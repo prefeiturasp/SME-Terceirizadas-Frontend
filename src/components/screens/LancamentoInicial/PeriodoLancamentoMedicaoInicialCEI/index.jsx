@@ -41,6 +41,7 @@ import {
   botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
   botaoAdicionarObrigatorioTabelaAlimentacao,
   validacoesTabelaAlimentacaoCEI,
+  validacoesTabelasDietasCEI,
   validarFormulario
 } from "./validacoes";
 import {
@@ -58,10 +59,10 @@ import {
   setPeriodoLancamento,
   updateValoresPeriodosLancamentos,
   getFeriadosNoMes,
-  getLogMatriculadosPorFaixaEtariaDia
+  getLogMatriculadosPorFaixaEtariaDia,
+  getLogDietasAutorizadasCEIPeriodo
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import * as perfilService from "services/perfil.service";
-import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { escolaCorrigeMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { DETALHAMENTO_DO_LANCAMENTO, MEDICAO_INICIAL } from "configs/constants";
 import "./styles.scss";
@@ -83,12 +84,15 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const [mesAnoFormatadoState, setMesAnoFormatadoState] = useState(null);
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
   const [tabelaAlimentacaoCEIRows, setTabelaAlimentacaoCEIRows] = useState([]);
-  const [tabelaDietaRows, setTabelaDietaRows] = useState([]);
+  const [tabelaDietaCEIRows, setTabelaDietaCEIRows] = useState([]);
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState([]);
   const [
     valoresMatriculadosFaixaEtariaDia,
     setValoresMatriculadosFaixaEtariaDia
   ] = useState([]);
+  const [logQtdDietasAutorizadasCEI, setLogQtdDietasAutorizadasCEI] = useState(
+    []
+  );
   const [
     dadosValoresInclusoesAutorizadasState,
     setDadosValoresInclusoesAutorizadasState
@@ -162,49 +166,22 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       const meusDados = await perfilService.meusDados();
       const escola =
         meusDados.vinculo_atual && meusDados.vinculo_atual.instituicao;
-      const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
-        escola.uuid
-      );
-      const periodos_escolares = response_vinculos.data.results;
-      const periodo =
-        periodos_escolares.find(
-          periodo =>
-            periodo.periodo_escolar.nome ===
-            (location.state ? location.state.periodo : "MANHA")
-        ) || periodos_escolares[0];
-
-      const rowsDietas = [];
-      rowsDietas.push(
-        {
-          nome: "Dietas Autorizadas",
-          name: "dietas_autorizadas",
-          uuid: null
-        },
-        {
-          nome: "Frequência",
-          name: "frequencia",
-          uuid: null
-        }
-      );
-
-      rowsDietas.push({
-        nome: "Observações",
-        name: "observacoes",
-        uuid: null
-      });
-      setTabelaDietaRows(rowsDietas);
+      const periodo = location.state ? location.state.periodo : "INTEGRAL";
 
       const mes = format(mesAnoSelecionado, "MM");
       const ano = getYear(mesAnoSelecionado);
       let response_log_matriculados_por_faixa_etaria_dia = [];
-      let faixas_etarias = [];
-      let faixas_etarias_objs = [];
+      let response_log_dietas_autorizadas_cei = [];
+      let faixas_etarias_alimentacao = [];
+      let faixas_etarias_objs_alimentacao = [];
+      let faixas_etarias_dieta = [];
+      let faixas_etarias_objs_dieta = [];
 
       let response_categorias_medicao = await getCategoriasDeMedicao();
 
       const params_matriculados_por_faixa_etaria_dia = {
         escola_uuid: escola.uuid,
-        nome_periodo_escolar: periodo.periodo_escolar.nome,
+        nome_periodo_escolar: periodo,
         mes: mes,
         ano: ano
       };
@@ -214,17 +191,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       setValoresMatriculadosFaixaEtariaDia(
         response_log_matriculados_por_faixa_etaria_dia.data
       );
+
       response_log_matriculados_por_faixa_etaria_dia.data.forEach(log => {
-        !faixas_etarias.find(faixa => faixa === log.faixa_etaria.__str__) &&
-          faixas_etarias.push(log.faixa_etaria.__str__);
+        !faixas_etarias_alimentacao.find(
+          faixa => faixa === log.faixa_etaria.__str__
+        ) && faixas_etarias_alimentacao.push(log.faixa_etaria.__str__);
       });
 
-      faixas_etarias.forEach(faixa => {
+      faixas_etarias_alimentacao.forEach(faixa => {
         const log = response_log_matriculados_por_faixa_etaria_dia.data.find(
           log => log.faixa_etaria.__str__ === faixa
         );
         log &&
-          faixas_etarias_objs.push({
+          faixas_etarias_objs_alimentacao.push({
             inicio: log.faixa_etaria.inicio,
             __str__: log.faixa_etaria.__str__,
             uuid: log.faixa_etaria.uuid
@@ -233,7 +212,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
       let linhasTabelaAlimentacaoCEI = [];
 
-      faixas_etarias_objs
+      faixas_etarias_objs_alimentacao
         .sort((a, b) => a.inicio - b.inicio)
         .forEach(faixa_obj => {
           linhasTabelaAlimentacaoCEI.push(
@@ -260,14 +239,70 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
       setTabelaAlimentacaoCEIRows(linhasTabelaAlimentacaoCEI);
 
+      const params_dietas_autorizadas_cei = {
+        escola_uuid: escola.uuid,
+        nome_periodo_escolar: periodo,
+        mes: mes,
+        ano: ano
+      };
+      response_log_dietas_autorizadas_cei = await getLogDietasAutorizadasCEIPeriodo(
+        params_dietas_autorizadas_cei
+      );
+      setLogQtdDietasAutorizadasCEI(response_log_dietas_autorizadas_cei.data);
+
+      response_log_dietas_autorizadas_cei.data.forEach(log => {
+        !faixas_etarias_dieta.find(
+          faixa => faixa === log.faixa_etaria.__str__
+        ) && faixas_etarias_dieta.push(log.faixa_etaria.__str__);
+      });
+
+      faixas_etarias_dieta.forEach(faixa => {
+        const log = response_log_dietas_autorizadas_cei.data.find(
+          log => log.faixa_etaria.__str__ === faixa
+        );
+        log &&
+          faixas_etarias_objs_dieta.push({
+            inicio: log.faixa_etaria.inicio,
+            __str__: log.faixa_etaria.__str__,
+            uuid: log.faixa_etaria.uuid
+          });
+      });
+
+      let linhasTabelaDietasCEI = [];
+
+      faixas_etarias_objs_dieta
+        .sort((a, b) => a.inicio - b.inicio)
+        .forEach(faixa_obj => {
+          linhasTabelaDietasCEI.push(
+            {
+              nome: "Dietas Autorizadas",
+              name: "dietas_autorizadas",
+              uuid: faixa_obj.uuid,
+              faixa_etaria: faixa_obj.__str__
+            },
+            {
+              nome: "Frequência",
+              name: "frequencia",
+              uuid: faixa_obj.uuid,
+              faixa_etaria: faixa_obj.__str__
+            }
+          );
+        });
+      linhasTabelaDietasCEI.push({
+        nome: "Observações",
+        name: "observacoes",
+        uuid: null,
+        faixa_etaria: null
+      });
+
+      setTabelaDietaCEIRows(linhasTabelaDietasCEI);
+
       response_categorias_medicao = response_categorias_medicao.data.filter(
         categoria => {
-          return !categoria.nome.includes("SOLICITAÇÕES");
-        }
-      );
-      response_categorias_medicao = response_categorias_medicao.filter(
-        categoria => {
-          return !categoria.nome.includes("DIETA");
+          return (
+            !categoria.nome.includes("SOLICITAÇÕES") &&
+            !categoria.nome.includes("ENTERAL")
+          );
         }
       );
       setCategoriasDeMedicao(response_categorias_medicao);
@@ -278,7 +313,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       };
       params = {
         ...params,
-        nome_periodo_escolar: periodo.periodo_escolar.nome
+        nome_periodo_escolar: periodo
       };
       const response_valores_periodos = await getValoresPeriodosLancamentos(
         params
@@ -309,8 +344,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         response_valores_periodos.data,
         response_categorias_medicao,
         linhasTabelaAlimentacaoCEI,
+        linhasTabelaDietasCEI,
         mesAnoSelecionado,
-        response_log_matriculados_por_faixa_etaria_dia.data
+        response_log_matriculados_por_faixa_etaria_dia.data,
+        response_log_dietas_autorizadas_cei.data
       );
 
       let items = [];
@@ -338,8 +375,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     valoresMedicao,
     categoriasMedicao,
     tabelaAlimentacaoCEIRows,
+    tabelaDietaCEIRows,
     mesAno,
-    matriculadosFaixaEtariaDia
+    matriculadosFaixaEtariaDia,
+    logQtdDietasAutorizadasCEI
   ) => {
     let dadosValoresMedicoes = {};
     let dadosValoresMatriculadosFaixaEtariaDia = {};
@@ -369,15 +408,6 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
     categoriasMedicao &&
       categoriasMedicao.forEach(categoria => {
-        matriculadosFaixaEtariaDia &&
-          matriculadosFaixaEtariaDia.forEach(obj => {
-            dadosValoresMatriculadosFaixaEtariaDia[
-              `matriculados__faixa_${obj.faixa_etaria.uuid}__dia_${
-                obj.dia
-              }__categoria_${categoria.id}`
-            ] = obj.quantidade ? `${obj.quantidade}` : null;
-          });
-
         let diasSemana = [];
         let diaDaSemanaNumerico = getDay(startOfMonth(mesAno)); // 0 representa Domingo
 
@@ -414,8 +444,20 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           }
         }
 
+        logQtdDietasAutorizadasCEI &&
+          logQtdDietasAutorizadasCEI.forEach(log => {
+            categoria.nome.includes("TIPO B") &&
+              log.classificacao.toUpperCase().includes("TIPO B") &&
+              (dadosValoresDietasAutorizadas[
+                `dietas_autorizadas__faixa_${log.faixa_etaria.uuid}__dia_${
+                  log.dia
+                }__categoria_${categoria.id}`
+              ] = `${log.quantidade}`);
+          });
+
         tabelaAlimentacaoCEIRows &&
-          [tabelaAlimentacaoCEIRows].forEach(
+          tabelaDietaCEIRows &&
+          [tabelaAlimentacaoCEIRows, tabelaDietaCEIRows].forEach(
             each =>
               each &&
               each.forEach(row => {
@@ -423,6 +465,40 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                   const dia =
                     String(i).length === 1 ? "0" + String(i) : String(i);
                   let result = null;
+                  let uuidFaixasDietas = [];
+                  if (categoria.nome === "DIETA ESPECIAL - TIPO A") {
+                    logQtdDietasAutorizadasCEI &&
+                      logQtdDietasAutorizadasCEI.forEach(
+                        log =>
+                          !uuidFaixasDietas.find(
+                            faixa => faixa === log.faixa_etaria.uuid
+                          ) && uuidFaixasDietas.push(log.faixa_etaria.uuid)
+                      );
+                    logQtdDietasAutorizadasCEI &&
+                      uuidFaixasDietas.forEach(faixa => {
+                        const logsFiltrados = logQtdDietasAutorizadasCEI.filter(
+                          log =>
+                            log.classificacao
+                              .toUpperCase()
+                              .includes("TIPO A") &&
+                            log.dia === dia &&
+                            log.faixa_etaria.uuid === faixa
+                        );
+                        const qtdDietasTipoA = logsFiltrados.reduce(function(
+                          acc,
+                          log
+                        ) {
+                          return acc + log.quantidade;
+                        },
+                        0);
+                        logsFiltrados.length &&
+                          (dadosValoresDietasAutorizadas[
+                            `dietas_autorizadas__faixa_${faixa}__dia_${dia}__categoria_${
+                              categoria.id
+                            }`
+                          ] = `${qtdDietasTipoA}`);
+                      });
+                  }
                   if (
                     Number(semanaSelecionada) === 1 &&
                     Number(dia) > 20 &&
@@ -469,6 +545,39 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
               ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
             }
           });
+      });
+
+    const idCategoriaAlimentacao =
+      categoriasMedicao.length &&
+      categoriasMedicao.find(categoria =>
+        categoria.nome.includes("ALIMENTAÇÃO")
+      ).id;
+
+    matriculadosFaixaEtariaDia &&
+      idCategoriaAlimentacao &&
+      matriculadosFaixaEtariaDia.forEach(objMatriculado => {
+        const dietasMesmoDia = Object.fromEntries(
+          Object.entries(dadosValoresDietasAutorizadas).filter(([key]) =>
+            key.includes(
+              `dietas_autorizadas__faixa_${
+                objMatriculado.faixa_etaria.uuid
+              }__dia_${objMatriculado.dia}`
+            )
+          )
+        );
+        const somaDietasMesmoDia = Object.values(dietasMesmoDia).reduce(
+          (acc, value) => {
+            return acc + Number(value);
+          },
+          0
+        );
+        dadosValoresMatriculadosFaixaEtariaDia[
+          `matriculados__faixa_${objMatriculado.faixa_etaria.uuid}__dia_${
+            objMatriculado.dia
+          }__categoria_${idCategoriaAlimentacao}`
+        ] = objMatriculado.quantidade
+          ? `${objMatriculado.quantidade - somaDietasMesmoDia}`
+          : null;
       });
 
     valoresMedicao &&
@@ -549,8 +658,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         valoresPeriodosLancamentos,
         categoriasDeMedicao,
         tabelaAlimentacaoCEIRows,
+        tabelaDietaCEIRows,
         mesAnoConsiderado,
-        valoresMatriculadosFaixaEtariaDia
+        valoresMatriculadosFaixaEtariaDia,
+        logQtdDietasAutorizadasCEI
       );
     };
     semanaSelecionada && formatar();
@@ -589,12 +700,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const onSubmitObservacao = async (values, dia, categoria, errors) => {
     let valoresMedicao = [];
     const valuesMesmoDiaDaObservacao = Object.fromEntries(
-      Object.entries(values).filter(([key]) => key.includes(dia))
+      Object.entries(values).filter(([key]) =>
+        key.includes(`__dia_${dia}__categoria_${categoria}`)
+      )
     );
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
       return (
-        (["Mês anterior", "Mês posterior", null].includes(value) ||
-          key.includes("dietas_autorizadas")) &&
+        ["Mês anterior", "Mês posterior", null].includes(value) &&
         delete valuesMesmoDiaDaObservacao[key]
       );
     });
@@ -608,23 +720,21 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       toastError(`Existe(m) erro(s) na coluna do dia ${dia}.`);
       return;
     }
-    Object.entries(valuesMesmoDiaDaObservacao)
-      .filter(([key]) => key.includes(`categoria_${categoria}`))
-      .forEach(([key, value]) => {
-        const keySplitted = key.split("__");
-        const uuid_faixa_etaria = keySplitted[1].replace("faixa_", "");
-        if (
-          !(key.includes("observacoes") || key.includes("matriculados")) &&
-          Number(value) >
-            Number(
-              valuesMesmoDiaDaObservacao[
-                `matriculados__faixa_${uuid_faixa_etaria}__dia_${dia}__categoria_${categoria}`
-              ]
-            )
-        ) {
-          qtdCamposComErro++;
-        }
-      });
+    Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
+      const keySplitted = key.split("__");
+      const uuid_faixa_etaria = keySplitted[1].replace("faixa_", "");
+      if (
+        !(key.includes("observacoes") || key.includes("matriculados")) &&
+        Number(value) >
+          Number(
+            valuesMesmoDiaDaObservacao[
+              `matriculados__faixa_${uuid_faixa_etaria}__dia_${dia}__categoria_${categoria}`
+            ]
+          )
+      ) {
+        qtdCamposComErro++;
+      }
+    });
     if (qtdCamposComErro) {
       toastError(
         `Existe(m) ${qtdCamposComErro} campo(s) com valor maior que matriculados. Necessário corrigir.`
@@ -802,8 +912,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         valores_medicao_response,
         categoriasDeMedicao,
         tabelaAlimentacaoCEIRows,
+        tabelaDietaCEIRows,
         mesAnoConsiderado,
-        valoresMatriculadosFaixaEtariaDia
+        valoresMatriculadosFaixaEtariaDia,
+        logQtdDietasAutorizadasCEI
       );
     }
     setLoading(false);
@@ -946,7 +1058,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     }
   };
 
-  const fieldValidationsTabelaAlimentacaoCEI = (
+  const fieldValidationsTabelasCEI = (
     rowName,
     dia,
     idCategoria,
@@ -958,12 +1070,15 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         rowName,
         dia,
         idCategoria,
-        value,
         allValues,
-        dadosValoresInclusoesAutorizadasState,
-        validacaoDiaLetivo,
-        location,
-        feriadosNoMes,
+        uuidFaixaEtaria
+      );
+    } else if (nomeCategoria.includes("DIETA")) {
+      return validacoesTabelasDietasCEI(
+        rowName,
+        dia,
+        idCategoria,
+        allValues,
         uuidFaixaEtaria
       );
     }
@@ -1184,8 +1299,12 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                               {semanaSelecionada &&
                                 calendarioMesConsiderado &&
                                 feriadosNoMes &&
-                                tabelaDietaRows &&
-                                tabelaAlimentacaoCEIRows.map((row, index) => {
+                                tabelaAlimentacaoCEIRows &&
+                                tabelaDietaCEIRows &&
+                                (categoria.nome.includes("DIETA")
+                                  ? tabelaDietaCEIRows
+                                  : tabelaAlimentacaoCEIRows
+                                ).map((row, index) => {
                                   return (
                                     <Fragment key={index}>
                                       <div
@@ -1328,7 +1447,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                     column,
                                                     row
                                                   )}
-                                                  validate={fieldValidationsTabelaAlimentacaoCEI(
+                                                  validate={fieldValidationsTabelasCEI(
                                                     row.name,
                                                     column.dia,
                                                     categoria.id,

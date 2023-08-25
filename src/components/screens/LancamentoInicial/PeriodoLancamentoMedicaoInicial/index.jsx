@@ -1270,7 +1270,9 @@ export default () => {
   const onSubmitObservacao = async (values, dia, categoria, errors) => {
     let valoresMedicao = [];
     const valuesMesmoDiaDaObservacao = Object.fromEntries(
-      Object.entries(values).filter(([key]) => key.includes(dia))
+      Object.entries(values).filter(([key]) =>
+        key.includes(`__dia_${dia}__categoria_${categoria}`)
+      )
     );
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
       return (
@@ -1293,22 +1295,20 @@ export default () => {
       toastError(`Existe(m) erro(s) na coluna do dia ${dia}.`);
       return;
     }
-    Object.entries(valuesMesmoDiaDaObservacao)
-      .filter(([key]) => key.includes(`categoria_${categoria}`))
-      .forEach(([key, value]) => {
-        if (
-          !ehGrupoETECUrlParam &&
-          !(key.includes("observacoes") || key.includes("frequencia")) &&
-          Number(value) >
-            Number(
-              valuesMesmoDiaDaObservacao[
-                `frequencia__dia_${dia}__categoria_${categoria}`
-              ]
-            )
-        ) {
-          qtdCamposComErro++;
-        }
-      });
+    Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
+      if (
+        !ehGrupoETECUrlParam &&
+        !(key.includes("observacoes") || key.includes("frequencia")) &&
+        Number(value) >
+          Number(
+            valuesMesmoDiaDaObservacao[
+              `frequencia__dia_${dia}__categoria_${categoria}`
+            ]
+          )
+      ) {
+        qtdCamposComErro++;
+      }
+    });
     if (qtdCamposComErro) {
       toastError(
         `Existe(m) ${qtdCamposComErro} campo(s) com valor maior que a frequência. Necessário corrigir.`
