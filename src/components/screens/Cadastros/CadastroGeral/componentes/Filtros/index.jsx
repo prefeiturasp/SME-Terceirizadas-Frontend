@@ -23,9 +23,9 @@ export default ({
   setFiltros,
   setPage,
   changePage,
-  tipoFixo
+  tipoFixo,
+  initialValues
 }) => {
-  const initialValues = tipoFixo ? { tipo: tipoFixo } : {};
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const { Option } = SelectAntd;

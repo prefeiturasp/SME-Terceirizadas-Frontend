@@ -13,18 +13,19 @@ import "./style.scss";
 import { Paginacao } from "components/Shareable/Paginacao";
 
 export default ({ tipoFixo = false }) => {
+  const initialValues = tipoFixo ? { tipo: tipoFixo } : {};
   const [carregando, setCarregando] = useState(true);
   const [resultado, setResultado] = useState(undefined);
   const [nomes, setNomes] = useState(undefined);
   const [tipos, setTipos] = useState(undefined);
   const [total, setTotal] = useState(0);
-  const [filtros, setFiltros] = useState({});
+  const [filtros, setFiltros] = useState(initialValues);
   const [page, setPage] = useState(1);
 
   async function fetchData() {
     const respNomes = await getNomesItems();
     const respTipos = await getTiposItems();
-    const respItems = await consultaItems(tipoFixo ? { tipo: tipoFixo } : {});
+    const respItems = await consultaItems(initialValues);
     setNomes(respNomes.data.results);
     setTipos(respTipos.data);
     setResultado(respItems.data.results);
@@ -65,6 +66,7 @@ export default ({ tipoFixo = false }) => {
           setPage={setPage}
           changePage={() => changePage(page)}
           tipoFixo={tipoFixo}
+          initialValues={initialValues}
         />
         {resultado && (
           <>

@@ -100,7 +100,7 @@ export default ({
                   <div className="col-4">
                     <label className="col-form-label mb-1">
                       <span className="asterisco">* </span>
-                      Status
+                      Tipo
                     </label>
                     <Field
                       name="tipo"
