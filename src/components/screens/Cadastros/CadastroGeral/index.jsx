@@ -12,7 +12,7 @@ import Tabela from "./componentes/Tabela";
 import "./style.scss";
 import { Paginacao } from "components/Shareable/Paginacao";
 
-export default () => {
+export default ({ tipoFixo = false }) => {
   const [carregando, setCarregando] = useState(true);
   const [resultado, setResultado] = useState(undefined);
   const [nomes, setNomes] = useState(undefined);
@@ -24,7 +24,7 @@ export default () => {
   async function fetchData() {
     const respNomes = await getNomesItems();
     const respTipos = await getTiposItems();
-    const respItems = await consultaItems({});
+    const respItems = await consultaItems(tipoFixo ? { tipo: tipoFixo } : {});
     setNomes(respNomes.data.results);
     setTipos(respTipos.data);
     setResultado(respItems.data.results);
@@ -64,6 +64,7 @@ export default () => {
           setFiltros={setFiltros}
           setPage={setPage}
           changePage={() => changePage(page)}
+          tipoFixo={tipoFixo}
         />
         {resultado && (
           <>

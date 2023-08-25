@@ -132,7 +132,8 @@ import {
   usuarioEhDilogJuridico,
   usuarioEhDilog,
   usuarioComAcessoTelaDetalharNotificacaoOcorrencia,
-  usuarioComAcessoAoPainelAprovacoes
+  usuarioComAcessoAoPainelAprovacoes,
+  usuarioEhQualquerUsuarioEmpresa
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -245,6 +246,7 @@ import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
+import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
 
 const routesConfig = [
   {
@@ -829,6 +831,18 @@ const routesConfig = [
     component: EditarUnidadesMedidaPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.MARCAS
+    }`,
+    component: CadastroMarcaPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhQualquerUsuarioEmpresa() ||
+      usuarioEhAdmQualquerEmpresa() ||
+      usuarioEhCodaeDilog()
+    // TODO: VERIFICAR SE É REALMENTE QUALQUER TIPO DE EMPRESA
   },
   {
     path: `/configuracoes/cadastros`,

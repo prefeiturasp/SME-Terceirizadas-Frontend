@@ -22,8 +22,10 @@ export default ({
   setTotal,
   setFiltros,
   setPage,
-  changePage
+  changePage,
+  tipoFixo
 }) => {
+  const initialValues = tipoFixo ? { tipo: tipoFixo } : {};
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const { Option } = SelectAntd;
@@ -64,7 +66,7 @@ export default ({
     <>
       <Form
         onSubmit={onSubmit}
-        initialValues={{}}
+        initialValues={initialValues}
         render={({ submitting, form, handleSubmit, values }) => (
           <form onSubmit={handleSubmit}>
             <div className="row mt-3 mb-3">
@@ -97,6 +99,7 @@ export default ({
                       .toLowerCase()
                       .includes(inputValue.toLowerCase())
                   }
+                  disabled={tipoFixo}
                 >
                   {opcoes}
                 </Field>
@@ -125,7 +128,7 @@ export default ({
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   className="float-right ml-3"
                   onClick={() => {
-                    form.reset({});
+                    form.reset(initialValues);
                     setResultado(undefined);
                     setPage(1);
                   }}
@@ -139,6 +142,7 @@ export default ({
         closeModal={() => setShowModal(false)}
         showModal={showModal}
         changePage={() => changePage()}
+        tipoFixo={tipoFixo}
       />
     </>
   );
