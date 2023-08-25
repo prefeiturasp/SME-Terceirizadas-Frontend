@@ -4,6 +4,7 @@ import {
   analiseDilogSolicitacaoAlteracaoCronograma,
   analiseDinutreSolicitacaoAlteracaoCronograma,
   cadastraSolicitacaoAlteracaoCronograma,
+  dilogCienteSolicitacaoAlteracaoCronograma,
   getCronograma,
   getSolicitacaoAlteracaoCronograma
 } from "services/cronograma.service";
@@ -14,7 +15,10 @@ import AnaliseDilogDiretoria from "./components/AnaliseDilogDiretoria";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import "./styles.scss";
 import AcoesAlterar from "./components/AcoesAlterar";
-import { prepararPayloadCronograma } from "./helpers";
+import {
+  prepararPayloadAnaliseCronograma,
+  prepararPayloadCronograma
+} from "./helpers";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   CRONOGRAMA_ENTREGA,
@@ -79,7 +83,7 @@ export default ({ analiseSolicitacao }) => {
       setSolicitacaoAlteracaoCronograma(responseSolicitacaoCronograma.data);
       geraInitialValuesSolicitacao(responseSolicitacaoCronograma.data);
       setCronograma(responseCronograma);
-      setEtapas(responseCronograma.etapas);
+      setEtapas(responseSolicitacaoCronograma.data.etapas_novas);
       setRestante(responseCronograma.qtd_total_programada);
       setDuplicados([]);
       setCarregando(false);
@@ -114,6 +118,7 @@ export default ({ analiseSolicitacao }) => {
       values[`total_embalagens_${index}`] = etapa.total_embalagens;
       values[`etapa_${index}`] = etapa.etapa;
       values[`parte_${index}`] = etapa.parte;
+      values[`quantidade_${index}`] = etapa.quantidade;
       values[`data_programada_${index}`] = etapa.data_programada;
     });
     setInitialValues(values);
@@ -206,6 +211,25 @@ export default ({ analiseSolicitacao }) => {
     } else {
       cadastraAlteracao(values);
     }
+  };
+
+  const handleSubmitCronograma = async (values, justificativa) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+    const payload = prepararPayloadAnaliseCronograma(
+      justificativa,
+      values,
+      etapas,
+      recebimentos
+    );
+    await dilogCienteSolicitacaoAlteracaoCronograma(uuid, payload)
+      .then(() => {
+        toastSuccess("Análise da alteração enviada com sucesso!");
+        history.push(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
+      })
+      .catch(() => {
+        toastError("Ocorreu um erro ao salvar o Cronograma");
+      });
   };
 
   const buscaLogJustificativaCronograma = (logs, autorJustificativa) => {
@@ -423,9 +447,13 @@ export default ({ analiseSolicitacao }) => {
                           solicitacaoAlteracaoCronograma
                         }
                         handleSubmit={handleSubmit}
+                        handleSubmitCronograma={justificativa =>
+                          handleSubmitCronograma(values, justificativa)
+                        }
                         podeSubmeter={Object.keys(errors).length === 0}
                         disabledDinutre={disabledDinutre(values)}
                         disabledDilog={disabledDilog(values)}
+                        valuesForm={values}
                       />
                     </div>
                   </form>
