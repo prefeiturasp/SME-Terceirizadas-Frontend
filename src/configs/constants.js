@@ -140,6 +140,7 @@ export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
 export const SUSPENSAO_DE_PRODUTO = "relatorio-produtos-suspensos";
 export const ATIVACAO_DE_PRODUTO = "ativacao-de-produto";
 export const CADASTROS = "cadastros";
+export const MARCAS = "marcas";
 export const EDITAIS_CONTRATOS = "editais-contratos";
 export const EDITAIS_CADASTRADOS = "editais-cadastrados";
 export const EMPRESA = "empresa";
