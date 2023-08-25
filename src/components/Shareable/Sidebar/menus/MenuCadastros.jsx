@@ -26,9 +26,7 @@ import {
   usuarioEhLogistica,
   usuarioEhMedicao,
   usuarioEhCodaeDilog,
-  usuarioEhEmpresaFornecedor,
-  usuarioEhQualquerUsuarioEmpresa,
-  usuarioEhAdmQualquerEmpresa
+  usuarioEhEmpresaFornecedor
 } from "helpers/utilities";
 
 const MenuCadastros = () => {
@@ -103,9 +101,7 @@ const MenuCadastros = () => {
           Produtos
         </LeafItem>
       )}
-      {(usuarioEhQualquerUsuarioEmpresa() ||
-        usuarioEhAdmQualquerEmpresa() ||
-        usuarioEhCodaeDilog()) && (
+      {(usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog()) && (
         <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${MARCAS}`}>
           Marcas
         </LeafItem>

@@ -29,8 +29,7 @@ import {
   exibirModuloMedicaoInicial,
   usuarioEhCodaeDilog,
   usuarioEhDilog,
-  usuarioEhDilogQualidade,
-  usuarioEhAdmQualquerEmpresa
+  usuarioEhDilogQualidade
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -114,9 +113,7 @@ export const SidebarContent = () => {
     (exibeMenuValidandoAmbiente &&
       (usuarioEhCODAEGestaoAlimentacao() ||
         usuarioEhEscolaTerceirizadaDiretor() ||
-        usuarioEhEscolaTerceirizada())) ||
-    usuarioEhQualquerUsuarioEmpresa() ||
-    usuarioEhAdmQualquerEmpresa();
+        usuarioEhEscolaTerceirizada()));
   const exibirRelatorios =
     !usuarioEhEscolaAbastecimento() &&
     !usuarioEhEscolaAbastecimentoDiretor() &&

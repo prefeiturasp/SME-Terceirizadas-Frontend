@@ -132,8 +132,7 @@ import {
   usuarioEhDilogJuridico,
   usuarioEhDilog,
   usuarioComAcessoTelaDetalharNotificacaoOcorrencia,
-  usuarioComAcessoAoPainelAprovacoes,
-  usuarioEhQualquerUsuarioEmpresa
+  usuarioComAcessoAoPainelAprovacoes
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -838,11 +837,7 @@ const routesConfig = [
     }`,
     component: CadastroMarcaPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhQualquerUsuarioEmpresa() ||
-      usuarioEhAdmQualquerEmpresa() ||
-      usuarioEhCodaeDilog()
-    // TODO: VERIFICAR SE É REALMENTE QUALQUER TIPO DE EMPRESA
+    tipoUsuario: usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog()
   },
   {
     path: `/configuracoes/cadastros`,
