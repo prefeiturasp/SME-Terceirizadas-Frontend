@@ -27,7 +27,13 @@ import {
 } from "helpers/utilities";
 import "./style.scss";
 
-export default ({ closeModal, showModal, item, changePage }) => {
+export default ({
+  closeModal,
+  showModal,
+  item,
+  changePage,
+  tipoFixo = false
+}) => {
   const [carregando, setCarregando] = useState(true);
   const [tipos, setTipos] = useState(undefined);
 
@@ -86,6 +92,7 @@ export default ({ closeModal, showModal, item, changePage }) => {
       <Spin tip="Carregando..." spinning={carregando}>
         <Form
           onSubmit={onSubmit}
+          initialValues={tipoFixo ? { tipo: tipoFixo } : {}}
           render={({ handleSubmit, submitting }) => (
             <form onSubmit={handleSubmit}>
               <Modal.Body>
@@ -93,13 +100,13 @@ export default ({ closeModal, showModal, item, changePage }) => {
                   <div className="col-4">
                     <label className="col-form-label mb-1">
                       <span className="asterisco">* </span>
-                      Status
+                      Tipo
                     </label>
                     <Field
                       name="tipo"
                       component={Select}
                       defaultValue={item ? item.tipo : undefined}
-                      disabled={item ? true : false}
+                      disabled={item || tipoFixo ? true : false}
                       options={[
                         { uuid: "", nome: "Selecione uma opção" }
                       ].concat(

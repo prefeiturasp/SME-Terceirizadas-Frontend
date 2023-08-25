@@ -13,7 +13,8 @@ import {
   LABORATORIOS_CADASTRADOS,
   PRODUTOS,
   EMBALAGENS_CADASTRADAS,
-  UNIDADES_MEDIDA
+  UNIDADES_MEDIDA,
+  MARCAS
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -98,6 +99,11 @@ const MenuCadastros = () => {
         usuarioEhEmpresaFornecedor()) && (
         <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`}>
           Produtos
+        </LeafItem>
+      )}
+      {(usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog()) && (
+        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${MARCAS}`}>
+          Marcas
         </LeafItem>
       )}
     </Menu>
