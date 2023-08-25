@@ -191,20 +191,26 @@ export const desabilitarField = (
     !validacaoDiaLetivo(dia)
   ) {
     return true;
-  }
-
-  if (nomeCategoria === "ALIMENTAÇÃO") {
-    if (
-      rowName === "matriculados" ||
-      !values[
-        `matriculados__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+  } else if (
+    (nomeCategoria === "ALIMENTAÇÃO" &&
+      (rowName === "matriculados" ||
+        !values[
+          `matriculados__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+        ])) ||
+    (nomeCategoria.includes("DIETA") &&
+      (rowName === "dietas_autorizadas" ||
+        !values[
+          `dietas_autorizadas__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+        ])) ||
+    Number(
+      values[
+        `dietas_autorizadas__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
       ]
-    ) {
-      return true;
-    }
-    if (rowName === "frequencia") {
-      return false;
-    }
+    ) === 0
+  ) {
+    return true;
+  } else if (rowName === "frequencia") {
+    return false;
   }
 };
 
