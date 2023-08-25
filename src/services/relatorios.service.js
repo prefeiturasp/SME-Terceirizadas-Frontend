@@ -277,11 +277,11 @@ export const getRelatorioReclamacao = async params => {
   saveAs(data, "relatorio_reclamacao.pdf");
 };
 
-export const filtrarSolicitacoesAlimentacaoDRE = async params => {
+export const filtrarSolicitacoesAlimentacaoDRE = async payload => {
   const response = await axios
-    .get(
+    .post(
       `${API_URL}/diretoria-regional-solicitacoes/filtrar-solicitacoes-ga/`,
-      { params }
+      payload
     )
     .catch(ErrorHandlerFunction);
   if (response) {
@@ -290,9 +290,9 @@ export const filtrarSolicitacoesAlimentacaoDRE = async params => {
   }
 };
 
-export const filtrarSolicitacoesAlimentacaoEscola = async params => {
+export const filtrarSolicitacoesAlimentacaoEscola = async payload => {
   const response = await axios
-    .get(`${API_URL}/escola-solicitacoes/filtrar-solicitacoes-ga/`, { params })
+    .post(`${API_URL}/escola-solicitacoes/filtrar-solicitacoes-ga/`, payload)
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -300,9 +300,9 @@ export const filtrarSolicitacoesAlimentacaoEscola = async params => {
   }
 };
 
-export const filtrarSolicitacoesAlimentacaoCODAE = async params => {
+export const filtrarSolicitacoesAlimentacaoCODAE = async payload => {
   const response = await axios
-    .get(`${API_URL}/codae-solicitacoes/filtrar-solicitacoes-ga/`, { params })
+    .post(`${API_URL}/codae-solicitacoes/filtrar-solicitacoes-ga/`, payload)
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -310,10 +310,10 @@ export const filtrarSolicitacoesAlimentacaoCODAE = async params => {
   }
 };
 
-export const filtrarSolicitacoesAlimentacaoTerceirizadas = async params => {
+export const filtrarSolicitacoesAlimentacaoTerceirizadas = async payload => {
   const response = await axios
-    .get(`${API_URL}/terceirizada-solicitacoes/filtrar-solicitacoes-ga/`, {
-      params
+    .post(`${API_URL}/terceirizada-solicitacoes/filtrar-solicitacoes-ga/`, {
+      payload
     })
     .catch(ErrorHandlerFunction);
   if (response) {
@@ -322,88 +322,72 @@ export const filtrarSolicitacoesAlimentacaoTerceirizadas = async params => {
   }
 };
 
-export const gerarExcelRelatorioSolicitacoesAlimentacaoDRE = async params => {
+export const gerarExcelRelatorioSolicitacoesAlimentacaoDRE = async payload => {
   const url = `/diretoria-regional-solicitacoes/exportar-xlsx/`;
-  const response = await axios
-    .get(url, { params: params })
-    .catch(ErrorHandlerFunction);
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
   }
 };
 
-export const gerarExcelRelatorioSolicitacoesAlimentacaoEscola = async params => {
+export const gerarExcelRelatorioSolicitacoesAlimentacaoEscola = async payload => {
   const url = `/escola-solicitacoes/exportar-xlsx/`;
-  const response = await axios
-    .get(url, { params: params })
-    .catch(ErrorHandlerFunction);
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
   }
 };
 
-export const gerarExcelRelatorioSolicitacoesAlimentacaoCODAE = async params => {
+export const gerarExcelRelatorioSolicitacoesAlimentacaoCODAE = async payload => {
   const url = `/codae-solicitacoes/exportar-xlsx/`;
-  const response = await axios
-    .get(url, { params: params })
-    .catch(ErrorHandlerFunction);
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
   }
 };
 
-export const gerarExcelRelatorioSolicitacoesAlimentacaoTerceirizadas = async params => {
+export const gerarExcelRelatorioSolicitacoesAlimentacaoTerceirizadas = async payload => {
   const url = `/terceirizada-solicitacoes/exportar-xlsx/`;
-  const response = await axios
-    .get(url, { params: params })
-    .catch(ErrorHandlerFunction);
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
   }
 };
 
-export const gerarPDFRelatorioSolicitacoesAlimentacaoDRE = async params => {
+export const gerarPDFRelatorioSolicitacoesAlimentacaoDRE = async payload => {
   const url = `/diretoria-regional-solicitacoes/exportar-pdf/`;
-  const response = await axios
-    .get(url, { params: params })
-    .catch(ErrorHandlerFunction);
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
   }
 };
 
-export const gerarPDFRelatorioSolicitacoesAlimentacaoEscola = async params => {
+export const gerarPDFRelatorioSolicitacoesAlimentacaoEscola = async payload => {
   const url = `/escola-solicitacoes/exportar-pdf/`;
-  const response = await axios
-    .get(url, { params: params })
-    .catch(ErrorHandlerFunction);
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
   }
 };
 
-export const gerarPDFRelatorioSolicitacoesAlimentacaoCODAE = async params => {
+export const gerarPDFRelatorioSolicitacoesAlimentacaoCODAE = async payload => {
   const url = `/codae-solicitacoes/exportar-pdf/`;
-  const response = await axios
-    .get(url, { params: params })
-    .catch(ErrorHandlerFunction);
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
   }
 };
 
-export const gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas = async params => {
+export const gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas = async payload => {
   const url = `/terceirizada-solicitacoes/exportar-pdf/`;
-  const response = await axios
-    .get(url, { params: params })
-    .catch(ErrorHandlerFunction);
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
