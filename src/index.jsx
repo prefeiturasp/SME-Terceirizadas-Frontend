@@ -11,7 +11,7 @@ import multi from "redux-multi";
 // Middleware
 import promise from "redux-promise";
 import thunk from "redux-thunk";
-import App from "./App";
+import { App } from "./App";
 import { ENVIRONMENT } from "constants/config";
 import reducers from "./reducers";
 import * as serviceWorker from "./serviceWorker";
