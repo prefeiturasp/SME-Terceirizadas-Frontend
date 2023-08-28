@@ -25,17 +25,26 @@ import {
   exibeMotivoETEC,
   formatarPeriodos
 } from "../../../helper";
+import {
+  MotivoContinuoInterface,
+  MotivoSimplesInterface,
+  PeriodosInclusaoInterface
+} from "../interfaces";
 
 export const Container = () => {
   const [dados, setDados] = useState(null);
-  const [motivosSimples, setMotivosSimples] = useState(null);
-  const [motivosContinuos, setMotivosContinuos] = useState(
-    escolaEhCei() ? [] : null
+  const [motivosSimples, setMotivosSimples] = useState<
+    Array<MotivoSimplesInterface>
+  >(undefined);
+  const [motivosContinuos, setMotivosContinuos] = useState<
+    Array<MotivoContinuoInterface>
+  >(escolaEhCei() ? [] : undefined);
+  const [periodos, setPeriodos] = useState<Array<PeriodosInclusaoInterface>>(
+    undefined
   );
-  const [periodos, setPeriodos] = useState(null);
-  const [periodosMotivoEspecifico, setPeriodosMotivoEspecifico] = useState(
-    null
-  );
+  const [periodosMotivoEspecifico, setPeriodosMotivoEspecifico] = useState<
+    Array<PeriodosInclusaoInterface>
+  >(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
   const [periodoNoite, setPeriodoNoite] = useState(
@@ -48,6 +57,7 @@ export const Container = () => {
     periodos,
     escola_uuid
   ) => {
+    console.log(periodos);
     const response = await getQuantidadeAlunosEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
       const periodos_ = abstraiPeriodosComAlunosMatriculados(

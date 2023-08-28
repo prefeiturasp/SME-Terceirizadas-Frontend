@@ -4,6 +4,19 @@ import {
   TipoAlimentacaoRascunhoInterface
 } from "interfaces/rascunhos.interface";
 
+export interface PeriodosInclusaoInterface {
+  checked: boolean;
+  dias_semana: Array<number | string>;
+  maximo_alunos: number;
+  multiselect: "multiselect-wrapper-enabled" | "multiselect-wrapper-disabled";
+  nome: string;
+  numero_alunos: string | number | null;
+  posicao: number;
+  possui_alunos_regulares: boolean;
+  tipo_turno: number;
+  tipos_alimentacao: Array<TipoAlimentacaoRascunhoInterface>;
+}
+
 export interface QuantidadePeriodoValuesInterface {
   cancelado?: false;
   cancelado_em?: null;
@@ -12,7 +25,7 @@ export interface QuantidadePeriodoValuesInterface {
   dias_semanas: Array<string | number>;
   numero_alunos: string | number;
   observacao: string;
-  periodo_escolar: string;
+  periodo_escolar: string | PeriodoEscolarRascunhosInterface;
   tipos_alimentacao: Array<string>;
 }
 export interface ValuesFormInclusaoDeAlimentacaoInterface {

@@ -243,22 +243,25 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
         .nome.includes("Específico")
     ) {
       setMotivoEspecifico(true);
-      await form.change("quantidades_periodo", periodosMotivoEspecifico);
+      form.change("quantidades_periodo", periodosMotivoEspecifico);
     } else {
       setMotivoEspecifico(false);
-      await form.change("quantidades_periodo", periodos);
+      form.change("quantidades_periodo", periodos);
     }
     inclusao_.inclusoes.forEach(i => {
       i.motivo = i.motivo.uuid;
     });
-    await form.change("inclusoes", inclusao_.inclusoes);
-    inclusao_.quantidades_periodo.forEach(async qp => {
-      let index;
+    form.change("inclusoes", inclusao_.inclusoes);
+    inclusao_.quantidades_periodo.forEach(async (qp: any) => {
+      let index: number;
       if (
         inclusao_.inclusoes &&
         inclusao_.inclusoes[0].motivo &&
         motivosSimples
-          .find(motivo => motivo.uuid === inclusao_.inclusoes[0].motivo)
+          .find(
+            (motivo: MotivoSimplesInterface) =>
+              motivo.uuid === inclusao_.inclusoes[0].motivo
+          )
           .nome.includes("Específico")
       ) {
         setMotivoEspecifico(true);
@@ -269,16 +272,16 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
         setMotivoEspecifico(false);
         index = periodos.findIndex(qp_ => qp_.nome === qp.periodo_escolar.nome);
       }
-      await form.change(`quantidades_periodo[${index}].checked`, true);
-      await form.change(
+      form.change(`quantidades_periodo[${index}].checked`, true);
+      form.change(
         `quantidades_periodo[${index}].multiselect`,
         "multiselect-wrapper-enabled"
       );
-      await form.change(
+      form.change(
         `quantidades_periodo[${index}].tipos_alimentacao_selecionados`,
         qp.tipos_alimentacao.map(t => t.uuid)
       );
-      await form.change(
+      form.change(
         `quantidades_periodo[${index}].numero_alunos`,
         qp.numero_alunos
       );
