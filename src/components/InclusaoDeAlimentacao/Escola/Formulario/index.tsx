@@ -52,7 +52,9 @@ import {
 import {
   MotivoContinuoInterface,
   MotivoSimplesInterface,
+  RascunhosInclusaoDeAlimentacaoContinuaInterface,
   RascunhosInclusaoDeAlimentacaoInterface,
+  RascunhosInclusaoDeAlimentacaoNormalInterface,
   ValuesFormInclusaoDeAlimentacaoInterface
 } from "./interfaces";
 import { FormApi } from "final-form";
@@ -66,7 +68,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
   const [motivoEspecifico, setMotivoEspecifico] = useState(false);
   const [carregandoRascunho, setCarregandoRascunho] = useState(false);
   const [uuid, setUuid] = useState<string | undefined>(undefined);
-  const [idExterno, setIdExterno] = useState<undefined | undefined>(undefined);
+  const [idExterno, setIdExterno] = useState<string | undefined>(undefined);
 
   const {
     meusDados,
@@ -182,7 +184,14 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     }
   };
 
-  const removerRascunho = async (id_externo, uuid, tipoSolicitacao, form) => {
+  const removerRascunho = async (
+    id_externo: string,
+    uuid: string,
+    tipoSolicitacao:
+      | TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      | TIPO_SOLICITACAO.SOLICITACAO_CONTINUA,
+    form: FormApi<any, Partial<any>>
+  ) => {
     if (window.confirm("Deseja remover este rascunho?")) {
       const response = await escolaExcluirSolicitacaoDeInclusaoDeAlimentacao(
         uuid,
@@ -199,11 +208,17 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     }
   };
 
-  const carregarRascunho = async (form, values, inclusao) => {
+  const carregarRascunho = async (
+    form: FormApi<any, Partial<any>>,
+    values: ValuesFormInclusaoDeAlimentacaoInterface,
+    inclusao:
+      | RascunhosInclusaoDeAlimentacaoNormalInterface
+      | RascunhosInclusaoDeAlimentacaoContinuaInterface
+  ) => {
     setUuid(inclusao.uuid);
     setIdExterno(inclusao.id_externo);
-    await form.change("uuid", inclusao.uuid);
-    await form.change("id_externo", inclusao.id_externo);
+    form.change("uuid", inclusao.uuid);
+    form.change("id_externo", inclusao.id_externo);
     const inclusao_ = deepCopy(inclusao);
     if (inclusao_.inclusoes) {
       carregarRascunhoNormal(form, inclusao_);
@@ -212,13 +227,19 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     }
   };
 
-  const carregarRascunhoNormal = async (form, inclusao_) => {
+  const carregarRascunhoNormal = async (
+    form: FormApi<any, Partial<any>>,
+    inclusao_: any
+  ) => {
     setCarregandoRascunho(true);
     if (
       inclusao_.inclusoes &&
       inclusao_.inclusoes[0].motivo &&
       motivosSimples
-        .find(motivo => motivo.uuid === inclusao_.inclusoes[0].motivo.uuid)
+        .find(
+          (motivo: MotivoSimplesInterface) =>
+            motivo.uuid === inclusao_.inclusoes[0].motivo.uuid
+        )
         .nome.includes("Específico")
     ) {
       setMotivoEspecifico(true);
@@ -264,7 +285,11 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     });
   };
 
-  const carregarRascunhoContinuo = async (form, values, inclusao_) => {
+  const carregarRascunhoContinuo = async (
+    form: FormApi<any, Partial<any>>,
+    values: ValuesFormInclusaoDeAlimentacaoInterface,
+    inclusao_: any
+  ) => {
     const quantidades_periodo_ = deepCopy(inclusao_.quantidades_periodo);
     if (inclusao_.motivo.nome === "ETEC") {
       quantidades_periodo_.forEach(qp => {
@@ -291,22 +316,28 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       });
     }
 
-    await form.change("inclusoes", [
+    form.change("inclusoes", [
       {
         motivo: inclusao_.motivo.uuid,
         data_inicial: inclusao_.data_inicial,
         data_final: inclusao_.data_final
       }
     ]);
-    await form.change("quantidades_periodo", quantidades_periodo_);
+    form.change("quantidades_periodo", quantidades_periodo_);
   };
 
-  const refresh = form => {
+  const refresh = (form: FormApi<any, Partial<any>>) => {
     getRascunhos();
     resetForm(form);
   };
 
-  const iniciarPedido = async (uuid, tipoInclusao, form) => {
+  const iniciarPedido = async (
+    uuid: string,
+    tipoInclusao:
+      | TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      | TIPO_SOLICITACAO.SOLICITACAO_CONTINUA,
+    form: FormApi<any, Partial<any>>
+  ) => {
     const response = await iniciaFluxoInclusaoAlimentacao(uuid, tipoInclusao);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Inclusão de Alimentação enviada com sucesso!");
@@ -329,9 +360,13 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     );
   };
 
-  const onSubmit = async (values, form) => {
+  const onSubmit = async (
+    values: ValuesFormInclusaoDeAlimentacaoInterface,
+    form: FormApi<any, Partial<any>>
+  ) => {
     const ehMotivoEspecifico = ehMotivoInclusaoEspecifico(values);
     const values_ = deepCopy(values);
+    console.log(values);
     const tipoSolicitacao = motivoSimplesSelecionado(values)
       ? TIPO_SOLICITACAO.SOLICITACAO_NORMAL
       : TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
@@ -389,7 +424,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     }
   };
 
-  const onDataChanged = value => {
+  const onDataChanged = (value: string) => {
     if (
       value &&
       checaSeDataEstaEntre2e5DiasUteis(
@@ -402,11 +437,15 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     }
   };
 
-  const checaMotivoInclusaoEspecifico = async (values, form, value) => {
+  const checaMotivoInclusaoEspecifico = async (
+    values: ValuesFormInclusaoDeAlimentacaoInterface,
+    form: FormApi<any, Partial<any>>,
+    value: string
+  ) => {
     if (
       (ehMotivoInclusaoEspecifico(values) && !carregandoRascunho) ||
       (motivosSimples
-        .find(motivo => motivo.uuid === value)
+        .find((motivo: MotivoSimplesInterface) => motivo.uuid === value)
         .nome.includes("Específico") &&
         carregandoRascunho)
     ) {
@@ -491,12 +530,12 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                 values.inclusoes.length > 1
                                   ? motivoEspecifico
                                     ? agregarDefault(motivosSimples).filter(
-                                        motivo =>
+                                        (motivo: MotivoSimplesInterface) =>
                                           motivo.nome.includes("Selecione") ||
                                           motivo.nome.includes("Específico")
                                       )
                                     : agregarDefault(motivosSimples).filter(
-                                        motivo =>
+                                        (motivo: MotivoSimplesInterface) =>
                                           !motivo.nome.includes("Específico")
                                       )
                                   : agregarDefault(motivosSimples).concat(
@@ -508,11 +547,12 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                               naoDesabilitarPrimeiraOpcao
                             />
                             <OnChange name={`${name}.motivo`}>
-                              {async value => {
+                              {async (value: string) => {
                                 if (value) {
                                   if (
                                     motivosSimples.find(
-                                      motivo => motivo.uuid === value
+                                      (motivo: MotivoSimplesInterface) =>
+                                        motivo.uuid === value
                                     )
                                   ) {
                                     form.change(
@@ -527,7 +567,8 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                     );
                                   } else if (
                                     motivosContinuos.find(
-                                      motivo => motivo.uuid === value
+                                      (motivo: MotivoContinuoInterface) =>
+                                        motivo.uuid === value
                                     ).nome === "ETEC"
                                   ) {
                                     form.change(
@@ -541,7 +582,8 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                     form.change("reload", !values.reload);
                                   } else if (
                                     motivosContinuos.find(
-                                      motivo => motivo.uuid === value
+                                      (motivo: MotivoContinuoInterface) =>
+                                        motivo.uuid === value
                                     )
                                   ) {
                                     form.change("dias_semana", undefined);

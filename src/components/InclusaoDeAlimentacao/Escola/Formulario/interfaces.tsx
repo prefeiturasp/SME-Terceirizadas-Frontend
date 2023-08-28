@@ -4,12 +4,33 @@ import {
   TipoAlimentacaoRascunhoInterface
 } from "interfaces/rascunhos.interface";
 
+export interface QuantidadePeriodoValuesInterface {
+  cancelado?: false;
+  cancelado_em?: null;
+  cancelado_justificativa?: string;
+  cancelado_por?: null;
+  dias_semanas: Array<string | number>;
+  numero_alunos: string | number;
+  observacao: string;
+  periodo_escolar: string;
+  tipos_alimentacao: Array<string>;
+}
 export interface ValuesFormInclusaoDeAlimentacaoInterface {
-  inclusoes: Array<InclusoesDeAlimentacaoInterface>;
+  inclusoes: Array<InclusoesDeAlimentacaoValuesInterface>;
+  quantidades_periodo: Array<QuantidadePeriodoValuesInterface>;
+  uuid: string;
+  status: string;
+  id_externo: string;
+  escola: string;
 }
 
-export interface InclusoesDeAlimentacaoInterface {
+export interface InclusoesDeAlimentacaoValuesInterface {
   motivo: string;
+  data: string;
+}
+
+export interface InclusoesDeAlimentacaoFromRequestInterface {
+  motivo: MotivoInterface | string;
   data: string;
 }
 
@@ -68,12 +89,14 @@ export interface RascunhosInclusaoDeAlimentacaoInterface {
   foi_solicitado_fora_do_prazo: boolean;
   id_externo: string;
   logs: Array<any>;
-  prioridade: string;
   quantidades_periodo: Array<
     | QuantidadesPeriodoInclusaoNormalRascunhosInterface
     | QuantidadesPeriodoInclusaoContinuaRascunhosInterface
   >;
-  inclusoes: undefined | Array<InclusoesDeAlimentacaoInterface>;
+  inclusoes: undefined | Array<InclusoesDeAlimentacaoFromRequestInterface>;
+  motivo: MotivoInterface;
+  outro_motivo: string;
+  prioridade: "VENCIDO" | "PRIORIDADE" | "LIMITE" | "REGULAR";
   rastro_dre: null;
   rastro_escola: null;
   rastro_lote: null;
@@ -85,7 +108,7 @@ export interface RascunhosInclusaoDeAlimentacaoInterface {
 
 export interface RascunhosInclusaoDeAlimentacaoNormalInterface
   extends RascunhosInclusaoDeAlimentacaoInterface {
-  inclusoes: Array<InclusoesDeAlimentacaoInterface>;
+  inclusoes: Array<InclusoesDeAlimentacaoFromRequestInterface>;
   quantidades_periodo: Array<
     QuantidadesPeriodoInclusaoNormalRascunhosInterface
   >;
