@@ -20,7 +20,7 @@ export const Container = () => {
 
   const [erro, setErro] = useState(false);
 
-  const getQuantidadeAlunosCEMEIporCEIEMEIAsync = async escola => {
+  const getQuantidadeAlunosCEMEIporCEIEMEIAsync = async (escola) => {
     const response = await getQuantidadeAlunosCEMEIporCEIEMEI(
       escola.codigo_eol
     );
@@ -29,7 +29,7 @@ export const Container = () => {
     }
   };
 
-  const getVinculosTipoAlimentacaoPorEscolaAsync = async escola => {
+  const getVinculosTipoAlimentacaoPorEscolaAsync = async (escola) => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola.uuid);
     if (response.status === HTTP_STATUS.OK) {
       setVinculos(response.data.results);

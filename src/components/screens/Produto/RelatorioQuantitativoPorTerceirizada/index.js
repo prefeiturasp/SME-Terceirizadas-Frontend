@@ -13,7 +13,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 
 import { gerarLabelPorFiltro } from "helpers/produto";
@@ -94,18 +94,18 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
-  const onSearch = searchText => {
+  const onSearch = (searchText) => {
     if (!searchText.length) {
       setTerceirizadasFiltrado(terceirizadas);
     }
     const reg = new RegExp(searchText, "i");
-    setTerceirizadasFiltrado(terceirizadas.filter(el => reg.test(el)));
+    setTerceirizadasFiltrado(terceirizadas.filter((el) => reg.test(el)));
   };
 
   useEffect(() => {
     async function fetchData() {
-      getNomesTerceirizadas().then(response => {
-        const results = response.data.results.map(el => el.nome_fantasia);
+      getNomesTerceirizadas().then((response) => {
+        const results = response.data.results.map((el) => el.nome_fantasia);
         setTerceirizadas(results);
         setTerceirizadasFiltrado(results);
       });
@@ -124,7 +124,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
     fetchData();
   }, [filtros, setDadosRelatorio]);
 
-  const onSubmitForm = formValues => {
+  const onSubmitForm = (formValues) => {
     setFiltros(formValues);
   };
 

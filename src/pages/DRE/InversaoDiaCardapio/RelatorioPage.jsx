@@ -7,14 +7,14 @@ import { DRE, INVERSAO_CARDAPIO } from "../../../configs/constants";
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 
 const anteriores = [
   {
     href: `/${DRE}/${INVERSAO_CARDAPIO}`,
-    titulo: "Inversões de dia de Cardápio"
-  }
+    titulo: "Inversões de dia de Cardápio",
+  },
 ];
 
 export default () => (

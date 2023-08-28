@@ -5,7 +5,7 @@ export const AlteracaoBody = ({ ...props }) => {
   const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
 
-  const ehDiaCancelado = diaIntervalo => {
+  const ehDiaCancelado = (diaIntervalo) => {
     return diaIntervalo.cancelado || solicitacao.status === "ESCOLA_CANCELOU"
       ? "dia-cancelado"
       : "";
@@ -107,7 +107,7 @@ export const AlteracaoBody = ({ ...props }) => {
                     <p>
                       <b>
                         {substituicao.tipos_alimentacao_de
-                          .map(ta => ta.nome)
+                          .map((ta) => ta.nome)
                           .join(", ")}
                       </b>
                     </p>
@@ -116,7 +116,7 @@ export const AlteracaoBody = ({ ...props }) => {
                     <p>
                       <b>
                         {substituicao.tipos_alimentacao_para
-                          .map(ta => ta.nome)
+                          .map((ta) => ta.nome)
                           .join(", ")}
                       </b>
                     </p>
@@ -131,14 +131,14 @@ export const AlteracaoBody = ({ ...props }) => {
                   <p
                     className="observacao-negrito"
                     dangerouslySetInnerHTML={{
-                      __html: solicitacao.observacao
+                      __html: solicitacao.observacao,
                     }}
                   />
                 </div>
               </div>
             )}
             {solicitacao.datas_intervalo.find(
-              data_intervalo => data_intervalo.cancelado_justificativa
+              (data_intervalo) => data_intervalo.cancelado_justificativa
             ) && (
               <>
                 <hr />
@@ -146,7 +146,7 @@ export const AlteracaoBody = ({ ...props }) => {
                   <strong>Histórico de cancelamento</strong>
                   {solicitacao.datas_intervalo
                     .filter(
-                      data_intervalo => data_intervalo.cancelado_justificativa
+                      (data_intervalo) => data_intervalo.cancelado_justificativa
                     )
                     .map((data_intervalo, key) => {
                       return (
@@ -164,6 +164,6 @@ export const AlteracaoBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

@@ -1,6 +1,6 @@
-export const formataMotivosDias = inclusoes => {
+export const formataMotivosDias = (inclusoes) => {
   const motivosDias = {};
-  inclusoes.forEach(inclusao => {
+  inclusoes.forEach((inclusao) => {
     const motivo =
       inclusao.motivo.nome === "Outro"
         ? inclusao.outro_motivo || "-"
@@ -14,12 +14,12 @@ export const formataMotivosDias = inclusoes => {
   return motivosDias;
 };
 
-export const formataPeriodos = periodos => {
-  const _periodos = periodos.map(periodo => {
+export const formataPeriodos = (periodos) => {
+  const _periodos = periodos.map((periodo) => {
     return { nome: periodo };
   });
 
-  const periodosComStyles = _periodos.map(periodo => {
+  const periodosComStyles = _periodos.map((periodo) => {
     switch (periodo.nome) {
       case "MANHA":
         periodo["background"] = "#fff7cb";

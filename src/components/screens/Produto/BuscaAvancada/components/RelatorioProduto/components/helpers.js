@@ -2,11 +2,11 @@ export const produto = {
   protocolos: [],
   marca: {
     nome: "XXXXXXXXXXXXX",
-    uuid: "ce8d08f8-5a55-406f-a3b0-9fdc4376e503"
+    uuid: "ce8d08f8-5a55-406f-a3b0-9fdc4376e503",
   },
   fabricante: {
     nome: "XXXXXXXXXXXXXXXXXXXXXX",
-    uuid: "cb9ee8ca-031e-4fb1-9c1c-a1dc75c78bf2"
+    uuid: "cb9ee8ca-031e-4fb1-9c1c-a1dc75c78bf2",
   },
   imagens: [],
   informacoes_nutricionais: [
@@ -14,16 +14,16 @@ export const produto = {
       informacao_nutricional: {
         tipo_nutricional: {
           nome: "XXXXXXXXXXXXXXXXXXXXXX",
-          uuid: "7995c8e0-bf52-4a62-8b57-bc460b298d66"
+          uuid: "7995c8e0-bf52-4a62-8b57-bc460b298d66",
         },
         nome: "XXXXXXXXXXXXXXXXXXXXXX",
         uuid: "e3f8dc79-57f0-4953-8d62-b817ab7665e5",
-        medida: "KCAL"
+        medida: "KCAL",
       },
       uuid: "9a92d242-c699-4cb2-9082-bed3a1a0f644",
       quantidade_porcao: "1,1",
-      valor_diario: "1"
-    }
+      valor_diario: "1",
+    },
   ],
   homologacoes: [
     {
@@ -39,9 +39,9 @@ export const produto = {
             telefone: "119999999",
             telefone2: "1199999999",
             celular: "1199999999",
-            email: "admin@admin.com"
-          }
-        ]
+            email: "admin@admin.com",
+          },
+        ],
       },
       logs: [
         {
@@ -53,16 +53,16 @@ export const produto = {
             email: "terceirizada@admin.com",
             date_joined: "28/04/2020 16:54:17",
             registro_funcional: "0000100",
-            tipo_usuario: "terceirizada"
+            tipo_usuario: "terceirizada",
           },
           criado_em: "28/04/2020 17:15:34",
           descricao: "Homologação #6D296",
           justificativa: "",
-          resposta_sim_nao: false
-        }
+          resposta_sim_nao: false,
+        },
       ],
-      criado_em: "28/04/2020 17:15:34"
-    }
+      criado_em: "28/04/2020 17:15:34",
+    },
   ],
   nome: "XXXXXXXXXXXXXXXXXXXXXX",
   ativo: false,
@@ -96,9 +96,9 @@ export const produto = {
           telefone: "XXXXXXXXXX",
           telefone2: "1199999999",
           celular: "1199999999",
-          email: "XXXXXXXXXXXXX@XXXXXXXX.XXX"
-        }
-      ]
+          email: "XXXXXXXXXXXXX@XXXXXXXX.XXX",
+        },
+      ],
     },
     logs: [
       {
@@ -110,16 +110,16 @@ export const produto = {
           email: "terceirizada@admin.com",
           date_joined: "28/04/2020 16:54:17",
           registro_funcional: "0000100",
-          tipo_usuario: "terceirizada"
+          tipo_usuario: "terceirizada",
         },
         criado_em: "28/04/2020 17:15:34",
         descricao: "Homologação #6D296",
         justificativa: "",
-        resposta_sim_nao: false
-      }
+        resposta_sim_nao: false,
+      },
     ],
-    criado_em: "28/04/2020 17:15:34"
-  }
+    criado_em: "28/04/2020 17:15:34",
+  },
 };
 
 export const logs = [
@@ -131,13 +131,13 @@ export const logs = [
       nome: "USUARIO TERCEIRIZADA",
       email: "xxxxxxxxxxxx@xxxx.xxx",
       registro_funcional: "0214563",
-      tipo_usuario: "xxxxxxxxxxxx"
+      tipo_usuario: "xxxxxxxxxxxx",
     },
     criado_em: "28/04/2020 17:15:34",
     descricao: "Homologação #6D296",
     justificativa: "",
     resposta_sim_nao: false,
-    ativo: false
+    ativo: false,
   },
   {
     status_evento_explicacao: "Homologado",
@@ -147,39 +147,39 @@ export const logs = [
       nome: "USUARIO CODAE",
       email: "xxxxxxxxxxxx@xxxx.xxx",
       registro_funcional: "0546986",
-      tipo_usuario: "xxxxxxxxxxxx"
+      tipo_usuario: "xxxxxxxxxxxx",
     },
     criado_em: "28/04/2020 17:15:34",
     descricao: "Homologação #6D296",
     justificativa: "",
     resposta_sim_nao: false,
-    ativo: false
-  }
+    ativo: false,
+  },
 ];
 
 export const informacoesNutricionais = [
   {
     nome: "CALORIA",
-    ativo: false
+    ativo: false,
   },
   {
     nome: "CARBOIDRATOS",
-    ativo: false
+    ativo: false,
   },
   {
     nome: "PROTEINAS",
-    ativo: false
+    ativo: false,
   },
   {
     nome: "GORDURAS",
-    ativo: false
+    ativo: false,
   },
   {
     nome: "FIBRAS",
-    ativo: false
+    ativo: false,
   },
   {
     nome: "VITAMINAS E MINERAIS",
-    ativo: false
-  }
+    ativo: false,
+  },
 ];

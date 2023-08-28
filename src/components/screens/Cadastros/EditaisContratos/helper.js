@@ -1,42 +1,42 @@
-export const normalizaLabelValueDRE = response => {
-  let dres = response.results.map(elemento => {
+export const normalizaLabelValueDRE = (response) => {
+  let dres = response.results.map((elemento) => {
     return {
       label: elemento.nome,
       value: elemento.uuid,
-      uuid: elemento.uuid
+      uuid: elemento.uuid,
     };
   });
   return dres;
 };
 
-export const normalizaLabelValueLote = response => {
-  let lotes = response.map(elemento => {
+export const normalizaLabelValueLote = (response) => {
+  let lotes = response.map((elemento) => {
     return {
       label: elemento.nome,
       value: elemento.uuid,
-      uuid: elemento.uuid
+      uuid: elemento.uuid,
     };
   });
   return lotes;
 };
 
-export const normalizaLabelValueEmpresa = response => {
-  let empresas = response.map(empresa => {
+export const normalizaLabelValueEmpresa = (response) => {
+  let empresas = response.map((empresa) => {
     return {
       label: empresa.nome_fantasia,
       value: empresa.uuid,
-      uuid: empresa.uuid
+      uuid: empresa.uuid,
     };
   });
   return empresas;
 };
 
-export const normalizaLabelValueEmpresaSocial = response => {
-  let empresas = response.map(empresa => {
+export const normalizaLabelValueEmpresaSocial = (response) => {
+  let empresas = response.map((empresa) => {
     return {
       label: empresa.razao_social,
       value: empresa.uuid,
-      uuid: empresa.uuid
+      uuid: empresa.uuid,
     };
   });
   return empresas;
@@ -87,8 +87,8 @@ export const montaEstadoEditalEContrato = (edital, contratos) => {
   return editalContrato;
 };
 
-export const montaEstadoEditais = response => {
-  let editais = response.data.results.map(edital => {
+export const montaEstadoEditais = (response) => {
+  let editais = response.data.results.map((edital) => {
     return {
       ativo: false,
       uuid: edital.uuid,
@@ -96,7 +96,7 @@ export const montaEstadoEditais = response => {
       edital_numero: edital.numero,
       processo_administrativo: edital.processo,
       resumo: edital.objeto,
-      contratos: edital.contratos
+      contratos: edital.contratos,
     };
   });
   return editais;
@@ -107,28 +107,26 @@ export const montaContratoRelacionado = (
   contrato,
   indice_contrato
 ) => {
-  contratos_relacionados[indice_contrato].lotes = contrato.lotes.map(lote => {
+  contratos_relacionados[indice_contrato].lotes = contrato.lotes.map((lote) => {
     return lote.uuid;
   });
   contratos_relacionados[indice_contrato].lotes_nomes = contrato.lotes.map(
-    lote => {
+    (lote) => {
       return lote.nome;
     }
   );
 
-  contratos_relacionados[
-    indice_contrato
-  ].dres = contrato.diretorias_regionais.map(dre => {
-    return dre.uuid;
-  });
-  contratos_relacionados[
-    indice_contrato
-  ].dres_nomes = contrato.diretorias_regionais.map(dre => {
-    return dre.nome;
-  });
+  contratos_relacionados[indice_contrato].dres =
+    contrato.diretorias_regionais.map((dre) => {
+      return dre.uuid;
+    });
+  contratos_relacionados[indice_contrato].dres_nomes =
+    contrato.diretorias_regionais.map((dre) => {
+      return dre.nome;
+    });
 
   contratos_relacionados[indice_contrato].empresas = [
-    contrato.terceirizada.uuid
+    contrato.terceirizada.uuid,
   ];
 
   contratos_relacionados[indice_contrato].empresas_nomes =
@@ -149,7 +147,7 @@ export const montaContratoRelacionado = (
     } else {
       let vigencia_temp = {
         data_inicial: vigencia["data_inicial"],
-        data_final: vigencia["data_final"]
+        data_final: vigencia["data_final"],
       };
       contratos_relacionados[indice_contrato].vigencias.push(vigencia_temp);
     }

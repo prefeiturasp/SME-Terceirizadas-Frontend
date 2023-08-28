@@ -6,7 +6,7 @@ import { SUSPENSAO_DE_PRODUTO, GESTAO_PRODUTO } from "configs/constants";
 
 const atual = {
   href: `/${GESTAO_PRODUTO}/${SUSPENSAO_DE_PRODUTO}`,
-  titulo: "Relatório de análise de produtos suspensos"
+  titulo: "Relatório de análise de produtos suspensos",
 };
 
 export default () => (

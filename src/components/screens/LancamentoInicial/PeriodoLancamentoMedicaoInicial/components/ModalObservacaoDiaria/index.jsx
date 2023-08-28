@@ -9,14 +9,14 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import InputText from "components/Shareable/Input/InputText";
 import CKEditorField from "components/Shareable/CKEditorField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   maxLengthSemTags,
-  peloMenosUmCaractere
+  peloMenosUmCaractere,
 } from "helpers/fieldValidators";
 import { deleteObservacaoValoresPeriodosLancamentos } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import "./styles.scss";
@@ -39,7 +39,7 @@ export default ({
   valoresObservacoes,
   location,
   setFormValuesAtualizados,
-  setValoresObservacoes
+  setValoresObservacoes,
 }) => {
   const [desabilitarBotaoSalvar, setDesabilitarBotaoSalvar] = useState(true);
   const [showBotaoExcluir, setShowBotaoExcluir] = useState(false);
@@ -54,16 +54,16 @@ export default ({
     const msgError = "Ocorreu um erro ao deletar a observação!";
     try {
       const valorAtual = valoresPeriodosLancamentos
-        .filter(valor => valor.nome_campo === rowName)
-        .filter(valor => String(valor.dia) === String(dia))
+        .filter((valor) => valor.nome_campo === rowName)
+        .filter((valor) => String(valor.dia) === String(dia))
         .filter(
-          valor => String(valor.categoria_medicao) === String(categoria)
+          (valor) => String(valor.categoria_medicao) === String(categoria)
         )[0];
       const uuidValor =
         (valorAtual && valorAtual.uuid) ||
         (valoresObservacoes &&
           valoresObservacoes.find(
-            valor =>
+            (valor) =>
               String(valor.dia) === String(dia) &&
               String(valor.categoria_medicao) === String(categoria)
           ).uuid);
@@ -73,11 +73,11 @@ export default ({
       if (response.status === HTTP_STATUS.NO_CONTENT) {
         form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
         setValoresObservacoes(
-          valoresObservacoes.filter(v => v.uuid !== uuidValor)
+          valoresObservacoes.filter((v) => v.uuid !== uuidValor)
         );
         valoresPeriodosLancamentos.splice(
           valoresPeriodosLancamentos.findIndex(
-            valor => valor.uuid === uuidValor
+            (valor) => valor.uuid === uuidValor
           ),
           1
         );
@@ -99,10 +99,10 @@ export default ({
   const onClickVoltar = () => {
     if (
       !valoresPeriodosLancamentos
-        .filter(valor => valor.nome_campo === rowName)
-        .filter(valor => String(valor.dia) === String(dia))
+        .filter((valor) => valor.nome_campo === rowName)
+        .filter((valor) => String(valor.dia) === String(dia))
         .filter(
-          valor => String(valor.categoria_medicao) === String(categoria)
+          (valor) => String(valor.categoria_medicao) === String(categoria)
         )[0]
     ) {
       form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
@@ -110,10 +110,10 @@ export default ({
       form.change(
         `${rowName}__dia_${dia}__categoria_${categoria}`,
         valoresPeriodosLancamentos
-          .filter(valor => valor.nome_campo === rowName)
-          .filter(valor => String(valor.dia) === String(dia))
+          .filter((valor) => valor.nome_campo === rowName)
+          .filter((valor) => String(valor.dia) === String(dia))
           .filter(
-            valor => String(valor.categoria_medicao) === String(categoria)
+            (valor) => String(valor.categoria_medicao) === String(categoria)
           )[0].valor
       );
     }
@@ -124,10 +124,10 @@ export default ({
   const onClickSalvar = async () => {
     await onSubmit();
     valoresPeriodosLancamentos
-      .filter(valor => valor.nome_campo === rowName)
-      .filter(valor => String(valor.dia) === String(dia))
+      .filter((valor) => valor.nome_campo === rowName)
+      .filter((valor) => String(valor.dia) === String(dia))
       .filter(
-        valor => String(valor.categoria_medicao) === String(categoria)
+        (valor) => String(valor.categoria_medicao) === String(categoria)
       )[0] && setShowBotaoExcluir(true);
     closeModal();
   };
@@ -140,10 +140,10 @@ export default ({
       form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
     if (
       !valoresPeriodosLancamentos
-        .filter(valor => valor.nome_campo === rowName)
-        .filter(valor => String(valor.dia) === String(dia))
+        .filter((valor) => valor.nome_campo === rowName)
+        .filter((valor) => String(valor.dia) === String(dia))
         .filter(
-          valor => String(valor.categoria_medicao) === String(categoria)
+          (valor) => String(valor.categoria_medicao) === String(categoria)
         )[0]
     ) {
       form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
@@ -151,10 +151,10 @@ export default ({
       form.change(
         `${rowName}__dia_${dia}__categoria_${categoria}`,
         valoresPeriodosLancamentos
-          .filter(valor => valor.nome_campo === rowName)
-          .filter(valor => String(valor.dia) === String(dia))
+          .filter((valor) => valor.nome_campo === rowName)
+          .filter((valor) => String(valor.dia) === String(dia))
           .filter(
-            valor => String(valor.categoria_medicao) === String(categoria)
+            (valor) => String(valor.categoria_medicao) === String(categoria)
           )[0].valor
       );
     }
@@ -168,24 +168,23 @@ export default ({
         !values[`${rowName}__dia_${dia}__categoria_${categoria}`] &&
         valoresObservacoes &&
         valoresObservacoes.find(
-          valor =>
+          (valor) =>
             String(valor.dia) === String(dia) &&
             String(valor.categoria_medicao) === String(categoria)
         )
       ) {
         const updateObs = {};
-        updateObs[
-          `${rowName}__dia_${dia}__categoria_${categoria}`
-        ] = valoresObservacoes.find(
-          valor =>
-            String(valor.dia) === String(dia) &&
-            String(valor.categoria_medicao) === String(categoria)
-        ).valor;
+        updateObs[`${rowName}__dia_${dia}__categoria_${categoria}`] =
+          valoresObservacoes.find(
+            (valor) =>
+              String(valor.dia) === String(dia) &&
+              String(valor.categoria_medicao) === String(categoria)
+          ).valor;
         setFormValuesAtualizados({ ...values, ...updateObs });
         form.change(
           `${rowName}__dia_${dia}__categoria_${categoria}`,
           valoresObservacoes.find(
-            valor =>
+            (valor) =>
               String(valor.dia) === String(dia) &&
               String(valor.categoria_medicao) === String(categoria)
           ).valor
@@ -194,12 +193,12 @@ export default ({
     }
   };
 
-  const onChangeTextAreaField = value => {
+  const onChangeTextAreaField = (value) => {
     const valorFiltered = valoresPeriodosLancamentos
-      .filter(valor => valor.nome_campo === rowName)
-      .filter(valor => String(valor.dia) === String(dia))
+      .filter((valor) => valor.nome_campo === rowName)
+      .filter((valor) => String(valor.dia) === String(dia))
       .filter(
-        valor => String(valor.categoria_medicao) === String(categoria)
+        (valor) => String(valor.categoria_medicao) === String(categoria)
       )[0];
     if (value) {
       setDesabilitarBotaoSalvar(
@@ -209,16 +208,17 @@ export default ({
           !!peloMenosUmCaractere(
             values[`${rowName}__dia_${dia}__categoria_${categoria}`]
           )) &&
-          (valorFiltered && valorFiltered.valor === value)) ||
+          valorFiltered &&
+          valorFiltered.valor === value) ||
           strip_tags(value).length > 250
       );
 
       setShowBotaoExcluir(
         valoresPeriodosLancamentos
-          .filter(valor => valor.nome_campo === rowName)
-          .filter(valor => String(valor.dia) === String(dia))
+          .filter((valor) => valor.nome_campo === rowName)
+          .filter((valor) => String(valor.dia) === String(dia))
           .filter(
-            valor => String(valor.categoria_medicao) === String(categoria)
+            (valor) => String(valor.categoria_medicao) === String(categoria)
           ).length > 0
       );
     } else {
@@ -258,13 +258,13 @@ export default ({
                 location.state &&
                 [
                   "MEDICAO_APROVADA_PELA_DRE",
-                  "MEDICAO_APROVADA_PELA_CODAE"
+                  "MEDICAO_APROVADA_PELA_CODAE",
                 ].includes(location.state.status_periodo)
               }
               validate={maxLengthSemTags(250)}
             />
             <OnChange name={`${rowName}__dia_${dia}__categoria_${categoria}`}>
-              {value => onChangeTextAreaField(value)}
+              {(value) => onChangeTextAreaField(value)}
             </OnChange>
           </div>
         </Modal.Body>
@@ -276,7 +276,7 @@ export default ({
           valoresPeriodosLancamentos.length > 0 &&
           (showBotaoExcluir ||
             valoresObservacoes.find(
-              valor =>
+              (valor) =>
                 String(valor.dia) === String(dia) &&
                 String(valor.categoria_medicao) === String(categoria)
             ) ||
@@ -291,7 +291,7 @@ export default ({
                 location.state &&
                 [
                   "MEDICAO_APROVADA_PELA_DRE",
-                  "MEDICAO_APROVADA_PELA_CODAE"
+                  "MEDICAO_APROVADA_PELA_CODAE",
                 ].includes(location.state.status_periodo)
               }
               type={BUTTON_TYPE.BUTTON}

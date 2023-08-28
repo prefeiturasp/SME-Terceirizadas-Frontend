@@ -4,12 +4,12 @@ import RelatorioProduto from "../../components/screens/Produto/BuscaAvancada/com
 import Page from "../../components/Shareable/Page/Page";
 import {
   PESQUISA_DESENVOLVIMENTO,
-  RELATORIO_PRODUTO
+  RELATORIO_PRODUTO,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${PESQUISA_DESENVOLVIMENTO}/${RELATORIO_PRODUTO}`,
-  titulo: "Consultar Produto"
+  titulo: "Consultar Produto",
 };
 
 export default () => (

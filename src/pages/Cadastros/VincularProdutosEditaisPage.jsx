@@ -5,7 +5,7 @@ import Page from "components/Shareable/Page/Page";
 
 const atual = {
   href: `/gestao-produto/vincular-produto-edital`,
-  titulo: "Vincular Produtos aos Editais"
+  titulo: "Vincular Produtos aos Editais",
 };
 
 export default () => (

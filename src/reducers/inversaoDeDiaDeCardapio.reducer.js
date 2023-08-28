@@ -15,7 +15,7 @@ export default function reducer(state = {}, action) {
         action.data.data_para_2 = action.data.data_para_inversao_2;
         if (action.data.tipos_alimentacao) {
           action.data.tipos_alimentacao = action.data.tipos_alimentacao.map(
-            tipoAlimentacao => {
+            (tipoAlimentacao) => {
               return tipoAlimentacao.uuid;
             }
           );
@@ -41,13 +41,13 @@ export default function reducer(state = {}, action) {
       }
       return {
         data: {
-          ...action.data
-        }
+          ...action.data,
+        },
       };
     default:
       return state;
   }
 }
 
-export const loadInversaoDeDiaDeCardapio = data => dispatch =>
+export const loadInversaoDeDiaDeCardapio = (data) => (dispatch) =>
   dispatch({ type: LOAD_INVERSAO_DIA_CARDAPIO, data });

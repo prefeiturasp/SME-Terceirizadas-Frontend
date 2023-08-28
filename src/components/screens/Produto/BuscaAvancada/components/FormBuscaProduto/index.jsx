@@ -12,7 +12,7 @@ import { SelectWithHideOptions } from "components/Shareable/SelectWithHideOption
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 
@@ -21,7 +21,7 @@ import {
   getNomesUnicosMarcas,
   getNomesUnicosFabricantes,
   getNomesTerceirizadas,
-  getNomesUnicosEditais
+  getNomesUnicosEditais,
 } from "services/produto.service";
 
 import { getOpecoesStatus, retornaStatusBackend } from "./helpers";
@@ -37,7 +37,7 @@ const initialState = {
   fabricantes: [],
   dataMinima: null,
   dataMaxima: null,
-  editais: []
+  editais: [],
 };
 
 const FORM_NAME = "buscaAvancadaProduto";
@@ -58,7 +58,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [status, setStatus] = useState({
     opcoesStatus: getOpecoesStatus(),
-    statusSelecionados: []
+    statusSelecionados: [],
   });
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
         getNomesUnicosMarcas(),
         getNomesUnicosFabricantes(),
         getNomesTerceirizadas(),
-        getNomesUnicosEditais()
+        getNomesUnicosEditais(),
       ]).then(([produtos, marcas, fabricantes, terceirizadas, editais]) =>
         dispatch({
           type: "popularDados",
@@ -77,40 +77,42 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
             marcas: marcas.data.results,
             fabricantes: fabricantes.data.results,
             terceirizadas: terceirizadas.data.results.map(
-              el => el.nome_fantasia
+              (el) => el.nome_fantasia
             ),
-            editais: editais.data.results
-          }
+            editais: editais.data.results,
+          },
         })
       );
     }
     fetchData();
   }, []);
 
-  const onSelectStatus = value => {
+  const onSelectStatus = (value) => {
     if (value === "Todos") {
       setStatus({ opcoesStatus: [], statusSelecionados: ["Todos"] });
     } else {
       setStatus({
         opcoesStatus: getOpecoesStatus(),
-        statusSelecionados: [...status.statusSelecionados, value]
+        statusSelecionados: [...status.statusSelecionados, value],
       });
     }
   };
 
-  const onDeselectStatus = value => {
+  const onDeselectStatus = (value) => {
     if (value === "Todos") {
       setStatus({ opcoesStatus: getOpecoesStatus(), statusSelecionados: [] });
     } else {
-      const filtered = status.statusSelecionados.filter(item => item !== value);
+      const filtered = status.statusSelecionados.filter(
+        (item) => item !== value
+      );
       setStatus({
         opcoesStatus: getOpecoesStatus(),
-        statusSelecionados: filtered
+        statusSelecionados: filtered,
       });
     }
   };
 
-  const onSubmit = values => {
+  const onSubmit = (values) => {
     let formValues = JSON.parse(JSON.stringify(values));
 
     if (formValues.tipo_produto_comum && !formValues.dieta_especial) {
@@ -200,8 +202,8 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
                 options={status.opcoesStatus}
                 name="status"
                 selectedItems={status.statusSelecionados}
-                onSelect={value => onSelectStatus(value)}
-                onDeselect={value => onDeselectStatus(value)}
+                onSelect={(value) => onSelectStatus(value)}
+                onDeselect={(value) => onDeselectStatus(value)}
               />
             </div>
             <div className="col-12 col-md-3 col-xl-3 check-tipos-prod">
@@ -314,11 +316,11 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
                   tem_aditivos_alergenicos: undefined,
                   status: undefined,
                   data_final: undefined,
-                  data_inicial: undefined
+                  data_inicial: undefined,
                 });
                 setStatus({
                   opcoesStatus: getOpecoesStatus(),
-                  statusSelecionados: []
+                  statusSelecionados: [],
                 });
               }}
             />
@@ -329,9 +331,9 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    initialValues: state.finalForm[FORM_NAME]
+    initialValues: state.finalForm[FORM_NAME],
   };
 };
 

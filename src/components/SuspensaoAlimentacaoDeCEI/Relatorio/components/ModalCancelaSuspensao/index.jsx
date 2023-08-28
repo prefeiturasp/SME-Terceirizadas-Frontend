@@ -5,7 +5,7 @@ import { Field, Form } from "react-final-form";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { required } from "helpers/fieldValidators";
@@ -13,7 +13,7 @@ import { getError } from "helpers/utilities";
 import { escolaCancelaSuspensaoCEI } from "services/suspensaoAlimentacaoCei.service";
 
 export default ({ showModal, closeModal, setSolicitacaoSuspensao, uuid }) => {
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const resp = await escolaCancelaSuspensaoCEI(uuid, values);
     if (resp.status === HTTP_STATUS.OK) {
       setSolicitacaoSuspensao(resp.data);

@@ -7,20 +7,15 @@ import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { textAreaRequired } from "helpers/fieldValidators";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 export const ModalEscolaCancela = ({ ...props }) => {
-  const {
-    showModal,
-    closeModal,
-    solicitacao,
-    endpoint,
-    loadSolicitacao
-  } = props;
+  const { showModal, closeModal, solicitacao, endpoint, loadSolicitacao } =
+    props;
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const response = await endpoint(solicitacao.uuid, values);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Alteração do Tipo de Alimentação cancelada com sucesso!");

@@ -19,12 +19,12 @@ export class InputComData extends Component {
       onChange: PropTypes.func.isRequired,
       value: PropTypes.oneOfType([
         PropTypes.string.isRequired,
-        PropTypes.instanceOf(Date).isRequired
-      ])
+        PropTypes.instanceOf(Date).isRequired,
+      ]),
     }).isRequired,
     meta: PropTypes.shape({
       touched: PropTypes.bool,
-      error: PropTypes.bool
+      error: PropTypes.bool,
     }),
     placeholder: PropTypes.string,
     label: PropTypes.string,
@@ -33,7 +33,7 @@ export class InputComData extends Component {
     tooltipText: PropTypes.string,
     writable: PropTypes.bool,
     minDate: PropTypes.instanceOf(Date),
-    maxDate: PropTypes.instanceOf(Date)
+    maxDate: PropTypes.instanceOf(Date),
   };
 
   static defaultProps = {
@@ -47,7 +47,7 @@ export class InputComData extends Component {
     inline: false,
     hasIcon: true,
     writable: false,
-    usarDirty: false
+    usarDirty: false,
   };
 
   constructor(props) {
@@ -107,7 +107,7 @@ export class InputComData extends Component {
       tooltipText,
       visitedError,
       writable,
-      usarDirty
+      usarDirty,
     } = this.props;
     return (
       <div className="datepicker">
@@ -123,7 +123,7 @@ export class InputComData extends Component {
             className={`col-form-label ${labelClassName}`}
           >
             {label}
-          </label>
+          </label>,
         ]}
         {tooltipText && <TooltipIcone tooltipText={tooltipText} />}
         <div
@@ -157,11 +157,13 @@ export class InputComData extends Component {
             maxDate={maxDate}
             disabled={disabled}
             selected={this.dataSelecionada(input.value)}
-            className={`form-control ${className} ${meta &&
+            className={`form-control ${className} ${
+              meta &&
               (usarDirty ? meta.dirty : meta.touched) &&
               meta.error &&
-              "invalid-field"}`}
-            ref={c => (this._calendar = c)}
+              "invalid-field"
+            }`}
+            ref={(c) => (this._calendar = c)}
             onChange={this.handleChange}
             locale={ptBR}
             name={name}

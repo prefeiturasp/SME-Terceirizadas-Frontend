@@ -20,7 +20,7 @@ import {
   dreValidaPedidoEscola,
   escolaCancelaInversaoDiaCardapio,
   TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio,
-  terceirizadaTomaCiencia
+  terceirizadaTomaCiencia,
 } from "services/inversaoDeDiaDeCardapio.service";
 import { ModalAprovarGenericoSimOpcional } from "components/Shareable/ModalAprovarGenericoSimOpcional";
 
@@ -40,7 +40,7 @@ export const RelatorioBase = ({ ...props }) => {
 
   const atual = {
     href: "#",
-    titulo: "Relatório"
+    titulo: "Relatório",
   };
 
   return (
@@ -55,7 +55,7 @@ export class InversaoDeDiaDeCardapioPage extends React.Component {
   render() {
     const atual = {
       href: "/escola/inversao-de-dia-de-cardapio",
-      titulo: "Inversão de dia de Cardápio"
+      titulo: "Inversão de dia de Cardápio",
     };
     return (
       <Page titulo={atual.titulo} botaoVoltar>

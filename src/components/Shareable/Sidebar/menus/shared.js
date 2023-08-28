@@ -16,11 +16,11 @@ export const SubMenu = ({
   title,
   onClick,
   activeMenu,
-  children
+  children,
 }) => (
   <>
     <div
-      onClick={e => {
+      onClick={(e) => {
         e.stopPropagation();
         onClick(path);
       }}
@@ -48,7 +48,7 @@ export const Menu = ({ id, title, icon, children }) => (
       data-target={`#collapse${id}`}
       aria-expanded="false"
       aria-controls={`collapse${id}`}
-      onClick={e => {
+      onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
         const currentElement = document.querySelector(`#collapse${id}`);

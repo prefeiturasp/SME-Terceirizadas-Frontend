@@ -16,7 +16,7 @@ export default class CheckboxField extends Component {
       children,
       input: { checked },
       check,
-      nomeInput
+      nomeInput,
     } = this.props;
     return (
       <div className="checkbox-field-component">

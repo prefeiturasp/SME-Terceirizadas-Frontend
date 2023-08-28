@@ -5,14 +5,14 @@ import { dataParaUTC } from "helpers/utilities";
 import { getDiasUteis } from "services/diasUteis.service";
 import {
   getMotivosInclusaoContinua,
-  getMotivosInclusaoNormal
+  getMotivosInclusaoNormal,
 } from "services/inclusaoDeAlimentacao";
 import { getMeusDados } from "services/perfil.service";
 import { getQuantidadeAlunosCEMEIporCEIEMEI } from "services/aluno.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import {
   abstraiPeriodosComAlunosMatriculados,
-  formatarPeriodos
+  formatarPeriodos,
 } from "components/InclusaoDeAlimentacao/helper";
 import { getQuantidadeAlunosEscola } from "services/escola.service";
 
@@ -21,9 +21,8 @@ export const Container = () => {
   const [motivosSimples, setMotivosSimples] = useState(null);
   const [motivosContinuos, setMotivosContinuos] = useState(null);
   const [periodos, setPeriodos] = useState(null);
-  const [periodosInclusaoContinua, setPeriodosInclusaoContinua] = useState(
-    null
-  );
+  const [periodosInclusaoContinua, setPeriodosInclusaoContinua] =
+    useState(null);
   const [vinculos, setVinculos] = useState(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
@@ -43,9 +42,9 @@ export const Container = () => {
       );
       const vinculos = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
       if (vinculos.status === HTTP_STATUS.OK) {
-        periodos_.map(periodo => {
+        periodos_.map((periodo) => {
           return (periodo.tipos_alimentacao = vinculos.data.results.find(
-            v => v.periodo_escolar.nome === periodo.nome
+            (v) => v.periodo_escolar.nome === periodo.nome
           ).tipos_alimentacao);
         });
         setPeriodosInclusaoContinua(
@@ -71,7 +70,7 @@ export const Container = () => {
       setPeriodos(response.data);
     }
   };
-  const getVinculosTipoAlimentacaoPorEscolaAsync = async escola => {
+  const getVinculosTipoAlimentacaoPorEscolaAsync = async (escola) => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola.uuid);
     if (response.status === HTTP_STATUS.OK) {
       setVinculos(response.data.results);

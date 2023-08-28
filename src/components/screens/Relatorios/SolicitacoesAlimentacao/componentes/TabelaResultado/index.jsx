@@ -20,7 +20,7 @@ export const TabelaResultado = ({ ...props }) => {
     AUTORIZADOS: "Data de Autorização",
     CANCELADOS: "Data de Cancelamento",
     NEGADOS: "Data de Negação",
-    RECEBIDAS: "Data de Autorização"
+    RECEBIDAS: "Data de Autorização",
   };
 
   const mapComponentePorSolicitacao = (solicitacao, item, index) => {
@@ -232,7 +232,7 @@ export const TabelaResultado = ({ ...props }) => {
           <tbody>
             {resultadoPaginado.map((item, index) => {
               const solicitacao = solicitacoes.find(
-                solicitacao => solicitacao.uuid === item.uuid
+                (solicitacao) => solicitacao.uuid === item.uuid
               );
               const componente = mapComponentePorSolicitacao(
                 solicitacao,

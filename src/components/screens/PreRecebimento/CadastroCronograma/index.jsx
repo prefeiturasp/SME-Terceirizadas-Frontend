@@ -6,7 +6,7 @@ import moment from "moment";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Field, Form, FormSpy } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -18,7 +18,7 @@ import {
   editaCronograma,
   getCronograma,
   getRascunhos,
-  getUnidadesDeMedidaLogistica
+  getUnidadesDeMedidaLogistica,
 } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { useHistory } from "react-router-dom";
@@ -75,17 +75,17 @@ export default () => {
     setShowModal(true);
   };
 
-  const getEmpresaFiltrado = empresa => {
+  const getEmpresaFiltrado = (empresa) => {
     if (empresa) {
       const reg = new RegExp(empresa, "iu");
-      return fornecedores.filter(a => reg.test(a.value));
+      return fornecedores.filter((a) => reg.test(a.value));
     }
     return fornecedores;
   };
 
-  const toggleCollapse = index => {
+  const toggleCollapse = (index) => {
     setCollapse({
-      [index]: !collapse[index]
+      [index]: !collapse[index],
     });
   };
 
@@ -110,12 +110,12 @@ export default () => {
           )
         : undefined,
       quantidade: values[`quantidade_${index}`],
-      total_embalagens: values[`total_embalagens_${index}`]
+      total_embalagens: values[`total_embalagens_${index}`],
     }));
 
     payload.programacoes_de_recebimento = recebimentos.map((etapa, index) => ({
       data_programada: values[`data_recebimento_${index}`],
-      tipo_carga: values[`tipo_recebimento_${index}`]
+      tipo_carga: values[`tipo_recebimento_${index}`],
     }));
     return payload;
   };
@@ -157,10 +157,10 @@ export default () => {
     }
   };
 
-  const validaRascunho = values => {
+  const validaRascunho = (values) => {
     return !values.contrato;
   };
-  const lengthOrUnderfined = value => {
+  const lengthOrUnderfined = (value) => {
     let valor = value ? value.toString() : undefined;
     return valor && valor.length > 0 ? valor : undefined;
   };
@@ -169,7 +169,8 @@ export default () => {
     try {
       const responseCronograma = await getCronograma(uuidCronograma);
       if (responseCronograma.status === HTTP_STATUS.OK) {
-        const programacoes_de_recebimento = responseCronograma.data.programacoes_de_recebimento.reverse();
+        const programacoes_de_recebimento =
+          responseCronograma.data.programacoes_de_recebimento.reverse();
         setEtapas(responseCronograma.data.etapas);
         setRecebimentos(programacoes_de_recebimento);
 
@@ -238,33 +239,33 @@ export default () => {
 
   const getOpcoesContrato = () => {
     if (!empresaSelecionada) return [];
-    return empresaSelecionada.contratos.map(contrato => ({
+    return empresaSelecionada.contratos.map((contrato) => ({
       nome: contrato.numero,
-      uuid: contrato.uuid
+      uuid: contrato.uuid,
     }));
   };
 
-  const selecionaEmpresa = uuid_empresa => {
+  const selecionaEmpresa = (uuid_empresa) => {
     if (!empresaSelecionada || empresaSelecionada.uuid !== uuid_empresa) {
-      let fornecedor = fornecedores.find(f => f.value === uuid_empresa);
+      let fornecedor = fornecedores.find((f) => f.value === uuid_empresa);
       setEmpresaSelecionada(fornecedor);
     }
   };
 
-  const selecionaContrato = values => {
+  const selecionaContrato = (values) => {
     let uuid_contrato = values.contrato;
     if (!contratoSelecionado || contratoSelecionado.uuid !== uuid_contrato) {
       let contrato = empresaSelecionada.contratos.find(
-        c => c.uuid === uuid_contrato
+        (c) => c.uuid === uuid_contrato
       );
       values.numero_processo = contrato.processo;
       setContratoSelecionado(contrato);
     }
   };
 
-  const selecionaUnidade = uuid_unidade => {
+  const selecionaUnidade = (uuid_unidade) => {
     if (!unidadeSelecionada || unidadeSelecionada.uuid !== uuid_unidade) {
-      let unidade = unidadesMedidaOptions.find(u => u.uuid === uuid_unidade);
+      let unidade = unidadesMedidaOptions.find((u) => u.uuid === uuid_unidade);
       setUnidadeSelecionada(unidade);
     }
   };
@@ -284,9 +285,9 @@ export default () => {
     const buscaArmazens = async () => {
       const response = await getNomesDistribuidores();
       setArmazens(
-        response.data.results.map(armazem => ({
+        response.data.results.map((armazem) => ({
           nome: armazem.nome_fantasia,
-          uuid: armazem.uuid
+          uuid: armazem.uuid,
         }))
       );
     };
@@ -294,10 +295,10 @@ export default () => {
     const buscaFornecedores = async () => {
       const response = await getEmpresasCronograma();
       setFornecedores(
-        response.data.results.map(forn => ({
+        response.data.results.map((forn) => ({
           uuid: forn.uuid,
           value: forn.nome_fantasia,
-          contratos: forn.contratos
+          contratos: forn.contratos,
         }))
       );
     };
@@ -324,7 +325,7 @@ export default () => {
     setValoresIniciais(false);
   }
 
-  const onChangeFormSpy = async changes => {
+  const onChangeFormSpy = async (changes) => {
     if (changes.values.empresa) selecionaEmpresa(changes.values.empresa);
     if (changes.values.contrato) selecionaContrato(changes.values);
     if (changes.values.unidade_medida)
@@ -342,14 +343,14 @@ export default () => {
             initialValues={{
               ...cronograma,
               ...etapasValues,
-              ...recebimentosValues
+              ...recebimentosValues,
             }}
             validate={() => {}}
             render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
                 <FormSpy
                   subscription={{ values: true, active: true, valid: true }}
-                  onChange={changes => onChangeFormSpy(changes)}
+                  onChange={(changes) => onChangeFormSpy(changes)}
                 />
                 <div className="row">
                   <div className="col-5">
@@ -496,16 +497,16 @@ export default () => {
                                 options={[
                                   {
                                     uuid: "CAIXA",
-                                    nome: "Caixa"
+                                    nome: "Caixa",
                                   },
                                   {
                                     uuid: "FARDO",
-                                    nome: "Fardo"
+                                    nome: "Fardo",
                                   },
                                   {
                                     uuid: "TUBET",
-                                    nome: "Tubet"
-                                  }
+                                    nome: "Tubet",
+                                  },
                                 ]}
                                 label="Tipo de Embalagem"
                                 name="tipo_embalagem"
@@ -568,7 +569,7 @@ export default () => {
                     setShowModal(false);
                     setCarregando(false);
                   }}
-                  handleSim={password => {
+                  handleSim={(password) => {
                     values["password"] = password;
                     salvarCronograma(values, false);
                   }}

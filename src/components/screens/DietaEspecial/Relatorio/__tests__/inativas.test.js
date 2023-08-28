@@ -14,14 +14,14 @@ import {
   listaProtocolosLiberados,
   alimentos,
   solicitacoesDietaEspecial,
-  protocoloPadraoDietaEspecial
+  protocoloPadraoDietaEspecial,
 } from "../dados";
 import { API_URL } from "constants/config";
 
 const payload = {
   ...respostaApiCancelamentoporDataTermino(),
   status_solicitacao: "CODAE_AUTORIZADO",
-  ativo: false
+  ativo: false,
 };
 
 const server = setupServer(
@@ -68,8 +68,8 @@ test("Teste dietas inativas", async () => {
   const search = `?uuid=${payload.uuid}&ehInclusaoContinua=false&card=inativas`;
   Object.defineProperty(window, "location", {
     value: {
-      search: search
-    }
+      search: search,
+    },
   });
   render(<Relatorio visao={CODAE} />);
 

@@ -10,21 +10,21 @@ class Container extends Component {
       meusDados: null,
       tiposUnidadesEscolar: null,
       tiposDeAlimentacao: null,
-      periodosEscolares: null
+      periodosEscolares: null,
     };
   }
 
   componentDidMount() {
-    meusDados().then(response => {
+    meusDados().then((response) => {
       this.setState({
-        meusDados: response
+        meusDados: response,
       });
     });
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.tiposUnidadesEscolar === this.state.tiposUnidadesEscolar) {
-      getTiposUnidadeEscolar().then(response => {
+      getTiposUnidadeEscolar().then((response) => {
         const tiposUnidadesEscolar = response.data.results;
         this.setState({ tiposUnidadesEscolar });
       });

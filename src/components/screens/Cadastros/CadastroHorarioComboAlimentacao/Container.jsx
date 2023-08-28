@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { meusDados } from "../../../../services/perfil.service";
 import {
   getHorariosCombosPorEscola,
-  getVinculosTipoAlimentacaoPorEscola
+  getVinculosTipoAlimentacaoPorEscola,
 } from "../../../../services/cadastroTipoAlimentacao.service";
 import { montaVinculosDeHorariosInicial } from "./helper";
 
@@ -19,14 +19,14 @@ class Container extends Component {
       vinculosDeHorarios: null,
       uuidEscola: null,
       naoPermitido: false,
-      periodosEQuantidadeAlunos: null
+      periodosEQuantidadeAlunos: null,
     };
   }
 
   componentDidMount() {
-    meusDados().then(response => {
+    meusDados().then((response) => {
       this.setState({
-        meusDados: response
+        meusDados: response,
       });
     });
   }
@@ -38,7 +38,7 @@ class Container extends Component {
       horarioDosAlimentos,
       uuidEscola,
       vinculosDeHorarios,
-      periodosEQuantidadeAlunos
+      periodosEQuantidadeAlunos,
     } = this.state;
     if (meusDados !== prevState.meusDados) {
       const TipoUnidadeEscolar =
@@ -53,7 +53,7 @@ class Container extends Component {
       }
 
       this.setState({
-        uuidEscola: meusDados.vinculo_atual.instituicao.uuid
+        uuidEscola: meusDados.vinculo_atual.instituicao.uuid,
       });
     } else {
       if (
@@ -74,8 +74,8 @@ class Container extends Component {
     }
   }
 
-  buscaQuantidadeDosAlunosPorPeriodoEscolar = uuidEscola => {
-    getQuantidaDeAlunosPorPeriodoEEscola(uuidEscola).then(response => {
+  buscaQuantidadeDosAlunosPorPeriodoEscolar = (uuidEscola) => {
+    getQuantidaDeAlunosPorPeriodoEEscola(uuidEscola).then((response) => {
       let { periodosEQuantidadeAlunos } = this.state;
       if (!periodosEQuantidadeAlunos) {
         this.setState({ periodosEQuantidadeAlunos: response.results });
@@ -83,18 +83,18 @@ class Container extends Component {
     });
   };
 
-  buscaVinculosTipoAlimentacaoPorUnidadeEscolar = uuidEscola => {
-    let vinculosPeriodoEscolarUnidadeEscolar = this.state
-      .vinculosPeriodoEscolarUnidadeEscolar;
-    getVinculosTipoAlimentacaoPorEscola(uuidEscola).then(response => {
+  buscaVinculosTipoAlimentacaoPorUnidadeEscolar = (uuidEscola) => {
+    let vinculosPeriodoEscolarUnidadeEscolar =
+      this.state.vinculosPeriodoEscolarUnidadeEscolar;
+    getVinculosTipoAlimentacaoPorEscola(uuidEscola).then((response) => {
       vinculosPeriodoEscolarUnidadeEscolar = response.data.results;
       this.setState({ vinculosPeriodoEscolarUnidadeEscolar });
     });
   };
 
-  buscaHorariosDosCombos = escolaUuid => {
+  buscaHorariosDosCombos = (escolaUuid) => {
     let horarioDosAlimentos = this.state.horarioDosAlimentos;
-    getHorariosCombosPorEscola(escolaUuid).then(response => {
+    getHorariosCombosPorEscola(escolaUuid).then((response) => {
       horarioDosAlimentos = response.results;
       this.setState({ horarioDosAlimentos });
     });

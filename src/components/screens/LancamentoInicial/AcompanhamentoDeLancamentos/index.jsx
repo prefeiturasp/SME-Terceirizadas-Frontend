@@ -5,7 +5,7 @@ import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import HTTP_STATUS from "http-status-codes";
 import {
   getDashboardMedicaoInicial,
-  getMesesAnosSolicitacoesMedicaoinicial
+  getMesesAnosSolicitacoesMedicaoinicial,
 } from "services/medicaoInicial/dashboard.service";
 import { CardMedicaoPorStatus } from "./components/CardMedicaoPorStatus";
 import "./style.scss";
@@ -15,7 +15,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Paginacao } from "components/Shareable/Paginacao";
 import { Field, Form } from "react-final-form";
@@ -32,14 +32,14 @@ import {
   usuarioEhMedicao,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaTerceirizadaDiretor
+  usuarioEhEscolaTerceirizadaDiretor,
 } from "helpers/utilities";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
 import {
   CONFERENCIA_DOS_LANCAMENTOS,
   DETALHAMENTO_DO_LANCAMENTO,
-  MEDICAO_INICIAL
+  MEDICAO_INICIAL,
 } from "configs/constants";
 import { required } from "helpers/fieldValidators";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
@@ -69,10 +69,8 @@ export const AcompanhamentoDeLancamentos = () => {
   const [loading, setLoading] = useState(true);
   const [loadingComFiltros, setLoadingComFiltros] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [
-    exibirModalCentralDownloads,
-    setExibirModalCentralDownloads
-  ] = useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
 
   const PAGE_SIZE = 10;
   const LOADING =
@@ -95,14 +93,14 @@ export const AcompanhamentoDeLancamentos = () => {
         let NovoDashboardResults = [...dashboardResults];
         if (usuarioEhEscolaTerceirizadaQualquerPerfil())
           NovoDashboardResults = NovoDashboardResults.filter(
-            medicoes => medicoes.status !== "TODOS_OS_LANCAMENTOS"
+            (medicoes) => medicoes.status !== "TODOS_OS_LANCAMENTOS"
           );
         if (!dadosDashboard || (diretoriaRegional && !params.mes_ano))
           setDadosDashboard(NovoDashboardResults);
       }
       if (statusSelecionado) {
         setResultados(
-          response.data.results.find(res => res.status === statusSelecionado)
+          response.data.results.find((res) => res.status === statusSelecionado)
         );
       }
     } else {
@@ -156,7 +154,7 @@ export const AcompanhamentoDeLancamentos = () => {
       const getLotesAsync = async () => {
         setCarregandoLotes(true);
         const response = await getLotesSimples({
-          diretoria_regional__uuid: uuid
+          diretoria_regional__uuid: uuid,
         });
         if (response.status === HTTP_STATUS.OK) {
           setLotes(response.data.results);
@@ -171,7 +169,9 @@ export const AcompanhamentoDeLancamentos = () => {
         const response = await getEscolasTrecTotal({ dre: uuid });
         if (response.status === HTTP_STATUS.OK) {
           setNomesEscolas(
-            response.data.map(escola => `${escola.codigo_eol} - ${escola.nome}`)
+            response.data.map(
+              (escola) => `${escola.codigo_eol} - ${escola.nome}`
+            )
           );
         } else {
           setErroAPI("Erro ao carregar escolas. Tente novamente mais tarde.");
@@ -187,7 +187,7 @@ export const AcompanhamentoDeLancamentos = () => {
     }
   }, [meusDados, diretoriaRegional]);
 
-  const onPageChanged = async page => {
+  const onPageChanged = async (page) => {
     setLoadingComFiltros(true);
     const params = { limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE };
     setCurrentPage(page);
@@ -195,13 +195,13 @@ export const AcompanhamentoDeLancamentos = () => {
     setLoadingComFiltros(false);
   };
 
-  const getNomesItemsFiltrado = value => {
+  const getNomesItemsFiltrado = (value) => {
     if (value) {
       let value_ = value;
       if (localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA) {
         value_ = value[0];
       }
-      return nomesEscolas.filter(a => a.includes(value_.toUpperCase()));
+      return nomesEscolas.filter((a) => a.includes(value_.toUpperCase()));
     }
     return [];
   };
@@ -210,14 +210,14 @@ export const AcompanhamentoDeLancamentos = () => {
     const response = await getDiretoriaregionalSimplissima();
     if (response.status === HTTP_STATUS.OK) {
       const { Option } = SelectAntd;
-      const dres = formatarOpcoesDRE(response.data.results).map(dre => {
+      const dres = formatarOpcoesDRE(response.data.results).map((dre) => {
         return <Option key={dre.value}>{dre.label}</Option>;
       });
       setDiretoriasRegionais(
         [
           <Option value="" key={0} hidden>
             Selecione a DRE para visualizar os resultados
-          </Option>
+          </Option>,
         ].concat(dres)
       );
     } else {
@@ -225,12 +225,12 @@ export const AcompanhamentoDeLancamentos = () => {
     }
   };
 
-  const onSubmit = values => {
+  const onSubmit = (values) => {
     setCurrentPage(1);
     getDashboardMedicaoInicialAsync({ status: statusSelecionado, ...values });
   };
 
-  const resetForm = form => {
+  const resetForm = (form) => {
     let diretoria_regional = form.getFieldState(
       "diretoria_regional" || undefined
     );
@@ -253,21 +253,21 @@ export const AcompanhamentoDeLancamentos = () => {
         search: `mes=${mes}&ano=${ano}`,
         state: {
           veioDoAcompanhamentoDeLancamentos: true,
-          status
-        }
+          status,
+        },
       });
     } else {
       history.push({
         pathname: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
         search: `uuid=${uuidSolicitacaoMedicao}`,
         state: {
-          escolaUuid: escolaUuid
-        }
+          escolaUuid: escolaUuid,
+        },
       });
     }
   };
 
-  const handleClickDownload = async uuidSolicitacaoMedicao => {
+  const handleClickDownload = async (uuidSolicitacaoMedicao) => {
     const response = await relatorioMedicaoInicialPDF(uuidSolicitacaoMedicao);
     if (response.status === HTTP_STATUS.OK) {
       setExibirModalCentralDownloads(true);
@@ -298,7 +298,7 @@ export const AcompanhamentoDeLancamentos = () => {
                         component={ASelect}
                         showSearch
                         className="seletor-dre"
-                        onChange={value => {
+                        onChange={(value) => {
                           form.change(`diretoria_regional`, value || undefined);
                           setDiretoriaRegional(value || undefined);
                           setStatusSelecionado(null);
@@ -342,8 +342,9 @@ export const AcompanhamentoDeLancamentos = () => {
                                   ? MEDICAO_CARD_NOME_POR_STATUS_DRE[
                                       dadosPorStatus.status
                                     ].cor
-                                  : `cinza ${dadosPorStatus.total &&
-                                      "cursor-pointer"}`
+                                  : `cinza ${
+                                      dadosPorStatus.total && "cursor-pointer"
+                                    }`
                               }
                             >
                               {
@@ -376,10 +377,10 @@ export const AcompanhamentoDeLancamentos = () => {
                                 name="mes_ano"
                                 label="Mês de referência"
                                 options={[
-                                  { nome: "Selecione o mês", uuid: "" }
+                                  { nome: "Selecione o mês", uuid: "" },
                                 ].concat(
                                   mesesAnos
-                                    .filter(mesAno =>
+                                    .filter((mesAno) =>
                                       statusSelecionado !==
                                       "TODOS_OS_LANCAMENTOS"
                                         ? mesAno.status.includes(
@@ -387,11 +388,11 @@ export const AcompanhamentoDeLancamentos = () => {
                                           )
                                         : true
                                     )
-                                    .map(mesAno => ({
+                                    .map((mesAno) => ({
                                       nome: `${
                                         MESES[parseInt(mesAno.mes) - 1]
                                       } - ${mesAno.ano}`,
-                                      uuid: `${mesAno.mes}_${mesAno.ano}`
+                                      uuid: `${mesAno.mes}_${mesAno.ano}`,
                                     }))
                                 )}
                                 naoDesabilitarPrimeiraOpcao
@@ -405,11 +406,11 @@ export const AcompanhamentoDeLancamentos = () => {
                                 component={StatefulMultiSelect}
                                 name="lotes"
                                 selected={values.lotes_selecionados || []}
-                                options={lotes.map(lote => ({
+                                options={lotes.map((lote) => ({
                                   label: lote.nome,
-                                  value: lote.uuid
+                                  value: lote.uuid,
                                 }))}
-                                onSelectedChanged={values_ => {
+                                onSelectedChanged={(values_) => {
                                   form.change(`lotes_selecionados`, values_);
                                 }}
                                 disableSearch={true}
@@ -417,7 +418,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                   selectSomeItems: "Selecione um ou mais lotes",
                                   allItemsAreSelected:
                                     "Todos os lotes estão selecionados",
-                                  selectAll: "Todos"
+                                  selectAll: "Todos",
                                 }}
                               />
                             </div>
@@ -427,11 +428,11 @@ export const AcompanhamentoDeLancamentos = () => {
                                 name="tipo_unidade"
                                 label="Tipo de unidade"
                                 options={[
-                                  { nome: "Selecione o tipo de UE", uuid: "" }
+                                  { nome: "Selecione o tipo de UE", uuid: "" },
                                 ].concat(
-                                  tiposUnidades.map(tipoUnidade => ({
+                                  tiposUnidades.map((tipoUnidade) => ({
                                     nome: tipoUnidade.iniciais,
-                                    uuid: tipoUnidade.uuid
+                                    uuid: tipoUnidade.uuid,
                                   }))
                                 )}
                                 naoDesabilitarPrimeiraOpcao
@@ -540,9 +541,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                         <td className="col-2 text-center">
                                           <Botao
                                             type={BUTTON_TYPE.BUTTON}
-                                            style={`${
-                                              BUTTON_STYLE.GREEN_OUTLINE
-                                            } no-border`}
+                                            style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
                                             icon={BUTTON_ICON.EYE}
                                             onClick={() =>
                                               handleClickVisualizar(
@@ -556,9 +555,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                           />
                                           <Botao
                                             type={BUTTON_TYPE.BUTTON}
-                                            style={`${
-                                              BUTTON_STYLE.GREEN_OUTLINE
-                                            } no-border`}
+                                            style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
                                             icon={BUTTON_ICON.DOWNLOAD}
                                             onClick={() =>
                                               handleClickDownload(dado.uuid)
@@ -571,7 +568,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                 </tbody>
                               </table>
                               <Paginacao
-                                onChange={page => onPageChanged(page)}
+                                onChange={(page) => onPageChanged(page)}
                                 total={resultados.total}
                                 pageSize={PAGE_SIZE}
                                 current={currentPage}

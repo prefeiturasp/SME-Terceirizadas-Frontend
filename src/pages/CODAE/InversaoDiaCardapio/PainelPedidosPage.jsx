@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 
 const atual = {
   href: `/${CODAE}/${INVERSAO_CARDAPIO}`,
-  titulo: "Inversão de dia de Cardápio - Pendente Autorização"
+  titulo: "Inversão de dia de Cardápio - Pendente Autorização",
 };
 
 export default () => {

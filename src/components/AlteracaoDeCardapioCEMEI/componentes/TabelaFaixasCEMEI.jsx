@@ -19,15 +19,15 @@ export const TabelaFaixasCEMEI = ({
   alimentosEMEI,
   substitutosCEI,
   substitutosEMEI,
-  ehMotivoRPL
+  ehMotivoRPL,
 }) => {
   const periodoCEI = vinculos.find(
-    vinculo =>
+    (vinculo) =>
       vinculo.tipo_unidade_escolar.iniciais === "CEI DIRET" &&
       vinculo.periodo_escolar.nome === periodo.nome
   );
   const periodoEMEI = vinculos.find(
-    vinculo =>
+    (vinculo) =>
       vinculo.tipo_unidade_escolar.iniciais === "EMEI" &&
       vinculo.periodo_escolar.nome === periodo.nome
   );
@@ -50,7 +50,7 @@ export const TabelaFaixasCEMEI = ({
                 margin: "1% 0px",
                 width: "100%",
                 padding: "8px 15px",
-                height: "40px"
+                height: "40px",
               }}
             >
               <Field
@@ -110,7 +110,7 @@ export const TabelaFaixasCEMEI = ({
                     name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
                     options={agregarDefault(
                       alimentosCEI.find(
-                        v => v.periodo_escolar.nome === periodo.nome
+                        (v) => v.periodo_escolar.nome === periodo.nome
                       ).tipos_alimentacao
                     )}
                     naoDesabilitarPrimeiraOpcao
@@ -126,7 +126,7 @@ export const TabelaFaixasCEMEI = ({
                     multiple
                     options={formatarParaMultiselect(
                       alimentosCEI.find(
-                        v => v.periodo_escolar.nome === periodo.nome
+                        (v) => v.periodo_escolar.nome === periodo.nome
                       ).tipos_alimentacao
                     )}
                     nomeDoItemNoPlural="Alimentos"
@@ -136,7 +136,7 @@ export const TabelaFaixasCEMEI = ({
                 <OnChange
                   name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
                 >
-                  {async value => {
+                  {async (value) => {
                     setAlimentoSelecionadoCEI(value);
                   }}
                 </OnChange>
@@ -151,9 +151,9 @@ export const TabelaFaixasCEMEI = ({
                     multiple
                     options={formatarParaMultiselect(
                       substitutosCEI
-                        .find(v => v.periodo_escolar.nome === periodo.nome)
+                        .find((v) => v.periodo_escolar.nome === periodo.nome)
                         .tipos_alimentacao.filter(
-                          ta => !alimentoSelecionadoCEI.includes(ta.uuid)
+                          (ta) => !alimentoSelecionadoCEI.includes(ta.uuid)
                         )
                     )}
                     nomeDoItemNoPlural="Substitutos"
@@ -166,9 +166,9 @@ export const TabelaFaixasCEMEI = ({
                     component={Select}
                     options={agregarDefault(
                       substitutosCEI
-                        .find(v => v.periodo_escolar.nome === periodo.nome)
+                        .find((v) => v.periodo_escolar.nome === periodo.nome)
                         .tipos_alimentacao.filter(
-                          ta => !alimentoSelecionadoCEI.includes(ta.uuid)
+                          (ta) => !alimentoSelecionadoCEI.includes(ta.uuid)
                         )
                     )}
                     name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_para]`}
@@ -281,7 +281,7 @@ export const TabelaFaixasCEMEI = ({
                   multiple
                   options={formatarParaMultiselect(
                     alimentosEMEI.find(
-                      v => v.periodo_escolar.nome === periodo.nome
+                      (v) => v.periodo_escolar.nome === periodo.nome
                     ).tipos_alimentacao
                   )}
                   nomeDoItemNoPlural="Alimentos"
@@ -290,7 +290,7 @@ export const TabelaFaixasCEMEI = ({
                 <OnChange
                   name={`substituicoes[${periodoIndice}][emei][tipos_alimentacao_de]`}
                 >
-                  {async value => {
+                  {async (value) => {
                     setAlimentoSelecionadoEMEI(value);
                   }}
                 </OnChange>
@@ -304,9 +304,9 @@ export const TabelaFaixasCEMEI = ({
                   multiple
                   options={formatarParaMultiselect(
                     substitutosEMEI
-                      .find(v => v.periodo_escolar.nome === periodo.nome)
+                      .find((v) => v.periodo_escolar.nome === periodo.nome)
                       .tipos_alimentacao.filter(
-                        ta => !alimentoSelecionadoEMEI.includes(ta.uuid)
+                        (ta) => !alimentoSelecionadoEMEI.includes(ta.uuid)
                       )
                   )}
                   nomeDoItemNoPlural="Substitutos"
@@ -344,7 +344,7 @@ export const TabelaFaixasCEMEI = ({
                             <OnChange
                               name={`substituicoes[${periodoIndice}][emei][quantitade_alunos]`}
                             >
-                              {async value => {
+                              {async (value) => {
                                 form.change(
                                   `substituicoes[${periodoIndice}][emei][matriculados_quando_criado]`,
                                   parseInt(periodo.EMEI)

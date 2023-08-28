@@ -8,7 +8,7 @@ import "./style.scss";
 import {
   usuarioEhLogistica,
   usuarioEhEmpresaDistribuidora,
-  usuarioEhEscola
+  usuarioEhEscola,
 } from "helpers/utilities";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
@@ -25,13 +25,12 @@ export const Page = ({ ...props }) => {
     botaoVoltar,
     voltarPara,
     temModalVoltar,
-    textoModalVoltar
+    textoModalVoltar,
   } = props;
 
   const [nome, setNome] = useState(null);
-  const [nomeEscolaOuTerceirizada, setNomeEscolaOuTerceirizada] = useState(
-    null
-  );
+  const [nomeEscolaOuTerceirizada, setNomeEscolaOuTerceirizada] =
+    useState(null);
   const [toggled, setToggled] = useState(false);
   const [modalVoltar, setModalVoltar] = useState(false);
 
@@ -39,7 +38,7 @@ export const Page = ({ ...props }) => {
 
   useEffect(() => {
     if (!localStorage.getItem("meusDados")) {
-      getMeusDados().then(meusDados => {
+      getMeusDados().then((meusDados) => {
         setMeusDados(meusDados);
         localStorage.setItem("nome", JSON.stringify(meusDados.nome));
         if (meusDados.tipo_usuario === "dieta_especial") {
@@ -102,8 +101,9 @@ export const Page = ({ ...props }) => {
       {mostrarModalCestaBasica() && <ModalCestasBasicas />}
       <div id="content-wrapper" className="pt-5">
         <div
-          className={`content-wrapper-div ${toggled &&
-            "toggled"} d-flex flex-column p-4 mt-5`}
+          className={`content-wrapper-div ${
+            toggled && "toggled"
+          } d-flex flex-column p-4 mt-5`}
         >
           {children.length ? children[0] : children}
           <h1 className="page-title">

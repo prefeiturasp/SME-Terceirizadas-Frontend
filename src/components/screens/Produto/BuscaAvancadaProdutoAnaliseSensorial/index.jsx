@@ -22,7 +22,7 @@ const BuscaAvancadaProdutoAnaliseSensorial = () => {
       const params = gerarParametrosConsulta({
         ...filtros,
         page: 1,
-        page_size: PAGE_SIZE
+        page_size: PAGE_SIZE,
       });
       const response = await getProdutosRelatorioAnaliseSensorial(params);
       setProdutos(response.data.results);
@@ -33,7 +33,7 @@ const BuscaAvancadaProdutoAnaliseSensorial = () => {
     fetchData();
   }, [filtros]);
 
-  const onSubmitForm = formValues => {
+  const onSubmitForm = (formValues) => {
     setFiltros({ ...formValues });
   };
 

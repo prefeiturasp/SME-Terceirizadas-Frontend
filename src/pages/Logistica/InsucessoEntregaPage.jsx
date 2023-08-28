@@ -7,14 +7,14 @@ import InsucessoEntrega from "components/screens/Logistica/InsucessoEntrega";
 
 const atual = {
   href: `/${LOGISTICA}/${INSUCESSO_ENTREGA}`,
-  titulo: "Insucesso de Entrega"
+  titulo: "Insucesso de Entrega",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
-  }
+    titulo: "Abastecimento",
+  },
 ];
 
 export default () => (

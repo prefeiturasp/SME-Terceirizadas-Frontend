@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export const gerarLabelPorFiltro = filtros => {
+export const gerarLabelPorFiltro = (filtros) => {
   let qtdeFiltros = 0;
 
   for (let valor of Object.values(filtros)) {

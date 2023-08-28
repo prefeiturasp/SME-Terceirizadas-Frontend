@@ -13,14 +13,14 @@ import {
   usuarioEhCODAENutriManifestacao,
   usuarioEhDRE,
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada
+  usuarioEhEscolaTerceirizada,
 } from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { useHistory } from "react-router-dom";
@@ -30,7 +30,7 @@ import {
   getNomesUnicosFabricantes,
   getNomesUnicosEditais,
   getNomesTerceirizadas,
-  getEditaisDre
+  getEditaisDre,
 } from "services/produto.service";
 import { SelectWithHideOptions } from "../SelectWithHideOptions";
 import { STATUS_RECLAMACAO_PRODUTO } from "constants/shared";
@@ -38,10 +38,10 @@ import { required } from "helpers/fieldValidators";
 
 const tiposProdutos = [
   { nome: "Comum", key: "Comum" },
-  { nome: "Dieta Especial", key: "Dieta especial" }
+  { nome: "Dieta Especial", key: "Dieta especial" },
 ];
 const { Option } = SelectAntd;
-const listaTipos = tiposProdutos.map(tipo => {
+const listaTipos = tiposProdutos.map((tipo) => {
   return <Option key={tipo.key}>{tipo.nome}</Option>;
 });
 
@@ -54,7 +54,7 @@ const initialState = {
   tipos: listaTipos,
   editais: [],
   status: "",
-  inicio: ""
+  inicio: "",
 };
 
 const exibirFiltroNomeTerceirizada =
@@ -76,7 +76,7 @@ function reducer(state, { type: actionType, payload }) {
         return { ...state, [payload.filtro]: [] };
       }
       const reg = new RegExp(payload.searchText, "i");
-      const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
+      const filtrado = state.dados[payload.filtro].filter((el) => reg.test(el));
       return { ...state, [payload.filtro]: filtrado };
     }
     case "resetar":
@@ -94,7 +94,7 @@ export const FormBuscaProduto = ({
   naoExibirLimparFiltros,
   onLimparDados,
   valoresIniciais,
-  setErroAPI
+  setErroAPI,
 }) => {
   const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -106,7 +106,7 @@ export const FormBuscaProduto = ({
       const response = await getEditaisDre();
       if (response.status === HTTP_STATUS.OK) {
         setEditaisDRE(
-          response.data.results.map(element => {
+          response.data.results.map((element) => {
             return { value: element.numero, label: element.numero };
           })
         );
@@ -121,14 +121,14 @@ export const FormBuscaProduto = ({
       getNomesUnicosProdutos(),
       getNomesUnicosMarcas(),
       getNomesUnicosFabricantes(),
-      getNomesUnicosEditais()
+      getNomesUnicosEditais(),
     ];
     if (!naoExibirRowTerceirizadas) endpoints.push(getNomesTerceirizadas());
     async function fetchData() {
       Promise.all(endpoints).then(
         ([produtos, marcas, fabricantes, editais, terceirizadas]) => {
           const nomesTerceirizadas = terceirizadas
-            ? terceirizadas.data.results.map(el => el.nome_fantasia)
+            ? terceirizadas.data.results.map((el) => el.nome_fantasia)
             : [];
           dispatch({
             type: "popularDados",
@@ -138,8 +138,8 @@ export const FormBuscaProduto = ({
               fabricantes: fabricantes.data.results,
               terceirizadas: nomesTerceirizadas,
               editais: editais.data.results,
-              status: STATUS_RECLAMACAO_PRODUTO
-            }
+              status: STATUS_RECLAMACAO_PRODUTO,
+            },
           });
           setLoading(false);
         }
@@ -154,8 +154,8 @@ export const FormBuscaProduto = ({
       type: "atualizarFiltro",
       payload: {
         filtro,
-        searchText
-      }
+        searchText,
+      },
     });
   };
 
@@ -177,7 +177,7 @@ export const FormBuscaProduto = ({
                       component={AutoCompleteField}
                       dataSource={state.terceirizadas}
                       label="Nome da terceirizada"
-                      onSearch={v => onSearch("terceirizadas", v)}
+                      onSearch={(v) => onSearch("terceirizadas", v)}
                       name="nome_terceirizada"
                       disabled={
                         values.agrupado_por_nome_e_marca ||
@@ -196,7 +196,7 @@ export const FormBuscaProduto = ({
                           dataSource={state.editais}
                           label="Edital"
                           className="input-busca-produto"
-                          onSearch={v => onSearch("editais", v)}
+                          onSearch={(v) => onSearch("editais", v)}
                           name="nome_edital"
                           required
                           validate={required}
@@ -289,7 +289,7 @@ export const FormBuscaProduto = ({
                           component={AutoCompleteField}
                           dataSource={state.editais}
                           className="input-busca-produto mt-1"
-                          onSearch={v => onSearch("editais", v)}
+                          onSearch={(v) => onSearch("editais", v)}
                           name="nome_edital"
                           required
                           validate={required}
@@ -340,7 +340,7 @@ export const FormBuscaProduto = ({
                 dataSource={state.marcas}
                 className="input-busca-produto"
                 label="Marca do Produto"
-                onSearch={v => onSearch("marcas", v)}
+                onSearch={(v) => onSearch("marcas", v)}
                 name="nome_marca"
               />
             </div>
@@ -349,7 +349,7 @@ export const FormBuscaProduto = ({
                 component={AutoCompleteField}
                 dataSource={state.fabricantes}
                 label="Fabricante do Produto"
-                onSearch={v => onSearch("fabricantes", v)}
+                onSearch={(v) => onSearch("fabricantes", v)}
                 name="nome_fabricante"
                 disabled={values.agrupado_por_nome_e_marca}
               />
@@ -364,7 +364,7 @@ export const FormBuscaProduto = ({
                   mode="default"
                   options={STATUS_RECLAMACAO_PRODUTO}
                   name="status"
-                  handleChange={v => onSearch("status", v)}
+                  handleChange={(v) => onSearch("status", v)}
                   selectedItems={state.status}
                 />
               </div>
@@ -375,7 +375,7 @@ export const FormBuscaProduto = ({
                 dataSource={state.produtos}
                 label="Nome do Produto"
                 className="input-busca-produto"
-                onSearch={v => onSearch("produtos", v)}
+                onSearch={(v) => onSearch("produtos", v)}
                 name="nome_produto"
               />
             </div>

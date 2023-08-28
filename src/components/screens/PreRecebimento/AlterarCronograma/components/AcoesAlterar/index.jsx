@@ -3,14 +3,14 @@ import { useHistory } from "react-router-dom";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   usuarioEhCronograma,
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
-  usuarioEhEmpresaFornecedor
+  usuarioEhEmpresaFornecedor,
 } from "helpers/utilities";
 import ModalEnviarSolicitacao from "../Modals/ModalEnviarSolicitacao";
 import ModalAnalise from "../Modals/ModalAnalise";
@@ -23,7 +23,7 @@ export default ({
   podeSubmeter,
   solicitacaoAlteracaoCronograma,
   disabledDinutre,
-  disabledDilog
+  disabledDilog,
 }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ export default ({
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const enviaAnaliseCronograma = async values => {
+  const enviaAnaliseCronograma = async (values) => {
     setLoading(true);
     await handleSubmitCronograma(values);
     setLoading(false);

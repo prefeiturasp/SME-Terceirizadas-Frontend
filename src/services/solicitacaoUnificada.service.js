@@ -6,28 +6,28 @@ import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 const URL_SOLICITACAO_UNIFICADA = `${API_URL}/solicitacoes-kit-lanche-unificada`;
 const MOTIVOS_UNIFICADA = `${API_URL}/motivos-solicitacao-unificada`;
 
-export const criarSolicitacaoUnificada = payload => {
+export const criarSolicitacaoUnificada = (payload) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
     body: payload,
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -38,35 +38,35 @@ export const atualizarSolicitacaoUnificada = (uuid, payload) => {
   return fetch(url, {
     method: "PUT",
     body: payload,
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const inicioPedido = uuid => {
+export const inicioPedido = (uuid) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -74,34 +74,34 @@ export const inicioPedido = uuid => {
 export const solicitacoesUnificadasSalvas = async () => {
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   const url = `${URL_SOLICITACAO_UNIFICADA}/${PEDIDOS.MEUS}/`;
   return await fetch(url, OBJ_REQUEST)
-    .then(response => {
+    .then((response) => {
       return response.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("Error Kit Lanche: ", error);
       return {};
     });
 };
 
-export const removerSolicitacaoUnificada = async uuid => {
+export const removerSolicitacaoUnificada = async (uuid) => {
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "DELETE"
+    method: "DELETE",
   };
   let status = 0;
   return await fetch(`${URL_SOLICITACAO_UNIFICADA}/${uuid}/`, OBJ_REQUEST)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return { data: error, status: status };
     });
 };
@@ -110,32 +110,32 @@ export const motivosSolicitacaoUnificada = () => {
   const url = `${MOTIVOS_UNIFICADA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
 
-export const getSolicitacaoUnificada = uuid => {
+export const getSolicitacaoUnificada = (uuid) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -144,26 +144,24 @@ export const getCODAEPedidosSolicitacoesUnificadas = async (
   filtroAplicado,
   paramsFromPrevPage
 ) => {
-  const url = `${URL_SOLICITACAO_UNIFICADA}/${
-    PEDIDOS.CODAE
-  }/${filtroAplicado}/`;
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
   const response = await axios.get(url, { params: paramsFromPrevPage });
   return response.data;
 };
 
-export const getTerceirizadaPedidosSolicitacoesUnificadas = filtroAplicado => {
-  const url = `${URL_SOLICITACAO_UNIFICADA}/${
-    PEDIDOS.TERCEIRIZADA
-  }/${filtroAplicado}/`;
+export const getTerceirizadaPedidosSolicitacoesUnificadas = (
+  filtroAplicado
+) => {
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
@@ -177,16 +175,16 @@ export const CODAEAutorizaPedidoKitLancheUnificado = (
   return fetch(url, {
     method: "PATCH",
     body: JSON.stringify(justificativa),
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -214,23 +212,21 @@ export const CODAEquestionaSolicitacaoUnificada = async (uuid, payload) => {
   }
 };
 
-export const TerceirizadaTomaCienciaSolicitacoUnificada = uuid => {
-  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${
-    FLUXO.TERCEIRIZADA_TOMA_CIENCIA
-  }/`;
+export const TerceirizadaTomaCienciaSolicitacoUnificada = (uuid) => {
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.TERCEIRIZADA_TOMA_CIENCIA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -239,13 +235,11 @@ export const terceirizadaRespondeQuestionamentoSolitacaoUnificada = async (
   uuid,
   payload
 ) => {
-  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${
-    FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
-  }/`;
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH",
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   };
   let status = 0;
   try {
@@ -268,7 +262,7 @@ export const cancelaKitLancheUnificadoDre = async (
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH",
-    body: JSON.stringify({ justificativa, escolas_selecionadas })
+    body: JSON.stringify({ justificativa, escolas_selecionadas }),
   };
   let status = 0;
   try {
@@ -286,7 +280,7 @@ export const cancelaKitLancheUnificadoEscola = async (uuid, justificativa) => {
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH",
-    body: JSON.stringify({ justificativa })
+    body: JSON.stringify({ justificativa }),
   };
   let status = 0;
   try {
@@ -299,19 +293,19 @@ export const cancelaKitLancheUnificadoEscola = async (uuid, justificativa) => {
   }
 };
 
-export const getTerceirizadasPedidosSolicitacoesUnificadas = filtroAplicado => {
-  const url = `${URL_SOLICITACAO_UNIFICADA}/${
-    PEDIDOS.TERCEIRIZADA
-  }/${filtroAplicado}/`;
+export const getTerceirizadasPedidosSolicitacoesUnificadas = (
+  filtroAplicado
+) => {
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };

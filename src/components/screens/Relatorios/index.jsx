@@ -13,7 +13,7 @@ class Relatorios extends Component {
       limpaForm: false,
       values: null,
       paginacao: [],
-      count: 0
+      count: 0,
     };
     this.renderizarRelatorio = this.renderizarRelatorio.bind(this);
     this.setaFalseLimpaForm = this.setaFalseLimpaForm.bind(this);
@@ -23,15 +23,15 @@ class Relatorios extends Component {
 
   setaFalseLimpaForm() {
     this.setState({
-      limpaForm: false
+      limpaForm: false,
     });
   }
 
-  setaValuesForm = values => {
+  setaValuesForm = (values) => {
     this.setState({ values });
   };
 
-  setaPaginacao = quantidade => {
+  setaPaginacao = (quantidade) => {
     let paginacao = this.state.paginacao;
     for (let i = 0; i < quantidade; i++) {
       if (i % 100 === 0) {
@@ -47,7 +47,7 @@ class Relatorios extends Component {
       this.setState({
         renderizaConteudoPadrao: !this.state.renderizaConteudoPadrao,
         resultadosFiltro: [],
-        limpaForm: true
+        limpaForm: true,
       });
     } else {
       renderizaConteudoPadrao &&
@@ -55,7 +55,7 @@ class Relatorios extends Component {
       this.setState({
         renderizaConteudoPadrao,
         resultadosFiltro: resultado,
-        count: count
+        count: count,
       });
     }
   };
@@ -67,7 +67,7 @@ class Relatorios extends Component {
       limpaForm,
       values,
       paginacao,
-      count
+      count,
     } = this.state;
     return (
       <Fragment>

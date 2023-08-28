@@ -14,7 +14,7 @@ import {
   PRODUTOS,
   EMBALAGENS_CADASTRADAS,
   UNIDADES_MEDIDA,
-  MARCAS
+  MARCAS,
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -26,7 +26,7 @@ import {
   usuarioEhLogistica,
   usuarioEhMedicao,
   usuarioEhCodaeDilog,
-  usuarioEhEmpresaFornecedor
+  usuarioEhEmpresaFornecedor,
 } from "helpers/utilities";
 
 const MenuCadastros = () => {

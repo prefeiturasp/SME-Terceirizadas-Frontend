@@ -8,7 +8,7 @@ import Botao from "components/Shareable/Botao";
 import { trocaAcentuadasPorSemAcento } from "helpers/utilities.js";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 
@@ -17,7 +17,7 @@ const FORM_NAME = "buscaRequisicoesDilog";
 export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
   const [initialValues] = useState({});
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     if (filtros.nome_unidade)
       filtros.nome_unidade = trocaAcentuadasPorSemAcento(filtros.nome_unidade);

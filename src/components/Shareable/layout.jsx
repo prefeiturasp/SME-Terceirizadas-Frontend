@@ -1,4 +1,4 @@
-export default props => {
+export default (props) => {
   if (props.isVisible) {
     return props.children;
   } else {

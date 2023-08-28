@@ -4,7 +4,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { Spin } from "antd";
 import { useState } from "react";
@@ -19,7 +19,7 @@ export const ModalAssinaturaUsuario = ({
   titulo,
   texto,
   loading,
-  textoBotao = "Sim, assinar cronograma"
+  textoBotao = "Sim, assinar cronograma",
 }) => {
   const [concordaAssinar, setConcordaAssinar] = useState(false);
 

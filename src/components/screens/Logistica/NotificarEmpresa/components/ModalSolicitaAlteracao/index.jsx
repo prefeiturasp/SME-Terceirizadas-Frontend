@@ -5,17 +5,17 @@ import { Field, Form } from "react-final-form";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { textAreaRequired } from "helpers/fieldValidators";
 
 export default ({ index, handleClose, aprovacoes, setAprovacoes }) => {
-  const solicitaAlteracao = async values => {
+  const solicitaAlteracao = async (values) => {
     let newAprovacoes = [...aprovacoes];
     newAprovacoes[index] = {
       aprovado: false,
-      justificativa_alteracao: values.justificativa
+      justificativa_alteracao: values.justificativa,
     };
     setAprovacoes(newAprovacoes);
     handleClose();
@@ -38,7 +38,7 @@ export default ({ index, handleClose, aprovacoes, setAprovacoes }) => {
         onSubmit={solicitaAlteracao}
         subscription={{ submitting: true, values: true }}
         initialValues={{
-          justificativa: justificativaInicial
+          justificativa: justificativaInicial,
         }}
         render={({ handleSubmit, form, values }) => {
           return (

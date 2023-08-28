@@ -3,7 +3,7 @@ import "./styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Field } from "react-final-form";
 import SelectSelecione from "components/Shareable/SelectSelecione";
@@ -22,13 +22,13 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
     setRecebimentos([...recebimentos, {}]);
   };
 
-  const deletaRecebimento = index => {
+  const deletaRecebimento = (index) => {
     let recebimentosNovo = [...recebimentos];
     recebimentosNovo.splice(index, 1);
     setRecebimentos(recebimentosNovo);
   };
 
-  const getOptionsDataProgramada = values => {
+  const getOptionsDataProgramada = (values) => {
     let options = [];
     etapas.forEach((e, index) => {
       if (values[`etapa_${index}`] && values[`data_programada_${index}`]) {
@@ -37,7 +37,7 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
         } ${values[`parte_${index}`] ? ` - ${values[`parte_${index}`]}` : ""}`;
         options.push({
           uuid: nomeConcatenado,
-          nome: nomeConcatenado
+          nome: nomeConcatenado,
         });
       }
     });
@@ -105,9 +105,9 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
                       component={SelectSelecione}
                       naoDesabilitarPrimeiraOpcao
                       options={getOptionsDataProgramada(values).filter(
-                        op =>
+                        (op) =>
                           !datasProgramadas.find(
-                            dp => dp.nome === op.nome && dp.index !== index
+                            (dp) => dp.nome === op.nome && dp.index !== index
                           )
                       )}
                       label="Data Programada"
@@ -115,16 +115,16 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
                       placeholder={"Selecionar a Data"}
                     />
                     <OnChange name={`data_recebimento_${index}`}>
-                      {async value => {
+                      {async (value) => {
                         const index_ = datasProgramadas.findIndex(
-                          dp => dp.index === index
+                          (dp) => dp.index === index
                         );
                         if (index_ !== -1) {
                           datasProgramadas.splice(index_, 1);
                         }
                         datasProgramadas.push({
                           nome: value,
-                          index
+                          index,
                         });
                         setDatasProgramadas(datasProgramadas);
                         form.change("reload", !values.reload);
@@ -138,12 +138,12 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
                       options={[
                         {
                           uuid: "PALETIZADA",
-                          nome: "Paletizada"
+                          nome: "Paletizada",
                         },
                         {
                           uuid: "ESTIVADA_BATIDA",
-                          nome: "Estivada/Batida"
-                        }
+                          nome: "Estivada/Batida",
+                        },
                       ]}
                       label="Tipo de Carga"
                       name={`tipo_recebimento_${index}`}

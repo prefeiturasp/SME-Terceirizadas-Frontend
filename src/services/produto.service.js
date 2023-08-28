@@ -7,24 +7,24 @@ import axios from "./_base";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
-export const getProduto = uuid => {
+export const getProduto = (uuid) => {
   const url = `${API_URL}/produtos/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -34,16 +34,16 @@ export const getInformacoesNutricionais = () => {
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -52,7 +52,7 @@ export const getInformacoesGrupo = async () => {
   return await axios.get(`/informacoes-nutricionais/agrupadas/`);
 };
 
-export const getNomesProdutos = async queryparams => {
+export const getNomesProdutos = async (queryparams) => {
   let url = `/produtos/lista-nomes/`;
   if (queryparams) url += queryparams + "/";
   return await axios.get(url);
@@ -61,7 +61,7 @@ export const getNomesProdutos = async queryparams => {
 export const getNomesUnicosProdutos = async () =>
   await axios.get("/produtos/lista-nomes-unicos/");
 
-export const getNomesMarcas = async queryparams => {
+export const getNomesMarcas = async (queryparams) => {
   let url = `/marcas/lista-nomes/`;
   if (queryparams) url += queryparams + "/";
   return await axios.get(url);
@@ -70,7 +70,7 @@ export const getNomesMarcas = async queryparams => {
 export const getNomesUnicosMarcas = async () =>
   await axios.get("/marcas/lista-nomes-unicos/");
 
-export const getNomesFabricantes = async queryparams => {
+export const getNomesFabricantes = async (queryparams) => {
   let url = `/fabricantes/lista-nomes/`;
   if (queryparams) url += queryparams + "/";
   return await axios.get(url);
@@ -106,7 +106,7 @@ export const getResponderReclamacaoNomesMarcas = async () =>
 export const getResponderReclamacaoNomesFabricantes = async () =>
   await axios.get("/fabricantes/lista-nomes-responder-reclamacao/");
 
-export const getNomesTerceirizadas = async params => {
+export const getNomesTerceirizadas = async (params) => {
   const url = `/terceirizadas/lista-nomes/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -123,19 +123,19 @@ export const getNomesUnicosEditais = async () => {
   return await axios.get(`/produtos-editais/lista-nomes-unicos/`);
 };
 
-export const getProdutosPorNome = async nomeProduto => {
+export const getProdutosPorNome = async (nomeProduto) => {
   return await axios.get(`/produtos/filtro-por-nome/${nomeProduto}/`);
 };
 
-export const getProdutosPorMarca = async nomeMarca => {
+export const getProdutosPorMarca = async (nomeMarca) => {
   return await axios.get(`/produtos/filtro-por-marca/${nomeMarca}/`);
 };
 
-export const getHomologacao = async uuid => {
+export const getHomologacao = async (uuid) => {
   return await axios.get(`/homologacoes-produtos/${uuid}/`);
 };
 
-export const getProdutosPorFabricante = async nomeFabricante => {
+export const getProdutosPorFabricante = async (nomeFabricante) => {
   return await axios.get(`/produtos/filtro-por-fabricante/${nomeFabricante}/`);
 };
 
@@ -147,21 +147,21 @@ export const getProdutosPorParametros = async (parametros, page, pageSize) => {
   );
 };
 
-export const getReclamacoesTerceirizadaPorFiltro = async params => {
+export const getReclamacoesTerceirizadaPorFiltro = async (params) => {
   return await axios.get(`/produtos/filtro-reclamacoes-terceirizada/`, {
-    params
+    params,
   });
 };
 
-export const getProdutosRelatorioAnaliseSensorial = async params => {
+export const getProdutosRelatorioAnaliseSensorial = async (params) => {
   return await axios.get(`/produtos/filtro-relatorio-em-analise-sensorial/`, {
-    params
+    params,
   });
 };
 
-export const getProdutosRelatorioSuspenso = async params => {
+export const getProdutosRelatorioSuspenso = async (params) => {
   return await axios.get(`/produtos/filtro-relatorio-produto-suspenso/`, {
-    params
+    params,
   });
 };
 
@@ -181,7 +181,7 @@ export const getFabricantesProdutos = async () => {
   return await axios.get(`/fabricantes/`);
 };
 
-export const criarMarcaProduto = async data => {
+export const criarMarcaProduto = async (data) => {
   return await axios.post(`/marcas/`, data);
 };
 
@@ -193,27 +193,27 @@ export const getEmbalagensProduto = async () => {
   return await axios.get(`/embalagens-produto/`);
 };
 
-export const submitProduto = async payload => {
+export const submitProduto = async (payload) => {
   const url = `${API_URL}/produtos/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
     headers: authToken,
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
 
-export const updateProduto = async payload => {
+export const updateProduto = async (payload) => {
   const url = `${API_URL}/produtos/${payload.uuid}/`;
   const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -231,45 +231,45 @@ export const alteracaoProdutoHomologado = async (payload, uuid) => {
   }
 };
 
-export const respostaAnaliseSensorial = payload => {
+export const respostaAnaliseSensorial = (payload) => {
   const url = `${API_URL}/analise-sensorial/terceirizada-responde-analise-sensorial/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
     headers: authToken,
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
 
-export const criarFabricanteProduto = async data => {
+export const criarFabricanteProduto = async (data) => {
   return await axios.post(`/fabricantes/`, data);
 };
 
-export const getHomologacaoProduto = uuid => {
+export const getHomologacaoProduto = (uuid) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -280,16 +280,16 @@ export const CODAEHomologaProduto = (uuid, editais) => {
   return fetch(url, {
     method: "PATCH",
     headers: authToken,
-    body: JSON.stringify({ editais })
+    body: JSON.stringify({ editais }),
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -300,16 +300,16 @@ export const CODAEPedeAnaliseReclamacao = (uuid, payload) => {
   return fetch(url, {
     method: "PATCH",
     headers: authToken,
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -320,16 +320,16 @@ export const CODAERecusaReclamacao = (uuid, payload) => {
   return fetch(url, {
     method: "PATCH",
     headers: authToken,
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -340,16 +340,16 @@ export const CODAEAceitaReclamacao = (uuid, payload) => {
   return fetch(url, {
     method: "PATCH",
     headers: authToken,
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -364,17 +364,17 @@ export const CODAEPedeAnaliseSensorialProduto = (
   return fetch(url, {
     method: "PATCH",
     headers: authToken,
-    body: JSON.stringify({ justificativa, uuidTerceirizada })
+    body: JSON.stringify({ justificativa, uuidTerceirizada }),
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       console.log("RES", res);
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -385,16 +385,16 @@ export const CODAECancelaAnaliseSensorialProduto = (uuid, justificativa) => {
   return fetch(url, {
     method: "PATCH",
     headers: authToken,
-    body: JSON.stringify({ justificativa })
+    body: JSON.stringify({ justificativa }),
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -405,16 +405,16 @@ export const CODAENaoHomologaProduto = (uuid, justificativa) => {
   return fetch(url, {
     method: "PATCH",
     headers: authToken,
-    body: JSON.stringify({ justificativa })
+    body: JSON.stringify({ justificativa }),
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -426,7 +426,7 @@ export const CODAECancelaSoliticaoCorrecao = async (uuid, justificativa) => {
     const res = await fetch(url, {
       method: "PATCH",
       headers: authToken,
-      body: JSON.stringify({ justificativa })
+      body: JSON.stringify({ justificativa }),
     });
     status = res.status;
     const data = await res.json();
@@ -446,7 +446,7 @@ export const TerceirizadaCancelaSoliticaoCorrecao = async (
     const res = await fetch(url, {
       method: "PATCH",
       headers: authToken,
-      body: JSON.stringify({ justificativa })
+      body: JSON.stringify({ justificativa }),
     });
     status = res.status;
     const data = await res.json();
@@ -462,16 +462,16 @@ export const CODAEPedeCorrecao = (uuid, justificativa) => {
   return fetch(url, {
     method: "PATCH",
     headers: authToken,
-    body: JSON.stringify({ justificativa })
+    body: JSON.stringify({ justificativa }),
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -482,7 +482,7 @@ export const getRascunhosDeProduto = async () => {
   );
 };
 
-export const excluirRascunhoDeProduto = async uuid => {
+export const excluirRascunhoDeProduto = async (uuid) => {
   return await axios.delete(`/homologacoes-produtos/${uuid}/`);
 };
 
@@ -490,7 +490,7 @@ export const getDashboardGestaoProdutos = async () => {
   return await axios.get(`/painel-gerencial-homologacoes-produtos/dashboard/`);
 };
 
-export const getHomologacoesPorTituloMarca = async parametros => {
+export const getHomologacoesPorTituloMarca = async (parametros) => {
   return await axios.post(
     `/painel-gerencial-homologacoes-produtos/filtro-homologacoes-por-titulo-marca-edital/`,
     parametros
@@ -502,8 +502,8 @@ export const getHomologacoesDeProdutoPorStatus = async (status, page = 0) => {
   if (page > 0) {
     return await axios.get(url, {
       params: {
-        page: page
-      }
+        page: page,
+      },
     });
   }
 
@@ -522,7 +522,7 @@ export const getTodosOsProdutos = async () => {
   return await axios.get(`/produtos/todos-produtos/`);
 };
 
-export const excluirImagemDoProduto = async uuid => {
+export const excluirImagemDoProduto = async (uuid) => {
   return await axios.delete(`/produto-imagens/${uuid}/`);
 };
 
@@ -545,7 +545,7 @@ export const suspenderProduto = async (uuid, payload) => {
     .catch(ErrorHandlerFunction);
 };
 
-export const vinculosAtivosProdutoEditais = async uuid => {
+export const vinculosAtivosProdutoEditais = async (uuid) => {
   return await axios
     .get(`/homologacoes-produtos/${uuid}/vinculos-ativos-produto-edital/`)
     .catch(ErrorHandlerFunction);
@@ -555,7 +555,7 @@ export const getNumeroProtocoloAnaliseSensorial = async () => {
   return await axios.get(`/homologacoes-produtos/numero_protocolo/`);
 };
 
-export const getReclamacaoDeProduto = async uuid => {
+export const getReclamacaoDeProduto = async (uuid) => {
   return await axios.get(`/homologacoes-produtos/${uuid}/reclamacao/`);
 };
 
@@ -572,22 +572,22 @@ export const responderReclamacaoProduto = async (uuid, payload) => {
   );
 };
 
-export const getReclamacao = async uuid => {
+export const getReclamacao = async (uuid) => {
   return await axios.get(`/reclamacoes-produtos/${uuid}/`);
 };
 
-export const flegarHomologacaoPDF = async uuid => {
+export const flegarHomologacaoPDF = async (uuid) => {
   return await axios.post(`/homologacoes-produtos/${uuid}/gerar-pdf/`);
 };
 
-export const getProdutosPorTerceirizada = async params => {
+export const getProdutosPorTerceirizada = async (params) => {
   return await axios.get(
     `/painel-gerencial-homologacoes-produtos/filtro-por-parametros-agrupado-terceirizada/`,
     { params }
   );
 };
 
-export const getPDFRelatorioProdutosHomologados = async params => {
+export const getPDFRelatorioProdutosHomologados = async (params) => {
   const url = "/painel-gerencial-homologacoes-produtos/exportar-pdf/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -596,20 +596,20 @@ export const getPDFRelatorioProdutosHomologados = async params => {
   }
 };
 
-export const getProdutosSuspensos = async payload => {
+export const getProdutosSuspensos = async (payload) => {
   return await axios.post(
     `/homologacoes-produtos/homologacoes_suspensas/`,
     payload
   );
 };
 
-export const getProdutosListagem = async params => {
+export const getProdutosListagem = async (params) => {
   return await axios.get(`/produtos/`, {
-    params: params
+    params: params,
   });
 };
 
-export const solicitarCadastroProdutoDieta = async payload => {
+export const solicitarCadastroProdutoDieta = async (payload) => {
   return await axios.post(`/solicitacao-cadastro-produto-dieta/`, payload);
 };
 
@@ -620,7 +620,7 @@ export const getSubstitutos = async () => {
 export const getNomesProdutosSolicitacaoInclusao = async () =>
   await axios.get("/solicitacao-cadastro-produto-dieta/nomes-produtos/");
 
-export const getSolicitacoesCadastroProdutoDieta = async params =>
+export const getSolicitacoesCadastroProdutoDieta = async (params) =>
   await axios.get("/solicitacao-cadastro-produto-dieta/", { params });
 
 export const updateSolicitacaoCadastroProdutoDieta = async (uuid, params) =>
@@ -629,13 +629,13 @@ export const updateSolicitacaoCadastroProdutoDieta = async (uuid, params) =>
     params
   );
 
-export const getProdutosReclamacoes = async params =>
+export const getProdutosReclamacoes = async (params) =>
   await axios.get("/produtos/filtro-reclamacoes/", { params });
 
-export const getProdutosAvaliacaoReclamacao = async params =>
+export const getProdutosAvaliacaoReclamacao = async (params) =>
   await axios.get("/produtos/filtro-avaliar-reclamacoes/", { params });
 
-export const produtoJaExiste = async params =>
+export const produtoJaExiste = async (params) =>
   await axios.get("/produtos/ja-existe/", { params });
 
 export const cancelaHomologacao = async (uuid, payload) =>
@@ -649,33 +649,33 @@ export const getNomesItems = async () =>
 
 export const getTiposItems = async () => axios.get("/itens-cadastros/tipos/");
 
-export const consultaItems = async params =>
+export const consultaItems = async (params) =>
   axios.get(`/itens-cadastros/`, { params });
 
-export const cadastrarItem = async payload =>
+export const cadastrarItem = async (payload) =>
   await axios.post(`/itens-cadastros/`, payload);
 
 export const atualizarItem = async (payload, uuid) =>
   await axios.patch(`/itens-cadastros/${uuid}/`, payload);
 
-export const deletarItem = async uuid =>
+export const deletarItem = async (uuid) =>
   await axios.delete(`/itens-cadastros/${uuid}/`);
 
 export const filtrosVincularProdutoEdital = () =>
   axios.get("/produtos-editais/filtros/");
 
-export const filtrarPorEditalNomeTipo = async params =>
+export const filtrarPorEditalNomeTipo = async (params) =>
   await axios.get("/produtos-editais/filtrar/", { params });
 
-export const ativarInativarProduto = async uuid =>
+export const ativarInativarProduto = async (uuid) =>
   await axios.patch(`/produtos-editais/${uuid}/ativar-inativar-produto/`);
 
-export const getListaProdutos = async params =>
+export const getListaProdutos = async (params) =>
   await axios.get(`/produtos-editais/lista-produtos-opcoes/`, {
-    params: params
+    params: params,
   });
 
-export const criarVinculoProdutosEditais = async payload =>
+export const criarVinculoProdutosEditais = async (payload) =>
   await axios.post(`/produtos-editais/`, payload);
 
 export const getNomesProdutosEdital = async () =>
@@ -684,16 +684,16 @@ export const getNomesProdutosEdital = async () =>
 export const getNomesProdutosLogistica = async () =>
   axios.get("/cadastro-produtos-edital/lista-nomes-logistica/");
 
-export const getCadastroProdutosEdital = async params =>
+export const getCadastroProdutosEdital = async (params) =>
   axios.get(`/cadastro-produtos-edital/`, { params });
 
-export const getListaCompletaProdutosLogistica = async params =>
+export const getListaCompletaProdutosLogistica = async (params) =>
   axios.get(`/cadastro-produtos-edital/lista-completa-logistica/`, { params });
 
-export const getListaProdutosLogistica = async params =>
+export const getListaProdutosLogistica = async (params) =>
   axios.get(`/cadastro-produtos-edital/produtos-logistica/`, { params });
 
-export const cadastrarProdutoEdital = async payload =>
+export const cadastrarProdutoEdital = async (payload) =>
   await axios.post(`/cadastro-produtos-edital/`, payload);
 
 export const atualizarProdutoEdital = async (payload, uuid) =>
@@ -703,12 +703,12 @@ export const imprimeFichaIdentificacaoProduto = async (uuid, params) => {
   const url = `/homologacoes-produtos/${uuid}/gerar-pdf-ficha-identificacao-produto/`;
   const { data } = await axios.get(url, {
     params,
-    responseType: "blob"
+    responseType: "blob",
   });
   saveAs(data, "ficha_identificacao_produto.pdf");
 };
 
-export const gerarExcelRelatorioProdutosHomologados = async params => {
+export const gerarExcelRelatorioProdutosHomologados = async (params) => {
   const url = `/produtos/exportar-xlsx/`;
   const response = await axios.post(url, params).catch(ErrorHandlerFunction);
   if (response) {

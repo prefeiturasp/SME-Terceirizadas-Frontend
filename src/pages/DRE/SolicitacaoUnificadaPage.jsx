@@ -6,7 +6,7 @@ import { HOME } from "./constants";
 
 const atual = {
   href: "/dre/solicitacao-unificada",
-  titulo: "Solicitação Unificada"
+  titulo: "Solicitação Unificada",
 };
 
 export default () => (

@@ -20,7 +20,7 @@ export default ({ fiscal = false }) => {
     }
   }, [filtros]);
 
-  const buscarGuias = async page => {
+  const buscarGuias = async (page) => {
     setCarregando(true);
 
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -36,7 +36,7 @@ export default ({ fiscal = false }) => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarGuias(page);
     setPage(page);
   };

@@ -6,7 +6,7 @@ import { NUTRISUPERVISAO, SOLICITACOES_PENDENTES } from "configs/constants";
 import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardLegendas from "components/Shareable/CardLegendas";
 import { PAGINACAO_DEFAULT } from "constants/shared";
@@ -14,7 +14,7 @@ import { getSolicitacoesPendentesAutorizacaoNutrisupervisaoSemFiltro } from "ser
 
 const atual = {
   href: `/${NUTRISUPERVISAO}/${SOLICITACOES_PENDENTES}`,
-  titulo: "Solicitações Pendentes"
+  titulo: "Solicitações Pendentes",
 };
 
 export default () => (

@@ -7,7 +7,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
 import "./style.scss";
@@ -34,10 +34,12 @@ export const Relatorio = ({ ...props }) => {
           response.data
         );
         let _response = deepCopy(response.data);
-        let solicitacoes_similares = _response.solicitacoes_similares.map(s => {
-          s["collapsed"] = true;
-          return s;
-        });
+        let solicitacoes_similares = _response.solicitacoes_similares.map(
+          (s) => {
+            s["collapsed"] = true;
+            return s;
+          }
+        );
         setSolicitacoesSimilares(solicitacoes_similares);
       } else {
         setErro(true);

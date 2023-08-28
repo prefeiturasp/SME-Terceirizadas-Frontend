@@ -2,7 +2,7 @@ import React from "react";
 import * as R from "ramda";
 
 export const MotivoHomologacaoRecusada = ({ logs }) => {
-  const getRecusa = logs => {
+  const getRecusa = (logs) => {
     const arr = R.filter(
       R.propEq("status_evento_explicacao", "CODAE não homologou"),
       logs
@@ -23,7 +23,7 @@ export const MotivoHomologacaoRecusada = ({ logs }) => {
         <p
           className="justificativa-ficha-produto no-margin"
           dangerouslySetInnerHTML={{
-            __html: recusa.justificativa
+            __html: recusa.justificativa,
           }}
         />
       </div>

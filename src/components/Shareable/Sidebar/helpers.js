@@ -7,10 +7,10 @@ import {
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhEmpresaTerceirizada,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
 } from "helpers/utilities";
 
-export const labelSidebar = nomeEscolaOuTerceirizada => {
+export const labelSidebar = (nomeEscolaOuTerceirizada) => {
   if (usuarioEhCODAEGestaoProduto()) {
     return "Núcleo de Pesquisa e Desenvolvimento";
   } else if (

@@ -7,7 +7,7 @@ import { Tooltip } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { useState } from "react";
 import { encerraContratoTerceirizada } from "services/terceirizada.service";
@@ -22,7 +22,7 @@ const contratosEstadoInicial = {
   numero_contrato: null,
   numero_ata_chamada_publica: null,
   numero_pregao: null,
-  vigencias: null
+  vigencias: null,
 };
 
 export const ContratosFormSet = ({
@@ -30,18 +30,17 @@ export const ContratosFormSet = ({
   contratos,
   setContratos,
   terceirizada,
-  values
+  values,
 }) => {
   const [contratoARemover, setContratoARemover] = useState({});
-  const [exibirModalRemoverContrato, setExibirModalRemoverContrato] = useState(
-    false
-  );
+  const [exibirModalRemoverContrato, setExibirModalRemoverContrato] =
+    useState(false);
   const adicionaContrato = () => {
     contratos = contratos.concat([contratosEstadoInicial]);
     setContratos(contratos);
   };
 
-  const removeContrato = index => {
+  const removeContrato = (index) => {
     let newContratos = [...contratos];
     newContratos.splice(index, 1);
     setContratos(newContratos);
@@ -52,7 +51,7 @@ export const ContratosFormSet = ({
     let response = await encerraContratoTerceirizada(uuid);
     if (response && response.status === 200) {
       let contratosNew = [...contratos];
-      let index = contratosNew.findIndex(c => c.uuid === uuid);
+      let index = contratosNew.findIndex((c) => c.uuid === uuid);
       contratosNew[index].data_hora_encerramento =
         response.data.data_hora_encerramento;
       contratosNew[index].encerrado = true;
@@ -67,7 +66,7 @@ export const ContratosFormSet = ({
     setExibirModalRemoverContrato(false);
   };
 
-  const abrirModalRemoverContrato = index => {
+  const abrirModalRemoverContrato = (index) => {
     setExibirModalRemoverContrato(true);
     setContratoARemover(contratos[index]);
   };

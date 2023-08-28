@@ -19,7 +19,7 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
     solicitacao,
     endpoint,
     tipoSolicitacao,
-    loadSolicitacao
+    loadSolicitacao,
   } = props;
 
   const dias_motivos =
@@ -28,11 +28,11 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
       solicitacao.dias_motivos_da_inclusao_cemei ||
       solicitacao.dias_motivos_da_inclusao_cei);
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     if (
       [
         TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
-        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
       ].includes(tipoSolicitacao) &&
       (!values.datas || values.datas.length === 0)
     ) {
@@ -41,11 +41,8 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
     }
     const values_ = deepCopy(values);
     if (values.datas) {
-      values_.datas = values_.datas.map(data =>
-        data
-          .split("/")
-          .reverse()
-          .join("-")
+      values_.datas = values_.datas.map((data) =>
+        data.split("/").reverse().join("-")
       );
     }
     const resp = await endpoint(uuid, values_, tipoSolicitacao);
@@ -54,9 +51,10 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
       if (
         [
           TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
-          TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+          TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
         ].includes(tipoSolicitacao) &&
-        values_.datas.length + dias_motivos.filter(i => i.cancelado).length !==
+        values_.datas.length +
+          dias_motivos.filter((i) => i.cancelado).length !==
           dias_motivos.length
       ) {
         toastSuccess("Solicitação cancelada parcialmente com sucesso");
@@ -90,7 +88,7 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
               {[
                 TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
                 TIPO_SOLICITACAO.SOLICITACAO_CEI,
-                TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+                TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
               ].includes(tipoSolicitacao) && (
                 <>
                   <p>Selecione a(s) data(s) para solicitar o cancelamento:</p>
@@ -109,7 +107,7 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                                   name="datas"
                                   component="input"
                                   disabled={
-                                    dias_motivos.find(i => i.data === dia)
+                                    dias_motivos.find((i) => i.data === dia)
                                       .cancelado ||
                                     moment(dia, "DD/MM/YYYY") <= moment()
                                   }

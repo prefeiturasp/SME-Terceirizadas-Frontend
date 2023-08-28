@@ -5,7 +5,7 @@ import ListagemUnidadesMedida from "./components/ListagemUnidadesMedida";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   getUnidadesMedida,
-  getNomesEAbreviacoesUnidadesMedida
+  getNomesEAbreviacoesUnidadesMedida,
 } from "services/qualidade.service";
 import { Paginacao } from "components/Shareable/Paginacao";
 
@@ -33,13 +33,13 @@ export default () => {
 
   const buscaDadosAutoComplete = async () => {
     const nomesEAbreviacoes = await getNomesEAbreviacoesUnidadesMedida();
-    const nomes = nomesEAbreviacoes.data.results.map(e => e.nome);
-    const abreviacoes = nomesEAbreviacoes.data.results.map(e => e.abreviacao);
+    const nomes = nomesEAbreviacoes.data.results.map((e) => e.nome);
+    const abreviacoes = nomesEAbreviacoes.data.results.map((e) => e.abreviacao);
     setNomesUnidadesMedida(nomes);
     setAbreviacoesUnidadesMedida(abreviacoes);
   };
 
-  const buscarResultados = async pageNumber => {
+  const buscarResultados = async (pageNumber) => {
     setCarregando(true);
 
     const params = gerarParametrosConsulta({ page: pageNumber, ...filtros });
@@ -54,7 +54,7 @@ export default () => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarResultados(page);
     setPage(page);
   };

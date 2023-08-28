@@ -7,7 +7,7 @@ import {
   getKitLanches,
   createKitLanche,
   checaNomeKitLanche,
-  updateKitLanche
+  updateKitLanche,
 } from "services/codae.service";
 import { Field, Form } from "react-final-form";
 import { OnBlur } from "react-final-form-listeners";
@@ -17,12 +17,12 @@ import CKEditorField from "components/Shareable/CKEditorField";
 import {
   required,
   selectValidate,
-  textAreaRequired
+  textAreaRequired,
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { Spin } from "antd";
 import "./style.scss";
@@ -34,23 +34,23 @@ export default ({ uuid }) => {
   const [opcaoStatus] = useState([
     { uuid: "", nome: "Selecione uma opção" },
     { uuid: "ATIVO", nome: "Ativo" },
-    { uuid: "INATIVO", nome: "Inativo" }
+    { uuid: "INATIVO", nome: "Inativo" },
   ]);
   const [desabilitarBotao, setDesabilitarBotao] = useState(false);
   const [modeloKitLanche, setModeloKitLanche] = useState({
     edital: null,
     nome: null,
     descricao: null,
-    status: "ATIVO"
+    status: "ATIVO",
   });
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     setCarregando(true);
     const payload = {
       edital: formValues.edital,
       nome: formValues.nome,
       descricao: formValues.descricao,
-      status: formValues.status
+      status: formValues.status,
     };
     const response = uuid
       ? await updateKitLanche(payload, uuid)
@@ -65,9 +65,9 @@ export default ({ uuid }) => {
   };
 
   const fetchData = async () => {
-    await getNumerosEditais().then(res => {
+    await getNumerosEditais().then((res) => {
       if (res.status === HTTP_STATUS.OK) {
-        const result = res.data.results.map(edital => {
+        const result = res.data.results.map((edital) => {
           return { uuid: edital.uuid, nome: edital.numero };
         });
         setEditais(result);
@@ -76,14 +76,14 @@ export default ({ uuid }) => {
       }
     });
     if (uuid) {
-      await getKitLanches(uuid).then(res => {
+      await getKitLanches(uuid).then((res) => {
         if (res.status === HTTP_STATUS.OK) setModeloKitLanche(res.data);
       });
     }
     setCarregando(false);
   };
 
-  const checaNomeExiste = async values => {
+  const checaNomeExiste = async (values) => {
     if (
       ![null, undefined, ""].includes(values.nome) &&
       ![null, undefined, ""].includes(values.edital)
@@ -91,7 +91,7 @@ export default ({ uuid }) => {
       const payload = {
         nome: values.nome,
         edital: values.edital,
-        uuid: modeloKitLanche.uuid
+        uuid: modeloKitLanche.uuid,
       };
       try {
         const response = await checaNomeKitLanche(payload);
@@ -132,7 +132,7 @@ export default ({ uuid }) => {
                       name="edital"
                       component={Select}
                       options={[
-                        { uuid: "", nome: "Selecione uma opção" }
+                        { uuid: "", nome: "Selecione uma opção" },
                       ].concat(editais)}
                       required
                       validate={selectValidate}

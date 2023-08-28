@@ -1,4 +1,4 @@
-export const formataEditais = editais => {
+export const formataEditais = (editais) => {
   let editais_string = "";
   for (let index = 0; index < editais.length; index++) {
     if (index !== 0) {
@@ -10,7 +10,7 @@ export const formataEditais = editais => {
   return editais_string;
 };
 
-export const formatarOpcoes = produtosEditais => {
+export const formatarOpcoes = (produtosEditais) => {
   const treeData = [];
   let produtosFormatados = [];
   for (let index = 0; index < produtosEditais.length; index++) {
@@ -18,14 +18,14 @@ export const formatarOpcoes = produtosEditais => {
     if (!produtosFormatados.includes(produtoEdital.produto.nome)) {
       produtosFormatados.push(produtoEdital.produto.nome);
       let listaNomesIguais = produtosEditais.filter(
-        pe => pe.produto.nome === produtoEdital.produto.nome
+        (pe) => pe.produto.nome === produtoEdital.produto.nome
       );
-      let marcasFabricantes = listaNomesIguais.map(pe => {
+      let marcasFabricantes = listaNomesIguais.map((pe) => {
         return {
           title: pe.marca.nome,
           value: pe.uuid,
           key: pe.uuid,
-          todos: false
+          todos: false,
         };
       });
       treeData.push({
@@ -33,14 +33,14 @@ export const formatarOpcoes = produtosEditais => {
         value: produtoEdital.produto.nome,
         key: produtoEdital.produto.nome,
         todos: true,
-        children: marcasFabricantes
+        children: marcasFabricantes,
       });
     }
   }
   return treeData;
 };
 
-export const validatePayload = payload => {
+export const validatePayload = (payload) => {
   let keys = Object.keys(payload);
 
   let erros = {
@@ -48,7 +48,7 @@ export const validatePayload = payload => {
     editaisDestino: false,
     tipoProduto: false,
     produtos: false,
-    tipoProdutoEditalOrigem: false
+    tipoProdutoEditalOrigem: false,
   };
 
   if (

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Spin } from "antd";
 import {
   getCronogramaDetalhar,
-  imprimirCronograma
+  imprimirCronograma,
 } from "services/cronograma.service";
 import AcoesDetalhar from "../AcoesDetalhar";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
@@ -13,7 +13,7 @@ import AcoesDetalharDilogDiretoria from "../AcoesDetalharDilogDiretoria";
 import {
   usuarioEhCronograma,
   usuarioEhDilogDiretoria,
-  usuarioEhDinutreDiretoria
+  usuarioEhDinutreDiretoria,
 } from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
@@ -22,7 +22,7 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCronograma";
 
@@ -34,9 +34,9 @@ export default () => {
 
   const history = useHistory();
 
-  const esconderLogFornecedor = logs => {
+  const esconderLogFornecedor = (logs) => {
     return logs.filter(
-      log => !["Assinado DINUTRE"].includes(log.status_evento_explicacao)
+      (log) => !["Assinado DINUTRE"].includes(log.status_evento_explicacao)
     );
   };
 
@@ -54,7 +54,7 @@ export default () => {
     }
   };
 
-  const converte_tipo_carga = tipo => {
+  const converte_tipo_carga = (tipo) => {
     if (tipo === "PALETIZADA") {
       return "Paletizada";
     } else if (tipo === "ESTIVADA_BATIDA") {
@@ -70,8 +70,8 @@ export default () => {
       .then(() => {
         setCarregando(false);
       })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
   };

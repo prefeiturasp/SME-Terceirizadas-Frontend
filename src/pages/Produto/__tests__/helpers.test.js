@@ -1,6 +1,6 @@
 import {
   TIPO_PERFIL,
-  ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS
+  ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS,
 } from "../../../constants/shared";
 import { escolheStatusPendenteHomologacao } from "../helpers";
 

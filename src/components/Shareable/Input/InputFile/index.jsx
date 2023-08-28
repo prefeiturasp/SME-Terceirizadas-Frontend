@@ -14,7 +14,7 @@ export class InputFile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      files: []
+      files: [],
     };
   }
 
@@ -60,13 +60,13 @@ export class InputFile extends Component {
       "jpg",
       "jpeg",
       "xlsx",
-      "xls"
+      "xls",
     ];
     let { accept } = this.props;
     const QUANTIDADE_ARQUIVOS = event.target.files.length;
     if (accept) {
       let nova_lista_extensoes = [];
-      lista_extensoes.forEach(ext => {
+      lista_extensoes.forEach((ext) => {
         if (accept.toLowerCase().includes(ext)) {
           nova_lista_extensoes.push(ext);
         }
@@ -74,7 +74,7 @@ export class InputFile extends Component {
       lista_extensoes = nova_lista_extensoes;
     }
 
-    Array.from(event.target.files).forEach(file => {
+    Array.from(event.target.files).forEach((file) => {
       const extensao = file.name.split(".")[file.name.split(".").length - 1];
       if (this.props.ehPlanilhaMedicaoInicial) {
         if (!["xls", "xlsx", "pdf"].includes(extensao.toLowerCase())) {
@@ -99,13 +99,13 @@ export class InputFile extends Component {
     if (valido) {
       let files = [];
       let data = [];
-      Array.from(event.target.files).forEach(file => {
+      Array.from(event.target.files).forEach((file) => {
         readerFile(file)
-          .then(anexo => {
+          .then((anexo) => {
             data.push(anexo);
             files.push({
               nome: this.props.nomeNovoArquivo || file.name,
-              base64: anexo.arquivo
+              base64: anexo.arquivo,
             });
           })
           .then(() => {
@@ -145,7 +145,7 @@ export class InputFile extends Component {
       title,
       texto,
       ehPlanilhaMedicaoInicial,
-      validationFile
+      validationFile,
     } = this.props;
     return (
       <>
@@ -203,8 +203,9 @@ export class InputFile extends Component {
           />
         </div>
         <div
-          className={`col-12 input input-file ${alignLeft &&
-            "align-left"} ${icone && "icon"}`}
+          className={`col-12 input input-file ${alignLeft && "align-left"} ${
+            icone && "icon"
+          }`}
         >
           {files.map((file, key) => {
             return (
@@ -229,20 +230,23 @@ export class InputFile extends Component {
           })}
         </div>
         <div
-          className={`col-12 input input-file ${alignLeft &&
-            "align-left"} ${icone && "icon"}`}
+          className={`col-12 input input-file ${alignLeft && "align-left"} ${
+            icone && "icon"
+          }`}
         >
           <input
             {...input}
             accept={accept}
-            ref={i => (this.inputRef = i)}
-            className={`form-control ${className} ${meta &&
+            ref={(i) => (this.inputRef = i)}
+            className={`form-control ${className} ${
+              meta &&
               meta.touched &&
               (meta.error || meta.warning) &&
-              "invalid-field"}`}
+              "invalid-field"
+            }`}
             disabled={disabled}
             name={name}
-            onChange={event => this.onInputChange(event)}
+            onChange={(event) => this.onInputChange(event)}
             data-cy={input.name}
             required={required}
             type="file"
@@ -273,7 +277,7 @@ InputFile.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   type: PropTypes.string,
-  validationFile: PropTypes.object
+  validationFile: PropTypes.object,
 };
 
 InputFile.defaultProps = {
@@ -292,7 +296,7 @@ InputFile.defaultProps = {
   placeholder: "",
   required: false,
   type: "text",
-  validationFile: { touched: false }
+  validationFile: { touched: false },
 };
 
 export default InputFile;

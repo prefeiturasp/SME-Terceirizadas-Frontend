@@ -10,7 +10,7 @@ export const getDiasSobremesaDoce = async (params = null) => {
   }
 };
 
-export const setDiaSobremesaDoce = async payload => {
+export const setDiaSobremesaDoce = async (payload) => {
   const url = `medicao-inicial/dias-sobremesa-doce/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -19,7 +19,7 @@ export const setDiaSobremesaDoce = async payload => {
   }
 };
 
-export const deleteDiaSobremesaDoce = async uuid => {
+export const deleteDiaSobremesaDoce = async (uuid) => {
   const url = `medicao-inicial/dias-sobremesa-doce/${uuid}/`;
   const response = await axios.delete(url).catch(ErrorHandlerFunction);
   if (response) {

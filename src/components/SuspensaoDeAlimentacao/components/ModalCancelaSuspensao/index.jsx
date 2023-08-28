@@ -5,7 +5,7 @@ import { Field, Form } from "react-final-form";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { required } from "helpers/fieldValidators";
@@ -19,10 +19,10 @@ export const ModalCancelaSuspensao = ({ ...props }) => {
     uuid,
     solicitacao,
     tipoSolicitacao,
-    loadSolicitacao
+    loadSolicitacao,
   } = props;
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const resp = await escolaCancelaSuspensao(uuid, values);
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();

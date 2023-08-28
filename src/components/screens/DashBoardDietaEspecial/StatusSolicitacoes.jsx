@@ -5,7 +5,7 @@ import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "../../../services/perfil.service";
 import {
   getPaginacaoSolicitacoesDietaEspecial,
-  getPaginacaoSolicitacoesDietaEspecialCODAE
+  getPaginacaoSolicitacoesDietaEspecialCODAE,
 } from "../../../services/dashBoardDietaEspecial.service";
 import { extrairStatusDaSolicitacaoURL } from "./helpers";
 import {
@@ -29,11 +29,11 @@ import {
   INATIVAS_TEMPORARIAMENTE_DIETA,
   SOLICITACOES_INATIVAS,
   INATIVAS_DIETA,
-  AGUARDANDO_VIGENCIA_DIETA
+  AGUARDANDO_VIGENCIA_DIETA,
 } from "../../../configs/constants";
 import {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { ajustarFormatoLog } from "../helper";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
@@ -50,9 +50,8 @@ function StatusSolicitacoes(props) {
   const [count, setCount] = useState(0);
   const [tipoSolicitacao, setTipoSolicitacao] = useState(null);
   const [solicitacoes, setSolicitacoes] = useState(null);
-  const [listaSolicitacoesSemFiltro, setListaSolicitacoesSemFiltro] = useState(
-    null
-  );
+  const [listaSolicitacoesSemFiltro, setListaSolicitacoesSemFiltro] =
+    useState(null);
   const [originalCount, setOriginalCount] = useState(null);
   const [tipoCard, setTipoCard] = useState(null);
   const [icone, setIcone] = useState(null);
@@ -65,7 +64,7 @@ function StatusSolicitacoes(props) {
   const [loading, setLoading] = useState(false);
   const [propsDietaRedux, setPropsDietaRedux] = useState({});
 
-  const selectTodos = solicitacoes => {
+  const selectTodos = (solicitacoes) => {
     const novoEstadoSelecionarTodos = !selecionarTodos;
     solicitacoes.forEach((_, key) => {
       props.change(`check_${key}`, novoEstadoSelecionarTodos);
@@ -79,7 +78,7 @@ function StatusSolicitacoes(props) {
     props.change(`check_${key}`, solicitacoes[key].checked);
   };
 
-  const onPesquisarChanged = values => {
+  const onPesquisarChanged = (values) => {
     let filtrados = listaSolicitacoesSemFiltro;
 
     if (values.titulo === undefined) values.titulo = "";
@@ -109,13 +108,13 @@ function StatusSolicitacoes(props) {
     const propsDieta = {
       tituloDieta: props.tituloDieta,
       loteDieta: props.loteDieta,
-      statusDieta: props.statusDieta
+      statusDieta: props.statusDieta,
     };
     setPropsDietaRedux(propsDieta);
     const values = {
       titulo: propsDieta.tituloDieta || "",
       lote: propsDieta.loteDieta || "",
-      status: propsDieta.statusDieta || ""
+      status: propsDieta.statusDieta || "",
     };
     props.resetCamposDieta();
     onPesquisarChanged(values);
@@ -130,7 +129,7 @@ function StatusSolicitacoes(props) {
     getDietaEspecialAutorizadasTemporariamente,
     getDietaEspecialAguardandoVigencia,
     getDietaEspecialInativasTemporariamente,
-    getDietaEspecialInativas
+    getDietaEspecialInativas,
   } = props;
 
   useEffect(() => {
@@ -138,7 +137,7 @@ function StatusSolicitacoes(props) {
       const url = window.location.href;
       let tipoSolicitacao = extrairStatusDaSolicitacaoURL(url);
       setTipoSolicitacao(tipoSolicitacao);
-      meusDados().then(response => {
+      meusDados().then((response) => {
         setInstituicao(response.vinculo_atual.instituicao);
       });
       if (usuarioEhEmpresaTerceirizada()) {
@@ -241,10 +240,10 @@ function StatusSolicitacoes(props) {
       "Autorizadas Temporariamente",
       retornaUrlPaginacao(visao, AUTORIZADAS_TEMPORARIAMENTE_DIETA)
     );
-    const responseNaoPaginado = await getDietaEspecialAutorizadasTemporariamente(
-      instituicao.uuid,
-      { sem_paginacao: true }
-    );
+    const responseNaoPaginado =
+      await getDietaEspecialAutorizadasTemporariamente(instituicao.uuid, {
+        sem_paginacao: true,
+      });
     updateSolicitacoesSemFiltro(responseNaoPaginado.data, "autorizadas-temp");
   };
 
@@ -303,10 +302,13 @@ function StatusSolicitacoes(props) {
     [SOLICITACOES_NEGADAS]: getSolicitacoesNegadas,
     [SOLICITACOES_AUTORIZADAS]: getSolicitacoesAutorizadas,
     [SOLICITACOES_CANCELADAS]: getSolicitacoesCanceladas,
-    [SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE]: getSolicitacoesAutorizadasTemporariamente,
-    [SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA]: getSolicitacoesAguardandoInicioVigencia,
-    [SOLICITACOES_INATIVAS_TEMPORARIAMENTE]: getSolicitacoesInativasTemporariamente,
-    [SOLICITACOES_INATIVAS]: getSolicitacoesInativas
+    [SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE]:
+      getSolicitacoesAutorizadasTemporariamente,
+    [SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA]:
+      getSolicitacoesAguardandoInicioVigencia,
+    [SOLICITACOES_INATIVAS_TEMPORARIAMENTE]:
+      getSolicitacoesInativasTemporariamente,
+    [SOLICITACOES_INATIVAS]: getSolicitacoesInativas,
   };
 
   const getSolicitacoesAsync = async () => {
@@ -337,23 +339,23 @@ function StatusSolicitacoes(props) {
 
   const filtrarStatus = (listaFiltro, value) => {
     if (value === "1") {
-      listaFiltro = listaFiltro.filter(item => item.conferido === true);
+      listaFiltro = listaFiltro.filter((item) => item.conferido === true);
     }
     if (value === "0") {
       listaFiltro = listaFiltro.filter(
-        item => item.conferido === false || item.conferido === null
+        (item) => item.conferido === false || item.conferido === null
       );
     }
     return listaFiltro;
   };
 
   const filtrarLote = (listaFiltro, value) => {
-    listaFiltro = listaFiltro.filter(item => item.lote_uuid === value);
+    listaFiltro = listaFiltro.filter((item) => item.lote_uuid === value);
     return listaFiltro;
   };
 
   const filtrarNome = (listaFiltro, value) => {
-    listaFiltro = listaFiltro.filter(item => {
+    listaFiltro = listaFiltro.filter((item) => {
       const wordToFilter = value.toLowerCase();
       return item.text.toLowerCase().search(wordToFilter) !== -1;
     });
@@ -378,7 +380,7 @@ function StatusSolicitacoes(props) {
   const navegacaoPage = (multiploQuantidade, quantidadePorPagina) => {
     setLoading(true);
     const offSet = quantidadePorPagina * (multiploQuantidade - 1);
-    const handleResponse = response => {
+    const handleResponse = (response) => {
       setSolicitacoesFiltrados(ajustarFormatoLog(response.data.results));
       setSolicitacoes(ajustarFormatoLog(response.data.results));
       setLoading(false);
@@ -430,11 +432,11 @@ function StatusSolicitacoes(props) {
 
 const StatusSolicitacoesDietaEspecialForm = reduxForm({
   form: "statusSolicitacoesDietaEspecial",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(StatusSolicitacoes);
 
 const selector = formValueSelector("statusSolicitacoesDietaEspecialForm");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const statusDieta = state.filtersDieta.statusDieta;
   const loteDieta = state.filtersDieta.loteDieta;
   const tituloDieta = state.filtersDieta.tituloDieta;
@@ -442,12 +444,12 @@ const mapStateToProps = state => {
     selecionar_todos: selector(state, "selecionar_todos"),
     statusDieta: statusDieta,
     loteDieta: loteDieta,
-    tituloDieta: tituloDieta
+    tituloDieta: tituloDieta,
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  resetCamposDieta: () => dispatch(resetCamposDieta())
+const mapDispatchToProps = (dispatch) => ({
+  resetCamposDieta: () => dispatch(resetCamposDieta()),
 });
 
 export default connect(

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { retornaTituloCardPendencias } from "./helper";
 import "./style.scss";
 
-export const CardPendencia = props => {
+export const CardPendencia = (props) => {
   const {
     cardTitle,
     totalOfOrders,
@@ -11,7 +11,7 @@ export const CardPendencia = props => {
     onLimitOrders,
     regularOrders,
     priorityOrdersOnly,
-    loading
+    loading,
   } = props;
   return (
     <div className="card card-pendency">
@@ -77,7 +77,7 @@ CardPendencia.propTypes = {
   totalOfOrders: PropTypes.number,
   priorityOrders: PropTypes.number,
   onLimitOrders: PropTypes.number,
-  regularOrders: PropTypes.number
+  regularOrders: PropTypes.number,
 };
 
 export default CardPendencia;

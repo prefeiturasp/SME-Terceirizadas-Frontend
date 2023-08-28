@@ -7,12 +7,12 @@ import {
   DETALHE_CRONOGRAMA,
   PRE_RECEBIMENTO,
   EDITAR,
-  ALTERACAO_CRONOGRAMA
+  ALTERACAO_CRONOGRAMA,
 } from "configs/constants";
 import {
   usuarioEhCronogramaCriacaoEdicao,
   usuarioEhEmpresaFornecedor,
-  formataMilhar
+  formataMilhar,
 } from "helpers/utilities";
 import { deParaStatusCronograma } from "../Filtros/utils";
 import { Tooltip } from "antd";
@@ -21,7 +21,7 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import { imprimirCronograma } from "services/cronograma.service";
 
 const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
-  const statusValue = status => {
+  const statusValue = (status) => {
     if (
       status === "Assinado e Enviado ao Fornecedor" &&
       usuarioEhEmpresaFornecedor()
@@ -32,7 +32,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
     }
   };
 
-  const baixarPDFCronograma = cronograma => {
+  const baixarPDFCronograma = (cronograma) => {
     setCarregando(true);
     let uuid = cronograma.uuid;
     let numero = cronograma.numero;
@@ -40,8 +40,8 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
       .then(() => {
         setCarregando(false);
       })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
   };
@@ -88,7 +88,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                       overlayStyle={{
                         maxWidth: "320px",
                         fontSize: "12px",
-                        fontWeight: "700"
+                        fontWeight: "700",
                       }}
                       title={cronograma.produto && cronograma.produto.nome}
                     >
@@ -114,9 +114,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                         <>
                           <NavLink
                             className="float-left"
-                            to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
-                              cronograma.uuid
-                            }`}
+                            to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${cronograma.uuid}`}
                           >
                             <span className="link-acoes green">Detalhar</span>
                           </NavLink>
@@ -138,9 +136,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                                 <span className="ml-1">|</span>
                                 <NavLink
                                   className="float-left ml-1"
-                                  to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${
-                                    cronograma.uuid
-                                  }`}
+                                  to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${cronograma.uuid}`}
                                 >
                                   <span className="link-acoes green">
                                     Solicitar Alteração
@@ -154,9 +150,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                           {usuarioEhCronogramaCriacaoEdicao() && (
                             <NavLink
                               className="float-left"
-                              to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${
-                                cronograma.uuid
-                              }`}
+                              to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${cronograma.uuid}`}
                             >
                               <span className="link-acoes green">Editar</span>
                             </NavLink>

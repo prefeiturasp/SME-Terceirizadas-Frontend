@@ -7,7 +7,7 @@ import Notificacoes from "components/screens/Notificacoes";
 
 const atual = {
   href: `/${NOTIFICACOES}`,
-  titulo: "Notificações"
+  titulo: "Notificações",
 };
 
 export default () => (

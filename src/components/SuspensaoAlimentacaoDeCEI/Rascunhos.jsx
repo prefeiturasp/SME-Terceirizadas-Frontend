@@ -5,7 +5,7 @@ export class Rascunhos extends Component {
     const {
       suspensoesDeAlimentacaoList,
       OnDeleteButtonClicked,
-      OnEditButtonClicked
+      OnEditButtonClicked,
     } = this.props;
     const allDaysInfo = suspensoesDeAlimentacaoList.map(
       (suspensaoDeAlimentacao, key) => {
@@ -33,7 +33,7 @@ export class Rascunhos extends Component {
               <span
                 onClick={() =>
                   OnEditButtonClicked({
-                    suspensaoDeAlimentacao
+                    suspensaoDeAlimentacao,
                   })
                 }
               >

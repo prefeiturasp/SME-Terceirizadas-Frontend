@@ -5,28 +5,28 @@ import Page from "components/Shareable/Page/Page";
 import {
   ANALISAR_ASSINAR,
   LOGISTICA,
-  GUIAS_NOTIFICACAO_FISCAL
+  GUIAS_NOTIFICACAO_FISCAL,
 } from "configs/constants";
 import NotificarEmpresa from "components/screens/Logistica/NotificarEmpresa";
 
 const atual = {
   href: `/${LOGISTICA}/${ANALISAR_ASSINAR}`,
-  titulo: "Analisar e Assinar"
+  titulo: "Analisar e Assinar",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
+    titulo: "Abastecimento",
   },
   {
     href: `/`,
-    titulo: "Ocorrências"
+    titulo: "Ocorrências",
   },
   {
     href: `/${LOGISTICA}/${GUIAS_NOTIFICACAO_FISCAL}`,
-    titulo: "Guias com Notificações"
-  }
+    titulo: "Guias com Notificações",
+  },
 ];
 
 const voltarPara = `/${LOGISTICA}/${GUIAS_NOTIFICACAO_FISCAL}`;

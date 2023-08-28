@@ -9,16 +9,16 @@ export class OpcoesKits extends Component {
     super(props);
     this.state = {
       kitsLanche: null,
-      kitsChecked: []
+      kitsChecked: [],
     };
     this.onCardChange = this.onCardChange.bind(this);
   }
 
   componentDidMount() {
     if (!this.props.kitsLanche) {
-      getKitLanches().then(response => {
+      getKitLanches().then((response) => {
         this.setState({
-          kitsLanche: response.data.results
+          kitsLanche: response.data.results,
         });
       });
     } else {

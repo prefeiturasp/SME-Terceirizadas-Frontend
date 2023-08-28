@@ -10,7 +10,7 @@ export const field = ({ input, meta, options }) => {
   const inputValue = input.value;
 
   const radioes = options.map(({ label, value }, index) => {
-    const handleChange = event => {
+    const handleChange = (event) => {
       let selected = "";
       if (event.target.checked) {
         selected = value;
@@ -53,9 +53,9 @@ export default class RadioboxGroup extends Component {
     options: PropTypes.arrayOf(
       PropTypes.shape({
         value: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired
+        label: PropTypes.string.isRequired,
       })
-    ).isRequired
+    ).isRequired,
   };
 
   render() {

@@ -5,7 +5,7 @@ import Page from "components/Shareable/Page/Page";
 
 const atual = {
   href: `/gestao-produto/cadastro-geral`,
-  titulo: "Cadastro Geral"
+  titulo: "Cadastro Geral",
 };
 
 export default () => (

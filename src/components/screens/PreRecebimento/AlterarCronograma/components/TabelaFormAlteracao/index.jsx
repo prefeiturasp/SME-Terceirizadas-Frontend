@@ -16,6 +16,8 @@ export default ({ solicitacao }) => {
     } else return "";
   };
 
+  const apenasLeitura = solicitacao.status !== "Em Análise";
+
   return (
     <>
       <table className="table tabela-form-alteracao mt-2 mb-4">
@@ -33,12 +35,16 @@ export default ({ solicitacao }) => {
               return (
                 <tr key={index}>
                   <td className="borda-crono">
-                    <Field
-                      component={InputText}
-                      name={`empenho_${index}`}
-                      validate={required}
-                      proibeLetras
-                    />
+                    {apenasLeitura ? (
+                      <>{etapa.numero_empenho}</>
+                    ) : (
+                      <Field
+                        component={InputText}
+                        name={`empenho_${index}`}
+                        validate={required}
+                        proibeLetras
+                      />
+                    )}
                   </td>
                   <td className={`borda-crono ${pintaTabela("etapa", index)}`}>
                     {etapa.etapa}
@@ -68,12 +74,16 @@ export default ({ solicitacao }) => {
                       index
                     )}`}
                   >
-                    <Field
-                      component={InputText}
-                      name={`total_embalagens_${index}`}
-                      validate={required}
-                      apenasNumeros
-                    />
+                    {apenasLeitura ? (
+                      <>{etapa.total_embalagens}</>
+                    ) : (
+                      <Field
+                        component={InputText}
+                        name={`total_embalagens_${index}`}
+                        validate={required}
+                        apenasNumeros
+                      />
+                    )}
                   </td>
                 </tr>
               );

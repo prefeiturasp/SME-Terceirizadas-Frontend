@@ -3,7 +3,7 @@ import "./styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Field } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -23,15 +23,15 @@ export default ({
   duplicados,
   restante,
   unidadeMedida,
-  fornecedor = false
+  fornecedor = false,
 }) => {
   const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [desabilitar, setDesabilitar] = useState([]);
 
-  const getEtapasFiltrado = etapa => {
+  const getEtapasFiltrado = (etapa) => {
     if (etapa) {
       const reg = new RegExp(etapa, "iu");
-      return etapasOptions.filter(a => reg.test(a.value));
+      return etapasOptions.filter((a) => reg.test(a.value));
     }
     return etapasOptions;
   };
@@ -40,7 +40,7 @@ export default ({
     setEtapas([...etapas, {}]);
   };
 
-  const deletaEtapa = index => {
+  const deletaEtapa = (index) => {
     let etapasNovo = [...etapas];
     etapasNovo.splice(index, 1);
     setEtapas(etapasNovo);
@@ -167,24 +167,24 @@ export default ({
                   options={[
                     {
                       uuid: "Parte 1",
-                      nome: "Parte 1"
+                      nome: "Parte 1",
                     },
                     {
                       uuid: "Parte 2",
-                      nome: "Parte 2"
+                      nome: "Parte 2",
                     },
                     {
                       uuid: "Parte 3",
-                      nome: "Parte 3"
+                      nome: "Parte 3",
                     },
                     {
                       uuid: "Parte 4",
-                      nome: "Parte 4"
+                      nome: "Parte 4",
                     },
                     {
                       uuid: "Parte 5",
-                      nome: "Parte 5"
-                    }
+                      nome: "Parte 5",
+                    },
                   ]}
                   label="Parte"
                   name={`parte_${index}`}
@@ -217,8 +217,9 @@ export default ({
                   placeholder="Digite a Quantidade"
                   validate={() =>
                     restante !== 0 &&
-                    `quantidade total é diferente de ${values.quantidade_total ||
-                      0}`
+                    `quantidade total é diferente de ${
+                      values.quantidade_total || 0
+                    }`
                   }
                   required
                   apenasNumeros

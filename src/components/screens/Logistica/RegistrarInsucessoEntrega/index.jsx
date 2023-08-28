@@ -15,14 +15,14 @@ import {
   maxLength,
   apenasLetras,
   alphaNumeric,
-  peloMenosUmNumeroEUmaLetra
+  peloMenosUmNumeroEUmaLetra,
 } from "../../../../helpers/fieldValidators";
 import { composeValidators } from "../../../../helpers/utilities";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import ModalInsucesso from "./components/ModalInsucesso";
 import moment from "moment";
@@ -42,7 +42,7 @@ export default () => {
   const [arquivo, setArquivo] = useState([]);
   const history = useHistory();
 
-  const carregarGuia = async uuid => {
+  const carregarGuia = async (uuid) => {
     let response;
     try {
       setCarregando(true);
@@ -54,7 +54,7 @@ export default () => {
         data_entrega: response.data.data_entrega,
         nome_unidade: response.data.nome_unidade,
         numero_requisicao: response.data.numero_requisicao,
-        hora_tentativa: "00:00"
+        hora_tentativa: "00:00",
       });
       setCarregando(false);
     } catch (e) {
@@ -63,7 +63,7 @@ export default () => {
     }
   };
 
-  const escolherHora = hora => {
+  const escolherHora = (hora) => {
     if (hora) {
       const horario = moment(hora).format("HH:mm");
       setHoraRecebimento(horario);
@@ -78,19 +78,19 @@ export default () => {
     setArquivo([]);
   };
 
-  const setFiles = files => {
+  const setFiles = (files) => {
     let arquivos = arquivo;
     arquivos = files;
     setArquivo(arquivos);
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     values.hora_tentativa = HoraRecebimento;
     values.guia = uuid;
     if (arquivo[0]) values.arquivo = arquivo[0].arquivo;
   };
 
-  const validaHoraRecebimento = value => {
+  const validaHoraRecebimento = (value) => {
     value = HoraRecebimentoAlterada ? HoraRecebimento : undefined;
     return value !== undefined ? "" : "Campo obrigatório";
   };
@@ -174,18 +174,17 @@ export default () => {
                         { uuid: "", nome: "Selecione" },
                         {
                           uuid: "UNIDADE_FECHADA",
-                          nome: "Unidade Educacional Fechada"
+                          nome: "Unidade Educacional Fechada",
                         },
                         {
                           uuid: "UNIDADE_SEM_ENERGIA",
-                          nome: "Unidade Educacional Sem Energia Elétrica"
+                          nome: "Unidade Educacional Sem Energia Elétrica",
                         },
                         {
                           uuid: "UNIDADE_SEM_ACESSO",
-                          nome:
-                            "Interdição de Via de Acesso ao Local de Entrega"
+                          nome: "Interdição de Via de Acesso ao Local de Entrega",
                         },
-                        { uuid: "OUTROS", nome: "Outros" }
+                        { uuid: "OUTROS", nome: "Outros" },
                       ]}
                       className="input-busca-produto"
                       validate={required}
@@ -259,7 +258,7 @@ export default () => {
                       name="hora_tentativa"
                       placeholder="Selecione a Hora"
                       horaAtual={HoraRecebimento}
-                      onChangeFunction={data => {
+                      onChangeFunction={(data) => {
                         escolherHora(data);
                       }}
                       className="input-busca-produto"

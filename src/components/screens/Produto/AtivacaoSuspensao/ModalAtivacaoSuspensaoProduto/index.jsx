@@ -12,7 +12,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
 import { ativarProduto, suspenderProduto } from "services/produto.service";
@@ -29,7 +29,7 @@ const ModalAtivacaoSuspensaoProduto = ({
   closeModal,
   showModal,
   produto,
-  ehSuspensaoFluxoAlteracaoDados
+  ehSuspensaoFluxoAlteracaoDados,
 }) => {
   const [meusDadosUsuario, setMeusDadosUsuario] = useState(undefined);
   const [editais, setEditais] = useState(undefined);
@@ -48,12 +48,12 @@ const ModalAtivacaoSuspensaoProduto = ({
       ? {
           funcionario_registro_funcional: meusDadosUsuario.registro_funcional,
           funcionario_nome: meusDadosUsuario.nome,
-          funcionario_cargo: meusDadosUsuario.cargo || ""
+          funcionario_cargo: meusDadosUsuario.cargo || "",
         }
       : {};
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const endpoint = acao === "ativação" ? ativarProduto : suspenderProduto;
     const response = await endpoint(idHomologacao, values);
     if (response.status === HTTP_STATUS.OK) {
@@ -102,18 +102,18 @@ const ModalAtivacaoSuspensaoProduto = ({
         let vinculos_produto_edital = produto.vinculos_produto_edital;
         if (vinculos_produto_edital) {
           vinculos_produto_edital = vinculos_produto_edital.filter(
-            vinculo => !vinculo.suspenso
+            (vinculo) => !vinculo.suspenso
           );
         }
-        options = vinculos_produto_edital.map(vinculo => ({
+        options = vinculos_produto_edital.map((vinculo) => ({
           value: vinculo.edital.uuid,
-          label: vinculo.edital.numero
+          label: vinculo.edital.numero,
         }));
       }
       if (acao === "ativação" && editais?.length > 0) {
-        options = editais.map(edital => ({
+        options = editais.map((edital) => ({
           label: edital.numero,
-          value: edital.uuid
+          value: edital.uuid,
         }));
       }
     }
@@ -184,7 +184,7 @@ const ModalAtivacaoSuspensaoProduto = ({
                     label="Justificativa"
                     name="justificativa"
                     required
-                    validate={value => {
+                    validate={(value) => {
                       for (let validator of [peloMenosUmCaractere, required]) {
                         const erro = validator(value);
                         if (erro) return erro;
@@ -236,9 +236,9 @@ const ModalAtivacaoSuspensaoProduto = ({
                       submitting ||
                       peloMenosUmCaractere(values.justificativa) !==
                         undefined ||
-                      (!values.editais_para_suspensao_ativacao ||
-                        (values.editais_para_suspensao_ativacao &&
-                          values.editais_para_suspensao_ativacao.length === 0))
+                      !values.editais_para_suspensao_ativacao ||
+                      (values.editais_para_suspensao_ativacao &&
+                        values.editais_para_suspensao_ativacao.length === 0)
                     }
                   />
                 </div>

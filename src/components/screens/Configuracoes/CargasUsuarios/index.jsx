@@ -12,7 +12,7 @@ import {
   getPlanilhasNaoServidor,
   getPlanilhasServidor,
   removerPlanilhaExterno,
-  removerPlanilhaServidor
+  removerPlanilhaServidor,
 } from "services/cargaUsuario.service";
 import ModalCadastroPlanilha from "./components/ModalCadastroPlanilha";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -29,7 +29,7 @@ export default ({ servidores }) => {
   const [showRemocao, setShowRemocao] = useState(false);
   const [tipoPlanilha, setTipoPlanilha] = useState();
 
-  const buscarPlanilhas = async page => {
+  const buscarPlanilhas = async (page) => {
     setCarregando(true);
     setTipoPlanilha(filtros.modelo);
     let payload = gerarParametrosConsulta({ page, ...filtros });
@@ -45,7 +45,7 @@ export default ({ servidores }) => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarPlanilhas(page);
     setPage(page);
   };
@@ -55,10 +55,10 @@ export default ({ servidores }) => {
     let res = await fetch(arquivo[0].arquivo);
     let blob = await res.blob();
     let file = new File([blob], arquivo[0].nome, {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
     let payload = {
-      conteudo: file
+      conteudo: file,
     };
     let response;
     if (tipoPlanilha === "NAO_SERVIDOR") {
@@ -97,7 +97,7 @@ export default ({ servidores }) => {
     }
   };
 
-  const executarCarga = async uuid => {
+  const executarCarga = async (uuid) => {
     setCarregando(true);
     let response;
     if (tipoPlanilha === "SERVIDOR") {

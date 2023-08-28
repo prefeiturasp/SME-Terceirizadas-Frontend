@@ -3,7 +3,7 @@ import { Tooltip } from "antd";
 import PropTypes from "prop-types";
 import "../style.scss";
 
-export const InputText = props => {
+export const InputText = (props) => {
   const {
     classNameToNextInput,
     classNameToPrevInput,
@@ -41,7 +41,7 @@ export const InputText = props => {
     exibeTooltipLancheEmergencialSolAlimentacoes,
     exibeTooltipFrequenciaZeroTabelaEtec,
     exibeTooltipLancheEmergTabelaEtec,
-    exibeTooltipRepeticao
+    exibeTooltipRepeticao,
   } = props;
 
   let msgTooltip = "";
@@ -93,7 +93,7 @@ export const InputText = props => {
           className={`col-form-label ${labelClassName}`}
         >
           {label}
-        </label>
+        </label>,
       ]}
       {exibeTooltipDiaSobremesaDoce && (
         <Tooltip
@@ -254,7 +254,7 @@ export const InputText = props => {
         title={title}
         pattern={pattern}
         maxLength={maxlength}
-        onInput={e => {
+        onInput={(e) => {
           e.target.value = toUppercaseActive
             ? e.target.value.toUpperCase()
             : e.target.value;
@@ -262,7 +262,7 @@ export const InputText = props => {
             ? e.target.value.replace(/\D/g, "")
             : e.target.value;
         }}
-        onKeyDown={e => {
+        onKeyDown={(e) => {
           if (e.key === "Enter" && classNameToPrevInput && e.shiftKey) {
             let elements = document.getElementsByName(classNameToPrevInput);
             if (elements && elements.length === 1) {
@@ -298,7 +298,7 @@ InputText.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   type: PropTypes.string,
-  contador: PropTypes.number
+  contador: PropTypes.number,
 };
 
 InputText.defaultProps = {
@@ -316,7 +316,7 @@ InputText.defaultProps = {
   name: "",
   placeholder: "",
   required: false,
-  type: "text"
+  type: "text",
 };
 
 export default InputText;

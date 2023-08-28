@@ -7,12 +7,12 @@ import { GESTAO_PRODUTO } from "configs/constants";
 import { formataCards, incluirDados } from "./helper";
 import {
   dataAtual,
-  usuarioEhEscolaTerceirizadaQualquerPerfil
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
 } from "helpers/utilities";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
 import {
   getDashboardGestaoProdutos,
-  getHomologacoesPorTituloMarca
+  getHomologacoesPorTituloMarca,
 } from "services/produto.service";
 import { TIPO_PERFIL } from "constants/shared";
 import CardAtalho from "components/Shareable/CardAtalho";
@@ -28,7 +28,7 @@ export default class DashboardGestaoProduto extends Component {
       ehTerceirizada: false,
       loading: true,
       filtrosDesabilitados: true,
-      filtroAtivo: false
+      filtroAtivo: false,
     };
     this.typingTimeout = null;
   }
@@ -41,14 +41,14 @@ export default class DashboardGestaoProduto extends Component {
   loadDashBoardGestaoProdutos = () => {
     this.setState({
       loading: true,
-      filtrosDesabilitados: true
+      filtrosDesabilitados: true,
     });
     getDashboardGestaoProdutos()
-      .then(response => {
+      .then((response) => {
         if (response.status === HTTP_STATUS.OK) {
           const cards = listarCardsPermitidos();
           const ehTerceirizada = this.ehPerfilTerceirizada();
-          cards.forEach(card => {
+          cards.forEach((card) => {
             card.items = incluirDados(
               card.incluir_status,
               response.data.results
@@ -59,17 +59,17 @@ export default class DashboardGestaoProduto extends Component {
             cardsFiltered: cards.concat(),
             ehTerceirizada,
             loading: false,
-            filtrosDesabilitados: false
+            filtrosDesabilitados: false,
           });
         } else {
           this.setState({
             erro: true,
             loading: false,
-            filtrosDesabilitados: false
+            filtrosDesabilitados: false,
           });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         // eslint-disable-next-line no-console
         console.error(error);
         this.setState({ erro: true });
@@ -80,7 +80,7 @@ export default class DashboardGestaoProduto extends Component {
     this.loadDashBoardGestaoProdutos();
   }
 
-  onPesquisaChanged = values => {
+  onPesquisaChanged = (values) => {
     clearTimeout(this.typingTimeout);
     this.typingTimeout = setTimeout(async () => {
       const data = {};
@@ -121,25 +121,25 @@ export default class DashboardGestaoProduto extends Component {
       if (response.status === HTTP_STATUS.OK) {
         const cards = listarCardsPermitidos();
         const ehTerceirizada = this.ehPerfilTerceirizada();
-        cards.forEach(card => {
+        cards.forEach((card) => {
           card.items = incluirDados(card.incluir_status, response.data.results);
         });
         this.setState({
           cards: cards,
           cardsFiltered: cards.concat(),
           ehTerceirizada,
-          loading: false
+          loading: false,
         });
       } else {
         this.setState({
           loading: false,
-          erro: true
+          erro: true,
         });
       }
     }, 1000);
   };
 
-  retornaCenarioPorTitulo = titulo => {
+  retornaCenarioPorTitulo = (titulo) => {
     switch (titulo) {
       case "Produtos suspensos":
         return true;
@@ -156,7 +156,7 @@ export default class DashboardGestaoProduto extends Component {
     }
   };
 
-  apontaParaFormularioDeAlteracao = titulo => {
+  apontaParaFormularioDeAlteracao = (titulo) => {
     const { ehTerceirizada } = this.state;
     return this.retornaCenarioPorTitulo(titulo) && ehTerceirizada;
   };

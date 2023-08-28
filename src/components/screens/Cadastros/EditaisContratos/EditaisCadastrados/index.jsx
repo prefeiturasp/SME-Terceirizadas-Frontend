@@ -8,12 +8,12 @@ class EditaisCadastrados extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editais: null
+      editais: null,
     };
   }
 
   obtemResponseAPIEditais() {
-    obterEditaisEContratos().then(response => {
+    obterEditaisEContratos().then((response) => {
       this.setState({ editais: montaEstadoEditais(response) });
     });
   }
@@ -52,9 +52,7 @@ class EditaisCadastrados extends Component {
                         {edital.ativo && (
                           <NavLink
                             className="float-left"
-                            to={`/configuracoes/cadastros/editais-contratos?uuid=${
-                              edital.uuid
-                            }`}
+                            to={`/configuracoes/cadastros/editais-contratos?uuid=${edital.uuid}`}
                           >
                             <i className="fas fa-pen" />
                           </NavLink>

@@ -29,7 +29,7 @@ import {
   exibirModuloMedicaoInicial,
   usuarioEhCodaeDilog,
   usuarioEhDilog,
-  usuarioEhDilogQualidade
+  usuarioEhDilogQualidade,
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -41,7 +41,7 @@ import {
   MenuLancamentoInicial,
   MenuRelatorios,
   MenuLogistica,
-  MenuPreRecebimento
+  MenuPreRecebimento,
 } from "./menus";
 
 export const SidebarContent = () => {
@@ -49,14 +49,14 @@ export const SidebarContent = () => {
   const [activeMenuCadastros, setActiveMenuCadastros] = useState("");
 
   const onSubmenuClick = useCallback(
-    clickedMenu => {
+    (clickedMenu) => {
       setActiveMenu(clickedMenu === activeMenu ? "" : clickedMenu);
     },
     [activeMenu]
   );
 
   const onSubmenuCadastroClick = useCallback(
-    clickedMenu => {
+    (clickedMenu) => {
       setActiveMenuCadastros(
         clickedMenu === activeMenuCadastros ? "" : clickedMenu
       );
@@ -153,7 +153,7 @@ export const SidebarContent = () => {
     activeMenu,
     onSubmenuClick: onSubmenuClick,
     activeMenuCadastros,
-    onSubmenuCadastroClick: onSubmenuCadastroClick
+    onSubmenuCadastroClick: onSubmenuCadastroClick,
   };
 
   return [
@@ -170,6 +170,6 @@ export const SidebarContent = () => {
     exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
     exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />,
-    exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />
+    exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
   ];
 };

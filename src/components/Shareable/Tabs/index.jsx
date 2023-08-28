@@ -17,7 +17,7 @@ Tab.propTypes = {
   index: number,
   activeIndex: number,
   setActiveIndex: func,
-  title: string
+  title: string,
 };
 
 const Tabs = ({ tabs, children }) => {
@@ -45,7 +45,7 @@ const Tabs = ({ tabs, children }) => {
 
 Tabs.propTypes = {
   tabs: arrayOf(string),
-  children: node
+  children: node,
 };
 
 export default Tabs;

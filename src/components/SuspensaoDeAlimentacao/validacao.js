@@ -9,7 +9,7 @@ export const validateSubmit = (values, meusDados) => {
     let objSuspensoes = {
       periodo_escolar: values.suspensoes_MANHA.periodo,
       tipos_alimentacao: values.suspensoes_MANHA.tipo_de_refeicao,
-      numero_alunos: values.suspensoes_MANHA.numero_de_alunos
+      numero_alunos: values.suspensoes_MANHA.numero_de_alunos,
     };
     if (escolaEhCEMEI()) {
       objSuspensoes["alunos_cei_ou_emei"] =
@@ -25,7 +25,7 @@ export const validateSubmit = (values, meusDados) => {
     let objSuspensoes = {
       periodo_escolar: values.suspensoes_TARDE.periodo,
       tipos_alimentacao: values.suspensoes_TARDE.tipo_de_refeicao,
-      numero_alunos: values.suspensoes_TARDE.numero_de_alunos
+      numero_alunos: values.suspensoes_TARDE.numero_de_alunos,
     };
     if (escolaEhCEMEI()) {
       objSuspensoes["alunos_cei_ou_emei"] =
@@ -41,7 +41,7 @@ export const validateSubmit = (values, meusDados) => {
     let objSuspensoes = {
       periodo_escolar: values.suspensoes_NOITE.periodo,
       tipos_alimentacao: values.suspensoes_NOITE.tipo_de_refeicao,
-      numero_alunos: values.suspensoes_NOITE.numero_de_alunos
+      numero_alunos: values.suspensoes_NOITE.numero_de_alunos,
     };
     if (escolaEhCEMEI()) {
       objSuspensoes["alunos_cei_ou_emei"] =
@@ -57,7 +57,7 @@ export const validateSubmit = (values, meusDados) => {
     let objSuspensoes = {
       periodo_escolar: values.suspensoes_INTEGRAL.periodo,
       tipos_alimentacao: values.suspensoes_INTEGRAL.tipo_de_refeicao,
-      numero_alunos: values.suspensoes_INTEGRAL.numero_de_alunos
+      numero_alunos: values.suspensoes_INTEGRAL.numero_de_alunos,
     };
     if (escolaEhCEMEI()) {
       objSuspensoes["alunos_cei_ou_emei"] =

@@ -5,7 +5,7 @@ export const Rascunhos = ({
   rascunhosAlteracaoCardapio,
   removerRascunho,
   form,
-  carregarRascunho
+  carregarRascunho,
 }) => {
   return (
     <div>

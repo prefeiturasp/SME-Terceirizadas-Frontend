@@ -10,7 +10,7 @@ import {
   usuarioEhEmpresaTerceirizada,
   usuarioEhCODAENutriManifestacao,
   usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaTerceirizadaDiretor
+  usuarioEhEscolaTerceirizadaDiretor,
 } from "helpers/utilities";
 import {
   filtrarSolicitacoesAlimentacaoCODAE,
@@ -24,23 +24,23 @@ import {
   gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas,
   filtrarSolicitacoesAlimentacaoEscola,
   gerarExcelRelatorioSolicitacoesAlimentacaoEscola,
-  gerarPDFRelatorioSolicitacoesAlimentacaoEscola
+  gerarPDFRelatorioSolicitacoesAlimentacaoEscola,
 } from "services/relatorios.service";
 
 const atual = {
   href: `/${RELATORIO_SOLICITACOES_ALIMENTACAO}`,
-  titulo: "Solicitações de Alimentações"
+  titulo: "Solicitações de Alimentações",
 };
 
 const anteriores = [
   {
     href: `/painel-gestao-alimentacao`,
-    titulo: "Gestão de Alimentação"
+    titulo: "Gestão de Alimentação",
   },
   {
     href: `/`,
-    titulo: "Relatórios"
-  }
+    titulo: "Relatórios",
+  },
 ];
 
 const endpointPorPerfil = () => {
@@ -106,7 +106,7 @@ const endpointGerarPDF = () => {
   }
 };
 
-export default props => (
+export default (props) => (
   <Page
     titulo="Relatório de Solicitações de Alimentação"
     botaoVoltar

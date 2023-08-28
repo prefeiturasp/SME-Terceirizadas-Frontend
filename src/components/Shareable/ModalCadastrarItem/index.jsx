@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import {
   getTiposItems,
   cadastrarItem,
-  atualizarItem
+  atualizarItem,
 } from "services/produto.service";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -14,16 +14,16 @@ import {
   required,
   selectValidate,
   alphaNumericAndSingleSpaceBetweenCharacters,
-  noSpaceStartOrEnd
+  noSpaceStartOrEnd,
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import {
   composeValidators,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhEmpresaTerceirizada,
 } from "helpers/utilities";
 import "./style.scss";
 
@@ -32,7 +32,7 @@ export default ({
   showModal,
   item,
   changePage,
-  tipoFixo = false
+  tipoFixo = false,
 }) => {
   const [carregando, setCarregando] = useState(true);
   const [tipos, setTipos] = useState(undefined);
@@ -42,7 +42,7 @@ export default ({
     const permissao = usuarioEhEmpresaTerceirizada();
     if (permissao) {
       const result = respTipos.data.filter(
-        data => data.tipo === "MARCA" || data.tipo === "FABRICANTE"
+        (data) => data.tipo === "MARCA" || data.tipo === "FABRICANTE"
       );
       setTipos(result);
     } else {
@@ -55,18 +55,18 @@ export default ({
     fetchData();
   }, []);
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     setCarregando(true);
     const payload = {
       nome: formValues.nome,
-      tipo: formValues.tipo
+      tipo: formValues.tipo,
     };
     if (item) {
       await atualizarItem(payload, item.uuid)
         .then(() => {
           toastSuccess("Cadastro atualizado com sucesso");
         })
-        .catch(error => {
+        .catch((error) => {
           toastError(error.response.data[0]);
         });
     } else {
@@ -74,7 +74,7 @@ export default ({
         .then(() => {
           toastSuccess("Cadastro realizado com sucesso");
         })
-        .catch(error => {
+        .catch((error) => {
           toastError(error.response.data[0]);
         });
     }
@@ -108,10 +108,10 @@ export default ({
                       defaultValue={item ? item.tipo : undefined}
                       disabled={item || tipoFixo ? true : false}
                       options={[
-                        { uuid: "", nome: "Selecione uma opção" }
+                        { uuid: "", nome: "Selecione uma opção" },
                       ].concat(
                         tipos &&
-                          tipos.map(tipo => {
+                          tipos.map((tipo) => {
                             return { uuid: tipo.tipo, nome: tipo.tipo_display };
                           })
                       )}

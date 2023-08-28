@@ -6,7 +6,7 @@ import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 export const getEvolucaoSolicitacoesEscola = () => {
@@ -14,16 +14,16 @@ export const getEvolucaoSolicitacoesEscola = () => {
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -33,16 +33,16 @@ export const getResumoTotaisPorMesEscola = () => {
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -52,21 +52,17 @@ export const getPedidosESolicitacoesFiltroEscola = (
   dataDe,
   dataAte
 ) => {
-  const url = `${API_URL}/escola-solicitacoes/pesquisa/?tipo_solicitacao=${
-    values.tipo_de_solicitacao
-  }&status_solicitacao=${
-    values.status_solicitacao
-  }&data_inicial=${dataDe}&data_final=${dataAte}`;
+  const url = `${API_URL}/escola-solicitacoes/pesquisa/?tipo_solicitacao=${values.tipo_de_solicitacao}&status_solicitacao=${values.status_solicitacao}&data_inicial=${dataDe}&data_final=${dataAte}`;
 
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -77,19 +73,17 @@ export const getPedidosESolicitacoesFiltroPaginacaoEscola = (
   dataAte,
   pagina
 ) => {
-  const url = `${API_URL}/escola-solicitacoes/pesquisa?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${
-    values.status_solicitacao
-  }&tipo_solicitacao=${values.tipo_de_solicitacao}`;
+  const url = `${API_URL}/escola-solicitacoes/pesquisa?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${values.status_solicitacao}&tipo_solicitacao=${values.tipo_de_solicitacao}`;
 
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -99,16 +93,16 @@ export const getEvolucaoSolicitacoesDiretoriaRegional = () => {
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -118,16 +112,16 @@ export const getResumoTotaisPorMesDiretoriaRegional = () => {
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -137,20 +131,16 @@ export const getPedidosESolicitacoesFiltroDiretoriaRegional = (
   dataDe,
   dataAte
 ) => {
-  const url = `${API_URL}/diretoria-regional-solicitacoes/pesquisa/${
-    values.unidade_escolar
-  }/?tipo_solicitacao=${values.tipo_de_solicitacao}&status_solicitacao=${
-    values.status_solicitacao
-  }&data_inicial=${dataDe}&data_final=${dataAte}`;
+  const url = `${API_URL}/diretoria-regional-solicitacoes/pesquisa/${values.unidade_escolar}/?tipo_solicitacao=${values.tipo_de_solicitacao}&status_solicitacao=${values.status_solicitacao}&data_inicial=${dataDe}&data_final=${dataAte}`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -161,21 +151,17 @@ export const getPedidosESolicitacoesFiltroPaginacaoDiretoriaRegional = (
   dataAte,
   pagina
 ) => {
-  const url = `${API_URL}/diretoria-regional-solicitacoes/pesquisa/${
-    values.unidade_escolar
-  }/?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${
-    values.status_solicitacao
-  }&tipo_solicitacao=${values.tipo_de_solicitacao}`;
+  const url = `${API_URL}/diretoria-regional-solicitacoes/pesquisa/${values.unidade_escolar}/?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${values.status_solicitacao}&tipo_solicitacao=${values.tipo_de_solicitacao}`;
 
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -185,16 +171,16 @@ export const getEvolucaoSolicitacoesCODAE = () => {
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -204,37 +190,31 @@ export const getResumoTotaisPorMesCODAE = () => {
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
 export const getPedidosESolicitacoesFiltroCODAE = (values, dataDe, dataAte) => {
-  const url = `${API_URL}/codae-solicitacoes/pesquisa/${
-    values.diretoria_regional
-  }/${values.unidade_escolar}/?tipo_solicitacao=${
-    values.tipo_de_solicitacao
-  }&status_solicitacao=${
-    values.status_solicitacao
-  }&data_inicial=${dataDe}&data_final=${dataAte}`;
+  const url = `${API_URL}/codae-solicitacoes/pesquisa/${values.diretoria_regional}/${values.unidade_escolar}/?tipo_solicitacao=${values.tipo_de_solicitacao}&status_solicitacao=${values.status_solicitacao}&data_inicial=${dataDe}&data_final=${dataAte}`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -245,39 +225,33 @@ export const getPedidosESolicitacoesFiltroPaginacaoCODAE = (
   dataAte,
   pagina
 ) => {
-  const url = `${API_URL}/codae-solicitacoes/pesquisa/${
-    values.diretoria_regional
-  }/${
-    values.unidade_escolar
-  }/?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${
-    values.status_solicitacao
-  }&tipo_solicitacao=${values.tipo_de_solicitacao}`;
+  const url = `${API_URL}/codae-solicitacoes/pesquisa/${values.diretoria_regional}/${values.unidade_escolar}/?data_final=${dataAte}&data_inicial=${dataDe}&limit=100&offset=${pagina}&status_solicitacao=${values.status_solicitacao}&tipo_solicitacao=${values.tipo_de_solicitacao}`;
 
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const getRelatorioReclamacao = async params => {
+export const getRelatorioReclamacao = async (params) => {
   const { data } = await axios.get(
     `${API_URL}/produtos/relatorio-reclamacao/`,
     {
       responseType: "blob",
-      params
+      params,
     }
   );
   saveAs(data, "relatorio_reclamacao.pdf");
 };
 
-export const filtrarSolicitacoesAlimentacaoDRE = async payload => {
+export const filtrarSolicitacoesAlimentacaoDRE = async (payload) => {
   const response = await axios
     .post(
       `${API_URL}/diretoria-regional-solicitacoes/filtrar-solicitacoes-ga/`,
@@ -290,7 +264,7 @@ export const filtrarSolicitacoesAlimentacaoDRE = async payload => {
   }
 };
 
-export const filtrarSolicitacoesAlimentacaoEscola = async payload => {
+export const filtrarSolicitacoesAlimentacaoEscola = async (payload) => {
   const response = await axios
     .post(`${API_URL}/escola-solicitacoes/filtrar-solicitacoes-ga/`, payload)
     .catch(ErrorHandlerFunction);
@@ -300,7 +274,7 @@ export const filtrarSolicitacoesAlimentacaoEscola = async payload => {
   }
 };
 
-export const filtrarSolicitacoesAlimentacaoCODAE = async payload => {
+export const filtrarSolicitacoesAlimentacaoCODAE = async (payload) => {
   const response = await axios
     .post(`${API_URL}/codae-solicitacoes/filtrar-solicitacoes-ga/`, payload)
     .catch(ErrorHandlerFunction);
@@ -310,10 +284,10 @@ export const filtrarSolicitacoesAlimentacaoCODAE = async payload => {
   }
 };
 
-export const filtrarSolicitacoesAlimentacaoTerceirizadas = async payload => {
+export const filtrarSolicitacoesAlimentacaoTerceirizadas = async (payload) => {
   const response = await axios
     .post(`${API_URL}/terceirizada-solicitacoes/filtrar-solicitacoes-ga/`, {
-      payload
+      payload,
     })
     .catch(ErrorHandlerFunction);
   if (response) {
@@ -322,7 +296,9 @@ export const filtrarSolicitacoesAlimentacaoTerceirizadas = async payload => {
   }
 };
 
-export const gerarExcelRelatorioSolicitacoesAlimentacaoDRE = async payload => {
+export const gerarExcelRelatorioSolicitacoesAlimentacaoDRE = async (
+  payload
+) => {
   const url = `/diretoria-regional-solicitacoes/exportar-xlsx/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -331,7 +307,9 @@ export const gerarExcelRelatorioSolicitacoesAlimentacaoDRE = async payload => {
   }
 };
 
-export const gerarExcelRelatorioSolicitacoesAlimentacaoEscola = async payload => {
+export const gerarExcelRelatorioSolicitacoesAlimentacaoEscola = async (
+  payload
+) => {
   const url = `/escola-solicitacoes/exportar-xlsx/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -340,7 +318,9 @@ export const gerarExcelRelatorioSolicitacoesAlimentacaoEscola = async payload =>
   }
 };
 
-export const gerarExcelRelatorioSolicitacoesAlimentacaoCODAE = async payload => {
+export const gerarExcelRelatorioSolicitacoesAlimentacaoCODAE = async (
+  payload
+) => {
   const url = `/codae-solicitacoes/exportar-xlsx/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -349,7 +329,9 @@ export const gerarExcelRelatorioSolicitacoesAlimentacaoCODAE = async payload => 
   }
 };
 
-export const gerarExcelRelatorioSolicitacoesAlimentacaoTerceirizadas = async payload => {
+export const gerarExcelRelatorioSolicitacoesAlimentacaoTerceirizadas = async (
+  payload
+) => {
   const url = `/terceirizada-solicitacoes/exportar-xlsx/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -358,7 +340,7 @@ export const gerarExcelRelatorioSolicitacoesAlimentacaoTerceirizadas = async pay
   }
 };
 
-export const gerarPDFRelatorioSolicitacoesAlimentacaoDRE = async payload => {
+export const gerarPDFRelatorioSolicitacoesAlimentacaoDRE = async (payload) => {
   const url = `/diretoria-regional-solicitacoes/exportar-pdf/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -367,7 +349,9 @@ export const gerarPDFRelatorioSolicitacoesAlimentacaoDRE = async payload => {
   }
 };
 
-export const gerarPDFRelatorioSolicitacoesAlimentacaoEscola = async payload => {
+export const gerarPDFRelatorioSolicitacoesAlimentacaoEscola = async (
+  payload
+) => {
   const url = `/escola-solicitacoes/exportar-pdf/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -376,7 +360,9 @@ export const gerarPDFRelatorioSolicitacoesAlimentacaoEscola = async payload => {
   }
 };
 
-export const gerarPDFRelatorioSolicitacoesAlimentacaoCODAE = async payload => {
+export const gerarPDFRelatorioSolicitacoesAlimentacaoCODAE = async (
+  payload
+) => {
   const url = `/codae-solicitacoes/exportar-pdf/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -385,7 +371,9 @@ export const gerarPDFRelatorioSolicitacoesAlimentacaoCODAE = async payload => {
   }
 };
 
-export const gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas = async payload => {
+export const gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas = async (
+  payload
+) => {
   const url = `/terceirizada-solicitacoes/exportar-pdf/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -394,10 +382,10 @@ export const gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas = async paylo
   }
 };
 
-export const getSolicitacoesDetalhadas = async params => {
+export const getSolicitacoesDetalhadas = async (params) => {
   const response = await axios
     .get(`${API_URL}/solicitacoes-genericas/solicitacoes-detalhadas/`, {
-      params
+      params,
     })
     .catch(ErrorHandlerFunction);
   if (response) {
@@ -406,7 +394,7 @@ export const getSolicitacoesDetalhadas = async params => {
   }
 };
 
-export const gerarPDFRelatorioAlunosMatriculados = async params => {
+export const gerarPDFRelatorioAlunosMatriculados = async (params) => {
   const url = `/relatorio-alunos-matriculados/gerar-pdf/`;
   const response = await axios
     .get(url, { params: params })
@@ -417,7 +405,7 @@ export const gerarPDFRelatorioAlunosMatriculados = async params => {
   }
 };
 
-export const gerarXLSRelatorioAlunosMatriculados = async params => {
+export const gerarXLSRelatorioAlunosMatriculados = async (params) => {
   const url = `/relatorio-alunos-matriculados/gerar-xlsx/`;
   const response = await axios
     .get(url, { params: params })

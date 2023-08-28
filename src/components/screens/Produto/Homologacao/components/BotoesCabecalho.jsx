@@ -3,14 +3,14 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import ModalHistorico from "components/Shareable/ModalHistorico";
 import { TIPO_PERFIL } from "constants/shared";
 import { ModalPadrao } from "components/Shareable/ModalPadrao";
 import {
   CODAEPedeAnaliseSensorialProduto,
-  imprimeFichaIdentificacaoProduto
+  imprimeFichaIdentificacaoProduto,
 } from "services/produto.service";
 import ModalAtivacaoSuspensaoProduto from "../../AtivacaoSuspensao/ModalAtivacaoSuspensaoProduto";
 import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
@@ -20,22 +20,21 @@ export const BotoesCabecalho = ({
   getHomologacaoProdutoAsync,
   terceirizadas,
   protocoloAnalise,
-  ehCardSuspensos
+  ehCardSuspensos,
 }) => {
   const ehGPCODAE =
     localStorage.getItem("tipo_perfil") === TIPO_PERFIL.GESTAO_PRODUTO;
   const [showModal, setShowModal] = useState(false);
-  const [showModalAnaliseSensorial, setShowModalAnaliseSensorial] = useState(
-    false
-  );
+  const [showModalAnaliseSensorial, setShowModalAnaliseSensorial] =
+    useState(false);
   const [showModalSuspender, setShowModalSuspender] = useState(false);
   const [acao, setAcao] = useState();
 
-  const checaStatus = status => {
+  const checaStatus = (status) => {
     return [
       "CODAE_HOMOLOGADO",
       "CODAE_AUTORIZOU_RECLAMACAO",
-      "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+      "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
     ].includes(status);
   };
 
@@ -45,7 +44,7 @@ export const BotoesCabecalho = ({
   };
 
   const params = {
-    eh_card_suspensos: ehCardSuspensos
+    eh_card_suspensos: ehCardSuspensos,
   };
 
   return (

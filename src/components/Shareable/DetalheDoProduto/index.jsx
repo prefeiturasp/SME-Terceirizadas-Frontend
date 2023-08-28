@@ -11,7 +11,7 @@ const DetalheDoProduto = ({
   status,
   reclamacao,
   questionamento,
-  suspenso
+  suspenso,
 }) => {
   const [ativos, setAtivos] = useState([]);
   const infoNutri = formataInformacoesNutricionais(produto);
@@ -54,7 +54,7 @@ const DetalheDoProduto = ({
                       dangerouslySetInnerHTML={{
                         __html: suspenso
                           ? ultimoLog.justificativa.split("<br>")[0]
-                          : ultimoLog.justificativa
+                          : ultimoLog.justificativa,
                       }}
                     />
                   </p>
@@ -112,12 +112,12 @@ const DetalheDoProduto = ({
         </p>
         <p className="value">
           {produto.vinculos_produto_edital
-            .filter(vinculo =>
+            .filter((vinculo) =>
               status === "suspenso" || suspenso
                 ? vinculo.suspenso
                 : !vinculo.suspenso
             )
-            .map(vinculo => vinculo.edital.numero)
+            .map((vinculo) => vinculo.edital.numero)
             .join(", ")}
         </p>
       </div>
@@ -216,7 +216,7 @@ const DetalheDoProduto = ({
                     <ToggleExpandir
                       onClick={() => {
                         ativos.includes(index)
-                          ? setAtivos(ativos.filter(el => el !== index))
+                          ? setAtivos(ativos.filter((el) => el !== index))
                           : setAtivos([...ativos, index]);
                       }}
                       ativo={ativos.includes(index)}

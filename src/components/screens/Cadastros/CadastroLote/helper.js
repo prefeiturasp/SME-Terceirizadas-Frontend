@@ -1,10 +1,10 @@
-export const formatarEscolasParaMultiselect = lista => {
-  return lista.map(element => {
+export const formatarEscolasParaMultiselect = (lista) => {
+  return lista.map((element) => {
     return {
       value: element.uuid,
       label: `${element.codigo_eol} - ${element.nome} - ${
         element.lote ? element.lote.nome : ""
-      }`
+      }`,
     };
   });
 };
