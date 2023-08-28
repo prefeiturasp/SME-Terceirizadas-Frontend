@@ -26,14 +26,14 @@ import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
-import { OnChange } from "react-final-form-listeners";
-import { agregarDefault, exibeError, formataMilhar } from "helpers/utilities";
+import { exibeError, formataMilhar } from "helpers/utilities";
 import { getEmpresasCronograma } from "services/terceirizada.service";
 import { getListaCompletaProdutosLogistica } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
+import FormRecebimento from "components/PreRecebimento/FormRecebimento";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -52,7 +52,6 @@ export default () => {
   const [listaRascunhos, setListaRascunhos] = useState(null);
   const [duplicados, setDuplicados] = useState([]);
   const [restante, setRestante] = useState(undefined);
-  const [datasProgramadas, setDatasProgramadas] = useState([]);
   const [edicao, setEdicao] = useState(false);
   const [cronograma, setCronograma] = useState({});
   const [valoresIniciais, setValoresIniciais] = useState(true);
@@ -84,36 +83,10 @@ export default () => {
     return fornecedores;
   };
 
-  const adicionaRecebimento = () => {
-    setRecebimentos([...recebimentos, {}]);
-  };
-
-  const deletaRecebimento = (index) => {
-    let recebimentosNovo = [...recebimentos];
-    recebimentosNovo.splice(index, 1);
-    setRecebimentos(recebimentosNovo);
-  };
-
   const toggleCollapse = (index) => {
     setCollapse({
       [index]: !collapse[index],
     });
-  };
-
-  const getOptionsDataProgramada = (values) => {
-    let options = [];
-    etapas.forEach((e, index) => {
-      if (values[`etapa_${index}`] && values[`data_programada_${index}`]) {
-        let nomeConcatenado = `${values[`data_programada_${index}`]} - ${
-          values[`etapa_${index}`]
-        } ${values[`parte_${index}`] ? ` - ${values[`parte_${index}`]}` : ""}`;
-        options.push({
-          uuid: nomeConcatenado,
-          nome: nomeConcatenado,
-        });
-      }
-    });
-    return agregarDefault(options);
   };
 
   const formataPayload = (values, rascunho) => {
@@ -373,7 +346,7 @@ export default () => {
               ...recebimentosValues,
             }}
             validate={() => {}}
-            render={({ form, handleSubmit, submitting, values }) => (
+            render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
                 <FormSpy
                   subscription={{ values: true, active: true, valid: true }}
@@ -558,136 +531,14 @@ export default () => {
                         </div>
                       </div>
                     </div>
-                    <div className="card mt-3">
-                      <div className={`card-header card-tipo`} id={`heading_2`}>
-                        <div className="row card-header-content">
-                          <span className="nome-alimento">
-                            Dados do Recebimento
-                          </span>
-                          <div className="col-1 align-self-center">
-                            <button
-                              onClick={() => toggleCollapse(2)}
-                              className="btn btn-link btn-block text-right px-0"
-                              type="button"
-                              data-toggle="collapse"
-                              data-target={`#collapse_2`}
-                              aria-expanded="true"
-                              aria-controls={`collapse_2`}
-                            >
-                              <span className="span-icone-toogle">
-                                <i
-                                  className={
-                                    collapse[2]
-                                      ? "fas fa-chevron-up"
-                                      : "fas fa-chevron-down"
-                                  }
-                                />
-                              </span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
 
-                      <div
-                        id={`collapse_2`}
-                        className="collapse"
-                        aria-labelledby="headingOne"
-                        data-parent="#accordionCronograma"
-                      >
-                        <div className="card-body">
-                          {recebimentos.map((recebimento, index) => (
-                            <>
-                              {index !== 0 && (
-                                <>
-                                  <hr />
-                                  <div className="row">
-                                    <div className="w-100">
-                                      <Botao
-                                        texto=""
-                                        type={BUTTON_TYPE.BUTTON}
-                                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                                        icon="fas fa-trash"
-                                        className="float-right ml-3"
-                                        onClick={() => deletaRecebimento(index)}
-                                        disabled={submitting}
-                                      />
-                                    </div>
-                                  </div>
-                                </>
-                              )}
-
-                              <div className="row">
-                                <div className="col-4">
-                                  <Field
-                                    component={SelectSelecione}
-                                    naoDesabilitarPrimeiraOpcao
-                                    options={getOptionsDataProgramada(
-                                      values
-                                    ).filter(
-                                      (op) =>
-                                        !datasProgramadas.find(
-                                          (dp) =>
-                                            dp.nome === op.nome &&
-                                            dp.index !== index
-                                        )
-                                    )}
-                                    label="Data Programada"
-                                    name={`data_recebimento_${index}`}
-                                    placeholder={"Selecionar a Data"}
-                                  />
-                                  <OnChange name={`data_recebimento_${index}`}>
-                                    {async (value) => {
-                                      const index_ = datasProgramadas.findIndex(
-                                        (dp) => dp.index === index
-                                      );
-                                      if (index_ !== -1) {
-                                        datasProgramadas.splice(index_, 1);
-                                      }
-                                      datasProgramadas.push({
-                                        nome: value,
-                                        index,
-                                      });
-                                      setDatasProgramadas(datasProgramadas);
-                                      form.change("reload", !values.reload);
-                                    }}
-                                  </OnChange>
-                                </div>
-                                <div className="col-4">
-                                  <Field
-                                    component={SelectSelecione}
-                                    naoDesabilitarPrimeiraOpcao
-                                    options={[
-                                      {
-                                        uuid: "PALETIZADA",
-                                        nome: "Paletizada",
-                                      },
-                                      {
-                                        uuid: "ESTIVADA_BATIDA",
-                                        nome: "Estivada/Batida",
-                                      },
-                                    ]}
-                                    label="Tipo de Carga"
-                                    name={`tipo_recebimento_${index}`}
-                                    placeholder={"Selecione a Carga"}
-                                  />
-                                </div>
-                              </div>
-                            </>
-                          ))}
-
-                          <div className="text-center mb-2 mt-2">
-                            <Botao
-                              texto="+ Adicionar Recebimento"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              className=""
-                              onClick={() => adicionaRecebimento()}
-                              disabled={submitting}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <FormRecebimento
+                      values={values}
+                      form={form}
+                      etapas={etapas}
+                      recebimentos={recebimentos}
+                      setRecebimentos={setRecebimentos}
+                    />
                   </div>
                 )}
 

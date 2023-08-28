@@ -1,7 +1,7 @@
 import moment from "moment";
 
 export const prepararPayloadCronograma = (cronograma, values, etapas) => {
-  let etapasPayload = prepararPayloadEtapas(cronograma, values, etapas);
+  let etapasPayload = prepararPayloadEtapas(values, etapas);
   return {
     cronograma: cronograma.uuid,
     etapas: etapasPayload,
@@ -9,7 +9,22 @@ export const prepararPayloadCronograma = (cronograma, values, etapas) => {
   };
 };
 
-export const prepararPayloadEtapas = (cronograma, values, etapas) => {
+export const prepararPayloadAnaliseCronograma = (
+  justificativa,
+  values,
+  etapas,
+  recebimentos
+) => {
+  let etapasPayload = prepararPayloadEtapas(values, etapas);
+  let recebimentosPayload = prepararPayloadRecebimentos(values, recebimentos);
+  return {
+    programacoes_de_recebimento: recebimentosPayload,
+    etapas: etapasPayload,
+    justificativa_cronograma: justificativa["justificativa_cronograma"],
+  };
+};
+
+export const prepararPayloadEtapas = (values, etapas) => {
   let etapasPayload = [];
 
   etapasPayload = etapas.map((etapa, index) => ({
@@ -26,6 +41,17 @@ export const prepararPayloadEtapas = (cronograma, values, etapas) => {
   }));
 
   return etapasPayload;
+};
+
+export const prepararPayloadRecebimentos = (values, recebimentos) => {
+  let recebimentosPayload = [];
+
+  recebimentosPayload = recebimentos.map((etapa, index) => ({
+    data_programada: values[`data_recebimento_${index}`],
+    tipo_carga: values[`tipo_recebimento_${index}`],
+  }));
+
+  return recebimentosPayload;
 };
 
 export const calculaRestante = (values, cronograma) => {
