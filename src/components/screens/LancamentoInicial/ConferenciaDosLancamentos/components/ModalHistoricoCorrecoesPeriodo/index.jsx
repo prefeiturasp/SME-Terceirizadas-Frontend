@@ -9,6 +9,7 @@ import "./style.scss";
 import { HistoricoCorrecaoSolicitada } from "./HistoricoCorrecaoSolicitada";
 import { HistoricoCorrecaoEscola } from "./HistoricoCorrecaoEscola";
 import { HistoricoAprovacao } from "./HistoricoAprovacao";
+import { Tooltip } from "antd";
 
 export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
   const { showModal, setShowModal, solicitacao, historicos } = props;
@@ -47,6 +48,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
             historico={historicos[index]}
             retornaIniciais={retornaIniciais}
             solicitacao={solicitacao}
+            formatarTitulo={acao => formatarTitulo(acao)}
           />
         );
         break;
@@ -56,6 +58,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
             historico={historicos[index]}
             retornaIniciais={retornaIniciais}
             solicitacao={solicitacao}
+            formatarTitulo={acao => formatarTitulo(acao)}
           />
         );
         break;
@@ -65,6 +68,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
             historico={historicos[index]}
             retornaIniciais={retornaIniciais}
             solicitacao={solicitacao}
+            formatarTitulo={acao => formatarTitulo(acao)}
           />
         );
         break;
@@ -109,10 +113,19 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
                         </p>
                       </div>
                       <div className="col-7 mb-1">
-                        <span className="mb-0">
-                          <b>{formatarTitulo(historico.acao).substr(0, 23)}</b>
-                          <br />
-                        </span>
+                        <Tooltip title={formatarTitulo(historico.acao)}>
+                          <span className="mb-0">
+                            <b>
+                              {formatarTitulo(historico.acao).length > 23
+                                ? `${formatarTitulo(historico.acao).substr(
+                                    0,
+                                    23
+                                  )}...`
+                                : formatarTitulo(historico.acao)}
+                            </b>
+                            <br />
+                          </span>
+                        </Tooltip>
                         <span className="mb-0">
                           {historico.usuario.nome.substr(0, 20)}
                         </span>
