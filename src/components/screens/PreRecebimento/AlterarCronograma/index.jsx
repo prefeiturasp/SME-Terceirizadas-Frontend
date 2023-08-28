@@ -453,7 +453,6 @@ export default ({ analiseSolicitacao }) => {
                         podeSubmeter={Object.keys(errors).length === 0}
                         disabledDinutre={disabledDinutre(values)}
                         disabledDilog={disabledDilog(values)}
-                        valuesForm={values}
                       />
                     </div>
                   </form>
