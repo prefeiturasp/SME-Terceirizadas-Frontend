@@ -38,6 +38,7 @@
     "bootstrap": "^4.3.1",
     "chart.js": "^4.2.1",
     "date-fns": "^2.29.3",
+    "eslint-plugin-typescript": "^0.14.0",
     "file-saver": "^2.0.5",
     "final-form": "^4.20.9",
     "final-form-arrays": "^3.0.2",
@@ -79,7 +80,7 @@
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
     "startbootstrap-sb-admin-2": "^4.1.4",
-    "typescript": "^5.2.2"
+    "typescript": "^5.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -94,8 +95,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "importSort": {
@@ -119,6 +119,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.2",
+    "@types/uuid": "^9.0.2",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.12.1",
     "enzyme-to-json": "^3.3.5",

@@ -49,6 +49,10 @@ import {
   Recorrencia,
   RecorrenciaTabela
 } from "./componentes/InclusaoContinua";
+import {
+  MotivoSimplesInterface,
+  ValuesFormInclusaoDeAlimentacaoInterface
+} from "./interfaces";
 
 export const InclusaoDeAlimentacao = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
@@ -56,7 +60,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
   const [showModal, setShowModal] = useState(false);
   const [motivoEspecifico, setMotivoEspecifico] = useState(false);
   const [carregandoRascunho, setCarregandoRascunho] = useState(false);
-  const [uuid, setUuid] = useState(null);
+  const [uuid, setUuid] = useState<string | null>(null);
   const [idExterno, setIdExterno] = useState(null);
 
   const {
@@ -84,15 +88,20 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     await form.change("periodo_escolar");
     await form.change("numero_alunos", undefined);
     setCarregandoRascunho(false);
-    setUuid(false);
+    setUuid(null);
     setIdExterno(false);
   };
 
-  const motivoSimplesSelecionado = values => {
+  const motivoSimplesSelecionado = (
+    values: ValuesFormInclusaoDeAlimentacaoInterface
+  ) => {
     return (
       values.inclusoes &&
       values.inclusoes[0].motivo &&
-      motivosSimples.find(motivo => motivo.uuid === values.inclusoes[0].motivo)
+      motivosSimples.find(
+        (motivo: MotivoSimplesInterface) =>
+          motivo.uuid === values.inclusoes[0].motivo
+      )
     );
   };
 
@@ -101,7 +110,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       values.inclusoes &&
       values.inclusoes[0].motivo &&
       motivosContinuos.find(
-        motivo => motivo.uuid === values.inclusoes[0].motivo
+        (motivo: any) => motivo.uuid === values.inclusoes[0].motivo
       )
     );
   };
@@ -663,7 +672,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                     />
                     <Botao
                       texto="Enviar inclusão"
-                      type={BUTTON_TYPE.SUBMIT}
+                      type={BUTTON_TYPE.BUTTON}
                       disabled={
                         submitting ||
                         (values &&
@@ -677,7 +686,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                       }
                       onClick={() => {
                         values["status"] = STATUS_DRE_A_VALIDAR;
-                        handleSubmit(values => onSubmit(values, form));
+                        handleSubmit(values);
                       }}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3"
