@@ -185,7 +185,7 @@ function SolicitacoesPorStatusGenerico(props) {
                           name="periodo"
                           naoDesabilitarPrimeiraOpcao
                           placeholder="Período"
-                          initialValue={PERIODOS_OPTIONS[0]}
+                          initialValue={PERIODOS_OPTIONS[0].uuid}
                           options={PERIODOS_OPTIONS}
                         />
                       </div>
