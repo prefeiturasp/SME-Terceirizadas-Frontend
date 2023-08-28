@@ -421,17 +421,22 @@ export default ({ analiseSolicitacao }) => {
                         )}
                       </>
                     )}
-                    {analiseSolicitacao && (
-                      <div className="accordion mt-1" id="accordionCronograma">
-                        <FormRecebimento
-                          values={values}
-                          form={form}
-                          etapas={solicitacaoAlteracaoCronograma.etapas_novas}
-                          recebimentos={recebimentos}
-                          setRecebimentos={setRecebimentos}
-                        />
-                      </div>
-                    )}
+                    {analiseSolicitacao &&
+                      solicitacaoAlteracaoCronograma.status ===
+                        "Em Análise" && (
+                        <div
+                          className="accordion mt-1"
+                          id="accordionCronograma"
+                        >
+                          <FormRecebimento
+                            values={values}
+                            form={form}
+                            etapas={solicitacaoAlteracaoCronograma.etapas_novas}
+                            recebimentos={recebimentos}
+                            setRecebimentos={setRecebimentos}
+                          />
+                        </div>
+                      )}
                     {usuarioEhDilogDiretoria() && analisadoPelaDinutre() && (
                       <AnaliseDilogDiretoria
                         aprovacaoDilog={aprovacaoDilog}
