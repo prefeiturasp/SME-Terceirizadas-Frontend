@@ -8,7 +8,7 @@ import CardLancamentoCEI from "./CardLancamentoCEI";
 export default ({
   solicitacaoMedicaoInicial,
   escolaInstituicao,
-  periodoSelecionado
+  periodoSelecionado,
 }) => {
   const quantidadeAlimentacoesLancadas = [
     {
@@ -16,15 +16,15 @@ export default ({
       status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
       qtd_alunos: 100,
       qtd_refeicoes_diarias: 5,
-      valor_total: 500
+      valor_total: 500,
     },
     {
       nome_periodo_grupo: "PARCIAL",
       status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
       qtd_alunos: 100,
       qtd_refeicoes_diarias: 3,
-      valor_total: 300
-    }
+      valor_total: 300,
+    },
   ];
 
   const renderBotaoFinalizar = () => {

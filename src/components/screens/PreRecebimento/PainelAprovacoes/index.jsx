@@ -7,23 +7,23 @@ import {
   cards_alteracao_dinutre,
   cards_alteracao_dilog,
   cards_visao_cronograma,
-  cards_alteracao_visao_cronograma
+  cards_alteracao_visao_cronograma,
 } from "./constants";
 import {
   getDashboardCronograma,
   getDashboardCronogramaComFiltros,
   getDashboardSolicitacoesAlteracao,
-  getDashboardSolicitacoesAlteracaoComFiltros
+  getDashboardSolicitacoesAlteracaoComFiltros,
 } from "services/cronograma.service";
 import {
   parseDataHoraBrToMoment,
   comparaObjetosMoment,
-  truncarString
+  truncarString,
 } from "helpers/utilities";
 import {
   DETALHAR_ALTERACAO_CRONOGRAMA,
   DETALHE_CRONOGRAMA,
-  PRE_RECEBIMENTO
+  PRE_RECEBIMENTO,
 } from "configs/constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -35,20 +35,20 @@ const obterCardsParaPerfilLogado = () => {
   const cardsIniciais = {
     DILOG_DIRETORIA: {
       cronograma: cards_dilog,
-      alteracoes: cards_alteracao_dilog
+      alteracoes: cards_alteracao_dilog,
     },
     DINUTRE_DIRETORIA: {
       cronograma: cards_dinutre,
-      alteracoes: cards_alteracao_dinutre
+      alteracoes: cards_alteracao_dinutre,
     },
     DILOG_CRONOGRAMA: {
       cronograma: cards_visao_cronograma,
-      alteracoes: cards_alteracao_visao_cronograma
+      alteracoes: cards_alteracao_visao_cronograma,
     },
     COORDENADOR_CODAE_DILOG_LOGISTICA: {
       cronograma: cards_visao_cronograma,
-      alteracoes: cards_alteracao_visao_cronograma
-    }
+      alteracoes: cards_alteracao_visao_cronograma,
+    },
   };
 
   const perfilLogado = JSON.parse(localStorage.getItem("perfil"));
@@ -70,17 +70,17 @@ export default () => {
     return comparaObjetosMoment(data_b, data_a);
   };
 
-  const gerarTextoCardCronograma = item => {
+  const gerarTextoCardCronograma = (item) => {
     const TAMANHO_MAXIMO = 48;
 
     return `${item.numero} - ${truncarString(item.produto, TAMANHO_MAXIMO)}`;
   };
 
-  const gerarLinkCronograma = item => {
+  const gerarLinkCronograma = (item) => {
     return `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${item.uuid}`;
   };
 
-  const gerarTextoCardAlteracao = item => {
+  const gerarTextoCardAlteracao = (item) => {
     const TAMANHO_MAXIMO = 48;
 
     return `${item.cronograma} - ${truncarString(
@@ -89,27 +89,25 @@ export default () => {
     )}`;
   };
 
-  const gerarLinkSolicitacaoAlteracao = item => {
-    return `/${PRE_RECEBIMENTO}/${DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${
-      item.uuid
-    }`;
+  const gerarLinkSolicitacaoAlteracao = (item) => {
+    return `/${PRE_RECEBIMENTO}/${DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${item.uuid}`;
   };
 
-  const formatarCardsCronograma = items => {
-    return items.sort(ordenarPorLogMaisRecente).map(item => ({
+  const formatarCardsCronograma = (items) => {
+    return items.sort(ordenarPorLogMaisRecente).map((item) => ({
       text: gerarTextoCardCronograma(item),
       date: item.log_mais_recente,
       link: gerarLinkCronograma(item),
-      status: item.status
+      status: item.status,
     }));
   };
 
-  const formatarCardsAlteracao = items => {
-    return items.sort(ordenarPorLogMaisRecente).map(item => ({
+  const formatarCardsAlteracao = (items) => {
+    return items.sort(ordenarPorLogMaisRecente).map((item) => ({
       text: gerarTextoCardAlteracao(item),
       date: item.log_mais_recente,
       link: gerarLinkSolicitacaoAlteracao(item),
-      status: item.status
+      status: item.status,
     }));
   };
 
@@ -124,9 +122,9 @@ export default () => {
     }
 
     let cards = [];
-    cardsCronograma.forEach(card => {
+    cardsCronograma.forEach((card) => {
       card.items = [];
-      dadosDashboard.data.results.forEach(data => {
+      dadosDashboard.data.results.forEach((data) => {
         if (card.incluir_status.includes(data.status)) {
           card.items = [...card.items, ...data.dados];
         }
@@ -141,7 +139,7 @@ export default () => {
   const filtrarCronogramas = debounce((value, values) => {
     const { nome_produto, numero_cronograma } = values;
     const podeFiltrar = [nome_produto, numero_cronograma].some(
-      value => value && value.length > 2
+      (value) => value && value.length > 2
     );
     if (podeFiltrar) {
       setCarregando(true);
@@ -168,9 +166,9 @@ export default () => {
     }
 
     let cards = [];
-    cardsAlteracao.forEach(card => {
+    cardsAlteracao.forEach((card) => {
       card.items = [];
-      dadosDashboard.data.results.forEach(data => {
+      dadosDashboard.data.results.forEach((data) => {
         if (card.incluir_status.includes(data.status)) {
           card.items = [...card.items, ...data.dados];
         }
@@ -185,7 +183,7 @@ export default () => {
   const filtrarSolicitacoesAlteracao = debounce((value, values) => {
     const { numero_cronograma, nome_fornecedor } = values;
     const podeFiltrar = [numero_cronograma, nome_fornecedor].some(
-      value => value && value.length > 2
+      (value) => value && value.length > 2
     );
     if (podeFiltrar) {
       setCarregando(true);
@@ -215,7 +213,7 @@ export default () => {
                 <Form
                   initialValues={{
                     numero_cronograma: "",
-                    nome_produto: ""
+                    nome_produto: "",
                   }}
                   onSubmit={() => {}}
                 >
@@ -229,7 +227,7 @@ export default () => {
                         />
 
                         <OnChange name="numero_cronograma">
-                          {value => filtrarCronogramas(value, values)}
+                          {(value) => filtrarCronogramas(value, values)}
                         </OnChange>
                       </div>
                       <div className="col-6">
@@ -240,7 +238,7 @@ export default () => {
                         />
 
                         <OnChange name="nome_produto">
-                          {value => filtrarCronogramas(value, values)}
+                          {(value) => filtrarCronogramas(value, values)}
                         </OnChange>
                       </div>
                     </div>
@@ -276,7 +274,7 @@ export default () => {
                 <Form
                   initialValues={{
                     nome_fornecedor: "",
-                    numero_cronograma: ""
+                    numero_cronograma: "",
                   }}
                   onSubmit={() => {}}
                 >
@@ -290,7 +288,9 @@ export default () => {
                         />
 
                         <OnChange name="numero_cronograma">
-                          {value => filtrarSolicitacoesAlteracao(value, values)}
+                          {(value) =>
+                            filtrarSolicitacoesAlteracao(value, values)
+                          }
                         </OnChange>
                       </div>
                       <div className="col-6">
@@ -301,7 +301,9 @@ export default () => {
                         />
 
                         <OnChange name="nome_fornecedor">
-                          {value => filtrarSolicitacoesAlteracao(value, values)}
+                          {(value) =>
+                            filtrarSolicitacoesAlteracao(value, values)
+                          }
                         </OnChange>
                       </div>
                     </div>

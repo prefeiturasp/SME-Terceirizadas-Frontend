@@ -4,13 +4,13 @@ import {
   corDaMensagem,
   ehInclusaoCei,
   justificativaAoNegarSolicitacao,
-  justificativaAoAprovarSolicitacao
+  justificativaAoAprovarSolicitacao,
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "../../../Shareable/Botao/constants";
 import { getRelatorioAlteracaoCardapio } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
@@ -18,7 +18,7 @@ import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 import "./style.scss";
 import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
 
-export const CorpoRelatorio = props => {
+export const CorpoRelatorio = (props) => {
   const { alteracaoDeCardapio, prazoDoPedidoMensagem, tipoSolicitacao } = props;
 
   const justificativaNegacao = justificativaAoNegarSolicitacao(
@@ -193,11 +193,13 @@ export const CorpoRelatorio = props => {
               tipos_alimentacao_para,
               tipo_alimentacao_para,
               qtd_alunos,
-              faixas_etarias
+              faixas_etarias,
             },
             key
           ) => {
-            let alimentos = tipos_alimentacao_de.map(alimento => alimento.nome);
+            let alimentos = tipos_alimentacao_de.map(
+              (alimento) => alimento.nome
+            );
             let tipos_alimentos_formatados = "";
             for (let i = 0; i < alimentos.length; i++) {
               tipos_alimentos_formatados =
@@ -211,7 +213,7 @@ export const CorpoRelatorio = props => {
               substitutos_formatados = tipo_alimentacao_para.nome;
             } else {
               let substitutos = tipos_alimentacao_para.map(
-                substituto => substituto.nome
+                (substituto) => substituto.nome
               );
 
               for (let i = 0; i < substitutos.length; i++) {
@@ -252,7 +254,7 @@ export const CorpoRelatorio = props => {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: alteracaoDeCardapio.observacao
+                __html: alteracaoDeCardapio.observacao,
               }}
             />
           </td>
@@ -260,7 +262,7 @@ export const CorpoRelatorio = props => {
       </table>
       {!ehInclusaoCei(tipoSolicitacao) &&
         alteracaoDeCardapio.datas_intervalo.find(
-          data_intervalo => data_intervalo.cancelado_justificativa
+          (data_intervalo) => data_intervalo.cancelado_justificativa
         ) && (
           <>
             <hr />
@@ -268,7 +270,7 @@ export const CorpoRelatorio = props => {
               <strong>Histórico de cancelamento</strong>
               {alteracaoDeCardapio.datas_intervalo
                 .filter(
-                  data_intervalo => data_intervalo.cancelado_justificativa
+                  (data_intervalo) => data_intervalo.cancelado_justificativa
                 )
                 .map((data_intervalo, key) => {
                   return (
@@ -292,7 +294,7 @@ export const CorpoRelatorio = props => {
               <p
                 className="value"
                 dangerouslySetInnerHTML={{
-                  __html: justificativaNegacao
+                  __html: justificativaNegacao,
                 }}
               />
             </td>
@@ -310,7 +312,7 @@ export const CorpoRelatorio = props => {
             <tr>
               <th>{`${
                 alteracaoDeCardapio.logs.find(
-                  log => log.status_evento_explicacao === "CODAE autorizou"
+                  (log) => log.status_evento_explicacao === "CODAE autorizou"
                 ).criado_em
               } - Informações da CODAE`}</th>
             </tr>
@@ -319,7 +321,7 @@ export const CorpoRelatorio = props => {
                 <p
                   className="value"
                   dangerouslySetInnerHTML={{
-                    __html: justificativaAprovacao
+                    __html: justificativaAprovacao,
                   }}
                 />
               </td>

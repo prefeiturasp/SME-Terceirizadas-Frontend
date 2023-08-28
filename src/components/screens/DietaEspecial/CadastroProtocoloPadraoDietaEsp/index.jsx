@@ -18,13 +18,13 @@ import {
   getAlimentos,
   cadastraProtocoloPadraoDietaEspecial,
   editaProtocoloPadraoDietaEspecial,
-  getProtocoloPadrao
+  getProtocoloPadrao,
 } from "services/dietaEspecial.service";
 import SubstituicoesField from "./componentes/SubstituicoesField";
 import ModalCancelaCopia from "./componentes/ModalCancelaCopia";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { getNumerosEditais } from "services/edital.service";
@@ -40,7 +40,7 @@ export default ({ uuid }) => {
   const [showModalCancelaCopia, setShowModalCancelaCopia] = useState(false);
   const [historico, setHistorico] = useState([]);
   const [valoresIniciais, setValoresIniciais] = useState({
-    substituicoes: [{}]
+    substituicoes: [{}],
   });
   const [editais, setEditais] = useState(undefined);
   const [erroAPI, setErroAPI] = useState(false);
@@ -60,15 +60,15 @@ export default ({ uuid }) => {
 
   async function fetchData() {
     const respAlimentos = await getAlimentos({
-      tipo: "E"
+      tipo: "E",
     });
     setAlimentos(
-      respAlimentos.data.filter(alimento =>
+      respAlimentos.data.filter((alimento) =>
         ["AMBOS", "SO_ALIMENTOS"].includes(alimento.tipo_listagem_protocolo)
       )
     );
     setProdutos(
-      respAlimentos.data.filter(alimento =>
+      respAlimentos.data.filter((alimento) =>
         ["AMBOS", "SO_SUBSTITUTOS"].includes(alimento.tipo_listagem_protocolo)
       )
     );
@@ -87,17 +87,17 @@ export default ({ uuid }) => {
 
   function getInitialValues(protocolo) {
     if (protocolo) {
-      const substituicoes = protocolo.substituicoes.map(substituicao => {
+      const substituicoes = protocolo.substituicoes.map((substituicao) => {
         const alimentos_substitutos = substituicao.alimentos_substitutos.map(
-          alimento => alimento.uuid
+          (alimento) => alimento.uuid
         );
         const substitutos = substituicao.substitutos.map(
-          alimento => alimento.uuid
+          (alimento) => alimento.uuid
         );
         return {
           alimento: String(substituicao.alimento.id),
           tipo: substituicao.tipo === "Substituir" ? "S" : "I",
-          substitutos: substitutos.concat(alimentos_substitutos)
+          substitutos: substitutos.concat(alimentos_substitutos),
         };
       });
       return {
@@ -105,15 +105,15 @@ export default ({ uuid }) => {
         nome_protocolo: protocolo.nome_protocolo,
         orientacoes_gerais: protocolo.orientacoes_gerais,
         status: protocolo.status === "Liberado" ? "LIBERADO" : "NAO_LIBERADO",
-        editais: protocolo.editais.map(e => e.uuid),
-        substituicoes: substituicoes
+        editais: protocolo.editais.map((e) => e.uuid),
+        substituicoes: substituicoes,
       };
     } else {
       return {
         nome_protocolo: undefined,
         orientacoes_gerais: undefined,
         status: undefined,
-        substituicoes: [{}]
+        substituicoes: [{}],
       };
     }
   }
@@ -128,7 +128,7 @@ export default ({ uuid }) => {
     await form.restart();
   }
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     if (protocoloPadrao) {
       if (ehCopia) {
         try {
@@ -223,7 +223,7 @@ export default ({ uuid }) => {
               mutators={{ ...arrayMutators }}
               render={({ form, handleSubmit, submitting, values }) => (
                 <form
-                  onSubmit={event => {
+                  onSubmit={(event) => {
                     const promise = handleSubmit(event);
                     promise &&
                       promise.then(() => {
@@ -281,11 +281,11 @@ export default ({ uuid }) => {
                         component={StatefulMultiSelect}
                         name="editais"
                         selected={values.editais || []}
-                        options={editais.map(edital => ({
+                        options={editais.map((edital) => ({
                           label: edital.numero,
-                          value: edital.uuid
+                          value: edital.uuid,
                         }))}
-                        onSelectedChanged={values_ => {
+                        onSelectedChanged={(values_) => {
                           form.change(`editais`, values_);
                         }}
                         overrideStrings={{
@@ -293,7 +293,7 @@ export default ({ uuid }) => {
                           selectSomeItems: "Selecione",
                           allItemsAreSelected:
                             "Todos os itens estão selecionados",
-                          selectAll: "Todos"
+                          selectAll: "Todos",
                         }}
                       />
                     </div>
@@ -304,9 +304,9 @@ export default ({ uuid }) => {
                         options={[
                           {
                             uuid: "LIBERADO",
-                            nome: "Liberado"
+                            nome: "Liberado",
                           },
-                          { uuid: "NAO_LIBERADO", nome: "Não liberado" }
+                          { uuid: "NAO_LIBERADO", nome: "Não liberado" },
                         ]}
                         label="Status"
                         name="status"

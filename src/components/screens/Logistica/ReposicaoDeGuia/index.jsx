@@ -3,7 +3,7 @@ import { Spin } from "antd";
 import {
   getGuiaParaConferencia,
   getReposicaoParaEdicao,
-  getConferenciaParaEdicao
+  getConferenciaParaEdicao,
 } from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
@@ -21,12 +21,12 @@ import {
   apenasLetras,
   alphaNumeric,
   peloMenosUmNumeroEUmaLetra,
-  numericInteger
+  numericInteger,
 } from "../../../../helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { composeValidators } from "../../../../helpers/utilities";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -65,7 +65,7 @@ export default () => {
   const [flagAtraso, setFlagAtraso] = useState(false);
   const [flagAlimento, setFlagAlimento] = useState([]);
 
-  const carregarGuia = async uuid => {
+  const carregarGuia = async (uuid) => {
     let response;
     try {
       setCarregando(true);
@@ -79,7 +79,7 @@ export default () => {
       setInitialValues({
         numero_guia: response.data.numero_guia,
         data_entrega: response.data.data_entrega,
-        hora_recebimento: "00:00:00"
+        hora_recebimento: "00:00:00",
       });
       setCarregando(false);
     } catch (e) {
@@ -90,10 +90,10 @@ export default () => {
 
   const filtrarAlimentos = (conf_alimentos, guiaResponse, edicao) => {
     if (edicao) {
-      guiaResponse.alimentos.forEach(alimento => {
-        alimento.embalagens.forEach(embalagem => {
+      guiaResponse.alimentos.forEach((alimento) => {
+        alimento.embalagens.forEach((embalagem) => {
           let conf = conf_alimentos.find(
-            element =>
+            (element) =>
               element.tipo_embalagem === embalagem.tipo_embalagem &&
               element.nome_alimento === alimento.nome_alimento
           );
@@ -103,15 +103,15 @@ export default () => {
       });
     }
 
-    guiaResponse.alimentos = guiaResponse.alimentos.filter(alimento => {
+    guiaResponse.alimentos = guiaResponse.alimentos.filter((alimento) => {
       alimento.embalagens = alimento.embalagens.filter(
-        embalagem => embalagem.qtd_a_receber !== 0
+        (embalagem) => embalagem.qtd_a_receber !== 0
       );
       return alimento.embalagens.length !== 0;
     });
   };
 
-  const carregarReposicaoEdicao = async uuid => {
+  const carregarReposicaoEdicao = async (uuid) => {
     let response;
     try {
       setCarregando(true);
@@ -154,8 +154,8 @@ export default () => {
         item.arquivo = [
           {
             nome: "imagem.png",
-            arquivo: item.arquivo
-          }
+            arquivo: item.arquivo,
+          },
         ];
         let arquivos = arquivoAtual;
         arquivos[index] = item.arquivo;
@@ -180,7 +180,7 @@ export default () => {
     setCarregando(false);
   };
 
-  const setFiles = files => {
+  const setFiles = (files) => {
     let arquivos = arquivoAtual;
     arquivos = files;
     setArquivoAtual(arquivos);
@@ -190,7 +190,7 @@ export default () => {
     setArquivoAtual([]);
   };
 
-  const escolherHora = hora => {
+  const escolherHora = (hora) => {
     if (hora) {
       const horario = moment(hora).format("HH:mm:ss");
       setHoraRecebimento(horario);
@@ -210,7 +210,7 @@ export default () => {
     carregarEdicao(values, conf);
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     values.hora_recebimento = HoraRecebimento;
     values.data_recebimento = moment(values.data_entrega_real).format(
       "DD/MM/YYYY"
@@ -244,14 +244,14 @@ export default () => {
     history.push(`/${LOGISTICA}/${REPOSICAO_RESUMO_FINAL}?editar=${edicao}`);
   };
 
-  const comparaDataEntrega = value => {
+  const comparaDataEntrega = (value) => {
     let dataPrevista = moment(guia.data_entrega, "DD/MM/YYYY");
     let dataReal = moment(value, "DD/MM/YYYY");
     if (moment(dataReal).isAfter(dataPrevista)) return true;
     else return false;
   };
 
-  const validaDataEntrega = value => {
+  const validaDataEntrega = (value) => {
     let dataEhDepois = comparaDataEntrega(value);
     if (value === null) return "Digite uma data válida";
     if (!dataEhDepois)
@@ -275,7 +275,7 @@ export default () => {
         "Selecionar ocorrência que justifique o recebimento menor que o previsto.";
   };
 
-  const validaObservacoes = (values, index) => value => {
+  const validaObservacoes = (values, index) => (value) => {
     if (
       !values[`ocorrencias_${index}`] ||
       !values[`ocorrencias_${index}`].length
@@ -302,20 +302,20 @@ export default () => {
     }
   };
 
-  const validaHoraRecebimento = value => {
+  const validaHoraRecebimento = (value) => {
     value = HoraRecebimentoAlterada ? HoraRecebimento : undefined;
     return value !== undefined ? "" : "Campo obrigatório";
   };
 
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
-    const embalagensFiltradas = embalagens.filter(value => {
+    const embalagensFiltradas = embalagens.filter((value) => {
       return value.tipo_embalagem.toUpperCase() === tipo;
     });
     if (embalagensFiltradas.length) return embalagensFiltradas[0];
     else return false;
   };
 
-  const validaStatus = values => {
+  const validaStatus = (values) => {
     if (guia.alimentos)
       guia.alimentos.forEach((item, index) => {
         let recebidos_fechada = parseInt(values[`recebidos_fechada_${index}`]);
@@ -388,7 +388,7 @@ export default () => {
               : [];
             ocorrenciasApagadas[index] = [
               ...oldOcorrenciasApagadas,
-              ...values[`ocorrencias_${index}`]
+              ...values[`ocorrencias_${index}`],
             ];
           }
 
@@ -413,7 +413,7 @@ export default () => {
       });
   };
 
-  const carregarLocalStorage = values => {
+  const carregarLocalStorage = (values) => {
     setCarregando(true);
 
     let valoresConf = JSON.parse(localStorage.getItem("valoresReposicao"));
@@ -453,16 +453,17 @@ export default () => {
       `recebidos_fracionada_${index}`,
       `ocorrencias_${index}`,
       `observacoes_${index}`,
-      `status_${index}`
+      `status_${index}`,
     ];
-    if (errorsNameList.some(r => Object.keys(errors).includes(r))) return "red";
+    if (errorsNameList.some((r) => Object.keys(errors).includes(r)))
+      return "red";
     else return "green";
   };
 
-  const toggleBtnAlimentos = uuid => {
+  const toggleBtnAlimentos = (uuid) => {
     if (arquivoAtual) inputFile.current.setState({ files: arquivoAtual });
     setCollapseAlimentos({
-      [uuid]: !collapseAlimentos[uuid]
+      [uuid]: !collapseAlimentos[uuid],
     });
   };
 
@@ -552,7 +553,7 @@ export default () => {
                       name="hora_recebimento"
                       placeholder="Selecione a Hora"
                       horaAtual={HoraRecebimento}
-                      onChangeFunction={data => {
+                      onChangeFunction={(data) => {
                         escolherHora(data);
                       }}
                       writable={false}
@@ -618,9 +619,7 @@ export default () => {
                           id={`heading_${alimento.uuid}`}
                         >
                           <div className="row card-header-content">
-                            <span className="nome-alimento">{`${
-                              alimento.nome_alimento
-                            }`}</span>
+                            <span className="nome-alimento">{`${alimento.nome_alimento}`}</span>
                             <div className="col-1 align-self-center">
                               <button
                                 onClick={() =>
@@ -930,7 +929,7 @@ export default () => {
 
                 <div>
                   <button
-                    onClick={event => {
+                    onClick={(event) => {
                       event.preventDefault();
                       carregarLocalStorage(values);
                     }}
@@ -939,7 +938,7 @@ export default () => {
                   />
 
                   <button
-                    onClick={async event => {
+                    onClick={async (event) => {
                       processarEdicao(event, values);
                     }}
                     style={{ display: "none" }}

@@ -1,6 +1,6 @@
 import React from "react";
 
-const OrientacoesLeitura = orientacoes_gerais => {
+const OrientacoesLeitura = (orientacoes_gerais) => {
   return (
     <div className="row">
       <div className="col-md-12">
@@ -8,7 +8,7 @@ const OrientacoesLeitura = orientacoes_gerais => {
         <div
           className="orientacoes"
           dangerouslySetInnerHTML={{
-            __html: orientacoes_gerais.orientacoes_gerais
+            __html: orientacoes_gerais.orientacoes_gerais,
           }}
         />
       </div>

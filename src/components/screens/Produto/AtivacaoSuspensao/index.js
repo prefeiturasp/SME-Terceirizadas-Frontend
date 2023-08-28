@@ -7,7 +7,7 @@ import Botao from "components/Shareable/Botao";
 import LabelResultadoDaBusca from "components/Shareable/LabelResultadoDaBusca";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import FormBuscaProduto from "./FormBuscaProduto";
 import { ATIVACAO_DE_PRODUTO, GESTAO_PRODUTO } from "configs/constants";
@@ -16,7 +16,7 @@ import { Paginacao } from "components/Shareable/Paginacao";
 
 const TabelaProdutos = ({ filtros, produtos }) => {
   let arrayDeProdutosRenderizados = [];
-  const checaStatus = produto => {
+  const checaStatus = (produto) => {
     let retorno =
       (produto.ultima_homologacao.status === "CODAE_HOMOLOGADO" ||
         produto.ultima_homologacao.status ===
@@ -35,7 +35,7 @@ const TabelaProdutos = ({ filtros, produtos }) => {
     return retorno;
   };
 
-  const nomeDaColunaEditais = filtros => {
+  const nomeDaColunaEditais = (filtros) => {
     let nome = "Editais";
     if (filtros && filtros.status.length === 1) {
       if (deepEqual(filtros.status, ["CODAE_SUSPENDEU"])) {
@@ -74,9 +74,7 @@ const TabelaProdutos = ({ filtros, produtos }) => {
                   <div>{produto.vinculos_produto_edital_ativos || " -- "}</div>
                   <div>
                     <Link
-                      to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${
-                        produto.ultima_homologacao.uuid
-                      }`}
+                      to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${produto.ultima_homologacao.uuid}`}
                     >
                       <Botao
                         type={BUTTON_TYPE.BUTTON}
@@ -95,9 +93,7 @@ const TabelaProdutos = ({ filtros, produtos }) => {
                   </div>
                   <div>
                     <Link
-                      to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${
-                        produto.ultima_homologacao.uuid
-                      }&suspenso=true`}
+                      to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${produto.ultima_homologacao.uuid}&suspenso=true`}
                     >
                       <Botao
                         type={BUTTON_TYPE.BUTTON}
@@ -133,7 +129,7 @@ const AtivacaoSuspencaoProduto = () => {
       const params = gerarParametrosConsulta({
         ...filtros,
         page: page,
-        page_size: PAGE_SIZE
+        page_size: PAGE_SIZE,
       });
       const response = await getProdutosListagem(params);
       setCarregando(false);
@@ -143,7 +139,7 @@ const AtivacaoSuspencaoProduto = () => {
     fetchData();
   }, [filtros, setProdutos, page]);
 
-  const onSubmitForm = formValues => {
+  const onSubmitForm = (formValues) => {
     setPage(1);
     const status = [];
     switch (formValues.status) {
@@ -188,7 +184,7 @@ const AtivacaoSuspencaoProduto = () => {
               current={page}
               total={produtosCount}
               showSizeChanger={false}
-              onChange={page => {
+              onChange={(page) => {
                 setPage(page);
               }}
               pageSize={PAGE_SIZE}

@@ -11,9 +11,9 @@ export default ({
   handleChangeMarcarComoLida,
   clickBtnNotificacoes,
   toggleBtnNotificacoes,
-  index
+  index,
 }) => {
-  const retornaClasseStatus = notificacao => {
+  const retornaClasseStatus = (notificacao) => {
     if (notificacao.tipo === "Pendência" && !notificacao.resolvido) {
       return "card-header-notificacao-pendente";
     } else if (notificacao.lido) {
@@ -87,7 +87,7 @@ export default ({
             <div
               className="col-12 descricao-notificacao"
               dangerouslySetInnerHTML={{
-                __html: notificacao.descricao
+                __html: notificacao.descricao,
               }}
             />
           </div>
@@ -99,7 +99,7 @@ export default ({
                   style={{
                     fontSize: "16px",
                     paddingTop: "10px",
-                    paddingLeft: "12px"
+                    paddingLeft: "12px",
                   }}
                   onChange={() => {
                     handleChangeMarcarComoLida(notificacao, index);

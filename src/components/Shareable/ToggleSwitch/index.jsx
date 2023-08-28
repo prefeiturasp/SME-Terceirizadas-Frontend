@@ -1,7 +1,7 @@
 import React from "react";
 import "./style.scss";
 
-export const ToggleSwitch = props => {
+export const ToggleSwitch = (props) => {
   const { texto, onClick } = props;
   return (
     <div className="toggle-switch">

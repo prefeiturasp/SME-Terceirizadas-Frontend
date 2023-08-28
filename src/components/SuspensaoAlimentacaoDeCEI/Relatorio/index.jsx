@@ -5,7 +5,7 @@ import CorpoRelatorio from "./components/CorpoRelatorio";
 import ModalCancelaSuspensao from "./components/ModalCancelaSuspensao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
@@ -14,7 +14,7 @@ import { statusEnum } from "constants/shared";
 import { TERCEIRIZADA } from "configs/constants";
 import {
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada
+  usuarioEhEscolaTerceirizada,
 } from "helpers/utilities";
 import { getSuspensaoAlimentacaoCEI } from "services/suspensaoAlimentacaoCei.service";
 import "./style.scss";
@@ -23,9 +23,8 @@ export default ({ ...props }) => {
   const [carregando, setCarregando] = useState(true);
   const [solicitacaoSuspensao, setSolicitacaoSuspensao] = useState(undefined);
   const [showModal, setShowModal] = useState(false);
-  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
-    false
-  );
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] =
+    useState(false);
 
   const { visao } = props;
 
@@ -33,7 +32,7 @@ export default ({ ...props }) => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      await getSuspensaoAlimentacaoCEI(uuid).then(response => {
+      await getSuspensaoAlimentacaoCEI(uuid).then((response) => {
         setSolicitacaoSuspensao(response.data);
       });
     }
@@ -44,7 +43,7 @@ export default ({ ...props }) => {
     fetchData();
   }, []);
 
-  const loadSolicitacao = async uuid => {
+  const loadSolicitacao = async (uuid) => {
     const response = await getSuspensaoAlimentacaoCEI(uuid);
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacaoSuspensao(response.data);

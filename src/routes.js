@@ -13,7 +13,7 @@ const PrivateRouter = (
 ) => (
   <Route
     {...rest}
-    render={props =>
+    render={(props) =>
       authService.isLoggedIn() ? (
         tipoUsuario ? (
           <Component {...props} />

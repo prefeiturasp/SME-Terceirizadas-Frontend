@@ -5,19 +5,19 @@ import Relatorio from "../../../components/SolicitacaoUnificada/CODAE/Relatorio"
 import { HOME } from "../constants";
 import {
   CODAE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
 } from "../../../configs/constants";
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 
 const anteriores = [
   {
     href: `/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
-    titulo: "Solicitações Unificadas"
-  }
+    titulo: "Solicitações Unificadas",
+  },
 ];
 
 export default () => (

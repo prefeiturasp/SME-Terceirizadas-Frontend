@@ -2,28 +2,28 @@ import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
 import {
   getVinculosTipoAlimentacaoMotivoInclusaoEspecifico,
-  getVinculosTipoAlimentacaoPorEscola
+  getVinculosTipoAlimentacaoPorEscola,
 } from "services/cadastroTipoAlimentacao.service";
 import {
   buscaPeriodosEscolares,
-  getQuantidadeAlunosEscola
+  getQuantidadeAlunosEscola,
 } from "services/escola.service";
 import InclusaoDeAlimentacao from "..";
 import {
   dataParaUTC,
   escolaEhCei,
-  tiposAlimentacaoETEC
+  tiposAlimentacaoETEC,
 } from "helpers/utilities";
 import { getDiasUteis } from "services/diasUteis.service";
 import {
   getMotivosInclusaoContinua,
-  getMotivosInclusaoNormal
+  getMotivosInclusaoNormal,
 } from "services/inclusaoDeAlimentacao";
 import { getMeusDados } from "services/perfil.service";
 import {
   abstraiPeriodosComAlunosMatriculados,
   exibeMotivoETEC,
-  formatarPeriodos
+  formatarPeriodos,
 } from "../../../helper";
 
 export const Container = () => {
@@ -33,9 +33,8 @@ export const Container = () => {
     escolaEhCei() ? [] : null
   );
   const [periodos, setPeriodos] = useState(null);
-  const [periodosMotivoEspecifico, setPeriodosMotivoEspecifico] = useState(
-    null
-  );
+  const [periodosMotivoEspecifico, setPeriodosMotivoEspecifico] =
+    useState(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
   const [periodoNoite, setPeriodoNoite] = useState(
@@ -57,9 +56,9 @@ export const Container = () => {
       );
       const vinculos = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
       if (vinculos.status === HTTP_STATUS.OK) {
-        periodos_.map(periodo => {
+        periodos_.map((periodo) => {
           return (periodo.tipos_alimentacao = vinculos.data.results.find(
-            v => v.periodo_escolar.nome === periodo.nome
+            (v) => v.periodo_escolar.nome === periodo.nome
           ).tipos_alimentacao);
         });
         setPeriodos(
@@ -85,16 +84,19 @@ export const Container = () => {
       getQuantidaDeAlunosPorPeriodoEEscolaAsync(periodos, escola_uuid);
       const tipo_unidade_escolar_iniciais =
         response.data.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais;
-      const vinculosTipoAlimentacaoMotivoInclusaoEspecifico = await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico(
-        { tipo_unidade_escolar_iniciais }
-      );
+      const vinculosTipoAlimentacaoMotivoInclusaoEspecifico =
+        await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico({
+          tipo_unidade_escolar_iniciais,
+        });
       let periodosMotivoInclusaoEspecifico = [];
-      vinculosTipoAlimentacaoMotivoInclusaoEspecifico.data.forEach(vinculo => {
-        let periodo = vinculo.periodo_escolar;
-        periodo.tipos_alimentacao = vinculo.tipos_alimentacao;
-        periodo.maximo_alunos = null;
-        periodosMotivoInclusaoEspecifico.push(periodo);
-      });
+      vinculosTipoAlimentacaoMotivoInclusaoEspecifico.data.forEach(
+        (vinculo) => {
+          let periodo = vinculo.periodo_escolar;
+          periodo.tipos_alimentacao = vinculo.tipos_alimentacao;
+          periodo.maximo_alunos = null;
+          periodosMotivoInclusaoEspecifico.push(periodo);
+        }
+      );
       setPeriodosMotivoEspecifico(
         formatarPeriodos(periodosMotivoInclusaoEspecifico)
       );
@@ -108,7 +110,7 @@ export const Container = () => {
     if (response.status === HTTP_STATUS.OK) {
       if (!exibeMotivoETEC()) {
         response.data.results = response.data.results.filter(
-          motivo => motivo.nome !== "ETEC"
+          (motivo) => motivo.nome !== "ETEC"
         );
       }
       setMotivosContinuos(response.data.results);
@@ -146,10 +148,10 @@ export const Container = () => {
       response.status === HTTP_STATUS.OK &&
       response.data.results.length > 0
     ) {
-      response.data.results[0].tipos_alimentacao = response.data.results[0].tipos_alimentacao.filter(
-        tipo_alimentacao =>
+      response.data.results[0].tipos_alimentacao =
+        response.data.results[0].tipos_alimentacao.filter((tipo_alimentacao) =>
           tiposAlimentacaoETEC().includes(tipo_alimentacao.nome)
-      );
+        );
       setPeriodoNoite(formatarPeriodos(response.data.results));
     } else {
       setErro(true);

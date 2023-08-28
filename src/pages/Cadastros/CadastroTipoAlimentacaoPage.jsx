@@ -5,19 +5,19 @@ import Page from "../../components/Shareable/Page/Page";
 import {
   CADASTROS,
   CONFIGURACOES,
-  TIPO_ALIMENTACAO_UNIDADE_ESCOLAR
+  TIPO_ALIMENTACAO_UNIDADE_ESCOLAR,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${TIPO_ALIMENTACAO_UNIDADE_ESCOLAR}`,
-  titulo: "Cadastro de tipo de alimentação"
+  titulo: "Cadastro de tipo de alimentação",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
-  }
+    titulo: "Cadastros",
+  },
 ];
 
 export default () => (

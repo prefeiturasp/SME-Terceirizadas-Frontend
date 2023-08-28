@@ -8,7 +8,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
@@ -21,9 +21,9 @@ export default ({
   setCronogramas,
   setTotal,
   inicioResultado,
-  armazens
+  armazens,
 }) => {
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     if (filtros.status) filtros.status = filtros.status.flat();
     if (filtros.motivos) {

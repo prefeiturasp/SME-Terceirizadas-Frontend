@@ -14,27 +14,27 @@ export default function reducer(state = {}, action = {}) {
     case SET_REQUISICOES:
       return {
         ...state,
-        requisicoes: action.payload
+        requisicoes: action.payload,
       };
     case SET_REQUISICOES_COUNT:
       return {
         ...state,
-        requisicoesCount: action.payload
+        requisicoesCount: action.payload,
       };
     case SET_ATIVOS:
       return {
         ...state,
-        ativos: action.payload
+        ativos: action.payload,
       };
     case SET_FILTROS:
       return {
         ...state,
-        filtros: action.payload
+        filtros: action.payload,
       };
     case SET_PAGE:
       return {
         ...state,
-        page: action.payload
+        page: action.payload,
       };
     case RESET:
       return {
@@ -42,38 +42,38 @@ export default function reducer(state = {}, action = {}) {
         ativos: undefined,
         filtros: undefined,
         requisicoes: undefined,
-        requisicoesCount: undefined
+        requisicoesCount: undefined,
       };
     default:
       return state;
   }
 }
 
-export const setRequisicoes = listaRequisicoes => ({
+export const setRequisicoes = (listaRequisicoes) => ({
   type: SET_REQUISICOES,
-  payload: listaRequisicoes
+  payload: listaRequisicoes,
 });
 
-export const setRequisicoesCount = count => ({
+export const setRequisicoesCount = (count) => ({
   type: SET_REQUISICOES_COUNT,
-  payload: count
+  payload: count,
 });
 
-export const setAtivosRequisicao = ativos => ({
+export const setAtivosRequisicao = (ativos) => ({
   type: SET_ATIVOS,
-  payload: ativos
+  payload: ativos,
 });
 
-export const setFiltrosRequisicao = filtros => ({
+export const setFiltrosRequisicao = (filtros) => ({
   type: SET_FILTROS,
-  payload: filtros
+  payload: filtros,
 });
 
-export const setPageRequisicao = pageNumber => ({
+export const setPageRequisicao = (pageNumber) => ({
   type: SET_PAGE,
-  payload: pageNumber
+  payload: pageNumber,
 });
 
 export const resetRequisicao = () => ({
-  type: RESET
+  type: RESET,
 });

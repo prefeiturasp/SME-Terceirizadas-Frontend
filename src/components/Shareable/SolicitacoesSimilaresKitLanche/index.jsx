@@ -7,13 +7,13 @@ export const SolicitacoesSimilaresKitLanche = ({ ...props }) => {
 
   const kitsCEI =
     solicitacao.solicitacao_kit_lanche &&
-    solicitacao.solicitacao_kit_lanche.kits.map(k => k.nome);
+    solicitacao.solicitacao_kit_lanche.kits.map((k) => k.nome);
   const kitsCEICEMEI =
     solicitacao.solicitacao_cei &&
-    solicitacao.solicitacao_cei.kits.map(k => k.nome);
+    solicitacao.solicitacao_cei.kits.map((k) => k.nome);
   const kitsEMEICEMEI =
     solicitacao.solicitacao_emei &&
-    solicitacao.solicitacao_emei.kits.map(k => k.nome);
+    solicitacao.solicitacao_emei.kits.map((k) => k.nome);
 
   return (
     <Collapse isOpened={!solicitacao.collapsed} key={index}>
@@ -142,12 +142,12 @@ export const SolicitacoesSimilaresKitLanche = ({ ...props }) => {
                       <td className="col-8">Total</td>
                       <td className="col-2 text-center">
                         {solicitacao.faixas_etarias
-                          .map(f => f.matriculados_quando_criado)
+                          .map((f) => f.matriculados_quando_criado)
                           .reduce((partialSum, a) => partialSum + a, 0)}
                       </td>
                       <td className="col-2 text-center">
                         {solicitacao.faixas_etarias
-                          .map(f => f.quantidade)
+                          .map((f) => f.quantidade)
                           .reduce((partialSum, a) => partialSum + a, 0)}
                       </td>
                     </tr>
@@ -165,7 +165,7 @@ export const SolicitacoesSimilaresKitLanche = ({ ...props }) => {
                       Número de Alunos:{" "}
                       <label className="label-cemei-info">
                         {solicitacao.solicitacao_cei.faixas_quantidades
-                          .map(f => f.quantidade_alunos)
+                          .map((f) => f.quantidade_alunos)
                           .reduce((partialSum, a) => partialSum + a, 0)}
                       </label>
                     </p>
@@ -227,12 +227,12 @@ export const SolicitacoesSimilaresKitLanche = ({ ...props }) => {
                       <td className="col-8">Total</td>
                       <td className="col-2 text-center">
                         {solicitacao.solicitacao_cei.faixas_quantidades
-                          .map(f => f.matriculados_quando_criado)
+                          .map((f) => f.matriculados_quando_criado)
                           .reduce((partialSum, a) => partialSum + a, 0)}
                       </td>
                       <td className="col-2 text-center">
                         {solicitacao.solicitacao_cei.faixas_quantidades
-                          .map(f => f.quantidade_alunos)
+                          .map((f) => f.quantidade_alunos)
                           .reduce((partialSum, a) => partialSum + a, 0)}
                       </td>
                     </tr>
@@ -305,7 +305,7 @@ export const SolicitacoesSimilaresKitLanche = ({ ...props }) => {
                     __html:
                       solicitacao.observacao ||
                       (solicitacao.solicitacao_kit_lanche &&
-                        solicitacao.solicitacao_kit_lanche.descricao)
+                        solicitacao.solicitacao_kit_lanche.descricao),
                   }}
                 />
               </div>

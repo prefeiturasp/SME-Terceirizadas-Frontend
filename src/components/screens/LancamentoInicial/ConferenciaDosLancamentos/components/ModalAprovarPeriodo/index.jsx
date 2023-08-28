@@ -4,7 +4,7 @@ import { formatarNomePeriodo } from "../../helper";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 
 export const ModalAprovarPeriodo = ({ ...props }) => {

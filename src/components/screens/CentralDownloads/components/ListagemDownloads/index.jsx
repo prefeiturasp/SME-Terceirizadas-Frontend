@@ -10,9 +10,9 @@ const ListagemDownloads = ({
   downloads,
   deletaDownload,
   marcarVisto,
-  atualizar
+  atualizar,
 }) => {
-  const retornaIconeStatus = status => {
+  const retornaIconeStatus = (status) => {
     switch (status) {
       case STATUS_DOWNLOAD.CONCLUIDO:
         return "fas fa-check-circle verde";
@@ -25,16 +25,16 @@ const ListagemDownloads = ({
     }
   };
 
-  const baixarArquivo = async download => {
+  const baixarArquivo = async (download) => {
     await baixarArquivoCentral(download);
   };
 
-  const verificaDataDownload = download => {
+  const verificaDataDownload = (download) => {
     const dataDownload = moment(download.data_criacao, "DD/MM/YYYY [ás] HH:mm");
     return moment().diff(dataDownload, "hours") < 96;
   };
 
-  const retornaTextoTooltipDownload = download => {
+  const retornaTextoTooltipDownload = (download) => {
     if (
       !verificaDataDownload(download) &&
       download.status === STATUS_DOWNLOAD.CONCLUIDO
@@ -43,7 +43,7 @@ const ListagemDownloads = ({
     else return "Download";
   };
 
-  const retornaTextoTooltipIcone = download => {
+  const retornaTextoTooltipIcone = (download) => {
     if (download.status === STATUS_DOWNLOAD.ERRO)
       return "Houve erro no download. Favor solicitar novamente.";
     else if (download.status === STATUS_DOWNLOAD.CONCLUIDO)

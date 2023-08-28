@@ -3,20 +3,20 @@ import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "../../../Shareable/Botao/constants";
 import Botao from "../../../Shareable/Botao";
 import { TabelaKits } from "./TabelaKits";
 import {
   corDaMensagem,
   deepCopy,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
 } from "../../../../helpers/utilities";
 import { getRelatorioKitLancheUnificado } from "../../../../services/relatorios";
 import { fluxoPartindoDRE } from "../../../Shareable/FluxoDeStatus/helper";
 import { ESCOLA } from "configs/constants";
 
-export const CorpoRelatorio = props => {
+export const CorpoRelatorio = (props) => {
   const { solicitacaoUnificada, prazoDoPedidoMensagem, visao } = props;
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     solicitacaoUnificada.logs
@@ -35,7 +35,7 @@ export const CorpoRelatorio = props => {
     }
     const nomeEscola = localStorage.getItem("nome_instituicao");
     escolasQuantidades = escolasQuantidades.filter(
-      eq => `"${eq.escola.nome}"` === nomeEscola
+      (eq) => `"${eq.escola.nome}"` === nomeEscola
     );
     if (escolasQuantidades[0].cancelado) {
       copyLogs.push({
@@ -49,7 +49,7 @@ export const CorpoRelatorio = props => {
             ? "DRE"
             : "Escola"
         } cancelou`,
-        usuario: escolasQuantidades[0].cancelado_por
+        usuario: escolasQuantidades[0].cancelado_por,
       });
     }
   }
@@ -187,7 +187,7 @@ export const CorpoRelatorio = props => {
                   className="descricao-texto"
                   dangerouslySetInnerHTML={{
                     __html:
-                      solicitacaoUnificada.solicitacao_kit_lanche.descricao
+                      solicitacaoUnificada.solicitacao_kit_lanche.descricao,
                   }}
                 />
               </div>
@@ -198,7 +198,7 @@ export const CorpoRelatorio = props => {
               <div
                 className="descricao-texto"
                 dangerouslySetInnerHTML={{
-                  __html: justificativaNegacao
+                  __html: justificativaNegacao,
                 }}
               />
             </div>

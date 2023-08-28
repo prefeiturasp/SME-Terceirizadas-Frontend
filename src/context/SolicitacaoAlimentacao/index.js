@@ -3,13 +3,13 @@ import React, { useState, createContext } from "react";
 export const SolicitacaoAlimentacaoContext = createContext({
   solicitacaoAlimentacao: "",
   setSolicitacaoAlimentacao() {},
-  updateSolicitacaoAlimentacao() {}
+  updateSolicitacaoAlimentacao() {},
 });
 
 export const SolicitacaoAlimentacaoContextProvider = ({ children }) => {
   const [solicitacaoAlimentacao, setSolicitacaoAlimentacao] = useState(null);
 
-  const updateSolicitacaoAlimentacao = solicitacao => {
+  const updateSolicitacaoAlimentacao = (solicitacao) => {
     setSolicitacaoAlimentacao(solicitacao);
     return solicitacao;
   };
@@ -19,7 +19,7 @@ export const SolicitacaoAlimentacaoContextProvider = ({ children }) => {
       value={{
         solicitacaoAlimentacao,
         setSolicitacaoAlimentacao,
-        updateSolicitacaoAlimentacao
+        updateSolicitacaoAlimentacao,
       }}
     >
       {children}

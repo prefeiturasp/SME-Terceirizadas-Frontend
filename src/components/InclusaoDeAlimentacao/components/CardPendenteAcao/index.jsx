@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import {
   talvezPluralizar,
-  gerarLinkRelatorio
+  gerarLinkRelatorio,
 } from "../../../../helpers/utilities";
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
@@ -13,7 +13,7 @@ export class CardPendenteAcao extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: this.props.pedidos
+      pedidosFiltrados: this.props.pedidos,
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
   }
@@ -21,7 +21,7 @@ export class CardPendenteAcao extends Component {
   filtrarPedidos(event) {
     if (event === undefined) event = { target: { value: "" } };
     let pedidosFiltrados = this.props.pedidos;
-    pedidosFiltrados = pedidosFiltrados.filter(function(item) {
+    pedidosFiltrados = pedidosFiltrados.filter(function (item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.id_externo.toLowerCase().search(palavraAFiltrar) !== -1 ||

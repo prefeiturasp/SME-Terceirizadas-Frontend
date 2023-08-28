@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 
@@ -12,7 +12,7 @@ const ModalExclusaoVinculo = ({
   show,
   toggleShow,
   vinculo,
-  deletarVinculo
+  deletarVinculo,
 }) => {
   const handleClose = () => {
     toggleShow(false, null);

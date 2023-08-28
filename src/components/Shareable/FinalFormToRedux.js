@@ -6,10 +6,7 @@ import { FormSpy } from "react-final-form";
 import { updateFormState } from "reducers/finalForm";
 
 const FormStateToRedux = ({ form, updateFormState }) => (
-  <FormSpy onChange={state => updateFormState(form, state.values)} />
+  <FormSpy onChange={(state) => updateFormState(form, state.values)} />
 );
 
-export default connect(
-  undefined,
-  { updateFormState }
-)(FormStateToRedux);
+export default connect(undefined, { updateFormState })(FormStateToRedux);

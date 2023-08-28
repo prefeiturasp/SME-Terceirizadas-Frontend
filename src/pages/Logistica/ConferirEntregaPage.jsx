@@ -7,14 +7,14 @@ import ConferirEntrega from "components/screens/Logistica/ConferirEntrega";
 
 const atual = {
   href: `/${LOGISTICA}/${CONFERIR_ENTREGA}`,
-  titulo: "Conferir Entrega"
+  titulo: "Conferir Entrega",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
-  }
+    titulo: "Abastecimento",
+  },
 ];
 
 export default () => (

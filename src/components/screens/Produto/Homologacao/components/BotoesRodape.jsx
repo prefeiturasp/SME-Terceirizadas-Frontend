@@ -3,11 +3,11 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import {
   CODAECancelaAnaliseSensorialProduto,
-  imprimeFichaIdentificacaoProduto
+  imprimeFichaIdentificacaoProduto,
 } from "services/produto.service";
 import { useHistory } from "react-router-dom";
 import { usuarioEhCODAEGestaoProduto } from "helpers/utilities";
@@ -19,7 +19,7 @@ export const BotoesRodape = ({ homologacao, ehCardSuspensos }) => {
   const [showModal, setShowModal] = useState(false);
 
   const params = {
-    eh_card_suspensos: ehCardSuspensos
+    eh_card_suspensos: ehCardSuspensos,
   };
 
   return (

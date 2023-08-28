@@ -4,31 +4,31 @@ export const UPDATE_NOME = "UPDATE_NOME";
 export const UPDATE_EDITAL = "UPDATE_EDITAL";
 export const RESET_CAMPOS_PRODUTO = "RESET_CAMPOS_PRODUTO";
 
-export const updateMarcaProduto = marca => ({
+export const updateMarcaProduto = (marca) => ({
   type: UPDATE_MARCA,
-  payload: marca
+  payload: marca,
 });
 
-export const updateNomeProduto = nome => ({
+export const updateNomeProduto = (nome) => ({
   type: UPDATE_NOME,
-  payload: nome
+  payload: nome,
 });
 
-export const updateEditalProduto = edital => ({
+export const updateEditalProduto = (edital) => ({
   type: UPDATE_EDITAL,
-  payload: edital
+  payload: edital,
 });
 
 export const resetCamposProduto = () => {
   return {
-    type: RESET_CAMPOS_PRODUTO
+    type: RESET_CAMPOS_PRODUTO,
   };
 };
 
 const initialState = {
   marcaProduto: "",
   nomeProduto: "",
-  editalProduto: ""
+  editalProduto: "",
 };
 
 //reducer
@@ -37,24 +37,24 @@ export const filtersProdutoReducer = (state = initialState, action) => {
     case UPDATE_MARCA:
       return {
         ...state,
-        marcaProduto: action.payload
+        marcaProduto: action.payload,
       };
     case UPDATE_NOME:
       return {
         ...state,
-        nomeProduto: action.payload
+        nomeProduto: action.payload,
       };
     case UPDATE_EDITAL:
       return {
         ...state,
-        editalProduto: action.payload
+        editalProduto: action.payload,
       };
     case RESET_CAMPOS_PRODUTO:
       return {
         ...state,
         marcaProduto: "",
         nomeProduto: "",
-        editalProduto: ""
+        editalProduto: "",
       };
     default:
       return state;

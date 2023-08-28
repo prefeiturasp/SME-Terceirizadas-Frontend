@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import {
   peloMenosUmCaractere,
-  required
+  required,
 } from "../../../../helpers/fieldValidators";
 import CKEditorField from "components/Shareable/CKEditorField";
 import { toastWarn } from "../../../Shareable/Toast/dialogs";
@@ -46,9 +46,9 @@ export class ModalJustificativa extends Component {
               required
               validate={[required, peloMenosUmCaractere]}
               input={{
-                onChange: valor => this.setState({ justificativa: valor }),
+                onChange: (valor) => this.setState({ justificativa: valor }),
                 value: this.state.justificativa,
-                onBlur: () => {}
+                onBlur: () => {},
               }}
             />
           </div>

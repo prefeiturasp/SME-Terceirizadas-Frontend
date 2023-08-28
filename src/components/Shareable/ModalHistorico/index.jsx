@@ -5,7 +5,7 @@ import { truncarString, usuarioEhCogestorDRE } from "helpers/utilities";
 import "./styles.scss";
 import {
   documentoAnaliseSensorial,
-  medicaoInicialExportarOcorrenciasPDF
+  medicaoInicialExportarOcorrenciasPDF,
 } from "services/relatorios";
 import { BUTTON_STYLE } from "../Botao/constants";
 import Botao from "../Botao";
@@ -16,7 +16,7 @@ const ModalHistorico = ({
   onCancel,
   getHistorico,
   titulo,
-  logs: logsProps
+  logs: logsProps,
 }) => {
   const [logs, setLogs] = useState([]);
   const [logSelecionado, setLogSelecionado] = useState(null);
@@ -24,7 +24,7 @@ const ModalHistorico = ({
     "Enviado pela UE",
     "Corrigido para DRE",
     "Corrigido para CODAE",
-    "Terceirizada respondeu a análise"
+    "Terceirizada respondeu a análise",
   ];
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const ModalHistorico = ({
   }, []);
 
   const itemLogAtivo = (index, ativo) => {
-    logs.forEach(log => {
+    logs.forEach((log) => {
       log.ativo = false;
     });
 
@@ -59,7 +59,7 @@ const ModalHistorico = ({
     setLogs(logs);
   };
 
-  const retornaIniciais = log => {
+  const retornaIniciais = (log) => {
     const nome = log.usuario.nome.split(" ");
     let iniciais = "";
     nome.forEach((n, index) => {
@@ -82,7 +82,7 @@ const ModalHistorico = ({
   //   return urlArquivoPDF;
   // };
 
-  const getArquivoUrl = log => {
+  const getArquivoUrl = (log) => {
     let urlArquivo = "";
 
     if (statusValidosDownload.includes(log.status_evento_explicacao)) {
@@ -90,7 +90,9 @@ const ModalHistorico = ({
 
       switch (tipoSolicitacao) {
         case "Solicitação de medição inicial": {
-          const anexoPDF = log.anexos.find(anexo => anexo.nome.includes("pdf"));
+          const anexoPDF = log.anexos.find((anexo) =>
+            anexo.nome.includes("pdf")
+          );
           if (anexoPDF) {
             urlArquivo = anexoPDF.arquivo_url;
           }
@@ -111,7 +113,7 @@ const ModalHistorico = ({
     return urlArquivo;
   };
 
-  const getTitulo = log => {
+  const getTitulo = (log) => {
     if (log) {
       if (log.status_evento_explicacao === "Correção solicitada") {
         return "Devolvido para ajustes pela DRE";
@@ -143,7 +145,7 @@ const ModalHistorico = ({
       maskClosable={false}
       cancelButtonProps={{ style: { background: "white", onHover: "none" } }}
       okButtonProps={{
-        style: { background: "#198459", borderColor: "#198459" }
+        style: { background: "#198459", borderColor: "#198459" },
       }}
     >
       <section className="body-modal-produto">
@@ -237,7 +239,7 @@ const ModalHistorico = ({
                             ) : null}
                             <div
                               dangerouslySetInnerHTML={{
-                                __html: logSelecionado.justificativa
+                                __html: logSelecionado.justificativa,
                               }}
                             />
                           </>

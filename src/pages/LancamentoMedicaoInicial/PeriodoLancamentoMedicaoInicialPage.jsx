@@ -9,19 +9,19 @@ import PeriodoLancamentoMedicaoInicial from "components/screens/LancamentoInicia
 import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
-  PERIODO_LANCAMENTO
+  PERIODO_LANCAMENTO,
 } from "configs/constants";
 
 const anteriores = [
   {
     href: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`,
-    titulo: "Medição Inicial"
-  }
+    titulo: "Medição Inicial",
+  },
 ];
 
 const atual = {
   href: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`,
-  titulo: "Lançamento Medição Inicial"
+  titulo: "Lançamento Medição Inicial",
 };
 
 export default () => (

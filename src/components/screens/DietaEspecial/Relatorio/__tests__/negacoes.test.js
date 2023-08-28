@@ -14,13 +14,13 @@ import {
   listaProtocolosLiberados,
   alimentos,
   solicitacoesDietaEspecial,
-  protocoloPadraoDietaEspecial
+  protocoloPadraoDietaEspecial,
 } from "../dados";
 import { API_URL } from "constants/config";
 
 const payload = {
   ...respostaApiCancelamentoporDataTermino(),
-  status_solicitacao: "CODAE_NEGOU_PEDIDO"
+  status_solicitacao: "CODAE_NEGOU_PEDIDO",
 };
 
 const server = setupServer(
@@ -67,8 +67,8 @@ test("Relatorio negadas para inclusão", async () => {
   const search = `?uuid=${payload.uuid}&ehInclusaoContinua=false&card=negadas:`;
   Object.defineProperty(window, "location", {
     value: {
-      search: search
-    }
+      search: search,
+    },
   });
   render(<Relatorio visao={CODAE} />);
 
@@ -140,13 +140,11 @@ test("Relatorio negadas para solicitação de alteração de U.E.", async () => 
   let payload_alteracao = payload;
   payload_alteracao.tipo_solicitacao = "ALTERACAO_UE";
 
-  const search = `?uuid=${
-    payload_alteracao.uuid
-  }&ehInclusaoContinua=false&card=negadas:`;
+  const search = `?uuid=${payload_alteracao.uuid}&ehInclusaoContinua=false&card=negadas:`;
   Object.defineProperty(window, "location", {
     value: {
-      search: search
-    }
+      search: search,
+    },
   });
   render(<Relatorio visao={CODAE} />);
 

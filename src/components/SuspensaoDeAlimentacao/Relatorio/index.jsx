@@ -10,18 +10,18 @@ import { ModalCancelaSuspensao } from "../components/ModalCancelaSuspensao";
 import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { SUSPENSAO_ALIMENTACAO, TERCEIRIZADA } from "configs/constants";
 import { statusEnum, TIPO_PERFIL } from "constants/shared";
 import {
   getError,
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada
+  usuarioEhEscolaTerceirizada,
 } from "helpers/utilities";
 import {
   getSuspensaoDeAlimentacaoUUID,
-  terceirizadaTomaCienciaSuspensaoDeAlimentacao
+  terceirizadaTomaCienciaSuspensaoDeAlimentacao,
 } from "services/suspensaoDeAlimentacao.service";
 import "./style.scss";
 
@@ -34,17 +34,16 @@ class RelatorioSuspensaoAlimentacao extends Component {
       dadosEscola: null,
       redirect: false,
       showModalMarcarConferencia: false,
-      showModalEscolaCancela: false
+      showModalEscolaCancela: false,
     };
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
-    this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
-      this
-    );
+    this.closeModalMarcarConferencia =
+      this.closeModalMarcarConferencia.bind(this);
   }
 
   setRedirect() {
     this.setState({
-      redirect: true
+      redirect: true,
     });
   }
 
@@ -58,14 +57,14 @@ class RelatorioSuspensaoAlimentacao extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      getSuspensaoDeAlimentacaoUUID(uuid).then(response => {
+      getSuspensaoDeAlimentacaoUUID(uuid).then((response) => {
         if (response.status === HTTP_STATUS.OK) {
           let suspensaoAlimentacao = response.data;
           let dadosEscola = suspensaoAlimentacao.escola;
           this.setState({
             suspensaoAlimentacao,
             dadosEscola,
-            uuid
+            uuid,
           });
         } else if (response.data.detail) {
           this.setState({ erro: true });
@@ -91,14 +90,14 @@ class RelatorioSuspensaoAlimentacao extends Component {
   }
 
   loadSolicitacao(uuid) {
-    getSuspensaoDeAlimentacaoUUID(uuid).then(response => {
+    getSuspensaoDeAlimentacaoUUID(uuid).then((response) => {
       if (response.status === HTTP_STATUS.OK) {
         let suspensaoAlimentacao = response.data;
         let dadosEscola = suspensaoAlimentacao.escola;
         this.setState({
           suspensaoAlimentacao,
           dadosEscola,
-          uuid
+          uuid,
         });
       } else if (response.data.detail) {
         this.setState({ erro: true });
@@ -117,7 +116,7 @@ class RelatorioSuspensaoAlimentacao extends Component {
   handleSubmit() {
     const uuid = this.state.uuid;
     terceirizadaTomaCienciaSuspensaoDeAlimentacao(uuid).then(
-      response => {
+      (response) => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(
             "Ciência de suspensão de alimentação avisada com sucesso!"
@@ -131,7 +130,7 @@ class RelatorioSuspensaoAlimentacao extends Component {
           );
         }
       },
-      function() {
+      function () {
         toastError("Erro ao tomar ciência de suspensão de alimentação");
       }
     );
@@ -144,7 +143,7 @@ class RelatorioSuspensaoAlimentacao extends Component {
       erro,
       showModalMarcarConferencia,
       uuid,
-      showModalEscolaCancela
+      showModalEscolaCancela,
     } = this.state;
 
     const visao = localStorage.getItem("tipo_perfil");
@@ -190,9 +189,7 @@ class RelatorioSuspensaoAlimentacao extends Component {
         {!suspensaoAlimentacao && !erro && <div>Carregando...</div>}
         {suspensaoAlimentacao && (
           <form onSubmit={this.props.handleSubmit}>
-            <span className="page-title">{`Suspensão de Alimentação - Solicitação # ${
-              suspensaoAlimentacao.id_externo
-            }`}</span>
+            <span className="page-title">{`Suspensão de Alimentação - Solicitação # ${suspensaoAlimentacao.id_externo}`}</span>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
@@ -255,6 +252,6 @@ class RelatorioSuspensaoAlimentacao extends Component {
 
 const RelatorioForm = reduxForm({
   form: "suspensaoALimentacaoForm",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(RelatorioSuspensaoAlimentacao);
 export default RelatorioForm;

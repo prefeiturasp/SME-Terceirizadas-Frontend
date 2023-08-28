@@ -5,7 +5,7 @@ import HTTP_STATUS from "http-status-codes";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import CKEditorField from "./CKEditorField";
@@ -16,7 +16,7 @@ export const ModalAprovarGenericoSimOpcional = ({
   uuid,
   endpoint,
   loadSolicitacao,
-  tipoSolicitacao
+  tipoSolicitacao,
 }) => {
   const autorizarSolicitacao = async (uuid, justificativa) => {
     const resp = await endpoint(
@@ -25,7 +25,7 @@ export const ModalAprovarGenericoSimOpcional = ({
         justificativa:
           justificativa && justificativa.length > 0
             ? justificativa
-            : "Sem observações por parte da CODAE"
+            : "Sem observações por parte da CODAE",
       },
       tipoSolicitacao
     );

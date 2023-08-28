@@ -11,18 +11,18 @@ const ListagemPlanilhas = ({
   buscarPlanilhas,
   page,
   setShowRemocao,
-  executarCarga
+  executarCarga,
 }) => {
-  const formataNomeArquivo = url => {
+  const formataNomeArquivo = (url) => {
     return url.split("/").pop();
   };
 
-  const formataStatus = uuid => {
-    let obj = OPTIONS_STATUS.find(el => el.uuid === uuid);
+  const formataStatus = (uuid) => {
+    let obj = OPTIONS_STATUS.find((el) => el.uuid === uuid);
     return obj ? obj.nome : "";
   };
 
-  const downloadArquivo = url => {
+  const downloadArquivo = (url) => {
     saveAs(url.replace("http://", "https://"));
   };
 

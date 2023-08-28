@@ -83,7 +83,7 @@ export const HistoricoCorrecaoSolicitada = ({ ...props }) => {
                                             <p>
                                               <b>Dias:</b>{" "}
                                               {semana.dias
-                                                .map(dia => dia)
+                                                .map((dia) => dia)
                                                 .join(", ")}
                                             </p>
                                           </div>
@@ -101,7 +101,7 @@ export const HistoricoCorrecaoSolicitada = ({ ...props }) => {
                         <p
                           className="cor-texo-detalhes"
                           dangerouslySetInnerHTML={{
-                            __html: alteracao.justificativa
+                            __html: alteracao.justificativa,
                           }}
                         />
                       </td>

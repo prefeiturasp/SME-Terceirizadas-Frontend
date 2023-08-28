@@ -8,13 +8,13 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   BUTTON_ICON,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { DETALHAMENTO_DO_LANCAMENTO } from "configs/constants";
 import {
   getTiposDeContagemAlimentacao,
   setSolicitacaoMedicaoInicial,
-  updateSolicitacaoMedicaoInicial
+  updateSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
 export default ({
@@ -22,25 +22,24 @@ export default ({
   escolaInstituicao,
   nomeTerceirizada,
   solicitacaoMedicaoInicial,
-  onClickInfoBasicas
+  onClickInfoBasicas,
 }) => {
   const [tiposDeContagem, setTiposDeContagem] = useState([]);
-  const [tipoDeContagemSelecionada, setTipoDeContagemSelecionada] = useState(
-    null
-  );
+  const [tipoDeContagemSelecionada, setTipoDeContagemSelecionada] =
+    useState(null);
   const [responsaveis, setResponsaveis] = useState([
     {
       nome: "",
-      rf: ""
+      rf: "",
     },
     {
       nome: "",
-      rf: ""
+      rf: "",
     },
     {
       nome: "",
-      rf: ""
-    }
+      rf: "",
+    },
   ]);
   const [emEdicao, setEmEdicao] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -76,7 +75,7 @@ export default ({
   }, []);
 
   const opcoesContagem = tiposDeContagem
-    ? tiposDeContagem.map(tipo => {
+    ? tiposDeContagem.map((tipo) => {
         return <Option key={tipo.uuid}>{tipo.nome}</Option>;
       })
     : [];
@@ -104,7 +103,7 @@ export default ({
               className="mt-2"
               name={`responsavel_nome_${responsavel}`}
               defaultValue={responsaveis[responsavel]["nome"]}
-              onChange={event =>
+              onChange={(event) =>
                 setaResponsavel("nome", event.target.value, responsavel)
               }
               disabled={!emEdicao}
@@ -115,8 +114,8 @@ export default ({
               maxLength={7}
               className="mt-2"
               name={`responsavel_rf_${responsavel}`}
-              onKeyPress={event => verificarInput(event, responsavel)}
-              onChange={event => verificarInput(event, responsavel)}
+              onKeyPress={(event) => verificarInput(event, responsavel)}
+              onChange={(event) => verificarInput(event, responsavel)}
               defaultValue={responsaveis[responsavel]["rf"]}
               disabled={!emEdicao}
             />
@@ -128,7 +127,7 @@ export default ({
     return component;
   };
 
-  const handleChangeTipoContagem = value => {
+  const handleChangeTipoContagem = (value) => {
     setTipoDeContagemSelecionada(value);
   };
 
@@ -140,13 +139,13 @@ export default ({
   };
 
   const handleClickSalvar = async () => {
-    if (!responsaveis.some(resp => resp.nome !== "" && resp.rf !== "")) {
+    if (!responsaveis.some((resp) => resp.nome !== "" && resp.rf !== "")) {
       toastError("Pelo menos um responsável deve ser cadastrado");
       return;
     }
     if (
       responsaveis.some(
-        resp =>
+        (resp) =>
           (resp.nome !== "" && resp.rf === "") ||
           (resp.nome === "" && resp.rf !== "")
       )
@@ -155,9 +154,9 @@ export default ({
       return;
     }
     const responsaveisPayload = responsaveis.filter(
-      resp => resp.nome !== "" && resp.rf !== ""
+      (resp) => resp.nome !== "" && resp.rf !== ""
     );
-    if (responsaveisPayload.some(resp => resp.rf.length !== 7)) {
+    if (responsaveisPayload.some((resp) => resp.rf.length !== 7)) {
       toastError("O campo de RF deve conter 7 números");
       return;
     }
@@ -214,7 +213,7 @@ export default ({
         tipo_contagem_alimentacoes: tipoDeContagemSelecionada,
         responsaveis: responsaveisPayload,
         mes: format(new Date(periodoSelecionado), "MM").toString(),
-        ano: getYear(new Date(periodoSelecionado)).toString()
+        ano: getYear(new Date(periodoSelecionado)).toString(),
       };
       const response = await setSolicitacaoMedicaoInicial(payload);
       if (response.status === HTTP_STATUS.CREATED) {
@@ -261,7 +260,7 @@ export default ({
                       open={openSelect}
                       onClick={() => setOpenSelect(!openSelect)}
                       defaultValue={getDefaultValueSelectTipoContagem()}
-                      onChange={value => handleChangeTipoContagem(value)}
+                      onChange={(value) => handleChangeTipoContagem(value)}
                       className="mt-2"
                       disabled={!emEdicao}
                     >

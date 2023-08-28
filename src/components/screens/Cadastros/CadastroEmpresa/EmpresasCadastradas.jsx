@@ -16,18 +16,18 @@ class EmpresasCadastradas extends Component {
       empresasFiltradas: [],
       empresasFiltradasEstadoInicial: [],
       ehDistribuidor: false,
-      loading: false
+      loading: false,
     };
   }
 
   buscaTerceirizadas(filtro = null) {
     this.setState({ loading: true });
-    getTerceirizada(filtro).then(response => {
+    getTerceirizada(filtro).then((response) => {
       const resp = retornArrayTerceirizadas(response.data.results);
       const tipoPerfil = localStorage.getItem("perfil");
       let empresasF = [];
       if (tipoPerfil === PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA) {
-        resp.forEach(empresa => {
+        resp.forEach((empresa) => {
           if (!empresa.eh_distribuidor) {
             empresasF.push(empresa);
           }
@@ -38,7 +38,7 @@ class EmpresasCadastradas extends Component {
         tipoPerfil === PERFIL.DILOG_CRONOGRAMA
       ) {
         this.setState({ ...this.state, ehDistribuidor: true });
-        resp.forEach(empresa => {
+        resp.forEach((empresa) => {
           if (empresa.eh_distribuidor) {
             empresasF.push(empresa);
           }
@@ -69,7 +69,7 @@ class EmpresasCadastradas extends Component {
       }, 500);
     } else if (values.length < 3 && !this.state.loading) {
       this.setState({
-        empresasFiltradas: this.state.empresasFiltradasEstadoInicial
+        empresasFiltradas: this.state.empresasFiltradasEstadoInicial,
       });
     }
     this.setState({ pesquisar: values });
@@ -93,7 +93,7 @@ class EmpresasCadastradas extends Component {
                     className="input-search"
                     placeholder="Pesquisar"
                     value={pesquisar}
-                    onChange={e => this.onPesquisaChanged(e.target.value)}
+                    onChange={(e) => this.onPesquisaChanged(e.target.value)}
                     autoFocus={true}
                   />
                   <i className="fas fa-search" />
@@ -129,9 +129,7 @@ class EmpresasCadastradas extends Component {
                           <span>
                             <NavLink
                               className="float-left botao-editar"
-                              to={`/configuracoes/cadastros/editar-empresa?uuid=${
-                                empresa.uuid
-                              }`}
+                              to={`/configuracoes/cadastros/editar-empresa?uuid=${empresa.uuid}`}
                             >
                               <i className="fas fa-edit" />
                             </NavLink>
@@ -282,8 +280,8 @@ class EmpresasCadastradas extends Component {
                               </header>
                               <div className="secao-empresa">
                                 {empresa.contatos
-                                  .filter(contato => contato.nome)
-                                  .map(contato => (
+                                  .filter((contato) => contato.nome)
+                                  .map((contato) => (
                                     <section key="" className="contato-empresa">
                                       <div>
                                         <span className="descricao">Nome:</span>
@@ -318,7 +316,7 @@ class EmpresasCadastradas extends Component {
                                   <span>Contratos</span>
                                 </header>
                                 <div className="secao-empresa">
-                                  {empresa.contratos.map(contrato => (
+                                  {empresa.contratos.map((contrato) => (
                                     <section
                                       key=""
                                       className="contrato-empresa"
@@ -346,10 +344,8 @@ class EmpresasCadastradas extends Component {
                                         </span>
                                         <span className="valor-desc">
                                           {contrato.vigencias.map(
-                                            vigencia =>
-                                              `${vigencia.data_inicial} até ${
-                                                vigencia.data_final
-                                              }`
+                                            (vigencia) =>
+                                              `${vigencia.data_inicial} até ${vigencia.data_final}`
                                           )}
                                         </span>
                                       </div>
@@ -439,7 +435,7 @@ class EmpresasCadastradas extends Component {
                                       </div>
                                     </div>
                                   </div>
-                                </Fragment>
+                                </Fragment>,
                               ];
                             })}
 
@@ -470,7 +466,7 @@ class EmpresasCadastradas extends Component {
                                       </div>
                                     </div>
                                   </div>
-                                </Fragment>
+                                </Fragment>,
                               ];
                             })}
                             {empresa.editais.length > 0 && (
@@ -489,9 +485,7 @@ class EmpresasCadastradas extends Component {
                                   {empresa.lotes.map((lote, key) => (
                                     <li key={key}>
                                       <Link
-                                        to={`/configuracoes/cadastros/lote?uuid=${
-                                          lote.uuid
-                                        }`}
+                                        to={`/configuracoes/cadastros/lote?uuid=${lote.uuid}`}
                                       >
                                         {lote.nome}
                                       </Link>
@@ -504,7 +498,7 @@ class EmpresasCadastradas extends Component {
                         )}
                       </td>
                     </tr>
-                  )
+                  ),
                 ];
               })
             )}

@@ -5,11 +5,11 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 
 const DadosDietaEspecial = ({ values, dietaEspecial, card }) => {
-  const downloadAnexo = url => {
+  const downloadAnexo = (url) => {
     const a = document.createElement("a");
     a.href = url;
     a.target = "_blank";
@@ -23,7 +23,7 @@ const DadosDietaEspecial = ({ values, dietaEspecial, card }) => {
     <div
       className="observacoes"
       dangerouslySetInnerHTML={{
-        __html: values.observacoes
+        __html: values.observacoes,
       }}
     />
   );
@@ -45,7 +45,7 @@ const DadosDietaEspecial = ({ values, dietaEspecial, card }) => {
       ![
         "TERMINADA_AUTOMATICAMENTE_SISTEMA",
         "CANCELADO_ALUNO_MUDOU_ESCOLA",
-        "CANCELADO_ALUNO_NAO_PERTENCE_REDE"
+        "CANCELADO_ALUNO_NAO_PERTENCE_REDE",
       ].includes(dietaEspecial.status_solicitacao)
     );
   };

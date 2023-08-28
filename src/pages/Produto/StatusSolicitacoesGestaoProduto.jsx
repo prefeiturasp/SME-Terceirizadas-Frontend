@@ -12,19 +12,19 @@ import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 
 import {
   escolheStatusPendenteHomologacao,
-  escolheStatusAguardandoAnaliseReclamacao
+  escolheStatusAguardandoAnaliseReclamacao,
 } from "./helpers";
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
-  usuarioEhCogestorDRE
+  usuarioEhCogestorDRE,
 } from "helpers/utilities";
 
 class StatusSolicitacoesBase extends React.Component {
   render() {
     const atual = {
       href: "#",
-      titulo: "Status Solicitações"
+      titulo: "Status Solicitações",
     };
 
     return (

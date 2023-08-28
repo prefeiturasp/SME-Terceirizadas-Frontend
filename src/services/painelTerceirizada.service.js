@@ -3,7 +3,7 @@ import axios from "./_base";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
+  filtraRegular,
 } from "./../components/InversaoDeDiaDeCardapio/Terceirizada/PainelPedidos/helper";
 import { SOLICITACOES } from "./constants";
 import { getTerceirizadaPedidosDeAlteracaoCardapio } from "services/alteracaoDeCardapio";
@@ -25,7 +25,7 @@ export const getResumoPendenciasTerceirizadaAlteracoesDeCardapio = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -40,7 +40,7 @@ export const getResumoPendenciasTerceirizadaAlteracoesDeCardapio = async (
     getTerceirizadaPedidosDeAlteracaoCardapio(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CEI
-    )
+    ),
   ]);
 
   if (avulsos) {
@@ -66,7 +66,7 @@ const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -85,7 +85,7 @@ const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa = async (
     terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CEI
-    )
+    ),
   ]);
 
   if (continuas) {
@@ -111,17 +111,18 @@ const getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoContinua = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
   let pedidosLimite = [];
   let pedidosRegular = [];
 
-  const solicitacoes = await terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
-    filtro,
-    TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
-  );
+  const solicitacoes =
+    await terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+    );
 
   if (solicitacoes) {
     pedidosPrioritarios = filtraPrioritarios(solicitacoes.results);
@@ -145,15 +146,13 @@ export const getResumoPendenciasTerceirizadaInclusaoDeAlimentacao = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
-  const resumoAvulsa = await getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa(
-    filtro
-  );
-  const resumoContinua = await getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoContinua(
-    filtro
-  );
+  const resumoAvulsa =
+    await getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoAvulsa(filtro);
+  const resumoContinua =
+    await getResumoPendenciasTerceirizadaInclusaoDeAlimentacaoContinua(filtro);
 
   resposta.limite = resumoAvulsa.limite + resumoContinua.limite;
   resposta.prioritario = resumoAvulsa.prioritario + resumoContinua.prioritario;
@@ -171,7 +170,7 @@ export const getResumoPendenciasTerceirizadaInversaoDeDiaDeCardapio = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -202,7 +201,7 @@ export const getResumoPendenciasTerceirizadaKitLanche = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -214,7 +213,10 @@ export const getResumoPendenciasTerceirizadaKitLanche = async (
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_NORMAL
     ),
-    getTerceirizadasPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
+    getTerceirizadasPedidosDeKitLanche(
+      filtro,
+      TIPO_SOLICITACAO.SOLICITACAO_CEI
+    ),
   ]);
 
   if (avulsos) {
@@ -240,7 +242,7 @@ export const getResumoPendenciasTerceirizadaSuspensaoDeAlimentacao = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
   let pedidosPrioritarios = [];
   let pedidosLimite = [];
@@ -269,7 +271,7 @@ export const getResumoPendenciasTerceirizadaSolicitacoesUnificadas = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -305,7 +307,7 @@ export const getResumoPendenciasTerceirizadaSolicitacoesUnificadas = async (
 
 const SOLICITACOES_TERCEIRIZADA = `${API_URL}/terceirizada-solicitacoes`;
 
-export const getSolicitacoesPendentesTerceirizada = async params => {
+export const getSolicitacoesPendentesTerceirizada = async (params) => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${SOLICITACOES.PENDENTES}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -314,7 +316,7 @@ export const getSolicitacoesPendentesTerceirizada = async params => {
   }
 };
 
-export const getSolicitacoesCanceladasTerceirizada = async params => {
+export const getSolicitacoesCanceladasTerceirizada = async (params) => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${SOLICITACOES.CANCELADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -323,7 +325,7 @@ export const getSolicitacoesCanceladasTerceirizada = async params => {
   }
 };
 
-export const getSolicitacoesAutorizadasTerceirizada = async params => {
+export const getSolicitacoesAutorizadasTerceirizada = async (params) => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${SOLICITACOES.AUTORIZADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -332,7 +334,7 @@ export const getSolicitacoesAutorizadasTerceirizada = async params => {
   }
 };
 
-export const getSolicitacoesNegadasTerceirizada = async params => {
+export const getSolicitacoesNegadasTerceirizada = async (params) => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${SOLICITACOES.NEGADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -346,9 +348,7 @@ export const getSolicitacoesPendenteCienciaTerceirizada = async (
   filtroAplicado,
   tipoVisao
 ) => {
-  const url = `${SOLICITACOES_TERCEIRIZADA}/${
-    SOLICITACOES.PENDENTES_CIENCIA
-  }/${TerceirizadaUuid}/${filtroAplicado}/${tipoVisao}/`;
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${SOLICITACOES.PENDENTES_CIENCIA}/${TerceirizadaUuid}/${filtroAplicado}/${tipoVisao}/`;
   const response = await axios.get(url).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -356,7 +356,7 @@ export const getSolicitacoesPendenteCienciaTerceirizada = async (
   }
 };
 
-export const getSolicitacoesComQuestionamento = async params => {
+export const getSolicitacoesComQuestionamento = async (params) => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${SOLICITACOES.QUESTIONAMENTOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {

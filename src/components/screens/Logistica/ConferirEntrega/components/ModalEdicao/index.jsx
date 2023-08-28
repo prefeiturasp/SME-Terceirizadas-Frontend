@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { CONFERENCIA_GUIA, LOGISTICA } from "configs/constants";
 import { useHistory } from "react-router-dom";

@@ -8,7 +8,7 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { consultaItems } from "services/produto.service";
 import HTTP_STATUS from "http-status-codes";
@@ -24,31 +24,31 @@ export default ({
   setPage,
   changePage,
   tipoFixo,
-  initialValues
+  initialValues,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const { Option } = SelectAntd;
   const opcoes = tipos
-    ? tipos.map(tipo => {
+    ? tipos.map((tipo) => {
         return <Option key={tipo.tipo}>{tipo.tipo_display}</Option>;
       })
     : [];
 
-  const getNomesItemsFiltrado = nomeItem => {
+  const getNomesItemsFiltrado = (nomeItem) => {
     if (nomeItem) {
       const reg = new RegExp(nomeItem, "iu");
-      return nomes.filter(a => reg.test(a));
+      return nomes.filter((a) => reg.test(a));
     }
     return [];
   };
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     try {
       setCarregando(true);
       const payload = {
         nome: formValues.nome_item,
-        tipo: formValues.tipo
+        tipo: formValues.tipo,
       };
       const response = await consultaItems(payload);
       if (response.status === HTTP_STATUS.OK) {

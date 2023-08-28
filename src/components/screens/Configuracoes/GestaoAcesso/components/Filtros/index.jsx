@@ -5,7 +5,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import SelectSelecione from "components/Shareable/SelectSelecione";
@@ -19,16 +19,16 @@ export default ({
   perfis,
   visaoUnica,
   desabilitaCadastro,
-  qtdLimiteCadastro
+  qtdLimiteCadastro,
 }) => {
   const initialValues = visaoUnica
     ? {
-        visao: visaoUnica
+        visao: visaoUnica,
       }
     : {};
   const inicioResultado = useRef();
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };

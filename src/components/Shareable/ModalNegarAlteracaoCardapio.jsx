@@ -5,7 +5,7 @@ import { Field } from "redux-form";
 import { required } from "../../helpers/fieldValidators";
 import {
   DRENaoValidaAlteracaoCardapio,
-  CODAENegaAlteracaoCardapio
+  CODAENegaAlteracaoCardapio,
 } from "../../services/alteracaoDeCardapio";
 import { toastError, toastSuccess } from "./Toast/dialogs";
 import { statusEnum } from "../../constants/shared";
@@ -76,12 +76,12 @@ export class ModalNegarAlteracaoCardapio extends Component {
                 options={[
                   {
                     nome: "Sem motivo",
-                    uuid: "Sem motivo"
+                    uuid: "Sem motivo",
                   },
                   {
                     nome: "Em desacordo com o contrato",
-                    uuid: "Em desacordo com o contrato"
-                  }
+                    uuid: "Em desacordo com o contrato",
+                  },
                 ]}
                 validate={required}
               />

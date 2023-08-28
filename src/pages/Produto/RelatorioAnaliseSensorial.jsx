@@ -4,12 +4,12 @@ import RelatorioAnaliseSensorial from "../../components/screens/Produto/Relatori
 import Page from "../../components/Shareable/Page/Page";
 import {
   PESQUISA_DESENVOLVIMENTO,
-  RELATORIO_ANALISE_SENSORIAL
+  RELATORIO_ANALISE_SENSORIAL,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${PESQUISA_DESENVOLVIMENTO}/${RELATORIO_ANALISE_SENSORIAL}`,
-  titulo: "Responder análise sensorial"
+  titulo: "Responder análise sensorial",
 };
 
 export default () => (

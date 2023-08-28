@@ -6,14 +6,14 @@ import { CONFIGURACOES, GERENCIAMENTO_EMAILS } from "../../configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${GERENCIAMENTO_EMAILS}`,
-  titulo: "Gerenciamento de E-mails"
+  titulo: "Gerenciamento de E-mails",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Configurações"
-  }
+    titulo: "Configurações",
+  },
 ];
 
 export default () => (

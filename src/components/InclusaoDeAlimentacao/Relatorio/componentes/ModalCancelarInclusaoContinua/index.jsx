@@ -1,13 +1,13 @@
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { WEEK } from "configs/constants";
 import { required } from "helpers/fieldValidators";
 import {
   mensagemCancelamento,
-  stringSeparadaPorVirgulas
+  stringSeparadaPorVirgulas,
 } from "helpers/utilities";
 import React from "react";
 import { Modal } from "react-bootstrap";
@@ -24,11 +24,13 @@ export const ModalCancelarInclusaoContinua = ({ ...props }) => {
     endpoint,
     tipoSolicitacao,
     loadSolicitacao,
-    uuid
+    uuid,
   } = props;
 
-  const onSubmit = async values => {
-    if (!values.quantidades_periodo.map(qtd_prd => qtd_prd.cancelado).length) {
+  const onSubmit = async (values) => {
+    if (
+      !values.quantidades_periodo.map((qtd_prd) => qtd_prd.cancelado).length
+    ) {
       toastError("Selecione pelo menos uma data");
       return;
     }
@@ -36,7 +38,7 @@ export const ModalCancelarInclusaoContinua = ({ ...props }) => {
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
       if (
-        values.quantidades_periodo.filter(qtd_prd => qtd_prd.cancelado)
+        values.quantidades_periodo.filter((qtd_prd) => qtd_prd.cancelado)
           .length !== values.quantidades_periodo.length
       ) {
         toastSuccess("Solicitação cancelada parcialmente com sucesso");
@@ -139,7 +141,7 @@ export const ModalCancelarInclusaoContinua = ({ ...props }) => {
                         {quantidade_periodo.numero_alunos}
                       </div>
                     </div>,
-                    <hr key={Math.random()} />
+                    <hr key={Math.random()} />,
                   ];
                 }
               )}

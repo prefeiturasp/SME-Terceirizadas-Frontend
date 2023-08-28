@@ -1,4 +1,4 @@
-export const mesesToMesEAnoString = totalMeses => {
+export const mesesToMesEAnoString = (totalMeses) => {
   const anos = Math.floor(totalMeses / 12);
   const meses = totalMeses % 12;
 
@@ -24,12 +24,12 @@ export const mesesToMesEAnoString = totalMeses => {
 export const range = (stop, startAt = 0) => {
   const arr = [...Array(stop).keys()];
   if (startAt > 0) {
-    return arr.map(i => i + startAt).filter(i => i < stop);
+    return arr.map((i) => i + startAt).filter((i) => i < stop);
   }
   return arr;
 };
 
-export const ordenaFaixas = faixas => {
+export const ordenaFaixas = (faixas) => {
   // Recebe faixas etárias no formato:
   // [
   //   {inicio: X1, fim: Y1},

@@ -4,7 +4,7 @@ import Botao from "components/Shareable/Botao";
 import ModalHistoricoProtocoloPadrao from "components/Shareable/ModalHistoricoProtocoloPadrao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 
 export default ({ protocoloPadrao, idx, selecionado }) => {
@@ -47,7 +47,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
           <p className="data-title">Orientações Gerais</p>
           <div
             dangerouslySetInnerHTML={{
-              __html: protocoloPadrao.orientacoes_gerais
+              __html: protocoloPadrao.orientacoes_gerais,
             }}
           />
         </td>
@@ -101,7 +101,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
             <p className="data-title">Outras informações</p>
             <div
               dangerouslySetInnerHTML={{
-                __html: protocoloPadrao.outras_informacoes
+                __html: protocoloPadrao.outras_informacoes,
               }}
             />
           </td>
@@ -116,9 +116,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
             className="float-right mt-3 mb-3 ml-3"
             onClick={() => {
               history.push(
-                `/dieta-especial/protocolo-padrao/${
-                  protocoloPadrao.uuid
-                }/criar-copia`
+                `/dieta-especial/protocolo-padrao/${protocoloPadrao.uuid}/criar-copia`
               );
             }}
           />
@@ -129,9 +127,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
             className="float-right mt-3 mb-3 ml-3"
             onClick={() => {
               history.push(
-                `/dieta-especial/protocolo-padrao/${
-                  protocoloPadrao.uuid
-                }/editar`
+                `/dieta-especial/protocolo-padrao/${protocoloPadrao.uuid}/editar`
               );
             }}
           />

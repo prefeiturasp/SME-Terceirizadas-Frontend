@@ -17,7 +17,7 @@ import Respostas from "./components/Respostas/index";
 import { AnaliseSensorial } from "./components/AnaliseSensorial";
 import {
   usuarioEhCODAEGestaoProduto,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhEmpresaTerceirizada,
 } from "helpers/utilities";
 import "./style.scss";
 
@@ -28,17 +28,17 @@ export const Homologacao = ({
   produto,
   protocoloAnalise,
   getHomologacaoProdutoAsync,
-  formValues
+  formValues,
 }) => {
   const setDefaultEditaisVinculados = () => {
     let result = [];
     if (homologacao.eh_para_alunos_com_dieta) {
-      result = homologacao.rastro_terceirizada.contratos.map(contrato => {
+      result = homologacao.rastro_terceirizada.contratos.map((contrato) => {
         return contrato.edital.uuid;
       });
     }
     if (homologacao.produto.vinculos_produto_edital.length) {
-      result = homologacao.produto.vinculos_produto_edital.map(vinculo => {
+      result = homologacao.produto.vinculos_produto_edital.map((vinculo) => {
         return vinculo.edital.uuid;
       });
     }
@@ -46,7 +46,7 @@ export const Homologacao = ({
   };
 
   const logAnaliseSensorial = homologacao.logs.filter(
-    log => log.status_evento_explicacao === "CODAE pediu análise sensorial"
+    (log) => log.status_evento_explicacao === "CODAE pediu análise sensorial"
   );
   const [editais, setEditais] = useState(setDefaultEditaisVinculados());
   const [ehCardSuspensos, setEhCardSuspensos] = useState(false);
@@ -87,7 +87,7 @@ export const Homologacao = ({
               <hr />
               <DadosDaEmpresa />
               {homologacao.logs.filter(
-                log => log.status_evento_explicacao === "CODAE homologou"
+                (log) => log.status_evento_explicacao === "CODAE homologou"
               ).length > 0 && (
                 <EditaisVinculados ehCardSuspensos={ehCardSuspensos} />
               )}
@@ -111,7 +111,7 @@ export const Homologacao = ({
                         getHomologacaoProdutoAsync()
                       }
                       editaisOptions={editaisOptions}
-                      setEditais={values => setEditais(values)}
+                      setEditais={(values) => setEditais(values)}
                       editais={editais}
                       values={values}
                     />

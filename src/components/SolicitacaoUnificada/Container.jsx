@@ -15,16 +15,16 @@ export default () => {
   const [kits, setKits] = useState([]);
 
   async function fetchData() {
-    meusDados().then(response => {
+    meusDados().then((response) => {
       setDadosUsuario(response);
       setLotes(response.vinculo_atual.instituicao.lotes);
       const dre_uuid = response.vinculo_atual.instituicao.uuid;
-      getEscolasTrecTotal({ dre: dre_uuid }).then(response => {
+      getEscolasTrecTotal({ dre: dre_uuid }).then((response) => {
         setEscolas(response.data);
       });
     });
 
-    getDiasUteis().then(response => {
+    getDiasUteis().then((response) => {
       const proximos_dois_dias_uteis = dataParaUTC(
         new Date(response.data.proximos_dois_dias_uteis)
       );
@@ -35,7 +35,7 @@ export default () => {
       setProximosCincoDiasUteis(proximos_cinco_dias_uteis);
     });
 
-    getKitLanches({ status: "ATIVO" }).then(response => {
+    getKitLanches({ status: "ATIVO" }).then((response) => {
       setKits(response.data.results);
     });
   }

@@ -13,7 +13,7 @@ import {
   ENTREGAS_DRE,
   ENTREGAS_DISTRIBUIDOR,
   GUIAS_NOTIFICACAO,
-  GUIAS_NOTIFICACAO_FISCAL
+  GUIAS_NOTIFICACAO_FISCAL,
 } from "configs/constants";
 import {
   usuarioEhEmpresaDistribuidora,
@@ -27,7 +27,7 @@ import {
   exibirModuloOcorrencias,
   usuarioEhDilogJuridico,
   usuarioEhDilogQualidade,
-  usuarioEhDilog
+  usuarioEhDilog,
 } from "helpers/utilities";
 
 const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {

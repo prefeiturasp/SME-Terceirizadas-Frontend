@@ -12,7 +12,7 @@ import {
   GESTAO_ACESSO_COGESTOR,
   GESTAO_ACESSO_MASTER,
   CARGAS_USUARIOS_SERVIDORES,
-  ATUALIZACAO_EMAIL_EOL
+  ATUALIZACAO_EMAIL_EOL,
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -26,7 +26,7 @@ import {
   usuarioEhAdmQualquerEmpresa,
   usuarioEhCogestorDRE,
   usuarioEhCodaeDilog,
-  usuarioEhDiretorUE
+  usuarioEhDiretorUE,
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {

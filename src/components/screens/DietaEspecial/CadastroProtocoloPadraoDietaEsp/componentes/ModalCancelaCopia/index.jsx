@@ -4,7 +4,7 @@ import { Botao } from "components/Shareable/Botao";
 import { Link } from "react-router-dom";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants.js";
 
 export default ({ showModal, closeModal }) => {
@@ -32,7 +32,7 @@ export default ({ showModal, closeModal }) => {
         />
         <Link
           to={{
-            pathname: "/dieta-especial/consultar-protocolo-padrao-dieta"
+            pathname: "/dieta-especial/consultar-protocolo-padrao-dieta",
           }}
         >
           <Botao

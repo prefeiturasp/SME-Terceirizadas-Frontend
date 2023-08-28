@@ -14,13 +14,13 @@ import {
   listaProtocolosLiberados,
   alimentos,
   solicitacoesDietaEspecial,
-  protocoloPadraoDietaEspecial
+  protocoloPadraoDietaEspecial,
 } from "../dados";
 import { API_URL } from "constants/config";
 
 const payload = {
   ...respostaApiCancelamentoporDataTermino(),
-  status_solicitacao: "CODAE_AUTORIZADO"
+  status_solicitacao: "CODAE_AUTORIZADO",
 };
 
 const server = setupServer(
@@ -64,13 +64,11 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("Relatorio autorizadas temporariamente", async () => {
-  const search = `?uuid=${
-    payload.uuid
-  }&ehInclusaoContinua=false&card=autorizadas-temp`;
+  const search = `?uuid=${payload.uuid}&ehInclusaoContinua=false&card=autorizadas-temp`;
   Object.defineProperty(window, "location", {
     value: {
-      search: search
-    }
+      search: search,
+    },
   });
   render(<Relatorio visao={CODAE} />);
 

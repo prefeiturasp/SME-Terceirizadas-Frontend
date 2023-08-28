@@ -6,7 +6,7 @@ export const getListaFiltradaAutoComplete = (
   if (valorFiltro) {
     const reg = new RegExp(valorFiltro, regex);
     const listaUnica = Array.from(new Set(lista));
-    return listaUnica.filter(e => reg.test(e));
+    return listaUnica.filter((e) => reg.test(e));
   }
   return [];
 };

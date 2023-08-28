@@ -11,7 +11,7 @@ import { DIETA_ESPECIAL, ATIVAS_ANATIVAS } from "configs/constants";
 
 const atual = {
   href: `/${DIETA_ESPECIAL}/${ATIVAS_ANATIVAS}`,
-  titulo: "Consulta de Dieta do Aluno"
+  titulo: "Consulta de Dieta do Aluno",
 };
 
 export default () => {

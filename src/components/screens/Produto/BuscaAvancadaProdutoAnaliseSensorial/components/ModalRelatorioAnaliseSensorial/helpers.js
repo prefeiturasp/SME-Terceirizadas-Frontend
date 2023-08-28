@@ -1,4 +1,4 @@
-export const getTituloRelatorio = filtros => {
+export const getTituloRelatorio = (filtros) => {
   const qtde_filtros = Object.keys(filtros).length;
 
   if (qtde_filtros === 0 || qtde_filtros > 2)
@@ -18,9 +18,7 @@ export const getTituloRelatorio = filtros => {
       return `Veja os resultados para "${filtros.nome_fabricante}"`;
 
     if (filtros.data_analise_inicial) {
-      return `Veja os resultados a partir de "${
-        filtros.data_analise_inicial
-      }":`;
+      return `Veja os resultados a partir de "${filtros.data_analise_inicial}":`;
     }
 
     if (filtros.data_analise_final) {
@@ -29,9 +27,7 @@ export const getTituloRelatorio = filtros => {
   }
 
   if (filtros.data_analise_inicial && filtros.data_analise_final) {
-    return `Veja os resultados para o período de ${
-      filtros.data_analise_inicial
-    } à ${filtros.data_analise_final}:`;
+    return `Veja os resultados para o período de ${filtros.data_analise_inicial} à ${filtros.data_analise_final}:`;
   } else {
     return "Veja os resultados para a busca:";
   }

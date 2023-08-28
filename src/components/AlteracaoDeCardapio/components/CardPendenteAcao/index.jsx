@@ -5,7 +5,7 @@ import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar, gerarLinkRelatorio } from "helpers/utilities";
 import {
   ALTERACAO_TIPO_ALIMENTACAO,
-  ALTERACAO_TIPO_ALIMENTACAO_CEMEI
+  ALTERACAO_TIPO_ALIMENTACAO_CEMEI,
 } from "../../../../configs/constants";
 import "../../../Shareable/style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
@@ -15,7 +15,7 @@ export class CardPendenteAcao extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: this.props.pedidos
+      pedidosFiltrados: this.props.pedidos,
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
   }
@@ -23,7 +23,7 @@ export class CardPendenteAcao extends Component {
   filtrarPedidos(event) {
     if (event === undefined) event = { target: { value: "" } };
     let pedidosFiltrados = this.props.pedidos;
-    pedidosFiltrados = pedidosFiltrados.filter(function(item) {
+    pedidosFiltrados = pedidosFiltrados.filter(function (item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.id_externo.toLowerCase().search(palavraAFiltrar) !== -1 ||

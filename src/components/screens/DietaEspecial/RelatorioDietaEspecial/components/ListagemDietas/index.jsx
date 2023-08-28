@@ -16,7 +16,7 @@ export const ListagemDietas = ({ ...props }) => {
     meusDados,
     setDietasEspeciais,
     setLoadingDietas,
-    values
+    values,
   } = props;
 
   const PAGE_SIZE = 10;
@@ -27,7 +27,7 @@ export const ListagemDietas = ({ ...props }) => {
     let params = {
       limit: PAGE_SIZE,
       offset: (page - 1) * PAGE_SIZE,
-      ...values
+      ...values,
     };
     if (usuarioEhEmpresaTerceirizada()) {
       params["terceirizada_uuid"] = meusDados.vinculo_atual.instituicao.uuid;
@@ -79,7 +79,7 @@ export const ListagemDietas = ({ ...props }) => {
                 <div>
                   {!usuarioEhEmpresaTerceirizada()
                     ? formataAlergias(dietaEspecial)
-                        .map(a => a.nome)
+                        .map((a) => a.nome)
                         .join("; ")
                     : (dietaEspecial.protocolo_padrao &&
                         dietaEspecial.protocolo_padrao.nome) ||
@@ -94,7 +94,7 @@ export const ListagemDietas = ({ ...props }) => {
         })}
       </article>
       <Paginacao
-        onChange={page => onChangePage(page, values)}
+        onChange={(page) => onChangePage(page, values)}
         total={dietasEspeciais.count}
         pageSize={PAGE_SIZE}
         current={paginaAtual}

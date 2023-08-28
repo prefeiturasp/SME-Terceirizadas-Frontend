@@ -6,7 +6,7 @@ import "./styles.scss";
 export default ({
   cronograma,
   esconderInformacoesAdicionais,
-  solicitacaoAlteracaoCronograma
+  solicitacaoAlteracaoCronograma,
 }) => {
   return (
     <>

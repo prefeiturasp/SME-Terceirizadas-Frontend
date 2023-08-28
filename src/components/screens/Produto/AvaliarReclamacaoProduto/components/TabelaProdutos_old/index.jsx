@@ -12,7 +12,7 @@ export const TabelaProdutos = ({
   setModal,
   setProdutoAAtualizar,
   nomeDoProduto,
-  setPropsPageProduto
+  setPropsPageProduto,
 }) => {
   return (
     <div className="tabela-lista-produtos">
@@ -76,7 +76,7 @@ export const TabelaProdutos = ({
                         setPropsPageProduto={setPropsPageProduto}
                       />
                     </Fragment>
-                  )
+                  ),
                 ];
               })}
             </tbody>

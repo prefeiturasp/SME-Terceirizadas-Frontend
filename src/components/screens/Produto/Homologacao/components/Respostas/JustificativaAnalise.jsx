@@ -10,7 +10,7 @@ export const JustificativaAnalise = ({ homologacao, logAnaliseSensorial }) => {
         <p
           className="justificativa-ficha-produto"
           dangerouslySetInnerHTML={{
-            __html: homologacao.protocolo_analise_sensorial
+            __html: homologacao.protocolo_analise_sensorial,
           }}
         />
       </div>
@@ -25,7 +25,7 @@ export const JustificativaAnalise = ({ homologacao, logAnaliseSensorial }) => {
             <p
               className="justificativa-ficha-produto no-margin"
               dangerouslySetInnerHTML={{
-                __html: log.justificativa
+                __html: log.justificativa,
               }}
             />
           </div>

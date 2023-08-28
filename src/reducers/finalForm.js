@@ -10,7 +10,7 @@ export default function reducer(state = {}, action = {}) {
     case UPDATE_FORM_STATE:
       return {
         ...state,
-        [action.form]: action.payload
+        [action.form]: action.payload,
       };
     default:
       return state;
@@ -21,7 +21,7 @@ export default function reducer(state = {}, action = {}) {
 export const updateFormState = (form, state) => ({
   type: UPDATE_FORM_STATE,
   form,
-  payload: state
+  payload: state,
 });
 
 // Selectors

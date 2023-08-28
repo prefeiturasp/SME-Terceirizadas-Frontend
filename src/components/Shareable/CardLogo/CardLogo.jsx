@@ -1,7 +1,7 @@
 import React from "react";
 import "./style.scss";
 
-export const CardLogo = props => {
+export const CardLogo = (props) => {
   const { titulo, disabled, onClick } = props;
   return (
     <div

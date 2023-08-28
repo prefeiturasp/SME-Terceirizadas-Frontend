@@ -2,7 +2,7 @@ import Botao from "components/Shareable/Botao";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
 import React, { useState } from "react";
@@ -22,7 +22,7 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
     showModal,
     closeModal,
     getDiasSobremesaDoceAsync,
-    diasSobremesaDoce
+    diasSobremesaDoce,
   } = props;
 
   const [tipoUnidadesSalvoNoDia, setTipoUnidadesSalvoNoDia] = useState([]);
@@ -31,16 +31,17 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
     setTipoUnidadesSalvoNoDia(
       diasSobremesaDoce
         .filter(
-          diaSobremesa => diaSobremesa.data === getDDMMYYYfromDate(event.start)
+          (diaSobremesa) =>
+            diaSobremesa.data === getDDMMYYYfromDate(event.start)
         )
-        .map(diaSobremesa => diaSobremesa.tipo_unidade.uuid)
+        .map((diaSobremesa) => diaSobremesa.tipo_unidade.uuid)
     );
   }, [event.start]);
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const payload = {
       tipo_unidades: values.tipo_unidades,
-      data: getYYYYMMDDfromDate(event.start)
+      data: getYYYYMMDDfromDate(event.start),
     };
     const response = await setDiaSobremesaDoce(payload);
     if (response.status === HTTP_STATUS.CREATED) {
@@ -64,7 +65,7 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
     >
       <Form
         initialValues={{
-          tipo_unidades: tipoUnidadesSalvoNoDia
+          tipo_unidades: tipoUnidadesSalvoNoDia,
         }}
         onSubmit={onSubmit}
       >
@@ -85,18 +86,18 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
                 component={StatefulMultiSelect}
                 name="tipo_unidades"
                 selected={values.tipo_unidades || []}
-                options={tiposUnidades.map(tipoUnidade => ({
+                options={tiposUnidades.map((tipoUnidade) => ({
                   label: tipoUnidade.iniciais,
-                  value: tipoUnidade.uuid
+                  value: tipoUnidade.uuid,
                 }))}
-                onSelectedChanged={values_ => {
+                onSelectedChanged={(values_) => {
                   form.change("tipo_unidades", values_);
                 }}
                 overrideStrings={{
                   selectSomeItems: "Selecione",
                   allItemsAreSelected:
                     "Todos os tipos de unidade estão selecionados",
-                  selectAll: "Todos"
+                  selectAll: "Todos",
                 }}
               />
             </Modal.Body>

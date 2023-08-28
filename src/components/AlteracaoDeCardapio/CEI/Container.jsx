@@ -3,7 +3,7 @@ import HTTP_STATUS from "http-status-codes";
 import { agregarDefault, dataParaUTC } from "helpers/utilities";
 import {
   getMotivosAlteracaoCardapio,
-  getPeriodosComMatriculadosPorUE
+  getPeriodosComMatriculadosPorUE,
 } from "services/alteracaoDeCardapio";
 import { getDiasUteis, getFeriadosAno } from "services/diasUteis.service";
 import MeusDadosContext from "context/MeusDadosContext";
@@ -33,7 +33,7 @@ export const Container = () => {
     }
   };
 
-  const getPeriodosValidos = async escola_uuid => {
+  const getPeriodosValidos = async (escola_uuid) => {
     const response = await getPeriodosComMatriculadosPorUE(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
       setPeriodosValidos(response.data);
@@ -42,7 +42,7 @@ export const Container = () => {
     }
   };
 
-  const getVinculosTipoAlimentacaoPorEscolaAsync = async escola_uuid => {
+  const getVinculosTipoAlimentacaoPorEscolaAsync = async (escola_uuid) => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
       setVinculos(response.data.results);
@@ -95,13 +95,13 @@ export const Container = () => {
 
   const filtroPeriodos = () => {
     return meusDados.vinculo_atual.instituicao.periodos_escolares.filter(
-      periodo => periodosValidos.includes(periodo.nome)
+      (periodo) => periodosValidos.includes(periodo.nome)
     );
   };
 
   const filtroVinculos = () => {
     return vinculos.filter(
-      vinculo => vinculo.periodo_escolar.nome === "INTEGRAL"
+      (vinculo) => vinculo.periodo_escolar.nome === "INTEGRAL"
     );
   };
 

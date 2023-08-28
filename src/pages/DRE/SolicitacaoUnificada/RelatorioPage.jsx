@@ -4,20 +4,20 @@ import Page from "../../../components/Shareable/Page/Page";
 import Relatorio from "../../../components/SolicitacaoUnificada/DRE/Relatorio";
 import {
   DRE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
 } from "../../../configs/constants";
 import { HOME } from "../constants";
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 
 const anteriores = [
   {
     href: `/${DRE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
-    titulo: "Solicitações de Kit Lanche Passeio Unificada"
-  }
+    titulo: "Solicitações de Kit Lanche Passeio Unificada",
+  },
 ];
 
 const RelatorioPage = () => (

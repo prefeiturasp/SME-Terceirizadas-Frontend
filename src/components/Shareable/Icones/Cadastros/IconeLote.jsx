@@ -1,6 +1,6 @@
 import React from "react";
 
-export const IconeLote = props => {
+export const IconeLote = (props) => {
   const { hover } = props;
   return (
     <svg

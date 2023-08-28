@@ -1,10 +1,10 @@
 import {
   usuarioEhDRE,
-  usuarioEhCODAEGestaoAlimentacao
+  usuarioEhCODAEGestaoAlimentacao,
 } from "../../../../../helpers/utilities";
 import { TODOS } from "../../../../../constants/shared";
 
-export const formataValues = values => {
+export const formataValues = (values) => {
   if (
     (usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao()) &&
     !values.unidade_escolar

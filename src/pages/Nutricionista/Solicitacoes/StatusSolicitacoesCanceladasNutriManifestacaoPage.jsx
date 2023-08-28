@@ -6,7 +6,7 @@ import { NUTRIMANIFESTACAO, SOLICITACOES_CANCELADAS } from "configs/constants";
 import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getSolicitacoesCanceladasNutrimanifestacao } from "services/painelNutricionista.service";
 import CardLegendas from "components/Shareable/CardLegendas";
@@ -14,7 +14,7 @@ import { PAGINACAO_DEFAULT } from "constants/shared";
 
 const atual = {
   href: `/${NUTRIMANIFESTACAO}/${SOLICITACOES_CANCELADAS}`,
-  titulo: "Solicitações Canceladas"
+  titulo: "Solicitações Canceladas",
 };
 
 export default () => (

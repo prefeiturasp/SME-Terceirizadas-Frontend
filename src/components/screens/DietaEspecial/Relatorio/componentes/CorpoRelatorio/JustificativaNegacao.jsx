@@ -11,7 +11,7 @@ const JustificativaNegacao = ({ justificativaNegacao }) => {
           name="justificativa_negacao"
           className="orientacoes"
           dangerouslySetInnerHTML={{
-            __html: justificativaNegacao
+            __html: justificativaNegacao,
           }}
         />
       </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-export const IconeHorarioCombo = props => {
+export const IconeHorarioCombo = (props) => {
   const { hover } = props;
   return (
     <svg

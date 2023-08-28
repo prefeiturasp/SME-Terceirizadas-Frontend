@@ -7,7 +7,7 @@ export class Rascunhos extends Component {
       removerRascunho,
       carregarRascunho,
       form,
-      values
+      values,
     } = this.props;
     const cardsRascunhos = alteracaoCardapioList.map(
       (alteracaoDeCardapio, key) => {
@@ -46,11 +46,11 @@ export class Rascunhos extends Component {
                   ? `Dia: ${alteracaoDeCardapio.data}`
                   : alteracaoDeCardapio.data_inicial ===
                     alteracaoDeCardapio.data_final
-                  ? `Dia: ${alteracaoDeCardapio.data_inicial ||
-                      alteracaoDeCardapio.alterar_dia}`
-                  : `De ${alteracaoDeCardapio.data_inicial} a ${
-                      alteracaoDeCardapio.data_final
-                    }`}
+                  ? `Dia: ${
+                      alteracaoDeCardapio.data_inicial ||
+                      alteracaoDeCardapio.alterar_dia
+                    }`
+                  : `De ${alteracaoDeCardapio.data_inicial} a ${alteracaoDeCardapio.data_final}`}
               </p>
             </div>
           </div>

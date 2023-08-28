@@ -16,15 +16,15 @@ export const ModalTercRespondeQuestFinalForm = ({ ...props }) => {
     endpoint,
     tipoSolicitacao,
     loadSolicitacao,
-    solicitacao
+    solicitacao,
   } = props;
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const response = await endpoint(
       solicitacao.uuid,
       {
         resposta_sim_nao: resposta_sim_nao === "Sim",
-        justificativa: values.justificativa
+        justificativa: values.justificativa,
       },
       tipoSolicitacao
     );

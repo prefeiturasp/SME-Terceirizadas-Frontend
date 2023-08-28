@@ -20,7 +20,7 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
       <td>{item.desc_doc}</td>
       <td className="text-center">
         {solicitacao.suspensoes_alimentacao.length > 1 ? (
-          solicitacao.suspensoes_alimentacao.map(suspensao => (
+          solicitacao.suspensoes_alimentacao.map((suspensao) => (
             <>
               {suspensao.data} <br />
             </>
@@ -123,7 +123,7 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
                       <p>
                         <b>
                           {quantidade_periodo.tipos_alimentacao
-                            .map(ta => ta.nome)
+                            .map((ta) => ta.nome)
                             .join(", ")}
                         </b>
                       </p>
@@ -152,7 +152,7 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
                     <p
                       className="observacao-negrito"
                       dangerouslySetInnerHTML={{
-                        __html: solicitacao.observacao
+                        __html: solicitacao.observacao,
                       }}
                     />
                   </b>
@@ -162,6 +162,6 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

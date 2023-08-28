@@ -88,7 +88,7 @@ export default class DetalheProduto extends Component {
             <p
               className="texto-em-upper"
               dangerouslySetInnerHTML={{
-                __html: justificativa
+                __html: justificativa,
               }}
             />
           </div>

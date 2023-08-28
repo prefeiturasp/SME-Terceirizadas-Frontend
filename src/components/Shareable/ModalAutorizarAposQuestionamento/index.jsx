@@ -15,13 +15,13 @@ const ModalAutorizarAposQuestionamento = ({
   uuid,
   endpoint,
   loadSolicitacao,
-  tipoSolicitacao
+  tipoSolicitacao,
 }) => {
-  const autorizarQuestionamento = async uuid => {
+  const autorizarQuestionamento = async (uuid) => {
     const resp = await endpoint(
       uuid,
       {
-        justificativa
+        justificativa,
       },
       tipoSolicitacao
     );

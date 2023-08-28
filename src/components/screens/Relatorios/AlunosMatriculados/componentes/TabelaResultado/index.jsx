@@ -5,14 +5,10 @@ import { formataNome } from "../../helpers";
 import { Tooltip } from "antd";
 
 export const TabelaResultado = ({ ...props }) => {
-  const {
-    resultado,
-    faixasEtarias,
-    showPeridosFaixas,
-    setShowPeriodosFaixas
-  } = props;
+  const { resultado, faixasEtarias, showPeridosFaixas, setShowPeriodosFaixas } =
+    props;
 
-  const changeToActive = index => {
+  const changeToActive = (index) => {
     let lista = deepCopy(showPeridosFaixas);
     lista[index].active = !lista[index].active;
     setShowPeriodosFaixas(lista);
@@ -88,7 +84,7 @@ export const TabelaResultado = ({ ...props }) => {
                           overlayStyle={{
                             maxWidth: "320px",
                             fontSize: "12px",
-                            fontWeight: "700"
+                            fontWeight: "700",
                           }}
                           title={item.escola.nome}
                         >

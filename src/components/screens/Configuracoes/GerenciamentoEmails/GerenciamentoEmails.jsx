@@ -11,7 +11,7 @@ import FiltrosEmails from "./FiltrosEmails";
 import ListagemEmails from "./ListagemSolicitacoes";
 import {
   getEmailsTerceirizadasPorModulo,
-  getTerceirizada_razoes
+  getTerceirizada_razoes,
 } from "services/terceirizada.service";
 import "./style.scss";
 import { Paginacao } from "components/Shareable/Paginacao";
@@ -44,7 +44,7 @@ export default () => {
     const response = await getEmailsTerceirizadasPorModulo({
       page: page,
       modulo: mod,
-      busca: busca
+      busca: busca,
     });
     if (response.status === HTTP_STATUS.OK) {
       if (response.data.results.length) {
@@ -63,12 +63,12 @@ export default () => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     setPage(page);
     buscarTerceirizadas(page, modulo);
   };
 
-  const onPesquisaChanged = values => {
+  const onPesquisaChanged = (values) => {
     if (values.buscar) {
       if (values.buscar.length > 2) {
         buscarTerceirizadas(1, modulo, values.buscar);
@@ -82,7 +82,7 @@ export default () => {
     buscarTerceirizadas(page ? page : 1, modulo);
   };
 
-  const escolheModulo = mod => {
+  const escolheModulo = (mod) => {
     if (modulo !== mod) {
       buscarTerceirizadas(1, mod);
     }

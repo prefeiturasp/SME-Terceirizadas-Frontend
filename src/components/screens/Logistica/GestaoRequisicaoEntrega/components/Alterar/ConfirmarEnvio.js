@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { distribuidorAltera } from "services/logistica.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -15,7 +15,7 @@ export default ({
   handleCloseAll,
   updatePage,
   solicitacao,
-  values
+  values,
 }) => {
   const handleClose = () => setShow(false);
 

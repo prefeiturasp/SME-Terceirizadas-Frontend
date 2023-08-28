@@ -5,16 +5,12 @@ export class Rascunhos extends Component {
     const {
       rascunhosSolicitacoesKitLanche,
       OnDeleteButtonClicked,
-      OnEditButtonClicked
+      OnEditButtonClicked,
     } = this.props;
     const cardsRascunhos = rascunhosSolicitacoesKitLanche.map(
-      solicitacaoKitLanche => {
-        const {
-          uuid,
-          id_externo,
-          local,
-          quantidade_alunos
-        } = solicitacaoKitLanche;
+      (solicitacaoKitLanche) => {
+        const { uuid, id_externo, local, quantidade_alunos } =
+          solicitacaoKitLanche;
         let backgroundColor = "#DADADA";
         return (
           <div className="draft card border rounded mt-3 p-3" key={id_externo}>

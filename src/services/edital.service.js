@@ -4,25 +4,25 @@ import axios from "services/_base";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
-export const criarEditalEContrato = payload => {
+export const criarEditalEContrato = (payload) => {
   const url = `${API_URL}/editais-contratos/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
     body: payload,
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -33,16 +33,16 @@ export const atualizarEditalEContrato = (payload, uuid) => {
   return fetch(url, {
     method: "PUT",
     body: payload,
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -52,54 +52,54 @@ export const obterEditaisEContratos = () => {
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const obtemEdital = uuid => {
+export const obtemEdital = (uuid) => {
   const url = `${API_URL}/editais-contratos/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const excluirEdital = async uuid => {
+export const excluirEdital = async (uuid) => {
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "DELETE"
+    method: "DELETE",
   };
   let status = 0;
   return await fetch(`${API_URL}/editais-contratos/${uuid}/`, OBJ_REQUEST)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return { data: error, status: status };
     });
 };

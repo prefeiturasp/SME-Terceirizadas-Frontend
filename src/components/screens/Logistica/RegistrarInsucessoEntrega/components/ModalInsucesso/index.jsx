@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { INSUCESSO_ENTREGA, LOGISTICA } from "configs/constants";
 import { registraInsucessoDeEntrega } from "services/logistica.service";
@@ -33,7 +33,7 @@ export default ({ values, disabled }) => {
         setLoading(false);
         goToInsucesso();
       })
-      .catch(e => {
+      .catch((e) => {
         toastError(e.response.data.detail);
         setShow(false);
         setLoading(false);

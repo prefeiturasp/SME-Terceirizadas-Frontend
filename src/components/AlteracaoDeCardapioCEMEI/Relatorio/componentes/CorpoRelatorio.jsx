@@ -2,7 +2,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
@@ -15,7 +15,7 @@ import {
   corDaMensagem,
   justificativaAoAprovarSolicitacao,
   justificativaAoNegarSolicitacao,
-  prazoDoPedidoMensagem
+  prazoDoPedidoMensagem,
 } from "helpers/utilities";
 import React, { useState } from "react";
 import { getRelatorioAlteracaoTipoAlimentacao } from "services/relatorios";
@@ -164,7 +164,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                   margin: "1% 0px",
                   width: "100%",
                   padding: "8px 15px",
-                  height: "40px"
+                  height: "40px",
                 }}
               >
                 {periodo.nome}
@@ -182,7 +182,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                         Alteração do tipo de Alimentação de:{" "}
                         <b className="tipos-alimentacao-style">
                           {periodo.substituicoesCEI.tipos_alimentacao_de
-                            .map(ta => ta.nome)
+                            .map((ta) => ta.nome)
                             .join(", ")}
                         </b>
                       </p>
@@ -190,7 +190,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                         Para o tipo de Alimentação:{" "}
                         <b className="tipos-alimentacao-style">
                           {periodo.substituicoesCEI.tipos_alimentacao_para
-                            .map(ta => ta.nome)
+                            .map((ta) => ta.nome)
                             .join(", ")}
                         </b>
                       </p>
@@ -209,10 +209,10 @@ export const CorpoRelatorio = ({ ...props }) => {
                         <tbody>
                           {solicitacao.substituicoes_cemei_cei_periodo_escolar
                             .filter(
-                              q => q.periodo_escolar.nome === periodo.nome
+                              (q) => q.periodo_escolar.nome === periodo.nome
                             )
                             .map((faixa, key) =>
-                              faixa.faixas_etarias.map(f => {
+                              faixa.faixas_etarias.map((f) => {
                                 return (
                                   <tr key={key}>
                                     <td className="col-7">
@@ -237,10 +237,10 @@ export const CorpoRelatorio = ({ ...props }) => {
                             <th className="col-3 text-center">
                               {solicitacao.substituicoes_cemei_cei_periodo_escolar
                                 .filter(
-                                  q => q.periodo_escolar.nome === periodo.nome
+                                  (q) => q.periodo_escolar.nome === periodo.nome
                                 )
-                                .map(faixa =>
-                                  faixa.faixas_etarias.reduce(function(
+                                .map((faixa) =>
+                                  faixa.faixas_etarias.reduce(function (
                                     total,
                                     f
                                   ) {
@@ -252,10 +252,10 @@ export const CorpoRelatorio = ({ ...props }) => {
                             <th className="col-2 text-center">
                               {solicitacao.substituicoes_cemei_cei_periodo_escolar
                                 .filter(
-                                  q => q.periodo_escolar.nome === periodo.nome
+                                  (q) => q.periodo_escolar.nome === periodo.nome
                                 )
-                                .map(faixa =>
-                                  faixa.faixas_etarias.reduce(function(
+                                .map((faixa) =>
+                                  faixa.faixas_etarias.reduce(function (
                                     total,
                                     f
                                   ) {
@@ -280,7 +280,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                         Alteração do tipo de Alimentação de:{" "}
                         <b className="tipos-alimentacao-style">
                           {periodo.substituicoesEMEI.tipos_alimentacao_de
-                            .map(ta => ta.nome)
+                            .map((ta) => ta.nome)
                             .join(", ")}
                         </b>
                       </p>
@@ -288,7 +288,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                         Para o tipo de Alimentação:{" "}
                         <b className="tipos-alimentacao-style">
                           {periodo.substituicoesEMEI.tipos_alimentacao_para
-                            .map(ta => ta.nome)
+                            .map((ta) => ta.nome)
                             .join(", ")}
                         </b>
                       </p>
@@ -331,7 +331,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <p
               className="observacao-alteracao-cardapio-cemei"
               dangerouslySetInnerHTML={{
-                __html: solicitacao.observacao
+                __html: solicitacao.observacao,
               }}
             />
           </div>
@@ -344,7 +344,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaAoNegarSolicitacao(solicitacao.logs)
+                __html: justificativaAoNegarSolicitacao(solicitacao.logs),
               }}
             />
           </div>
@@ -360,13 +360,13 @@ export const CorpoRelatorio = ({ ...props }) => {
               </p>
               <p>{`${
                 solicitacao.logs.find(
-                  log => log.status_evento_explicacao === "CODAE autorizou"
+                  (log) => log.status_evento_explicacao === "CODAE autorizou"
                 ).criado_em
               } - Informações da CODAE`}</p>
               <p
                 className="value"
                 dangerouslySetInnerHTML={{
-                  __html: justificativaAoAprovarSolicitacao(solicitacao.logs)
+                  __html: justificativaAoAprovarSolicitacao(solicitacao.logs),
                 }}
               />
             </div>

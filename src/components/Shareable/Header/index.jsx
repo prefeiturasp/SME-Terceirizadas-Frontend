@@ -8,7 +8,7 @@ import DownloadsNavbar from "../DownloadsNavbar";
 import { CENTRAL_DOWNLOADS } from "configs/constants";
 import {
   usuarioEhEscolaAbastecimento,
-  usuarioEhEscolaAbastecimentoDiretor
+  usuarioEhEscolaAbastecimentoDiretor,
 } from "helpers/utilities";
 import { temas, TemaContext } from "context/TemaContext";
 
@@ -17,7 +17,7 @@ export const Header = ({ toggled }) => {
 
   const getTema = () => (temaContext.tema === temas.dark ? "dark" : "light");
 
-  const retornaMarcaDagua = ambiente => {
+  const retornaMarcaDagua = (ambiente) => {
     let path = `/assets/image/marca-${ambiente}-${getTema()}.png`;
     return <img className="marca-d-agua" src={path} alt="" />;
   };
@@ -57,8 +57,8 @@ export const Header = ({ toggled }) => {
                   to={{
                     pathname: `/ajuda`,
                     state: {
-                      prevPath: window.location.pathname
-                    }
+                      prevPath: window.location.pathname,
+                    },
                   }}
                   className="nav-link"
                 >
@@ -71,7 +71,7 @@ export const Header = ({ toggled }) => {
                   <li className="nav-item">
                     <Link
                       to={{
-                        pathname: `/${CENTRAL_DOWNLOADS}`
+                        pathname: `/${CENTRAL_DOWNLOADS}`,
                       }}
                     >
                       <DownloadsNavbar />

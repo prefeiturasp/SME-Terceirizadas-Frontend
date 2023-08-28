@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import { Tooltip } from "antd";
 
 const ListagemGuias = ({ guias, ativos, setAtivos }) => {
-  const isDisabled = guia => {
+  const isDisabled = (guia) => {
     if (
       guia.situacao === "ARQUIVADA" ||
       guia.status !== "Pendente de conferência" ||
@@ -37,7 +37,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
           <div>Registrar Insucesso de Entrega</div>
           <div />
         </div>
-        {guias.map(guia => {
+        {guias.map((guia) => {
           const bordas =
             ativos && ativos.includes(guia.uuid) ? "desativar-borda" : "";
           const icone = ativos && ativos.includes(guia.uuid) ? "minus" : "plus";
@@ -61,10 +61,8 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                     <span>
                       <NavLink
                         className="float-left"
-                        to={`/${LOGISTICA}/${REGISTRAR_INSUCESSO}?uuid=${
-                          guia.uuid
-                        }`}
-                        onClick={event => validaLink(desabilitar, event)}
+                        to={`/${LOGISTICA}/${REGISTRAR_INSUCESSO}?uuid=${guia.uuid}`}
+                        onClick={(event) => validaLink(desabilitar, event)}
                         disabled={desabilitar}
                       >
                         <span
@@ -86,7 +84,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                     className={`fas fa-${icone}`}
                     onClick={() => {
                       ativos && ativos.includes(guia.uuid)
-                        ? setAtivos(ativos.filter(el => el !== guia.uuid))
+                        ? setAtivos(ativos.filter((el) => el !== guia.uuid))
                         : setAtivos(
                             ativos ? [...ativos, guia.uuid] : [guia.uuid]
                           );
@@ -145,7 +143,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                         </div>
                       </div>
 
-                      {guia.alimentos.map(alimento => {
+                      {guia.alimentos.map((alimento) => {
                         return (
                           <>
                             <div className="row mt-3">

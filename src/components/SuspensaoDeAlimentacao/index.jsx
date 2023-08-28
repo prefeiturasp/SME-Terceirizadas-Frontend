@@ -9,14 +9,14 @@ import {
   deleteSuspensaoDeAlimentacao,
   getSuspensoesDeAlimentacaoSalvas,
   updateSuspensaoDeAlimentacao,
-  enviarSuspensaoDeAlimentacao
+  enviarSuspensaoDeAlimentacao,
 } from "../../services/suspensaoDeAlimentacao.service";
 import {
   geradorUUID,
   getError,
   deepCopy,
   escolaEhCEMEI,
-  fimDoCalendario
+  fimDoCalendario,
 } from "../../helpers/utilities";
 import { validateSubmit } from "./validacao";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
@@ -25,7 +25,7 @@ import { Select } from "../Shareable/Select";
 import {
   required,
   naoPodeSerZero,
-  maxValue
+  maxValue,
 } from "../../helpers/fieldValidators";
 import { loadFoodSuspension } from "../../reducers/suspensaoDeAlimentacaoReducer";
 import CardMatriculados from "../Shareable/CardMatriculados";
@@ -59,16 +59,16 @@ class FoodSuspensionEditor extends Component {
           id: geradorUUID(),
           data: null,
           motivo: null,
-          outroMotivo: false
-        }
+          outroMotivo: false,
+        },
       ],
       acimaDoLimite: [],
       options: {
         MANHA: [],
         TARDE: [],
         NOITE: [],
-        INTEGRAL: []
-      }
+        INTEGRAL: [],
+      },
     };
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
@@ -83,11 +83,10 @@ class FoodSuspensionEditor extends Component {
     dias_razoes[key][field] = value;
     if (field === `motivo${key}`) {
       const indiceMotivo = this.props.motivos.findIndex(
-        motivo => motivo.uuid === value
+        (motivo) => motivo.uuid === value
       );
-      dias_razoes[key]["outroMotivo"] = this.props.motivos[
-        indiceMotivo
-      ].nome.includes("Outro");
+      dias_razoes[key]["outroMotivo"] =
+        this.props.motivos[indiceMotivo].nome.includes("Outro");
     }
     if (field === "outro_motivo" + key) {
       if (value.length > 500) {
@@ -112,9 +111,9 @@ class FoodSuspensionEditor extends Component {
           id: geradorUUID(),
           data: null,
           motivo: null,
-          outroMotivo: false
-        }
-      ])
+          outroMotivo: false,
+        },
+      ]),
     });
   }
 
@@ -123,7 +122,7 @@ class FoodSuspensionEditor extends Component {
     options[period.nome] = selectedOptions;
     this.setState({
       ...this.state,
-      options: options
+      options: options,
     });
     this.props.change(
       `suspensoes_${period.nome}.tipo_de_refeicao`,
@@ -136,23 +135,24 @@ class FoodSuspensionEditor extends Component {
     alunosCEIouEMEI[period.nome] = selectedOptions;
     this.setState({ alunosCEIouEMEI });
     let periodos = this.props.periodos;
-    let indice = periodos.findIndex(periodo => periodo.nome === period.nome);
+    let indice = periodos.findIndex((periodo) => periodo.nome === period.nome);
     let qnt_alunos = 0;
-    selectedOptions.forEach(opt => {
-      qnt_alunos += periodos[indice].alunos.filter(obj => obj.value === opt)[0]
-        .quantidade_alunos;
+    selectedOptions.forEach((opt) => {
+      qnt_alunos += periodos[indice].alunos.filter(
+        (obj) => obj.value === opt
+      )[0].quantidade_alunos;
     });
     periodos[indice].validador = [
       naoPodeSerZero,
       maxValue(qnt_alunos),
-      required
+      required,
     ];
   };
 
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
       deleteSuspensaoDeAlimentacao(uuid).then(
-        statusCode => {
+        (statusCode) => {
           if (statusCode === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
@@ -160,7 +160,7 @@ class FoodSuspensionEditor extends Component {
             toastError("Houve um erro ao excluir o rascunho");
           }
         },
-        function() {
+        function () {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
@@ -178,25 +178,25 @@ class FoodSuspensionEditor extends Component {
         {
           id: geradorUUID(),
           data: null,
-          motivo: null
-        }
+          motivo: null,
+        },
       ],
       options: {
         MANHA: [],
         TARDE: [],
         NOITE: [],
-        INTEGRAL: []
+        INTEGRAL: [],
       },
-      observacao: null
+      observacao: null,
     });
     this.props.change("observacao", null);
   }
 
   diasRazoesFromSuspensoesAlimentacao(suspensoesAlimentacao) {
     let novoDiasRazoes = [];
-    suspensoesAlimentacao.forEach(function(suspensaoAlimentacao) {
+    suspensoesAlimentacao.forEach(function (suspensaoAlimentacao) {
       const idx = suspensoesAlimentacao.findIndex(
-        value2 => value2.data === suspensaoAlimentacao.data
+        (value2) => value2.data === suspensaoAlimentacao.data
       );
       let novoDia = {
         id: geradorUUID(),
@@ -204,7 +204,7 @@ class FoodSuspensionEditor extends Component {
         motivo: suspensaoAlimentacao.motivo.uuid,
         outroMotivo:
           suspensaoAlimentacao.outro_motivo !== null &&
-          suspensaoAlimentacao.outro_motivo !== ""
+          suspensaoAlimentacao.outro_motivo !== "",
       };
       novoDia[`data${idx}`] = suspensaoAlimentacao.data;
       novoDia[`motivo${idx}`] = suspensaoAlimentacao.motivo.uuid;
@@ -220,9 +220,7 @@ class FoodSuspensionEditor extends Component {
     this.props.loadFoodSuspension(param.suspensaoDeAlimentacao);
     this.setState({
       status: param.suspensaoDeAlimentacao.status,
-      title: `Suspensão de Alimentação # ${
-        param.suspensaoDeAlimentacao.id_externo
-      }`,
+      title: `Suspensão de Alimentação # ${param.suspensaoDeAlimentacao.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
       dias_razoes: this.diasRazoesFromSuspensoesAlimentacao(
         param.suspensaoDeAlimentacao.suspensoes_alimentacao
@@ -243,9 +241,9 @@ class FoodSuspensionEditor extends Component {
         INTEGRAL:
           param.suspensaoDeAlimentacao.suspensoes_INTEGRAL !== undefined
             ? param.suspensaoDeAlimentacao.suspensoes_INTEGRAL.tipo_de_refeicao
-            : []
+            : [],
       },
-      observacao
+      observacao,
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
@@ -255,16 +253,16 @@ class FoodSuspensionEditor extends Component {
   }
 
   retornaPeriodosComCombos = (periodosResponse, periodosProps) => {
-    periodosProps.forEach(periodoProps => {
-      periodosResponse.forEach(periodoResp => {
+    periodosProps.forEach((periodoProps) => {
+      periodosResponse.forEach((periodoResp) => {
         if (periodoProps.nome === periodoResp.periodo_escolar.nome) {
           periodoProps.validador = [];
           periodoProps.checked = false;
           periodoProps.tipos_alimentacao = periodoResp.tipos_alimentacao.map(
-            tipo_alimentacao => {
+            (tipo_alimentacao) => {
               return {
                 uuid: tipo_alimentacao.uuid,
-                nome: tipo_alimentacao.nome
+                nome: tipo_alimentacao.nome,
               };
             }
           );
@@ -277,8 +275,8 @@ class FoodSuspensionEditor extends Component {
     periodosEQuantidadeAlunos,
     periodoProps
   ) => {
-    periodoProps.forEach(periodo => {
-      periodosEQuantidadeAlunos.forEach(quantidade => {
+    periodoProps.forEach((periodo) => {
+      periodosEQuantidadeAlunos.forEach((quantidade) => {
         if (periodo.nome === quantidade.periodo_escolar.nome) {
           periodo.quantidade_alunos = quantidade.quantidade_alunos;
         }
@@ -290,22 +288,22 @@ class FoodSuspensionEditor extends Component {
     periodosEQuantidadeAlunosCeiEmei,
     periodoProps
   ) => {
-    periodoProps.forEach(periodo => {
-      periodosEQuantidadeAlunosCeiEmei.forEach(quantidadeCeiEmei => {
+    periodoProps.forEach((periodo) => {
+      periodosEQuantidadeAlunosCeiEmei.forEach((quantidadeCeiEmei) => {
         if (periodo.nome === quantidadeCeiEmei.nome) {
           periodo.alunos = [];
           if (quantidadeCeiEmei.CEI > 0) {
             periodo.alunos.push({
               value: "CEI",
               label: "CEI",
-              quantidade_alunos: quantidadeCeiEmei.CEI
+              quantidade_alunos: quantidadeCeiEmei.CEI,
             });
           }
           if (quantidadeCeiEmei.EMEI > 0) {
             periodo.alunos.push({
               value: "EMEI",
               label: "EMEI",
-              quantidade_alunos: quantidadeCeiEmei.EMEI
+              quantidade_alunos: quantidadeCeiEmei.EMEI,
             });
           }
         }
@@ -316,7 +314,7 @@ class FoodSuspensionEditor extends Component {
   periodosOptions(period) {
     const { alunosCEIouEMEI, vinculos } = this.state;
     let periodos = vinculos
-      ? vinculos.find(v => v.periodo_escolar.nome === period.nome)
+      ? vinculos.find((v) => v.periodo_escolar.nome === period.nome)
           .tipos_alimentacao
       : [];
     if (escolaEhCEMEI()) {
@@ -326,34 +324,34 @@ class FoodSuspensionEditor extends Component {
       if (alunosCEIouEMEI[period.nome].length === 2) {
         periodos = vinculos
           .find(
-            v =>
+            (v) =>
               v.tipo_unidade_escolar.iniciais.includes("CEI") &&
               v.periodo_escolar.nome === period.nome
           )
           .tipos_alimentacao.concat(
             vinculos.find(
-              v =>
+              (v) =>
                 v.tipo_unidade_escolar.iniciais.includes("EMEI") &&
                 v.periodo_escolar.nome === period.nome
             ).tipos_alimentacao
           );
       } else if (alunosCEIouEMEI[period.nome].includes("CEI")) {
         periodos = vinculos.find(
-          v =>
+          (v) =>
             v.tipo_unidade_escolar.iniciais.includes("CEI") &&
             v.periodo_escolar.nome === period.nome
         ).tipos_alimentacao;
       } else if (alunosCEIouEMEI[period.nome].includes("EMEI")) {
         periodos = vinculos.find(
-          v =>
+          (v) =>
             v.tipo_unidade_escolar.iniciais.includes("EMEI") &&
             v.periodo_escolar.nome === period.nome
         ).tipos_alimentacao;
       }
     }
-    return periodos.map(p => ({
+    return periodos.map((p) => ({
       label: p.nome,
-      value: p.uuid
+      value: p.uuid,
     }));
   }
 
@@ -362,10 +360,10 @@ class FoodSuspensionEditor extends Component {
       "suspensoes_MANHA",
       "suspensoes_TARDE",
       "suspensoes_NOITE",
-      "suspensoes_INTEGRAL"
+      "suspensoes_INTEGRAL",
     ];
     fields.forEach(
-      function(field) {
+      function (field) {
         if (
           prevProps[field] &&
           prevProps[field].check &&
@@ -377,7 +375,7 @@ class FoodSuspensionEditor extends Component {
           options[value] = [];
           this.setState({
             ...this.state,
-            options: options
+            options: options,
           });
           escolaEhCEMEI() &&
             this.props.change(field + ".alunos_cei_ou_emei", "");
@@ -389,14 +387,14 @@ class FoodSuspensionEditor extends Component {
     if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
       const escola = this.props.meusDados.vinculo_atual.instituicao;
-      getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
+      getVinculosTipoAlimentacaoPorEscola(vinculo).then((response) => {
         this.setState({ vinculos: response.data.results });
         this.retornaPeriodosComCombos(
           response.data.results,
           this.props.periodos
         );
       });
-      getQuantidaDeAlunosPorPeriodoEEscola(escola.uuid).then(response => {
+      getQuantidaDeAlunosPorPeriodoEEscola(escola.uuid).then((response) => {
         this.vinculaQuantidadeAlunosPorPeriodo(
           response.results,
           this.props.periodos
@@ -404,7 +402,7 @@ class FoodSuspensionEditor extends Component {
       });
       escolaEhCEMEI() &&
         getQuantidadeAlunosCEMEIporPeriodoCEIEMEI(escola.codigo_eol).then(
-          response => {
+          (response) => {
             this.vinculaQuantidadeAlunosPorPeriodoCeiEmei(
               response.data,
               this.props.periodos
@@ -422,19 +420,19 @@ class FoodSuspensionEditor extends Component {
       loading
     ) {
       this.setState({
-        loading: false
+        loading: false,
       });
     }
   }
 
   refresh() {
     getSuspensoesDeAlimentacaoSalvas().then(
-      res => {
+      (res) => {
         this.setState({
-          suspensoesDeAlimentacaoList: res.results
+          suspensoesDeAlimentacaoList: res.results,
         });
       },
-      function() {
+      function () {
         toastError("Erro ao carregar as suspensões salvas");
       }
     );
@@ -443,7 +441,7 @@ class FoodSuspensionEditor extends Component {
 
   enviaSuspensaoDeAlimentacao(uuid) {
     enviarSuspensaoDeAlimentacao(uuid).then(
-      res => {
+      (res) => {
         if (res.status === HTTP_STATUS.OK) {
           this.refresh();
           toastSuccess("Suspensão de alimentação enviada com sucesso");
@@ -453,7 +451,7 @@ class FoodSuspensionEditor extends Component {
           );
         }
       },
-      function() {
+      function () {
         toastError("Houve um erro ao enviar a suspensão de alimentação");
       }
     );
@@ -462,9 +460,9 @@ class FoodSuspensionEditor extends Component {
   onSubmit(values) {
     // Refatorar aqui.
     values.dias_razoes = deepCopy(this.state.dias_razoes);
-    values.dias_razoes.forEach(value => {
+    values.dias_razoes.forEach((value) => {
       const idx = values.dias_razoes.findIndex(
-        value2 => value2.id === value.id
+        (value2) => value2.id === value.id
       );
       values.dias_razoes[idx]["data"] = values.dias_razoes[idx][`data${idx}`];
       values.dias_razoes[idx]["motivo"] =
@@ -484,7 +482,7 @@ class FoodSuspensionEditor extends Component {
     if (!error) {
       if (!values.uuid) {
         createSuspensaoDeAlimentacao(JSON.stringify(values)).then(
-          async res => {
+          async (res) => {
             if (res.status === HTTP_STATUS.CREATED) {
               this.refresh();
               if (status === STATUS_DRE_A_VALIDAR) {
@@ -499,13 +497,13 @@ class FoodSuspensionEditor extends Component {
               );
             }
           },
-          function() {
+          function () {
             toastError("Houve um erro ao salvar a suspensão de alimentação");
           }
         );
       } else {
         updateSuspensaoDeAlimentacao(values.uuid, JSON.stringify(values)).then(
-          async res => {
+          async (res) => {
             if (res.status === HTTP_STATUS.OK) {
               this.refresh();
               if (status === STATUS_DRE_A_VALIDAR) {
@@ -522,7 +520,7 @@ class FoodSuspensionEditor extends Component {
               );
             }
           },
-          function() {
+          function () {
             toastError("Houve um erro ao atualizar a suspensão de alimentação");
           }
         );
@@ -532,14 +530,14 @@ class FoodSuspensionEditor extends Component {
     }
   }
 
-  onCheckInput = indice => {
+  onCheckInput = (indice) => {
     let periodos = this.props.periodos;
     let maxValueToValidate = periodos[indice].quantidade_alunos;
     periodos[indice].checked = !periodos[indice].checked;
 
     if (escolaEhCEMEI()) {
       let qntAlunos = 0;
-      periodos[indice].alunos.forEach(obj => {
+      periodos[indice].alunos.forEach((obj) => {
         qntAlunos += obj.quantidade_alunos;
       });
       maxValueToValidate = qntAlunos;
@@ -570,7 +568,7 @@ class FoodSuspensionEditor extends Component {
       suspensoes_MANHA,
       suspensoes_TARDE,
       suspensoes_NOITE,
-      suspensoes_INTEGRAL
+      suspensoes_INTEGRAL,
     } = this.props;
     const {
       loading,
@@ -578,13 +576,13 @@ class FoodSuspensionEditor extends Component {
       options,
       suspensoesDeAlimentacaoList,
       dias_razoes,
-      alunosCEIouEMEI
+      alunosCEIouEMEI,
     } = this.state;
     let checkMap = {
       MANHA: suspensoes_MANHA && suspensoes_MANHA.check,
       TARDE: suspensoes_TARDE && suspensoes_TARDE.check,
       NOITE: suspensoes_NOITE && suspensoes_NOITE.check,
-      INTEGRAL: suspensoes_INTEGRAL && suspensoes_INTEGRAL.check
+      INTEGRAL: suspensoes_INTEGRAL && suspensoes_INTEGRAL.check,
     };
     return (
       <div>
@@ -592,7 +590,7 @@ class FoodSuspensionEditor extends Component {
           <div>Carregando...</div>
         ) : (
           <form
-            onSubmit={e => {
+            onSubmit={(e) => {
               e.preventDefault();
             }}
             onKeyPress={this.onKeyPress}
@@ -612,8 +610,8 @@ class FoodSuspensionEditor extends Component {
                 <Rascunhos
                   suspensoesDeAlimentacaoList={suspensoesDeAlimentacaoList}
                   OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-                  resetForm={event => this.resetForm(event)}
-                  OnEditButtonClicked={params =>
+                  resetForm={(event) => this.resetForm(event)}
+                  OnEditButtonClicked={(params) =>
                     this.OnEditButtonClicked(params)
                   }
                 />
@@ -638,7 +636,7 @@ class FoodSuspensionEditor extends Component {
                             name={`data${key}`}
                             minDate={proximos_dois_dias_uteis}
                             maxDate={fimDoCalendario()}
-                            onChange={value =>
+                            onChange={(value) =>
                               this.handleField(`data${key}`, value, key)
                             }
                             label="Dia"
@@ -652,7 +650,7 @@ class FoodSuspensionEditor extends Component {
                             name={`motivo${key}`}
                             label="Motivo"
                             options={motivos}
-                            onChange={event =>
+                            onChange={(event) =>
                               this.handleField(
                                 `motivo${key}`,
                                 event.target.value,
@@ -670,7 +668,7 @@ class FoodSuspensionEditor extends Component {
                             <Field
                               component={TextArea}
                               label="Qual o motivo?"
-                              onChange={event =>
+                              onChange={(event) =>
                                 this.handleField(
                                   `outro_motivo${key}`,
                                   event.target.value,
@@ -753,7 +751,7 @@ class FoodSuspensionEditor extends Component {
                                 component={MultiSelect}
                                 name="alunos_cei_ou_emei"
                                 options={period.alunos || []}
-                                onChange={values =>
+                                onChange={(values) =>
                                   this.handleSelectedChangedAlunos(
                                     values,
                                     period
@@ -766,7 +764,7 @@ class FoodSuspensionEditor extends Component {
                                     period.alunos && period.alunos.length === 1
                                       ? `${period.alunos[0].value}`
                                       : "Todos os Alunos selecionados",
-                                  selectAll: "Todos"
+                                  selectAll: "Todos",
                                 }}
                                 hasSelectAll={
                                   period.alunos && period.alunos.length !== 1
@@ -791,7 +789,7 @@ class FoodSuspensionEditor extends Component {
                               name="tipo_de_refeicao"
                               selected={options[period.nome] || []}
                               options={this.periodosOptions(period)}
-                              onSelectedChanged={values =>
+                              onSelectedChanged={(values) =>
                                 this.handleSelectedChanged(values, period)
                               }
                               disableSearch={true}
@@ -799,7 +797,7 @@ class FoodSuspensionEditor extends Component {
                                 selectSomeItems: "Selecione",
                                 allItemsAreSelected:
                                   "Todos os itens estão selecionados",
-                                selectAll: "Todos"
+                                selectAll: "Todos",
                               }}
                               nomeDoItemNoPlural="Tipos"
                               required
@@ -843,14 +841,14 @@ class FoodSuspensionEditor extends Component {
                   <div className="col-12">
                     <Botao
                       texto="Cancelar"
-                      onClick={event => this.resetForm(event)}
+                      onClick={(event) => this.resetForm(event)}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
                     <Botao
                       texto={this.state.salvarAtualizarLbl}
-                      onClick={handleSubmit(values =>
+                      onClick={handleSubmit((values) =>
                         this.onSubmit({
-                          ...values
+                          ...values,
                         })
                       )}
                       className="ml-3"
@@ -860,10 +858,10 @@ class FoodSuspensionEditor extends Component {
                     <Botao
                       texto="Enviar"
                       type={BUTTON_TYPE.SUBMIT}
-                      onClick={handleSubmit(values =>
+                      onClick={handleSubmit((values) =>
                         this.onSubmit({
                           ...values,
-                          status: STATUS_DRE_A_VALIDAR
+                          status: STATUS_DRE_A_VALIDAR,
                         })
                       )}
                       style={BUTTON_STYLE.GREEN}
@@ -882,24 +880,24 @@ class FoodSuspensionEditor extends Component {
 
 const FoodSuspensionEditorForm = reduxForm({
   form: "foodSuspension",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(FoodSuspensionEditor);
 const selector = formValueSelector("foodSuspension");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     initialValues: state.suspensaoDeAlimentacao.data,
     observacao: selector(state, "observacao"),
     suspensoes_MANHA: selector(state, "suspensoes_MANHA"),
     suspensoes_TARDE: selector(state, "suspensoes_TARDE"),
     suspensoes_NOITE: selector(state, "suspensoes_NOITE"),
-    suspensoes_INTEGRAL: selector(state, "suspensoes_INTEGRAL")
+    suspensoes_INTEGRAL: selector(state, "suspensoes_INTEGRAL"),
   };
 };
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      loadFoodSuspension
+      loadFoodSuspension,
     },
     dispatch
   );

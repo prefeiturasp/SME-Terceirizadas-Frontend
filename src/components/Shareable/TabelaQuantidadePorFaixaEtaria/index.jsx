@@ -10,16 +10,15 @@ import "./style.scss";
 
 export default class TabelaQuantidadePorFaixaEtaria extends Component {
   defaultProps = {
-    escondeTotalAlunos: false
+    escondeTotalAlunos: false,
   };
   render() {
-    const {
-      alunosPorFaixaEtaria,
-      escondeTotalAlunos,
-      totalSelecionados
-    } = this.props;
+    const { alunosPorFaixaEtaria, escondeTotalAlunos, totalSelecionados } =
+      this.props;
     let totalAlunos = 0;
-    Object.values(alunosPorFaixaEtaria).forEach(v => (totalAlunos += v.count));
+    Object.values(alunosPorFaixaEtaria).forEach(
+      (v) => (totalAlunos += v.count)
+    );
     return (
       <div>
         <table

@@ -2,7 +2,7 @@ import {
   CADASTROS,
   CONFIGURACOES,
   EDITAR,
-  CADASTRO_EMBALAGEM
+  CADASTRO_EMBALAGEM,
 } from "configs/constants";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -20,7 +20,7 @@ const ListagemEmbalagens = ({ embalagens }) => {
           <div>Data do Cadastro</div>
           <div>Ações</div>
         </div>
-        {embalagens.map(embalagem => {
+        {embalagens.map((embalagem) => {
           return (
             <>
               <div key={embalagem.uuid} className="grid-table body-table">
@@ -29,9 +29,7 @@ const ListagemEmbalagens = ({ embalagens }) => {
                 <div>{embalagem.criado_em.slice(0, 10)}</div>
                 <div>
                   <NavLink
-                    to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_EMBALAGEM}/${EDITAR}?uuid=${
-                      embalagem.uuid
-                    }`}
+                    to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_EMBALAGEM}/${EDITAR}?uuid=${embalagem.uuid}`}
                   >
                     <span className="link-acoes px-2">
                       <i title="Editar" className="verde fas fa-edit" />

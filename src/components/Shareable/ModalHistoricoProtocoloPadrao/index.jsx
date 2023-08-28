@@ -10,14 +10,14 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
     super(props);
     this.state = {
       history: [],
-      histSelecionado: null
+      histSelecionado: null,
     };
   }
 
   itemLogAtivo = (index, ativo) => {
     let { history } = this.props;
     let { histSelecionado } = this.state;
-    history.forEach(h => {
+    history.forEach((h) => {
       h.ativo = false;
     });
 
@@ -31,7 +31,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
     this.setState({ history, histSelecionado });
   };
 
-  retornaIniciais = email => {
+  retornaIniciais = (email) => {
     const nome = email.split(" ");
     let iniciais = "";
     nome.forEach((n, index) => {
@@ -47,9 +47,9 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
     this.setState({ history });
   };
 
-  filterFieldsProtocolos = history => {
+  filterFieldsProtocolos = (history) => {
     if (history !== undefined && history.changes) {
-      const fields = history.changes.filter(change => {
+      const fields = history.changes.filter((change) => {
         return ["nome_protocolo", "status", "orientacoes_gerais"].includes(
           change.field
         );
@@ -59,9 +59,9 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
     return [];
   };
 
-  findFieldSubstituicoes = history => {
+  findFieldSubstituicoes = (history) => {
     if (history !== undefined && history.changes !== undefined) {
-      const field = history.changes.find(change => {
+      const field = history.changes.find((change) => {
         return ["substituicoes"].includes(change.field);
       });
       return field;
@@ -69,25 +69,25 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
     return { changes: [] };
   };
 
-  findEditais = history => {
+  findEditais = (history) => {
     if (history !== undefined && history.changes) {
-      const field = history.changes.find(change => {
+      const field = history.changes.find((change) => {
         return ["editais"].includes(change.field);
       });
       return field;
     }
   };
 
-  findOutrasInformacoes = history => {
+  findOutrasInformacoes = (history) => {
     if (history !== undefined && history.changes) {
-      const field = history.changes.find(change => {
+      const field = history.changes.find((change) => {
         return ["outras informacoes"].includes(change.field);
       });
       return field;
     }
   };
 
-  ajusta_nome = campo => {
+  ajusta_nome = (campo) => {
     if (campo === "nome_protocolo") {
       return "Nome Protocolo";
     } else if (campo === "status") {
@@ -104,7 +104,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
     return valor_campo;
   };
 
-  formatar_action = action_name => {
+  formatar_action = (action_name) => {
     switch (action_name) {
       case "CREATE":
         return "CRIAÇÃO";
@@ -239,9 +239,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                 histSelecionado.user.username
                               )}`}</div>
                             ) : (
-                              <div className="w-100">{`RF: ${
-                                histSelecionado.user.username
-                              }`}</div>
+                              <div className="w-100">{`RF: ${histSelecionado.user.username}`}</div>
                             )}
                           </>
                         ) : (
@@ -329,7 +327,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                           __html: this.ajusta_valor(
                                             change.field,
                                             change.from
-                                          )
+                                          ),
                                         }}
                                       />
                                     </td>
@@ -339,7 +337,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                           __html: this.ajusta_valor(
                                             change.field,
                                             change.to
-                                          )
+                                          ),
                                         }}
                                       />
                                     </td>
@@ -399,7 +397,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                                     ? change.tipo.from === "I"
                                                       ? "Isento"
                                                       : "Substituir"
-                                                    : ""
+                                                    : "",
                                                 }}
                                               />
                                             </td>
@@ -410,7 +408,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                                     ? change.tipo.to === "I"
                                                       ? "Isento"
                                                       : "Substituir"
-                                                    : ""
+                                                    : "",
                                                 }}
                                               />
                                             </td>
@@ -430,7 +428,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                                 dangerouslySetInnerHTML={{
                                                   __html: change.alimento.from
                                                     ? change.alimento.from.nome
-                                                    : ""
+                                                    : "",
                                                 }}
                                               />
                                             </td>
@@ -439,7 +437,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                                 dangerouslySetInnerHTML={{
                                                   __html: change.alimento.to
                                                     ? change.alimento.to.nome
-                                                    : ""
+                                                    : "",
                                                 }}
                                               />
                                             </td>
@@ -458,7 +456,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                               <ul>
                                                 {change.substitutos.from
                                                   ? change.substitutos.from.map(
-                                                      alimento => {
+                                                      (alimento) => {
                                                         return (
                                                           <li
                                                             key={alimento.uuid}
@@ -475,7 +473,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                               <ul>
                                                 {change.substitutos.to
                                                   ? change.substitutos.to.map(
-                                                      alimento => {
+                                                      (alimento) => {
                                                         return (
                                                           <li
                                                             key={alimento.uuid}
@@ -563,9 +561,10 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                           ).from && (
                                             <p
                                               dangerouslySetInnerHTML={{
-                                                __html: this.findOutrasInformacoes(
-                                                  histSelecionado
-                                                ).from
+                                                __html:
+                                                  this.findOutrasInformacoes(
+                                                    histSelecionado
+                                                  ).from,
                                               }}
                                             />
                                           )}
@@ -576,9 +575,10 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                           ).to && (
                                             <p
                                               dangerouslySetInnerHTML={{
-                                                __html: this.findOutrasInformacoes(
-                                                  histSelecionado
-                                                ).to
+                                                __html:
+                                                  this.findOutrasInformacoes(
+                                                    histSelecionado
+                                                  ).to,
                                               }}
                                             />
                                           )}

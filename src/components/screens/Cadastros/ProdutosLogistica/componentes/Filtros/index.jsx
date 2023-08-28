@@ -4,7 +4,7 @@ import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { statusProdutos } from "helpers/utilities";
@@ -17,18 +17,18 @@ export default ({ setResultado, nomes, setFiltros }) => {
 
   const cadastrarProduto = () =>
     history.push({
-      pathname: `/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_PRODUTOS}`
+      pathname: `/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_PRODUTOS}`,
     });
 
-  const getNomesProdutosFiltrado = nomeItem => {
+  const getNomesProdutosFiltrado = (nomeItem) => {
     if (nomeItem) {
       const reg = new RegExp(nomeItem, "iu");
-      return nomes.filter(a => reg.test(a));
+      return nomes.filter((a) => reg.test(a));
     }
     return [];
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };

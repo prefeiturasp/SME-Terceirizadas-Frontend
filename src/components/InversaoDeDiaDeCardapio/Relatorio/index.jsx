@@ -6,14 +6,14 @@ import { formValueSelector, reduxForm } from "redux-form";
 import {
   INVERSAO_CARDAPIO,
   CODAE,
-  TERCEIRIZADA
+  TERCEIRIZADA,
 } from "../../../configs/constants";
 import { TIPO_PERFIL } from "../../../constants/shared";
 import { statusEnum } from "../../../constants/shared";
 import {
   visualizaBotoesDoFluxo,
   prazoDoPedidoMensagem,
-  getError
+  getError,
 } from "../../../helpers/utilities";
 import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
 import Botao from "../../Shareable/Botao";
@@ -40,21 +40,20 @@ class Relatorio extends Component {
       escolaDaInversao: null,
       prazoDoPedidoMensagem: null,
       erro: false,
-      showModalMarcarConferencia: false
+      showModalMarcarConferencia: false,
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.closeModalCodaeAutorizar = this.closeModalCodaeAutorizar.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
-    this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
-      this
-    );
+    this.closeModalMarcarConferencia =
+      this.closeModalMarcarConferencia.bind(this);
   }
 
   setRedirect() {
     this.setState({
-      redirect: true
+      redirect: true,
     });
   }
 
@@ -68,7 +67,7 @@ class Relatorio extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      getInversaoDeDiaDeCardapio(uuid).then(response => {
+      getInversaoDeDiaDeCardapio(uuid).then((response) => {
         if (response.status === HTTP_STATUS.OK) {
           const inversaoDiaCardapio = response.data;
           this.setState({
@@ -77,7 +76,7 @@ class Relatorio extends Component {
             escolaDaInversao: inversaoDiaCardapio.escola,
             prazoDoPedidoMensagem: prazoDoPedidoMensagem(
               inversaoDiaCardapio.prioridade
-            )
+            ),
           });
         } else if (response.data.detail) {
           this.setState({ erro: true });
@@ -135,9 +134,9 @@ class Relatorio extends Component {
   }
 
   loadSolicitacao(uuid) {
-    getInversaoDeDiaDeCardapio(uuid).then(response => {
+    getInversaoDeDiaDeCardapio(uuid).then((response) => {
       this.setState({
-        inversaoDiaCardapio: response.data
+        inversaoDiaCardapio: response.data,
       });
     });
   }
@@ -146,7 +145,7 @@ class Relatorio extends Component {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
     this.props.endpointAprovaSolicitacao(uuid).then(
-      response => {
+      (response) => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
           this.loadSolicitacao(uuid);
@@ -154,7 +153,7 @@ class Relatorio extends Component {
           toastError(toastAprovaMensagemErro);
         }
       },
-      function() {
+      function () {
         toastError(toastAprovaMensagemErro);
       }
     );
@@ -172,7 +171,7 @@ class Relatorio extends Component {
       showAutorizarModal,
       showModalCodaeAutorizar,
       erro,
-      showModalMarcarConferencia
+      showModalMarcarConferencia,
     } = this.state;
     const {
       visao,
@@ -186,7 +185,7 @@ class Relatorio extends Component {
       endpointQuestionamento,
       ModalNaoAprova,
       ModalQuestionamento,
-      ModalCodaeAutoriza
+      ModalCodaeAutoriza,
     } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
@@ -198,20 +197,20 @@ class Relatorio extends Component {
     const EXIBIR_BOTAO_APROVAR =
       (![
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-        TIPO_PERFIL.TERCEIRIZADA
+        TIPO_PERFIL.TERCEIRIZADA,
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
       (inversaoDiaCardapio &&
         (inversaoDiaCardapio.prioridade === "REGULAR" ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
-            statusEnum.CODAE_AUTORIZADO
+            statusEnum.CODAE_AUTORIZADO,
           ].includes(inversaoDiaCardapio.status)) &&
         textoBotaoAprova);
     const EXIBIR_BOTAO_QUESTIONAMENTO =
       [
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-        TIPO_PERFIL.TERCEIRIZADA
+        TIPO_PERFIL.TERCEIRIZADA,
       ].includes(tipoPerfil) &&
       inversaoDiaCardapio &&
       (inversaoDiaCardapio.prioridade !== "REGULAR" ||
@@ -319,9 +318,7 @@ class Relatorio extends Component {
                 uuid={uuid}
               />
             )}
-            <span className="page-title">{`Inversão de dia de Cardápio - Solicitação # ${
-              inversaoDiaCardapio.id_externo
-            }`}</span>
+            <span className="page-title">{`Inversão de dia de Cardápio - Solicitação # ${inversaoDiaCardapio.id_externo}`}</span>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
@@ -347,22 +344,22 @@ class Relatorio extends Component {
                       />
                     )}
                     {EXIBIR_BOTAO_APROVAR &&
-                      (textoBotaoAprova !== "Ciente" &&
-                        (visao === CODAE &&
-                        inversaoDiaCardapio.logs.filter(
-                          log =>
-                            log.status_evento_explicacao ===
-                              "Terceirizada respondeu questionamento" &&
-                            !log.resposta_sim_nao
-                        ).length > 0 ? null : (
-                          <Botao
-                            texto={textoBotaoAprova}
-                            className="ml-3"
-                            onClick={() => handleClickBotaoAprova()}
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
-                          />
-                        )))}
+                      textoBotaoAprova !== "Ciente" &&
+                      (visao === CODAE &&
+                      inversaoDiaCardapio.logs.filter(
+                        (log) =>
+                          log.status_evento_explicacao ===
+                            "Terceirizada respondeu questionamento" &&
+                          !log.resposta_sim_nao
+                      ).length > 0 ? null : (
+                        <Botao
+                          texto={textoBotaoAprova}
+                          className="ml-3"
+                          onClick={() => handleClickBotaoAprova()}
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN}
+                        />
+                      ))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={
@@ -405,15 +402,15 @@ class Relatorio extends Component {
 const formName = "relatorioInversaoDeDiaDeCardapio";
 const RelatorioForm = reduxForm({
   form: formName,
-  enableReinitialize: true
+  enableReinitialize: true,
 })(Relatorio);
 
 const selector = formValueSelector(formName);
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     justificativa: selector(state, "justificativa"),
-    motivo_cancelamento: selector(state, "motivo_cancelamento")
+    motivo_cancelamento: selector(state, "motivo_cancelamento"),
   };
 };
 

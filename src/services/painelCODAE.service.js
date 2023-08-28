@@ -3,7 +3,7 @@ import {
   filtraInformados,
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
+  filtraRegular,
 } from "../helpers/painelPedidos";
 import { API_URL } from "../constants/config";
 import { codaeListarSolicitacoesDeAlteracaoDeCardapio } from "./alteracaoDeCardapio";
@@ -23,12 +23,12 @@ import axios from "./_base";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 const TODAS_SOLICITACOES_CODAE_URL = `${API_URL}/codae-solicitacoes`;
 
-export const getSolicitacoesAutorizadasCodae = async params => {
+export const getSolicitacoesAutorizadasCodae = async (params) => {
   const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.AUTORIZADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -37,7 +37,7 @@ export const getSolicitacoesAutorizadasCodae = async params => {
   }
 };
 
-export const getSolicitacoesCanceladasCodae = async params => {
+export const getSolicitacoesCanceladasCodae = async (params) => {
   const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.CANCELADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -46,14 +46,12 @@ export const getSolicitacoesCanceladasCodae = async params => {
   }
 };
 
-export const getSolicitacoesPendentesAutorizacaoCodae = async filtro => {
-  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${
-    SOLICITACOES.PENDENTES
-  }/${filtro}/`;
+export const getSolicitacoesPendentesAutorizacaoCodae = async (filtro) => {
+  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.PENDENTES}/${filtro}/`;
 
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   try {
     const result = await fetch(url, OBJ_REQUEST);
@@ -64,7 +62,9 @@ export const getSolicitacoesPendentesAutorizacaoCodae = async filtro => {
   }
 };
 
-export const getSolicitacoesPendentesAutorizacaoCodaeSemFiltro = async params => {
+export const getSolicitacoesPendentesAutorizacaoCodaeSemFiltro = async (
+  params
+) => {
   const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.PENDENTES}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -72,10 +72,8 @@ export const getSolicitacoesPendentesAutorizacaoCodaeSemFiltro = async params =>
     return data;
   }
 };
-export const getSolicitacoesComQuestionamentoCodae = async params => {
-  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${
-    SOLICITACOES.QUESTIONAMENTOS
-  }/`;
+export const getSolicitacoesComQuestionamentoCodae = async (params) => {
+  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.QUESTIONAMENTOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -88,9 +86,7 @@ export const getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias = async (
   tipoVisao,
   params
 ) => {
-  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${
-    SOLICITACOES.PENDENTES
-  }/${filtroAplicado}/${tipoVisao}/`;
+  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.PENDENTES}/${filtroAplicado}/${tipoVisao}/`;
 
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
 
@@ -100,7 +96,7 @@ export const getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias = async (
   }
 };
 
-export const getSolicitacoesNegadasCodae = async params => {
+export const getSolicitacoesNegadasCodae = async (params) => {
   const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.NEGADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -116,7 +112,7 @@ export const getResumoPendenciasInversoesCardapio = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -146,7 +142,7 @@ export const getResumoPendenciasInclusaoAlimentacao = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -165,7 +161,7 @@ export const getResumoPendenciasInclusaoAlimentacao = async (
     codaeListarSolicitacoesDeInclusaoDeAlimentacao(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CEI
-    )
+    ),
   ]);
 
   if (continuas) {
@@ -191,7 +187,7 @@ export const getResumoPendenciasKitLancheAvulso = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -203,7 +199,7 @@ export const getResumoPendenciasKitLancheAvulso = async (
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_NORMAL
     ),
-    getCODAEPedidosKitLanchePendentes(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
+    getCODAEPedidosKitLanchePendentes(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI),
   ]);
 
   if (avulsos) {
@@ -228,7 +224,7 @@ export const getResumoPendenciasKitLancheUnificado = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -260,7 +256,7 @@ export const getResumoPendenciasAlteracaoCardapio = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -275,7 +271,7 @@ export const getResumoPendenciasAlteracaoCardapio = async (
     codaeListarSolicitacoesDeAlteracaoDeCardapio(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CEI
-    )
+    ),
   ]);
 
   if (avulsos) {
@@ -299,7 +295,7 @@ export const getResumoPendenciasSuspensaoCardapio = async (
   let resposta = {
     total: 0,
     informados: 0,
-    ciencia: 0
+    ciencia: 0,
   };
 
   let informados = [];
@@ -319,7 +315,7 @@ export const getResumoPendenciasSuspensaoCardapio = async (
   return resposta;
 };
 
-export const getResumoPendenciasCODAEporDRE = async filtro => {
+export const getResumoPendenciasCODAEporDRE = async (filtro) => {
   // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
   const solicitacoes = await getSolicitacoesPendentesAutorizacaoCodae(filtro);
 
@@ -347,7 +343,7 @@ export const getResumoPendenciasCODAEporDRE = async filtro => {
   return resumoPorDRE;
 };
 
-export const getResumoPendenciasCODAEporLote = async filtro => {
+export const getResumoPendenciasCODAEporLote = async (filtro) => {
   // TODO Algoritimo de prioridade desse endpoint não bate com usado para os cards por tipo de doc
   const solicitacoes = await getSolicitacoesPendentesAutorizacaoCodae(filtro);
 

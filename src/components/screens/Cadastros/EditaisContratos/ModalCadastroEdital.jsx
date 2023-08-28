@@ -13,7 +13,7 @@ export class ModalCadastroEdital extends Component {
       tipo_contratacao: requisicao_edital.tipo_contratacao,
       processo: requisicao_edital.numero_processo,
       objeto: requisicao_edital.resumo,
-      contratos: requisicao_edital.contratos_relacionados.map(contrato => {
+      contratos: requisicao_edital.contratos_relacionados.map((contrato) => {
         return {
           terceirizada: contrato.empresas[0],
           vigencias: contrato.vigencias,
@@ -21,9 +21,9 @@ export class ModalCadastroEdital extends Component {
           processo: contrato.processo_administrativo,
           lotes: contrato.lotes,
           diretorias_regionais: contrato.dres,
-          data_proposta: contrato.data_proposta
+          data_proposta: contrato.data_proposta,
         };
-      })
+      }),
     };
     this.props.onSubmit(values);
   }

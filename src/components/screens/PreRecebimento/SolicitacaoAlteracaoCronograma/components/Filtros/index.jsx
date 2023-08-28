@@ -8,7 +8,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { montarMenuOptionStatus } from "../../helper";
@@ -19,9 +19,9 @@ export default ({
   setFiltros,
   setAlteracoesCronogramas,
   setTotal,
-  fornecedor
+  fornecedor,
 }) => {
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     if (filtros.motivos) {
       filtros.motivos = filtros.motivos.toString();

@@ -7,7 +7,7 @@ import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
   usuarioEhNutricionistaSupervisao,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhEmpresaTerceirizada,
 } from "helpers/utilities";
 import { Paginacao } from "components/Shareable/Paginacao";
 
@@ -15,16 +15,16 @@ const TabelaAgrupadaProdutosTerceirizadas = ({
   dadosProdutos,
   filtros,
   getProdutosHomologados,
-  quantidadeHomologados
+  quantidadeHomologados,
 }) => {
   const [page, setPage] = useState(1);
 
-  const onChangePagination = page => {
+  const onChangePagination = (page) => {
     setPage(page);
     getProdutosHomologados({
       limit: PAGE_SIZE,
       offset: (page - 1) * PAGE_SIZE,
-      ...filtros
+      ...filtros,
     });
   };
 

@@ -8,7 +8,7 @@ import moment from "moment";
 import {
   renderizarLabelLote,
   renderizarLabelDiretoria,
-  renderizarLabelEmpresa
+  renderizarLabelEmpresa,
 } from "./helper";
 import { dateDelta } from "../../../../helpers/utilities";
 import { InputText } from "../../../Shareable/Input/InputText";
@@ -32,12 +32,12 @@ class ContratosRelacionados extends Component {
       vigencias: [
         {
           data_inicial: null,
-          data_final: null
-        }
+          data_final: null,
+        },
       ],
       atualizado: false,
       status: false,
-      formVigenciaContratos: ["vigenciaContrato_0"]
+      formVigenciaContratos: ["vigenciaContrato_0"],
     };
   }
 
@@ -71,16 +71,14 @@ class ContratosRelacionados extends Component {
       vigencias: this.state.vigencias.concat([
         {
           data_inicial: null,
-          data_final: null
-        }
-      ])
+          data_final: null,
+        },
+      ]),
     });
   }
 
   nomeFormAtual() {
-    const indiceDoFormAtual = `vigenciaContrato_${
-      this.state.formVigenciaContratos.length
-    }`;
+    const indiceDoFormAtual = `vigenciaContrato_${this.state.formVigenciaContratos.length}`;
     let forms = this.state.formVigenciaContratos;
     forms.push(indiceDoFormAtual);
     this.setState({ forms });
@@ -89,15 +87,15 @@ class ContratosRelacionados extends Component {
   atualizarDiretoriasSelecionadas(values) {
     let diretoriasNomesSelecionadas = [];
     const diretoriasRegionais = this.props.diretoriasRegionais;
-    values.forEach(value => {
+    values.forEach((value) => {
       const indice = diretoriasRegionais.findIndex(
-        diretoriaRegional => diretoriaRegional.value === value
+        (diretoriaRegional) => diretoriaRegional.value === value
       );
       diretoriasNomesSelecionadas.push(diretoriasRegionais[indice].label);
     });
     this.setState({
       diretoriasSelecionadas: values,
-      diretoriasNomesSelecionadas
+      diretoriasNomesSelecionadas,
     });
     this.props.adicionarNomesListagem(
       "dres_nomes",
@@ -109,8 +107,8 @@ class ContratosRelacionados extends Component {
   atualizarLotesSelecionados(values) {
     let lotesNomesSelecionados = [];
     const lotes = this.props.lotes;
-    values.forEach(value => {
-      const indice = lotes.findIndex(lote => lote.value === value);
+    values.forEach((value) => {
+      const indice = lotes.findIndex((lote) => lote.value === value);
       lotesNomesSelecionados.push(lotes[indice].label);
     });
     this.setState({ lotesSelecionados: values, lotesNomesSelecionados });
@@ -124,8 +122,8 @@ class ContratosRelacionados extends Component {
   atualizarEmpresasSelecionadas(values) {
     let empresasNomesSelecionados = [];
     const empresas = this.props.empresas;
-    values.forEach(value => {
-      const indice = empresas.findIndex(empresa => empresa.value === value);
+    values.forEach((value) => {
+      const indice = empresas.findIndex((empresa) => empresa.value === value);
       empresasNomesSelecionados.push(empresas[indice].label);
     });
     this.setState({ empresasSelecionadas: values, empresasNomesSelecionados });
@@ -149,8 +147,8 @@ class ContratosRelacionados extends Component {
       let vigencias = [
         {
           data_inicial: null,
-          data_final: null
-        }
+          data_final: null,
+        },
       ];
       this.setState({ vigencias });
       if (this.props.reseta === true) {
@@ -174,7 +172,7 @@ class ContratosRelacionados extends Component {
             diretoriasSelecionadas: [],
             diretoriasNomesSelecionadas: [],
             empresasSelecionadas: [],
-            empresasNomesSelecionados: []
+            empresasNomesSelecionados: [],
           });
 
           this.props.setaResetFormChild();
@@ -230,7 +228,7 @@ class ContratosRelacionados extends Component {
         diretoriasSelecionadas,
         diretoriasNomesSelecionadas,
         empresasSelecionadas,
-        empresasNomesSelecionados
+        empresasNomesSelecionados,
       });
     }
   }
@@ -252,7 +250,7 @@ class ContratosRelacionados extends Component {
       empresasNomesSelecionados,
       diretoriasSelecionadas,
       empresasSelecionadas,
-      formVigenciaContratos
+      formVigenciaContratos,
     } = this.state;
     const {
       lotes,
@@ -262,7 +260,7 @@ class ContratosRelacionados extends Component {
       indice,
       adicionaNumeroContrato,
       excluirContratoRelacionado,
-      formValues
+      formValues,
     } = this.props;
     return (
       <div>
@@ -290,7 +288,7 @@ class ContratosRelacionados extends Component {
                       component={InputText}
                       required
                       validate={required}
-                      onChange={value => {
+                      onChange={(value) => {
                         obtemDadosParaSubmit(
                           `processo_administrativo`,
                           value.target.value,
@@ -309,7 +307,7 @@ class ContratosRelacionados extends Component {
                       required
                       minDate={null}
                       maxDate={dateDelta(1825)}
-                      onChange={value => {
+                      onChange={(value) => {
                         obtemDadosParaSubmit(`data_proposta`, value, indice);
                       }}
                     />
@@ -325,7 +323,7 @@ class ContratosRelacionados extends Component {
                     component={InputText}
                     validate={required}
                     required
-                    onChange={event =>
+                    onChange={(event) =>
                       adicionaNumeroContrato(indice, event.target.value)
                     }
                     max={50}
@@ -357,7 +355,7 @@ class ContratosRelacionados extends Component {
                                   ? moment(dataFinal, "DD/MM/YYYY")._d
                                   : null
                               }
-                              onChange={value =>
+                              onChange={(value) =>
                                 this.handleField(
                                   `data_inicial`,
                                   value,
@@ -379,7 +377,7 @@ class ContratosRelacionados extends Component {
                               maxDate={null}
                               required
                               validate={required}
-                              onChange={value =>
+                              onChange={(value) =>
                                 this.handleField(
                                   `data_final`,
                                   value,
@@ -424,7 +422,7 @@ class ContratosRelacionados extends Component {
                           }
                           options={lotes}
                           valueRenderer={renderizarLabelLote}
-                          onSelectedChanged={values => {
+                          onSelectedChanged={(values) => {
                             this.atualizarLotesSelecionados(values);
                             obtemDadosParaSubmit(`lotes`, values, indice);
                           }}
@@ -433,7 +431,7 @@ class ContratosRelacionados extends Component {
                             selectSomeItems: "Selecione",
                             allItemsAreSelected:
                               "Todos os itens estão selecionados",
-                            selectAll: "Todos"
+                            selectAll: "Todos",
                           }}
                           validate={required}
                         />
@@ -457,7 +455,7 @@ class ContratosRelacionados extends Component {
                           }
                           options={diretoriasRegionais}
                           valueRenderer={renderizarLabelDiretoria}
-                          onSelectedChanged={values => {
+                          onSelectedChanged={(values) => {
                             this.atualizarDiretoriasSelecionadas(values);
                             obtemDadosParaSubmit(`dres`, values, indice);
                           }}
@@ -466,7 +464,7 @@ class ContratosRelacionados extends Component {
                             selectSomeItems: "Selecione",
                             allItemsAreSelected:
                               "Todos os itens estão selecionados",
-                            selectAll: "Todos"
+                            selectAll: "Todos",
                           }}
                           validate={required}
                         />
@@ -536,7 +534,7 @@ class ContratosRelacionados extends Component {
                         }
                         options={empresas}
                         valueRenderer={renderizarLabelEmpresa}
-                        onSelectedChanged={values => {
+                        onSelectedChanged={(values) => {
                           this.atualizarEmpresasSelecionadas(values);
                           obtemDadosParaSubmit(`empresas`, values, indice);
                         }}
@@ -545,7 +543,7 @@ class ContratosRelacionados extends Component {
                           selectSomeItems: "Selecione",
                           allItemsAreSelected:
                             "Todos os itens estão selecionados",
-                          selectAll: "Todos"
+                          selectAll: "Todos",
                         }}
                         validate={required}
                       />
@@ -578,10 +576,10 @@ class ContratosRelacionados extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     formValues:
-      state.form.cadastroEditaisForm && state.form.cadastroEditaisForm.values
+      state.form.cadastroEditaisForm && state.form.cadastroEditaisForm.values,
   };
 };
 

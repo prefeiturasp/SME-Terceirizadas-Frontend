@@ -1,4 +1,4 @@
-export const getStatusSolicitacaoFrontend = status => {
+export const getStatusSolicitacaoFrontend = (status) => {
   switch (status) {
     case "CODAE_A_AUTORIZAR":
       return "Aguardando Autorização";

@@ -2,11 +2,8 @@ import React, { Component } from "react";
 
 export class Rascunhos extends Component {
   render() {
-    const {
-      rascunhosInversoes,
-      removerRascunho,
-      carregarRascunho
-    } = this.props;
+    const { rascunhosInversoes, removerRascunho, carregarRascunho } =
+      this.props;
     if (rascunhosInversoes && rascunhosInversoes.length) {
       const cardsInversoes = rascunhosInversoes.map(
         (inversaoDeDiaDeCardapio, key) => {
@@ -33,7 +30,7 @@ export class Rascunhos extends Component {
                 <span
                   onClick={() =>
                     carregarRascunho({
-                      inversaoDeDiaDeCardapio
+                      inversaoDeDiaDeCardapio,
                     })
                   }
                 >

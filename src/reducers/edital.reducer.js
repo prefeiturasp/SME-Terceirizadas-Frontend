@@ -12,12 +12,12 @@ export default function reducer(state = {}, action) {
           let secaoContrato = {
             [`processo_administrativo${indiceContrato}`]: contrato.processo,
             [`data_proposta${indiceContrato}`]: contrato.data_proposta,
-            [`numero_contrato${indiceContrato}`]: contrato.numero
+            [`numero_contrato${indiceContrato}`]: contrato.numero,
           };
           contrato.vigencias.forEach((vigencia, indiceVigencia) => {
             secaoContrato[`secaoContrato${indiceVigencia}`] = {
               [`data_inicial${indiceVigencia}`]: vigencia.data_inicial,
-              [`data_final${indiceVigencia}`]: vigencia.data_final
+              [`data_final${indiceVigencia}`]: vigencia.data_final,
             };
           });
           action.data[`secaoEdital${indiceContrato}`] = secaoContrato;
@@ -26,13 +26,13 @@ export default function reducer(state = {}, action) {
 
       return {
         data: {
-          ...action.data
-        }
+          ...action.data,
+        },
       };
     default:
       return state;
   }
 }
 
-export const loadEdital = data => dispatch =>
+export const loadEdital = (data) => (dispatch) =>
   dispatch({ type: LOAD_EDITAL, data });

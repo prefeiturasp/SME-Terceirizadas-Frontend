@@ -9,7 +9,7 @@ import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 export const TIPO_CARD_ENUM = {
   LIMITE: "on-limit",
   REGULAR: "regular",
-  PRIORIDADE: "priority"
+  PRIORIDADE: "priority",
 };
 
 export class CardPendenteAcao extends Component {
@@ -17,7 +17,7 @@ export class CardPendenteAcao extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: this.props.pedidos
+      pedidosFiltrados: this.props.pedidos,
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
   }
@@ -25,7 +25,7 @@ export class CardPendenteAcao extends Component {
   filtrarPedidos(event) {
     if (event === undefined) event = { target: { value: "" } };
     let pedidosFiltrados = this.props.pedidos;
-    pedidosFiltrados = pedidosFiltrados.filter(function(item) {
+    pedidosFiltrados = pedidosFiltrados.filter(function (item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.id_externo.toLowerCase().search(palavraAFiltrar) !== -1 ||
@@ -106,9 +106,7 @@ export class CardPendenteAcao extends Component {
                   return (
                     <Link
                       key={key}
-                      to={`/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${
-                        solicitacao.uuid
-                      }`}
+                      to={`/${SUSPENSAO_ALIMENTACAO}/relatorio?uuid=${solicitacao.uuid}`}
                     >
                       <tr className="row">
                         <td className="col-2">{solicitacao.id_externo}</td>

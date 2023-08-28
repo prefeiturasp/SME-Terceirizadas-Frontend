@@ -2,10 +2,10 @@ import {
   URL_KIT_LANCHES_SOLICITACOES_AVULSA,
   URL_KIT_LANCHES_SOLICITACOES_CEI,
   URL_KIT_LANCHES_SOLICITACOES_CEMEI,
-  TIPO_SOLICITACAO
+  TIPO_SOLICITACAO,
 } from "services/constants";
 
-export const getPath = tipoSolicitacao => {
+export const getPath = (tipoSolicitacao) => {
   switch (tipoSolicitacao) {
     case TIPO_SOLICITACAO.SOLICITACAO_NORMAL:
       return URL_KIT_LANCHES_SOLICITACOES_AVULSA;

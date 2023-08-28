@@ -11,7 +11,7 @@ import {
   setProdutosCount,
   setAtivos,
   setFiltros,
-  setPage
+  setPage,
 } from "reducers/buscaAvancadaProduto";
 
 import { getProdutosListagem } from "services/produto.service";
@@ -36,7 +36,7 @@ const BuscaAvancada = ({
   filtros,
   setFiltros,
   history,
-  reset
+  reset,
 }) => {
   const [carregando, setCarregando] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
@@ -48,7 +48,7 @@ const BuscaAvancada = ({
     const params = gerarParametrosConsulta({
       ...filtros,
       page: page,
-      page_size: PAGE_SIZE
+      page_size: PAGE_SIZE,
     });
     const response = await getProdutosListagem(params);
     setProdutos(ordenaProdutos(response.data.results));
@@ -93,7 +93,7 @@ const BuscaAvancada = ({
                 current={page || 1}
                 total={produtosCount}
                 showSizeChanger={false}
-                onChange={page => {
+                onChange={(page) => {
                   setPage(page);
                 }}
                 pageSize={PAGE_SIZE}
@@ -106,17 +106,17 @@ const BuscaAvancada = ({
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     ativos: state.buscaAvancadaProduto.ativos,
     filtros: state.buscaAvancadaProduto.filtros,
     produtos: state.buscaAvancadaProduto.produtos,
     produtosCount: state.buscaAvancadaProduto.produtosCount,
-    page: state.buscaAvancadaProduto.page
+    page: state.buscaAvancadaProduto.page,
   };
 };
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setAtivos,
@@ -124,14 +124,11 @@ const mapDispatchToProps = dispatch =>
       setPage,
       setProdutos,
       setProdutosCount,
-      reset
+      reset,
     },
     dispatch
   );
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(BuscaAvancada)
+  connect(mapStateToProps, mapDispatchToProps)(BuscaAvancada)
 );

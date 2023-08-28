@@ -5,7 +5,7 @@ export const prepararPayloadCronograma = (cronograma, values, etapas) => {
   return {
     cronograma: cronograma.uuid,
     etapas: etapasPayload,
-    justificativa: values.justificativa
+    justificativa: values.justificativa,
   };
 };
 
@@ -20,7 +20,7 @@ export const prepararPayloadAnaliseCronograma = (
   return {
     programacoes_de_recebimento: recebimentosPayload,
     etapas: etapasPayload,
-    justificativa_cronograma: justificativa["justificativa_cronograma"]
+    justificativa_cronograma: justificativa["justificativa_cronograma"],
   };
 };
 
@@ -37,7 +37,7 @@ export const prepararPayloadEtapas = (values, etapas) => {
         )
       : undefined,
     quantidade: values[`quantidade_${index}`],
-    total_embalagens: values[`total_embalagens_${index}`]
+    total_embalagens: values[`total_embalagens_${index}`],
   }));
 
   return etapasPayload;
@@ -48,7 +48,7 @@ export const prepararPayloadRecebimentos = (values, recebimentos) => {
 
   recebimentosPayload = recebimentos.map((etapa, index) => ({
     data_programada: values[`data_recebimento_${index}`],
-    tipo_carga: values[`tipo_recebimento_${index}`]
+    tipo_carga: values[`tipo_recebimento_${index}`],
   }));
 
   return recebimentosPayload;
@@ -56,7 +56,7 @@ export const prepararPayloadRecebimentos = (values, recebimentos) => {
 
 export const calculaRestante = (values, cronograma) => {
   let resto = cronograma.qtd_total_programada;
-  cronograma.etapas.forEach(etapa => {
+  cronograma.etapas.forEach((etapa) => {
     if (values[`quantidade_total_${etapa.uuid}`])
       resto -= values[`quantidade_total_${etapa.uuid}`];
   });
