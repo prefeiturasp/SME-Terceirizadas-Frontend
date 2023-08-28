@@ -3,7 +3,7 @@ import { formataMesNome } from "helpers/utilities";
 import "./style.scss";
 
 export const HistoricoCorrecaoSolicitada = ({ ...props }) => {
-  const { solicitacao, historico, retornaIniciais } = props;
+  const { solicitacao, historico, retornaIniciais, formatarTitulo } = props;
 
   return (
     <Fragment>
@@ -24,6 +24,11 @@ export const HistoricoCorrecaoSolicitada = ({ ...props }) => {
       </div>
       <hr />
       <div className="row mb-3">
+        <div className="col-12 mb-3">
+          <label className="cor-texo-detalhes">
+            <b>Status</b>: {formatarTitulo(historico.acao)}
+          </label>
+        </div>
         <div className="col-12 mb-3">
           <label className="cor-texo-detalhes">
             <b>Mês de Lançamento</b>: {formataMesNome(solicitacao.mes)}/

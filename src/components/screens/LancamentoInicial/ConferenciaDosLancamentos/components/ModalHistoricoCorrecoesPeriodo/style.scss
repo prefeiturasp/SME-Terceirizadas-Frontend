@@ -45,7 +45,7 @@
 .detalhes-historico {
   border: 1px solid #0c6b45;
   border-radius: 5px;
-  height: 550px;
+  height: 450px;
   overflow: auto;
 }
 
@@ -75,4 +75,12 @@
 
 .borda-lateral {
   border-right: 1px solid rgb(218, 218, 218);
+}
+
+table {
+  font-size: 12px;
+
+  p {
+    font-size: 12px !important;
+  }
 }
