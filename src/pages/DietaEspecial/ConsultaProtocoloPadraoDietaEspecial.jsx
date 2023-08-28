@@ -8,12 +8,12 @@ import Page from "components/Shareable/Page/Page";
 import ConsultaCadastroProtocoloPadraoDieta from "components/screens/DietaEspecial/ConsultaProtocoloPadraoDieta";
 import {
   DIETA_ESPECIAL,
-  CONSULTA_PROTOCOLO_PADRAO_DIETA
+  CONSULTA_PROTOCOLO_PADRAO_DIETA,
 } from "configs/constants";
 
 const atual = {
   href: `/${DIETA_ESPECIAL}/${CONSULTA_PROTOCOLO_PADRAO_DIETA}`,
-  titulo: "Consultar Protocolo Padrão"
+  titulo: "Consultar Protocolo Padrão",
 };
 
 export default () => (

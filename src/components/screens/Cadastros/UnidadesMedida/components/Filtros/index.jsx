@@ -5,7 +5,7 @@ import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
@@ -13,7 +13,7 @@ import { NavLink } from "react-router-dom";
 import {
   CADASTROS,
   CONFIGURACOES,
-  CADASTRO_UNIDADE_MEDIDA
+  CADASTRO_UNIDADE_MEDIDA,
 } from "configs/constants";
 import { getListaFiltradaAutoComplete } from "helpers/autoComplete";
 
@@ -24,9 +24,9 @@ export default ({
   nomesUnidadesMedida,
   abreviacoesUnidadesMedida,
   setUnidadesMedida,
-  setTotal
+  setTotal,
 }) => {
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };

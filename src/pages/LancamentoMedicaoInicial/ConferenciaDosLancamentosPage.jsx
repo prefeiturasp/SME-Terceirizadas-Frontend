@@ -9,24 +9,24 @@ import { ConferenciaDosLancamentos } from "components/screens/LancamentoInicial/
 import {
   ACOMPANHAMENTO_DE_LANCAMENTOS,
   CONFERENCIA_DOS_LANCAMENTOS,
-  MEDICAO_INICIAL
+  MEDICAO_INICIAL,
 } from "configs/constants";
 import { usuarioEhMedicao } from "helpers/utilities";
 
 const atual = {
   href: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
-  titulo: "Conferência dos Lançamentos"
+  titulo: "Conferência dos Lançamentos",
 };
 
 const anteriores = [
   {
     href: `/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`,
-    titulo: "Medição Inicial"
+    titulo: "Medição Inicial",
   },
   usuarioEhMedicao() && {
     href: `/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`,
-    titulo: "Acompanhamento de Lançamentos"
-  }
+    titulo: "Acompanhamento de Lançamentos",
+  },
 ];
 
 export default () => (

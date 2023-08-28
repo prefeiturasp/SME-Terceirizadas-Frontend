@@ -14,9 +14,9 @@ describe("Teste corrigeLinkAnexo", () => {
     const url = "https://localhost";
     Object.defineProperty(window, "location", {
       value: {
-        href: url
+        href: url,
       },
-      writable: true
+      writable: true,
     });
     expect(corrigeLinkAnexo(urlHttp)).toBe(urlHttps);
   });

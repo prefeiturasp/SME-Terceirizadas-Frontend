@@ -18,14 +18,14 @@ export const onChangeEtapas = (changes, etapas, setRestante, setDuplicados) => {
     partes_etapas.push({
       parte: changes.values[`parte_${i}`],
       etapa: changes.values[`etapa_${i}`],
-      index: i
+      index: i,
     });
   });
   const duplicados = [];
-  partes_etapas.forEach(pe => {
+  partes_etapas.forEach((pe) => {
     if (
       partes_etapas.filter(
-        pe_ => pe_.parte === pe.parte && pe_.etapa === pe.etapa
+        (pe_) => pe_.parte === pe.parte && pe_.etapa === pe.etapa
       ).length > 1
     ) {
       duplicados.push(pe.index);

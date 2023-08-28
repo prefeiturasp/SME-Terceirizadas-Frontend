@@ -15,13 +15,13 @@ import {
   setProdutos,
   setIndiceProdutoAtivo,
   setProdutosCount,
-  setPage
+  setPage,
 } from "reducers/avaliarReclamacaoProduto";
 
 import {
   getProdutosAvaliacaoReclamacao,
   getHomologacao,
-  getNomesTerceirizadas
+  getNomesTerceirizadas,
 } from "services/produto.service";
 import "./style.scss";
 import { Paginacao } from "components/Shareable/Paginacao";
@@ -37,7 +37,7 @@ export const AvaliarReclamacaoProduto = ({
   page,
   setPage,
   indiceProdutoAtivo,
-  setIndiceProdutoAtivo
+  setIndiceProdutoAtivo,
 }) => {
   const [loading, setLoading] = useState(true);
   const [erroNaAPI, setErroNaAPI] = useState(false);
@@ -52,9 +52,9 @@ export const AvaliarReclamacaoProduto = ({
       const params = gerarParametrosConsulta({
         ...formatarValues(values_),
         page_size: PAGE_SIZE,
-        page: page
+        page: page,
       });
-      getProdutosAvaliacaoReclamacao(params).then(response => {
+      getProdutosAvaliacaoReclamacao(params).then((response) => {
         setProdutos(response.data.results);
         setProdutosCount(response.data.count);
         setLoading(false);
@@ -72,7 +72,7 @@ export const AvaliarReclamacaoProduto = ({
     }
     if (uuid) {
       getHomologacao(uuid)
-        .then(response => {
+        .then((response) => {
           setLoading(false);
           setPropsPageProduto(response.data.produto);
           setProdutos([response.data.produto]);
@@ -85,12 +85,12 @@ export const AvaliarReclamacaoProduto = ({
     } else {
       setLoading(false);
     }
-    getNomesTerceirizadas().then(response => {
+    getNomesTerceirizadas().then((response) => {
       setTerceirizadas(response.data.results);
     });
   }, []);
 
-  const onSubmit = values => {
+  const onSubmit = (values) => {
     setLoading(true);
     setFormValues(deepCopy(values));
     setPage(page ? page : 1);
@@ -129,7 +129,7 @@ export const AvaliarReclamacaoProduto = ({
                     current={page || 1}
                     total={produtosCount}
                     showSizeChanger={false}
-                    onChange={page => {
+                    onChange={(page) => {
                       setPage(page);
                     }}
                     pageSize={PAGE_SIZE}
@@ -149,30 +149,27 @@ export const AvaliarReclamacaoProduto = ({
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     indiceProdutoAtivo: state.avaliarReclamacaoProduto.indiceProdutoAtivo,
     produtos: state.avaliarReclamacaoProduto.produtos,
     produtosCount: state.avaliarReclamacaoProduto.produtosCount,
-    page: state.avaliarReclamacaoProduto.page
+    page: state.avaliarReclamacaoProduto.page,
   };
 };
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setIndiceProdutoAtivo,
       setProdutos,
       setProdutosCount,
       setPage,
-      reset
+      reset,
     },
     dispatch
   );
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(AvaliarReclamacaoProduto)
+  connect(mapStateToProps, mapDispatchToProps)(AvaliarReclamacaoProduto)
 );

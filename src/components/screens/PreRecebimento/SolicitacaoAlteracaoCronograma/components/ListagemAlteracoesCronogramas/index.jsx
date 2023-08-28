@@ -7,7 +7,7 @@ import { deParaStatusAltCronograma } from "components/screens/helper";
 
 const ListagemAlteracoesCronogramas = ({
   alteracoesCronogramas,
-  fornecedor
+  fornecedor,
 }) => {
   return (
     <section className="resultado-cronograma-de-entrega">
@@ -45,9 +45,7 @@ const ListagemAlteracoesCronogramas = ({
                 <div>
                   <NavLink
                     className="float-left"
-                    to={`/${constants.PRE_RECEBIMENTO}/${
-                      constants.DETALHAR_ALTERACAO_CRONOGRAMA
-                    }?uuid=${alteracaoCronograma.uuid}`}
+                    to={`/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${alteracaoCronograma.uuid}`}
                   >
                     <span className="link-acoes green">Detalhar</span>
                   </NavLink>

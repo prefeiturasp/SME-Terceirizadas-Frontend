@@ -6,7 +6,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
   const [showDetail, setShowDetail] = useState(false);
 
   const total_CEI = solicitacao.solicitacao_cei
-    ? solicitacao.solicitacao_cei.faixas_quantidades.reduce(function(acc, v) {
+    ? solicitacao.solicitacao_cei.faixas_quantidades.reduce(function (acc, v) {
         return acc + (v.quantidade || v.quantidade_alunos);
       }, 0)
     : 0;
@@ -15,7 +15,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
     : 0;
 
   const total_matriculados_CEI = solicitacao.solicitacao_cei
-    ? solicitacao.solicitacao_cei.faixas_quantidades.reduce(function(acc, v) {
+    ? solicitacao.solicitacao_cei.faixas_quantidades.reduce(function (acc, v) {
         return acc + v.matriculados_quando_criado || 0;
       }, 0)
     : 0;
@@ -118,7 +118,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
                         Opção desejada:{" "}
                         <b>
                           {solicitacao.solicitacao_cei.kits
-                            .map(kit => kit.nome)
+                            .map((kit) => kit.nome)
                             .join(", ")}
                         </b>
                       </p>
@@ -202,7 +202,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
                           Opção desejada:{" "}
                           <b>
                             {solicitacao.solicitacao_emei.kits
-                              .map(kit => kit.nome)
+                              .map((kit) => kit.nome)
                               .join(", ")}
                           </b>
                         </p>
@@ -239,7 +239,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
                     <p
                       className="observacao-negrito"
                       dangerouslySetInnerHTML={{
-                        __html: solicitacao.observacao
+                        __html: solicitacao.observacao,
                       }}
                     />
                   </b>
@@ -249,6 +249,6 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

@@ -5,19 +5,19 @@ import Page from "../../components/Shareable/Page/Page";
 import {
   CADASTROS,
   CONFIGURACOES,
-  SOBREMESA_DOCE
+  SOBREMESA_DOCE,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`,
-  titulo: "Cadastro de Sobremesa Doce"
+  titulo: "Cadastro de Sobremesa Doce",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
-  }
+    titulo: "Cadastros",
+  },
 ];
 
 export const CadastroSobremesaDocePage = () => {

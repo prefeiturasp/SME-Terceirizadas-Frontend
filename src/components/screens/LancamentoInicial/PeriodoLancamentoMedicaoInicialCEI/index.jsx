@@ -13,7 +13,7 @@ import {
   isSunday,
   lastDayOfMonth,
   startOfMonth,
-  subDays
+  subDays,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Spin, Tabs } from "antd";
@@ -24,12 +24,12 @@ import Botao from "components/Shareable/Botao";
 import {
   toastError,
   toastSuccess,
-  toastWarn
+  toastWarn,
 } from "components/Shareable/Toast/dialogs";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
 import ModalErro from "./components/ModalErro";
@@ -42,7 +42,7 @@ import {
   botaoAdicionarObrigatorioTabelaAlimentacao,
   validacoesTabelaAlimentacaoCEI,
   validacoesTabelasDietasCEI,
-  validarFormulario
+  validarFormulario,
 } from "./validacoes";
 import {
   desabilitarBotaoColunaObservacoes,
@@ -50,7 +50,7 @@ import {
   deveExistirObservacao,
   formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
-  textoBotaoObservacao
+  textoBotaoObservacao,
 } from "./helper";
 import {
   getCategoriasDeMedicao,
@@ -60,7 +60,7 @@ import {
   updateValoresPeriodosLancamentos,
   getFeriadosNoMes,
   getLogMatriculadosPorFaixaEtariaDia,
-  getLogDietasAutorizadasCEIPeriodo
+  getLogDietasAutorizadasCEIPeriodo,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import * as perfilService from "services/perfil.service";
 import { escolaCorrigeMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
@@ -75,7 +75,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     { position: 3, dia: "02" },
     { position: 4, dia: "03" },
     { position: 5, dia: "04" },
-    { position: 6, dia: "05" }
+    { position: 6, dia: "05" },
   ];
 
   const [dadosIniciais, setDadosIniciais] = useState(null);
@@ -88,48 +88,40 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState([]);
   const [
     valoresMatriculadosFaixaEtariaDia,
-    setValoresMatriculadosFaixaEtariaDia
+    setValoresMatriculadosFaixaEtariaDia,
   ] = useState([]);
   const [logQtdDietasAutorizadasCEI, setLogQtdDietasAutorizadasCEI] = useState(
     []
   );
   const [
     dadosValoresInclusoesAutorizadasState,
-    setDadosValoresInclusoesAutorizadasState
+    setDadosValoresInclusoesAutorizadasState,
   ] = useState(null);
   const [valoresPeriodosLancamentos, setValoresPeriodosLancamentos] = useState(
     []
   );
-  const [calendarioMesConsiderado, setCalendarioMesConsiderado] = useState(
-    null
-  );
+  const [calendarioMesConsiderado, setCalendarioMesConsiderado] =
+    useState(null);
   const [feriadosNoMes, setFeriadosNoMes] = useState(null);
-  const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] = useState(
-    false
-  );
-  const [showModalSalvarCorrecoes, setShowModalSalvarCorrecoes] = useState(
-    false
-  );
+  const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] =
+    useState(false);
+  const [showModalSalvarCorrecoes, setShowModalSalvarCorrecoes] =
+    useState(false);
   const [
     showModalVoltarPeriodoLancamento,
-    setShowModalVoltarPeriodoLancamento
+    setShowModalVoltarPeriodoLancamento,
   ] = useState(false);
-  const [
-    disableBotaoSalvarLancamentos,
-    setDisableBotaoSalvarLancamentos
-  ] = useState(true);
+  const [disableBotaoSalvarLancamentos, setDisableBotaoSalvarLancamentos] =
+    useState(true);
   const [exibirTooltip, setExibirTooltip] = useState(false);
   const [showDiaObservacaoDiaria, setDiaObservacaoDiaria] = useState(null);
-  const [
-    showCategoriaObservacaoDiaria,
-    setCategoriaObservacaoDiaria
-  ] = useState(null);
+  const [showCategoriaObservacaoDiaria, setCategoriaObservacaoDiaria] =
+    useState(null);
   const [loading, setLoading] = useState(true);
   const [formValuesAtualizados, setFormValuesAtualizados] = useState(null);
   const [diasDaSemanaSelecionada, setDiasDaSemanaSelecionada] = useState(null);
-  const [ultimaAtualizacaoMedicao, setUltimaAtualizacaoMedicao] = useState(
-    null
-  );
+  const [ultimaAtualizacaoMedicao, setUltimaAtualizacaoMedicao] =
+    useState(null);
   const [showModalErro, setShowModalErro] = useState(false);
   const [valoresObservacoes, setValoresObservacoes] = useState([]);
   const [periodoGrupo, setPeriodoGrupo] = useState(null);
@@ -148,7 +140,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         : new Date(location.state.mesAnoSelecionado)
       : mesAnoDefault;
     const mesString = format(mesAnoSelecionado, "LLLL", {
-      locale: ptBR
+      locale: ptBR,
     }).toString();
     const mesAnoFormatado =
       mesString.charAt(0).toUpperCase() +
@@ -183,30 +175,31 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         escola_uuid: escola.uuid,
         nome_periodo_escolar: periodo,
         mes: mes,
-        ano: ano
+        ano: ano,
       };
-      response_log_matriculados_por_faixa_etaria_dia = await getLogMatriculadosPorFaixaEtariaDia(
-        params_matriculados_por_faixa_etaria_dia
-      );
+      response_log_matriculados_por_faixa_etaria_dia =
+        await getLogMatriculadosPorFaixaEtariaDia(
+          params_matriculados_por_faixa_etaria_dia
+        );
       setValoresMatriculadosFaixaEtariaDia(
         response_log_matriculados_por_faixa_etaria_dia.data
       );
 
-      response_log_matriculados_por_faixa_etaria_dia.data.forEach(log => {
+      response_log_matriculados_por_faixa_etaria_dia.data.forEach((log) => {
         !faixas_etarias_alimentacao.find(
-          faixa => faixa === log.faixa_etaria.__str__
+          (faixa) => faixa === log.faixa_etaria.__str__
         ) && faixas_etarias_alimentacao.push(log.faixa_etaria.__str__);
       });
 
-      faixas_etarias_alimentacao.forEach(faixa => {
+      faixas_etarias_alimentacao.forEach((faixa) => {
         const log = response_log_matriculados_por_faixa_etaria_dia.data.find(
-          log => log.faixa_etaria.__str__ === faixa
+          (log) => log.faixa_etaria.__str__ === faixa
         );
         log &&
           faixas_etarias_objs_alimentacao.push({
             inicio: log.faixa_etaria.inicio,
             __str__: log.faixa_etaria.__str__,
-            uuid: log.faixa_etaria.uuid
+            uuid: log.faixa_etaria.uuid,
           });
       });
 
@@ -214,19 +207,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
       faixas_etarias_objs_alimentacao
         .sort((a, b) => a.inicio - b.inicio)
-        .forEach(faixa_obj => {
+        .forEach((faixa_obj) => {
           linhasTabelaAlimentacaoCEI.push(
             {
               nome: "Matriculados",
               name: "matriculados",
               uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__
+              faixa_etaria: faixa_obj.__str__,
             },
             {
               nome: "Frequência",
               name: "frequencia",
               uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__
+              faixa_etaria: faixa_obj.__str__,
             }
           );
         });
@@ -234,7 +227,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         nome: "Observações",
         name: "observacoes",
         uuid: null,
-        faixa_etaria: null
+        faixa_etaria: null,
       });
 
       setTabelaAlimentacaoCEIRows(linhasTabelaAlimentacaoCEI);
@@ -243,28 +236,27 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         escola_uuid: escola.uuid,
         nome_periodo_escolar: periodo,
         mes: mes,
-        ano: ano
+        ano: ano,
       };
-      response_log_dietas_autorizadas_cei = await getLogDietasAutorizadasCEIPeriodo(
-        params_dietas_autorizadas_cei
-      );
+      response_log_dietas_autorizadas_cei =
+        await getLogDietasAutorizadasCEIPeriodo(params_dietas_autorizadas_cei);
       setLogQtdDietasAutorizadasCEI(response_log_dietas_autorizadas_cei.data);
 
-      response_log_dietas_autorizadas_cei.data.forEach(log => {
+      response_log_dietas_autorizadas_cei.data.forEach((log) => {
         !faixas_etarias_dieta.find(
-          faixa => faixa === log.faixa_etaria.__str__
+          (faixa) => faixa === log.faixa_etaria.__str__
         ) && faixas_etarias_dieta.push(log.faixa_etaria.__str__);
       });
 
-      faixas_etarias_dieta.forEach(faixa => {
+      faixas_etarias_dieta.forEach((faixa) => {
         const log = response_log_dietas_autorizadas_cei.data.find(
-          log => log.faixa_etaria.__str__ === faixa
+          (log) => log.faixa_etaria.__str__ === faixa
         );
         log &&
           faixas_etarias_objs_dieta.push({
             inicio: log.faixa_etaria.inicio,
             __str__: log.faixa_etaria.__str__,
-            uuid: log.faixa_etaria.uuid
+            uuid: log.faixa_etaria.uuid,
           });
       });
 
@@ -272,19 +264,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
       faixas_etarias_objs_dieta
         .sort((a, b) => a.inicio - b.inicio)
-        .forEach(faixa_obj => {
+        .forEach((faixa_obj) => {
           linhasTabelaDietasCEI.push(
             {
               nome: "Dietas Autorizadas",
               name: "dietas_autorizadas",
               uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__
+              faixa_etaria: faixa_obj.__str__,
             },
             {
               nome: "Frequência",
               name: "frequencia",
               uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__
+              faixa_etaria: faixa_obj.__str__,
             }
           );
         });
@@ -292,13 +284,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         nome: "Observações",
         name: "observacoes",
         uuid: null,
-        faixa_etaria: null
+        faixa_etaria: null,
       });
 
       setTabelaDietaCEIRows(linhasTabelaDietasCEI);
 
       response_categorias_medicao = response_categorias_medicao.data.filter(
-        categoria => {
+        (categoria) => {
           return (
             !categoria.nome.includes("SOLICITAÇÕES") &&
             !categoria.nome.includes("ENTERAL")
@@ -309,11 +301,11 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
       let params = {
         uuid_solicitacao_medicao: uuid,
-        nome_grupo: location.state.grupo
+        nome_grupo: location.state.grupo,
       };
       params = {
         ...params,
-        nome_periodo_escolar: periodo
+        nome_periodo_escolar: periodo,
       };
       const response_valores_periodos = await getValoresPeriodosLancamentos(
         params
@@ -323,7 +315,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       const params_dias_calendario = {
         escola_uuid: escola.uuid,
         mes: mes,
-        ano: ano
+        ano: ano,
       };
       const response_dias_calendario = await getDiasCalendario(
         params_dias_calendario
@@ -332,7 +324,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
       const params_feriados_no_mes = {
         mes: mes,
-        ano: ano
+        ano: ano,
       };
       const response_feriados_no_mes = await getFeriadosNoMes(
         params_feriados_no_mes
@@ -356,11 +348,11 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           ? getWeeksInMonth(mesAnoSelecionado) - 1
           : getDay(startOfMonth(mesAnoSelecionado)) === 0
           ? getWeeksInMonth(mesAnoSelecionado) + 1
-          : getWeeksInMonth(mesAnoSelecionado)
+          : getWeeksInMonth(mesAnoSelecionado),
       }).map((e, i) =>
         items.push({
           key: `${i + 1}`,
-          label: `Semana ${i + 1}`
+          label: `Semana ${i + 1}`,
         })
       );
       setTabItems(items);
@@ -400,14 +392,14 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     const dadosMesPeriodo = {
       mes_lancamento: mesAnoFormatado,
       periodo_escolar: periodoEscolar,
-      justificativa_periodo: justificativaPeriodo
+      justificativa_periodo: justificativaPeriodo,
     };
     let dadosValoresInclusoesAutorizadas = {};
 
     setDadosValoresInclusoesAutorizadasState(dadosValoresInclusoesAutorizadas);
 
     categoriasMedicao &&
-      categoriasMedicao.forEach(categoria => {
+      categoriasMedicao.forEach((categoria) => {
         let diasSemana = [];
         let diaDaSemanaNumerico = getDay(startOfMonth(mesAno)); // 0 representa Domingo
 
@@ -445,22 +437,20 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         }
 
         logQtdDietasAutorizadasCEI &&
-          logQtdDietasAutorizadasCEI.forEach(log => {
+          logQtdDietasAutorizadasCEI.forEach((log) => {
             categoria.nome.includes("TIPO B") &&
               log.classificacao.toUpperCase().includes("TIPO B") &&
               (dadosValoresDietasAutorizadas[
-                `dietas_autorizadas__faixa_${log.faixa_etaria.uuid}__dia_${
-                  log.dia
-                }__categoria_${categoria.id}`
+                `dietas_autorizadas__faixa_${log.faixa_etaria.uuid}__dia_${log.dia}__categoria_${categoria.id}`
               ] = `${log.quantidade}`);
           });
 
         tabelaAlimentacaoCEIRows &&
           tabelaDietaCEIRows &&
           [tabelaAlimentacaoCEIRows, tabelaDietaCEIRows].forEach(
-            each =>
+            (each) =>
               each &&
-              each.forEach(row => {
+              each.forEach((row) => {
                 for (let i = 1; i <= 31; i++) {
                   const dia =
                     String(i).length === 1 ? "0" + String(i) : String(i);
@@ -469,22 +459,22 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                   if (categoria.nome === "DIETA ESPECIAL - TIPO A") {
                     logQtdDietasAutorizadasCEI &&
                       logQtdDietasAutorizadasCEI.forEach(
-                        log =>
+                        (log) =>
                           !uuidFaixasDietas.find(
-                            faixa => faixa === log.faixa_etaria.uuid
+                            (faixa) => faixa === log.faixa_etaria.uuid
                           ) && uuidFaixasDietas.push(log.faixa_etaria.uuid)
                       );
                     logQtdDietasAutorizadasCEI &&
-                      uuidFaixasDietas.forEach(faixa => {
+                      uuidFaixasDietas.forEach((faixa) => {
                         const logsFiltrados = logQtdDietasAutorizadasCEI.filter(
-                          log =>
+                          (log) =>
                             log.classificacao
                               .toUpperCase()
                               .includes("TIPO A") &&
                             log.dia === dia &&
                             log.faixa_etaria.uuid === faixa
                         );
-                        const qtdDietasTipoA = logsFiltrados.reduce(function(
+                        const qtdDietasTipoA = logsFiltrados.reduce(function (
                           acc,
                           log
                         ) {
@@ -493,9 +483,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                         0);
                         logsFiltrados.length &&
                           (dadosValoresDietasAutorizadas[
-                            `dietas_autorizadas__faixa_${faixa}__dia_${dia}__categoria_${
-                              categoria.id
-                            }`
+                            `dietas_autorizadas__faixa_${faixa}__dia_${dia}__categoria_${categoria.id}`
                           ] = `${qtdDietasTipoA}`);
                       });
                   }
@@ -506,9 +494,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                   ) {
                     result = "Mês anterior";
                     dadosValoresForaDoMes[
-                      `${row.name}__faixa_${row.uuid}__dia_${dia}__categoria_${
-                        categoria.id
-                      }`
+                      `${row.name}__faixa_${row.uuid}__dia_${dia}__categoria_${categoria.id}`
                     ] = result;
                   }
                   if (
@@ -518,9 +504,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                   ) {
                     result = "Mês posterior";
                     dadosValoresForaDoMes[
-                      `${row.name}__faixa_${row.uuid}__dia_${dia}__categoria_${
-                        categoria.id
-                      }`
+                      `${row.name}__faixa_${row.uuid}__dia_${dia}__categoria_${categoria.id}`
                     ] = result;
                   }
                 }
@@ -528,20 +512,14 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           );
 
         valoresMedicao &&
-          valoresMedicao.forEach(valor_medicao => {
+          valoresMedicao.forEach((valor_medicao) => {
             if (valor_medicao.nome_campo === "observacoes") {
               dadosValoresMedicoes[
-                `${valor_medicao.nome_campo}__dia_${
-                  valor_medicao.dia
-                }__categoria_${valor_medicao.categoria_medicao}`
+                `${valor_medicao.nome_campo}__dia_${valor_medicao.dia}__categoria_${valor_medicao.categoria_medicao}`
               ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
             } else {
               dadosValoresMedicoes[
-                `${valor_medicao.nome_campo}__faixa_${
-                  valor_medicao.faixa_etaria
-                }__dia_${valor_medicao.dia}__categoria_${
-                  valor_medicao.categoria_medicao
-                }`
+                `${valor_medicao.nome_campo}__faixa_${valor_medicao.faixa_etaria}__dia_${valor_medicao.dia}__categoria_${valor_medicao.categoria_medicao}`
               ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
             }
           });
@@ -549,19 +527,17 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
     const idCategoriaAlimentacao =
       categoriasMedicao.length &&
-      categoriasMedicao.find(categoria =>
+      categoriasMedicao.find((categoria) =>
         categoria.nome.includes("ALIMENTAÇÃO")
       ).id;
 
     matriculadosFaixaEtariaDia &&
       idCategoriaAlimentacao &&
-      matriculadosFaixaEtariaDia.forEach(objMatriculado => {
+      matriculadosFaixaEtariaDia.forEach((objMatriculado) => {
         const dietasMesmoDia = Object.fromEntries(
           Object.entries(dadosValoresDietasAutorizadas).filter(([key]) =>
             key.includes(
-              `dietas_autorizadas__faixa_${
-                objMatriculado.faixa_etaria.uuid
-              }__dia_${objMatriculado.dia}`
+              `dietas_autorizadas__faixa_${objMatriculado.faixa_etaria.uuid}__dia_${objMatriculado.dia}`
             )
           )
         );
@@ -572,9 +548,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           0
         );
         dadosValoresMatriculadosFaixaEtariaDia[
-          `matriculados__faixa_${objMatriculado.faixa_etaria.uuid}__dia_${
-            objMatriculado.dia
-          }__categoria_${idCategoriaAlimentacao}`
+          `matriculados__faixa_${objMatriculado.faixa_etaria.uuid}__dia_${objMatriculado.dia}__categoria_${idCategoriaAlimentacao}`
         ] = objMatriculado.quantidade
           ? `${objMatriculado.quantidade - somaDietasMesmoDia}`
           : null;
@@ -590,7 +564,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       ...dadosValoresMatriculadosFaixaEtariaDia,
       ...dadosValoresDietasAutorizadas,
       ...dadosValoresForaDoMes,
-      semanaSelecionada
+      semanaSelecionada,
     });
     setLoading(false);
   };
@@ -622,8 +596,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           )
         );
       }
-      setDiasDaSemanaSelecionada(diasSemana.filter(dia => Number(dia) < 20));
-      week = weekColumns.map(column => {
+      setDiasDaSemanaSelecionada(diasSemana.filter((dia) => Number(dia) < 20));
+      week = weekColumns.map((column) => {
         return { ...column, dia: diasSemana[column["position"]] };
       });
       setWeekColumns(week);
@@ -643,11 +617,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         );
       }
       if ([4, 5, 6].includes(Number(semanaSelecionada))) {
-        setDiasDaSemanaSelecionada(diasSemana.filter(dia => Number(dia) > 10));
+        setDiasDaSemanaSelecionada(
+          diasSemana.filter((dia) => Number(dia) > 10)
+        );
       } else {
         setDiasDaSemanaSelecionada(diasSemana);
       }
-      week = weekColumns.map(column => {
+      week = weekColumns.map((column) => {
         return { ...column, dia: diasSemana[column["position"]] };
       });
       setWeekColumns(week);
@@ -667,14 +643,14 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     semanaSelecionada && formatar();
 
     valoresPeriodosLancamentos.findIndex(
-      valor => valor.nome_campo !== "observacoes"
+      (valor) => valor.nome_campo !== "observacoes"
     ) !== -1 && setDisableBotaoSalvarLancamentos(false);
   }, [
     mesAnoConsiderado,
     semanaSelecionada,
     categoriasDeMedicao,
     tabelaAlimentacaoCEIRows,
-    valoresPeriodosLancamentos
+    valoresPeriodosLancamentos,
   ]);
 
   useEffect(() => {
@@ -694,7 +670,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   }, [
     formValuesAtualizados,
     dadosValoresInclusoesAutorizadasState,
-    disableBotaoSalvarLancamentos
+    disableBotaoSalvarLancamentos,
   ]);
 
   const onSubmitObservacao = async (values, dia, categoria, errors) => {
@@ -741,7 +717,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       );
       return;
     }
-    Object.entries(valuesMesmoDiaDaObservacao).map(v => {
+    Object.entries(valuesMesmoDiaDaObservacao).map((v) => {
       const keySplitted = v[0].split("__");
       const categoria = keySplitted.pop();
       const idCategoria = categoria.match(/\d/g).join("");
@@ -758,7 +734,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         valor: ["<p></p>\n", ""].includes(v[1]) ? 0 : v[1],
         nome_campo: nome_campo,
         categoria_medicao: idCategoria,
-        faixa_etaria: uuid_faixa_etaria
+        faixa_etaria: uuid_faixa_etaria,
       });
     });
 
@@ -769,7 +745,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     const payload = {
       solicitacao_medicao_inicial: solicitacao_medicao_inicial,
       valores_medicao: valoresMedicao,
-      eh_observacao: true
+      eh_observacao: true,
     };
     if (
       values["periodo_escolar"].includes("Solicitações") ||
@@ -804,7 +780,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     }
     setValoresObservacoes(
       valores_medicao_response.filter(
-        valor => valor.nome_campo === "observacoes"
+        (valor) => valor.nome_campo === "observacoes"
       )
     );
     setExibirTooltip(false);
@@ -821,7 +797,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     const uuid = urlParams.get("uuid");
     let valuesClone = deepCopy(values);
     setDadosIniciais(values);
-    const idCategoriaAlimentacao = categoriasDeMedicao.find(categoria =>
+    const idCategoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
       categoria.nome.includes("ALIMENTAÇÃO")
     ).id;
     valuesClone.solicitacao_medicao_inicial = uuid;
@@ -956,16 +932,16 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     return result;
   };
 
-  const validacaoSemana = dia => {
+  const validacaoSemana = (dia) => {
     return (
       (Number(semanaSelecionada) === 1 && Number(dia) > 20) ||
       ([4, 5, 6].includes(Number(semanaSelecionada)) && Number(dia) < 10)
     );
   };
 
-  const validacaoDiaLetivo = dia => {
+  const validacaoDiaLetivo = (dia) => {
     const objDia = calendarioMesConsiderado.find(
-      objDia => Number(objDia.dia) === Number(dia)
+      (objDia) => Number(objDia.dia) === Number(dia)
     );
     const ehDiaLetivo = objDia && objDia.dia_letivo;
     return ehDiaLetivo;
@@ -983,7 +959,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
   let valuesInputArray = [];
 
-  const desabilitaTooltip = values => {
+  const desabilitaTooltip = (values) => {
     const erro = validarFormulario(
       values,
       location,
@@ -1058,35 +1034,31 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     }
   };
 
-  const fieldValidationsTabelasCEI = (
-    rowName,
-    dia,
-    idCategoria,
-    nomeCategoria,
-    uuidFaixaEtaria
-  ) => (value, allValues) => {
-    if (nomeCategoria === "ALIMENTAÇÃO") {
-      return validacoesTabelaAlimentacaoCEI(
-        rowName,
-        dia,
-        idCategoria,
-        allValues,
-        uuidFaixaEtaria
-      );
-    } else if (nomeCategoria.includes("DIETA")) {
-      return validacoesTabelasDietasCEI(
-        rowName,
-        dia,
-        idCategoria,
-        allValues,
-        uuidFaixaEtaria
-      );
-    }
-  };
+  const fieldValidationsTabelasCEI =
+    (rowName, dia, idCategoria, nomeCategoria, uuidFaixaEtaria) =>
+    (value, allValues) => {
+      if (nomeCategoria === "ALIMENTAÇÃO") {
+        return validacoesTabelaAlimentacaoCEI(
+          rowName,
+          dia,
+          idCategoria,
+          allValues,
+          uuidFaixaEtaria
+        );
+      } else if (nomeCategoria.includes("DIETA")) {
+        return validacoesTabelasDietasCEI(
+          rowName,
+          dia,
+          idCategoria,
+          allValues,
+          uuidFaixaEtaria
+        );
+      }
+    };
 
   const classNameFieldTabelaAlimentacao = (row, column, categoria) => {
     if (
-      Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+      Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
         String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
       )
     ) {
@@ -1156,17 +1128,17 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           <Form
             onSubmit={onSubmit}
             mutators={{
-              ...arrayMutators
+              ...arrayMutators,
             }}
             initialValues={dadosIniciais}
             render={({ handleSubmit, form, errors }) => (
               <form onSubmit={handleSubmit}>
                 <FormSpy
                   subscription={{ values: true, active: true }}
-                  onChange={changes =>
+                  onChange={(changes) =>
                     setFormValuesAtualizados({
                       week: semanaSelecionada,
-                      ...changes.values
+                      ...changes.values,
                     })
                   }
                 />
@@ -1238,9 +1210,11 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                       </div>
                     )}
                     <div
-                      className={`row pb-2 pt-4 ${!(
-                        location.state && location.state.justificativa_periodo
-                      ) && "mt-legenda"}`}
+                      className={`row pb-2 pt-4 ${
+                        !(
+                          location.state && location.state.justificativa_periodo
+                        ) && "mt-legenda"
+                      }`}
                     >
                       <div className="col">
                         <b className="section-title">
@@ -1251,7 +1225,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                     <div className="weeks-tabs mb-2">
                       <Tabs
                         activeKey={semanaSelecionada}
-                        onChange={key => {
+                        onChange={(key) => {
                           calendarioMesConsiderado &&
                             feriadosNoMes &&
                             onChangeSemana(formValuesAtualizados, key);
@@ -1267,7 +1241,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                     </div>
                     {categoriasDeMedicao.length > 0 &&
                       !loading &&
-                      categoriasDeMedicao.map(categoria => (
+                      categoriasDeMedicao.map((categoria) => (
                         <div key={categoria.uuid}>
                           <b className="pb-2 section-title">{categoria.nome}</b>
                           <section className="tabela-tipos-alimentacao">
@@ -1278,7 +1252,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                 }
                               >
                                 <div />
-                                {weekColumns.map(column => (
+                                {weekColumns.map((column) => (
                                   <div key={column.dia}>{column.dia}</div>
                                 ))}
                               </div>
@@ -1312,8 +1286,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                       >
                                         <div className="linha-cei">
                                           <b
-                                            className={`nome-linha-cei pl-2 ${row.name ===
-                                              "observacoes" && "mt-2"}`}
+                                            className={`nome-linha-cei pl-2 ${
+                                              row.name === "observacoes" &&
+                                              "mt-2"
+                                            }`}
                                           >
                                             {row.nome}
                                           </b>
@@ -1323,7 +1299,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                             </b>
                                           )}
                                         </div>
-                                        {weekColumns.map(column => (
+                                        {weekColumns.map((column) => (
                                           <div
                                             key={column.dia}
                                             className={`${
@@ -1339,11 +1315,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                 <Botao
                                                   texto={textoBotaoObservacao(
                                                     formValuesAtualizados[
-                                                      `${row.name}__dia_${
-                                                        column.dia
-                                                      }__categoria_${
-                                                        categoria.id
-                                                      }`
+                                                      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
                                                     ],
                                                     valoresObservacoes,
                                                     column.dia,
@@ -1364,11 +1336,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                     botaoAdicionarObrigatorioTabelaAlimentacao()
                                                       ? textoBotaoObservacao(
                                                           formValuesAtualizados[
-                                                            `${row.name}__dia_${
-                                                              column.dia
-                                                            }__categoria_${
-                                                              categoria.id
-                                                            }`
+                                                            `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
                                                           ],
                                                           valoresObservacoes,
                                                           column.dia,
@@ -1378,11 +1346,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                         : BUTTON_STYLE.RED_OUTLINE
                                                       : textoBotaoObservacao(
                                                           formValuesAtualizados[
-                                                            `${row.name}__dia_${
-                                                              column.dia
-                                                            }__categoria_${
-                                                              categoria.id
-                                                            }`
+                                                            `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
                                                           ],
                                                           valoresObservacoes,
                                                           column.dia,
@@ -1421,11 +1385,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                     index
                                                   )}
                                                   apenasNumeros
-                                                  name={`${row.name}__faixa_${
-                                                    row.uuid
-                                                  }__dia_${
-                                                    column.dia
-                                                  }__categoria_${categoria.id}`}
+                                                  name={`${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`}
                                                   disabled={desabilitarField(
                                                     column.dia,
                                                     row.name,
@@ -1456,11 +1416,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                   )}
                                                 />
                                                 <OnChange
-                                                  name={`${row.name}__faixa_${
-                                                    row.uuid
-                                                  }__dia_${
-                                                    column.dia
-                                                  }__categoria_${categoria.id}`}
+                                                  name={`${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`}
                                                 >
                                                   {(value, previous) => {
                                                     onChangeInput(
@@ -1499,11 +1455,11 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                       "MEDICAO_CORRECAO_SOLICITADA",
                       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                       "MEDICAO_CORRIGIDA_PELA_UE",
-                      "MEDICAO_CORRIGIDA_PARA_CODAE"
+                      "MEDICAO_CORRIGIDA_PARA_CODAE",
                     ].includes(location.state.status_periodo) &&
                     [
                       "MEDICAO_CORRECAO_SOLICITADA",
-                      "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                     ].includes(location.state.status_solicitacao) ? (
                       <Botao
                         className="float-right"
@@ -1563,7 +1519,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                         )
                       }
                       dadosIniciais={dadosIniciais}
-                      setExibirTooltip={value => setExibirTooltip(value)}
+                      setExibirTooltip={(value) => setExibirTooltip(value)}
                       errors={errors}
                       valoresObservacoes={valoresObservacoes}
                       setFormValuesAtualizados={setFormValuesAtualizados}

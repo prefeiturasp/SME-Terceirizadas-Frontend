@@ -35,12 +35,12 @@ export class AnexosProdutoField extends Component {
       onChange,
       concatenarNovosArquivos,
       nomeNovoArquivo,
-      toastSuccessMessage
+      toastSuccessMessage,
     } = this.props;
     const files = event.target.files;
     let valido = true;
     const QUANTIDADE_ARQUIVOS = files.length;
-    Array.from(files).forEach(file => {
+    Array.from(files).forEach((file) => {
       const extensao = file.name.split(".")[file.name.split(".").length - 1];
       if (
         !["doc", "docx", "png", "pdf", "jpg", "jpeg"].includes(
@@ -56,12 +56,12 @@ export class AnexosProdutoField extends Component {
     });
     if (valido) {
       let filesBase64 = [];
-      Array.from(files).forEach(file => {
+      Array.from(files).forEach((file) => {
         readerFile(file)
-          .then(anexo => {
+          .then((anexo) => {
             filesBase64.push({
               nome: nomeNovoArquivo || file.name,
-              base64: anexo.arquivo
+              base64: anexo.arquivo,
             });
           })
           .then(() => {
@@ -89,10 +89,10 @@ export class AnexosProdutoField extends Component {
         <div>
           <input
             accept={accept}
-            ref={i => (this.inputRef = i)}
+            ref={(i) => (this.inputRef = i)}
             className={`form-control inputfile`}
             disabled={disabled}
-            onChange={event => this.onInputChange(event)}
+            onChange={(event) => this.onInputChange(event)}
             type="file"
             multiple={multiple}
             title={title}
@@ -151,14 +151,14 @@ AnexosProdutoField.propTypes = {
   multiple: PropTypes.bool,
   title: PropTypes.string,
   texto: PropTypes.string,
-  nomeNovoArquivo: PropTypes.string
+  nomeNovoArquivo: PropTypes.string,
 };
 
 AnexosProdutoField.defaultProps = {
   accept: [],
   concatenarNovosArquivos: false,
   disabled: false,
-  multiple: false
+  multiple: false,
 };
 
 export default AnexosProdutoField;

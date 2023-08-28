@@ -6,7 +6,7 @@ import { getError } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import CKEditorField from "components/Shareable/CKEditorField";
@@ -18,10 +18,10 @@ export const ModalCODAEQuestionaFinalForm = ({ ...props }) => {
     solicitacao,
     endpoint,
     loadSolicitacao,
-    tipoSolicitacao
+    tipoSolicitacao,
   } = props;
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const resp = await endpoint(solicitacao.uuid, values, tipoSolicitacao);
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();

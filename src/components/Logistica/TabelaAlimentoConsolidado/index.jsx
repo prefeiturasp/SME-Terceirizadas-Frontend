@@ -3,7 +3,7 @@ import "./style.scss";
 
 export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
-    const embalagensFiltradas = embalagens.filter(value => {
+    const embalagensFiltradas = embalagens.filter((value) => {
       return value.tipo_embalagem.toUpperCase() === tipo;
     });
     if (embalagensFiltradas.length) return embalagensFiltradas[0];

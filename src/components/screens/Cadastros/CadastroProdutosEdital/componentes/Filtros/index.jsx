@@ -8,7 +8,7 @@ import { Select as SelectAntd } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { getCadastroProdutosEdital } from "services/produto.service";
 import HTTP_STATUS from "http-status-codes";
@@ -22,31 +22,31 @@ export default ({
   setTotal,
   setFiltros,
   setPage,
-  changePage
+  changePage,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const { Option } = SelectAntd;
   const opcoes = status
-    ? status.map(tipo => {
+    ? status.map((tipo) => {
         return <Option key={tipo.status}>{tipo.status}</Option>;
       })
     : [];
 
-  const getNomesProdutosFiltrado = nomeItem => {
+  const getNomesProdutosFiltrado = (nomeItem) => {
     if (nomeItem) {
       const reg = new RegExp(nomeItem, "iu");
-      return nomes.filter(a => reg.test(a));
+      return nomes.filter((a) => reg.test(a));
     }
     return [];
   };
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     try {
       setCarregando(true);
       const payload = {
         nome: formValues.nome_item,
-        status: formValues.status
+        status: formValues.status,
       };
       const response = await getCadastroProdutosEdital(payload);
       if (response.status === HTTP_STATUS.OK) {

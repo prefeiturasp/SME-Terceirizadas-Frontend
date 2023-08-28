@@ -1,7 +1,7 @@
-export const retornaHomologacoesComContadorDePaginacoes = homologacoes => {
+export const retornaHomologacoesComContadorDePaginacoes = (homologacoes) => {
   let listagemTemp = [];
   let listagemPaginacao = [];
-  homologacoes.forEach(homolog => {
+  homologacoes.forEach((homolog) => {
     if (listagemTemp.length <= 10) {
       homolog["ativo"] = false;
       listagemTemp.push(homolog);

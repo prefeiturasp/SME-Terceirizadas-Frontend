@@ -2,7 +2,7 @@ import authService from "./auth";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 export const fetchPatch = (url, body) => {
@@ -10,34 +10,34 @@ export const fetchPatch = (url, body) => {
   return fetch(url, {
     method: "PATCH",
     body: JSON.stringify(body),
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const fetchGet = url => {
+export const fetchGet = (url) => {
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -47,16 +47,16 @@ export const fetchPost = (url, body) => {
   return fetch(url, {
     method: "POST",
     body: JSON.stringify(body),
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };

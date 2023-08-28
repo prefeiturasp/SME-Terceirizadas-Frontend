@@ -1,4 +1,4 @@
-export const tipoDeStatus = status => {
+export const tipoDeStatus = (status) => {
   switch (status) {
     case "Cronograma Criado":
     case "Assinado e Enviado ao Fornecedor":
@@ -25,7 +25,7 @@ export const tipoDeStatus = status => {
   }
 };
 
-export const tipoDeStatusClasse = status => {
+export const tipoDeStatusClasse = (status) => {
   return tipoDeStatus(status.status_evento_explicacao) === "aprovado"
     ? "active"
     : tipoDeStatus(status.status_evento_explicacao) === "reprovado"

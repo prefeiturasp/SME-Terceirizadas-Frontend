@@ -6,14 +6,14 @@ import { loadEdital } from "../../../../reducers/edital.reducer";
 import { Link } from "react-router-dom";
 import {
   getLotes,
-  getDiretoriaregionalSimplissima
+  getDiretoriaregionalSimplissima,
 } from "../../../../services/diretoriaRegional.service";
 import HTTP_STATUS from "http-status-codes";
 import {
   criarEditalEContrato,
   obtemEdital,
   excluirEdital,
-  atualizarEditalEContrato
+  atualizarEditalEContrato,
 } from "../../../../services/edital.service";
 import { ModalCadastroEdital } from "./ModalCadastroEdital";
 import { getTerceirizada } from "../../../../services/terceirizada.service";
@@ -21,7 +21,7 @@ import {
   normalizaLabelValueLote,
   normalizaLabelValueDRE,
   normalizaLabelValueEmpresa,
-  montaContratoRelacionado
+  montaContratoRelacionado,
 } from "./helper";
 import { SectionFormEdital } from "./SectionFormEdital";
 import ContratosRelacionados from "./ContratosRelacionados";
@@ -33,7 +33,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import {
   CADASTROS,
   CONFIGURACOES,
-  EDITAIS_CADASTRADOS
+  EDITAIS_CADASTRADOS,
 } from "../../../../configs/constants";
 import { getError } from "../../../../helpers/utilities";
 
@@ -51,7 +51,7 @@ class EditaisContratos extends Component {
         tipo_contratacao: null,
         numero: null,
         numero_processo: null,
-        resumo: null
+        resumo: null,
       },
 
       contratos_relacionados: [
@@ -59,8 +59,8 @@ class EditaisContratos extends Component {
           vigencias: [
             {
               data_inicial: null,
-              data_final: null
-            }
+              data_final: null,
+            },
           ],
           numero_contrato: null,
           processo_administrativo: null,
@@ -70,8 +70,8 @@ class EditaisContratos extends Component {
           dres: null,
           dres_nomes: null,
           empresas: null,
-          empresas_nomes: null
-        }
+          empresas_nomes: null,
+        },
       ],
       exibirModal: false,
       edital_contratos: null,
@@ -79,7 +79,7 @@ class EditaisContratos extends Component {
       redirect: false,
       loading: true,
       uuid: null,
-      atualizacao: false
+      atualizacao: false,
     };
     this.exibirModal = this.exibirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
@@ -90,9 +90,8 @@ class EditaisContratos extends Component {
     this.adicionarNomesListagem = this.adicionarNomesListagem.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.setaResetFormChild = this.setaResetFormChild.bind(this);
-    this.excluirContratoRelacionado = this.excluirContratoRelacionado.bind(
-      this
-    );
+    this.excluirContratoRelacionado =
+      this.excluirContratoRelacionado.bind(this);
   }
 
   componentDidUpdate(prevState) {
@@ -103,7 +102,7 @@ class EditaisContratos extends Component {
         const uuid = urlParams.get("uuid");
         this.setState({ uuid });
         if (uuid) {
-          obtemEdital(uuid).then(response => {
+          obtemEdital(uuid).then((response) => {
             this.props.reset("cadastroEditaisForm");
             response.data.contratos.forEach((contrato, indice_contrato) => {
               if (indice_contrato !== 0) {
@@ -133,7 +132,7 @@ class EditaisContratos extends Component {
           this.props.reset("cadastroEditaisForm");
         }
         this.setState({
-          loading: false
+          loading: false,
         });
       }
     }
@@ -142,7 +141,7 @@ class EditaisContratos extends Component {
   excluirEdital(uuid) {
     if (window.confirm("Tem certeza que deseja excluir o lote?")) {
       excluirEdital(uuid).then(
-        res => {
+        (res) => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess("Edital excluído com sucesso");
             this.setRedirect();
@@ -153,7 +152,7 @@ class EditaisContratos extends Component {
             );
           }
         },
-        function() {
+        function () {
           toastError("Houve um erro ao excluir o edital");
         }
       );
@@ -167,8 +166,8 @@ class EditaisContratos extends Component {
           vigencias: [
             {
               data_inicial: null,
-              data_final: null
-            }
+              data_final: null,
+            },
           ],
           numero_contrato: null,
           processo_administrativo: null,
@@ -178,9 +177,9 @@ class EditaisContratos extends Component {
           dres: null,
           dres_nomes: null,
           empresas: null,
-          empresas_nomes: null
-        }
-      ])
+          empresas_nomes: null,
+        },
+      ]),
     });
   }
 
@@ -193,7 +192,7 @@ class EditaisContratos extends Component {
 
   setRedirect() {
     this.setState({
-      redirect: true
+      redirect: true,
     });
   }
 
@@ -222,7 +221,7 @@ class EditaisContratos extends Component {
   onSubmit(values) {
     if (!this.state.uuid) {
       criarEditalEContrato(JSON.stringify(values)).then(
-        response => {
+        (response) => {
           if (response.status === HTTP_STATUS.CREATED) {
             toastSuccess("Edital salvo com sucesso");
             this.setRedirect();
@@ -233,13 +232,13 @@ class EditaisContratos extends Component {
             );
           }
         },
-        function() {
+        function () {
           toastError("Houve um erro ao salvar o edital");
         }
       );
     } else {
       atualizarEditalEContrato(JSON.stringify(values), this.state.uuid).then(
-        res => {
+        (res) => {
           if (res.status === HTTP_STATUS.OK) {
             toastSuccess("Edital atualizado com sucesso");
             this.setRedirect();
@@ -250,7 +249,7 @@ class EditaisContratos extends Component {
             );
           }
         },
-        function() {
+        function () {
           toastError("Houve um erro ao atualizar o edital");
         }
       );
@@ -262,8 +261,8 @@ class EditaisContratos extends Component {
       "tipo_contratacao",
       "edital_numero",
       "processo_administrativo",
-      "resumo_objeto"
-    ].forEach(element => {
+      "resumo_objeto",
+    ].forEach((element) => {
       this.props.change(element, null);
     });
 
@@ -296,8 +295,8 @@ class EditaisContratos extends Component {
         vigencias: [
           {
             data_inicial: null,
-            data_final: null
-          }
+            data_final: null,
+          },
         ],
         numero_contrato: null,
         processo_administrativo: null,
@@ -307,8 +306,8 @@ class EditaisContratos extends Component {
         dres: null,
         dres_nomes: null,
         empresas: null,
-        empresas_nomes: null
-      }
+        empresas_nomes: null,
+      },
     ];
 
     this.setState({ contratos_relacionados });
@@ -324,7 +323,7 @@ class EditaisContratos extends Component {
     const contratos_relacionados = this.state.contratos_relacionados;
     contratos_relacionados[indice].numero_contrato = numero_contrato;
     this.setState({
-      contratos_relacionados
+      contratos_relacionados,
     });
   }
 
@@ -335,7 +334,7 @@ class EditaisContratos extends Component {
   }
 
   validarForm(edital_contratos) {
-    edital_contratos.contratos_relacionados.forEach(contrato => {
+    edital_contratos.contratos_relacionados.forEach((contrato) => {
       if (
         contrato.lotes === null ||
         contrato.dres === null ||
@@ -351,9 +350,8 @@ class EditaisContratos extends Component {
 
   salvaFormulario() {
     const edital_contratos = this.state.edital;
-    edital_contratos[
-      "contratos_relacionados"
-    ] = this.state.contratos_relacionados;
+    edital_contratos["contratos_relacionados"] =
+      this.state.contratos_relacionados;
     this.validarForm(edital_contratos);
   }
 
@@ -370,19 +368,19 @@ class EditaisContratos extends Component {
   }
 
   componentDidMount() {
-    getLotes().then(response => {
+    getLotes().then((response) => {
       this.setState({ lotes: normalizaLabelValueLote(response.results) });
     });
 
-    getDiretoriaregionalSimplissima().then(response => {
+    getDiretoriaregionalSimplissima().then((response) => {
       this.setState({
-        diretoriasRegionais: normalizaLabelValueDRE(response.data)
+        diretoriasRegionais: normalizaLabelValueDRE(response.data),
       });
     });
 
-    getTerceirizada().then(response => {
+    getTerceirizada().then((response) => {
       this.setState({
-        empresas: normalizaLabelValueEmpresa(response.data.results)
+        empresas: normalizaLabelValueEmpresa(response.data.results),
       });
     });
   }
@@ -409,7 +407,7 @@ class EditaisContratos extends Component {
       reseta,
       contratos_relacionados,
       atualizacao,
-      uuid
+      uuid,
     } = this.state;
     return (
       <section className="cadastro pt-3">
@@ -530,17 +528,17 @@ class EditaisContratos extends Component {
 
 const cadastroEditaisForm = reduxForm({
   form: "cadastroEditaisForm",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(EditaisContratos);
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    initialValues: state.cadastroEditaisForm.data
+    initialValues: state.cadastroEditaisForm.data,
   };
 };
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      loadEdital
+      loadEdital,
     },
     dispatch
   );

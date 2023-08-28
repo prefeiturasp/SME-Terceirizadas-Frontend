@@ -2,7 +2,7 @@ import React from "react";
 
 export const DocumentosProduto = ({ homologacao }) => {
   const documentoRegex = new RegExp("(doc|docx|pdf)$", "i");
-  const documentos = homologacao.produto.imagens.filter(documento =>
+  const documentos = homologacao.produto.imagens.filter((documento) =>
     documentoRegex.test(documento.arquivo)
   );
   return (

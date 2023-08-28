@@ -55,7 +55,7 @@ export const DadosReclamacaoProduto = ({ produto, paginaInteira }) => {
             dangerouslySetInnerHTML={{
               __html:
                 produto.ultima_homologacao.reclamacoes &&
-                produto.ultima_homologacao.reclamacoes[0].reclamacao
+                produto.ultima_homologacao.reclamacoes[0].reclamacao,
             }}
           />
         </div>

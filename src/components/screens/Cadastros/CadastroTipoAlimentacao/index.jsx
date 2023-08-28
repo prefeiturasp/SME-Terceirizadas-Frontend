@@ -4,7 +4,7 @@ import HTTP_STATUS from "http-status-codes";
 import {
   getVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
   updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
-  getTiposDeAlimentacao
+  getTiposDeAlimentacao,
 } from "services/cadastroTipoAlimentacao.service";
 
 import { Form, Field } from "react-final-form";
@@ -17,7 +17,7 @@ import { Select as SelectAntd } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -27,23 +27,21 @@ import "./style.scss";
 export default ({ tiposUnidadesEscolar }) => {
   const { Option } = SelectAntd;
   const opcoesTiposUnidades = tiposUnidadesEscolar
-    ? tiposUnidadesEscolar.map(tipo => {
+    ? tiposUnidadesEscolar.map((tipo) => {
         return <Option key={tipo.uuid}>{tipo.iniciais}</Option>;
       })
     : undefined;
 
   const [tiposDeAlimentacao, setTiposDeAlimentacao] = useState(undefined);
-  const [
-    alterandoTiposDeAlimentacao,
-    setAlterandoTiposDeAlimentacao
-  ] = useState(false);
+  const [alterandoTiposDeAlimentacao, setAlterandoTiposDeAlimentacao] =
+    useState(false);
   const [vinculos, setVinculos] = useState(undefined);
   const [carregando, setCarregando] = useState(undefined);
   const [open, setOpen] = useState(false);
 
   async function fetchData() {
     setCarregando(true);
-    await getTiposDeAlimentacao().then(response => {
+    await getTiposDeAlimentacao().then((response) => {
       setTiposDeAlimentacao(response.results);
     });
     setCarregando(false);
@@ -53,11 +51,11 @@ export default ({ tiposUnidadesEscolar }) => {
     fetchData();
   }, []);
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     setCarregando(true);
     await updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar(
       formValues
-    ).then(async response => {
+    ).then(async (response) => {
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Tipo de Alimentação salvo com sucesso");
         setVinculos(response.results);
@@ -69,25 +67,25 @@ export default ({ tiposUnidadesEscolar }) => {
     setAlterandoTiposDeAlimentacao(false);
   };
 
-  const setInitialValues = vinculos => {
-    let vinculosFormatados = vinculos.map(vinculo => {
+  const setInitialValues = (vinculos) => {
+    let vinculosFormatados = vinculos.map((vinculo) => {
       let tipos_alimentacao = vinculo.tipos_alimentacao.map(
-        tipo_alimentacao => tipo_alimentacao.uuid
+        (tipo_alimentacao) => tipo_alimentacao.uuid
       );
       return {
         tipos_alimentacao: tipos_alimentacao,
         uuid: vinculo.uuid,
         periodo_escolar: vinculo.periodo_escolar.uuid,
-        tipo_unidade_escolar: vinculo.tipo_unidade_escolar.uuid
+        tipo_unidade_escolar: vinculo.tipo_unidade_escolar.uuid,
       };
     });
     return { vinculos: vinculosFormatados };
   };
 
-  const getPeriodosEscolares = async uuid => {
+  const getPeriodosEscolares = async (uuid) => {
     setCarregando(true);
     await getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(uuid).then(
-      response => {
+      (response) => {
         if (response.results.length === 0) {
           toastError(
             "Nenhum período escolar está associado ao tipo de unidade escolar selecionado"
@@ -134,7 +132,7 @@ export default ({ tiposUnidadesEscolar }) => {
                         {opcoesTiposUnidades}
                       </Field>
                       <OnChange name="tipo_unidade_escolar">
-                        {value => {
+                        {(value) => {
                           getPeriodosEscolares(value);
                         }}
                       </OnChange>
@@ -196,15 +194,11 @@ export default ({ tiposUnidadesEscolar }) => {
                                               type="checkbox"
                                               value={tipoAlimentacao.uuid}
                                               className="custom-control-input"
-                                              id={`${
-                                                vinculo.periodo_escolar.nome
-                                              }-${tipoAlimentacao.uuid}`}
+                                              id={`${vinculo.periodo_escolar.nome}-${tipoAlimentacao.uuid}`}
                                             />
                                             <label
                                               className="custom-control-label"
-                                              htmlFor={`${
-                                                vinculo.periodo_escolar.nome
-                                              }-${tipoAlimentacao.uuid}`}
+                                              htmlFor={`${vinculo.periodo_escolar.nome}-${tipoAlimentacao.uuid}`}
                                             >
                                               {tipoAlimentacao.nome}
                                             </label>

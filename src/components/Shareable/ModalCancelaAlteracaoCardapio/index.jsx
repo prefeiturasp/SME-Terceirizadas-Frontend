@@ -8,7 +8,7 @@ import { deepCopy, mensagemCancelamento } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { TIPO_SOLICITACAO } from "constants/shared";
@@ -21,10 +21,10 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
     solicitacao,
     endpoint,
     tipoSolicitacao,
-    loadSolicitacao
+    loadSolicitacao,
   } = props;
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     if (
       tipoSolicitacao !== TIPO_SOLICITACAO.SOLICITACAO_CEI &&
       (!values.datas || values.datas.length === 0)
@@ -34,11 +34,8 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
     }
     const values_ = deepCopy(values);
     if (values.datas) {
-      values_.datas = values_.datas.map(data =>
-        data
-          .split("/")
-          .reverse()
-          .join("-")
+      values_.datas = values_.datas.map((data) =>
+        data.split("/").reverse().join("-")
       );
     }
     const resp = await endpoint(uuid, values_, tipoSolicitacao);
@@ -47,7 +44,7 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
       if (
         tipoSolicitacao !== TIPO_SOLICITACAO.SOLICITACAO_CEI &&
         values_.datas.length +
-          solicitacao.datas_intervalo.filter(i => i.cancelado).length !==
+          solicitacao.datas_intervalo.filter((i) => i.cancelado).length !==
           solicitacao.datas_intervalo.length
       ) {
         toastSuccess("Solicitação cancelada parcialmente com sucesso");
@@ -93,7 +90,7 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
                           component="input"
                           disabled={
                             solicitacao.datas_intervalo.find(
-                              i => i.data === dia.data
+                              (i) => i.data === dia.data
                             ).cancelado ||
                             moment(dia.data, "DD/MM/YYYY") <= moment()
                           }

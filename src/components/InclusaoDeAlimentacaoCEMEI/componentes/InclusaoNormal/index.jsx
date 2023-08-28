@@ -3,7 +3,7 @@ import {
   possuiAlunosCEIporPeriodo,
   tiposAlimentacaoPorPeriodoETipoUnidade,
   totalAlunosInputPorPeriodoCEI,
-  totalAlunosPorPeriodoCEI
+  totalAlunosPorPeriodoCEI,
 } from "components/InclusaoDeAlimentacaoCEMEI/helpers";
 import InputText from "components/Shareable/Input/InputText";
 import { maxValue, naoPodeSerZero } from "helpers/fieldValidators";
@@ -14,7 +14,7 @@ import { FieldArray } from "react-final-form-arrays";
 import "./style.scss";
 
 export const PeriodosCEIeouEMEI = ({ form, values, vinculos, periodos }) => {
-  const getPeriodo = indice => {
+  const getPeriodo = (indice) => {
     return values.quantidades_periodo[indice];
   };
 

@@ -78,7 +78,7 @@ export const InclusaoContinuaBody = ({ ...props }) => {
             </div>
             {solicitacao.quantidades_periodo.map((quantidade_periodo, idx) => {
               const tiposAlimentacao = quantidade_periodo.tipos_alimentacao
-                .map(tipo_alimentacao => tipo_alimentacao.nome)
+                .map((tipo_alimentacao) => tipo_alimentacao.nome)
                 .join(", ");
               return (
                 <div
@@ -132,7 +132,7 @@ export const InclusaoContinuaBody = ({ ...props }) => {
                         <p
                           className="value"
                           dangerouslySetInnerHTML={{
-                            __html: quantidade_periodo.observacao
+                            __html: quantidade_periodo.observacao,
                           }}
                         />
                       </b>
@@ -142,7 +142,8 @@ export const InclusaoContinuaBody = ({ ...props }) => {
               );
             })}
             {solicitacao.quantidades_periodo.find(
-              quantidades_periodo => quantidades_periodo.cancelado_justificativa
+              (quantidades_periodo) =>
+                quantidades_periodo.cancelado_justificativa
             ) && (
               <>
                 <hr />
@@ -150,7 +151,7 @@ export const InclusaoContinuaBody = ({ ...props }) => {
                   <strong>Histórico de cancelamento</strong>
                   {solicitacao.quantidades_periodo
                     .filter(
-                      quantidades_periodo =>
+                      (quantidades_periodo) =>
                         quantidades_periodo.cancelado_justificativa
                     )
                     .map((quantidades_periodo, key) => {
@@ -160,7 +161,7 @@ export const InclusaoContinuaBody = ({ ...props }) => {
                             `${
                               quantidades_periodo.periodo_escolar.nome
                             } - ${quantidades_periodo.tipos_alimentacao
-                              .map(ta => ta.nome)
+                              .map((ta) => ta.nome)
                               .join(", ")} - ${
                               quantidades_periodo.numero_alunos
                             }`}
@@ -176,6 +177,6 @@ export const InclusaoContinuaBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

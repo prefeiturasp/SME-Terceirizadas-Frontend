@@ -10,23 +10,23 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import {
   CODAEPedeAnaliseReclamacao,
   CODAERecusaReclamacao,
-  CODAEAceitaReclamacao
+  CODAEAceitaReclamacao,
 } from "services/produto.service";
 import { getMensagemSucesso } from "./helpers";
 
 export default class ModalProsseguirReclamacao extends Component {
-  onSubmit = async values => {
+  onSubmit = async (values) => {
     const { produto, tituloModal } = this.props;
-    const homologacaoComReclamacao = produto.homologacoes.find(h =>
+    const homologacaoComReclamacao = produto.homologacoes.find((h) =>
       [
         "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
-        "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+        "TERCEIRIZADA_RESPONDEU_RECLAMACAO",
       ].includes(h.status)
     );
     const endpoint =
@@ -68,10 +68,10 @@ export default class ModalProsseguirReclamacao extends Component {
                       label="Justificativa"
                       name="justificativa"
                       required
-                      validate={value => {
+                      validate={(value) => {
                         for (let validator of [
                           peloMenosUmCaractere,
-                          required
+                          required,
                         ]) {
                           const erro = validator(value);
                           if (erro) return erro;

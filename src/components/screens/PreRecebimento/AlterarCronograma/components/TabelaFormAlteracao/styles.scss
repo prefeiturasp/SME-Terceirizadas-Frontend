@@ -1,0 +1,18 @@
+@import "styles/variables.scss";
+
+.tabela-form-alteracao {
+  .fundo-laranja {
+    background-color: #f8cea5;
+  }
+
+  .head-crono {
+    th {
+      background-color: $greenLight;
+      color: white;
+    }
+  }
+
+  td {
+    color: $blackSubtle;
+  }
+}

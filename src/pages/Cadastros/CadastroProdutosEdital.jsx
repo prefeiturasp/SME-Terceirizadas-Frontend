@@ -5,7 +5,7 @@ import CadastroProdutosEdital from "components/screens/Cadastros/CadastroProduto
 
 const atual = {
   href: `/gestao-produto/cadastro-produtos-provinientes-edital`,
-  titulo: "Cadastro de Produtos Provenientes do Edital"
+  titulo: "Cadastro de Produtos Provenientes do Edital",
 };
 
 export default () => (

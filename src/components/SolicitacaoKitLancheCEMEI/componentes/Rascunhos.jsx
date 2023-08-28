@@ -7,10 +7,10 @@ export class Rascunhos extends Component {
       removerRascunho,
       carregarRascunho,
       form,
-      values
+      values,
     } = this.props;
     const cardsRascunhos = rascunhosSolicitacoesKitLanche.map(
-      solicitacaoKitLanche => {
+      (solicitacaoKitLanche) => {
         const { uuid, id_externo, local } = solicitacaoKitLanche;
         let backgroundColor = "#DADADA";
         return (

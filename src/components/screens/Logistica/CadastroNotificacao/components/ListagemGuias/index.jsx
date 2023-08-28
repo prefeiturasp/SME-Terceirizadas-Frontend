@@ -6,10 +6,10 @@ const ListagemSolicitacoes = ({
   vincularGuia,
   guiasVinculadas,
   desvincularGuia,
-  buscarDetalheGuia
+  buscarDetalheGuia,
 }) => {
-  const guiaVinculada = guia =>
-    guiasVinculadas.map(guia => guia.numero_guia).includes(guia.numero_guia);
+  const guiaVinculada = (guia) =>
+    guiasVinculadas.map((guia) => guia.numero_guia).includes(guia.numero_guia);
 
   return (
     <section className="resultado-guias-ocorrencias">
@@ -22,7 +22,7 @@ const ListagemSolicitacoes = ({
           <div>Status da Guia</div>
           <div>Ações</div>
         </div>
-        {guias.map(guia => {
+        {guias.map((guia) => {
           return (
             <>
               <div

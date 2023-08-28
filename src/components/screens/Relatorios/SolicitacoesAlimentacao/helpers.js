@@ -1,8 +1,8 @@
-export const lotesToOptions = lotes => {
+export const lotesToOptions = (lotes) => {
   return lotes
-    .map(lote => ({
+    .map((lote) => ({
       label: `${lote.diretoria_regional.iniciais} - ${lote.nome}`,
-      value: lote.uuid
+      value: lote.uuid,
     }))
     .sort((a, b) => {
       if (a.label < b.label) return -1;

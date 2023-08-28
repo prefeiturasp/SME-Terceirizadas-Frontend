@@ -5,19 +5,19 @@ import Page from "../../components/Shareable/Page/Page";
 import {
   CADASTROS,
   CONFIGURACOES,
-  UNIDADES_MEDIDA
+  UNIDADES_MEDIDA,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`,
-  titulo: "Unidades de Medida"
+  titulo: "Unidades de Medida",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
-  }
+    titulo: "Cadastros",
+  },
 ];
 
 export default () => (

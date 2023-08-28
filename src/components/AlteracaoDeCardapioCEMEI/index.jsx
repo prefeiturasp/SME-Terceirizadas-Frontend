@@ -11,7 +11,7 @@ import CKEditorField from "components/Shareable/CKEditorField";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import { TabelaFaixasCEMEI } from "./componentes/TabelaFaixasCEMEI";
@@ -23,13 +23,13 @@ import {
   getError,
   getDataObj,
   fimDoCalendario,
-  checaSeDataEstaEntre2e5DiasUteis
+  checaSeDataEstaEntre2e5DiasUteis,
 } from "helpers/utilities";
 import { formatarPayload, validarSubmit } from "./helpers";
 import {
   composeValidators,
   ehDiaUtil,
-  required
+  required,
 } from "helpers/fieldValidators";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 import {
@@ -37,7 +37,7 @@ import {
   getAlteracaoCEMEIRascunhos,
   deleteAlteracaoAlimentacaoCEMEI,
   updateAlteracaoCardapioCEMEI,
-  iniciaFluxoAlteracaoAlimentacaoCEMEI
+  iniciaFluxoAlteracaoAlimentacaoCEMEI,
 } from "services/alteracaoDeCardapio/escola.service";
 import "./style.scss";
 import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
@@ -50,7 +50,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     vinculos,
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
-    feriadosAno
+    feriadosAno,
   } = props;
 
   useEffect(() => {
@@ -63,27 +63,29 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
   const [desabilitarAlterarDia, setDesabilitarAlterarDia] = useState(false);
   const [desabilitarDeAte, setDesabilitarDeAte] = useState(false);
   const [maximo5DiasUteis, setMaximo5DiasUteis] = useState(false);
-  const [showModalLancheEmergencial, setShowModalLancheEmergencial] = useState(
-    false
-  );
-  const [showModalDataPrioritaria, setShowModalDataPrioritaria] = useState(
-    false
-  );
+  const [showModalLancheEmergencial, setShowModalLancheEmergencial] =
+    useState(false);
+  const [showModalDataPrioritaria, setShowModalDataPrioritaria] =
+    useState(false);
   const [alimentosCEI, setAlimentosCEI] = useState(
     vinculos.filter(
-      vinculo => vinculo.tipo_unidade_escolar.iniciais === "CEI DIRET"
+      (vinculo) => vinculo.tipo_unidade_escolar.iniciais === "CEI DIRET"
     )
   );
   const [substitutosCEI, setSubstitutosCEI] = useState(
     vinculos.filter(
-      vinculo => vinculo.tipo_unidade_escolar.iniciais === "CEI DIRET"
+      (vinculo) => vinculo.tipo_unidade_escolar.iniciais === "CEI DIRET"
     )
   );
   const [alimentosEMEI, setAlimentosEMEI] = useState(
-    vinculos.filter(vinculo => vinculo.tipo_unidade_escolar.iniciais === "EMEI")
+    vinculos.filter(
+      (vinculo) => vinculo.tipo_unidade_escolar.iniciais === "EMEI"
+    )
   );
   const [substitutosEMEI, setSubstitutosEMEI] = useState(
-    vinculos.filter(vinculo => vinculo.tipo_unidade_escolar.iniciais === "EMEI")
+    vinculos.filter(
+      (vinculo) => vinculo.tipo_unidade_escolar.iniciais === "EMEI"
+    )
   );
 
   const iniciarPedido = async (uuid, form) => {
@@ -96,7 +98,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     }
   };
 
-  const onDataChanged = value => {
+  const onDataChanged = (value) => {
     if (
       value &&
       checaSeDataEstaEntre2e5DiasUteis(
@@ -109,13 +111,13 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     }
   };
 
-  const ehMotivoRPL = values => {
+  const ehMotivoRPL = (values) => {
     return (
       motivos.find(
-        motivo => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
+        (motivo) => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
       ) &&
       motivos.find(
-        motivo => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
+        (motivo) => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
       ).uuid === values.motivo
     );
   };
@@ -155,117 +157,117 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     }
   };
 
-  const modificarOpcoesAlimentos = async motivo => {
+  const modificarOpcoesAlimentos = async (motivo) => {
     let _alimentosCEI = vinculos.filter(
-      v => v.tipo_unidade_escolar.iniciais === "CEI DIRET"
+      (v) => v.tipo_unidade_escolar.iniciais === "CEI DIRET"
     );
     let _substitutosCEI = vinculos.filter(
-      v => v.tipo_unidade_escolar.iniciais === "CEI DIRET"
+      (v) => v.tipo_unidade_escolar.iniciais === "CEI DIRET"
     );
     let _alimentosEMEI = vinculos.filter(
-      v => v.tipo_unidade_escolar.iniciais === "EMEI"
+      (v) => v.tipo_unidade_escolar.iniciais === "EMEI"
     );
     let _substitutosEMEI = vinculos.filter(
-      v => v.tipo_unidade_escolar.iniciais === "EMEI"
+      (v) => v.tipo_unidade_escolar.iniciais === "EMEI"
     );
 
     if (motivo) {
       switch (motivo.nome) {
         case "RPL - Refeição por Lanche":
-          _alimentosCEI = _alimentosCEI.map(v => {
-            const taCEI = v.tipos_alimentacao.filter(ta =>
+          _alimentosCEI = _alimentosCEI.map((v) => {
+            const taCEI = v.tipos_alimentacao.filter((ta) =>
               ["Refeição da tarde", "Almoço"].includes(ta.nome)
             );
             return {
               ...v,
-              tipos_alimentacao: taCEI
+              tipos_alimentacao: taCEI,
             };
           });
-          _substitutosCEI = _substitutosCEI.map(v => {
-            const subCEI = v.tipos_alimentacao.filter(ta =>
+          _substitutosCEI = _substitutosCEI.map((v) => {
+            const subCEI = v.tipos_alimentacao.filter((ta) =>
               ["Lanche"].includes(ta.nome)
             );
             return {
               ...v,
-              tipos_alimentacao: subCEI
+              tipos_alimentacao: subCEI,
             };
           });
-          _alimentosEMEI = _alimentosEMEI.map(v => {
-            const taEMEI = v.tipos_alimentacao.filter(ta =>
+          _alimentosEMEI = _alimentosEMEI.map((v) => {
+            const taEMEI = v.tipos_alimentacao.filter((ta) =>
               ["Refeição", "Sobremesa"].includes(ta.nome)
             );
             return {
               ...v,
-              tipos_alimentacao: taEMEI
+              tipos_alimentacao: taEMEI,
             };
           });
-          _substitutosEMEI = _substitutosEMEI.map(v => {
-            const subEMEI = v.tipos_alimentacao.filter(ta =>
+          _substitutosEMEI = _substitutosEMEI.map((v) => {
+            const subEMEI = v.tipos_alimentacao.filter((ta) =>
               ["Lanche"].includes(ta.nome)
             );
             return {
               ...v,
-              tipos_alimentacao: subEMEI
+              tipos_alimentacao: subEMEI,
             };
           });
           break;
 
         case "LPR - Lanche por Refeição":
-          _alimentosCEI = _alimentosCEI.map(v => {
-            const taCEI = v.tipos_alimentacao.filter(ta =>
+          _alimentosCEI = _alimentosCEI.map((v) => {
+            const taCEI = v.tipos_alimentacao.filter((ta) =>
               ["Lanche"].includes(ta.nome)
             );
             return {
               ...v,
-              tipos_alimentacao: taCEI
+              tipos_alimentacao: taCEI,
             };
           });
-          _substitutosCEI = _substitutosCEI.map(v => {
-            const subCEI = v.tipos_alimentacao.filter(ta =>
+          _substitutosCEI = _substitutosCEI.map((v) => {
+            const subCEI = v.tipos_alimentacao.filter((ta) =>
               ["Refeição da tarde", "Almoço"].includes(ta.nome)
             );
             return {
               ...v,
-              tipos_alimentacao: subCEI
+              tipos_alimentacao: subCEI,
             };
           });
-          _alimentosEMEI = _alimentosEMEI.map(v => {
-            const taEMEI = v.tipos_alimentacao.filter(ta =>
+          _alimentosEMEI = _alimentosEMEI.map((v) => {
+            const taEMEI = v.tipos_alimentacao.filter((ta) =>
               ["Lanche"].includes(ta.nome)
             );
             return {
               ...v,
-              tipos_alimentacao: taEMEI
+              tipos_alimentacao: taEMEI,
             };
           });
-          _substitutosEMEI = _substitutosEMEI.map(v => {
-            const subEMEI = v.tipos_alimentacao.filter(ta =>
+          _substitutosEMEI = _substitutosEMEI.map((v) => {
+            const subEMEI = v.tipos_alimentacao.filter((ta) =>
               ["Refeição", "Sobremesa"].includes(ta.nome)
             );
             return {
               ...v,
-              tipos_alimentacao: subEMEI
+              tipos_alimentacao: subEMEI,
             };
           });
           break;
 
         case "Lanche Emergencial":
-          _alimentosEMEI = _alimentosEMEI.map(v => {
+          _alimentosEMEI = _alimentosEMEI.map((v) => {
             const taEMEI = v.tipos_alimentacao.filter(
-              ta => !["Lanche Emergencial"].includes(ta.nome)
+              (ta) => !["Lanche Emergencial"].includes(ta.nome)
             );
             return {
               ...v,
-              tipos_alimentacao: taEMEI
+              tipos_alimentacao: taEMEI,
             };
           });
-          _substitutosEMEI = _substitutosEMEI.map(v => {
-            const subEMEI = v.tipos_alimentacao.filter(ta =>
+          _substitutosEMEI = _substitutosEMEI.map((v) => {
+            const subEMEI = v.tipos_alimentacao.filter((ta) =>
               ["Lanche Emergencial"].includes(ta.nome)
             );
             return {
               ...v,
-              tipos_alimentacao: subEMEI
+              tipos_alimentacao: subEMEI,
             };
           });
           break;
@@ -284,10 +286,10 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     let substituicoes = [];
     periodos_.forEach((periodo, periodoIndice) => {
       const subsCEI = alteracao_.substituicoes_cemei_cei_periodo_escolar.find(
-        sub => sub.periodo_escolar.nome === periodo.nome
+        (sub) => sub.periodo_escolar.nome === periodo.nome
       );
       const subsEMEI = alteracao_.substituicoes_cemei_emei_periodo_escolar.find(
-        sub => sub.periodo_escolar.nome === periodo.nome
+        (sub) => sub.periodo_escolar.nome === periodo.nome
       );
       substituicoes[periodoIndice] = { checked: false };
       if (subsCEI) {
@@ -295,26 +297,26 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
         substituicoes[periodoIndice]["periodo_uuid"] =
           subsCEI.periodo_escolar.uuid;
         substituicoes[periodoIndice]["cei"] = {
-          tipos_alimentacao_de: subsCEI.tipos_alimentacao_de.map(ta => ta.uuid),
-          tipos_alimentacao_para: subsCEI.tipos_alimentacao_para.map(
-            ta => ta.uuid
+          tipos_alimentacao_de: subsCEI.tipos_alimentacao_de.map(
+            (ta) => ta.uuid
           ),
-          faixas_etarias: []
+          tipos_alimentacao_para: subsCEI.tipos_alimentacao_para.map(
+            (ta) => ta.uuid
+          ),
+          faixas_etarias: [],
         };
         periodo.CEI.forEach((faixa, faixaIndice) => {
-          substituicoes[periodoIndice]["cei"]["faixas_etarias"][
-            faixaIndice
-          ] = {};
+          substituicoes[periodoIndice]["cei"]["faixas_etarias"][faixaIndice] =
+            {};
           const faixaRascunho = subsCEI.faixas_etarias.find(
-            f => f.faixa_etaria.__str__ === faixa.faixa
+            (f) => f.faixa_etaria.__str__ === faixa.faixa
           );
           if (faixaRascunho) {
-            substituicoes[periodoIndice]["cei"]["faixas_etarias"][
-              faixaIndice
-            ] = {
-              faixa_uuid: faixaRascunho.faixa_etaria.uuid,
-              quantidade_alunos: faixaRascunho.quantidade
-            };
+            substituicoes[periodoIndice]["cei"]["faixas_etarias"][faixaIndice] =
+              {
+                faixa_uuid: faixaRascunho.faixa_etaria.uuid,
+                quantidade_alunos: faixaRascunho.quantidade,
+              };
           }
         });
       }
@@ -323,12 +325,10 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
         substituicoes[periodoIndice]["periodo_uuid"] =
           subsEMEI.periodo_escolar.uuid;
         substituicoes[periodoIndice]["emei"] = {};
-        substituicoes[periodoIndice]["emei"][
-          "tipos_alimentacao_de"
-        ] = subsEMEI.tipos_alimentacao_de.map(ta => ta.uuid);
-        substituicoes[periodoIndice]["emei"][
-          "tipos_alimentacao_para"
-        ] = subsEMEI.tipos_alimentacao_para.map(ta => ta.uuid);
+        substituicoes[periodoIndice]["emei"]["tipos_alimentacao_de"] =
+          subsEMEI.tipos_alimentacao_de.map((ta) => ta.uuid);
+        substituicoes[periodoIndice]["emei"]["tipos_alimentacao_para"] =
+          subsEMEI.tipos_alimentacao_para.map((ta) => ta.uuid);
         substituicoes[periodoIndice]["emei"]["quantitade_alunos"] =
           subsEMEI.qtd_alunos;
       }
@@ -336,7 +336,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     return substituicoes;
   };
 
-  const refresh = form => {
+  const refresh = (form) => {
     getRascunhos();
     resetForm(form);
   };
@@ -386,7 +386,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     setUuid(alteracao.uuid);
   };
 
-  const resetForm = async form => {
+  const resetForm = async (form) => {
     await form.change("uuid", undefined);
     await form.change("criado_por", meusDados.uuid);
     await form.change("escola", meusDados.vinculo_atual.instituicao.uuid);
@@ -444,7 +444,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     value &&
       value !== "EMEI" &&
       values.motivo &&
-      motivos.find(m => m.uuid === values.motivo).nome ===
+      motivos.find((m) => m.uuid === values.motivo).nome ===
         "Lanche Emergencial" &&
       setShowModalLancheEmergencial(true);
   };
@@ -467,12 +467,12 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
       <Form
         keepDirtyOnReinitialize
         mutators={{
-          ...arrayMutators
+          ...arrayMutators,
         }}
         initialValues={{
           criado_por: meusDados.uuid,
           escola: meusDados.vinculo_atual.instituicao.uuid,
-          substituicoes: []
+          substituicoes: [],
         }}
         onSubmit={onSubmit}
       >
@@ -509,13 +509,13 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                         { uuid: "", nome: "Selecione" },
                         { uuid: "TODOS", nome: "Todos" },
                         { uuid: "CEI", nome: "CEI" },
-                        { uuid: "EMEI", nome: "EMEI" }
+                        { uuid: "EMEI", nome: "EMEI" },
                       ]}
                       validate={required}
                       required
                     />
                     <OnChange name="alunos_cei_e_ou_emei">
-                      {async value => checarLancheCampoAlunos(values, value)}
+                      {async (value) => checarLancheCampoAlunos(values, value)}
                     </OnChange>
                   </div>
                   <div className="col-8">
@@ -529,8 +529,8 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       required
                     />
                     <OnChange name="motivo">
-                      {async value => {
-                        let motivo = motivos.find(m => m.uuid === value);
+                      {async (value) => {
+                        let motivo = motivos.find((m) => m.uuid === value);
                         modificarOpcoesAlimentos(motivo);
                         limparCampos(motivo, form);
                         checarLancheCampoTipoAlteracao(values, motivo);
@@ -545,8 +545,8 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       name="alterar_dia"
                       minDate={
                         values.motivo &&
-                        motivos.find(m => m.uuid === values.motivo) &&
-                        motivos.find(m => m.uuid === values.motivo).nome ===
+                        motivos.find((m) => m.uuid === values.motivo) &&
+                        motivos.find((m) => m.uuid === values.motivo).nome ===
                           "Lanche Emergencial"
                           ? moment().toDate()
                           : proximosDoisDiasUteis
@@ -561,7 +561,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       usarDirty={true}
                     />
                     <OnChange name="alterar_dia">
-                      {value => {
+                      {(value) => {
                         if (value) {
                           onDataChanged(value);
                         }
@@ -589,7 +589,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       }
                     />
                     <OnChange name="data_inicial">
-                      {value => {
+                      {(value) => {
                         if (value) {
                           onDataChanged(value);
                         }
@@ -617,7 +617,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       }
                     />
                     <OnChange name="data_final">
-                      {value => {
+                      {(value) => {
                         if (value) {
                           onDataChanged(value);
                         }
@@ -673,7 +673,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       disabled={submitting}
                       onClick={() => {
                         values["status"] = STATUS_DRE_A_VALIDAR;
-                        handleSubmit(values => onSubmit(values, form));
+                        handleSubmit((values) => onSubmit(values, form));
                       }}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3"

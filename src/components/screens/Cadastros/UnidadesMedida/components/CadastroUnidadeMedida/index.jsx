@@ -5,7 +5,7 @@ import "./style.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -14,12 +14,12 @@ import { useHistory } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
   noSpaceStartOrEnd,
-  required
+  required,
 } from "helpers/fieldValidators";
 import {
   cadastrarUnidadeMedida,
   editarUnidadeMedida,
-  getUnidadeMedida
+  getUnidadeMedida,
 } from "services/qualidade.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { composeValidators } from "helpers/utilities";
@@ -80,7 +80,7 @@ export default () => {
     }
   };
 
-  const montaPayload = values => {
+  const montaPayload = (values) => {
     let payload = {};
 
     payload.nome = values.nome_unidade_medida;
@@ -89,13 +89,13 @@ export default () => {
     return payload;
   };
 
-  const erroCadastroOuEdicaoRepetido = error => {
+  const erroCadastroOuEdicaoRepetido = (error) => {
     return error.response.data.non_field_errors.includes(
       "Os campos nome devem criar um set único."
     );
   };
 
-  const buscaUnidadeMedida = async uuid => {
+  const buscaUnidadeMedida = async (uuid) => {
     let response;
     try {
       response = await getUnidadeMedida(uuid);
@@ -103,7 +103,7 @@ export default () => {
         setInitialValues({
           nome_unidade_medida: response.data.nome,
           abreviacao: response.data.abreviacao,
-          data_cadastro: response.data.criado_em.slice(0, 10)
+          data_cadastro: response.data.criado_em.slice(0, 10),
         });
         setCarregando(false);
       }
@@ -127,8 +127,8 @@ export default () => {
         data_cadastro: new Date().toLocaleDateString("pt-BR", {
           day: "2-digit",
           month: "2-digit",
-          year: "numeric"
-        })
+          year: "numeric",
+        }),
       });
     }
   }, []);

@@ -7,9 +7,9 @@ export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_FOOD_SUSPENSION:
       if (action.data !== null) {
-        action.data.suspensoes_alimentacao.forEach(function(dia_motivo) {
+        action.data.suspensoes_alimentacao.forEach(function (dia_motivo) {
           const idx = action.data.suspensoes_alimentacao.findIndex(
-            suspensao => suspensao.data === dia_motivo.data
+            (suspensao) => suspensao.data === dia_motivo.data
           );
           let diaMotivo = {};
           diaMotivo["data"] = dia_motivo.data;
@@ -21,7 +21,7 @@ export default function reducer(state = {}, action) {
           action.data[`dias_razoes_${dia_motivo.data}`] = diaMotivo;
         });
 
-        action.data.quantidades_por_periodo.forEach(function(
+        action.data.quantidades_por_periodo.forEach(function (
           quantidade_por_periodo
         ) {
           let quantidade_por_periodo_ = {};
@@ -43,13 +43,13 @@ export default function reducer(state = {}, action) {
       }
       return {
         data: {
-          ...action.data
-        }
+          ...action.data,
+        },
       };
     default:
       return state;
   }
 }
 
-export const loadFoodSuspension = data => dispatch =>
+export const loadFoodSuspension = (data) => (dispatch) =>
   dispatch({ type: LOAD_FOOD_SUSPENSION, data });

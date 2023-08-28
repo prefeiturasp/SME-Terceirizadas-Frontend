@@ -96,7 +96,9 @@ export const Container = () => {
       const tipo_unidade_escolar_iniciais =
         response.data.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais;
       const vinculosTipoAlimentacaoMotivoInclusaoEspecifico = await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico(
-        { tipo_unidade_escolar_iniciais }
+        {
+          tipo_unidade_escolar_iniciais
+        }
       );
       let periodosMotivoInclusaoEspecifico = [];
       vinculosTipoAlimentacaoMotivoInclusaoEspecifico.data.forEach(vinculo => {

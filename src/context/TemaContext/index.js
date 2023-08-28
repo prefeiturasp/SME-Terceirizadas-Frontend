@@ -2,12 +2,12 @@ import React, { createContext, useEffect, useState } from "react";
 
 export const temas = {
   dark: "dark-content",
-  light: "light-content"
+  light: "light-content",
 };
 
 export const TemaContext = createContext({
   theme: temas.dark,
-  changeTheme: () => {}
+  changeTheme: () => {},
 });
 
 export const TemaContextProvider = ({ children }) => {

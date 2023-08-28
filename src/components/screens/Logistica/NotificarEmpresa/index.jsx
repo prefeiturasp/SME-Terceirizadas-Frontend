@@ -7,7 +7,7 @@ import {
   criarEditarNotificacao,
   enviarNotificacao,
   getNotificacao,
-  solicitarAlteracaoNotificacao
+  solicitarAlteracaoNotificacao,
 } from "services/logistica.service";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -18,13 +18,13 @@ import { TIPOS_OCORRENCIAS_OPTIONS } from "constants/shared";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import ModalConfirmarEnvio from "./components/ModalConfirmarEnvio";
 import {
   GUIAS_NOTIFICACAO,
   GUIAS_NOTIFICACAO_FISCAL,
-  LOGISTICA
+  LOGISTICA,
 } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import ModalCancelarEnvio from "./components/ModalCancelarEnvio";
@@ -47,7 +47,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
   const [modalAssinatura, setModalAssinatura] = useState(false);
 
   useEffect(() => {
-    const carregarNotificacao = async uuid => {
+    const carregarNotificacao = async (uuid) => {
       let response;
       try {
         setCarregando(true);
@@ -63,7 +63,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
           numero_notificacao: notificacao.numero,
           nome_empresa: notificacao.empresa.nome_fantasia,
           processo_sei: notificacao.processo_sei,
-          ...previsoes_contratuais
+          ...previsoes_contratuais,
         });
 
         setCarregando(false);
@@ -82,46 +82,47 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
     }
   }, []);
 
-  const abriModalGuia = guia => {
-    guia.conferencias.map(conferencia => {
-      conferencia.conferencia_dos_alimentos.map(conferenciaAlimento => {
+  const abriModalGuia = (guia) => {
+    guia.conferencias.map((conferencia) => {
+      conferencia.conferencia_dos_alimentos.map((conferenciaAlimento) => {
         if (conferenciaAlimento.ocorrencia) {
-          conferenciaAlimento.ocorrencia = conferenciaAlimento.ocorrencia.reduce(
-            (texto, ocorrencia, index) => {
-              let virgula = index === 0 ? "" : ", ";
-              return texto + virgula + labelOcorrencia(ocorrencia);
-            },
-            ""
-          );
+          conferenciaAlimento.ocorrencia =
+            conferenciaAlimento.ocorrencia.reduce(
+              (texto, ocorrencia, index) => {
+                let virgula = index === 0 ? "" : ", ";
+                return texto + virgula + labelOcorrencia(ocorrencia);
+              },
+              ""
+            );
         }
       });
     });
     setGuiaModal(guia);
   };
 
-  const labelOcorrencia = id =>
-    TIPOS_OCORRENCIAS_OPTIONS.find(x => x.value === id).label;
+  const labelOcorrencia = (id) =>
+    TIPOS_OCORRENCIAS_OPTIONS.find((x) => x.value === id).label;
 
   const getPrevisoesContratuais = (previsoes, ocorrencias) => {
     let values = {};
-    previsoes.forEach(prev => {
+    previsoes.forEach((prev) => {
       let index = Object.keys(ocorrencias).findIndex(
-        x => x === prev.motivo_ocorrencia
+        (x) => x === prev.motivo_ocorrencia
       );
       values[`previsao_contratual_${index}`] = prev.previsao_contratual;
     });
     return values;
   };
 
-  const organizaOcorrencias = notificacao => {
+  const organizaOcorrencias = (notificacao) => {
     let guias = notificacao.guias_notificadas;
 
     let ocorrencias = {};
 
-    guias.forEach(guia => {
-      guia.conferencias.map(c =>
-        c.conferencia_dos_alimentos.forEach(conf => {
-          conf.ocorrencia.forEach(ocorrencia => {
+    guias.forEach((guia) => {
+      guia.conferencias.map((c) =>
+        c.conferencia_dos_alimentos.forEach((conf) => {
+          conf.ocorrencia.forEach((ocorrencia) => {
             if (ocorrencias[ocorrencia]) {
               if (!ocorrencias[ocorrencia].includes(guia)) {
                 ocorrencias[ocorrencia].push(guia);
@@ -139,7 +140,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
     return notificacao;
   };
 
-  const montaPayload = values => {
+  const montaPayload = (values) => {
     let payload = {};
     payload.processo_sei = values.processo_sei;
     payload.previsoes = [];
@@ -148,7 +149,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
       if (values[`previsao_contratual_${index}`]) {
         let prev = {
           motivo_ocorrencia: occ,
-          previsao_contratual: values[`previsao_contratual_${index}`]
+          previsao_contratual: values[`previsao_contratual_${index}`],
         };
         payload.previsoes.push(prev);
       }
@@ -157,7 +158,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
     return payload;
   };
 
-  const salvarNotificacao = async values => {
+  const salvarNotificacao = async (values) => {
     setCarregando(true);
     let payload = montaPayload(values);
     let response = await criarEditarNotificacao(notificacao.uuid, payload);
@@ -174,7 +175,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
   const voltarPaginaFiscal = () =>
     history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO_FISCAL}`);
 
-  const salvarEnviarNotificacao = async values => {
+  const salvarEnviarNotificacao = async (values) => {
     setCarregando(true);
     let payload = montaPayload(values);
     let response = await enviarNotificacao(notificacao.uuid, payload);
@@ -188,7 +189,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
       toastError("Erro ao enviar Notificação");
     }
   };
-  const validaForm = values => {
+  const validaForm = (values) => {
     let processosIncompletos = false;
 
     if (notificacao.lista_ocorrencias) {
@@ -202,19 +203,19 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
     return !values.processo_sei || processosIncompletos;
   };
 
-  const aprovaPrevisao = index => {
+  const aprovaPrevisao = (index) => {
     let newAprovacoes = [...aprovacoes];
     newAprovacoes[index] = {
       aprovado: true,
       justificativa_alteracao: `Aprovado em ${moment().format(
         "DD/MM/YYYY - HH:mm"
-      )}`
+      )}`,
     };
     setAprovacoes(newAprovacoes);
   };
 
   const confereAprovacoes = () => {
-    let contador = aprovacoes.filter(x => x).length;
+    let contador = aprovacoes.filter((x) => x).length;
     return (
       notificacao.lista_ocorrencias &&
       Object.keys(notificacao.lista_ocorrencias).length === contador
@@ -222,13 +223,13 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
   };
 
   const confereAssinar = () =>
-    aprovacoes.filter(x => x.aprovado !== true).length === 0;
+    aprovacoes.filter((x) => x.aprovado !== true).length === 0;
 
   const handleClickVoltar = () => {
     voltarPara ? history.push(voltarPara) : history.goBack();
   };
 
-  const assinarNotificacao = async password => {
+  const assinarNotificacao = async (password) => {
     setCarregando(true);
     let payload = montaPayloadFiscal();
     payload["password"] = password;
@@ -268,7 +269,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
 
     payload.previsoes = aprovacoes.map((aprovacao, index) => ({
       motivo_ocorrencia: Object.keys(notificacao.lista_ocorrencias)[index],
-      ...aprovacao
+      ...aprovacao,
     }));
 
     return payload;

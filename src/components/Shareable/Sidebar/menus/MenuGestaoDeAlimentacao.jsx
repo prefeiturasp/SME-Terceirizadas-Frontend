@@ -20,7 +20,7 @@ import {
   CODAE,
   CADASTROS,
   CONSULTA_KITS,
-  RELATORIO_SOLICITACOES_ALIMENTACAO
+  RELATORIO_SOLICITACOES_ALIMENTACAO,
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -31,7 +31,7 @@ import {
   usuarioEscolaEhGestaoDireta,
   usuarioEhNutricionistaSupervisao,
   usuarioEhMedicao,
-  usuarioEhEscolaTerceirizadaQualquerPerfil
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {

@@ -5,7 +5,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 
@@ -15,7 +15,7 @@ export default ({
   loading,
   alunosAdicionados,
   setAlunosAdicionados,
-  emEdicao
+  emEdicao,
 }) => {
   const [valorSelecionado, setValorSelecionado] = useState(null);
   const [isModalExcluir, setIsModalExcluir] = useState(false);
@@ -26,30 +26,30 @@ export default ({
     () =>
       alunos
         ?.sort((a, b) => a.nome.localeCompare(b.nome))
-        .map(aluno => ({
-          value: `${aluno.codigo_eol} - ${aluno.nome}`
+        .map((aluno) => ({
+          value: `${aluno.codigo_eol} - ${aluno.nome}`,
         })) || [],
     [alunos]
   );
   const filterAlunos = (inputValue, option) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1;
 
-  const adicionarAluno = aluno => {
+  const adicionarAluno = (aluno) => {
     const alunoExiste = alunosAdicionados.some(
-      a => a.codigo_eol === aluno.codigo_eol
+      (a) => a.codigo_eol === aluno.codigo_eol
     );
 
     if (alunoExiste) {
       setIsModalDuplicata(true);
     } else {
-      setAlunosAdicionados(prev => [...prev, aluno]);
+      setAlunosAdicionados((prev) => [...prev, aluno]);
     }
     setValorSelecionado("");
   };
 
-  const excluirAluno = codigo_eol => {
-    setAlunosAdicionados(prev =>
-      prev.filter(aluno => aluno.codigo_eol !== codigo_eol)
+  const excluirAluno = (codigo_eol) => {
+    setAlunosAdicionados((prev) =>
+      prev.filter((aluno) => aluno.codigo_eol !== codigo_eol)
     );
     setIsModalExcluir(false);
   };
@@ -59,7 +59,7 @@ export default ({
       {
         title: "Alunos em Período Parcial",
         dataIndex: "nome",
-        key: "nome"
+        key: "nome",
       },
       {
         title: "Excluir",
@@ -79,13 +79,13 @@ export default ({
               />
             </>
           </Tooltip>
-        )
-      }
+        ),
+      },
     ];
 
-    const dataSource = alunos.map(aluno => ({
+    const dataSource = alunos.map((aluno) => ({
       key: aluno.codigo_eol,
-      nome: `${aluno.codigo_eol} - ${aluno.nome}`
+      nome: `${aluno.codigo_eol} - ${aluno.nome}`,
     }));
 
     const contador = `Total: ${dataSource.length.toString().padStart(2, "0")}`;
@@ -135,7 +135,7 @@ export default ({
               onClick={handleModalExcluirClose}
               className="ml-3"
             />
-          </>
+          </>,
         ]}
       >
         <p>
@@ -153,13 +153,13 @@ export default ({
         >
           <AutoComplete
             className={erro ? "input-error" : ""}
-            options={alunosOptions.map(option => ({
-              value: option.value
+            options={alunosOptions.map((option) => ({
+              value: option.value,
             }))}
             value={valorSelecionado}
             style={{ width: 400 }}
             filterOption={filterAlunos}
-            onChange={value => {
+            onChange={(value) => {
               if (valorSelecionado !== value) {
                 setValorSelecionado(value);
               }
@@ -172,7 +172,7 @@ export default ({
                 <SearchOutlined
                   style={{
                     cursor: "pointer",
-                    transform: "rotateX(180deg)"
+                    transform: "rotateX(180deg)",
                   }}
                 />
               }
@@ -185,7 +185,7 @@ export default ({
             className="ml-2"
             onClick={() => {
               const alunoSelecionado = alunos.find(
-                aluno =>
+                (aluno) =>
                   `${aluno.codigo_eol} - ${aluno.nome}` === valorSelecionado
               );
               if (alunoSelecionado) {

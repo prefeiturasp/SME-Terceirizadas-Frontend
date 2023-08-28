@@ -4,7 +4,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import {
   deleteFotoAluno,
   getFotoAluno,
-  updateFotoAluno
+  updateFotoAluno,
 } from "services/aluno.service";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
@@ -13,11 +13,11 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   getError,
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada
+  usuarioEhEscolaTerceirizada,
 } from "helpers/utilities";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { solicitacaoEhDoCardAutorizadas } from "../../helpers";
 import { podeAtualizarFoto } from "components/screens/DietaEspecial/Escola/helper";
@@ -34,9 +34,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
     const responseFoto = await getFotoAluno(aluno.codigo_eol);
     if (responseFoto.status === HTTP_STATUS.OK) {
       setFotoAlunoSrc(
-        `data:${responseFoto.data.data.download.item2};base64,${
-          responseFoto.data.data.download.item1
-        }`
+        `data:${responseFoto.data.data.download.item2};base64,${responseFoto.data.data.download.item1}`
       );
       setCriadoRf(responseFoto.data.data.criadoRf);
     } else {
@@ -50,7 +48,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
     aluno.codigo_eol && getFoto();
   }, []);
 
-  const atualizarFoto = async files => {
+  const atualizarFoto = async (files) => {
     if (files.length > 0) {
       setAtualizandoImagem(true);
       const response = await updateFotoAluno(aluno.codigo_eol, files);
@@ -60,9 +58,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
         if (responseFoto) {
           if (responseFoto.status === HTTP_STATUS.OK) {
             setFotoAlunoSrc(
-              `data:${responseFoto.data.data.download.item2};base64,${
-                responseFoto.data.data.download.item1
-              }`
+              `data:${responseFoto.data.data.download.item2};base64,${responseFoto.data.data.download.item1}`
             );
             setCriadoRf(responseFoto.data.data.criadoRf);
           } else {
@@ -172,7 +168,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
                     ref={inputRef}
                     accept=".png, .jpeg, .jpg"
                     type="file"
-                    onChange={e => atualizarFoto(e.target.files)}
+                    onChange={(e) => atualizarFoto(e.target.files)}
                   />
                 </span>
                 <Botao

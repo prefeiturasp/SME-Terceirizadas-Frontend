@@ -7,14 +7,14 @@ import GestaoSolicitacaoAlteracao from "components/screens/Logistica/GestaoSolic
 
 const atual = {
   href: `/${LOGISTICA}/${GESTAO_SOLICITACAO_ALTERACAO}`,
-  titulo: "Alteração da Requisição"
+  titulo: "Alteração da Requisição",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
-  }
+    titulo: "Abastecimento",
+  },
 ];
 
 export default () => (

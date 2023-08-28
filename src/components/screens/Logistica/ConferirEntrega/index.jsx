@@ -18,7 +18,7 @@ export default () => {
 
   const inicioResultado = useRef();
 
-  const buscarGuias = async page => {
+  const buscarGuias = async (page) => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     const response = await getGuiasEscola(params);
@@ -41,7 +41,7 @@ export default () => {
       const urlParams = new URLSearchParams(window.location.search);
       const codigo = urlParams.get("numero_guia");
       const filtro = {
-        numero_guia: codigo
+        numero_guia: codigo,
       };
       setFiltros({ ...filtro });
       setInitialValues({ ...filtro });
@@ -55,7 +55,7 @@ export default () => {
     }
   }, [filtros]);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarGuias(page);
     setPage(page);
   };

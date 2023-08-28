@@ -4,7 +4,7 @@ import "./style.scss";
 import {
   getNotificacoesGerais,
   getPendenciasNaoResolvidas,
-  setNotificacaoMarcarDesmarcarLida
+  setNotificacaoMarcarDesmarcarLida,
 } from "services/notificacoes.service";
 import CardNotificacao from "./components/CardNotificacao";
 import Filtros from "./components/Filtros";
@@ -21,13 +21,13 @@ export default () => {
   const [clickBtnNotificacoes, setClickBtnNotificacoes] = useState(false);
   const [filtros, setFiltros] = useState();
 
-  const buscarNotificacoes = async page => {
+  const buscarNotificacoes = async (page) => {
     let pendenciasResponse;
     if (!filtros.lido) {
       let filtrosPendencias = { ...filtros };
       delete filtrosPendencias.lido;
       const paramsPendencias = gerarParametrosConsulta({
-        ...filtrosPendencias
+        ...filtrosPendencias,
       });
       pendenciasResponse = await getPendenciasNaoResolvidas(paramsPendencias);
     }
@@ -43,21 +43,21 @@ export default () => {
     setTotalPendencias(pendenciasNew.length);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarNotificacoes(page);
     setPage(page);
   };
 
-  const toggleBtnNotificacoes = uuid => {
+  const toggleBtnNotificacoes = (uuid) => {
     setClickBtnNotificacoes({
-      [uuid]: !clickBtnNotificacoes[uuid]
+      [uuid]: !clickBtnNotificacoes[uuid],
     });
   };
 
   const handleChangeMarcarComoLida = async (notificacao, index) => {
     const payload = {
       uuid: notificacao.uuid,
-      lido: !notificacao.lido
+      lido: !notificacao.lido,
     };
     if (notificacao.tipo === "Pendência" && notificacao.resolvido === false) {
       let pendenciasNew = pendencias;
@@ -79,7 +79,7 @@ export default () => {
       const urlParams = new URLSearchParams(window.location.search);
       const codigo = urlParams.get("uuid");
       const filtro = {
-        uuid: codigo
+        uuid: codigo,
       };
       setFiltros({ ...filtro });
     } else {

@@ -14,7 +14,7 @@ import {
   listaProtocolosLiberados,
   alimentos,
   solicitacoesDietaEspecial,
-  protocoloPadraoDietaEspecial
+  protocoloPadraoDietaEspecial,
 } from "../dados";
 import { API_URL } from "constants/config";
 import { formataJustificativa } from "../helpers";
@@ -50,9 +50,7 @@ const server = setupServer(
     return res(ctx.json(solicitacoesDietaEspecial()));
   }),
   rest.get(
-    `${API_URL}/protocolo-padrao-dieta-especial/${
-      cancelamento_data_termino.protocolo_padrao
-    }/`,
+    `${API_URL}/protocolo-padrao-dieta-especial/${cancelamento_data_termino.protocolo_padrao}/`,
     (req, res, ctx) => {
       return res(ctx.json(protocoloPadraoDietaEspecial()));
     }
@@ -64,13 +62,11 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 test("Relatorio para cancelamento por atingir data termino", async () => {
-  const search = `?uuid=${
-    cancelamento_data_termino.uuid
-  }&ehInclusaoContinua=false&card=canceladas:`;
+  const search = `?uuid=${cancelamento_data_termino.uuid}&ehInclusaoContinua=false&card=canceladas:`;
   Object.defineProperty(window, "location", {
     value: {
-      search: search
-    }
+      search: search,
+    },
   });
   render(<Relatorio visao={CODAE} />);
 
@@ -138,13 +134,11 @@ test("Relatorio para cancelamento para aluno não matriculado na rede", async ()
   cancelamento_rede_municipal.status_solicitacao =
     "CANCELADO_ALUNO_NAO_PERTENCE_REDE";
 
-  const search = `?uuid=${
-    cancelamento_rede_municipal.uuid
-  }&ehInclusaoContinua=false&card=canceladas:`;
+  const search = `?uuid=${cancelamento_rede_municipal.uuid}&ehInclusaoContinua=false&card=canceladas:`;
   Object.defineProperty(window, "location", {
     value: {
-      search: search
-    }
+      search: search,
+    },
   });
   render(<Relatorio visao={CODAE} />);
 
@@ -226,12 +220,12 @@ test("Relatorio para cancelamento quando a escola cancela antes da aprovação p
         date_joined: "10/07/2020 13:15:23",
         registro_funcional: "8115257",
         tipo_usuario: "escola",
-        cargo: "ANALISTA DE SAUDE NIVEL I"
+        cargo: "ANALISTA DE SAUDE NIVEL I",
       },
       criado_em: "20/09/2021 16:16:17",
       descricao: "7691509: BENICIO LOPES SANTOS DE ARAUJO",
       justificativa: "",
-      resposta_sim_nao: false
+      resposta_sim_nao: false,
     },
     {
       status_evento_explicacao: "Escola cancelou",
@@ -243,22 +237,20 @@ test("Relatorio para cancelamento quando a escola cancela antes da aprovação p
         date_joined: "10/07/2020 13:15:23",
         registro_funcional: "8115257",
         tipo_usuario: "escola",
-        cargo: "ANALISTA DE SAUDE NIVEL I"
+        cargo: "ANALISTA DE SAUDE NIVEL I",
       },
       criado_em: "14/10/2021 18:23:07",
       descricao: "7691509: BENICIO LOPES SANTOS DE ARAUJO",
       justificativa: "<p>Cancelei</p>",
-      resposta_sim_nao: false
-    }
+      resposta_sim_nao: false,
+    },
   ];
 
-  const search = `?uuid=${
-    cancelamento_escola_antes_aprovacao.uuid
-  }&ehInclusaoContinua=false&card=canceladas:`;
+  const search = `?uuid=${cancelamento_escola_antes_aprovacao.uuid}&ehInclusaoContinua=false&card=canceladas:`;
   Object.defineProperty(window, "location", {
     value: {
-      search: search
-    }
+      search: search,
+    },
   });
   render(<Relatorio visao={CODAE} />);
 
@@ -347,12 +339,12 @@ test("Relatorio para cancelamento quando a escola cancela após da aprovação p
         date_joined: "10/07/2020 13:15:23",
         registro_funcional: "8115257",
         tipo_usuario: "escola",
-        cargo: "ANALISTA DE SAUDE NIVEL I"
+        cargo: "ANALISTA DE SAUDE NIVEL I",
       },
       criado_em: "15/09/2021 18:28:17",
       descricao: "5126330: RYCHARD GABRYEL AMORIM VIANA CONTARINI",
       justificativa: "",
-      resposta_sim_nao: false
+      resposta_sim_nao: false,
     },
     {
       status_evento_explicacao: "CODAE autorizou",
@@ -364,12 +356,12 @@ test("Relatorio para cancelamento quando a escola cancela após da aprovação p
         date_joined: "10/07/2020 13:15:16",
         registro_funcional: "8107807",
         tipo_usuario: "dieta_especial",
-        cargo: "ANALISTA DE SAUDE NIVEL I"
+        cargo: "ANALISTA DE SAUDE NIVEL I",
       },
       criado_em: "14/10/2021 18:43:24",
       descricao: "5126330: RYCHARD GABRYEL AMORIM VIANA CONTARINI",
       justificativa: "",
-      resposta_sim_nao: false
+      resposta_sim_nao: false,
     },
     {
       status_evento_explicacao: "Escola solicitou cancelamento",
@@ -381,12 +373,12 @@ test("Relatorio para cancelamento quando a escola cancela após da aprovação p
         date_joined: "10/07/2020 13:15:23",
         registro_funcional: "8115257",
         tipo_usuario: "escola",
-        cargo: "ANALISTA DE SAUDE NIVEL I"
+        cargo: "ANALISTA DE SAUDE NIVEL I",
       },
       criado_em: "14/10/2021 18:48:47",
       descricao: "5126330: RYCHARD GABRYEL AMORIM VIANA CONTARINI",
       justificativa: "<p>Escola Cancelou após solicitação aprovada</p>\n",
-      resposta_sim_nao: false
+      resposta_sim_nao: false,
     },
     {
       status_evento_explicacao: "Escola cancelou",
@@ -398,22 +390,20 @@ test("Relatorio para cancelamento quando a escola cancela após da aprovação p
         date_joined: "10/07/2020 13:15:16",
         registro_funcional: "8107807",
         tipo_usuario: "dieta_especial",
-        cargo: "ANALISTA DE SAUDE NIVEL I"
+        cargo: "ANALISTA DE SAUDE NIVEL I",
       },
       criado_em: "14/10/2021 18:49:38",
       descricao: "5126330: RYCHARD GABRYEL AMORIM VIANA CONTARINI",
       justificativa: "",
-      resposta_sim_nao: false
-    }
+      resposta_sim_nao: false,
+    },
   ];
 
-  const search = `?uuid=${
-    cancelamento_escola_apos_aprovacao.uuid
-  }&ehInclusaoContinua=false&card=canceladas:`;
+  const search = `?uuid=${cancelamento_escola_apos_aprovacao.uuid}&ehInclusaoContinua=false&card=canceladas:`;
   Object.defineProperty(window, "location", {
     value: {
-      search: search
-    }
+      search: search,
+    },
   });
   render(<Relatorio visao={CODAE} />);
 

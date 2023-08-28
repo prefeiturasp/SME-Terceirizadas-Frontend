@@ -24,11 +24,11 @@ export default function reducer(state = {}, action) {
           action.data.especificacoes.length > 0
         ) {
           action.data.especificacoes = action.data.especificacoes.map(
-            especificacao => {
+            (especificacao) => {
               return {
                 volume: especificacao.volume,
                 unidade_de_medida: especificacao.unidade_de_medida.uuid,
-                embalagem_produto: especificacao.embalagem_produto.uuid
+                embalagem_produto: especificacao.embalagem_produto.uuid,
               };
             }
           );
@@ -38,13 +38,13 @@ export default function reducer(state = {}, action) {
       }
       return {
         data: {
-          ...action.data
-        }
+          ...action.data,
+        },
       };
     default:
       return state;
   }
 }
 
-export const loadProduto = data => dispatch =>
+export const loadProduto = (data) => (dispatch) =>
   dispatch({ type: LOAD_PRODUTO, data });

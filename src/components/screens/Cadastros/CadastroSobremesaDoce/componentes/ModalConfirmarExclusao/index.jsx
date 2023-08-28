@@ -1,7 +1,7 @@
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { getDDMMYYYfromDate } from "configs/helper";
 import React from "react";

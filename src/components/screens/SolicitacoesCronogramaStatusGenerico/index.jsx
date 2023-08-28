@@ -20,7 +20,7 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
     titulo,
     icone,
     cardType,
-    alteracao
+    alteracao,
   } = props;
   const [solicitacoes, setSolicitacoes] = useState(null);
   const [erro, setErro] = useState("");
@@ -32,19 +32,19 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
 
   const PAGE_SIZE = limit || 10;
 
-  const formataCardCronograma = itens => {
-    return itens.map(item => ({
+  const formataCardCronograma = (itens) => {
+    return itens.map((item) => ({
       texto: `${item.numero} - ${item.produto} - ${item.empresa}`,
       data: item.log_mais_recente,
-      link: gerarLinkDoItem(item)
+      link: gerarLinkDoItem(item),
     }));
   };
 
-  const formataCardSolicitacao = itens => {
-    return itens.map(item => ({
+  const formataCardSolicitacao = (itens) => {
+    return itens.map((item) => ({
       texto: `${item.cronograma} - ${item.empresa}`,
       data: item.log_mais_recente,
-      link: ""
+      link: "",
     }));
   };
 
@@ -57,8 +57,8 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
     }
     if (response.status === HTTP_STATUS.OK) {
       let solicitacoes_new = response.data.results
-        .map(solicitacao => solicitacao.dados)
-        .map(dado => dado)[0];
+        .map((solicitacao) => solicitacao.dados)
+        .map((dado) => dado)[0];
       solicitacoes_new = alteracao
         ? formataCardSolicitacao(solicitacoes_new)
         : formataCardCronograma(solicitacoes_new);
@@ -73,7 +73,7 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
   const filtrarRequisicao = debounce((value, values) => {
     const { nome_fornecedor, nome_produto, numero_cronograma } = values;
     const podeFiltrar = [nome_fornecedor, nome_produto, numero_cronograma].some(
-      value => value && value.length > 2
+      (value) => value && value.length > 2
     );
     if (podeFiltrar) {
       setLoading(true);
@@ -93,7 +93,7 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
     // eslint-disable-next-line
   }, []);
 
-  const onPageChanged = async page => {
+  const onPageChanged = async (page) => {
     const paramsPage = { limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE };
     let newParams = Object.assign({}, params, paramsPage);
     await getSolicitacoesAsync(newParams);
@@ -110,7 +110,7 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
               initialValues={{
                 nome_fornecedor: "",
                 numero_cronograma: "",
-                nome_produto: ""
+                nome_produto: "",
               }}
               onSubmit={() => {}}
             >
@@ -124,7 +124,7 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
                     />
 
                     <OnChange name="numero_cronograma">
-                      {value => filtrarRequisicao(value, values)}
+                      {(value) => filtrarRequisicao(value, values)}
                     </OnChange>
                   </div>
                   <div className="col-4">
@@ -135,7 +135,7 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
                     />
 
                     <OnChange name="nome_produto">
-                      {value => filtrarRequisicao(value, values)}
+                      {(value) => filtrarRequisicao(value, values)}
                     </OnChange>
                   </div>
                   <div className="col-4">
@@ -145,7 +145,7 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
                       placeholder="Pesquisar por Nome do Fornecedor"
                     />
                     <OnChange name="nome_fornecedor">
-                      {value => filtrarRequisicao(value, values)}
+                      {(value) => filtrarRequisicao(value, values)}
                     </OnChange>
                   </div>
                 </div>
@@ -158,7 +158,7 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
               solicitacoes={solicitacoes}
             />
             <Paginacao
-              onChange={page => onPageChanged(page)}
+              onChange={(page) => onPageChanged(page)}
               total={count}
               pageSize={PAGE_SIZE}
               current={currentPage}

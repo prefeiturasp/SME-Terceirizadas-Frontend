@@ -10,7 +10,7 @@ export class CardListarSolicitacoes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      solicitacoes: this.props.solicitacoes
+      solicitacoes: this.props.solicitacoes,
     };
   }
 
@@ -39,14 +39,15 @@ export class CardListarSolicitacoes extends Component {
                             value.link ||
                             `${caminhoURL(value.tipo_doc)}/${RELATORIO}?uuid=${
                               value.uuid
-                            }&ehInclusaoContinua=${value.tipo_doc ===
-                              "INC_ALIMENTA_CONTINUA"}`
+                            }&ehInclusaoContinua=${
+                              value.tipo_doc === "INC_ALIMENTA_CONTINUA"
+                            }`
                           }
                         >
                           <p className={`data ml-4 ${conferida}`}>
                             {[
                               GESTAO_PRODUTO_CARDS.HOMOLOGADOS,
-                              GESTAO_PRODUTO_CARDS.PRODUTOS_SUSPENSOS
+                              GESTAO_PRODUTO_CARDS.PRODUTOS_SUSPENSOS,
                             ].includes(titulo) ? (
                               <TooltipProdutos
                                 cardTitulo={titulo}

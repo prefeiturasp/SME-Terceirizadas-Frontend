@@ -10,15 +10,15 @@ class GraficoEvolucao extends Component {
     this.state = {
       dataSet: [],
       data: chartData(),
-      legend: null
+      legend: null,
     };
   }
 
   componentDidMount() {
-    this.props.getEvolucaoSolicitacoes().then(response => {
+    this.props.getEvolucaoSolicitacoes().then((response) => {
       const results = response.data.results;
       let dataSet = [];
-      TIPOS_SOLICITACAO_LISTA.forEach(tipoSolicitacao => {
+      TIPOS_SOLICITACAO_LISTA.forEach((tipoSolicitacao) => {
         if (results[tipoSolicitacao.titulo]) {
           const data = {
             label: tipoSolicitacao.titulo,
@@ -28,7 +28,7 @@ class GraficoEvolucao extends Component {
             data: results[tipoSolicitacao.titulo].quantidades,
             pointHoverBackgroundColor: tipoSolicitacao.cor,
             pointHoverBorderColor: tipoSolicitacao.cor,
-            ...DATA_DEFAULT_SOLICITACAO
+            ...DATA_DEFAULT_SOLICITACAO,
           };
           dataSet.push(data);
         }
@@ -36,7 +36,7 @@ class GraficoEvolucao extends Component {
           dataSet,
           data: chartData(dataSet),
           graficoEvolucao: results,
-          legend: this.refs.chart.chartInstance.legend.legendItems
+          legend: this.refs.chart.chartInstance.legend.legendItems,
         });
       });
     });
@@ -67,7 +67,7 @@ class GraficoEvolucao extends Component {
           </div>
           {graficoEvolucao && (
             <div className="col-4">
-              {TIPOS_SOLICITACAO_LISTA.map(tipoSolicitacao => {
+              {TIPOS_SOLICITACAO_LISTA.map((tipoSolicitacao) => {
                 return (
                   graficoEvolucao[tipoSolicitacao.titulo] && (
                     <div className="legend-unit">
@@ -91,7 +91,7 @@ class GraficoEvolucao extends Component {
             <div className="row">
               <div className="col-8 legend">
                 <div className="row">
-                  {TIPOS_SOLICITACAO_LISTA.map(tipoSolicitacao => {
+                  {TIPOS_SOLICITACAO_LISTA.map((tipoSolicitacao) => {
                     return (
                       graficoEvolucao[tipoSolicitacao.titulo] && (
                         <div className="col-4">
@@ -100,7 +100,7 @@ class GraficoEvolucao extends Component {
                               <div
                                 className="circle"
                                 style={{
-                                  backgroundColor: tipoSolicitacao.cor
+                                  backgroundColor: tipoSolicitacao.cor,
                                 }}
                               />
                               <div className="text">

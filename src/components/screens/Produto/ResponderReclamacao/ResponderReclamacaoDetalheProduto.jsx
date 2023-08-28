@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import DetalheDoProduto from "components/Shareable/DetalheDoProduto";
@@ -18,7 +18,7 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
   const [uuid, setUuid] = useState();
 
   const carregaHomologacao = useCallback(
-    _uuid => {
+    (_uuid) => {
       async function fetchData() {
         setProduto(null);
         setExibirModal(false);

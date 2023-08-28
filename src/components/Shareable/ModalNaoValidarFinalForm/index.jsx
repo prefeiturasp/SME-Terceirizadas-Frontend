@@ -9,7 +9,7 @@ import Botao from "components/Shareable/Botao";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
@@ -23,7 +23,7 @@ export const ModalNaoValidarFinalForm = ({ ...props }) => {
     endpoint,
     loadSolicitacao,
     motivosDREnaoValida,
-    tipoSolicitacao
+    tipoSolicitacao,
   } = props;
   const [desabilitaBotaoSim, setDesabilitaBotaoSim] = useState(true);
 
@@ -31,13 +31,13 @@ export const ModalNaoValidarFinalForm = ({ ...props }) => {
     SolicitacaoAlimentacaoContext
   );
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const justificativa = {
       justificativa: `${
         motivosDREnaoValida.find(
-          motivo => motivo.uuid === values.motivo_nao_valida
+          (motivo) => motivo.uuid === values.motivo_nao_valida
         ).nome
-      } - ${values.justificativa}`
+      } - ${values.justificativa}`,
     };
     const resp = await endpoint(
       solicitacao.uuid,
@@ -63,7 +63,7 @@ export const ModalNaoValidarFinalForm = ({ ...props }) => {
     }
   };
 
-  const onChangeForm = values => {
+  const onChangeForm = (values) => {
     if (values.justificativa && values.motivo_nao_valida) {
       setDesabilitaBotaoSim(false);
     } else setDesabilitaBotaoSim(true);

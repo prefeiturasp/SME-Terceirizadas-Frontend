@@ -8,12 +8,12 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
   const [showDetail, setShowDetail] = useState(false);
   const log = solicitacao.logs[solicitacao.logs.length - 1];
 
-  const unique = arr => [...new Set(arr)];
+  const unique = (arr) => [...new Set(arr)];
 
   const nomes_periodos = unique(
     solicitacao.quantidade_alunos_cei_da_inclusao_cemei
       .concat(solicitacao.quantidade_alunos_emei_da_inclusao_cemei)
-      .map(qa => qa.periodo_escolar.nome)
+      .map((qa) => qa.periodo_escolar.nome)
   );
 
   const getVinculosAlimentacao = async () => {
@@ -28,7 +28,7 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
     getVinculosAlimentacao();
   }, []);
 
-  const ehDiaCancelado = dia_motivo_inclusao => {
+  const ehDiaCancelado = (dia_motivo_inclusao) => {
     return dia_motivo_inclusao.cancelado ||
       solicitacao.status === "ESCOLA_CANCELOU"
       ? "dia-cancelado"
@@ -116,31 +116,33 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
             {vinculosAlimentacao &&
               nomes_periodos.map((periodo, idx) => {
                 const vinculosCEI = vinculosAlimentacao.find(
-                  vinc =>
+                  (vinc) =>
                     vinc.periodo_escolar.nome === periodo &&
                     vinc.tipo_unidade_escolar.iniciais === "CEI DIRET"
                 );
                 const tiposAlimentacaoCEI = vinculosCEI.tipos_alimentacao
-                  .map(ta => ta.nome)
+                  .map((ta) => ta.nome)
                   .join(", ");
                 const vinculosEMEI = vinculosAlimentacao.find(
-                  vinc =>
+                  (vinc) =>
                     vinc.periodo_escolar.nome === periodo &&
                     vinc.tipo_unidade_escolar.iniciais === "EMEI"
                 );
                 const tiposAlimentacaoEMEI = vinculosEMEI.tipos_alimentacao
-                  .map(ta => ta.nome)
+                  .map((ta) => ta.nome)
                   .join(", ");
-                const faixasCEI = solicitacao.quantidade_alunos_cei_da_inclusao_cemei.filter(
-                  qa => qa.periodo_escolar.nome === periodo
-                );
-                const faixasEMEI = solicitacao.quantidade_alunos_emei_da_inclusao_cemei.filter(
-                  qa => qa.periodo_escolar.nome === periodo
-                );
-                const total = faixasCEI.reduce(function(acc, v) {
+                const faixasCEI =
+                  solicitacao.quantidade_alunos_cei_da_inclusao_cemei.filter(
+                    (qa) => qa.periodo_escolar.nome === periodo
+                  );
+                const faixasEMEI =
+                  solicitacao.quantidade_alunos_emei_da_inclusao_cemei.filter(
+                    (qa) => qa.periodo_escolar.nome === periodo
+                  );
+                const total = faixasCEI.reduce(function (acc, v) {
                   return acc + (v.quantidade || v.quantidade_alunos);
                 }, 0);
-                const total_matriculados = faixasCEI.reduce(function(acc, v) {
+                const total_matriculados = faixasCEI.reduce(function (acc, v) {
                   return acc + (v.matriculados_quando_criado || 0);
                 }, 0);
                 return (
@@ -265,14 +267,14 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                 );
               })}
             {solicitacao.dias_motivos_da_inclusao_cemei.find(
-              inclusao => inclusao.cancelado_justificativa
+              (inclusao) => inclusao.cancelado_justificativa
             ) && (
               <>
                 <hr />
                 <p>
                   <strong>Histórico de cancelamento</strong>
                   {solicitacao.dias_motivos_da_inclusao_cemei
-                    .filter(inclusao => inclusao.cancelado_justificativa)
+                    .filter((inclusao) => inclusao.cancelado_justificativa)
                     .map((inclusao, key) => {
                       return (
                         <div className="cancelado_justificativa" key={key}>
@@ -288,6 +290,6 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

@@ -9,28 +9,28 @@ export const montarMenuOptionStatus = () => {
 export const option_status = [
   {
     value: "EM_ANALISE",
-    label: "Em Análise"
+    label: "Em Análise",
   },
   {
     value: "CRONOGRAMA_CIENTE",
-    label: "Cronograma Ciente"
+    label: "Cronograma Ciente",
   },
   {
     value: "APROVADO_DINUTRE",
-    label: "Aprovado DINUTRE"
+    label: "Aprovado DINUTRE",
   },
   {
     value: "REPROVADO_DINUTRE",
-    label: "Reprovado DINUTRE"
+    label: "Reprovado DINUTRE",
   },
   {
     value: "APROVADO_DILOG",
-    label: "Aprovado DILOG"
+    label: "Aprovado DILOG",
   },
   {
     value: "REPROVADO_DILOG",
-    label: "Reprovado DILOG"
-  }
+    label: "Reprovado DILOG",
+  },
 ];
 
 export const option_status_fornecedor = [
@@ -39,21 +39,21 @@ export const option_status_fornecedor = [
       "EM_ANALISE",
       "CRONOGRAMA_CIENTE",
       "APROVADO_DINUTRE",
-      "REPROVADO_DINUTRE"
+      "REPROVADO_DINUTRE",
     ],
-    label: "Em Análise"
+    label: "Em Análise",
   },
   {
     value: "APROVADO_DILOG",
-    label: "Aprovado DILOG"
+    label: "Aprovado DILOG",
   },
   {
     value: "REPROVADO_DILOG",
-    label: "Reprovado DILOG"
-  }
+    label: "Reprovado DILOG",
+  },
 ];
 
-export const remove_filtros_nulos = filtros => {
+export const remove_filtros_nulos = (filtros) => {
   if (filtros["data_after"] === null) {
     delete filtros["data_after"];
   }

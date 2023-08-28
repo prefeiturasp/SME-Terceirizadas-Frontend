@@ -5,13 +5,13 @@ export default function reducer(state = {}, action) {
     case LOAD_EMPRESA:
       return {
         data: {
-          ...action.data
-        }
+          ...action.data,
+        },
       };
     default:
       return state;
   }
 }
 
-export const loadEmpresa = data => dispatch =>
+export const loadEmpresa = (data) => (dispatch) =>
   dispatch({ type: LOAD_EMPRESA, data });

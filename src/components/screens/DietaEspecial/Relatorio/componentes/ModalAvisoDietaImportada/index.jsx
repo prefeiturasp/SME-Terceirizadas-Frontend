@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "../../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../../Shareable/Botao/constants";
 import "./style.scss";
 

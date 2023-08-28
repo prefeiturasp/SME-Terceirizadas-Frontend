@@ -5,7 +5,7 @@ import { Field, Form } from "react-final-form";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import ConfirmarAlteracao from "./ConfirmarAlteracao";
 import "./styles.scss";
@@ -49,7 +49,7 @@ export default ({ solicitacao, updatePage, acao }) => {
           <Form
             onSubmit={onSubmit}
             subscription={{ submitting: true, values: true }}
-            validate={values => {
+            validate={(values) => {
               const errors = {};
               if (!values.justificativa) {
                 errors.justificativa = "Campo obrigatório";

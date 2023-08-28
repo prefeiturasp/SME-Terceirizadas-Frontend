@@ -18,7 +18,7 @@ export const Container = () => {
 
   const [erro, setErro] = useState(false);
 
-  const getVinculosAlimentacao = async escola_uuid => {
+  const getVinculosAlimentacao = async (escola_uuid) => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
       setVinculosAlimentacao(response.data.results);

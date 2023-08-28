@@ -2,7 +2,7 @@ import React from "react";
 import * as R from "ramda";
 import "./styles.scss";
 
-export const getRecusa = logs => {
+export const getRecusa = (logs) => {
   const arr = R.filter(
     R.propEq("status_evento_explicacao", "CODAE não homologou"),
     logs
@@ -25,7 +25,7 @@ const MotivoDaRecusaDeHomologacao = ({ logs }) => {
           <p
             className="texto-wysiwyg-recusa"
             dangerouslySetInnerHTML={{
-              __html: recusa.justificativa
+              __html: recusa.justificativa,
             }}
           />
         </div>

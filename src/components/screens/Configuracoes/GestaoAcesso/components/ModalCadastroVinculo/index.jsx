@@ -5,7 +5,7 @@ import { Form, Field } from "react-final-form";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import { Radio } from "antd";
@@ -16,19 +16,19 @@ import {
   required,
   tamanhoCnpj,
   validaCPF,
-  SMEPrefeituraEmail
+  SMEPrefeituraEmail,
 } from "helpers/fieldValidators";
 import {
   composeValidators,
   formataCPFCensurado,
-  formatarCPFouCNPJ
+  formatarCPFouCNPJ,
 } from "helpers/utilities";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { getDadosUsuarioEOLCompleto } from "services/permissoes.service";
 import { useEffect } from "react";
 import {
   getSubdivisoesCodae,
-  getVinculoEmpresa
+  getVinculoEmpresa,
 } from "services/vinculos.service";
 import MeusDadosContext from "context/MeusDadosContext";
 import ModalExclusaoVinculo from "../ModalExclusaoVinculo";
@@ -40,7 +40,7 @@ const ENTER = 13;
 
 const campoObrigatorio = {
   touched: true,
-  error: "Informação não localizada"
+  error: "Informação não localizada",
 };
 
 const ModalCadastroVinculo = ({
@@ -56,7 +56,7 @@ const ModalCadastroVinculo = ({
   visaoUnica,
   codae,
   cogestor,
-  ehUEParceira
+  ehUEParceira,
 }) => {
   const [tipoUsuario, setTipoUsuario] = useState();
   const [subdivisoes, setSubdivisoes] = useState();
@@ -73,21 +73,21 @@ const ModalCadastroVinculo = ({
     toggleShow(false, null);
   };
 
-  const getPerfis = visao => {
+  const getPerfis = (visao) => {
     return listaPerfis
-      .filter(perfil => perfil.visao === visao)
-      .map(perfil => ({
+      .filter((perfil) => perfil.visao === visao)
+      .map((perfil) => ({
         uuid: perfil.nome,
-        nome: perfil.nome
+        nome: perfil.nome,
       }));
   };
 
   const buscaSubdivisoes = async () => {
     const subdivisoes = await getSubdivisoesCodae();
 
-    let options_subs = subdivisoes.results.map(sub => ({
+    let options_subs = subdivisoes.results.map((sub) => ({
       uuid: sub.uuid,
-      nome: sub.nome
+      nome: sub.nome,
     }));
     const perfil = JSON.parse(localStorage.getItem("perfil"));
 
@@ -95,19 +95,19 @@ const ModalCadastroVinculo = ({
       COORDENADOR_DIETA_ESPECIAL: "CODAE - Gestão Dieta Especial",
       COORDENADOR_GESTAO_PRODUTO: "CODAE - Gestão de Produtos",
       COORDENADOR_SUPERVISAO_NUTRICAO:
-        "CODAE - Coordenador Supervisão de Nutrição"
+        "CODAE - Coordenador Supervisão de Nutrição",
     };
 
     if (perfil in subdivisoes_restrita_por_perfil) {
       options_subs = options_subs.filter(
-        option => option.nome === subdivisoes_restrita_por_perfil[perfil]
+        (option) => option.nome === subdivisoes_restrita_por_perfil[perfil]
       );
     }
 
     setSubdivisoes(options_subs);
   };
 
-  const buscaEOL = async values => {
+  const buscaEOL = async (values) => {
     let response = await getDadosUsuarioEOLCompleto(values.registro_funcional);
 
     if (response.status === 200) {
@@ -143,7 +143,7 @@ const ModalCadastroVinculo = ({
     }
   };
 
-  const buscaEOLFuncionarioUnidadeParceira = async values => {
+  const buscaEOLFuncionarioUnidadeParceira = async (values) => {
     let response = await getDadosUsuarioEOLCompleto(
       values.cpf_pesquisado.replace(/[^\w\s]/gi, "")
     );
@@ -233,7 +233,7 @@ const ModalCadastroVinculo = ({
     toggleShow,
     visaoUnica,
     codae,
-    ehUEParceira
+    ehUEParceira,
   ]);
 
   return (
@@ -257,7 +257,7 @@ const ModalCadastroVinculo = ({
                 <form
                   onSubmit={handleSubmit}
                   className=""
-                  onKeyPress={event => onKeyPress(event, values)}
+                  onKeyPress={(event) => onKeyPress(event, values)}
                 >
                   {diretor_escola ||
                     empresa ||
@@ -268,7 +268,9 @@ const ModalCadastroVinculo = ({
                           Selecione o tipo de usuário:
                         </span>
                         <Radio.Group
-                          onChange={event => setTipoUsuario(event.target.value)}
+                          onChange={(event) =>
+                            setTipoUsuario(event.target.value)
+                          }
                           value={tipoUsuario}
                         >
                           <Radio className="" value={"SERVIDOR"}>
@@ -506,7 +508,7 @@ const ModalCadastroVinculo = ({
                             className="input-busca-produto"
                             required
                             options={
-                              listaPerfis.some(perfil => perfil.visao)
+                              listaPerfis.some((perfil) => perfil.visao)
                                 ? getPerfis("EMPRESA")
                                 : listaPerfis
                             }

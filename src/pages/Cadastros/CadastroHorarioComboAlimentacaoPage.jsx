@@ -5,22 +5,22 @@ import Page from "../../components/Shareable/Page/Page";
 import {
   CADASTROS,
   CONFIGURACOES,
-  HORARIO_COMBOS_ALIMENTACAO
+  HORARIO_COMBOS_ALIMENTACAO,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${HORARIO_COMBOS_ALIMENTACAO}`,
-  titulo: "Horário de fornecimento de alimentação"
+  titulo: "Horário de fornecimento de alimentação",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
-  }
+    titulo: "Cadastros",
+  },
 ];
 
-export default props => (
+export default (props) => (
   <Page
     titulo={atual.titulo}
     botaoVoltar

@@ -8,7 +8,7 @@ import { visualizaBotoesDoFluxo } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { statusEnum, TIPO_PERFIL } from "constants/shared";
 import { CODAE, DRE, TERCEIRIZADA } from "configs/constants";
@@ -23,9 +23,8 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [respostaSimNao, setRespostaSimNao] = useState(null);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
   const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
-  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
-    false
-  );
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] =
+    useState(false);
   const [showModalCodaeAutorizar, setShowModalCodaeAutorizar] = useState(false);
 
   const {
@@ -41,10 +40,10 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     visao,
     tipoSolicitacao,
     toastAprovaMensagem,
-    toastAprovaMensagemErro
+    toastAprovaMensagemErro,
   } = props;
 
-  const getVinculosTipoAlimentacaoPorEscolaAsync = async escola => {
+  const getVinculosTipoAlimentacaoPorEscolaAsync = async (escola) => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola.uuid);
     if (response.status === HTTP_STATUS.OK) {
       setVinculos(response.data.results);
@@ -61,9 +60,9 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     }
   };
 
-  const onSubmit = values => {
+  const onSubmit = (values) => {
     endpointAprovaSolicitacao(uuid, values.justificativa, tipoSolicitacao).then(
-      response => {
+      (response) => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
           getInclusaoCEMEIAsync();
@@ -71,7 +70,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
           toastError(toastAprovaMensagemErro);
         }
       },
-      function() {
+      function () {
         toastError(toastAprovaMensagemErro);
       }
     );
@@ -94,21 +93,21 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const EXIBIR_BOTAO_APROVAR =
     (![
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
       textoBotaoAprova) ||
     (solicitacao &&
       (solicitacao.prioridade === "REGULAR" ||
         [
           statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
-          statusEnum.CODAE_AUTORIZADO
+          statusEnum.CODAE_AUTORIZADO,
         ].includes(solicitacao.status)) &&
       textoBotaoAprova);
 
   const EXIBIR_BOTAO_QUESTIONAMENTO =
     [
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
     solicitacao &&
     (solicitacao.prioridade !== "REGULAR" ||
@@ -130,9 +129,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <div className="report">
-                <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
-                  solicitacao.id_externo
-                }`}</span>
+                <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${solicitacao.id_externo}`}</span>
                 <div className="card mt-3">
                   <div className="card-body">
                     <CorpoRelatorio
@@ -171,26 +168,26 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                             />
                           )}
                           {EXIBIR_BOTAO_APROVAR &&
-                            (textoBotaoAprova !== "Ciente" &&
-                              (visao === CODAE &&
-                              solicitacao.logs.filter(
-                                log =>
-                                  log.status_evento_explicacao ===
-                                    "Terceirizada respondeu questionamento" &&
-                                  !log.resposta_sim_nao
-                              ).length > 0 ? null : (
-                                <Botao
-                                  texto={textoBotaoAprova}
-                                  type={BUTTON_TYPE.BUTTON}
-                                  onClick={() =>
-                                    visao === DRE
-                                      ? handleSubmit()
-                                      : setShowModalCodaeAutorizar(true)
-                                  }
-                                  style={BUTTON_STYLE.GREEN}
-                                  className="ml-3"
-                                />
-                              )))}
+                            textoBotaoAprova !== "Ciente" &&
+                            (visao === CODAE &&
+                            solicitacao.logs.filter(
+                              (log) =>
+                                log.status_evento_explicacao ===
+                                  "Terceirizada respondeu questionamento" &&
+                                !log.resposta_sim_nao
+                            ).length > 0 ? null : (
+                              <Botao
+                                texto={textoBotaoAprova}
+                                type={BUTTON_TYPE.BUTTON}
+                                onClick={() =>
+                                  visao === DRE
+                                    ? handleSubmit()
+                                    : setShowModalCodaeAutorizar(true)
+                                }
+                                style={BUTTON_STYLE.GREEN}
+                                className="ml-3"
+                              />
+                            ))}
                           {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
                             <div className="form-group float-right mt-4">
                               {solicitacao.terceirizada_conferiu_gestao ? (

@@ -6,7 +6,7 @@ import moment from "moment";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Field, Form, FormSpy } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -18,7 +18,7 @@ import {
   editaCronograma,
   getCronograma,
   getRascunhos,
-  getUnidadesDeMedidaLogistica
+  getUnidadesDeMedidaLogistica,
 } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { useHistory } from "react-router-dom";
@@ -26,14 +26,14 @@ import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
-import { OnChange } from "react-final-form-listeners";
-import { agregarDefault, exibeError, formataMilhar } from "helpers/utilities";
+import { exibeError, formataMilhar } from "helpers/utilities";
 import { getEmpresasCronograma } from "services/terceirizada.service";
 import { getListaCompletaProdutosLogistica } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
+import FormRecebimento from "components/PreRecebimento/FormRecebimento";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -52,7 +52,6 @@ export default () => {
   const [listaRascunhos, setListaRascunhos] = useState(null);
   const [duplicados, setDuplicados] = useState([]);
   const [restante, setRestante] = useState(undefined);
-  const [datasProgramadas, setDatasProgramadas] = useState([]);
   const [edicao, setEdicao] = useState(false);
   const [cronograma, setCronograma] = useState({});
   const [valoresIniciais, setValoresIniciais] = useState(true);
@@ -76,44 +75,18 @@ export default () => {
     setShowModal(true);
   };
 
-  const getEmpresaFiltrado = empresa => {
+  const getEmpresaFiltrado = (empresa) => {
     if (empresa) {
       const reg = new RegExp(empresa, "iu");
-      return fornecedores.filter(a => reg.test(a.value));
+      return fornecedores.filter((a) => reg.test(a.value));
     }
     return fornecedores;
   };
 
-  const adicionaRecebimento = () => {
-    setRecebimentos([...recebimentos, {}]);
-  };
-
-  const deletaRecebimento = index => {
-    let recebimentosNovo = [...recebimentos];
-    recebimentosNovo.splice(index, 1);
-    setRecebimentos(recebimentosNovo);
-  };
-
-  const toggleCollapse = index => {
+  const toggleCollapse = (index) => {
     setCollapse({
-      [index]: !collapse[index]
+      [index]: !collapse[index],
     });
-  };
-
-  const getOptionsDataProgramada = values => {
-    let options = [];
-    etapas.forEach((e, index) => {
-      if (values[`etapa_${index}`] && values[`data_programada_${index}`]) {
-        let nomeConcatenado = `${values[`data_programada_${index}`]} - ${
-          values[`etapa_${index}`]
-        } ${values[`parte_${index}`] ? ` - ${values[`parte_${index}`]}` : ""}`;
-        options.push({
-          uuid: nomeConcatenado,
-          nome: nomeConcatenado
-        });
-      }
-    });
-    return agregarDefault(options);
   };
 
   const formataPayload = (values, rascunho) => {
@@ -137,12 +110,12 @@ export default () => {
           )
         : undefined,
       quantidade: values[`quantidade_${index}`],
-      total_embalagens: values[`total_embalagens_${index}`]
+      total_embalagens: values[`total_embalagens_${index}`],
     }));
 
     payload.programacoes_de_recebimento = recebimentos.map((etapa, index) => ({
       data_programada: values[`data_recebimento_${index}`],
-      tipo_carga: values[`tipo_recebimento_${index}`]
+      tipo_carga: values[`tipo_recebimento_${index}`],
     }));
     return payload;
   };
@@ -184,10 +157,10 @@ export default () => {
     }
   };
 
-  const validaRascunho = values => {
+  const validaRascunho = (values) => {
     return !values.contrato;
   };
-  const lengthOrUnderfined = value => {
+  const lengthOrUnderfined = (value) => {
     let valor = value ? value.toString() : undefined;
     return valor && valor.length > 0 ? valor : undefined;
   };
@@ -196,7 +169,8 @@ export default () => {
     try {
       const responseCronograma = await getCronograma(uuidCronograma);
       if (responseCronograma.status === HTTP_STATUS.OK) {
-        const programacoes_de_recebimento = responseCronograma.data.programacoes_de_recebimento.reverse();
+        const programacoes_de_recebimento =
+          responseCronograma.data.programacoes_de_recebimento.reverse();
         setEtapas(responseCronograma.data.etapas);
         setRecebimentos(programacoes_de_recebimento);
 
@@ -265,33 +239,33 @@ export default () => {
 
   const getOpcoesContrato = () => {
     if (!empresaSelecionada) return [];
-    return empresaSelecionada.contratos.map(contrato => ({
+    return empresaSelecionada.contratos.map((contrato) => ({
       nome: contrato.numero,
-      uuid: contrato.uuid
+      uuid: contrato.uuid,
     }));
   };
 
-  const selecionaEmpresa = uuid_empresa => {
+  const selecionaEmpresa = (uuid_empresa) => {
     if (!empresaSelecionada || empresaSelecionada.uuid !== uuid_empresa) {
-      let fornecedor = fornecedores.find(f => f.value === uuid_empresa);
+      let fornecedor = fornecedores.find((f) => f.value === uuid_empresa);
       setEmpresaSelecionada(fornecedor);
     }
   };
 
-  const selecionaContrato = values => {
+  const selecionaContrato = (values) => {
     let uuid_contrato = values.contrato;
     if (!contratoSelecionado || contratoSelecionado.uuid !== uuid_contrato) {
       let contrato = empresaSelecionada.contratos.find(
-        c => c.uuid === uuid_contrato
+        (c) => c.uuid === uuid_contrato
       );
       values.numero_processo = contrato.processo;
       setContratoSelecionado(contrato);
     }
   };
 
-  const selecionaUnidade = uuid_unidade => {
+  const selecionaUnidade = (uuid_unidade) => {
     if (!unidadeSelecionada || unidadeSelecionada.uuid !== uuid_unidade) {
-      let unidade = unidadesMedidaOptions.find(u => u.uuid === uuid_unidade);
+      let unidade = unidadesMedidaOptions.find((u) => u.uuid === uuid_unidade);
       setUnidadeSelecionada(unidade);
     }
   };
@@ -311,9 +285,9 @@ export default () => {
     const buscaArmazens = async () => {
       const response = await getNomesDistribuidores();
       setArmazens(
-        response.data.results.map(armazem => ({
+        response.data.results.map((armazem) => ({
           nome: armazem.nome_fantasia,
-          uuid: armazem.uuid
+          uuid: armazem.uuid,
         }))
       );
     };
@@ -321,10 +295,10 @@ export default () => {
     const buscaFornecedores = async () => {
       const response = await getEmpresasCronograma();
       setFornecedores(
-        response.data.results.map(forn => ({
+        response.data.results.map((forn) => ({
           uuid: forn.uuid,
           value: forn.nome_fantasia,
-          contratos: forn.contratos
+          contratos: forn.contratos,
         }))
       );
     };
@@ -351,7 +325,7 @@ export default () => {
     setValoresIniciais(false);
   }
 
-  const onChangeFormSpy = async changes => {
+  const onChangeFormSpy = async (changes) => {
     if (changes.values.empresa) selecionaEmpresa(changes.values.empresa);
     if (changes.values.contrato) selecionaContrato(changes.values);
     if (changes.values.unidade_medida)
@@ -369,14 +343,14 @@ export default () => {
             initialValues={{
               ...cronograma,
               ...etapasValues,
-              ...recebimentosValues
+              ...recebimentosValues,
             }}
             validate={() => {}}
-            render={({ form, handleSubmit, submitting, values }) => (
+            render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
                 <FormSpy
                   subscription={{ values: true, active: true, valid: true }}
-                  onChange={changes => onChangeFormSpy(changes)}
+                  onChange={(changes) => onChangeFormSpy(changes)}
                 />
                 <div className="row">
                   <div className="col-5">
@@ -523,16 +497,16 @@ export default () => {
                                 options={[
                                   {
                                     uuid: "CAIXA",
-                                    nome: "Caixa"
+                                    nome: "Caixa",
                                   },
                                   {
                                     uuid: "FARDO",
-                                    nome: "Fardo"
+                                    nome: "Fardo",
                                   },
                                   {
                                     uuid: "TUBET",
-                                    nome: "Tubet"
-                                  }
+                                    nome: "Tubet",
+                                  },
                                 ]}
                                 label="Tipo de Embalagem"
                                 name="tipo_embalagem"
@@ -557,136 +531,14 @@ export default () => {
                         </div>
                       </div>
                     </div>
-                    <div className="card mt-3">
-                      <div className={`card-header card-tipo`} id={`heading_2`}>
-                        <div className="row card-header-content">
-                          <span className="nome-alimento">
-                            Dados do Recebimento
-                          </span>
-                          <div className="col-1 align-self-center">
-                            <button
-                              onClick={() => toggleCollapse(2)}
-                              className="btn btn-link btn-block text-right px-0"
-                              type="button"
-                              data-toggle="collapse"
-                              data-target={`#collapse_2`}
-                              aria-expanded="true"
-                              aria-controls={`collapse_2`}
-                            >
-                              <span className="span-icone-toogle">
-                                <i
-                                  className={
-                                    collapse[2]
-                                      ? "fas fa-chevron-up"
-                                      : "fas fa-chevron-down"
-                                  }
-                                />
-                              </span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
 
-                      <div
-                        id={`collapse_2`}
-                        className="collapse"
-                        aria-labelledby="headingOne"
-                        data-parent="#accordionCronograma"
-                      >
-                        <div className="card-body">
-                          {recebimentos.map((recebimento, index) => (
-                            <>
-                              {index !== 0 && (
-                                <>
-                                  <hr />
-                                  <div className="row">
-                                    <div className="w-100">
-                                      <Botao
-                                        texto=""
-                                        type={BUTTON_TYPE.BUTTON}
-                                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                                        icon="fas fa-trash"
-                                        className="float-right ml-3"
-                                        onClick={() => deletaRecebimento(index)}
-                                        disabled={submitting}
-                                      />
-                                    </div>
-                                  </div>
-                                </>
-                              )}
-
-                              <div className="row">
-                                <div className="col-4">
-                                  <Field
-                                    component={SelectSelecione}
-                                    naoDesabilitarPrimeiraOpcao
-                                    options={getOptionsDataProgramada(
-                                      values
-                                    ).filter(
-                                      op =>
-                                        !datasProgramadas.find(
-                                          dp =>
-                                            dp.nome === op.nome &&
-                                            dp.index !== index
-                                        )
-                                    )}
-                                    label="Data Programada"
-                                    name={`data_recebimento_${index}`}
-                                    placeholder={"Selecionar a Data"}
-                                  />
-                                  <OnChange name={`data_recebimento_${index}`}>
-                                    {async value => {
-                                      const index_ = datasProgramadas.findIndex(
-                                        dp => dp.index === index
-                                      );
-                                      if (index_ !== -1) {
-                                        datasProgramadas.splice(index_, 1);
-                                      }
-                                      datasProgramadas.push({
-                                        nome: value,
-                                        index
-                                      });
-                                      setDatasProgramadas(datasProgramadas);
-                                      form.change("reload", !values.reload);
-                                    }}
-                                  </OnChange>
-                                </div>
-                                <div className="col-4">
-                                  <Field
-                                    component={SelectSelecione}
-                                    naoDesabilitarPrimeiraOpcao
-                                    options={[
-                                      {
-                                        uuid: "PALETIZADA",
-                                        nome: "Paletizada"
-                                      },
-                                      {
-                                        uuid: "ESTIVADA_BATIDA",
-                                        nome: "Estivada/Batida"
-                                      }
-                                    ]}
-                                    label="Tipo de Carga"
-                                    name={`tipo_recebimento_${index}`}
-                                    placeholder={"Selecione a Carga"}
-                                  />
-                                </div>
-                              </div>
-                            </>
-                          ))}
-
-                          <div className="text-center mb-2 mt-2">
-                            <Botao
-                              texto="+ Adicionar Recebimento"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              className=""
-                              onClick={() => adicionaRecebimento()}
-                              disabled={submitting}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <FormRecebimento
+                      values={values}
+                      form={form}
+                      etapas={etapas}
+                      recebimentos={recebimentos}
+                      setRecebimentos={setRecebimentos}
+                    />
                   </div>
                 )}
 
@@ -717,7 +569,7 @@ export default () => {
                     setShowModal(false);
                     setCarregando(false);
                   }}
-                  handleSim={password => {
+                  handleSim={(password) => {
                     values["password"] = password;
                     salvarCronograma(values, false);
                   }}

@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import Botao from "components/Shareable/Botao";
 import {
   recebeGuiaComOcorrencia,
-  editaGuiaComOcorrencia
+  editaGuiaComOcorrencia,
 } from "services/logistica.service";
 import { mapeiaStatusAlimento } from "../../helper";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import {
   CONFERENCIA_GUIA_COM_OCORRENCIA,
   LOGISTICA,
   CONFERIR_ENTREGA,
-  REPOSICAO_GUIA
+  REPOSICAO_GUIA,
 } from "configs/constants";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
@@ -88,7 +88,7 @@ export default ({ reposicao }) => {
           setLoading(false);
           goToConferir();
         })
-        .catch(e => {
+        .catch((e) => {
           toastError(e.response.data.detail);
           setLoading(false);
         });
@@ -104,7 +104,7 @@ export default ({ reposicao }) => {
           setLoading(false);
           goToConferir();
         })
-        .catch(e => {
+        .catch((e) => {
           toastError(e.response.data.detail);
           setLoading(false);
         });
@@ -116,14 +116,14 @@ export default ({ reposicao }) => {
   };
 
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
-    const embalagensFiltradas = embalagens.filter(value => {
+    const embalagensFiltradas = embalagens.filter((value) => {
       return value.tipo_embalagem.toUpperCase() === tipo;
     });
     if (embalagensFiltradas.length) return embalagensFiltradas[0];
     else return false;
   };
 
-  const getClassStatus = item => {
+  const getClassStatus = (item) => {
     switch (item.status) {
       case "Recebido":
         return "green";
@@ -145,8 +145,8 @@ export default ({ reposicao }) => {
     );
   };
 
-  const validaReposicao = valores => {
-    const alimentosValidos = valores.filter(alim => {
+  const validaReposicao = (valores) => {
+    const alimentosValidos = valores.filter((alim) => {
       return alim.status !== "Não Recebido";
     });
     if (alimentosValidos.length) {

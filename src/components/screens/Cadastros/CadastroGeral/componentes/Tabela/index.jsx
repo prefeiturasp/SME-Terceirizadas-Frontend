@@ -12,12 +12,12 @@ export default ({ resultado, changePage }) => {
 
   const permissao = usuarioEhEmpresaTerceirizada();
 
-  const openModal = item => {
+  const openModal = (item) => {
     setSelecionado(item);
     setShowModal(true);
   };
 
-  const openModalExcluir = item => {
+  const openModalExcluir = (item) => {
     setSelecionado(item);
     setShowModalExcluir(true);
   };

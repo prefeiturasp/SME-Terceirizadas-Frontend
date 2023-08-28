@@ -8,7 +8,7 @@ import { Field, reduxForm, change } from "redux-form";
 import {
   required,
   peloMenosUmCaractere,
-  textAreaRequired
+  textAreaRequired,
 } from "../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
@@ -16,7 +16,7 @@ import {
   escolaEhCEMEI,
   fimDoCalendario,
   formatarParaMultiselect,
-  getError
+  getError,
 } from "../../helpers/utilities";
 import { loadInversaoDeDiaDeCardapio } from "../../reducers/inversaoDeDiaDeCardapio.reducer";
 import {
@@ -24,7 +24,7 @@ import {
   criarInversaoDeDiaDeCardapio,
   getInversoesDeDiaDeCardapio,
   inicioPedido,
-  removerInversaoDeDiaDeCardapio
+  removerInversaoDeDiaDeCardapio,
 } from "../../services/inversaoDeDiaDeCardapio.service";
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
@@ -38,7 +38,7 @@ import Botao from "../Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "../Shareable/Botao/constants";
 import { JS_DATE_NOVEMBRO } from "constants/shared";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
@@ -59,7 +59,7 @@ export class InversaoDeDiaDeCardapio extends Component {
       tiposAlimentacao: [],
       dataInicial: null,
       dataInicial_2: null,
-      tiposAlimentacaoSelecionados: []
+      tiposAlimentacaoSelecionados: [],
     };
     this.carregarRascunho = this.carregarRascunho.bind(this);
     this.removerRascunho = this.removerRascunho.bind(this);
@@ -70,7 +70,7 @@ export class InversaoDeDiaDeCardapio extends Component {
   removerRascunho(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
       removerInversaoDeDiaDeCardapio(uuid).then(
-        res => {
+        (res) => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
@@ -78,7 +78,7 @@ export class InversaoDeDiaDeCardapio extends Component {
             toastError(`Erro ao remover rascunho: ${getError(res.data)}`);
           }
         },
-        function() {
+        function () {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
@@ -92,7 +92,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.setState({
       status: "SEM STATUS",
       title: "Nova Solicitação",
-      salvarAtualizarLbl: "Salvar Rascunho"
+      salvarAtualizarLbl: "Salvar Rascunho",
     });
     this.refresh();
   }
@@ -103,16 +103,14 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.props.loadInversaoDeDiaDeCardapio(inversaoDeDiaDeCardapio);
     this.setState({
       status: inversaoDeDiaDeCardapio.status,
-      title: `Inversão de dia de Cardápio # ${
-        inversaoDeDiaDeCardapio.id_externo
-      }`,
+      title: `Inversão de dia de Cardápio # ${inversaoDeDiaDeCardapio.id_externo}`,
       salvarAtualizarLbl: "Atualizar",
       adicionarOutroDia: inversaoDeDiaDeCardapio.data_de_inversao_2
         ? true
         : false,
       tiposAlimentacaoSelecionados: formatarParaMultiselect(
         inversaoDeDiaDeCardapio.tipos_alimentacao
-      )
+      ),
     });
   }
 
@@ -123,7 +121,7 @@ export class InversaoDeDiaDeCardapio extends Component {
       for (let tipoAlimentacao in listaTiposAlimentacao) {
         if (
           !tiposAlimentacao.filter(
-            t => t.nome === listaTiposAlimentacao[tipoAlimentacao].nome
+            (t) => t.nome === listaTiposAlimentacao[tipoAlimentacao].nome
           ).length > 0
         ) {
           tiposAlimentacao.push(listaTiposAlimentacao[tipoAlimentacao]);
@@ -131,7 +129,7 @@ export class InversaoDeDiaDeCardapio extends Component {
       }
     }
     this.setState({
-      tiposAlimentacao: formatarParaMultiselect(tiposAlimentacao)
+      tiposAlimentacao: formatarParaMultiselect(tiposAlimentacao),
     });
   }
 
@@ -146,7 +144,7 @@ export class InversaoDeDiaDeCardapio extends Component {
       meusDados !== null && proximos_dois_dias_uteis !== null && loading;
     if (dadosDaAPItotalmenteCarregados) {
       this.setState({
-        loading: false
+        loading: false,
       });
       const escola_uuid = meusDados.vinculo_atual.instituicao.uuid;
       const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
@@ -159,7 +157,7 @@ export class InversaoDeDiaDeCardapio extends Component {
   }
 
   refresh() {
-    getInversoesDeDiaDeCardapio().then(response => {
+    getInversoesDeDiaDeCardapio().then((response) => {
       const rascunhosInversoes = response.results;
       this.setState({ rascunhosInversoes });
     });
@@ -173,7 +171,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.setState({ ...this.state, showModal: false });
   }
 
-  validaDiasUteis = value => {
+  validaDiasUteis = (value) => {
     if (
       value &&
       checaSeDataEstaEntre2e5DiasUteis(
@@ -201,7 +199,7 @@ export class InversaoDeDiaDeCardapio extends Component {
 
   iniciarPedido(uuid) {
     inicioPedido(uuid).then(
-      res => {
+      (res) => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Inversão de dia de Cardápio enviada com sucesso!");
           this.resetForm();
@@ -214,7 +212,7 @@ export class InversaoDeDiaDeCardapio extends Component {
           );
         }
       },
-      function() {
+      function () {
         toastError("Houve um erro ao enviar a Inversão de dia de Cardápio");
       }
     );
@@ -242,7 +240,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     );
     values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
     if (!values.uuid) {
-      criarInversaoDeDiaDeCardapio(values).then(response => {
+      criarInversaoDeDiaDeCardapio(values).then((response) => {
         if (response.status === HTTP_STATUS.CREATED) {
           if (values.status === STATUS_DRE_A_VALIDAR) {
             this.iniciarPedido(response.data.uuid);
@@ -259,7 +257,7 @@ export class InversaoDeDiaDeCardapio extends Component {
         }
       });
     } else {
-      atualizarInversaoDeDiaDeCardapio(values.uuid, values).then(response => {
+      atualizarInversaoDeDiaDeCardapio(values.uuid, values).then((response) => {
         if (response.status === HTTP_STATUS.OK) {
           if (values.status === STATUS_DRE_A_VALIDAR) {
             this.iniciarPedido(response.data.uuid);
@@ -269,7 +267,7 @@ export class InversaoDeDiaDeCardapio extends Component {
           }
         } else {
           let keys = Object.keys(response.data);
-          keys.forEach(function() {
+          keys.forEach(function () {
             toastError(
               `Erro ao enviar Inversão de dia de Cardápio: ${getError(
                 response.data
@@ -286,9 +284,9 @@ export class InversaoDeDiaDeCardapio extends Component {
     dataInicial = moment(value, "DD/MM/YYYY").add(1, "days")["_d"];
     this.setState({ [field]: dataInicial });
     const dataDe = {
-      data: value
+      data: value,
     };
-    getDiasUteis(dataDe).then(response => {
+    getDiasUteis(dataDe).then((response) => {
       const limiteDataFinal = moment(
         response.data.data_apos_quatro_dias_uteis,
         "YYYY-MM-DD"
@@ -303,14 +301,10 @@ export class InversaoDeDiaDeCardapio extends Component {
       loading,
       rascunhosInversoes,
       adicionarOutroDia,
-      tiposAlimentacao
+      tiposAlimentacao,
     } = this.state;
-    const {
-      handleSubmit,
-      pristine,
-      proximos_dois_dias_uteis,
-      meusDados
-    } = this.props;
+    const { handleSubmit, pristine, proximos_dois_dias_uteis, meusDados } =
+      this.props;
     const linha_adicionar_dia = (
       data_de,
       data_para,
@@ -331,8 +325,8 @@ export class InversaoDeDiaDeCardapio extends Component {
             placeholder="Cardápio dia"
             required
             validate={required}
-            onBlur={event => this.validaDiasUteis(event.target.value)}
-            onChange={value => {
+            onBlur={(event) => this.validaDiasUteis(event.target.value)}
+            onChange={(value) => {
               this.validaDiasUteis(value);
               this.obtemDataInicial(fieldDataInicial, value);
               this.props.dispatch(
@@ -365,8 +359,8 @@ export class InversaoDeDiaDeCardapio extends Component {
             placeholder="Cardápio dia"
             required
             validate={required}
-            onBlur={event => this.validaDiasUteis(event.target.value)}
-            onChange={value => this.validaDiasUteis(value)}
+            onBlur={(event) => this.validaDiasUteis(event.target.value)}
+            onChange={(value) => this.validaDiasUteis(value)}
             minDate={this.state[fieldDataInicial]}
             maxDate={
               new Date().getMonth() === JS_DATE_NOVEMBRO
@@ -385,7 +379,7 @@ export class InversaoDeDiaDeCardapio extends Component {
               multiple
               options={[
                 { value: "CEI", label: "CEI" },
-                { value: "EMEI", label: "EMEI" }
+                { value: "EMEI", label: "EMEI" },
               ]}
               nomeDoItemNoPlural="Alunos"
               validate={required}
@@ -427,7 +421,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                   rascunhosInversoes={rascunhosInversoes}
                   removerRascunho={this.removerRascunho}
                   resetForm={() => this.resetForm()}
-                  carregarRascunho={params => this.carregarRascunho(params)}
+                  carregarRascunho={(params) => this.carregarRascunho(params)}
                 />
               </div>
             )}
@@ -473,7 +467,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                         onClick={() =>
                           this.setState({
                             ...this.state,
-                            adicionarOutroDia: true
+                            adicionarOutroDia: true,
                           })
                         }
                       />
@@ -504,24 +498,24 @@ export class InversaoDeDiaDeCardapio extends Component {
                   <div className="col-12 mt-2">
                     <Botao
                       texto="Cancelar"
-                      onClick={event => this.resetForm(event)}
+                      onClick={(event) => this.resetForm(event)}
                       disabled={pristine}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       type={BUTTON_TYPE.SUBMIT}
                     />
                     <Botao
                       texto={this.state.salvarAtualizarLbl}
-                      onClick={handleSubmit(values => this.onSubmit(values))}
+                      onClick={handleSubmit((values) => this.onSubmit(values))}
                       className="ml-3"
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       type={BUTTON_TYPE.SUBMIT}
                     />
                     <Botao
                       texto="Enviar"
-                      onClick={handleSubmit(values =>
+                      onClick={handleSubmit((values) =>
                         this.onSubmit({
                           ...values,
-                          status: STATUS_DRE_A_VALIDAR
+                          status: STATUS_DRE_A_VALIDAR,
                         })
                       )}
                       style={BUTTON_STYLE.GREEN}
@@ -545,19 +539,19 @@ export class InversaoDeDiaDeCardapio extends Component {
 
 InversaoDeDiaDeCardapio = reduxForm({
   form: "inversaoDeDiaDeCardapioForm",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(InversaoDeDiaDeCardapio);
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    initialValues: state.inversaoDeDiaDeCardapioForm.data
+    initialValues: state.inversaoDeDiaDeCardapioForm.data,
   };
 };
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      loadInversaoDeDiaDeCardapio
+      loadInversaoDeDiaDeCardapio,
     },
     dispatch
   );

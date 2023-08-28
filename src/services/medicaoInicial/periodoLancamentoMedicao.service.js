@@ -4,7 +4,7 @@ import { ErrorHandlerFunction } from "services/service-helpers";
 export const getCategoriasDeMedicao = async () =>
   axios.get("medicao-inicial/categorias-medicao/");
 
-export const setPeriodoLancamento = async payload => {
+export const setPeriodoLancamento = async (payload) => {
   const url = "medicao-inicial/medicao/";
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -13,7 +13,7 @@ export const setPeriodoLancamento = async payload => {
   }
 };
 
-export const getValoresPeriodosLancamentos = async params => {
+export const getValoresPeriodosLancamentos = async (params) => {
   const url = "medicao-inicial/valores-medicao/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -22,7 +22,7 @@ export const getValoresPeriodosLancamentos = async params => {
   }
 };
 
-export const deleteObservacaoValoresPeriodosLancamentos = async uuid => {
+export const deleteObservacaoValoresPeriodosLancamentos = async (uuid) => {
   const url = `medicao-inicial/valores-medicao/${uuid}/`;
   const response = await axios.delete(url).catch(ErrorHandlerFunction);
   if (response) {
@@ -40,7 +40,7 @@ export const updateValoresPeriodosLancamentos = async (uuid, params) => {
   }
 };
 
-export const getMatriculadosPeriodo = async params => {
+export const getMatriculadosPeriodo = async (params) => {
   const url = "matriculados-no-mes/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -49,7 +49,7 @@ export const getMatriculadosPeriodo = async params => {
   }
 };
 
-export const getDiasCalendario = async params => {
+export const getDiasCalendario = async (params) => {
   const url = "dias-calendario/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -58,7 +58,7 @@ export const getDiasCalendario = async params => {
   }
 };
 
-export const getFeriadosNoMes = async params => {
+export const getFeriadosNoMes = async (params) => {
   const url = "medicao-inicial/medicao/feriados-no-mes/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -67,7 +67,7 @@ export const getFeriadosNoMes = async params => {
   }
 };
 
-export const getLogDietasAutorizadasPeriodo = async params => {
+export const getLogDietasAutorizadasPeriodo = async (params) => {
   const url = "log-quantidade-dietas-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -76,7 +76,7 @@ export const getLogDietasAutorizadasPeriodo = async params => {
   }
 };
 
-export const getLogDietasAutorizadasCEIPeriodo = async params => {
+export const getLogDietasAutorizadasCEIPeriodo = async (params) => {
   const url = "log-quantidade-dietas-autorizadas-cei/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -85,7 +85,7 @@ export const getLogDietasAutorizadasCEIPeriodo = async params => {
   }
 };
 
-export const getSolicitacoesInclusoesAutorizadasEscola = async params => {
+export const getSolicitacoesInclusoesAutorizadasEscola = async (params) => {
   const url = "escola-solicitacoes/inclusoes-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -94,7 +94,7 @@ export const getSolicitacoesInclusoesAutorizadasEscola = async params => {
   }
 };
 
-export const getSolicitacoesInclusoesEtecAutorizadasEscola = async params => {
+export const getSolicitacoesInclusoesEtecAutorizadasEscola = async (params) => {
   const url = "escola-solicitacoes/inclusoes-etec-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -103,7 +103,7 @@ export const getSolicitacoesInclusoesEtecAutorizadasEscola = async params => {
   }
 };
 
-export const getPeriodosInclusaoContinua = async params => {
+export const getPeriodosInclusaoContinua = async (params) => {
   const url = "periodos-escolares/inclusao-continua-por-mes/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -112,7 +112,7 @@ export const getPeriodosInclusaoContinua = async params => {
   }
 };
 
-export const getSolicitacoesSuspensoesAutorizadasEscola = async params => {
+export const getSolicitacoesSuspensoesAutorizadasEscola = async (params) => {
   const url = "escola-solicitacoes/suspensoes-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -121,7 +121,9 @@ export const getSolicitacoesSuspensoesAutorizadasEscola = async params => {
   }
 };
 
-export const getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola = async params => {
+export const getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola = async (
+  params
+) => {
   const url =
     "escola-solicitacoes/ceu-gestao-periodos-com-solicitacoes-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
@@ -131,7 +133,9 @@ export const getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola = async params =>
   }
 };
 
-export const getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola = async params => {
+export const getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola = async (
+  params
+) => {
   const url = "escola-solicitacoes/alteracoes-alimentacao-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -140,7 +144,7 @@ export const getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola = async param
   }
 };
 
-export const getSolicitacoesKitLanchesAutorizadasEscola = async params => {
+export const getSolicitacoesKitLanchesAutorizadasEscola = async (params) => {
   const url = "escola-solicitacoes/kit-lanches-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -149,7 +153,7 @@ export const getSolicitacoesKitLanchesAutorizadasEscola = async params => {
   }
 };
 
-export const getLogMatriculadosPorFaixaEtariaDia = async params => {
+export const getLogMatriculadosPorFaixaEtariaDia = async (params) => {
   const url = "log-alunos-matriculados-faixa-etaria-dia/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {

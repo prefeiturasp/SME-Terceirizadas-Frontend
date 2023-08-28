@@ -7,14 +7,14 @@ import CadastroNotificacao from "components/screens/Logistica/CadastroNotificaca
 
 const atual = {
   href: `/${LOGISTICA}/${EDITAR_NOTIFICACAO}`,
-  titulo: "Edição da Notificação"
+  titulo: "Edição da Notificação",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
-  }
+    titulo: "Abastecimento",
+  },
 ];
 
 export default () => (

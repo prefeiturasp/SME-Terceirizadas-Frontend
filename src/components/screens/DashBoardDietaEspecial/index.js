@@ -7,7 +7,7 @@ import {
   dataAtual,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhEmpresaTerceirizada,
-  usuarioEhEscolaTerceirizada
+  usuarioEhEscolaTerceirizada,
 } from "helpers/utilities";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import { getMeusLotes } from "services/lote.service";
@@ -15,7 +15,7 @@ import CardMatriculados from "components/Shareable/CardMatriculados";
 import CardBody from "components/Shareable/CardBody";
 import CardStatusDeSolicitacao, {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 import CardAtalho from "components/Shareable/CardAtalho";
@@ -29,7 +29,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     getDietaEspecialAutorizadasTemporariamente,
     getDietaEspecialInativasTemporariamente,
     getDietaEspecialInativas,
-    getDietaEspecialAguardandoVigencia
+    getDietaEspecialAguardandoVigencia,
   } = props;
 
   const LIMIT = 6;
@@ -41,9 +41,8 @@ export const DashboardDietaEspecial = ({ ...props }) => {
   const [aguardandoVigencia, setAguardandoVigencia] = useState(null);
   const [aguardandoAutorizacao, setAguardandoAutorizacao] = useState(null);
   const [autorizadas, setAutorizadas] = useState(null);
-  const [autorizadasTemporariamente, setAutorizadasTemporariamente] = useState(
-    null
-  );
+  const [autorizadasTemporariamente, setAutorizadasTemporariamente] =
+    useState(null);
   const [negadas, setNegadas] = useState(null);
   const [canceladas, setCanceladas] = useState(null);
   const [inativas, setInativas] = useState(null);
@@ -70,10 +69,8 @@ export const DashboardDietaEspecial = ({ ...props }) => {
 
   const getSolicitacoesAsync = async (params = null) => {
     setLoading(true);
-    const responsePendenteAutorizacao = await getDietaEspecialPendenteAutorizacao(
-      instituicao.uuid,
-      params
-    );
+    const responsePendenteAutorizacao =
+      await getDietaEspecialPendenteAutorizacao(instituicao.uuid, params);
     if (responsePendenteAutorizacao.status === HTTP_STATUS.OK) {
       setAguardandoAutorizacao(
         ajustarFormatoLog(
@@ -131,10 +128,8 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       setErro("Erro ao carregar solicitações inativas.");
     }
 
-    const responseInativasTemporariamente = await getDietaEspecialInativasTemporariamente(
-      instituicao.uuid,
-      params
-    );
+    const responseInativasTemporariamente =
+      await getDietaEspecialInativasTemporariamente(instituicao.uuid, params);
     if (responseInativasTemporariamente.status === HTTP_STATUS.OK) {
       setInativasTemporariamente(
         ajustarFormatoLog(
@@ -146,10 +141,11 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       setErro("Erro ao carregar solicitações inativas temporariamente.");
     }
 
-    const responseAutorizadasTemporariamente = await getDietaEspecialAutorizadasTemporariamente(
-      instituicao.uuid,
-      params
-    );
+    const responseAutorizadasTemporariamente =
+      await getDietaEspecialAutorizadasTemporariamente(
+        instituicao.uuid,
+        params
+      );
     if (responseAutorizadasTemporariamente.status === HTTP_STATUS.OK) {
       setAutorizadasTemporariamente(
         ajustarFormatoLog(
@@ -166,10 +162,8 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhEmpresaTerceirizada()
     ) {
-      const responseAguardandoVigencia = await getDietaEspecialAguardandoVigencia(
-        instituicao.uuid,
-        params
-      );
+      const responseAguardandoVigencia =
+        await getDietaEspecialAguardandoVigencia(instituicao.uuid, params);
       if (responseAguardandoVigencia.status === HTTP_STATUS.OK) {
         setAguardandoVigencia(
           ajustarFormatoLog(
@@ -216,7 +210,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
 
   let typingTimeout = null;
 
-  const onPesquisaChanged = values => {
+  const onPesquisaChanged = (values) => {
     clearTimeout(typingTimeout);
 
     typingTimeout = setTimeout(async () => {
@@ -230,7 +224,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     }, 1000);
   };
 
-  const contadorDietas = title => {
+  const contadorDietas = (title) => {
     if (!usuarioEhCoordenadorNutriCODAE()) return title;
     const count = title === "Autorizadas" ? countAutorizadas : countRecebidas;
     return `${title}${` (${count}) `}`;
@@ -250,12 +244,12 @@ export const DashboardDietaEspecial = ({ ...props }) => {
               <CardBody
                 titulo={"Acompanhamento de solicitações dieta especial"}
                 dataAtual={dataAtual()}
-                onChange={values => onPesquisaChanged(values)}
+                onChange={(values) => onPesquisaChanged(values)}
                 listaLotes={listaLotes}
                 listaStatus={[
                   { nome: "Conferência Status", uuid: "" },
                   { nome: "Conferida", uuid: "1" },
-                  { nome: "Não Conferida", uuid: "0" }
+                  { nome: "Não Conferida", uuid: "0" },
                 ]}
                 loadingDietas={LOADING || loading}
               >

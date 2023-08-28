@@ -5,13 +5,13 @@ import {
   stringSeparadaPorVirgulas,
   ehInclusaoContinua,
   ehInclusaoCei,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
 } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { formataMotivosDias } from "./helper";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
@@ -28,12 +28,12 @@ const renderParteAvulsa = (
 ) => {
   const diasMotivosFormatados = formataMotivosDias(inclusoes);
 
-  const getDia = dia => {
+  const getDia = (dia) => {
     return inclusaoDeAlimentacao[
       !ehInclusaoCei(tipoSolicitacao)
         ? "inclusoes"
         : "dias_motivos_da_inclusao_cei"
-    ].find(i => i.data === dia);
+    ].find((i) => i.data === dia);
   };
 
   return (
@@ -86,7 +86,7 @@ const renderParteAvulsa = (
   );
 };
 
-const renderParteContinua = inclusaoDeAlimentacao => {
+const renderParteContinua = (inclusaoDeAlimentacao) => {
   const { motivo, data_final, data_inicial } = inclusaoDeAlimentacao;
   return (
     <div>
@@ -109,11 +109,8 @@ const renderParteContinua = inclusaoDeAlimentacao => {
 };
 
 export const CorpoRelatorio = ({ ...props }) => {
-  const {
-    tipoSolicitacao,
-    prazoDoPedidoMensagem,
-    inclusaoDeAlimentacao
-  } = props;
+  const { tipoSolicitacao, prazoDoPedidoMensagem, inclusaoDeAlimentacao } =
+    props;
 
   const [baixandoPDF, setBaixandoPDF] = useState(false);
 
@@ -231,8 +228,8 @@ export const CorpoRelatorio = ({ ...props }) => {
                 {
                   data: inclusaoDeAlimentacao.data,
                   motivo: inclusaoDeAlimentacao.motivo,
-                  outro_motivo: inclusaoDeAlimentacao.outro_motivo
-                }
+                  outro_motivo: inclusaoDeAlimentacao.outro_motivo,
+                },
               ],
             tipoSolicitacao
           )}
@@ -324,7 +321,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                                 <p
                                   className="value"
                                   dangerouslySetInnerHTML={{
-                                    __html: quantidade_por_periodo.observacao
+                                    __html: quantidade_por_periodo.observacao,
                                   }}
                                 />
                               ) : (
@@ -341,7 +338,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                                 </span>
                                 {quantidade_por_periodo.cancelado_justificativa ||
                                   inclusaoDeAlimentacao.logs.find(
-                                    log =>
+                                    (log) =>
                                       log.status_evento_explicacao ===
                                       "Escola cancelou"
                                   ).justificativa}
@@ -349,7 +346,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                             )}
                           </td>
                         </tr>
-                      )
+                      ),
                     ];
                   }
                 )
@@ -367,7 +364,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                   </td>
                   <td>
                     {inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias.reduce(
-                      function(acc, v) {
+                      function (acc, v) {
                         return acc + (v.quantidade || v.quantidade_alunos);
                       },
                       0
@@ -396,7 +393,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               </p>
               {
                 inclusaoDeAlimentacao.logs.find(
-                  log => log.status_evento_explicacao === "CODAE autorizou"
+                  (log) => log.status_evento_explicacao === "CODAE autorizou"
                 ).criado_em
               }{" "}
               - Informações da CODAE
@@ -405,9 +402,12 @@ export const CorpoRelatorio = ({ ...props }) => {
               <div
                 className="obs"
                 dangerouslySetInnerHTML={{
-                  __html: `${inclusaoDeAlimentacao.logs.find(
-                    log => log.status_evento_explicacao === "CODAE autorizou"
-                  ).justificativa || `Sem observações por parte da CODAE`}`
+                  __html: `${
+                    inclusaoDeAlimentacao.logs.find(
+                      (log) =>
+                        log.status_evento_explicacao === "CODAE autorizou"
+                    ).justificativa || `Sem observações por parte da CODAE`
+                  }`,
                 }}
               />
             </p>
@@ -421,7 +421,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaNegacao
+                __html: justificativaNegacao,
               }}
             />
           </div>

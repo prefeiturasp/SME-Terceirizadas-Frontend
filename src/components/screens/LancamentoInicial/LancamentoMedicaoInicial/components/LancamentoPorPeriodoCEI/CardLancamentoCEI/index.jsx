@@ -7,7 +7,7 @@ import { PERIODO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicia
 import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
-  PERIODO_LANCAMENTO_CEI
+  PERIODO_LANCAMENTO_CEI,
 } from "configs/constants";
 import "./styles.scss";
 
@@ -16,20 +16,20 @@ export default ({
   cor,
   solicitacaoMedicaoInicial,
   quantidadeAlimentacoesLancadas,
-  periodoSelecionado
+  periodoSelecionado,
 }) => {
   const history = useHistory();
 
   const qtdAlimentacaoPeriodoFiltrada = () => {
     return quantidadeAlimentacoesLancadas.filter(
-      qtdAlimentacaoPeriodo =>
+      (qtdAlimentacaoPeriodo) =>
         qtdAlimentacaoPeriodo.nome_periodo_grupo === textoCabecalho
     );
   };
 
   const statusPeriodo = () => {
     const obj = quantidadeAlimentacoesLancadas.find(
-      each => each.nome_periodo_grupo === textoCabecalho
+      (each) => each.nome_periodo_grupo === textoCabecalho
     );
     if (obj) {
       return obj.status;
@@ -52,8 +52,8 @@ export default ({
         mesAnoSelecionado: periodoSelecionado,
         status_periodo: statusPeriodo(),
         status_solicitacao: solicitacaoMedicaoInicial.status,
-        ...location.state
-      }
+        ...location.state,
+      },
     });
   };
 

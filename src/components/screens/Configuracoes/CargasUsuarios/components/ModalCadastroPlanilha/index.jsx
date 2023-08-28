@@ -5,7 +5,7 @@ import { Form, Field } from "react-final-form";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import { Radio } from "antd";
@@ -19,7 +19,7 @@ const ModalCadastroVinculo = ({ show, setShow, onSubmit, servidores }) => {
   );
   const [arquivo, setArquivo] = useState([]);
 
-  const setFiles = files => {
+  const setFiles = (files) => {
     let arquivos = arquivo;
     arquivos = files;
     setArquivo(arquivos);
@@ -55,7 +55,7 @@ const ModalCadastroVinculo = ({ show, setShow, onSubmit, servidores }) => {
                       Modelo de Planilha a ser Inserido
                     </span>
                     <Radio.Group
-                      onChange={event => setTipoPlanilha(event.target.value)}
+                      onChange={(event) => setTipoPlanilha(event.target.value)}
                       value={tipoPlanilha}
                     >
                       <Radio className="" value={"SERVIDOR"}>

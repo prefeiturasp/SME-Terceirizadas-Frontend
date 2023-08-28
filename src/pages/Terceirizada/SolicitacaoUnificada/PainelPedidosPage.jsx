@@ -5,12 +5,12 @@ import Container from "../../../components/SolicitacaoUnificada/Terceirizada/Pai
 import { HOME } from "../constants";
 import {
   TERCEIRIZADA,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
 } from "../../../configs/constants";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
-  titulo: "Solicitação Unificadas - Pendente Ciência"
+  titulo: "Solicitação Unificadas - Pendente Ciência",
 };
 
 export default () => (

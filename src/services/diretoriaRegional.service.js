@@ -4,18 +4,18 @@ import axios from "./_base";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 export const getLotes = async () => {
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
 
   const url = API_URL + "/lotes/";
   OBJ_REQUEST["method"] = "GET";
-  return await fetch(url, OBJ_REQUEST).then(response => {
+  return await fetch(url, OBJ_REQUEST).then((response) => {
     return response.json();
   });
 };
@@ -25,35 +25,35 @@ export const getDiretoriaregional = () => {
   let status = 0;
   return fetch(url, {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   })
-    .then(response => {
+    .then((response) => {
       status = response.status;
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const getDiretoriaregionalDetalhe = uuid => {
+export const getDiretoriaregionalDetalhe = (uuid) => {
   const url = `${API_URL}/diretorias-regionais/${uuid}/`;
   let status = 0;
   return fetch(url, {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   })
-    .then(response => {
+    .then((response) => {
       status = response.status;
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -63,16 +63,16 @@ export const getDiretoriaregionalSimplissima = () => {
   let status = 0;
   return fetch(url, {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   })
-    .then(response => {
+    .then((response) => {
       status = response.status;
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };

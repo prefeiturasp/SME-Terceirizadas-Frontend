@@ -6,13 +6,13 @@ import {
   deepCopy,
   justificativaAoAprovarSolicitacao,
   justificativaAoNegarSolicitacao,
-  visualizaBotoesDoFluxo
+  visualizaBotoesDoFluxo,
 } from "helpers/utilities";
 import {
   totalAlunosCEI,
   tempoPasseio,
   checaPrazo,
-  getNumeroTotalKits
+  getNumeroTotalKits,
 } from "components/SolicitacaoKitLancheCEMEI/helpers";
 import Botao from "components/Shareable/Botao";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
@@ -21,7 +21,7 @@ import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import { CODAE, TERCEIRIZADA } from "configs/constants";
@@ -53,18 +53,16 @@ export const CorpoRelatorio = ({ ...props }) => {
     toastAprovaMensagemErro,
     fetchData,
     ModalQuestionamento,
-    endpointQuestionamento
+    endpointQuestionamento,
   } = props;
 
   const [collapseAlunosCEI, setCollapseAlunosCEI] = useState(false);
   const [collapseAlunosEMEI, setCollapseAlunosEMEI] = useState(false);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
-  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
-    false
-  );
-  const [showModalObservacaoCodae, setShowModalObservacaoCodae] = useState(
-    false
-  );
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] =
+    useState(false);
+  const [showModalObservacaoCodae, setShowModalObservacaoCodae] =
+    useState(false);
   const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
   const [respostaSimNao, setRespostaSimNao] = useState(null);
   const [imprimindo, setImprimindo] = useState(false);
@@ -88,20 +86,20 @@ export const CorpoRelatorio = ({ ...props }) => {
   const EXIBIR_BOTAO_APROVAR =
     (![
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
       textoBotaoAprova) ||
     (solicitacaoKitLancheCEMEI &&
       (solicitacaoKitLancheCEMEI.prioridade === "REGULAR" ||
         [
           statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
-          statusEnum.CODAE_AUTORIZADO
+          statusEnum.CODAE_AUTORIZADO,
         ].includes(solicitacaoKitLancheCEMEI.status)) &&
       textoBotaoAprova);
   const EXIBIR_BOTAO_QUESTIONAMENTO =
     [
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
     solicitacaoKitLancheCEMEI &&
     (solicitacaoKitLancheCEMEI.prioridade !== "REGULAR" ||
@@ -147,17 +145,16 @@ export const CorpoRelatorio = ({ ...props }) => {
     }
   };
 
-  const collapseSolicitacaoSimilar = idxSolicitacaoSimilar => {
+  const collapseSolicitacaoSimilar = (idxSolicitacaoSimilar) => {
     let _solicitacoesSimilares = deepCopy(solicitacoesSimilares);
-    _solicitacoesSimilares[idxSolicitacaoSimilar][
-      "collapsed"
-    ] = !_solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"];
+    _solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"] =
+      !_solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"];
     setSolicitacoesSimilares(_solicitacoesSimilares);
   };
 
-  const kitsSelecionados = kits => {
+  const kitsSelecionados = (kits) => {
     let nomeKits = [];
-    kits.forEach(kit => nomeKits.push(kit.nome));
+    kits.forEach((kit) => nomeKits.push(kit.nome));
     return nomeKits.join(", ");
   };
 
@@ -520,7 +517,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <p>Observações:</p>
             <p
               dangerouslySetInnerHTML={{
-                __html: solicitacaoKitLancheCEMEI.observacao
+                __html: solicitacaoKitLancheCEMEI.observacao,
               }}
             />
           </div>
@@ -533,7 +530,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaNegacao
+                __html: justificativaNegacao,
               }}
             />
           </div>
@@ -547,13 +544,13 @@ export const CorpoRelatorio = ({ ...props }) => {
             </p>
             <p>{`${
               solicitacaoKitLancheCEMEI.logs.find(
-                log => log.status_evento_explicacao === "CODAE autorizou"
+                (log) => log.status_evento_explicacao === "CODAE autorizou"
               ).criado_em
             } - Informações da CODAE`}</p>
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaAprovacao
+                __html: justificativaAprovacao,
               }}
             />
           </div>
@@ -597,26 +594,26 @@ export const CorpoRelatorio = ({ ...props }) => {
               />
             )}
             {EXIBIR_BOTAO_APROVAR &&
-              (textoBotaoAprova !== "Ciente" &&
-                (visao === CODAE &&
-                solicitacaoKitLancheCEMEI.logs.filter(
-                  log =>
-                    log.status_evento_explicacao ===
-                      "Terceirizada respondeu questionamento" &&
-                    !log.resposta_sim_nao
-                ).length > 0 ? null : (
-                  <Botao
-                    texto={textoBotaoAprova}
-                    type={BUTTON_TYPE.SUBMIT}
-                    onClick={() =>
-                      tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-                        ? setShowModalObservacaoCodae(true)
-                        : onClickBotaoAprovar()
-                    }
-                    style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
-                  />
-                )))}
+              textoBotaoAprova !== "Ciente" &&
+              (visao === CODAE &&
+              solicitacaoKitLancheCEMEI.logs.filter(
+                (log) =>
+                  log.status_evento_explicacao ===
+                    "Terceirizada respondeu questionamento" &&
+                  !log.resposta_sim_nao
+              ).length > 0 ? null : (
+                <Botao
+                  texto={textoBotaoAprova}
+                  type={BUTTON_TYPE.SUBMIT}
+                  onClick={() =>
+                    tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                      ? setShowModalObservacaoCodae(true)
+                      : onClickBotaoAprovar()
+                  }
+                  style={BUTTON_STYLE.GREEN}
+                  className="ml-3"
+                />
+              ))}
             {EXIBIR_BOTAO_QUESTIONAMENTO && (
               <Botao
                 texto={

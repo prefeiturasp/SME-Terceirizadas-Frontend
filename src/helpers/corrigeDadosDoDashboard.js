@@ -8,7 +8,7 @@ const sumObjectsByKey = (...objs) => {
   }, {});
 };
 
-export default results => {
+export default (results) => {
   try {
     if (
       results["Inclusão de Alimentacao de CEI"] ||

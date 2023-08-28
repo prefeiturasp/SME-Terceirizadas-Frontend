@@ -13,7 +13,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -30,20 +30,18 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
   const [filtros, setFiltros] = useState(undefined);
   const [carregando, setCarregando] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [
-    exibirModalCentralDownloads,
-    setExibirModalCentralDownloads
-  ] = useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
 
-  const getSolicitacoesDetalhadasAsync = async solicitacoes => {
-    const payloadSolicitacoesDetalhadas = solicitacoes.map(solicitacao => {
+  const getSolicitacoesDetalhadasAsync = async (solicitacoes) => {
+    const payloadSolicitacoesDetalhadas = solicitacoes.map((solicitacao) => {
       return JSON.stringify({
         tipo_doc: solicitacao.tipo_doc,
-        uuid: solicitacao.uuid
+        uuid: solicitacao.uuid,
       });
     });
     const response = await getSolicitacoesDetalhadas({
-      "solicitacoes[]": payloadSolicitacoesDetalhadas
+      "solicitacoes[]": payloadSolicitacoesDetalhadas,
     });
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacoes(response.data.data);
@@ -109,7 +107,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
             setTotalBusca={setTotalBusca}
             setPage={setPage}
             setFiltros={setFiltros}
-            endpoint={values => endpoint(values)}
+            endpoint={(values) => endpoint(values)}
             getSolicitacoesDetalhadasAsync={getSolicitacoesDetalhadasAsync}
             setCarregando={setCarregando}
             setResultadoPaginado={setResultadoPaginado}
@@ -122,7 +120,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
                 <p className="quantitativo">
                   QUANTITATIVO GERAL DE SOLICITAÇÕES{" "}
                   {STATUS_SOLICITACOES.find(
-                    obj => obj.uuid === filtros.status
+                    (obj) => obj.uuid === filtros.status
                   ).nome.toUpperCase()}
                 </p>
               </div>
@@ -143,7 +141,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
           {solicitacoes && solicitacoes.length && filtros ? (
             <>
               <Paginacao
-                onChange={page => onPageChanged(page, filtros)}
+                onChange={(page) => onPageChanged(page, filtros)}
                 total={totalBusca}
                 pageSize={10}
                 current={page}

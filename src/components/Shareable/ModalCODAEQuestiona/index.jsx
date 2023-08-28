@@ -16,10 +16,10 @@ export const ModalCODAEQuestiona = ({ ...props }) => {
     justificativa,
     loadSolicitacao,
     endpoint,
-    tipoSolicitacao
+    tipoSolicitacao,
   } = props;
 
-  const enviarQuestionamento = async uuid => {
+  const enviarQuestionamento = async (uuid) => {
     let resp = "";
     resp = await endpoint(
       uuid,

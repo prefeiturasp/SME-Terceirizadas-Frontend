@@ -5,19 +5,19 @@ import Page from "../../components/Shareable/Page/Page";
 import {
   CONFIGURACOES,
   CADASTROS,
-  EDITAIS_CADASTRADOS
+  EDITAIS_CADASTRADOS,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`,
-  titulo: "Editais e Contratos"
+  titulo: "Editais e Contratos",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
-  }
+    titulo: "Cadastros",
+  },
 ];
 
 export default () => (

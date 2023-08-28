@@ -15,7 +15,7 @@ export default ({ fornecedor }) => {
   const [page, setPage] = useState();
   const [buscaPorParametro, setBuscaPorParametro] = useState(false);
 
-  const buscarSolicitacoesCronograma = async page => {
+  const buscarSolicitacoesCronograma = async (page) => {
     setCarregando(true);
     setFiltros(remove_filtros_nulos(filtros));
     if (filtros.status) filtros.status = filtros.status.flat();
@@ -41,7 +41,7 @@ export default ({ fornecedor }) => {
     }
   }, [filtros]);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarSolicitacoesCronograma(page);
     setPage(page);
   };

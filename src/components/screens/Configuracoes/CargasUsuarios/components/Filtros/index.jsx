@@ -5,13 +5,13 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import {
   baixarExcelModeloNaoServidor,
-  baixarExcelModeloServidor
+  baixarExcelModeloServidor,
 } from "services/cargaUsuario.service";
 import { required } from "helpers/fieldValidators";
 import moment from "moment";
@@ -27,19 +27,19 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
   const OPTIONS_MODELO = [
     {
       uuid: "SERVIDOR",
-      nome: "Servidor"
+      nome: "Servidor",
     },
     ...(!servidores
       ? [
           {
             uuid: "NAO_SERVIDOR",
-            nome: "Não Servidor"
-          }
+            nome: "Não Servidor",
+          },
         ]
-      : [])
+      : []),
   ];
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };

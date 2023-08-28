@@ -7,7 +7,7 @@ export const Rascunhos = ({
   removerRascunho,
   form,
   carregarRascunho,
-  values
+  values,
 }) => {
   return (
     <div>
@@ -53,9 +53,7 @@ export const Rascunhos = ({
               <p>
                 {inclusaoDeAlimentacao.data_inicial
                   ? `${inclusaoDeAlimentacao.motivo.nome} -
-                    (${inclusaoDeAlimentacao.data_inicial} - ${
-                      inclusaoDeAlimentacao.data_final
-                    })`
+                    (${inclusaoDeAlimentacao.data_inicial} - ${inclusaoDeAlimentacao.data_final})`
                   : `${
                       inclusaoDeAlimentacao.inclusoes
                         ? inclusaoDeAlimentacao.inclusoes.length

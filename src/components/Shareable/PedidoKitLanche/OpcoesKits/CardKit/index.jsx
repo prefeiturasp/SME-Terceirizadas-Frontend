@@ -12,7 +12,7 @@ export class CardKit extends Component {
       nomeKitsLanche,
       tempoPasseio,
       esconderDetalhamentoKits,
-      numeroKit
+      numeroKit,
     } = this.props;
     const disabled =
       (!checked &&

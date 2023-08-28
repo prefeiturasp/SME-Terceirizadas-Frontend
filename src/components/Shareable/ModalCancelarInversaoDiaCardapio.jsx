@@ -11,13 +11,13 @@ import { TextArea } from "./TextArea/TextArea";
 
 export const ORIGEM_SOLICITACAO = {
   ESCOLA: 0,
-  DRE: 1
+  DRE: 1,
 };
 export class ModalCancelarInversaoDiaCardapio extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      justificativa: ""
+      justificativa: "",
     };
   }
 
@@ -40,12 +40,8 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
     }
   }
   render() {
-    const {
-      showModal,
-      closeModal,
-      uuid,
-      solicitacaoInversaoDeDiaDeCardapio
-    } = this.props;
+    const { showModal, closeModal, uuid, solicitacaoInversaoDeDiaDeCardapio } =
+      this.props;
     const { justificativa } = this.state;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
@@ -66,16 +62,23 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
             </div>
             <div className="col-12 label--gray margin-fix">
               <b>Resumo</b>
-              <p>{`Solicitação nº #${solicitacaoInversaoDeDiaDeCardapio &&
-                solicitacaoInversaoDeDiaDeCardapio.id_externo}`}</p>
+              <p>{`Solicitação nº #${
+                solicitacaoInversaoDeDiaDeCardapio &&
+                solicitacaoInversaoDeDiaDeCardapio.id_externo
+              }`}</p>
               <p>{`Solicitante: AGUARDANDO DEFINIÇÃO DE PERFIL`}</p>
-              <p>{`Data: ${solicitacaoInversaoDeDiaDeCardapio &&
-                solicitacaoInversaoDeDiaDeCardapio.data_de} ->
-                ${solicitacaoInversaoDeDiaDeCardapio &&
-                  solicitacaoInversaoDeDiaDeCardapio.data_para}`}</p>
-              <p>{`Quantidade de Alimentações: ${solicitacaoInversaoDeDiaDeCardapio &&
-                solicitacaoInversaoDeDiaDeCardapio.escola
-                  .quantidade_alunos}`}</p>
+              <p>{`Data: ${
+                solicitacaoInversaoDeDiaDeCardapio &&
+                solicitacaoInversaoDeDiaDeCardapio.data_de
+              } ->
+                ${
+                  solicitacaoInversaoDeDiaDeCardapio &&
+                  solicitacaoInversaoDeDiaDeCardapio.data_para
+                }`}</p>
+              <p>{`Quantidade de Alimentações: ${
+                solicitacaoInversaoDeDiaDeCardapio &&
+                solicitacaoInversaoDeDiaDeCardapio.escola.quantidade_alunos
+              }`}</p>
             </div>
             <div className="form-group col-12">
               <Field
