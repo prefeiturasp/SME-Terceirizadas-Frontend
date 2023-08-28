@@ -206,6 +206,11 @@ export const desabilitarField = (
       values[
         `dietas_autorizadas__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
       ]
+    ) === 0 ||
+    Number(
+      values[
+        `matriculados__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+      ]
     ) === 0
   ) {
     return true;
