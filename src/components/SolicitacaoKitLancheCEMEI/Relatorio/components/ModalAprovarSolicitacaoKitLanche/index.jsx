@@ -6,20 +6,15 @@ import Botao from "components/Shareable/Botao";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 export const ModalAprovarSolicitacaoKitLanche = ({ ...props }) => {
-  const {
-    showModal,
-    closeModal,
-    solicitacao,
-    endpoint,
-    loadSolicitacao
-  } = props;
+  const { showModal, closeModal, solicitacao, endpoint, loadSolicitacao } =
+    props;
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     values.justificativa =
       values.justificativa && values.justificativa.length > 0
         ? values.justificativa

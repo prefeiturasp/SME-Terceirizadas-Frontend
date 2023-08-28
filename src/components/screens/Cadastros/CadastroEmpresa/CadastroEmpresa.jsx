@@ -20,7 +20,7 @@ import {
   createNaoTerceirizada,
   getTerceirizadaUUID,
   updateNaoTerceirizada,
-  updateTerceirizada
+  updateTerceirizada,
 } from "services/terceirizada.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { formatarCPFouCNPJ, getError } from "helpers/utilities";
@@ -56,7 +56,7 @@ export const CadastroEmpresa = () => {
     representante_legal: undefined,
     email_representante_legal: undefined,
     telefone_representante: undefined,
-    bairro: undefined
+    bairro: undefined,
   });
   const [carregando, setCarregando] = useState(false);
   const [ehDistribuidor, setEhDistribuidor] = useState(false);
@@ -65,19 +65,19 @@ export const CadastroEmpresa = () => {
     nome: null,
     cpf: null,
     telefone: null,
-    cargo: null
+    cargo: null,
   });
   const [contatosEmpresaForm, setContatosEmpresaForm] = useState([
-    "contatoEmpresa_0"
+    "contatoEmpresa_0",
   ]);
   const [contatosTerceirizadaForm, setContatosTerceirizadaForm] = useState([
-    "contatoTerceirizada_0"
+    "contatoTerceirizada_0",
   ]);
   const [contatosEmpresa, setContatosEmpresa] = useState([
     {
       telefone: null,
-      email: ""
-    }
+      email: "",
+    },
   ]);
   const [contatosNutricionista, setContatosNutricionista] = useState([
     {
@@ -86,8 +86,8 @@ export const CadastroEmpresa = () => {
       responsavel: null,
       crn: null,
       email: null,
-      super_admin_terceirizadas: false
-    }
+      super_admin_terceirizadas: false,
+    },
   ]);
   const [contratos, setContratos] = useState([
     {
@@ -96,8 +96,8 @@ export const CadastroEmpresa = () => {
       numero_ata_chamada_publica: null,
       numero_pregao: null,
       vigencia_de: null,
-      vigencia_ate: null
-    }
+      vigencia_ate: null,
+    },
   ]);
   const [terceirizada, setTerceirizada] = useState(undefined);
   const [uuid, setUuid] = useState(null);
@@ -107,19 +107,19 @@ export const CadastroEmpresa = () => {
     {
       nome: "",
       telefone: null,
-      email: ""
-    }
+      email: "",
+    },
   ]);
-  const atribuiContatosEmpresaForm = data => {
+  const atribuiContatosEmpresaForm = (data) => {
     const { contatos } = data;
     contatos
-      .filter(contato => !contato.nome)
+      .filter((contato) => !contato.nome)
       .forEach((contato, indice) => {
         if (indice !== 0 && contatos.length > contatosEmpresaForm.length) {
           contatosEmpresaForm.push(`contatoEmpresa_${indice}`);
           contatosEmpresa.push({
             telefone: null,
-            email: null
+            email: null,
           });
         }
         setContatosEmpresaForm(contatosEmpresaForm);
@@ -136,16 +136,16 @@ export const CadastroEmpresa = () => {
     return data;
   };
 
-  const atribuiContatosPessoaEmpresaForm = data => {
+  const atribuiContatosPessoaEmpresaForm = (data) => {
     const { contatos } = data;
 
     contatos
-      .filter(contato => contato.nome)
+      .filter((contato) => contato.nome)
       .forEach((contato, indice) => {
         if (indice !== 0 && contatos.length > contatosPessoaEmpresa.length) {
           contatosPessoaEmpresa.push({
             telefone: null,
-            email: null
+            email: null,
           });
         }
 
@@ -160,7 +160,7 @@ export const CadastroEmpresa = () => {
     return data;
   };
 
-  const atribuiNutricionistaEmpresaForm = data => {
+  const atribuiNutricionistaEmpresaForm = (data) => {
     const { contatos, nutricionistas } = data;
     const antigosUsuariosNutri = nutricionistas;
     if (antigosUsuariosNutri.length) {
@@ -174,7 +174,7 @@ export const CadastroEmpresa = () => {
             telefone: null,
             responsavel: null,
             crn: null,
-            email: null
+            email: null,
           });
         }
         contatosNutricionista[indice]["telefone"] =
@@ -197,7 +197,7 @@ export const CadastroEmpresa = () => {
       });
     } else {
       contatos
-        .filter(contato => contato.eh_nutricionista)
+        .filter((contato) => contato.eh_nutricionista)
         .forEach((nutri, indice) => {
           if (indice !== 0 && contatos.length > contatosNutricionista.length) {
             contatosTerceirizadaForm.push(`contatoTerceirizada_${indice}`);
@@ -205,7 +205,7 @@ export const CadastroEmpresa = () => {
               telefone: null,
               responsavel: null,
               crn: null,
-              email: null
+              email: null,
             });
           }
           contatosNutricionista[indice]["telefone"] = nutri.telefone;
@@ -228,7 +228,7 @@ export const CadastroEmpresa = () => {
     }
   };
 
-  const setaValoresForm = data => {
+  const setaValoresForm = (data) => {
     data.cnpj = formatarCPFouCNPJ(data.cnpj);
     data.numero_contrato = data.numero;
     data.email_representante_legal = data.representante_email;
@@ -253,14 +253,14 @@ export const CadastroEmpresa = () => {
       cpf: data.superuser_cpf,
       cargo: data.superuser_cargo,
       telefone: data.superuser_telefone,
-      email: data.superuser_email
+      email: data.superuser_email,
     });
 
     setInitialValuesForm(data);
     setTerceirizada(data);
   };
 
-  const atribuiContratosForm = data => {
+  const atribuiContratosForm = (data) => {
     setContratos(data.contratos);
     data.contratos.forEach((contrato, indice) => {
       data[`numero_contrato_${indice}`] = contrato.numero;
@@ -286,7 +286,7 @@ export const CadastroEmpresa = () => {
   const atualizarEmpresa = (uuid, dados, ehDistribuidor) => {
     const service = ehDistribuidor ? updateNaoTerceirizada : updateTerceirizada;
 
-    service(uuid, dados).then(response => {
+    service(uuid, dados).then((response) => {
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Empresa atualizada com sucesso!");
         history.push("/configuracoes/cadastros/empresas-cadastradas");
@@ -303,7 +303,7 @@ export const CadastroEmpresa = () => {
   const cadastrarEmpresa = (dados, ehDistribuidor) => {
     const service = ehDistribuidor ? createNaoTerceirizada : createTerceirizada;
 
-    service(dados).then(response => {
+    service(dados).then((response) => {
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Empresa cadastrada com sucesso!");
         history.push("/configuracoes/cadastros/empresas-cadastradas");
@@ -315,14 +315,14 @@ export const CadastroEmpresa = () => {
     });
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const dados = {
       ehDistribuidor: ehDistribuidor,
       contatosPessoaEmpresa: contatosPessoaEmpresa,
       contratos: contratos,
       contatosEmpresa: contatosEmpresa,
       contatosNutricionista: contatosNutricionista,
-      lotesSelecionados: lotesSelecionados
+      lotesSelecionados: lotesSelecionados,
     };
 
     const data = formataJsonParaEnvio(values, dados);
@@ -343,11 +343,11 @@ export const CadastroEmpresa = () => {
       setCarregando(true);
       setTituloModal("Confirma atualização de Empresa?");
 
-      getTerceirizadaUUID(uuid).then(response => {
+      getTerceirizadaUUID(uuid).then((response) => {
         if (response.status !== HTTP_STATUS.NOT_FOUND) {
           let lotesNomesSelecionados = [];
           let lotesSelecionados = [];
-          response.data.lotes.forEach(lote => {
+          response.data.lotes.forEach((lote) => {
             lotesNomesSelecionados.push(lote.nome);
             lotesSelecionados.push(lote.uuid);
           });
@@ -436,16 +436,16 @@ export const CadastroEmpresa = () => {
                               options={[
                                 {
                                   nome: "Selecione...",
-                                  uuid: ""
+                                  uuid: "",
                                 },
                                 {
                                   nome: "Ativo",
-                                  uuid: true
+                                  uuid: true,
                                 },
                                 {
                                   nome: "Inativo",
-                                  uuid: false
-                                }
+                                  uuid: false,
+                                },
                               ]}
                             />
                           </div>
@@ -465,7 +465,7 @@ export const CadastroEmpresa = () => {
                               <Botao
                                 texto={"Salvar"}
                                 className="ml-3"
-                                onClick={e => {
+                                onClick={(e) => {
                                   e.preventDefault();
                                   abrirModal();
                                 }}
@@ -483,7 +483,7 @@ export const CadastroEmpresa = () => {
                               </Link>
                               <Botao
                                 texto={"Atualizar"}
-                                onClick={e => {
+                                onClick={(e) => {
                                   e.preventDefault();
                                   abrirModal();
                                 }}

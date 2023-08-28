@@ -9,19 +9,19 @@ import LancamentoMedicaoInicial from "components/screens/LancamentoInicial/Lanca
 import {
   ACOMPANHAMENTO_DE_LANCAMENTOS,
   DETALHAMENTO_DO_LANCAMENTO,
-  MEDICAO_INICIAL
+  MEDICAO_INICIAL,
 } from "configs/constants";
 
 const atual = {
   href: `/${MEDICAO_INICIAL}/${DETALHAMENTO_DO_LANCAMENTO}`,
-  titulo: "Detalhamento do Lançamento"
+  titulo: "Detalhamento do Lançamento",
 };
 
 const anteriores = [
   {
     href: `/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`,
-    titulo: "Medição Inicial"
-  }
+    titulo: "Medição Inicial",
+  },
 ];
 
 export default () => (

@@ -5,11 +5,11 @@ import {
   DINUTRE,
   PAINEL_APROVACOES,
   PRE_RECEBIMENTO,
-  SOLICITACOES_PENDENTES
+  SOLICITACOES_PENDENTES,
 } from "configs/constants";
 import {
   getDashboardCronograma,
-  getDashboardCronogramaComFiltros
+  getDashboardCronogramaComFiltros,
 } from "services/cronograma.service";
 import { CARD_PENDENTES_ASSINATURA } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
 
@@ -17,7 +17,7 @@ import { SolicitacoesCronogramaStatusGenerico } from "components/screens/Solicit
 
 const atual = {
   href: `/${DINUTRE}/${SOLICITACOES_PENDENTES}`,
-  titulo: "Cronogramas Pendentes de Assinatura"
+  titulo: "Cronogramas Pendentes de Assinatura",
 };
 
 const limit = 10;
@@ -25,19 +25,19 @@ const limit = 10;
 const paramsDefault = {
   status: "ASSINADO_FORNECEDOR",
   offset: 0,
-  limit: limit
+  limit: limit,
 };
 
 export default () => {
   const anteriores = [
     {
       href: `#`,
-      titulo: "Pré-Recebimento"
+      titulo: "Pré-Recebimento",
     },
     {
       href: `/pre-recebimento/painel-aprovacoes`,
-      titulo: "Painel de Aprovações"
-    }
+      titulo: "Painel de Aprovações",
+    },
   ];
 
   return (

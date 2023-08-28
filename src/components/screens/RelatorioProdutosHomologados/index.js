@@ -4,14 +4,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { getInitalState } from "components/Shareable/FormBuscaProduto/helper";
 import {
   gerarExcelRelatorioProdutosHomologados,
-  getNomesUnicosEditais
+  getNomesUnicosEditais,
 } from "services/produto.service";
 
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import FormBuscaProduto from "components/Shareable/FormBuscaProduto";
 import { gerarParametrosConsulta } from "helpers/utilities";
@@ -19,7 +19,7 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 import TabelaAgrupadaProdutosTerceirizadas from "./TabelaAgrupadaProdutosTerceirizadas";
 import {
   getProdutosPorTerceirizada,
-  getPDFRelatorioProdutosHomologados
+  getPDFRelatorioProdutosHomologados,
 } from "services/produto.service";
 
 import "./style.scss";
@@ -37,10 +37,8 @@ const RelatorioProdutosHomologados = () => {
   const [valoresIniciais, setValoresIniciais] = useState(null);
   const [carregando, setCarregando] = useState(true);
   const [exportando, setExportando] = useState(false);
-  const [
-    exibirModalCentralDownloads,
-    setExibirModalCentralDownloads
-  ] = useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
   const [erroAPI, setErroAPI] = useState("");
 
   useEffect(() => {
@@ -73,12 +71,12 @@ const RelatorioProdutosHomologados = () => {
     setCarregando(false);
   };
 
-  const onSubmitForm = async formValues => {
+  const onSubmitForm = async (formValues) => {
     setFiltros(formValues);
     await getProdutosHomologados(formValues);
   };
 
-  const exportarXLSX = async params => {
+  const exportarXLSX = async (params) => {
     setExportando(true);
     const response = await gerarExcelRelatorioProdutosHomologados(params);
     if (response.status === HTTP_STATUS.OK) {
@@ -89,7 +87,7 @@ const RelatorioProdutosHomologados = () => {
     setExportando(false);
   };
 
-  const exportarPDF = async params => {
+  const exportarPDF = async (params) => {
     setExportando(true);
     const response = await getPDFRelatorioProdutosHomologados(params);
     if (response.status === HTTP_STATUS.OK) {

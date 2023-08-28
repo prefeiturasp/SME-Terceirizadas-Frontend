@@ -8,7 +8,7 @@ import {
   dreValidarSolicitacaoDeAlteracaoDeCardapio,
   escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI,
   terceirizadaRespondeQuestionamentoAlteracaoCardapio,
-  TerceirizadaTomaCienciaAlteracaoCardapio
+  TerceirizadaTomaCienciaAlteracaoCardapio,
 } from "services/alteracaoDeCardapio";
 import { getMotivosDREnaoValida } from "services/relatorios";
 import Breadcrumb from "components/Shareable/Breadcrumb";
@@ -42,17 +42,17 @@ export const RelatorioBase = ({ ...props }) => {
   const anteriores = [
     {
       href: `#`,
-      titulo: "Gestão de Alimentação"
+      titulo: "Gestão de Alimentação",
     },
     {
       href: `/painel-gestao-alimentacao`,
-      titulo: "Painel de Solicitações"
-    }
+      titulo: "Painel de Solicitações",
+    },
   ];
 
   const atual = {
     href: `/alteracao-do-tipo-de-alimentacao-cemei/relatorio?uuid=${uuid}&ehInclusaoContinua=false&tipoSolicitacao=solicitacao-cemei&card=undefined`,
-    titulo: "Relatório"
+    titulo: "Relatório",
   };
 
   return (

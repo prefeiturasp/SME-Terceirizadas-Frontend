@@ -17,7 +17,7 @@ import {
   EscolaBuscaRascunhos,
   EscolaExcluiSuspensao,
   EscolaAtualizaSuspensao,
-  escolaInformaSuspensao
+  escolaInformaSuspensao,
 } from "../../services/suspensaoAlimentacaoCei.service";
 import "../Shareable/Checkbox/style.scss";
 import "./styles.scss";
@@ -36,7 +36,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
       ehOutroMotivo: false,
       periodos_escolares: [],
       periodos: [],
-      suspensoesDeAlimentacaoList: []
+      suspensoesDeAlimentacaoList: [],
     };
 
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
@@ -44,12 +44,8 @@ class SuspensaoAlimentacaoDeCEI extends Component {
   }
 
   componentDidUpdate() {
-    const {
-      motivos,
-      meusDados,
-      periodos,
-      proximos_dois_dias_uteis
-    } = this.props;
+    const { motivos, meusDados, periodos, proximos_dois_dias_uteis } =
+      this.props;
     const { loading } = this.state;
     if (
       motivos !== [] &&
@@ -58,19 +54,19 @@ class SuspensaoAlimentacaoDeCEI extends Component {
       proximos_dois_dias_uteis !== null &&
       loading
     ) {
-      periodos.forEach(periodo => {
+      periodos.forEach((periodo) => {
         periodo["check"] = false;
       });
       this.setState({
         loading: false,
-        periodos
+        periodos,
       });
 
       this.buscaMeusRascunhos();
     }
   }
 
-  OnEditButtonClicked = params => {
+  OnEditButtonClicked = (params) => {
     let { periodos_escolares } = this.state;
 
     periodos_escolares.splice(0, periodos_escolares.length);
@@ -79,10 +75,10 @@ class SuspensaoAlimentacaoDeCEI extends Component {
     const suspensao = params["suspensaoDeAlimentacao"];
     this.props.reset("suspensaoAlimentacaoFormCEI");
 
-    suspensao.periodos_escolares.forEach(periodo => {
+    suspensao.periodos_escolares.forEach((periodo) => {
       periodos_escolares.push(periodo.uuid);
 
-      periodos.forEach(period => {
+      periodos.forEach((period) => {
         if (period.uuid === periodo.uuid) {
           period.check = true;
         }
@@ -91,12 +87,12 @@ class SuspensaoAlimentacaoDeCEI extends Component {
 
     if (suspensao.motivo.nome.includes("Outro")) {
       this.setState({
-        ehOutroMotivo: true
+        ehOutroMotivo: true,
       });
       this.props.change("outro_motivo", suspensao.outro_motivo);
     } else {
       this.setState({
-        ehOutroMotivo: false
+        ehOutroMotivo: false,
       });
       this.props.reset("suspensaoAlimentacaoFormCEI");
     }
@@ -109,11 +105,11 @@ class SuspensaoAlimentacaoDeCEI extends Component {
       uuid: suspensao.uuid,
       periodos_escolares,
       salvarAtualizarLbl: "Atualizar",
-      periodos
+      periodos,
     });
   };
 
-  OnDeleteButtonClicked = async suspensao => {
+  OnDeleteButtonClicked = async (suspensao) => {
     if (window.confirm("Deseja remover este rascunho?")) {
       const resposta = await EscolaExcluiSuspensao(suspensao);
       if (resposta.status === HTTP_STATUS.NO_CONTENT) {
@@ -136,7 +132,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
     const resposta = await EscolaBuscaRascunhos();
     if (resposta.status === HTTP_STATUS.OK) {
       this.setState({
-        suspensoesDeAlimentacaoList: resposta.data.results
+        suspensoesDeAlimentacaoList: resposta.data.results,
       });
     }
   };
@@ -154,7 +150,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
 
   checkItem = ({ uuid }) => {
     let { periodos } = this.state;
-    periodos.forEach(periodo => {
+    periodos.forEach((periodo) => {
       if (periodo.uuid === uuid) {
         this.atualizaPeriodosSelecionados(periodo);
         periodo.check = !periodo.check;
@@ -163,10 +159,10 @@ class SuspensaoAlimentacaoDeCEI extends Component {
     this.setState({ periodos });
   };
 
-  ehOutroMotivo = motivoUUID => {
+  ehOutroMotivo = (motivoUUID) => {
     let { ehOutroMotivo } = this.state;
     const { motivos } = this.props;
-    motivos.forEach(motivo => {
+    motivos.forEach((motivo) => {
       if (motivo.uuid === motivoUUID && motivo.nome.includes("Outro")) {
         ehOutroMotivo = true;
       } else {
@@ -178,7 +174,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
 
   resetForm = () => {
     const { periodos } = this.props;
-    periodos.forEach(periodo => {
+    periodos.forEach((periodo) => {
       periodo["check"] = false;
     });
     this.setState({
@@ -186,7 +182,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
       periodos_escolares: [],
       salvarAtualizarLbl: "Salvar Rascunho",
       ehOutroMotivo: false,
-      uuid: null
+      uuid: null,
     });
 
     this.props.change("motivo", null);
@@ -194,7 +190,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
     this.props.reset("suspensaoAlimentacaoFormCEI");
   };
 
-  salvarRascunhoSolicitacao = async payload => {
+  salvarRascunhoSolicitacao = async (payload) => {
     const resposta = await EscolaSalvaRascunhoDeSuspensao(payload);
     if (resposta.status === HTTP_STATUS.CREATED) {
       this.buscaMeusRascunhos();
@@ -205,7 +201,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
     }
   };
 
-  atualizarRascunhoSolicitacao = async payload => {
+  atualizarRascunhoSolicitacao = async (payload) => {
     const { uuid } = this.state;
     const resposta = await EscolaAtualizaSuspensao(uuid, payload);
     if (resposta.status === HTTP_STATUS.OK) {
@@ -217,7 +213,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
     }
   };
 
-  enviaSuspensao = async payload => {
+  enviaSuspensao = async (payload) => {
     const rascunho = await EscolaSalvaRascunhoDeSuspensao(payload);
     const uuid = rascunho.data.uuid;
     const resposta = await escolaInformaSuspensao(uuid, payload);
@@ -241,7 +237,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
     }
   };
 
-  onSubmit = values => {
+  onSubmit = (values) => {
     const { salvarAtualizarLbl, periodos_escolares, uuid } = this.state;
     const { meusDados } = this.props;
     values["periodos_escolares"] = periodos_escolares;
@@ -277,21 +273,17 @@ class SuspensaoAlimentacaoDeCEI extends Component {
       periodos,
       uuid,
       salvarAtualizarLbl,
-      suspensoesDeAlimentacaoList
+      suspensoesDeAlimentacaoList,
     } = this.state;
-    const {
-      motivos,
-      proximos_dois_dias_uteis,
-      handleSubmit,
-      meusDados
-    } = this.props;
+    const { motivos, proximos_dois_dias_uteis, handleSubmit, meusDados } =
+      this.props;
     return (
       <section className="section-main-form">
         {loading ? (
           <div>Carregando...</div>
         ) : (
           <form
-            onSubmit={e => {
+            onSubmit={(e) => {
               e.preventDefault();
             }}
             onKeyPress={this.onKeyPress}
@@ -310,7 +302,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                 <Rascunhos
                   suspensoesDeAlimentacaoList={suspensoesDeAlimentacaoList}
                   OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-                  OnEditButtonClicked={params =>
+                  OnEditButtonClicked={(params) =>
                     this.OnEditButtonClicked(params)
                   }
                 />
@@ -339,7 +331,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                     options={motivos}
                     required
                     validate={required}
-                    onChange={event => {
+                    onChange={(event) => {
                       this.ehOutroMotivo(event.target.value);
                     }}
                   />
@@ -367,7 +359,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                 <section className="section-descricao-periodo">Período</section>
                 <section className="form-check-periodos">
                   {periodos
-                    .filter(periodo => periodo.possui_alunos_regulares)
+                    .filter((periodo) => periodo.possui_alunos_regulares)
                     .map((periodo, index) => {
                       return (
                         <div className="row" key={index}>
@@ -400,15 +392,15 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                 <section className="section-botoes-bottom">
                   <Botao
                     texto="Cancelar"
-                    onClick={event => this.resetForm(event)}
+                    onClick={(event) => this.resetForm(event)}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                   />
                   <Botao
                     texto={salvarAtualizarLbl}
-                    onClick={handleSubmit(values =>
+                    onClick={handleSubmit((values) =>
                       this.onSubmit({
                         ...values,
-                        status: null
+                        status: null,
                       })
                     )}
                     className="ml-3"
@@ -418,10 +410,10 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                   <Botao
                     texto="Enviar"
                     type={BUTTON_TYPE.SUBMIT}
-                    onClick={handleSubmit(values =>
+                    onClick={handleSubmit((values) =>
                       this.onSubmit({
                         ...values,
-                        status: STATUS_INFORMA_TERCEIRIZADA
+                        status: STATUS_INFORMA_TERCEIRIZADA,
                       })
                     )}
                     style={BUTTON_STYLE.GREEN}
@@ -439,7 +431,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
 
 const SuspensaoAlimentacaoDeCEIForm = reduxForm({
   form: "suspensaoAlimentacaoFormCEI",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(SuspensaoAlimentacaoDeCEI);
 
 export default connect(null)(SuspensaoAlimentacaoDeCEIForm);

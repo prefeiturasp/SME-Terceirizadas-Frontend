@@ -5,28 +5,28 @@ import Page from "components/Shareable/Page/Page";
 import {
   DETALHAR_NOTIFICACAO,
   LOGISTICA,
-  GUIAS_NOTIFICACAO
+  GUIAS_NOTIFICACAO,
 } from "configs/constants";
 import NotificarEmpresa from "components/screens/Logistica/NotificarEmpresa";
 
 const atual = {
   href: `/${LOGISTICA}/${DETALHAR_NOTIFICACAO}`,
-  titulo: "Detalhar Notificação"
+  titulo: "Detalhar Notificação",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
+    titulo: "Abastecimento",
   },
   {
     href: `/`,
-    titulo: "Ocorrências"
+    titulo: "Ocorrências",
   },
   {
     href: `/${LOGISTICA}/${GUIAS_NOTIFICACAO}`,
-    titulo: "Guias com Notificações"
-  }
+    titulo: "Guias com Notificações",
+  },
 ];
 
 const voltarPara = `/${LOGISTICA}/${GUIAS_NOTIFICACAO}`;

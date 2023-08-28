@@ -1,6 +1,6 @@
 import { TIPO_PERFIL } from "constants/shared";
 
-export const retornaStatusFormatado = status => {
+export const retornaStatusFormatado = (status) => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   switch (status) {
     case "CODAE_AUTORIZOU_RECLAMACAO":

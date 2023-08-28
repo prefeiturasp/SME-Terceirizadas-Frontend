@@ -1,6 +1,6 @@
 import React from "react";
 
-const InformacoesAdicionaisLeitura = informacoes_adicionais => {
+const InformacoesAdicionaisLeitura = (informacoes_adicionais) => {
   return (
     <div className="row">
       <div className="col-md-12">
@@ -8,7 +8,7 @@ const InformacoesAdicionaisLeitura = informacoes_adicionais => {
         <div
           className="orientacoes"
           dangerouslySetInnerHTML={{
-            __html: informacoes_adicionais.informacoes_adicionais
+            __html: informacoes_adicionais.informacoes_adicionais,
           }}
         />
       </div>

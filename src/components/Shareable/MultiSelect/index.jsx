@@ -4,7 +4,7 @@ import "./style.scss";
 import { HelpText } from "../HelpText";
 import InputErroMensagem from "../Input/InputErroMensagem";
 
-export const MultiSelect = props => {
+export const MultiSelect = (props) => {
   const {
     disableSearch,
     helpText,
@@ -14,7 +14,7 @@ export const MultiSelect = props => {
     options,
     onSelectedChange,
     required,
-    selected
+    selected,
   } = props;
   return (
     <div className="select">
@@ -26,7 +26,7 @@ export const MultiSelect = props => {
         ),
         <label key={2} htmlFor={name} className="col-form-label">
           {label}
-        </label>
+        </label>,
       ]}
       <StatefulMultiSelect
         name={name}
@@ -37,7 +37,7 @@ export const MultiSelect = props => {
         overrideStrings={{
           selectSomeItems: "Selecione",
           allItemsAreSelected: "Todos os itens estão selecionados",
-          selectAll: "Todos"
+          selectAll: "Todos",
         }}
       />
       <HelpText helpText={helpText} />

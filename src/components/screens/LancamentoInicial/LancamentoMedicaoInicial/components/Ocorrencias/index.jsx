@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { OCORRENCIA_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
@@ -13,7 +13,7 @@ import { ModalAtualizarOcorrencia } from "../ModalAtualizarOcorrencia";
 export default ({
   solicitacaoMedicaoInicial,
   onClickInfoBasicas,
-  setObjSolicitacaoMIFinalizada
+  setObjSolicitacaoMIFinalizada,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalHistorico, setShowModalHistorico] = useState(false);
@@ -57,7 +57,7 @@ export default ({
                         className={
                           [
                             "MEDICAO_CORRECAO_SOLICITADA",
-                            "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                            "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                           ].includes(
                             solicitacaoMedicaoInicial.ocorrencia.status
                           )
@@ -97,11 +97,12 @@ export default ({
                         <div className="justificativa-ocorrencia-medicao">
                           <p
                             dangerouslySetInnerHTML={{
-                              __html: solicitacaoMedicaoInicial.ocorrencia.logs.find(
-                                log =>
-                                  log.status_evento_explicacao ===
-                                  "Correção solicitada"
-                              ).justificativa
+                              __html:
+                                solicitacaoMedicaoInicial.ocorrencia.logs.find(
+                                  (log) =>
+                                    log.status_evento_explicacao ===
+                                    "Correção solicitada"
+                                ).justificativa,
                             }}
                           />
                         </div>
@@ -120,7 +121,7 @@ export default ({
                         {[
                           "MEDICAO_CORRECAO_SOLICITADA",
                           "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-                          "MEDICAO_CORRIGIDA_PARA_CODAE"
+                          "MEDICAO_CORRIGIDA_PARA_CODAE",
                         ].includes(
                           solicitacaoMedicaoInicial.ocorrencia.status
                         ) && (
@@ -157,7 +158,7 @@ export default ({
         closeModal={() => setShowModal(false)}
         solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
         onClickInfoBasicas={onClickInfoBasicas}
-        setObjSolicitacaoMIFinalizada={value =>
+        setObjSolicitacaoMIFinalizada={(value) =>
           setObjSolicitacaoMIFinalizada(value)
         }
       />

@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import "./style.scss";
 
-export default props => {
+export default (props) => {
   const { tipo, icone, titulo, solicitacoes } = props;
 
   return (

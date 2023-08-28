@@ -3,14 +3,14 @@ import authService from "./auth";
 
 const authHeader = {
   "Content-Type": "application/json",
-  Authorization: `JWT ${authService.getToken()}`
+  Authorization: `JWT ${authService.getToken()}`,
 };
 
 export const getEmailConfiguration = async () => {
   try {
     const response = await fetch(`${CONFIG.API_URL}/email/1/`, {
       method: "GET",
-      headers: authHeader
+      headers: authHeader,
     });
     const json = await response.json();
     return json;
@@ -19,12 +19,12 @@ export const getEmailConfiguration = async () => {
   }
 };
 
-export const setEmailConfiguration = async values => {
+export const setEmailConfiguration = async (values) => {
   try {
     const response = await fetch(`${CONFIG.API_URL}/email/1/`, {
       method: "PUT",
       headers: authHeader,
-      body: JSON.stringify(values)
+      body: JSON.stringify(values),
     });
     const json = await response.json();
     return json;
@@ -33,12 +33,12 @@ export const setEmailConfiguration = async values => {
   }
 };
 
-export const testEmailConfiguration = async to_email => {
+export const testEmailConfiguration = async (to_email) => {
   try {
     const response = await fetch(`${CONFIG.API_URL}/email-test/`, {
       method: "POST",
       headers: authHeader,
-      body: JSON.stringify({ to_email: to_email })
+      body: JSON.stringify({ to_email: to_email }),
     });
     const json = await response.json();
     return json;

@@ -10,18 +10,18 @@ class Container extends Component {
     this.state = {
       meusDados: null,
       proximos_dois_dias_uteis: null,
-      proximos_cinco_dias_uteis: null
+      proximos_cinco_dias_uteis: null,
     };
   }
 
   componentDidMount() {
-    meusDados().then(response => {
+    meusDados().then((response) => {
       this.setState({
-        meusDados: response
+        meusDados: response,
       });
     });
 
-    getDiasUteis().then(response => {
+    getDiasUteis().then((response) => {
       const proximos_cinco_dias_uteis = dataParaUTC(
         new Date(response.data.proximos_cinco_dias_uteis)
       );
@@ -30,7 +30,7 @@ class Container extends Component {
       );
       this.setState({
         proximos_dois_dias_uteis,
-        proximos_cinco_dias_uteis
+        proximos_cinco_dias_uteis,
       });
     });
   }

@@ -1,7 +1,7 @@
 import React from "react";
 import Select from "../Select";
 
-const SelectSelecione = props => {
+const SelectSelecione = (props) => {
   const {
     input: { onChange, value },
     options,

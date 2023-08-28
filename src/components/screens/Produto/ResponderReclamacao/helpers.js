@@ -1,14 +1,14 @@
 import moment from "moment";
 import * as R from "ramda";
 
-export const ordenaLogs = logs => {
+export const ordenaLogs = (logs) => {
   const sortedLogs = logs
     .concat()
     .sort((a, b) => moment(a.criado_em) - moment(b.criado_em));
   return sortedLogs;
 };
 
-export const getReclamacao = logs => {
+export const getReclamacao = (logs) => {
   const arr = R.filter(
     R.propEq(
       "status_evento_explicacao",
@@ -19,7 +19,7 @@ export const getReclamacao = logs => {
   return arr[0];
 };
 
-export const getQuestionamentoCodae = logs => {
+export const getQuestionamentoCodae = (logs) => {
   const arr = R.filter(
     R.propEq("status_evento_explicacao", "CODAE pediu análise da reclamação"),
     logs
@@ -27,12 +27,12 @@ export const getQuestionamentoCodae = logs => {
   return arr[0];
 };
 
-export const getStatus = values => {
+export const getStatus = (values) => {
   return {
     ...values,
     status: [
       "CODAE_PEDIU_ANALISE_RECLAMACAO",
-      "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
-    ]
+      "TERCEIRIZADA_RESPONDEU_RECLAMACAO",
+    ],
   };
 };

@@ -20,7 +20,7 @@ export default function reducer(state = {}, action) {
         } else if (typeof action.data.motivo === "object") {
           action.data.motivo = action.data.motivo.uuid;
         }
-        action.data.substituicoes.forEach(function(substituicao) {
+        action.data.substituicoes.forEach(function (substituicao) {
           action.data[`substituicoes_${substituicao.periodo_escolar.nome}`] = {
             check: true,
             tipos_alimentacao_de: extrairTiposALimentacao(
@@ -29,14 +29,14 @@ export default function reducer(state = {}, action) {
             tipos_alimentacao_para: extrairTiposALimentacao(
               substituicao.tipos_alimentacao_para
             ),
-            numero_de_alunos: substituicao.qtd_alunos
+            numero_de_alunos: substituicao.qtd_alunos,
           };
         });
       }
       return {
         data: {
-          ...action.data
-        }
+          ...action.data,
+        },
       };
     case LOAD_ALTERACAO_TIPO_ALIMENTACAO_CEI:
       if (action.data !== null) {
@@ -45,27 +45,27 @@ export default function reducer(state = {}, action) {
           uuid,
           motivo: motivo.uuid,
           observacao,
-          data_alteracao: data
+          data_alteracao: data,
         };
-        substituicoes.forEach(function(substituicao) {
+        substituicoes.forEach(function (substituicao) {
           const {
             periodo_escolar,
             tipos_alimentacao_de,
             tipo_alimentacao_para,
-            faixas_etarias
+            faixas_etarias,
           } = substituicao;
           const dadosSubstituicao = {
             periodo: periodo_escolar.uuid,
             check: true,
             tipo_alimentacao_para: tipo_alimentacao_para.uuid,
             tipos_alimentacao_de: tipos_alimentacao_de.map(
-              tipo_alimentacao_de => {
+              (tipo_alimentacao_de) => {
                 return tipo_alimentacao_de.uuid;
               }
             ),
-            faixas_etarias: {}
+            faixas_etarias: {},
           };
-          faixas_etarias.forEach(faixaEtaria => {
+          faixas_etarias.forEach((faixaEtaria) => {
             dadosSubstituicao[`qtde-faixa-${faixaEtaria.faixa_etaria.uuid}`] =
               faixaEtaria.quantidade;
             dadosSubstituicao.faixas_etarias[faixaEtaria.faixa_etaria.uuid] =
@@ -76,21 +76,21 @@ export default function reducer(state = {}, action) {
           ] = dadosSubstituicao;
         });
         return {
-          data: dadosRetornados
+          data: dadosRetornados,
         };
       }
       return {
         data: {
-          ...action.data
-        }
+          ...action.data,
+        },
       };
     default:
       return state;
   }
 }
 
-export const loadAlteracaoCardapio = data => dispatch =>
+export const loadAlteracaoCardapio = (data) => (dispatch) =>
   dispatch({ type: LOAD_ALTERACAO_TIPO_ALIMENTACAO, data });
 
-export const loadAlteracaoCardapioCei = data => dispatch =>
+export const loadAlteracaoCardapioCei = (data) => (dispatch) =>
   dispatch({ type: LOAD_ALTERACAO_TIPO_ALIMENTACAO_CEI, data });

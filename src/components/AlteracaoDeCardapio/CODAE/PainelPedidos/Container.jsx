@@ -9,7 +9,7 @@ class Container extends Component {
       visaoPorCombo: visaoPorComboSomenteDatas,
       pedidosAutorizados: [],
       pedidosReprovados: [],
-      filtros: this.props.filtros
+      filtros: this.props.filtros,
     };
   }
 

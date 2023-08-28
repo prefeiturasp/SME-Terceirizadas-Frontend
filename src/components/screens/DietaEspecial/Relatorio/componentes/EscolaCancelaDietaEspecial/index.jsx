@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import Botao from "../../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../../Shareable/Botao/constants";
 import ModalCancelaDietaEspecial from "../ModalCancelaDietaEspecial";
 import {
   usuarioEhNutricionistaSupervisao,
-  usuarioEhDRE
+  usuarioEhDRE,
 } from "helpers/utilities";
 
 const EscolaCancelaDietaEspecial = ({ uuid, onCancelar }) => {

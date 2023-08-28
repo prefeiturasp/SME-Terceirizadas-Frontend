@@ -7,7 +7,7 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS,
-  RELATORIOS
+  RELATORIOS,
 } from "../../../../../configs/constants";
 import { PERFIL } from "../../../../../constants/shared";
 
@@ -19,7 +19,7 @@ export class SidebarContentDRE extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      subMenu: ""
+      subMenu: "",
     };
   }
 
@@ -177,7 +177,7 @@ export class SidebarContentDRE extends Component {
             <span>Configurações</span>
           </Link>
         </li>
-      )
+      ),
     ];
   }
 }

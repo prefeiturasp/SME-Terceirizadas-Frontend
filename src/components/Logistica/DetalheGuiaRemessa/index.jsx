@@ -11,13 +11,13 @@ export default ({ guia }) => {
 
   const montaConferencia = (guia, reposicao) => {
     let conferencia = guia.conferencias.find(
-      conf => conf.eh_reposicao === reposicao
+      (conf) => conf.eh_reposicao === reposicao
     );
     if (conferencia) {
-      conferencia.conferencia_dos_alimentos = guia.alimentos.map(alimento => {
-        alimento.embalagens = alimento.embalagens.map(emb => {
+      conferencia.conferencia_dos_alimentos = guia.alimentos.map((alimento) => {
+        alimento.embalagens = alimento.embalagens.map((emb) => {
           let conf = conferencia.conferencia_dos_alimentos.find(
-            conf =>
+            (conf) =>
               alimento.nome_alimento === conf.nome_alimento &&
               emb.tipo_embalagem === conf.tipo_embalagem
           );
@@ -50,7 +50,7 @@ export default ({ guia }) => {
           [
             "Pendente de conferência",
             "Insucesso de entrega",
-            "Cancelada"
+            "Cancelada",
           ].includes(guia.status) && (
             <>
               <div className="titulo-secao">

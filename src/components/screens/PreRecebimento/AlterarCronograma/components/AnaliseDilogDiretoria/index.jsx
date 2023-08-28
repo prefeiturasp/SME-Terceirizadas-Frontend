@@ -4,7 +4,7 @@ import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { Field } from "react-final-form";
 
 export default ({ aprovacaoDilog, setAprovacaoDilog }) => {
-  const onChangeCampos = e => {
+  const onChangeCampos = (e) => {
     setAprovacaoDilog(e.target.value);
   };
 

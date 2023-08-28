@@ -4,7 +4,7 @@ import {
   DIETA_ESPECIAL,
   CANCELAMENTO,
   CONSULTA_PROTOCOLO_PADRAO_DIETA,
-  RELATORIO_DIETA_ESPECIAL
+  RELATORIO_DIETA_ESPECIAL,
 } from "configs/constants";
 import {
   usuarioEhEmpresaTerceirizada,
@@ -18,7 +18,7 @@ import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhAdministradorNutriCODAE,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhCoordenadorNutriCODAE
+  usuarioEhCoordenadorNutriCODAE,
 } from "helpers/utilities";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 

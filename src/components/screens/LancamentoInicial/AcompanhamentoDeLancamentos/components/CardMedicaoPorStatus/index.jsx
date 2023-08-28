@@ -14,7 +14,7 @@ export const CardMedicaoPorStatus = ({ ...props }) => {
     statusSelecionado,
     setStatusSelecionado,
     total,
-    resetForm
+    resetForm,
   } = props;
 
   return (

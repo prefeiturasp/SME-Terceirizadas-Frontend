@@ -6,7 +6,7 @@ import { PERFIL } from "../../configs/constants";
 
 const atual = {
   href: `/${PERFIL}`,
-  titulo: "Perfil"
+  titulo: "Perfil",
 };
 
 export default () => (

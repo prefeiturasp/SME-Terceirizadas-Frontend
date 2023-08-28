@@ -7,7 +7,7 @@ import {
   getSolicitacoesInclusoesAutorizadasEscola,
   getSolicitacoesInclusoesEtecAutorizadasEscola,
   getSolicitacoesKitLanchesAutorizadasEscola,
-  getSolicitacoesSuspensoesAutorizadasEscola
+  getSolicitacoesSuspensoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 
 export const formatarPayloadPeriodoLancamento = (
@@ -41,7 +41,7 @@ export const formatarPayloadPeriodoLancamento = (
 
   arrayCategoriesValues
     .filter(([key]) => !key.includes("observacoes"))
-    .map(arr => {
+    .map((arr) => {
       const keySplitted = arr[0].split("__");
       const categoria = keySplitted.pop();
       const idCategoria = categoria.match(/\d/g).join("");
@@ -54,11 +54,11 @@ export const formatarPayloadPeriodoLancamento = (
         valor: ["<p></p>\n", ""].includes(arr[1]) ? 0 : arr[1],
         nome_campo: nome_campo,
         categoria_medicao: idCategoria,
-        faixa_etaria: uuid_faixa_etaria
+        faixa_etaria: uuid_faixa_etaria,
       });
     });
 
-  valoresMedicao = valoresMedicao.filter(valorMed => {
+  valoresMedicao = valoresMedicao.filter((valorMed) => {
     return (
       !(valorMed.nome_campo === "observacoes" && valorMed.valor === 0) &&
       diasDaSemanaSelecionada.includes(valorMed.dia)
@@ -79,16 +79,16 @@ export const formatarPayloadParaCorrecao = (
   let payloadParaCorrecao = [];
   valoresPeriodosLancamentos
     .filter(
-      valor =>
+      (valor) =>
         valor.habilitado_correcao &&
         !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
           valor.nome_campo
         )
     )
-    .forEach(valor_lancamento => {
+    .forEach((valor_lancamento) => {
       payloadParaCorrecao.push(
         payload.valores_medicao.filter(
-          valor_medicao =>
+          (valor_medicao) =>
             String(valor_lancamento.categoria_medicao) ===
               valor_medicao.categoria_medicao &&
             valor_lancamento.dia === valor_medicao.dia &&
@@ -107,9 +107,9 @@ export const deveExistirObservacao = (
 ) => {
   let diasNaoLetivos = [];
   const objDiasNaoLetivos = calendarioMesConsiderado.filter(
-    obj => !obj.dia_letivo
+    (obj) => !obj.dia_letivo
   );
-  objDiasNaoLetivos.map(obj => diasNaoLetivos.push(obj.dia));
+  objDiasNaoLetivos.map((obj) => diasNaoLetivos.push(obj.dia));
 
   const valuesAsArray = Object.entries(values);
   const arrayCategoriesValuesDiasNaoletivos = valuesAsArray.filter(
@@ -120,17 +120,17 @@ export const deveExistirObservacao = (
       !key.includes("frequencia") &&
       !key.includes("observacoes") &&
       !["Mês anterior", "Mês posterior", null].includes(value) &&
-      diasNaoLetivos.some(dia => key.includes(dia))
+      diasNaoLetivos.some((dia) => key.includes(dia))
   );
   let dias = [];
-  arrayCategoriesValuesDiasNaoletivos.forEach(arr => {
+  arrayCategoriesValuesDiasNaoletivos.forEach((arr) => {
     const keySplitted = arr[0].split("__");
     const dia = keySplitted[1].match(/\d/g).join("");
     dias.push(dia);
   });
 
   return !dias.every(
-    dia =>
+    (dia) =>
       values[`observacoes__dia_${dia}__categoria_${categoria}`] !== undefined
   );
 };
@@ -153,10 +153,10 @@ export const desabilitarField = (
   uuidFaixaEtaria
 ) => {
   const valorField = valoresPeriodosLancamentos
-    .filter(valor => valor.nome_campo === rowName)
-    .filter(valor => String(valor.dia) === String(dia))
-    .filter(valor => String(valor.categoria_medicao) === String(categoria))
-    .filter(valor => valor.habilitado_correcao === true)[0];
+    .filter((valor) => valor.nome_campo === rowName)
+    .filter((valor) => String(valor.dia) === String(dia))
+    .filter((valor) => String(valor.categoria_medicao) === String(categoria))
+    .filter((valor) => valor.habilitado_correcao === true)[0];
   if (
     location.state &&
     (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
@@ -166,7 +166,7 @@ export const desabilitarField = (
         "MEDICAO_CORRECAO_SOLICITADA",
         "MEDICAO_CORRECAO_SOLICITADA_CODAE",
         "MEDICAO_CORRIGIDA_PELA_UE",
-        "MEDICAO_CORRIGIDA_PARA_CODAE"
+        "MEDICAO_CORRIGIDA_PARA_CODAE",
       ].includes(location.state.status_periodo) &&
         !valorField))
   ) {
@@ -174,10 +174,10 @@ export const desabilitarField = (
   }
 
   const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
-    locale: ptBR
+    locale: ptBR,
   }).toString();
   const mesAtual = format(mesAnoDefault, "LLLL", {
-    locale: ptBR
+    locale: ptBR,
   }).toString();
 
   if (
@@ -235,9 +235,8 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   } else {
     params["excluir_inclusoes_continuas"] = true;
   }
-  const responseInclusoesAutorizadas = await getSolicitacoesInclusoesAutorizadasEscola(
-    params
-  );
+  const responseInclusoesAutorizadas =
+    await getSolicitacoesInclusoesAutorizadasEscola(params);
   if (responseInclusoesAutorizadas.status === HTTP_STATUS.OK) {
     return responseInclusoesAutorizadas.data.results;
   } else {
@@ -256,9 +255,8 @@ export const getSolicitacoesInclusoesEtecAutorizadasAsync = async (
   params["tipo_solicitacao"] = "Inclusão de";
   params["mes"] = mes;
   params["ano"] = ano;
-  const responseInclusoesAutorizadas = await getSolicitacoesInclusoesEtecAutorizadasEscola(
-    params
-  );
+  const responseInclusoesAutorizadas =
+    await getSolicitacoesInclusoesEtecAutorizadasEscola(params);
   if (responseInclusoesAutorizadas.status === HTTP_STATUS.OK) {
     return responseInclusoesAutorizadas.data.results;
   } else {
@@ -279,9 +277,8 @@ export const getSolicitacoesSuspensoesAutorizadasAsync = async (
   params["mes"] = mes;
   params["ano"] = ano;
   params["nome_periodo_escolar"] = nome_periodo_escolar;
-  const responseSuspensoesAutorizadas = await getSolicitacoesSuspensoesAutorizadasEscola(
-    params
-  );
+  const responseSuspensoesAutorizadas =
+    await getSolicitacoesSuspensoesAutorizadasEscola(params);
   if (responseSuspensoesAutorizadas.status === HTTP_STATUS.OK) {
     return responseSuspensoesAutorizadas.data.results;
   } else {
@@ -306,9 +303,8 @@ export const getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync = async (
   if (!ehLancheEmergencial) {
     params["nome_periodo_escolar"] = nomePeriodoEscolar;
   }
-  const responseAlteracoesAlimentacaoAutorizadas = await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(
-    params
-  );
+  const responseAlteracoesAlimentacaoAutorizadas =
+    await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(params);
   if (responseAlteracoesAlimentacaoAutorizadas.status === HTTP_STATUS.OK) {
     return responseAlteracoesAlimentacaoAutorizadas.data.results;
   } else {
@@ -327,9 +323,8 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
   params["tipo_solicitacao"] = "Kit Lanche";
   params["mes"] = mes;
   params["ano"] = ano;
-  const responseKitLanchesAutorizadas = await getSolicitacoesKitLanchesAutorizadasEscola(
-    params
-  );
+  const responseKitLanchesAutorizadas =
+    await getSolicitacoesKitLanchesAutorizadasEscola(params);
   if (responseKitLanchesAutorizadas.status === HTTP_STATUS.OK) {
     return responseKitLanchesAutorizadas.data.results;
   } else {
@@ -343,38 +338,38 @@ export const formatarLinhasTabelaAlimentacao = (
   periodoGrupo
 ) => {
   const tiposAlimentacaoFormatadas = tipos_alimentacao
-    .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
-    .map(alimentacao => {
+    .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
+    .map((alimentacao) => {
       return {
         ...alimentacao,
         name: alimentacao.nome
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase()
-          .replaceAll(/ /g, "_")
+          .replaceAll(/ /g, "_"),
       };
     });
   const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
-    ali => ali.nome === "Refeição"
+    (ali) => ali.nome === "Refeição"
   );
   if (indexRefeicao !== -1) {
     tiposAlimentacaoFormatadas[indexRefeicao].nome = "Refeição 1ª Oferta";
     tiposAlimentacaoFormatadas.splice(indexRefeicao + 1, 0, {
       nome: "Repetição Refeição",
       name: "repeticao_refeicao",
-      uuid: null
+      uuid: null,
     });
   }
 
   const indexSobremesa = tiposAlimentacaoFormatadas.findIndex(
-    ali => ali.nome === "Sobremesa"
+    (ali) => ali.nome === "Sobremesa"
   );
   if (indexSobremesa !== -1) {
     tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1º Oferta";
     tiposAlimentacaoFormatadas.splice(indexSobremesa + 1, 0, {
       nome: "Repetição Sobremesa",
       name: "repeticao_sobremesa",
-      uuid: null
+      uuid: null,
     });
   }
 
@@ -383,46 +378,46 @@ export const formatarLinhasTabelaAlimentacao = (
       ? {
           nome: "Número de Alunos",
           name: "numero_de_alunos",
-          uuid: null
+          uuid: null,
         }
       : {
           nome: "Matriculados",
           name: "matriculados",
-          uuid: null
+          uuid: null,
         };
   };
 
   tiposAlimentacaoFormatadas.unshift(matriculadosOuNumeroDeAlunos(), {
     nome: "Frequência",
     name: "frequencia",
-    uuid: null
+    uuid: null,
   });
 
   tiposAlimentacaoFormatadas.push({
     nome: "Observações",
     name: "observacoes",
-    uuid: null
+    uuid: null,
   });
 
   return tiposAlimentacaoFormatadas;
 };
 
-export const formatarLinhasTabelasDietas = tipos_alimentacao => {
+export const formatarLinhasTabelasDietas = (tipos_alimentacao) => {
   const linhasTabelasDietas = [];
   linhasTabelasDietas.push(
     {
       nome: "Dietas Autorizadas",
       name: "dietas_autorizadas",
-      uuid: null
+      uuid: null,
     },
     {
       nome: "Frequência",
       name: "frequencia",
-      uuid: null
+      uuid: null,
     }
   );
 
-  const indexLanche4h = tipos_alimentacao.findIndex(ali =>
+  const indexLanche4h = tipos_alimentacao.findIndex((ali) =>
     ali.nome.includes("4h")
   );
   if (indexLanche4h !== -1) {
@@ -433,11 +428,13 @@ export const formatarLinhasTabelasDietas = tipos_alimentacao => {
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .replaceAll(/ /g, "_"),
-      uuid: tipos_alimentacao[indexLanche4h].uuid
+      uuid: tipos_alimentacao[indexLanche4h].uuid,
     });
   }
 
-  const indexLanche = tipos_alimentacao.findIndex(ali => ali.nome === "Lanche");
+  const indexLanche = tipos_alimentacao.findIndex(
+    (ali) => ali.nome === "Lanche"
+  );
   if (indexLanche !== -1) {
     linhasTabelasDietas.push({
       nome: "Lanche",
@@ -446,14 +443,14 @@ export const formatarLinhasTabelasDietas = tipos_alimentacao => {
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .replaceAll(/ /g, "_"),
-      uuid: tipos_alimentacao[indexLanche].uuid
+      uuid: tipos_alimentacao[indexLanche].uuid,
     });
   }
 
   linhasTabelasDietas.push({
     nome: "Observações",
     name: "observacoes",
-    uuid: null
+    uuid: null,
   });
 
   return linhasTabelasDietas;
@@ -464,12 +461,12 @@ export const formatarLinhasTabelaDietaEnteral = (
   linhasTabelasDietas
 ) => {
   const indexRefeicaoDieta = tipos_alimentacao.findIndex(
-    ali => ali.nome === "Refeição"
+    (ali) => ali.nome === "Refeição"
   );
   linhasTabelasDietas.splice(linhasTabelasDietas.length - 1, 0, {
     nome: "Refeição",
     name: "refeicao",
-    uuid: tipos_alimentacao[indexRefeicaoDieta].uuid
+    uuid: tipos_alimentacao[indexRefeicaoDieta].uuid,
   });
 
   return linhasTabelasDietas;
@@ -492,7 +489,7 @@ export const defaultValue = (
   let result = null;
 
   const valorLancamento = valoresLancamentos.find(
-    valor =>
+    (valor) =>
       Number(valor.categoria_medicao) === Number(categoria.id) &&
       Number(valor.dia) === Number(column.dia) &&
       valor.nome_campo === row.name
@@ -521,14 +518,14 @@ export const ehDiaParaCorrigir = (
 ) => {
   const existeAlgumCampoParaCorrigir = valoresPeriodosLancamentos
     .filter(
-      valor =>
+      (valor) =>
         !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
           valor.nome_campo
         )
     )
-    .filter(valor => String(valor.dia) === String(dia))
-    .filter(valor => String(valor.categoria_medicao) === String(categoria))
-    .filter(valor => valor.habilitado_correcao === true)[0];
+    .filter((valor) => String(valor.dia) === String(dia))
+    .filter((valor) => String(valor.categoria_medicao) === String(categoria))
+    .filter((valor) => valor.habilitado_correcao === true)[0];
 
   return existeAlgumCampoParaCorrigir;
 };
@@ -545,7 +542,7 @@ export const textoBotaoObservacao = (
   } else if (
     valoresObservacoes &&
     valoresObservacoes.find(
-      valor =>
+      (valor) =>
         String(valor.dia) === String(dia) &&
         String(valor.categoria_medicao) === String(categoria)
     )
@@ -584,13 +581,13 @@ export const desabilitarBotaoColunaObservacoes = (
         "MEDICAO_CORRECAO_SOLICITADA",
         "MEDICAO_CORRECAO_SOLICITADA_CODAE",
         "MEDICAO_CORRIGIDA_PELA_UE",
-        "MEDICAO_CORRIGIDA_PARA_CODAE"
+        "MEDICAO_CORRIGIDA_PARA_CODAE",
       ].includes(location.state.status_periodo) &&
         !valoresPeriodosLancamentos
-          .filter(valor => valor.nome_campo === "observacoes")
-          .filter(valor => String(valor.dia) === String(column.dia))
+          .filter((valor) => valor.nome_campo === "observacoes")
+          .filter((valor) => String(valor.dia) === String(column.dia))
           .filter(
-            valor => String(valor.categoria_medicao) === String(categoria.id)
+            (valor) => String(valor.categoria_medicao) === String(categoria.id)
           )[0])) &&
       botaoEhAdicionar &&
       !ehDiaParaCorrigir(
@@ -606,7 +603,7 @@ export const desabilitarBotaoColunaObservacoes = (
         "MEDICAO_CORRECAO_SOLICITADA",
         "MEDICAO_CORRECAO_SOLICITADA_CODAE",
         "MEDICAO_CORRIGIDA_PELA_UE",
-        "MEDICAO_CORRIGIDA_PARA_CODAE"
+        "MEDICAO_CORRIGIDA_PARA_CODAE",
       ].includes(location.state.status_periodo) &&
         !ehDiaParaCorrigir(
           column.dia,

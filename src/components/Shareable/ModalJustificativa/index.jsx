@@ -9,7 +9,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 
 import "./style.scss";
@@ -29,7 +29,7 @@ const ModalJustificativa = ({
   uuidReclamacao,
   showModalSuspensao,
   abreModalSuspensao,
-  closeModalSuspensao
+  closeModalSuspensao,
 }) => {
   return (
     <Modal
@@ -139,7 +139,7 @@ const ModalJustificativa = ({
                     label={labelJustificativa}
                     name="justificativa"
                     required
-                    validate={value => {
+                    validate={(value) => {
                       for (let validator of [peloMenosUmCaractere, required]) {
                         const erro = validator(value);
                         if (erro) return erro;

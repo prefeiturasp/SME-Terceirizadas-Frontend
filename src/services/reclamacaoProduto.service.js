@@ -4,7 +4,7 @@ import authService from "./auth";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 export const CODAEAceitaReclamacao = async (uuid, params) =>
@@ -44,14 +44,14 @@ export const CODAEPedeAnaliseSensorialProdutoReclamacao = (
   const params = JSON.stringify({ justificativa, uuidTerceirizada });
   return axios
     .patch(url, params)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res;
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -65,17 +65,17 @@ export const getMarcas = async () =>
 export const getFabricantes = async () =>
   await axios.get(`/fabricantes/lista-nomes-responder-reclamacao-escola/`);
 
-export const filtrarReclamacoesEscola = async params => {
+export const filtrarReclamacoesEscola = async (params) => {
   const url = `${API_URL}/produtos/filtro-reclamacoes-escola/${params}`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -96,17 +96,17 @@ export const getFabricantesNutrisupervisor = async () =>
     `/fabricantes/lista-nomes-responder-reclamacao-nutrisupervisor/`
   );
 
-export const filtrarReclamacoesNutrisupervisor = async params => {
+export const filtrarReclamacoesNutrisupervisor = async (params) => {
   const url = `${API_URL}/produtos/filtro-reclamacoes-nutrisupervisor/${params}`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };

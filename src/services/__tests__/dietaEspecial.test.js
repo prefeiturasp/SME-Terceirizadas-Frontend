@@ -10,7 +10,7 @@ import {
   getAlimentos,
   getDietasAtivasInativasPorAluno,
   getSolicitacaoDietaEspecial,
-  terceirizadaTomaCienciaDietaEspecial
+  terceirizadaTomaCienciaDietaEspecial,
 } from "../dietaEspecial.service";
 
 describe("test getDietasAtivasInativasPorAluno", () => {
@@ -24,7 +24,7 @@ describe("test getDietasAtivasInativasPorAluno", () => {
   });
   test("pesquisa dre", async () => {
     const response = await getDietasAtivasInativasPorAluno({
-      dre: 12
+      dre: 12,
     });
     expect(response.data).toEqual(["dietas", "inativas"]);
     expect(response.status).toEqual(200);
@@ -45,12 +45,12 @@ describe("test CODAEAutorizaDietaEspecial", () => {
   const uuid = "1234-5678";
   const baseUrl = `${API_URL}/${ENDPOINT.AUTORIZAR_DIETA(uuid)}/`;
   mock.onPatch(baseUrl).reply(200, {
-    detail: "Autorização de Dieta Especial realizada com sucesso"
+    detail: "Autorização de Dieta Especial realizada com sucesso",
   });
   test("autorização bem sucedida", async () => {
     const response = await CODAEAutorizaDietaEspecial(uuid, {});
     expect(response.data).toEqual({
-      detail: "Autorização de Dieta Especial realizada com sucesso"
+      detail: "Autorização de Dieta Especial realizada com sucesso",
     });
     expect(response.status).toEqual(200);
   });
@@ -76,7 +76,7 @@ describe("test terceirizadaTomaCienciaDietaEspecial", () => {
   test("obtém dados corretamente", async () => {
     const response = await terceirizadaTomaCienciaDietaEspecial(uuid);
     expect(response.data).toEqual({
-      mensagem: "Ciente da solicitação de dieta especial"
+      mensagem: "Ciente da solicitação de dieta especial",
     });
     expect(response.status).toEqual(200);
   });
@@ -91,7 +91,7 @@ describe("test CODAENegaDietaEspecial", () => {
   test("obtém dados corretamente", async () => {
     const response = await CODAENegaDietaEspecial(uuid);
     expect(response.data).toEqual({
-      mensagem: "Solicitação de Dieta Especial Negada"
+      mensagem: "Solicitação de Dieta Especial Negada",
     });
     expect(response.status).toEqual(200);
   });

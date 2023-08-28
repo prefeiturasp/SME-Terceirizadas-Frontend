@@ -1,7 +1,7 @@
 import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import ModalAutorizarAposQuestionamento from "components/Shareable/ModalAutorizarAposQuestionamento";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
@@ -13,7 +13,7 @@ import { statusEnum, TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
 import {
   prazoDoPedidoMensagem,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
-  visualizaBotoesDoFluxo
+  visualizaBotoesDoFluxo,
 } from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
@@ -40,7 +40,7 @@ class Relatorio extends Component {
       inclusaoDeAlimentacao: null,
       prazoDoPedidoMensagem: null,
       resposta_sim_nao: null,
-      showModalMarcarConferencia: false
+      showModalMarcarConferencia: false,
     };
 
     //FIXME: migrar para padrao sem binding
@@ -50,16 +50,15 @@ class Relatorio extends Component {
     this.closeModalCodaeAutorizar = this.closeModalCodaeAutorizar.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
-      this
-    );
+    this.closeModalMarcarConferencia =
+      this.closeModalMarcarConferencia.bind(this);
   }
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     const tipoSolicitacao = urlParams.get("tipoSolicitacao");
-    meusDados().then(response => {
+    meusDados().then((response) => {
       if (response) {
         this.setState({ meusDados: response });
       } else {
@@ -69,12 +68,12 @@ class Relatorio extends Component {
     });
     if (uuid) {
       obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(
-        response => {
+        (response) => {
           this.setState({
             uuid,
             inclusaoDeAlimentacao: response,
             tipoSolicitacao,
-            prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
+            prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade),
           });
         }
       );
@@ -123,9 +122,9 @@ class Relatorio extends Component {
 
   loadSolicitacao(uuid, tipoSolicitacao) {
     obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(
-      response => {
+      (response) => {
         this.setState({
-          inclusaoDeAlimentacao: response
+          inclusaoDeAlimentacao: response,
         });
       }
     );
@@ -140,7 +139,7 @@ class Relatorio extends Component {
         this.state.tipoSolicitacao
       )
       .then(
-        response => {
+        (response) => {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess(toastAprovaMensagem);
             this.loadSolicitacao(this.state.uuid, this.state.tipoSolicitacao);
@@ -148,7 +147,7 @@ class Relatorio extends Component {
             toastError(toastAprovaMensagemErro);
           }
         },
-        function() {
+        function () {
           toastError(toastAprovaMensagemErro);
         }
       );
@@ -166,7 +165,7 @@ class Relatorio extends Component {
       showAutorizarModal,
       showModalCodaeAutorizar,
       meusDados,
-      showModalMarcarConferencia
+      showModalMarcarConferencia,
     } = this.state;
     const {
       endpointAprovaSolicitacao,
@@ -180,7 +179,7 @@ class Relatorio extends Component {
       ModalNaoAprova,
       ModalQuestionamento,
       motivosDREnaoValida,
-      ModalCodaeAutoriza
+      ModalCodaeAutoriza,
     } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
@@ -192,20 +191,20 @@ class Relatorio extends Component {
     const EXIBIR_BOTAO_APROVAR =
       (![
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-        TIPO_PERFIL.TERCEIRIZADA
+        TIPO_PERFIL.TERCEIRIZADA,
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
       (inclusaoDeAlimentacao &&
         (inclusaoDeAlimentacao.prioridade === "REGULAR" ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
-            statusEnum.CODAE_AUTORIZADO
+            statusEnum.CODAE_AUTORIZADO,
           ].includes(inclusaoDeAlimentacao.status)) &&
         textoBotaoAprova);
     const EXIBIR_BOTAO_QUESTIONAMENTO =
       [
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-        TIPO_PERFIL.TERCEIRIZADA
+        TIPO_PERFIL.TERCEIRIZADA,
       ].includes(tipoPerfil) &&
       inclusaoDeAlimentacao &&
       (inclusaoDeAlimentacao.prioridade !== "REGULAR" ||
@@ -240,7 +239,7 @@ class Relatorio extends Component {
       );
     };
 
-    const renderModalCancelamentoContinuo = inclusao => {
+    const renderModalCancelamentoContinuo = (inclusao) => {
       return (
         usuarioEhEscolaTerceirizadaQualquerPerfil() &&
         inclusao &&
@@ -328,9 +327,7 @@ class Relatorio extends Component {
                 tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
-            <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
-              inclusaoDeAlimentacao.id_externo
-            }`}</span>
+            <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${inclusaoDeAlimentacao.id_externo}`}</span>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
@@ -343,7 +340,7 @@ class Relatorio extends Component {
                   inclusaoDeAlimentacao.inclusoes ||
                   inclusaoDeAlimentacao.dias_motivos_da_inclusao_cei ||
                   inclusaoDeAlimentacao.quantidades_periodo
-                ).find(inclusao => inclusao.cancelado_justificativa) && (
+                ).find((inclusao) => inclusao.cancelado_justificativa) && (
                   <>
                     <hr />
                     <p>
@@ -353,7 +350,7 @@ class Relatorio extends Component {
                         inclusaoDeAlimentacao.dias_motivos_da_inclusao_cei ||
                         inclusaoDeAlimentacao.quantidades_periodo
                       )
-                        .filter(inclusao => inclusao.cancelado_justificativa)
+                        .filter((inclusao) => inclusao.cancelado_justificativa)
                         .map((inclusao, key) => {
                           return (
                             <div key={key}>
@@ -361,7 +358,7 @@ class Relatorio extends Component {
                                 `${
                                   inclusao.periodo_escolar.nome
                                 } - ${inclusao.tipos_alimentacao
-                                  .map(ta => ta.nome)
+                                  .map((ta) => ta.nome)
                                   .join(", ")} - ${inclusao.numero_alunos}`}
                               {" - "}
                               justificativa: {inclusao.cancelado_justificativa}
@@ -391,28 +388,28 @@ class Relatorio extends Component {
                       />
                     )}
                     {EXIBIR_BOTAO_APROVAR &&
-                      (textoBotaoAprova !== "Ciente" &&
-                        (visao === CODAE &&
-                        inclusaoDeAlimentacao.logs.filter(
-                          log =>
-                            log.status_evento_explicacao ===
-                              "Terceirizada respondeu questionamento" &&
-                            !log.resposta_sim_nao
-                        ).length > 0 ? null : (
-                          <Botao
-                            texto={textoBotaoAprova}
-                            type={BUTTON_TYPE.BUTTON}
-                            onClick={() =>
-                              visao === DRE
-                                ? this.handleSubmit()
-                                : EXIBIR_MODAL_AUTORIZACAO_APOS_QUESTIONAMENTO
-                                ? this.showAutorizarModal()
-                                : this.showModalCodaeAutorizar()
-                            }
-                            style={BUTTON_STYLE.GREEN}
-                            className="ml-3"
-                          />
-                        )))}
+                      textoBotaoAprova !== "Ciente" &&
+                      (visao === CODAE &&
+                      inclusaoDeAlimentacao.logs.filter(
+                        (log) =>
+                          log.status_evento_explicacao ===
+                            "Terceirizada respondeu questionamento" &&
+                          !log.resposta_sim_nao
+                      ).length > 0 ? null : (
+                        <Botao
+                          texto={textoBotaoAprova}
+                          type={BUTTON_TYPE.BUTTON}
+                          onClick={() =>
+                            visao === DRE
+                              ? this.handleSubmit()
+                              : EXIBIR_MODAL_AUTORIZACAO_APOS_QUESTIONAMENTO
+                              ? this.showAutorizarModal()
+                              : this.showModalCodaeAutorizar()
+                          }
+                          style={BUTTON_STYLE.GREEN}
+                          className="ml-3"
+                        />
+                      ))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <>
                         {inclusaoDeAlimentacao.status ===
@@ -472,15 +469,15 @@ class Relatorio extends Component {
 const formName = "relatorioInclusaoDeAlimentacao";
 const RelatorioForm = reduxForm({
   form: formName,
-  enableReinitialize: true
+  enableReinitialize: true,
 })(Relatorio);
 
 const selector = formValueSelector(formName);
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     justificativa: selector(state, "justificativa"),
-    motivo_cancelamento: selector(state, "motivo_cancelamento")
+    motivo_cancelamento: selector(state, "motivo_cancelamento"),
   };
 };
 

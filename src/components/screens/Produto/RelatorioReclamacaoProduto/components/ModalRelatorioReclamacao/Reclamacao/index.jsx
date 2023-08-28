@@ -7,10 +7,10 @@ const {
   CODAE_RECUSOU_RECLAMACAO,
   CODAE_QUESTIONOU_TERCEIRIZADA,
   CODAE_RESPONDEU_RECLAMACAO,
-  TERCEIRIZADA_RESPONDEU_RECLAMACAO
+  TERCEIRIZADA_RESPONDEU_RECLAMACAO,
 } = RECLAMACAO_PRODUTO_STATUS_EXPLICACAO;
 
-const obterTituloLog = status_evento => {
+const obterTituloLog = (status_evento) => {
   switch (status_evento) {
     case TERCEIRIZADA_RESPONDEU_RECLAMACAO:
       return "Resposta terceirizada";
@@ -32,7 +32,7 @@ const obterTituloLog = status_evento => {
   }
 };
 
-const obterRotuloDataLog = log => {
+const obterRotuloDataLog = (log) => {
   if (log.status_evento_explicacao === CODAE_QUESTIONOU_TERCEIRIZADA)
     return "Data quest. CODAE";
   if (log.status_evento_explicacao === TERCEIRIZADA_RESPONDEU_RECLAMACAO)

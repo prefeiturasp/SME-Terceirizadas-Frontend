@@ -15,19 +15,21 @@ export const dreListarSolicitacoesDeInclusaoDeAlimentacao = async (
   return { results: results, status };
 };
 
-export const dreListarSolicitacoesDeInclusaoDeAlimentacaoReprovados = tipoSolicitacao => {
+export const dreListarSolicitacoesDeInclusaoDeAlimentacaoReprovados = (
+  tipoSolicitacao
+) => {
   const url = `${getPath(
     tipoSolicitacao
   )}/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };

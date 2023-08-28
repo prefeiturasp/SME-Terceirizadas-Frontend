@@ -13,25 +13,25 @@ class Container extends Component {
       motivos: [],
       periodos: [],
       proximos_dois_dias_uteis: null,
-      proximos_cinco_dias_uteis: null
+      proximos_cinco_dias_uteis: null,
     };
   }
 
   componentDidMount() {
-    meusDados().then(response => {
+    meusDados().then((response) => {
       this.setState({
         meusDados: response,
-        periodos: response.vinculo_atual.instituicao.periodos_escolares
+        periodos: response.vinculo_atual.instituicao.periodos_escolares,
       });
     });
 
-    getMotivosSuspensaoCardapio().then(response => {
+    getMotivosSuspensaoCardapio().then((response) => {
       this.setState({
-        motivos: agregarDefault(response.results)
+        motivos: agregarDefault(response.results),
       });
     });
 
-    getDiasUteis().then(response => {
+    getDiasUteis().then((response) => {
       const proximos_cinco_dias_uteis = dataParaUTC(
         new Date(response.data.proximos_cinco_dias_uteis)
       );
@@ -40,7 +40,7 @@ class Container extends Component {
       );
       this.setState({
         proximos_dois_dias_uteis,
-        proximos_cinco_dias_uteis
+        proximos_cinco_dias_uteis,
       });
     });
   }

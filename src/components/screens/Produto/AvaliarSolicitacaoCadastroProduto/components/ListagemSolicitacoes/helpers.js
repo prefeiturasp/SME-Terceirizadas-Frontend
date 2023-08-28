@@ -1,4 +1,4 @@
-export const retornaStatusFormatado = status => {
+export const retornaStatusFormatado = (status) => {
   switch (status) {
     case "CODAE_AUTORIZOU_RECLAMACAO":
       return "Reclamação de produto";

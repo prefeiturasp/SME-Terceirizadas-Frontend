@@ -32,7 +32,7 @@ export class Rascunhos extends Component {
               <span
                 onClick={() =>
                   carregarRascunho({
-                    produto
+                    produto,
                   })
                 }
               >

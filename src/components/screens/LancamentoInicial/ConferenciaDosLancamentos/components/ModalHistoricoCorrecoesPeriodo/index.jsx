@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { HistoricoCorrecaoSolicitada } from "./HistoricoCorrecaoSolicitada";
@@ -15,7 +15,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
   const [detalhesHistoricoAtivo, setDetalhesHistoricoAtivo] = useState(<p />);
   const [activeIdx, setActiveIdx] = useState(undefined);
 
-  const formatarTitulo = acao => {
+  const formatarTitulo = (acao) => {
     switch (acao) {
       case "MEDICAO_CORRECAO_SOLICITADA":
         return "Devolvidos para ajustes pela DRE";
@@ -28,7 +28,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
     }
   };
 
-  const retornaIniciais = email => {
+  const retornaIniciais = (email) => {
     const nome = email.split(" ");
     let iniciais = "";
     nome.forEach((n, index) => {

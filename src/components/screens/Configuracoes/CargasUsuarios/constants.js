@@ -1,26 +1,26 @@
 export const OPTIONS_STATUS = [
   {
     uuid: "PENDENTE",
-    nome: "Inserido"
+    nome: "Inserido",
   },
   {
     uuid: "PROCESSANDO",
-    nome: "Em Execução"
+    nome: "Em Execução",
   },
   {
     uuid: "SUCESSO",
-    nome: "Executado"
+    nome: "Executado",
   },
   {
     uuid: "ERRO",
-    nome: "Não Executado"
+    nome: "Não Executado",
   },
   {
     uuid: "PROCESSADO_COM_ERRO",
-    nome: "Parcialmente Executado"
+    nome: "Parcialmente Executado",
   },
   {
     uuid: "REMOVIDO",
-    nome: "Removido"
-  }
+    nome: "Removido",
+  },
 ];

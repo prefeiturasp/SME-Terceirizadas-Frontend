@@ -5,29 +5,29 @@ import {
   getDietasEspeciaisVigentesDeUmAluno,
   deleteSolicitacaoAberta,
   createSolicitacaoAberta,
-  updateSolicitacaoAberta
+  updateSolicitacaoAberta,
 } from "services/dietaEspecial.service";
 import {
   getProtocoloDietaEspecial,
-  getRelatorioDietaEspecial
+  getRelatorioDietaEspecial,
 } from "services/relatorios";
 import {
   CODAENegaSolicitacaoCancelamento,
-  getMotivosNegarSolicitacaoCancelamento
+  getMotivosNegarSolicitacaoCancelamento,
 } from "services/dietaEspecial.service";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import HTTP_STATUS from "http-status-codes";
 import { ESCOLA, CODAE, TERCEIRIZADA } from "configs/constants";
 import {
   statusEnum,
   TIPO_PERFIL,
-  TIPO_SOLICITACAO_DIETA
+  TIPO_SOLICITACAO_DIETA,
 } from "constants/shared";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 
@@ -47,9 +47,8 @@ const Relatorio = ({ visao }) => {
   const [dietaEspecial, setDietaEspecial] = useState(null);
   const [carregando, setCarregando] = useState(false);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
-  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
-    false
-  );
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] =
+    useState(false);
   const [showModalAviso, setShowModalAviso] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [mostrarHistorico, setMostrarHistorico] = useState(false);
@@ -64,9 +63,9 @@ const Relatorio = ({ visao }) => {
   const dietaCancelada = status ? ehSolicitacaoDeCancelamento(status) : false;
   const tipoPerfil = localStorage.getItem("tipo_perfil");
 
-  const fetchData = async uuid => {
+  const fetchData = async (uuid) => {
     const payload = {
-      uuid_solicitacao: uuid
+      uuid_solicitacao: uuid,
     };
     const response = await createSolicitacaoAberta(payload);
     if (response.status === HTTP_STATUS.CREATED) {
@@ -74,7 +73,7 @@ const Relatorio = ({ visao }) => {
     }
   };
 
-  const initSocket = uuid => {
+  const initSocket = (uuid) => {
     return new Websocket(
       "solicitacoes-abertas/",
       ({ data }) => {
@@ -99,11 +98,11 @@ const Relatorio = ({ visao }) => {
     setEditar(!editar);
   };
 
-  const getDietasEspeciaisAbertas = content => {
+  const getDietasEspeciaisAbertas = (content) => {
     content && setDietasAbertas(content.message);
   };
 
-  const loadSolicitacao = async uuid => {
+  const loadSolicitacao = async (uuid) => {
     setCarregando(true);
     const responseDietaEspecial = await getDietaEspecial(uuid);
     if (responseDietaEspecial.status === HTTP_STATUS.OK) {
@@ -119,7 +118,7 @@ const Relatorio = ({ visao }) => {
     }
   };
 
-  const getSolicitacoesVigentes = async codigo_eol => {
+  const getSolicitacoesVigentes = async (codigo_eol) => {
     const responseDietasVigentes = await getDietasEspeciaisVigentesDeUmAluno(
       codigo_eol
     );
@@ -162,7 +161,7 @@ const Relatorio = ({ visao }) => {
     }
   };
 
-  const gerarRelatorio = async uuid => {
+  const gerarRelatorio = async (uuid) => {
     setCarregando(true);
     await getRelatorioDietaEspecial(uuid);
     setCarregando(false);
@@ -266,7 +265,7 @@ const Relatorio = ({ visao }) => {
   };
 
   const dietasFiltradas = () => {
-    return dietasAbertas.filter(dieta =>
+    return dietasAbertas.filter((dieta) =>
       dieta.uuid_solicitacao.includes(uuidDieta)
     );
   };
@@ -310,9 +309,7 @@ const Relatorio = ({ visao }) => {
                     <ul className="col-11 usuarios-simultaneos-dietas">
                       {dietasFiltradas().map((dieta, index) => (
                         <li key={index}>
-                          {`${dieta.usuario.nome} - RF: ${
-                            dieta.usuario.registro_funcional
-                          } - ${dieta.usuario.email}`}
+                          {`${dieta.usuario.nome} - RF: ${dieta.usuario.registro_funcional} - ${dieta.usuario.email}`}
                         </li>
                       ))}
                     </ul>
@@ -368,7 +365,7 @@ const Relatorio = ({ visao }) => {
                 ![
                   TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
                   TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
-                  TIPO_PERFIL.MEDICAO
+                  TIPO_PERFIL.MEDICAO,
                 ].includes(tipoPerfil) && (
                   <EscolaCancelaDietaEspecial
                     uuid={dietaEspecial.uuid}
@@ -387,7 +384,7 @@ const Relatorio = ({ visao }) => {
                 setTemSolicitacaoCadastroProduto={() =>
                   setDietaEspecial({
                     ...dietaEspecial,
-                    tem_solicitacao_cadastro_produto: true
+                    tem_solicitacao_cadastro_produto: true,
                   })
                 }
                 editar={editar}
@@ -415,7 +412,7 @@ const Relatorio = ({ visao }) => {
                   className="ml-3"
                   onClick={() => setShowNaoAprovaModal(true)}
                 />
-              </div>
+              </div>,
             ]}
           {dietaEspecial &&
             visao === TERCEIRIZADA &&

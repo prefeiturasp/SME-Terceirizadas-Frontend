@@ -11,7 +11,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
 import { vinculosAtivosProdutoEditais } from "services/produto.service";
@@ -23,7 +23,7 @@ const ModalSuspensaoProdutoEdital = ({
   showModal,
   produto,
   onSubmitSupender,
-  state
+  state,
 }) => {
   const [dados, setDados] = useState(undefined);
   const [vinculos, setVinculos] = useState([]);
@@ -59,7 +59,7 @@ const ModalSuspensaoProdutoEdital = ({
           marca_produto: produto.marca.nome,
           produto_tipo: produto.eh_para_alunos_com_dieta
             ? "D. Especial"
-            : "Comum"
+            : "Comum",
         }
       : {};
   };
@@ -69,18 +69,18 @@ const ModalSuspensaoProdutoEdital = ({
 
     if (vinculos_produto_edital) {
       vinculos_produto_edital = vinculos_produto_edital.filter(
-        vinculo => !vinculo.suspenso
+        (vinculo) => !vinculo.suspenso
       );
 
-      return vinculos_produto_edital.map(vinculo => ({
+      return vinculos_produto_edital.map((vinculo) => ({
         value: vinculo.edital.uuid,
-        label: vinculo.edital.numero
+        label: vinculo.edital.numero,
       }));
     }
     return [];
   };
 
-  const verificaEditaisSelecionados = values => {
+  const verificaEditaisSelecionados = (values) => {
     const editaisSelecionados =
       values.editais_para_suspensao && values.editais_para_suspensao.length;
     return editaisSelecionados === opcoesEditais().length;
@@ -174,7 +174,7 @@ const ModalSuspensaoProdutoEdital = ({
                     label="Justificativa"
                     name="justificativa"
                     required
-                    validate={value => {
+                    validate={(value) => {
                       for (let validator of [peloMenosUmCaractere, required]) {
                         const erro = validator(value);
                         if (erro) return erro;
@@ -223,9 +223,8 @@ const ModalSuspensaoProdutoEdital = ({
                     className="ml-3"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => {
-                      const todosEditaisSelecionados = verificaEditaisSelecionados(
-                        values
-                      );
+                      const todosEditaisSelecionados =
+                        verificaEditaisSelecionados(values);
                       state.tipo_resposta = todosEditaisSelecionados
                         ? "aceitar"
                         : "aceitar_parcialmente";
@@ -234,9 +233,9 @@ const ModalSuspensaoProdutoEdital = ({
                     disabled={
                       peloMenosUmCaractere(values.justificativa) !==
                         undefined ||
-                      (!values.editais_para_suspensao ||
-                        (values.editais_para_suspensao &&
-                          values.editais_para_suspensao.length === 0))
+                      !values.editais_para_suspensao ||
+                      (values.editais_para_suspensao &&
+                        values.editais_para_suspensao.length === 0)
                     }
                   />
                 </div>

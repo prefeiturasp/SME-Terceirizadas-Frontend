@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import ModalCancelarHomologacaoProduto from "./ModalCancelarHomologacaoProduto";
 
 export const BotoesTerceirizada = ({
   homologacao,
   produto,
-  getHomologacaoProdutoAsync
+  getHomologacaoProdutoAsync,
 }) => {
   const [showModal, setShowModal] = useState(false);
 

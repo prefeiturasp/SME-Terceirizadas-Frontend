@@ -3,26 +3,23 @@ import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
   justificativaAoNegarSolicitacao,
-  stringSeparadaPorVirgulas
+  stringSeparadaPorVirgulas,
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "../../../Shareable/Botao/constants";
 
 import { getDetalheInversaoCardapio } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import { statusEnum } from "constants/shared";
 
-export const CorpoRelatorio = props => {
+export const CorpoRelatorio = (props) => {
   const [imprimindo, setimprimindo] = useState(false);
-  const {
-    inversaoDiaCardapio,
-    prazoDoPedidoMensagem,
-    escolaDaInversao
-  } = props;
+  const { inversaoDiaCardapio, prazoDoPedidoMensagem, escolaDaInversao } =
+    props;
 
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     inversaoDiaCardapio.logs
@@ -166,7 +163,7 @@ export const CorpoRelatorio = props => {
           <p
             className="value font-weight-bold"
             dangerouslySetInnerHTML={{
-              __html: inversaoDiaCardapio.motivo
+              __html: inversaoDiaCardapio.motivo,
             }}
           />
         </div>
@@ -178,7 +175,7 @@ export const CorpoRelatorio = props => {
             <p
               className="font-weight-bold value"
               dangerouslySetInnerHTML={{
-                __html: inversaoDiaCardapio.observacao
+                __html: inversaoDiaCardapio.observacao,
               }}
             />
           </div>
@@ -207,7 +204,7 @@ export const CorpoRelatorio = props => {
                     __html:
                       inversaoDiaCardapio.logs[
                         inversaoDiaCardapio.logs.length - 1
-                      ].justificativa
+                      ].justificativa,
                   }}
                 />
               ) : (
@@ -223,7 +220,7 @@ export const CorpoRelatorio = props => {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaNegacao
+                __html: justificativaNegacao,
               }}
             />
           </div>

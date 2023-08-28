@@ -54,7 +54,7 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
                 <p>
                   <b>
                     {solicitacao.solicitacao_kit_lanche.kits
-                      .map(kit => kit.nome)
+                      .map((kit) => kit.nome)
                       .join(", ")}
                   </b>
                 </p>
@@ -95,7 +95,7 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
                       <p
                         className="observacao-negrito"
                         dangerouslySetInnerHTML={{
-                          __html: solicitacao.solicitacao_kit_lanche.descricao
+                          __html: solicitacao.solicitacao_kit_lanche.descricao,
                         }}
                       />
                     </b>
@@ -105,6 +105,6 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

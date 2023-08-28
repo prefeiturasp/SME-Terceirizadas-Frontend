@@ -2,7 +2,7 @@ import React from "react";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import {
   fluxoDietaEspecialPartindoEscola,
-  formatarFluxoDietaEspecial
+  formatarFluxoDietaEspecial,
 } from "components/Shareable/FluxoDeStatus/helper";
 
 const FluxoDeStatusDieta = ({ logs, eh_importado = false }) => {
@@ -13,7 +13,7 @@ const FluxoDeStatusDieta = ({ logs, eh_importado = false }) => {
           listaDeStatus={logs}
           fluxo={
             logs.find(
-              log =>
+              (log) =>
                 log.status_evento_explicacao === "Escola solicitou cancelamento"
             ) !== undefined
               ? formatarFluxoDietaEspecial()

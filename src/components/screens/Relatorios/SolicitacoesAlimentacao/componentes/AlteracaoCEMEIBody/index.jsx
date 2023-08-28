@@ -5,12 +5,12 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
   const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
 
-  const unique = arr => [...new Set(arr)];
+  const unique = (arr) => [...new Set(arr)];
 
   const nomes_periodos = unique(
     solicitacao.substituicoes_cemei_cei_periodo_escolar
       .concat(solicitacao.substituicoes_cemei_emei_periodo_escolar)
-      .map(qa => qa.periodo_escolar.nome)
+      .map((qa) => qa.periodo_escolar.nome)
   );
 
   return [
@@ -61,9 +61,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                 <p>
                   <b>
                     {solicitacao.data_final
-                      ? `${solicitacao.data_inicial} - ${
-                          solicitacao.data_final
-                        }`
+                      ? `${solicitacao.data_inicial} - ${solicitacao.data_final}`
                       : solicitacao.alterar_dia}
                   </b>
                 </p>
@@ -76,12 +74,14 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
               </div>
             </div>
             {nomes_periodos.map((periodo, idx) => {
-              const substituicoesCEI = solicitacao.substituicoes_cemei_cei_periodo_escolar.filter(
-                s => s.periodo_escolar.nome === periodo
-              );
-              const substituicoesEMEI = solicitacao.substituicoes_cemei_emei_periodo_escolar.filter(
-                s => s.periodo_escolar.nome === periodo
-              );
+              const substituicoesCEI =
+                solicitacao.substituicoes_cemei_cei_periodo_escolar.filter(
+                  (s) => s.periodo_escolar.nome === periodo
+                );
+              const substituicoesEMEI =
+                solicitacao.substituicoes_cemei_emei_periodo_escolar.filter(
+                  (s) => s.periodo_escolar.nome === periodo
+                );
               return (
                 <Fragment key={idx}>
                   <div className="row mt-3">
@@ -93,17 +93,15 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                   </div>
                   {substituicoesCEI.map((substituicaoCEI, idxCEI) => {
                     const total = substituicaoCEI.faixas_etarias.reduce(
-                      function(acc, v) {
+                      function (acc, v) {
                         return acc + (v.quantidade || v.quantidade_alunos);
                       },
                       0
                     );
-                    const total_matriculados = substituicaoCEI.faixas_etarias.reduce(
-                      function(acc, v) {
+                    const total_matriculados =
+                      substituicaoCEI.faixas_etarias.reduce(function (acc, v) {
                         return acc + (v.matriculados_quando_criado || 0);
-                      },
-                      0
-                    );
+                      }, 0);
                     return (
                       <div className="container-fluid pr-0" key={idxCEI}>
                         <div className="row mt-3">
@@ -119,7 +117,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                               Alteração do tipo de Alimentação de:{" "}
                               <b>
                                 {substituicaoCEI.tipos_alimentacao_de
-                                  .map(ta => ta.nome)
+                                  .map((ta) => ta.nome)
                                   .join(", ")}
                               </b>
                             </p>
@@ -129,7 +127,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                               Alteração do tipo de Alimentação para:{" "}
                               <b>
                                 {substituicaoCEI.tipos_alimentacao_para
-                                  .map(ta => ta.nome)
+                                  .map((ta) => ta.nome)
                                   .join(", ")}
                               </b>
                             </p>
@@ -198,7 +196,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                               Alteração do tipo de Alimentação de:{" "}
                               <b>
                                 {substituicaoEMEI.tipos_alimentacao_de
-                                  .map(ta => ta.nome)
+                                  .map((ta) => ta.nome)
                                   .join(", ")}
                               </b>
                             </p>
@@ -208,7 +206,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                               Alteração do tipo de Alimentação de:{" "}
                               <b>
                                 {substituicaoEMEI.tipos_alimentacao_para
-                                  .map(ta => ta.nome)
+                                  .map((ta) => ta.nome)
                                   .join(", ")}
                               </b>
                             </p>
@@ -248,7 +246,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                   <p
                     className="observacao-negrito"
                     dangerouslySetInnerHTML={{
-                      __html: solicitacao.observacao
+                      __html: solicitacao.observacao,
                     }}
                   />
                 </div>
@@ -257,6 +255,6 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

@@ -7,14 +7,14 @@ import { DRE, INCLUSAO_ALIMENTACAO } from "../../../configs/constants";
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 
 const anteriores = [
   {
     href: `/${DRE}/${INCLUSAO_ALIMENTACAO}`,
-    titulo: "Inclusões de Alimentação"
-  }
+    titulo: "Inclusões de Alimentação",
+  },
 ];
 
 export default () => (

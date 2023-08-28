@@ -5,7 +5,7 @@ import {
   getRequisicoesListagem,
   gerarExcelSolicitacoes,
   arquivaGuias,
-  desarquivaGuias
+  desarquivaGuias,
 } from "../../../../services/logistica.service.js";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
 import "./styles.scss";
@@ -15,13 +15,13 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { enviaSolicitacoesDaGrade } from "../../../../services/disponibilizacaoDeSolicitacoes.service";
 import {
   toastError,
   toastInfo,
-  toastSuccess
+  toastSuccess,
 } from "components/Shareable/Toast/dialogs";
 import { Modal } from "react-bootstrap";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads/index.js";
@@ -46,7 +46,7 @@ export default () => {
 
   const inicioResultado = useRef();
 
-  const buscarSolicitacoes = async page => {
+  const buscarSolicitacoes = async (page) => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     try {
@@ -81,7 +81,7 @@ export default () => {
 
   const enviarSolicitacoesMarcadas = async () => {
     setCarregandoModal(true);
-    let payload = selecionados.map(x => x.uuid);
+    let payload = selecionados.map((x) => x.uuid);
     const response = await enviaSolicitacoesDaGrade(payload);
     if (response.status === HTTP_STATUS.OK && response.data.length === 0) {
       atualizaTabela();
@@ -122,7 +122,7 @@ export default () => {
   const confereSolicitacoesSelecionadas = () => {
     return (
       selecionados.find(
-        selecionado => selecionado.status !== "Aguardando envio"
+        (selecionado) => selecionado.status !== "Aguardando envio"
       ) !== undefined || selecionados.length === 0
     );
   };
@@ -135,7 +135,7 @@ export default () => {
     setCarregando
   ) => {
     setCarregando(true);
-    let guias = selecionadas.map(x => x.numero_guia);
+    let guias = selecionadas.map((x) => x.numero_guia);
     const payload = { guias, numero_requisicao };
     let textoToast =
       situacao === "ATIVA"
@@ -172,7 +172,7 @@ export default () => {
       const urlParams = new URLSearchParams(window.location.search);
       const codigo = urlParams.get("numero_requisicao");
       const filtro = {
-        numero_requisicao: codigo
+        numero_requisicao: codigo,
       };
       setFiltros({ ...filtro });
       setInitialValues({ ...filtro });
@@ -186,7 +186,7 @@ export default () => {
     }
   }, [filtros]);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarSolicitacoes(page);
     setPage(page);
   };
@@ -272,11 +272,9 @@ export default () => {
           </Modal.Header>
           <Modal.Body>
             {selecionados.length === 1
-              ? `Deseja enviar a Requisição de Entrega n° ${
-                  selecionados[0].numero_solicitacao
-                } ? `
+              ? `Deseja enviar a Requisição de Entrega n° ${selecionados[0].numero_solicitacao} ? `
               : `Deseja enviar as seguintes Requisições de Entrega n° ${selecionados
-                  .map(x => x.numero_solicitacao)
+                  .map((x) => x.numero_solicitacao)
                   .join("; ")} ? `}
           </Modal.Body>
           <Modal.Footer>

@@ -7,7 +7,7 @@ import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/un
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 
@@ -17,14 +17,14 @@ import {
   getAvaliarReclamacaoNomesFabricantes,
   getNovaReclamacaoNomesProdutos,
   getNovaReclamacaoNomesMarcas,
-  getNovaReclamacaoNomesFabricantes
+  getNovaReclamacaoNomesFabricantes,
 } from "services/produto.service";
 
 const initialState = {
   dados: {},
   produtos: [],
   marcas: [],
-  fabricantes: []
+  fabricantes: [],
 };
 
 function reducer(state, { type: actionType, payload }) {
@@ -43,7 +43,7 @@ const FormBuscaProduto = ({
   history,
   initialValues,
   formName,
-  novaReclamacao
+  novaReclamacao,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -54,23 +54,23 @@ const FormBuscaProduto = ({
         endpoints = [
           getNovaReclamacaoNomesProdutos(),
           getNovaReclamacaoNomesMarcas(),
-          getNovaReclamacaoNomesFabricantes()
+          getNovaReclamacaoNomesFabricantes(),
         ];
       } else {
         endpoints = [
           getAvaliarReclamacaoNomesProdutos(),
           getAvaliarReclamacaoNomesMarcas(),
-          getAvaliarReclamacaoNomesFabricantes()
+          getAvaliarReclamacaoNomesFabricantes(),
         ];
       }
       Promise.all(endpoints).then(([produtos, marcas, fabricantes]) => {
         dispatch({
           type: "popularDados",
           payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome)
-          }
+            produtos: produtos.data.results.map((el) => el.nome),
+            marcas: marcas.data.results.map((el) => el.nome),
+            fabricantes: fabricantes.data.results.map((el) => el.nome),
+          },
         });
       });
     }
@@ -121,7 +121,7 @@ const FormBuscaProduto = ({
                 form.reset({
                   nome_fabricante: undefined,
                   nome_marca: undefined,
-                  nome_produto: undefined
+                  nome_produto: undefined,
                 })
               }
               className="float-right ml-3"
@@ -136,7 +136,7 @@ const FormBuscaProduto = ({
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    initialValues: state.finalForm[ownProps.formName]
+    initialValues: state.finalForm[ownProps.formName],
   };
 };
 

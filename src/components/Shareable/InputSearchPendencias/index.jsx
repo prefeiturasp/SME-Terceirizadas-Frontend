@@ -6,18 +6,18 @@ import InputText from "components/Shareable/Input/InputText";
 import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 import {
   SOLICITACOES_AUTORIZADAS,
-  SOLICITACOES_CANCELADAS
+  SOLICITACOES_CANCELADAS,
 } from "configs/constants";
 import "./style.scss";
 import { ASelect } from "../MakeField";
 import { SOLICITACOES_NEGADAS } from "configs/constants";
 
-export const InputSearchPendencias = props => {
+export const InputSearchPendencias = (props) => {
   const ehTerceirizada = usuarioEhEmpresaTerceirizada();
   const listaStatus = [
     { nome: "Conferência Status", uuid: "" },
     { nome: "Conferida", uuid: "1" },
-    { nome: "Não Conferida", uuid: "0" }
+    { nome: "Não Conferida", uuid: "0" },
   ];
 
   const verificaURLFiltros = () => {
@@ -37,7 +37,7 @@ export const InputSearchPendencias = props => {
     return [
       SOLICITACOES_AUTORIZADAS,
       SOLICITACOES_CANCELADAS,
-      SOLICITACOES_NEGADAS
+      SOLICITACOES_NEGADAS,
     ].includes(props.tipoSolicitacao);
   };
 

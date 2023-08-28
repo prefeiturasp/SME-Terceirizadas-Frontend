@@ -12,7 +12,7 @@ import {
   updateInclusaoAlimentacao,
   iniciaFluxoInclusaoAlimentacao,
   obterMinhasSolicitacoesDeInclusaoDeAlimentacao,
-  escolaExcluirSolicitacaoDeInclusaoDeAlimentacao
+  escolaExcluirSolicitacaoDeInclusaoDeAlimentacao,
 } from "services/inclusaoDeAlimentacao";
 import { Rascunhos } from "./componentes/Rascunhos";
 import Select from "components/Shareable/Select";
@@ -21,7 +21,7 @@ import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
   deepCopy,
-  getError
+  getError,
 } from "helpers/utilities";
 import { FieldArray } from "react-final-form-arrays";
 import arrayMutators from "final-form-arrays";
@@ -29,7 +29,7 @@ import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 import { OnChange } from "react-final-form-listeners";
@@ -37,14 +37,14 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   AdicionarDia,
   DataInclusaoNormal,
-  OutroMotivo
+  OutroMotivo,
 } from "components/InclusaoDeAlimentacao/Escola/Formulario/componentes/InclusaoNormal";
 import { PeriodosCEIeouEMEI } from "./componentes/InclusaoNormal";
 import { formataInclusaoCEMEI, validarSubmit } from "./helpers";
 import {
   DatasInclusaoContinua,
   Recorrencia,
-  RecorrenciaTabela
+  RecorrenciaTabela,
 } from "components/InclusaoDeAlimentacao/Escola/Formulario/componentes/InclusaoContinua";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { validarSubmissaoContinua } from "components/InclusaoDeAlimentacao/validacao";
@@ -63,14 +63,14 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     proximosCincoDiasUteis,
     periodos,
     periodosInclusaoContinua,
-    vinculos
+    vinculos,
   } = props;
 
   useEffect(() => {
     getRascunhos();
   }, []);
 
-  const resetForm = async form => {
+  const resetForm = async (form) => {
     await form.change("inclusoes", [{ motivo: undefined }]);
     await form.change("quantidades_periodo", undefined);
     await form.change("dias_semana", undefined);
@@ -79,20 +79,22 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     await form.change("numero_alunos", undefined);
   };
 
-  const motivoSimplesSelecionado = values => {
+  const motivoSimplesSelecionado = (values) => {
     return (
       values.inclusoes &&
       values.inclusoes[0].motivo &&
-      motivosSimples.find(motivo => motivo.uuid === values.inclusoes[0].motivo)
+      motivosSimples.find(
+        (motivo) => motivo.uuid === values.inclusoes[0].motivo
+      )
     );
   };
 
-  const motivoContinuoSelecionado = values => {
+  const motivoContinuoSelecionado = (values) => {
     return (
       values.inclusoes &&
       values.inclusoes[0].motivo &&
       motivosContinuos.find(
-        motivo => motivo.uuid === values.inclusoes[0].motivo
+        (motivo) => motivo.uuid === values.inclusoes[0].motivo
       )
     );
   };
@@ -103,19 +105,20 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
       values.inclusoes[index] &&
       values.inclusoes[index].motivo &&
       motivosSimples.find(
-        motivo => motivo.uuid === values.inclusoes[index].motivo
+        (motivo) => motivo.uuid === values.inclusoes[index].motivo
       ) &&
       motivosSimples
-        .find(motivo => motivo.uuid === values.inclusoes[index].motivo)
+        .find((motivo) => motivo.uuid === values.inclusoes[index].motivo)
         .nome.includes("Outro")
     );
   };
 
   const getRascunhos = async () => {
     const responseRascunhosNormais = await getInclusaoCEMEIRascunhos();
-    const responseRascunhosContinuas = await obterMinhasSolicitacoesDeInclusaoDeAlimentacao(
-      TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
-    );
+    const responseRascunhosContinuas =
+      await obterMinhasSolicitacoesDeInclusaoDeAlimentacao(
+        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+      );
     if (
       responseRascunhosNormais.status === HTTP_STATUS.OK &&
       responseRascunhosContinuas.status === HTTP_STATUS.OK
@@ -154,10 +157,10 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
 
   const carregarRascunhoContinuo = async (form, values, inclusao_) => {
     const quantidades_periodo_ = deepCopy(inclusao_.quantidades_periodo);
-    quantidades_periodo_.forEach(qp => {
+    quantidades_periodo_.forEach((qp) => {
       qp.dias_semana = qp.dias_semana.map(String);
       qp.periodo_escolar = qp.periodo_escolar.uuid;
-      qp.tipos_alimentacao = qp.tipos_alimentacao.map(t => t.uuid);
+      qp.tipos_alimentacao = qp.tipos_alimentacao.map((t) => t.uuid);
       delete qp.grupo_inclusao_normal;
       delete qp.inclusao_alimentacao_continua;
     });
@@ -166,8 +169,8 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
       {
         motivo: inclusao_.motivo.uuid,
         data_inicial: inclusao_.data_inicial,
-        data_final: inclusao_.data_final
-      }
+        data_final: inclusao_.data_final,
+      },
     ]);
     await form.change("quantidades_periodo", quantidades_periodo_);
   };
@@ -184,9 +187,9 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   };
 
   const buildFaixas = (values, inclusao) => {
-    inclusao.quantidade_alunos_cei_da_inclusao_cemei.forEach(qtd_alunos => {
+    inclusao.quantidade_alunos_cei_da_inclusao_cemei.forEach((qtd_alunos) => {
       const periodo_nome = qtd_alunos.periodo_escolar.nome;
-      const index = values.findIndex(qp => qp.nome === periodo_nome);
+      const index = values.findIndex((qp) => qp.nome === periodo_nome);
       values[index].checked = true;
       if (!values[index].faixas) {
         values[index].faixas = {};
@@ -197,9 +200,9 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   };
 
   const buildAlunosEMEI = (values, inclusao) => {
-    inclusao.quantidade_alunos_emei_da_inclusao_cemei.forEach(qtd_alunos => {
+    inclusao.quantidade_alunos_emei_da_inclusao_cemei.forEach((qtd_alunos) => {
       const periodo_nome = qtd_alunos.periodo_escolar.nome;
-      const index = values.findIndex(qp => qp.nome === periodo_nome);
+      const index = values.findIndex((qp) => qp.nome === periodo_nome);
       values[index].checked = true;
       values[index].alunos_emei = qtd_alunos.quantidade_alunos;
     });
@@ -207,7 +210,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
 
   const carregarRascunhoNormal = async (form, inclusao_) => {
     const periodos_ = deepCopy(periodos);
-    inclusao_.dias_motivos_da_inclusao_cemei.forEach(i => {
+    inclusao_.dias_motivos_da_inclusao_cemei.forEach((i) => {
       i.motivo = i.motivo.uuid;
     });
     await form.change("inclusoes", inclusao_.dias_motivos_da_inclusao_cemei);
@@ -216,7 +219,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     await form.change(`quantidades_periodo`, periodos_);
   };
 
-  const refresh = form => {
+  const refresh = (form) => {
     getRascunhos();
     resetForm(form);
   };
@@ -337,7 +340,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     }
   };
 
-  const onDataChanged = value => {
+  const onDataChanged = (value) => {
     if (
       value &&
       checaSeDataEstaEntre2e5DiasUteis(
@@ -368,11 +371,11 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
       <Form
         keepDirtyOnReinitialize
         mutators={{
-          ...arrayMutators
+          ...arrayMutators,
         }}
         initialValues={{
           escola: meusDados.vinculo_atual.instituicao.uuid,
-          inclusoes: [{ motivo: undefined }]
+          inclusoes: [{ motivo: undefined }],
         }}
         onSubmit={onSubmit}
       >
@@ -381,9 +384,9 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
           submitting,
           form,
           form: {
-            mutators: { push }
+            mutators: { push },
           },
-          values
+          values,
         }) => (
           <form onSubmit={handleSubmit}>
             {rascunhos && rascunhos.length > 0 && (
@@ -430,11 +433,11 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                               naoDesabilitarPrimeiraOpcao
                             />
                             <OnChange name={`${name}.motivo`}>
-                              {async value => {
+                              {async (value) => {
                                 if (
                                   value &&
                                   motivosSimples.find(
-                                    motivo => motivo.uuid === value
+                                    (motivo) => motivo.uuid === value
                                   )
                                 ) {
                                   form.change("quantidades_periodo", undefined);
@@ -444,7 +447,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                                 if (
                                   value &&
                                   motivosContinuos.find(
-                                    motivo => motivo.uuid === value
+                                    (motivo) => motivo.uuid === value
                                   )
                                 ) {
                                   form.change("quantidades_periodo", undefined);
@@ -544,7 +547,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                       disabled={submitting}
                       onClick={() => {
                         values["status"] = STATUS_DRE_A_VALIDAR;
-                        handleSubmit(values => onSubmit(values, form));
+                        handleSubmit((values) => onSubmit(values, form));
                       }}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3"

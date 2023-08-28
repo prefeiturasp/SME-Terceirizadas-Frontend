@@ -2,7 +2,7 @@ import { API_URL } from "../constants/config";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
+  filtraRegular,
 } from "../helpers/painelPedidos";
 import { dreListarSolicitacoesDeAlteracaoDeCardapio } from "services/alteracaoDeCardapio";
 import { SOLICITACOES } from "./constants";
@@ -25,7 +25,7 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -40,7 +40,7 @@ export const getResumoPendenciasDREAlteracoesDeCardapio = async (
     dreListarSolicitacoesDeAlteracaoDeCardapio(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CEI
-    )
+    ),
   ]);
 
   if (avulsos) {
@@ -66,7 +66,7 @@ const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -81,7 +81,7 @@ const getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa = async (
     dreListarSolicitacoesDeInclusaoDeAlimentacao(
       filtro,
       TIPO_SOLICITACAO.SOLICITACAO_CEI
-    )
+    ),
   ]);
 
   if (avulsos) {
@@ -106,7 +106,7 @@ const getResumoPendenciasDREInclusaoDeAlimentacaoContinua = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -139,15 +139,14 @@ export const getResumoPendenciasDREInclusaoDeAlimentacao = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   const resumoAvulsa = await getResumoPendenciasDREInclusaoDeAlimentacaoAvulsa(
     filtro
   );
-  const resumoContinua = await getResumoPendenciasDREInclusaoDeAlimentacaoContinua(
-    filtro
-  );
+  const resumoContinua =
+    await getResumoPendenciasDREInclusaoDeAlimentacaoContinua(filtro);
 
   resposta.limite = resumoAvulsa.limite + resumoContinua.limite;
   resposta.prioritario = resumoAvulsa.prioritario + resumoContinua.prioritario;
@@ -162,7 +161,7 @@ export const getResumoPendenciasDREInversaoDeDiaDeCardapio = async () => {
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -184,7 +183,7 @@ export const getResumoPendenciasDREKitLanche = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -193,7 +192,7 @@ export const getResumoPendenciasDREKitLanche = async (
 
   const [avulsos, cei] = await Promise.all([
     getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
-    getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
+    getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI),
   ]);
 
   if (avulsos) {
@@ -218,7 +217,7 @@ export const getResumoPendenciasDRESuspensaoDeAlimentacao = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   const solicitacoes = await getSuspensoesDeAlimentacaoInformadas(filtro);
@@ -234,7 +233,7 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
     total: 0,
     prioritario: 0,
     limite: 0,
-    regular: 0
+    regular: 0,
   };
 
   let pedidosPrioritarios = [];
@@ -271,9 +270,7 @@ export const getSolicitacoesPendentesValidacaoDRE = async (
   tipoVisao,
   params
 ) => {
-  const url = `${SOLICITACOES_DRE}/${
-    SOLICITACOES.PENDENTES_VALIDACAO_DRE
-  }/${filtroAplicado}/${tipoVisao}/`;
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.PENDENTES_VALIDACAO_DRE}/${filtroAplicado}/${tipoVisao}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
 
   if (response) {
@@ -282,7 +279,7 @@ export const getSolicitacoesPendentesValidacaoDRE = async (
   }
 };
 
-export const getSolicitacoesPendentesDRE = async params => {
+export const getSolicitacoesPendentesDRE = async (params) => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.PENDENTES}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -291,7 +288,7 @@ export const getSolicitacoesPendentesDRE = async params => {
   }
 };
 
-export const getSolicitacoesAutorizadasDRE = async params => {
+export const getSolicitacoesAutorizadasDRE = async (params) => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AUTORIZADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -300,7 +297,7 @@ export const getSolicitacoesAutorizadasDRE = async params => {
   }
 };
 
-export const getSolicitacoesAguardandoCODAE = async params => {
+export const getSolicitacoesAguardandoCODAE = async (params) => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AGUARDANDO_CODAE}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -309,7 +306,7 @@ export const getSolicitacoesAguardandoCODAE = async params => {
   }
 };
 
-export const getSolicitacoesCanceladasDRE = async params => {
+export const getSolicitacoesCanceladasDRE = async (params) => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.CANCELADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -318,7 +315,7 @@ export const getSolicitacoesCanceladasDRE = async params => {
   }
 };
 
-export const getSolicitacoesNegadasDRE = async params => {
+export const getSolicitacoesNegadasDRE = async (params) => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.NEGADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {

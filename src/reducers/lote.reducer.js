@@ -13,12 +13,13 @@ export default function reducer(state = {}, action) {
       }
       return {
         data: {
-          ...action.data
-        }
+          ...action.data,
+        },
       };
     default:
       return state;
   }
 }
 
-export const loadLote = data => dispatch => dispatch({ type: LOAD_LOTE, data });
+export const loadLote = (data) => (dispatch) =>
+  dispatch({ type: LOAD_LOTE, data });

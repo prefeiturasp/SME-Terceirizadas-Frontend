@@ -13,24 +13,24 @@ export default function reducer(state = {}, action = {}) {
     case SET_HOMOLOGACOES:
       return {
         ...state,
-        homologacoes: action.payload
+        homologacoes: action.payload,
       };
     case SET_UUID_HOMOLOGACAO_ATIVA:
       return {
         ...state,
-        uuidHomologacaoAtiva: action.payload
+        uuidHomologacaoAtiva: action.payload,
       };
     case SET_PAGE:
       return {
         ...state,
-        page: action.payload
+        page: action.payload,
       };
     case RESET:
       return {
         ...state,
         uuidHomologacaoAtiva: undefined,
         homologacoes: undefined,
-        page: undefined
+        page: undefined,
       };
     default:
       return state;
@@ -38,21 +38,21 @@ export default function reducer(state = {}, action = {}) {
 }
 
 // Action Creators
-export const setHomologacoes = listaHomologacoes => ({
+export const setHomologacoes = (listaHomologacoes) => ({
   type: SET_HOMOLOGACOES,
-  payload: listaHomologacoes
+  payload: listaHomologacoes,
 });
 
-export const setUuidHomologacaoAtiva = uuidHomologacaoAtiva => ({
+export const setUuidHomologacaoAtiva = (uuidHomologacaoAtiva) => ({
   type: SET_UUID_HOMOLOGACAO_ATIVA,
-  payload: uuidHomologacaoAtiva
+  payload: uuidHomologacaoAtiva,
 });
 
-export const setPage = pageNumber => ({
+export const setPage = (pageNumber) => ({
   type: SET_PAGE,
-  payload: pageNumber
+  payload: pageNumber,
 });
 
 export const reset = () => ({
-  type: RESET
+  type: RESET,
 });

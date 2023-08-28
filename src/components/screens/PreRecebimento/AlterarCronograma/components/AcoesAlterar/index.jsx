@@ -3,21 +3,21 @@ import { useHistory } from "react-router-dom";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   usuarioEhCronograma,
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
-  usuarioEhEmpresaFornecedor
+  usuarioEhEmpresaFornecedor,
 } from "helpers/utilities";
 import ModalEnviarSolicitacao from "../Modals/ModalEnviarSolicitacao";
 import ModalAnalise from "../Modals/ModalAnalise";
 import { dilogCienteSolicitacaoAlteracaoCronograma } from "services/cronograma.service";
 import {
   PRE_RECEBIMENTO,
-  SOLICITACAO_ALTERACAO_CRONOGRAMA
+  SOLICITACAO_ALTERACAO_CRONOGRAMA,
 } from "configs/constants";
 import ModalAnaliseDinutre from "../Modals/ModalAnaliseDinutre";
 import ModalAnaliseDilog from "../Modals/ModalAnaliseDilog";
@@ -27,7 +27,7 @@ export default ({
   podeSubmeter,
   solicitacaoAlteracaoCronograma,
   disabledDinutre,
-  disabledDilog
+  disabledDilog,
 }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -124,12 +124,12 @@ export default ({
           setShow={setShow}
           handleClose={handleClose}
           loading={loading}
-          handleSim={async values => {
+          handleSim={async (values) => {
             setLoading(true);
             const urlParams = new URLSearchParams(window.location.search);
             const uuid = urlParams.get("uuid");
             const payload = {
-              justificativa_cronograma: values["justificativa_cronograma"]
+              justificativa_cronograma: values["justificativa_cronograma"],
             };
             await dilogCienteSolicitacaoAlteracaoCronograma(uuid, payload)
               .then(() => {

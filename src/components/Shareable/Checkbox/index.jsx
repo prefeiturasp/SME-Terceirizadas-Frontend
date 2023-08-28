@@ -2,7 +2,7 @@ import React from "react";
 import { Field } from "redux-form";
 import "./style.scss";
 
-export const Checkbox = props => {
+export const Checkbox = (props) => {
   const { className, classNameTexto, input, onClick, texto } = props;
   return (
     <div className="checkbox-component">

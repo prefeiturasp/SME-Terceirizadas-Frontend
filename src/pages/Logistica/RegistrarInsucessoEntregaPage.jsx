@@ -5,24 +5,24 @@ import Page from "components/Shareable/Page/Page";
 import {
   INSUCESSO_ENTREGA,
   REGISTRAR_INSUCESSO,
-  LOGISTICA
+  LOGISTICA,
 } from "configs/constants";
 import RegistrarInsucessoEntrega from "components/screens/Logistica/RegistrarInsucessoEntrega";
 
 const atual = {
   href: `/${LOGISTICA}/${REGISTRAR_INSUCESSO}`,
-  titulo: "Registrar Insucesso de Entrega"
+  titulo: "Registrar Insucesso de Entrega",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
+    titulo: "Abastecimento",
   },
   {
     href: `/${LOGISTICA}/${INSUCESSO_ENTREGA}`,
-    titulo: "Insucesso de Entrega"
-  }
+    titulo: "Insucesso de Entrega",
+  },
 ];
 
 export default () => (

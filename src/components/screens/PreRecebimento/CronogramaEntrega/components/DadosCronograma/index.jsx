@@ -5,7 +5,7 @@ import React from "react";
 export default ({
   cronograma,
   esconderInformacoesAdicionais,
-  solicitacaoAlteracaoCronograma
+  solicitacaoAlteracaoCronograma,
 }) => {
   return (
     <>

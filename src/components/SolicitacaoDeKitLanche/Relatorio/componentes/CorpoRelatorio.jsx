@@ -4,7 +4,7 @@ import {
   corDaMensagem,
   deepCopy,
   ehInclusaoCei,
-  justificativaAoAprovarSolicitacao
+  justificativaAoAprovarSolicitacao,
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
@@ -12,11 +12,11 @@ import { SolicitacoesSimilaresKitLanche } from "components/Shareable/Solicitacoe
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "../../../Shareable/Botao/constants";
 import {
   stringSeparadaPorVirgulas,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
 } from "../../../../helpers/utilities";
 import { getDetalheKitLancheAvulso } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
@@ -24,12 +24,9 @@ import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 import "./style.scss";
 import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
 
-export const CorpoRelatorio = props => {
-  const {
-    tipoSolicitacao,
-    solicitacaoKitLanche,
-    prazoDoPedidoMensagem
-  } = props;
+export const CorpoRelatorio = (props) => {
+  const { tipoSolicitacao, solicitacaoKitLanche, prazoDoPedidoMensagem } =
+    props;
 
   const [solicitacoesSimilares, setSolicitacoesSimilares] = useState(
     props.solicitacoesSimilares
@@ -47,11 +44,10 @@ export const CorpoRelatorio = props => {
     solicitacaoKitLanche.prioridade !== "REGULAR" &&
     existeLogDeQuestionamentoDaCODAE(solicitacaoKitLanche.logs);
 
-  const collapseSolicitacaoSimilar = idxSolicitacaoSimilar => {
+  const collapseSolicitacaoSimilar = (idxSolicitacaoSimilar) => {
     let _solicitacoesSimilares = deepCopy(solicitacoesSimilares);
-    _solicitacoesSimilares[idxSolicitacaoSimilar][
-      "collapsed"
-    ] = !_solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"];
+    _solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"] =
+      !_solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"];
     setSolicitacoesSimilares(_solicitacoesSimilares);
   };
 
@@ -261,7 +257,7 @@ export const CorpoRelatorio = props => {
             dangerouslySetInnerHTML={{
               __html:
                 solicitacaoKitLanche.solicitacao_kit_lanche &&
-                solicitacaoKitLanche.solicitacao_kit_lanche.descricao
+                solicitacaoKitLanche.solicitacao_kit_lanche.descricao,
             }}
           />
         </div>
@@ -273,7 +269,7 @@ export const CorpoRelatorio = props => {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaNegacao
+                __html: justificativaNegacao,
               }}
             />
           </div>
@@ -287,13 +283,13 @@ export const CorpoRelatorio = props => {
             </p>
             <p>{`${
               solicitacaoKitLanche.logs.find(
-                log => log.status_evento_explicacao === "CODAE autorizou"
+                (log) => log.status_evento_explicacao === "CODAE autorizou"
               ).criado_em
             } - Informações da CODAE`}</p>
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaAprovacao
+                __html: justificativaAprovacao,
               }}
             />
           </div>

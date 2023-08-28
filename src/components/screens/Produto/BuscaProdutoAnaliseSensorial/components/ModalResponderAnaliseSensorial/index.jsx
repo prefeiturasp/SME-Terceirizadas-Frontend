@@ -6,7 +6,7 @@ import { Modal } from "react-bootstrap";
 import {
   required,
   length,
-  numericInteger
+  numericInteger,
 } from "../../../../../../helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
@@ -14,7 +14,7 @@ import InputFile from "components/Shareable/Input/InputFile";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { withRouter } from "react-router-dom";
 import { InputComData } from "components/Shareable/DatePicker";
@@ -34,7 +34,7 @@ class ModalResponderAnaliseSensorial extends Component {
     this.state = {
       arquivos: [],
       hora: null,
-      texto: null
+      texto: null,
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -53,11 +53,11 @@ class ModalResponderAnaliseSensorial extends Component {
     this.setState({ arquivos });
   }
 
-  setHora = value => {
+  setHora = (value) => {
     this.setState({ hora: value });
   };
 
-  onSubmit = values => {
+  onSubmit = (values) => {
     const { arquivos } = this.state;
     const { uuid } = this.props.homologacao;
     const values_ = deepCopy(values);
@@ -68,10 +68,10 @@ class ModalResponderAnaliseSensorial extends Component {
       values_["hora"] = new Date(values_.hora_min).toTimeString().split(" ")[0];
       values_["data"] = formataData(values_.data_resp);
 
-      values_["anexos"] = arquivos.map(anexo => {
+      values_["anexos"] = arquivos.map((anexo) => {
         return {
           nome: anexo.nome,
-          base64: anexo.arquivo
+          base64: anexo.arquivo,
         };
       });
       values_["homologacao_de_produto"] = uuid;
@@ -79,7 +79,7 @@ class ModalResponderAnaliseSensorial extends Component {
       delete values_["hora_min"];
       delete values_["data_resp"];
 
-      respostaAnaliseSensorial(values_).then(response => {
+      respostaAnaliseSensorial(values_).then((response) => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Resposta para análise sensorial enviada com sucesso.");
           this.props.history.push(
@@ -210,7 +210,7 @@ class ModalResponderAnaliseSensorial extends Component {
               <Botao
                 texto="Enviar"
                 type={BUTTON_TYPE.SUBMIT}
-                onClick={handleSubmit(values => this.onSubmit(values))}
+                onClick={handleSubmit((values) => this.onSubmit(values))}
                 style={BUTTON_STYLE.GREEN}
               />
             </section>
@@ -223,23 +223,20 @@ class ModalResponderAnaliseSensorial extends Component {
 
 const RespostaAnaliseSensorialForm = reduxForm({
   form: "analiseSensorial",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(withRouter(ModalResponderAnaliseSensorial));
 
 const selector = formValueSelector("analiseSensorial");
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     responsavel_produto: selector(state, "responsavel_produto"),
     registro_funcional: selector(state, "registro_funcional"),
     data: selector(state, "data"),
     hora: selector(state, "hora"),
     observacao: selector(state, "observacao"),
-    arquivos: selector(state, "arquivos")
+    arquivos: selector(state, "arquivos"),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  null
-)(RespostaAnaliseSensorialForm);
+export default connect(mapStateToProps, null)(RespostaAnaliseSensorialForm);

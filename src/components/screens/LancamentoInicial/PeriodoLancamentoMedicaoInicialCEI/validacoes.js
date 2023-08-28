@@ -28,7 +28,7 @@ export const botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada = (
   validacaoDiaLetivo
 ) => {
   if (
-    Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+    Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
       String(key).includes(`__dia_${dia}__categoria_${categoria.id}`)
     )
   ) {
@@ -50,7 +50,7 @@ export const campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao = (
 ) => {
   const alimentacoes = ["lanche_4h", "lanche", "refeicao", "sobremesa"];
   let erro = false;
-  alimentacoes.forEach(alimentacao => {
+  alimentacoes.forEach((alimentacao) => {
     if (
       `${alimentacao}__dia_${dia}__categoria_${categoria.id}` in
         dadosValoresInclusoesAutorizadasState &&
@@ -95,16 +95,16 @@ export const validarFormulario = (
   dadosValoresInclusoesAutorizadasState,
   weekColumns
 ) => {
-  const categoriaAlimentacao = categoriasDeMedicao.find(categoria =>
+  const categoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
     categoria.nome.includes("ALIMENTAÇÃO")
   );
   let erro = false;
 
   const values_ = deepCopy(values);
-  Object.keys(values_).forEach(value => {
+  Object.keys(values_).forEach((value) => {
     if (
       !weekColumns
-        .map(wc => wc.dia)
+        .map((wc) => wc.dia)
         .includes(
           value.includes("__dia_") &&
             value.split("__dia_")[1].split("__categoria")[0]
@@ -115,11 +115,11 @@ export const validarFormulario = (
   });
 
   let dias = [];
-  weekColumns.forEach(c => dias.push(c.dia));
+  weekColumns.forEach((c) => dias.push(c.dia));
 
-  categoriasDeMedicao.forEach(categoria => {
+  categoriasDeMedicao.forEach((categoria) => {
     categoria.id === categoriaAlimentacao.id &&
-      Object.keys(dadosValoresInclusoesAutorizadasState).forEach(inclusao => {
+      Object.keys(dadosValoresInclusoesAutorizadasState).forEach((inclusao) => {
         const dia = inclusao.split("__dia_")[1].split("__categoria")[0];
         if (
           campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(

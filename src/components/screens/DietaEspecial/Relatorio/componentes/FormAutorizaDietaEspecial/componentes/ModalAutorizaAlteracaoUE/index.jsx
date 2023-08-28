@@ -3,11 +3,11 @@ import { Modal } from "react-bootstrap";
 import Botao from "../../../../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../../../../Shareable/Botao/constants";
 import { Spin } from "antd";
 
-export default props => (
+export default (props) => (
   <Modal show={props.showModal} onHide={props.closeModal} size="lg">
     <Modal.Header className="pb-1" closeButton>
       <Modal.Title>

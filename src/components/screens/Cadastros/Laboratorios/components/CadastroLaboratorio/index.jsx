@@ -5,7 +5,7 @@ import "./style.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -18,13 +18,13 @@ import {
   email,
   noSpaceStartOrEnd,
   required,
-  tamanhoCnpjMascara
+  tamanhoCnpjMascara,
 } from "helpers/fieldValidators";
 import {
   cadastraLaboratorio,
   editaLaboratorio,
   getLaboratorio,
-  getListaLaboratorios
+  getListaLaboratorios,
 } from "services/laboratorio.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
@@ -33,7 +33,7 @@ import {
   formatarCEP,
   formatarCPFouCNPJ,
   formatarTelefone,
-  removeCaracteresEspeciais
+  removeCaracteresEspeciais,
 } from "helpers/utilities";
 import createDecorator from "final-form-calculate";
 import { getEnderecoPorCEP } from "services/cep.service";
@@ -128,7 +128,7 @@ export default ({ naoEditavel = false }) => {
     setShowModalEnviar(true);
   };
 
-  const salvarLaboratorio = async values => {
+  const salvarLaboratorio = async (values) => {
     setCarregando(true);
     let payload = montaPayload(values);
 
@@ -160,8 +160,8 @@ export default ({ naoEditavel = false }) => {
   const cepCalculator = createDecorator({
     field: "cep",
     updates: {
-      dummy: (minimumValue, allValues) => buscaCEP(minimumValue, allValues)
-    }
+      dummy: (minimumValue, allValues) => buscaCEP(minimumValue, allValues),
+    },
   });
 
   const buscaCEP = async (cep, values) => {
@@ -180,7 +180,7 @@ export default ({ naoEditavel = false }) => {
     }
   };
 
-  const montaPayload = values => {
+  const montaPayload = (values) => {
     let payload = {};
 
     payload.nome = values.nome_laboratorio;
@@ -197,13 +197,13 @@ export default ({ naoEditavel = false }) => {
     payload.contatos = contatos.map((contatos, index) => ({
       nome: values[`nome_${index}`],
       telefone: removeCaracteresEspeciais(values[`telefone_${index}`]),
-      email: values[`email_${index}`]
+      email: values[`email_${index}`],
     }));
 
     return payload;
   };
 
-  const validaNomeLab = value => {
+  const validaNomeLab = (value) => {
     if (
       laboratorios &&
       laboratorios.includes(value.toUpperCase()) &&
@@ -213,7 +213,7 @@ export default ({ naoEditavel = false }) => {
     else return undefined;
   };
 
-  const lengthOrUnderfined = value => {
+  const lengthOrUnderfined = (value) => {
     let valor = value ? value.toString() : undefined;
     return valor && valor.length > 0 ? valor : undefined;
   };
@@ -235,7 +235,7 @@ export default ({ naoEditavel = false }) => {
     );
   };
 
-  const renderizarCredenciamentoEditavel = formValues => {
+  const renderizarCredenciamentoEditavel = (formValues) => {
     return (
       <>
         <div className="row pergunta-credenciado">
@@ -243,7 +243,7 @@ export default ({ naoEditavel = false }) => {
             Esse Laboratório está Credenciado?
           </div>
           <Radio.Group
-            onChange={event => handleOnChangeCredenciado(event, formValues)}
+            onChange={(event) => handleOnChangeCredenciado(event, formValues)}
             value={credenciado}
           >
             <Radio className="" value={true}>
@@ -368,9 +368,9 @@ export default ({ naoEditavel = false }) => {
             initialValues={{
               data_cadastro: new Date().toLocaleDateString(),
               ...laboratorio,
-              ...contatosValues
+              ...contatosValues,
             }}
-            validate={values => {
+            validate={(values) => {
               const errors = {};
               if (
                 values.credenciado === undefined ||

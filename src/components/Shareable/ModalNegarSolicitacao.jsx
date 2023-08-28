@@ -15,7 +15,7 @@ const ModalNegarSolicitacao = ({
   uuid,
   endpoint,
   tipoSolicitacao,
-  loadSolicitacao
+  loadSolicitacao,
 }) => {
   const negarSolicitacaoEscolaOuDre = async (uuid, justificativa) => {
     if (justificativa === MENSAGEM_VAZIA) {

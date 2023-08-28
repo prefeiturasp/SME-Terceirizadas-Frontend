@@ -5,7 +5,7 @@ import CardLancamento from "./CardLancamento";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
@@ -13,7 +13,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesInclusoesEtecAutorizadasEscola,
-  getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola
+  getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import {
@@ -21,14 +21,14 @@ import {
   escolaEnviaCorrecaoMedicaoInicialDRE,
   getCEUGESTAOFrequenciasDietas,
   getQuantidadeAlimentacoesLancadasPeriodoGrupo,
-  getSolicitacaoMedicaoInicial
+  getSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { CORES, removeObjetosDuplicados } from "./helpers";
 import {
   ehEscolaTipoCEUGESTAO,
   getError,
   usuarioEhDiretorUE,
-  usuarioEhEscolaTerceirizadaDiretor
+  usuarioEhEscolaTerceirizadaDiretor,
 } from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
@@ -45,46 +45,39 @@ export default ({
   ano,
   objSolicitacaoMIFinalizada,
   setObjSolicitacaoMIFinalizada,
-  setSolicitacaoMedicaoInicial
+  setSolicitacaoMedicaoInicial,
 }) => {
-  const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
-    false
-  );
+  const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
+    useState(false);
   const [showModalEnviarCorrecao, setShowModalEnviarCorrecao] = useState(false);
   const [desabilitaSim, setDesabilitaSim] = useState(false);
-  const [periodosInclusaoContinua, setPeriodosInclusaoContinua] = useState(
-    undefined
-  );
+  const [periodosInclusaoContinua, setPeriodosInclusaoContinua] =
+    useState(undefined);
   const [
     solicitacoesKitLanchesAutorizadas,
-    setSolicitacoesKitLanchesAutorizadas
+    setSolicitacoesKitLanchesAutorizadas,
   ] = useState(undefined);
   const [
     solicitacoesAlteracaoLancheEmergencialAutorizadas,
-    setSolicitacoesAlteracaoLancheEmergencialAutorizadas
+    setSolicitacoesAlteracaoLancheEmergencialAutorizadas,
   ] = useState(undefined);
   const [
     solicitacoesInclusoesEtecAutorizadas,
-    setSolicitacoesInclusoesEtecAutorizadas
+    setSolicitacoesInclusoesEtecAutorizadas,
   ] = useState(undefined);
   const [periodosCEUGESTAO, setPeriodosCEUGESTAO] = useState(undefined);
-  const [frequenciasDietasCEUGESTAO, setFrequenciasDietasCEUGESTAO] = useState(
-    undefined
-  );
-  const [
-    quantidadeAlimentacoesLancadas,
-    setQuantidadeAlimentacoesLancadas
-  ] = useState(undefined);
+  const [frequenciasDietasCEUGESTAO, setFrequenciasDietasCEUGESTAO] =
+    useState(undefined);
+  const [quantidadeAlimentacoesLancadas, setQuantidadeAlimentacoesLancadas] =
+    useState(undefined);
   const [erroAPI, setErroAPI] = useState("");
-  const [
-    exibirModalCentralDownloads,
-    setExibirModalCentralDownloads
-  ] = useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
     const response = await getPeriodosInclusaoContinua({
       mes,
-      ano
+      ano,
     });
     if (response.status === HTTP_STATUS.OK) {
       setPeriodosInclusaoContinua(response.data.periodos);
@@ -102,7 +95,7 @@ export default ({
       escola_uuid,
       mes,
       ano,
-      tipo_solicitacao
+      tipo_solicitacao,
     });
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacoesKitLanchesAutorizadas(response.data.results);
@@ -113,26 +106,26 @@ export default ({
     }
   };
 
-  const getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync = async () => {
-    const params = {};
-    params["escola_uuid"] = escolaInstituicao.uuid;
-    params["tipo_solicitacao"] = "Alteração";
-    params["mes"] = mes;
-    params["ano"] = ano;
-    params["eh_lanche_emergencial"] = true;
-    const response = await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(
-      params
-    );
-    if (response.status === HTTP_STATUS.OK) {
-      setSolicitacoesAlteracaoLancheEmergencialAutorizadas(
-        response.data.results
-      );
-    } else {
-      setErroAPI(
-        "Erro ao carregar Alteração de Lanche Emergencial Autorizadas. Tente novamente mais tarde."
-      );
-    }
-  };
+  const getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync =
+    async () => {
+      const params = {};
+      params["escola_uuid"] = escolaInstituicao.uuid;
+      params["tipo_solicitacao"] = "Alteração";
+      params["mes"] = mes;
+      params["ano"] = ano;
+      params["eh_lanche_emergencial"] = true;
+      const response =
+        await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(params);
+      if (response.status === HTTP_STATUS.OK) {
+        setSolicitacoesAlteracaoLancheEmergencialAutorizadas(
+          response.data.results
+        );
+      } else {
+        setErroAPI(
+          "Erro ao carregar Alteração de Lanche Emergencial Autorizadas. Tente novamente mais tarde."
+        );
+      }
+    };
 
   const getSolicitacoesInclusoesEtecAutorizadasAsync = async () => {
     const escola_uuid = escolaInstituicao.uuid;
@@ -141,7 +134,7 @@ export default ({
       escola_uuid,
       mes,
       ano,
-      tipo_solicitacao
+      tipo_solicitacao,
     });
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacoesInclusoesEtecAutorizadas(response.data.results);
@@ -171,7 +164,7 @@ export default ({
     const response = await getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola({
       escola_uuid,
       mes,
-      ano
+      ano,
     });
     if (response.status === HTTP_STATUS.OK) {
       setPeriodosCEUGESTAO(response.data);
@@ -238,7 +231,7 @@ export default ({
     const payload = {
       escola: escolaInstituicao.uuid,
       mes: mes,
-      ano: ano
+      ano: ano,
     };
 
     const solicitacao = await getSolicitacaoMedicaoInicial(payload);
@@ -271,7 +264,7 @@ export default ({
       solicitacaoMedicaoInicial &&
       [
         "MEDICAO_CORRECAO_SOLICITADA",
-        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
       ].includes(solicitacaoMedicaoInicial.status) &&
       usuarioEhDiretorUE()
     );
@@ -298,12 +291,12 @@ export default ({
   const verificaSeEnviarCorrecaoDisabled = () => {
     return (
       quantidadeAlimentacoesLancadas.some(
-        periodo =>
+        (periodo) =>
           ![
             "MEDICAO_APROVADA_PELA_DRE",
             "MEDICAO_APROVADA_PELA_CODAE",
             "MEDICAO_CORRIGIDA_PELA_UE",
-            "MEDICAO_CORRIGIDA_PARA_CODAE"
+            "MEDICAO_CORRIGIDA_PARA_CODAE",
           ].includes(periodo.status)
       ) ||
       (solicitacaoMedicaoInicial.com_ocorrencias &&
@@ -311,16 +304,16 @@ export default ({
           "MEDICAO_APROVADA_PELA_DRE",
           "MEDICAO_APROVADA_PELA_CODAE",
           "MEDICAO_CORRIGIDA_PELA_UE",
-          "MEDICAO_CORRIGIDA_PARA_CODAE"
+          "MEDICAO_CORRIGIDA_PARA_CODAE",
         ].includes(solicitacaoMedicaoInicial.ocorrencia.status))
     );
   };
 
   const tiposAlimentacaoProgramasEProjetos = () => {
     let tiposAlimentacao = [];
-    Object.keys(periodosInclusaoContinua).forEach(periodo => {
+    Object.keys(periodosInclusaoContinua).forEach((periodo) => {
       const tipos = periodosEscolaSimples.find(
-        p => p.periodo_escolar.nome === periodo
+        (p) => p.periodo_escolar.nome === periodo
       ).tipos_alimentacao;
       tiposAlimentacao = [...tiposAlimentacao, ...tipos];
     });

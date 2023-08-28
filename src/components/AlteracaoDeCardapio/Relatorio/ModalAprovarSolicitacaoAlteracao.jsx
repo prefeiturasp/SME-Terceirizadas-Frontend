@@ -5,7 +5,7 @@ import HTTP_STATUS from "http-status-codes";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
@@ -18,7 +18,7 @@ export class ModalAprovarSolicitacaoAlteracao extends Component {
         justificativa:
           this.props.justificativa && this.props.justificativa.length > 0
             ? this.props.justificativa
-            : "Sem observações por parte da CODAE"
+            : "Sem observações por parte da CODAE",
       },
       this.props.tipoSolicitacao
     );

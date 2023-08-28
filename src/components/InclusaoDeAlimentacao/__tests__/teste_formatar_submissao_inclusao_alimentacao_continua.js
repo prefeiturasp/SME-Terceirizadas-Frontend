@@ -8,26 +8,28 @@ describe("Teste formatarSubmissão Inclusão de Alimentação Contínua", () => 
         data_inicial: "01/08/2019",
         data_final: "31/08/2019",
         dias_semana: [1, 2, 3],
-        outro_motivo: null
-      }
+        outro_motivo: null,
+      },
     ],
     quantidades_periodo: [
       {
         checked: true,
         numero_alunos: "123",
         uuid: "73605a3b-7767-4ea6-845e-fef62f84dc1c",
-        tipos_alimentacao_selecionados: ["4c4b4d8e-6c32-456a-b1e5-524da9278629"]
-      }
+        tipos_alimentacao_selecionados: [
+          "4c4b4d8e-6c32-456a-b1e5-524da9278629",
+        ],
+      },
     ],
-    descricao: "<p>Descrição</p>"
+    descricao: "<p>Descrição</p>",
   };
 
   const meusDados = {
     vinculo_atual: {
       instituicao: {
-        uuid: "9f86ecb8-bdba-4d70-9fb7-13844f563636"
-      }
-    }
+        uuid: "9f86ecb8-bdba-4d70-9fb7-13844f563636",
+      },
+    },
   };
 
   it("formata submissao inclusao de alimentacao continua", () => {
@@ -43,9 +45,9 @@ describe("Teste formatarSubmissão Inclusão de Alimentação Contínua", () => 
         {
           numero_alunos: "123",
           periodo_escolar: "73605a3b-7767-4ea6-845e-fef62f84dc1c",
-          tipos_alimentacao: ["4c4b4d8e-6c32-456a-b1e5-524da9278629"]
-        }
-      ]
+          tipos_alimentacao: ["4c4b4d8e-6c32-456a-b1e5-524da9278629"],
+        },
+      ],
     };
     expect(
       formatarSubmissaoSolicitacaoContinua(

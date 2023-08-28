@@ -5,7 +5,7 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   getNomesItems,
   getTiposItems,
-  consultaItems
+  consultaItems,
 } from "services/produto.service";
 import Filtros from "./componentes/Filtros";
 import Tabela from "./componentes/Tabela";
@@ -37,7 +37,7 @@ export default ({ tipoFixo = false }) => {
     fetchData();
   }, []);
 
-  const changePage = async page => {
+  const changePage = async (page) => {
     try {
       setCarregando(true);
       let payload = filtros;
@@ -76,7 +76,7 @@ export default ({ tipoFixo = false }) => {
               current={page || 1}
               total={total}
               showSizeChanger={false}
-              onChange={page => {
+              onChange={(page) => {
                 setPage(page);
                 changePage(page);
               }}

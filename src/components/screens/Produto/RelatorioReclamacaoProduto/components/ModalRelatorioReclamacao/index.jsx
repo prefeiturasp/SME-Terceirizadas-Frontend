@@ -7,7 +7,7 @@ import { getProdutosReclamacoes } from "services/produto.service";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import { getRelatorioReclamacao } from "services/relatorios.service";
@@ -24,20 +24,20 @@ const ModalRelatorioReclamacao = ({
   filtros,
   pageSize,
   page,
-  setPage
+  setPage,
 }) => {
   const configCabecario = getConfigCabecario(filtros, produtos);
   const [carregando, setCarregando] = useState(false);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     setCarregando(true);
     setPage(page);
     const params = gerarParametrosConsulta({
       ...filtros,
       page: page,
-      page_size: pageSize
+      page_size: pageSize,
     });
-    getProdutosReclamacoes(params).then(response => {
+    getProdutosReclamacoes(params).then((response) => {
       setProdutos(response.data.results);
       setCarregando(false);
     });
@@ -56,7 +56,7 @@ const ModalRelatorioReclamacao = ({
           current={page}
           total={produtosCount}
           showSizeChanger={false}
-          onChange={page => {
+          onChange={(page) => {
             nextPage(page);
           }}
           pageSize={pageSize}
@@ -78,11 +78,11 @@ const ModalRelatorioReclamacao = ({
           onClick={() => {
             const params = gerarParametrosConsulta({
               ...filtros,
-              ...configCabecario
+              ...configCabecario,
             });
             getRelatorioReclamacao(params);
           }}
-        />
+        />,
       ]}
     >
       <Spin tip="Carregando..." spinning={carregando}>
@@ -101,7 +101,7 @@ const ModalRelatorioReclamacao = ({
                 </div>
 
                 {produtos !== null &&
-                  produtos.map(produto => {
+                  produtos.map((produto) => {
                     return (
                       <>
                         <div className="item-grid-produto item-prod-detalhe">

@@ -2,10 +2,10 @@ import React from "react";
 import "./style.scss";
 import { NavLink } from "react-router-dom";
 
-export const CardCronograma = props => {
+export const CardCronograma = (props) => {
   const { cardTitle, cardType, solicitations, icon, loading, href } = props;
 
-  const renderSolicitations = solicitations => {
+  const renderSolicitations = (solicitations) => {
     return solicitations.slice(0, 5).map((solicitation, key) => {
       return (
         <NavLink key={key} to={solicitation.link}>
@@ -18,7 +18,7 @@ export const CardCronograma = props => {
     });
   };
 
-  const renderVerMais = solicitations => {
+  const renderVerMais = (solicitations) => {
     return (
       solicitations.length > 5 && (
         <NavLink

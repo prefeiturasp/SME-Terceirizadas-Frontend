@@ -5,7 +5,7 @@ export const prepararPayloadCronograma = (cronograma, values, etapas) => {
   return {
     cronograma: cronograma.uuid,
     etapas: etapasPayload,
-    justificativa: values.justificativa
+    justificativa: values.justificativa,
   };
 };
 
@@ -22,7 +22,7 @@ export const prepararPayloadEtapas = (cronograma, values, etapas) => {
         )
       : undefined,
     quantidade: values[`quantidade_${index}`],
-    total_embalagens: values[`total_embalagens_${index}`]
+    total_embalagens: values[`total_embalagens_${index}`],
   }));
 
   return etapasPayload;
@@ -30,7 +30,7 @@ export const prepararPayloadEtapas = (cronograma, values, etapas) => {
 
 export const calculaRestante = (values, cronograma) => {
   let resto = cronograma.qtd_total_programada;
-  cronograma.etapas.forEach(etapa => {
+  cronograma.etapas.forEach((etapa) => {
     if (values[`quantidade_total_${etapa.uuid}`])
       resto -= values[`quantidade_total_${etapa.uuid}`];
   });

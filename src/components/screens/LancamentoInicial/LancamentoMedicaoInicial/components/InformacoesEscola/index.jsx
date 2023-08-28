@@ -4,10 +4,8 @@ import { Collapse } from "antd";
 export default ({ escolaInstituicao, loteEscolaSimples }) => {
   const { Panel } = Collapse;
 
-  const formataEnderencoCompleto = endereco => {
-    return `${endereco.logradouro}, ${endereco.numero} - ${
-      endereco.bairro
-    } - CEP: ${endereco.cep}`;
+  const formataEnderencoCompleto = (endereco) => {
+    return `${endereco.logradouro}, ${endereco.numero} - ${endereco.bairro} - CEP: ${endereco.cep}`;
   };
 
   return (

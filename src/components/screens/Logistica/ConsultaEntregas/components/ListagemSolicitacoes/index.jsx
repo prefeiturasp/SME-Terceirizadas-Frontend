@@ -11,7 +11,7 @@ const ListagemSolicitacoes = ({
   ativos,
   setAtivos,
   dilog,
-  dre
+  dre,
 }) => {
   const [showDownload, setShowDownload] = useState(false);
 
@@ -62,7 +62,7 @@ const ListagemSolicitacoes = ({
             <div>Requisição</div>
             <div />
           </div>
-          {solicitacoes.map(solicitacao => {
+          {solicitacoes.map((solicitacao) => {
             const bordas =
               ativos && ativos.includes(solicitacao.uuid)
                 ? "desativar-borda"
@@ -116,7 +116,7 @@ const ListagemSolicitacoes = ({
                       onClick={() => {
                         ativos && ativos.includes(solicitacao.uuid)
                           ? setAtivos(
-                              ativos.filter(el => el !== solicitacao.uuid)
+                              ativos.filter((el) => el !== solicitacao.uuid)
                             )
                           : setAtivos(
                               ativos

@@ -21,7 +21,7 @@ export default () => {
     setNotificacoes(notifsResponse.data.results);
   };
 
-  const goToNotificacoes = notificacao => {
+  const goToNotificacoes = (notificacao) => {
     let path = `/${NOTIFICACOES}/${
       notificacao ? `?uuid=${notificacao.uuid}` : ""
     }`;

@@ -12,7 +12,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
     this.state = {
       collapsed: true,
       pedidosFiltrados: [],
-      filtrado: false
+      filtrado: false,
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
   }
@@ -28,7 +28,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
   filtrarPedidos(event) {
     if (event === undefined) event = { target: { value: "" } };
     let pedidosFiltrados = this.props.pedidos;
-    pedidosFiltrados = pedidosFiltrados.filter(function(item) {
+    pedidosFiltrados = pedidosFiltrados.filter(function (item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.id_externo.toLowerCase().search(palavraAFiltrar) !== -1 ||
@@ -110,9 +110,7 @@ export class CardInversaoPendenciaAprovacao extends Component {
                     return (
                       <Link
                         key={key}
-                        to={`/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${
-                          pedido.uuid
-                        }`}
+                        to={`/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${pedido.uuid}`}
                       >
                         <tr className="row">
                           <td className="col-2">{pedido.id_externo}</td>

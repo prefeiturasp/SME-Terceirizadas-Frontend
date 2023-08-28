@@ -101,7 +101,7 @@ export const KitLancheUnificadoBody = ({ ...props }) => {
                             </td>
                             <td className="text-center">
                               {escola_quantidade.kits
-                                .map(kit => kit.nome)
+                                .map((kit) => kit.nome)
                                 .join(", ")}
                             </td>
                             <td className="text-center">
@@ -125,7 +125,7 @@ export const KitLancheUnificadoBody = ({ ...props }) => {
                       <p
                         className="observacao-negrito"
                         dangerouslySetInnerHTML={{
-                          __html: solicitacao.solicitacao_kit_lanche.descricao
+                          __html: solicitacao.solicitacao_kit_lanche.descricao,
                         }}
                       />
                     </b>
@@ -135,6 +135,6 @@ export const KitLancheUnificadoBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

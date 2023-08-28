@@ -9,7 +9,7 @@ export default class SeletorAlunosDietaEspecial extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collapsed: true
+      collapsed: true,
     };
     this.selecionarTodos = this.selecionarTodos.bind(this);
   }
@@ -20,7 +20,7 @@ export default class SeletorAlunosDietaEspecial extends Component {
 
   selecionarTodos() {
     if (this.props.pedidos) {
-      this.props.pedidos.forEach(pedido => {
+      this.props.pedidos.forEach((pedido) => {
         this.props.change(`check_${pedido.uuid}`, !this.props.selecionar_todos);
       });
     }
@@ -54,9 +54,7 @@ export default class SeletorAlunosDietaEspecial extends Component {
                         <Field
                           component={CheckboxField}
                           type="checkbox"
-                          name={`alunos_com_dieta_especial_participantes.${
-                            aluno.uuid
-                          }`}
+                          name={`alunos_com_dieta_especial_participantes.${aluno.uuid}`}
                         />
                       </td>
                       <td>{aluno.codigo_eol}</td>

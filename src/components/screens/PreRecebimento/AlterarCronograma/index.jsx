@@ -5,7 +5,7 @@ import {
   analiseDinutreSolicitacaoAlteracaoCronograma,
   cadastraSolicitacaoAlteracaoCronograma,
   getCronograma,
-  getSolicitacaoAlteracaoCronograma
+  getSolicitacaoAlteracaoCronograma,
 } from "services/cronograma.service";
 import HTTP_STATUS from "http-status-codes";
 import { Form, Field, FormSpy } from "react-final-form";
@@ -19,13 +19,13 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   CRONOGRAMA_ENTREGA,
   PRE_RECEBIMENTO,
-  SOLICITACAO_ALTERACAO_CRONOGRAMA
+  SOLICITACAO_ALTERACAO_CRONOGRAMA,
 } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import {
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
-  usuarioEhEmpresaFornecedor
+  usuarioEhEmpresaFornecedor,
 } from "helpers/utilities";
 import { Radio, Spin } from "antd";
 import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCronograma";
@@ -43,14 +43,12 @@ export default ({ analiseSolicitacao }) => {
   const [cronograma, setCronograma] = useState(null);
   const [aprovacaoDinutre, setAprovacaoDinutre] = useState(null);
   const [aprovacaoDilog, setAprovacaoDilog] = useState(null);
-  const [
-    solicitacaoAlteracaoCronograma,
-    setSolicitacaoAlteracaoCronograma
-  ] = useState(null);
+  const [solicitacaoAlteracaoCronograma, setSolicitacaoAlteracaoCronograma] =
+    useState(null);
   const [carregando, setCarregando] = useState(false);
   const history = useHistory();
 
-  const onChangeCampos = e => {
+  const onChangeCampos = (e) => {
     setAprovacaoDinutre(e.target.value);
   };
 
@@ -64,9 +62,8 @@ export default ({ analiseSolicitacao }) => {
   const getDetalhes = async () => {
     setCarregando(true);
     if (analiseSolicitacao) {
-      const responseSolicitacaoCronograma = await getSolicitacaoAlteracaoCronograma(
-        uuid
-      );
+      const responseSolicitacaoCronograma =
+        await getSolicitacaoAlteracaoCronograma(uuid);
       const responseCronograma = responseSolicitacaoCronograma.data.cronograma;
       if (usuarioEhEmpresaFornecedor()) {
         responseSolicitacaoCronograma.data.logs = montarFluxoStatusFornecedor(
@@ -94,7 +91,7 @@ export default ({ analiseSolicitacao }) => {
     }
   };
 
-  const geraInitialValuesSolicitacao = solicitacao => {
+  const geraInitialValuesSolicitacao = (solicitacao) => {
     let values;
     values = {
       motivos: solicitacao ? solicitacao.motivo : undefined,
@@ -106,16 +103,16 @@ export default ({ analiseSolicitacao }) => {
       justificativa_dinutre: buscaLogJustificativaCronograma(
         solicitacao.logs,
         "dinutre"
-      )
+      ),
     };
-    solicitacao.etapas.forEach(e => {
+    solicitacao.etapas.forEach((e) => {
       values[`quantidade_total_${e.etapa}`] = e.nova_quantidade;
       values[`data_programada_${e.etapa}`] = e.nova_data_programada;
     });
     setInitialValues(values);
   };
 
-  const geraInitialValuesEtapa = cronograma => {
+  const geraInitialValuesEtapa = (cronograma) => {
     let values = {};
     cronograma.etapas.forEach((etapa, index) => {
       values[`empenho_${index}`] = etapa.numero_empenho;
@@ -136,7 +133,7 @@ export default ({ analiseSolicitacao }) => {
     );
   };
 
-  const cadastraAlteracao = async values => {
+  const cadastraAlteracao = async (values) => {
     const payload = prepararPayloadCronograma(cronograma, values, etapas);
     await cadastraSolicitacaoAlteracaoCronograma(payload)
       .then(() => {
@@ -152,7 +149,7 @@ export default ({ analiseSolicitacao }) => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     const payload = {
-      aprovado: aprovado
+      aprovado: aprovado,
     };
     if (!aprovado) {
       payload.justificativa_dilog = values["justificativa_dilog"];
@@ -171,7 +168,7 @@ export default ({ analiseSolicitacao }) => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     const payload = {
-      aprovado: aprovado
+      aprovado: aprovado,
     };
     if (!aprovado) {
       payload.justificativa_dinutre = values["justificativa_dinutre"];
@@ -186,15 +183,15 @@ export default ({ analiseSolicitacao }) => {
       });
   };
 
-  const disabledDinutre = values => {
+  const disabledDinutre = (values) => {
     return aprovacaoDinutre !== true && !values.justificativa_dinutre;
   };
 
-  const disabledDilog = values => {
+  const disabledDilog = (values) => {
     return aprovacaoDilog !== true && !values.justificativa_dilog;
   };
 
-  const defineSubmit = values => {
+  const defineSubmit = (values) => {
     if (usuarioEhDinutreDiretoria()) {
       analiseDinutre(values, aprovacaoDinutre);
     } else if (usuarioEhDilogDiretoria()) {
@@ -209,10 +206,10 @@ export default ({ analiseSolicitacao }) => {
       cronograma: ["Cronograma ciente alteração cronograma"],
       dinutre: [
         "Alteração cronograma aprovada pela DINUTRE",
-        "Alteração cronograma reprovada pela DINUTRE"
-      ]
+        "Alteração cronograma reprovada pela DINUTRE",
+      ],
     };
-    let log_correto = logs.find(log => {
+    let log_correto = logs.find((log) => {
       return dict_logs[autorJustificativa].includes(
         log.status_evento_explicacao
       );
@@ -220,15 +217,15 @@ export default ({ analiseSolicitacao }) => {
     return log_correto ? log_correto.justificativa : "";
   };
 
-  const montarFluxoStatusFornecedor = logs => {
+  const montarFluxoStatusFornecedor = (logs) => {
     const logsFiltrados = logs.filter(
-      log =>
+      (log) =>
         !["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
           log.status_evento_explicacao
         )
     );
     logsFiltrados[0].status_evento_explicacao = "Em Análise";
-    const logsNomesAtualizados = logsFiltrados.map(log => {
+    const logsNomesAtualizados = logsFiltrados.map((log) => {
       if (log.status_evento_explicacao === "Aprovado DILOG") {
         log.status_evento_explicacao = "Aprovado CODAE";
       } else if (log.status_evento_explicacao === "Reprovado DILOG") {
@@ -288,7 +285,7 @@ export default ({ analiseSolicitacao }) => {
                   <form onSubmit={handleSubmit}>
                     <FormSpy
                       subscription={{ values: true, active: true, valid: true }}
-                      onChange={changes =>
+                      onChange={(changes) =>
                         onChangeEtapas(
                           changes,
                           etapas,

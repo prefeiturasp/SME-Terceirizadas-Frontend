@@ -10,36 +10,36 @@ import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import {
   DIETA_ESPECIAL,
   ESCOLA,
-  RELATORIO
+  RELATORIO,
 } from "../../../../configs/constants";
 import {
   length,
   minLength,
   required,
-  validaCPF
+  validaCPF,
 } from "../../../../helpers/fieldValidators";
 import {
   cpfMask,
   dateDelta,
   deepCopy,
   gerarParametrosConsulta,
-  getError
+  getError,
 } from "../../../../helpers/utilities";
 import {
   updateFotoAluno,
   getAlunoPertenceAEscola,
   getFotoAluno,
-  deleteFotoAluno
+  deleteFotoAluno,
 } from "../../../../services/aluno.service";
 import {
   criaDietaEspecial,
   getDietasEspeciaisVigentesDeUmAluno,
-  getSolicitacoesDietaEspecial
+  getSolicitacoesDietaEspecial,
 } from "../../../../services/dietaEspecial.service";
 import { getEscolasSimplissima } from "../../../../services/escola.service";
 import {
   meusDados,
-  obtemDadosAlunoPeloEOL
+  obtemDadosAlunoPeloEOL,
 } from "../../../../services/perfil.service";
 import { Botao } from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
@@ -75,7 +75,7 @@ class solicitacaoDietaEspecial extends Component {
       fotoAlunoSrc: null,
       criadoRf: null,
       deletandoImagem: false,
-      atualizandoImagem: false
+      atualizandoImagem: false,
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -85,10 +85,10 @@ class solicitacaoDietaEspecial extends Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
-    meusDados().then(meusDados => {
+    meusDados().then((meusDados) => {
       this.setState({
         quantidadeAlunos: meusDados.vinculo_atual.instituicao.quantidade_alunos,
-        codigo_eol_escola: meusDados.vinculo_atual.instituicao.codigo_eol
+        codigo_eol_escola: meusDados.vinculo_atual.instituicao.codigo_eol,
       });
     });
     const { history, loadSolicitacoesVigentes, reset } = this.props;
@@ -118,10 +118,8 @@ class solicitacaoDietaEspecial extends Component {
         if (responseFoto) {
           if (responseFoto.status === HTTP_STATUS.OK) {
             this.setState({
-              fotoAlunoSrc: `data:${
-                responseFoto.data.data.download.item2
-              };base64,${responseFoto.data.data.download.item1}`,
-              criadoRf: responseFoto.data.data.criadoRf
+              fotoAlunoSrc: `data:${responseFoto.data.data.download.item2};base64,${responseFoto.data.data.download.item1}`,
+              criadoRf: responseFoto.data.data.criadoRf,
             });
           } else {
             this.setState({ fotoAlunoSrc: null, criadoRf: null });
@@ -134,7 +132,7 @@ class solicitacaoDietaEspecial extends Component {
     }
   };
 
-  deletarFoto = async codigo_eol => {
+  deletarFoto = async (codigo_eol) => {
     if (window.confirm("Deseja realmente excluir a foto deste aluno?")) {
       this.setState({ deletandoImagem: true });
       const response = await deleteFotoAluno(codigo_eol);
@@ -151,7 +149,7 @@ class solicitacaoDietaEspecial extends Component {
     }
   };
 
-  onEolBlur = async event => {
+  onEolBlur = async (event) => {
     const { change } = this.props;
     const { codigo_eol_escola } = this.state;
     this.setState({ fotoAlunoSrc: undefined, criadoRf: null });
@@ -171,19 +169,19 @@ class solicitacaoDietaEspecial extends Component {
 
     getDietasEspeciaisVigentesDeUmAluno(
       event.target.value.padStart(6, "0")
-    ).then(response => {
+    ).then((response) => {
       this.props.loadSolicitacoesVigentes(
         formatarSolicitacoesVigentes(response.data.results.slice(0, 1))
       );
     });
 
     getAlunoPertenceAEscola(event.target.value, codigo_eol_escola).then(
-      response => {
+      (response) => {
         if (response.status === 200) {
           this.setState({
             pertence_a_escola: response.data.pertence_a_escola,
             fotoAlunoSrc: undefined,
-            criadoRf: null
+            criadoRf: null,
           });
           if (this.state.pertence_a_escola) {
             change("aluno_json.nome", resposta.detail.nm_aluno);
@@ -191,13 +189,11 @@ class solicitacaoDietaEspecial extends Component {
               "aluno_json.data_nascimento",
               moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
             );
-            getFotoAluno(event.target.value).then(responseFoto => {
+            getFotoAluno(event.target.value).then((responseFoto) => {
               if (responseFoto.status === HTTP_STATUS.OK) {
                 this.setState({
-                  fotoAlunoSrc: `data:${
-                    responseFoto.data.data.download.item2
-                  };base64,${responseFoto.data.data.download.item1}`,
-                  criadoRf: responseFoto.data.data.criadoRf
+                  fotoAlunoSrc: `data:${responseFoto.data.data.download.item2};base64,${responseFoto.data.data.download.item1}`,
+                  criadoRf: responseFoto.data.data.criadoRf,
                 });
               } else {
                 this.setState({ fotoAlunoSrc: null, criadoRf: null });
@@ -213,7 +209,7 @@ class solicitacaoDietaEspecial extends Component {
           this.setState({
             pertence_a_escola: null,
             fotoAlunoSrc: null,
-            criadoRf: null
+            criadoRf: null,
           });
         }
       }
@@ -279,7 +275,7 @@ class solicitacaoDietaEspecial extends Component {
     const params = gerarParametrosConsulta({
       cpf_responsavel: cpf,
       nome_completo_aluno: nome,
-      status: getStatusSolicitacoesVigentes()
+      status: getStatusSolicitacoesVigentes(),
     });
     const resposta = await getSolicitacoesDietaEspecial(params);
     this.props.loadSolicitacoesVigentes(
@@ -289,34 +285,31 @@ class solicitacaoDietaEspecial extends Component {
 
   async onSubmit(payload) {
     const payload_ = deepCopy(payload);
-    payload_.anexos = payload_.anexos.map(anexo => {
+    payload_.anexos = payload_.anexos.map((anexo) => {
       return {
         nome: anexo.nome,
-        arquivo: anexo.base64
+        arquivo: anexo.base64,
       };
     });
     if (
       payload_.aluno_nao_matriculado_data &&
       payload_.aluno_nao_matriculado_data.data_nascimento.includes("T")
     ) {
-      payload_.aluno_nao_matriculado_data.data_nascimento = payload_.aluno_nao_matriculado_data.data_nascimento.split(
-        "T"
-      )[0];
+      payload_.aluno_nao_matriculado_data.data_nascimento =
+        payload_.aluno_nao_matriculado_data.data_nascimento.split("T")[0];
     }
     const response = await criaDietaEspecial(payload_);
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Solicitação realizada com sucesso.");
       this.setState({
         submitted: !this.state.submitted,
-        resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
-          response.data.uuid
-        }`
+        resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${response.data.uuid}`,
       });
       this.props.loadSolicitacoesVigentes(null);
       this.setState({
         aluno_nao_matriculado: false,
         fotoAlunoSrc: undefined,
-        criadoRf: null
+        criadoRf: null,
       });
       this.resetForm();
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
@@ -339,14 +332,14 @@ class solicitacaoDietaEspecial extends Component {
       deletandoImagem,
       atualizandoImagem,
       pertence_a_escola,
-      criadoRf
+      criadoRf,
     } = this.state;
     const {
       handleSubmit,
       pristine,
       submitting,
       solicitacoesVigentes,
-      codigo_eol
+      codigo_eol,
     } = this.props;
     return (
       <form className="special-diet" onSubmit={handleSubmit}>
@@ -363,7 +356,7 @@ class solicitacaoDietaEspecial extends Component {
                   this.props.loadSolicitacoesVigentes(null);
                   this.props.reset();
                   this.setState({
-                    aluno_nao_matriculado: !this.state.aluno_nao_matriculado
+                    aluno_nao_matriculado: !this.state.aluno_nao_matriculado,
                   });
                 }}
               />
@@ -468,10 +461,10 @@ class solicitacaoDietaEspecial extends Component {
                       <input
                         className="inputfile"
                         name="foto_aluno"
-                        ref={i => (this.inputRef = i)}
+                        ref={(i) => (this.inputRef = i)}
                         accept=".png, .jpeg, .jpg"
                         type="file"
-                        onChange={e =>
+                        onChange={(e) =>
                           this.atualizarFoto(codigo_eol, e.target.files)
                         }
                       />
@@ -645,9 +638,9 @@ class solicitacaoDietaEspecial extends Component {
             <Botao
               texto="Enviar"
               type={BUTTON_TYPE.SUBMIT}
-              onClick={handleSubmit(values =>
+              onClick={handleSubmit((values) =>
                 this.onSubmit({
-                  ...values
+                  ...values,
                 })
               )}
               style={BUTTON_STYLE.GREEN}
@@ -666,29 +659,26 @@ class solicitacaoDietaEspecial extends Component {
 const componentNameForm = reduxForm({
   form: "solicitacaoDietaEspecial",
   keepDirtyOnReinitialize: true,
-  destroyOnUnmount: false
+  destroyOnUnmount: false,
 })(solicitacaoDietaEspecial);
 
 const selector = formValueSelector("solicitacaoDietaEspecial");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     files: selector(state, "files"),
     codigo_eol: selector(state, "codigo_eol"),
     aluno_nao_matriculado: selector(state, "aluno_nao_matriculado_data"),
-    solicitacoesVigentes: state.incluirDietaEspecial.solicitacoesVigentes
+    solicitacoesVigentes: state.incluirDietaEspecial.solicitacoesVigentes,
   };
 };
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      loadSolicitacoesVigentes
+      loadSolicitacoesVigentes,
     },
     dispatch
   );
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(componentNameForm)
+  connect(mapStateToProps, mapDispatchToProps)(componentNameForm)
 );

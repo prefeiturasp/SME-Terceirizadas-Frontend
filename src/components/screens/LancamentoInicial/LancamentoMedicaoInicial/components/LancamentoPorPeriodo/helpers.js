@@ -3,7 +3,7 @@ import { get, set } from "lodash";
 const grupos = {
   convencional: "Convencional",
   grupoA: "Dieta especial Grupo A",
-  grupoB: "Dieta especial Grupo B"
+  grupoB: "Dieta especial Grupo B",
 };
 
 const camposMetadeFrequencia = {
@@ -13,14 +13,14 @@ const camposMetadeFrequencia = {
   "refeicoes.0.ref_oferta": "Refeição 1ª oferta",
   "refeicoes.1.ref_oferta": "Refeição 2ª oferta",
   "refeicoes.0.sob_oferta": "Sobremesa 1ª oferta",
-  "refeicoes.1.sob_oferta": "Sobremesa 2ª oferta"
+  "refeicoes.1.sob_oferta": "Sobremesa 2ª oferta",
 };
 
-export const objectFlattener = object => {
+export const objectFlattener = (object) => {
   return Reflect.apply(
     Array.prototype.concat,
     [],
-    Object.keys(object).map(key => {
+    Object.keys(object).map((key) => {
       if (object[key] instanceof Object) {
         return objectFlattener(object[key]);
       }
@@ -29,7 +29,7 @@ export const objectFlattener = object => {
   );
 };
 
-export const tamanhoMaximoObsDiarias = value =>
+export const tamanhoMaximoObsDiarias = (value) =>
   value && value.length > 90
     ? `Observações diárias devem ter 90 caracteres ou menos`
     : undefined;
@@ -78,9 +78,7 @@ export const validateFormLancamento = (
       set(
         erros,
         `${grupo}.frequencia`,
-        `Não é possível informar quantidade superior ao número de Dietas Ativas (${
-          dadosMatriculados[grupo]
-        }).`
+        `Não é possível informar quantidade superior ao número de Dietas Ativas (${dadosMatriculados[grupo]}).`
       );
     }
     for (let [nomeCampo, nomeAmigavelCampo] of Object.entries(
@@ -134,9 +132,9 @@ export const mockLogs = [
       nome: "SUPER USUARIO ESCOLA EMEF",
       registro_funcional: "8115257",
       tipo_usuario: "escola",
-      uuid: "36750ded-5790-433e-b765-0507303828df"
-    }
-  }
+      uuid: "36750ded-5790-433e-b765-0507303828df",
+    },
+  },
 ];
 
 export const CORES = [
@@ -148,7 +146,7 @@ export const CORES = [
   "#9b51e0",
   "#B58B00",
   "#00f7ff",
-  "#ff0095"
+  "#ff0095",
 ];
 
 export const mockPeriodos = [
@@ -158,8 +156,8 @@ export const mockPeriodos = [
       total: 200,
       refeicoes: 100,
       sobremesas: 60,
-      lanches: 40
-    }
+      lanches: 40,
+    },
   },
   {
     periodo: "Período Vespertino",
@@ -167,8 +165,8 @@ export const mockPeriodos = [
       total: 102,
       refeicoes: 50,
       sobremesas: 30,
-      lanche: 20
-    }
+      lanche: 20,
+    },
   },
   {
     periodo: "Período Integral",
@@ -177,8 +175,8 @@ export const mockPeriodos = [
       refeicoes: 100,
       sobremesas: 100,
       lanches_4h: 70,
-      lanche: 80
-    }
+      lanche: 80,
+    },
   },
   {
     periodo: "Período Noturno - EJA",
@@ -187,8 +185,8 @@ export const mockPeriodos = [
       refeicoes: 80,
       sobremesas: 80,
       lanches: 100,
-      lanche: 20
-    }
+      lanche: 20,
+    },
   },
   {
     periodo: "Programas e Projetos",
@@ -197,30 +195,30 @@ export const mockPeriodos = [
       refeicoes: 20,
       sobremesas: 20,
       lanches_4h: 40,
-      lanche: 40
-    }
+      lanche: 40,
+    },
   },
   {
     periodo: "Solicitações de Alimentação",
     alimentacoes: {
       total: 80,
       lanches_emergenciais: 30,
-      kit_lanches: 50
-    }
+      kit_lanches: 50,
+    },
   },
   {
     periodo: "ETEC",
     alimentacoes: {
-      total: 0
-    }
-  }
+      total: 0,
+    },
+  },
 ];
 
 export const OPCOES_AVALIACAO_A_CONTENTO = {
   SIM_SEM_OCORRENCIAS: 1,
-  NAO_COM_OCORRENCIAS: 0
+  NAO_COM_OCORRENCIAS: 0,
 };
 
 export const removeObjetosDuplicados = (arr, key) => {
-  return [...new Map(arr.map(obj => [obj[key], obj])).values()];
+  return [...new Map(arr.map((obj) => [obj[key], obj])).values()];
 };

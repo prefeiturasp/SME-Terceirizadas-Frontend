@@ -45,7 +45,7 @@ export default () => {
     fetchData();
   }, []);
 
-  const changePage = async page => {
+  const changePage = async (page) => {
     try {
       setCarregando(true);
       let payload = filtros;
@@ -91,7 +91,7 @@ export default () => {
               current={page || 1}
               total={total}
               showSizeChanger={false}
-              onChange={page => {
+              onChange={(page) => {
                 setPage(page);
                 changePage(page);
               }}

@@ -18,7 +18,7 @@ export const ModalNaoValidarSolicitacao = ({ ...props }) => {
     motivosDREnaoValida,
     tipoSolicitacao,
     endpoint,
-    loadSolicitacao
+    loadSolicitacao,
   } = props;
 
   const onSubmit = () => {};
@@ -37,9 +37,9 @@ export const ModalNaoValidarSolicitacao = ({ ...props }) => {
       {
         justificativa: `${
           motivosDREnaoValida.find(
-            motivo => motivo.uuid === values.motivo_cancelamento
+            (motivo) => motivo.uuid === values.motivo_cancelamento
           ).nome
-        } - ${values.justificativa}`
+        } - ${values.justificativa}`,
       },
       tipoSolicitacao
     );

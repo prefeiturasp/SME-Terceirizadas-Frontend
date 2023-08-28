@@ -20,7 +20,7 @@ import {
   dreValidarSolicitacaoDeInclusaoDeAlimentacao,
   escolaCancelarSolicitacaoDeInclusaoDeAlimentacao,
   terceirizadaDarCienciaDeInclusaoDeAlimentacao,
-  terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao
+  terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao,
 } from "services/inclusaoDeAlimentacao";
 import { TIPO_SOLICITACAO } from "constants/shared";
 
@@ -41,17 +41,17 @@ export const RelatorioBase = ({ ...props }) => {
   const anteriores = [
     {
       href: `/painel-gestao-alimentacao`,
-      titulo: "Gestão de Alimentação"
+      titulo: "Gestão de Alimentação",
     },
     {
       href: `/painel-gestao-alimentacao`,
-      titulo: "Painel de Solicitações"
-    }
+      titulo: "Painel de Solicitações",
+    },
   ];
 
   const atual = {
     href: "#",
-    titulo: "Relatório"
+    titulo: "Relatório",
   };
 
   return (
