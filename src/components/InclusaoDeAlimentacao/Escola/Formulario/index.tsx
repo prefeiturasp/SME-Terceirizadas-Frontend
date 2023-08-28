@@ -50,18 +50,23 @@ import {
   RecorrenciaTabela
 } from "./componentes/InclusaoContinua";
 import {
+  MotivoContinuoInterface,
   MotivoSimplesInterface,
+  RascunhosInclusaoDeAlimentacaoInterface,
   ValuesFormInclusaoDeAlimentacaoInterface
 } from "./interfaces";
+import { FormApi } from "final-form";
 
 export const InclusaoDeAlimentacao = ({ ...props }) => {
-  const [rascunhos, setRascunhos] = useState(null);
+  const [rascunhos, setRascunhos] = useState<
+    Array<RascunhosInclusaoDeAlimentacaoInterface> | undefined
+  >(undefined);
   const [erroRascunhos, setErroRascunhos] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [motivoEspecifico, setMotivoEspecifico] = useState(false);
   const [carregandoRascunho, setCarregandoRascunho] = useState(false);
-  const [uuid, setUuid] = useState<string | null>(null);
-  const [idExterno, setIdExterno] = useState(null);
+  const [uuid, setUuid] = useState<string | undefined>(undefined);
+  const [idExterno, setIdExterno] = useState<undefined | undefined>(undefined);
 
   const {
     meusDados,
@@ -78,18 +83,18 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     getRascunhos();
   }, []);
 
-  const resetForm = async form => {
-    await form.change("uuid", undefined);
-    await form.change("id_externo", undefined);
-    await form.change("inclusoes", [{ motivo: undefined }]);
-    await form.change("quantidades_periodo", undefined);
-    await form.change("dias_semana", undefined);
-    await form.change("tipos_alimentacao_selecionados", []);
-    await form.change("periodo_escolar");
-    await form.change("numero_alunos", undefined);
+  const resetForm = async (form: FormApi<any, Partial<any>>) => {
+    form.change("uuid", undefined);
+    form.change("id_externo", undefined);
+    form.change("inclusoes", [{ motivo: undefined }]);
+    form.change("quantidades_periodo", undefined);
+    form.change("dias_semana", undefined);
+    form.change("tipos_alimentacao_selecionados", []);
+    form.change("periodo_escolar");
+    form.change("numero_alunos", undefined);
     setCarregandoRascunho(false);
-    setUuid(null);
-    setIdExterno(false);
+    setUuid(undefined);
+    setIdExterno(undefined);
   };
 
   const motivoSimplesSelecionado = (
@@ -105,39 +110,53 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     );
   };
 
-  const motivoContinuoSelecionado = values => {
+  const motivoContinuoSelecionado = (
+    values: ValuesFormInclusaoDeAlimentacaoInterface
+  ) => {
     return (
       values.inclusoes &&
       values.inclusoes[0].motivo &&
       motivosContinuos.find(
-        (motivo: any) => motivo.uuid === values.inclusoes[0].motivo
+        (motivo: MotivoContinuoInterface) =>
+          motivo.uuid === values.inclusoes[0].motivo
       )
     );
   };
 
-  const motivoETECSelecionado = values => {
+  const motivoETECSelecionado = (
+    values: ValuesFormInclusaoDeAlimentacaoInterface
+  ) => {
     return (
       values.inclusoes &&
       values.inclusoes[0].motivo &&
       motivosContinuos.find(
-        motivo => motivo.uuid === values.inclusoes[0].motivo
+        (motivo: MotivoContinuoInterface) =>
+          motivo.uuid === values.inclusoes[0].motivo
       ) &&
       motivosContinuos.find(
-        motivo => motivo.uuid === values.inclusoes[0].motivo
+        (motivo: MotivoContinuoInterface) =>
+          motivo.uuid === values.inclusoes[0].motivo
       ).nome === "ETEC"
     );
   };
 
-  const outroMotivoSelecionado = (values, index) => {
+  const outroMotivoSelecionado = (
+    values: ValuesFormInclusaoDeAlimentacaoInterface,
+    index: number
+  ) => {
     return (
       values.inclusoes &&
       values.inclusoes[index] &&
       values.inclusoes[index].motivo &&
       motivosSimples.find(
-        motivo => motivo.uuid === values.inclusoes[index].motivo
+        (motivo: MotivoSimplesInterface) =>
+          motivo.uuid === values.inclusoes[index].motivo
       ) &&
       motivosSimples
-        .find(motivo => motivo.uuid === values.inclusoes[index].motivo)
+        .find(
+          (motivo: MotivoSimplesInterface) =>
+            motivo.uuid === values.inclusoes[index].motivo
+        )
         .nome.includes("Outro")
     );
   };
