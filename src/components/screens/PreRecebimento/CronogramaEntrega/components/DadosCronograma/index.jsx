@@ -1,5 +1,5 @@
 import { deParaStatusAltCronograma } from "components/screens/helper";
-import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
+import { usuarioEhEmpresaFornecedor, formataMilhar } from "helpers/utilities";
 import React from "react";
 import "./styles.scss";
 
@@ -101,7 +101,7 @@ export default ({
             <div className="col-4">
               <p>Quantidade Total Programada:</p>
               <p>
-                <b>{cronograma.qtd_total_programada}</b>
+                <b>{formataMilhar(cronograma.qtd_total_programada)}</b>
               </p>
             </div>
             <div className="col-4">

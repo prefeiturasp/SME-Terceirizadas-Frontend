@@ -26,7 +26,7 @@ import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
-import { exibeError } from "helpers/utilities";
+import { exibeError, formataMilhar } from "helpers/utilities";
 import { getEmpresasCronograma } from "services/terceirizada.service";
 import { getListaCompletaProdutosLogistica } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
@@ -95,7 +95,7 @@ export default () => {
     payload.contrato = values.contrato;
     payload.empresa = empresaSelecionada.uuid;
     payload.produto = values.produto;
-    payload.qtd_total_programada = values.quantidade_total;
+    payload.qtd_total_programada = values.quantidade_total.replace(".", "");
     payload.unidade_medida = values.unidade_medida;
     payload.armazem = values.armazem;
     payload.tipo_embalagem = values.tipo_embalagem;
@@ -185,7 +185,7 @@ export default () => {
           crono.contrato.processo
         );
         cronogramaValues["quantidade_total"] = lengthOrUnderfined(
-          crono.qtd_total_programada
+          formataMilhar(crono.qtd_total_programada)
         );
         cronogramaValues["unidade_medida"] = lengthOrUnderfined(
           crono.unidade_medida ? crono.unidade_medida.uuid : undefined
@@ -458,7 +458,7 @@ export default () => {
                                 name="quantidade_total"
                                 className="input-busca-produto"
                                 disabled={false}
-                                apenasNumeros
+                                agrupadorMilhar
                                 required
                                 placeholder="Informe a Quantidade Total"
                               />

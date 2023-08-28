@@ -137,7 +137,7 @@ export const ContatoFormSet = ({
                             <Botao
                               className="deletar-contato"
                               type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.RED_OUTLINE}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
                               icon="fas fa-trash"
                               onClick={() => {
                                 removeContato(indiceEmpresa);

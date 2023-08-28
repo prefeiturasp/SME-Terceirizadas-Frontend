@@ -245,6 +245,7 @@ import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
+import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
 
 const routesConfig = [
   {
@@ -829,6 +830,14 @@ const routesConfig = [
     component: EditarUnidadesMedidaPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.MARCAS
+    }`,
+    component: CadastroMarcaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog()
   },
   {
     path: `/configuracoes/cadastros`,

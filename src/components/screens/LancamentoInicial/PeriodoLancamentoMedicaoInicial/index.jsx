@@ -36,7 +36,12 @@ import ModalErro from "./components/ModalErro";
 import ModalSalvarCorrecoes from "./components/ModalSalvarCorrecoes";
 import { ModalVoltarPeriodoLancamento } from "./components/ModalVoltarPeriodoLancamento";
 import CKEditorField from "components/Shareable/CKEditorField";
-import { deepCopy, deepEqual, tiposAlimentacaoETEC } from "helpers/utilities";
+import {
+  deepCopy,
+  deepEqual,
+  ehEscolaTipoCEUGESTAO,
+  tiposAlimentacaoETEC
+} from "helpers/utilities";
 import {
   botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
   botaoAdicionarObrigatorio,
@@ -110,8 +115,8 @@ export default () => {
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
   const [tabelaAlimentacaoRows, setTabelaAlimentacaoRows] = useState([]);
   const [
-    tabelaAlimentacaoProgramasProjetosRows,
-    setTabelaAlimentacaoProgramasProjetosRows
+    tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows,
+    setTabelaAlimentacaoProgramasProjetosOuCEUGESTAORows
   ] = useState([]);
   const [tabelaDietaRows, setTabelaDietaRows] = useState([]);
   const [tabelaDietaEnteralRows, setTabelaDietaEnteralRows] = useState([]);
@@ -208,6 +213,95 @@ export default () => {
     }
   };
 
+  const getTiposAlimentacaoCEUGESTAO = inclusoesAutorizadas => {
+    if (!ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
+      return [];
+    const tiposAlimentacao = [];
+    inclusoesAutorizadas.forEach(inclusao => {
+      inclusao.alimentacoes.split(", ").forEach(alimentacao => {
+        if (!tiposAlimentacao.includes(alimentacao)) {
+          tiposAlimentacao.push(alimentacao);
+        }
+      });
+    });
+    return tiposAlimentacao;
+  };
+
+  const trataTabelaAlimentacaoCEUGESTAO = (
+    tiposAlimentacaoProgramasProjetosOuCEUGESTAO,
+    tiposAlimentacaoCEUGESTAO
+  ) => {
+    if (!ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
+      return tiposAlimentacaoProgramasProjetosOuCEUGESTAO;
+    if (!tiposAlimentacaoCEUGESTAO.includes("refeicao")) {
+      const indexRefeicao1Oferta = tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+        ali => ali.nome === "Refeição 1ª Oferta"
+      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
+        indexRefeicao1Oferta,
+        1
+      );
+      const indexRefeicaoRepeticao = tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+        ali => ali.nome === "Repetição Refeição"
+      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
+        indexRefeicaoRepeticao,
+        1
+      );
+    }
+
+    if (!tiposAlimentacaoCEUGESTAO.includes("sobremesa")) {
+      const indexRefeicao1Oferta = tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+        ali => ali.nome === "Sobremesa 1º Oferta"
+      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
+        indexRefeicao1Oferta,
+        1
+      );
+      const indexRefeicaoRepeticao = tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+        ali => ali.nome === "Repetição Sobremesa"
+      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
+        indexRefeicaoRepeticao,
+        1
+      );
+    }
+
+    if (!tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+      const indexRefeicao1Oferta = tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+        ali => ali.nome === "Lanche"
+      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
+        indexRefeicao1Oferta,
+        1
+      );
+    }
+
+    return tiposAlimentacaoProgramasProjetosOuCEUGESTAO;
+  };
+
+  const trataCategoriasMedicaoCEUGESTAO = (
+    response_categorias_medicao,
+    tiposAlimentacaoCEUGESTAO
+  ) => {
+    if (!ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
+      return response_categorias_medicao;
+    if (!tiposAlimentacaoCEUGESTAO.includes("refeicao")) {
+      response_categorias_medicao = response_categorias_medicao.filter(
+        categoria => !categoria.nome.includes("ENTERAL")
+      );
+    }
+    if (!tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+      response_categorias_medicao = response_categorias_medicao.filter(
+        categoria =>
+          !categoria.nome.includes("DIETA ESPECIAL") ||
+          categoria.nome.includes("ENTERAL")
+      );
+    }
+
+    return response_categorias_medicao;
+  };
+
   useEffect(() => {
     const mesAnoSelecionado = location.state
       ? typeof location.state.mesAnoSelecionado === String
@@ -236,7 +330,9 @@ export default () => {
       const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
         escola.uuid
       );
+
       getListaDiasSobremesaDoceAsync(escola.uuid);
+
       const periodos_escolares = response_vinculos.data.results;
       const periodo =
         periodos_escolares.find(
@@ -244,7 +340,25 @@ export default () => {
             periodo.periodo_escolar.nome ===
             (location.state ? location.state.periodo : "MANHA")
         ) || periodos_escolares[0];
+
+      const mes = format(mesAnoSelecionado, "MM");
+      const ano = getYear(mesAnoSelecionado);
+
+      response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
+        escola.uuid,
+        mes,
+        ano,
+        location && location.state && location.state.periodosInclusaoContinua
+          ? Object.keys(location.state.periodosInclusaoContinua)
+          : [periodo.periodo_escolar.nome],
+        location
+      );
+      setInclusoesAutorizadas(response_inclusoes_autorizadas);
+
       const tipos_alimentacao = periodo.tipos_alimentacao;
+      const tiposAlimentacaoCEUGESTAO = getTiposAlimentacaoCEUGESTAO(
+        response_inclusoes_autorizadas
+      );
       const cloneTiposAlimentacao = deepCopy(tipos_alimentacao);
       const tiposAlimentacaoFormatadas = cloneTiposAlimentacao
         .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
@@ -258,7 +372,6 @@ export default () => {
               .replaceAll(/ /g, "_")
           };
         });
-
       const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
         ali => ali.nome === "Refeição"
       );
@@ -283,7 +396,7 @@ export default () => {
         });
       }
 
-      const tiposAlimentacaoProgramasProjetos = deepCopy(
+      const tiposAlimentacaoProgramasProjetosOuCEUGESTAO = deepCopy(
         tiposAlimentacaoFormatadas
       );
 
@@ -305,9 +418,10 @@ export default () => {
         name: "observacoes",
         uuid: null
       });
+
       setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
 
-      tiposAlimentacaoProgramasProjetos.unshift(
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.unshift(
         {
           nome: "Número de Alunos",
           name: "numero_de_alunos",
@@ -320,13 +434,17 @@ export default () => {
         }
       );
 
-      tiposAlimentacaoProgramasProjetos.push({
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.push({
         nome: "Observações",
         name: "observacoes",
         uuid: null
       });
-      setTabelaAlimentacaoProgramasProjetosRows(
-        tiposAlimentacaoProgramasProjetos
+
+      setTabelaAlimentacaoProgramasProjetosOuCEUGESTAORows(
+        trataTabelaAlimentacaoCEUGESTAO(
+          tiposAlimentacaoProgramasProjetosOuCEUGESTAO,
+          tiposAlimentacaoCEUGESTAO
+        )
       );
 
       const rowsDietas = [];
@@ -361,7 +479,13 @@ export default () => {
       const indexLanche = cloneTiposAlimentacao.findIndex(
         ali => ali.nome === "Lanche"
       );
-      if (indexLanche !== -1) {
+      if (
+        indexLanche !== -1 &&
+        (!ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) ||
+          tiposAlimentacaoCEUGESTAO.includes("lanche"))
+      ) {
         rowsDietas.push({
           nome: "Lanche",
           name: "Lanche"
@@ -384,7 +508,13 @@ export default () => {
       const indexRefeicaoDieta = cloneTiposAlimentacao.findIndex(
         ali => ali.nome === "Refeição"
       );
-      if (indexRefeicaoDieta !== -1) {
+      if (
+        indexRefeicaoDieta !== -1 &&
+        (!ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) ||
+          tiposAlimentacaoCEUGESTAO.includes("refeicao"))
+      ) {
         cloneRowsDietas.splice(cloneRowsDietas.length - 1, 0, {
           nome: "Refeição",
           name: "refeicao",
@@ -486,8 +616,6 @@ export default () => {
 
       setTabelaEtecAlimentacaoRows(tiposAlimentacaoEtecFormatadas);
 
-      const mes = format(mesAnoSelecionado, "MM");
-      const ano = getYear(mesAnoSelecionado);
       let response_log_dietas_autorizadas = [];
 
       let response_categorias_medicao = await getCategoriasDeMedicao();
@@ -497,6 +625,15 @@ export default () => {
         mes: mes,
         ano: ano
       };
+      if (
+        location.state.grupo !== "Programas e Projetos" &&
+        !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+      ) {
+        params_dietas_autorizadas["periodo_escolar"] =
+          periodo.periodo_escolar.uuid;
+      } else {
+        params_dietas_autorizadas["unificado"] = true;
+      }
       response_log_dietas_autorizadas = await getLogDietasAutorizadasPeriodo(
         params_dietas_autorizadas
       );
@@ -588,7 +725,12 @@ export default () => {
           );
         }
         setLogQtdDietasAutorizadas(response_log_dietas_autorizadas.data);
-        setCategoriasDeMedicao(response_categorias_medicao);
+        setCategoriasDeMedicao(
+          trataCategoriasMedicaoCEUGESTAO(
+            response_categorias_medicao,
+            tiposAlimentacaoCEUGESTAO
+          )
+        );
       }
 
       let params = {
@@ -629,17 +771,6 @@ export default () => {
           params_matriculados
         );
         setValoresMatriculados(response_matriculados.data);
-
-        response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
-          escola.uuid,
-          mes,
-          ano,
-          location && location.state && location.state.periodosInclusaoContinua
-            ? Object.keys(location.state.periodosInclusaoContinua)
-            : [periodo.periodo_escolar.nome],
-          location
-        );
-        setInclusoesAutorizadas(response_inclusoes_autorizadas);
 
         response_suspensoes_autorizadas = await getSolicitacoesSuspensoesAutorizadasAsync(
           escola.uuid,
@@ -798,11 +929,11 @@ export default () => {
                     categoria.id
                   }`
                 ] = `${logFiltrado.quantidade +
-                  logQtdDietasAutorizadas.find(
+                  (logQtdDietasAutorizadas.find(
                     log =>
                       logFiltrado.dia === log.dia &&
                       log.classificacao.toUpperCase().includes("AMINOÁCIDOS")
-                  ).quantidade}`)
+                  )?.quantidade || 0)}`)
             );
 
         logQtdDietasAutorizadas &&
@@ -857,7 +988,10 @@ export default () => {
         );
 
         if (
-          grupoLocation === "Programas e Projetos" &&
+          (grupoLocation === "Programas e Projetos" ||
+            ehEscolaTipoCEUGESTAO(
+              location.state.solicitacaoMedicaoInicial.escola
+            )) &&
           solInclusoesAutorizadas
         ) {
           for (let i = 1; i <= 31; i++) {
@@ -1136,7 +1270,9 @@ export default () => {
   const onSubmitObservacao = async (values, dia, categoria, errors) => {
     let valoresMedicao = [];
     const valuesMesmoDiaDaObservacao = Object.fromEntries(
-      Object.entries(values).filter(([key]) => key.includes(dia))
+      Object.entries(values).filter(([key]) =>
+        key.includes(`__dia_${dia}__categoria_${categoria}`)
+      )
     );
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
       return (
@@ -1159,22 +1295,20 @@ export default () => {
       toastError(`Existe(m) erro(s) na coluna do dia ${dia}.`);
       return;
     }
-    Object.entries(valuesMesmoDiaDaObservacao)
-      .filter(([key]) => key.includes(`categoria_${categoria}`))
-      .forEach(([key, value]) => {
-        if (
-          !ehGrupoETECUrlParam &&
-          !(key.includes("observacoes") || key.includes("frequencia")) &&
-          Number(value) >
-            Number(
-              valuesMesmoDiaDaObservacao[
-                `frequencia__dia_${dia}__categoria_${categoria}`
-              ]
-            )
-        ) {
-          qtdCamposComErro++;
-        }
-      });
+    Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
+      if (
+        !ehGrupoETECUrlParam &&
+        !(key.includes("observacoes") || key.includes("frequencia")) &&
+        Number(value) >
+          Number(
+            valuesMesmoDiaDaObservacao[
+              `frequencia__dia_${dia}__categoria_${categoria}`
+            ]
+          )
+      ) {
+        qtdCamposComErro++;
+      }
+    });
     if (qtdCamposComErro) {
       toastError(
         `Existe(m) ${qtdCamposComErro} campo(s) com valor maior que a frequência. Necessário corrigir.`
@@ -1311,7 +1445,8 @@ export default () => {
       diasDaSemanaSelecionada,
       ehGrupoSolicitacoesDeAlimentacaoUrlParam,
       ehGrupoETECUrlParam,
-      grupoLocation
+      grupoLocation,
+      tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows
     );
     if (payload.valores_medicao.length === 0)
       return (
@@ -1427,6 +1562,7 @@ export default () => {
   };
 
   const validacaoSemana = dia => {
+    // valida se é mês anterior ou mês posterior e desabilita
     return (
       (Number(semanaSelecionada) === 1 && Number(dia) > 20) ||
       ([4, 5, 6].includes(Number(semanaSelecionada)) && Number(dia) < 10)
@@ -1690,7 +1826,9 @@ export default () => {
       dia,
       categoria,
       value,
-      allValues
+      allValues,
+      location,
+      valoresPeriodosLancamentos[0].medicao_uuid
     );
   };
 
@@ -1723,8 +1861,11 @@ export default () => {
       return tabelaSolicitacoesAlimentacaoRows;
     } else if (ehGrupoETECUrlParam) {
       return tabelaEtecsAlimentacaoRows;
-    } else if (grupoLocation === "Programas e Projetos") {
-      return tabelaAlimentacaoProgramasProjetosRows;
+    } else if (
+      grupoLocation === "Programas e Projetos" ||
+      ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+    ) {
+      return tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows;
     } else {
       return tabelaAlimentacaoRows;
     }
@@ -2083,7 +2224,9 @@ export default () => {
                                                         inclusoesEtecAutorizadas,
                                                         grupoLocation,
                                                         valoresPeriodosLancamentos,
-                                                        feriadosNoMes
+                                                        feriadosNoMes,
+                                                        inclusoesAutorizadas,
+                                                        categoriasDeMedicao
                                                       )}
                                                       dia={column.dia}
                                                       defaultValue={defaultValue(
@@ -2288,7 +2431,9 @@ export default () => {
                                                           inclusoesEtecAutorizadas,
                                                           grupoLocation,
                                                           valoresPeriodosLancamentos,
-                                                          feriadosNoMes
+                                                          feriadosNoMes,
+                                                          inclusoesAutorizadas,
+                                                          categoriasDeMedicao
                                                         )}
                                                         exibeTooltipDiaSobremesaDoce={
                                                           row.name ===
