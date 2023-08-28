@@ -48,7 +48,7 @@
     "moment": "^2.29.4",
     "multiselect-react-dropdown": "^2.0.25",
     "node-sass": "^8.0.0",
-    "patch-package": "^6.5.1",
+    "patch-package": "^7.0.1",
     "prettier": "^1.16.4",
     "ramda": "^0.27.0",
     "react": "^18.2.0",
