@@ -1295,7 +1295,11 @@ export default () => {
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
       if (
         !ehGrupoETECUrlParam &&
-        !(key.includes("observacoes") || key.includes("frequencia")) &&
+        !(
+          key.includes("observacoes") ||
+          key.includes("frequencia") ||
+          key.includes("repeticao")
+        ) &&
         Number(value) >
           Number(
             valuesMesmoDiaDaObservacao[
