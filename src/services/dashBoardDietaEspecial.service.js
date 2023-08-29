@@ -323,7 +323,7 @@ export const getPaginacaoSolicitacoesDietaEspecial = (
   uuidInstituicao,
   offSet
 ) => {
-  const url = `${API_URL}/${urlPaginacao}/${uuidInstituicao}/?limit=100${
+  const url = `${API_URL}/${urlPaginacao}/${uuidInstituicao}/?limit=10${
     offSet > 0 ? `&offset=${offSet}` : "/"
   }`;
 
@@ -344,7 +344,7 @@ export const getPaginacaoSolicitacoesDietaEspecialCODAE = (
   urlPaginacao,
   offSet
 ) => {
-  const url = `${API_URL}/${urlPaginacao}/?limit=100${
+  const url = `${API_URL}/${urlPaginacao}/?limit=10${
     offSet > 0 ? `&offset=${offSet}` : ""
   }`;
 
