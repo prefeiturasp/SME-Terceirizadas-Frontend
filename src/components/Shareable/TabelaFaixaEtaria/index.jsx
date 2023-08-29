@@ -32,11 +32,6 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
         ) => {
           return (
             <article key={indice} className="tabela-rows">
-              {console.log("faixa_etaria 222", faixa_etaria)}
-              {console.log(
-                "faixaToString(faixa_etaria) 333",
-                faixaToString(faixa_etaria)
-              )}
               <div className="faixa-etaria">{faixaToString(faixa_etaria)}</div>
               <div className="alunos-matriculados">
                 {matriculados_quando_criado}
