@@ -340,6 +340,7 @@ export default () => {
       const mes = format(mesAnoSelecionado, "MM");
       const ano = getYear(mesAnoSelecionado);
 
+      let response_inclusoes_autorizadas = [];
       response_inclusoes_autorizadas =
         await getSolicitacoesInclusaoAutorizadasAsync(
           escola.uuid,
@@ -749,7 +750,6 @@ export default () => {
       setValoresPeriodosLancamentos(response_valores_periodos.data);
 
       let response_matriculados = [];
-      let response_inclusoes_autorizadas = [];
       let response_inclusoes_etec_autorizadas = [];
       let response_kit_lanches_autorizadas = [];
       let response_suspensoes_autorizadas = [];
@@ -1295,7 +1295,11 @@ export default () => {
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
       if (
         !ehGrupoETECUrlParam &&
-        !(key.includes("observacoes") || key.includes("frequencia")) &&
+        !(
+          key.includes("observacoes") ||
+          key.includes("frequencia") ||
+          key.includes("repeticao")
+        ) &&
         Number(value) >
           Number(
             valuesMesmoDiaDaObservacao[
@@ -1624,9 +1628,7 @@ export default () => {
         form,
         tabelaAlimentacaoRows,
         tabelaDietaRows,
-        tabelaDietaEnteralRows,
-        dadosValoresInclusoesAutorizadasState,
-        validacaoDiaLetivo
+        tabelaDietaEnteralRows
       );
     if (deepEqual(values, dadosIniciais)) {
       setDisableBotaoSalvarLancamentos(true);
