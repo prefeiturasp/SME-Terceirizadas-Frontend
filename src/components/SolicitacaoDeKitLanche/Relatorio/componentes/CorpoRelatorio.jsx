@@ -227,7 +227,9 @@ export const CorpoRelatorio = (props) => {
           <Fragment>
             <div className="row report-label-value">
               <div className="col-12 report-label-value">
-                <p>Alunos com dieta especial</p>
+                <p>
+                  <b>Alunos com dieta especial</b>
+                </p>
               </div>
             </div>
             <section className="table-report-dieta-especial">

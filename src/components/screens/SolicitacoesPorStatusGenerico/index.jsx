@@ -137,6 +137,7 @@ function SolicitacoesPorStatusGenerico(props) {
     };
     setPropsAlimentacaoRedux(propsAlimentacao);
     const values = {
+      limit: 10,
       titulo: propsAlimentacao.tituloAlimentacao || "",
       lote: propsAlimentacao.loteAlimentacao || "",
       status: propsAlimentacao.statusAlimentacao || "",
@@ -185,7 +186,7 @@ function SolicitacoesPorStatusGenerico(props) {
                           name="periodo"
                           naoDesabilitarPrimeiraOpcao
                           placeholder="Período"
-                          initialValue={PERIODOS_OPTIONS[0]}
+                          initialValue={PERIODOS_OPTIONS[0].uuid}
                           options={PERIODOS_OPTIONS}
                         />
                       </div>
