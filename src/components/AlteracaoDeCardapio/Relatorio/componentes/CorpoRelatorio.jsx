@@ -236,7 +236,6 @@ export const CorpoRelatorio = (props) => {
                 {ehInclusaoCei(tipoSolicitacao) && (
                   <tr>
                     <td className="faixas-etarias" colSpan="3">
-                      {console.log("faixas_etarias", faixas_etarias)}
                       <TabelaFaixaEtaria faixas={faixas_etarias} />
                     </td>
                   </tr>
