@@ -6,7 +6,7 @@ import {
   getError,
   usuarioEhDRE,
   usuarioEhEmpresaTerceirizada,
-  usuarioEhQualquerCODAE
+  usuarioEhQualquerCODAE,
 } from "helpers/utilities";
 import { Spin } from "antd";
 import CardListarSolicitacoes from "components/Shareable/CardListarSolicitacoes";
@@ -34,7 +34,7 @@ function SolicitacoesPorStatusGenerico(props) {
     tipoPaginacao,
     limit,
     lotes,
-    listaStatus
+    listaStatus,
   } = props;
 
   const [solicitacoes, setSolicitacoes] = useState(null);
@@ -133,7 +133,7 @@ function SolicitacoesPorStatusGenerico(props) {
       statusAlimentacao: props.statusAlimentacao,
       tipoSolicitacaoAlimentacao: props.tipoSolicitacaoAlimentacao,
       dataEventoAlimentacao: props.dataEventoAlimentacao,
-      dreAlimentacao: props.dreAlimentacao
+      dreAlimentacao: props.dreAlimentacao,
     };
     setPropsAlimentacaoRedux(propsAlimentacao);
     const values = {
@@ -143,7 +143,7 @@ function SolicitacoesPorStatusGenerico(props) {
       tipo_solicitacao: propsAlimentacao.tipoSolicitacaoAlimentacao || "",
       data_evento: propsAlimentacao.dataEventoAlimentacao || "",
       diretoria_regional: propsAlimentacao.dreAlimentacao || "",
-      periodo: PERIODOS_OPTIONS[0].uuid
+      periodo: PERIODOS_OPTIONS[0].uuid,
     };
     props.resetCamposAlimentacao();
     getSolicitacoesAsync(values);
@@ -190,7 +190,7 @@ function SolicitacoesPorStatusGenerico(props) {
                         />
                       </div>
                       <OnChange name="periodo">
-                        {value => {
+                        {(value) => {
                           getSolicitacoesAsync({
                             lote: values.lote,
                             status: values.status,
@@ -202,7 +202,7 @@ function SolicitacoesPorStatusGenerico(props) {
                             data_evento: values.data_evento,
                             periodo: value,
                             diretoria_regional: values.diretoria_regional,
-                            ...PARAMS
+                            ...PARAMS,
                           });
                           setCurrentPage(1);
                         }}
@@ -219,7 +219,7 @@ function SolicitacoesPorStatusGenerico(props) {
                           * mínimo de 3 caracteres
                         </div>
                         <OnChange name="titulo">
-                          {value => {
+                          {(value) => {
                             clearTimeout(typingTimeout);
                             typingTimeout = setTimeout(async () => {
                               getSolicitacoesAsync({
@@ -230,7 +230,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                 tipo_solicitacao: values.tipo_solicitacao,
                                 data_evento: values.data_evento,
                                 diretoria_regional: values.diretoria_regional,
-                                ...PARAMS
+                                ...PARAMS,
                               });
                               setCurrentPage(1);
                             }, 1000);
@@ -250,7 +250,7 @@ function SolicitacoesPorStatusGenerico(props) {
                             }
                           />
                           <OnChange name="status">
-                            {value => {
+                            {(value) => {
                               getSolicitacoesAsync({
                                 status: value,
                                 lote: values.lote,
@@ -262,7 +262,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                 tipo_solicitacao: values.tipo_solicitacao,
                                 data_evento: values.data_evento,
                                 diretoria_regional: values.diretoria_regional,
-                                ...PARAMS
+                                ...PARAMS,
                               });
                               setCurrentPage(1);
                             }}
@@ -282,7 +282,7 @@ function SolicitacoesPorStatusGenerico(props) {
                           options={TIPOS_SOLICITACOES_OPTIONS}
                         />
                         <OnChange name="tipo_solicitacao">
-                          {value => {
+                          {(value) => {
                             getSolicitacoesAsync({
                               lote: values.lote,
                               status: values.status,
@@ -294,7 +294,7 @@ function SolicitacoesPorStatusGenerico(props) {
                               periodo: values.periodo,
                               data_evento: values.data_evento,
                               diretoria_regional: values.diretoria_regional,
-                              ...PARAMS
+                              ...PARAMS,
                             });
                             setCurrentPage(1);
                           }}
@@ -312,7 +312,7 @@ function SolicitacoesPorStatusGenerico(props) {
                           placeholder="Data do evento"
                         />
                         <OnChange name="data_evento">
-                          {value => {
+                          {(value) => {
                             getSolicitacoesAsync({
                               lote: values.lote,
                               status: values.status,
@@ -324,7 +324,7 @@ function SolicitacoesPorStatusGenerico(props) {
                               data_evento: value,
                               periodo: values.periodo,
                               diretoria_regional: values.diretoria_regional,
-                              ...PARAMS
+                              ...PARAMS,
                             });
                             setCurrentPage(1);
                           }}
@@ -341,7 +341,7 @@ function SolicitacoesPorStatusGenerico(props) {
                             naoDesabilitarPrimeiraOpcao
                           />
                           <OnChange name="diretoria_regional">
-                            {value => {
+                            {(value) => {
                               getSolicitacoesAsync({
                                 lote: values.lote,
                                 status: values.status,
@@ -353,7 +353,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                 data_evento: values.data_evento,
                                 periodo: values.periodo,
                                 diretoria_regional: value,
-                                ...PARAMS
+                                ...PARAMS,
                               });
                               setCurrentPage(1);
                             }}
@@ -378,7 +378,7 @@ function SolicitacoesPorStatusGenerico(props) {
                               naoDesabilitarPrimeiraOpcao
                             />
                             <OnChange name="lote">
-                              {value => {
+                              {(value) => {
                                 getSolicitacoesAsync({
                                   lote: value,
                                   status: values.status,
@@ -390,7 +390,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                   data_evento: values.data_evento,
                                   periodo: values.periodo,
                                   diretoria_regional: values.diretoria_regional,
-                                  ...PARAMS
+                                  ...PARAMS,
                                 });
                                 setCurrentPage(1);
                               }}
@@ -405,7 +405,7 @@ function SolicitacoesPorStatusGenerico(props) {
                       icone={icone}
                     />
                     <Paginacao
-                      onChange={page => onPageChanged(page, values)}
+                      onChange={(page) => onPageChanged(page, values)}
                       total={count}
                       pageSize={PAGE_SIZE}
                       current={currentPage}
@@ -422,7 +422,7 @@ function SolicitacoesPorStatusGenerico(props) {
   );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const statusAlimentacao = state.filtersAlimentacao.statusAlimentacao;
   const loteAlimentacao = state.filtersAlimentacao.loteAlimentacao;
   const tituloAlimentacao = state.filtersAlimentacao.tituloAlimentacao;
@@ -436,14 +436,14 @@ const mapStateToProps = state => {
     tituloAlimentacao: tituloAlimentacao,
     tipoSolicitacaoAlimentacao: tipoSolicitacaoAlimentacao,
     dataEventoAlimentacao: dataEventoAlimentacao,
-    dreAlimentacao: dreAlimentacao
+    dreAlimentacao: dreAlimentacao,
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   resetCamposAlimentacao: () => {
     dispatch(resetCamposAlimentacao());
-  }
+  },
 });
 
 export default connect(

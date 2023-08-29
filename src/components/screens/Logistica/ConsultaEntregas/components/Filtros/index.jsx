@@ -7,7 +7,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import MultiSelectDistribuidores from "components/Shareable/MultiSelectDistribuidores";
@@ -20,11 +20,11 @@ export default ({
   setTotal,
   dilog,
   dre,
-  inicioResultado
+  inicioResultado,
 }) => {
   const [initialValues] = useState({});
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };

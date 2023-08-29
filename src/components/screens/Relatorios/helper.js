@@ -1,4 +1,4 @@
-export const mesInteiro = mes => {
+export const mesInteiro = (mes) => {
   const mesInteiro = {
     Jan: "Janeiro",
     Fev: "Fevereiro",
@@ -11,7 +11,7 @@ export const mesInteiro = mes => {
     Set: "Setembro",
     Out: "Outubro",
     Nov: "Novembro",
-    Dez: "Dezembro"
+    Dez: "Dezembro",
   };
   return mesInteiro[mes];
 };

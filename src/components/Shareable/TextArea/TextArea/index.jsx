@@ -4,7 +4,7 @@ import InputErroMensagem from "../../Input/InputErroMensagem";
 import { ContadorCaracteres } from "../../ContadorCaracteres";
 import "../style.scss";
 
-export const TextArea = props => {
+export const TextArea = (props) => {
   const {
     className,
     disabled,
@@ -16,7 +16,7 @@ export const TextArea = props => {
     placeholder,
     required,
     maxLength,
-    contador
+    contador,
   } = props;
   return (
     <div className="textarea">
@@ -28,13 +28,13 @@ export const TextArea = props => {
         ),
         <label key={2} htmlFor={name} className="col-form-label">
           {label}
-        </label>
+        </label>,
       ]}
       <textarea
         {...input}
-        className={`form-control ${className} ${meta.touched &&
-          meta.error &&
-          "invalid-field"}`}
+        className={`form-control ${className} ${
+          meta.touched && meta.error && "invalid-field"
+        }`}
         disabled={disabled}
         name={name}
         placeholder={placeholder}
@@ -60,7 +60,7 @@ TextArea.propTypes = {
   name: PropTypes.string,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
-  contador: PropTypes.number
+  contador: PropTypes.number,
 };
 
 TextArea.defaultProps = {
@@ -72,5 +72,5 @@ TextArea.defaultProps = {
   meta: {},
   name: "",
   placeholder: "",
-  required: false
+  required: false,
 };

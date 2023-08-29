@@ -2,7 +2,7 @@ import React from "react";
 
 export const FotosProduto = ({ homologacao }) => {
   const imagemRegex = new RegExp("(jpe|jpg|jpeg|png)$", "i");
-  const imagens = homologacao.produto.imagens.filter(imagem =>
+  const imagens = homologacao.produto.imagens.filter((imagem) =>
     imagemRegex.test(imagem.arquivo)
   );
   return (

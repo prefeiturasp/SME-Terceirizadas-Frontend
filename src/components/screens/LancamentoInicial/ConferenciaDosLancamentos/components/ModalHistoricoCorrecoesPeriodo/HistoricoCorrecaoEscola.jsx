@@ -3,7 +3,7 @@ import { formataMesNome } from "helpers/utilities";
 import "./style.scss";
 
 export const HistoricoCorrecaoEscola = ({ ...props }) => {
-  const { solicitacao, historico, retornaIniciais } = props;
+  const { solicitacao, historico, retornaIniciais, formatarTitulo } = props;
 
   return (
     <Fragment>
@@ -26,6 +26,11 @@ export const HistoricoCorrecaoEscola = ({ ...props }) => {
       <div className="row mb-3">
         <div className="col-12 mb-3">
           <label className="cor-texo-detalhes">
+            <b>Status</b>: {formatarTitulo(historico.acao)}
+          </label>
+        </div>
+        <div className="col-12 mb-3">
+          <label className="cor-texo-detalhes">
             <b>Mês de Lançamento</b>: {formataMesNome(solicitacao.mes)}/
             {solicitacao.ano}
           </label>
@@ -36,18 +41,16 @@ export const HistoricoCorrecaoEscola = ({ ...props }) => {
           </label>
         </div>
         {historico &&
-          historico.alteracoes.map(alteracao => {
+          historico.alteracoes.map((alteracao) => {
             return alteracao.tabelas_lancamentos.map(
               (categoria, categoriaIdx) => {
                 return (
                   <div className="col-12 mb-3" key={categoriaIdx}>
                     <label className="cor-texo-detalhes mb-3">
-                      <b>{`Período ${alteracao.periodo_escolar} - Tabela de ${
-                        categoria.categoria_medicao
-                      }`}</b>
+                      <b>{`Período ${alteracao.periodo_escolar} - Tabela de ${categoria.categoria_medicao}`}</b>
                     </label>
                     <ul>
-                      {categoria.semanas.map(semana => {
+                      {categoria.semanas.map((semana) => {
                         return semana.dias.map((dia, diaIdx) => {
                           return (
                             <Fragment key={diaIdx}>

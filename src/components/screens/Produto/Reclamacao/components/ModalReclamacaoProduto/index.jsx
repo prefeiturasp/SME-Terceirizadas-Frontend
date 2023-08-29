@@ -7,7 +7,7 @@ import {
   composeValidators,
   peloMenosUmCaractere,
   required,
-  requiredOptionSearchSelect
+  requiredOptionSearchSelect,
 } from "helpers/fieldValidators";
 import CKEditorField from "components/Shareable/CKEditorField";
 import InputText from "components/Shareable/Input/InputText";
@@ -21,7 +21,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 
 import { escolaOuNutriReclamaDoProduto } from "services/produto.service";
@@ -35,7 +35,7 @@ import {
   usuarioEhCODAEDietaEspecial,
   deepCopy,
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada
+  usuarioEhEscolaTerceirizada,
 } from "helpers/utilities";
 import { TIPO_PERFIL } from "constants/shared";
 export default class ModalReclamacaoProduto extends Component {
@@ -44,7 +44,7 @@ export default class ModalReclamacaoProduto extends Component {
     this.state = {
       meusDados: undefined,
       escolas: [],
-      nomesEscolas: []
+      nomesEscolas: [],
     };
   }
 
@@ -53,15 +53,15 @@ export default class ModalReclamacaoProduto extends Component {
     const escolasResposta = await getEscolasTrecTotal();
     this.setState({
       meusDados: meusDadosResposta,
-      escolas: escolasResposta.data.map(escola => {
+      escolas: escolasResposta.data.map((escola) => {
         return {
           uuid: escola.uuid,
-          label: `${escola.codigo_eol} - ${escola.nome}`
+          label: `${escola.codigo_eol} - ${escola.nome}`,
         };
       }),
       nomesEscolas: escolasResposta.data.map(
-        escola => `${escola.codigo_eol} - ${escola.nome}`
-      )
+        (escola) => `${escola.codigo_eol} - ${escola.nome}`
+      ),
     });
     if (escolasResposta) {
       this.props.setEscolasRequisicaoConcluida(true);
@@ -76,7 +76,7 @@ export default class ModalReclamacaoProduto extends Component {
           ? meusDados.registro_funcional
           : undefined,
         reclamante_nome: meusDados.nome,
-        reclamante_cargo: meusDados.cargo ? meusDados.cargo : undefined
+        reclamante_cargo: meusDados.cargo ? meusDados.cargo : undefined,
       };
       if (
         usuarioEhEscolaTerceirizadaDiretor() ||
@@ -89,21 +89,21 @@ export default class ModalReclamacaoProduto extends Component {
     return {};
   };
 
-  getNomesItemsFiltrado = value => {
+  getNomesItemsFiltrado = (value) => {
     const { nomesEscolas } = this.state;
     if (value) {
-      return nomesEscolas.filter(a => a.includes(value.toUpperCase()));
+      return nomesEscolas.filter((a) => a.includes(value.toUpperCase()));
     }
     return [];
   };
 
-  onSubmit = async values => {
+  onSubmit = async (values) => {
     const values_ = deepCopy(values);
     const { escolas } = this.state;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     if (tipoPerfil === TIPO_PERFIL.SUPERVISAO_NUTRICAO) {
       values_.escola = escolas.find(
-        escola => escola.label === values_.escola
+        (escola) => escola.label === values_.escola
       ).uuid;
     }
     const response = await escolaOuNutriReclamaDoProduto(
@@ -254,7 +254,7 @@ export default class ModalReclamacaoProduto extends Component {
                       maxDate={moment().toDate()}
                     />
                     <OnChange name="produto_data_fabricacao">
-                      {value => {
+                      {(value) => {
                         form.change("produto_data_validade", undefined);
                         this.setState({ ...this.state, fabricacao: value });
                       }}

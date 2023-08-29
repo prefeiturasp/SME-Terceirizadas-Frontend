@@ -8,14 +8,14 @@ export class DadosProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      informacoesNutricionais: null
+      informacoesNutricionais: null,
     };
   }
 
   componentDidMount() {
     const { produto } = this.props;
     this.setState({
-      informacoesNutricionais: formataInformacoesNutricionais(produto)
+      informacoesNutricionais: formataInformacoesNutricionais(produto),
     });
   }
 
@@ -150,9 +150,7 @@ export class DadosProduto extends Component {
                                   <div className="row">
                                     <div className="col-8">
                                       {informacaoNutricional.valor_diario
-                                        ? `${
-                                            informacaoNutricional.valor_diario
-                                          } %`
+                                        ? `${informacaoNutricional.valor_diario} %`
                                         : ""}
                                     </div>
                                   </div>

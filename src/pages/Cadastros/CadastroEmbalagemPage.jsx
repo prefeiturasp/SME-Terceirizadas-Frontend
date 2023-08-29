@@ -6,23 +6,23 @@ import {
   CADASTROS,
   CONFIGURACOES,
   CADASTRO_EMBALAGEM,
-  EMBALAGENS_CADASTRADAS
+  EMBALAGENS_CADASTRADAS,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_EMBALAGEM}`,
-  titulo: "Cadastro de Embalagem"
+  titulo: "Cadastro de Embalagem",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
+    titulo: "Cadastros",
   },
   {
     href: `/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`,
-    titulo: "Embalagens"
-  }
+    titulo: "Embalagens",
+  },
 ];
 
 export default () => (

@@ -7,14 +7,14 @@ import { INVERSAO_CARDAPIO, CODAE } from "../../../configs/constants";
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 
 const anteriores = [
   {
     href: `/${CODAE}/${INVERSAO_CARDAPIO}`,
-    titulo: "Inversões de dia de Cardápio"
-  }
+    titulo: "Inversões de dia de Cardápio",
+  },
 ];
 
 export default () => (

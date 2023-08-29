@@ -7,12 +7,12 @@ import { CADASTROS, CONFIGURACOES, EDICAO_PRODUTOS } from "configs/constants";
 const Tabela = ({ produtos }) => {
   const history = useHistory();
 
-  const editarProduto = produto =>
+  const editarProduto = (produto) =>
     history.push({
       pathname: `/${CONFIGURACOES}/${CADASTROS}/${EDICAO_PRODUTOS}`,
       state: {
-        produto: produto
-      }
+        produto: produto,
+      },
     });
 
   return (
@@ -25,7 +25,7 @@ const Tabela = ({ produtos }) => {
           <div>Data do Cadastro</div>
           <div>Ações</div>
         </div>
-        {produtos.map(produto => {
+        {produtos.map((produto) => {
           return (
             <>
               <div key={produto.uuid} className="grid-table body-table">

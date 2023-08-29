@@ -4,7 +4,7 @@ import "./style.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
 import ModalReclamacaoProduto from "../ModalReclamacaoProduto";
@@ -16,7 +16,7 @@ export default class TabelaProdutos extends Component {
     super(props);
     this.state = {
       mostraModalReclamacao: false,
-      escolasRequisicaoConcluida: false
+      escolasRequisicaoConcluida: false,
     };
   }
 
@@ -28,7 +28,7 @@ export default class TabelaProdutos extends Component {
     this.setState({ mostraModalReclamacao: false });
   };
 
-  setEscolasRequisicaoConcluida = concluido => {
+  setEscolasRequisicaoConcluida = (concluido) => {
     this.setState({ escolasRequisicaoConcluida: concluido });
   };
 
@@ -37,7 +37,7 @@ export default class TabelaProdutos extends Component {
       listaProdutos,
       onAtualizarProduto,
       indiceProdutoAtivo,
-      setIndiceProdutoAtivo
+      setIndiceProdutoAtivo,
     } = this.props;
     const { mostraModalReclamacao, escolasRequisicaoConcluida } = this.state;
     return (
@@ -82,15 +82,13 @@ export default class TabelaProdutos extends Component {
                         produto.ultima_homologacao.reclamacoes.length - 1;
                       return [
                         <Reclamacao key={indice} reclamacao={reclamacao} />,
-                        deveMostrarBarraHorizontal && <hr />
+                        deveMostrarBarraHorizontal && <hr />,
                       ];
                     }
                   )}
                   <div className="botao-reclamacao mt-4">
                     <Link
-                      to={`/gestao-produto/relatorio?uuid=${
-                        produto.ultima_homologacao.uuid
-                      }`}
+                      to={`/gestao-produto/relatorio?uuid=${produto.ultima_homologacao.uuid}`}
                     >
                       <Botao
                         texto="Ver produto"

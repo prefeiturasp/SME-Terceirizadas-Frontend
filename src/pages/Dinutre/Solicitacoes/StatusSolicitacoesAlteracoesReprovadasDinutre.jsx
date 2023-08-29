@@ -5,18 +5,18 @@ import {
   ALTERACOES_REPROVADAS,
   DINUTRE,
   PAINEL_APROVACOES,
-  PRE_RECEBIMENTO
+  PRE_RECEBIMENTO,
 } from "configs/constants";
 import {
   getDashboardSolicitacoesAlteracao,
-  getDashboardSolicitacoesAlteracaoComFiltros
+  getDashboardSolicitacoesAlteracaoComFiltros,
 } from "services/cronograma.service";
 import { SolicitacoesCronogramaStatusGenerico } from "components/screens/SolicitacoesCronogramaStatusGenerico";
 import { CARD_SOLICITACOES_REPROVADAS_DINUTRE } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
 
 const atual = {
   href: `/${DINUTRE}/${ALTERACOES_REPROVADAS}`,
-  titulo: "Alterações Aprovadas"
+  titulo: "Alterações Aprovadas",
 };
 
 const limit = 10;
@@ -27,12 +27,12 @@ export default () => {
   const anteriores = [
     {
       href: `#`,
-      titulo: "Pré-Recebimento"
+      titulo: "Pré-Recebimento",
     },
     {
       href: `/pre-recebimento/painel-aprovacoes`,
-      titulo: "Painel de Aprovações"
-    }
+      titulo: "Painel de Aprovações",
+    },
   ];
 
   return (

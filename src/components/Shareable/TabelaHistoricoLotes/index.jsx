@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./style.scss";
 
-export const TabelaHistoricoLotes = props => {
+export const TabelaHistoricoLotes = (props) => {
   return (
     <div className="table-lote">
       <p className="pt-3">Lotes pertencentes à {props.tipoPerfil || "DRE"}</p>
@@ -21,8 +21,8 @@ export const TabelaHistoricoLotes = props => {
                       pathname: `/configuracoes/cadastros/lote`,
                       state: {
                         prevPath: window.location.pathname,
-                        uuid: lote.uuid
-                      }
+                        uuid: lote.uuid,
+                      },
                     }}
                   >
                     {lote.nome}

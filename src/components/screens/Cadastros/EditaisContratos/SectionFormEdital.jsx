@@ -4,7 +4,7 @@ import { Field } from "redux-form";
 import { required } from "../../../../helpers/fieldValidators";
 import { InputText } from "../../../Shareable/Input/InputText";
 
-export const SectionFormEdital = props => {
+export const SectionFormEdital = (props) => {
   const { adicionaFieldsFormEdital } = props;
   return (
     <div className="card-body dados-editais">
@@ -16,7 +16,7 @@ export const SectionFormEdital = props => {
             name="tipo_contratacao"
             required
             validate={required}
-            onChange={event =>
+            onChange={(event) =>
               adicionaFieldsFormEdital(`tipo_contratacao`, event.target.value)
             }
             max={50}
@@ -30,7 +30,7 @@ export const SectionFormEdital = props => {
             name="edital_numero"
             required
             validate={required}
-            onChange={event =>
+            onChange={(event) =>
               adicionaFieldsFormEdital(`numero`, event.target.value)
             }
             max={50}
@@ -45,7 +45,7 @@ export const SectionFormEdital = props => {
             name="processo_administrativo"
             required
             validate={required}
-            onChange={event =>
+            onChange={(event) =>
               adicionaFieldsFormEdital(`numero_processo`, event.target.value)
             }
             max={50}
@@ -60,7 +60,7 @@ export const SectionFormEdital = props => {
             name="resumo_objeto"
             required
             validate={required}
-            onChange={event =>
+            onChange={(event) =>
               adicionaFieldsFormEdital(`resumo`, event.target.value)
             }
           />

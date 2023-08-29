@@ -5,22 +5,22 @@ import Page from "../../components/Shareable/Page/Page";
 import {
   CADASTROS,
   CONFIGURACOES,
-  LABORATORIOS_CADASTRADOS
+  LABORATORIOS_CADASTRADOS,
 } from "../../configs/constants";
 
 const atual = {
-  titulo: "Editar Cadastro de Laboratório"
+  titulo: "Editar Cadastro de Laboratório",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
+    titulo: "Cadastros",
   },
   {
     href: `/${CONFIGURACOES}/${CADASTROS}/${LABORATORIOS_CADASTRADOS}`,
-    titulo: "Laboratórios Cadastrados"
-  }
+    titulo: "Laboratórios Cadastrados",
+  },
 ];
 
 export default () => (

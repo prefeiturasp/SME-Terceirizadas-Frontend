@@ -4,7 +4,7 @@ import Botao from "components/Shareable/Botao";
 import { Button } from "react-bootstrap";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { distribuidorConfirma } from "services/logistica.service";
 import { Spin } from "antd";
@@ -20,7 +20,7 @@ export default ({ solicitacao, updatePage }) => {
   const handleSim = () => {
     setLoading(true);
     distribuidorConfirma(solicitacao.uuid)
-      .then(response => {
+      .then((response) => {
         if (response.status === 200) {
           updatePage();
           setShow(false);

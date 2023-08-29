@@ -1,11 +1,12 @@
 import { deParaStatusAltCronograma } from "components/screens/helper";
 import { usuarioEhEmpresaFornecedor, formataMilhar } from "helpers/utilities";
 import React from "react";
+import "./styles.scss";
 
 export default ({
   cronograma,
   esconderInformacoesAdicionais,
-  solicitacaoAlteracaoCronograma
+  solicitacaoAlteracaoCronograma,
 }) => {
   return (
     <>
@@ -125,39 +126,35 @@ export default ({
               </p>
             </div>
           </div>
-          {!solicitacaoAlteracaoCronograma && (
-            <table className="table mt-4 mb-3">
-              <thead className="head-crono">
-                <th className="borda-crono">N° do Empenho</th>
-                <th className="borda-crono">Etapa</th>
-                <th className="borda-crono">Parte</th>
-                <th className="borda-crono">Data Programada</th>
-                <th className="borda-crono">Quantidade</th>
-                <th className="borda-crono">Total de Embalagens</th>
-              </thead>
-              <tbody>
-                {cronograma.etapas.length > 0 &&
-                  cronograma.etapas.map((etapa, key) => {
-                    return (
-                      <tr key={key}>
-                        <td className="borda-crono">{etapa.numero_empenho}</td>
-                        <td className="borda-crono">{etapa.etapa}</td>
-                        <td className="borda-crono">{etapa.parte}</td>
-                        <td className="borda-crono">
-                          {etapa.data_programada_atual}
-                        </td>
-                        <td className="borda-crono">
-                          {etapa.quantidade_atual}
-                        </td>
-                        <td className="borda-crono">
-                          {etapa.total_embalagens}
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          )}
+
+          <hr />
+
+          <div className="head-green mt-4">Cronograma Programado</div>
+          <table className="table mt-3 mb-4 tabela-dados-cronograma">
+            <thead className="head-crono">
+              <th className="borda-crono">N° do Empenho</th>
+              <th className="borda-crono">Etapa</th>
+              <th className="borda-crono">Parte</th>
+              <th className="borda-crono">Data Programada</th>
+              <th className="borda-crono">Quantidade</th>
+              <th className="borda-crono">Total de Embalagens</th>
+            </thead>
+            <tbody>
+              {cronograma.etapas.length > 0 &&
+                cronograma.etapas.map((etapa, key) => {
+                  return (
+                    <tr key={key}>
+                      <td className="borda-crono">{etapa.numero_empenho}</td>
+                      <td className="borda-crono">{etapa.etapa}</td>
+                      <td className="borda-crono">{etapa.parte}</td>
+                      <td className="borda-crono">{etapa.data_programada}</td>
+                      <td className="borda-crono">{etapa.quantidade}</td>
+                      <td className="borda-crono">{etapa.total_embalagens}</td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
         </>
       ) : (
         <>

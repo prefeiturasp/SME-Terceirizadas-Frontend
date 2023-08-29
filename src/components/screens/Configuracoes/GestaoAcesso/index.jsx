@@ -5,7 +5,7 @@ import {
   alterarVinculo,
   cadastrarVinculo,
   finalizarVinculo,
-  getVinculosAtivos
+  getVinculosAtivos,
 } from "services/vinculos.service";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import ListagemVinculos from "./components/ListagemVinculos";
@@ -13,7 +13,7 @@ import Filtros from "./components/Filtros";
 import {
   getPerfilListagem,
   getPerfisSubordinados,
-  getVisoesListagem
+  getVisoesListagem,
 } from "services/perfil.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalCadastroVinculo from "./components/ModalCadastroVinculo";
@@ -44,15 +44,15 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     const visoes = await getVisoesListagem();
     const lista_perfis = perfis.data.results;
 
-    let options_perfis = lista_perfis.map(perfil => ({
+    let options_perfis = lista_perfis.map((perfil) => ({
       uuid: perfil.nome,
       nome: perfil.nome,
-      visao: perfil.visao
+      visao: perfil.visao,
     }));
 
-    let options_visoes = visoes.data.map(visao => ({
+    let options_visoes = visoes.data.map((visao) => ({
       uuid: visao.id,
-      nome: visao.nome
+      nome: visao.nome,
     }));
 
     if (diretor_escola) {
@@ -67,9 +67,9 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
       const perfis_subordinados = await getPerfisSubordinados();
       const visao = localStorage.getItem("visao_perfil").replace(/['"]+/g, "");
       setPerfis(
-        perfis_subordinados.data.map(perfil => ({
+        perfis_subordinados.data.map((perfil) => ({
           uuid: perfil,
-          nome: perfil
+          nome: perfil,
         }))
       );
       setVisaoUnica(visao);
@@ -86,17 +86,17 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
 
   const setPerfisVisao = (lista_perfis, visao) => {
     const perfis = lista_perfis
-      .filter(perfil => perfil.visao === visao)
-      .map(perfil => ({
+      .filter((perfil) => perfil.visao === visao)
+      .map((perfil) => ({
         uuid: perfil.nome,
-        nome: perfil.nome
+        nome: perfil.nome,
       }));
     setVisaoUnica(visao);
     setPerfis(perfis);
     setFiltros({});
   };
 
-  const buscarVinculos = async page => {
+  const buscarVinculos = async (page) => {
     setCarregando(true);
     if (geral && !filtros.perfil) {
       filtros.perfil = perfisSubordinados;
@@ -118,7 +118,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarVinculos(page);
     setPage(page);
   };
@@ -179,10 +179,10 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     }
   };
 
-  const ehErroEmail = erro =>
+  const ehErroEmail = (erro) =>
     erro.includes("(email)") && erro.includes("already exists");
 
-  const editarAcesso = async values => {
+  const editarAcesso = async (values) => {
     let payload = {};
     payload.email = values.email;
     payload.username = values.cpf.replace(/[^\w\s]/gi, "");
@@ -208,7 +208,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     setShowExclusao(aberto);
   };
 
-  const deletarVinculo = async vinculo => {
+  const deletarVinculo = async (vinculo) => {
     let response = await finalizarVinculo(vinculo.username);
     if (response.status === 200) {
       toastSuccess("Acesso removido com sucesso!");

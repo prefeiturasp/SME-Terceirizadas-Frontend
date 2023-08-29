@@ -13,14 +13,14 @@ import Ocorrencias from "./components/Ocorrencias";
 
 import {
   DETALHAMENTO_DO_LANCAMENTO,
-  LANCAMENTO_MEDICAO_INICIAL
+  LANCAMENTO_MEDICAO_INICIAL,
 } from "configs/constants";
 import * as perfilService from "services/perfil.service";
 import { getEscolaSimples } from "services/escola.service";
 import { getPanoramaEscola } from "services/dietaEspecial.service";
 import {
   getSolicitacaoMedicaoInicial,
-  getSolicitacoesLancadas
+  getSolicitacoesLancadas,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { ehEscolaTipoCEI } from "../../../../helpers/utilities";
@@ -38,17 +38,14 @@ export default () => {
   const [escolaInstituicao, setEscolaInstituicao] = useState(null);
   const [loteEscolaSimples, setLoteEscolaSimples] = useState(null);
   const [periodosEscolaSimples, setPeriodosEscolaSimples] = useState(null);
-  const [solicitacaoMedicaoInicial, setSolicitacaoMedicaoInicial] = useState(
-    null
-  );
+  const [solicitacaoMedicaoInicial, setSolicitacaoMedicaoInicial] =
+    useState(null);
   const [periodoFromSearchParam, setPeriodoFromSearchParam] = useState(null);
-  const [
-    loadingSolicitacaoMedInicial,
-    setLoadingSolicitacaoMedicaoInicial
-  ] = useState(true);
+  const [loadingSolicitacaoMedInicial, setLoadingSolicitacaoMedicaoInicial] =
+    useState(true);
   const [objSolicitacaoMIFinalizada, setObjSolicitacaoMIFinalizada] = useState({
     anexo: null,
-    status: null
+    status: null,
   });
   const [open, setOpen] = useState(false);
 
@@ -80,7 +77,7 @@ export default () => {
 
       if (location.pathname.includes(LANCAMENTO_MEDICAO_INICIAL)) {
         const payload = {
-          escola: escola.uuid
+          escola: escola.uuid,
         };
 
         solicitacoesLancadas = await getSolicitacoesLancadas(payload);
@@ -91,7 +88,7 @@ export default () => {
         const mesString = format(dataBRT, "LLLL", { locale: ptBR }).toString();
         if (location.pathname.includes(LANCAMENTO_MEDICAO_INICIAL)) {
           const temSolicitacaoLancada = solicitacoesLancadas.data.filter(
-            solicitacao =>
+            (solicitacao) =>
               Number(solicitacao.mes) === getMonth(dataBRT) + 1 &&
               Number(solicitacao.ano) === getYear(dataBRT)
           ).length;
@@ -102,14 +99,14 @@ export default () => {
                 mesString.charAt(0).toUpperCase() +
                 mesString.slice(1) +
                 " / " +
-                getYear(dataBRT).toString()
+                getYear(dataBRT).toString(),
             });
             if (!location.search && periodos.length === 1) {
               history.replace({
                 pathname: location.pathname,
                 search: `?mes=${(getMonth(dataBRT) + 1)
                   .toString()
-                  .padStart(2, "0")}&ano=${getYear(dataBRT).toString()}`
+                  .padStart(2, "0")}&ano=${getYear(dataBRT).toString()}`,
               });
             }
           }
@@ -120,7 +117,7 @@ export default () => {
               mesString.charAt(0).toUpperCase() +
               mesString.slice(1) +
               " / " +
-              getYear(dataBRT).toString()
+              getYear(dataBRT).toString(),
           });
         }
       }
@@ -154,7 +151,7 @@ export default () => {
         }
         const dataFromSearch = new Date(ano, mes - 1, 1);
         const mesStringFromSearch = format(dataFromSearch, "LLLL", {
-          locale: ptBR
+          locale: ptBR,
         }).toString();
         const periodoFromSearch =
           mesStringFromSearch.charAt(0).toUpperCase() +
@@ -179,7 +176,7 @@ export default () => {
     const payload = {
       escola: escolaUuid,
       mes: format(new Date(periodo), "MM").toString(),
-      ano: getYear(new Date(periodo)).toString()
+      ano: getYear(new Date(periodo)).toString(),
     };
 
     const solicitacao = await getSolicitacaoMedicaoInicial(payload);
@@ -189,12 +186,12 @@ export default () => {
   const { Option } = Select;
 
   const opcoesPeriodos = objectoPeriodos
-    ? objectoPeriodos.map(periodo => {
+    ? objectoPeriodos.map((periodo) => {
         return <Option key={periodo.dataBRT}>{periodo.periodo}</Option>;
       })
     : [];
 
-  const handleChangeSelectPeriodo = async value => {
+  const handleChangeSelectPeriodo = async (value) => {
     setMes(null);
     setAno(null);
     setLoadingSolicitacaoMedicaoInicial(true);
@@ -207,7 +204,7 @@ export default () => {
       pathname: location.pathname,
       search: `?mes=${format(new Date(value), "MM").toString()}&ano=${getYear(
         new Date(value)
-      ).toString()}`
+      ).toString()}`,
     });
   };
 
@@ -220,7 +217,7 @@ export default () => {
     const payload = {
       escola: escolaInstituicao.uuid,
       mes: mes.toString(),
-      ano: ano.toString()
+      ano: ano.toString(),
     };
 
     const solicitacao = await getSolicitacaoMedicaoInicial(payload);
@@ -253,7 +250,7 @@ export default () => {
                   defaultValue={
                     periodoFromSearchParam || objectoPeriodos[0].periodo
                   }
-                  onChange={value => handleChangeSelectPeriodo(value)}
+                  onChange={(value) => handleChangeSelectPeriodo(value)}
                 >
                   {opcoesPeriodos}
                 </Select>
@@ -298,7 +295,7 @@ export default () => {
               <Ocorrencias
                 solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
                 onClickInfoBasicas={onClickInfoBasicas}
-                setObjSolicitacaoMIFinalizada={value =>
+                setObjSolicitacaoMIFinalizada={(value) =>
                   setObjSolicitacaoMIFinalizada(value)
                 }
               />
@@ -319,11 +316,11 @@ export default () => {
               periodosEscolaSimples={periodosEscolaSimples}
               solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
               onClickInfoBasicas={onClickInfoBasicas}
-              setLoadingSolicitacaoMedicaoInicial={value =>
+              setLoadingSolicitacaoMedicaoInicial={(value) =>
                 setLoadingSolicitacaoMedicaoInicial(value)
               }
               objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
-              setObjSolicitacaoMIFinalizada={value =>
+              setObjSolicitacaoMIFinalizada={(value) =>
                 setObjSolicitacaoMIFinalizada(value)
               }
               setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
@@ -338,11 +335,11 @@ export default () => {
               periodosEscolaSimples={periodosEscolaSimples}
               solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
               onClickInfoBasicas={onClickInfoBasicas}
-              setLoadingSolicitacaoMedicaoInicial={value =>
+              setLoadingSolicitacaoMedicaoInicial={(value) =>
                 setLoadingSolicitacaoMedicaoInicial(value)
               }
               objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
-              setObjSolicitacaoMIFinalizada={value =>
+              setObjSolicitacaoMIFinalizada={(value) =>
                 setObjSolicitacaoMIFinalizada(value)
               }
               setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}

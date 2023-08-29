@@ -5,18 +5,18 @@ import {
   DINUTRE,
   PAINEL_APROVACOES,
   PRE_RECEBIMENTO,
-  ASSINADO_CODAE
+  ASSINADO_CODAE,
 } from "configs/constants";
 import {
   getDashboardCronograma,
-  getDashboardCronogramaComFiltros
+  getDashboardCronogramaComFiltros,
 } from "services/cronograma.service";
 import { SolicitacoesCronogramaStatusGenerico } from "components/screens/SolicitacoesCronogramaStatusGenerico";
 import { CARD_CRONOGRAMAS_ASSINADOS } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
 
 const atual = {
   href: `/${DINUTRE}/${ASSINADO_CODAE}`,
-  titulo: "Cronogramas Assinados"
+  titulo: "Cronogramas Assinados",
 };
 
 const limit = 10;
@@ -27,12 +27,12 @@ export default () => {
   const anteriores = [
     {
       href: `#`,
-      titulo: "Pré-Recebimento"
+      titulo: "Pré-Recebimento",
     },
     {
       href: `/pre-recebimento/painel-aprovacoes`,
-      titulo: "Painel de Aprovações"
-    }
+      titulo: "Painel de Aprovações",
+    },
   ];
 
   return (

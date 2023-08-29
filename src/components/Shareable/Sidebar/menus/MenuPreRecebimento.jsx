@@ -5,7 +5,7 @@ import {
   CRONOGRAMA_ENTREGA,
   PAINEL_APROVACOES,
   SOLICITACAO_ALTERACAO_CRONOGRAMA,
-  SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR
+  SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR,
 } from "configs/constants";
 import {
   usuarioEhCronograma,
@@ -13,7 +13,7 @@ import {
   usuarioEhDinutreDiretoria,
   usuarioEhPreRecebimento,
   usuarioEhEmpresaFornecedor,
-  usuarioComAcessoAoPainelAprovacoes
+  usuarioComAcessoAoPainelAprovacoes,
 } from "helpers/utilities";
 
 const MenuPreRecebimento = () => {

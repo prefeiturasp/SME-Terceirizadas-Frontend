@@ -7,7 +7,7 @@ import { PERIODO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicia
 import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
-  PERIODO_LANCAMENTO
+  PERIODO_LANCAMENTO,
 } from "configs/constants";
 import "./styles.scss";
 
@@ -22,7 +22,7 @@ export default ({
   ehGrupoETEC = false,
   quantidadeAlimentacoesLancadas,
   periodosInclusaoContinua = null,
-  frequenciasDietasCEUGESTAO
+  frequenciasDietasCEUGESTAO,
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -42,12 +42,12 @@ export default ({
 
   const qtdAlimentacaoPeriodoFiltrada = () => {
     return quantidadeAlimentacoesLancadas.filter(
-      qtdAlimentacaoPeriodo =>
+      (qtdAlimentacaoPeriodo) =>
         qtdAlimentacaoPeriodo.nome_periodo_grupo === nomePeriodoGrupo()
     );
   };
 
-  const quantidadeAlimentacao = nomeAlimentacao => {
+  const quantidadeAlimentacao = (nomeAlimentacao) => {
     const alimentacao = nomeAlimentacao
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
@@ -55,9 +55,10 @@ export default ({
       .replaceAll(/ /g, "_");
     let quantidade = 0;
     if (qtdAlimentacaoPeriodoFiltrada().length > 0) {
-      const qtdAlimentacaoFiltrada = qtdAlimentacaoPeriodoFiltrada()[0].valores.filter(
-        v => v.nome_campo === alimentacao
-      );
+      const qtdAlimentacaoFiltrada =
+        qtdAlimentacaoPeriodoFiltrada()[0].valores.filter(
+          (v) => v.nome_campo === alimentacao
+        );
       if (qtdAlimentacaoFiltrada.length > 0) {
         quantidade = qtdAlimentacaoFiltrada[0].valor;
       }
@@ -68,7 +69,7 @@ export default ({
   if (ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC) {
     if (ehGrupoETEC) {
       tipos_alimentacao = tipos_alimentacao.filter(
-        alimentacao => alimentacao !== "Lanche Emergencial"
+        (alimentacao) => alimentacao !== "Lanche Emergencial"
       );
     }
     alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
@@ -82,7 +83,7 @@ export default ({
     ));
   } else {
     alimentacoesFormatadas = tipos_alimentacao
-      .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
+      .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
       .map((alimentacao, key) => (
         <div key={key} className="mb-2">
           <span style={{ color: cor }}>
@@ -104,7 +105,7 @@ export default ({
       [
         "MEDICAO_APROVADA_PELA_DRE",
         "MEDICAO_CORRECAO_SOLICITADA",
-        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
       ].includes(solicitacaoMedicaoInicial.status) ||
       statusPeriodo() === "MEDICAO_APROVADA_PELA_DRE"
     ) {
@@ -119,9 +120,7 @@ export default ({
   const handleClickEditar = () => {
     history.push({
       pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`,
-      search: `uuid=${
-        solicitacaoMedicaoInicial.uuid
-      }&ehGrupoSolicitacoesDeAlimentacao=${ehGrupoSolicitacoesDeAlimentacao}&ehGrupoETEC=${ehGrupoETEC}`,
+      search: `uuid=${solicitacaoMedicaoInicial.uuid}&ehGrupoSolicitacoesDeAlimentacao=${ehGrupoSolicitacoesDeAlimentacao}&ehGrupoETEC=${ehGrupoETEC}`,
       state: {
         periodo: textoCabecalho,
         grupo,
@@ -133,14 +132,14 @@ export default ({
         periodosInclusaoContinua: periodosInclusaoContinua,
         solicitacaoMedicaoInicial: solicitacaoMedicaoInicial,
         frequenciasDietasCEUGESTAO: frequenciasDietasCEUGESTAO,
-        ...location.state
-      }
+        ...location.state,
+      },
     });
   };
 
   const statusPeriodo = () => {
     const obj = quantidadeAlimentacoesLancadas.find(
-      each => each.nome_periodo_grupo === nomePeriodoGrupo()
+      (each) => each.nome_periodo_grupo === nomePeriodoGrupo()
     );
     if (obj) {
       return obj.status;
@@ -156,7 +155,7 @@ export default ({
 
   const justificativaPeriodo = () => {
     const obj = quantidadeAlimentacoesLancadas.find(
-      each => each.nome_periodo_grupo === nomePeriodoGrupo()
+      (each) => each.nome_periodo_grupo === nomePeriodoGrupo()
     );
     if (obj) {
       return obj.justificativa;
@@ -183,12 +182,12 @@ export default ({
                 className={`float-right status-card-periodo-grupo ${
                   [
                     "MEDICAO_CORRECAO_SOLICITADA",
-                    "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                    "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                   ].includes(statusPeriodo())
                     ? "red"
                     : [
                         "MEDICAO_CORRIGIDA_PELA_UE",
-                        "MEDICAO_CORRIGIDA_PARA_CODAE"
+                        "MEDICAO_CORRIGIDA_PARA_CODAE",
                       ].includes(statusPeriodo())
                     ? "blue"
                     : ""
@@ -230,22 +229,22 @@ export default ({
                 texto={
                   [
                     "MEDICAO_APROVADA_PELA_DRE",
-                    "MEDICAO_APROVADA_PELA_CODAE"
+                    "MEDICAO_APROVADA_PELA_CODAE",
                   ].includes(solicitacaoMedicaoInicial.status) ||
                   [
                     "MEDICAO_APROVADA_PELA_DRE",
-                    "MEDICAO_APROVADA_PELA_CODAE"
+                    "MEDICAO_APROVADA_PELA_CODAE",
                   ].includes(statusPeriodo())
                     ? "Visualizar"
                     : [
                         "MEDICAO_CORRECAO_SOLICITADA",
-                        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                       ].includes(solicitacaoMedicaoInicial.status) &&
                       [
                         "MEDICAO_CORRECAO_SOLICITADA",
                         "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                         "MEDICAO_CORRIGIDA_PELA_UE",
-                        "MEDICAO_CORRIGIDA_PARA_CODAE"
+                        "MEDICAO_CORRIGIDA_PARA_CODAE",
                       ].includes(statusPeriodo())
                     ? "Corrigir"
                     : "Editar"

@@ -6,7 +6,7 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   getEmbalagens,
   getListaNomesEmbalagens,
-  getListaAbreviacaoEmbalagens
+  getListaAbreviacaoEmbalagens,
 } from "services/qualidade.service";
 import { Paginacao } from "components/Shareable/Paginacao";
 
@@ -37,7 +37,7 @@ export default () => {
     setAbreviacaoEmbalagens(respAbreviacoes.data.results);
   };
 
-  const buscarEmbalagens = async page => {
+  const buscarEmbalagens = async (page) => {
     setCarregando(true);
 
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -52,7 +52,7 @@ export default () => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarEmbalagens(page);
     setPage(page);
   };

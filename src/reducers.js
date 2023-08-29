@@ -51,7 +51,7 @@ const rootReducer = combineReducers({
   dietasAtivasInativasPorAluno: dietasAtivasInativasPorAlunoReducer,
   filtersDieta: filtersDietaReducer,
   filtersProduto: filtersProdutoReducer,
-  filtersAlimentacao: filtersAlimentacaoReducer
+  filtersAlimentacao: filtersAlimentacaoReducer,
 });
 
 export default rootReducer;

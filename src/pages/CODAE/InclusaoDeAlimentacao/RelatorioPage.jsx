@@ -7,14 +7,14 @@ import { INCLUSAO_ALIMENTACAO, CODAE } from "../../../configs/constants";
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 
 const anteriores = [
   {
     href: `/${CODAE}/${INCLUSAO_ALIMENTACAO}`,
-    titulo: "Inclusões de Alimentação"
-  }
+    titulo: "Inclusões de Alimentação",
+  },
 ];
 
 export default () => (

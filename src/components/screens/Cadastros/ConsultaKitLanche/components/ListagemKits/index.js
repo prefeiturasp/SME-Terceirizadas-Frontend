@@ -16,7 +16,7 @@ const ListagemKits = ({ kits }) => {
           <div>Status</div>
           <div />
         </div>
-        {kits.map(kit => {
+        {kits.map((kit) => {
           return (
             <>
               <div key={kit.uuid} className="grid-table body-table">

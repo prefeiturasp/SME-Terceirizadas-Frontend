@@ -22,8 +22,8 @@ const TabContent = ({ items }) => {
 TabContent.propTypes = {
   items: shape({
     pergunta: string,
-    resposta: string
-  })
+    resposta: string,
+  }),
 };
 
 const FaqPage = () => {
@@ -46,12 +46,12 @@ const FaqPage = () => {
 
   useEffect(() => {
     if (!pattern.length) setFilteredCategories(categories);
-    const filtered = categories.map(category => {
+    const filtered = categories.map((category) => {
       return {
         nome: category.name,
-        perguntas: category.perguntas.filter(item =>
+        perguntas: category.perguntas.filter((item) =>
           item.pergunta.toLowerCase().includes(pattern.toLowerCase())
-        )
+        ),
       };
     });
     setFilteredCategories(filtered);
@@ -72,7 +72,7 @@ const FaqPage = () => {
               type="text"
               placeholder="Pesquisar"
               value={pattern}
-              onChange={e => setPattern(e.target.value)}
+              onChange={(e) => setPattern(e.target.value)}
             />
             <i className="fas fa-search fa-lg" />
           </div>

@@ -7,13 +7,13 @@ import { INCLUSAO_ALIMENTACAO, ESCOLA } from "../../../configs/constants";
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 
 const anteriores = [
   {
-    href: `/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`
-  }
+    href: `/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`,
+  },
 ];
 
 export const RelatorioPage = () => (

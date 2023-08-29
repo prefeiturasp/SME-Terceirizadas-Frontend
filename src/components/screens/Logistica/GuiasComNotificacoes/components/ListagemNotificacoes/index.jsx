@@ -2,7 +2,7 @@ import {
   ANALISAR_ASSINAR,
   DETALHAR_NOTIFICACAO,
   LOGISTICA,
-  NOTIFICAR_EMPRESA
+  NOTIFICAR_EMPRESA,
 } from "configs/constants";
 import React from "react";
 import { useHistory } from "react-router-dom";
@@ -15,7 +15,7 @@ import { usuarioComAcessoTelaDetalharNotificacaoOcorrencia } from "helpers/utili
 const ListagemNotificacoes = ({ notificacoes, fiscal }) => {
   const history = useHistory();
 
-  const renderizarBotoesDeAcoes = notificacao => {
+  const renderizarBotoesDeAcoes = (notificacao) => {
     const botaoRascunho = (
       <span
         className="link-acoes px-2"
@@ -23,8 +23,8 @@ const ListagemNotificacoes = ({ notificacoes, fiscal }) => {
           history.push({
             pathname: `/${LOGISTICA}/${EDITAR_NOTIFICACAO}`,
             state: {
-              guia: notificacao
-            }
+              guia: notificacao,
+            },
           })
         }
       >
@@ -103,7 +103,7 @@ const ListagemNotificacoes = ({ notificacoes, fiscal }) => {
           <div>Número SEI</div>
           <div>Ações</div>
         </div>
-        {notificacoes.map(notificacao => {
+        {notificacoes.map((notificacao) => {
           return (
             <>
               <div key={notificacao.uuid} className="grid-table body-table">

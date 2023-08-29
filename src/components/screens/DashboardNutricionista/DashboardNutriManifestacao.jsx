@@ -5,20 +5,20 @@ import {
   NUTRIMANIFESTACAO,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
-  SOLICITACOES_NEGADAS
+  SOLICITACOES_NEGADAS,
 } from "configs/constants";
 import { dataAtual } from "helpers/utilities";
 import CardBody from "components/Shareable/CardBody";
 import CardMatriculados from "components/Shareable/CardMatriculados";
 import CardStatusDeSolicitacao, {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "./style.scss";
 import {
   getSolicitacoesAutorizadasNutrimanifestacao,
   getSolicitacoesCanceladasNutrimanifestacao,
-  getSolicitacoesNegadasNutrimanifestacao
+  getSolicitacoesNegadasNutrimanifestacao,
 } from "services/painelNutricionista.service";
 import { PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { Spin } from "antd";
@@ -31,7 +31,7 @@ export const DashboardNutrimanifestacao = () => {
   const [erro, setErro] = useState("");
   const [
     loadingAcompanhamentoSolicitacoes,
-    setLoadingAcompanhamentoSolicitacoes
+    setLoadingAcompanhamentoSolicitacoes,
   ] = useState(false);
 
   const { meusDados } = useContext(MeusDadosContext);
@@ -57,9 +57,8 @@ export const DashboardNutrimanifestacao = () => {
       setErro("Erro ao carregar solicitações negadas");
     }
 
-    const responseAutorizadas = await getSolicitacoesAutorizadasNutrimanifestacao(
-      params
-    );
+    const responseAutorizadas =
+      await getSolicitacoesAutorizadasNutrimanifestacao(params);
     if (responseAutorizadas.status === HTTP_STATUS.OK) {
       setAutorizadas(ajustarFormatoLog(responseAutorizadas.data.results));
     } else {
@@ -73,26 +72,22 @@ export const DashboardNutrimanifestacao = () => {
     getSolicitacoesAsync(PARAMS);
   }, []);
 
-  const onPesquisaChanged = values => {
+  const onPesquisaChanged = (values) => {
     if (values.titulo && values.titulo.length > 2) {
       getSolicitacoesAsync({
         busca: values.titulo,
-        ...prepararParametros(values)
+        ...prepararParametros(values),
       });
     } else {
       getSolicitacoesAsync(prepararParametros(values));
     }
   };
 
-  const prepararParametros = values => {
+  const prepararParametros = (values) => {
     const params = PARAMS;
     params["tipo_solicitacao"] = values.tipo_solicitacao;
     params["data_evento"] =
-      values.data_evento &&
-      values.data_evento
-        .split("/")
-        .reverse()
-        .join("-");
+      values.data_evento && values.data_evento.split("/").reverse().join("-");
     return params;
   };
 
@@ -116,7 +111,7 @@ export const DashboardNutrimanifestacao = () => {
               exibirFiltrosDataEventoETipoSolicitacao={true}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
-              onChange={values => {
+              onChange={(values) => {
                 clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(async () => {
                   onPesquisaChanged(values);

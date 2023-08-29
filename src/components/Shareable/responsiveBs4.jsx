@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-const toCssClasses = numbers => {
+const toCssClasses = (numbers) => {
   const cols = numbers ? numbers.split(" ") : [];
   let classes = "";
 
@@ -16,11 +16,11 @@ const toCssClasses = numbers => {
 export class Grid extends Component {
   static propTypes = {
     cols: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
   };
 
   static defaultProps = {
-    cols: "12 12 12 12"
+    cols: "12 12 12 12",
   };
 
   render() {

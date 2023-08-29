@@ -36,14 +36,14 @@ export const ModalPadrao = ({ ...props }) => {
   } = props;
 
   const history = useHistory();
-  const painelProdutos = history => history.push(`/${PAINEL_GESTAO_PRODUTO}`);
+  const painelProdutos = (history) => history.push(`/${PAINEL_GESTAO_PRODUTO}`);
 
-  const enviarJustificativa = async formValues => {
+  const enviarJustificativa = async (formValues) => {
     const { justificativa } = formValues;
     let resp = undefined;
     if (eAnalise) {
       const terceirizada = terceirizadas.find(
-        t => t.nome_fantasia === formValues.nome_terceirizada
+        (t) => t.nome_fantasia === formValues.nome_terceirizada
       );
       resp = await endpoint(uuid, justificativa, terceirizada.uuid);
     } else {
@@ -62,12 +62,14 @@ export const ModalPadrao = ({ ...props }) => {
     }
   };
 
-  const getTerceirizadasFiltrado = t => {
+  const getTerceirizadasFiltrado = (t) => {
     if (t) {
       const reg = new RegExp(t, "i");
-      return terceirizadas.map(t => t.nome_fantasia).filter(a => reg.test(a));
+      return terceirizadas
+        .map((t) => t.nome_fantasia)
+        .filter((a) => reg.test(a));
     }
-    return terceirizadas.map(t => t.nome_fantasia);
+    return terceirizadas.map((t) => t.nome_fantasia);
   };
 
   return (
@@ -137,7 +139,7 @@ export const ModalPadrao = ({ ...props }) => {
                       label="Nome da empresa solicitante (Terceirizada)"
                       placeholder="Digite nome da terceirizada"
                       name="nome_terceirizada"
-                      validate={value =>
+                      validate={(value) =>
                         !value ? "Campo obrigatório" : undefined
                       }
                       required

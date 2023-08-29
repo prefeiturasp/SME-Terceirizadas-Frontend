@@ -5,7 +5,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import InputFile from "components/Shareable/Input/InputFile";
 import { Field, Form } from "react-final-form";
@@ -20,18 +20,17 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     escolaInstituicao,
     solicitacaoMedicaoInicial,
     setObjSolicitacaoMIFinalizada,
-    onClickInfoBasicas
+    onClickInfoBasicas,
   } = props;
 
   const [opcaoSelecionada, setOpcaoSelecionada] = useState(null);
   const [disableFinalizarMedicao, setDisableFinalizarMedicao] = useState(true);
-  const [showButtonAnexarPlanilha, setShowButtonAnexarPlanilha] = useState(
-    false
-  );
+  const [showButtonAnexarPlanilha, setShowButtonAnexarPlanilha] =
+    useState(false);
   const [arquivo, setArquivo] = useState([]);
   const [validationFile, setValidationFile] = useState({ touched: false });
 
-  const handleOnChange = event => {
+  const handleOnChange = (event) => {
     if (opcaoSelecionada === OPCOES_AVALIACAO_A_CONTENTO.NAO_COM_OCORRENCIAS) {
       setArquivo([]);
     }
@@ -56,20 +55,20 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     closeModal();
   };
 
-  const isValidFiles = files => {
+  const isValidFiles = (files) => {
     let validation = { touched: true };
-    files.forEach(element => {
+    files.forEach((element) => {
       const base64Ext = element.base64.split(";")[0];
       if (base64Ext.includes("pdf")) {
         validation = {
           ...validation,
-          pdf: true
+          pdf: true,
         };
       }
       if (base64Ext.includes("spreadsheetml")) {
         validation = {
           ...validation,
-          xls: true
+          xls: true,
         };
       }
     });
@@ -87,7 +86,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     setArquivo(arquivos);
   };
 
-  const setFiles = files => {
+  const setFiles = (files) => {
     let arquivos = arquivo;
     arquivos = files;
     isValidFiles(arquivos);
@@ -109,10 +108,10 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
 
     if (!opcaoSelecionada) {
       let payloadAnexos = [];
-      arquivo.forEach(element => {
+      arquivo.forEach((element) => {
         payloadAnexos.push({
           nome: String(element.nome),
-          base64: String(element.base64)
+          base64: String(element.base64),
         });
       });
       data.append("anexos", JSON.stringify(payloadAnexos));
@@ -152,7 +151,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
         </div>
         <div className="row">
           <Radio.Group
-            onChange={event => handleOnChange(event)}
+            onChange={(event) => handleOnChange(event)}
             value={opcaoSelecionada}
           >
             <Radio

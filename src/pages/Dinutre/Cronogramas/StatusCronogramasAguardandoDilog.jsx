@@ -5,18 +5,18 @@ import {
   DINUTRE,
   PAINEL_APROVACOES,
   PRE_RECEBIMENTO,
-  AGUARDANDO_DILOG
+  AGUARDANDO_DILOG,
 } from "configs/constants";
 import {
   getDashboardCronograma,
-  getDashboardCronogramaComFiltros
+  getDashboardCronogramaComFiltros,
 } from "services/cronograma.service";
 import { SolicitacoesCronogramaStatusGenerico } from "components/screens/SolicitacoesCronogramaStatusGenerico";
 import { CARD_AGUARDANDO_ASSINATURA } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
 
 const atual = {
   href: `/${DINUTRE}/${AGUARDANDO_DILOG}`,
-  titulo: "Aguardando Assinatura de DILOG"
+  titulo: "Aguardando Assinatura de DILOG",
 };
 
 const limit = 10;
@@ -27,12 +27,12 @@ export default () => {
   const anteriores = [
     {
       href: `#`,
-      titulo: "Pré-Recebimento"
+      titulo: "Pré-Recebimento",
     },
     {
       href: `/pre-recebimento/painel-aprovacoes`,
-      titulo: "Painel de Aprovações"
-    }
+      titulo: "Painel de Aprovações",
+    },
   ];
 
   return (

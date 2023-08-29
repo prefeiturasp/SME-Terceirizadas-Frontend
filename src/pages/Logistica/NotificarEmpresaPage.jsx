@@ -5,20 +5,20 @@ import Page from "components/Shareable/Page/Page";
 import {
   NOTIFICAR_EMPRESA,
   LOGISTICA,
-  GUIAS_NOTIFICACAO
+  GUIAS_NOTIFICACAO,
 } from "configs/constants";
 import NotificarEmpresa from "components/screens/Logistica/NotificarEmpresa";
 
 const atual = {
   href: `/${LOGISTICA}/${NOTIFICAR_EMPRESA}`,
-  titulo: "Notificar Empresa"
+  titulo: "Notificar Empresa",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
-  }
+    titulo: "Abastecimento",
+  },
 ];
 
 export default () => (

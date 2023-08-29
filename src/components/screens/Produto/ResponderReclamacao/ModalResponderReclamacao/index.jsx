@@ -11,7 +11,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { responderReclamacaoProduto } from "services/produto.service";
 import "./style.scss";
@@ -24,7 +24,7 @@ export default class ModalResponderReclamacao extends Component {
 
   UNSAFE_componentWillMount = async () => {};
 
-  onSubmit = async values => {
+  onSubmit = async (values) => {
     try {
       const response = await responderReclamacaoProduto(
         this.props.reclamacao.uuid,
@@ -104,10 +104,10 @@ export default class ModalResponderReclamacao extends Component {
                       label="Resposta"
                       name="justificativa"
                       required
-                      validate={value => {
+                      validate={(value) => {
                         for (let validator of [
                           peloMenosUmCaractere,
-                          required
+                          required,
                         ]) {
                           const erro = validator(value);
                           if (erro) return erro;

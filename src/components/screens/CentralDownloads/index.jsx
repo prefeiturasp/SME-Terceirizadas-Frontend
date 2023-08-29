@@ -4,7 +4,7 @@ import "./styles.scss";
 import {
   getDownloads,
   setDownloadMarcarDesmarcarLida,
-  deletarDownload
+  deletarDownload,
 } from "services/downloads.service";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import ListagemDownloads from "./components/ListagemDownloads";
@@ -23,7 +23,7 @@ export default () => {
 
   const [page, setPage] = useState(1);
 
-  const buscarDownloads = async page => {
+  const buscarDownloads = async (page) => {
     setCarregando(true);
     let payload = gerarParametrosConsulta({ page, ...filtros });
     let data = await getDownloads(payload);
@@ -33,7 +33,7 @@ export default () => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarDownloads(page);
     setPage(page);
   };
@@ -42,7 +42,7 @@ export default () => {
     setCarregando(true);
     const payload = {
       uuid: download.uuid,
-      visto: !download.visto
+      visto: !download.visto,
     };
 
     let downloadsNew = downloads;
@@ -54,13 +54,13 @@ export default () => {
     setCarregando(false);
   };
 
-  const deletaDownload = async download => {
+  const deletaDownload = async (download) => {
     try {
       setCarregando(true);
       await deletarDownload(download.uuid);
       setCarregando(false);
       toastSuccess("Download deletado com sucesso!");
-      let downloadsNew = downloads.filter(d => d.uuid !== download.uuid);
+      let downloadsNew = downloads.filter((d) => d.uuid !== download.uuid);
       setDownloads([...downloadsNew]);
     } catch {
       toastError("Ocorreu um erro ao deletar o download!");

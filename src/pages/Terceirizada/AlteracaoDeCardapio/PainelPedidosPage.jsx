@@ -5,12 +5,12 @@ import Container from "../../../components/AlteracaoDeCardapio/Terceirizada/Pain
 import { HOME } from "../constants";
 import {
   ALTERACAO_TIPO_ALIMENTACAO,
-  TERCEIRIZADA
+  TERCEIRIZADA,
 } from "../../../configs/constants";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${ALTERACAO_TIPO_ALIMENTACAO}`,
-  titulo: "Alteração do Tipo de Alimentação - Pendente Ciência"
+  titulo: "Alteração do Tipo de Alimentação - Pendente Ciência",
 };
 
 export default () => (

@@ -21,12 +21,12 @@ import "./styles/_overrides.scss";
 import * as Sentry from "@sentry/browser";
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 //eslint-disable-next-line
 if (["development", "homolog", "treinamento"].includes(ENVIRONMENT)) {
-  document.addEventListener("keydown", async function(event) {
+  document.addEventListener("keydown", async function (event) {
     if (event.key === "PrintScreen") {
       document.body.style.display = "none";
       await sleep(3000);

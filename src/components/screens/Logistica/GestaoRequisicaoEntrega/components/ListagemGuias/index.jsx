@@ -5,7 +5,7 @@ import "./styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { Modal } from "react-bootstrap";
 
@@ -18,13 +18,13 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
   const guias = solicitacao.guias;
 
   const validaBotao = () => {
-    let invalidas = guias.filter(guia =>
+    let invalidas = guias.filter((guia) =>
       ["Aguardando cancelamento"].includes(guia.status)
     );
     return invalidas.length === 0;
   };
 
-  const abrirModalGuia = guia => {
+  const abrirModalGuia = (guia) => {
     setGuiaAtual(guia);
     setShowModalGuia(true);
   };
@@ -39,7 +39,7 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
               <div>Nome da Unidade Educacional</div>
               <div>Status</div>
             </div>
-            {guias.map(guia => {
+            {guias.map((guia) => {
               return (
                 <>
                   <div className="grid-table body-table hand-cursor">
@@ -136,7 +136,7 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
                   </div>
 
                   {guiaAtual.alimentos &&
-                    guiaAtual.alimentos.map(alimento => {
+                    guiaAtual.alimentos.map((alimento) => {
                       return (
                         <>
                           <div className="grid-table body-table">

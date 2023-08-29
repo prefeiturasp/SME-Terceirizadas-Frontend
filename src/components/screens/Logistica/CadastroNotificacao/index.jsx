@@ -9,14 +9,14 @@ import {
   criarNotificacao,
   editarNotificacao,
   getGuiaDetalhe,
-  getGuiasNaoNotificadas
+  getGuiasNaoNotificadas,
 } from "services/logistica.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalDesvincular from "./components/ModalDesvincular";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { GUIAS_NOTIFICACAO, LOGISTICA } from "configs/constants";
 import { useHistory } from "react-router-dom";
@@ -48,13 +48,13 @@ export default () => {
     }
   }, [filtros]);
 
-  const buscarGuias = async page => {
+  const buscarGuias = async (page) => {
     setCarregando(true);
 
     if (!showVinculadas) {
       const params = {
         page: page,
-        ...filtros
+        ...filtros,
       };
       if (notificacao) {
         params["notificacao_uuid"] = notificacao.uuid;
@@ -77,26 +77,26 @@ export default () => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarGuias(page);
     setPage(page);
   };
 
-  const vincularGuia = guia => {
+  const vincularGuia = (guia) => {
     setGuiasVinculadas([...guiasVinculadas, guia]);
     toastSuccess("Guia Vinculada com sucesso!");
   };
 
-  const desvincularGuia = guia => {
+  const desvincularGuia = (guia) => {
     setGuiasVinculadas(
-      guiasVinculadas.filter(g => g.numero_guia !== guia.numero_guia)
+      guiasVinculadas.filter((g) => g.numero_guia !== guia.numero_guia)
     );
     toastSuccess("Guia desvinculada com sucesso!");
     setModal(false);
     setGuiaModal(false);
   };
 
-  const buscarDetalheGuia = async guia => {
+  const buscarDetalheGuia = async (guia) => {
     let response;
     try {
       setCarregando(true);
@@ -112,7 +112,7 @@ export default () => {
   const salvarNotificacao = async () => {
     const payload = {
       empresa,
-      guias: guiasVinculadas.map(guia => guia.uuid)
+      guias: guiasVinculadas.map((guia) => guia.uuid),
     };
     if (notificacao) {
       const response = await editarNotificacao(notificacao.uuid, payload);
@@ -128,8 +128,8 @@ export default () => {
     }
   };
 
-  const botaoAcao = guia => {
-    if (guia && guiasVinculadas.find(g => g.uuid === guia.uuid)) {
+  const botaoAcao = (guia) => {
+    if (guia && guiasVinculadas.find((g) => g.uuid === guia.uuid)) {
       return (
         <Botao
           texto="Excluir Vínculo"
@@ -191,7 +191,7 @@ export default () => {
                 guias={guias}
                 guiasVinculadas={guiasVinculadas}
                 vincularGuia={vincularGuia}
-                desvincularGuia={guia => {
+                desvincularGuia={(guia) => {
                   setModal(guia);
                 }}
                 showVinculadas={showVinculadas}

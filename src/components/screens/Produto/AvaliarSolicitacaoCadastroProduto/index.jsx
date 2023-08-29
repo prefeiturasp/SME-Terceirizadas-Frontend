@@ -22,7 +22,7 @@ export default () => {
     const resposta = await getSolicitacoesCadastroProdutoDieta({
       ...formValues,
       page: page,
-      page_size: PAGE_SIZE
+      page_size: PAGE_SIZE,
     });
     if (resposta.status === HTTP_STATUS.OK) {
       setSolicitacoes(resposta.data.results);
@@ -35,7 +35,7 @@ export default () => {
     if (formValues) fetchData();
   }, [formValues, page]);
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     setFormValues({ ...values });
   };
 
@@ -57,7 +57,7 @@ export default () => {
                 current={page || 1}
                 total={totalSolicitacoes}
                 showSizeChanger={false}
-                onChange={page => {
+                onChange={(page) => {
                   setPage(page);
                 }}
                 pageSize={PAGE_SIZE}

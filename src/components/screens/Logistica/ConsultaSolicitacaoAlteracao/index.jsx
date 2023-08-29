@@ -20,7 +20,7 @@ export default () => {
 
   const inicioResultado = useRef();
 
-  const buscarSolicitacoes = async page => {
+  const buscarSolicitacoes = async (page) => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     const response = await getListagemSolicitacaoAlteracao(params);
@@ -46,7 +46,7 @@ export default () => {
       const urlParams = new URLSearchParams(window.location.search);
       const codigo = urlParams.get("numero_solicitacao");
       const filtro = {
-        numero_solicitacao: codigo
+        numero_solicitacao: codigo,
       };
       setBuscaPorParametro(true);
       setNumeroSolicitacaoInicial(codigo);
@@ -61,7 +61,7 @@ export default () => {
     }
   }, [filtros]);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarSolicitacoes(page);
     setPage(page);
   };

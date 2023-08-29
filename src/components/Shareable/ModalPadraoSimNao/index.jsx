@@ -1,7 +1,7 @@
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import React from "react";
 import { Modal } from "react-bootstrap";
@@ -13,7 +13,7 @@ export const ModalPadraoSimNao = ({ ...props }) => {
     tituloModal,
     descricaoModal,
     funcaoSim,
-    desabilitaSim
+    desabilitaSim,
   } = props;
 
   return (

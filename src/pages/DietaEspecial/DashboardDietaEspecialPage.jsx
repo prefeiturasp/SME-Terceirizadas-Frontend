@@ -9,7 +9,7 @@ import {
   ESCOLA,
   TERCEIRIZADA,
   ALUNO,
-  DIETA_ESPECIAL
+  DIETA_ESPECIAL,
 } from "../../configs/constants";
 import { HOME } from "../../constants/config";
 import {
@@ -42,7 +42,7 @@ import {
   getDietaEspecialPendenteAutorizacaoDRE,
   getDietaEspecialPendenteAutorizacaoEscola,
   getDietaEspecialPendenteAutorizacaoTerceirizada,
-  getDietaEspecialAguardandoVigenciaTerceirizada
+  getDietaEspecialAguardandoVigenciaTerceirizada,
 } from "../../services/dashBoardDietaEspecial.service";
 
 class DietaEspecialBase extends React.Component {
@@ -144,7 +144,7 @@ export const DietaEspecialTerceirizada = () => (
 
 const atualAluno = {
   href: `/${ALUNO}/${DIETA_ESPECIAL}`,
-  titulo: "Detalhes de Dieta do Aluno"
+  titulo: "Detalhes de Dieta do Aluno",
 };
 
 export const DietaEspecialAluno = () => (

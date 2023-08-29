@@ -1,6 +1,6 @@
 import React from "react";
 
-const SubstituicoesTable = substituicoes => {
+const SubstituicoesTable = (substituicoes) => {
   return (
     <div className="row">
       <div className="col-md-12">

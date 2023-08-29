@@ -15,7 +15,7 @@ export const getOpecoesStatus = () => {
       "Aguardando análise sensoriais",
       "Pendente de homologação",
       "Homologado",
-      "Não homologado"
+      "Não homologado",
     ];
   } else {
     return [
@@ -23,7 +23,7 @@ export const getOpecoesStatus = () => {
       "Homologado",
       "Não homologado",
       "Produtos Suspensos",
-      "Reclamações de produtos"
+      "Reclamações de produtos",
     ];
   }
 };
@@ -44,7 +44,7 @@ export const getTodasOpcoesStatusPorPerfil = () => {
       "CODAE_HOMOLOGADO",
       "CODAE_NAO_HOMOLOGADO",
       "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
-      "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+      "TERCEIRIZADA_RESPONDEU_RECLAMACAO",
     ];
   } else {
     return [
@@ -55,12 +55,12 @@ export const getTodasOpcoesStatusPorPerfil = () => {
       "CODAE_HOMOLOGADO",
       "CODAE_PEDIU_ANALISE_RECLAMACAO",
       "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
-      "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+      "TERCEIRIZADA_RESPONDEU_RECLAMACAO",
     ];
   }
 };
 
-export const retornaStatusBackend = status => {
+export const retornaStatusBackend = (status) => {
   switch (status) {
     case "Reclamações de produtos":
       return "CODAE_AUTORIZOU_RECLAMACAO";

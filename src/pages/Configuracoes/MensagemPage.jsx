@@ -6,7 +6,7 @@ import { CONFIGURACOES, MENSAGEM } from "../../configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${MENSAGEM}`,
-  titulo: "Configuração de Mensagem"
+  titulo: "Configuração de Mensagem",
 };
 
 export default () => (

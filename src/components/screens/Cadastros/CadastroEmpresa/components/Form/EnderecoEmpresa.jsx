@@ -10,7 +10,7 @@ import { cepMask, telefoneMask } from "constants/shared";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 
 export const EnderecoEmpresa = ({
@@ -18,15 +18,14 @@ export const EnderecoEmpresa = ({
   contatosEmpresaForm,
   setContatosEmpresaForm,
   contatosEmpresa,
-  setContatosEmpresa
+  setContatosEmpresa,
 }) => {
-  const [camposEnderecoDesabilitado, setCamposEnderecoDesabilitado] = useState(
-    true
-  );
+  const [camposEnderecoDesabilitado, setCamposEnderecoDesabilitado] =
+    useState(true);
   const [qtdFieldCep, setQtdFieldCep] = useState(8);
   const form = useForm();
 
-  const temTracos = value => {
+  const temTracos = (value) => {
     const valid = value.indexOf("-") > -1;
     if (valid) {
       setQtdFieldCep(9);
@@ -49,7 +48,7 @@ export const EnderecoEmpresa = ({
     let contatosEmpresaArray = [...contatosEmpresa];
     contatosEmpresaArray.push({
       telefone: "",
-      email: ""
+      email: "",
     });
     setContatosEmpresa(contatosEmpresaArray);
   };
@@ -76,7 +75,7 @@ export const EnderecoEmpresa = ({
               validate={required}
             />
             <OnChange name="cep">
-              {async value => {
+              {async (value) => {
                 temTracos(value);
                 if (
                   value &&
@@ -182,7 +181,7 @@ export const EnderecoEmpresa = ({
                           maxlength="140"
                         />
                         <OnChange name={`telefone_empresa_${indiceEmpresa}`}>
-                          {value =>
+                          {(value) =>
                             setaContatosEmpresa(
                               "telefone",
                               value,
@@ -199,7 +198,7 @@ export const EnderecoEmpresa = ({
                           maxlength="140"
                         />
                         <OnChange name={`email_empresa_${indiceEmpresa}`}>
-                          {value =>
+                          {(value) =>
                             setaContatosEmpresa("email", value, indiceEmpresa)
                           }
                         </OnChange>

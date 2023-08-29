@@ -10,10 +10,8 @@ export class MultiselectDiagnosticos extends Multiselect {
     // o negrito dos diagnósticos selecionados
 
     const { options, selectedValues } = this.props;
-    const {
-      options: prevOptions,
-      selectedValues: prevSelectedvalues
-    } = prevProps;
+    const { options: prevOptions, selectedValues: prevSelectedvalues } =
+      prevProps;
     if (JSON.stringify(prevOptions) !== JSON.stringify(options)) {
       this.setState(
         { options, filteredOptions: options, unfilteredOptions: options },
@@ -24,7 +22,7 @@ export class MultiselectDiagnosticos extends Multiselect {
       this.setState(
         {
           selectedValues: Object.assign([], selectedValues),
-          preSelectedValues: Object.assign([], selectedValues)
+          preSelectedValues: Object.assign([], selectedValues),
         },
         this.initialSetValue
       );
@@ -32,8 +30,9 @@ export class MultiselectDiagnosticos extends Multiselect {
 
     // Retirada do negrito dos diagnóticos
     let lis = $(
-      `.optionContainer li:nth-child(-n+${this.state.selectedValues.length +
-        1})`
+      `.optionContainer li:nth-child(-n+${
+        this.state.selectedValues.length + 1
+      })`
     );
     $(lis).each((_, element) => {
       $(element).css("font-weight", "");
@@ -46,7 +45,7 @@ export class MultiselectDiagnosticos extends Multiselect {
     $(lis).each((index, element) => {
       if (
         this.state.selectedValues
-          .map(o => o.nome)
+          .map((o) => o.nome)
           .includes(this.state.options[index].nome)
       ) {
         $(element).css("font-weight", "900");
@@ -64,13 +63,13 @@ export class MultiselectDiagnosticos extends Multiselect {
 
     const wordToFilter = slugify(inputValue.toLowerCase());
     const stateOptions = filteredOptions.filter(
-      op => !selectedValues.find(o => o.uuid === op.uuid)
+      (op) => !selectedValues.find((o) => o.uuid === op.uuid)
     );
     const orderedNewOptions = selectedValues.sort(this.compare);
     options = orderedNewOptions
       .concat(stateOptions.sort(this.compare))
       .filter(
-        item => slugify(item.nome.toLowerCase()).search(wordToFilter) !== -1
+        (item) => slugify(item.nome.toLowerCase()).search(wordToFilter) !== -1
       );
 
     this.groupByOptions(options);
@@ -83,7 +82,7 @@ const Diagnosticos = ({
   setDiagnosticosSelecionados,
   selectedValues,
   alergiasError,
-  setAlergiasError
+  setAlergiasError,
 }) => {
   const [diags, setDiags] = useState(diagnosticos);
   const [options, setOptions] = useState([]);
@@ -96,29 +95,29 @@ const Diagnosticos = ({
     return a.nome > b.nome ? 1 : b.nome > a.nome ? -1 : 0;
   };
 
-  const onSelect = values => {
+  const onSelect = (values) => {
     if (alergiasError) {
       setAlergiasError(false);
     }
     setDiagnosticosSelecionados(formatarDiagnostico(values));
     const stateOptions = diagnosticos.filter(
-      op => !values.find(o => o.uuid === op.uuid)
+      (op) => !values.find((o) => o.uuid === op.uuid)
     );
     const orderedNewOptions = values.sort(compare);
     setDiags(orderedNewOptions.concat(stateOptions.sort(compare)));
   };
 
-  const onRemove = values => {
+  const onRemove = (values) => {
     setDiagnosticosSelecionados(formatarDiagnostico(values));
     const stateOptions = diagnosticos.filter(
-      op => !values.find(o => o.uuid === op.uuid)
+      (op) => !values.find((o) => o.uuid === op.uuid)
     );
     const orderedNewOptions = values.sort(compare);
     setDiags(orderedNewOptions.concat(stateOptions.sort(compare)));
   };
 
-  const formatarDiagnostico = values => {
-    return values.map(value => value.uuid);
+  const formatarDiagnostico = (values) => {
+    return values.map((value) => value.uuid);
   };
 
   return (

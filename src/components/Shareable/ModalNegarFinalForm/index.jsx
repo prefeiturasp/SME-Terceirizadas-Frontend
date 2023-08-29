@@ -6,12 +6,12 @@ import HTTP_STATUS from "http-status-codes";
 import { composeValidators, getError } from "helpers/utilities";
 import {
   peloMenosUmCaractere,
-  textAreaRequired
+  textAreaRequired,
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
@@ -24,7 +24,7 @@ export const ModalNegarFinalForm = ({ ...props }) => {
     solicitacao,
     endpoint,
     loadSolicitacao,
-    tipoSolicitacao
+    tipoSolicitacao,
   } = props;
   const [justificativa, setJustificativa] = useState("");
 
@@ -32,7 +32,7 @@ export const ModalNegarFinalForm = ({ ...props }) => {
     SolicitacaoAlimentacaoContext
   );
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const resp = await endpoint(solicitacao.uuid, values, tipoSolicitacao);
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
@@ -75,7 +75,7 @@ export const ModalNegarFinalForm = ({ ...props }) => {
                     )}
                   />
                   <OnChange name="justificativa">
-                    {value => setJustificativa(value)}
+                    {(value) => setJustificativa(value)}
                   </OnChange>
                 </div>
               </div>

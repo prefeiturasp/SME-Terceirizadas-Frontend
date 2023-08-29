@@ -8,7 +8,7 @@ import InputText from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { CODAEHomologaProduto } from "services/produto.service";
@@ -24,7 +24,7 @@ export const ModalVincularEditais = ({ ...props }) => {
     loadSolicitacao,
     produto,
     tituloModal,
-    ehSuspensaoFluxoAlteracaoDados
+    ehSuspensaoFluxoAlteracaoDados,
   } = props;
 
   const [loading, setLoading] = useState(false);
@@ -44,7 +44,7 @@ export const ModalVincularEditais = ({ ...props }) => {
 
   const onSubmit = () => {
     setLoading(true);
-    CODAEHomologaProduto(uuid, editais).then(response => {
+    CODAEHomologaProduto(uuid, editais).then((response) => {
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Solicitação de homologado enviada com sucesso");
         setLoading(false);
@@ -73,8 +73,8 @@ export const ModalVincularEditais = ({ ...props }) => {
           tipo: produto.eh_para_alunos_com_dieta ? "Dieta Especial" : "Comum",
           nome: produto.nome,
           marca: produto.marca.nome,
-          fabricante: produto.fabricante.nome
-        }
+          fabricante: produto.fabricante.nome,
+        },
       }}
       onSubmit={onSubmit}
     >
@@ -136,17 +136,17 @@ export const ModalVincularEditais = ({ ...props }) => {
                       name="editais"
                       selected={editais}
                       disableSearch={true}
-                      options={editaisOptions.map(edital => ({
+                      options={editaisOptions.map((edital) => ({
                         label: edital.numero,
-                        value: edital.uuid
+                        value: edital.uuid,
                       }))}
                       valueRenderer={(selected, options) =>
                         renderizarLabelEditais(selected, options)
                       }
                       overrideStrings={{
-                        selectAll: "Todos os editais"
+                        selectAll: "Todos os editais",
                       }}
-                      onSelectedChanged={values => onChangeEditais(values)}
+                      onSelectedChanged={(values) => onChangeEditais(values)}
                     />
                   </div>
                 </div>

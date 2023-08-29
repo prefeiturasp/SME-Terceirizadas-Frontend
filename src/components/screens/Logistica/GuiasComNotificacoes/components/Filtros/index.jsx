@@ -6,7 +6,7 @@ import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import SelectSelecione from "components/Shareable/SelectSelecione";
@@ -23,7 +23,7 @@ export default ({ setFiltros, setNotificacoes, fiscal }) => {
 
   const initialValues = {};
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
@@ -32,9 +32,9 @@ export default ({ setFiltros, setNotificacoes, fiscal }) => {
     const buscaDistribuidores = async () => {
       const response = await getNomesDistribuidores();
       setDistribuidores(
-        response.data.results.map(distribuidor => ({
+        response.data.results.map((distribuidor) => ({
           nome: distribuidor.nome_fantasia,
-          uuid: distribuidor.uuid
+          uuid: distribuidor.uuid,
         }))
       );
     };
@@ -84,8 +84,8 @@ export default ({ setFiltros, setNotificacoes, fiscal }) => {
                   options={[
                     {
                       value: "RASCUNHO",
-                      label: "Rascunho"
-                    }
+                      label: "Rascunho",
+                    },
                   ]}
                   placeholder="Selecione o Status da Notificação"
                   className="input-numero-notificacao"

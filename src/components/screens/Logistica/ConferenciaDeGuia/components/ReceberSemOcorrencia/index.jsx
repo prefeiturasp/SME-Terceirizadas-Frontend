@@ -4,12 +4,12 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { CONFERIR_ENTREGA, LOGISTICA } from "configs/constants";
 import {
   recebeGuiaSemOcorrencia,
-  editaGuiaComOcorrencia
+  editaGuiaComOcorrencia,
 } from "services/logistica.service";
 import { Spin } from "antd";
 import moment from "moment";
@@ -42,7 +42,7 @@ export default ({ values, disabled, uuidEdicao }) => {
           setLoading(false);
           goToConferir();
         })
-        .catch(e => {
+        .catch((e) => {
           toastError(e.response.data.detail);
           setLoading(false);
         });

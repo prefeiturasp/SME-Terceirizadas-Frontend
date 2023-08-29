@@ -11,25 +11,25 @@ import {
   RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP,
   RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
   RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP,
-  SOLICITACOES_DIETA_ESPECIAL
+  SOLICITACOES_DIETA_ESPECIAL,
 } from "configs/constants";
 import { ErrorHandlerFunction } from "./service-helpers";
 import { TIPO_MOTIVO } from "./constants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
-export const getRelatorioKitLancheUnificado = uuid => {
+export const getRelatorioKitLancheUnificado = (uuid) => {
   const url = `${API_URL}/solicitacoes-kit-lanche-unificada/${uuid}/relatorio/`;
   fetch(url, {
     method: "GET",
     headers: authToken,
-    responseType: "blob"
+    responseType: "blob",
   })
-    .then(response => response.blob())
-    .then(data => {
+    .then((response) => response.blob())
+    .then((data) => {
       let a = document.createElement("a");
       const fileURL = URL.createObjectURL(data);
       a.href = fileURL;
@@ -43,10 +43,10 @@ export const getRelatorioAlteracaoCardapio = (uuid, tipoSolicitacao) => {
   fetch(url, {
     method: "GET",
     headers: authToken,
-    responseType: "blob"
+    responseType: "blob",
   })
-    .then(response => response.blob())
-    .then(data => {
+    .then((response) => response.blob())
+    .then((data) => {
       let a = document.createElement("a");
       const fileURL = URL.createObjectURL(data);
       a.href = fileURL;
@@ -55,18 +55,18 @@ export const getRelatorioAlteracaoCardapio = (uuid, tipoSolicitacao) => {
     });
 };
 
-export const getRelatorioDietaEspecial = async uuid => {
+export const getRelatorioDietaEspecial = async (uuid) => {
   const url = `/solicitacoes-dieta-especial/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
-    responseType: "blob"
+    responseType: "blob",
   });
   saveAs(data, "relatorio_dieta_especial.pdf");
 };
 
-export const getProtocoloDietaEspecial = async uuid => {
+export const getProtocoloDietaEspecial = async (uuid) => {
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/protocolo/`;
   const { data } = await axios.get(url, {
-    responseType: "blob"
+    responseType: "blob",
   });
   saveAs(data, "protocolo_dieta_especial.pdf");
 };
@@ -77,7 +77,7 @@ export const getRelatorioInclusaoAlimentacao = async (
 ) => {
   let url = `${getInclusaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
-    responseType: "blob"
+    responseType: "blob",
   });
   saveAs(data, "inclusao_alimentacao.pdf");
 };
@@ -88,7 +88,7 @@ export const getRelatorioInclusaoAlimentacaoCEMEI = async (
 ) => {
   const url = `${getInclusaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
-    responseType: "blob"
+    responseType: "blob",
   });
   saveAs(data, "inclusao_alimentacao_cemei.pdf");
 };
@@ -99,7 +99,7 @@ export const getRelatorioAlteracaoTipoAlimentacao = async (
 ) => {
   const url = `${getAlteracaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
-    responseType: "blob"
+    responseType: "blob",
   });
   saveAs(data, "alteracao_tipo_alimentacao_cemei.pdf");
 };
@@ -109,10 +109,10 @@ export const getDetalheKitLancheAvulso = (uuid, tipoSolicitacao) => {
   fetch(url, {
     method: "GET",
     headers: authToken,
-    responseType: "blob"
+    responseType: "blob",
   })
-    .then(response => response.blob())
-    .then(data => {
+    .then((response) => response.blob())
+    .then((data) => {
       let a = document.createElement("a");
       const fileURL = URL.createObjectURL(data);
       a.href = fileURL;
@@ -126,10 +126,10 @@ export const getRelatorioProduto = ({ uuid, id_externo }) => {
   fetch(url, {
     method: "GET",
     headers: authToken,
-    responseType: "blob"
+    responseType: "blob",
   })
-    .then(response => response.blob())
-    .then(data => {
+    .then((response) => response.blob())
+    .then((data) => {
       let a = document.createElement("a");
       const fileURL = URL.createObjectURL(data);
       a.href = fileURL;
@@ -138,10 +138,10 @@ export const getRelatorioProduto = ({ uuid, id_externo }) => {
     });
 };
 
-export const getDetalheInversaoCardapio = async uuid => {
+export const getDetalheInversaoCardapio = async (uuid) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
-    responseType: "blob"
+    responseType: "blob",
   });
   saveAs(data, "relatorio_inversao_dia_cardapio.pdf");
 };
@@ -153,7 +153,7 @@ export const imprimeRelatorioSuspensaoAlimentacao = async (
   let url = `/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
   if (ehCei) url = `/suspensao-alimentacao-de-cei/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
-    responseType: "blob"
+    responseType: "blob",
   });
   saveAs(data, "relatorio_suspensao_alimentacao.pdf");
 };
@@ -193,10 +193,10 @@ export const getRelatorioFiltroPorPeriodo = (filtro, visao) => {
   fetch(url, {
     method: "GET",
     headers: authToken,
-    responseType: "blob"
+    responseType: "blob",
   })
-    .then(response => response.blob())
-    .then(data => {
+    .then((response) => response.blob())
+    .then((data) => {
       let a = document.createElement("a");
       const fileURL = URL.createObjectURL(data);
       a.href = fileURL;
@@ -205,7 +205,7 @@ export const getRelatorioFiltroPorPeriodo = (filtro, visao) => {
     });
 };
 
-export const getRelatorioResumoMesAno = visao => {
+export const getRelatorioResumoMesAno = (visao) => {
   let endpoint = "";
   switch (visao) {
     case VISAO.ESCOLA:
@@ -226,10 +226,10 @@ export const getRelatorioResumoMesAno = visao => {
   fetch(url, {
     method: "GET",
     headers: authToken,
-    responseType: "blob"
+    responseType: "blob",
   })
-    .then(response => response.blob())
-    .then(data => {
+    .then((response) => response.blob())
+    .then((data) => {
       let a = document.createElement("a");
       const fileURL = URL.createObjectURL(data);
       a.href = fileURL;
@@ -243,10 +243,10 @@ export const getRelatorioProdutoAnaliseSensorial = ({ uuid, id_externo }) => {
   fetch(url, {
     method: "GET",
     headers: authToken,
-    responseType: "blob"
+    responseType: "blob",
   })
-    .then(response => response.blob())
-    .then(data => {
+    .then((response) => response.blob())
+    .then((data) => {
       let a = document.createElement("a");
       const fileURL = URL.createObjectURL(data);
       a.href = fileURL;
@@ -257,16 +257,16 @@ export const getRelatorioProdutoAnaliseSensorial = ({ uuid, id_externo }) => {
 
 export const getRelatorioProdutoAnaliseSensorialRecebimento = ({
   uuid,
-  id_externo
+  id_externo,
 }) => {
   const url = `${API_URL}/produtos/${uuid}/relatorio-analise-sensorial-recebimento/`;
   fetch(url, {
     method: "GET",
     headers: authToken,
-    responseType: "blob"
+    responseType: "blob",
   })
-    .then(response => response.blob())
-    .then(data => {
+    .then((response) => response.blob())
+    .then((data) => {
       let a = document.createElement("a");
       const fileURL = URL.createObjectURL(data);
       a.href = fileURL;
@@ -275,7 +275,7 @@ export const getRelatorioProdutoAnaliseSensorialRecebimento = ({
     });
 };
 
-export const getRelatorioEmAnaliseSensorial = async params => {
+export const getRelatorioEmAnaliseSensorial = async (params) => {
   const { data } = await axios.get(
     `${API_URL}/produtos/relatorio-em-analise-sensorial/`,
     { params, responseType: "blob" }
@@ -283,7 +283,7 @@ export const getRelatorioEmAnaliseSensorial = async params => {
   saveAs(data, "relatorio_analise_sensorial.pdf");
 };
 
-export const getRelatorioProdutoSuspenso = async params => {
+export const getRelatorioProdutoSuspenso = async (params) => {
   const { data } = await axios.get(
     `${API_URL}/produtos/relatorio-produto-suspenso/`,
     { params, responseType: "blob" }
@@ -291,29 +291,31 @@ export const getRelatorioProdutoSuspenso = async params => {
   saveAs(data, "relatorio_produto_suspenso.pdf");
 };
 
-export const imprimeRelatorioQuantitativoSolicDietaEsp = async payload => {
+export const imprimeRelatorioQuantitativoSolicDietaEsp = async (payload) => {
   const { data } = await axios.post(
     `/${SOLICITACOES_DIETA_ESPECIAL}/imprime-${RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP}/`,
     payload,
     {
-      responseType: "blob"
+      responseType: "blob",
     }
   );
   saveAs(data, "relatorio_quantitativo_solicitacoes_dieta_especial.pdf");
 };
 
-export const imprimeRelatorioQuantitativoClassificacaoDietaEsp = async payload => {
+export const imprimeRelatorioQuantitativoClassificacaoDietaEsp = async (
+  payload
+) => {
   const { data } = await axios.post(
     `/${SOLICITACOES_DIETA_ESPECIAL}/imprime-${RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP}/`,
     payload,
     {
-      responseType: "blob"
+      responseType: "blob",
     }
   );
   saveAs(data, "relatorio_quantitativo_classificacao_dieta_especial.pdf");
 };
 
-export const imprimeRelatorioQuantitativoDiagDietaEsp = async payload => {
+export const imprimeRelatorioQuantitativoDiagDietaEsp = async (payload) => {
   let url = `/${SOLICITACOES_DIETA_ESPECIAL}/imprime-${RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP}/`;
   if (payload.somente_dietas_ativas) {
     url += "somente-dietas-ativas/";
@@ -347,37 +349,37 @@ export const getMotivosDREnaoValida = async () => {
   }
 };
 
-export const getRelatorioKitLancheCEMEI = async uuid => {
+export const getRelatorioKitLancheCEMEI = async (uuid) => {
   const url = `/solicitacao-kit-lanche-cemei/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
-    responseType: "blob"
+    responseType: "blob",
   });
   saveAs(data, "relatorio_kit_lanche_cemei.pdf");
 };
 
-export const medicaoInicialExportarOcorrenciasPDF = async url => {
+export const medicaoInicialExportarOcorrenciasPDF = async (url) => {
   const { data } = await axios.get(`${url}`, {
-    responseType: "blob"
+    responseType: "blob",
   });
   saveAs(data, "ocorrencias_medicao_inicial.pdf");
 };
 
-export const medicaoInicialExportarOcorrenciasXLSX = async url => {
+export const medicaoInicialExportarOcorrenciasXLSX = async (url) => {
   const { data } = await axios.get(`${url}`, {
-    responseType: "blob"
+    responseType: "blob",
   });
   saveAs(data, "ocorrencias_medicao_inicial.xlsx");
 };
 
-export const documentoAnaliseSensorial = async url => {
+export const documentoAnaliseSensorial = async (url) => {
   const { data } = await axios.get(`${url}`, {
-    responseType: "blob"
+    responseType: "blob",
   });
   const extensao = url.split(".").pop();
   saveAs(data, `resposta_analise_sensorial.${extensao}`);
 };
 
-export const relatorioMedicaoInicialPDF = async uuid => {
+export const relatorioMedicaoInicialPDF = async (uuid) => {
   const url = `medicao-inicial/solicitacao-medicao-inicial/relatorio-pdf/`;
   const response = await axios
     .get(url, { params: { uuid: uuid } })

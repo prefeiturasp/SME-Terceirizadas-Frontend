@@ -4,11 +4,11 @@ import { faixaToString } from "../../../helpers/faixasEtarias";
 import "./style.scss";
 
 const TabelaFaixaEtaria = ({ faixas = [] }) => {
-  const total = faixas.reduce(function(acc, v) {
+  const total = faixas.reduce(function (acc, v) {
     return acc + (v.quantidade || v.quantidade_alunos);
   }, 0);
 
-  const total_matriculados = faixas.reduce(function(acc, v) {
+  const total_matriculados = faixas.reduce(function (acc, v) {
     return acc + (v.matriculados_quando_criado || 0);
   }, 0);
 
@@ -26,7 +26,7 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
             faixa_etaria,
             quantidade,
             quantidade_alunos,
-            matriculados_quando_criado
+            matriculados_quando_criado,
           },
           indice
         ) => {
@@ -51,7 +51,7 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
 };
 
 TabelaFaixaEtaria.propTypes = {
-  faixas: array
+  faixas: array,
 };
 
 export default TabelaFaixaEtaria;

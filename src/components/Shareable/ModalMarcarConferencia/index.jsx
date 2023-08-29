@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import { terceirizadaMarcaConferencia } from "services/dietaEspecial.service";
@@ -15,7 +15,7 @@ const ModalMarcarConferencia = ({
   closeModal,
   onMarcarConferencia,
   uuid,
-  endpoint
+  endpoint,
 }) => {
   const marcaConferencia = async () => {
     const resp = await terceirizadaMarcaConferencia(uuid, endpoint);

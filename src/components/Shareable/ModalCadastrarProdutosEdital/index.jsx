@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import {
   cadastrarProdutoEdital,
-  atualizarProdutoEdital
+  atualizarProdutoEdital,
 } from "services/produto.service";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -13,12 +13,12 @@ import {
   required,
   selectValidate,
   alphaNumericAndSingleSpaceBetweenCharacters,
-  noSpaceStartOrEnd
+  noSpaceStartOrEnd,
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { composeValidators } from "helpers/utilities";
 import "./style.scss";
@@ -37,18 +37,18 @@ export default ({ closeModal, showModal, produto, changePage }) => {
     fetchData();
   }, []);
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     setCarregando(true);
     const payload = {
       nome: formValues.nome,
-      ativo: formValues.status
+      ativo: formValues.status,
     };
     if (produto) {
       await atualizarProdutoEdital(payload, produto.uuid)
         .then(() => {
           toastSuccess("Alterações salvas com sucesso.");
         })
-        .catch(error => {
+        .catch((error) => {
           toastError(error.response.data[0]);
         });
     } else {
@@ -58,7 +58,7 @@ export default ({ closeModal, showModal, produto, changePage }) => {
             "Cadastro de Produto Proveniente de Edital Efetuado com sucesso."
           );
         })
-        .catch(error => {
+        .catch((error) => {
           toastError(error.response.data[0]);
         });
     }
@@ -93,10 +93,10 @@ export default ({ closeModal, showModal, produto, changePage }) => {
                       defaultValue={produto ? produto.status : undefined}
                       //disabled={item ? true : false}
                       options={[
-                        { uuid: "", nome: "Selecione uma opção" }
+                        { uuid: "", nome: "Selecione uma opção" },
                       ].concat(
                         tipos &&
-                          tipos.map(tipo => {
+                          tipos.map((tipo) => {
                             return { uuid: tipo.uuid, nome: tipo.status };
                           })
                       )}

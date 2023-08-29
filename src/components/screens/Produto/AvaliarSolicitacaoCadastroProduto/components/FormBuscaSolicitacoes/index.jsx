@@ -10,7 +10,7 @@ import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import Select from "components/Shareable/Select";
@@ -32,10 +32,10 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
     fetchData();
   }, []);
 
-  const onSearch = searchText => {
+  const onSearch = (searchText) => {
     if (searchText.length) {
       const reg = new RegExp(searchText, "i");
-      setNomesProdutosFiltrado(nomesProdutos.filter(nome => reg.test(nome)));
+      setNomesProdutosFiltrado(nomesProdutos.filter((nome) => reg.test(nome)));
     }
   };
   return (
@@ -65,9 +65,9 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
                   { uuid: "", nome: "Todos" },
                   {
                     uuid: "AGUARDANDO_CONFIRMACAO",
-                    nome: "Aguardando confirmação"
+                    nome: "Aguardando confirmação",
                   },
-                  { uuid: "CONFIRMADA", nome: "Confirmada" }
+                  { uuid: "CONFIRMADA", nome: "Confirmada" },
                 ]}
                 label="Situação do Pedido"
                 name="status"
@@ -131,7 +131,7 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
                   nome_produto: undefined,
                   status: undefined,
                   data_final: undefined,
-                  data_inicial: undefined
+                  data_inicial: undefined,
                 });
               }}
             />
@@ -142,9 +142,9 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    initialValues: state.finalForm[FORM_NAME]
+    initialValues: state.finalForm[FORM_NAME],
   };
 };
 

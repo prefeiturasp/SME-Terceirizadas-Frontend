@@ -5,7 +5,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Paginacao } from "components/Shareable/Paginacao";
 
@@ -36,12 +36,12 @@ export default () => {
     setDadosRelatorio(response.data.results);
   };
 
-  const submit = async formValuesSubmit => {
+  const submit = async (formValuesSubmit) => {
     atualizaDados(formValuesSubmit);
     setFormValues(formValuesSubmit);
   };
 
-  const onPaginationChange = async page => {
+  const onPaginationChange = async (page) => {
     atualizaDados(formValues, page);
     setPage(page);
   };

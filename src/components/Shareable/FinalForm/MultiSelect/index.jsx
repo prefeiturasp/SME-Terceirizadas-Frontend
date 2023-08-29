@@ -32,7 +32,7 @@ export default ({
       return allItemsAreSelectedText;
     } else if (input.value[0]) {
       const matchingOption = props.options.find(
-        e => e.value === input.value[0]
+        (e) => e.value === input.value[0]
       );
       return matchingOption ? matchingOption.label : "";
     }
@@ -53,7 +53,7 @@ export default ({
           className={`${labelClassName || "col-form-label"}`}
         >
           {label}
-        </label>
+        </label>,
       ]}
       {!props.disabled && (
         <MultiSelect
@@ -68,7 +68,7 @@ export default ({
             allItemsAreSelected:
               input.value.length === 1 && props.options[0]
                 ? props.options[0].label
-                : allItemsAreSelectedText
+                : allItemsAreSelectedText,
           }}
           valueRenderer={(selected, options) => {
             if (selected.length === 0) {
@@ -88,10 +88,12 @@ export default ({
       )}
       {props.disabled && (
         <input
-          className={`form-control ${meta &&
+          className={`form-control ${
+            meta &&
             meta.touched &&
             (meta.error || meta.warning) &&
-            "invalid-field"}`}
+            "invalid-field"
+          }`}
           disabled={props.disabled}
           placeholder={placeholder ? placeholder : "Selecione"}
           data-cy={input.name}

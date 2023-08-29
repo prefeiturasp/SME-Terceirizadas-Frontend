@@ -2,7 +2,7 @@ export const STATUS_SOLICITACOES = [
   { nome: "Autorizadas", uuid: "AUTORIZADOS" },
   { nome: "Canceladas", uuid: "CANCELADOS" },
   { nome: "Negadas", uuid: "NEGADOS" },
-  { nome: "Recebidas", uuid: "RECEBIDAS" }
+  { nome: "Recebidas", uuid: "RECEBIDAS" },
 ];
 
 export const TIPOS_SOLICITACAO = [
@@ -10,5 +10,5 @@ export const TIPOS_SOLICITACAO = [
   { label: "Alteração do Tipo de Alimentação", value: "ALT_CARDAPIO" },
   { label: "Kit Lanche", value: "KIT_LANCHE_AVULSA" },
   { label: "Inversão de Dia de Cardápio", value: "INV_CARDAPIO" },
-  { label: "Suspensão de Alimentação", value: "SUSP_ALIMENTACAO" }
+  { label: "Suspensão de Alimentação", value: "SUSP_ALIMENTACAO" },
 ];

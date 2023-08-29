@@ -12,7 +12,7 @@ export const terceirizadaRespondeQuestionamentoKitLanche = async (
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "PATCH",
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   };
   let status = 0;
   try {
@@ -31,18 +31,18 @@ export const terceirizadaTomaCienciaKitLanche = (uuid, tipoSolicitacao) => {
   }/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "PATCH"
+    method: "PATCH",
   };
   let status = 0;
   return fetch(url, OBJ_REQUEST)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -56,13 +56,13 @@ export const getTerceirizadasPedidosDeKitLanche = (
   }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };

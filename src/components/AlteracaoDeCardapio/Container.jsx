@@ -14,25 +14,25 @@ class Container extends Component {
       periodos: [],
       proximos_dois_dias_uteis: null,
       proximos_cinco_dias_uteis: null,
-      feriados_ano: null
+      feriados_ano: null,
     };
   }
 
   componentDidMount() {
-    meusDados().then(response => {
+    meusDados().then((response) => {
       this.setState({
         meusDados: response,
-        periodos: response.vinculo_atual.instituicao.periodos_escolares
+        periodos: response.vinculo_atual.instituicao.periodos_escolares,
       });
     });
 
-    getMotivosAlteracaoCardapio().then(response => {
+    getMotivosAlteracaoCardapio().then((response) => {
       this.setState({
-        motivos: agregarDefault(response.data.results)
+        motivos: agregarDefault(response.data.results),
       });
     });
 
-    getDiasUteis().then(response => {
+    getDiasUteis().then((response) => {
       const proximos_cinco_dias_uteis = dataParaUTC(
         new Date(response.data.proximos_cinco_dias_uteis)
       );
@@ -41,11 +41,11 @@ class Container extends Component {
       );
       this.setState({
         proximos_dois_dias_uteis,
-        proximos_cinco_dias_uteis
+        proximos_cinco_dias_uteis,
       });
     });
 
-    getFeriadosAno().then(response => {
+    getFeriadosAno().then((response) => {
       const feriados_ano = response.data.results;
       this.setState({ feriados_ano });
     });

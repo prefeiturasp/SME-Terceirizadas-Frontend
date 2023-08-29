@@ -11,19 +11,19 @@ const TabelaResultado = ({
   setProdutos,
   pageSize,
   setPage,
-  page
+  page,
 }) => {
   const [carregando, setCarregando] = useState(false);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     setCarregando(true);
     setPage(page);
     const params = gerarParametrosConsulta({
       ...filtros,
       page: page,
-      page_size: pageSize
+      page_size: pageSize,
     });
-    getProdutosRelatorioSuspenso(params).then(response => {
+    getProdutosRelatorioSuspenso(params).then((response) => {
       setProdutos(response.data.results);
       setCarregando(false);
     });
@@ -73,7 +73,7 @@ const TabelaResultado = ({
               current={page}
               total={produtosCount}
               showSizeChanger={false}
-              onChange={page => {
+              onChange={(page) => {
                 nextPage(page);
               }}
               pageSize={pageSize}

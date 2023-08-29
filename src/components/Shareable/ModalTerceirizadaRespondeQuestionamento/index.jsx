@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "../Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -21,7 +21,7 @@ export const ModalTerceirizadaRespondeQuestionamento = ({ ...props }) => {
     uuid,
     showModal,
     resposta_sim_nao,
-    loadSolicitacao
+    loadSolicitacao,
   } = props;
 
   const responderQuestionamento = async (uuid, values) => {

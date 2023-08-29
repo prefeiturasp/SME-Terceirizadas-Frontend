@@ -27,7 +27,7 @@ const RelatorioReclamacaoProduto = () => {
       const params = gerarParametrosConsulta({
         ...filtros,
         page: page,
-        page_size: PAGE_SIZE
+        page_size: PAGE_SIZE,
       });
       const response = await getProdutosReclamacoes(params);
       setProdutos(response.data.results);

@@ -4,14 +4,14 @@ import CardBody from "components/Shareable/CardBody";
 import CardMatriculados from "components/Shareable/CardMatriculados";
 import CardStatusDeSolicitacao, {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import {
   ESCOLA,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_NEGADAS,
-  SOLICITACOES_PENDENTES
+  SOLICITACOES_PENDENTES,
 } from "configs/constants";
 import { PAGINACAO_DEFAULT } from "constants/shared";
 import { dataAtual } from "helpers/utilities";
@@ -20,7 +20,7 @@ import {
   getSolicitacoesAutorizadasEscola,
   getSolicitacoesCanceladasEscola,
   getSolicitacoesNegadasEscola,
-  getSolicitacoesPendentesEscola
+  getSolicitacoesPendentesEscola,
 } from "services/painelEscola.service";
 import { Spin } from "antd";
 import { ajustarFormatoLog } from "../helper";
@@ -32,20 +32,16 @@ export const DashboardEscola = () => {
   const [negadas, setNegadas] = useState(null);
   const [canceladas, setCanceladas] = useState(null);
   const [erro, setErro] = useState("");
-  const prepararParametros = values => {
+  const prepararParametros = (values) => {
     const params = PARAMS;
     params["tipo_solicitacao"] = values.tipo_solicitacao;
     params["data_evento"] =
-      values.data_evento &&
-      values.data_evento
-        .split("/")
-        .reverse()
-        .join("-");
+      values.data_evento && values.data_evento.split("/").reverse().join("-");
     return params;
   };
   const [
     loadingAcompanhamentoSolicitacoes,
-    setLoadingAcompanhamentoSolicitacoes
+    setLoadingAcompanhamentoSolicitacoes,
   ] = useState(false);
   const { meusDados } = useContext(MeusDadosContext);
 
@@ -92,11 +88,11 @@ export const DashboardEscola = () => {
     getSolicitacoesAsync(PARAMS);
   }, []);
 
-  const onPesquisaChanged = values => {
+  const onPesquisaChanged = (values) => {
     if (values.titulo && values.titulo.length > 2) {
       getSolicitacoesAsync({
         busca: values.titulo,
-        ...prepararParametros(values)
+        ...prepararParametros(values),
       });
     } else {
       getSolicitacoesAsync(prepararParametros(values));
@@ -123,7 +119,7 @@ export const DashboardEscola = () => {
                 exibirFiltrosDataEventoETipoSolicitacao={true}
                 titulo={"Acompanhamento solicitações"}
                 dataAtual={dataAtual()}
-                onChange={values => {
+                onChange={(values) => {
                   clearTimeout(typingTimeout);
                   typingTimeout = setTimeout(async () => {
                     onPesquisaChanged(values);
