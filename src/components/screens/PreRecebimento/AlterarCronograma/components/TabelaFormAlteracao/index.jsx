@@ -16,7 +16,7 @@ export default ({ solicitacao }) => {
     } else return "";
   };
 
-  const apenasLeitura = solicitacao.status !== "Em Análise";
+  const apenasLeitura = solicitacao.status !== "Em análise";
 
   return (
     <>
