@@ -137,6 +137,7 @@ function SolicitacoesPorStatusGenerico(props) {
     };
     setPropsAlimentacaoRedux(propsAlimentacao);
     const values = {
+      limit: 10,
       titulo: propsAlimentacao.tituloAlimentacao || "",
       lote: propsAlimentacao.loteAlimentacao || "",
       status: propsAlimentacao.statusAlimentacao || "",
