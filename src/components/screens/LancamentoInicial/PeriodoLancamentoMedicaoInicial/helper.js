@@ -165,9 +165,7 @@ export const valorZeroFrequencia = (
   form,
   tabelaAlimentacaoRows,
   tabelaDietaRows,
-  tabelaDietaEnteralRows,
-  dadosValoresInclusoesAutorizadasState,
-  validacaoDiaLetivo
+  tabelaDietaEnteralRows
 ) => {
   if (rowName === "frequencia" && value && Number(value) === 0) {
     let linhasDaTabela = null;
@@ -177,22 +175,6 @@ export const valorZeroFrequencia = (
       linhasDaTabela = tabelaDietaRows;
     } else {
       linhasDaTabela = tabelaAlimentacaoRows;
-      if (
-        Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
-          String(key).includes(`__dia_${dia}__categoria_${categoria.id}`)
-        ) &&
-        !validacaoDiaLetivo(dia)
-      ) {
-        linhasDaTabela = linhasDaTabela.filter((linha) =>
-          Object.keys(
-            Object.fromEntries(
-              Object.entries(dadosValoresInclusoesAutorizadasState).filter(
-                ([key]) => key.includes(dia)
-              )
-            )
-          ).some((key) => key.includes(linha.name))
-        );
-      }
     }
 
     linhasDaTabela.forEach((linha) => {
