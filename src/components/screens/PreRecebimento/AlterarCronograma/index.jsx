@@ -423,7 +423,7 @@ export default ({ analiseSolicitacao }) => {
                     )}
                     {analiseSolicitacao &&
                       solicitacaoAlteracaoCronograma.status ===
-                        "Em Análise" && (
+                        "Em análise" && (
                         <div
                           className="accordion mt-1"
                           id="accordionCronograma"
