@@ -14,7 +14,7 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
 
   return (
     <section className="tabela-faixa-etaria">
-      <article>
+      <article className="tabela-rows">
         <div className="faixa-etaria">Faixa Etária</div>
         <div className="alunos-matriculados">Alunos Matriculados</div>
         <div className="quantidade">Quantidade</div>
@@ -31,17 +31,24 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
           indice
         ) => {
           return (
-            <article key={indice}>
+            <article key={indice} className="tabela-rows">
+              {console.log("faixa_etaria 222", faixa_etaria)}
+              {console.log(
+                "faixaToString(faixa_etaria) 333",
+                faixaToString(faixa_etaria)
+              )}
               <div className="faixa-etaria">{faixaToString(faixa_etaria)}</div>
               <div className="alunos-matriculados">
                 {matriculados_quando_criado}
               </div>
-              <div>{quantidade || quantidade_alunos}</div>
+              <div className="quantidade">
+                {quantidade || quantidade_alunos}
+              </div>
             </article>
           );
         }
       )}
-      <article>
+      <article className="tabela-rows">
         <div className="faixa-etaria">Total {">>"} </div>
         <div className="alunos-matriculados">{total_matriculados || "N/A"}</div>
         <div className="quantidade">{total}</div>
