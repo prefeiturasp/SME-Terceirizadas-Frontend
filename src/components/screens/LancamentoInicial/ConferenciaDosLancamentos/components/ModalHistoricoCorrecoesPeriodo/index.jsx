@@ -78,11 +78,17 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
     }
   };
 
+  const closeModal = () => {
+    setDetalhesHistoricoAtivo(<p />);
+    setActiveIdx(undefined);
+    setShowModal(false);
+  };
+
   return (
     <Modal
       dialogClassName="modal-60w"
       show={showModal}
-      onHide={() => setShowModal(false)}
+      onHide={() => closeModal()}
     >
       <Modal.Header closeButton>
         <Modal.Title>
@@ -159,7 +165,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
           className="float-right"
           texto="Fechar"
           type={BUTTON_TYPE.BUTTON}
-          onClick={() => setShowModal(false)}
+          onClick={() => closeModal()}
           style={BUTTON_STYLE.GREEN}
         />
       </Modal.Footer>
