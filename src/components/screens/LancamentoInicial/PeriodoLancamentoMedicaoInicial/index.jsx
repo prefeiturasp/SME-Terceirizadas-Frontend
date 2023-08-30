@@ -1455,10 +1455,7 @@ export default () => {
       );
 
     if (ehCorrecao) {
-      const payloadParaCorrecao = formatarPayloadParaCorrecao(
-        valoresPeriodosLancamentos,
-        payload
-      );
+      const payloadParaCorrecao = formatarPayloadParaCorrecao(payload);
       const response = await escolaCorrigeMedicao(
         valoresPeriodosLancamentos[0].medicao_uuid,
         payloadParaCorrecao
