@@ -94,31 +94,13 @@ export const formatarPayloadPeriodoLancamento = (
   return { ...values, valores_medicao: valoresMedicao };
 };
 
-export const formatarPayloadParaCorrecao = (
-  valoresPeriodosLancamentos,
-  payload
-) => {
-  let payloadParaCorrecao = [];
-  valoresPeriodosLancamentos
-    .filter(
-      (valor) =>
-        valor.habilitado_correcao &&
-        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
-          valor.nome_campo
-        )
-    )
-    .forEach((valor_lancamento) => {
-      payloadParaCorrecao.push(
-        payload.valores_medicao.filter(
-          (valor_medicao) =>
-            String(valor_lancamento.categoria_medicao) ===
-              valor_medicao.categoria_medicao &&
-            valor_lancamento.dia === valor_medicao.dia &&
-            valor_lancamento.nome_campo === valor_medicao.nome_campo
-        )[0]
-      );
-    });
-
+export const formatarPayloadParaCorrecao = (payload) => {
+  let payloadParaCorrecao = payload.valores_medicao.filter(
+    (valor) =>
+      !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
+        valor.nome_campo
+      )
+  );
   return payloadParaCorrecao;
 };
 
