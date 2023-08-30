@@ -189,6 +189,7 @@ const validaAlimentacoesEDietasCEUGESTAO = (
   if (
     ![
       "lanche",
+      "lanche_4h",
       "refeicao",
       "repeticao_refeicao",
       "sobremesa",
@@ -211,10 +212,14 @@ const validaAlimentacoesEDietasCEUGESTAO = (
     if (nomeCategoria.includes("ENTERAL")) {
       return (
         !tiposAlimentacaoExistentes.includes("refeicao") &&
-        !tiposAlimentacaoExistentes.includes("lanche")
+        !tiposAlimentacaoExistentes.includes("lanche") &&
+        !tiposAlimentacaoExistentes.includes("lanche_4h")
       );
     }
-    if (!tiposAlimentacaoExistentes.includes("lanche")) {
+    if (
+      !tiposAlimentacaoExistentes.includes("lanche") &&
+      !tiposAlimentacaoExistentes.includes("lanche_4h")
+    ) {
       return true;
     }
     return false;
