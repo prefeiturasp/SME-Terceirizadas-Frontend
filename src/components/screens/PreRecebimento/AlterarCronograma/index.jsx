@@ -27,6 +27,7 @@ import {
 } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import {
+  usuarioEhCronograma,
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
   usuarioEhEmpresaFornecedor,
@@ -61,7 +62,7 @@ export default ({ analiseSolicitacao }) => {
 
   const exibirJustificativaDinutre = () =>
     aprovacaoDinutre === false ||
-    ((usuarioEhDilogDiretoria() || usuarioEhDinutreDiretoria) &&
+    ((usuarioEhDilogDiretoria() || usuarioEhDinutreDiretoria()) &&
       ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
         solicitacaoAlteracaoCronograma.status
       ));
@@ -141,6 +142,10 @@ export default ({ analiseSolicitacao }) => {
       solicitacaoAlteracaoCronograma.status
     );
   };
+
+  const analiseCronograma = () =>
+    solicitacaoAlteracaoCronograma.status === "Em análise" &&
+    usuarioEhCronograma();
 
   const cadastraAlteracao = async (values) => {
     const payload = prepararPayloadCronograma(cronograma, values, etapas);
@@ -230,12 +235,10 @@ export default ({ analiseSolicitacao }) => {
   };
 
   const buscaLogJustificativaCronograma = (logs, autorJustificativa) => {
+    console.log("a");
     const dict_logs = {
-      cronograma: ["Cronograma ciente alteração cronograma"],
-      dinutre: [
-        "Alteração cronograma aprovada pela DINUTRE",
-        "Alteração cronograma reprovada pela DINUTRE",
-      ],
+      cronograma: ["Cronograma Ciente"],
+      dinutre: ["Aprovado DINUTRE", "Reprovado DINUTRE"],
     };
     let log_correto = logs.find((log) => {
       return dict_logs[autorJustificativa].includes(
@@ -328,6 +331,7 @@ export default ({ analiseSolicitacao }) => {
                         </p>
                         <TabelaFormAlteracao
                           solicitacao={solicitacaoAlteracaoCronograma}
+                          somenteLeitura={!analiseCronograma()}
                         />
                       </>
                     )}
@@ -361,7 +365,8 @@ export default ({ analiseSolicitacao }) => {
                         validate={textAreaRequired}
                       />
                     </div>
-                    {(usuarioEhDinutreDiretoria() ||
+                    {((usuarioEhDinutreDiretoria() &&
+                      solicitacaoAlteracaoCronograma.status !== "Em análise") ||
                       (usuarioEhDilogDiretoria() &&
                         analisadoPelaDinutre())) && (
                       <>
@@ -421,22 +426,17 @@ export default ({ analiseSolicitacao }) => {
                         )}
                       </>
                     )}
-                    {analiseSolicitacao &&
-                      solicitacaoAlteracaoCronograma.status ===
-                        "Em análise" && (
-                        <div
-                          className="accordion mt-1"
-                          id="accordionCronograma"
-                        >
-                          <FormRecebimento
-                            values={values}
-                            form={form}
-                            etapas={solicitacaoAlteracaoCronograma.etapas_novas}
-                            recebimentos={recebimentos}
-                            setRecebimentos={setRecebimentos}
-                          />
-                        </div>
-                      )}
+                    {analiseSolicitacao && analiseCronograma() && (
+                      <div className="accordion mt-1" id="accordionCronograma">
+                        <FormRecebimento
+                          values={values}
+                          form={form}
+                          etapas={solicitacaoAlteracaoCronograma.etapas_novas}
+                          recebimentos={recebimentos}
+                          setRecebimentos={setRecebimentos}
+                        />
+                      </div>
+                    )}
                     {usuarioEhDilogDiretoria() && analisadoPelaDinutre() && (
                       <AnaliseDilogDiretoria
                         aprovacaoDilog={aprovacaoDilog}
