@@ -94,31 +94,13 @@ export const formatarPayloadPeriodoLancamento = (
   return { ...values, valores_medicao: valoresMedicao };
 };
 
-export const formatarPayloadParaCorrecao = (
-  valoresPeriodosLancamentos,
-  payload
-) => {
-  let payloadParaCorrecao = [];
-  valoresPeriodosLancamentos
-    .filter(
-      (valor) =>
-        valor.habilitado_correcao &&
-        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
-          valor.nome_campo
-        )
-    )
-    .forEach((valor_lancamento) => {
-      payloadParaCorrecao.push(
-        payload.valores_medicao.filter(
-          (valor_medicao) =>
-            String(valor_lancamento.categoria_medicao) ===
-              valor_medicao.categoria_medicao &&
-            valor_lancamento.dia === valor_medicao.dia &&
-            valor_lancamento.nome_campo === valor_medicao.nome_campo
-        )[0]
-      );
-    });
-
+export const formatarPayloadParaCorrecao = (payload) => {
+  let payloadParaCorrecao = payload.valores_medicao.filter(
+    (valor) =>
+      !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
+        valor.nome_campo
+      )
+  );
   return payloadParaCorrecao;
 };
 
@@ -165,9 +147,7 @@ export const valorZeroFrequencia = (
   form,
   tabelaAlimentacaoRows,
   tabelaDietaRows,
-  tabelaDietaEnteralRows,
-  dadosValoresInclusoesAutorizadasState,
-  validacaoDiaLetivo
+  tabelaDietaEnteralRows
 ) => {
   if (rowName === "frequencia" && value && Number(value) === 0) {
     let linhasDaTabela = null;
@@ -177,22 +157,6 @@ export const valorZeroFrequencia = (
       linhasDaTabela = tabelaDietaRows;
     } else {
       linhasDaTabela = tabelaAlimentacaoRows;
-      if (
-        Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
-          String(key).includes(`__dia_${dia}__categoria_${categoria.id}`)
-        ) &&
-        !validacaoDiaLetivo(dia)
-      ) {
-        linhasDaTabela = linhasDaTabela.filter((linha) =>
-          Object.keys(
-            Object.fromEntries(
-              Object.entries(dadosValoresInclusoesAutorizadasState).filter(
-                ([key]) => key.includes(dia)
-              )
-            )
-          ).some((key) => key.includes(linha.name))
-        );
-      }
     }
 
     linhasDaTabela.forEach((linha) => {
@@ -225,6 +189,7 @@ const validaAlimentacoesEDietasCEUGESTAO = (
   if (
     ![
       "lanche",
+      "lanche_4h",
       "refeicao",
       "repeticao_refeicao",
       "sobremesa",
@@ -247,10 +212,14 @@ const validaAlimentacoesEDietasCEUGESTAO = (
     if (nomeCategoria.includes("ENTERAL")) {
       return (
         !tiposAlimentacaoExistentes.includes("refeicao") &&
-        !tiposAlimentacaoExistentes.includes("lanche")
+        !tiposAlimentacaoExistentes.includes("lanche") &&
+        !tiposAlimentacaoExistentes.includes("lanche_4h")
       );
     }
-    if (!tiposAlimentacaoExistentes.includes("lanche")) {
+    if (
+      !tiposAlimentacaoExistentes.includes("lanche") &&
+      !tiposAlimentacaoExistentes.includes("lanche_4h")
+    ) {
       return true;
     }
     return false;

@@ -262,10 +262,13 @@ export default () => {
       );
     }
 
-    if (!tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+    if (
+      !tiposAlimentacaoCEUGESTAO.includes("lanche") &&
+      !tiposAlimentacaoCEUGESTAO.includes("lanche_4h")
+    ) {
       const indexRefeicao1Oferta =
         tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
-          (ali) => ali.nome === "Lanche"
+          (ali) => ali.nome === "Lanche" || ali.nome === "Lanche 4h"
         );
       tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
         indexRefeicao1Oferta,
@@ -287,7 +290,10 @@ export default () => {
         (categoria) => !categoria.nome.includes("ENTERAL")
       );
     }
-    if (!tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+    if (
+      !tiposAlimentacaoCEUGESTAO.includes("lanche") &&
+      !tiposAlimentacaoCEUGESTAO.includes("lanche_4h")
+    ) {
       response_categorias_medicao = response_categorias_medicao.filter(
         (categoria) =>
           !categoria.nome.includes("DIETA ESPECIAL") ||
@@ -340,6 +346,7 @@ export default () => {
       const mes = format(mesAnoSelecionado, "MM");
       const ano = getYear(mesAnoSelecionado);
 
+      let response_inclusoes_autorizadas = [];
       response_inclusoes_autorizadas =
         await getSolicitacoesInclusaoAutorizadasAsync(
           escola.uuid,
@@ -517,6 +524,19 @@ export default () => {
           name: "refeicao",
           uuid: cloneTiposAlimentacao[indexRefeicaoDieta].uuid,
         });
+      }
+
+      if (
+        ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) &&
+        !tiposAlimentacaoCEUGESTAO.includes("lanche") &&
+        !tiposAlimentacaoCEUGESTAO.includes("lanche_4h")
+      ) {
+        const indexLanche = cloneRowsDietas.findIndex(
+          (ali) => ali.nome === "Lanche" || ali.nome === "Lanche 4h"
+        );
+        cloneRowsDietas.splice(indexLanche, 1);
       }
 
       setTabelaDietaEnteralRows(cloneRowsDietas);
@@ -749,7 +769,6 @@ export default () => {
       setValoresPeriodosLancamentos(response_valores_periodos.data);
 
       let response_matriculados = [];
-      let response_inclusoes_autorizadas = [];
       let response_inclusoes_etec_autorizadas = [];
       let response_kit_lanches_autorizadas = [];
       let response_suspensoes_autorizadas = [];
@@ -1295,7 +1314,11 @@ export default () => {
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
       if (
         !ehGrupoETECUrlParam &&
-        !(key.includes("observacoes") || key.includes("frequencia")) &&
+        !(
+          key.includes("observacoes") ||
+          key.includes("frequencia") ||
+          key.includes("repeticao")
+        ) &&
         Number(value) >
           Number(
             valuesMesmoDiaDaObservacao[
@@ -1451,10 +1474,7 @@ export default () => {
       );
 
     if (ehCorrecao) {
-      const payloadParaCorrecao = formatarPayloadParaCorrecao(
-        valoresPeriodosLancamentos,
-        payload
-      );
+      const payloadParaCorrecao = formatarPayloadParaCorrecao(payload);
       const response = await escolaCorrigeMedicao(
         valoresPeriodosLancamentos[0].medicao_uuid,
         payloadParaCorrecao
@@ -1624,9 +1644,7 @@ export default () => {
         form,
         tabelaAlimentacaoRows,
         tabelaDietaRows,
-        tabelaDietaEnteralRows,
-        dadosValoresInclusoesAutorizadasState,
-        validacaoDiaLetivo
+        tabelaDietaEnteralRows
       );
     if (deepEqual(values, dadosIniciais)) {
       setDisableBotaoSalvarLancamentos(true);
@@ -1819,7 +1837,7 @@ export default () => {
         value,
         allValues,
         location,
-        valoresPeriodosLancamentos[0].medicao_uuid
+        valoresPeriodosLancamentos[0]?.medicao_uuid
       );
     };
 
