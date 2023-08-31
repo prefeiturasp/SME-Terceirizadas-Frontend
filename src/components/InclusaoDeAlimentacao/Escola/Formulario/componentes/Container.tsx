@@ -2,74 +2,78 @@ import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
 import {
   getVinculosTipoAlimentacaoMotivoInclusaoEspecifico,
-  getVinculosTipoAlimentacaoPorEscola
+  getVinculosTipoAlimentacaoPorEscola,
 } from "services/cadastroTipoAlimentacao.service";
 import {
   buscaPeriodosEscolares,
-  getQuantidadeAlunosEscola
+  getQuantidadeAlunosEscola,
 } from "services/escola.service";
 import InclusaoDeAlimentacao from "..";
 import {
   dataParaUTC,
   escolaEhCei,
-  tiposAlimentacaoETEC
+  tiposAlimentacaoETEC,
 } from "helpers/utilities";
 import { getDiasUteis } from "services/diasUteis.service";
 import {
   getMotivosInclusaoContinua,
-  getMotivosInclusaoNormal
+  getMotivosInclusaoNormal,
 } from "services/inclusaoDeAlimentacao";
 import { getMeusDados } from "services/perfil.service";
 import {
   abstraiPeriodosComAlunosMatriculados,
   exibeMotivoETEC,
-  formatarPeriodos
+  formatarPeriodos,
 } from "../../../helper";
 import {
   MotivoContinuoInterface,
   MotivoSimplesInterface,
-  PeriodosInclusaoInterface
+  PeriodosInclusaoInterface,
 } from "../interfaces";
+import { PeriodoEscolarRascunhosInterface } from "interfaces/rascunhos.interface";
+import {
+  ResponseQuantidadeAlunosEscolaInterface,
+  ResponseVinculosTipoAlimentacaoPorEscolaInterface,
+} from "interfaces/responses.interface";
 
 export const Container = () => {
   const [dados, setDados] = useState(null);
-  const [motivosSimples, setMotivosSimples] = useState<
-    Array<MotivoSimplesInterface>
-  >(undefined);
+  const [motivosSimples, setMotivosSimples] =
+    useState<Array<MotivoSimplesInterface>>(undefined);
   const [motivosContinuos, setMotivosContinuos] = useState<
     Array<MotivoContinuoInterface>
   >(escolaEhCei() ? [] : undefined);
-  const [periodos, setPeriodos] = useState<Array<PeriodosInclusaoInterface>>(
-    undefined
-  );
-  const [periodosMotivoEspecifico, setPeriodosMotivoEspecifico] = useState<
-    Array<PeriodosInclusaoInterface>
-  >(null);
-  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
-  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
-  const [periodoNoite, setPeriodoNoite] = useState(
-    exibeMotivoETEC() ? null : []
-  );
-
+  const [periodos, setPeriodos] =
+    useState<Array<PeriodosInclusaoInterface>>(undefined);
+  const [periodosMotivoEspecifico, setPeriodosMotivoEspecifico] =
+    useState<Array<PeriodosInclusaoInterface>>(undefined);
+  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] =
+    useState<Date>(undefined);
+  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] =
+    useState<Date>(null);
+  const [periodoNoite, setPeriodoNoite] = useState<
+    PeriodoEscolarRascunhosInterface | boolean
+  >(exibeMotivoETEC() ? undefined : true);
   const [erro, setErro] = useState(false);
 
   const getQuantidaDeAlunosPorPeriodoEEscolaAsync = async (
-    periodos,
-    escola_uuid
-  ) => {
-    console.log(periodos);
-    const response = await getQuantidadeAlunosEscola(escola_uuid);
+    periodos: Array<PeriodosInclusaoInterface>,
+    escola_uuid: string
+  ): Promise<void> => {
+    const response: ResponseQuantidadeAlunosEscolaInterface =
+      await getQuantidadeAlunosEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
-      const periodos_ = abstraiPeriodosComAlunosMatriculados(
+      const periodos_: Array<any> = abstraiPeriodosComAlunosMatriculados(
         periodos,
         response.data.results,
         false
       );
-      const vinculos = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
+      const vinculos: ResponseVinculosTipoAlimentacaoPorEscolaInterface =
+        await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
       if (vinculos.status === HTTP_STATUS.OK) {
-        periodos_.map(periodo => {
+        periodos_.map((periodo) => {
           return (periodo.tipos_alimentacao = vinculos.data.results.find(
-            v => v.periodo_escolar.nome === periodo.nome
+            (v) => v.periodo_escolar.nome === periodo.nome
           ).tipos_alimentacao);
         });
         setPeriodos(
@@ -83,7 +87,7 @@ export const Container = () => {
     }
   };
 
-  const getMeusDadosAsync = async () => {
+  const getMeusDadosAsync = async (): Promise<void> => {
     const response = await getMeusDados();
     if (response.status === HTTP_STATUS.OK) {
       setDados(response.data);
@@ -95,18 +99,19 @@ export const Container = () => {
       getQuantidaDeAlunosPorPeriodoEEscolaAsync(periodos, escola_uuid);
       const tipo_unidade_escolar_iniciais =
         response.data.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais;
-      const vinculosTipoAlimentacaoMotivoInclusaoEspecifico = await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico(
-        {
-          tipo_unidade_escolar_iniciais
+      const vinculosTipoAlimentacaoMotivoInclusaoEspecifico =
+        await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico({
+          tipo_unidade_escolar_iniciais,
+        });
+      let periodosMotivoInclusaoEspecifico = [];
+      vinculosTipoAlimentacaoMotivoInclusaoEspecifico.data.forEach(
+        (vinculo) => {
+          let periodo = vinculo.periodo_escolar;
+          periodo.tipos_alimentacao = vinculo.tipos_alimentacao;
+          periodo.maximo_alunos = null;
+          periodosMotivoInclusaoEspecifico.push(periodo);
         }
       );
-      let periodosMotivoInclusaoEspecifico = [];
-      vinculosTipoAlimentacaoMotivoInclusaoEspecifico.data.forEach(vinculo => {
-        let periodo = vinculo.periodo_escolar;
-        periodo.tipos_alimentacao = vinculo.tipos_alimentacao;
-        periodo.maximo_alunos = null;
-        periodosMotivoInclusaoEspecifico.push(periodo);
-      });
       setPeriodosMotivoEspecifico(
         formatarPeriodos(periodosMotivoInclusaoEspecifico)
       );
@@ -115,12 +120,12 @@ export const Container = () => {
     }
   };
 
-  const getMotivosInclusaoContinuaAsync = async () => {
+  const getMotivosInclusaoContinuaAsync = async (): Promise<void> => {
     const response = await getMotivosInclusaoContinua();
     if (response.status === HTTP_STATUS.OK) {
       if (!exibeMotivoETEC()) {
         response.data.results = response.data.results.filter(
-          motivo => motivo.nome !== "ETEC"
+          (motivo) => motivo.nome !== "ETEC"
         );
       }
       setMotivosContinuos(response.data.results);
@@ -138,7 +143,7 @@ export const Container = () => {
     }
   };
 
-  const getDiasUteisAsync = async () => {
+  const getDiasUteisAsync = async (): Promise<void> => {
     const response = await getDiasUteis();
     if (response.status === HTTP_STATUS.OK) {
       setProximosCincoDiasUteis(
@@ -152,16 +157,16 @@ export const Container = () => {
     }
   };
 
-  const getBuscaPeriodosEscolaresAsync = async () => {
+  const getBuscaPeriodosEscolaresAsync = async (): Promise<void> => {
     const response = await buscaPeriodosEscolares({ nome: "NOITE" });
     if (
       response.status === HTTP_STATUS.OK &&
       response.data.results.length > 0
     ) {
-      response.data.results[0].tipos_alimentacao = response.data.results[0].tipos_alimentacao.filter(
-        tipo_alimentacao =>
+      response.data.results[0].tipos_alimentacao =
+        response.data.results[0].tipos_alimentacao.filter((tipo_alimentacao) =>
           tiposAlimentacaoETEC().includes(tipo_alimentacao.nome)
-      );
+        );
       setPeriodoNoite(formatarPeriodos(response.data.results));
     } else {
       setErro(true);

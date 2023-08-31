@@ -1,62 +1,11 @@
-export interface DiretoriaRegionalRascunhosInterface {
-  acesso_modulo_medicao_inicial: boolean;
-  codigo_eol: number;
-  iniciais: string;
-  nome: string;
-  uuid: string;
-}
+import {
+  DiretoriaRegionalInterface,
+  LoteInterface,
+} from "interfaces/escola.interface";
 
-export interface ContatoTerceirizadaRascunhosInterface {
-  celular: string;
-  crn_numero: string;
-  eh_nutricionista: boolean;
-  email: string;
-  nome: string;
-  telefone: string;
-  telefone2: string;
-}
-
-export interface EditalRascunhosInterface {
-  numero: string;
-  objeto: string;
-  processo: string;
-  tipo_contratacao: string;
-  uuid: string;
-}
-
-export interface VigenciaContratoRascunhosInterface {
-  data_final: string;
-  data_inicial: string;
-  uuid: string;
-}
-
-export interface ContratoTerceirizadaRascunhosInterface {
-  ata_chamada_publica: string;
-  data_hora_encerramento: string | null;
-  data_proposta: string;
-  edital: EditalRascunhosInterface | null;
-  encerrado: boolean;
-  numero: string;
-  pregao: string;
-  processo: string;
-  uuid: string;
-  vigencias: Array<VigenciaContratoRascunhosInterface>;
-}
-
-export interface TerceirizadaRascunhosInterface {
-  cnpj: string;
-  contatos: Array<ContatoTerceirizadaRascunhosInterface>;
-  contratos: Array<ContratoTerceirizadaRascunhosInterface>;
-  nome_fantasia: string;
-  uuid: string;
-}
-
-export interface LoteRascunhosInterface {
-  diretoria_regional: DiretoriaRegionalRascunhosInterface;
-  nome: string;
-  terceirizada: TerceirizadaRascunhosInterface;
+export interface LoteRascunhosInterface extends LoteInterface {
+  diretoria_regional: DiretoriaRegionalInterface;
   tipo_gestao: string | null;
-  uuid: string;
 }
 
 export interface TipoAlimentacaoRascunhoInterface {
@@ -89,7 +38,7 @@ export interface TipoUnidadeRascunhosInterface {
 
 export interface EscolaRascunhosInterface {
   codigo_eol: number;
-  diretoria_regional: DiretoriaRegionalRascunhosInterface;
+  diretoria_regional: DiretoriaRegionalInterface;
   lote: LoteRascunhosInterface;
   nome: string;
   periodos_escolares: Array<PeriodoEscolarRascunhosInterface>;
