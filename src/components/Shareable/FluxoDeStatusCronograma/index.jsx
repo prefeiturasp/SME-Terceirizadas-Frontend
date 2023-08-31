@@ -1,6 +1,6 @@
 import {
   DETALHAR_ALTERACAO_CRONOGRAMA,
-  PRE_RECEBIMENTO
+  PRE_RECEBIMENTO,
 } from "configs/constants";
 import React from "react";
 import { useHistory } from "react-router-dom";
@@ -27,14 +27,12 @@ export const FluxoDeStatusCronograma = ({ listaDeStatus, solicitacao }) => {
         className={`${tipoDeStatusClasse(status)}`}
         style={{
           width: `${100 / listaDeStatus.length}%`,
-          cursor: isClickable ? "pointer" : "default"
+          cursor: isClickable ? "pointer" : "default",
         }}
         onClick={() => {
           isClickable &&
             history.push(
-              `/${PRE_RECEBIMENTO}/${DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${
-                status.justificativa
-              }`
+              `/${PRE_RECEBIMENTO}/${DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${status.justificativa}`
             );
         }}
       >

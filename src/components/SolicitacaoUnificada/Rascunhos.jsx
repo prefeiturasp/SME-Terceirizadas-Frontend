@@ -6,9 +6,9 @@ export class Rascunhos extends Component {
       unifiedSolicitationList,
       OnDeleteButtonClicked,
       OnEditButtonClicked,
-      form
+      form,
     } = this.props;
-    const allDaysInfo = unifiedSolicitationList.map(solicitacaoUnificada => {
+    const allDaysInfo = unifiedSolicitationList.map((solicitacaoUnificada) => {
       const { id_externo, uuid } = solicitacaoUnificada;
       let backgroundColor = "#DADADA";
       return (

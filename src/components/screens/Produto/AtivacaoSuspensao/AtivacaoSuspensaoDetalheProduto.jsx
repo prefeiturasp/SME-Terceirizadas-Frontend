@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import Botao from "components/Shareable/Botao";
@@ -12,12 +12,10 @@ import DetalheDoProduto from "components/Shareable/DetalheDoProduto";
 import { getHomologacaoProduto } from "../../../../services/produto.service";
 import ModalAtivacaoSuspensaoProduto from "./ModalAtivacaoSuspensaoProduto";
 
-const {
-  CODAE_HOMOLOGADO,
-  ESCOLA_OU_NUTRICIONISTA_RECLAMOU
-} = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
+const { CODAE_HOMOLOGADO, ESCOLA_OU_NUTRICIONISTA_RECLAMOU } =
+  ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
-const checaStatus = obj =>
+const checaStatus = (obj) =>
   obj.status === CODAE_HOMOLOGADO.toUpperCase() ||
   obj.status === ESCOLA_OU_NUTRICIONISTA_RECLAMOU.toUpperCase();
 

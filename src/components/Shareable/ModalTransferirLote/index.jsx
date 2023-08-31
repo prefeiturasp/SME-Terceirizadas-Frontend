@@ -3,14 +3,14 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
 export const ModalTransferirLote = ({
   showModal,
   closeModalNao,
   closeModalSim,
-  lote
+  lote,
 }) => {
   return (
     <Modal backdrop={"static"} dialogClassName="modal-90w" show={showModal}>

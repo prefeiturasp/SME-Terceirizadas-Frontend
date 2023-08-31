@@ -4,7 +4,7 @@ import { InputHorario } from "../../../Shareable/Input/InputHorario";
 import {
   todosOsCamposValidos,
   ultimoHorarioDisponivel,
-  ultimoPeriodoDaEscola
+  ultimoPeriodoDaEscola,
 } from "./helper";
 import HTTP_STATUS from "http-status-codes";
 import Wizard from "../../../Shareable/Wizard";
@@ -15,7 +15,7 @@ import moment from "moment";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import {
   postHorariosCombosPorEscola,
-  putHorariosCombosPorEscola
+  putHorariosCombosPorEscola,
 } from "../../../../services/cadastroTipoAlimentacao.service";
 import { getError } from "../../../../helpers/utilities";
 
@@ -28,7 +28,7 @@ class CadastroHorarioComboAlimentacao extends Component {
       horarioAlimentacaoAtual: 0,
       meusDados: null,
       exibirRelatorio: null,
-      quantidadeAlunos: null
+      quantidadeAlunos: null,
     };
   }
 
@@ -38,8 +38,8 @@ class CadastroHorarioComboAlimentacao extends Component {
     if (prevProps.vinculosDeHorarios !== this.props.vinculosDeHorarios) {
       if (meusDados) {
         let todosOsCombos = [];
-        vinculosDeHorarios.forEach(vinculo => {
-          vinculo.horarios_alimentacao.forEach(horario => {
+        vinculosDeHorarios.forEach((vinculo) => {
+          vinculo.horarios_alimentacao.forEach((horario) => {
             todosOsCombos.push(horario);
           });
         });
@@ -75,12 +75,9 @@ class CadastroHorarioComboAlimentacao extends Component {
     }
   }
 
-  obterHoraInicio = hora => {
-    let {
-      vinculosDeHorarios,
-      periodoEscolar,
-      horarioAlimentacaoAtual
-    } = this.state;
+  obterHoraInicio = (hora) => {
+    let { vinculosDeHorarios, periodoEscolar, horarioAlimentacaoAtual } =
+      this.state;
     const horario = moment(hora).format("HH:mm");
     vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
       horarioAlimentacaoAtual
@@ -88,12 +85,9 @@ class CadastroHorarioComboAlimentacao extends Component {
     this.setState({ vinculosDeHorarios });
   };
 
-  obterHoraFim = hora => {
-    let {
-      vinculosDeHorarios,
-      periodoEscolar,
-      horarioAlimentacaoAtual
-    } = this.state;
+  obterHoraFim = (hora) => {
+    let { vinculosDeHorarios, periodoEscolar, horarioAlimentacaoAtual } =
+      this.state;
     const horario = moment(hora).format("HH:mm");
     vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
       horarioAlimentacaoAtual
@@ -102,11 +96,8 @@ class CadastroHorarioComboAlimentacao extends Component {
   };
 
   enviarETrocaDePeriodo = () => {
-    let {
-      vinculosDeHorarios,
-      periodoEscolar,
-      horarioAlimentacaoAtual
-    } = this.state;
+    let { vinculosDeHorarios, periodoEscolar, horarioAlimentacaoAtual } =
+      this.state;
     const horario =
       vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
         horarioAlimentacaoAtual
@@ -116,10 +107,10 @@ class CadastroHorarioComboAlimentacao extends Component {
       periodo_escolar: horario.periodo_escolar,
       escola: horario.escola,
       hora_inicial: horario.hora_inicial,
-      hora_final: horario.hora_final
+      hora_final: horario.hora_final,
     };
     if (!horario.uuid) {
-      postHorariosCombosPorEscola(request).then(response => {
+      postHorariosCombosPorEscola(request).then((response) => {
         if (response.status === HTTP_STATUS.CREATED) {
           vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
             horarioAlimentacaoAtual
@@ -127,7 +118,7 @@ class CadastroHorarioComboAlimentacao extends Component {
           this.setState({
             vinculosDeHorarios,
             horarioAlimentacaoAtual: 0,
-            periodoEscolar: periodoEscolar + 1
+            periodoEscolar: periodoEscolar + 1,
           });
         } else {
           toastError(
@@ -138,12 +129,12 @@ class CadastroHorarioComboAlimentacao extends Component {
         }
       });
     } else {
-      putHorariosCombosPorEscola(request, horario.uuid).then(response => {
+      putHorariosCombosPorEscola(request, horario.uuid).then((response) => {
         if (response.status === HTTP_STATUS.OK) {
           this.setState({
             vinculosDeHorarios,
             horarioAlimentacaoAtual: 0,
-            periodoEscolar: periodoEscolar + 1
+            periodoEscolar: periodoEscolar + 1,
           });
         } else {
           toastError(
@@ -157,11 +148,8 @@ class CadastroHorarioComboAlimentacao extends Component {
   };
 
   enviarEFinalizar = () => {
-    let {
-      vinculosDeHorarios,
-      periodoEscolar,
-      horarioAlimentacaoAtual
-    } = this.state;
+    let { vinculosDeHorarios, periodoEscolar, horarioAlimentacaoAtual } =
+      this.state;
     const horario =
       vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
         horarioAlimentacaoAtual
@@ -171,10 +159,10 @@ class CadastroHorarioComboAlimentacao extends Component {
       periodo_escolar: horario.periodo_escolar,
       escola: horario.escola,
       hora_inicial: horario.hora_inicial,
-      hora_final: horario.hora_final
+      hora_final: horario.hora_final,
     };
     if (!horario.uuid) {
-      postHorariosCombosPorEscola(request).then(response => {
+      postHorariosCombosPorEscola(request).then((response) => {
         if (response.status === HTTP_STATUS.CREATED) {
           vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
             horarioAlimentacaoAtual
@@ -183,7 +171,7 @@ class CadastroHorarioComboAlimentacao extends Component {
             exibirRelatorio: true,
             vinculosDeHorarios,
             horarioAlimentacaoAtual: 0,
-            periodoEscolar: 0
+            periodoEscolar: 0,
           });
           toastSuccess("Cadastrado efetuado com sucesso");
         } else {
@@ -195,13 +183,13 @@ class CadastroHorarioComboAlimentacao extends Component {
         }
       });
     } else {
-      putHorariosCombosPorEscola(request, horario.uuid).then(response => {
+      putHorariosCombosPorEscola(request, horario.uuid).then((response) => {
         if (response.status === HTTP_STATUS.OK) {
           this.setState({
             exibirRelatorio: true,
             vinculosDeHorarios,
             horarioAlimentacaoAtual: 0,
-            periodoEscolar: 0
+            periodoEscolar: 0,
           });
           toastSuccess("Cadastrado efetuado com sucesso");
         } else {
@@ -216,11 +204,8 @@ class CadastroHorarioComboAlimentacao extends Component {
   };
 
   enviarComboDeHorarios = () => {
-    let {
-      vinculosDeHorarios,
-      periodoEscolar,
-      horarioAlimentacaoAtual
-    } = this.state;
+    let { vinculosDeHorarios, periodoEscolar, horarioAlimentacaoAtual } =
+      this.state;
     const horario =
       vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
         horarioAlimentacaoAtual
@@ -230,17 +215,17 @@ class CadastroHorarioComboAlimentacao extends Component {
       periodo_escolar: horario.periodo_escolar,
       escola: horario.escola,
       hora_inicial: horario.hora_inicial,
-      hora_final: horario.hora_final
+      hora_final: horario.hora_final,
     };
     if (!horario.uuid) {
-      postHorariosCombosPorEscola(request).then(response => {
+      postHorariosCombosPorEscola(request).then((response) => {
         if (response.status === HTTP_STATUS.CREATED) {
           vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
             horarioAlimentacaoAtual
           ].uuid = response.data.uuid;
           this.setState({
             vinculosDeHorarios,
-            horarioAlimentacaoAtual: horarioAlimentacaoAtual + 1
+            horarioAlimentacaoAtual: horarioAlimentacaoAtual + 1,
           });
         } else {
           toastError(
@@ -251,11 +236,11 @@ class CadastroHorarioComboAlimentacao extends Component {
         }
       });
     } else {
-      putHorariosCombosPorEscola(request, horario.uuid).then(response => {
+      putHorariosCombosPorEscola(request, horario.uuid).then((response) => {
         if (response.status === HTTP_STATUS.OK) {
           this.setState({
             vinculosDeHorarios,
-            horarioAlimentacaoAtual: horarioAlimentacaoAtual + 1
+            horarioAlimentacaoAtual: horarioAlimentacaoAtual + 1,
           });
         } else {
           toastError(
@@ -281,9 +266,9 @@ class CadastroHorarioComboAlimentacao extends Component {
       combo_tipos_alimentacao: comboHorario.combo_tipos_alimentacao,
       escola: comboHorario.escola,
       hora_inicial: comboHorario.hora_inicial,
-      hora_final: comboHorario.hora_final
+      hora_final: comboHorario.hora_final,
     };
-    postHorariosCombosPorEscola(request).then(resp => {
+    postHorariosCombosPorEscola(request).then((resp) => {
       return resp;
     });
   };
@@ -300,15 +285,15 @@ class CadastroHorarioComboAlimentacao extends Component {
     this.setState({ vinculosDeHorarios });
   };
 
-  getPeriodoHorario = index => {
+  getPeriodoHorario = (index) => {
     let { vinculosDeHorarios } = this.state;
-    vinculosDeHorarios.forEach(vinculo => {
+    vinculosDeHorarios.forEach((vinculo) => {
       vinculo.ativo = false;
     });
     this.setState({
       periodoEscolar: index,
       exibirRelatorio: false,
-      vinculosDeHorarios
+      vinculosDeHorarios,
     });
   };
 
@@ -319,7 +304,7 @@ class CadastroHorarioComboAlimentacao extends Component {
       horarioAlimentacaoAtual,
       meusDados,
       exibirRelatorio,
-      quantidadeAlunos
+      quantidadeAlunos,
     } = this.state;
     vinculosDeHorarios &&
       ultimoHorarioDisponivel(
@@ -378,8 +363,9 @@ class CadastroHorarioComboAlimentacao extends Component {
                     </div>
                     {element.ativo && (
                       <main
-                        className={`grid-conteudo-periodo ${element.ativo &&
-                          "ativo-conteudo"}`}
+                        className={`grid-conteudo-periodo ${
+                          element.ativo && "ativo-conteudo"
+                        }`}
                       >
                         <nav>Tipos de alimentos atuais</nav>
                         <nav>Horário Inicio</nav>
@@ -467,7 +453,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                         placeholder={"Hora Inicial"}
                         horaAtual={horario.hora_inicial}
                         component={InputHorario}
-                        onChange={date => this.obterHoraInicio(date)}
+                        onChange={(date) => this.obterHoraInicio(date)}
                         disabled={
                           horarioAlimentacaoAtual !== index ? true : false
                         }
@@ -484,7 +470,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                         placeholder={"Hora Término"}
                         horaAtual={horario.hora_final}
                         component={InputHorario}
-                        onChange={date => this.obterHoraFim(date)}
+                        onChange={(date) => this.obterHoraFim(date)}
                         disabled={
                           horarioAlimentacaoAtual !== index ? true : false
                         }
@@ -545,7 +531,7 @@ class CadastroHorarioComboAlimentacao extends Component {
 }
 
 CadastroHorarioComboAlimentacao = reduxForm({
-  form: "cadastroHorarioCombosAlimentacao"
+  form: "cadastroHorarioCombosAlimentacao",
 })(CadastroHorarioComboAlimentacao);
 
 export default CadastroHorarioComboAlimentacao;

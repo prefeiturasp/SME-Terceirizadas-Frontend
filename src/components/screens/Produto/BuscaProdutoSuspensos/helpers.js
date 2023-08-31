@@ -8,7 +8,7 @@ export const DATA_MAXIMA = dataMax.add(0, "days")["_d"];
 export const DATA_INICIAL = dataMin.format("DD/MM/YYYY");
 export const DATA_FINAL = dataMax.add(0, "days").format("DD/MM/YYYY");
 
-export const condicaoDeDatas = arrayFiltro => {
+export const condicaoDeDatas = (arrayFiltro) => {
   const temDataInicio = arrayFiltro.includes("data_inicial");
   const temDataFim = arrayFiltro.includes("data_final");
   if (temDataFim && temDataInicio) {
@@ -22,7 +22,7 @@ export const condicaoDeDatas = arrayFiltro => {
   }
 };
 
-export const ehFiltroDeData = arrayFiltro => {
+export const ehFiltroDeData = (arrayFiltro) => {
   const array1 = ["data_inicial", "data_final"];
   const array2 = ["data_final", "data_inicial"];
   const array3 = ["data_final"];
@@ -41,27 +41,27 @@ export const ehFiltroDeData = arrayFiltro => {
   }
 };
 
-export const retornaDataMinima = valor => {
+export const retornaDataMinima = (valor) => {
   const data = moment(valor, "DD/MM/YYYY");
   return data._d;
 };
 
-export const retornaUltimaHomologacao = item => {
+export const retornaUltimaHomologacao = (item) => {
   const { homologacoes } = item.produto;
   return homologacoes[homologacoes.length - 1];
 };
 
-export const retornUltimoLog = homologacao => {
+export const retornUltimoLog = (homologacao) => {
   const { logs } = homologacao;
   return logs[logs.length - 1];
 };
 
-export const retornaData = item => {
+export const retornaData = (item) => {
   const { criado_em } = item;
   return criado_em.split(" ")[0];
 };
 
-export const ultimoLogItem = item => {
+export const ultimoLogItem = (item) => {
   const { logs } = item;
   return logs[logs.length - 1];
 };

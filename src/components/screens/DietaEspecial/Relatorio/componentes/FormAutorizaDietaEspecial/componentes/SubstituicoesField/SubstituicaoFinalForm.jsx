@@ -10,14 +10,14 @@ import Botao from "components/Shareable/Botao";
 import { ASelect } from "components/Shareable/MakeField";
 import {
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 
 import "./style.scss";
 
 const { Option } = SelectAntd;
 
-const SelectSelecione = props => {
+const SelectSelecione = (props) => {
   const {
     input: { onChange, value },
     options,
@@ -50,7 +50,7 @@ export default class SubstituicoesField extends Component {
       form,
       values,
       index,
-      deveHabilitarApagar
+      deveHabilitarApagar,
     } = this.props;
 
     return (
@@ -70,16 +70,16 @@ export default class SubstituicoesField extends Component {
                   .indexOf(input.toLowerCase()) >= 0
               }
             >
-              {alimentos.map(a => {
+              {alimentos.map((a) => {
                 return <Option key={a.id.toString()}>{a.nome}</Option>;
               })}
             </Field>
             <OnChange name={`${name}.alimento`}>
-              {value => {
+              {(value) => {
                 this.setState({
                   valorSelecionado: alimentos.find(
-                    al => String(al.id) === value
-                  )
+                    (al) => String(al.id) === value
+                  ),
                 });
               }}
             </OnChange>
@@ -89,7 +89,7 @@ export default class SubstituicoesField extends Component {
               component={SelectSelecione}
               options={[
                 { uuid: "I", nome: "Isento" },
-                { uuid: "S", nome: "Substituir" }
+                { uuid: "S", nome: "Substituir" },
               ]}
               name={`${name}.tipo`}
               validate={required}
@@ -104,11 +104,11 @@ export default class SubstituicoesField extends Component {
                   values.substituicoes[index].substitutos) ||
                 []
               }
-              options={produtos.map(produto => ({
+              options={produtos.map((produto) => ({
                 value: produto.uuid,
-                label: produto.nome
+                label: produto.nome,
               }))}
-              onSelectedChanged={values_ =>
+              onSelectedChanged={(values_) =>
                 form.change(
                   `substituicoes[
                 ${index}].substitutos`,
@@ -120,7 +120,7 @@ export default class SubstituicoesField extends Component {
               overrideStrings={{
                 selectSomeItems: "Selecione",
                 allItemsAreSelected: "Todos os itens estão selecionados",
-                selectAll: "Todos"
+                selectAll: "Todos",
               }}
               validate={required}
             />

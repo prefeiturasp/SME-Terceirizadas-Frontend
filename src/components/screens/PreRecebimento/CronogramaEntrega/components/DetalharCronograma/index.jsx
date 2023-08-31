@@ -1,19 +1,19 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { Spin } from "antd";
 import {
   getCronogramaDetalhar,
-  imprimirCronograma
+  imprimirCronograma,
 } from "services/cronograma.service";
 import AcoesDetalhar from "../AcoesDetalhar";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
-import AcoesDetalharCronograma from "../AcoesDetalharCronograma";
 import AcoesDetalharDinutreDiretoria from "../AcoesDetalharDinutreDiretoria";
 import AcoesDetalharDilogDiretoria from "../AcoesDetalharDilogDiretoria";
 import {
   usuarioEhCronograma,
   usuarioEhDilogDiretoria,
-  usuarioEhDinutreDiretoria
+  usuarioEhDinutreDiretoria,
 } from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
@@ -22,7 +22,7 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCronograma";
 
@@ -32,9 +32,11 @@ export default () => {
   const [cronograma, setCronograma] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
-  const esconderLogFornecedor = logs => {
+  const history = useHistory();
+
+  const esconderLogFornecedor = (logs) => {
     return logs.filter(
-      log => !["Assinado DINUTRE"].includes(log.status_evento_explicacao)
+      (log) => !["Assinado DINUTRE"].includes(log.status_evento_explicacao)
     );
   };
 
@@ -52,7 +54,7 @@ export default () => {
     }
   };
 
-  const converte_tipo_carga = tipo => {
+  const converte_tipo_carga = (tipo) => {
     if (tipo === "PALETIZADA") {
       return "Paletizada";
     } else if (tipo === "ESTIVADA_BATIDA") {
@@ -68,8 +70,8 @@ export default () => {
       .then(() => {
         setCarregando(false);
       })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
   };
@@ -84,6 +86,11 @@ export default () => {
         onClick={() => baixarPDFCronograma()}
       />
     );
+
+  const handleBack = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    history.goBack();
+  };
 
   useEffect(() => {
     getDetalhes();
@@ -144,7 +151,13 @@ export default () => {
               )}
               {usuarioEhCronograma() && (
                 <div className="mt-4 mb-4">
-                  <AcoesDetalharCronograma cronograma={cronograma} />
+                  <Botao
+                    texto="Voltar"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    className="float-right ml-3"
+                    onClick={() => handleBack()}
+                  />
                   {botaoImprimir}
                 </div>
               )}

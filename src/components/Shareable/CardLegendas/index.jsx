@@ -14,7 +14,7 @@ export default () => (
       </span>
       <span className="mr-0">
         <i className="fas fa-exclamation-triangle" />
-        Solicitação Aguardando Respota da Empresa
+        Solicitação Aguardando Resposta da Empresa
       </span>
       <span className="mr-0">
         <i className="fas fa-ban" />

@@ -28,7 +28,7 @@ const Card = ({ question, answer }) => {
 };
 Card.propTypes = {
   question: string,
-  answer: string
+  answer: string,
 };
 
 export default Card;

@@ -21,17 +21,17 @@ const ModalCancelarSolicitacao = ({
   visao,
   endpoint,
   tipoSolicitacao,
-  loadSolicitacao
+  loadSolicitacao,
 }) => {
   const [justificativa, setJustificativa] = useState("");
   const [escolasSelecionadas, setEscolasSelecionadas] = useState([]);
 
   const optionsMultiselect = () =>
     solicitacao.escolas_quantidades
-      .filter(eq => !eq.cancelado)
-      .map(eq => ({
+      .filter((eq) => !eq.cancelado)
+      .map((eq) => ({
         label: eq.escola.nome,
-        value: eq.escola.uuid
+        value: eq.escola.uuid,
       }));
 
   const desabilitarBotaoSim = (
@@ -55,7 +55,7 @@ const ModalCancelarSolicitacao = ({
     }
   };
 
-  const cancelarSolicitacaoDaEscola = async uuid => {
+  const cancelarSolicitacaoDaEscola = async (uuid) => {
     let resp = "";
     let mensagem = "Solicitação cancelada com sucesso!";
     if (
@@ -110,13 +110,13 @@ const ModalCancelarSolicitacao = ({
                   component={MultiSelect}
                   name="escolas"
                   options={optionsMultiselect() || []}
-                  onChange={values => setEscolasSelecionadas(values)}
+                  onChange={(values) => setEscolasSelecionadas(values)}
                   disableSearch={true}
                   pluralFeminino
                   overrideStrings={{
                     selectSomeItems: "Selecione as unidades educacionais",
                     allItemsAreSelected: "Todas as unidades estão selecionadas",
-                    selectAll: "Todas"
+                    selectAll: "Todas",
                   }}
                   nomeDoItemNoPlural="unidades educacionais"
                   required
@@ -132,7 +132,7 @@ const ModalCancelarSolicitacao = ({
               validate={textAreaRequired}
             />
             <OnChange name="justificativa">
-              {value => setJustificativa(value)}
+              {(value) => setJustificativa(value)}
             </OnChange>
           </div>
         </div>

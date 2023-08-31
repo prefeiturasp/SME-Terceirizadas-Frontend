@@ -5,7 +5,7 @@ import "./style.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -14,20 +14,20 @@ import { useHistory } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
   noSpaceStartOrEnd,
-  required
+  required,
 } from "helpers/fieldValidators";
 import {
   cadastraEmbalagens,
   editaEmbalagem,
   getEmbalagem,
-  getListaNomesEmbalagens
+  getListaNomesEmbalagens,
 } from "services/qualidade.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { composeValidators } from "helpers/utilities";
 import {
   CADASTROS,
   CONFIGURACOES,
-  EMBALAGENS_CADASTRADAS
+  EMBALAGENS_CADASTRADAS,
 } from "configs/constants";
 
 let tituloModalSalvar = "Salvar Cadastro da Embalagem";
@@ -82,7 +82,7 @@ export default () => {
     }
   };
 
-  const montaPayload = values => {
+  const montaPayload = (values) => {
     let payload = {};
 
     payload.nome = values.nome_embalagem;
@@ -91,7 +91,7 @@ export default () => {
     return payload;
   };
 
-  const validaNomeEmbalagem = value => {
+  const validaNomeEmbalagem = (value) => {
     if (value !== initialValues.nome_embalagem) {
       if (nomesEmbalagens && nomesEmbalagens.includes(value))
         return "Embalagem já cadastrada";
@@ -99,7 +99,7 @@ export default () => {
     } else return undefined;
   };
 
-  const buscaEmbalagem = async value => {
+  const buscaEmbalagem = async (value) => {
     let response;
     try {
       response = await getEmbalagem(value);
@@ -107,7 +107,7 @@ export default () => {
         setInitialValues({
           nome_embalagem: response.data.nome,
           abreviacao: response.data.abreviacao,
-          data_cadastro: response.data.criado_em.slice(0, 10)
+          data_cadastro: response.data.criado_em.slice(0, 10),
         });
         setCarregando(false);
       }
@@ -128,7 +128,7 @@ export default () => {
       buscaEmbalagem(uuid);
     } else {
       setInitialValues({
-        data_cadastro: new Date().toLocaleDateString()
+        data_cadastro: new Date().toLocaleDateString(),
       });
     }
 

@@ -7,12 +7,12 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import {
   OPTIONS_STATUS_DOWNLOAD,
-  OPTIONS_VISTO_DOWNLOAD
+  OPTIONS_VISTO_DOWNLOAD,
 } from "constants/shared";
 import Select from "components/Shareable/Select";
 
@@ -22,7 +22,7 @@ export default ({ setFiltros }) => {
   const initialValues = {};
   const inicioResultado = useRef();
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     if (filtros.data_geracao)
       filtros.data_geracao = moment(filtros.data_geracao).format("DD/MM/YYYY");

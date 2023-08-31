@@ -7,18 +7,22 @@ import { Tooltip } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { useState } from "react";
 import { encerraContratoTerceirizada } from "services/terceirizada.service";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { ModalRemoveContrato } from "../ModalRemoveContrato";
+import MaskedInputText from "components/Shareable/Input/MaskedInputText";
+import { numeroProcessoContratoSEIMask } from "constants/shared";
+import { dateDelta, getDataObj } from "helpers/utilities";
 
 const contratosEstadoInicial = {
   numero_processo: null,
   numero_contrato: null,
-  vigencia_de: null,
-  vigencia_ate: null
+  numero_ata_chamada_publica: null,
+  numero_pregao: null,
+  vigencias: null,
 };
 
 export const ContratosFormSet = ({
@@ -26,18 +30,17 @@ export const ContratosFormSet = ({
   contratos,
   setContratos,
   terceirizada,
-  values
+  values,
 }) => {
   const [contratoARemover, setContratoARemover] = useState({});
-  const [exibirModalRemoverContrato, setExibirModalRemoverContrato] = useState(
-    false
-  );
+  const [exibirModalRemoverContrato, setExibirModalRemoverContrato] =
+    useState(false);
   const adicionaContrato = () => {
     contratos = contratos.concat([contratosEstadoInicial]);
     setContratos(contratos);
   };
 
-  const removeContrato = index => {
+  const removeContrato = (index) => {
     let newContratos = [...contratos];
     newContratos.splice(index, 1);
     setContratos(newContratos);
@@ -48,7 +51,7 @@ export const ContratosFormSet = ({
     let response = await encerraContratoTerceirizada(uuid);
     if (response && response.status === 200) {
       let contratosNew = [...contratos];
-      let index = contratosNew.findIndex(c => c.uuid === uuid);
+      let index = contratosNew.findIndex((c) => c.uuid === uuid);
       contratosNew[index].data_hora_encerramento =
         response.data.data_hora_encerramento;
       contratosNew[index].encerrado = true;
@@ -63,7 +66,7 @@ export const ContratosFormSet = ({
     setExibirModalRemoverContrato(false);
   };
 
-  const abrirModalRemoverContrato = index => {
+  const abrirModalRemoverContrato = (index) => {
     setExibirModalRemoverContrato(true);
     setContratoARemover(contratos[index]);
   };
@@ -87,17 +90,18 @@ export const ContratosFormSet = ({
                 return (
                   <div key={index}>
                     <div className="row">
-                      <div className="col-6">
+                      <div className="col-4">
                         <Field
                           name={`numero_processo_${index}`}
-                          component={InputText}
-                          label="Nº do Processo Administrativo do Contrato"
+                          component={MaskedInputText}
+                          mask={numeroProcessoContratoSEIMask}
+                          label="Nº do Processo Administrativo do Contrato (SEI)"
                           required
                           validate={required}
                           apenasNumeros
                         />
                       </div>
-                      <div className="col-6">
+                      <div className="col-4">
                         <Field
                           name={`numero_contrato_${index}`}
                           component={InputText}
@@ -106,43 +110,75 @@ export const ContratosFormSet = ({
                           validate={required}
                         />
                       </div>
-                      <div className="col-3">
+                      <div className="col-4">
+                        <Field
+                          name={`numero_ata_chamada_publica_${index}`}
+                          component={InputText}
+                          label="Nº da ATA/Chamada Pública"
+                          required
+                          validate={required}
+                        />
+                      </div>
+                      <div className="col-4">
+                        <Field
+                          name={`numero_pregao_${index}`}
+                          component={InputText}
+                          label="Nº do Pregão Eletrônico"
+                          required
+                          validate={required}
+                        />
+                      </div>
+                      <div className="col-2">
                         <Field
                           component={InputComData}
                           label="Vigência do Contrato"
                           name={`vigencia_de_${index}`}
                           placeholder="De"
                           writable={false}
+                          minDate={null}
+                          maxDate={
+                            values[`vigencia_ate_${index}`]
+                              ? getDataObj(values[`vigencia_ate_${index}`])
+                              : null
+                          }
                           required
                         />
                       </div>
-                      <div className="col-3">
+                      <div className="col-2">
                         <Field
                           component={InputComData}
                           label="&nbsp;"
                           name={`vigencia_ate_${index}`}
                           placeholder="Até"
                           writable={false}
+                          minDate={
+                            values[`vigencia_de_${index}`]
+                              ? getDataObj(values[`vigencia_de_${index}`])
+                              : dateDelta(0)
+                          }
+                          maxDate={null}
                         />
                       </div>
                       {terceirizada &&
                         (contrato.encerrado ? (
-                          <div className="col-6">
+                          <div className="col-12">
                             <div className="aviso-encerramento">
                               <strong>Aviso:</strong> Contrato encerrado em{" "}
                               {contrato.data_hora_encerramento}
                             </div>
                           </div>
                         ) : (
-                          <div className="col-3">
-                            <Botao
-                              className="btn-encerrar-contrato"
-                              texto="Encerrar Contrato"
-                              onClick={() => abrirModalRemoverContrato(index)}
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.RED_OUTLINE}
-                            />
-                          </div>
+                          contrato.numero_contrato !== null && (
+                            <div className="col-2">
+                              <Botao
+                                className="btn-encerrar-contrato"
+                                texto="Encerrar Contrato"
+                                onClick={() => abrirModalRemoverContrato(index)}
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.RED_OUTLINE}
+                              />
+                            </div>
+                          )
                         ))}
                     </div>
                     <div className="flex-center my-3">
@@ -161,7 +197,7 @@ export const ContratosFormSet = ({
                               texto="Remover Contrato"
                               icon="fas fa-trash"
                               type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.RED_OUTLINE}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
                               onClick={() => {
                                 removeContrato(index);
                               }}

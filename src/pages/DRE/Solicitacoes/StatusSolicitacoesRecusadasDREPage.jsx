@@ -6,7 +6,7 @@ import { DRE, SOLICITACOES_NEGADAS } from "configs/constants";
 import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getSolicitacoesNegadasDRE } from "services/painelDRE.service";
 import CardLegendas from "components/Shareable/CardLegendas";
@@ -16,7 +16,7 @@ import MeusDadosContext from "context/MeusDadosContext";
 
 const atual = {
   href: `/${DRE}/${SOLICITACOES_NEGADAS}`,
-  titulo: "Solicitações Negadas"
+  titulo: "Solicitações Negadas",
 };
 
 export default () => {

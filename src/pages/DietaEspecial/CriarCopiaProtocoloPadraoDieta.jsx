@@ -8,20 +8,20 @@ import Page from "components/Shareable/Page/Page";
 import UpdateProtocoloPadrao from "components/screens/DietaEspecial/CadastroProtocoloPadraoDietaEsp";
 import {
   DIETA_ESPECIAL,
-  CONSULTA_PROTOCOLO_PADRAO_DIETA
+  CONSULTA_PROTOCOLO_PADRAO_DIETA,
 } from "configs/constants";
 
 export default ({ match }) => {
   const uuid = match.params.uuid;
   const atual = {
     href: `/${DIETA_ESPECIAL}/protocolo-padrao/${uuid}/criar-copia`,
-    titulo: "Cópia de Protocolo Padrão de Dieta Especial"
+    titulo: "Cópia de Protocolo Padrão de Dieta Especial",
   };
   const anteriores = [
     {
       href: `/${DIETA_ESPECIAL}/${CONSULTA_PROTOCOLO_PADRAO_DIETA}`,
-      titulo: "Consultar Protocolo Padrão"
-    }
+      titulo: "Consultar Protocolo Padrão",
+    },
   ];
 
   return (

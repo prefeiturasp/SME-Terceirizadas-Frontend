@@ -2,7 +2,7 @@ import React, { createContext, useState } from "react";
 
 const DEFAULT_VALUE_MEUS_DADOS = {
   meusDados: null,
-  setMeusDados: () => {}
+  setMeusDados: () => {},
 };
 
 const MeusDadosContext = createContext(DEFAULT_VALUE_MEUS_DADOS);

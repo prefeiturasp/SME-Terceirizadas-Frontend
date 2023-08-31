@@ -5,7 +5,7 @@ import {
   alterarVinculo,
   cadastrarVinculo,
   finalizarVinculo,
-  getVinculosAtivos
+  getVinculosAtivos,
 } from "services/vinculos.service";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import ListagemVinculos from "./components/ListagemVinculos";
@@ -13,12 +13,13 @@ import Filtros from "./components/Filtros";
 import {
   getPerfilListagem,
   getPerfisSubordinados,
-  getVisoesListagem
+  getVisoesListagem,
 } from "services/perfil.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalCadastroVinculo from "./components/ModalCadastroVinculo";
 import ModalExclusaoVinculo from "./components/ModalExclusaoVinculo";
 import { Paginacao } from "components/Shareable/Paginacao";
+import { TIPO_GESTAO } from "constants/shared";
 
 export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
   const [carregando, setCarregando] = useState(false);
@@ -35,6 +36,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
   const [page, setPage] = useState(1);
   const [vinculoModal, setVinculoModal] = useState();
   const [perfisSubordinados, setPerfisSubordinados] = useState();
+  const [ehUEParceira, setEhUEParceira] = useState(false);
 
   const buscaFiltros = async () => {
     setCarregando(true);
@@ -42,31 +44,16 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     const visoes = await getVisoesListagem();
     const lista_perfis = perfis.data.results;
 
-    let options_perfis = lista_perfis.map(perfil => ({
+    let options_perfis = lista_perfis.map((perfil) => ({
       uuid: perfil.nome,
       nome: perfil.nome,
-      visao: perfil.visao
+      visao: perfil.visao,
     }));
 
-    let options_visoes = visoes.data.map(visao => ({
+    let options_visoes = visoes.data.map((visao) => ({
       uuid: visao.id,
-      nome: visao.nome
+      nome: visao.nome,
     }));
-
-    if (codae) {
-      setVisoes(options_visoes.filter(visao => visao.uuid === "CODAE"));
-      setPerfis(
-        lista_perfis
-          .filter(perfil => perfil.visao && perfil.visao === "CODAE")
-          .map(visao => ({
-            uuid: visao.id,
-            nome: visao.nome
-          }))
-      );
-      setListaPerfis(lista_perfis);
-      setFiltros({});
-      return;
-    }
 
     if (diretor_escola) {
       setPerfisVisao(lista_perfis, "ESCOLA");
@@ -74,13 +61,15 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
       setPerfisVisao(lista_perfis, "EMPRESA");
     } else if (cogestor) {
       setPerfisVisao(lista_perfis, "DRE");
+    } else if (codae) {
+      setPerfisVisao(lista_perfis, "CODAE");
     } else if (geral) {
       const perfis_subordinados = await getPerfisSubordinados();
       const visao = localStorage.getItem("visao_perfil").replace(/['"]+/g, "");
       setPerfis(
-        perfis_subordinados.data.map(perfil => ({
+        perfis_subordinados.data.map((perfil) => ({
           uuid: perfil,
-          nome: perfil
+          nome: perfil,
         }))
       );
       setVisaoUnica(visao);
@@ -97,17 +86,17 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
 
   const setPerfisVisao = (lista_perfis, visao) => {
     const perfis = lista_perfis
-      .filter(perfil => perfil.visao === visao)
-      .map(perfil => ({
+      .filter((perfil) => perfil.visao === visao)
+      .map((perfil) => ({
         uuid: perfil.nome,
-        nome: perfil.nome
+        nome: perfil.nome,
       }));
     setVisaoUnica(visao);
     setPerfis(perfis);
     setFiltros({});
   };
 
-  const buscarVinculos = async page => {
+  const buscarVinculos = async (page) => {
     setCarregando(true);
     if (geral && !filtros.perfil) {
       filtros.perfil = perfisSubordinados;
@@ -129,7 +118,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarVinculos(page);
     setPage(page);
   };
@@ -190,10 +179,10 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     }
   };
 
-  const ehErroEmail = erro =>
+  const ehErroEmail = (erro) =>
     erro.includes("(email)") && erro.includes("already exists");
 
-  const editarAcesso = async values => {
+  const editarAcesso = async (values) => {
     let payload = {};
     payload.email = values.email;
     payload.username = values.cpf.replace(/[^\w\s]/gi, "");
@@ -219,7 +208,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     setShowExclusao(aberto);
   };
 
-  const deletarVinculo = async vinculo => {
+  const deletarVinculo = async (vinculo) => {
     let response = await finalizarVinculo(vinculo.username);
     if (response.status === 200) {
       toastSuccess("Acesso removido com sucesso!");
@@ -230,8 +219,20 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     }
   };
 
+  const qtdLimiteCadastro = ehUEParceira ? 2 : 4;
+  const desabilitaCadastro = () => {
+    if (diretor_escola && totalVinculos >= qtdLimiteCadastro) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   useEffect(() => {
     buscaFiltros();
+    setEhUEParceira(
+      [TIPO_GESTAO.PARCEIRA].includes(localStorage.getItem("tipo_gestao"))
+    );
   }, []);
 
   useEffect(() => {
@@ -249,6 +250,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
         listaPerfis={visaoUnica ? perfis : listaPerfis}
         listaVisao={visoes}
         diretor_escola={diretor_escola}
+        ehUEParceira={ehUEParceira}
         cogestor={cogestor}
         empresa={empresa}
         onSubmit={salvarAcesso}
@@ -278,7 +280,8 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
             visoes={visoes}
             setShowCadastro={setShowCadastro}
             visaoUnica={visaoUnica}
-            desabilitaCadastro={diretor_escola && totalVinculos >= 4}
+            desabilitaCadastro={desabilitaCadastro}
+            qtdLimiteCadastro={qtdLimiteCadastro}
           />
           {vinculos && (
             <>

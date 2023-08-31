@@ -8,7 +8,7 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import HTTP_STATUS from "http-status-codes";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -22,38 +22,38 @@ export default ({
   setTotal,
   setFiltros,
   setPage,
-  filtrarPorEditalNomeTipo
+  filtrarPorEditalNomeTipo,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const { Option } = SelectAntd;
   const opcoesTipos = listaTipos
-    ? listaTipos.map(tipo => {
+    ? listaTipos.map((tipo) => {
         return <Option key={tipo.key}>{tipo.nome}</Option>;
       })
     : [];
 
-  const filtrarPorNome = value => {
+  const filtrarPorNome = (value) => {
     if (value) {
       const reg = new RegExp(value, "iu");
       return listaProdutos
-        .map(produto => produto.produto__nome)
-        .filter(produto => reg.test(produto));
+        .map((produto) => produto.produto__nome)
+        .filter((produto) => reg.test(produto));
     }
     return [];
   };
 
-  const filtrarPorEdital = value => {
+  const filtrarPorEdital = (value) => {
     if (value) {
       const reg = new RegExp(value, "iu");
       return listaEditais
-        .map(edital => edital.numero)
-        .filter(edital => reg.test(edital));
+        .map((edital) => edital.numero)
+        .filter((edital) => reg.test(edital));
     }
     return [];
   };
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     try {
       setCarregando(true);
       let payload = formValues;

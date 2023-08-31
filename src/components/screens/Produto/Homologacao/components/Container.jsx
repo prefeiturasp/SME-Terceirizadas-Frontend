@@ -4,7 +4,7 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   getNomesTerceirizadas,
   getHomologacaoProduto,
-  getNumeroProtocoloAnaliseSensorial
+  getNumeroProtocoloAnaliseSensorial,
 } from "services/produto.service";
 import { getNumerosEditais } from "services/edital.service";
 import { Homologacao } from "../index";
@@ -64,9 +64,9 @@ export const Container = () => {
         aditivos_alergicos: formataValoresBooleanos(
           data.produto.tem_aditivos_alergenicos
         ),
-        tem_gluten: formataValoresBooleanos(data.produto.tem_gluten)
+        tem_gluten: formataValoresBooleanos(data.produto.tem_gluten),
       },
-      necessita_analise_sensorial: "1"
+      necessita_analise_sensorial: "1",
     };
     setFormValues(values);
   };

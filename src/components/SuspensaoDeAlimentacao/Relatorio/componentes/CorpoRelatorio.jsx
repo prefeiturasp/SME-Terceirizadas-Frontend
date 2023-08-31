@@ -3,14 +3,14 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import { fluxoInformativoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import { stringSeparadaPorVirgulas } from "helpers/utilities";
 import { imprimeRelatorioSuspensaoAlimentacao } from "services/relatorios";
 
-export const CorpoRelatorio = props => {
+export const CorpoRelatorio = (props) => {
   const { suspensaoAlimentacao, dadosEscola } = props;
   return (
     <div>
@@ -137,7 +137,7 @@ export const CorpoRelatorio = props => {
           <p
             className="value"
             dangerouslySetInnerHTML={{
-              __html: suspensaoAlimentacao.observacao
+              __html: suspensaoAlimentacao.observacao,
             }}
           />
         </div>

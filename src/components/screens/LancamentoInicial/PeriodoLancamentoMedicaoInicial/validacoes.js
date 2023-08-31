@@ -1,4 +1,4 @@
-import { deepCopy } from "helpers/utilities";
+import { deepCopy, ehEscolaTipoCEUGESTAO } from "helpers/utilities";
 
 export const repeticaoSobremesaDoceComValorESemObservacao = (
   values,
@@ -28,7 +28,7 @@ export const botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada = (
   validacaoDiaLetivo
 ) => {
   if (
-    Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+    Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
       String(key).includes(`__dia_${dia}__categoria_${categoria.id}`)
     )
   ) {
@@ -50,7 +50,7 @@ export const campoComInclusaoContinuaValor0ESemObservacao = (
 ) => {
   const alimentacoes = ["lanche_4h", "lanche", "refeicao", "sobremesa"];
   let erro = false;
-  alimentacoes.forEach(alimentacao => {
+  alimentacoes.forEach((alimentacao) => {
     if (
       `${alimentacao}__dia_${dia}__categoria_${categoria.id}` in
         dadosValoresInclusoesAutorizadasState &&
@@ -73,7 +73,7 @@ export const campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao = (
 ) => {
   const alimentacoes = ["lanche_4h", "lanche", "refeicao", "sobremesa"];
   let erro = false;
-  alimentacoes.forEach(alimentacao => {
+  alimentacoes.forEach((alimentacao) => {
     if (
       `${alimentacao}__dia_${dia}__categoria_${categoria.id}` in
         dadosValoresInclusoesAutorizadasState &&
@@ -113,11 +113,11 @@ export const campoComSuspensaoAutorizadaESemObservacao = (
   let alimentacoes = [];
   suspensoesAutorizadas &&
     suspensoesAutorizadas
-      .filter(suspensao => suspensao.dia === column.dia)
-      .forEach(suspensao => {
+      .filter((suspensao) => suspensao.dia === column.dia)
+      .forEach((suspensao) => {
         alimentacoes = alimentacoes.concat(suspensao.alimentacoes);
       });
-  alimentacoes.forEach(alimentacao => {
+  alimentacoes.forEach((alimentacao) => {
     if (
       formValuesAtualizados[
         `${alimentacao}__dia_${column.dia}__categoria_${categoria.id}`
@@ -139,7 +139,7 @@ export const campoRefeicaoComRPLAutorizadaESemObservacao = (
   if (
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
-      alteracao =>
+      (alteracao) =>
         alteracao.dia === column.dia && alteracao.motivo.includes("RPL")
     ).length > 0 &&
     formValuesAtualizados[
@@ -161,7 +161,7 @@ export const campoLancheComLPRAutorizadaESemObservacao = (
   if (
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
-      alteracao =>
+      (alteracao) =>
         alteracao.dia === column.dia && alteracao.motivo.includes("LPR")
     ).length > 0 &&
     (formValuesAtualizados[
@@ -192,7 +192,7 @@ export const camposKitLancheSolicitacoesAlimentacaoESemObservacao = (
     categoria.nome.includes("SOLICITAÇÕES") &&
     !kitLancheValue &&
     kitLanchesAutorizadas.filter(
-      kit =>
+      (kit) =>
         kit.dia === column.dia &&
         Number(kitLancheValue) !== Number(kit.numero_alunos)
     ).length > 0
@@ -204,11 +204,12 @@ export const camposKitLancheSolicitacoesAlimentacaoESemObservacao = (
     categoria.nome.includes("SOLICITAÇÕES") &&
     kitLancheValue &&
     (kitLanchesAutorizadas.filter(
-      kit =>
+      (kit) =>
         kit.dia === column.dia &&
         Number(kitLancheValue) !== Number(kit.numero_alunos)
     ).length > 0 ||
-      kitLanchesAutorizadas.filter(kit => kit.dia === column.dia).length === 0)
+      kitLanchesAutorizadas.filter((kit) => kit.dia === column.dia).length ===
+        0)
   ) {
     erro = true;
   }
@@ -231,7 +232,7 @@ export const camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao = (
     categoria.nome.includes("SOLICITAÇÕES") &&
     !lancheEmergencialValue &&
     alteracoesAlimentacaoAutorizadas.filter(
-      alteracao =>
+      (alteracao) =>
         alteracao.dia === column.dia &&
         Number(lancheEmergencialValue) !== Number(alteracao.numero_alunos)
     ).length > 0
@@ -243,12 +244,12 @@ export const camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao = (
     categoria.nome.includes("SOLICITAÇÕES") &&
     lancheEmergencialValue &&
     (alteracoesAlimentacaoAutorizadas.filter(
-      alteracao =>
+      (alteracao) =>
         alteracao.dia === column.dia &&
         Number(lancheEmergencialValue) !== Number(alteracao.numero_alunos)
     ).length > 0 ||
       alteracoesAlimentacaoAutorizadas.filter(
-        alteracao => alteracao.dia === column.dia
+        (alteracao) => alteracao.dia === column.dia
       ).length === 0)
   ) {
     erro = true;
@@ -265,7 +266,7 @@ export const camposLancheEmergTabelaEtec = (
 ) => {
   let erro = false;
   const inclusaoEtec = ehGrupoETECUrlParam
-    ? inclusoesEtecAutorizadas.filter(inc => inc.dia === column.dia)
+    ? inclusoesEtecAutorizadas.filter((inc) => inc.dia === column.dia)
     : [];
   const refeicaoValue =
     formValuesAtualizados[
@@ -409,16 +410,16 @@ export const validarFormulario = (
   dadosValoresInclusoesAutorizadasState,
   weekColumns
 ) => {
-  const categoriaAlimentacao = categoriasDeMedicao.find(categoria =>
+  const categoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
     categoria.nome.includes("ALIMENTAÇÃO")
   );
   let erro = false;
 
   const values_ = deepCopy(values);
-  Object.keys(values_).forEach(value => {
+  Object.keys(values_).forEach((value) => {
     if (
       !weekColumns
-        .map(wc => wc.dia)
+        .map((wc) => wc.dia)
         .includes(
           value.includes("__dia_") &&
             value.split("__dia_")[1].split("__categoria")[0]
@@ -429,10 +430,10 @@ export const validarFormulario = (
   });
 
   let dias = [];
-  weekColumns.forEach(c => dias.push(c.dia));
+  weekColumns.forEach((c) => dias.push(c.dia));
 
-  categoriasDeMedicao.forEach(categoria => {
-    diasSobremesaDoce.forEach(dia => {
+  categoriasDeMedicao.forEach((categoria) => {
+    diasSobremesaDoce.forEach((dia) => {
       if (
         repeticaoSobremesaDoceComValorESemObservacao(
           values_,
@@ -449,7 +450,7 @@ export const validarFormulario = (
     });
 
     categoria.id === categoriaAlimentacao.id &&
-      Object.keys(dadosValoresInclusoesAutorizadasState).forEach(inclusao => {
+      Object.keys(dadosValoresInclusoesAutorizadasState).forEach((inclusao) => {
         const dia = inclusao.split("__dia_")[1].split("__categoria")[0];
         if (
           campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(
@@ -478,7 +479,7 @@ export const validarFormulario = (
   }
 
   arrayDiasInclusoesAutorizadasEmValues = [
-    ...new Set(arrayDiasInclusoesAutorizadasEmValues)
+    ...new Set(arrayDiasInclusoesAutorizadasEmValues),
   ];
 
   return erro;
@@ -528,12 +529,13 @@ export const validacoesTabelaAlimentacao = (
   const existeAlteracaoAlimentacaoRPL =
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
-      alteracao => alteracao.dia === dia && alteracao.motivo.includes("RPL")
+      (alteracao) => alteracao.dia === dia && alteracao.motivo.includes("RPL")
     ).length > 0;
+
   const existeAlteracaoAlimentacaoLPR =
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
-      alteracao => alteracao.dia === dia && alteracao.motivo.includes("LPR")
+      (alteracao) => alteracao.dia === dia && alteracao.motivo.includes("LPR")
     ).length > 0;
 
   const maxMatriculados = Number(
@@ -545,7 +547,7 @@ export const validacoesTabelaAlimentacao = (
   );
 
   const alimentacoesDoDia = Object.keys(allValues).filter(
-    key =>
+    (key) =>
       String(key).includes(`dia_${dia}__categoria_${categoria}`) &&
       !String(key).includes("numero_de_alunos") &&
       !String(key).includes("frequencia")
@@ -554,11 +556,11 @@ export const validacoesTabelaAlimentacao = (
   if (
     `${rowName}__dia_${dia}__categoria_${categoria}` ===
       `frequencia__dia_${dia}__categoria_${categoria}` &&
-    Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+    Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
       String(key).includes(`__dia_${dia}__categoria_${categoria}`)
     ) &&
     !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
-    alimentacoesDoDia.some(ali => allValues[ali])
+    alimentacoesDoDia.some((ali) => allValues[ali])
   ) {
     if (!value || (value && Number(value) !== 0 && validacaoDiaLetivo(dia))) {
       return `Foi autorizada inclusão de alimentação ${
@@ -577,16 +579,17 @@ export const validacoesTabelaAlimentacao = (
     !(inputName in dadosValoresInclusoesAutorizadasState)
   ) {
     return "Frequência acima inválida ou não preenchida.";
-  } else if (inputName in dadosValoresInclusoesAutorizadasState) {
+  } else if (
+    inputName in dadosValoresInclusoesAutorizadasState &&
+    !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+  ) {
     if (
       validacaoDiaLetivo(dia) &&
       allValues[inputName] >
         maxFrequencia + Number(dadosValoresInclusoesAutorizadasState[inputName])
     ) {
       let msg = `Número máximo de alimentações foi excedido. Foi autorizada a inclusão de `;
-      msg += `${
-        dadosValoresInclusoesAutorizadasState[inputName]
-      } alimentações neste dia. `;
+      msg += `${dadosValoresInclusoesAutorizadasState[inputName]} alimentações neste dia. `;
       msg += `O lançamento deve considerar as alimentações do dia (até o limite dos frequentes) + as alimentações autorizadas.`;
       return msg;
     }
@@ -611,8 +614,8 @@ export const validacoesTabelaAlimentacao = (
     existeAlteracaoAlimentacaoLPR &&
     inputName.includes("refeicao") &&
     !inputName.includes("repeticao") &&
-    (!allValues[`lanche__dia_${dia}__categoria_${categoria}`] &&
-      !allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`])
+    !allValues[`lanche__dia_${dia}__categoria_${categoria}`] &&
+    !allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`]
   ) {
     if (Number(value) > 2 * maxFrequencia) {
       return "Lançamento maior que 2x a frequência de alunos no dia.";
@@ -632,18 +635,48 @@ export const validacoesTabelaAlimentacao = (
   } else if (
     value &&
     Number(value) >
-      (location.state && location.state.grupo === "Programas e Projetos"
+      (location.state &&
+      (location.state.grupo === "Programas e Projetos" ||
+        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
         ? maxNumeroDeAlunos
         : maxMatriculados) &&
     inputName.includes("frequencia")
   ) {
     const complemento =
-      location.state && location.state.grupo === "Programas e Projetos"
+      location.state &&
+      (location.state.grupo === "Programas e Projetos" ||
+        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
         ? "em Número de Alunos"
         : "de alunos matriculados";
     return `A quantidade de alunos frequentes não pode ser maior do que a quantidade ${complemento}.`;
   }
   return undefined;
+};
+
+const validaFrequenciaDietasCEUGESTAO = (
+  location,
+  categoria,
+  dia,
+  value,
+  rowName,
+  medicaoUuid,
+  maxDietasAutorizadas
+) => {
+  if (rowName !== "frequencia") return false;
+  const totalFrequencia = location.state.frequenciasDietasCEUGESTAO
+    .filter(
+      (campoFrequencia) =>
+        campoFrequencia.categoria_medicao === categoria &&
+        Number(campoFrequencia.dia) === Number(dia) &&
+        campoFrequencia.medicao_uuid !== medicaoUuid
+    )
+    .reduce(function (total, cf) {
+      return total + Number(cf.valor);
+    }, 0);
+  if (Number(value) + totalFrequencia > maxDietasAutorizadas) {
+    return "Quantidade de dietas especiais autorizadas foi excedida";
+  }
+  return false;
 };
 
 export const validacoesTabelasDietas = (
@@ -652,9 +685,11 @@ export const validacoesTabelasDietas = (
   dia,
   categoria,
   value,
-  allValues
+  allValues,
+  location,
+  medicaoUuid
 ) => {
-  const idCategoriaAlimentacao = categoriasDeMedicao.find(categoria =>
+  const idCategoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
     categoria.nome.includes("ALIMENTAÇÃO")
   ).id;
   const maxDietasAutorizadas = Number(
@@ -723,6 +758,17 @@ export const validacoesTabelasDietas = (
       inputName.includes("refeicao"))
   ) {
     return "Frequência acima inválida ou não preenchida.";
+  }
+  if (ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)) {
+    return validaFrequenciaDietasCEUGESTAO(
+      location,
+      categoria,
+      dia,
+      value,
+      rowName,
+      medicaoUuid,
+      maxDietasAutorizadas
+    );
   }
   return undefined;
 };
@@ -821,7 +867,7 @@ export const exibirTooltipSuspensoesAutorizadas = (
     (!["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
     suspensoesAutorizadas &&
     suspensoesAutorizadas.filter(
-      suspensao =>
+      (suspensao) =>
         suspensao.dia === column.dia &&
         suspensao.alimentacoes.includes(row.name)
     ).length > 0
@@ -845,10 +891,11 @@ export const exibirTooltipRPLAutorizadas = (
     (!["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
-      alteracao =>
+      (alteracao) =>
         alteracao.dia === column.dia && alteracao.motivo.includes("RPL")
     ).length > 0 &&
-    (row.name.includes("refeicao") && !row.name.includes("repeticao"))
+    row.name.includes("refeicao") &&
+    !row.name.includes("repeticao")
   );
 };
 
@@ -869,10 +916,11 @@ export const exibirTooltipLPRAutorizadas = (
     (!["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
-      alteracao =>
+      (alteracao) =>
         alteracao.dia === column.dia && alteracao.motivo.includes("LPR")
     ).length > 0 &&
-    (row.name.includes("lanche") && !row.name.includes("emergencial"))
+    row.name.includes("lanche") &&
+    !row.name.includes("emergencial")
   );
 };
 
@@ -894,13 +942,13 @@ export const exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas = (
       !["Mês anterior", "Mês posterior"].includes(value) &&
       kitLanchesAutorizadas &&
       kitLanchesAutorizadas.filter(
-        kit =>
+        (kit) =>
           kit.dia === column.dia && Number(value) !== Number(kit.numero_alunos)
       ).length > 0 &&
       row.name.includes("kit_lanche")) ||
     (!value &&
       row.name.includes("kit_lanche") &&
-      kitLanchesAutorizadas.filter(kit => kit.dia === column.dia).length > 0)
+      kitLanchesAutorizadas.filter((kit) => kit.dia === column.dia).length > 0)
   );
 };
 
@@ -920,42 +968,44 @@ export const exibirTooltipKitLancheSolAlimentacoes = (
     value &&
     categoria.nome.includes("SOLICITAÇÕES") &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
-    kitLanchesAutorizadas.filter(kit => kit.dia === column.dia).length === 0 &&
+    kitLanchesAutorizadas.filter((kit) => kit.dia === column.dia).length ===
+      0 &&
     row.name.includes("kit_lanche")
   );
 };
 
-export const exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas = (
-  formValuesAtualizados,
-  row,
-  column,
-  categoria,
-  alteracoesAlimentacaoAutorizadas
-) => {
-  const value =
-    formValuesAtualizados[
-      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
-    ];
+export const exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas =
+  (
+    formValuesAtualizados,
+    row,
+    column,
+    categoria,
+    alteracoesAlimentacaoAutorizadas
+  ) => {
+    const value =
+      formValuesAtualizados[
+        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+      ];
 
-  return (
-    (value &&
-      categoria.nome.includes("SOLICITAÇÕES") &&
-      !["Mês anterior", "Mês posterior"].includes(value) &&
-      alteracoesAlimentacaoAutorizadas &&
-      alteracoesAlimentacaoAutorizadas.filter(
-        alteracao =>
-          alteracao.dia === column.dia &&
-          Number(value) !== Number(alteracao.numero_alunos)
-      ).length > 0 &&
-      row.name.includes("lanche_emergencial")) ||
-    (!value &&
-      row.name.includes("lanche_emergencial") &&
-      alteracoesAlimentacaoAutorizadas &&
-      alteracoesAlimentacaoAutorizadas.filter(
-        alteracao => alteracao.dia === column.dia
-      ).length > 0)
-  );
-};
+    return (
+      (value &&
+        categoria.nome.includes("SOLICITAÇÕES") &&
+        !["Mês anterior", "Mês posterior"].includes(value) &&
+        alteracoesAlimentacaoAutorizadas &&
+        alteracoesAlimentacaoAutorizadas.filter(
+          (alteracao) =>
+            alteracao.dia === column.dia &&
+            Number(value) !== Number(alteracao.numero_alunos)
+        ).length > 0 &&
+        row.name.includes("lanche_emergencial")) ||
+      (!value &&
+        row.name.includes("lanche_emergencial") &&
+        alteracoesAlimentacaoAutorizadas &&
+        alteracoesAlimentacaoAutorizadas.filter(
+          (alteracao) => alteracao.dia === column.dia
+        ).length > 0)
+    );
+  };
 
 export const exibirTooltipLancheEmergencialSolAlimentacoes = (
   formValuesAtualizados,
@@ -974,7 +1024,7 @@ export const exibirTooltipLancheEmergencialSolAlimentacoes = (
     categoria.nome.includes("SOLICITAÇÕES") &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
     alteracoesAlimentacaoAutorizadas.filter(
-      alteracao => alteracao.dia === column.dia
+      (alteracao) => alteracao.dia === column.dia
     ).length === 0 &&
     row.name.includes("lanche_emergencial")
   );
@@ -1024,7 +1074,7 @@ export const exibirTooltipLancheEmergTabelaEtec = (
       row.name.includes("sobremesa") ||
       row.name.includes("repeticao_sobremesa")) &&
     inclusoesEtecAutorizadas
-      .filter(inc => inc.dia === column.dia)[0]
+      .filter((inc) => inc.dia === column.dia)[0]
       .alimentacoes.includes("lanche_emergencial")
   );
 };

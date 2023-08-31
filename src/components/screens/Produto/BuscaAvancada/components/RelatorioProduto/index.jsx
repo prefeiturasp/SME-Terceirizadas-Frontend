@@ -40,7 +40,7 @@ const RelatorioProduto = () => {
               informacoesNutricionais={informacoesNutricionais}
               produto={{
                 ...produto,
-                todos_logs: retornaTodosOsLogs(produto.homologacao)
+                todos_logs: retornaTodosOsLogs(produto.homologacao),
               }}
               historico={produto.ultima_homologacao}
             />

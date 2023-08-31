@@ -9,19 +9,19 @@ import CadastroProtocoloPadraoDietaEsp from "components/screens/DietaEspecial/Ca
 import {
   DIETA_ESPECIAL,
   PROTOCOLO_PADRAO_DIETA,
-  CONSULTA_PROTOCOLO_PADRAO_DIETA
+  CONSULTA_PROTOCOLO_PADRAO_DIETA,
 } from "configs/constants";
 
 const atual = {
   href: `/${DIETA_ESPECIAL}/${PROTOCOLO_PADRAO_DIETA}`,
-  titulo: "Cadastro de Protocolo Padrão de Dieta Especial"
+  titulo: "Cadastro de Protocolo Padrão de Dieta Especial",
 };
 
 const anteriores = [
   {
     href: `/${DIETA_ESPECIAL}/${CONSULTA_PROTOCOLO_PADRAO_DIETA}`,
-    titulo: "Consultar Protocolo Padrão"
-  }
+    titulo: "Consultar Protocolo Padrão",
+  },
 ];
 
 export default () => (

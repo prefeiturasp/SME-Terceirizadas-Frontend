@@ -5,7 +5,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import SelectSelecione from "components/Shareable/SelectSelecione";
@@ -18,19 +18,21 @@ export default ({
   visoes,
   perfis,
   visaoUnica,
-  desabilitaCadastro
+  desabilitaCadastro,
+  qtdLimiteCadastro,
 }) => {
   const initialValues = visaoUnica
     ? {
-        visao: visaoUnica
+        visao: visaoUnica,
       }
     : {};
   const inicioResultado = useRef();
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
+
   return (
     <div className="filtros-gestao-acesso">
       <Form
@@ -91,10 +93,10 @@ export default ({
                 style={BUTTON_STYLE.GREEN}
                 className="float-left"
                 onClick={() => setShowCadastro(true)}
-                disabled={desabilitaCadastro}
+                disabled={desabilitaCadastro()}
                 tooltipExterno={
-                  desabilitaCadastro
-                    ? "É possível manter até 4 usuários utilizando o SIGPAE em sua UE."
+                  desabilitaCadastro()
+                    ? `É possível manter até ${qtdLimiteCadastro} usuários utilizando o SIGPAE em sua UE.`
                     : ""
                 }
               />

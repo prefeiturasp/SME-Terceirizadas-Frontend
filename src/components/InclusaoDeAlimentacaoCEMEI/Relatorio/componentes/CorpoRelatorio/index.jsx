@@ -5,7 +5,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
@@ -18,12 +18,12 @@ import { getRelatorioInclusaoAlimentacaoCEMEI } from "services/relatorios";
 import {
   corDaMensagem,
   justificativaAoNegarSolicitacao,
-  prazoDoPedidoMensagem
+  prazoDoPedidoMensagem,
 } from "helpers/utilities";
 import {
   inclusaoPossuiCEInestePeriodo,
   inclusaoPossuiEMEInestePeriodo,
-  periodosDaInclusao
+  periodosDaInclusao,
 } from "../../helpers";
 import "./style.scss";
 
@@ -153,7 +153,7 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                         key={key}
                         className={`col-2 ${
                           solicitacao.dias_motivos_da_inclusao_cemei.find(
-                            i => i.data === dia
+                            (i) => i.data === dia
                           ).cancelado ||
                           solicitacao.status === "ESCOLA_CANCELOU"
                             ? `cancelado`
@@ -162,13 +162,13 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                       >
                         <span>{dia}</span>
                         {(solicitacao.dias_motivos_da_inclusao_cemei.find(
-                          i => i.data === dia
+                          (i) => i.data === dia
                         ).cancelado_justificativa ||
                           solicitacao.status === "ESCOLA_CANCELOU") && (
                           <div className="dark-red">
                             <strong>justificativa:</strong>{" "}
                             {solicitacao.dias_motivos_da_inclusao_cemei.find(
-                              i => i.data === dia
+                              (i) => i.data === dia
                             ).cancelado_justificativa ||
                               solicitacao.logs[solicitacao.logs.length - 1]
                                 .justificativa}
@@ -216,7 +216,7 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                     </thead>
                     <tbody>
                       {solicitacao.quantidade_alunos_cei_da_inclusao_cemei
-                        .filter(q => q.periodo_escolar.nome === periodo)
+                        .filter((q) => q.periodo_escolar.nome === periodo)
                         .map((faixa, key) => {
                           return (
                             <tr key={key} className="row">
@@ -237,15 +237,15 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                         <td className="col-8 font-weight-bold">Total</td>
                         <td className="col-2 text-center">
                           {solicitacao.quantidade_alunos_cei_da_inclusao_cemei
-                            .filter(q => q.periodo_escolar.nome === periodo)
-                            .reduce(function(total, faixa) {
+                            .filter((q) => q.periodo_escolar.nome === periodo)
+                            .reduce(function (total, faixa) {
                               return total + faixa.matriculados_quando_criado;
                             }, totalMatriculados)}
                         </td>
                         <td className="col-2 text-center">
                           {solicitacao.quantidade_alunos_cei_da_inclusao_cemei
-                            .filter(q => q.periodo_escolar.nome === periodo)
-                            .reduce(function(total, faixa) {
+                            .filter((q) => q.periodo_escolar.nome === periodo)
+                            .reduce(function (total, faixa) {
                               return total + faixa.quantidade_alunos;
                             }, totalQuantidadeAlunos)}
                         </td>
@@ -275,7 +275,7 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                           <span className="font-weight-normal">
                             {
                               solicitacao.quantidade_alunos_emei_da_inclusao_cemei.find(
-                                q => q.periodo_escolar.nome === periodo
+                                (q) => q.periodo_escolar.nome === periodo
                               ).matriculados_quando_criado
                             }
                           </span>
@@ -284,7 +284,7 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                           Quantidade:{" "}
                           {
                             solicitacao.quantidade_alunos_emei_da_inclusao_cemei.find(
-                              q => q.periodo_escolar.nome === periodo
+                              (q) => q.periodo_escolar.nome === periodo
                             ).quantidade_alunos
                           }
                         </th>
@@ -294,14 +294,14 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                 </>
               )}
               {solicitacao.dias_motivos_da_inclusao_cemei.find(
-                inclusao => inclusao.cancelado_justificativa
+                (inclusao) => inclusao.cancelado_justificativa
               ) && (
                 <>
                   <hr />
                   <p>
                     <strong>Histórico de cancelamento</strong>
                     {solicitacao.dias_motivos_da_inclusao_cemei
-                      .filter(inclusao => inclusao.cancelado_justificativa)
+                      .filter((inclusao) => inclusao.cancelado_justificativa)
                       .map((inclusao, key) => {
                         return (
                           <div key={key}>
@@ -321,7 +321,7 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                     <p
                       className="value"
                       dangerouslySetInnerHTML={{
-                        __html: justificativaNegacao
+                        __html: justificativaNegacao,
                       }}
                     />
                   </div>
@@ -347,7 +347,7 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
               </p>
               {
                 solicitacao.logs.find(
-                  log => log.status_evento_explicacao === "CODAE autorizou"
+                  (log) => log.status_evento_explicacao === "CODAE autorizou"
                 ).criado_em
               }{" "}
               - Informações da CODAE
@@ -356,9 +356,12 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
               <div
                 className="obs"
                 dangerouslySetInnerHTML={{
-                  __html: `${solicitacao.logs.find(
-                    log => log.status_evento_explicacao === "CODAE autorizou"
-                  ).justificativa || `Sem observações por parte da CODAE`}`
+                  __html: `${
+                    solicitacao.logs.find(
+                      (log) =>
+                        log.status_evento_explicacao === "CODAE autorizou"
+                    ).justificativa || `Sem observações por parte da CODAE`
+                  }`,
                 }}
               />
             </p>

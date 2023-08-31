@@ -5,11 +5,11 @@ export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_ALUNOS_POR_FAIXA_ETARIA:
       return Object.assign({}, state, {
-        alunosPorFaixaEtaria: action.data
+        alunosPorFaixaEtaria: action.data,
       });
     case SET_TOTAL_ALUNOS_SELECIONADOS:
       return Object.assign({}, state, {
-        totalAlunosSelecionadosCei: action.data
+        totalAlunosSelecionadosCei: action.data,
       });
     default:
       return state;

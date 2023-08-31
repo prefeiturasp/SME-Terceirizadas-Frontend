@@ -2,17 +2,17 @@ import React from "react";
 import {
   existeAlgumStatusFimDeFluxo,
   tipoDeStatusClasse,
-  formatarLogs
+  formatarLogs,
 } from "./helper";
 import "./style.scss";
 import { deepCopy } from "../../../helpers/utilities";
 
-export const FluxoDeStatus = props => {
+export const FluxoDeStatus = (props) => {
   const {
     listaDeStatus,
     fluxo,
     eh_gestao_alimentacao = false,
-    eh_medicao_inicial = false
+    eh_medicao_inicial = false,
   } = props;
   let cloneListaDeStatus = deepCopy(listaDeStatus);
   cloneListaDeStatus = formatarLogs(cloneListaDeStatus);
@@ -35,12 +35,12 @@ export const FluxoDeStatus = props => {
       status_evento_explicacao: "CODAE",
       status: "",
       criado_em: "",
-      usuario: null
+      usuario: null,
     });
     temStatusDeAnaliseSensorialCancelada = true;
   }
 
-  const fluxoUtilizadoEFormatado = fluxoUtilizado.map(log => {
+  const fluxoUtilizadoEFormatado = fluxoUtilizado.map((log) => {
     let logFormatado = log;
     if (log.status_evento_explicacao === "Escola solicitou cancelamento") {
       logFormatado = "Escola solicitou cancelamento";
@@ -54,7 +54,7 @@ export const FluxoDeStatus = props => {
     return logFormatado;
   });
 
-  const getTitulo = log => {
+  const getTitulo = (log) => {
     if (log) {
       if (
         log.justificativa &&

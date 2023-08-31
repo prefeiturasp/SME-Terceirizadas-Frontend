@@ -5,7 +5,7 @@ import ListagemLaboratorios from "./components/ListagemLaboratorios";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   getLaboratorios,
-  getListaLaboratorios
+  getListaLaboratorios,
 } from "services/laboratorio.service";
 import { Paginacao } from "components/Shareable/Paginacao";
 
@@ -31,13 +31,13 @@ export default () => {
 
   const buscaDadosAutoComplete = async () => {
     const response = await getListaLaboratorios();
-    const nomes = response.data.results.map(e => e.nome);
-    const cnpjs = response.data.results.map(e => e.cnpj);
+    const nomes = response.data.results.map((e) => e.nome);
+    const cnpjs = response.data.results.map((e) => e.cnpj);
     setNomesLaboratorios(nomes);
     setCnpjsLaboratorios(cnpjs);
   };
 
-  const buscaResultado = async page => {
+  const buscaResultado = async (page) => {
     setCarregando(true);
 
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -52,7 +52,7 @@ export default () => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscaResultado(page);
     setPage(page);
   };

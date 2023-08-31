@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 export default () => {
   const atual = {
     href: `/${DRE}/${INCLUSAO_ALIMENTACAO}`,
-    titulo: "Inclusão de Alimentação - Pendente Validação"
+    titulo: "Inclusão de Alimentação - Pendente Validação",
   };
   const location = useLocation();
   const filtros = location.state && location.state.filtros;

@@ -7,7 +7,7 @@ import { TIPO_SOLICITACAO_DIETA } from "constants/shared";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import { ESCOLA, CODAE } from "configs/constants";
@@ -22,7 +22,7 @@ import {
   atualizaDietaEspecial,
   getSolicitacoesDietaEspecial,
   CODAEAutorizaDietaEspecial,
-  CODAEAtualizaProtocoloDietaEspecial
+  CODAEAtualizaProtocoloDietaEspecial,
 } from "services/dietaEspecial.service";
 import { getSubstitutos } from "services/produto.service";
 import { getMotivosNegacaoDietaEspecial } from "services/painelNutricionista.service";
@@ -43,11 +43,11 @@ import ModalAutorizaAlteracaoUE from "./componentes/ModalAutorizaAlteracaoUE";
 import {
   formataOpcoesClassificacaoDieta,
   formataSubstituicoes,
-  formataAlergias
+  formataAlergias,
 } from "./helper";
 import {
   obtemIdentificacaoNutricionista,
-  gerarParametrosConsulta
+  gerarParametrosConsulta,
 } from "helpers/utilities";
 import { getStatusSolicitacoesVigentes } from "helpers/dietaEspecial";
 import { formatarSolicitacoesVigentes } from "../../../Escola/helper";
@@ -59,7 +59,7 @@ const FormAutorizaDietaEspecial = ({
   visao,
   dietaCancelada,
   editar,
-  cancelar
+  cancelar,
 }) => {
   const [diagnosticos, setDiagnosticos] = useState(undefined);
   const [alergiasError, setAlergiasError] = useState(false);
@@ -70,16 +70,14 @@ const FormAutorizaDietaEspecial = ({
   const [alimentos, setAlimentos] = useState(undefined);
   const [produtos, setProdutos] = useState(undefined);
   const [showModalNegaDieta, setShowModalNegaDieta] = useState(false);
-  const [
-    showAutorizarAlteracaoUEModal,
-    setShowAutorizarAlteracaoUEModal
-  ] = useState(false);
+  const [showAutorizarAlteracaoUEModal, setShowAutorizarAlteracaoUEModal] =
+    useState(false);
   const [showAutorizarModal, setShowAutorizarModal] = useState(false);
   const [solicitacoesVigentes, setSolicitacoesVigentes] = useState(undefined);
   const [diagnosticosSelecionados, setDiagnosticosSelecionados] = useState([]);
   const tipoUsuario = localStorage.getItem("tipo_perfil");
 
-  const fetchData = async dietaEspecial => {
+  const fetchData = async (dietaEspecial) => {
     const respAlergiasIntolerancias = await getAlergiasIntolerancias();
     if (respAlergiasIntolerancias.status === HTTP_STATUS.OK) {
       setDiagnosticos(respAlergiasIntolerancias.results);
@@ -102,8 +100,8 @@ const FormAutorizaDietaEspecial = ({
       let optionsProtocolo = [
         {
           nome_protocolo: "Selecione um protocolo",
-          uuid: "selecione"
-        }
+          uuid: "selecione",
+        },
       ];
       optionsProtocolo = optionsProtocolo.concat(
         respNomesProtocolos.data.results
@@ -114,7 +112,7 @@ const FormAutorizaDietaEspecial = ({
     }
 
     const respAlimentos = await getAlimentos({
-      tipo: dietaEspecial.escola.tipo_gestao.nome === "TERC TOTAL" ? "E" : "P"
+      tipo: dietaEspecial.escola.tipo_gestao.nome === "TERC TOTAL" ? "E" : "P",
     });
     if (respAlimentos.status === HTTP_STATUS.OK) {
       setAlimentos(respAlimentos.data);
@@ -130,11 +128,11 @@ const FormAutorizaDietaEspecial = ({
         toastError("Houve um erro ao carregar Alimentos Substitutos");
       }
     } else {
-      const substitutos = respAlimentos.data.map(alimento =>
+      const substitutos = respAlimentos.data.map((alimento) =>
         Object.assign({}, alimento, {
           nome: alimento.marca
             ? `${alimento.nome} (${alimento.marca.nome})`
-            : `${alimento.nome}`
+            : `${alimento.nome}`,
         })
       );
       setProdutos(substitutos);
@@ -142,13 +140,13 @@ const FormAutorizaDietaEspecial = ({
 
     const params = gerarParametrosConsulta({
       aluno: dietaEspecial.aluno.uuid,
-      status: getStatusSolicitacoesVigentes()
+      status: getStatusSolicitacoesVigentes(),
     });
     const respSolicitacoesVigentes = await getSolicitacoesDietaEspecial(params);
     if (respSolicitacoesVigentes.status === HTTP_STATUS.OK) {
       const resultado = formatarSolicitacoesVigentes(
         respSolicitacoesVigentes.data.results.filter(
-          solicitacaoVigente => solicitacaoVigente.uuid !== dietaEspecial.uuid
+          (solicitacaoVigente) => solicitacaoVigente.uuid !== dietaEspecial.uuid
         )
       );
       setSolicitacoesVigentes(resultado);
@@ -161,7 +159,7 @@ const FormAutorizaDietaEspecial = ({
     setAlergias(formataAlergias(dietaEspecial));
   };
 
-  const salvaRascunho = async values => {
+  const salvaRascunho = async (values) => {
     values.alergias_intolerancias = diagnosticosSelecionados;
     if (protocoloPadrao) {
       values.nome_protocolo = protocoloPadrao.nome_protocolo;
@@ -186,7 +184,7 @@ const FormAutorizaDietaEspecial = ({
     onAutorizarOuNegar();
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     values.alergias_intolerancias = diagnosticosSelecionados;
     if (!diagnosticosSelecionados.length) {
       return;
@@ -269,7 +267,7 @@ const FormAutorizaDietaEspecial = ({
       data_termino:
         data_termino_formatada || dietaEspecial.data_termino || undefined,
       informacoes_adicionais: dietaEspecial.informacoes_adicionais,
-      registro_funcional_nutricionista: obtemIdentificacaoNutricionista()
+      registro_funcional_nutricionista: obtemIdentificacaoNutricionista(),
     };
   };
 
@@ -288,14 +286,14 @@ const FormAutorizaDietaEspecial = ({
 
   const setDiagnosticosDaDieta = () => {
     const diagnosticosDieta = dietaEspecial.alergias_intolerancias.map(
-      alergia => {
+      (alergia) => {
         return alergia.id.toString();
       }
     );
     setDiagnosticosSelecionados(diagnosticosDieta);
   };
 
-  const validaAlergias = form => {
+  const validaAlergias = (form) => {
     if (diagnosticosSelecionados.length) {
       setAlergiasError(false);
     } else {

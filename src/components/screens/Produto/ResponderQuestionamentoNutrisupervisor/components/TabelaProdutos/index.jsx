@@ -4,7 +4,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import { Link } from "react-router-dom";
@@ -13,7 +13,7 @@ import ModalJustificativa from "components/Shareable/ModalJustificativa";
 
 import {
   responderQuestionamentoNutrisupervisor,
-  filtrarReclamacoesNutrisupervisor
+  filtrarReclamacoesNutrisupervisor,
 } from "services/reclamacaoProduto.service";
 
 import { ordenaPorCriadoEm } from "./helpers";
@@ -28,13 +28,13 @@ const TabelaProdutos = ({
   setTotal,
   setProdutos,
   setShowBuscaVazia,
-  filtradoPorParametro
+  filtradoPorParametro,
 }) => {
   const [indiceProdutoAtivo, setIndiceProdutoAtivo] = useState();
   const [uuid, setUuid] = useState();
   const [produtoSelecionado, setProdutoSelecionado] = useState();
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     setCarregando(true);
     setExibirModal(false);
     const response = await responderQuestionamentoNutrisupervisor(
@@ -112,9 +112,7 @@ const TabelaProdutos = ({
                   <div className="container">
                     <div className="botao-ver-produto mt-4">
                       <Link
-                        to={`/gestao-produto/relatorio?uuid=${
-                          produto.ultima_homologacao.uuid
-                        }`}
+                        to={`/gestao-produto/relatorio?uuid=${produto.ultima_homologacao.uuid}`}
                       >
                         <Botao
                           texto="Ver produto"
@@ -127,7 +125,7 @@ const TabelaProdutos = ({
                     <hr />
                     {produto.ultima_homologacao.reclamacoes
                       .sort(ordenaPorCriadoEm)
-                      .map(reclamacao => {
+                      .map((reclamacao) => {
                         const desabilitarResponder =
                           reclamacao.status === "RESPONDIDO_NUTRISUPERVISOR";
                         return (
@@ -163,7 +161,7 @@ const TabelaProdutos = ({
           state={{
             acao: "resposta_nutrisupervisor",
             uuidReclamacao: uuid,
-            produto: produtoSelecionado
+            produto: produtoSelecionado,
           }}
           labelJustificativa="Responder"
           showModal={exibirModal}

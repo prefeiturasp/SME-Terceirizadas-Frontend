@@ -2,13 +2,13 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import moment from "moment";
 import React from "react";
 import { useEffect } from "react";
 
-export const CustomToolbar = toolbar => {
+export const CustomToolbar = (toolbar) => {
   useEffect(() => {
     const now = new Date();
     toolbar.date.setMonth(now.getMonth());

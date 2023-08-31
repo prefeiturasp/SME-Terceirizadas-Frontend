@@ -7,18 +7,18 @@ import GuiasComNotificacoes from "components/screens/Logistica/GuiasComNotificac
 
 const atual = {
   href: `/${LOGISTICA}/${GUIAS_NOTIFICACAO_FISCAL}`,
-  titulo: "Notificações"
+  titulo: "Notificações",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
+    titulo: "Abastecimento",
   },
   {
     href: `/`,
-    titulo: "Ocorrências"
-  }
+    titulo: "Ocorrências",
+  },
 ];
 
 export default () => (

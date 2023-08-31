@@ -4,10 +4,10 @@ export const KitLancheAvulsaCEIBody = ({ ...props }) => {
   const { solicitacao, item, index, filtros, labelData } = props;
   const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
-  const total = solicitacao.faixas_etarias.reduce(function(acc, v) {
+  const total = solicitacao.faixas_etarias.reduce(function (acc, v) {
     return acc + (v.quantidade || v.quantidade_alunos);
   }, 0);
-  const total_matriculados = solicitacao.faixas_etarias.reduce(function(
+  const total_matriculados = solicitacao.faixas_etarias.reduce(function (
     acc,
     v
   ) {
@@ -66,7 +66,7 @@ export const KitLancheAvulsaCEIBody = ({ ...props }) => {
                 <p>
                   <b>
                     {solicitacao.solicitacao_kit_lanche.kits
-                      .map(kit => kit.nome)
+                      .map((kit) => kit.nome)
                       .join(", ")}
                   </b>
                 </p>
@@ -138,7 +138,7 @@ export const KitLancheAvulsaCEIBody = ({ ...props }) => {
                       <p
                         className="observacao-negrito"
                         dangerouslySetInnerHTML={{
-                          __html: solicitacao.solicitacao_kit_lanche.descricao
+                          __html: solicitacao.solicitacao_kit_lanche.descricao,
                         }}
                       />
                     </b>
@@ -148,6 +148,6 @@ export const KitLancheAvulsaCEIBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

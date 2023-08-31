@@ -9,5 +9,5 @@ const FormStateFromRedux = ({ state }) => (
 );
 
 export default connect((state, ownProps) => ({
-  state: getFormState(state, ownProps.form)
+  state: getFormState(state, ownProps.form),
 }))(FormStateFromRedux);

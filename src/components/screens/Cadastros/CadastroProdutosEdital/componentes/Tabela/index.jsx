@@ -7,7 +7,7 @@ export default ({ resultado, changePage }) => {
   const [selecionado, setSelecionado] = useState(undefined);
   const [showModal, setShowModal] = useState(false);
 
-  const openModal = produto => {
+  const openModal = (produto) => {
     setSelecionado(produto);
     setShowModal(true);
   };

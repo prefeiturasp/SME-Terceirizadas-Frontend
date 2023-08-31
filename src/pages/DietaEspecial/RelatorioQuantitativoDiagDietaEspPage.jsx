@@ -8,12 +8,12 @@ import Page from "components/Shareable/Page/Page";
 import RelatorioQuantitativoDiagDietaEsp from "components/screens/DietaEspecial/RelatorioQuantitativoDiagDietaEsp";
 import {
   DIETA_ESPECIAL,
-  RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP
+  RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
 } from "configs/constants";
 
 const atual = {
   href: `/${DIETA_ESPECIAL}/${RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP}`,
-  titulo: "Relatório Quantitativo por Diagnóstico de Dieta Especial"
+  titulo: "Relatório Quantitativo por Diagnóstico de Dieta Especial",
 };
 
 export default () => (

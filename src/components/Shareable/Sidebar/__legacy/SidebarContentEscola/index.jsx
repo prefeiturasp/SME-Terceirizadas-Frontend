@@ -15,7 +15,7 @@ import {
   SUSPENSAO_ALIMENTACAO,
   CONFIGURACOES,
   CADASTROS,
-  HORARIO_COMBOS_ALIMENTACAO
+  HORARIO_COMBOS_ALIMENTACAO,
 } from "../../../../../configs/constants";
 import { PERFIL } from "../../../../../constants/shared";
 
@@ -27,7 +27,7 @@ export class SidebarContentEscola extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      subMenu: ""
+      subMenu: "",
     };
   }
 
@@ -292,7 +292,7 @@ export class SidebarContentEscola extends Component {
             <span>Configurações</span>
           </Link>
         </li>
-      )
+      ),
     ];
   }
 }

@@ -11,12 +11,12 @@ export default ({ match }) => {
     if (uuid) {
       return {
         href: `/${CODAE}/${CADASTROS}/${KITS}/${uuid}/${EDITAR}`,
-        titulo: "Edição de Modelo de KIT LANCHE"
+        titulo: "Edição de Modelo de KIT LANCHE",
       };
     } else {
       return {
         href: `/${CODAE}/${CADASTROS}/${KITS}`,
-        titulo: "Cadastro de Modelo de KIT LANCHE"
+        titulo: "Cadastro de Modelo de KIT LANCHE",
       };
     }
   };

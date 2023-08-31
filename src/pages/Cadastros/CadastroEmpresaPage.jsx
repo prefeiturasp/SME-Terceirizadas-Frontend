@@ -6,14 +6,14 @@ import { CadastroEmpresa } from "components/screens/Cadastros/CadastroEmpresa/Ca
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${EMPRESA}`,
-  titulo: "Cadastro de Empresa"
+  titulo: "Cadastro de Empresa",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
-  }
+    titulo: "Cadastros",
+  },
 ];
 
 export default () => (

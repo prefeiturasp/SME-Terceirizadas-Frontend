@@ -8,7 +8,7 @@ const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 export const codaeListarSolicitacoesDeInclusaoDeAlimentacao = async (
@@ -22,11 +22,11 @@ export const codaeListarSolicitacoesDeInclusaoDeAlimentacao = async (
     const response = await axios.get(url, { params: paramsFromPrevPage });
     const results = response.data.results;
     return {
-      results: results.map(el => ({
+      results: results.map((el) => ({
         ...el,
-        tipoSolicitacao: SOLICITACAO_CEI
+        tipoSolicitacao: SOLICITACAO_CEI,
       })),
-      status: response.status
+      status: response.status,
     };
   } else {
     const response = await axios.get(url, { params: paramsFromPrevPage });
@@ -46,16 +46,16 @@ export const codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao = (
   return fetch(url, {
     method: "PATCH",
     body: JSON.stringify({ justificativa: justificativa }),
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };

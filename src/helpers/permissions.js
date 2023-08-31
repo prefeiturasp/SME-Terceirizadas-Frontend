@@ -3,7 +3,7 @@ import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhDRE,
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada
+  usuarioEhEscolaTerceirizada,
 } from "./utilities";
 
 export const podeAcessarRelatorioQuantSolicDietaEsp =

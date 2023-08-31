@@ -7,7 +7,7 @@ import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { getNumerosEditais } from "../../../../../../services/edital.service";
 import "./style.scss";
@@ -19,7 +19,7 @@ export default ({ setFiltros, setKits }) => {
   const [initialValues] = useState();
   const [editais, setEditais] = useState();
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
@@ -30,13 +30,13 @@ export default ({ setFiltros, setKits }) => {
 
   const carregarEditais = async () => {
     const response = await getNumerosEditais();
-    setEditais(response.data.results.map(edital => edital.numero));
+    setEditais(response.data.results.map((edital) => edital.numero));
   };
 
-  const getEditaisFiltrado = numEdital => {
+  const getEditaisFiltrado = (numEdital) => {
     if (numEdital) {
       const reg = new RegExp(numEdital, "i");
-      return editais.filter(a => reg.test(a));
+      return editais.filter((a) => reg.test(a));
     }
     return [];
   };
@@ -71,12 +71,12 @@ export default ({ setFiltros, setKits }) => {
                   options={[
                     {
                       value: "ATIVO",
-                      label: "Ativo"
+                      label: "Ativo",
                     },
                     {
                       value: "INATIVO",
-                      label: "Inativo"
-                    }
+                      label: "Inativo",
+                    },
                   ]}
                 />
               </div>

@@ -6,7 +6,7 @@ export const Rascunhos = ({
   removerRascunho,
   form,
   carregarRascunho,
-  values
+  values,
 }) => {
   return (
     <div>

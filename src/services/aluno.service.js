@@ -6,7 +6,7 @@ export const getAlunoPertenceAEscola = (codigo_eol, escola_codigo_eol) => {
   return axios.get(url);
 };
 
-export const getFotoAluno = async codigo_eol => {
+export const getFotoAluno = async (codigo_eol) => {
   const url = `/alunos/${codigo_eol}/ver-foto/`;
   const response = await axios.get(url).catch(ErrorHandlerFunction);
   if (response) {
@@ -22,7 +22,7 @@ export const updateFotoAluno = async (codigo_eol_aluno, files) => {
   formData.append("file", files[0]);
   const response = await axios
     .post(url, formData, {
-      headers: headers
+      headers: headers,
     })
     .catch(ErrorHandlerFunction);
   if (response) {
@@ -31,7 +31,7 @@ export const updateFotoAluno = async (codigo_eol_aluno, files) => {
   }
 };
 
-export const deleteFotoAluno = async codigo_eol_aluno => {
+export const deleteFotoAluno = async (codigo_eol_aluno) => {
   const url = `/alunos/${codigo_eol_aluno}/deletar-foto/`;
   const response = await axios.delete(url).catch(ErrorHandlerFunction);
   if (response) {
@@ -54,7 +54,9 @@ export const getQuantidadeAlunosCEMEIporCEIEMEI = async (
   }
 };
 
-export const getQuantidadeAlunosCEMEIporPeriodoCEIEMEI = async codigo_eol_escola => {
+export const getQuantidadeAlunosCEMEIporPeriodoCEIEMEI = async (
+  codigo_eol_escola
+) => {
   const url = `/alunos/quantidade-alunos-por-periodo-cei-emei/`;
   const response = await axios
     .get(url, { params: { codigo_eol_escola } })

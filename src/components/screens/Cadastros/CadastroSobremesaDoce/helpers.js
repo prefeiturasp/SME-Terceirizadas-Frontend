@@ -1,6 +1,6 @@
-export const formataComoEventos = diasSobremesaDoce => {
+export const formataComoEventos = (diasSobremesaDoce) => {
   const eventos = [];
-  diasSobremesaDoce.forEach(diaSobremesaDoce => {
+  diasSobremesaDoce.forEach((diaSobremesaDoce) => {
     eventos.push({
       title: diaSobremesaDoce.tipo_unidade.iniciais,
       tipo_unidade: diaSobremesaDoce.tipo_unidade,
@@ -20,7 +20,7 @@ export const formataComoEventos = diasSobremesaDoce => {
       allDay: true,
       criado_por: diaSobremesaDoce.criado_por,
       criado_em: diaSobremesaDoce.criado_em,
-      uuid: diaSobremesaDoce.uuid
+      uuid: diaSobremesaDoce.uuid,
     });
   });
   return eventos;

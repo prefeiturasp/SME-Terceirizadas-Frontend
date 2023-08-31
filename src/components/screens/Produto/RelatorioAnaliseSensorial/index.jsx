@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import {
   getHomologacao,
   getInformacoesGrupo,
-  flegarHomologacaoPDF
+  flegarHomologacaoPDF,
 } from "../../../../services/produto.service";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import "./styles.scss";
@@ -15,7 +15,7 @@ import { Fragment } from "react";
 import ModalResponderAnaliseSensorial from "../BuscaProdutoAnaliseSensorial/components/ModalResponderAnaliseSensorial";
 import {
   getRelatorioProdutoAnaliseSensorial,
-  getRelatorioProdutoAnaliseSensorialRecebimento
+  getRelatorioProdutoAnaliseSensorialRecebimento,
 } from "services/relatorios";
 import TabelaEspecificacoesProduto from "components/Shareable/TabelaEspecificacoesProduto";
 
@@ -25,7 +25,7 @@ class RelatorioAnaliseSensorial extends Component {
     this.state = {
       homologacao: null,
       informacoes: null,
-      showModal: false
+      showModal: false,
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -39,9 +39,9 @@ class RelatorioAnaliseSensorial extends Component {
 
     const produto = responseHomolog.data.produto;
 
-    produto.informacoes_nutricionais.forEach(item => {
-      responseInformacoes.data.results.forEach(itemInfo => {
-        itemInfo.informacoes_nutricionais.forEach(informacao => {
+    produto.informacoes_nutricionais.forEach((item) => {
+      responseInformacoes.data.results.forEach((itemInfo) => {
+        itemInfo.informacoes_nutricionais.forEach((informacao) => {
           informacao["ativo"] = false;
           if (item.informacao_nutricional.uuid === informacao.uuid) {
             informacao["quantidade_porcao"] = item.quantidade_porcao;
@@ -56,7 +56,7 @@ class RelatorioAnaliseSensorial extends Component {
 
     this.setState({
       homologacao: responseHomolog.data,
-      informacoes: responseInformacoes.data.results
+      informacoes: responseInformacoes.data.results,
     });
   };
 
@@ -74,7 +74,7 @@ class RelatorioAnaliseSensorial extends Component {
 
   showItem = ({ nome }) => {
     let { informacoes } = this.state;
-    informacoes.forEach(info => {
+    informacoes.forEach((info) => {
       if (info.nome === nome) {
         info.ativo = !info.ativo;
       }
@@ -97,11 +97,11 @@ class RelatorioAnaliseSensorial extends Component {
     let homolog = this.state.homologacao;
     homolog.pdf_gerado = true;
     this.setState({
-      homologacao: homolog
+      homologacao: homolog,
     });
   };
 
-  responder_deve_aparecer = analise_sensorial => {
+  responder_deve_aparecer = (analise_sensorial) => {
     if (analise_sensorial === null) {
       return true;
     } else if (analise_sensorial.status !== "AGUARDANDO_RESPOSTA") {
@@ -146,7 +146,7 @@ class RelatorioAnaliseSensorial extends Component {
                     <div className="col-7">
                       <p
                         dangerouslySetInnerHTML={{
-                          __html: justificativa
+                          __html: justificativa,
                         }}
                       />
                     </div>
@@ -485,7 +485,7 @@ class RelatorioAnaliseSensorial extends Component {
             showModal={showModal}
             closeModal={this.closeModal}
             homologacao={homologacao}
-            onSend={e => e}
+            onSend={(e) => e}
           />
         </div>
       </div>

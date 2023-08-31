@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   cadastrarProdutoEdital,
-  atualizarProdutoEdital
+  atualizarProdutoEdital,
 } from "services/produto.service";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -11,12 +11,12 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   required,
   alphaNumericAndSingleSpaceBetweenCharacters,
-  noSpaceStartOrEnd
+  noSpaceStartOrEnd,
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { composeValidators, statusProdutos } from "helpers/utilities";
 import "./style.scss";
@@ -39,15 +39,15 @@ export default () => {
 
   const voltarParaProdutos = () =>
     history.push({
-      pathname: `/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`
+      pathname: `/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`,
     });
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     setCarregando(true);
     const payload = {
       nome: formValues.nome,
       ativo: formValues.status,
-      tipo_produto: "LOGISTICA"
+      tipo_produto: "LOGISTICA",
     };
     if (produto) {
       await atualizarProdutoEdital(payload, produto.uuid)
@@ -55,7 +55,7 @@ export default () => {
           toastSuccess("Produto atualizado com sucesso!");
           voltarParaProdutos();
         })
-        .catch(error => {
+        .catch((error) => {
           toastError(error.response.data[0]);
         });
     } else {
@@ -64,7 +64,7 @@ export default () => {
           toastSuccess("Produto cadastrado com sucesso!");
           voltarParaProdutos();
         })
-        .catch(error => {
+        .catch((error) => {
           toastError(error.response.data[0]);
         });
     }

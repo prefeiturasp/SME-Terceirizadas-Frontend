@@ -5,7 +5,7 @@ import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
-  CARD_TYPE_ENUM
+  CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { FILTRO_VISAO, PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { FILTRO } from "../const";
@@ -15,7 +15,7 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS,
-  SOLICITACOES_COM_QUESTIONAMENTO
+  SOLICITACOES_COM_QUESTIONAMENTO,
 } from "configs/constants";
 import { ajustarFormatoLog } from "../helper";
 import {
@@ -24,7 +24,7 @@ import {
   getSolicitacoesAutorizadasCodae,
   getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias,
   getSolicitacoesComQuestionamentoCodae,
-  getSolicitacoesPendentesAutorizacaoCodaeSemFiltro
+  getSolicitacoesPendentesAutorizacaoCodaeSemFiltro,
 } from "services/painelCODAE.service";
 import corrigeResumo from "helpers/corrigeDadosDoDashboard";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -35,13 +35,13 @@ import "./style.scss";
 import {
   updateDREAlimentacao,
   updateLoteAlimentacao,
-  updateTituloAlimentacao
+  updateTituloAlimentacao,
 } from "reducers/filtersAlimentacaoReducer";
 import { connect } from "react-redux";
 import { Spin } from "antd";
 import CardBody from "components/Shareable/CardBody";
 
-export const DashboardCODAE = props => {
+export const DashboardCODAE = (props) => {
   const { cards, lotes, diretoriasRegionais, handleSubmit, meusDados } = props;
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
   const filtroPorVencimento = FILTRO.SEM_FILTRO;
@@ -52,9 +52,9 @@ export const DashboardCODAE = props => {
     ? [
         <Option key={0} value={""}>
           Filtrar por DRE
-        </Option>
+        </Option>,
       ].concat(
-        diretoriasRegionais.map(dre => {
+        diretoriasRegionais.map((dre) => {
           return (
             <Option key={dre.value} value={dre.value}>
               {dre.label}
@@ -68,9 +68,9 @@ export const DashboardCODAE = props => {
     ? [
         <Option key={0} value={""}>
           Filtrar por Lote
-        </Option>
+        </Option>,
       ].concat(
-        lotes.map(lote => {
+        lotes.map((lote) => {
           return (
             <Option value={lote.value} key={lote.value}>
               {lote.label}
@@ -83,12 +83,11 @@ export const DashboardCODAE = props => {
   const [collapsed, setCollapsed] = useState(true);
   const [filtros, setFiltros] = useState({});
   const [resumo, setResumo] = useState([]);
-  const [loadingPainelSolicitacoes, setLoadingPainelSolicitacoes] = useState(
-    false
-  );
+  const [loadingPainelSolicitacoes, setLoadingPainelSolicitacoes] =
+    useState(false);
   const [
     loadingAcompanhamentoSolicitacoes,
-    setLoadingAcompanhamentoSolicitacoes
+    setLoadingAcompanhamentoSolicitacoes,
   ] = useState(false);
 
   const [solicitacoesFiltradas, setSolicitacoesFiltradas] = useState({
@@ -96,8 +95,27 @@ export const DashboardCODAE = props => {
     questionadas: [],
     autorizadas: [],
     negadas: [],
-    canceladas: []
+    canceladas: [],
   });
+
+  const params_periodo = (params) => {
+    let parametros = { ...params };
+    let isAllUndefined = true;
+    for (let key in parametros) {
+      if (
+        key !== "limit" &&
+        key !== "offset" &&
+        parametros[key] !== undefined
+      ) {
+        isAllUndefined = false;
+        break;
+      }
+    }
+    if (isAllUndefined) {
+      parametros.periodo = 60;
+    }
+    return parametros;
+  };
 
   const getSolicitacoesAsync = async (params = null) => {
     let pendentesAutorizacaoListSolicitacao = [];
@@ -109,26 +127,32 @@ export const DashboardCODAE = props => {
     setLoadingAcompanhamentoSolicitacoes(true);
 
     await getSolicitacoesPendentesAutorizacaoCodaeSemFiltro(params).then(
-      response => {
+      (response) => {
         pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(
           response.data.results
         );
       }
     );
 
-    await getSolicitacoesCanceladasCodae(params).then(response => {
-      canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
-    });
+    await getSolicitacoesCanceladasCodae(params_periodo(params)).then(
+      (response) => {
+        canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
+      }
+    );
 
-    await getSolicitacoesNegadasCodae(params).then(response => {
-      negadasListSolicitacao = ajustarFormatoLog(response.data.results);
-    });
+    await getSolicitacoesNegadasCodae(params_periodo(params)).then(
+      (response) => {
+        negadasListSolicitacao = ajustarFormatoLog(response.data.results);
+      }
+    );
 
-    await getSolicitacoesAutorizadasCodae(params).then(response => {
-      autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
-    });
+    await getSolicitacoesAutorizadasCodae(params_periodo(params)).then(
+      (response) => {
+        autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
+      }
+    );
 
-    await getSolicitacoesComQuestionamentoCodae(params).then(response => {
+    await getSolicitacoesComQuestionamentoCodae(params).then((response) => {
       questionamentosListSolicitacao = ajustarFormatoLog(response.data.results);
     });
 
@@ -137,7 +161,7 @@ export const DashboardCODAE = props => {
       questionadas: questionamentosListSolicitacao,
       autorizadas: autorizadasListSolicitacao,
       negadas: negadasListSolicitacao,
-      canceladas: canceladasListSolicitacao
+      canceladas: canceladasListSolicitacao,
     });
 
     setLoadingAcompanhamentoSolicitacoes(false);
@@ -149,7 +173,7 @@ export const DashboardCODAE = props => {
       filtroPorVencimento,
       visao,
       prepararParametros(values)
-    ).then(response => {
+    ).then((response) => {
       const resumo = response.data.results;
       // // TODO melhorar essas duas linhas abaixo
       resumo["Kit Lanche Unificado"] = resumo["Kit Lanche Passeio Unificado"];
@@ -161,13 +185,13 @@ export const DashboardCODAE = props => {
     setLoadingPainelSolicitacoes(false);
   };
 
-  const onPesquisaChanged = values => {
+  const onPesquisaChanged = (values) => {
     carregaResumoPendencias(values);
     if (values.titulo && values.titulo.length > 2) {
       setTimeout(async () => {
         getSolicitacoesAsync({
           busca: values.titulo,
-          ...prepararParametros(values)
+          ...prepararParametros(values),
         });
       }, 500);
     } else {
@@ -177,7 +201,7 @@ export const DashboardCODAE = props => {
     }
   };
 
-  const linkTo = link => {
+  const linkTo = (link) => {
     let url =
       visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO ? `/${CODAE}/${link}` : "/";
 
@@ -185,21 +209,17 @@ export const DashboardCODAE = props => {
       pathname: url,
       state: {
         prevPath: window.location.pathname,
-        filtros: filtros
-      }
+        filtros: filtros,
+      },
     };
   };
 
-  const prepararParametros = values => {
+  const prepararParametros = (values) => {
     setFiltros(values);
     const params = PARAMS;
     params["tipo_solicitacao"] = values.tipo_solicitacao;
     params["data_evento"] =
-      values.data_evento &&
-      values.data_evento
-        .split("/")
-        .reverse()
-        .join("-");
+      values.data_evento && values.data_evento.split("/").reverse().join("-");
     params["diretoria_regional"] = values.diretoria_regional;
     params["lote"] = values.lote;
     return params;
@@ -239,7 +259,7 @@ export const DashboardCODAE = props => {
                       <Field
                         component={ASelect}
                         showSearch
-                        onChange={value => {
+                        onChange={(value) => {
                           form.change(`diretoria_regional`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                           props.updateDREAlimentacao(value);
@@ -259,7 +279,7 @@ export const DashboardCODAE = props => {
                       <Field
                         component={ASelect}
                         showSearch
-                        onChange={value => {
+                        onChange={(value) => {
                           form.change(`lote`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                           props.updateLoteAlimentacao(value);
@@ -317,7 +337,7 @@ export const DashboardCODAE = props => {
               exibirFiltrosDataEventoETipoSolicitacao={true}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
-              onChange={value => {
+              onChange={(value) => {
                 clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(async () => {
                   onPesquisaChanged(value);
@@ -390,19 +410,16 @@ export const DashboardCODAE = props => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  updateDREAlimentacao: dreAlimentacao => {
+const mapDispatchToProps = (dispatch) => ({
+  updateDREAlimentacao: (dreAlimentacao) => {
     dispatch(updateDREAlimentacao(dreAlimentacao));
   },
-  updateLoteAlimentacao: loteAlimentacao => {
+  updateLoteAlimentacao: (loteAlimentacao) => {
     dispatch(updateLoteAlimentacao(loteAlimentacao));
   },
-  updateTituloAlimentacao: tituloAlimentacao => {
+  updateTituloAlimentacao: (tituloAlimentacao) => {
     dispatch(updateTituloAlimentacao(tituloAlimentacao));
-  }
+  },
 });
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(DashboardCODAE);
+export default connect(null, mapDispatchToProps)(DashboardCODAE);

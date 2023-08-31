@@ -14,13 +14,13 @@ import {
   PESQUISA_DESENVOLVIMENTO,
   RECLAMACAO_DE_PRODUTO,
   ATIVACAO_DE_PRODUTO,
-  GESTAO_PRODUTO
+  GESTAO_PRODUTO,
 } from "configs/constants";
 
 export const ReclamacaoDeProdutoPage = () => {
   const atual = {
     href: `/${PESQUISA_DESENVOLVIMENTO}/${RECLAMACAO_DE_PRODUTO}`,
-    titulo: "Reclamação de Produto"
+    titulo: "Reclamação de Produto",
   };
 
   return (
@@ -34,7 +34,7 @@ export const ReclamacaoDeProdutoPage = () => {
 export const ConsultaAtivacaoDeProdutoPage = () => {
   const atual = {
     href: `/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/consulta`,
-    titulo: "Ativar/suspender Produto"
+    titulo: "Ativar/suspender Produto",
   };
 
   return (
@@ -48,7 +48,7 @@ export const ConsultaAtivacaoDeProdutoPage = () => {
 export const AtivacaoDeProdutoPage = () => {
   const atual = {
     href: `/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe`,
-    titulo: "Ativar/suspender Produto"
+    titulo: "Ativar/suspender Produto",
   };
 
   return (
@@ -62,7 +62,7 @@ export const AtivacaoDeProdutoPage = () => {
 export const ConsultaResponderReclamacaoPage = () => {
   const atual = {
     href: `/${GESTAO_PRODUTO}/responder-reclamacao/consulta`,
-    titulo: "Responder Questionamento da CODAE"
+    titulo: "Responder Questionamento da CODAE",
   };
 
   return (
@@ -76,7 +76,7 @@ export const ConsultaResponderReclamacaoPage = () => {
 export const ResponderReclamacaoPage = () => {
   const atual = {
     href: `/${GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
-    titulo: "Responder Questionamento da CODAE"
+    titulo: "Responder Questionamento da CODAE",
   };
 
   return (
@@ -90,7 +90,7 @@ export const ResponderReclamacaoPage = () => {
 export const ResponderQuestionamentoUEPage = () => {
   const atual = {
     href: `/${GESTAO_PRODUTO}/responder-questionamento-ue`,
-    titulo: "Responder Questionamento da CODAE"
+    titulo: "Responder Questionamento da CODAE",
   };
 
   return (
@@ -104,7 +104,7 @@ export const ResponderQuestionamentoUEPage = () => {
 export const ResponderQuestionamentoNutrisupervisorPage = () => {
   const atual = {
     href: `/${GESTAO_PRODUTO}/responder-questionamento-nutrisupervisor`,
-    titulo: "Responder Questionamento da CODAE"
+    titulo: "Responder Questionamento da CODAE",
   };
 
   return (
@@ -118,7 +118,7 @@ export const ResponderQuestionamentoNutrisupervisorPage = () => {
 export const RelatorioQuantitativoPorTerceirizadaPage = () => {
   const atual = {
     href: `/${GESTAO_PRODUTO}/relatorios/quantitativo-por-terceirizada`,
-    titulo: "Relatório quantitativo de produtos por terceirizadas"
+    titulo: "Relatório quantitativo de produtos por terceirizadas",
   };
 
   return (

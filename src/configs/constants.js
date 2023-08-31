@@ -66,7 +66,7 @@ export const ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO = {
   SOLICITACOES_PENDENTE_HOMOLOGACAO: "solicitacoes-pendente-homologacao",
   SOLICITACOES_HOMOLOGADAS: "solicitacoes-homologadas",
   SOLICITACOES_NAO_HOMOLOGADAS: "solicitacoes-nao-homologadas",
-  RESPONDER_QUESTIONAMENTOS_DA_CODAE: "responder-questionamentos-da-codae"
+  RESPONDER_QUESTIONAMENTOS_DA_CODAE: "responder-questionamentos-da-codae",
 };
 
 export const AUTORIZADOS_DIETA = "autorizados-dieta";
@@ -83,7 +83,7 @@ export const DIETA_ESPECIAL_SOLICITACOES = {
   CODAE: "codae-solicitacoes",
   ESCOLA: "escola-solicitacoes",
   TERCEIRIZADA: "terceirizada-solicitacoes",
-  DRE: "diretoria-regional-solicitacoes"
+  DRE: "diretoria-regional-solicitacoes",
 };
 
 export const GESTAO_PRODUTO_CARDS = {
@@ -95,7 +95,7 @@ export const GESTAO_PRODUTO_CARDS = {
   PENDENTE_HOMOLOGACAO: "Pendentes de homologação",
   HOMOLOGADOS: "Homologados",
   NAO_HOMOLOGADOS: "Não homologados",
-  RESPONDER_QUESTIONAMENTOS_DA_CODAE: "Responder Questionamentos da CODAE"
+  RESPONDER_QUESTIONAMENTOS_DA_CODAE: "Responder Questionamentos da CODAE",
 };
 
 export const SOLICITACOES_CODAE = "codae-solicitacoes";
@@ -140,6 +140,7 @@ export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
 export const SUSPENSAO_DE_PRODUTO = "relatorio-produtos-suspensos";
 export const ATIVACAO_DE_PRODUTO = "ativacao-de-produto";
 export const CADASTROS = "cadastros";
+export const MARCAS = "marcas";
 export const EDITAIS_CONTRATOS = "editais-contratos";
 export const EDITAIS_CADASTRADOS = "editais-cadastrados";
 export const EMPRESA = "empresa";
@@ -269,38 +270,38 @@ export const STATUS_RECLAMACAO = {
   AGUARDANDO_RESPOSTA_TERCEIRIZADA: "AGUARDANDO_RESPOSTA_TERCEIRIZADA",
   RESPONDIDO_TERCEIRIZADA: "RESPONDIDO_TERCEIRIZADA",
   CODAE_ACEITOU: "CODAE_ACEITOU",
-  CODAE_RECUSOU: "CODAE_RECUSOU"
+  CODAE_RECUSOU: "CODAE_RECUSOU",
 };
 
 export const WEEK = [
   {
     label: "D",
-    value: "6"
+    value: "6",
   },
   {
     label: "S",
-    value: "0"
+    value: "0",
   },
   {
     label: "T",
-    value: "1"
+    value: "1",
   },
   {
     label: "Q",
-    value: "2"
+    value: "2",
   },
   {
     label: "Q",
-    value: "3"
+    value: "3",
   },
   {
     label: "S",
-    value: "4"
+    value: "4",
   },
   {
     label: "S",
-    value: "5"
-  }
+    value: "5",
+  },
 ];
 
 export const USUARIO_PODE_ATUALIZAR_FOTO_DEV_HOM = "6769195";

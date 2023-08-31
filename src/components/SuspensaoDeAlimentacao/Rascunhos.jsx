@@ -6,13 +6,13 @@ export class Rascunhos extends Component {
     const {
       suspensoesDeAlimentacaoList,
       OnDeleteButtonClicked,
-      OnEditButtonClicked
+      OnEditButtonClicked,
     } = this.props;
     const allDaysInfo = suspensoesDeAlimentacaoList.map(
       (suspensaoDeAlimentacao, key) => {
-        suspensaoDeAlimentacao.suspensoes_alimentacao.forEach(value => {
+        suspensaoDeAlimentacao.suspensoes_alimentacao.forEach((value) => {
           const idx = suspensaoDeAlimentacao.suspensoes_alimentacao.findIndex(
-            value2 => value2.data === value.data
+            (value2) => value2.data === value.data
           );
           suspensaoDeAlimentacao.suspensoes_alimentacao[idx][`data${idx}`] =
             suspensaoDeAlimentacao.suspensoes_alimentacao[idx][`data`];
@@ -42,7 +42,7 @@ export class Rascunhos extends Component {
               <span
                 onClick={() =>
                   OnEditButtonClicked({
-                    suspensaoDeAlimentacao
+                    suspensaoDeAlimentacao,
                   })
                 }
               >

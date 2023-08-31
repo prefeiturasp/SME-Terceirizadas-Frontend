@@ -9,14 +9,14 @@ import SelectSelecione from "components/Shareable/SelectSelecione";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 
 import {
   getResponderReclamacaoNomesProdutos,
   getResponderReclamacaoNomesMarcas,
-  getResponderReclamacaoNomesFabricantes
+  getResponderReclamacaoNomesFabricantes,
 } from "services/produto.service";
 
 import "./style.scss";
@@ -27,7 +27,7 @@ const initialState = {
   status: ["Ativo", "Suspenso"],
   produtos: [],
   marcas: [],
-  fabricantes: []
+  fabricantes: [],
 };
 
 const FORM_NAME = "formBuscaProduto";
@@ -48,7 +48,7 @@ const FormBuscaProduto = ({
   onSubmit,
   exibirStatus = true,
   initialValues,
-  history
+  history,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -57,15 +57,15 @@ const FormBuscaProduto = ({
       Promise.all([
         getResponderReclamacaoNomesProdutos(),
         getResponderReclamacaoNomesMarcas(),
-        getResponderReclamacaoNomesFabricantes()
+        getResponderReclamacaoNomesFabricantes(),
       ]).then(([produtos, marcas, fabricantes]) => {
         dispatch({
           type: "popularDados",
           payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome)
-          }
+            produtos: produtos.data.results.map((el) => el.nome),
+            marcas: marcas.data.results.map((el) => el.nome),
+            fabricantes: fabricantes.data.results.map((el) => el.nome),
+          },
         });
       });
     }
@@ -122,7 +122,7 @@ const FormBuscaProduto = ({
                     name="status"
                     options={[
                       { nome: "Ativo", uuid: "ativo" },
-                      { nome: "Suspenso", uuid: "suspenso" }
+                      { nome: "Suspenso", uuid: "suspenso" },
                     ]}
                   />
                 </div>
@@ -148,7 +148,7 @@ const FormBuscaProduto = ({
                   status: undefined,
                   nome_fabricante: undefined,
                   nome_marca: undefined,
-                  nome_produto: undefined
+                  nome_produto: undefined,
                 })
               }
               disabled={submitting}
@@ -160,9 +160,9 @@ const FormBuscaProduto = ({
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    initialValues: state.finalForm[FORM_NAME]
+    initialValues: state.finalForm[FORM_NAME],
   };
 };
 

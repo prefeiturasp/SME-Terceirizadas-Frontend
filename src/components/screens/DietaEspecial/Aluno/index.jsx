@@ -20,20 +20,20 @@ class solicitacaoDietaEspecial extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const codigo_eol = urlParams.get("codigo_eol");
-    dadosDoAluno(codigo_eol).then(dadosAluno => {
+    dadosDoAluno(codigo_eol).then((dadosAluno) => {
       const dados = dadosAluno.data;
       this.setState({
         nomeAluno: dados.nome,
         eolAluno: dados.codigo_eol,
         escolaAtual: dados.nome_escola,
-        dreAtual: dados.nome_dre
+        dreAtual: dados.nome_dre,
       });
     });
-    getDietasEspeciaisVigentesDeUmAluno(codigo_eol).then(response => {
+    getDietasEspeciaisVigentesDeUmAluno(codigo_eol).then((response) => {
       this.setState({
         solicitacoesVigentes: formatarSolicitacoesVigentes(
           response.data.results
-        )
+        ),
       });
     });
   }
@@ -47,13 +47,8 @@ class solicitacaoDietaEspecial extends Component {
   }
 
   render() {
-    const {
-      nomeAluno,
-      eolAluno,
-      escolaAtual,
-      dreAtual,
-      solicitacoesVigentes
-    } = this.state;
+    const { nomeAluno, eolAluno, escolaAtual, dreAtual, solicitacoesVigentes } =
+      this.state;
     const { handleSubmit } = this.props;
     return (
       <div className="card">
@@ -101,13 +96,13 @@ const componentNameForm = reduxForm({
         "É necessário preencher este campo com um código EOL válido";
     }
     return errors;
-  }
+  },
 })(solicitacaoDietaEspecial);
 
 const selector = formValueSelector("solicitacaoDietaEspecial");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    files: selector(state, "files")
+    files: selector(state, "files"),
   };
 };
 

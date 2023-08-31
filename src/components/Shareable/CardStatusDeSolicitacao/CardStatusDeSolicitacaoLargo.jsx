@@ -4,7 +4,7 @@ import { caminhoURL } from "./helper";
 import { NavLink } from "react-router-dom";
 import { RELATORIO } from "../../../configs/constants";
 
-export const CardStatusDeSolicitacaoLargo = props => {
+export const CardStatusDeSolicitacaoLargo = (props) => {
   const { titulo, tipo, solicitacoes, icone } = props;
   return (
     <div className={`card card-panel card-colored ${tipo} mb-4 mr-4`}>
@@ -22,8 +22,9 @@ export const CardStatusDeSolicitacaoLargo = props => {
                 solicitacao.link ||
                 `${caminhoURL(solicitacao.tipo_doc)}/${RELATORIO}?uuid=${
                   solicitacao.uuid
-                }&ehInclusaoContinua=${solicitacao.tipo_doc ===
-                  "INC_ALIMENTA_CONTINUA"}`
+                }&ehInclusaoContinua=${
+                  solicitacao.tipo_doc === "INC_ALIMENTA_CONTINUA"
+                }`
               }
             >
               <p className="data">

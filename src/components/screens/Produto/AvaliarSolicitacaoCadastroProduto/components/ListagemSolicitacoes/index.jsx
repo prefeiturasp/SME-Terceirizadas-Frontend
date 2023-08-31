@@ -5,20 +5,20 @@ import "./styles.scss";
 import FormPrevisaoCadastro from "../FormPrevisaoCadastro";
 import {
   usuarioEhCODAEDietaEspecial,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhEmpresaTerceirizada,
 } from "helpers/utilities";
 
 const ListagemProdutos = ({
   solicitacoes,
   setSolicitacoes,
   ativos,
-  setAtivos
+  setAtivos,
 }) => {
   const usuarioNutricionistaCodae = usuarioEhCODAEDietaEspecial();
   const usuarioTerceirizada = usuarioEhEmpresaTerceirizada();
   const onUpdateSolicitacao = (uuid, values) => {
     setSolicitacoes(
-      solicitacoes.map(sol => {
+      solicitacoes.map((sol) => {
         if (sol.uuid === uuid) {
           sol.status = "CONFIRMADA";
           sol.status_title = "Confirmada";
@@ -80,7 +80,7 @@ const ListagemProdutos = ({
                     onClick={() => {
                       ativos && ativos.includes(solicitacao.uuid)
                         ? setAtivos(
-                            ativos.filter(el => el !== solicitacao.uuid)
+                            ativos.filter((el) => el !== solicitacao.uuid)
                           )
                         : setAtivos(
                             ativos
@@ -100,7 +100,7 @@ const ListagemProdutos = ({
                     <div
                       className="value-empresa"
                       dangerouslySetInnerHTML={{
-                        __html: solicitacao.info_produto
+                        __html: solicitacao.info_produto,
                       }}
                     />
                   </div>
@@ -161,31 +161,33 @@ const ListagemProdutos = ({
                     solicitacao.status === "AGUARDANDO_CONFIRMACAO" && (
                       <FormPrevisaoCadastro
                         uuidSolicitacao={solicitacao.uuid}
-                        onUpdate={values =>
+                        onUpdate={(values) =>
                           onUpdateSolicitacao(solicitacao.uuid, values)
                         }
                       />
                     )}
-                  {usuarioTerceirizada && solicitacao.status === "CONFIRMADA" && (
-                    <>
-                      <div className="cabecalho-empresa">
-                        <b>Dados da confirmação</b>
-                      </div>
-                      <div className="grid-confirmacao">
-                        <div className="label-empresa">Data prevista</div>
-                        <div className="label-empresa">Justificativa</div>
-                        <div className="value-empresa">
-                          {solicitacao.data_previsao_cadastro}
+                  {usuarioTerceirizada &&
+                    solicitacao.status === "CONFIRMADA" && (
+                      <>
+                        <div className="cabecalho-empresa">
+                          <b>Dados da confirmação</b>
                         </div>
-                        <div
-                          className="value-empresa"
-                          dangerouslySetInnerHTML={{
-                            __html: solicitacao.justificativa_previsao_cadastro
-                          }}
-                        />
-                      </div>
-                    </>
-                  )}
+                        <div className="grid-confirmacao">
+                          <div className="label-empresa">Data prevista</div>
+                          <div className="label-empresa">Justificativa</div>
+                          <div className="value-empresa">
+                            {solicitacao.data_previsao_cadastro}
+                          </div>
+                          <div
+                            className="value-empresa"
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                solicitacao.justificativa_previsao_cadastro,
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
                   {usuarioNutricionistaCodae &&
                     solicitacao.status === "CONFIRMADA" && (
                       <>
@@ -195,7 +197,7 @@ const ListagemProdutos = ({
                         <div
                           className="value-empresa"
                           dangerouslySetInnerHTML={{
-                            __html: solicitacao.justificativa_previsao_cadastro
+                            __html: solicitacao.justificativa_previsao_cadastro,
                           }}
                         />
                       </>

@@ -7,14 +7,14 @@ import {
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_COM_QUESTIONAMENTO,
   SOLICITACOES_NEGADAS,
-  SOLICITACOES_PENDENTES
+  SOLICITACOES_PENDENTES,
 } from "configs/constants";
 import { dataAtual } from "helpers/utilities";
 import CardBody from "components/Shareable/CardBody";
 import CardMatriculados from "components/Shareable/CardMatriculados";
 import CardStatusDeSolicitacao, {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "./style.scss";
 import {
@@ -22,7 +22,7 @@ import {
   getSolicitacoesCanceladasNutrisupervisao,
   getSolicitacoesComQuestionamentoNutrisupervisao,
   getSolicitacoesNegadasNutrisupervisao,
-  getSolicitacoesPendentesAutorizacaoNutrisupervisaoSemFiltro
+  getSolicitacoesPendentesAutorizacaoNutrisupervisaoSemFiltro,
 } from "services/painelNutricionista.service";
 import { PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { Spin } from "antd";
@@ -33,12 +33,11 @@ export const DashboardNutrisupervisao = () => {
   const [negadas, setNegadas] = useState(null);
   const [autorizadas, setAutorizadas] = useState(null);
   const [aguardandoAutorizacao, setAguardandoAutorizacao] = useState(null);
-  const [aguardandoRespostaEmpresa, setAguardandoRespostaEmpresa] = useState(
-    null
-  );
+  const [aguardandoRespostaEmpresa, setAguardandoRespostaEmpresa] =
+    useState(null);
   const [
     loadingAcompanhamentoSolicitacoes,
-    setLoadingAcompanhamentoSolicitacoes
+    setLoadingAcompanhamentoSolicitacoes,
   ] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -78,9 +77,8 @@ export const DashboardNutrisupervisao = () => {
       setErro("Erro ao carregar solicitações autorizadas");
     }
 
-    const responseAguardandoAutorizacao = await getSolicitacoesPendentesAutorizacaoNutrisupervisaoSemFiltro(
-      params
-    );
+    const responseAguardandoAutorizacao =
+      await getSolicitacoesPendentesAutorizacaoNutrisupervisaoSemFiltro(params);
     if (responseAguardandoAutorizacao.status === HTTP_STATUS.OK) {
       setAguardandoAutorizacao(
         ajustarFormatoLog(responseAguardandoAutorizacao.data.results)
@@ -89,9 +87,8 @@ export const DashboardNutrisupervisao = () => {
       setErro("Erro ao carregar solicitações aguardando autorização");
     }
 
-    const responseAguardandoRespostaEmpresa = await getSolicitacoesComQuestionamentoNutrisupervisao(
-      params
-    );
+    const responseAguardandoRespostaEmpresa =
+      await getSolicitacoesComQuestionamentoNutrisupervisao(params);
     if (responseAguardandoRespostaEmpresa.status === HTTP_STATUS.OK) {
       setAguardandoRespostaEmpresa(
         ajustarFormatoLog(responseAguardandoRespostaEmpresa.data.results)
@@ -107,23 +104,19 @@ export const DashboardNutrisupervisao = () => {
     getSolicitacoesAsync(PARAMS);
   }, []);
 
-  const prepararParametros = values => {
+  const prepararParametros = (values) => {
     const params = PARAMS;
     params["tipo_solicitacao"] = values.tipo_solicitacao;
     params["data_evento"] =
-      values.data_evento &&
-      values.data_evento
-        .split("/")
-        .reverse()
-        .join("-");
+      values.data_evento && values.data_evento.split("/").reverse().join("-");
     return params;
   };
 
-  const onPesquisaChanged = values => {
+  const onPesquisaChanged = (values) => {
     if (values.titulo && values.titulo.length > 2) {
       getSolicitacoesAsync({
         busca: values.titulo,
-        ...prepararParametros(values)
+        ...prepararParametros(values),
       });
     } else {
       getSolicitacoesAsync(prepararParametros(values));
@@ -150,7 +143,7 @@ export const DashboardNutrisupervisao = () => {
               exibirFiltrosDataEventoETipoSolicitacao={true}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
-              onChange={values => {
+              onChange={(values) => {
                 clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(async () => {
                   onPesquisaChanged(values);

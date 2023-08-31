@@ -21,7 +21,7 @@ import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaAbastecimentoDiretor,
-  exibirModuloMedicaoInicial
+  exibirModuloMedicaoInicial,
 } from "helpers/utilities";
 import { ACOMPANHAMENTO_DE_LANCAMENTOS } from "configs/constants";
 

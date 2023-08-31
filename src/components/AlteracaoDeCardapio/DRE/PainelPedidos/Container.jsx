@@ -7,7 +7,7 @@ class Container extends Component {
     super(props);
     this.state = {
       visaoPorCombo: visaoPorComboSomenteDatas,
-      filtros: this.props.filtros
+      filtros: this.props.filtros,
     };
   }
 

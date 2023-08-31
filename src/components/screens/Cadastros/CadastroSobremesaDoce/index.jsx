@@ -6,7 +6,7 @@ import moment from "moment";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import {
   getDiasSobremesaDoce,
-  setDiaSobremesaDoce
+  setDiaSobremesaDoce,
 } from "services/medicaoInicial/diaSobremesaDoce.service";
 import { formataComoEventos } from "./helpers";
 import { Spin } from "antd";
@@ -35,16 +35,15 @@ export class CadastroSobremesaDoce extends React.Component {
       showModalConfirmarExclusao: false,
       currentEvent: undefined,
       mes: moment().month() + 1,
-      ano: moment().year()
+      ano: moment().year(),
     };
 
     this.moveEvent = this.moveEvent.bind(this);
     this.handleSelectSlot = this.handleSelectSlot.bind(this);
     this.handleEvent = this.handleEvent.bind(this);
     this.getDiasSobremesaDoceAsync = this.getDiasSobremesaDoceAsync.bind(this);
-    this.getTiposUnidadeEscolarAsync = this.getTiposUnidadeEscolarAsync.bind(
-      this
-    );
+    this.getTiposUnidadeEscolarAsync =
+      this.getTiposUnidadeEscolarAsync.bind(this);
   }
 
   componentDidMount() {
@@ -60,7 +59,7 @@ export class CadastroSobremesaDoce extends React.Component {
     );
     if (response.status === HTTP_STATUS.OK) {
       this.setState({
-        diasSobremesaDoce: formataComoEventos(response.data.results)
+        diasSobremesaDoce: formataComoEventos(response.data.results),
       });
     }
     if (response) {
@@ -94,7 +93,7 @@ export class CadastroSobremesaDoce extends React.Component {
       data: getDDMMYYYfromDate(start),
       start,
       end,
-      allDay
+      allDay,
     };
 
     const nextEvents = [...diasSobremesaDoce];
@@ -102,18 +101,18 @@ export class CadastroSobremesaDoce extends React.Component {
 
     const payload = {
       tipo_unidades: nextEvents
-        .filter(e => e.data === getDDMMYYYfromDate(event.start))
-        .map(e => e.tipo_unidade.uuid),
-      data: getYYYYMMDDfromDate(event.start)
+        .filter((e) => e.data === getDDMMYYYfromDate(event.start))
+        .map((e) => e.tipo_unidade.uuid),
+      data: getYYYYMMDDfromDate(event.start),
     };
 
     await setDiaSobremesaDoce(payload);
 
     const payload2 = {
       tipo_unidades: nextEvents
-        .filter(e => e.data === getDDMMYYYfromDate(start))
-        .map(e => e.tipo_unidade.uuid),
-      data: getYYYYMMDDfromDate(start)
+        .filter((e) => e.data === getDDMMYYYfromDate(start))
+        .map((e) => e.tipo_unidade.uuid),
+      data: getYYYYMMDDfromDate(start),
     };
 
     const response2 = await setDiaSobremesaDoce(payload2);
@@ -122,21 +121,21 @@ export class CadastroSobremesaDoce extends React.Component {
     }
 
     this.setState({
-      diasSobremesaDoce: nextEvents
+      diasSobremesaDoce: nextEvents,
     });
   }
 
   handleSelectSlot(event) {
     this.setState({
       currentEvent: event,
-      showModalCadastrarSobremesa: true
+      showModalCadastrarSobremesa: true,
     });
   }
 
   handleEvent(event) {
     this.setState({
       currentEvent: event,
-      showModalEditar: true
+      showModalEditar: true,
     });
   }
 
@@ -149,7 +148,7 @@ export class CadastroSobremesaDoce extends React.Component {
       currentEvent,
       showModalCadastrarSobremesa,
       showModalEditar,
-      showModalConfirmarExclusao
+      showModalConfirmarExclusao,
     } = this.state;
 
     return (
@@ -179,7 +178,7 @@ export class CadastroSobremesaDoce extends React.Component {
                     style={{ height: 1000 }}
                     formats={{
                       weekdayFormat: (date, culture, localizer) =>
-                        localizer.format(date, "dddd", culture)
+                        localizer.format(date, "dddd", culture),
                     }}
                     selectable
                     resizable={false}
@@ -189,23 +188,23 @@ export class CadastroSobremesaDoce extends React.Component {
                     onEventDrop={this.moveEvent}
                     onSelectSlot={this.handleSelectSlot}
                     components={{
-                      toolbar: CustomToolbar
+                      toolbar: CustomToolbar,
                     }}
                     messages={{
-                      showMore: target => (
+                      showMore: (target) => (
                         <span className="ml-2" role="presentation">
                           ...{target} mais
                         </span>
-                      )
+                      ),
                     }}
-                    onNavigate={date => {
+                    onNavigate={(date) => {
                       this.setState({
                         mes: date.getMonth() + 1,
-                        ano: date.getFullYear()
+                        ano: date.getFullYear(),
                       });
                       this.getDiasSobremesaDoceAsync({
                         mes: date.getMonth() + 1,
-                        ano: date.getFullYear()
+                        ano: date.getFullYear(),
                       });
                     }}
                     defaultView={Views.MONTH}

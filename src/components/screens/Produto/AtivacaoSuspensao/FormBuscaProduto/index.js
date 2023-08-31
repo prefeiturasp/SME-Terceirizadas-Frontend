@@ -7,13 +7,13 @@ import SelectSelecione from "components/Shareable/SelectSelecione";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import {
   getNomesUnicosProdutos,
   getNomesUnicosMarcas,
   getNomesUnicosFabricantes,
-  getNomesUnicosEditais
+  getNomesUnicosEditais,
 } from "services/produto.service";
 import "./style.scss";
 
@@ -22,7 +22,7 @@ const initialState = {
   status: ["Ativo", "Suspenso"],
   produtos: [],
   marcas: [],
-  fabricantes: []
+  fabricantes: [],
 };
 
 function reducer(state, { type: actionType, payload }) {
@@ -40,7 +40,7 @@ function reducer(state, { type: actionType, payload }) {
 const FormBuscaProduto = ({
   onSubmit,
   exibirBotaoVoltar,
-  exibirStatus = true
+  exibirStatus = true,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -50,7 +50,7 @@ const FormBuscaProduto = ({
         getNomesUnicosProdutos(),
         getNomesUnicosMarcas(),
         getNomesUnicosFabricantes(),
-        getNomesUnicosEditais()
+        getNomesUnicosEditais(),
       ]).then(([produtos, marcas, fabricantes, editais]) => {
         dispatch({
           type: "popularDados",
@@ -58,8 +58,8 @@ const FormBuscaProduto = ({
             produtos: produtos.data.results,
             marcas: marcas.data.results,
             fabricantes: fabricantes.data.results,
-            editais: editais.data.results
-          }
+            editais: editais.data.results,
+          },
         });
       });
     }
@@ -121,7 +121,7 @@ const FormBuscaProduto = ({
                     name="status"
                     options={[
                       { nome: "Ativo", uuid: "ativo" },
-                      { nome: "Suspenso", uuid: "suspenso" }
+                      { nome: "Suspenso", uuid: "suspenso" },
                     ]}
                   />
                 </div>

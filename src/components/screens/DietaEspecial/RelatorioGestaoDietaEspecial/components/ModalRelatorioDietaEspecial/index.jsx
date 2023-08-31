@@ -5,7 +5,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import { imprimeRelatorioDietaEspecial } from "services/relatorios";
@@ -23,28 +23,28 @@ const ModalRelatorioDietaEspecial = ({
   dadosRelatorio,
   setDadosRelatorio,
   filtros,
-  totalResultados
+  totalResultados,
 }) => {
   const [carregando, setCarregando] = useState(false);
   const [page, setPage] = useState(1);
   const [exportandoRelatorio, setExportandoRelatorio] = useState(false);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     setCarregando(true);
     setPage(page);
     const params = gerarParametrosConsulta({
       ...filtros,
-      page: page
+      page: page,
     });
     params.delete("diagnostico");
     params.delete("escola");
-    getSolicitacaoDietaEspecialListagem(filtros, params).then(response => {
+    getSolicitacaoDietaEspecialListagem(filtros, params).then((response) => {
       setDadosRelatorio(response.data.results);
       setCarregando(false);
     });
   };
 
-  const imprimeRelatorioDietaEspecialAsync = async params => {
+  const imprimeRelatorioDietaEspecialAsync = async (params) => {
     const response = await imprimeRelatorioDietaEspecial(filtros, params);
     if (response.status === HTTP_STATUS.OK) {
       closeModal();
@@ -86,7 +86,7 @@ const ModalRelatorioDietaEspecial = ({
           current={page}
           total={totalResultados}
           showSizeChanger={false}
-          onChange={page => {
+          onChange={(page) => {
             nextPage(page);
           }}
           pageSize={10}
@@ -110,13 +110,13 @@ const ModalRelatorioDietaEspecial = ({
           onClick={() => {
             setExportandoRelatorio(true);
             const params = gerarParametrosConsulta({
-              ...filtros
+              ...filtros,
             });
             params.delete("diagnostico");
             params.delete("escola");
             imprimeRelatorioDietaEspecialAsync(params);
           }}
-        />
+        />,
       ]}
     >
       <Spin tip="Carregando..." spinning={carregando}>
@@ -135,7 +135,7 @@ const ModalRelatorioDietaEspecial = ({
                   <div>Data da solicitação</div>
                   <div>Status dieta</div>
                 </div>
-                {dadosRelatorio.map(dieta => {
+                {dadosRelatorio.map((dieta) => {
                   const dataNegacao = getDataNegacao(
                     dieta.status_titulo,
                     dieta.logs
@@ -205,7 +205,7 @@ const ModalRelatorioDietaEspecial = ({
                           <div className="ml-3">
                             <label>Diagnóstico</label>
                             <br />
-                            {dieta.alergias_intolerancias.map(alergia => {
+                            {dieta.alergias_intolerancias.map((alergia) => {
                               return (
                                 <>
                                   <b>{alergia.descricao}</b>
@@ -239,7 +239,7 @@ const ModalRelatorioDietaEspecial = ({
                               dangerouslySetInnerHTML={{
                                 __html: dieta.motivo_negacao
                                   ? dieta.motivo_negacao.descricao
-                                  : ""
+                                  : "",
                               }}
                             />
                           </div>
@@ -252,7 +252,7 @@ const ModalRelatorioDietaEspecial = ({
                               dangerouslySetInnerHTML={{
                                 __html: dieta.justificativa_negacao
                                   ? dieta.justificativa_negacao
-                                  : ""
+                                  : "",
                               }}
                             />
                           </b>
@@ -287,7 +287,7 @@ const ModalRelatorioDietaEspecial = ({
                             <b
                               className="value-item"
                               dangerouslySetInnerHTML={{
-                                __html: dieta.observacoes
+                                __html: dieta.observacoes,
                               }}
                             />
                           </div>
@@ -298,7 +298,7 @@ const ModalRelatorioDietaEspecial = ({
                           <b
                             className="value-item"
                             dangerouslySetInnerHTML={{
-                              __html: dieta.informacoes_adicionais
+                              __html: dieta.informacoes_adicionais,
                             }}
                           />
                         </div>

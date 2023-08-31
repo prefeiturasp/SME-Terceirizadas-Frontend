@@ -8,7 +8,7 @@ import { email as emailValidation, required } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { InputText } from "components/Shareable/Input/InputText";
@@ -23,14 +23,14 @@ export const ModalEditarEmail = ({ ...props }) => {
     terceirizada,
     emailDict,
     endpoint,
-    buscarTerceirizadas
+    buscarTerceirizadas,
   } = props;
 
   const [desabilitaBotaoSalvar, setDesabilitaBotaoSalvar] = useState(true);
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const payload = {
-      email: values.email
+      email: values.email,
     };
     const response = await endpoint(emailDict.uuid, payload);
     if (response.status === HTTP_STATUS.OK) {
@@ -61,7 +61,7 @@ export const ModalEditarEmail = ({ ...props }) => {
       <Form
         onSubmit={onSubmit}
         initialValues={{
-          email: emailDict ? emailDict.email : null
+          email: emailDict ? emailDict.email : null,
         }}
         render={({ handleSubmit, errors }) => (
           <form onSubmit={handleSubmit}>
@@ -88,7 +88,7 @@ export const ModalEditarEmail = ({ ...props }) => {
                 />
                 <FormSpy
                   subscription={{ values: true }}
-                  onChange={changes =>
+                  onChange={(changes) =>
                     changes.values["email"] !== emailDict.email
                       ? setDesabilitaBotaoSalvar(false)
                       : setDesabilitaBotaoSalvar(true)

@@ -3,7 +3,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_ICON,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 
 export const Botoes = ({
@@ -12,7 +12,7 @@ export const Botoes = ({
   verUnicoProduto,
   setModal,
   setProdutoAAtualizar,
-  setPropsPageProduto
+  setPropsPageProduto,
 }) => {
   return (
     <div className="row mb-3">
@@ -56,7 +56,7 @@ export const Botoes = ({
           disabled={
             ![
               "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
-              "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+              "TERCEIRIZADA_RESPONDEU_RECLAMACAO",
             ].includes(produto.ultima_homologacao.status)
           }
         />
@@ -72,7 +72,7 @@ export const Botoes = ({
           disabled={
             ![
               "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
-              "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+              "TERCEIRIZADA_RESPONDEU_RECLAMACAO",
             ].includes(produto.ultima_homologacao.status)
           }
         />

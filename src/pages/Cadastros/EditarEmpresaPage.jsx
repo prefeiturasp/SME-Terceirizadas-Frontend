@@ -5,20 +5,20 @@ import {
   CADASTROS,
   CONFIGURACOES,
   EDITAR_EMPRESA,
-  EMPRESAS_CADASTRADAS
+  EMPRESAS_CADASTRADAS,
 } from "../../configs/constants";
 import { CadastroEmpresa } from "components/screens/Cadastros/CadastroEmpresa/CadastroEmpresa";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAR_EMPRESA}`,
-  titulo: "Editar Cadastro de Empresa"
+  titulo: "Editar Cadastro de Empresa",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
-  }
+    titulo: "Cadastros",
+  },
 ];
 
 export default () => (

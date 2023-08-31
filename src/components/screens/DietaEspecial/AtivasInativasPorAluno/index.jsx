@@ -17,7 +17,7 @@ import {
   setFiltros,
   setPage,
   setMeusDados,
-  reset
+  reset,
 } from "reducers/dietasAtivasInativasPorAlunoReducer";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { TIPO_PERFIL } from "constants/shared";
@@ -37,7 +37,7 @@ const AtivasInativasPorAluno = ({
   meusDados,
   setMeusDados,
   reset,
-  history
+  history,
 }) => {
   const [loading, setLoading] = useState(true);
   const [firstLoad, setFirstLoad] = useState(true);
@@ -49,7 +49,7 @@ const AtivasInativasPorAluno = ({
     } else if (filtros) fetchData({ ...filtros, page: 1 });
   }, [filtros]);
 
-  const fetchData = async filtros => {
+  const fetchData = async (filtros) => {
     setLoading(true);
     setExibirResultados(false);
     const escolas = filtros.escolas;
@@ -59,7 +59,8 @@ const AtivasInativasPorAluno = ({
         escola_ = escola_[0];
       }
       filtros.escola = escolas.find(
-        escola => escola.label === escola_.substring(escola_.indexOf("- ") + 2)
+        (escola) =>
+          escola.label === escola_.substring(escola_.indexOf("- ") + 2)
       ).value;
     }
     delete filtros.escolas;
@@ -77,7 +78,7 @@ const AtivasInativasPorAluno = ({
     }
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     fetchData({ ...filtros, page: page });
     setPage(page);
   };
@@ -121,18 +122,18 @@ const AtivasInativasPorAluno = ({
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     dadosResultados: state.dietasAtivasInativasPorAluno.dadosResultados,
     exibirResultados: state.dietasAtivasInativasPorAluno.exibirResultados,
     totalResultados: state.dietasAtivasInativasPorAluno.totalResultados,
     filtros: state.dietasAtivasInativasPorAluno.filtros,
     page: state.dietasAtivasInativasPorAluno.page,
-    meusDados: state.dietasAtivasInativasPorAluno.meusDados
+    meusDados: state.dietasAtivasInativasPorAluno.meusDados,
   };
 };
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setDadosResultados,
@@ -141,14 +142,11 @@ const mapDispatchToProps = dispatch =>
       setExibirResultados,
       setTotalResultados,
       setMeusDados,
-      reset
+      reset,
     },
     dispatch
   );
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(AtivasInativasPorAluno)
+  connect(mapStateToProps, mapDispatchToProps)(AtivasInativasPorAluno)
 );

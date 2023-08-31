@@ -3,7 +3,7 @@ import { Botao } from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE, BUTTON_ICON } from "../Botao/constants";
 import "./style.scss";
 
-export const InputSearch = props => (
+export const InputSearch = (props) => (
   <div className="div-input-search row">
     <div className="col-12">
       <span>

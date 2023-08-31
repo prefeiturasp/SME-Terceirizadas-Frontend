@@ -7,9 +7,9 @@ import {
   getSolicitacoesInclusoesAutorizadasEscola,
   getSolicitacoesInclusoesEtecAutorizadasEscola,
   getSolicitacoesKitLanchesAutorizadasEscola,
-  getSolicitacoesSuspensoesAutorizadasEscola
+  getSolicitacoesSuspensoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { tiposAlimentacaoETEC } from "helpers/utilities";
+import { ehEscolaTipoCEUGESTAO, tiposAlimentacaoETEC } from "helpers/utilities";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
@@ -19,7 +19,8 @@ export const formatarPayloadPeriodoLancamento = (
   diasDaSemanaSelecionada,
   ehGrupoSolicitacoesDeAlimentacaoUrlParam,
   ehGrupoETECUrlParam,
-  grupoLocation
+  grupoLocation,
+  tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows
 ) => {
   if (
     values["periodo_escolar"].includes("Solicitações") ||
@@ -44,19 +45,24 @@ export const formatarPayloadPeriodoLancamento = (
     }
   });
 
-  arrayCategoriesValues.map(arr => {
+  arrayCategoriesValues.map((arr) => {
     const keySplitted = arr[0].split("__");
     const categoria = keySplitted.pop();
     const idCategoria = categoria.match(/\d/g).join("");
     const dia = keySplitted[1].match(/\d/g).join("");
     const nome_campo = keySplitted[0];
     let tipoAlimentacao = tabelaAlimentacaoRows.find(
-      alimentacao => alimentacao.name === nome_campo
+      (alimentacao) => alimentacao.name === nome_campo
     );
 
     if (!tipoAlimentacao) {
       tipoAlimentacao = tabelaDietaEnteralRows.find(
-        row => row.name === nome_campo
+        (row) => row.name === nome_campo
+      );
+    }
+    if (!tipoAlimentacao) {
+      tipoAlimentacao = tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows.find(
+        (row) => row.name === nome_campo
       );
     }
 
@@ -70,11 +76,11 @@ export const formatarPayloadPeriodoLancamento = (
         !ehGrupoETECUrlParam &&
         grupoLocation !== "Programas e Projetos"
           ? tipoAlimentacao.uuid
-          : ""
+          : "",
     });
   });
 
-  valoresMedicao = valoresMedicao.filter(valorMed => {
+  valoresMedicao = valoresMedicao.filter((valorMed) => {
     return (
       !(valorMed.nome_campo === "observacoes" && valorMed.valor === 0) &&
       diasDaSemanaSelecionada.includes(valorMed.dia)
@@ -88,31 +94,13 @@ export const formatarPayloadPeriodoLancamento = (
   return { ...values, valores_medicao: valoresMedicao };
 };
 
-export const formatarPayloadParaCorrecao = (
-  valoresPeriodosLancamentos,
-  payload
-) => {
-  let payloadParaCorrecao = [];
-  valoresPeriodosLancamentos
-    .filter(
-      valor =>
-        valor.habilitado_correcao &&
-        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
-          valor.nome_campo
-        )
-    )
-    .forEach(valor_lancamento => {
-      payloadParaCorrecao.push(
-        payload.valores_medicao.filter(
-          valor_medicao =>
-            String(valor_lancamento.categoria_medicao) ===
-              valor_medicao.categoria_medicao &&
-            valor_lancamento.dia === valor_medicao.dia &&
-            valor_lancamento.nome_campo === valor_medicao.nome_campo
-        )[0]
-      );
-    });
-
+export const formatarPayloadParaCorrecao = (payload) => {
+  let payloadParaCorrecao = payload.valores_medicao.filter(
+    (valor) =>
+      !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
+        valor.nome_campo
+      )
+  );
   return payloadParaCorrecao;
 };
 
@@ -123,9 +111,9 @@ export const deveExistirObservacao = (
 ) => {
   let diasNaoLetivos = [];
   const objDiasNaoLetivos = calendarioMesConsiderado.filter(
-    obj => !obj.dia_letivo
+    (obj) => !obj.dia_letivo
   );
-  objDiasNaoLetivos.map(obj => diasNaoLetivos.push(obj.dia));
+  objDiasNaoLetivos.map((obj) => diasNaoLetivos.push(obj.dia));
 
   const valuesAsArray = Object.entries(values);
   const arrayCategoriesValuesDiasNaoletivos = valuesAsArray.filter(
@@ -136,17 +124,17 @@ export const deveExistirObservacao = (
       !key.includes("frequencia") &&
       !key.includes("observacoes") &&
       !["Mês anterior", "Mês posterior", null].includes(value) &&
-      diasNaoLetivos.some(dia => key.includes(dia))
+      diasNaoLetivos.some((dia) => key.includes(dia))
   );
   let dias = [];
-  arrayCategoriesValuesDiasNaoletivos.forEach(arr => {
+  arrayCategoriesValuesDiasNaoletivos.forEach((arr) => {
     const keySplitted = arr[0].split("__");
     const dia = keySplitted[1].match(/\d/g).join("");
     dias.push(dia);
   });
 
   return !dias.every(
-    dia =>
+    (dia) =>
       values[`observacoes__dia_${dia}__categoria_${categoria}`] !== undefined
   );
 };
@@ -159,9 +147,7 @@ export const valorZeroFrequencia = (
   form,
   tabelaAlimentacaoRows,
   tabelaDietaRows,
-  tabelaDietaEnteralRows,
-  dadosValoresInclusoesAutorizadasState,
-  validacaoDiaLetivo
+  tabelaDietaEnteralRows
 ) => {
   if (rowName === "frequencia" && value && Number(value) === 0) {
     let linhasDaTabela = null;
@@ -171,30 +157,14 @@ export const valorZeroFrequencia = (
       linhasDaTabela = tabelaDietaRows;
     } else {
       linhasDaTabela = tabelaAlimentacaoRows;
-      if (
-        Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
-          String(key).includes(`__dia_${dia}__categoria_${categoria.id}`)
-        ) &&
-        !validacaoDiaLetivo(dia)
-      ) {
-        linhasDaTabela = linhasDaTabela.filter(linha =>
-          Object.keys(
-            Object.fromEntries(
-              Object.entries(dadosValoresInclusoesAutorizadasState).filter(
-                ([key]) => key.includes(dia)
-              )
-            )
-          ).some(key => key.includes(linha.name))
-        );
-      }
     }
 
-    linhasDaTabela.forEach(linha => {
+    linhasDaTabela.forEach((linha) => {
       ![
         "matriculados",
         "frequencia",
         "observacoes",
-        "dietas_autorizadas"
+        "dietas_autorizadas",
       ].includes(linha.name) &&
         form.change(
           `${linha.name}__dia_${dia}__categoria_${categoria.id}`,
@@ -204,6 +174,61 @@ export const valorZeroFrequencia = (
     return true;
   }
   return;
+};
+
+const validaAlimentacoesEDietasCEUGESTAO = (
+  inclusoesAutorizadas,
+  rowName,
+  dia,
+  nomeCategoria
+) => {
+  /* REGRA VÁLIDA APENAS PARA CEU GESTÃO
+
+    Desabilita slot caso o dia com inclusão autorizada não possua o tipo de alimentação */
+  if (rowName === "frequencia" && nomeCategoria === "ALIMENTAÇÃO") return false;
+  if (
+    ![
+      "lanche",
+      "lanche_4h",
+      "refeicao",
+      "repeticao_refeicao",
+      "sobremesa",
+      "repeticao_sobremesa",
+      "frequencia",
+    ].includes(rowName)
+  )
+    return false;
+  const tiposAlimentacaoExistentes = [];
+  inclusoesAutorizadas
+    .filter((inc) => inc.dia === dia)
+    .forEach((inclusao) => {
+      inclusao.alimentacoes.split(", ").forEach((alimentacao) => {
+        if (!tiposAlimentacaoExistentes.includes(alimentacao)) {
+          tiposAlimentacaoExistentes.push(alimentacao);
+        }
+      });
+    });
+  if (rowName === "frequencia") {
+    if (nomeCategoria.includes("ENTERAL")) {
+      return (
+        !tiposAlimentacaoExistentes.includes("refeicao") &&
+        !tiposAlimentacaoExistentes.includes("lanche") &&
+        !tiposAlimentacaoExistentes.includes("lanche_4h")
+      );
+    }
+    if (
+      !tiposAlimentacaoExistentes.includes("lanche") &&
+      !tiposAlimentacaoExistentes.includes("lanche_4h")
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  const tipoAlimentacao = rowName.includes("repeticao")
+    ? rowName.split("_")[1]
+    : rowName;
+  return !tiposAlimentacaoExistentes.includes(tipoAlimentacao);
 };
 
 export const desabilitarField = (
@@ -223,10 +248,12 @@ export const desabilitarField = (
   inclusoesEtecAutorizadas = null,
   grupoLocation = null,
   valoresPeriodosLancamentos,
-  feriadosNoMes
+  feriadosNoMes,
+  inclusoesAutorizadas,
+  categoriasDeMedicao
 ) => {
   const valorField = valoresPeriodosLancamentos.some(
-    valor =>
+    (valor) =>
       String(valor.categoria_medicao) === String(categoria) &&
       String(valor.dia) === String(dia) &&
       valor.habilitado_correcao === true
@@ -240,7 +267,7 @@ export const desabilitarField = (
         "MEDICAO_CORRECAO_SOLICITADA",
         "MEDICAO_CORRECAO_SOLICITADA_CODAE",
         "MEDICAO_CORRIGIDA_PELA_UE",
-        "MEDICAO_CORRIGIDA_PARA_CODAE"
+        "MEDICAO_CORRIGIDA_PARA_CODAE",
       ].includes(location.state.status_periodo) &&
         !valorField))
   ) {
@@ -248,10 +275,10 @@ export const desabilitarField = (
   }
 
   const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
-    locale: ptBR
+    locale: ptBR,
   }).toString();
   const mesAtual = format(mesAnoDefault, "LLLL", {
-    locale: ptBR
+    locale: ptBR,
   }).toString();
 
   if (nomeCategoria.includes("SOLICITAÇÕES")) {
@@ -264,7 +291,7 @@ export const desabilitarField = (
   }
   if (ehGrupoETECUrlParam && nomeCategoria === "ALIMENTAÇÃO") {
     const inclusao = inclusoesEtecAutorizadas.filter(
-      inclusao => Number(inclusao.dia) === Number(dia)
+      (inclusao) => Number(inclusao.dia) === Number(dia)
     );
     if (
       rowName === "frequencia" &&
@@ -273,7 +300,7 @@ export const desabilitarField = (
       !["Mês anterior", "Mês posterior"].includes(
         values[`frequencia__dia_${dia}__categoria_${categoria}`]
       ) &&
-      Object.keys(dadosValoresInclusoesEtecAutorizadasState).some(key =>
+      Object.keys(dadosValoresInclusoesEtecAutorizadasState).some((key) =>
         String(key).includes(`__dia_${dia}__categoria_${categoria}`)
       )
     ) {
@@ -282,14 +309,16 @@ export const desabilitarField = (
       rowName === "repeticao_refeicao" &&
       validacaoDiaLetivo(dia) &&
       !validacaoSemana(dia) &&
-      (inclusao.length && inclusao[0].alimentacoes.includes("refeicao"))
+      inclusao.length &&
+      inclusao[0].alimentacoes.includes("refeicao")
     ) {
       return false;
     } else if (
       rowName === "repeticao_sobremesa" &&
       validacaoDiaLetivo(dia) &&
       !validacaoSemana(dia) &&
-      (inclusao.length && inclusao[0].alimentacoes.includes("sobremesa"))
+      inclusao.length &&
+      inclusao[0].alimentacoes.includes("sobremesa")
     ) {
       return false;
     } else {
@@ -297,7 +326,7 @@ export const desabilitarField = (
         !validacaoDiaLetivo(dia) ||
         validacaoSemana(dia) ||
         rowName === "numero_de_alunos" ||
-        !Object.keys(dadosValoresInclusoesEtecAutorizadasState).some(key =>
+        !Object.keys(dadosValoresInclusoesEtecAutorizadasState).some((key) =>
           String(key).includes(`__dia_${dia}__categoria_${categoria}`)
         ) ||
         (inclusao.length && !inclusao[0].alimentacoes.includes(rowName)) ||
@@ -305,6 +334,33 @@ export const desabilitarField = (
           Number(dia) >= format(mesAnoDefault, "dd"))
       );
     }
+  }
+  if (ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)) {
+    return (
+      validacaoSemana(dia) ||
+      rowName === "numero_de_alunos" ||
+      rowName === "dietas_autorizadas" ||
+      (nomeCategoria === "ALIMENTAÇÃO" &&
+        !values[`numero_de_alunos__dia_${dia}__categoria_${categoria}`]) ||
+      (nomeCategoria.includes("DIETA ESPECIAL") &&
+        !values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]) ||
+      Number(
+        values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+      ) === 0 ||
+      !values[
+        `numero_de_alunos__dia_${dia}__categoria_${
+          categoriasDeMedicao.find((cat) => cat.nome === "ALIMENTAÇÃO").id
+        }`
+      ] ||
+      (mesConsiderado === mesAtual &&
+        Number(dia) >= format(mesAnoDefault, "dd")) ||
+      validaAlimentacoesEDietasCEUGESTAO(
+        inclusoesAutorizadas,
+        rowName,
+        dia,
+        nomeCategoria
+      )
+    );
   }
   if (
     grupoLocation === "Programas e Projetos" &&
@@ -318,7 +374,7 @@ export const desabilitarField = (
       } else if (validacaoSemana(dia)) {
         return true;
       } else if (
-        !Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+        !Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
           key.includes(`__dia_${dia}`)
         )
       ) {
@@ -336,6 +392,7 @@ export const desabilitarField = (
       }
     }
   }
+
   if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
     return true;
   }
@@ -350,7 +407,7 @@ export const desabilitarField = (
   } else if (
     `${rowName}__dia_${dia}__categoria_${categoria}` ===
       `frequencia__dia_${dia}__categoria_${categoria}` &&
-    Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+    Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
       String(key).includes(`__dia_${dia}__categoria_${categoria}`)
     ) &&
     !["Mês anterior", "Mês posterior"].includes(
@@ -396,9 +453,8 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   } else {
     params["excluir_inclusoes_continuas"] = true;
   }
-  const responseInclusoesAutorizadas = await getSolicitacoesInclusoesAutorizadasEscola(
-    params
-  );
+  const responseInclusoesAutorizadas =
+    await getSolicitacoesInclusoesAutorizadasEscola(params);
   if (responseInclusoesAutorizadas.status === HTTP_STATUS.OK) {
     return responseInclusoesAutorizadas.data.results;
   } else {
@@ -417,9 +473,8 @@ export const getSolicitacoesInclusoesEtecAutorizadasAsync = async (
   params["tipo_solicitacao"] = "Inclusão de";
   params["mes"] = mes;
   params["ano"] = ano;
-  const responseInclusoesAutorizadas = await getSolicitacoesInclusoesEtecAutorizadasEscola(
-    params
-  );
+  const responseInclusoesAutorizadas =
+    await getSolicitacoesInclusoesEtecAutorizadasEscola(params);
   if (responseInclusoesAutorizadas.status === HTTP_STATUS.OK) {
     return responseInclusoesAutorizadas.data.results;
   } else {
@@ -440,9 +495,8 @@ export const getSolicitacoesSuspensoesAutorizadasAsync = async (
   params["mes"] = mes;
   params["ano"] = ano;
   params["nome_periodo_escolar"] = nome_periodo_escolar;
-  const responseSuspensoesAutorizadas = await getSolicitacoesSuspensoesAutorizadasEscola(
-    params
-  );
+  const responseSuspensoesAutorizadas =
+    await getSolicitacoesSuspensoesAutorizadasEscola(params);
   if (responseSuspensoesAutorizadas.status === HTTP_STATUS.OK) {
     return responseSuspensoesAutorizadas.data.results;
   } else {
@@ -467,9 +521,8 @@ export const getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync = async (
   if (!ehLancheEmergencial) {
     params["nome_periodo_escolar"] = nomePeriodoEscolar;
   }
-  const responseAlteracoesAlimentacaoAutorizadas = await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(
-    params
-  );
+  const responseAlteracoesAlimentacaoAutorizadas =
+    await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(params);
   if (responseAlteracoesAlimentacaoAutorizadas.status === HTTP_STATUS.OK) {
     return responseAlteracoesAlimentacaoAutorizadas.data.results;
   } else {
@@ -488,9 +541,8 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
   params["tipo_solicitacao"] = "Kit Lanche";
   params["mes"] = mes;
   params["ano"] = ano;
-  const responseKitLanchesAutorizadas = await getSolicitacoesKitLanchesAutorizadasEscola(
-    params
-  );
+  const responseKitLanchesAutorizadas =
+    await getSolicitacoesKitLanchesAutorizadasEscola(params);
   if (responseKitLanchesAutorizadas.status === HTTP_STATUS.OK) {
     return responseKitLanchesAutorizadas.data.results;
   } else {
@@ -504,38 +556,38 @@ export const formatarLinhasTabelaAlimentacao = (
   periodoGrupo
 ) => {
   const tiposAlimentacaoFormatadas = tipos_alimentacao
-    .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
-    .map(alimentacao => {
+    .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
+    .map((alimentacao) => {
       return {
         ...alimentacao,
         name: alimentacao.nome
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase()
-          .replaceAll(/ /g, "_")
+          .replaceAll(/ /g, "_"),
       };
     });
   const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
-    ali => ali.nome === "Refeição"
+    (ali) => ali.nome === "Refeição"
   );
   if (indexRefeicao !== -1) {
     tiposAlimentacaoFormatadas[indexRefeicao].nome = "Refeição 1ª Oferta";
     tiposAlimentacaoFormatadas.splice(indexRefeicao + 1, 0, {
       nome: "Repetição Refeição",
       name: "repeticao_refeicao",
-      uuid: null
+      uuid: null,
     });
   }
 
   const indexSobremesa = tiposAlimentacaoFormatadas.findIndex(
-    ali => ali.nome === "Sobremesa"
+    (ali) => ali.nome === "Sobremesa"
   );
   if (indexSobremesa !== -1) {
     tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1º Oferta";
     tiposAlimentacaoFormatadas.splice(indexSobremesa + 1, 0, {
       nome: "Repetição Sobremesa",
       name: "repeticao_sobremesa",
-      uuid: null
+      uuid: null,
     });
   }
 
@@ -544,46 +596,46 @@ export const formatarLinhasTabelaAlimentacao = (
       ? {
           nome: "Número de Alunos",
           name: "numero_de_alunos",
-          uuid: null
+          uuid: null,
         }
       : {
           nome: "Matriculados",
           name: "matriculados",
-          uuid: null
+          uuid: null,
         };
   };
 
   tiposAlimentacaoFormatadas.unshift(matriculadosOuNumeroDeAlunos(), {
     nome: "Frequência",
     name: "frequencia",
-    uuid: null
+    uuid: null,
   });
 
   tiposAlimentacaoFormatadas.push({
     nome: "Observações",
     name: "observacoes",
-    uuid: null
+    uuid: null,
   });
 
   return tiposAlimentacaoFormatadas;
 };
 
-export const formatarLinhasTabelasDietas = tipos_alimentacao => {
+export const formatarLinhasTabelasDietas = (tipos_alimentacao) => {
   const linhasTabelasDietas = [];
   linhasTabelasDietas.push(
     {
       nome: "Dietas Autorizadas",
       name: "dietas_autorizadas",
-      uuid: null
+      uuid: null,
     },
     {
       nome: "Frequência",
       name: "frequencia",
-      uuid: null
+      uuid: null,
     }
   );
 
-  const indexLanche4h = tipos_alimentacao.findIndex(ali =>
+  const indexLanche4h = tipos_alimentacao.findIndex((ali) =>
     ali.nome.includes("4h")
   );
   if (indexLanche4h !== -1) {
@@ -594,11 +646,13 @@ export const formatarLinhasTabelasDietas = tipos_alimentacao => {
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .replaceAll(/ /g, "_"),
-      uuid: tipos_alimentacao[indexLanche4h].uuid
+      uuid: tipos_alimentacao[indexLanche4h].uuid,
     });
   }
 
-  const indexLanche = tipos_alimentacao.findIndex(ali => ali.nome === "Lanche");
+  const indexLanche = tipos_alimentacao.findIndex(
+    (ali) => ali.nome === "Lanche"
+  );
   if (indexLanche !== -1) {
     linhasTabelasDietas.push({
       nome: "Lanche",
@@ -607,14 +661,14 @@ export const formatarLinhasTabelasDietas = tipos_alimentacao => {
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .replaceAll(/ /g, "_"),
-      uuid: tipos_alimentacao[indexLanche].uuid
+      uuid: tipos_alimentacao[indexLanche].uuid,
     });
   }
 
   linhasTabelasDietas.push({
     nome: "Observações",
     name: "observacoes",
-    uuid: null
+    uuid: null,
   });
 
   return linhasTabelasDietas;
@@ -625,12 +679,12 @@ export const formatarLinhasTabelaDietaEnteral = (
   linhasTabelasDietas
 ) => {
   const indexRefeicaoDieta = tipos_alimentacao.findIndex(
-    ali => ali.nome === "Refeição"
+    (ali) => ali.nome === "Refeição"
   );
   linhasTabelasDietas.splice(linhasTabelasDietas.length - 1, 0, {
     nome: "Refeição",
     name: "refeicao",
-    uuid: tipos_alimentacao[indexRefeicaoDieta].uuid
+    uuid: tipos_alimentacao[indexRefeicaoDieta].uuid,
   });
 
   return linhasTabelasDietas;
@@ -642,17 +696,17 @@ export const formatarLinhasTabelaSolicitacoesAlimentacao = () => {
     {
       nome: "Lanche Emergencial",
       name: "lanche_emergencial",
-      uuid: null
+      uuid: null,
     },
     {
       nome: "Kit Lanche",
       name: "kit_lanche",
-      uuid: null
+      uuid: null,
     },
     {
       nome: "Observações",
       name: "observacoes",
-      uuid: null
+      uuid: null,
     }
   );
 
@@ -662,8 +716,8 @@ export const formatarLinhasTabelaSolicitacoesAlimentacao = () => {
 export const formatarLinhasTabelaEtecAlimentacao = () => {
   const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
   const tiposAlimentacaoEtecFormatadas = tiposAlimentacaoEtec
-    .filter(alimentacao => alimentacao !== "Lanche Emergencial")
-    .map(alimentacao => {
+    .filter((alimentacao) => alimentacao !== "Lanche Emergencial")
+    .map((alimentacao) => {
       return {
         nome: alimentacao,
         name: alimentacao
@@ -671,12 +725,12 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase()
           .replaceAll(/ /g, "_"),
-        uuid: null
+        uuid: null,
       };
     });
 
   const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
-    ali => ali.nome === "Refeição"
+    (ali) => ali.nome === "Refeição"
   );
   if (indexRefeicaoEtec !== -1) {
     tiposAlimentacaoEtecFormatadas[indexRefeicaoEtec].nome =
@@ -684,12 +738,12 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
     tiposAlimentacaoEtecFormatadas.splice(indexRefeicaoEtec + 1, 0, {
       nome: "Repetição Refeição",
       name: "repeticao_refeicao",
-      uuid: null
+      uuid: null,
     });
   }
 
   const indexSobremesaEtec = tiposAlimentacaoEtecFormatadas.findIndex(
-    ali => ali.nome === "Sobremesa"
+    (ali) => ali.nome === "Sobremesa"
   );
   if (indexSobremesaEtec !== -1) {
     tiposAlimentacaoEtecFormatadas[indexSobremesaEtec].nome =
@@ -697,7 +751,7 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
     tiposAlimentacaoEtecFormatadas.splice(indexSobremesaEtec + 1, 0, {
       nome: "Repetição Sobremesa",
       name: "repeticao_sobremesa",
-      uuid: null
+      uuid: null,
     });
   }
 
@@ -705,19 +759,19 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
     {
       nome: "Número de Alunos",
       name: "numero_de_alunos",
-      uuid: null
+      uuid: null,
     },
     {
       nome: "Frequência",
       name: "frequencia",
-      uuid: null
+      uuid: null,
     }
   );
 
   tiposAlimentacaoEtecFormatadas.push({
     nome: "Observações",
     name: "observacoes",
-    uuid: null
+    uuid: null,
   });
 
   return tiposAlimentacaoEtecFormatadas;
@@ -740,7 +794,7 @@ export const defaultValue = (
   let result = null;
 
   const valorLancamento = valoresLancamentos.find(
-    valor =>
+    (valor) =>
       Number(valor.categoria_medicao) === Number(categoria.id) &&
       Number(valor.dia) === Number(column.dia) &&
       valor.nome_campo === row.name
@@ -769,14 +823,14 @@ export const ehDiaParaCorrigir = (
 ) => {
   const existeAlgumCampoParaCorrigir = valoresPeriodosLancamentos
     .filter(
-      valor =>
+      (valor) =>
         !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
           valor.nome_campo
         )
     )
-    .filter(valor => String(valor.dia) === String(dia))
-    .filter(valor => String(valor.categoria_medicao) === String(categoria))
-    .filter(valor => valor.habilitado_correcao === true)[0];
+    .filter((valor) => String(valor.dia) === String(dia))
+    .filter((valor) => String(valor.categoria_medicao) === String(categoria))
+    .filter((valor) => valor.habilitado_correcao === true)[0];
 
   return existeAlgumCampoParaCorrigir;
 };
@@ -793,7 +847,7 @@ export const textoBotaoObservacao = (
   } else if (
     valoresObservacoes &&
     valoresObservacoes.find(
-      valor =>
+      (valor) =>
         String(valor.dia) === String(dia) &&
         String(valor.categoria_medicao) === String(categoria)
     )
@@ -832,13 +886,13 @@ export const desabilitarBotaoColunaObservacoes = (
         "MEDICAO_CORRECAO_SOLICITADA",
         "MEDICAO_CORRECAO_SOLICITADA_CODAE",
         "MEDICAO_CORRIGIDA_PELA_UE",
-        "MEDICAO_CORRIGIDA_PARA_CODAE"
+        "MEDICAO_CORRIGIDA_PARA_CODAE",
       ].includes(location.state.status_periodo) &&
         !valoresPeriodosLancamentos
-          .filter(valor => valor.nome_campo === "observacoes")
-          .filter(valor => String(valor.dia) === String(column.dia))
+          .filter((valor) => valor.nome_campo === "observacoes")
+          .filter((valor) => String(valor.dia) === String(column.dia))
           .filter(
-            valor => String(valor.categoria_medicao) === String(categoria.id)
+            (valor) => String(valor.categoria_medicao) === String(categoria.id)
           )[0])) &&
       botaoEhAdicionar &&
       !ehDiaParaCorrigir(
@@ -854,7 +908,7 @@ export const desabilitarBotaoColunaObservacoes = (
         "MEDICAO_CORRECAO_SOLICITADA",
         "MEDICAO_CORRECAO_SOLICITADA_CODAE",
         "MEDICAO_CORRIGIDA_PELA_UE",
-        "MEDICAO_CORRIGIDA_PARA_CODAE"
+        "MEDICAO_CORRIGIDA_PARA_CODAE",
       ].includes(location.state.status_periodo) &&
         !ehDiaParaCorrigir(
           column.dia,

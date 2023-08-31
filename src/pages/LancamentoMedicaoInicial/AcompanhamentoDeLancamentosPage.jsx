@@ -8,12 +8,12 @@ import Page from "components/Shareable/Page/Page";
 import { AcompanhamentoDeLancamentos } from "components/screens/LancamentoInicial/AcompanhamentoDeLancamentos";
 import {
   ACOMPANHAMENTO_DE_LANCAMENTOS,
-  MEDICAO_INICIAL
+  MEDICAO_INICIAL,
 } from "configs/constants";
 
 const atual = {
   href: `/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`,
-  titulo: "Medição Inicial"
+  titulo: "Medição Inicial",
 };
 
 export default () => (

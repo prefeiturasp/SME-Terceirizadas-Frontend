@@ -4,14 +4,14 @@ import {
   ACOMPANHAMENTO_DE_LANCAMENTOS,
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
-  MEDICAO_INICIAL
+  MEDICAO_INICIAL,
 } from "configs/constants";
 import {
   exibirModuloMedicaoInicial,
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhDRE,
   usuarioEhEscolaTerceirizada,
-  usuarioEhMedicao
+  usuarioEhMedicao,
 } from "helpers/utilities";
 
 export default () => {

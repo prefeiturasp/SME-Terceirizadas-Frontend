@@ -4,7 +4,7 @@ import HTTP_STATUS from "http-status-codes";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
@@ -15,7 +15,7 @@ export const ModalExcluirEmail = ({ ...props }) => {
     emailDict,
     endpoint,
     modulo,
-    buscarTerceirizadas
+    buscarTerceirizadas,
   } = props;
 
   const onClickSim = async () => {

@@ -10,7 +10,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { ModalOcorrencia } from "./components/ModalOcorrencia";
 import { BUTTON_ICON } from "components/Shareable/Botao/constants";
@@ -18,7 +18,7 @@ import { TabelaLancamentosPeriodo } from "./components/TabelaLancamentosPeriodo"
 import {
   medicaoInicialExportarOcorrenciasPDF,
   medicaoInicialExportarOcorrenciasXLSX,
-  relatorioMedicaoInicialPDF
+  relatorioMedicaoInicialPDF,
 } from "services/relatorios";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import {
@@ -29,16 +29,17 @@ import {
   dreSolicitaCorrecaoUE,
   codaeAprovaSolicitacaoMedicao,
   codaeSolicitaCorrecaoUE,
-  codaeAprovaPeriodo
+  codaeAprovaPeriodo,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
   MEDICAO_STATUS_DE_PROGRESSO,
-  OCORRENCIA_STATUS_DE_PROGRESSO
+  OCORRENCIA_STATUS_DE_PROGRESSO,
 } from "./constants";
 import "./style.scss";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { ModalEnviarParaCodaeECodaeAprovar } from "./components/ModalEnviarParaCodaeECodaeAprovar";
 import { ModalSolicitarCorrecaoUE } from "./components/ModalSolicitarCorrecaoUE";
+import { ModalHistoricoCorrecoesPeriodo } from "./components/ModalHistoricoCorrecoesPeriodo";
 import ModalHistorico from "components/Shareable/ModalHistorico";
 import { usuarioEhDRE, usuarioEhMedicao } from "helpers/utilities";
 
@@ -56,37 +57,32 @@ export const ConferenciaDosLancamentos = () => {
   const [historico, setHistorico] = useState([]);
   const [ocorrencia, setOcorrencia] = useState(null);
   const [ocorrenciaExpandida, setOcorrenciaExpandida] = useState(false);
-  const [showModalSalvarOcorrencia, setShowModalSalvarOcorrencia] = useState(
-    false
-  );
-  const [showModalAprovarOcorrencia, setShowModalAprovarOcorrencia] = useState(
-    false
-  );
+  const [showModalSalvarOcorrencia, setShowModalSalvarOcorrencia] =
+    useState(false);
+  const [showModalAprovarOcorrencia, setShowModalAprovarOcorrencia] =
+    useState(false);
   const [
     showModalEnviarParaCodaeECodaeAprovar,
-    setShowModalEnviarParaCodaeECodaeAprovar
+    setShowModalEnviarParaCodaeECodaeAprovar,
   ] = useState(false);
+  const [showModalSolicitarCorrecaoUE, setShowModalSolicitarCorrecaoUE] =
+    useState(false);
   const [
-    showModalSolicitarCorrecaoUE,
-    setShowModalSolicitarCorrecaoUE
+    showModalHistoricoCorrecoesPeriodo,
+    setShowModalHistoricoCorrecoesPeriodo,
   ] = useState(false);
   const [logCorrecaoOcorrencia, setLogCorrecaoOcorrencia] = useState(null);
-  const [logCorrecaoOcorrenciaCODAE, setLogCorrecaoOcorrenciaCODAE] = useState(
-    null
-  );
-  const [
-    exibirModalCentralDownloads,
-    setExibirModalCentralDownloads
-  ] = useState(false);
+  const [logCorrecaoOcorrenciaCODAE, setLogCorrecaoOcorrenciaCODAE] =
+    useState(null);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
   const [textoOcorrencia, setTextoOcorrencia] = useState("");
   const [
     desabilitarEnviarParaCodaeECodaeAprovar,
-    setDesabilitarEnviarParaCodaeECodaeAprovar
+    setDesabilitarEnviarParaCodaeECodaeAprovar,
   ] = useState(true);
-  const [
-    desabilitarSolicitarCorrecao,
-    setDesabilitarSolicitarCorrecao
-  ] = useState(true);
+  const [desabilitarSolicitarCorrecao, setDesabilitarSolicitarCorrecao] =
+    useState(true);
   const [showModal, setShowModal] = useState(false);
 
   const visualizarModal = () => {
@@ -128,7 +124,7 @@ export const ConferenciaDosLancamentos = () => {
       "MEDICAO_ENVIADA_PELA_UE",
       "MEDICAO_CORRECAO_SOLICITADA",
       "MEDICAO_APROVADA_PELA_DRE",
-      "MEDICAO_CORRIGIDA_PELA_UE"
+      "MEDICAO_CORRIGIDA_PELA_UE",
     ].includes(solicitacao.ocorrencia.status);
 
   const desabilitarSolicitarCorrecaoOcorrenciaCODAE =
@@ -139,7 +135,7 @@ export const ConferenciaDosLancamentos = () => {
       "MEDICAO_APROVADA_PELA_DRE",
       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
       "MEDICAO_APROVADA_PELA_CODAE",
-      "MEDICAO_CORRIGIDA_PARA_CODAE"
+      "MEDICAO_CORRIGIDA_PARA_CODAE",
     ].includes(solicitacao.ocorrencia.status);
 
   const desabilitarAprovarOcorrenciaCODAE =
@@ -149,7 +145,7 @@ export const ConferenciaDosLancamentos = () => {
     ![
       "MEDICAO_APROVADA_PELA_DRE",
       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-      "MEDICAO_CORRIGIDA_PARA_CODAE"
+      "MEDICAO_CORRIGIDA_PARA_CODAE",
     ].includes(solicitacao.ocorrencia.status);
 
   const desabilitarAprovarOcorrenciaDRE =
@@ -159,7 +155,7 @@ export const ConferenciaDosLancamentos = () => {
     ![
       "MEDICAO_ENVIADA_PELA_UE",
       "MEDICAO_CORRIGIDA_PELA_UE",
-      "MEDICAO_CORRECAO_SOLICITADA"
+      "MEDICAO_CORRECAO_SOLICITADA",
     ].includes(solicitacao.ocorrencia.status);
 
   const getSolMedInicialAsync = async () => {
@@ -176,13 +172,13 @@ export const ConferenciaDosLancamentos = () => {
       ano = response.data.ano;
       const data = new Date(`${mes}/01/${ano}`);
       mesString = format(data, "LLLL", {
-        locale: ptBR
+        locale: ptBR,
       }).toString();
       mesString = mesString.charAt(0).toUpperCase() + mesString.slice(1);
       escola = response.data.escola;
       dados_iniciais = {
         mes_lancamento: `${mesString} / ${ano}`,
-        unidade_educacional: escola
+        unidade_educacional: escola,
       };
       setSolicitacao(response.data);
       setHistorico(response.data.ocorrencia && response.data.ocorrencia.logs);
@@ -190,12 +186,12 @@ export const ConferenciaDosLancamentos = () => {
       setAnoSolicitacao(ano);
       if (response.data.com_ocorrencias) {
         const arquivoPdfOcorrencia = response.data.ocorrencia;
-        const logOcorrencia = arquivoPdfOcorrencia.logs.find(log =>
+        const logOcorrencia = arquivoPdfOcorrencia.logs.find((log) =>
           ["Correção solicitada", "Aprovado pela DRE"].includes(
             log.status_evento_explicacao
           )
         );
-        const logOcorrenciaCODAE = arquivoPdfOcorrencia.logs.find(log =>
+        const logOcorrenciaCODAE = arquivoPdfOcorrencia.logs.find((log) =>
           ["Correção solicitada pela CODAE", "Aprovado pela CODAE"].includes(
             log.status_evento_explicacao
           )
@@ -252,10 +248,10 @@ export const ConferenciaDosLancamentos = () => {
   useEffect(() => {
     if (solicitacao && periodosGruposMedicao) {
       const todosPeriodosGruposAprovadosDRE = !periodosGruposMedicao.some(
-        periodoGrupo => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_DRE"
+        (periodoGrupo) => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_DRE"
       );
       const todosPeriodosGruposAprovadosCODAE = !periodosGruposMedicao.some(
-        periodoGrupo => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_CODAE"
+        (periodoGrupo) => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_CODAE"
       );
       if (
         (solicitacao.status === "MEDICAO_APROVADA_PELA_DRE" &&
@@ -291,34 +287,35 @@ export const ConferenciaDosLancamentos = () => {
 
       const statusPermitidosSolicitarCorrecaoPelaDRE = [
         "MEDICAO_CORRECAO_SOLICITADA",
-        "MEDICAO_APROVADA_PELA_DRE"
+        "MEDICAO_APROVADA_PELA_DRE",
       ];
 
       const statusPermitidosSolicitarCorrecaoPelaCODAE = [
         "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-        "MEDICAO_APROVADA_PELA_CODAE"
+        "MEDICAO_APROVADA_PELA_CODAE",
       ];
 
       const algumPeriodoGrupoParaCorrigirPelaDRE = periodosGruposMedicao.some(
-        periodoGrupo => periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
+        (periodoGrupo) => periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
       );
 
       const algumPeriodoGrupoParaCorrigirPelaCODAE = periodosGruposMedicao.some(
-        periodoGrupo =>
+        (periodoGrupo) =>
           periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE"
       );
 
       const todosPeriodosGruposAnalisadosPelaDRE = periodosGruposMedicao.every(
-        periodoGrupo =>
+        (periodoGrupo) =>
           periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ||
           periodoGrupo.status === "MEDICAO_APROVADA_PELA_DRE"
       );
 
-      const todosPeriodosGruposAnalisadosPelaCODAE = periodosGruposMedicao.every(
-        periodoGrupo =>
-          periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE" ||
-          periodoGrupo.status === "MEDICAO_APROVADA_PELA_CODAE"
-      );
+      const todosPeriodosGruposAnalisadosPelaCODAE =
+        periodosGruposMedicao.every(
+          (periodoGrupo) =>
+            periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE" ||
+            periodoGrupo.status === "MEDICAO_APROVADA_PELA_CODAE"
+        );
 
       if (
         (usuarioEhDRE() &&
@@ -539,7 +536,7 @@ export const ConferenciaDosLancamentos = () => {
                                       className={
                                         [
                                           "MEDICAO_CORRECAO_SOLICITADA",
-                                          "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                                          "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                                         ].includes(ocorrencia.status)
                                           ? "red"
                                           : ""
@@ -567,9 +564,7 @@ export const ConferenciaDosLancamentos = () => {
                                       }}
                                     >
                                       <i
-                                        className={`${
-                                          BUTTON_ICON.DOWNLOAD
-                                        } mr-2`}
+                                        className={`${BUTTON_ICON.DOWNLOAD} mr-2`}
                                       />
                                       Download de Ocorrências
                                     </span>
@@ -595,14 +590,10 @@ export const ConferenciaDosLancamentos = () => {
                                 <div className="col-5 mt-3">
                                   {usuarioEhDRE() &&
                                     logCorrecaoOcorrencia &&
-                                    `${textoOcorrencia} ${
-                                      logCorrecaoOcorrencia.criado_em
-                                    }`}
+                                    `${textoOcorrencia} ${logCorrecaoOcorrencia.criado_em}`}
                                   {usuarioEhMedicao() &&
                                     logCorrecaoOcorrenciaCODAE &&
-                                    `${textoOcorrencia} ${
-                                      logCorrecaoOcorrenciaCODAE.criado_em
-                                    }`}
+                                    `${textoOcorrencia} ${logCorrecaoOcorrenciaCODAE.criado_em}`}
                                 </div>
                                 <div className="col-7 text-right mt-3">
                                   <Botao
@@ -649,36 +640,56 @@ export const ConferenciaDosLancamentos = () => {
                       </div>
                     </div>
                     <hr />
-                    <div>
-                      <p className="section-title-conf-lancamentos">
-                        Acompanhamento do lançamento
-                      </p>
-                      {periodosGruposMedicao.map((periodoGrupo, index) => {
-                        return (
-                          <TabelaLancamentosPeriodo
-                            key={index}
-                            periodoGrupo={periodoGrupo}
-                            periodosSimples={periodosSimples}
-                            mesSolicitacao={mesSolicitacao}
-                            anoSolicitacao={anoSolicitacao}
-                            form={form}
-                            aprovarPeriodo={(
-                              periodoGrupo,
-                              nomePeridoFormatado
-                            ) =>
-                              aprovarPeriodo(periodoGrupo, nomePeridoFormatado)
-                            }
-                            values={values}
-                            getPeriodosGruposMedicaoAsync={() =>
-                              getPeriodosGruposMedicaoAsync()
-                            }
-                            setOcorrenciaExpandida={() =>
-                              setOcorrenciaExpandida(false)
-                            }
-                            solicitacao={solicitacao}
-                          />
-                        );
-                      })}
+                    <div className="row">
+                      <div className="col-6">
+                        <p className="section-title-conf-lancamentos">
+                          Acompanhamento do lançamento
+                        </p>
+                      </div>
+                      <div className="col-6">
+                        {solicitacao.historico &&
+                          solicitacao.historico !== "" && (
+                            <Botao
+                              className="float-right"
+                              texto="Histórico de correções"
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              onClick={() =>
+                                setShowModalHistoricoCorrecoesPeriodo(true)
+                              }
+                            />
+                          )}
+                      </div>
+                      <div className="col-12 mt-3">
+                        {periodosGruposMedicao.map((periodoGrupo, index) => {
+                          return (
+                            <TabelaLancamentosPeriodo
+                              key={index}
+                              periodoGrupo={periodoGrupo}
+                              periodosSimples={periodosSimples}
+                              mesSolicitacao={mesSolicitacao}
+                              anoSolicitacao={anoSolicitacao}
+                              form={form}
+                              aprovarPeriodo={(
+                                periodoGrupo,
+                                nomePeridoFormatado
+                              ) =>
+                                aprovarPeriodo(
+                                  periodoGrupo,
+                                  nomePeridoFormatado
+                                )
+                              }
+                              values={values}
+                              getPeriodosGruposMedicaoAsync={() =>
+                                getPeriodosGruposMedicaoAsync()
+                              }
+                              setOcorrenciaExpandida={() =>
+                                setOcorrenciaExpandida(false)
+                              }
+                              solicitacao={solicitacao}
+                            />
+                          );
+                        })}
+                      </div>
                     </div>
                     <div className="float-right">
                       <Botao
@@ -690,12 +701,12 @@ export const ConferenciaDosLancamentos = () => {
                         "MEDICAO_APROVADA_PELA_DRE",
                         "MEDICAO_CORRECAO_SOLICITADA",
                         "MEDICAO_APROVADA_PELA_CODAE",
-                        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                       ].includes(solicitacao.status) &&
                         usuarioEhDRE()) ||
                         ([
                           "MEDICAO_APROVADA_PELA_DRE",
-                          "MEDICAO_CORRIGIDA_PARA_CODAE"
+                          "MEDICAO_CORRIGIDA_PARA_CODAE",
                         ].includes(solicitacao.status) &&
                           usuarioEhMedicao())) && (
                         <>
@@ -732,7 +743,7 @@ export const ConferenciaDosLancamentos = () => {
         )}
         <ModalOcorrencia
           showModal={showModalSalvarOcorrencia}
-          setShowModal={value => setShowModalSalvarOcorrencia(value)}
+          setShowModal={(value) => setShowModalSalvarOcorrencia(value)}
           ocorrencia={ocorrencia}
           atualizarDados={() => getSolMedInicialAsync()}
           titulo={"Solicitar correção no formulário de ocorrências"}
@@ -745,7 +756,7 @@ export const ConferenciaDosLancamentos = () => {
         />
         <ModalOcorrencia
           showModal={showModalAprovarOcorrencia}
-          setShowModal={value => setShowModalAprovarOcorrencia(value)}
+          setShowModal={(value) => setShowModalAprovarOcorrencia(value)}
           ocorrencia={ocorrencia}
           atualizarDados={() => getSolMedInicialAsync()}
           titulo={"Aprovar Formulário de Ocorrências"}
@@ -760,7 +771,7 @@ export const ConferenciaDosLancamentos = () => {
         />
         <ModalEnviarParaCodaeECodaeAprovar
           showModal={showModalEnviarParaCodaeECodaeAprovar}
-          setShowModal={value =>
+          setShowModal={(value) =>
             setShowModalEnviarParaCodaeECodaeAprovar(value)
           }
           aprovarSolicitacaoMedicao={() => {
@@ -769,11 +780,21 @@ export const ConferenciaDosLancamentos = () => {
         />
         <ModalSolicitarCorrecaoUE
           showModal={showModalSolicitarCorrecaoUE}
-          setShowModal={value => setShowModalSolicitarCorrecaoUE(value)}
+          setShowModal={(value) => setShowModalSolicitarCorrecaoUE(value)}
           endpoint={() => {
             solicitarCorrecaoMedicao();
           }}
         />
+        {solicitacao && solicitacao.historico && (
+          <ModalHistoricoCorrecoesPeriodo
+            showModal={showModalHistoricoCorrecoesPeriodo}
+            setShowModal={(value) =>
+              setShowModalHistoricoCorrecoesPeriodo(value)
+            }
+            solicitacao={solicitacao}
+            historicos={solicitacao.historico}
+          />
+        )}
       </Spin>
     </div>
   );

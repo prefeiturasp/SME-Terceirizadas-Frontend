@@ -7,14 +7,14 @@ import { DisponibilizacaoDeSolicitacoes } from "components/screens/Logistica/Dis
 
 const atual = {
   href: `/${LOGISTICA}/${DISPONIBILIZACAO_DE_SOLICITACOES}`,
-  titulo: "Disponibilização de Solicitações"
+  titulo: "Disponibilização de Solicitações",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
-  }
+    titulo: "Abastecimento",
+  },
 ];
 
 export default () => (
