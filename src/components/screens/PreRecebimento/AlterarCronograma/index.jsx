@@ -235,7 +235,6 @@ export default ({ analiseSolicitacao }) => {
   };
 
   const buscaLogJustificativaCronograma = (logs, autorJustificativa) => {
-    console.log("a");
     const dict_logs = {
       cronograma: ["Cronograma Ciente"],
       dinutre: ["Aprovado DINUTRE", "Reprovado DINUTRE"],
