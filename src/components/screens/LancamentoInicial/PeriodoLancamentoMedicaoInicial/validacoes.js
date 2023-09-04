@@ -189,25 +189,31 @@ export const camposKitLancheSolicitacoesAlimentacaoESemObservacao = (
     ];
   if (
     kitLanchesAutorizadas &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ] &&
     categoria.nome.includes("SOLICITAÇÕES") &&
     !kitLancheValue &&
-    kitLanchesAutorizadas.filter(
-      (kit) =>
-        kit.dia === column.dia &&
-        Number(kitLancheValue) !== Number(kit.numero_alunos)
-    ).length > 0
+    kitLanchesAutorizadas
+      .filter((kit) => kit.dia === column.dia)
+      .reduce(function (total, kitLanche) {
+        return total + parseInt(kitLanche.numero_alunos);
+      }, 0) > 0
   ) {
     erro = true;
   }
   if (
     kitLanchesAutorizadas &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ] &&
     categoria.nome.includes("SOLICITAÇÕES") &&
     kitLancheValue &&
-    (kitLanchesAutorizadas.filter(
-      (kit) =>
-        kit.dia === column.dia &&
-        Number(kitLancheValue) !== Number(kit.numero_alunos)
-    ).length > 0 ||
+    (kitLanchesAutorizadas
+      .filter((kit) => kit.dia === column.dia)
+      .reduce(function (total, kitLanche) {
+        return total + parseInt(kitLanche.numero_alunos);
+      }, 0) !== Number(kitLancheValue) ||
       kitLanchesAutorizadas.filter((kit) => kit.dia === column.dia).length ===
         0)
   ) {
@@ -229,25 +235,31 @@ export const camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao = (
     ];
   if (
     alteracoesAlimentacaoAutorizadas &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ] &&
     categoria.nome.includes("SOLICITAÇÕES") &&
     !lancheEmergencialValue &&
-    alteracoesAlimentacaoAutorizadas.filter(
-      (alteracao) =>
-        alteracao.dia === column.dia &&
-        Number(lancheEmergencialValue) !== Number(alteracao.numero_alunos)
-    ).length > 0
+    alteracoesAlimentacaoAutorizadas
+      .filter((alteracao) => alteracao.dia === column.dia)
+      .reduce(function (total, alteracaoAlimentacao) {
+        return total + parseInt(alteracaoAlimentacao.numero_alunos);
+      }, 0) > 0
   ) {
     erro = true;
   }
   if (
     alteracoesAlimentacaoAutorizadas &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ] &&
     categoria.nome.includes("SOLICITAÇÕES") &&
     lancheEmergencialValue &&
-    (alteracoesAlimentacaoAutorizadas.filter(
-      (alteracao) =>
-        alteracao.dia === column.dia &&
-        Number(lancheEmergencialValue) !== Number(alteracao.numero_alunos)
-    ).length > 0 ||
+    (alteracoesAlimentacaoAutorizadas
+      .filter((alteracao) => alteracao.dia === column.dia)
+      .reduce(function (total, alteracaoAlimentacao) {
+        return total + parseInt(alteracaoAlimentacao.numero_alunos);
+      }, 0) !== Number(lancheEmergencialValue) ||
       alteracoesAlimentacaoAutorizadas.filter(
         (alteracao) => alteracao.dia === column.dia
       ).length === 0)
@@ -939,16 +951,24 @@ export const exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas = (
   return (
     (value &&
       categoria.nome.includes("SOLICITAÇÕES") &&
+      !formValuesAtualizados[
+        `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+      ] &&
       !["Mês anterior", "Mês posterior"].includes(value) &&
       kitLanchesAutorizadas &&
-      kitLanchesAutorizadas.filter(
-        (kit) =>
-          kit.dia === column.dia && Number(value) !== Number(kit.numero_alunos)
-      ).length > 0 &&
+      kitLanchesAutorizadas
+        .filter((kit) => kit.dia === column.dia)
+        .reduce(function (total, kitLanche) {
+          return total + parseInt(kitLanche.numero_alunos);
+        }, 0) !== Number(value) &&
       row.name.includes("kit_lanche")) ||
     (!value &&
       row.name.includes("kit_lanche") &&
-      kitLanchesAutorizadas.filter((kit) => kit.dia === column.dia).length > 0)
+      kitLanchesAutorizadas
+        .filter((kit) => kit.dia === column.dia)
+        .reduce(function (total, kitLanche) {
+          return total + parseInt(kitLanche.numero_alunos);
+        }, 0) > 0)
   );
 };
 
@@ -986,24 +1006,28 @@ export const exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizada
       formValuesAtualizados[
         `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
       ];
-
     return (
       (value &&
         categoria.nome.includes("SOLICITAÇÕES") &&
+        !formValuesAtualizados[
+          `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+        ] &&
         !["Mês anterior", "Mês posterior"].includes(value) &&
         alteracoesAlimentacaoAutorizadas &&
-        alteracoesAlimentacaoAutorizadas.filter(
-          (alteracao) =>
-            alteracao.dia === column.dia &&
-            Number(value) !== Number(alteracao.numero_alunos)
-        ).length > 0 &&
+        alteracoesAlimentacaoAutorizadas
+          .filter((alteracao) => alteracao.dia === column.dia)
+          .reduce(function (total, alteracaoAlimentacao) {
+            return total + parseInt(alteracaoAlimentacao.numero_alunos);
+          }, 0) !== Number(value) &&
         row.name.includes("lanche_emergencial")) ||
       (!value &&
         row.name.includes("lanche_emergencial") &&
         alteracoesAlimentacaoAutorizadas &&
-        alteracoesAlimentacaoAutorizadas.filter(
-          (alteracao) => alteracao.dia === column.dia
-        ).length > 0)
+        alteracoesAlimentacaoAutorizadas
+          .filter((alteracao) => alteracao.dia === column.dia)
+          .reduce(function (total, alteracaoAlimentacao) {
+            return total + parseInt(alteracaoAlimentacao.numero_alunos);
+          }, 0) > 0)
     );
   };
 
@@ -1021,6 +1045,9 @@ export const exibirTooltipLancheEmergencialSolAlimentacoes = (
 
   return (
     value &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ] &&
     categoria.nome.includes("SOLICITAÇÕES") &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
     alteracoesAlimentacaoAutorizadas.filter(
