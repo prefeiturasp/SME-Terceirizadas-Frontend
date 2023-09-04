@@ -553,7 +553,8 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
 
 export const formatarLinhasTabelaAlimentacao = (
   tipos_alimentacao,
-  periodoGrupo
+  periodoGrupo,
+  solicitacao
 ) => {
   const tiposAlimentacaoFormatadas = tipos_alimentacao
     .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
@@ -592,7 +593,8 @@ export const formatarLinhasTabelaAlimentacao = (
   }
 
   const matriculadosOuNumeroDeAlunos = () => {
-    return periodoGrupo.grupo === "Programas e Projetos"
+    return periodoGrupo.grupo === "Programas e Projetos" ||
+      ehEscolaTipoCEUGESTAO(solicitacao.escola)
       ? {
           nome: "Número de Alunos",
           name: "numero_de_alunos",

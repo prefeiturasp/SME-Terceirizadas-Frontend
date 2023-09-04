@@ -262,18 +262,20 @@ export default () => {
       );
     }
 
-    if (
-      !tiposAlimentacaoCEUGESTAO.includes("lanche") &&
-      !tiposAlimentacaoCEUGESTAO.includes("lanche_4h")
-    ) {
-      const indexRefeicao1Oferta =
+    if (!tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+      const indexLanche =
         tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
-          (ali) => ali.nome === "Lanche" || ali.nome === "Lanche 4h"
+          (ali) => ali.nome === "Lanche"
         );
-      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
-        indexRefeicao1Oferta,
-        1
-      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(indexLanche, 1);
+    }
+
+    if (!tiposAlimentacaoCEUGESTAO.includes("lanche_4h")) {
+      const indexLanche4h =
+        tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+          (ali) => ali.nome === "Lanche 4h"
+        );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(indexLanche4h, 1);
     }
 
     return tiposAlimentacaoProgramasProjetosOuCEUGESTAO;
@@ -465,19 +467,33 @@ export default () => {
         }
       );
 
-      const indexLanche4h = cloneTiposAlimentacao.findIndex((ali) =>
-        ali.nome.includes("4h")
-      );
-      if (indexLanche4h !== -1) {
-        rowsDietas.push({
-          nome: cloneTiposAlimentacao[indexLanche4h].nome,
-          name: cloneTiposAlimentacao[indexLanche4h].nome
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase()
-            .replaceAll(/ /g, "_"),
-          uuid: cloneTiposAlimentacao[indexLanche4h].uuid,
-        });
+      if (
+        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+      ) {
+        if (tiposAlimentacaoCEUGESTAO.includes("lanche_4h")) {
+          rowsDietas.push({
+            nome: "Lanche 4h",
+            name: "lanche_4h",
+            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find((tp) =>
+              tp.nome.includes("4h")
+            ).uuid,
+          });
+        }
+      } else {
+        const indexLanche4h = cloneTiposAlimentacao.findIndex((ali) =>
+          ali.nome.includes("4h")
+        );
+        if (indexLanche4h !== -1) {
+          rowsDietas.push({
+            nome: cloneTiposAlimentacao[indexLanche4h].nome,
+            name: cloneTiposAlimentacao[indexLanche4h].nome
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replaceAll(/ /g, "_"),
+            uuid: cloneTiposAlimentacao[indexLanche4h].uuid,
+          });
+        }
       }
 
       const indexLanche = cloneTiposAlimentacao.findIndex(
@@ -485,10 +501,7 @@ export default () => {
       );
       if (
         indexLanche !== -1 &&
-        (!ehEscolaTipoCEUGESTAO(
-          location.state.solicitacaoMedicaoInicial.escola
-        ) ||
-          tiposAlimentacaoCEUGESTAO.includes("lanche"))
+        !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
       ) {
         rowsDietas.push({
           nome: "Lanche",
@@ -501,11 +514,29 @@ export default () => {
         });
       }
 
+      if (
+        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+      ) {
+        if (tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+          rowsDietas.push({
+            nome: "Lanche",
+            name: "Lanche"
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replaceAll(/ /g, "_"),
+            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO[indexLanche]
+              .uuid,
+          });
+        }
+      }
+
       rowsDietas.push({
         nome: "Observações",
         name: "observacoes",
         uuid: null,
       });
+
       setTabelaDietaRows(rowsDietas);
 
       const cloneRowsDietas = deepCopy(rowsDietas);
@@ -524,19 +555,6 @@ export default () => {
           name: "refeicao",
           uuid: cloneTiposAlimentacao[indexRefeicaoDieta].uuid,
         });
-      }
-
-      if (
-        ehEscolaTipoCEUGESTAO(
-          location.state.solicitacaoMedicaoInicial.escola
-        ) &&
-        !tiposAlimentacaoCEUGESTAO.includes("lanche") &&
-        !tiposAlimentacaoCEUGESTAO.includes("lanche_4h")
-      ) {
-        const indexLanche = cloneRowsDietas.findIndex(
-          (ali) => ali.nome === "Lanche" || ali.nome === "Lanche 4h"
-        );
-        cloneRowsDietas.splice(indexLanche, 1);
       }
 
       setTabelaDietaEnteralRows(cloneRowsDietas);
