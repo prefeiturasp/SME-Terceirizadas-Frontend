@@ -57,7 +57,6 @@ const InputFile = (props) => {
     ];
     const { accept } = props;
     const QUANTIDADE_ARQUIVOS = event.target.files.length;
-    console.log("1", event, "2", accept, "3", QUANTIDADE_ARQUIVOS);
     if (accept) {
       let nova_lista_extensoes = [];
       lista_extensoes.forEach((ext) => {
@@ -108,31 +107,29 @@ const InputFile = (props) => {
       }
     });
     if (valido) {
-      let localFiles = []; // Renomeado para evitar conflito
+      let localFiles = [];
       let data = [];
       Array.from(event.target.files).forEach((file) => {
         readerFile(file)
           .then((anexo) => {
             data.push(anexo);
             localFiles.push({
-              // Usamos 'localFiles' aqui
               nome: props.nomeNovoArquivo || file.name,
               base64: anexo.arquivo,
             });
           })
           .then(() => {
             if (localFiles.length === QUANTIDADE_ARQUIVOS) {
-              // Usamos 'localFiles' aqui
               toastSuccess(
                 props.toastSuccess || "Laudo(s) incluso(s) com sucesso"
               );
               if (props.concatenarNovosArquivos) {
-                const allFiles = [...files, ...localFiles]; // Usamos ambos: estado 'files' e 'localFiles'
+                const allFiles = [...files, ...localFiles];
                 props.setFiles(allFiles);
-                setFiles(allFiles); // 'setFiles' seria o setter para o estado 'files'
+                setFiles(allFiles);
               } else {
                 props.setFiles(data);
-                setFiles(localFiles); // 'setFiles' seria o setter para o estado 'files'
+                setFiles(localFiles);
               }
             }
           });
