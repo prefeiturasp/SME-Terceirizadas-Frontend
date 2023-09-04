@@ -57,26 +57,46 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
 
   const isValidFiles = (files) => {
     let validation = { touched: true };
+    let xlsCount = 0;
+    let pdfCount = 0;
+
     files.forEach((element) => {
       const base64Ext = element.base64.split(";")[0];
       if (base64Ext.includes("pdf")) {
-        validation = {
-          ...validation,
-          pdf: true,
-        };
+        pdfCount++;
+        if (element.size > 10 * 1024 * 1024) {
+          toastError("PDF deve ter menos de 10MB");
+          setDisableFinalizarMedicao(true);
+          return;
+        }
+        validation = { ...validation, pdf: true };
       }
-      if (base64Ext.includes("spreadsheetml")) {
-        validation = {
-          ...validation,
-          xls: true,
-        };
+      if (
+        base64Ext.includes("spreadsheetml") ||
+        base64Ext.includes("application/vnd.ms-excel.sheet.macroEnabled.12")
+      ) {
+        xlsCount++;
+        if (element.size > 25 * 1024 * 1024) {
+          toastError("Excel deve ter menos de 25MB");
+          setDisableFinalizarMedicao(true);
+          return;
+        }
+        validation = { ...validation, xls: true };
       }
     });
+
+    if (xlsCount > 1 || pdfCount > 1) {
+      toastError("O sistema permite apenas 1 arquivo Excel e 1 arquivo PDF");
+      setDisableFinalizarMedicao(true);
+      return;
+    }
+
     if (validation.xls && validation.pdf) {
       setDisableFinalizarMedicao(false);
     } else {
       setDisableFinalizarMedicao(true);
     }
+
     setValidationFile(validation);
   };
 
@@ -179,7 +199,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
                   alignLeft={true}
                   texto="Anexar arquivos"
                   name="files"
-                  accept=".xls, .xlsx, .pdf"
+                  accept=".xls, .xlsm, .xlsx, .pdf"
                   setFiles={setFiles}
                   removeFile={removeFile}
                   toastSuccess={"Arquivos anexados com sucesso!"}
