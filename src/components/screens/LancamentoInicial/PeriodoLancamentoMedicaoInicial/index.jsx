@@ -978,7 +978,15 @@ export default () => {
             categoria.nome.includes("SOLICITAÇÕES") &&
               (dadosValoresKitLanchesAutorizadas[
                 `kit_lanche__dia_${kit.dia}__categoria_${categoria.id}`
-              ] = `${kit.numero_alunos}`);
+              ] = dadosValoresKitLanchesAutorizadas[
+                `kit_lanche__dia_${kit.dia}__categoria_${categoria.id}`
+              ]
+                ? parseInt(
+                    dadosValoresKitLanchesAutorizadas[
+                      `kit_lanche__dia_${kit.dia}__categoria_${categoria.id}`
+                    ]
+                  ) + kit.numero_alunos
+                : kit.numero_alunos).toString();
           });
 
         alteracoesAlimentacaoAutorizadas &&
@@ -987,7 +995,15 @@ export default () => {
             categoria.nome.includes("SOLICITAÇÕES") &&
               (dadosValoresAlteracoesAlimentacaoAutorizadas[
                 `lanche_emergencial__dia_${alteracao.dia}__categoria_${categoria.id}`
-              ] = `${alteracao.numero_alunos}`);
+              ] = dadosValoresAlteracoesAlimentacaoAutorizadas[
+                `lanche_emergencial__dia_${alteracao.dia}__categoria_${categoria.id}`
+              ]
+                ? parseInt(
+                    dadosValoresAlteracoesAlimentacaoAutorizadas[
+                      `lanche_emergencial__dia_${alteracao.dia}__categoria_${categoria.id}`
+                    ]
+                  ) + alteracao.numero_alunos
+                : alteracao.numero_alunos).toString();
           });
 
         inclusoesEtecAutorizadas &&
