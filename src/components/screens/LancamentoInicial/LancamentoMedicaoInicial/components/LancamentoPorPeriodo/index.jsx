@@ -193,8 +193,8 @@ export default ({
     getSolicitacoesKitLanchesAutorizadasAsync();
     getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
     getSolicitacoesInclusoesEtecAutorizadasAsync();
-    getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
     solicitacaoMedicaoInicial &&
+      getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync() &&
       ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
       getPeriodosCEUGESTAOAsync() &&
       getCEUGESTAOFrequenciasDietasAsync();
