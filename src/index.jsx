@@ -11,7 +11,7 @@ import multi from "redux-multi";
 // Middleware
 import promise from "redux-promise";
 import thunk from "redux-thunk";
-import App from "./App";
+import { App } from "./App";
 import { ENVIRONMENT } from "constants/config";
 import reducers from "./reducers";
 import * as serviceWorker from "./serviceWorker";
@@ -66,13 +66,12 @@ const store = applyMiddleware(thunk, multi, promise)(createStore)(
 );
 
 // store é o carinha que recebe todos os estados
-ReactDOM.render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <Router>
       <App />
     </Router>
-  </Provider>,
-  document.getElementById("root")
+  </Provider>
 );
 
 // If you want your app to work offline and load faster, you can change
