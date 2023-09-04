@@ -1,0 +1,44 @@
+@import "../../../styles/variables.scss";
+
+/*
+Para ajustar algum atributo do campo AutoCompleteSelectField, criar
+classe para o elemento pai e sobreescrecer o atributo desejado da
+seguinte forma:
+
+.meu-form-exemplo {
+  .autocomplete-select {
+    height: 40px;
+  }
+}
+*/
+
+.autocomplete-select {
+  width: 100%;
+  height: 35px;
+
+  .ant-select-selector,
+  .ant-select-selection-search,
+  .ant-input {
+    height: 100%;
+    border-radius: 0.35rem !important;
+  }
+
+  .ant-input {
+    border: 1px solid $grayInputBorder;
+    font-weight: bolder;
+
+    &:focus {
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(23, 100, 210, 0.23);
+    }
+  }
+
+  .ant-select-selection-placeholder {
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: bold;
+    color: $grayPlaceholder !important;
+  }
+}
