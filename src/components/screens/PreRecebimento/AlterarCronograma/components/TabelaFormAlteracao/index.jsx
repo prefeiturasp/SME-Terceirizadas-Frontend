@@ -4,7 +4,7 @@ import React from "react";
 import { Field } from "react-final-form";
 import "./styles.scss";
 
-export default ({ solicitacao }) => {
+export default ({ solicitacao, somenteLeitura }) => {
   const pintaTabela = (campo, index) => {
     const classe = "fundo-laranja";
     if (
@@ -15,8 +15,6 @@ export default ({ solicitacao }) => {
       return classe;
     } else return "";
   };
-
-  const apenasLeitura = solicitacao.status !== "Em análise";
 
   return (
     <>
@@ -35,8 +33,10 @@ export default ({ solicitacao }) => {
               return (
                 <tr key={index}>
                   <td className="borda-crono">
-                    {apenasLeitura ? (
-                      <>{etapa.numero_empenho}</>
+                    {somenteLeitura ? (
+                      <>
+                        {etapa.numero_empenho ? etapa.numero_empenho : "----"}
+                      </>
                     ) : (
                       <Field
                         component={InputText}
@@ -74,7 +74,7 @@ export default ({ solicitacao }) => {
                       index
                     )}`}
                   >
-                    {apenasLeitura ? (
+                    {somenteLeitura ? (
                       <>{etapa.total_embalagens}</>
                     ) : (
                       <Field
