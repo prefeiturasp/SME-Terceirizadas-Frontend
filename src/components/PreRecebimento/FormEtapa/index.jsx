@@ -12,6 +12,7 @@ import { InputComData } from "components/Shareable/DatePicker";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { getEtapas } from "services/cronograma.service";
 import { required } from "helpers/fieldValidators";
+import { deletaValues } from "helpers/formHelper";
 import { formataMilhar } from "helpers/utilities";
 
 import moment from "moment";
@@ -41,6 +42,17 @@ export default ({
   };
 
   const deletaEtapa = (index) => {
+    let listaChaves = [
+      "empenho",
+      "etapa",
+      "parte",
+      "data_programada",
+      "quantidade",
+      "total_embalagens",
+    ];
+
+    deletaValues(etapas, listaChaves, values, index);
+
     let etapasNovo = [...etapas];
     etapasNovo.splice(index, 1);
     setEtapas(etapasNovo);
