@@ -69,9 +69,8 @@ const InputFile = (props) => {
     }
 
     Array.from(event.target.files).forEach((file) => {
-      const extensao = file.name
-        .split(".")
-        [file.name.split(".").length - 1].toLowerCase();
+      const nameParts = file.name.split(".");
+      const extensao = nameParts[nameParts.length - 1].toLowerCase();
       if (props.ehPlanilhaMedicaoInicial) {
         if (!["xls", "xlsx", "xlsm", "pdf"].includes(extensao)) {
           toastError(`Extensão do arquivo não suportada: ${extensao}`);
