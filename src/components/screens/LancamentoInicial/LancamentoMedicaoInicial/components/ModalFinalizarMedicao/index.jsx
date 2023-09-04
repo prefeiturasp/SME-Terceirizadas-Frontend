@@ -122,7 +122,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
       data
     );
     if (response.status === HTTP_STATUS.OK) {
-      toastSuccess("Solicitação de Medição Inicial Finalizada com sucesso!");
+      toastSuccess("Medição Inicial finalizada com sucesso!");
       setObjSolicitacaoMIFinalizada(response.data);
       handleHideModal();
     } else {
