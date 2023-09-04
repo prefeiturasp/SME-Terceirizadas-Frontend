@@ -1,7 +1,7 @@
 import {
   EscolaRascunhosInterface,
   PeriodoEscolarRascunhosInterface,
-  TipoAlimentacaoRascunhoInterface
+  TipoAlimentacaoRascunhoInterface,
 } from "interfaces/rascunhos.interface";
 
 export interface PeriodosInclusaoInterface {
@@ -122,14 +122,10 @@ export interface RascunhosInclusaoDeAlimentacaoInterface {
 export interface RascunhosInclusaoDeAlimentacaoNormalInterface
   extends RascunhosInclusaoDeAlimentacaoInterface {
   inclusoes: Array<InclusoesDeAlimentacaoFromRequestInterface>;
-  quantidades_periodo: Array<
-    QuantidadesPeriodoInclusaoNormalRascunhosInterface
-  >;
+  quantidades_periodo: Array<QuantidadesPeriodoInclusaoNormalRascunhosInterface>;
 }
 
 export interface RascunhosInclusaoDeAlimentacaoContinuaInterface
   extends RascunhosInclusaoDeAlimentacaoInterface {
-  quantidades_periodo: Array<
-    QuantidadesPeriodoInclusaoContinuaRascunhosInterface
-  >;
+  quantidades_periodo: Array<QuantidadesPeriodoInclusaoContinuaRascunhosInterface>;
 }
