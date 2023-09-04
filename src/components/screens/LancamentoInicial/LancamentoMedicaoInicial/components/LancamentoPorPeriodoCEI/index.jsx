@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Botao from "components/Shareable/Botao";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 import { CORES } from "../LancamentoPorPeriodo/helpers";
@@ -10,6 +10,8 @@ export default ({
   escolaInstituicao,
   periodoSelecionado,
 }) => {
+  const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
+
   const quantidadeAlimentacoesLancadas = [
     {
       nome_periodo_grupo: "INTEGRAL",
@@ -25,7 +27,29 @@ export default ({
       qtd_refeicoes_diarias: 3,
       valor_total: 300,
     },
+    {
+      nome_periodo_grupo: "MANHA",
+      status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
+      qtd_alunos: 100,
+      qtd_refeicoes_diarias: 3,
+      valor_total: 200,
+    },
+    {
+      nome_periodo_grupo: "TARDE",
+      status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
+      qtd_alunos: 100,
+      qtd_refeicoes_diarias: 2,
+      valor_total: 200,
+    },
   ];
+
+  useEffect(() => {
+    const periodos = escolaInstituicao.periodos_escolares
+      .filter((periodo) => periodo.possui_alunos_regulares)
+      .map((periodo) => periodo.nome);
+
+    setPeriodosComAlunos(periodos);
+  }, [escolaInstituicao]);
 
   const renderBotaoFinalizar = () => {
     if (!solicitacaoMedicaoInicial) {
@@ -44,10 +68,12 @@ export default ({
             </div>
           </div>
           {quantidadeAlimentacoesLancadas.map((periodo, index) => {
-            if (
-              solicitacaoMedicaoInicial.ue_possui_alunos_periodo_parcial ||
-              periodo.nome_periodo_grupo === "INTEGRAL"
-            ) {
+            const deveriaExibirCard =
+              periodosComAlunos.includes(periodo.nome_periodo_grupo) ||
+              (solicitacaoMedicaoInicial.ue_possui_alunos_periodo_parcial &&
+                periodo.nome_periodo_grupo === "PARCIAL");
+
+            if (deveriaExibirCard) {
               return (
                 <CardLancamentoCEI
                   key={index}
