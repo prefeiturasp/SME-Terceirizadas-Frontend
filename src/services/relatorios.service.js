@@ -286,9 +286,10 @@ export const filtrarSolicitacoesAlimentacaoCODAE = async (payload) => {
 
 export const filtrarSolicitacoesAlimentacaoTerceirizadas = async (payload) => {
   const response = await axios
-    .post(`${API_URL}/terceirizada-solicitacoes/filtrar-solicitacoes-ga/`, {
-      payload,
-    })
+    .post(
+      `${API_URL}/terceirizada-solicitacoes/filtrar-solicitacoes-ga/`,
+      payload
+    )
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
