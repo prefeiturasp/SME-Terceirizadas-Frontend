@@ -764,7 +764,9 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                           row,
                                           semanaSelecionada,
                                           valoresLancamentos,
-                                          categoria
+                                          categoria,
+                                          form,
+                                          periodoGrupo
                                         )}
                                       />
                                     </div>
