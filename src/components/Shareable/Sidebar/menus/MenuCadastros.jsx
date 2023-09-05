@@ -12,7 +12,7 @@ import {
   SOBREMESA_DOCE,
   LABORATORIOS_CADASTRADOS,
   PRODUTOS,
-  EMBALAGENS_CADASTRADAS,
+  TIPOS_EMBALAGENS,
   UNIDADES_MEDIDA,
   MARCAS,
 } from "configs/constants";
@@ -47,10 +47,8 @@ const MenuCadastros = () => {
       )}
       {usuarioEhDilogQualidadeOuCronograma() && (
         <>
-          <LeafItem
-            to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`}
-          >
-            Embalagens
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${TIPOS_EMBALAGENS}`}>
+            Tipos de Embalagens
           </LeafItem>
           <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`}>
             Unidades de Medida
