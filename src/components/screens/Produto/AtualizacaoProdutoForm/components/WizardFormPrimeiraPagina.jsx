@@ -299,7 +299,7 @@ class WizardFormPrimeiraPagina extends React.Component {
   };
 
   render() {
-    const { handleSubmit, valuesForm } = this.props;
+    const { handleSubmit, valuesForm, produto } = this.props;
 
     const {
       produtoForm,
@@ -346,6 +346,7 @@ class WizardFormPrimeiraPagina extends React.Component {
                 onBlur={(e) => {
                   e.preventDefault();
                 }}
+                disabled={produto}
                 className={"select-form-produto"}
                 showSearch
                 name="marca"
@@ -381,21 +382,24 @@ class WizardFormPrimeiraPagina extends React.Component {
                 }}
                 onSelect={this.addFabricante}
                 validate={required}
+                disabled={produto}
               >
                 {fabricantesArray}
               </Field>
             </div>
-            <div className="mt-4 adicionar-marca-fornecedor">
-              <Botao
-                texto="Cadastrar Item"
-                className={"botao-adicionar-marca-fabricante"}
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                onClick={() => {
-                  this.showModalCadastrarItem();
-                }}
-              />
-            </div>
+            {!produto && (
+              <div className="mt-4 adicionar-marca-fornecedor">
+                <Botao
+                  texto="Cadastrar Item"
+                  className={"botao-adicionar-marca-fabricante"}
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  onClick={() => {
+                    this.showModalCadastrarItem();
+                  }}
+                />
+              </div>
+            )}
           </section>
 
           <section className="dieta-especial-form">
