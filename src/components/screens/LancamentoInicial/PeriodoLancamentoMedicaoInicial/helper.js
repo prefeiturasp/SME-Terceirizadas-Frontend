@@ -791,7 +791,9 @@ export const defaultValue = (
   row,
   semanaSelecionada,
   valoresLancamentos,
-  categoria
+  categoria,
+  form,
+  periodoGrupo
 ) => {
   let result = null;
 
@@ -813,6 +815,17 @@ export const defaultValue = (
     Number(column.dia) < 10
   ) {
     result = "Mês posterior";
+  }
+  if (form && periodoGrupo) {
+    form.change(
+      `${row.name}__dia_${column.dia}__categoria_${
+        categoria.id
+      }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+        0,
+        5
+      )}`,
+      result
+    );
   }
 
   return result;
