@@ -222,8 +222,8 @@ export const DETALHAR_ALTERACAO_CRONOGRAMA = "detalhe-alteracao-cronograma";
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";
 
-export const EMBALAGENS_CADASTRADAS = "embalagens";
-export const CADASTRO_EMBALAGEM = "cadastro-embalagem";
+export const TIPOS_EMBALAGENS = "tipos-embalagens";
+export const CADASTRO_TIPO_EMBALAGEM = "cadastro-tipo-embalagem";
 
 export const UNIDADES_MEDIDA = "unidades-medida";
 export const CADASTRO_UNIDADE_MEDIDA = "cadastro-unidade-medida";

@@ -20,7 +20,7 @@ export const Paginacao = (props) => {
   };
 
   return (
-    <section className="pagination-container">
+    <section className="pagination-container mt-3">
       <Pagination
         defaultPageSize={pageSize || 10}
         showTitle={showTitle || false}

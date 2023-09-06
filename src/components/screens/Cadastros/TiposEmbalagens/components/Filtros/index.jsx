@@ -13,7 +13,7 @@ import { NavLink } from "react-router-dom";
 import {
   CADASTROS,
   CONFIGURACOES,
-  CADASTRO_EMBALAGEM,
+  CADASTRO_TIPO_EMBALAGEM,
 } from "configs/constants";
 import { getListaFiltradaAutoComplete } from "helpers/autoComplete";
 
@@ -49,9 +49,9 @@ export default ({
                     nomesEmbalagens,
                     values.nome
                   )}
-                  label="Nome da Embalagem"
+                  label="Nome do Tipo de Embalagem"
                   name="nome"
-                  placeholder="Digite o nome da Embalagem"
+                  placeholder="Digite o nome do Tipo da Embalagem"
                   className="filtro-inputs-embalagens"
                   toUppercaseActive
                 />
@@ -87,10 +87,10 @@ export default ({
 
             <div className="mt-4 mb-4">
               <NavLink
-                to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_EMBALAGEM}`}
+                to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_TIPO_EMBALAGEM}`}
               >
                 <Botao
-                  texto="Cadastrar Embalagem"
+                  texto="Cadastrar Tipo de Embalagem"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
                   onClick={() => {}}

@@ -1,16 +1,16 @@
 import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import Embalagens from "components/screens/Cadastros/Embalagens";
+import TiposEmbalagens from "components/screens/Cadastros/TiposEmbalagens";
 import Page from "../../components/Shareable/Page/Page";
 import {
   CADASTROS,
   CONFIGURACOES,
-  EMBALAGENS_CADASTRADAS,
+  TIPOS_EMBALAGENS,
 } from "../../configs/constants";
 
 const atual = {
-  href: `/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`,
-  titulo: "Embalagens",
+  href: `/${CONFIGURACOES}/${CADASTROS}/${TIPOS_EMBALAGENS}`,
+  titulo: "Tipos de Embalagens",
 };
 
 const anteriores = [
@@ -23,6 +23,6 @@ const anteriores = [
 export default () => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={"/"}>
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
-    <Embalagens />
+    <TiposEmbalagens />
   </Page>
 );

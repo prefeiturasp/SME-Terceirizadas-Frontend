@@ -140,8 +140,11 @@ export default ({
               <th className="borda-crono">Total de Embalagens</th>
             </thead>
             <tbody>
-              {cronograma.etapas.length > 0 &&
-                cronograma.etapas.map((etapa, key) => {
+              {(() => {
+                let etapas = solicitacaoAlteracaoCronograma
+                  ? solicitacaoAlteracaoCronograma.etapas_antigas
+                  : cronograma.etapas;
+                return etapas.map((etapa, key) => {
                   return (
                     <tr key={key}>
                       <td className="borda-crono">{etapa.numero_empenho}</td>
@@ -152,7 +155,8 @@ export default ({
                       <td className="borda-crono">{etapa.total_embalagens}</td>
                     </tr>
                   );
-                })}
+                });
+              })()}
             </tbody>
           </table>
         </>
