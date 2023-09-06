@@ -43,6 +43,21 @@ export default ({
     }
   };
 
+  const textoCabecalhoFormatado = (textoCabecalho) => {
+    switch (textoCabecalho) {
+      case "MANHA":
+        return "Infantil Manhã";
+      case "TARDE":
+        return "Infantil Tarde";
+
+      case "PARCIAL":
+        return "Período Parcial";
+
+      case "INTEGRAL":
+        return "Período Integral";
+    }
+  };
+
   const handleClickEditar = () => {
     history.push({
       pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO_CEI}`,
@@ -67,7 +82,7 @@ export default ({
         >
           <div className="row">
             <div className="col-9 pl-0 mb-2 periodo-cabecalho">
-              {textoCabecalho}
+              {textoCabecalhoFormatado(textoCabecalho)}
             </div>
             <div className="col-3 pr-0">
               <div className="float-right status-card-periodo-grupo">
