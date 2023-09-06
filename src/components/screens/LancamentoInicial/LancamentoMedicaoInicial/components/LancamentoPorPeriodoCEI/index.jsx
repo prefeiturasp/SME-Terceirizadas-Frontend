@@ -48,6 +48,9 @@ export default ({
       .filter((periodo) => periodo.possui_alunos_regulares)
       .map((periodo) => periodo.nome);
 
+    if (solicitacaoMedicaoInicial?.ue_possui_alunos_periodo_parcial) {
+      periodos.splice(1, 0, "PARCIAL");
+    }
     setPeriodosComAlunos(periodos);
   }, [escolaInstituicao]);
 
@@ -67,29 +70,18 @@ export default ({
               <b className="section-title">Períodos</b>
             </div>
           </div>
-          {quantidadeAlimentacoesLancadas.map((periodo, index) => {
-            const deveriaExibirCard =
-              periodosComAlunos.includes(periodo.nome_periodo_grupo) ||
-              (solicitacaoMedicaoInicial.ue_possui_alunos_periodo_parcial &&
-                periodo.nome_periodo_grupo === "PARCIAL");
 
-            if (deveriaExibirCard) {
-              return (
-                <CardLancamentoCEI
-                  key={index}
-                  textoCabecalho={periodo.nome_periodo_grupo}
-                  cor={CORES[index]}
-                  solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-                  escolaInstituicao={escolaInstituicao}
-                  quantidadeAlimentacoesLancadas={
-                    quantidadeAlimentacoesLancadas
-                  }
-                  periodoSelecionado={periodoSelecionado}
-                />
-              );
-            }
-            return null;
-          })}
+          {periodosComAlunos.map((nomePeriodo, index) => (
+            <CardLancamentoCEI
+              key={index}
+              textoCabecalho={nomePeriodo}
+              cor={CORES[index % CORES.length]}
+              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+              escolaInstituicao={escolaInstituicao}
+              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+              periodoSelecionado={periodoSelecionado}
+            />
+          ))}
           <div className="mt-4">
             {renderBotaoFinalizar() && (
               <Botao
