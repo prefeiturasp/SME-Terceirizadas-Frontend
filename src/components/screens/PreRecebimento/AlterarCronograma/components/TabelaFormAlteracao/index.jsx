@@ -32,20 +32,22 @@ export default ({ solicitacao, somenteLeitura }) => {
             solicitacao.etapas_novas.map((etapa, index) => {
               return (
                 <tr key={index}>
-                  <td className="borda-crono">
-                    {somenteLeitura ? (
-                      <>
-                        {etapa.numero_empenho ? etapa.numero_empenho : "----"}
-                      </>
-                    ) : (
+                  {somenteLeitura ? (
+                    <td
+                      className={`borda-crono ${pintaTabela("etapa", index)}`}
+                    >
+                      {etapa.numero_empenho ? etapa.numero_empenho : "----"}
+                    </td>
+                  ) : (
+                    <td className="borda-crono">
                       <Field
                         component={InputText}
                         name={`empenho_${index}`}
                         validate={required}
                         proibeLetras
                       />
-                    )}
-                  </td>
+                    </td>
+                  )}
                   <td className={`borda-crono ${pintaTabela("etapa", index)}`}>
                     {etapa.etapa}
                   </td>
