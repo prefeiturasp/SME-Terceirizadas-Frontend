@@ -169,6 +169,9 @@ class WizardFormTerceiraPagina extends Component {
     if (values["aditivos"] === null) {
       values["aditivos"] = "";
     }
+    if (!values["numero_registro"]) {
+      values["numero_registro"] = "";
+    }
     const endpoint =
       this.props.homologacao.esta_homologado &&
       this.props.homologacao.status !== "CODAE_QUESTIONADO"
