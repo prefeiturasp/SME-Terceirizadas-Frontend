@@ -11,6 +11,7 @@ export const TAMANHO_RF = 7;
 export const TAMANHO_CPF = 11;
 export const DOIS_MB = 2097152;
 export const DEZ_MB = 10485760;
+export const VINTE_CINCO_MB = 26214400;
 export const TODOS = "TODOS";
 
 export const JS_DATE_NOVEMBRO = 10;
