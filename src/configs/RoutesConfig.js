@@ -208,10 +208,10 @@ import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
 import DetalharCadastroLaboratorioPage from "pages/Cadastros/DetalharCadastroLaboratorioPage";
 import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
 import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
-import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
-import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
+import CadastroTipoEmbalagemPage from "pages/Cadastros/CadastroTipoEmbalagemPage";
+import TiposEmbalagensCadastradosPage from "pages/Cadastros/TiposEmbalagensCadastradosPage";
 import GestaoAcessoEmpresaPage from "pages/Configuracoes/GestaoAcessoEmpresaPage";
-import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagemPage ";
+import EditarCadastroTipoEmbalagemPage from "../pages/Cadastros/EditarCadastroTipoEmbalagemPage";
 import ProdutosLogisticaPage from "pages/Cadastros/ProdutosLogisticaPage";
 import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 import GestaoAcessoGeralPage from "pages/Configuracoes/GestaoAcessoGeralPage";
@@ -733,20 +733,20 @@ const routesConfig = [
     tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog(),
   },
   {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.EMBALAGENS_CADASTRADAS}`,
-    component: EmbalagensCadastradasPage,
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.TIPOS_EMBALAGENS}`,
+    component: TiposEmbalagensCadastradosPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
   },
   {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.CADASTRO_EMBALAGEM}`,
-    component: CadastroEmbalagemPage,
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.CADASTRO_TIPO_EMBALAGEM}`,
+    component: CadastroTipoEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
   },
   {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.CADASTRO_EMBALAGEM}/${constants.EDITAR}`,
-    component: EditarCadastroEmbalagemPage,
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.CADASTRO_TIPO_EMBALAGEM}/${constants.EDITAR}`,
+    component: EditarCadastroTipoEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
   },

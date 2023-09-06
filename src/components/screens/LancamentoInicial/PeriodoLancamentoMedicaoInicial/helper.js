@@ -553,7 +553,8 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
 
 export const formatarLinhasTabelaAlimentacao = (
   tipos_alimentacao,
-  periodoGrupo
+  periodoGrupo,
+  solicitacao
 ) => {
   const tiposAlimentacaoFormatadas = tipos_alimentacao
     .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
@@ -592,7 +593,8 @@ export const formatarLinhasTabelaAlimentacao = (
   }
 
   const matriculadosOuNumeroDeAlunos = () => {
-    return periodoGrupo.grupo === "Programas e Projetos"
+    return periodoGrupo.grupo === "Programas e Projetos" ||
+      ehEscolaTipoCEUGESTAO(solicitacao.escola)
       ? {
           nome: "Número de Alunos",
           name: "numero_de_alunos",
@@ -789,7 +791,9 @@ export const defaultValue = (
   row,
   semanaSelecionada,
   valoresLancamentos,
-  categoria
+  categoria,
+  form,
+  periodoGrupo
 ) => {
   let result = null;
 
@@ -811,6 +815,17 @@ export const defaultValue = (
     Number(column.dia) < 10
   ) {
     result = "Mês posterior";
+  }
+  if (form && periodoGrupo) {
+    form.change(
+      `${row.name}__dia_${column.dia}__categoria_${
+        categoria.id
+      }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+        0,
+        5
+      )}`,
+      result
+    );
   }
 
   return result;
