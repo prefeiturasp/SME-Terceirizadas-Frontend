@@ -38,7 +38,10 @@ export const InputText = (props) => {
     exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas,
     exibeTooltipKitLancheSolAlimentacoes,
     exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas,
-    exibeTooltipLancheEmergencialSolAlimentacoes,
+    exibeTooltipLancheEmergencialNaoAutorizado,
+    exibeTooltipLancheEmergencialAutorizado,
+    exibeTooltipLancheEmergencialZeroAutorizado,
+    exibeTooltipLancheEmergencialZeroAutorizadoJustificado,
     exibeTooltipFrequenciaZeroTabelaEtec,
     exibeTooltipLancheEmergTabelaEtec,
     exibeTooltipRepeticao,
@@ -178,13 +181,37 @@ export const InputText = (props) => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
-      {exibeTooltipLancheEmergencialSolAlimentacoes && (
+      {exibeTooltipLancheEmergencialNaoAutorizado && (
         <Tooltip
           title={
             "Não há autorização para oferta de Lanche Emergencial. Justifique na Observação para análise de CODAE."
           }
         >
           <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipLancheEmergencialZeroAutorizado &&
+        !exibeTooltipLancheEmergencialZeroAutorizadoJustificado && (
+          <Tooltip
+            title={
+              "Há autorização de Lanche Emergencial para esta data. Justifique a ausência do lançamento."
+            }
+          >
+            <i className="fas fa-info icone-info-warning" />
+          </Tooltip>
+        )}
+      {exibeTooltipLancheEmergencialZeroAutorizadoJustificado && (
+        <Tooltip title={"Há autorização de Lanche Emergencial para esta data."}>
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
+      {exibeTooltipLancheEmergencialAutorizado && (
+        <Tooltip
+          title={
+            "Há autorização de Lanche Emergencial para esta data. Informe a quantidade ofertada."
+          }
+        >
+          <i className="fas fa-info icone-info-success" />
         </Tooltip>
       )}
       {exibeTooltipFrequenciaZeroTabelaEtec && (
@@ -236,7 +263,8 @@ export const InputText = (props) => {
             exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas ||
             exibeTooltipKitLancheSolAlimentacoes ||
             exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas ||
-            exibeTooltipLancheEmergencialSolAlimentacoes ||
+            exibeTooltipLancheEmergencialNaoAutorizado ||
+            exibeTooltipLancheEmergencialZeroAutorizado ||
             exibeTooltipFrequenciaZeroTabelaEtec ||
             exibeTooltipLancheEmergTabelaEtec)
             ? "border-warning"
