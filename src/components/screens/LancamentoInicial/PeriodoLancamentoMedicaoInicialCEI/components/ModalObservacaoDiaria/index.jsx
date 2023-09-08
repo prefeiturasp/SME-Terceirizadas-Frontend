@@ -158,6 +158,30 @@ export default ({
           )[0].valor
       );
     }
+    const updateObs = {};
+    if (
+      valoresObservacoes.find(
+        (valor) =>
+          String(valor.dia) === String(dia) &&
+          String(valor.categoria_medicao) === String(categoria)
+      )
+    ) {
+      updateObs[`${rowName}__dia_${dia}__categoria_${categoria}`] =
+        valoresObservacoes.find(
+          (valor) =>
+            String(valor.dia) === String(dia) &&
+            String(valor.categoria_medicao) === String(categoria)
+        ).valor;
+      setFormValuesAtualizados({ ...values, ...updateObs });
+      form.change(
+        `${rowName}__dia_${dia}__categoria_${categoria}`,
+        valoresObservacoes.find(
+          (valor) =>
+            String(valor.dia) === String(dia) &&
+            String(valor.categoria_medicao) === String(categoria)
+        ).valor
+      );
+    }
     setDesabilitarBotaoSalvar(true);
     closeModal();
   };

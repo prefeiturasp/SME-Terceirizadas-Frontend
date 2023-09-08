@@ -53,8 +53,10 @@ import {
   exibirTooltipSuspensoesAutorizadas,
   exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas,
   exibirTooltipKitLancheSolAlimentacoes,
-  exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas,
-  exibirTooltipLancheEmergencialSolAlimentacoes,
+  exibirTooltipLancheEmergencialNaoAutorizado,
+  exibirTooltipLancheEmergencialAutorizado,
+  exibirTooltipLancheEmergencialZeroAutorizado,
+  exibirTooltipLancheEmergencialZeroAutorizadoJustificado,
   exibirTooltipFrequenciaZeroTabelaEtec,
   exibirTooltipLancheEmergTabelaEtec,
   exibirTooltipRepeticao,
@@ -1007,23 +1009,6 @@ export default () => {
                 : kit.numero_alunos).toString();
           });
 
-        alteracoesAlimentacaoAutorizadas &&
-          ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
-          alteracoesAlimentacaoAutorizadas.forEach((alteracao) => {
-            categoria.nome.includes("SOLICITAÇÕES") &&
-              (dadosValoresAlteracoesAlimentacaoAutorizadas[
-                `lanche_emergencial__dia_${alteracao.dia}__categoria_${categoria.id}`
-              ] = dadosValoresAlteracoesAlimentacaoAutorizadas[
-                `lanche_emergencial__dia_${alteracao.dia}__categoria_${categoria.id}`
-              ]
-                ? parseInt(
-                    dadosValoresAlteracoesAlimentacaoAutorizadas[
-                      `lanche_emergencial__dia_${alteracao.dia}__categoria_${categoria.id}`
-                    ]
-                  ) + alteracao.numero_alunos
-                : alteracao.numero_alunos).toString();
-          });
-
         inclusoesEtecAutorizadas &&
           ehGrupoETECUrlParam &&
           inclusoesEtecAutorizadas.forEach((inclusao) => {
@@ -1793,14 +1778,15 @@ export default () => {
             categoria,
             kitLanchesAutorizadas
           ) ||
-          exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas(
+          exibirTooltipLancheEmergencialZeroAutorizado(
             formValuesAtualizados,
             row,
             column,
             categoria,
-            alteracoesAlimentacaoAutorizadas
+            alteracoesAlimentacaoAutorizadas,
+            validacaoDiaLetivo
           ) ||
-          exibirTooltipLancheEmergencialSolAlimentacoes(
+          exibirTooltipLancheEmergencialNaoAutorizado(
             formValuesAtualizados,
             row,
             column,
@@ -2510,19 +2496,36 @@ export default () => {
                                                           categoria,
                                                           kitLanchesAutorizadas
                                                         )}
-                                                        exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas={exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas(
+                                                        exibeTooltipLancheEmergencialNaoAutorizado={exibirTooltipLancheEmergencialNaoAutorizado(
                                                           formValuesAtualizados,
                                                           row,
                                                           column,
                                                           categoria,
                                                           alteracoesAlimentacaoAutorizadas
                                                         )}
-                                                        exibeTooltipLancheEmergencialSolAlimentacoes={exibirTooltipLancheEmergencialSolAlimentacoes(
+                                                        exibeTooltipLancheEmergencialAutorizado={exibirTooltipLancheEmergencialAutorizado(
                                                           formValuesAtualizados,
                                                           row,
                                                           column,
                                                           categoria,
-                                                          alteracoesAlimentacaoAutorizadas
+                                                          alteracoesAlimentacaoAutorizadas,
+                                                          validacaoDiaLetivo
+                                                        )}
+                                                        exibeTooltipLancheEmergencialZeroAutorizado={exibirTooltipLancheEmergencialZeroAutorizado(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          alteracoesAlimentacaoAutorizadas,
+                                                          validacaoDiaLetivo
+                                                        )}
+                                                        exibeTooltipLancheEmergencialZeroAutorizadoJustificado={exibirTooltipLancheEmergencialZeroAutorizadoJustificado(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          alteracoesAlimentacaoAutorizadas,
+                                                          validacaoDiaLetivo
                                                         )}
                                                         exibeTooltipFrequenciaZeroTabelaEtec={exibirTooltipFrequenciaZeroTabelaEtec(
                                                           formValuesAtualizados,

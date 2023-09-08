@@ -133,6 +133,7 @@ import {
   usuarioEhDilog,
   usuarioComAcessoTelaDetalharNotificacaoOcorrencia,
   usuarioComAcessoAoPainelAprovacoes,
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1468,22 +1469,19 @@ const routesConfig = [
     path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
+    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}/${constants.PERIODO_LANCAMENTO}`,
     component: PeriodoLancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
+    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}/${constants.PERIODO_LANCAMENTO_CEI}`,
     component: PeriodoLancamentoMedicaoInicialCEIPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
+    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.ACOMPANHAMENTO_DE_LANCAMENTOS}`,
@@ -1492,7 +1490,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhDRE() ||
       usuarioEhMedicao() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.CONFERENCIA_DOS_LANCAMENTOS}`,
@@ -1501,15 +1499,13 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhDRE() ||
       usuarioEhMedicao() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.DETALHAMENTO_DO_LANCAMENTO}`,
     component: DetalhamentoDoLancamentoPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
+    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,
