@@ -27,7 +27,7 @@ const ListagemPlanilhas = ({
   };
 
   return (
-    <section className="tabela-gestao-acesso">
+    <section className="tabela-carga-usuarios">
       <header>
         {filtros.modelo === "SERVIDOR"
           ? "Usuários Servidores"
