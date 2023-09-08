@@ -239,30 +239,18 @@ export const camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao = (
       `observacoes__dia_${column.dia}__categoria_${categoria.id}`
     ] &&
     categoria.nome.includes("SOLICITAÇÕES") &&
-    !lancheEmergencialValue &&
-    alteracoesAlimentacaoAutorizadas
-      .filter((alteracao) => alteracao.dia === column.dia)
-      .reduce(function (total, alteracaoAlimentacao) {
-        return total + parseInt(alteracaoAlimentacao.numero_alunos);
-      }, 0) > 0
+    lancheEmergencialValue &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === column.dia
+    ).length === 0
   ) {
     erro = true;
   }
   if (
     alteracoesAlimentacaoAutorizadas &&
-    !formValuesAtualizados[
-      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
-    ] &&
     categoria.nome.includes("SOLICITAÇÕES") &&
     lancheEmergencialValue &&
-    (alteracoesAlimentacaoAutorizadas
-      .filter((alteracao) => alteracao.dia === column.dia)
-      .reduce(function (total, alteracaoAlimentacao) {
-        return total + parseInt(alteracaoAlimentacao.numero_alunos);
-      }, 0) !== Number(lancheEmergencialValue) ||
-      alteracoesAlimentacaoAutorizadas.filter(
-        (alteracao) => alteracao.dia === column.dia
-      ).length === 0)
+    Number(lancheEmergencialValue) === 0
   ) {
     erro = true;
   }
@@ -1031,7 +1019,7 @@ export const exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizada
     );
   };
 
-export const exibirTooltipLancheEmergencialSolAlimentacoes = (
+export const exibirTooltipLancheEmergencialNaoAutorizado = (
   formValuesAtualizados,
   row,
   column,
@@ -1054,6 +1042,92 @@ export const exibirTooltipLancheEmergencialSolAlimentacoes = (
       (alteracao) => alteracao.dia === column.dia
     ).length === 0 &&
     row.name.includes("lanche_emergencial")
+  );
+};
+
+export const exibirTooltipLancheEmergencialAutorizado = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas,
+  validacaoDiaLetivo
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    !value &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ] &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    row.name.includes("lanche_emergencial") &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === column.dia
+    ).length > 0 &&
+    validacaoDiaLetivo(column.dia)
+  );
+};
+
+export const exibirTooltipLancheEmergencialZeroAutorizado = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas,
+  validacaoDiaLetivo
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ] &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    row.name.includes("lanche_emergencial") &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === column.dia
+    ).length > 0 &&
+    validacaoDiaLetivo(column.dia) &&
+    value &&
+    Number(value) === 0
+  );
+};
+
+export const exibirTooltipLancheEmergencialZeroAutorizadoJustificado = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas,
+  validacaoDiaLetivo
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ] &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    row.name.includes("lanche_emergencial") &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === column.dia
+    ).length > 0 &&
+    validacaoDiaLetivo(column.dia) &&
+    value &&
+    Number(value) === 0
   );
 };
 
