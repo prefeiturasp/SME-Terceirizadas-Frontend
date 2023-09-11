@@ -11,6 +11,7 @@ const ListagemVinculos = ({ vinculos, toggleEdicao, toggleExclusao }) => {
         <div className="grid-table header-table">
           <div>Nome Completo</div>
           <div>ID do Usuário</div>
+          <div>Nome da UE</div>
           <div>Visão</div>
           <div>Perfil de Acesso</div>
           <div />
@@ -20,6 +21,7 @@ const ListagemVinculos = ({ vinculos, toggleEdicao, toggleExclusao }) => {
             <div className="grid-table body-table" key={index}>
               <div>{vinculo.nome_usuario}</div>
               <div>{vinculo.username}</div>
+              <div>{vinculo.nome_escola || "--"}</div>
               <div>{vinculo.visao_perfil}</div>
               <div>{vinculo.nome_perfil}</div>
               <div className="flex-container">
