@@ -932,3 +932,21 @@ export const desabilitarBotaoColunaObservacoes = (
         )))
   );
 };
+
+export const todosCamposDeRepeticaoSobremesaDocePreenchidos = (
+  diasSobremesaDoce,
+  formValuesAtualizados,
+  categoriasDeMedicao
+) => {
+  const categoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
+    categoria.nome.includes("ALIMENTAÇÃO")
+  );
+  return diasSobremesaDoce.every(
+    (dataSobremesa) =>
+      formValuesAtualizados[
+        `repeticao_sobremesa__dia_${dataSobremesa.split("-")[2]}__categoria_${
+          categoriaAlimentacao.id
+        }`
+      ]
+  );
+};
