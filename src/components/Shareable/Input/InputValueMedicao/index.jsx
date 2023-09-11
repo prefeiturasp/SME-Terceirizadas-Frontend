@@ -28,7 +28,8 @@ export const InputText = (props) => {
     icone,
     toUppercaseActive,
     apenasNumeros,
-    exibeTooltipDiaSobremesaDoce,
+    exibeTooltipPadraoRepeticaoDiasSobremesaDoce,
+    exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero,
     exibeTooltipErroQtdMaiorQueAutorizado,
     numeroDeInclusoesAutorizadas,
     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo,
@@ -98,13 +99,18 @@ export const InputText = (props) => {
           {label}
         </label>,
       ]}
-      {exibeTooltipDiaSobremesaDoce && (
+      {exibeTooltipPadraoRepeticaoDiasSobremesaDoce && (
+        <Tooltip title={"Dia de sobremesa doce."}>
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
+      {exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero && (
         <Tooltip
           title={
             "Dia de sobremesa doce. Justifique o lançamento de repetição nas observações."
           }
         >
-          <i className="fas fa-info icone-info-success" />
+          <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
       {exibeTooltipRepeticao && (
@@ -266,7 +272,8 @@ export const InputText = (props) => {
             exibeTooltipLancheEmergencialNaoAutorizado ||
             exibeTooltipLancheEmergencialZeroAutorizado ||
             exibeTooltipFrequenciaZeroTabelaEtec ||
-            exibeTooltipLancheEmergTabelaEtec)
+            exibeTooltipLancheEmergTabelaEtec ||
+            exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero)
             ? "border-warning"
             : ""
         }`}

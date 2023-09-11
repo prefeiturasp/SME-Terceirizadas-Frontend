@@ -60,6 +60,8 @@ import {
   exibirTooltipFrequenciaZeroTabelaEtec,
   exibirTooltipLancheEmergTabelaEtec,
   exibirTooltipRepeticao,
+  exibirTooltipPadraoRepeticaoDiasSobremesaDoce,
+  exibirTooltipRepeticaoDiasSobremesaDoceDiferenteZero,
   validacoesTabelaAlimentacao,
   validacoesTabelasDietas,
   validarFormulario,
@@ -80,6 +82,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
   textoBotaoObservacao,
+  todosCamposDeRepeticaoSobremesaDocePreenchidos,
   valorZeroFrequencia,
 } from "./helper";
 import {
@@ -2420,24 +2423,22 @@ export default () => {
                                                           inclusoesAutorizadas,
                                                           categoriasDeMedicao
                                                         )}
-                                                        exibeTooltipDiaSobremesaDoce={
-                                                          row.name ===
-                                                            "repeticao_sobremesa" &&
-                                                          diasSobremesaDoce.includes(
-                                                            `${new Date(
-                                                              location.state.mesAnoSelecionado
-                                                            ).getFullYear()}-${(
-                                                              new Date(
-                                                                location.state.mesAnoSelecionado
-                                                              ).getMonth() + 1
-                                                            )
-                                                              .toString()
-                                                              .padStart(
-                                                                2,
-                                                                "0"
-                                                              )}-${column.dia}`
-                                                          )
-                                                        }
+                                                        exibeTooltipPadraoRepeticaoDiasSobremesaDoce={exibirTooltipPadraoRepeticaoDiasSobremesaDoce(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          diasSobremesaDoce,
+                                                          location
+                                                        )}
+                                                        exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero={exibirTooltipRepeticaoDiasSobremesaDoceDiferenteZero(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          diasSobremesaDoce,
+                                                          location
+                                                        )}
                                                         exibeTooltipRepeticao={exibirTooltipRepeticao(
                                                           formValuesAtualizados,
                                                           row,
@@ -2641,7 +2642,12 @@ export default () => {
                             location.state.status_periodo ===
                               "MEDICAO_APROVADA_PELA_DRE") ||
                           disableBotaoSalvarLancamentos ||
-                          !calendarioMesConsiderado
+                          !calendarioMesConsiderado ||
+                          !todosCamposDeRepeticaoSobremesaDocePreenchidos(
+                            diasSobremesaDoce,
+                            formValuesAtualizados,
+                            categoriasDeMedicao
+                          )
                         }
                         exibirTooltip={exibirTooltip}
                         tooltipTitulo="Existem campos a serem corrigidos. Realize as correções para salvar."
