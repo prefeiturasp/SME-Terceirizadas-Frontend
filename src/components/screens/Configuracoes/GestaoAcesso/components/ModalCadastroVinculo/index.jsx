@@ -129,6 +129,7 @@ const ModalCadastroVinculo = ({
         ? formataCPFCensurado(usuarioEOL.cpf)
         : undefined;
       values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
+      values.nome_escola = usuarioEOL.nome_escola;
 
       let t = document.getElementById("inputRF");
       t.blur();
@@ -299,7 +300,7 @@ const ModalCadastroVinculo = ({
                             validate={required}
                           />
                         </div>
-                        <div className="col-6 pl-0">
+                        <div className="col-1 pl-0">
                           <Botao
                             texto=""
                             icon="fas fa-search"
@@ -307,6 +308,15 @@ const ModalCadastroVinculo = ({
                             onClick={() => buscaEOL(values)}
                             style={BUTTON_STYLE.GREEN}
                             className="botao-rf"
+                          />
+                        </div>
+                        <div className="col-5">
+                          <Field
+                            component={InputText}
+                            label="UE"
+                            name="nome_escola"
+                            className="input-busca-produto"
+                            disabled={true}
                           />
                         </div>
                       </div>
