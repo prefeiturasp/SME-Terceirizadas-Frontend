@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 // Redux
@@ -43,8 +42,6 @@ if (process.env.IS_DOCKER_ENVIRONMENT === true) {
   const SENTRY_URL = "SENTRY_URL_REPLACE_ME";
   Sentry.init({ dsn: SENTRY_URL });
 }
-
-toast.configure();
 
 // see https://github.com/zalmoxisus/redux-devtools-extension
 let devTools = undefined;
