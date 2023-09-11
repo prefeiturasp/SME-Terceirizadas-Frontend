@@ -204,7 +204,6 @@ export default () => {
     const response = await getListaDiasSobremesaDoce(params);
     if (response.status === HTTP_STATUS.OK) {
       setDiasSobremesaDoce(response.data);
-      setDiasSobremesaDoce(["2023-07-04", "2023-07-06", "2023-07-07"]);
     } else {
       toastError("Erro ao carregar dias de sobremesa doce");
     }
