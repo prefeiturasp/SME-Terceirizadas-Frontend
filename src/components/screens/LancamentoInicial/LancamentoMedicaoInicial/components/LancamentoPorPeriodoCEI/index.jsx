@@ -31,7 +31,7 @@ export default ({
       nome_periodo_grupo: "MANHA",
       status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
       qtd_alunos: 100,
-      qtd_refeicoes_diarias: 3,
+      qtd_refeicoes_diarias: 2,
       valor_total: 200,
     },
     {
