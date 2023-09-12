@@ -338,73 +338,64 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
   }
 };
 
-export const formatarLinhasTabelaAlimentacao = (
-  tipos_alimentacao,
+export const formatarLinhasTabelaAlimentacaoCEI = (
+  response_log_matriculados_por_faixa_etaria_dia,
   periodoGrupo
 ) => {
-  const tiposAlimentacaoFormatadas = tipos_alimentacao
-    .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
-    .map((alimentacao) => {
-      return {
-        ...alimentacao,
-        name: alimentacao.nome
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase()
-          .replaceAll(/ /g, "_"),
-      };
-    });
-  const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
-    (ali) => ali.nome === "Refeição"
-  );
-  if (indexRefeicao !== -1) {
-    tiposAlimentacaoFormatadas[indexRefeicao].nome = "Refeição 1ª Oferta";
-    tiposAlimentacaoFormatadas.splice(indexRefeicao + 1, 0, {
-      nome: "Repetição Refeição",
-      name: "repeticao_refeicao",
-      uuid: null,
-    });
-  }
+  let faixas_etarias_alimentacao = [];
+  let faixas_etarias_objs_alimentacao = [];
+  let linhasTabelaAlimentacaoCEI = [];
 
-  const indexSobremesa = tiposAlimentacaoFormatadas.findIndex(
-    (ali) => ali.nome === "Sobremesa"
-  );
-  if (indexSobremesa !== -1) {
-    tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1º Oferta";
-    tiposAlimentacaoFormatadas.splice(indexSobremesa + 1, 0, {
-      nome: "Repetição Sobremesa",
-      name: "repeticao_sobremesa",
-      uuid: null,
-    });
-  }
-
-  const matriculadosOuNumeroDeAlunos = () => {
-    return periodoGrupo.grupo === "Programas e Projetos"
-      ? {
-          nome: "Número de Alunos",
-          name: "numero_de_alunos",
-          uuid: null,
-        }
-      : {
-          nome: "Matriculados",
-          name: "matriculados",
-          uuid: null,
-        };
-  };
-
-  tiposAlimentacaoFormatadas.unshift(matriculadosOuNumeroDeAlunos(), {
-    nome: "Frequência",
-    name: "frequencia",
-    uuid: null,
+  response_log_matriculados_por_faixa_etaria_dia.data.forEach((log) => {
+    !faixas_etarias_alimentacao.find(
+      (faixa) => faixa === log.faixa_etaria.__str__
+    ) && faixas_etarias_alimentacao.push(log.faixa_etaria.__str__);
   });
 
-  tiposAlimentacaoFormatadas.push({
+  if (["MANHA", "TARDE"].includes(periodoGrupo)) {
+    faixas_etarias_alimentacao = faixas_etarias_alimentacao.filter(
+      (faixa) => faixa === "04 anos a 06 anos"
+    );
+  }
+
+  faixas_etarias_alimentacao.forEach((faixa) => {
+    const log = response_log_matriculados_por_faixa_etaria_dia.data.find(
+      (log) => log.faixa_etaria.__str__ === faixa
+    );
+    log &&
+      faixas_etarias_objs_alimentacao.push({
+        inicio: log.faixa_etaria.inicio,
+        __str__: log.faixa_etaria.__str__,
+        uuid: log.faixa_etaria.uuid,
+      });
+  });
+
+  faixas_etarias_objs_alimentacao
+    .sort((a, b) => a.inicio - b.inicio)
+    .forEach((faixa_obj) => {
+      linhasTabelaAlimentacaoCEI.push(
+        {
+          nome: "Matriculados",
+          name: "matriculados",
+          uuid: faixa_obj.uuid,
+          faixa_etaria: faixa_obj.__str__,
+        },
+        {
+          nome: "Frequência",
+          name: "frequencia",
+          uuid: faixa_obj.uuid,
+          faixa_etaria: faixa_obj.__str__,
+        }
+      );
+    });
+  linhasTabelaAlimentacaoCEI.push({
     nome: "Observações",
     name: "observacoes",
     uuid: null,
+    faixa_etaria: null,
   });
 
-  return tiposAlimentacaoFormatadas;
+  return linhasTabelaAlimentacaoCEI;
 };
 
 export const formatarLinhasTabelasDietas = (tipos_alimentacao) => {

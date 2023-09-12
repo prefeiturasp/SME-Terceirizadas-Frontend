@@ -48,6 +48,7 @@ import {
   desabilitarBotaoColunaObservacoes,
   desabilitarField,
   deveExistirObservacao,
+  formatarLinhasTabelaAlimentacaoCEI,
   formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
   textoBotaoObservacao,
@@ -164,8 +165,6 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       const ano = getYear(mesAnoSelecionado);
       let response_log_matriculados_por_faixa_etaria_dia = [];
       let response_log_dietas_autorizadas_cei = [];
-      let faixas_etarias_alimentacao = [];
-      let faixas_etarias_objs_alimentacao = [];
       let faixas_etarias_dieta = [];
       let faixas_etarias_objs_dieta = [];
 
@@ -185,51 +184,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         response_log_matriculados_por_faixa_etaria_dia.data
       );
 
-      response_log_matriculados_por_faixa_etaria_dia.data.forEach((log) => {
-        !faixas_etarias_alimentacao.find(
-          (faixa) => faixa === log.faixa_etaria.__str__
-        ) && faixas_etarias_alimentacao.push(log.faixa_etaria.__str__);
-      });
-
-      faixas_etarias_alimentacao.forEach((faixa) => {
-        const log = response_log_matriculados_por_faixa_etaria_dia.data.find(
-          (log) => log.faixa_etaria.__str__ === faixa
-        );
-        log &&
-          faixas_etarias_objs_alimentacao.push({
-            inicio: log.faixa_etaria.inicio,
-            __str__: log.faixa_etaria.__str__,
-            uuid: log.faixa_etaria.uuid,
-          });
-      });
-
-      let linhasTabelaAlimentacaoCEI = [];
-
-      faixas_etarias_objs_alimentacao
-        .sort((a, b) => a.inicio - b.inicio)
-        .forEach((faixa_obj) => {
-          linhasTabelaAlimentacaoCEI.push(
-            {
-              nome: "Matriculados",
-              name: "matriculados",
-              uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__,
-            },
-            {
-              nome: "Frequência",
-              name: "frequencia",
-              uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__,
-            }
-          );
-        });
-      linhasTabelaAlimentacaoCEI.push({
-        nome: "Observações",
-        name: "observacoes",
-        uuid: null,
-        faixa_etaria: null,
-      });
-
+      const linhasTabelaAlimentacaoCEI = formatarLinhasTabelaAlimentacaoCEI(
+        response_log_matriculados_por_faixa_etaria_dia,
+        periodoGrupo
+      );
       setTabelaAlimentacaoCEIRows(linhasTabelaAlimentacaoCEI);
 
       const params_dietas_autorizadas_cei = {
