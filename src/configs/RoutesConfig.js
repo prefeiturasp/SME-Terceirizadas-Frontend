@@ -1713,7 +1713,10 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ALTERACAO_CRONOGRAMA}`,
     component: AlterarCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor(),
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhPreRecebimento() ||
+      usuarioEhEmpresaFornecedor(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_ALTERACAO_CRONOGRAMA}`,
