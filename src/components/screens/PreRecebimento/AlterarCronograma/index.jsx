@@ -373,9 +373,7 @@ export default ({ analiseSolicitacao }) => {
                           duplicados={duplicados}
                           restante={restante}
                           unidadeMedida={values.unidade_medida}
-                          fornecedor={
-                            usuarioEhEmpresaFornecedor() ? true : false
-                          }
+                          ehAlteracao={true}
                         />
                       </>
                     )}
