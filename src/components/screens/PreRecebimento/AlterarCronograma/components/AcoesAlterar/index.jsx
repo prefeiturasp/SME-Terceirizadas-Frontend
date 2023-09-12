@@ -16,6 +16,7 @@ import ModalEnviarSolicitacao from "../Modals/ModalEnviarSolicitacao";
 import ModalAnalise from "../Modals/ModalAnalise";
 import ModalAnaliseDinutre from "../Modals/ModalAnaliseDinutre";
 import ModalAnaliseDilog from "../Modals/ModalAnaliseDilog";
+import ModalEnviarAlteracao from "../Modals/ModalEnviarAlteracao";
 
 export default ({
   handleSubmit,
@@ -68,7 +69,24 @@ export default ({
           }}
         />
       )}
+      {usuarioEhCronograma() && !solicitacaoAlteracaoCronograma && (
+        <Botao
+          texto="Enviar Alteração"
+          type={BUTTON_TYPE.BUTTON}
+          disabled={!podeSubmeter}
+          style={BUTTON_STYLE.GREEN}
+          className="float-right ml-3"
+          onClick={() => {
+            if (!podeSubmeter) {
+              toastError("Selecione os campos obrigatórios");
+              return;
+            }
+            handleShow();
+          }}
+        />
+      )}
       {usuarioEhCronograma() &&
+        solicitacaoAlteracaoCronograma &&
         solicitacaoAlteracaoCronograma.status === "Em análise" && (
           <Botao
             texto="Enviar DINUTRE"
@@ -121,7 +139,17 @@ export default ({
           handleSim={handleSim}
         />
       )}
-      {usuarioEhCronograma() && (
+
+      {usuarioEhCronograma() && !solicitacaoAlteracaoCronograma && (
+        <ModalEnviarAlteracao
+          show={show}
+          handleClose={handleClose}
+          loading={loading}
+          handleSim={handleSim}
+        />
+      )}
+
+      {usuarioEhCronograma() && solicitacaoAlteracaoCronograma && (
         <ModalAnalise
           show={show}
           setShow={setShow}

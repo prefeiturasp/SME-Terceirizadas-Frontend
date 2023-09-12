@@ -13,12 +13,14 @@ import { Form, Field, FormSpy } from "react-final-form";
 import DadosCronograma from "../CronogramaEntrega/components/DadosCronograma";
 import AnaliseDilogDiretoria from "./components/AnaliseDilogDiretoria";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
+import { InputText } from "components/Shareable/Input/InputText";
 import "./styles.scss";
 import AcoesAlterar from "./components/AcoesAlterar";
 import {
   prepararPayloadAnaliseCronograma,
   prepararPayloadCronograma,
 } from "./helpers";
+import { formataMilhar } from "helpers/utilities";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   CRONOGRAMA_ENTREGA,
@@ -132,7 +134,7 @@ export default ({ analiseSolicitacao }) => {
       values[`quantidade_${index}`] = etapa.quantidade;
       values[`total_embalagens_${index}`] = etapa.total_embalagens;
     });
-    values.quantidade_total = cronograma.qtd_total_programada;
+    values.quantidade_total = formataMilhar(cronograma.qtd_total_programada);
     values.unidade_medida = cronograma.unidade_medida;
     setInitialValues(values);
   };
@@ -148,10 +150,18 @@ export default ({ analiseSolicitacao }) => {
     usuarioEhCronograma();
 
   const cadastraAlteracao = async (values) => {
-    const payload = prepararPayloadCronograma(cronograma, values, etapas);
+    const payload = prepararPayloadCronograma(
+      cronograma,
+      values,
+      etapas,
+      recebimentos
+    );
     await cadastraSolicitacaoAlteracaoCronograma(payload)
       .then(() => {
-        toastSuccess("Solicitação de alteração salva com sucesso!");
+        let msg = usuarioEhEmpresaFornecedor()
+          ? "Solicitação de alteração salva com sucesso!"
+          : "Alteração enviada com sucesso!";
+        toastSuccess(msg);
         history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
       })
       .catch(() => {
@@ -340,6 +350,22 @@ export default ({ analiseSolicitacao }) => {
                         <div className="head-green">
                           Informe as Alterações Necessárias
                         </div>
+                        {usuarioEhCronograma() && (
+                          <div className="row">
+                            <div className="col-4">
+                              <Field
+                                component={InputText}
+                                label="Quantidade Total Programada"
+                                name="quantidade_total"
+                                className="input-busca-produto"
+                                disabled={false}
+                                agrupadorMilhar
+                                required
+                                placeholder="Informe a Quantidade Total"
+                              />
+                            </div>
+                          </div>
+                        )}
                         <FormEtapa
                           etapas={etapas}
                           setEtapas={setEtapas}
@@ -347,7 +373,9 @@ export default ({ analiseSolicitacao }) => {
                           duplicados={duplicados}
                           restante={restante}
                           unidadeMedida={values.unidade_medida}
-                          fornecedor={true}
+                          fornecedor={
+                            usuarioEhEmpresaFornecedor() ? true : false
+                          }
                         />
                       </>
                     )}
@@ -358,7 +386,11 @@ export default ({ analiseSolicitacao }) => {
                       <Field
                         component={TextArea}
                         name="justificativa"
-                        placeholder="Escreva o motivo da solicitação de alteração"
+                        placeholder={
+                          usuarioEhCronograma()
+                            ? "Escreva o motivo da alteração"
+                            : "Escreva o motivo da solicitação de alteração"
+                        }
                         className="input-busca-produto"
                         disabled={solicitacaoAlteracaoCronograma !== null}
                         validate={textAreaRequired}
@@ -425,12 +457,17 @@ export default ({ analiseSolicitacao }) => {
                         )}
                       </>
                     )}
-                    {analiseSolicitacao && analiseCronograma() && (
+                    {((!analiseSolicitacao && usuarioEhCronograma()) ||
+                      (analiseSolicitacao && analiseCronograma())) && (
                       <div className="accordion mt-1" id="accordionCronograma">
                         <FormRecebimento
                           values={values}
                           form={form}
-                          etapas={solicitacaoAlteracaoCronograma.etapas_novas}
+                          etapas={
+                            analiseSolicitacao
+                              ? solicitacaoAlteracaoCronograma.etapas_novas
+                              : etapas
+                          }
                           recebimentos={recebimentos}
                           setRecebimentos={setRecebimentos}
                         />
