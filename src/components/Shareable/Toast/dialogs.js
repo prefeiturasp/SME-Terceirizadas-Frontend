@@ -1,14 +1,9 @@
-import { Slide, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "./style.scss";
 
 let baseConfig = {
-  position: "top-center",
-  autoClose: 6000,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  transition: Slide,
+  position: toast.POSITION.TOP_CENTER,
+  icon: false,
 };
 
 export const toastSuccess = (message) => {

@@ -34,7 +34,10 @@ export default ({ solicitacao, somenteLeitura }) => {
                 <tr key={index}>
                   {somenteLeitura ? (
                     <td
-                      className={`borda-crono ${pintaTabela("etapa", index)}`}
+                      className={`borda-crono ${pintaTabela(
+                        "numero_empenho",
+                        index
+                      )}`}
                     >
                       {etapa.numero_empenho ? etapa.numero_empenho : "----"}
                     </td>
