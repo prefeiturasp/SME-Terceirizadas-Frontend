@@ -89,24 +89,14 @@ export default ({
               </div>
             </div>
             <div className="row mt-3">
-              <div className="col">
-                <Field
-                  component={InputText}
-                  label="Nome do Distribuidor"
-                  name="nome_distribuidor"
-                  placeholder="Digite o Nome do Distribuidor"
-                  className="input-busca-produto"
-                />
-              </div>
-              <div className="col">
+            <div className="col">
                 <Field
                   label="Motivo de Alteração"
                   component={MultiSelect}
                   disableSearch
                   name="motivos"
                   multiple
-                  nomeDoItemNoPlural="classificações"
-                  pluralFeminino
+                  nomeDoItemNoPlural="status"
                   options={[
                     {
                       value: "ALTERAR_DATA_ENTREGA",
@@ -122,6 +112,15 @@ export default ({
                     },
                     { value: "OUTROS", label: "Outros" },
                   ]}
+                />
+              </div>
+              <div className="col">
+                <Field
+                  component={InputText}
+                  label="Nome do Distribuidor"
+                  name="nome_distribuidor"
+                  placeholder="Digite o Nome do Distribuidor"
+                  className="input-busca-produto"
                 />
               </div>
             </div>
