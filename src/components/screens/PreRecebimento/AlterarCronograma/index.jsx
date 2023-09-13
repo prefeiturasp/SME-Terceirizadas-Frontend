@@ -42,6 +42,8 @@ import { textAreaRequired } from "helpers/fieldValidators";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 import TabelaFormAlteracao from "./components/TabelaFormAlteracao";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
+import { fornecedorCienteAlteracaoCodae } from "../../../../services/cronograma.service";
+import { SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR } from "../../../../configs/constants";
 
 export default ({ analiseSolicitacao }) => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -58,6 +60,12 @@ export default ({ analiseSolicitacao }) => {
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [carregando, setCarregando] = useState(false);
   const history = useHistory();
+
+  const solicitacaoCodae =
+    solicitacaoAlteracaoCronograma &&
+    ["Alteração Enviada ao Fornecedor", "Fornecedor Ciente"].includes(
+      solicitacaoAlteracaoCronograma.status
+    );
 
   const onChangeCampos = (e) => {
     setAprovacaoDinutre(e.target.value);
@@ -216,11 +224,34 @@ export default ({ analiseSolicitacao }) => {
     return aprovacaoDilog !== true && !values.justificativa_dilog;
   };
 
+  const cienciaFornecedor = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    await fornecedorCienteAlteracaoCodae(uuid)
+      .then(() => {
+        toastSuccess("Ciência da alteração gravada com sucesso!");
+        history.push(
+          `/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR}`
+        );
+      })
+      .catch(() => {
+        toastError("Ocorreu um erro ao salvar a Ciência");
+      });
+  };
+
   const defineSubmit = (values) => {
     if (usuarioEhDinutreDiretoria()) {
       analiseDinutre(values, aprovacaoDinutre);
     } else if (usuarioEhDilogDiretoria()) {
       analiseDilog(values, aprovacaoDilog);
+    } else if (
+      usuarioEhEmpresaFornecedor() &&
+      solicitacaoAlteracaoCronograma &&
+      solicitacaoAlteracaoCronograma.status ===
+        "Alteração Enviada ao Fornecedor"
+    ) {
+      cienciaFornecedor();
     } else {
       cadastraAlteracao(values);
     }
@@ -337,7 +368,9 @@ export default ({ analiseSolicitacao }) => {
                     {analiseSolicitacao && (
                       <>
                         <p className="titulo-laranja">
-                          Solicitação de Alteração do Fornecedor
+                          {solicitacaoCodae
+                            ? "Alteração da CODAE"
+                            : "Solicitação de Alteração do Fornecedor"}
                         </p>
                         <TabelaFormAlteracao
                           solicitacao={solicitacaoAlteracaoCronograma}
