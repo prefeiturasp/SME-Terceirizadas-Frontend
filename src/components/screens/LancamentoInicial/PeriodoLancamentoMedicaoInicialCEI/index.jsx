@@ -51,6 +51,7 @@ import {
   formatarLinhasTabelaAlimentacaoCEI,
   formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
+  getSolicitacoesInclusaoAutorizadasAsync,
   textoBotaoObservacao,
 } from "./helper";
 import {
@@ -87,6 +88,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const [tabelaAlimentacaoCEIRows, setTabelaAlimentacaoCEIRows] = useState([]);
   const [tabelaDietaCEIRows, setTabelaDietaCEIRows] = useState([]);
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState([]);
+  const [inclusoesAutorizadas, setInclusoesAutorizadas] = useState(null);
+  const [exibirTooltipAoSalvar, setExibirTooltipAoSalvar] = useState(false);
+  const [inputsInclusaoComErro, setInputsInclusaoComErro] = useState([]);
   const [
     valoresMatriculadosFaixaEtariaDia,
     setValoresMatriculadosFaixaEtariaDia,
@@ -163,6 +167,20 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
       const mes = format(mesAnoSelecionado, "MM");
       const ano = getYear(mesAnoSelecionado);
+
+      let response_inclusoes_autorizadas = [];
+      response_inclusoes_autorizadas =
+        await getSolicitacoesInclusaoAutorizadasAsync(
+          escola.uuid,
+          mes,
+          ano,
+          location && location.state && location.state.periodosInclusaoContinua
+            ? Object.keys(location.state.periodosInclusaoContinua)
+            : [periodo],
+          location
+        );
+      setInclusoesAutorizadas(response_inclusoes_autorizadas);
+
       let response_log_matriculados_por_faixa_etaria_dia = [];
       let response_log_dietas_autorizadas_cei = [];
       let faixas_etarias_dieta = [];
@@ -633,6 +651,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
   const onSubmitObservacao = async (values, dia, categoria, errors) => {
     let valoresMedicao = [];
+    if (exibirTooltipAoSalvar) {
+      validarCamposComInclusoesDeAlimentacaoSemObservacao(values);
+    }
     const valuesMesmoDiaDaObservacao = Object.fromEntries(
       Object.entries(values).filter(([key]) =>
         key.includes(`__dia_${dia}__categoria_${categoria}`)
@@ -744,6 +765,80 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     setExibirTooltip(false);
   };
 
+  const validarCamposComInclusoesDeAlimentacaoSemObservacao = (values) => {
+    const categoria = categoriasDeMedicao.find(
+      (categoria) => categoria.nome === "ALIMENTAÇÃO"
+    );
+    let listaInputsComInclusoes = [];
+    let diasFaixasComErro = [];
+    ["frequencia", "observacoes"].forEach((nomeRow) => {
+      for (
+        let idxInclusao = 0;
+        idxInclusao < inclusoesAutorizadas.length;
+        idxInclusao++
+      ) {
+        const inclusao = inclusoesAutorizadas[idxInclusao];
+        for (
+          let idxFaixaEtaria = 0;
+          idxFaixaEtaria < inclusao.faixas_etarias.length;
+          idxFaixaEtaria++
+        ) {
+          const faixa_etaria = inclusao.faixas_etarias[idxFaixaEtaria];
+          let nomeInput = "";
+          if (nomeRow === "frequencia") {
+            nomeInput = `${nomeRow}__faixa_${faixa_etaria}__dia_${inclusao.dia}__categoria_${categoria.id}`;
+          } else {
+            nomeInput = `${nomeRow}__dia_${inclusao.dia}__categoria_${categoria.id}`;
+          }
+          listaInputsComInclusoes.push({
+            nome: nomeInput,
+            valor: values[nomeInput],
+          });
+        }
+      }
+    });
+    for (
+      let idxInclusao = 0;
+      idxInclusao < inclusoesAutorizadas.length;
+      idxInclusao++
+    ) {
+      const inclusao = inclusoesAutorizadas[idxInclusao];
+      const inputFrequencias = listaInputsComInclusoes.filter(
+        (inputComInclusao) =>
+          inputComInclusao.nome.includes("frequencia") &&
+          inputComInclusao.nome.includes(`dia_${inclusao.dia}`)
+      );
+      const observacaoDaColuna = listaInputsComInclusoes.find(
+        (inputComInclusao) =>
+          inputComInclusao.nome.includes("observacoes") &&
+          inputComInclusao.nome.includes(`dia_${inclusao.dia}`)
+      );
+      const frequenciasNaoPreenchidas = inputFrequencias.filter(
+        (inputFrequencia) => !inputFrequencia.valor
+      );
+      if (frequenciasNaoPreenchidas.length > 0 && !observacaoDaColuna.valor) {
+        frequenciasNaoPreenchidas.forEach((inputFrequencia) =>
+          diasFaixasComErro.push(inputFrequencia)
+        );
+        diasFaixasComErro.push(observacaoDaColuna);
+      }
+    }
+
+    const frequenciasDessaSemana = diasFaixasComErro.filter(
+      (element) => document.getElementsByName(element.nome).length
+    );
+
+    if (frequenciasDessaSemana.length > 0) {
+      setInputsInclusaoComErro(diasFaixasComErro);
+      setExibirTooltipAoSalvar(true);
+      return true;
+    } else {
+      setInputsInclusaoComErro([]);
+      setExibirTooltipAoSalvar(false);
+      return false;
+    }
+  };
+
   const onSubmit = async (
     values,
     dadosValoresInclusoesAutorizadasState,
@@ -751,6 +846,11 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     chamarFuncaoFormatar = true,
     ehCorrecao = false
   ) => {
+    if (validarCamposComInclusoesDeAlimentacaoSemObservacao(values)) {
+      return toastError(
+        "Existe Inclusões autorizadas na tabela de Lançamento de Alimentações. Justifique a ausência do apontamento!"
+      );
+    }
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     let valuesClone = deepCopy(values);
@@ -987,6 +1087,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     }
     desabilitaTooltip(values);
 
+    if (exibirTooltipAoSalvar) {
+      validarCamposComInclusoesDeAlimentacaoSemObservacao(values);
+    }
+
     if (deveExistirObservacao(categoria.id, values, calendarioMesConsiderado)) {
       return;
     }
@@ -1015,6 +1119,15 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     };
 
   const classNameFieldTabelaAlimentacao = (row, column, categoria) => {
+    const resultado = inclusoesAutorizadas.some(
+      (inclusao) =>
+        String(inclusao.dia) === String(column.dia) &&
+        inclusao.faixas_etarias.includes(row.uuid) &&
+        row.name === "frequencia" &&
+        categoria.nome === "ALIMENTAÇÃO"
+    );
+    if (resultado) return "";
+
     if (
       Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
         String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
@@ -1291,7 +1404,20 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                   )}
                                                   type={BUTTON_TYPE.BUTTON}
                                                   style={
-                                                    botaoAdicionarObrigatorioTabelaAlimentacao()
+                                                    exibirTooltipAoSalvar &&
+                                                    inputsInclusaoComErro.some(
+                                                      (inputComErro) =>
+                                                        inputComErro.nome ===
+                                                        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+                                                    ) &&
+                                                    botaoAdicionarObrigatorioTabelaAlimentacao(
+                                                      column,
+                                                      categoria,
+                                                      inclusoesAutorizadas,
+                                                      formValuesAtualizados[
+                                                        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+                                                      ]
+                                                    )
                                                       ? textoBotaoObservacao(
                                                           formValuesAtualizados[
                                                             `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
@@ -1352,7 +1478,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                     formValuesAtualizados,
                                                     mesAnoConsiderado,
                                                     mesAnoDefault,
-                                                    dadosValoresInclusoesAutorizadasState,
+                                                    inclusoesAutorizadas,
                                                     validacaoDiaLetivo,
                                                     validacaoSemana,
                                                     location,
@@ -1365,6 +1491,26 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                     column,
                                                     row
                                                   )}
+                                                  exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI={
+                                                    inclusoesAutorizadas.some(
+                                                      (inclusao) =>
+                                                        String(inclusao.dia) ===
+                                                          String(column.dia) &&
+                                                        inclusao.faixas_etarias.includes(
+                                                          row.uuid
+                                                        ) &&
+                                                        row.name ===
+                                                          "frequencia" &&
+                                                        categoria.nome ===
+                                                          "ALIMENTAÇÃO"
+                                                    ) &&
+                                                    inputsInclusaoComErro.some(
+                                                      (inputComErro) =>
+                                                        inputComErro.nome ===
+                                                        `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
+                                                    ) &&
+                                                    exibirTooltipAoSalvar
+                                                  }
                                                   validate={fieldValidationsTabelasCEI(
                                                     row.name,
                                                     column.dia,
