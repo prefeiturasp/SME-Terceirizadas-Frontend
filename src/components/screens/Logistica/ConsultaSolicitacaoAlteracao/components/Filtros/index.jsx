@@ -89,7 +89,7 @@ export default ({
               </div>
             </div>
             <div className="row mt-3">
-            <div className="col">
+              <div className="col">
                 <Field
                   label="Motivo de Alteração"
                   component={MultiSelect}
