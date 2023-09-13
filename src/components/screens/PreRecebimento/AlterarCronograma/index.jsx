@@ -21,6 +21,7 @@ import {
   prepararPayloadCronograma,
 } from "./helpers";
 import { formataMilhar } from "helpers/utilities";
+import { required } from "helpers/fieldValidators";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   CRONOGRAMA_ENTREGA,
@@ -361,6 +362,7 @@ export default ({ analiseSolicitacao }) => {
                                 disabled={false}
                                 agrupadorMilhar
                                 required
+                                validate={required}
                                 placeholder="Informe a Quantidade Total"
                               />
                             </div>
