@@ -45,10 +45,12 @@ import {
   validarFormulario,
 } from "./validacoes";
 import {
+  categoriasParaExibir,
   desabilitarBotaoColunaObservacoes,
   desabilitarField,
   deveExistirObservacao,
   formatarLinhasTabelaAlimentacaoCEI,
+  formatarLinhasTabelasDietasCEI,
   formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
   textoBotaoObservacao,
@@ -165,8 +167,6 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       const ano = getYear(mesAnoSelecionado);
       let response_log_matriculados_por_faixa_etaria_dia = [];
       let response_log_dietas_autorizadas_cei = [];
-      let faixas_etarias_dieta = [];
-      let faixas_etarias_objs_dieta = [];
 
       let response_categorias_medicao = await getCategoriasDeMedicao();
 
@@ -200,60 +200,15 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         await getLogDietasAutorizadasCEIPeriodo(params_dietas_autorizadas_cei);
       setLogQtdDietasAutorizadasCEI(response_log_dietas_autorizadas_cei.data);
 
-      response_log_dietas_autorizadas_cei.data.forEach((log) => {
-        !faixas_etarias_dieta.find(
-          (faixa) => faixa === log.faixa_etaria.__str__
-        ) && faixas_etarias_dieta.push(log.faixa_etaria.__str__);
-      });
+      let linhasTabelasDietasCEI = formatarLinhasTabelasDietasCEI(
+        response_log_dietas_autorizadas_cei,
+        periodoGrupo
+      );
+      setTabelaDietaCEIRows(linhasTabelasDietasCEI);
 
-      faixas_etarias_dieta.forEach((faixa) => {
-        const log = response_log_dietas_autorizadas_cei.data.find(
-          (log) => log.faixa_etaria.__str__ === faixa
-        );
-        log &&
-          faixas_etarias_objs_dieta.push({
-            inicio: log.faixa_etaria.inicio,
-            __str__: log.faixa_etaria.__str__,
-            uuid: log.faixa_etaria.uuid,
-          });
-      });
-
-      let linhasTabelaDietasCEI = [];
-
-      faixas_etarias_objs_dieta
-        .sort((a, b) => a.inicio - b.inicio)
-        .forEach((faixa_obj) => {
-          linhasTabelaDietasCEI.push(
-            {
-              nome: "Dietas Autorizadas",
-              name: "dietas_autorizadas",
-              uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__,
-            },
-            {
-              nome: "Frequência",
-              name: "frequencia",
-              uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__,
-            }
-          );
-        });
-      linhasTabelaDietasCEI.push({
-        nome: "Observações",
-        name: "observacoes",
-        uuid: null,
-        faixa_etaria: null,
-      });
-
-      setTabelaDietaCEIRows(linhasTabelaDietasCEI);
-
-      response_categorias_medicao = response_categorias_medicao.data.filter(
-        (categoria) => {
-          return (
-            !categoria.nome.includes("SOLICITAÇÕES") &&
-            !categoria.nome.includes("ENTERAL")
-          );
-        }
+      response_categorias_medicao = categoriasParaExibir(
+        response_categorias_medicao,
+        response_log_dietas_autorizadas_cei
       );
       setCategoriasDeMedicao(response_categorias_medicao);
 
@@ -294,7 +249,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         response_valores_periodos.data,
         response_categorias_medicao,
         linhasTabelaAlimentacaoCEI,
-        linhasTabelaDietasCEI,
+        linhasTabelasDietasCEI,
         mesAnoSelecionado,
         response_log_matriculados_por_faixa_etaria_dia.data,
         response_log_dietas_autorizadas_cei.data
