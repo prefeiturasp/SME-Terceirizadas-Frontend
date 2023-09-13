@@ -143,7 +143,7 @@ export const desabilitarField = (
   values,
   mesAnoConsiderado,
   mesAnoDefault,
-  dadosValoresInclusoesAutorizadasState,
+  inclusoesAutorizadas,
   validacaoDiaLetivo,
   validacaoSemana,
   location,
@@ -152,6 +152,15 @@ export const desabilitarField = (
   feriadosNoMes,
   uuidFaixaEtaria
 ) => {
+  const resultado = inclusoesAutorizadas.some(
+    (inclusao) =>
+      dia === String(inclusao.dia) &&
+      rowName === "frequencia" &&
+      inclusao.faixas_etarias.includes(uuidFaixaEtaria) &&
+      nomeCategoria === "ALIMENTAÇÃO"
+  );
+  if (resultado) return false;
+
   const valorField = valoresPeriodosLancamentos
     .filter((valor) => valor.nome_campo === rowName)
     .filter((valor) => String(valor.dia) === String(dia))
