@@ -965,6 +965,8 @@ export const exibirModuloMedicaoInicial = () => {
       return acessoModuloMedicaoInicialEscola();
     case `"diretoriaregional"`:
       return acessoModuloMedicaoInicialDRE();
+    case `"medicao"`:
+      return true;
     default:
       return false;
   }
