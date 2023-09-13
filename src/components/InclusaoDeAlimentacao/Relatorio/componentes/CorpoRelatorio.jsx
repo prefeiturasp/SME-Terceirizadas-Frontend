@@ -81,47 +81,48 @@ const renderParteAvulsa = (
               </Fragment>
             );
           })}
-          {inclusaoDeAlimentacao.inclusoes
-            .filter((inclusao) => inclusao.motivo.nome.includes("Outro"))
-            .map((inclusao, key) => {
-              return [
-                <tr className="row" key={key}>
-                  <th className="col-2">Motivo</th>
-                  <th className="col-10">Dia de inclusão</th>
-                </tr>,
-                <tr className="row" key={key}>
-                  <td className="col-2">{inclusao.motivo.nome}</td>
-                  <td
-                    key={key}
-                    className={`col-2 ${
-                      inclusao.cancelado ||
-                      inclusaoDeAlimentacao.status === "ESCOLA_CANCELOU"
-                        ? `cancelado`
-                        : ""
-                    }`}
-                  >
-                    <span>{inclusao.data}</span>
-                    {(inclusao.cancelado ||
-                      inclusaoDeAlimentacao.status === "ESCOLA_CANCELOU") && (
-                      <div className="dark-red">
-                        <strong>justificativa:</strong>{" "}
-                        {inclusao.cancelado_justificativa ||
-                          inclusaoDeAlimentacao.logs[
-                            inclusaoDeAlimentacao.logs.length - 1
-                          ].justificativa}
-                      </div>
-                    )}
-                  </td>
-                </tr>,
-                <tr className="row" key={key}>
-                  <th className="col-12">Qual o motivo?</th>
-                </tr>,
-                <tr className="row" key={key}>
-                  <td className="col-12">{inclusao.outro_motivo}</td>
-                </tr>,
-                <hr key={key} />,
-              ];
-            })}
+          {!ehInclusaoCei(tipoSolicitacao) &&
+            inclusaoDeAlimentacao.inclusoes
+              .filter((inclusao) => inclusao.motivo.nome.includes("Outro"))
+              .map((inclusao, key) => {
+                return [
+                  <tr className="row" key={key}>
+                    <th className="col-2">Motivo</th>
+                    <th className="col-10">Dia de inclusão</th>
+                  </tr>,
+                  <tr className="row" key={key}>
+                    <td className="col-2">{inclusao.motivo.nome}</td>
+                    <td
+                      key={key}
+                      className={`col-2 ${
+                        inclusao.cancelado ||
+                        inclusaoDeAlimentacao.status === "ESCOLA_CANCELOU"
+                          ? `cancelado`
+                          : ""
+                      }`}
+                    >
+                      <span>{inclusao.data}</span>
+                      {(inclusao.cancelado ||
+                        inclusaoDeAlimentacao.status === "ESCOLA_CANCELOU") && (
+                        <div className="dark-red">
+                          <strong>justificativa:</strong>{" "}
+                          {inclusao.cancelado_justificativa ||
+                            inclusaoDeAlimentacao.logs[
+                              inclusaoDeAlimentacao.logs.length - 1
+                            ].justificativa}
+                        </div>
+                      )}
+                    </td>
+                  </tr>,
+                  <tr className="row" key={key}>
+                    <th className="col-12">Qual o motivo?</th>
+                  </tr>,
+                  <tr className="row" key={key}>
+                    <td className="col-12">{inclusao.outro_motivo}</td>
+                  </tr>,
+                  <hr key={key} />,
+                ];
+              })}
         </tbody>
       </table>
     </>
