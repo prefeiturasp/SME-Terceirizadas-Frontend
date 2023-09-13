@@ -68,8 +68,32 @@ export const campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao = (
   return erro;
 };
 
-export const botaoAdicionarObrigatorioTabelaAlimentacao = () => {
+const campoComInclusaoSemObservacaoCEI = (
+  column,
+  categoria,
+  inclusoesAutorizadas,
+  value
+) => {
+  const diasSoliciacoes = inclusoesAutorizadas.filter(
+    (inclusao) =>
+      String(inclusao.dia) === column.dia && categoria.nome === "ALIMENTAÇÃO"
+  );
+  if (diasSoliciacoes.length > 0 && !value) return true;
   return false;
+};
+
+export const botaoAdicionarObrigatorioTabelaAlimentacao = (
+  column,
+  categoria,
+  inclusoesAutorizadas,
+  value
+) => {
+  return campoComInclusaoSemObservacaoCEI(
+    column,
+    categoria,
+    inclusoesAutorizadas,
+    value
+  );
 };
 
 export const botaoAdicionarObrigatorio = (
