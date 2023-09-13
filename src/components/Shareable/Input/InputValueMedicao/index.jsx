@@ -46,6 +46,7 @@ export const InputText = (props) => {
     exibeTooltipFrequenciaZeroTabelaEtec,
     exibeTooltipLancheEmergTabelaEtec,
     exibeTooltipRepeticao,
+    exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI,
   } = props;
 
   let msgTooltip = "";
@@ -252,6 +253,15 @@ export const InputText = (props) => {
             <i className="fas fa-info icone-info-warning" />
           </Tooltip>
         )}
+      {exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI && !input.value && (
+        <Tooltip
+          title={
+            "Existe autorização para o Lançamento de Alimentações para o dia. Justifique a ausência do apontamento!"
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
 
       <input
         {...input}
