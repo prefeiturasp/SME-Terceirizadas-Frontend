@@ -4,6 +4,10 @@ import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 import { CORES } from "../LancamentoPorPeriodo/helpers";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import CardLancamentoCEI from "./CardLancamentoCEI";
+import { relatorioMedicaoInicialPDF } from "services/relatorios";
+import HTTP_STATUS from "http-status-codes";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 export default ({
   solicitacaoMedicaoInicial,
@@ -11,6 +15,8 @@ export default ({
   periodoSelecionado,
 }) => {
   const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
 
   const quantidadeAlimentacoesLancadas = [
     {
@@ -43,6 +49,17 @@ export default ({
     },
   ];
 
+  const gerarPDFMedicaoInicial = async () => {
+    const response = await relatorioMedicaoInicialPDF(
+      solicitacaoMedicaoInicial.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
+  };
+
   useEffect(() => {
     const periodos = escolaInstituicao.periodos_escolares
       .filter((periodo) => periodo.possui_alunos_regulares)
@@ -70,6 +87,10 @@ export default ({
               <b className="section-title">Períodos</b>
             </div>
           </div>
+          <ModalSolicitacaoDownload
+            show={exibirModalCentralDownloads}
+            setShow={setExibirModalCentralDownloads}
+          />
 
           {periodosComAlunos.map((nomePeriodo, index) => (
             <CardLancamentoCEI
@@ -91,6 +112,13 @@ export default ({
                 disabled={!usuarioEhEscolaTerceirizadaDiretor()}
               />
             )}
+            <Botao
+              texto="Exportar PDF"
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              className="float-right mr-3"
+              onClick={() => gerarPDFMedicaoInicial()}
+              //disabled={ENVIRONMENT === "production"} ATIVIAR NOVAMENTE
+            />
           </div>
         </>
       )}
