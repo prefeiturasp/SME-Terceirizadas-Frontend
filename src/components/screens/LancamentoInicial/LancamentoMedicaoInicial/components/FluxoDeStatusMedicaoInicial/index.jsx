@@ -12,7 +12,7 @@ export default ({ solicitacaoMedicaoInicial }) => {
           )
         )
       ) {
-        return solicitacaoMedicaoInicial.logs.slice(1);
+        return solicitacaoMedicaoInicial.logs;
       }
       return solicitacaoMedicaoInicial.logs;
     } else {

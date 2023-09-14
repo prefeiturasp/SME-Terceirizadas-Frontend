@@ -17,7 +17,8 @@ export const formatarPayloadPeriodoLancamento = (
   diasDaSemanaSelecionada
 ) => {
   if (
-    values["periodo_escolar"].includes("Solicitações") ||
+    (values["periodo_escolar"] &&
+      values["periodo_escolar"].includes("Solicitações")) ||
     values["periodo_escolar"] === "ETEC" ||
     values["periodo_escolar"] === "Programas e Projetos"
   ) {
