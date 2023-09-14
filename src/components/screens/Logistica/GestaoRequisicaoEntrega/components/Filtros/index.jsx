@@ -116,13 +116,13 @@ export default ({
               </div>
             </div>
 
-            <div className="row mt-2">
+            <div className="row">
               <div className="col-4">
-                <span className="col-form-label">
+                <label className="col-form-label">
                   Selecionar Período de Entrega{" "}
-                </span>
+                </label>
                 <div className="row">
-                  <div className="col-6 mt-1">
+                  <div className="col-6">
                     <Field
                       component={InputComData}
                       name="data_inicial"
@@ -136,7 +136,7 @@ export default ({
                       }
                     />
                   </div>
-                  <div className="col-6 mt-1">
+                  <div className="col-6">
                     <Field
                       component={InputComData}
                       name="data_final"
