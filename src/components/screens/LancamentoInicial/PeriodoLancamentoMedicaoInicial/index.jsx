@@ -652,9 +652,11 @@ export default () => {
       } else {
         params_dietas_autorizadas["unificado"] = true;
       }
-      response_log_dietas_autorizadas = await getLogDietasAutorizadasPeriodo(
-        params_dietas_autorizadas
-      );
+      if (!ehGrupoSolicitacoesDeAlimentacaoUrlParam) {
+        response_log_dietas_autorizadas = await getLogDietasAutorizadasPeriodo(
+          params_dietas_autorizadas
+        );
+      }
 
       if (ehGrupoSolicitacoesDeAlimentacaoUrlParam) {
         response_categorias_medicao = response_categorias_medicao.data.filter(
@@ -1857,25 +1859,33 @@ export default () => {
       );
     };
 
-  const classNameFieldTabelaAlimentacao = (row, column, categoria) => {
+  const classNameFieldTabelaAlimentacao = (
+    row,
+    column,
+    categoria,
+    kitLanchesAutorizadas,
+    alteracoesAlimentacaoAutorizadas
+  ) => {
     if (
-      Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+      (Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
         String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
-      )
-    ) {
-      return "";
-    }
-    if (
-      `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
-      dadosValoresInclusoesAutorizadasState
+      ) ||
+        `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
+          dadosValoresInclusoesAutorizadasState) &&
+      !ehGrupoSolicitacoesDeAlimentacaoUrlParam
     ) {
       return "";
     }
     return `${
-      `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
-      dadosValoresInclusoesAutorizadasState
-        ? ""
-        : !validacaoDiaLetivo(column.dia)
+      !validacaoDiaLetivo(column.dia) &&
+      ((!kitLanchesAutorizadas.filter(
+        (kitLanche) => kitLanche.dia === column.dia
+      ).length &&
+        row.name === "kit_lanche") ||
+        (!alteracoesAlimentacaoAutorizadas.filter(
+          (lancheEmergencial) => lancheEmergencial.dia === column.dia
+        ).length &&
+          row.name === "lanche_emergencial"))
         ? "nao-eh-dia-letivo"
         : ""
     }`;
@@ -2233,7 +2243,9 @@ export default () => {
                                                         valoresPeriodosLancamentos,
                                                         feriadosNoMes,
                                                         inclusoesAutorizadas,
-                                                        categoriasDeMedicao
+                                                        categoriasDeMedicao,
+                                                        kitLanchesAutorizadas,
+                                                        alteracoesAlimentacaoAutorizadas
                                                       )}
                                                       dia={column.dia}
                                                       defaultValue={defaultValue(
@@ -2376,7 +2388,9 @@ export default () => {
                                                         className={`m-2 ${classNameFieldTabelaAlimentacao(
                                                           row,
                                                           column,
-                                                          categoria
+                                                          categoria,
+                                                          kitLanchesAutorizadas,
+                                                          alteracoesAlimentacaoAutorizadas
                                                         )}`}
                                                         component={
                                                           InputValueMedicao
@@ -2414,7 +2428,9 @@ export default () => {
                                                           valoresPeriodosLancamentos,
                                                           feriadosNoMes,
                                                           inclusoesAutorizadas,
-                                                          categoriasDeMedicao
+                                                          categoriasDeMedicao,
+                                                          kitLanchesAutorizadas,
+                                                          alteracoesAlimentacaoAutorizadas
                                                         )}
                                                         exibeTooltipDiaSobremesaDoce={
                                                           row.name ===
