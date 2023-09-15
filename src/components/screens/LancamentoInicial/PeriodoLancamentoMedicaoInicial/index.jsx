@@ -1886,13 +1886,15 @@ export default () => {
     }
     return `${
       !validacaoDiaLetivo(column.dia) &&
-      ((!kitLanchesAutorizadas.filter(
-        (kitLanche) => kitLanche.dia === column.dia
-      ).length &&
-        row.name === "kit_lanche") ||
-        (!alteracoesAlimentacaoAutorizadas.filter(
-          (lancheEmergencial) => lancheEmergencial.dia === column.dia
+      ((kitLanchesAutorizadas &&
+        !kitLanchesAutorizadas.filter(
+          (kitLanche) => kitLanche.dia === column.dia
         ).length &&
+        row.name === "kit_lanche") ||
+        (alteracoesAlimentacaoAutorizadas &&
+          !alteracoesAlimentacaoAutorizadas.filter(
+            (lancheEmergencial) => lancheEmergencial.dia === column.dia
+          ).length &&
           row.name === "lanche_emergencial"))
         ? "nao-eh-dia-letivo"
         : ""
