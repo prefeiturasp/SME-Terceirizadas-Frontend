@@ -1,4 +1,3 @@
-import { formataMotivosDias } from "components/InclusaoDeAlimentacao/Relatorio/componentes/helper";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { required } from "helpers/fieldValidators";
 import HTTP_STATUS from "http-status-codes";
@@ -10,6 +9,7 @@ import { deepCopy, mensagemCancelamento } from "../../../helpers/utilities";
 import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import { toastError, toastSuccess } from "../Toast/dialogs";
+import { formataMotivosDiasComOutros } from "../../InclusaoDeAlimentacao/Relatorio/componentes/helper";
 
 export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
   const {
@@ -92,37 +92,37 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
               ].includes(tipoSolicitacao) && (
                 <>
                   <p>Selecione a(s) data(s) para solicitar o cancelamento:</p>
-                  {Object.entries(formataMotivosDias(dias_motivos)).map(
-                    (dadosMotivo, key) => {
-                      const [motivo, datas] = dadosMotivo;
-                      return (
-                        <div key={key}>
-                          <p>
-                            Motivo: <strong>{motivo}</strong>
-                          </p>
-                          {datas.map((dia, key_) => {
-                            return (
-                              <label key={key_} className="mr-3">
-                                <Field
-                                  name="datas"
-                                  component="input"
-                                  disabled={
-                                    dias_motivos.find((i) => i.data === dia)
-                                      .cancelado ||
-                                    moment(dia, "DD/MM/YYYY") <= moment()
-                                  }
-                                  type="checkbox"
-                                  value={dia}
-                                />{" "}
-                                {dia}
-                              </label>
-                            );
-                          })}
-                          <hr />
-                        </div>
-                      );
-                    }
-                  )}
+                  {Object.entries(
+                    formataMotivosDiasComOutros(dias_motivos)
+                  ).map((dadosMotivo, key) => {
+                    const [motivo, datas] = dadosMotivo;
+                    return (
+                      <div key={key}>
+                        <p>
+                          Motivo: <strong>{motivo}</strong>
+                        </p>
+                        {datas.map((dia, key_) => {
+                          return (
+                            <label key={key_} className="mr-3">
+                              <Field
+                                name="datas"
+                                component="input"
+                                disabled={
+                                  dias_motivos.find((i) => i.data === dia)
+                                    .cancelado ||
+                                  moment(dia, "DD/MM/YYYY") <= moment()
+                                }
+                                type="checkbox"
+                                value={dia}
+                              />{" "}
+                              {dia}
+                            </label>
+                          );
+                        })}
+                        <hr />
+                      </div>
+                    );
+                  })}
                 </>
               )}
               {solicitacao.inclusoes &&

@@ -17,7 +17,8 @@ export const formatarPayloadPeriodoLancamento = (
   diasDaSemanaSelecionada
 ) => {
   if (
-    values["periodo_escolar"].includes("Solicitações") ||
+    (values["periodo_escolar"] &&
+      values["periodo_escolar"].includes("Solicitações")) ||
     values["periodo_escolar"] === "ETEC" ||
     values["periodo_escolar"] === "Programas e Projetos"
   ) {
@@ -143,7 +144,7 @@ export const desabilitarField = (
   values,
   mesAnoConsiderado,
   mesAnoDefault,
-  dadosValoresInclusoesAutorizadasState,
+  inclusoesAutorizadas,
   validacaoDiaLetivo,
   validacaoSemana,
   location,
@@ -152,6 +153,15 @@ export const desabilitarField = (
   feriadosNoMes,
   uuidFaixaEtaria
 ) => {
+  const resultado = inclusoesAutorizadas.some(
+    (inclusao) =>
+      dia === String(inclusao.dia) &&
+      rowName === "frequencia" &&
+      inclusao.faixas_etarias.includes(uuidFaixaEtaria) &&
+      nomeCategoria === "ALIMENTAÇÃO"
+  );
+  if (resultado) return false;
+
   const valorField = valoresPeriodosLancamentos
     .filter((valor) => valor.nome_campo === rowName)
     .filter((valor) => String(valor.dia) === String(dia))
@@ -338,127 +348,123 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
   }
 };
 
-export const formatarLinhasTabelaAlimentacao = (
-  tipos_alimentacao,
+export const formatarLinhasTabelaAlimentacaoCEI = (
+  response_log_matriculados_por_faixa_etaria_dia,
   periodoGrupo
 ) => {
-  const tiposAlimentacaoFormatadas = tipos_alimentacao
-    .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
-    .map((alimentacao) => {
-      return {
-        ...alimentacao,
-        name: alimentacao.nome
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase()
-          .replaceAll(/ /g, "_"),
-      };
-    });
-  const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
-    (ali) => ali.nome === "Refeição"
-  );
-  if (indexRefeicao !== -1) {
-    tiposAlimentacaoFormatadas[indexRefeicao].nome = "Refeição 1ª Oferta";
-    tiposAlimentacaoFormatadas.splice(indexRefeicao + 1, 0, {
-      nome: "Repetição Refeição",
-      name: "repeticao_refeicao",
-      uuid: null,
-    });
+  let faixas_etarias_alimentacao = [];
+  let faixas_etarias_objs_alimentacao = [];
+  let linhasTabelaAlimentacaoCEI = [];
+
+  response_log_matriculados_por_faixa_etaria_dia.data.forEach((log) => {
+    !faixas_etarias_alimentacao.find(
+      (faixa) => faixa === log.faixa_etaria.__str__
+    ) && faixas_etarias_alimentacao.push(log.faixa_etaria.__str__);
+  });
+
+  if (["MANHA", "TARDE"].includes(periodoGrupo)) {
+    faixas_etarias_alimentacao = faixas_etarias_alimentacao.filter(
+      (faixa) => faixa === "04 anos a 06 anos"
+    );
   }
 
-  const indexSobremesa = tiposAlimentacaoFormatadas.findIndex(
-    (ali) => ali.nome === "Sobremesa"
-  );
-  if (indexSobremesa !== -1) {
-    tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1º Oferta";
-    tiposAlimentacaoFormatadas.splice(indexSobremesa + 1, 0, {
-      nome: "Repetição Sobremesa",
-      name: "repeticao_sobremesa",
-      uuid: null,
-    });
-  }
+  faixas_etarias_alimentacao.forEach((faixa) => {
+    const log = response_log_matriculados_por_faixa_etaria_dia.data.find(
+      (log) => log.faixa_etaria.__str__ === faixa
+    );
+    log &&
+      faixas_etarias_objs_alimentacao.push({
+        inicio: log.faixa_etaria.inicio,
+        __str__: log.faixa_etaria.__str__,
+        uuid: log.faixa_etaria.uuid,
+      });
+  });
 
-  const matriculadosOuNumeroDeAlunos = () => {
-    return periodoGrupo.grupo === "Programas e Projetos"
-      ? {
-          nome: "Número de Alunos",
-          name: "numero_de_alunos",
-          uuid: null,
-        }
-      : {
+  faixas_etarias_objs_alimentacao
+    .sort((a, b) => a.inicio - b.inicio)
+    .forEach((faixa_obj) => {
+      linhasTabelaAlimentacaoCEI.push(
+        {
           nome: "Matriculados",
           name: "matriculados",
-          uuid: null,
-        };
-  };
-
-  tiposAlimentacaoFormatadas.unshift(matriculadosOuNumeroDeAlunos(), {
-    nome: "Frequência",
-    name: "frequencia",
-    uuid: null,
-  });
-
-  tiposAlimentacaoFormatadas.push({
+          uuid: faixa_obj.uuid,
+          faixa_etaria: faixa_obj.__str__,
+        },
+        {
+          nome: "Frequência",
+          name: "frequencia",
+          uuid: faixa_obj.uuid,
+          faixa_etaria: faixa_obj.__str__,
+        }
+      );
+    });
+  linhasTabelaAlimentacaoCEI.push({
     nome: "Observações",
     name: "observacoes",
     uuid: null,
+    faixa_etaria: null,
   });
 
-  return tiposAlimentacaoFormatadas;
+  return linhasTabelaAlimentacaoCEI;
 };
 
-export const formatarLinhasTabelasDietas = (tipos_alimentacao) => {
-  const linhasTabelasDietas = [];
-  linhasTabelasDietas.push(
-    {
-      nome: "Dietas Autorizadas",
-      name: "dietas_autorizadas",
-      uuid: null,
-    },
-    {
-      nome: "Frequência",
-      name: "frequencia",
-      uuid: null,
-    }
-  );
+export const formatarLinhasTabelasDietasCEI = (
+  response_log_dietas_autorizadas_cei,
+  periodoGrupo
+) => {
+  let faixas_etarias_dieta = [];
+  let faixas_etarias_objs_dieta = [];
+  let linhasTabelasDietasCEI = [];
 
-  const indexLanche4h = tipos_alimentacao.findIndex((ali) =>
-    ali.nome.includes("4h")
-  );
-  if (indexLanche4h !== -1) {
-    linhasTabelasDietas.push({
-      nome: tipos_alimentacao[indexLanche4h].nome,
-      name: tipos_alimentacao[indexLanche4h].nome
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-        .replaceAll(/ /g, "_"),
-      uuid: tipos_alimentacao[indexLanche4h].uuid,
-    });
+  response_log_dietas_autorizadas_cei.data.forEach((log) => {
+    !faixas_etarias_dieta.find((faixa) => faixa === log.faixa_etaria.__str__) &&
+      faixas_etarias_dieta.push(log.faixa_etaria.__str__);
+  });
+
+  if (["MANHA", "TARDE"].includes(periodoGrupo)) {
+    faixas_etarias_dieta = faixas_etarias_dieta.filter(
+      (faixa) => faixa === "04 anos a 06 anos"
+    );
   }
 
-  const indexLanche = tipos_alimentacao.findIndex(
-    (ali) => ali.nome === "Lanche"
-  );
-  if (indexLanche !== -1) {
-    linhasTabelasDietas.push({
-      nome: "Lanche",
-      name: "Lanche"
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-        .replaceAll(/ /g, "_"),
-      uuid: tipos_alimentacao[indexLanche].uuid,
-    });
-  }
+  faixas_etarias_dieta.forEach((faixa) => {
+    const log = response_log_dietas_autorizadas_cei.data.find(
+      (log) => log.faixa_etaria.__str__ === faixa
+    );
+    log &&
+      faixas_etarias_objs_dieta.push({
+        inicio: log.faixa_etaria.inicio,
+        __str__: log.faixa_etaria.__str__,
+        uuid: log.faixa_etaria.uuid,
+      });
+  });
 
-  linhasTabelasDietas.push({
+  faixas_etarias_objs_dieta
+    .sort((a, b) => a.inicio - b.inicio)
+    .forEach((faixa_obj) => {
+      linhasTabelasDietasCEI.push(
+        {
+          nome: "Dietas Autorizadas",
+          name: "dietas_autorizadas",
+          uuid: faixa_obj.uuid,
+          faixa_etaria: faixa_obj.__str__,
+        },
+        {
+          nome: "Frequência",
+          name: "frequencia",
+          uuid: faixa_obj.uuid,
+          faixa_etaria: faixa_obj.__str__,
+        }
+      );
+    });
+  linhasTabelasDietasCEI.push({
     nome: "Observações",
     name: "observacoes",
     uuid: null,
+    faixa_etaria: null,
   });
 
-  return linhasTabelasDietas;
+  return linhasTabelasDietasCEI;
 };
 
 export const formatarLinhasTabelaDietaEnteral = (
@@ -616,4 +622,55 @@ export const desabilitarBotaoColunaObservacoes = (
           valoresPeriodosLancamentos
         )))
   );
+};
+
+export const categoriasParaExibir = (
+  response_categorias_medicao,
+  response_log_dietas_autorizadas_cei
+) => {
+  response_categorias_medicao = response_categorias_medicao.data.filter(
+    (categoria) => {
+      return (
+        !categoria.nome.includes("SOLICITAÇÕES") &&
+        !categoria.nome.includes("ENTERAL")
+      );
+    }
+  );
+
+  if (response_log_dietas_autorizadas_cei.data.length) {
+    let categoriasDietasParaDeletar = [];
+    for (const categoria of response_categorias_medicao) {
+      if (
+        categoria.nome === "DIETA ESPECIAL - TIPO A" &&
+        (!response_log_dietas_autorizadas_cei.data.filter((dieta) =>
+          dieta.classificacao.toUpperCase().includes("TIPO A")
+        ).length ||
+          !response_log_dietas_autorizadas_cei.data.filter(
+            (dieta) =>
+              dieta.classificacao.toUpperCase().includes("TIPO A") &&
+              Number(dieta.quantidade) !== 0
+          ).length)
+      ) {
+        categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO A");
+      } else if (
+        categoria.nome === "DIETA ESPECIAL - TIPO B" &&
+        (!response_log_dietas_autorizadas_cei.data.filter((dieta) =>
+          dieta.classificacao.toUpperCase().includes("TIPO B")
+        ).length ||
+          !response_log_dietas_autorizadas_cei.data.filter(
+            (dieta) =>
+              dieta.classificacao.toUpperCase().includes("TIPO B") &&
+              Number(dieta.quantidade) !== 0
+          ).length)
+      ) {
+        categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO B");
+      }
+    }
+    response_categorias_medicao = response_categorias_medicao.filter(
+      (categoria) => {
+        return !categoriasDietasParaDeletar.includes(categoria.nome);
+      }
+    );
+  }
+  return response_categorias_medicao;
 };

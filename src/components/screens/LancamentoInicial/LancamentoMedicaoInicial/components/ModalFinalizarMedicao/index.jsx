@@ -29,6 +29,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     useState(false);
   const [arquivo, setArquivo] = useState([]);
   const [validationFile, setValidationFile] = useState({ touched: false });
+  const [desativarAnexar, setDesativarAnexar] = useState(false);
 
   const handleOnChange = (event) => {
     if (opcaoSelecionada === OPCOES_AVALIACAO_A_CONTENTO.NAO_COM_OCORRENCIAS) {
@@ -52,6 +53,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     setDisableFinalizarMedicao(true);
     setShowButtonAnexarPlanilha(false);
     setArquivo([]);
+    setDesativarAnexar(false);
     closeModal();
   };
 
@@ -59,7 +61,6 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     let validation = { touched: true };
     let xlsCount = 0;
     let pdfCount = 0;
-
     files.forEach((element) => {
       const base64Ext = element.base64.split(";")[0];
       if (base64Ext.includes("pdf")) {
@@ -93,6 +94,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
 
     if (validation.xls && validation.pdf) {
       setDisableFinalizarMedicao(false);
+      setDesativarAnexar(true);
     } else {
       setDisableFinalizarMedicao(true);
     }
@@ -104,6 +106,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     let arquivos = arquivo;
     isValidFiles(arquivos);
     setArquivo(arquivos);
+    setDesativarAnexar(false);
   };
 
   const setFiles = (files) => {
@@ -210,6 +213,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
                     "É obrigatório anexar o relatório de ocorrências no formato Excel e também no formato PDF"
                   }
                   customHelpTextClassName="custom-style-help-text"
+                  disabled={desativarAnexar}
                 />
               )}
             />

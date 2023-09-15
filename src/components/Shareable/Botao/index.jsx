@@ -33,8 +33,12 @@ export const Botao = (props) => {
       data-cy={texto}
       className={`general-button ${style} ${className}`}
       onClick={onClick}
-      onMouseOver={() => tooltipExterno && setExibeMensagem(true)}
-      onMouseOut={() => tooltipExterno && setExibeMensagem(false)}
+      onMouseOver={() =>
+        (tooltipExterno || exibirTooltip) && setExibeMensagem(true)
+      }
+      onMouseOut={() =>
+        (tooltipExterno || exibirTooltip) && setExibeMensagem(false)
+      }
       disabled={disabled}
       accept={accept}
       tabIndex={tabindex}

@@ -23,7 +23,8 @@ export const formatarPayloadPeriodoLancamento = (
   tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows
 ) => {
   if (
-    values["periodo_escolar"].includes("Solicitações") ||
+    (values["periodo_escolar"] &&
+      values["periodo_escolar"].includes("Solicitações")) ||
     values["periodo_escolar"] === "ETEC" ||
     values["periodo_escolar"] === "Programas e Projetos"
   ) {
@@ -250,7 +251,9 @@ export const desabilitarField = (
   valoresPeriodosLancamentos,
   feriadosNoMes,
   inclusoesAutorizadas,
-  categoriasDeMedicao
+  categoriasDeMedicao,
+  kitLanchesAutorizadas,
+  alteracoesAlimentacaoAutorizadas
 ) => {
   const valorField = valoresPeriodosLancamentos.some(
     (valor) =>
@@ -282,12 +285,22 @@ export const desabilitarField = (
   }).toString();
 
   if (nomeCategoria.includes("SOLICITAÇÕES")) {
-    return (
-      !validacaoDiaLetivo(dia) ||
+    if (
+      (!validacaoDiaLetivo(dia) &&
+        ((!kitLanchesAutorizadas.filter((kitLanche) => kitLanche.dia === dia)
+          .length &&
+          rowName === "kit_lanche") ||
+          (!alteracoesAlimentacaoAutorizadas.filter(
+            (lancheEmergencial) => lancheEmergencial.dia === dia
+          ).length &&
+            rowName === "lanche_emergencial"))) ||
       validacaoSemana(dia) ||
       (mesConsiderado === mesAtual &&
         Number(dia) >= format(mesAnoDefault, "dd"))
-    );
+    ) {
+      return true;
+    }
+    return false;
   }
   if (ehGrupoETECUrlParam && nomeCategoria === "ALIMENTAÇÃO") {
     const inclusao = inclusoesEtecAutorizadas.filter(

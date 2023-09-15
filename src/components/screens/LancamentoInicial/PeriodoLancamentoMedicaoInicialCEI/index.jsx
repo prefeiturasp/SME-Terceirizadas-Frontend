@@ -43,13 +43,18 @@ import {
   validacoesTabelaAlimentacaoCEI,
   validacoesTabelasDietasCEI,
   validarFormulario,
+  validarCamposComInclusoesDeAlimentacaoSemObservacao,
 } from "./validacoes";
 import {
+  categoriasParaExibir,
   desabilitarBotaoColunaObservacoes,
   desabilitarField,
   deveExistirObservacao,
+  formatarLinhasTabelaAlimentacaoCEI,
+  formatarLinhasTabelasDietasCEI,
   formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
+  getSolicitacoesInclusaoAutorizadasAsync,
   textoBotaoObservacao,
 } from "./helper";
 import {
@@ -86,6 +91,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const [tabelaAlimentacaoCEIRows, setTabelaAlimentacaoCEIRows] = useState([]);
   const [tabelaDietaCEIRows, setTabelaDietaCEIRows] = useState([]);
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState([]);
+  const [inclusoesAutorizadas, setInclusoesAutorizadas] = useState(null);
+  const [exibirTooltipAoSalvar, setExibirTooltipAoSalvar] = useState(false);
+  const [inputsInclusaoComErro, setInputsInclusaoComErro] = useState([]);
   const [
     valoresMatriculadosFaixaEtariaDia,
     setValoresMatriculadosFaixaEtariaDia,
@@ -162,12 +170,22 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
       const mes = format(mesAnoSelecionado, "MM");
       const ano = getYear(mesAnoSelecionado);
+
+      let response_inclusoes_autorizadas = [];
+      response_inclusoes_autorizadas =
+        await getSolicitacoesInclusaoAutorizadasAsync(
+          escola.uuid,
+          mes,
+          ano,
+          location && location.state && location.state.periodosInclusaoContinua
+            ? Object.keys(location.state.periodosInclusaoContinua)
+            : [periodo],
+          location
+        );
+      setInclusoesAutorizadas(response_inclusoes_autorizadas);
+
       let response_log_matriculados_por_faixa_etaria_dia = [];
       let response_log_dietas_autorizadas_cei = [];
-      let faixas_etarias_alimentacao = [];
-      let faixas_etarias_objs_alimentacao = [];
-      let faixas_etarias_dieta = [];
-      let faixas_etarias_objs_dieta = [];
 
       let response_categorias_medicao = await getCategoriasDeMedicao();
 
@@ -185,51 +203,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         response_log_matriculados_por_faixa_etaria_dia.data
       );
 
-      response_log_matriculados_por_faixa_etaria_dia.data.forEach((log) => {
-        !faixas_etarias_alimentacao.find(
-          (faixa) => faixa === log.faixa_etaria.__str__
-        ) && faixas_etarias_alimentacao.push(log.faixa_etaria.__str__);
-      });
-
-      faixas_etarias_alimentacao.forEach((faixa) => {
-        const log = response_log_matriculados_por_faixa_etaria_dia.data.find(
-          (log) => log.faixa_etaria.__str__ === faixa
-        );
-        log &&
-          faixas_etarias_objs_alimentacao.push({
-            inicio: log.faixa_etaria.inicio,
-            __str__: log.faixa_etaria.__str__,
-            uuid: log.faixa_etaria.uuid,
-          });
-      });
-
-      let linhasTabelaAlimentacaoCEI = [];
-
-      faixas_etarias_objs_alimentacao
-        .sort((a, b) => a.inicio - b.inicio)
-        .forEach((faixa_obj) => {
-          linhasTabelaAlimentacaoCEI.push(
-            {
-              nome: "Matriculados",
-              name: "matriculados",
-              uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__,
-            },
-            {
-              nome: "Frequência",
-              name: "frequencia",
-              uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__,
-            }
-          );
-        });
-      linhasTabelaAlimentacaoCEI.push({
-        nome: "Observações",
-        name: "observacoes",
-        uuid: null,
-        faixa_etaria: null,
-      });
-
+      const linhasTabelaAlimentacaoCEI = formatarLinhasTabelaAlimentacaoCEI(
+        response_log_matriculados_por_faixa_etaria_dia,
+        periodoGrupo
+      );
       setTabelaAlimentacaoCEIRows(linhasTabelaAlimentacaoCEI);
 
       const params_dietas_autorizadas_cei = {
@@ -242,60 +219,15 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         await getLogDietasAutorizadasCEIPeriodo(params_dietas_autorizadas_cei);
       setLogQtdDietasAutorizadasCEI(response_log_dietas_autorizadas_cei.data);
 
-      response_log_dietas_autorizadas_cei.data.forEach((log) => {
-        !faixas_etarias_dieta.find(
-          (faixa) => faixa === log.faixa_etaria.__str__
-        ) && faixas_etarias_dieta.push(log.faixa_etaria.__str__);
-      });
+      let linhasTabelasDietasCEI = formatarLinhasTabelasDietasCEI(
+        response_log_dietas_autorizadas_cei,
+        periodoGrupo
+      );
+      setTabelaDietaCEIRows(linhasTabelasDietasCEI);
 
-      faixas_etarias_dieta.forEach((faixa) => {
-        const log = response_log_dietas_autorizadas_cei.data.find(
-          (log) => log.faixa_etaria.__str__ === faixa
-        );
-        log &&
-          faixas_etarias_objs_dieta.push({
-            inicio: log.faixa_etaria.inicio,
-            __str__: log.faixa_etaria.__str__,
-            uuid: log.faixa_etaria.uuid,
-          });
-      });
-
-      let linhasTabelaDietasCEI = [];
-
-      faixas_etarias_objs_dieta
-        .sort((a, b) => a.inicio - b.inicio)
-        .forEach((faixa_obj) => {
-          linhasTabelaDietasCEI.push(
-            {
-              nome: "Dietas Autorizadas",
-              name: "dietas_autorizadas",
-              uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__,
-            },
-            {
-              nome: "Frequência",
-              name: "frequencia",
-              uuid: faixa_obj.uuid,
-              faixa_etaria: faixa_obj.__str__,
-            }
-          );
-        });
-      linhasTabelaDietasCEI.push({
-        nome: "Observações",
-        name: "observacoes",
-        uuid: null,
-        faixa_etaria: null,
-      });
-
-      setTabelaDietaCEIRows(linhasTabelaDietasCEI);
-
-      response_categorias_medicao = response_categorias_medicao.data.filter(
-        (categoria) => {
-          return (
-            !categoria.nome.includes("SOLICITAÇÕES") &&
-            !categoria.nome.includes("ENTERAL")
-          );
-        }
+      response_categorias_medicao = categoriasParaExibir(
+        response_categorias_medicao,
+        response_log_dietas_autorizadas_cei
       );
       setCategoriasDeMedicao(response_categorias_medicao);
 
@@ -336,7 +268,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         response_valores_periodos.data,
         response_categorias_medicao,
         linhasTabelaAlimentacaoCEI,
-        linhasTabelaDietasCEI,
+        linhasTabelasDietasCEI,
         mesAnoSelecionado,
         response_log_matriculados_por_faixa_etaria_dia.data,
         response_log_dietas_autorizadas_cei.data
@@ -675,6 +607,15 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
   const onSubmitObservacao = async (values, dia, categoria, errors) => {
     let valoresMedicao = [];
+    if (exibirTooltipAoSalvar) {
+      validarCamposComInclusoesDeAlimentacaoSemObservacao(
+        values,
+        categoriasDeMedicao,
+        inclusoesAutorizadas,
+        setInputsInclusaoComErro,
+        setExibirTooltipAoSalvar
+      );
+    }
     const valuesMesmoDiaDaObservacao = Object.fromEntries(
       Object.entries(values).filter(([key]) =>
         key.includes(`__dia_${dia}__categoria_${categoria}`)
@@ -748,7 +689,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       eh_observacao: true,
     };
     if (
-      values["periodo_escolar"].includes("Solicitações") ||
+      (values["periodo_escolar"] &&
+        values["periodo_escolar"].includes("Solicitações")) ||
       values["periodo_escolar"] === "ETEC" ||
       values["periodo_escolar"] === "Programas e Projetos"
     ) {
@@ -793,6 +735,25 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     chamarFuncaoFormatar = true,
     ehCorrecao = false
   ) => {
+    if (
+      validarCamposComInclusoesDeAlimentacaoSemObservacao(
+        values,
+        categoriasDeMedicao,
+        inclusoesAutorizadas,
+        setInputsInclusaoComErro,
+        setExibirTooltipAoSalvar
+      )
+    ) {
+      if (ehSalvamentoAutomático) {
+        setInputsInclusaoComErro([]);
+        setExibirTooltipAoSalvar(false);
+        return;
+      } else {
+        return toastError(
+          "Existe Inclusões autorizadas na tabela de Lançamento de Alimentações. Justifique a ausência do apontamento!"
+        );
+      }
+    }
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     let valuesClone = deepCopy(values);
@@ -1029,6 +990,16 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     }
     desabilitaTooltip(values);
 
+    if (exibirTooltipAoSalvar) {
+      validarCamposComInclusoesDeAlimentacaoSemObservacao(
+        values,
+        categoriasDeMedicao,
+        inclusoesAutorizadas,
+        setInputsInclusaoComErro,
+        setExibirTooltipAoSalvar
+      );
+    }
+
     if (deveExistirObservacao(categoria.id, values, calendarioMesConsiderado)) {
       return;
     }
@@ -1057,6 +1028,15 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     };
 
   const classNameFieldTabelaAlimentacao = (row, column, categoria) => {
+    const resultado = inclusoesAutorizadas.some(
+      (inclusao) =>
+        String(inclusao.dia) === String(column.dia) &&
+        inclusao.faixas_etarias.includes(row.uuid) &&
+        row.name === "frequencia" &&
+        categoria.nome === "ALIMENTAÇÃO"
+    );
+    if (resultado) return "";
+
     if (
       Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
         String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
@@ -1333,7 +1313,20 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                   )}
                                                   type={BUTTON_TYPE.BUTTON}
                                                   style={
-                                                    botaoAdicionarObrigatorioTabelaAlimentacao()
+                                                    exibirTooltipAoSalvar &&
+                                                    inputsInclusaoComErro.some(
+                                                      (inputComErro) =>
+                                                        inputComErro.nome ===
+                                                        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+                                                    ) &&
+                                                    botaoAdicionarObrigatorioTabelaAlimentacao(
+                                                      column,
+                                                      categoria,
+                                                      inclusoesAutorizadas,
+                                                      formValuesAtualizados[
+                                                        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+                                                      ]
+                                                    )
                                                       ? textoBotaoObservacao(
                                                           formValuesAtualizados[
                                                             `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
@@ -1394,7 +1387,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                     formValuesAtualizados,
                                                     mesAnoConsiderado,
                                                     mesAnoDefault,
-                                                    dadosValoresInclusoesAutorizadasState,
+                                                    inclusoesAutorizadas,
                                                     validacaoDiaLetivo,
                                                     validacaoSemana,
                                                     location,
@@ -1407,6 +1400,26 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                     column,
                                                     row
                                                   )}
+                                                  exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI={
+                                                    inclusoesAutorizadas.some(
+                                                      (inclusao) =>
+                                                        String(inclusao.dia) ===
+                                                          String(column.dia) &&
+                                                        inclusao.faixas_etarias.includes(
+                                                          row.uuid
+                                                        ) &&
+                                                        row.name ===
+                                                          "frequencia" &&
+                                                        categoria.nome ===
+                                                          "ALIMENTAÇÃO"
+                                                    ) &&
+                                                    inputsInclusaoComErro.some(
+                                                      (inputComErro) =>
+                                                        inputComErro.nome ===
+                                                        `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
+                                                    ) &&
+                                                    exibirTooltipAoSalvar
+                                                  }
                                                   validate={fieldValidationsTabelasCEI(
                                                     row.name,
                                                     column.dia,

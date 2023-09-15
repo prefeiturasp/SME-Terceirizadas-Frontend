@@ -16,6 +16,7 @@ import { deletaValues } from "helpers/formHelper";
 import { formataMilhar } from "helpers/utilities";
 
 import moment from "moment";
+import { usuarioEhCronograma } from "../../../helpers/utilities";
 
 export default ({
   etapas,
@@ -24,7 +25,7 @@ export default ({
   duplicados,
   restante,
   unidadeMedida,
-  fornecedor = false,
+  ehAlteracao = false,
 }) => {
   const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [desabilitar, setDesabilitar] = useState([]);
@@ -100,7 +101,7 @@ export default ({
 
   useEffect(() => {
     const desativaCampos = () => {
-      if (fornecedor) {
+      if (ehAlteracao) {
         let array = [];
         etapas.forEach((etapa, index) => {
           let dataProgramada = moment(
@@ -143,7 +144,7 @@ export default ({
               </>
             )}
             <div className="row">
-              {!fornecedor && (
+              {usuarioEhCronograma() && (
                 <div className="col-4">
                   {
                     <Field
