@@ -117,7 +117,6 @@ export default ({
               style={BUTTON_STYLE.GREEN_OUTLINE}
               className="float-right mr-3"
               onClick={() => gerarPDFMedicaoInicial()}
-              //disabled={ENVIRONMENT === "production"} ATIVIAR NOVAMENTE
             />
           </div>
         </>
