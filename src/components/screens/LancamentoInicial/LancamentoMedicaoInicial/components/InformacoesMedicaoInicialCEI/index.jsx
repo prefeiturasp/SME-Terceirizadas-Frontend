@@ -235,7 +235,7 @@ export default ({
       }
       const response = await setSolicitacaoMedicaoInicial(payload);
       if (response.status === HTTP_STATUS.CREATED) {
-        toastSuccess("Informações salvas com sucesso");
+        toastSuccess("Medição Inicial criada com sucesso");
       } else {
         const errorMessage = Object.values(response.data).join("; ");
         toastError(`Erro: ${errorMessage}`);
