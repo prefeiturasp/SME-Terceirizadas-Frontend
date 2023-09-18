@@ -283,7 +283,9 @@ export const InputText = (props) => {
             exibeTooltipLancheEmergencialZeroAutorizado ||
             exibeTooltipFrequenciaZeroTabelaEtec ||
             exibeTooltipLancheEmergTabelaEtec ||
-            exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero)
+            exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero ||
+            (exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI &&
+              !input.value))
             ? "border-warning"
             : ""
         }`}

@@ -288,3 +288,28 @@ export const validarCamposComInclusoesDeAlimentacaoSemObservacao = (
     return false;
   }
 };
+
+export const exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI = (
+  inclusoesAutorizadas,
+  row,
+  column,
+  categoria,
+  inputsInclusaoComErro,
+  exibirTooltipAoSalvar
+) => {
+  return (
+    inclusoesAutorizadas.some(
+      (inclusao) =>
+        String(inclusao.dia) === String(column.dia) &&
+        inclusao.faixas_etarias.includes(row.uuid) &&
+        row.name === "frequencia" &&
+        categoria.nome === "ALIMENTAÇÃO"
+    ) &&
+    inputsInclusaoComErro.some(
+      (inputComErro) =>
+        inputComErro.nome ===
+        `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
+    ) &&
+    exibirTooltipAoSalvar
+  );
+};
