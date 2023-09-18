@@ -8,7 +8,7 @@ import {
 } from "configs/constants";
 import {
   exibirModuloMedicaoInicial,
-  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioEhDRE,
   usuarioEhEscolaTerceirizada,
   usuarioEhMedicao,
@@ -23,14 +23,14 @@ export default () => {
         title={"Medição Inicial"}
       >
         {(usuarioEhEscolaTerceirizada() ||
-          usuarioEhEscolaTerceirizadaDiretor()) && (
+          usuarioEhEscolaTerceirizadaQualquerPerfil()) && (
           <LeafItem to={`/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`}>
             Lançamento Medição Inicial
           </LeafItem>
         )}
         {(usuarioEhDRE() ||
           usuarioEhMedicao() ||
-          usuarioEhEscolaTerceirizadaDiretor()) && (
+          usuarioEhEscolaTerceirizadaQualquerPerfil()) && (
           <LeafItem to={`/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`}>
             Acompanhamento de Lançamentos
           </LeafItem>

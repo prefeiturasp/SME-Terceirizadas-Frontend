@@ -13,12 +13,15 @@ import { Form, Field, FormSpy } from "react-final-form";
 import DadosCronograma from "../CronogramaEntrega/components/DadosCronograma";
 import AnaliseDilogDiretoria from "./components/AnaliseDilogDiretoria";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
+import { InputText } from "components/Shareable/Input/InputText";
 import "./styles.scss";
 import AcoesAlterar from "./components/AcoesAlterar";
 import {
   prepararPayloadAnaliseCronograma,
   prepararPayloadCronograma,
 } from "./helpers";
+import { formataMilhar } from "helpers/utilities";
+import { required } from "helpers/fieldValidators";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   CRONOGRAMA_ENTREGA,
@@ -27,6 +30,7 @@ import {
 } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import {
+  usuarioEhCronograma,
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
   usuarioEhEmpresaFornecedor,
@@ -38,6 +42,8 @@ import { textAreaRequired } from "helpers/fieldValidators";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 import TabelaFormAlteracao from "./components/TabelaFormAlteracao";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
+import { fornecedorCienteAlteracaoCodae } from "../../../../services/cronograma.service";
+import { SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR } from "../../../../configs/constants";
 
 export default ({ analiseSolicitacao }) => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -55,13 +61,19 @@ export default ({ analiseSolicitacao }) => {
   const [carregando, setCarregando] = useState(false);
   const history = useHistory();
 
+  const solicitacaoCodae =
+    solicitacaoAlteracaoCronograma &&
+    ["Alteração Enviada ao Fornecedor", "Fornecedor Ciente"].includes(
+      solicitacaoAlteracaoCronograma.status
+    );
+
   const onChangeCampos = (e) => {
     setAprovacaoDinutre(e.target.value);
   };
 
   const exibirJustificativaDinutre = () =>
     aprovacaoDinutre === false ||
-    ((usuarioEhDilogDiretoria() || usuarioEhDinutreDiretoria) &&
+    ((usuarioEhDilogDiretoria() || usuarioEhDinutreDiretoria()) &&
       ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
         solicitacaoAlteracaoCronograma.status
       ));
@@ -131,7 +143,7 @@ export default ({ analiseSolicitacao }) => {
       values[`quantidade_${index}`] = etapa.quantidade;
       values[`total_embalagens_${index}`] = etapa.total_embalagens;
     });
-    values.quantidade_total = cronograma.qtd_total_programada;
+    values.quantidade_total = formataMilhar(cronograma.qtd_total_programada);
     values.unidade_medida = cronograma.unidade_medida;
     setInitialValues(values);
   };
@@ -142,11 +154,23 @@ export default ({ analiseSolicitacao }) => {
     );
   };
 
+  const analiseCronograma = () =>
+    solicitacaoAlteracaoCronograma.status === "Em análise" &&
+    usuarioEhCronograma();
+
   const cadastraAlteracao = async (values) => {
-    const payload = prepararPayloadCronograma(cronograma, values, etapas);
+    const payload = prepararPayloadCronograma(
+      cronograma,
+      values,
+      etapas,
+      recebimentos
+    );
     await cadastraSolicitacaoAlteracaoCronograma(payload)
       .then(() => {
-        toastSuccess("Solicitação de alteração salva com sucesso!");
+        let msg = usuarioEhEmpresaFornecedor()
+          ? "Solicitação de alteração salva com sucesso!"
+          : "Alteração enviada com sucesso!";
+        toastSuccess(msg);
         history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
       })
       .catch(() => {
@@ -200,11 +224,34 @@ export default ({ analiseSolicitacao }) => {
     return aprovacaoDilog !== true && !values.justificativa_dilog;
   };
 
+  const cienciaFornecedor = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    await fornecedorCienteAlteracaoCodae(uuid)
+      .then(() => {
+        toastSuccess("Ciência da alteração gravada com sucesso!");
+        history.push(
+          `/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR}`
+        );
+      })
+      .catch(() => {
+        toastError("Ocorreu um erro ao salvar a Ciência");
+      });
+  };
+
   const defineSubmit = (values) => {
     if (usuarioEhDinutreDiretoria()) {
       analiseDinutre(values, aprovacaoDinutre);
     } else if (usuarioEhDilogDiretoria()) {
       analiseDilog(values, aprovacaoDilog);
+    } else if (
+      usuarioEhEmpresaFornecedor() &&
+      solicitacaoAlteracaoCronograma &&
+      solicitacaoAlteracaoCronograma.status ===
+        "Alteração Enviada ao Fornecedor"
+    ) {
+      cienciaFornecedor();
     } else {
       cadastraAlteracao(values);
     }
@@ -231,11 +278,8 @@ export default ({ analiseSolicitacao }) => {
 
   const buscaLogJustificativaCronograma = (logs, autorJustificativa) => {
     const dict_logs = {
-      cronograma: ["Cronograma ciente alteração cronograma"],
-      dinutre: [
-        "Alteração cronograma aprovada pela DINUTRE",
-        "Alteração cronograma reprovada pela DINUTRE",
-      ],
+      cronograma: ["Cronograma Ciente"],
+      dinutre: ["Aprovado DINUTRE", "Reprovado DINUTRE"],
     };
     let log_correto = logs.find((log) => {
       return dict_logs[autorJustificativa].includes(
@@ -324,10 +368,13 @@ export default ({ analiseSolicitacao }) => {
                     {analiseSolicitacao && (
                       <>
                         <p className="titulo-laranja">
-                          Solicitação de Alteração do Fornecedor
+                          {solicitacaoCodae
+                            ? "Alteração da CODAE"
+                            : "Solicitação de Alteração do Fornecedor"}
                         </p>
                         <TabelaFormAlteracao
                           solicitacao={solicitacaoAlteracaoCronograma}
+                          somenteLeitura={!analiseCronograma()}
                         />
                       </>
                     )}
@@ -337,6 +384,23 @@ export default ({ analiseSolicitacao }) => {
                         <div className="head-green">
                           Informe as Alterações Necessárias
                         </div>
+                        {usuarioEhCronograma() && (
+                          <div className="row">
+                            <div className="col-4">
+                              <Field
+                                component={InputText}
+                                label="Quantidade Total Programada"
+                                name="quantidade_total"
+                                className="input-busca-produto"
+                                disabled={false}
+                                agrupadorMilhar
+                                required
+                                validate={required}
+                                placeholder="Informe a Quantidade Total"
+                              />
+                            </div>
+                          </div>
+                        )}
                         <FormEtapa
                           etapas={etapas}
                           setEtapas={setEtapas}
@@ -344,7 +408,7 @@ export default ({ analiseSolicitacao }) => {
                           duplicados={duplicados}
                           restante={restante}
                           unidadeMedida={values.unidade_medida}
-                          fornecedor={true}
+                          ehAlteracao={true}
                         />
                       </>
                     )}
@@ -355,13 +419,18 @@ export default ({ analiseSolicitacao }) => {
                       <Field
                         component={TextArea}
                         name="justificativa"
-                        placeholder="Escreva o motivo da solicitação de alteração"
+                        placeholder={
+                          usuarioEhCronograma()
+                            ? "Escreva o motivo da alteração"
+                            : "Escreva o motivo da solicitação de alteração"
+                        }
                         className="input-busca-produto"
                         disabled={solicitacaoAlteracaoCronograma !== null}
                         validate={textAreaRequired}
                       />
                     </div>
-                    {(usuarioEhDinutreDiretoria() ||
+                    {((usuarioEhDinutreDiretoria() &&
+                      solicitacaoAlteracaoCronograma.status !== "Em análise") ||
                       (usuarioEhDilogDiretoria() &&
                         analisadoPelaDinutre())) && (
                       <>
@@ -421,22 +490,22 @@ export default ({ analiseSolicitacao }) => {
                         )}
                       </>
                     )}
-                    {analiseSolicitacao &&
-                      solicitacaoAlteracaoCronograma.status ===
-                        "Em análise" && (
-                        <div
-                          className="accordion mt-1"
-                          id="accordionCronograma"
-                        >
-                          <FormRecebimento
-                            values={values}
-                            form={form}
-                            etapas={solicitacaoAlteracaoCronograma.etapas_novas}
-                            recebimentos={recebimentos}
-                            setRecebimentos={setRecebimentos}
-                          />
-                        </div>
-                      )}
+                    {((!analiseSolicitacao && usuarioEhCronograma()) ||
+                      (analiseSolicitacao && analiseCronograma())) && (
+                      <div className="accordion mt-1" id="accordionCronograma">
+                        <FormRecebimento
+                          values={values}
+                          form={form}
+                          etapas={
+                            analiseSolicitacao
+                              ? solicitacaoAlteracaoCronograma.etapas_novas
+                              : etapas
+                          }
+                          recebimentos={recebimentos}
+                          setRecebimentos={setRecebimentos}
+                        />
+                      </div>
+                    )}
                     {usuarioEhDilogDiretoria() && analisadoPelaDinutre() && (
                       <AnaliseDilogDiretoria
                         aprovacaoDilog={aprovacaoDilog}

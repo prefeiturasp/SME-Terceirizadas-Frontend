@@ -51,6 +51,10 @@ export const option_status_fornecedor = [
     value: "REPROVADO_DILOG",
     label: "Reprovado DILOG",
   },
+  {
+    value: "ALTERACAO_ENVIADA_FORNECEDOR",
+    label: "Recebida Alteração da CODAE",
+  },
 ];
 
 export const remove_filtros_nulos = (filtros) => {

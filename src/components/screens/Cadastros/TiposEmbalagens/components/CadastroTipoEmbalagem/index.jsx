@@ -17,27 +17,23 @@ import {
   required,
 } from "helpers/fieldValidators";
 import {
-  cadastraEmbalagens,
-  editaEmbalagem,
-  getEmbalagem,
-  getListaNomesEmbalagens,
+  cadastraTipoEmbalagem,
+  editaTipoEmbalagem,
+  getTipoEmbalagem,
+  getListaNomesTiposEmbalagens,
 } from "services/qualidade.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { composeValidators } from "helpers/utilities";
-import {
-  CADASTROS,
-  CONFIGURACOES,
-  EMBALAGENS_CADASTRADAS,
-} from "configs/constants";
+import { CADASTROS, CONFIGURACOES, TIPOS_EMBALAGENS } from "configs/constants";
 
-let tituloModalSalvar = "Salvar Cadastro da Embalagem";
-let tituloModalCancelarSalvar = "Cancelar Cadastro da Embalagem";
-let tituloModalEditar = "Salvar Edição da Embalagem";
-let tituloModalCancelarEditar = "Cancelar Edição da Embalagem";
+let tituloModalSalvar = "Salvar Cadastro do Tipo de Embalagem";
+let tituloModalCancelarSalvar = "Cancelar Cadastro do Tipo da Embalagem";
+let tituloModalEditar = "Salvar Edição do Tipo da Embalagem";
+let tituloModalCancelarEditar = "Cancelar Edição do Tipo da Embalagem";
 
-let textoModalSalvar = "Confirma o cadastro da Embalagem?";
+let textoModalSalvar = "Confirma o cadastro do Tipo da Embalagem?";
 let textoModalCancelarSalvar = "Deseja cancelar o Cadastro?";
-let textoModalEditar = "Confirma a edição do cadastro da Embalagem?";
+let textoModalEditar = "Confirma a edição do cadastro do Tipo da Embalagem?";
 let textoModalCancelarEditar = "Deseja cancelar a edição do Cadastro?";
 
 export default () => {
@@ -60,17 +56,15 @@ export default () => {
 
     try {
       let response = edicao
-        ? await editaEmbalagem(payload, uuid)
-        : await cadastraEmbalagens(payload);
+        ? await editaTipoEmbalagem(payload, uuid)
+        : await cadastraTipoEmbalagem(payload);
       if (response.status === HTTP_STATUS.CREATED) {
-        toastSuccess("Embalagem Cadastrada com sucesso!");
+        toastSuccess("Tipo de Embalagem cadastrado com sucesso!");
         setShowModalSalvar(false);
         form.restart(initialValues);
         setCarregando(false);
       } else if (response.status === HTTP_STATUS.OK) {
-        history.push(
-          `/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`
-        );
+        history.push(`/${CONFIGURACOES}/${CADASTROS}/${TIPOS_EMBALAGENS}`);
         toastSuccess("Edição do cadastro realizado com sucesso!");
         setCarregando(false);
         setShowModalSalvar(false);
@@ -94,7 +88,7 @@ export default () => {
   const validaNomeEmbalagem = (value) => {
     if (value !== initialValues.nome_embalagem) {
       if (nomesEmbalagens && nomesEmbalagens.includes(value))
-        return "Embalagem já cadastrada";
+        return "Tipo de Embalagem já cadastrado";
       else return undefined;
     } else return undefined;
   };
@@ -102,7 +96,7 @@ export default () => {
   const buscaEmbalagem = async (value) => {
     let response;
     try {
-      response = await getEmbalagem(value);
+      response = await getTipoEmbalagem(value);
       if (response.status === HTTP_STATUS.OK) {
         setInitialValues({
           nome_embalagem: response.data.nome,
@@ -112,7 +106,7 @@ export default () => {
         setCarregando(false);
       }
     } catch (e) {
-      toastError("Ocorreu um erro ao carregar dados da embalagem");
+      toastError("Ocorreu um erro ao carregar dados do Tipo de Embalagem");
       setCarregando(false);
     }
   };
@@ -133,7 +127,7 @@ export default () => {
     }
 
     const buscaListaNomesEmbalagens = async () => {
-      const response = await getListaNomesEmbalagens();
+      const response = await getListaNomesTiposEmbalagens();
       setNomesEmbalagens(response.data.results);
     };
 
@@ -149,14 +143,16 @@ export default () => {
             initialValues={initialValues}
             render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
-                <div className="mt-4 card-title green">Dados da Embalagem</div>
+                <div className="mt-4 card-title green">
+                  Dados do Tipo da Embalagem
+                </div>
                 <div className="row">
                   <div className="col-6">
                     <Field
                       component={InputText}
-                      label="Nome da Embalagem"
+                      label="Nome do Tipo da Embalagem"
                       name="nome_embalagem"
-                      placeholder="Digite o nome da Embalagem"
+                      placeholder="Digite o nome do Tipo da Embalagem"
                       validate={composeValidators(
                         required,
                         validaNomeEmbalagem,
@@ -241,7 +237,7 @@ export default () => {
                       onClick={() => {
                         setShowModalCancelar(false);
                         history.push(
-                          `/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`
+                          `/${CONFIGURACOES}/${CADASTROS}/${TIPOS_EMBALAGENS}`
                         );
                       }}
                       style={BUTTON_STYLE.GREEN}

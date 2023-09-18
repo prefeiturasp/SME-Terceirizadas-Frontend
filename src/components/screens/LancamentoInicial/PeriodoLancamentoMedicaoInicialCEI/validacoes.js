@@ -68,8 +68,32 @@ export const campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao = (
   return erro;
 };
 
-export const botaoAdicionarObrigatorioTabelaAlimentacao = () => {
+const campoComInclusaoSemObservacaoCEI = (
+  column,
+  categoria,
+  inclusoesAutorizadas,
+  value
+) => {
+  const diasSoliciacoes = inclusoesAutorizadas.filter(
+    (inclusao) =>
+      String(inclusao.dia) === column.dia && categoria.nome === "ALIMENTAÇÃO"
+  );
+  if (diasSoliciacoes.length > 0 && !value) return true;
   return false;
+};
+
+export const botaoAdicionarObrigatorioTabelaAlimentacao = (
+  column,
+  categoria,
+  inclusoesAutorizadas,
+  value
+) => {
+  return campoComInclusaoSemObservacaoCEI(
+    column,
+    categoria,
+    inclusoesAutorizadas,
+    value
+  );
 };
 
 export const botaoAdicionarObrigatorio = (
@@ -183,4 +207,84 @@ export const validacoesTabelasDietasCEI = (
   }
 
   return undefined;
+};
+
+export const validarCamposComInclusoesDeAlimentacaoSemObservacao = (
+  values,
+  categoriasDeMedicao,
+  inclusoesAutorizadas,
+  setInputsInclusaoComErro,
+  setExibirTooltipAoSalvar
+) => {
+  const categoria = categoriasDeMedicao.find(
+    (categoria) => categoria.nome === "ALIMENTAÇÃO"
+  );
+  let listaInputsComInclusoes = [];
+  let diasFaixasComErro = [];
+  ["frequencia", "observacoes"].forEach((nomeRow) => {
+    for (
+      let idxInclusao = 0;
+      idxInclusao < inclusoesAutorizadas.length;
+      idxInclusao++
+    ) {
+      const inclusao = inclusoesAutorizadas[idxInclusao];
+      for (
+        let idxFaixaEtaria = 0;
+        idxFaixaEtaria < inclusao.faixas_etarias.length;
+        idxFaixaEtaria++
+      ) {
+        const faixa_etaria = inclusao.faixas_etarias[idxFaixaEtaria];
+        let nomeInput = "";
+        if (nomeRow === "frequencia") {
+          nomeInput = `${nomeRow}__faixa_${faixa_etaria}__dia_${inclusao.dia}__categoria_${categoria.id}`;
+        } else {
+          nomeInput = `${nomeRow}__dia_${inclusao.dia}__categoria_${categoria.id}`;
+        }
+        listaInputsComInclusoes.push({
+          nome: nomeInput,
+          valor: values[nomeInput],
+        });
+      }
+    }
+  });
+  for (
+    let idxInclusao = 0;
+    idxInclusao < inclusoesAutorizadas.length;
+    idxInclusao++
+  ) {
+    const inclusao = inclusoesAutorizadas[idxInclusao];
+    const inputFrequencias = listaInputsComInclusoes.filter(
+      (inputComInclusao) =>
+        inputComInclusao.nome.includes("frequencia") &&
+        inputComInclusao.nome.includes(`dia_${inclusao.dia}`)
+    );
+    const observacaoDaColuna = listaInputsComInclusoes.find(
+      (inputComInclusao) =>
+        inputComInclusao.nome.includes("observacoes") &&
+        inputComInclusao.nome.includes(`dia_${inclusao.dia}`)
+    );
+    const frequenciasNaoPreenchidas = inputFrequencias.filter(
+      (inputFrequencia) => !inputFrequencia.valor
+    );
+    if (frequenciasNaoPreenchidas.length > 0 && !observacaoDaColuna.valor) {
+      frequenciasNaoPreenchidas.forEach((inputFrequencia) =>
+        diasFaixasComErro.push(inputFrequencia)
+      );
+      diasFaixasComErro.push(observacaoDaColuna);
+    }
+  }
+
+  const frequenciasDessaSemana = diasFaixasComErro.filter(
+    (element) => document.getElementsByName(element.nome).length
+  );
+
+  if (frequenciasDessaSemana.length > 0) {
+    setInputsInclusaoComErro(diasFaixasComErro);
+    setExibirTooltipAoSalvar(true);
+    return true;
+  } else {
+    setInputsInclusaoComErro([]);
+    setExibirTooltipAoSalvar(false);
+    return false;
+  }
 };

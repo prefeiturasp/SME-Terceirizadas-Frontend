@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 // Redux
@@ -11,7 +10,7 @@ import multi from "redux-multi";
 // Middleware
 import promise from "redux-promise";
 import thunk from "redux-thunk";
-import App from "./App";
+import { App } from "./App";
 import { ENVIRONMENT } from "constants/config";
 import reducers from "./reducers";
 import * as serviceWorker from "./serviceWorker";
@@ -44,8 +43,6 @@ if (process.env.IS_DOCKER_ENVIRONMENT === true) {
   Sentry.init({ dsn: SENTRY_URL });
 }
 
-toast.configure();
-
 // see https://github.com/zalmoxisus/redux-devtools-extension
 let devTools = undefined;
 //eslint-disable-next-line
@@ -66,13 +63,12 @@ const store = applyMiddleware(thunk, multi, promise)(createStore)(
 );
 
 // store é o carinha que recebe todos os estados
-ReactDOM.render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <Router>
       <App />
     </Router>
-  </Provider>,
-  document.getElementById("root")
+  </Provider>
 );
 
 // If you want your app to work offline and load faster, you can change

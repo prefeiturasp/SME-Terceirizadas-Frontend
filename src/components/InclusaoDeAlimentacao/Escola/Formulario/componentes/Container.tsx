@@ -25,36 +25,51 @@ import {
   exibeMotivoETEC,
   formatarPeriodos,
 } from "../../../helper";
+import {
+  MotivoContinuoInterface,
+  MotivoSimplesInterface,
+  PeriodosInclusaoInterface,
+} from "../interfaces";
+import { PeriodoEscolarRascunhosInterface } from "interfaces/rascunhos.interface";
+import {
+  ResponseQuantidadeAlunosEscolaInterface,
+  ResponseVinculosTipoAlimentacaoPorEscolaInterface,
+} from "interfaces/responses.interface";
 
 export const Container = () => {
   const [dados, setDados] = useState(null);
-  const [motivosSimples, setMotivosSimples] = useState(null);
-  const [motivosContinuos, setMotivosContinuos] = useState(
-    escolaEhCei() ? [] : null
-  );
-  const [periodos, setPeriodos] = useState(null);
+  const [motivosSimples, setMotivosSimples] =
+    useState<Array<MotivoSimplesInterface>>(undefined);
+  const [motivosContinuos, setMotivosContinuos] = useState<
+    Array<MotivoContinuoInterface>
+  >(escolaEhCei() ? [] : undefined);
+  const [periodos, setPeriodos] =
+    useState<Array<PeriodosInclusaoInterface>>(undefined);
   const [periodosMotivoEspecifico, setPeriodosMotivoEspecifico] =
-    useState(null);
-  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
-  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
-  const [periodoNoite, setPeriodoNoite] = useState(
-    exibeMotivoETEC() ? null : []
-  );
-
+    useState<Array<PeriodosInclusaoInterface>>(undefined);
+  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] =
+    useState<Date>(undefined);
+  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] =
+    useState<Date>(null);
+  const [periodoNoite, setPeriodoNoite] = useState<
+    PeriodoEscolarRascunhosInterface | boolean
+  >(exibeMotivoETEC() ? undefined : true);
   const [erro, setErro] = useState(false);
 
   const getQuantidaDeAlunosPorPeriodoEEscolaAsync = async (
-    periodos,
-    escola_uuid
-  ) => {
-    const response = await getQuantidadeAlunosEscola(escola_uuid);
+    periodos: Array<PeriodosInclusaoInterface>,
+    escola_uuid: string
+  ): Promise<void> => {
+    const response: ResponseQuantidadeAlunosEscolaInterface =
+      await getQuantidadeAlunosEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
-      const periodos_ = abstraiPeriodosComAlunosMatriculados(
+      const periodos_: Array<any> = abstraiPeriodosComAlunosMatriculados(
         periodos,
         response.data.results,
         false
       );
-      const vinculos = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
+      const vinculos: ResponseVinculosTipoAlimentacaoPorEscolaInterface =
+        await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
       if (vinculos.status === HTTP_STATUS.OK) {
         periodos_.map((periodo) => {
           return (periodo.tipos_alimentacao = vinculos.data.results.find(
@@ -72,7 +87,7 @@ export const Container = () => {
     }
   };
 
-  const getMeusDadosAsync = async () => {
+  const getMeusDadosAsync = async (): Promise<void> => {
     const response = await getMeusDados();
     if (response.status === HTTP_STATUS.OK) {
       setDados(response.data);
@@ -105,7 +120,7 @@ export const Container = () => {
     }
   };
 
-  const getMotivosInclusaoContinuaAsync = async () => {
+  const getMotivosInclusaoContinuaAsync = async (): Promise<void> => {
     const response = await getMotivosInclusaoContinua();
     if (response.status === HTTP_STATUS.OK) {
       if (!exibeMotivoETEC()) {
@@ -128,7 +143,7 @@ export const Container = () => {
     }
   };
 
-  const getDiasUteisAsync = async () => {
+  const getDiasUteisAsync = async (): Promise<void> => {
     const response = await getDiasUteis();
     if (response.status === HTTP_STATUS.OK) {
       setProximosCincoDiasUteis(
@@ -142,7 +157,7 @@ export const Container = () => {
     }
   };
 
-  const getBuscaPeriodosEscolaresAsync = async () => {
+  const getBuscaPeriodosEscolaresAsync = async (): Promise<void> => {
     const response = await buscaPeriodosEscolares({ nome: "NOITE" });
     if (
       response.status === HTTP_STATUS.OK &&

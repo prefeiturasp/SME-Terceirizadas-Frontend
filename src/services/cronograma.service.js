@@ -96,6 +96,12 @@ export const codaeAssinaCronograma = async (uuid, password) => {
   });
 };
 
+export const fornecedorCienteAlteracaoCodae = async (uuid) => {
+  return await axios.patch(
+    `solicitacao-de-alteracao-de-cronograma/${uuid}/fornecedor-ciente/`
+  );
+};
+
 export const getDashboardCronograma = async (params = null) =>
   await axios.get(`/cronogramas/dashboard/`, { params });
 

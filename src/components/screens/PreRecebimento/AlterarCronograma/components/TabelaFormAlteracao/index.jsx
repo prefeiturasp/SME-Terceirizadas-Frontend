@@ -4,7 +4,7 @@ import React from "react";
 import { Field } from "react-final-form";
 import "./styles.scss";
 
-export default ({ solicitacao }) => {
+export default ({ solicitacao, somenteLeitura }) => {
   const pintaTabela = (campo, index) => {
     const classe = "fundo-laranja";
     if (
@@ -15,8 +15,6 @@ export default ({ solicitacao }) => {
       return classe;
     } else return "";
   };
-
-  const apenasLeitura = solicitacao.status !== "Em análise";
 
   return (
     <>
@@ -34,18 +32,25 @@ export default ({ solicitacao }) => {
             solicitacao.etapas_novas.map((etapa, index) => {
               return (
                 <tr key={index}>
-                  <td className="borda-crono">
-                    {apenasLeitura ? (
-                      <>{etapa.numero_empenho}</>
-                    ) : (
+                  {somenteLeitura ? (
+                    <td
+                      className={`borda-crono ${pintaTabela(
+                        "numero_empenho",
+                        index
+                      )}`}
+                    >
+                      {etapa.numero_empenho ? etapa.numero_empenho : "----"}
+                    </td>
+                  ) : (
+                    <td className="borda-crono">
                       <Field
                         component={InputText}
                         name={`empenho_${index}`}
                         validate={required}
                         proibeLetras
                       />
-                    )}
-                  </td>
+                    </td>
+                  )}
                   <td className={`borda-crono ${pintaTabela("etapa", index)}`}>
                     {etapa.etapa}
                   </td>
@@ -74,7 +79,7 @@ export default ({ solicitacao }) => {
                       index
                     )}`}
                   >
-                    {apenasLeitura ? (
+                    {somenteLeitura ? (
                       <>{etapa.total_embalagens}</>
                     ) : (
                       <Field

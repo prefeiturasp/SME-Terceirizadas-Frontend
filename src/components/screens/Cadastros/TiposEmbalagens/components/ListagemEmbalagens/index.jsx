@@ -2,20 +2,20 @@ import {
   CADASTROS,
   CONFIGURACOES,
   EDITAR,
-  CADASTRO_EMBALAGEM,
+  CADASTRO_TIPO_EMBALAGEM,
 } from "configs/constants";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
 import "./styles.scss";
 
-const ListagemEmbalagens = ({ embalagens }) => {
+const ListagemTiposEmbalagens = ({ embalagens }) => {
   return (
     <section className="resultado-embalagens">
-      <div className="titulo-verde">Embalagens Cadastradas</div>
+      <div className="titulo-verde">Tipos de Embalagens Cadastradas</div>
       <article>
         <div className="grid-table header-table">
-          <div>Nome da Embalagem</div>
+          <div>Tipos de Embalagens</div>
           <div>Abreviação</div>
           <div>Data do Cadastro</div>
           <div>Ações</div>
@@ -29,7 +29,7 @@ const ListagemEmbalagens = ({ embalagens }) => {
                 <div>{embalagem.criado_em.slice(0, 10)}</div>
                 <div>
                   <NavLink
-                    to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_EMBALAGEM}/${EDITAR}?uuid=${embalagem.uuid}`}
+                    to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_TIPO_EMBALAGEM}/${EDITAR}?uuid=${embalagem.uuid}`}
                   >
                     <span className="link-acoes px-2">
                       <i title="Editar" className="verde fas fa-edit" />
@@ -45,4 +45,4 @@ const ListagemEmbalagens = ({ embalagens }) => {
   );
 };
 
-export default ListagemEmbalagens;
+export default ListagemTiposEmbalagens;
