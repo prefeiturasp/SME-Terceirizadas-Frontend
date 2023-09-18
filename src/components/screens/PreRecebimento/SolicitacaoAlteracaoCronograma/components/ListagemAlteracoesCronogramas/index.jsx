@@ -36,7 +36,12 @@ const ListagemAlteracoesCronogramas = ({
                 <div>{alteracaoCronograma.numero_solicitacao}</div>
                 <div>{alteracaoCronograma.cronograma}</div>
                 {!fornecedor && <div>{alteracaoCronograma.fornecedor}</div>}
-                <div>
+                <div
+                  className={`${
+                    alteracaoCronograma.status ===
+                      "Alteração Enviada ao Fornecedor" && "orange"
+                  }`}
+                >
                   {fornecedor
                     ? deParaStatusAltCronograma(alteracaoCronograma.status)
                     : alteracaoCronograma.status}
@@ -47,7 +52,16 @@ const ListagemAlteracoesCronogramas = ({
                     className="float-left"
                     to={`/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${alteracaoCronograma.uuid}`}
                   >
-                    <span className="link-acoes green">Detalhar</span>
+                    <span
+                      className={`link-acoes ${
+                        alteracaoCronograma.status ===
+                        "Alteração Enviada ao Fornecedor"
+                          ? "orange"
+                          : "green"
+                      }`}
+                    >
+                      Detalhar
+                    </span>
                   </NavLink>
                 </div>
               </div>

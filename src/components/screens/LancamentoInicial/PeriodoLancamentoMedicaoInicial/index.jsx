@@ -53,11 +53,15 @@ import {
   exibirTooltipSuspensoesAutorizadas,
   exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas,
   exibirTooltipKitLancheSolAlimentacoes,
-  exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas,
-  exibirTooltipLancheEmergencialSolAlimentacoes,
+  exibirTooltipLancheEmergencialNaoAutorizado,
+  exibirTooltipLancheEmergencialAutorizado,
+  exibirTooltipLancheEmergencialZeroAutorizado,
+  exibirTooltipLancheEmergencialZeroAutorizadoJustificado,
   exibirTooltipFrequenciaZeroTabelaEtec,
   exibirTooltipLancheEmergTabelaEtec,
   exibirTooltipRepeticao,
+  exibirTooltipPadraoRepeticaoDiasSobremesaDoce,
+  exibirTooltipRepeticaoDiasSobremesaDoceDiferenteZero,
   validacoesTabelaAlimentacao,
   validacoesTabelasDietas,
   validarFormulario,
@@ -78,6 +82,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
   textoBotaoObservacao,
+  todosCamposDeRepeticaoSobremesaDocePreenchidos,
   valorZeroFrequencia,
 } from "./helper";
 import {
@@ -262,18 +267,20 @@ export default () => {
       );
     }
 
-    if (
-      !tiposAlimentacaoCEUGESTAO.includes("lanche") &&
-      !tiposAlimentacaoCEUGESTAO.includes("lanche_4h")
-    ) {
-      const indexRefeicao1Oferta =
+    if (!tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+      const indexLanche =
         tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
-          (ali) => ali.nome === "Lanche" || ali.nome === "Lanche 4h"
+          (ali) => ali.nome === "Lanche"
         );
-      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
-        indexRefeicao1Oferta,
-        1
-      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(indexLanche, 1);
+    }
+
+    if (!tiposAlimentacaoCEUGESTAO.includes("lanche_4h")) {
+      const indexLanche4h =
+        tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+          (ali) => ali.nome === "Lanche 4h"
+        );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(indexLanche4h, 1);
     }
 
     return tiposAlimentacaoProgramasProjetosOuCEUGESTAO;
@@ -465,19 +472,33 @@ export default () => {
         }
       );
 
-      const indexLanche4h = cloneTiposAlimentacao.findIndex((ali) =>
-        ali.nome.includes("4h")
-      );
-      if (indexLanche4h !== -1) {
-        rowsDietas.push({
-          nome: cloneTiposAlimentacao[indexLanche4h].nome,
-          name: cloneTiposAlimentacao[indexLanche4h].nome
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase()
-            .replaceAll(/ /g, "_"),
-          uuid: cloneTiposAlimentacao[indexLanche4h].uuid,
-        });
+      if (
+        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+      ) {
+        if (tiposAlimentacaoCEUGESTAO.includes("lanche_4h")) {
+          rowsDietas.push({
+            nome: "Lanche 4h",
+            name: "lanche_4h",
+            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find((tp) =>
+              tp.nome.includes("4h")
+            ).uuid,
+          });
+        }
+      } else {
+        const indexLanche4h = cloneTiposAlimentacao.findIndex((ali) =>
+          ali.nome.includes("4h")
+        );
+        if (indexLanche4h !== -1) {
+          rowsDietas.push({
+            nome: cloneTiposAlimentacao[indexLanche4h].nome,
+            name: cloneTiposAlimentacao[indexLanche4h].nome
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replaceAll(/ /g, "_"),
+            uuid: cloneTiposAlimentacao[indexLanche4h].uuid,
+          });
+        }
       }
 
       const indexLanche = cloneTiposAlimentacao.findIndex(
@@ -485,10 +506,7 @@ export default () => {
       );
       if (
         indexLanche !== -1 &&
-        (!ehEscolaTipoCEUGESTAO(
-          location.state.solicitacaoMedicaoInicial.escola
-        ) ||
-          tiposAlimentacaoCEUGESTAO.includes("lanche"))
+        !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
       ) {
         rowsDietas.push({
           nome: "Lanche",
@@ -501,11 +519,29 @@ export default () => {
         });
       }
 
+      if (
+        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+      ) {
+        if (tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+          rowsDietas.push({
+            nome: "Lanche",
+            name: "Lanche"
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replaceAll(/ /g, "_"),
+            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO[indexLanche]
+              .uuid,
+          });
+        }
+      }
+
       rowsDietas.push({
         nome: "Observações",
         name: "observacoes",
         uuid: null,
       });
+
       setTabelaDietaRows(rowsDietas);
 
       const cloneRowsDietas = deepCopy(rowsDietas);
@@ -524,19 +560,6 @@ export default () => {
           name: "refeicao",
           uuid: cloneTiposAlimentacao[indexRefeicaoDieta].uuid,
         });
-      }
-
-      if (
-        ehEscolaTipoCEUGESTAO(
-          location.state.solicitacaoMedicaoInicial.escola
-        ) &&
-        !tiposAlimentacaoCEUGESTAO.includes("lanche") &&
-        !tiposAlimentacaoCEUGESTAO.includes("lanche_4h")
-      ) {
-        const indexLanche = cloneRowsDietas.findIndex(
-          (ali) => ali.nome === "Lanche" || ali.nome === "Lanche 4h"
-        );
-        cloneRowsDietas.splice(indexLanche, 1);
       }
 
       setTabelaDietaEnteralRows(cloneRowsDietas);
@@ -991,23 +1014,6 @@ export default () => {
                 : kit.numero_alunos).toString();
           });
 
-        alteracoesAlimentacaoAutorizadas &&
-          ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
-          alteracoesAlimentacaoAutorizadas.forEach((alteracao) => {
-            categoria.nome.includes("SOLICITAÇÕES") &&
-              (dadosValoresAlteracoesAlimentacaoAutorizadas[
-                `lanche_emergencial__dia_${alteracao.dia}__categoria_${categoria.id}`
-              ] = dadosValoresAlteracoesAlimentacaoAutorizadas[
-                `lanche_emergencial__dia_${alteracao.dia}__categoria_${categoria.id}`
-              ]
-                ? parseInt(
-                    dadosValoresAlteracoesAlimentacaoAutorizadas[
-                      `lanche_emergencial__dia_${alteracao.dia}__categoria_${categoria.id}`
-                    ]
-                  ) + alteracao.numero_alunos
-                : alteracao.numero_alunos).toString();
-          });
-
         inclusoesEtecAutorizadas &&
           ehGrupoETECUrlParam &&
           inclusoesEtecAutorizadas.forEach((inclusao) => {
@@ -1392,7 +1398,8 @@ export default () => {
       eh_observacao: true,
     };
     if (
-      values["periodo_escolar"].includes("Solicitações") ||
+      (values["periodo_escolar"] &&
+        values["periodo_escolar"].includes("Solicitações")) ||
       values["periodo_escolar"] === "ETEC" ||
       values["periodo_escolar"] === "Programas e Projetos"
     ) {
@@ -1777,14 +1784,15 @@ export default () => {
             categoria,
             kitLanchesAutorizadas
           ) ||
-          exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas(
+          exibirTooltipLancheEmergencialZeroAutorizado(
             formValuesAtualizados,
             row,
             column,
             categoria,
-            alteracoesAlimentacaoAutorizadas
+            alteracoesAlimentacaoAutorizadas,
+            validacaoDiaLetivo
           ) ||
-          exibirTooltipLancheEmergencialSolAlimentacoes(
+          exibirTooltipLancheEmergencialNaoAutorizado(
             formValuesAtualizados,
             row,
             column,
@@ -1878,13 +1886,15 @@ export default () => {
     }
     return `${
       !validacaoDiaLetivo(column.dia) &&
-      ((!kitLanchesAutorizadas.filter(
-        (kitLanche) => kitLanche.dia === column.dia
-      ).length &&
-        row.name === "kit_lanche") ||
-        (!alteracoesAlimentacaoAutorizadas.filter(
-          (lancheEmergencial) => lancheEmergencial.dia === column.dia
+      ((kitLanchesAutorizadas &&
+        !kitLanchesAutorizadas.filter(
+          (kitLanche) => kitLanche.dia === column.dia
         ).length &&
+        row.name === "kit_lanche") ||
+        (alteracoesAlimentacaoAutorizadas &&
+          !alteracoesAlimentacaoAutorizadas.filter(
+            (lancheEmergencial) => lancheEmergencial.dia === column.dia
+          ).length &&
           row.name === "lanche_emergencial"))
         ? "nao-eh-dia-letivo"
         : ""
@@ -2432,24 +2442,22 @@ export default () => {
                                                           kitLanchesAutorizadas,
                                                           alteracoesAlimentacaoAutorizadas
                                                         )}
-                                                        exibeTooltipDiaSobremesaDoce={
-                                                          row.name ===
-                                                            "repeticao_sobremesa" &&
-                                                          diasSobremesaDoce.includes(
-                                                            `${new Date(
-                                                              location.state.mesAnoSelecionado
-                                                            ).getFullYear()}-${(
-                                                              new Date(
-                                                                location.state.mesAnoSelecionado
-                                                              ).getMonth() + 1
-                                                            )
-                                                              .toString()
-                                                              .padStart(
-                                                                2,
-                                                                "0"
-                                                              )}-${column.dia}`
-                                                          )
-                                                        }
+                                                        exibeTooltipPadraoRepeticaoDiasSobremesaDoce={exibirTooltipPadraoRepeticaoDiasSobremesaDoce(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          diasSobremesaDoce,
+                                                          location
+                                                        )}
+                                                        exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero={exibirTooltipRepeticaoDiasSobremesaDoceDiferenteZero(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          diasSobremesaDoce,
+                                                          location
+                                                        )}
                                                         exibeTooltipRepeticao={exibirTooltipRepeticao(
                                                           formValuesAtualizados,
                                                           row,
@@ -2508,19 +2516,36 @@ export default () => {
                                                           categoria,
                                                           kitLanchesAutorizadas
                                                         )}
-                                                        exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas={exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas(
+                                                        exibeTooltipLancheEmergencialNaoAutorizado={exibirTooltipLancheEmergencialNaoAutorizado(
                                                           formValuesAtualizados,
                                                           row,
                                                           column,
                                                           categoria,
                                                           alteracoesAlimentacaoAutorizadas
                                                         )}
-                                                        exibeTooltipLancheEmergencialSolAlimentacoes={exibirTooltipLancheEmergencialSolAlimentacoes(
+                                                        exibeTooltipLancheEmergencialAutorizado={exibirTooltipLancheEmergencialAutorizado(
                                                           formValuesAtualizados,
                                                           row,
                                                           column,
                                                           categoria,
-                                                          alteracoesAlimentacaoAutorizadas
+                                                          alteracoesAlimentacaoAutorizadas,
+                                                          validacaoDiaLetivo
+                                                        )}
+                                                        exibeTooltipLancheEmergencialZeroAutorizado={exibirTooltipLancheEmergencialZeroAutorizado(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          alteracoesAlimentacaoAutorizadas,
+                                                          validacaoDiaLetivo
+                                                        )}
+                                                        exibeTooltipLancheEmergencialZeroAutorizadoJustificado={exibirTooltipLancheEmergencialZeroAutorizadoJustificado(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          alteracoesAlimentacaoAutorizadas,
+                                                          validacaoDiaLetivo
                                                         )}
                                                         exibeTooltipFrequenciaZeroTabelaEtec={exibirTooltipFrequenciaZeroTabelaEtec(
                                                           formValuesAtualizados,
@@ -2636,7 +2661,12 @@ export default () => {
                             location.state.status_periodo ===
                               "MEDICAO_APROVADA_PELA_DRE") ||
                           disableBotaoSalvarLancamentos ||
-                          !calendarioMesConsiderado
+                          !calendarioMesConsiderado ||
+                          !todosCamposDeRepeticaoSobremesaDocePreenchidos(
+                            diasSobremesaDoce,
+                            formValuesAtualizados,
+                            categoriasDeMedicao
+                          )
                         }
                         exibirTooltip={exibirTooltip}
                         tooltipTitulo="Existem campos a serem corrigidos. Realize as correções para salvar."

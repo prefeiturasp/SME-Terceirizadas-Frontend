@@ -10,6 +10,7 @@ import {
   ALTERACAO_CRONOGRAMA,
 } from "configs/constants";
 import {
+  usuarioEhCronograma,
   usuarioEhCronogramaCriacaoEdicao,
   usuarioEhEmpresaFornecedor,
   formataMilhar,
@@ -131,7 +132,8 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                             </>
                           )}
                           {cronograma.status === "Assinado CODAE" &&
-                            usuarioEhEmpresaFornecedor() && (
+                            (usuarioEhEmpresaFornecedor() ||
+                              usuarioEhCronograma()) && (
                               <>
                                 <span className="ml-1">|</span>
                                 <NavLink
@@ -139,7 +141,11 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                                   to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${cronograma.uuid}`}
                                 >
                                   <span className="link-acoes green">
-                                    Solicitar Alteração
+                                    {`${
+                                      usuarioEhEmpresaFornecedor()
+                                        ? "Solicitar Alteração"
+                                        : "Alterar Cronograma"
+                                    }`}
                                   </span>
                                 </NavLink>
                               </>

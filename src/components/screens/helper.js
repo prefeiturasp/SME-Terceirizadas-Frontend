@@ -284,6 +284,8 @@ export const deParaStatusAltCronograma = (status) =>
     status
   )
     ? "Em análise"
+    : ["Alteração Enviada ao Fornecedor"].includes(status)
+    ? "Recebida Alteração da CODAE"
     : status;
 
 export const formatarPara4Digitos = (numero) => {

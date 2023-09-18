@@ -246,7 +246,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
             );
             const tiposAlimentacaoFormatadas = formatarLinhasTabelaAlimentacao(
               tipos_alimentacao,
-              periodoGrupo
+              periodoGrupo,
+              solicitacao
             );
             setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
             const linhasTabelasDietas =
@@ -267,7 +268,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
           const tipos_alimentacao = periodo.tipos_alimentacao;
           const tiposAlimentacaoFormatadas = formatarLinhasTabelaAlimentacao(
             tipos_alimentacao,
-            periodoGrupo
+            periodoGrupo,
+            solicitacao
           );
           setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
           const linhasTabelasDietas =

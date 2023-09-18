@@ -650,6 +650,42 @@ table.table-reasons {
   }
 }
 
+table.table-reasons-inclusao {
+  width: 100%;
+
+  tr {
+    padding: 5px 0;
+    color: $gray;
+    font-size: 14px;
+
+    th {
+      font-weight: normal;
+
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+    }
+
+    td {
+      font-weight: bold;
+      color: $blackInput;
+
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+
+      &.cancelado span {
+        color: $grayLight;
+        text-decoration: line-through;
+      }
+
+      &.cancelado div {
+        font-weight: normal;
+      }
+    }
+  }
+}
+
 .input-com-filtros-adicionais {
   height: 38px !important;
 }

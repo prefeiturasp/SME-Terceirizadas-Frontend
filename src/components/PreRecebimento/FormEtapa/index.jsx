@@ -12,9 +12,11 @@ import { InputComData } from "components/Shareable/DatePicker";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { getEtapas } from "services/cronograma.service";
 import { required } from "helpers/fieldValidators";
+import { deletaValues } from "helpers/formHelper";
 import { formataMilhar } from "helpers/utilities";
 
 import moment from "moment";
+import { usuarioEhCronograma } from "../../../helpers/utilities";
 
 export default ({
   etapas,
@@ -23,7 +25,7 @@ export default ({
   duplicados,
   restante,
   unidadeMedida,
-  fornecedor = false,
+  ehAlteracao = false,
 }) => {
   const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [desabilitar, setDesabilitar] = useState([]);
@@ -41,6 +43,17 @@ export default ({
   };
 
   const deletaEtapa = (index) => {
+    let listaChaves = [
+      "empenho",
+      "etapa",
+      "parte",
+      "data_programada",
+      "quantidade",
+      "total_embalagens",
+    ];
+
+    deletaValues(etapas, listaChaves, values, index);
+
     let etapasNovo = [...etapas];
     etapasNovo.splice(index, 1);
     setEtapas(etapasNovo);
@@ -88,7 +101,7 @@ export default ({
 
   useEffect(() => {
     const desativaCampos = () => {
-      if (fornecedor) {
+      if (ehAlteracao) {
         let array = [];
         etapas.forEach((etapa, index) => {
           let dataProgramada = moment(
@@ -131,7 +144,7 @@ export default ({
               </>
             )}
             <div className="row">
-              {!fornecedor && (
+              {usuarioEhCronograma() && (
                 <div className="col-4">
                   {
                     <Field

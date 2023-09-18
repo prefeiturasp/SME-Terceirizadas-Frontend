@@ -1,10 +1,18 @@
 import moment from "moment";
 
-export const prepararPayloadCronograma = (cronograma, values, etapas) => {
+export const prepararPayloadCronograma = (
+  cronograma,
+  values,
+  etapas,
+  recebimentos
+) => {
   let etapasPayload = prepararPayloadEtapas(values, etapas);
+  let recebimentosPayload = prepararPayloadRecebimentos(values, recebimentos);
   return {
     cronograma: cronograma.uuid,
+    qtd_total_programada: values.quantidade_total.replace(".", ""),
     etapas: etapasPayload,
+    programacoes_de_recebimento: recebimentosPayload,
     justificativa: values.justificativa,
   };
 };

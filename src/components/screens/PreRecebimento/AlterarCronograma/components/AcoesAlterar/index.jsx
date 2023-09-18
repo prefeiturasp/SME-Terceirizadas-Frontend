@@ -16,6 +16,8 @@ import ModalEnviarSolicitacao from "../Modals/ModalEnviarSolicitacao";
 import ModalAnalise from "../Modals/ModalAnalise";
 import ModalAnaliseDinutre from "../Modals/ModalAnaliseDinutre";
 import ModalAnaliseDilog from "../Modals/ModalAnaliseDilog";
+import ModalEnviarAlteracao from "../Modals/ModalEnviarAlteracao";
+import ModalCienciaAlteracao from "../Modals/ModalCienciaAlteracao";
 
 export default ({
   handleSubmit,
@@ -52,58 +54,140 @@ export default ({
 
   return (
     <>
+      {usuarioEhEmpresaFornecedor() &&
+        solicitacaoAlteracaoCronograma &&
+        solicitacaoAlteracaoCronograma.status ===
+          "Alteração Enviada ao Fornecedor" && (
+          <>
+            <Botao
+              texto="Ciente da Alteração"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              className="float-right ml-3"
+              onClick={() => {
+                handleShow();
+              }}
+            />
+            <ModalCienciaAlteracao
+              show={show}
+              handleClose={handleClose}
+              loading={loading}
+              handleSim={handleSim}
+            />
+          </>
+        )}
+
       {usuarioEhEmpresaFornecedor() && !solicitacaoAlteracaoCronograma && (
-        <Botao
-          texto="Enviar Solicitação"
-          type={BUTTON_TYPE.BUTTON}
-          disabled={!podeSubmeter}
-          style={BUTTON_STYLE.GREEN}
-          className="float-right ml-3"
-          onClick={() => {
-            if (!podeSubmeter) {
-              toastError("Selecione os campos obrigatórios");
-              return;
-            }
-            handleShow();
-          }}
-        />
-      )}
-      {usuarioEhCronograma() &&
-        solicitacaoAlteracaoCronograma.status === "Em análise" && (
+        <>
           <Botao
-            texto="Enviar DINUTRE"
+            texto="Enviar Solicitação"
             type={BUTTON_TYPE.BUTTON}
+            disabled={!podeSubmeter}
             style={BUTTON_STYLE.GREEN}
             className="float-right ml-3"
-            onClick={() => handleShow()}
-            disabled={!podeSubmeter}
+            onClick={() => {
+              if (!podeSubmeter) {
+                toastError("Selecione os campos obrigatórios");
+                return;
+              }
+              handleShow();
+            }}
           />
+          <ModalEnviarSolicitacao
+            show={show}
+            handleClose={handleClose}
+            loading={loading}
+            handleSim={handleSim}
+          />
+        </>
+      )}
+
+      {usuarioEhCronograma() && !solicitacaoAlteracaoCronograma && (
+        <>
+          <Botao
+            texto="Enviar Alteração"
+            type={BUTTON_TYPE.BUTTON}
+            disabled={!podeSubmeter}
+            style={BUTTON_STYLE.GREEN}
+            className="float-right ml-3"
+            onClick={() => {
+              if (!podeSubmeter) {
+                toastError("Selecione os campos obrigatórios");
+                return;
+              }
+              handleShow();
+            }}
+          />
+          <ModalEnviarAlteracao
+            show={show}
+            handleClose={handleClose}
+            loading={loading}
+            handleSim={handleSim}
+          />
+        </>
+      )}
+      {usuarioEhCronograma() &&
+        solicitacaoAlteracaoCronograma &&
+        solicitacaoAlteracaoCronograma.status === "Em análise" && (
+          <>
+            <Botao
+              texto="Enviar DINUTRE"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              className="float-right ml-3"
+              onClick={() => handleShow()}
+              disabled={!podeSubmeter}
+            />
+            <ModalAnalise
+              show={show}
+              setShow={setShow}
+              handleClose={handleClose}
+              loading={loading}
+              handleSim={enviaAnaliseCronograma}
+            />
+          </>
         )}
 
       {usuarioEhDinutreDiretoria() &&
         solicitacaoAlteracaoCronograma.status === "Cronograma ciente" && (
-          <Botao
-            texto="Enviar DILOG"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            className="float-right ml-3"
-            onClick={() => handleShow()}
-            disabled={disabledDinutre}
-          />
+          <>
+            <Botao
+              texto="Enviar DILOG"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              className="float-right ml-3"
+              onClick={() => handleShow()}
+              disabled={disabledDinutre}
+            />
+            <ModalAnaliseDinutre
+              show={show}
+              handleClose={handleClose}
+              loading={loading}
+              handleSim={handleSim}
+            />
+          </>
         )}
 
       {usuarioEhDilogDiretoria() &&
         ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
           solicitacaoAlteracaoCronograma.status
         ) && (
-          <Botao
-            texto="Enviar Fornecedor"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            className="float-right ml-3"
-            onClick={() => handleShow()}
-            disabled={disabledDilog}
-          />
+          <>
+            <Botao
+              texto="Enviar Fornecedor"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              className="float-right ml-3"
+              onClick={() => handleShow()}
+              disabled={disabledDilog}
+            />
+            <ModalAnaliseDilog
+              show={show}
+              handleClose={handleClose}
+              loading={loading}
+              handleSim={handleSim}
+            />
+          </>
         )}
       <Botao
         texto="Voltar"
@@ -112,40 +196,6 @@ export default ({
         className="float-right ml-3"
         onClick={() => handleBack()}
       />
-
-      {usuarioEhEmpresaFornecedor() && (
-        <ModalEnviarSolicitacao
-          show={show}
-          handleClose={handleClose}
-          loading={loading}
-          handleSim={handleSim}
-        />
-      )}
-      {usuarioEhCronograma() && (
-        <ModalAnalise
-          show={show}
-          setShow={setShow}
-          handleClose={handleClose}
-          loading={loading}
-          handleSim={enviaAnaliseCronograma}
-        />
-      )}
-      {usuarioEhDinutreDiretoria() && (
-        <ModalAnaliseDinutre
-          show={show}
-          handleClose={handleClose}
-          loading={loading}
-          handleSim={handleSim}
-        />
-      )}
-      {usuarioEhDilogDiretoria() && (
-        <ModalAnaliseDilog
-          show={show}
-          handleClose={handleClose}
-          loading={loading}
-          handleSim={handleSim}
-        />
-      )}
     </>
   );
 };

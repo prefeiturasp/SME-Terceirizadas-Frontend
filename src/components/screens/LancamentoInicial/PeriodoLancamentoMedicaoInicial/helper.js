@@ -23,7 +23,8 @@ export const formatarPayloadPeriodoLancamento = (
   tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows
 ) => {
   if (
-    values["periodo_escolar"].includes("Solicitações") ||
+    (values["periodo_escolar"] &&
+      values["periodo_escolar"].includes("Solicitações")) ||
     values["periodo_escolar"] === "ETEC" ||
     values["periodo_escolar"] === "Programas e Projetos"
   ) {
@@ -565,7 +566,8 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
 
 export const formatarLinhasTabelaAlimentacao = (
   tipos_alimentacao,
-  periodoGrupo
+  periodoGrupo,
+  solicitacao
 ) => {
   const tiposAlimentacaoFormatadas = tipos_alimentacao
     .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
@@ -604,7 +606,8 @@ export const formatarLinhasTabelaAlimentacao = (
   }
 
   const matriculadosOuNumeroDeAlunos = () => {
-    return periodoGrupo.grupo === "Programas e Projetos"
+    return periodoGrupo.grupo === "Programas e Projetos" ||
+      ehEscolaTipoCEUGESTAO(solicitacao.escola)
       ? {
           nome: "Número de Alunos",
           name: "numero_de_alunos",
@@ -940,5 +943,23 @@ export const desabilitarBotaoColunaObservacoes = (
           categoria.id,
           valoresPeriodosLancamentos
         )))
+  );
+};
+
+export const todosCamposDeRepeticaoSobremesaDocePreenchidos = (
+  diasSobremesaDoce,
+  formValuesAtualizados,
+  categoriasDeMedicao
+) => {
+  const categoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
+    categoria.nome.includes("ALIMENTAÇÃO")
+  );
+  return diasSobremesaDoce.every(
+    (dataSobremesa) =>
+      formValuesAtualizados[
+        `repeticao_sobremesa__dia_${dataSobremesa.split("-")[2]}__categoria_${
+          categoriaAlimentacao.id
+        }`
+      ]
   );
 };

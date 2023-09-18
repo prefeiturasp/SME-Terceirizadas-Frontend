@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import Filtros from "./components/Filtros";
-import ListagemEmbalagens from "./components/ListagemEmbalagens";
+import ListagemTiposEmbalagens from "./components/ListagemEmbalagens";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
-  getEmbalagens,
-  getListaNomesEmbalagens,
-  getListaAbreviacaoEmbalagens,
+  getTiposEmbalagens,
+  getListaNomesTiposEmbalagens,
+  getListaAbreviacoesTiposEmbalagens,
 } from "services/qualidade.service";
 import { Paginacao } from "components/Shareable/Paginacao";
 
@@ -31,8 +31,8 @@ export default () => {
   }, [filtros]);
 
   const buscaDadosAutoComplete = async () => {
-    const respNomes = await getListaNomesEmbalagens();
-    const respAbreviacoes = await getListaAbreviacaoEmbalagens();
+    const respNomes = await getListaNomesTiposEmbalagens();
+    const respAbreviacoes = await getListaAbreviacoesTiposEmbalagens();
     setNomesEmbalagens(respNomes.data.results);
     setAbreviacaoEmbalagens(respAbreviacoes.data.results);
   };
@@ -41,7 +41,7 @@ export default () => {
     setCarregando(true);
 
     const params = gerarParametrosConsulta({ page: page, ...filtros });
-    const response = await getEmbalagens(params);
+    const response = await getTiposEmbalagens(params);
     if (response.data.count) {
       setEmbalagens(response.data.results);
       setTotal(response.data.count);
@@ -72,7 +72,7 @@ export default () => {
           {embalagens && (
             <>
               <hr />
-              <ListagemEmbalagens embalagens={embalagens} />
+              <ListagemTiposEmbalagens embalagens={embalagens} />
               <div className="row">
                 <div className="col">
                   <Paginacao
