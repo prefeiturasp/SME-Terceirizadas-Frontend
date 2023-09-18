@@ -31,7 +31,7 @@ export const formataSubstituicoes = (dietaEspecial) => {
       );
       return {
         alimento: String(substituicao.alimento.id),
-        tipo: substituicao.tipo === "Substituir" ? "S" : "I",
+        tipo: ["Substituir", "S"].includes(substituicao.tipo) ? "S" : "I",
         substitutos: substitutos.concat(alimentos_substitutos),
       };
     });
