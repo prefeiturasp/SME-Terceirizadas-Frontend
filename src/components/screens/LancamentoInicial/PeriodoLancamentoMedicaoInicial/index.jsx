@@ -282,7 +282,17 @@ export default () => {
         );
       tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(indexLanche4h, 1);
     }
-
+    if (
+      !tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find(
+        (t) => t.name === "observacoes"
+      )
+    ) {
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.push({
+        nome: "Observações",
+        name: "observacoes",
+        uuid: null,
+      });
+    }
     return tiposAlimentacaoProgramasProjetosOuCEUGESTAO;
   };
 

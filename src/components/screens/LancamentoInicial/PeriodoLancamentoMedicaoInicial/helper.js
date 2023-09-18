@@ -398,7 +398,13 @@ export const desabilitarField = (
     } else {
       if (rowName === "dietas_autorizadas") {
         return true;
-      } else if (!validacaoDiaLetivo(dia) || validacaoSemana(dia)) {
+      } else if (validacaoSemana(dia)) {
+        return true;
+      } else if (
+        !Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+          key.includes(`__dia_${dia}`)
+        )
+      ) {
         return true;
       } else {
         return false;
