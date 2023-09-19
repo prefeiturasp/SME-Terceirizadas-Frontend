@@ -25,7 +25,7 @@ import {
 import { getRelatorioProdutoAnaliseSensorialRecebimento } from "services/relatorios";
 
 import DetalheProduto from "./components/DetalheProduto";
-import ModalResponderAnaliseSensorial from "./components/ModalResponderAnaliseSensorial";
+import { ModalResponderAnaliseSensorial } from "./components/ModalResponderAnaliseSensorial";
 
 import "./styles.scss";
 
