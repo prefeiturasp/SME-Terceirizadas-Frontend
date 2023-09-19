@@ -183,7 +183,7 @@ class solicitacaoDietaEspecial extends Component {
             fotoAlunoSrc: undefined,
             criadoRf: null,
           });
-          if (this.state.pertence_a_escola) {
+          if (response.data.pertence_a_escola) {
             change("aluno_json.nome", resposta.detail.nm_aluno);
             change(
               "aluno_json.data_nascimento",
