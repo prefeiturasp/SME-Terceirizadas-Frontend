@@ -12,7 +12,7 @@ import {
 import Botao from "components/Shareable/Botao";
 import "./styles.scss";
 import { Fragment } from "react";
-import ModalResponderAnaliseSensorial from "../BuscaProdutoAnaliseSensorial/components/ModalResponderAnaliseSensorial";
+import { ModalResponderAnaliseSensorial } from "../BuscaProdutoAnaliseSensorial/components/ModalResponderAnaliseSensorial";
 import {
   getRelatorioProdutoAnaliseSensorial,
   getRelatorioProdutoAnaliseSensorialRecebimento,
