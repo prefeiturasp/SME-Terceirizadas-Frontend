@@ -3,21 +3,21 @@ import Page from "components/Shareable/Page/Page";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import { PAINEL_APROVACOES, PRE_RECEBIMENTO } from "configs/constants";
 import {
-  getDashboardSolicitacoesAlteracao,
-  getDashboardSolicitacoesAlteracaoComFiltros,
+  getDashboardCronograma,
+  getDashboardCronogramaComFiltros,
 } from "services/cronograma.service";
 import { SolicitacoesCronogramaStatusGenerico } from "components/screens/SolicitacoesCronogramaStatusGenerico";
-import { CARD_SOLICITACOES_ALTERACOES_DINUTRE } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
+import { CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
 
 const atual = {
-  href: CARD_SOLICITACOES_ALTERACOES_DINUTRE.href,
-  titulo: CARD_SOLICITACOES_ALTERACOES_DINUTRE.titulo,
+  href: CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS.href,
+  titulo: CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS.titulo,
 };
 
 const limit = 10;
 
 const paramsDefault = {
-  status: CARD_SOLICITACOES_ALTERACOES_DINUTRE.incluir_status,
+  status: CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS.incluir_status,
   offset: 0,
   limit: limit,
 };
@@ -42,14 +42,13 @@ export default () => {
     >
       <Breadcrumb home="/" atual={atual} anteriores={anteriores} />
       <SolicitacoesCronogramaStatusGenerico
-        icone={CARD_SOLICITACOES_ALTERACOES_DINUTRE.icon}
-        titulo={CARD_SOLICITACOES_ALTERACOES_DINUTRE.titulo}
-        cardType={CARD_SOLICITACOES_ALTERACOES_DINUTRE.style}
-        getSolicitacoes={getDashboardSolicitacoesAlteracao}
-        getSolicitacoesComFiltros={getDashboardSolicitacoesAlteracaoComFiltros}
+        icone={CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS.icon}
+        titulo={CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS.titulo}
+        cardType={CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS.style}
+        getSolicitacoes={getDashboardCronograma}
+        getSolicitacoesComFiltros={getDashboardCronogramaComFiltros}
         params={paramsDefault}
         limit={limit}
-        alteracao={true}
       />
     </Page>
   );

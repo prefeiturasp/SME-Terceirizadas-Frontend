@@ -210,7 +210,10 @@ export default () => {
   };
 
   const getTiposAlimentacaoCEUGESTAO = (inclusoesAutorizadas) => {
-    if (!ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
+    if (
+      !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola) &&
+      !(urlParams.get("ehPeriodoEspecifico") === "true")
+    )
       return [];
     const tiposAlimentacao = [];
     inclusoesAutorizadas.forEach((inclusao) => {
@@ -227,7 +230,10 @@ export default () => {
     tiposAlimentacaoProgramasProjetosOuCEUGESTAO,
     tiposAlimentacaoCEUGESTAO
   ) => {
-    if (!ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
+    if (
+      !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola) &&
+      !(urlParams.get("ehPeriodoEspecifico") === "true")
+    )
       return tiposAlimentacaoProgramasProjetosOuCEUGESTAO;
     if (!tiposAlimentacaoCEUGESTAO.includes("refeicao")) {
       const indexRefeicao1Oferta =
@@ -282,7 +288,17 @@ export default () => {
         );
       tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(indexLanche4h, 1);
     }
-
+    if (
+      !tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find(
+        (t) => t.name === "observacoes"
+      )
+    ) {
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.push({
+        nome: "Observações",
+        name: "observacoes",
+        uuid: null,
+      });
+    }
     return tiposAlimentacaoProgramasProjetosOuCEUGESTAO;
   };
 
@@ -290,7 +306,10 @@ export default () => {
     response_categorias_medicao,
     tiposAlimentacaoCEUGESTAO
   ) => {
-    if (!ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
+    if (
+      !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola) &&
+      !(urlParams.get("ehPeriodoEspecifico") === "true")
+    )
       return response_categorias_medicao;
     if (!tiposAlimentacaoCEUGESTAO.includes("refeicao")) {
       response_categorias_medicao = response_categorias_medicao.filter(
@@ -343,12 +362,22 @@ export default () => {
       getListaDiasSobremesaDoceAsync(escola.uuid);
 
       const periodos_escolares = response_vinculos.data.results;
-      const periodo =
-        periodos_escolares.find(
-          (periodo) =>
-            periodo.periodo_escolar.nome ===
-            (location.state ? location.state.periodo : "MANHA")
-        ) || periodos_escolares[0];
+
+      let periodo = periodos_escolares[0];
+      const ehPeriodoEspecifico =
+        urlParams.get("ehPeriodoEspecifico") === "true" ? true : false;
+      if (ehPeriodoEspecifico) {
+        periodo = location.state
+          ? location.state.periodoEspecifico
+          : periodos_escolares[0];
+      } else {
+        periodo =
+          periodos_escolares.find(
+            (periodo) =>
+              periodo.periodo_escolar.nome ===
+              (location.state ? location.state.periodo : "MANHA")
+          ) || periodos_escolares[0];
+      }
 
       const mes = format(mesAnoSelecionado, "MM");
       const ano = getYear(mesAnoSelecionado);
@@ -473,7 +502,10 @@ export default () => {
       );
 
       if (
-        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+        ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) ||
+        urlParams.get("ehPeriodoEspecifico") === "true"
       ) {
         if (tiposAlimentacaoCEUGESTAO.includes("lanche_4h")) {
           rowsDietas.push({
@@ -505,8 +537,12 @@ export default () => {
         (ali) => ali.nome === "Lanche"
       );
       if (
-        indexLanche !== -1 &&
-        !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+        (indexLanche !== -1 &&
+          !ehEscolaTipoCEUGESTAO(
+            location.state.solicitacaoMedicaoInicial.escola
+          )) ||
+        (indexLanche !== -1 &&
+          !(urlParams.get("ehPeriodoEspecifico") === "true"))
       ) {
         rowsDietas.push({
           nome: "Lanche",
@@ -520,7 +556,10 @@ export default () => {
       }
 
       if (
-        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+        ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) ||
+        urlParams.get("ehPeriodoEspecifico") === "true"
       ) {
         if (tiposAlimentacaoCEUGESTAO.includes("lanche")) {
           rowsDietas.push({
@@ -549,11 +588,14 @@ export default () => {
         (ali) => ali.nome === "Refeição"
       );
       if (
-        indexRefeicaoDieta !== -1 &&
-        (!ehEscolaTipoCEUGESTAO(
-          location.state.solicitacaoMedicaoInicial.escola
-        ) ||
-          tiposAlimentacaoCEUGESTAO.includes("refeicao"))
+        (indexRefeicaoDieta !== -1 &&
+          (!ehEscolaTipoCEUGESTAO(
+            location.state.solicitacaoMedicaoInicial.escola
+          ) ||
+            tiposAlimentacaoCEUGESTAO.includes("refeicao"))) ||
+        (indexRefeicaoDieta !== -1 &&
+          (!(urlParams.get("ehPeriodoEspecifico") === "true") ||
+            tiposAlimentacaoCEUGESTAO.includes("refeicao")))
       ) {
         cloneRowsDietas.splice(cloneRowsDietas.length - 1, 0, {
           nome: "Refeição",
@@ -668,7 +710,10 @@ export default () => {
       };
       if (
         location.state.grupo !== "Programas e Projetos" &&
-        !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+        !ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) &&
+        !(urlParams.get("ehPeriodoEspecifico") === "true")
       ) {
         params_dietas_autorizadas["periodo_escolar"] =
           periodo.periodo_escolar.uuid;
@@ -1031,7 +1076,8 @@ export default () => {
           (grupoLocation === "Programas e Projetos" ||
             ehEscolaTipoCEUGESTAO(
               location.state.solicitacaoMedicaoInicial.escola
-            )) &&
+            ) ||
+            urlParams.get("ehPeriodoEspecifico") === "true") &&
           solInclusoesAutorizadas
         ) {
           for (let i = 1; i <= 31; i++) {
@@ -1908,7 +1954,8 @@ export default () => {
       return tabelaEtecsAlimentacaoRows;
     } else if (
       grupoLocation === "Programas e Projetos" ||
-      ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+      ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola) ||
+      urlParams.get("ehPeriodoEspecifico") === "true"
     ) {
       return tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows;
     } else {
@@ -2662,11 +2709,15 @@ export default () => {
                               "MEDICAO_APROVADA_PELA_DRE") ||
                           disableBotaoSalvarLancamentos ||
                           !calendarioMesConsiderado ||
-                          !todosCamposDeRepeticaoSobremesaDocePreenchidos(
-                            diasSobremesaDoce,
-                            formValuesAtualizados,
-                            categoriasDeMedicao
-                          )
+                          (!(
+                            urlParams.get("ehPeriodoEspecifico") === "true" ||
+                            grupoLocation === "Programas e Projetos"
+                          ) &&
+                            !todosCamposDeRepeticaoSobremesaDocePreenchidos(
+                              diasSobremesaDoce,
+                              formValuesAtualizados,
+                              categoriasDeMedicao
+                            ))
                         }
                         exibirTooltip={exibirTooltip}
                         tooltipTitulo="Existem campos a serem corrigidos. Realize as correções para salvar."
