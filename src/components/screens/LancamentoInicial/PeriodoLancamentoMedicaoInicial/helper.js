@@ -348,7 +348,10 @@ export const desabilitarField = (
       );
     }
   }
-  if (ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)) {
+  if (
+    ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola) ||
+    location.state.periodoEspecifico
+  ) {
     return (
       validacaoSemana(dia) ||
       rowName === "numero_de_alunos" ||

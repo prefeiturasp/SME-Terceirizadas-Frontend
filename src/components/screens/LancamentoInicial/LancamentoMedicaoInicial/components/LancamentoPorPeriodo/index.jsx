@@ -13,6 +13,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesInclusoesEtecAutorizadasEscola,
+  getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola,
   getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
@@ -38,6 +39,7 @@ import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
 export default ({
   escolaInstituicao,
   periodosEscolaSimples,
+  setPeriodosEscolaSimples,
   solicitacaoMedicaoInicial,
   onClickInfoBasicas,
   periodoSelecionado,
@@ -68,6 +70,11 @@ export default ({
   const [periodosCEUGESTAO, setPeriodosCEUGESTAO] = useState(undefined);
   const [frequenciasDietasCEUGESTAO, setFrequenciasDietasCEUGESTAO] =
     useState(undefined);
+
+  const [
+    frequenciasDietasPeriodosEspeciais,
+    setFrequenciasDietasPeriodosEspeciais,
+  ] = useState(undefined);
   const [quantidadeAlimentacoesLancadas, setQuantidadeAlimentacoesLancadas] =
     useState(undefined);
   const [erroAPI, setErroAPI] = useState("");
@@ -145,6 +152,33 @@ export default ({
     }
   };
 
+  const getSolicitacoesInclusoesComEventoEspecificoAsync = async () => {
+    const escola_uuid = escolaInstituicao.uuid;
+    const tipo_solicitacao = "Inclusão de";
+    const response =
+      await getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola({
+        escola_uuid,
+        mes,
+        ano,
+        tipo_solicitacao,
+      });
+    if (response.status === HTTP_STATUS.OK) {
+      const data = response.data.map((vinculo) => {
+        vinculo.periodo_escolar.eh_periodo_especifico = true;
+        return vinculo;
+      });
+      let periodos = periodosEscolaSimples.concat(data);
+      periodos = periodos.sort((obj1, obj2) =>
+        obj1.periodo_escolar.posicao > obj2.periodo_escolar.posicao ? 1 : -1
+      );
+      setPeriodosEscolaSimples(periodos);
+    } else {
+      setErroAPI(
+        "Erro ao carregar Inclusões Autorizadas com Evento Específico. Tente novamente mais tarde."
+      );
+    }
+  };
+
   const getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync = async () => {
     const params = { uuid_solicitacao: solicitacaoMedicaoInicial.uuid };
     const response = await getQuantidadeAlimentacoesLancadasPeriodoGrupo(
@@ -188,11 +222,26 @@ export default ({
     }
   };
 
+  const getFrequenciasDietasAsync = async () => {
+    const response = await getCEUGESTAOFrequenciasDietas(
+      solicitacaoMedicaoInicial.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setFrequenciasDietasPeriodosEspeciais(response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar frequência de dietas de escolas CEU GESTÃO. Tente novamente mais tarde."
+      );
+    }
+  };
+
   useEffect(() => {
     getPeriodosInclusaoContinuaAsync();
     getSolicitacoesKitLanchesAutorizadasAsync();
     getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
     getSolicitacoesInclusoesEtecAutorizadasAsync();
+    getSolicitacoesInclusoesComEventoEspecificoAsync();
+    solicitacaoMedicaoInicial && getFrequenciasDietasAsync();
     solicitacaoMedicaoInicial &&
       getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync() &&
       ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
@@ -332,6 +381,7 @@ export default ({
             </div>
           </div>
           {!ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
+            frequenciasDietasPeriodosEspeciais &&
             periodosEscolaSimples.map((periodo, index) => (
               <CardLancamento
                 key={index}
@@ -342,6 +392,13 @@ export default ({
                 solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
                 objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                ehPeriodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico
+                }
+                periodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico ? periodo : null
+                }
+                frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
               />
             ))}
           {ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&

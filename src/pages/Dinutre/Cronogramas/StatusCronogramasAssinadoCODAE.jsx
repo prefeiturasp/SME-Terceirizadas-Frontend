@@ -1,12 +1,7 @@
 import React from "react";
 import Page from "components/Shareable/Page/Page";
 import Breadcrumb from "components/Shareable/Breadcrumb";
-import {
-  DINUTRE,
-  PAINEL_APROVACOES,
-  PRE_RECEBIMENTO,
-  ASSINADO_CODAE,
-} from "configs/constants";
+import { PAINEL_APROVACOES, PRE_RECEBIMENTO } from "configs/constants";
 import {
   getDashboardCronograma,
   getDashboardCronogramaComFiltros,
@@ -15,13 +10,17 @@ import { SolicitacoesCronogramaStatusGenerico } from "components/screens/Solicit
 import { CARD_CRONOGRAMAS_ASSINADOS } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
 
 const atual = {
-  href: `/${DINUTRE}/${ASSINADO_CODAE}`,
-  titulo: "Cronogramas Assinados",
+  href: CARD_CRONOGRAMAS_ASSINADOS.href,
+  titulo: CARD_CRONOGRAMAS_ASSINADOS.titulo,
 };
 
 const limit = 10;
 
-const paramsDefault = { status: "ASSINADO_CODAE", offset: 0, limit: limit };
+const paramsDefault = {
+  status: CARD_CRONOGRAMAS_ASSINADOS.incluir_status,
+  offset: 0,
+  limit: limit,
+};
 
 export default () => {
   const anteriores = [
@@ -30,7 +29,7 @@ export default () => {
       titulo: "Pré-Recebimento",
     },
     {
-      href: `/pre-recebimento/painel-aprovacoes`,
+      href: `/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`,
       titulo: "Painel de Aprovações",
     },
   ];
