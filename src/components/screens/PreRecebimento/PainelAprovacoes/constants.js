@@ -1,8 +1,10 @@
 import {
+  AGUARDANDO_ASSINATURAS,
   AGUARDANDO_DILOG,
   ALTERACOES_APROVADAS,
   ALTERACOES_REPROVADAS,
   ASSINADO_CODAE,
+  CRONOGRAMA,
   DILOG,
   DINUTRE,
   SOLICITACOES_ALTERACOES,
@@ -33,7 +35,7 @@ export const CARD_CRONOGRAMAS_ASSINADOS = {
   icon: "fa-check",
   style: "card-cronogramas-assinados",
   incluir_status: ["ASSINADO_CODAE"],
-  href: `/${DINUTRE}/${ASSINADO_CODAE}`,
+  href: `/${ASSINADO_CODAE}`,
 };
 
 export const CARD_PENDENTES_ASSINATURA_DILOG = {
@@ -42,7 +44,7 @@ export const CARD_PENDENTES_ASSINATURA_DILOG = {
   icon: "fa-exclamation-triangle",
   style: "card-pendente-assinatura",
   incluir_status: ["ASSINADO_DINUTRE"],
-  href: `/${DINUTRE}/${SOLICITACOES_PENDENTES}`,
+  href: `/${DILOG}/${SOLICITACOES_PENDENTES}`,
 };
 
 export const CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS = {
@@ -55,7 +57,7 @@ export const CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS = {
     "ASSINADO_FORNECEDOR",
     "ASSINADO_DINUTRE",
   ],
-  href: `#`,
+  href: `/${CRONOGRAMA}/${AGUARDANDO_ASSINATURAS}`,
 };
 
 export const CARD_SOLICITACOES_ALTERACOES_DINUTRE = {
@@ -73,7 +75,7 @@ export const CARD_VISAO_CRONOGRAMA_SOLICITACOES_ALTERACOES_EM_ANALISE = {
   icon: "fa-exclamation-triangle",
   style: "card-solicitacoes-alteracoes",
   incluir_status: ["EM_ANALISE"],
-  href: `#`,
+  href: `/${CRONOGRAMA}/${SOLICITACOES_ALTERACOES}`,
 };
 
 export const CARD_SOLICITACOES_APROVADAS_DINUTRE = {
