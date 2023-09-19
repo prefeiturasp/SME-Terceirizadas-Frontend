@@ -1,37 +1,37 @@
 import React from "react";
 import HTTP_STATUS from "http-status-codes";
-import { CustomToolbar } from "./componentes/CustomToolbar";
+import { CustomToolbar } from "components/screens/Cadastros/CadastroSobremesaDoce/componentes/CustomToolbar";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import {
-  getDiasSobremesaDoce,
-  setDiaSobremesaDoce,
-} from "services/medicaoInicial/diaSobremesaDoce.service";
-import { formataComoEventos } from "./helpers";
+  getDiasSuspensaoAtividades,
+  setDiaSuspensaoAtividades,
+} from "services/cadastroDiasSuspensaoAtividades.service";
+import { formataComoEventos } from "components/screens/Cadastros/CadastroSobremesaDoce/helpers";
 import { Spin } from "antd";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
-import { ModalCadastrarNoCalendario } from "./componentes/ModalCadastrarNoCalendario";
-import { ModalEditar } from "./componentes/ModalEditar";
+import { ModalCadastrarNoCalendario } from "components/screens/Cadastros/CadastroSobremesaDoce/componentes/ModalCadastrarNoCalendario";
+import { ModalEditar } from "components/screens/Cadastros/CadastroSobremesaDoce/componentes/ModalEditar";
 import { usuarioEhCODAEGestaoAlimentacao } from "helpers/utilities";
-import { ModalConfirmarExclusao } from "./componentes/ModalConfirmarExclusao";
-import "./style.scss";
+import { ModalConfirmarExclusao } from "components/screens/Cadastros/CadastroSobremesaDoce/componentes//ModalConfirmarExclusao";
+import "components/screens/Cadastros/CadastroSobremesaDoce/style.scss";
 import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
 import { toastSuccess } from "components/Shareable/Toast/dialogs";
-import { deleteDiaSobremesaDoce } from "../../../../services/medicaoInicial/diaSobremesaDoce.service";
+import { deleteDiaSuspensaoAtividades } from "../../../../services/cadastroDiasSuspensaoAtividades.service";
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const localizer = momentLocalizer(moment);
-export class CadastroSobremesaDoce extends React.Component {
+export class CadastroSuspensaoAtividades extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      diasSobremesaDoce: undefined,
+      diasSuspensaoAtividades: undefined,
       loadingDiasCalendario: false,
       tiposUnidades: undefined,
       erroAPI: false,
-      showModalCadastrarSobremesa: false,
+      showModalCadastrarSuspensaoAtividades: false,
       showModalEditar: false,
       showModalConfirmarExclusao: false,
       currentEvent: undefined,
@@ -42,25 +42,26 @@ export class CadastroSobremesaDoce extends React.Component {
     this.moveEvent = this.moveEvent.bind(this);
     this.handleSelectSlot = this.handleSelectSlot.bind(this);
     this.handleEvent = this.handleEvent.bind(this);
-    this.getDiasSobremesaDoceAsync = this.getDiasSobremesaDoceAsync.bind(this);
+    this.getDiasSuspensaoAtividadesAsync =
+      this.getDiasSuspensaoAtividadesAsync.bind(this);
     this.getTiposUnidadeEscolarAsync =
       this.getTiposUnidadeEscolarAsync.bind(this);
   }
 
   componentDidMount() {
-    this.getDiasSobremesaDoceAsync();
+    this.getDiasSuspensaoAtividadesAsync();
     this.getTiposUnidadeEscolarAsync();
   }
 
-  async getDiasSobremesaDoceAsync(params) {
+  async getDiasSuspensaoAtividadesAsync(params) {
     const { mes, ano } = this.state;
     this.setState({ loadingDiasCalendario: true });
-    const response = await getDiasSobremesaDoce(
+    const response = await getDiasSuspensaoAtividades(
       params ? { mes: params.mes, ano: params.ano } : { mes, ano }
     );
     if (response.status === HTTP_STATUS.OK) {
       this.setState({
-        diasSobremesaDoce: formataComoEventos(response.data.results),
+        diasSuspensaoAtividades: formataComoEventos(response.data.results),
       });
     }
     if (response) {
@@ -78,9 +79,9 @@ export class CadastroSobremesaDoce extends React.Component {
   }
 
   async moveEvent({ event, start, end, isAllDay: droppedOnAllDaySlot }) {
-    const { diasSobremesaDoce } = this.state;
+    const { diasSuspensaoAtividades } = this.state;
 
-    const idx = diasSobremesaDoce.indexOf(event);
+    const idx = diasSuspensaoAtividades.indexOf(event);
     let allDay = event.allDay;
 
     if (!event.allDay && droppedOnAllDaySlot) {
@@ -97,7 +98,7 @@ export class CadastroSobremesaDoce extends React.Component {
       allDay,
     };
 
-    const nextEvents = [...diasSobremesaDoce];
+    const nextEvents = [...diasSuspensaoAtividades];
     nextEvents.splice(idx, 1, updatedEvent);
 
     const payload = {
@@ -107,7 +108,7 @@ export class CadastroSobremesaDoce extends React.Component {
       data: getYYYYMMDDfromDate(event.start),
     };
 
-    await setDiaSobremesaDoce(payload);
+    await setDiaSuspensaoAtividades(payload);
 
     const payload2 = {
       tipo_unidades: nextEvents
@@ -116,20 +117,20 @@ export class CadastroSobremesaDoce extends React.Component {
       data: getYYYYMMDDfromDate(start),
     };
 
-    const response2 = await setDiaSobremesaDoce(payload2);
+    const response2 = await setDiaSuspensaoAtividades(payload2);
     if (response2.status === HTTP_STATUS.CREATED) {
       toastSuccess("Dia de sobremesa atualizado com sucesso");
     }
 
     this.setState({
-      diasSobremesaDoce: nextEvents,
+      diasSuspensaoAtividades: nextEvents,
     });
   }
 
   handleSelectSlot(event) {
     this.setState({
       currentEvent: event,
-      showModalCadastrarSobremesa: true,
+      showModalCadastrarSuspensaoAtividades: true,
     });
   }
 
@@ -142,12 +143,12 @@ export class CadastroSobremesaDoce extends React.Component {
 
   render() {
     const {
-      diasSobremesaDoce,
+      diasSuspensaoAtividades,
       loadingDiasCalendario,
       tiposUnidades,
       erroAPI,
       currentEvent,
-      showModalCadastrarSobremesa,
+      showModalCadastrarSuspensaoAtividades,
       showModalEditar,
       showModalConfirmarExclusao,
     } = this.state;
@@ -157,7 +158,7 @@ export class CadastroSobremesaDoce extends React.Component {
         <div className="card-body">
           <Spin
             tip="Carregando calendário..."
-            spinning={(!tiposUnidades || !diasSobremesaDoce) && !erroAPI}
+            spinning={(!tiposUnidades || !diasSuspensaoAtividades) && !erroAPI}
           >
             {erroAPI && (
               <div>
@@ -165,14 +166,14 @@ export class CadastroSobremesaDoce extends React.Component {
                 mais tarde.
               </div>
             )}
-            {tiposUnidades && diasSobremesaDoce && (
+            {tiposUnidades && diasSuspensaoAtividades && (
               <>
                 <p>
-                  Para cadastrar sobremesas doces, clique sobre o dia desejado e
-                  insira as informações de cadastro
+                  Para cadastrar dias de suspensão de atividades, clique sobre o
+                  dia desejado e insira as informações de cadastro
                 </p>
                 <Spin
-                  tip="Carregando dias de sobremesa..."
+                  tip="Carregando dias de suspensão de atividades..."
                   spinning={loadingDiasCalendario}
                 >
                   <DragAndDropCalendar
@@ -184,7 +185,7 @@ export class CadastroSobremesaDoce extends React.Component {
                     selectable
                     resizable={false}
                     localizer={localizer}
-                    events={diasSobremesaDoce}
+                    events={diasSuspensaoAtividades}
                     onSelectEvent={this.handleEvent}
                     onEventDrop={this.moveEvent}
                     onSelectSlot={this.handleSelectSlot}
@@ -203,7 +204,7 @@ export class CadastroSobremesaDoce extends React.Component {
                         mes: date.getMonth() + 1,
                         ano: date.getFullYear(),
                       });
-                      this.getDiasSobremesaDoceAsync({
+                      this.getDiasSuspensaoAtividadesAsync({
                         mes: date.getMonth() + 1,
                         ano: date.getFullYear(),
                       });
@@ -214,20 +215,23 @@ export class CadastroSobremesaDoce extends React.Component {
                 {currentEvent && usuarioEhCODAEGestaoAlimentacao() && (
                   <>
                     <ModalCadastrarNoCalendario
-                      showModal={showModalCadastrarSobremesa}
-                      nomeObjetoNoCalendario="Sobremesa Doce"
+                      showModal={showModalCadastrarSuspensaoAtividades}
+                      nomeObjetoNoCalendario="Suspensão de Atividades"
                       closeModal={() =>
-                        this.setState({ showModalCadastrarSobremesa: false })
+                        this.setState({
+                          showModalCadastrarSuspensaoAtividades: false,
+                        })
                       }
-                      objetos={diasSobremesaDoce}
-                      setObjetoAsync={setDiaSobremesaDoce}
+                      objetos={diasSuspensaoAtividades}
                       tiposUnidades={tiposUnidades}
                       event={currentEvent}
-                      getObjetosAsync={this.getDiasSobremesaDoceAsync}
+                      getObjetosAsync={this.getDiasSuspensaoAtividadesAsync}
+                      setObjetoAsync={setDiaSuspensaoAtividades}
                     />
                     {showModalEditar && (
                       <ModalEditar
                         showModal={showModalEditar}
+                        nomeObjetoNoCalendario="Suspensão de Atividades"
                         closeModal={() =>
                           this.setState({ showModalEditar: false })
                         }
@@ -240,12 +244,13 @@ export class CadastroSobremesaDoce extends React.Component {
                     {showModalConfirmarExclusao && (
                       <ModalConfirmarExclusao
                         showModal={showModalConfirmarExclusao}
+                        nomeObjetoNoCalendario="Suspensão de Atividades"
                         closeModal={() =>
                           this.setState({ showModalConfirmarExclusao: false })
                         }
                         event={currentEvent}
-                        getObjetosAsync={this.getDiasSobremesaDoceAsync}
-                        deleteObjetoAsync={deleteDiaSobremesaDoce}
+                        getObjetosAsync={this.getDiasSuspensaoAtividadesAsync}
+                        deleteObjetoAsync={deleteDiaSuspensaoAtividades}
                       />
                     )}
                   </>
