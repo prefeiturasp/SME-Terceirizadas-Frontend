@@ -9,7 +9,6 @@ import { Spin } from "antd";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 import { ModalCadastrarNoCalendario } from "components/Shareable/Calendario/componentes/ModalCadastrarNoCalendario";
 import { ModalEditar } from "components/Shareable/Calendario/componentes/ModalEditar";
-import { usuarioEhCODAEGestaoAlimentacao } from "helpers/utilities";
 import { ModalConfirmarExclusao } from "components/Shareable/Calendario/componentes//ModalConfirmarExclusao";
 import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
 import { toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -148,7 +147,7 @@ export class Calendario extends React.Component {
       showModalEditar,
       showModalConfirmarExclusao,
     } = this.state;
-    const { nomeObjeto, setObjeto, deleteObjeto } = this.props;
+    const { nomeObjeto, setObjeto, deleteObjeto, podeEditar } = this.props;
 
     return (
       <div className="card calendario-sobremesa mt-3">
@@ -209,7 +208,7 @@ export class Calendario extends React.Component {
                     defaultView={Views.MONTH}
                   />
                 </Spin>
-                {currentEvent && usuarioEhCODAEGestaoAlimentacao() && (
+                {currentEvent && podeEditar && (
                   <>
                     <ModalCadastrarNoCalendario
                       showModal={showModalCadastrar}

@@ -12,6 +12,10 @@ import {
   setDiaSuspensaoAtividades,
   deleteDiaSuspensaoAtividades,
 } from "services/cadastroDiasSuspensaoAtividades.service";
+import {
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhMedicao,
+} from "../../helpers/utilities";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${SUSPENSAO_ATIVIDADES}`,
@@ -34,6 +38,7 @@ export const CadastroSuspensaoDeAtividadesPage = () => {
         nomeObjeto="Suspensão de Atividades"
         setObjeto={setDiaSuspensaoAtividades}
         deleteObjeto={deleteDiaSuspensaoAtividades}
+        podeEditar={usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()}
       />
     </Page>
   );

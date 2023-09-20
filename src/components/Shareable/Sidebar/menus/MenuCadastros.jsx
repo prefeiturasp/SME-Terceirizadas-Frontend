@@ -94,9 +94,16 @@ const MenuCadastros = () => {
         </>
       )}
       {usuarioEhMedicao() && (
-        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`}>
-          Sobremesa Doce
-        </LeafItem>
+        <>
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`}>
+            Sobremesa Doce
+          </LeafItem>
+          <LeafItem
+            to={`/${CONFIGURACOES}/${CADASTROS}/${SUSPENSAO_ATIVIDADES}`}
+          >
+            Suspensão de Atividades
+          </LeafItem>
+        </>
       )}
       {(usuarioEhCronograma() ||
         usuarioEhCodaeDilog() ||

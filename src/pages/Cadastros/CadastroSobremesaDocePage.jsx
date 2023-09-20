@@ -8,6 +8,7 @@ import {
   setDiaSobremesaDoce,
   deleteDiaSobremesaDoce,
 } from "services/medicaoInicial/diaSobremesaDoce.service";
+import { usuarioEhCODAEGestaoAlimentacao } from "helpers/utilities";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`,
@@ -30,6 +31,7 @@ export const CadastroSobremesaDocePage = () => {
         nomeObjeto="Sobremesa Doce"
         setObjeto={setDiaSobremesaDoce}
         deleteObjeto={deleteDiaSobremesaDoce}
+        podeEditar={usuarioEhCODAEGestaoAlimentacao()}
       />
     </Page>
   );

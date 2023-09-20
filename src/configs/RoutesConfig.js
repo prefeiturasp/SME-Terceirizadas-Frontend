@@ -629,7 +629,7 @@ const routesConfig = [
     path: `/configuracoes/cadastros/${constants.SUSPENSAO_ATIVIDADES}`,
     component: CadastroSuspensaoDeAtividadesPage,
     exact: true,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao(),
   },
   {
     path: `/configuracoes/cadastros/lotes-cadastrados`,
