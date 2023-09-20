@@ -119,10 +119,13 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
   const handleFinalizarMedicao = async () => {
     let data = new FormData();
     data.append("escola", String(escolaInstituicao.uuid));
-    data.append(
-      "tipo_contagem_alimentacoes",
-      String(solicitacaoMedicaoInicial.tipo_contagem_alimentacoes.uuid)
-    );
+
+    if (solicitacaoMedicaoInicial.tipo_contagem_alimentacoes) {
+      data.append(
+        "tipo_contagem_alimentacoes",
+        String(solicitacaoMedicaoInicial.tipo_contagem_alimentacoes?.uuid)
+      );
+    }
     data.append(
       "responsaveis",
       JSON.stringify(solicitacaoMedicaoInicial.responsaveis)
@@ -139,7 +142,6 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
       });
       data.append("anexos", JSON.stringify(payloadAnexos));
     }
-
     const response = await updateSolicitacaoMedicaoInicial(
       solicitacaoMedicaoInicial.uuid,
       data
