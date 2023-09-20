@@ -10,6 +10,7 @@ import {
   FAIXAS_ETARIAS,
   HORARIO_COMBOS_ALIMENTACAO,
   SOBREMESA_DOCE,
+  SUSPENSAO_ATIVIDADES,
   LABORATORIOS_CADASTRADOS,
   PRODUTOS,
   TIPOS_EMBALAGENS,
@@ -85,12 +86,24 @@ const MenuCadastros = () => {
           <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`}>
             Sobremesa Doce
           </LeafItem>
+          <LeafItem
+            to={`/${CONFIGURACOES}/${CADASTROS}/${SUSPENSAO_ATIVIDADES}`}
+          >
+            Suspensão de Atividades
+          </LeafItem>
         </>
       )}
       {usuarioEhMedicao() && (
-        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`}>
-          Sobremesa Doce
-        </LeafItem>
+        <>
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`}>
+            Sobremesa Doce
+          </LeafItem>
+          <LeafItem
+            to={`/${CONFIGURACOES}/${CADASTROS}/${SUSPENSAO_ATIVIDADES}`}
+          >
+            Suspensão de Atividades
+          </LeafItem>
+        </>
       )}
       {(usuarioEhCronograma() ||
         usuarioEhCodaeDilog() ||
