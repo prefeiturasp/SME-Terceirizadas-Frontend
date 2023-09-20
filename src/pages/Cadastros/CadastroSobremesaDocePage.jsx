@@ -1,12 +1,13 @@
 import React from "react";
-import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import { CadastroSobremesaDoce } from "../../components/screens/Cadastros/CadastroSobremesaDoce";
-import Page from "../../components/Shareable/Page/Page";
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import Page from "components/Shareable/Page/Page";
+import { CADASTROS, CONFIGURACOES, SOBREMESA_DOCE } from "configs/constants";
+import { Calendario } from "components/Shareable/Calendario";
 import {
-  CADASTROS,
-  CONFIGURACOES,
-  SOBREMESA_DOCE,
-} from "../../configs/constants";
+  getDiasSobremesaDoce,
+  setDiaSobremesaDoce,
+  deleteDiaSobremesaDoce,
+} from "services/medicaoInicial/diaSobremesaDoce.service";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`,
@@ -24,7 +25,12 @@ export const CadastroSobremesaDocePage = () => {
   return (
     <Page titulo={atual.titulo} botaoVoltar voltarPara>
       <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
-      <CadastroSobremesaDoce />
+      <Calendario
+        getObjetos={getDiasSobremesaDoce}
+        nomeObjeto="Sobremesa Doce"
+        setObjeto={setDiaSobremesaDoce}
+        deleteObjeto={deleteDiaSobremesaDoce}
+      />
     </Page>
   );
 };

@@ -250,7 +250,7 @@ import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
 import StatusCronogramasPendentesDilog from "../pages/Dinutre/Cronogramas/StatusCronogramasPendentesDilog";
 import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
 import StatusSolicitacoesAlteracoesCronograma from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCronograma";
-import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroDiasSuspensaoAtividades";
+import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroSuspensaoAtividades";
 
 const routesConfig = [
   {
