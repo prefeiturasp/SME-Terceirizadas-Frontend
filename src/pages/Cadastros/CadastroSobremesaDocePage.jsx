@@ -24,7 +24,7 @@ const anteriores = [
 
 export const CadastroSobremesaDocePage = () => {
   return (
-    <Page titulo={atual.titulo} botaoVoltar voltarPara>
+    <Page titulo={atual.titulo} botaoVoltar>
       <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
       <Calendario
         getObjetos={getDiasSobremesaDoce}

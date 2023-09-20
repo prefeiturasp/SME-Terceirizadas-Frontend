@@ -74,7 +74,8 @@ export class Calendario extends React.Component {
 
   async moveEvent({ event, start, end, isAllDay: droppedOnAllDaySlot }) {
     const { objetos } = this.state;
-    const { nomeObjeto, setObjeto } = this.props;
+    const { nomeObjeto, setObjeto, podeEditar } = this.props;
+    if (!podeEditar) return;
 
     const idx = objetos.indexOf(event);
     let allDay = event.allDay;
