@@ -20,8 +20,10 @@ export default ({
   solicitacaoMedicaoInicial,
   ehGrupoSolicitacoesDeAlimentacao = false,
   ehGrupoETEC = false,
+  ehPeriodoEspecifico = false,
   quantidadeAlimentacoesLancadas,
   periodosInclusaoContinua = null,
+  periodoEspecifico = null,
   frequenciasDietasCEUGESTAO,
 }) => {
   const history = useHistory();
@@ -120,7 +122,7 @@ export default ({
   const handleClickEditar = () => {
     history.push({
       pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`,
-      search: `uuid=${solicitacaoMedicaoInicial.uuid}&ehGrupoSolicitacoesDeAlimentacao=${ehGrupoSolicitacoesDeAlimentacao}&ehGrupoETEC=${ehGrupoETEC}`,
+      search: `uuid=${solicitacaoMedicaoInicial.uuid}&ehGrupoSolicitacoesDeAlimentacao=${ehGrupoSolicitacoesDeAlimentacao}&ehGrupoETEC=${ehGrupoETEC}&ehPeriodoEspecifico=${ehPeriodoEspecifico}`,
       state: {
         periodo: textoCabecalho,
         grupo,
@@ -132,6 +134,7 @@ export default ({
         periodosInclusaoContinua: periodosInclusaoContinua,
         solicitacaoMedicaoInicial: solicitacaoMedicaoInicial,
         frequenciasDietasCEUGESTAO: frequenciasDietasCEUGESTAO,
+        periodoEspecifico: periodoEspecifico,
         ...location.state,
       },
     });

@@ -231,24 +231,13 @@ export const alteracaoProdutoHomologado = async (payload, uuid) => {
   }
 };
 
-export const respostaAnaliseSensorial = (payload) => {
+export const respostaAnaliseSensorial = async (payload) => {
   const url = `${API_URL}/analise-sensorial/terceirizada-responde-analise-sensorial/`;
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    headers: authToken,
-    body: JSON.stringify(payload),
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error;
-    });
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const criarFabricanteProduto = async (data) => {

@@ -588,7 +588,8 @@ export const validacoesTabelaAlimentacao = (
     return "Frequência acima inválida ou não preenchida.";
   } else if (
     inputName in dadosValoresInclusoesAutorizadasState &&
-    !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+    !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola) &&
+    !location.state.periodoEspecifico
   ) {
     if (
       validacaoDiaLetivo(dia) &&
@@ -644,7 +645,10 @@ export const validacoesTabelaAlimentacao = (
     Number(value) >
       (location.state &&
       (location.state.grupo === "Programas e Projetos" ||
-        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
+        ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) ||
+        location.state.periodoEspecifico)
         ? maxNumeroDeAlunos
         : maxMatriculados) &&
     inputName.includes("frequencia")
@@ -652,7 +656,10 @@ export const validacoesTabelaAlimentacao = (
     const complemento =
       location.state &&
       (location.state.grupo === "Programas e Projetos" ||
-        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
+        ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) ||
+        location.state.periodoEspecifico)
         ? "em Número de Alunos"
         : "de alunos matriculados";
     return `A quantidade de alunos frequentes não pode ser maior do que a quantidade ${complemento}.`;
@@ -766,7 +773,10 @@ export const validacoesTabelasDietas = (
   ) {
     return "Frequência acima inválida ou não preenchida.";
   }
-  if (ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)) {
+  if (
+    ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola) ||
+    location.state.periodoEspecifico
+  ) {
     return validaFrequenciaDietasCEUGESTAO(
       location,
       categoria,

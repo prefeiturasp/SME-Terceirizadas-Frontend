@@ -103,6 +103,18 @@ export const getSolicitacoesInclusoesEtecAutorizadasEscola = async (params) => {
   }
 };
 
+export const getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola = async (
+  params
+) => {
+  const url =
+    "vinculos-tipo-alimentacao-u-e-periodo-escolar/vinculos-inclusoes-evento-especifico-autorizadas/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const getPeriodosInclusaoContinua = async (params) => {
   const url = "periodos-escolares/inclusao-continua-por-mes/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);

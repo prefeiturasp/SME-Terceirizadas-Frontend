@@ -44,6 +44,9 @@ import {
   validacoesTabelasDietasCEI,
   validarFormulario,
   validarCamposComInclusoesDeAlimentacaoSemObservacao,
+  exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI,
+  exibirTooltipSuspensoesAutorizadasCEI,
+  frequenciaComSuspensaoAutorizadaPreenchida,
 } from "./validacoes";
 import {
   categoriasParaExibir,
@@ -55,6 +58,7 @@ import {
   formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
   getSolicitacoesInclusaoAutorizadasAsync,
+  getSolicitacoesSuspensoesAutorizadasAsync,
   textoBotaoObservacao,
 } from "./helper";
 import {
@@ -92,6 +96,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const [tabelaDietaCEIRows, setTabelaDietaCEIRows] = useState([]);
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState([]);
   const [inclusoesAutorizadas, setInclusoesAutorizadas] = useState(null);
+  const [suspensoesAutorizadas, setSuspensoesAutorizadas] = useState(null);
   const [exibirTooltipAoSalvar, setExibirTooltipAoSalvar] = useState(false);
   const [inputsInclusaoComErro, setInputsInclusaoComErro] = useState([]);
   const [
@@ -177,12 +182,20 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           escola.uuid,
           mes,
           ano,
-          location && location.state && location.state.periodosInclusaoContinua
-            ? Object.keys(location.state.periodosInclusaoContinua)
-            : [periodo],
+          [periodo],
           location
         );
       setInclusoesAutorizadas(response_inclusoes_autorizadas);
+
+      let response_suspensoes_autorizadas = [];
+      response_suspensoes_autorizadas =
+        await getSolicitacoesSuspensoesAutorizadasAsync(
+          escola.uuid,
+          mes,
+          ano,
+          periodo
+        );
+      setSuspensoesAutorizadas(response_suspensoes_autorizadas);
 
       let response_log_matriculados_por_faixa_etaria_dia = [];
       let response_log_dietas_autorizadas_cei = [];
@@ -750,7 +763,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         return;
       } else {
         return toastError(
-          "Existe Inclusões autorizadas na tabela de Lançamento de Alimentações. Justifique a ausência do apontamento!"
+          "Existem Inclusões autorizadas na tabela de Lançamento de Alimentações. Justifique a ausência do apontamento!"
         );
       }
     }
@@ -935,10 +948,18 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     }
   };
 
-  const onChangeInput = (value, previous, errors, values, dia, categoria) => {
-    if (deepEqual(values, dadosIniciais)) {
+  const onChangeInput = (
+    value,
+    previous,
+    errors,
+    formValuesAtualizados,
+    dia,
+    categoria,
+    column
+  ) => {
+    if (deepEqual(formValuesAtualizados, dadosIniciais)) {
       setDisableBotaoSalvarLancamentos(true);
-      desabilitaTooltip(values);
+      desabilitaTooltip(formValuesAtualizados);
     } else if (
       (value || previous) &&
       value !== previous &&
@@ -955,7 +976,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       if (value.match(/\d+/g) !== null && valuesInputArray.length > 0) {
         setDisableBotaoSalvarLancamentos(false);
       } else {
-        desabilitaTooltip(values);
+        desabilitaTooltip(formValuesAtualizados);
         setDisableBotaoSalvarLancamentos(true);
       }
     }
@@ -963,7 +984,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     if (
       categoria.nome.includes("ALIMENTAÇÃO") &&
       botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada(
-        values,
+        formValuesAtualizados,
         dia,
         categoria,
         dadosValoresInclusoesAutorizadasState,
@@ -978,7 +999,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     }
 
     const valuesFrequencia = Object.fromEntries(
-      Object.entries(values).filter(([key]) => key.includes("frequencia"))
+      Object.entries(formValuesAtualizados).filter(([key]) =>
+        key.includes("frequencia")
+      )
     );
     let arrayDiasComFrequenciaZero = [];
     for (const key in valuesFrequencia) {
@@ -988,11 +1011,11 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         arrayDiasComFrequenciaZero.push(dia);
       }
     }
-    desabilitaTooltip(values);
+    desabilitaTooltip(formValuesAtualizados);
 
     if (exibirTooltipAoSalvar) {
       validarCamposComInclusoesDeAlimentacaoSemObservacao(
-        values,
+        formValuesAtualizados,
         categoriasDeMedicao,
         inclusoesAutorizadas,
         setInputsInclusaoComErro,
@@ -1000,7 +1023,29 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       );
     }
 
-    if (deveExistirObservacao(categoria.id, values, calendarioMesConsiderado)) {
+    if (
+      frequenciaComSuspensaoAutorizadaPreenchida(
+        formValuesAtualizados,
+        column,
+        categoria,
+        suspensoesAutorizadas,
+        errors
+      ) &&
+      !formValuesAtualizados[
+        `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+      ]
+    ) {
+      setDisableBotaoSalvarLancamentos(true);
+      setExibirTooltip(true);
+    }
+
+    if (
+      deveExistirObservacao(
+        categoria.id,
+        formValuesAtualizados,
+        calendarioMesConsiderado
+      )
+    ) {
       return;
     }
   };
@@ -1313,19 +1358,26 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                   )}
                                                   type={BUTTON_TYPE.BUTTON}
                                                   style={
-                                                    exibirTooltipAoSalvar &&
-                                                    inputsInclusaoComErro.some(
-                                                      (inputComErro) =>
-                                                        inputComErro.nome ===
-                                                        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
-                                                    ) &&
-                                                    botaoAdicionarObrigatorioTabelaAlimentacao(
+                                                    (exibirTooltipAoSalvar &&
+                                                      inputsInclusaoComErro.some(
+                                                        (inputComErro) =>
+                                                          inputComErro.nome ===
+                                                          `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+                                                      ) &&
+                                                      botaoAdicionarObrigatorioTabelaAlimentacao(
+                                                        column,
+                                                        categoria,
+                                                        inclusoesAutorizadas,
+                                                        formValuesAtualizados[
+                                                          `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+                                                        ]
+                                                      )) ||
+                                                    frequenciaComSuspensaoAutorizadaPreenchida(
+                                                      formValuesAtualizados,
                                                       column,
                                                       categoria,
-                                                      inclusoesAutorizadas,
-                                                      formValuesAtualizados[
-                                                        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
-                                                      ]
+                                                      suspensoesAutorizadas,
+                                                      errors
                                                     )
                                                       ? textoBotaoObservacao(
                                                           formValuesAtualizados[
@@ -1400,26 +1452,21 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                     column,
                                                     row
                                                   )}
-                                                  exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI={
-                                                    inclusoesAutorizadas.some(
-                                                      (inclusao) =>
-                                                        String(inclusao.dia) ===
-                                                          String(column.dia) &&
-                                                        inclusao.faixas_etarias.includes(
-                                                          row.uuid
-                                                        ) &&
-                                                        row.name ===
-                                                          "frequencia" &&
-                                                        categoria.nome ===
-                                                          "ALIMENTAÇÃO"
-                                                    ) &&
-                                                    inputsInclusaoComErro.some(
-                                                      (inputComErro) =>
-                                                        inputComErro.nome ===
-                                                        `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
-                                                    ) &&
+                                                  exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI={exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI(
+                                                    inclusoesAutorizadas,
+                                                    row,
+                                                    column,
+                                                    categoria,
+                                                    inputsInclusaoComErro,
                                                     exibirTooltipAoSalvar
-                                                  }
+                                                  )}
+                                                  exibeTooltipSuspensoesAutorizadasCEI={exibirTooltipSuspensoesAutorizadasCEI(
+                                                    formValuesAtualizados,
+                                                    row,
+                                                    column,
+                                                    categoria,
+                                                    suspensoesAutorizadas
+                                                  )}
                                                   validate={fieldValidationsTabelasCEI(
                                                     row.name,
                                                     column.dia,
@@ -1439,10 +1486,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                       formValuesAtualizados,
                                                       column.dia,
                                                       categoria,
-                                                      row.name,
-                                                      form,
-                                                      column,
-                                                      row
+                                                      column
                                                     );
                                                   }}
                                                 </OnChange>

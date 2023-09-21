@@ -47,6 +47,7 @@ export const InputText = (props) => {
     exibeTooltipLancheEmergTabelaEtec,
     exibeTooltipRepeticao,
     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI,
+    exibeTooltipSuspensoesAutorizadasCEI,
   } = props;
 
   let msgTooltip = "";
@@ -262,6 +263,15 @@ export const InputText = (props) => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
+      {exibeTooltipSuspensoesAutorizadasCEI && (
+        <Tooltip
+          title={
+            "Há suspensão de alimentação autorizada para essa data. Obrigatório adicionar observação para lançamento de frequência neste dia."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
 
       <input
         {...input}
@@ -283,7 +293,10 @@ export const InputText = (props) => {
             exibeTooltipLancheEmergencialZeroAutorizado ||
             exibeTooltipFrequenciaZeroTabelaEtec ||
             exibeTooltipLancheEmergTabelaEtec ||
-            exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero)
+            exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero ||
+            (exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI &&
+              !input.value) ||
+            exibeTooltipSuspensoesAutorizadasCEI)
             ? "border-warning"
             : ""
         }`}

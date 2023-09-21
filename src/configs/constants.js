@@ -36,7 +36,9 @@ export const NUTRIMANIFESTACAO = "nutrimanifestacao";
 export const MEDICAO = "medicao";
 export const DINUTRE = "dinutre";
 export const DILOG = "dilog";
+export const CRONOGRAMA = "cronograma";
 
+export const AGUARDANDO_ASSINATURAS = "aguardando-assinaturas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
@@ -148,6 +150,7 @@ export const EDITAR_EMPRESA = "editar-empresa";
 export const EMPRESAS_CADASTRADAS = "empresas-cadastradas";
 export const FAIXAS_ETARIAS = "faixas-etarias";
 export const SOBREMESA_DOCE = "sobremesa-doce";
+export const SUSPENSAO_ATIVIDADES = "suspensao-atividades";
 export const CONSULTA_KITS = "consulta-kits";
 export const KITS = "kits";
 export const LOTE = "lote";
