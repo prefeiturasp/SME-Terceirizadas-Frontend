@@ -15,11 +15,11 @@ import {
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhMedicao,
-} from "../../helpers/utilities";
+} from "helpers/utilities";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${SUSPENSAO_ATIVIDADES}`,
-  titulo: "Cadastro de Suspensão de Atividades",
+  titulo: "Suspensão de Atividades",
 };
 
 const anteriores = [
@@ -36,6 +36,7 @@ export const CadastroSuspensaoDeAtividadesPage = () => {
       <Calendario
         getObjetos={getDiasSuspensaoAtividades}
         nomeObjeto="Suspensão de Atividades"
+        nomeObjetoMinusculo="suspensão de atividades"
         setObjeto={setDiaSuspensaoAtividades}
         deleteObjeto={deleteDiaSuspensaoAtividades}
         podeEditar={usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()}
