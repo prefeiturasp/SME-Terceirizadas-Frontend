@@ -92,7 +92,8 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
                             solicitacao.datas_intervalo.find(
                               (i) => i.data === dia.data
                             ).cancelado ||
-                            moment(dia.data, "DD/MM/YYYY") <= moment()
+                            moment(dia.data, "DD/MM/YYYY") <=
+                              moment().subtract("days", 1)
                           }
                           type="checkbox"
                           value={dia.data}
