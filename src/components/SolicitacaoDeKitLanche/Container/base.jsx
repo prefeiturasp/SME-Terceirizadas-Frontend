@@ -225,7 +225,6 @@ export class SolicitacaoDeKitLanche extends Component {
   };
 
   onSubmit(values) {
-    console.log("values 111", values);
     const _alunosPorFaixaEtaria = this.props.alunosPorFaixaEtaria;
     values.kit_lanche = this.state.kitsChecked;
     const { ehCei } = this.state;
@@ -249,7 +248,6 @@ export class SolicitacaoDeKitLanche extends Component {
       );
       return;
     }
-    console.log("values 222", values);
     try {
       validateFormKitLanchePasseio(values);
       if (ehCei) {

@@ -64,7 +64,7 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
             </div>
             <div className="row mt-3">
               <div className="col-3">
-                <p>Tempo Previsto de Passeio</p>
+                <p>Tempo Previsto de Passeio:</p>
                 <p>
                   <b>
                     {
