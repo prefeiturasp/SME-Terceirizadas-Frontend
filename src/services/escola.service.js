@@ -154,8 +154,12 @@ export const getQuantidaDeAlunosPorPeriodoEEscola = (uuidEscola) => {
     });
 };
 
-export const getEscolaSimples = async (uuidEscola) =>
-  axios.get(`/escolas-simples/${uuidEscola}/`);
+export const getEscolaSimples = async (uuidEscola) => {
+  const url = uuidEscola
+    ? `/escolas-simples/${uuidEscola}/`
+    : "/escolas-simples/";
+  return axios.get(url);
+};
 
 export const updateEscolaSimples = async (uuidEscola, valores) =>
   axios.patch(`/escolas-simples/${uuidEscola}/`, valores);

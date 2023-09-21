@@ -180,9 +180,13 @@ export const CorpoRelatorio = (props) => {
               solicitacaoKitLanche.solicitacao_kit_lanche.data}
           </p>
         </div>
-        <div className="col-8 report-label-value">
+        <div className="col-4 report-label-value">
           <p>Local do passeio</p>
           <p className="value">{solicitacaoKitLanche.local}</p>
+        </div>
+        <div className="col-4 report-label-value">
+          <p>Evento/Atividade</p>
+          <p className="value">{solicitacaoKitLanche.evento}</p>
         </div>
       </div>
       <table className="table-report">

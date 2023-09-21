@@ -97,6 +97,7 @@ export const Filtros = ({ ...props }) => {
   };
 
   const getEscolaSimplesAsync = async () => {
+    console.log("passou aqui");
     let uuidEscola = null;
     if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
       uuidEscola = meusDados.vinculo_atual.instituicao.uuid;
