@@ -250,6 +250,7 @@ import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
 import StatusCronogramasPendentesDilog from "../pages/Dinutre/Cronogramas/StatusCronogramasPendentesDilog";
 import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
 import StatusSolicitacoesAlteracoesCronograma from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCronograma";
+import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroSuspensaoAtividades";
 
 const routesConfig = [
   {
@@ -621,6 +622,12 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/${constants.SOBREMESA_DOCE}`,
     component: CadastroSobremesaDocePage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao(),
+  },
+  {
+    path: `/configuracoes/cadastros/${constants.SUSPENSAO_ATIVIDADES}`,
+    component: CadastroSuspensaoDeAtividadesPage,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao(),
   },

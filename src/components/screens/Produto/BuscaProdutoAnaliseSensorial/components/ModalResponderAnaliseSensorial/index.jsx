@@ -6,7 +6,7 @@ import {
   length,
   numericInteger,
   composeValidators,
-} from "../../../../../../helpers/fieldValidators";
+} from "helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import InputFile from "components/Shareable/Input/InputFile";
@@ -24,7 +24,7 @@ import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import { deepCopy, getError } from "helpers/utilities";
 import { respostaAnaliseSensorial } from "services/produto.service";
 import { Field, Form } from "react-final-form";
-import { ATimePicker } from "../../../../../Shareable/MakeField";
+import { ATimePicker } from "components/Shareable/MakeField";
 
 export const ModalResponderAnaliseSensorial = ({ ...props }) => {
   const [arquivos, SetArquivos] = useState([]);
@@ -51,7 +51,6 @@ export const ModalResponderAnaliseSensorial = ({ ...props }) => {
     if (arquivos.length <= 0) {
       toastError(`Obrigatório anexar documento.`);
     } else {
-      console.log(values_);
       values_["hora"] = new Date(values_.hora_min).toTimeString().split(" ")[0];
       values_["data"] = formataData(values_.data_resp);
 
@@ -65,7 +64,6 @@ export const ModalResponderAnaliseSensorial = ({ ...props }) => {
 
       delete values_["hora_min"];
       delete values_["data_resp"];
-      console.log(values_);
 
       const response = await respostaAnaliseSensorial(values_);
       if (response.status === HTTP_STATUS.OK) {

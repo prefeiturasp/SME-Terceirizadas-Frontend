@@ -9,7 +9,13 @@ import { Modal } from "react-bootstrap";
 import "./style.scss";
 
 export const ModalEditar = ({ ...props }) => {
-  const { event, showModal, closeModal, setShowModalConfirmarExclusao } = props;
+  const {
+    event,
+    showModal,
+    closeModal,
+    setShowModalConfirmarExclusao,
+    nomeObjetoNoCalendario,
+  } = props;
 
   return (
     <Modal
@@ -22,13 +28,13 @@ export const ModalEditar = ({ ...props }) => {
       </Modal.Header>
       <Modal.Body>
         <p>
-          <strong>Sobremesa doce</strong> unidade <strong>{event.title}</strong>{" "}
-          cadastrada para o dia{" "}
+          <strong>{nomeObjetoNoCalendario}</strong> unidade{" "}
+          <strong>{event.title}</strong> cadastrada para o dia{" "}
           <strong>{getDDMMYYYfromDate(event.start)}</strong>, por{" "}
           {event.criado_por.nome} em {event.criado_em}.
         </p>
         <p>
-          Para alterar o dia de oferta da sobremesa doce no tipo de unidade,
+          Para alterar o dia de {nomeObjetoNoCalendario} no tipo de unidade,
           você pode apenas arrastar o item para a nova data ou excluir este
           cadastro e criar um novo cadastro no dia desejado.
         </p>
