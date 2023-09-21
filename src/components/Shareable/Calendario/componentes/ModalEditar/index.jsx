@@ -15,6 +15,7 @@ export const ModalEditar = ({ ...props }) => {
     closeModal,
     setShowModalConfirmarExclusao,
     nomeObjetoNoCalendario,
+    nomeObjetoNoCalendarioMinusculo,
   } = props;
 
   return (
@@ -28,15 +29,15 @@ export const ModalEditar = ({ ...props }) => {
       </Modal.Header>
       <Modal.Body>
         <p>
-          <strong>{nomeObjetoNoCalendario}</strong> unidade{" "}
+          <strong>{nomeObjetoNoCalendario}</strong> para a unidade{" "}
           <strong>{event.title}</strong> cadastrada para o dia{" "}
           <strong>{getDDMMYYYfromDate(event.start)}</strong>, por{" "}
           {event.criado_por.nome} em {event.criado_em}.
         </p>
         <p>
-          Para alterar o dia de {nomeObjetoNoCalendario} no tipo de unidade,
-          você pode apenas arrastar o item para a nova data ou excluir este
-          cadastro e criar um novo cadastro no dia desejado.
+          Para alterar o dia de {nomeObjetoNoCalendarioMinusculo} no tipo de
+          unidade, você pode apenas arrastar o item para a nova data ou excluir
+          este cadastro e criar um novo cadastro no dia desejado.
         </p>
       </Modal.Body>
       <div className="footer">
