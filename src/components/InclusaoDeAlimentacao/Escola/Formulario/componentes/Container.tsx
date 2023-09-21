@@ -177,9 +177,12 @@ export const Container = () => {
     getMeusDadosAsync();
     !escolaEhCei() && getMotivosInclusaoContinuaAsync();
     getMotivosInclusaoNormalAsync();
-    getDiasUteisAsync();
     exibeMotivoETEC() && getBuscaPeriodosEscolaresAsync();
   }, []);
+
+  useEffect(() => {
+    dados && getDiasUteisAsync();
+  }, [dados]);
 
   const REQUISICOES_CONCLUIDAS =
     dados &&
