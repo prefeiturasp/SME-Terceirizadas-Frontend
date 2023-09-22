@@ -1,0 +1,352 @@
+import React, { useEffect, useState } from "react";
+import { Spin } from "antd";
+import "./styles.scss";
+import { Field, Form } from "react-final-form";
+import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
+import { required } from "../../../../helpers/fieldValidators";
+import InputText from "../../../Shareable/Input/InputText";
+import { getListaCronogramasLayout } from "../../../../services/cronograma.service";
+import { cadastraLayoutEmbalagem } from "../../../../services/layoutEmbalagem.service";
+import { OnChange } from "react-final-form-listeners";
+import InputFile from "components/Shareable/Input/InputFile";
+import Botao from "../../../Shareable/Botao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
+import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
+import { exibeError } from "helpers/utilities";
+import { LAYOUT_EMBALAGEM, PRE_RECEBIMENTO } from "configs/constants";
+import ModalConfirmar from "./components/ModalConfirmar";
+import { useHistory } from "react-router-dom";
+import TooltipIcone from "../../../Shareable/TooltipIcone";
+import ModalCancelar from "./components/ModalCancelar";
+
+const FORMATOS_IMAGEM = "PNG, JPG ou JPEG";
+
+export default () => {
+  const history = useHistory();
+  const [carregando, setCarregando] = useState(true);
+  const [cronogramas, setCronogramas] = useState([]);
+  const [primaria, setPrimaria] = useState([]);
+  const [secundaria, setSecundaria] = useState([]);
+  const [terciaria, setTerciaria] = useState([]);
+  const [showModalConfirmar, setShowModalConfirmar] = useState(false);
+  const [showModalCancelar, setShowModalCancelar] = useState(false);
+
+  const onSubmit = () => {
+    setShowModalConfirmar(true);
+  };
+
+  const gerarImagens = (arr) =>
+    arr.map((img) => ({
+      arquivo: img.arquivo,
+      nome: img.nome,
+    }));
+
+  const salvarLayoutEmbalagem = async (values) => {
+    setCarregando(true);
+    let payload = formataPayload(values);
+    try {
+      let response = await cadastraLayoutEmbalagem(payload);
+      if (response.status === 201 || response.status === 200) {
+        setCarregando(false);
+        toastSuccess("Layout enviado para análise com sucesso!");
+        setShowModalConfirmar(false);
+        voltarPagina();
+      } else {
+        toastError("Ocorreu um erro ao salvar o Layout  da Embalagem");
+        setCarregando(false);
+      }
+    } catch (error) {
+      exibeError(error, "Ocorreu um erro ao salvar o Layout da Embalagem");
+    }
+  };
+
+  const formataPayload = (values) => {
+    let payload = {};
+    payload.cronograma = values.cronograma_uuid;
+    payload.observacoes = values.observacoes;
+
+    payload.tipos_de_embalagens = [];
+
+    payload.tipos_de_embalagens.push({
+      tipo_embalagem: "PRIMARIA",
+      imagens_do_tipo_de_embalagem: gerarImagens(primaria),
+    });
+    payload.tipos_de_embalagens.push({
+      tipo_embalagem: "SECUNDARIA",
+      imagens_do_tipo_de_embalagem: gerarImagens(secundaria),
+    });
+    payload.tipos_de_embalagens.push({
+      tipo_embalagem: "TERCIARIA",
+      imagens_do_tipo_de_embalagem: gerarImagens(terciaria),
+    });
+
+    return payload;
+  };
+
+  const buscaCronogramas = async () => {
+    let response = await getListaCronogramasLayout();
+    let lista = response.data.results.map((crono) => {
+      crono.value = crono.numero;
+      return crono;
+    });
+    setCronogramas(lista);
+  };
+
+  const removeFile1 = (index) => {
+    let newFiles = [...primaria];
+    newFiles.splice(index, 1);
+    setPrimaria(newFiles);
+  };
+
+  const setFiles1 = (files) => {
+    let arquivos = files;
+    setPrimaria(arquivos);
+  };
+
+  const removeFile2 = (index) => {
+    let newFiles = [...secundaria];
+    newFiles.splice(index, 1);
+    setSecundaria(newFiles);
+  };
+
+  const setFiles2 = (files) => {
+    let arquivos = files;
+    setSecundaria(arquivos);
+  };
+
+  const removeFile3 = (index) => {
+    let newFiles = [...terciaria];
+    newFiles.splice(index, 1);
+    setTerciaria(newFiles);
+  };
+
+  const setFiles3 = (files) => {
+    let arquivos = files;
+    setTerciaria(arquivos);
+  };
+
+  const voltarPagina = () =>
+    history.push(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
+
+  useEffect(() => {
+    setCarregando(true);
+
+    buscaCronogramas();
+
+    setCarregando(false);
+  }, []);
+
+  return (
+    <Spin tip="Carregando..." spinning={carregando}>
+      <div className="card mt-3 card-cadastro-layout-embalagem">
+        <div className="card-body cadastro-layout-embalagem">
+          <Form
+            onSubmit={onSubmit}
+            initialValues={{}}
+            validate={() => {}}
+            render={({ handleSubmit, values, errors }) => (
+              <form onSubmit={handleSubmit}>
+                <ModalConfirmar
+                  show={showModalConfirmar}
+                  handleClose={() => setShowModalConfirmar(false)}
+                  loading={carregando}
+                  handleSim={() => salvarLayoutEmbalagem(values)}
+                />
+                <ModalCancelar
+                  show={showModalCancelar}
+                  handleClose={() => setShowModalCancelar(false)}
+                  handleSim={() => voltarPagina()}
+                />
+                <div className="subtitulo">Dados do Produto</div>
+                <div className="row">
+                  <div className="col-4">
+                    <Field
+                      component={AutoCompleteSelectField}
+                      options={cronogramas}
+                      label="Nº do Cronograma"
+                      name={`cronograma`}
+                      className="input-busca-produto"
+                      placeholder="Digite o Nº do Cronograma"
+                      required
+                      validate={required}
+                      esconderIcone
+                    />
+                    <OnChange name="cronograma">
+                      {(value) => {
+                        let cronograma = cronogramas.find(
+                          (c) => c.numero === value
+                        );
+                        values.cronograma_uuid = cronograma.uuid;
+                        values.pregao = cronograma.pregao_chamada_publica;
+                        values.nome_produto = cronograma.nome_produto;
+                      }}
+                    </OnChange>
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Nº do Pregão/Chamada Pública"
+                      name={`pregao`}
+                      placeholder="Nº do Pregão/Chamada Pública"
+                      required
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Nome do Produto"
+                      name={`nome_produto`}
+                      placeholder="Nome do Produto"
+                      required
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+
+                <hr />
+
+                <div className="subtitulo">
+                  <span className="required-asterisk">*</span>
+                  Layout Embalagem Primária
+                  <TooltipIcone
+                    tooltipText={
+                      "É a embalagem de acondicionamento mais próxima do produto. Ex.: Saco plástico do Macarrão."
+                    }
+                  />
+                </div>
+
+                <div className="row">
+                  <article>
+                    <Field
+                      component={InputFile}
+                      className="inputfile"
+                      texto="Inserir Imagem"
+                      name="files"
+                      accept={FORMATOS_IMAGEM}
+                      setFiles={setFiles1}
+                      removeFile={removeFile1}
+                      toastSuccess={"Imagem incluída com sucesso!"}
+                      alignLeft
+                      multiple={true}
+                    />
+                    <label className="col-12 label-imagem">
+                      <span className="red">Campo Obrigatório:&nbsp;</span>
+                      {"Envie um arquivo nos formatos: " +
+                        FORMATOS_IMAGEM +
+                        ", com até 10MB"}
+                    </label>
+                  </article>
+                </div>
+                <hr />
+
+                <div className="subtitulo">
+                  <span className="required-asterisk">*</span>
+                  Layout Embalagem Secundária
+                  <TooltipIcone
+                    tooltipText={
+                      "É a embalagem que envolve a embalagem primária e pode agrupar os produtos. Ex.: Caixa contendo os pacotes de Macarrão."
+                    }
+                  />
+                </div>
+
+                <div className="row">
+                  <article>
+                    <Field
+                      component={InputFile}
+                      className="inputfile"
+                      texto="Inserir Imagem"
+                      name="files"
+                      accept={FORMATOS_IMAGEM}
+                      setFiles={setFiles2}
+                      removeFile={removeFile2}
+                      toastSuccess={"Imagem incluída com sucesso!"}
+                      alignLeft
+                      multiple={true}
+                    />
+                    <label className="col-12 label-imagem">
+                      <span className="red">Campo Obrigatório:&nbsp;</span>
+                      {"Envie um arquivo nos formatos: " +
+                        FORMATOS_IMAGEM +
+                        ", com até 10MB"}
+                    </label>
+                  </article>
+                </div>
+
+                <hr />
+
+                <div className="subtitulo">
+                  Layout Embalagem Terciária
+                  <TooltipIcone
+                    tooltipText={
+                      "É a embalagem de acondicionamento mais distante do produto. Ex.: Pallets contendo caixas de Macarrão."
+                    }
+                  />
+                </div>
+
+                <div className="row">
+                  <article>
+                    <Field
+                      component={InputFile}
+                      className="inputfile"
+                      texto="Inserir Imagem"
+                      name="files"
+                      accept={FORMATOS_IMAGEM}
+                      setFiles={setFiles3}
+                      removeFile={removeFile3}
+                      toastSuccess={"Imagem incluída com sucesso!"}
+                      alignLeft
+                      multiple={true}
+                    />
+                    <label className="col-12 label-imagem">
+                      <span className="red">IMPORTANTE:&nbsp;</span>
+                      {" Envie um arquivo nos formatos: " +
+                        FORMATOS_IMAGEM +
+                        ", com até 10MB"}
+                    </label>
+                  </article>
+                </div>
+
+                <hr />
+
+                <div className="row">
+                  <div className="col-12">
+                    <Field
+                      component={TextArea}
+                      label="Observação"
+                      name="observacao"
+                    />
+                  </div>
+                </div>
+
+                <hr />
+
+                <div className="mt-4 mb-4">
+                  <Botao
+                    texto="Enviar Para Análise"
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                    className="float-right ml-3"
+                    disabled={
+                      Object.keys(errors).length > 0 ||
+                      primaria.length === 0 ||
+                      secundaria.length === 0
+                    }
+                  />
+                  <Botao
+                    texto="Cancelar"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    className="float-right ml-3"
+                    onClick={() => setShowModalCancelar(true)}
+                  />
+                </div>
+              </form>
+            )}
+          />
+        </div>
+      </div>
+    </Spin>
+  );
+};
