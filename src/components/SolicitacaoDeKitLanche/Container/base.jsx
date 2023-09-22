@@ -553,7 +553,7 @@ export class SolicitacaoDeKitLanche extends Component {
                   />
                 </div>
               </div>
-              {!ehCei && meusDados && (
+              {!ehCei && meusDados ? (
                 <div className="form-group row">
                   <div className="col-3">
                     <Field
@@ -573,6 +573,27 @@ export class SolicitacaoDeKitLanche extends Component {
                             ]
                           : false
                       }
+                    />
+                  </div>
+                  <div className="col-9">
+                    <Field
+                      component={InputText}
+                      label="Evento/Atividade"
+                      name="evento"
+                      required
+                      validate={this.validatorsLocalPasseio}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="form-group row">
+                  <div className="col-12">
+                    <Field
+                      component={InputText}
+                      label="Evento/Atividade"
+                      name="evento"
+                      required
+                      validate={this.validatorsLocalPasseio}
                     />
                   </div>
                 </div>

@@ -294,6 +294,10 @@ export const CorpoRelatorio = ({ ...props }) => {
           <p className="mb-2">Local do passeio:</p>
           <p className="value-important">{solicitacaoKitLancheCEMEI.local}</p>
         </div>
+        <div className="col-4 report-label-value mt-0">
+          <p className="mb-2">Evento/Atividade</p>
+          <p className="value-important">{solicitacaoKitLancheCEMEI.evento}</p>
+        </div>
       </div>
       {solicitacaoKitLancheCEMEI.solicitacao_cei && (
         <>
