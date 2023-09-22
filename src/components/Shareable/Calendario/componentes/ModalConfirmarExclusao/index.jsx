@@ -24,7 +24,7 @@ export const ModalConfirmarExclusao = ({ ...props }) => {
   const onSubmit = async () => {
     const response = await deleteObjetoAsync(event.uuid);
     if (response.status === HTTP_STATUS.NO_CONTENT) {
-      toastSuccess(`Dia de ${nomeObjetoNoCalendario} excluído com sucesso`);
+      toastSuccess(`Registro excluído com sucesso`);
       closeModal();
       getObjetosAsync();
     } else {

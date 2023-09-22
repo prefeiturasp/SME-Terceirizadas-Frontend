@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
+import HTTP_STATUS from "http-status-codes";
 import { addMonths, getYear, format, getMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Select, Skeleton } from "antd";
@@ -22,11 +23,13 @@ import {
   getSolicitacaoMedicaoInicial,
   getSolicitacoesLancadas,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { getDiasCalendario } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { ehEscolaTipoCEI } from "../../../../helpers/utilities";
 import "./styles.scss";
 import InformacoesMedicaoInicialCEI from "./components/InformacoesMedicaoInicialCEI";
 import LancamentoPorPeriodoCEI from "./components/LancamentoPorPeriodoCEI";
+import { toastError } from "../../../Shareable/Toast/dialogs";
 
 export default () => {
   const [ano, setAno] = useState(null);
@@ -48,7 +51,7 @@ export default () => {
     status: null,
   });
   const [open, setOpen] = useState(false);
-
+  const [naoPodeFinalizar, setNaoPodeFinalizar] = useState(true);
   const history = useHistory();
   const location = useLocation();
 
@@ -180,6 +183,7 @@ export default () => {
     };
 
     const solicitacao = await getSolicitacaoMedicaoInicial(payload);
+    getDiasCalendarioAsync(payload);
     setSolicitacaoMedicaoInicial(solicitacao.data[0]);
   };
 
@@ -190,6 +194,33 @@ export default () => {
         return <Option key={periodo.dataBRT}>{periodo.periodo}</Option>;
       })
     : [];
+
+  const getDiasCalendarioAsync = async (payload) => {
+    payload["escola_uuid"] = payload["escola"];
+    delete payload["escola"];
+    const response = await getDiasCalendario(payload);
+    if (response.status === HTTP_STATUS.OK) {
+      const listaDiasLetivos = response.data.filter(
+        (dia) => dia.dia_letivo === true
+      );
+      if (listaDiasLetivos.length) {
+        const ultimoDiaLetivo = listaDiasLetivos[listaDiasLetivos.length - 1];
+        const dataUltimoDia = new Date(
+          `${payload["ano"]}/${payload["mes"]}/${ultimoDiaLetivo.dia}`
+        );
+        const dataHoje = new Date();
+        if (dataHoje.getTime() > dataUltimoDia.getTime()) {
+          setNaoPodeFinalizar(false);
+        } else {
+          setNaoPodeFinalizar(true);
+        }
+      }
+    } else {
+      toastError(
+        "Erro ao carregar calendário do mês. Tente novamente mais tarde."
+      );
+    }
+  };
 
   const handleChangeSelectPeriodo = async (value) => {
     setMes(null);
@@ -324,6 +355,7 @@ export default () => {
                 setObjSolicitacaoMIFinalizada(value)
               }
               setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
+              naoPodeFinalizar={naoPodeFinalizar}
             />
           ) : (
             <LancamentoPorPeriodo
@@ -344,6 +376,7 @@ export default () => {
                 setObjSolicitacaoMIFinalizada(value)
               }
               setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
+              naoPodeFinalizar={naoPodeFinalizar}
             />
           ))}
       </div>

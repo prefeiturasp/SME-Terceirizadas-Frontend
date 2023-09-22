@@ -67,7 +67,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
         <td colSpan={6}>
           <div className="container-fluid">
             <div className="row mt-3">
-              <div className="col-3">
+              <div className="col-2">
                 <p>ID da Solicitação:</p>
                 <p>
                   <b># {solicitacao.id_externo}</b>
@@ -80,12 +80,18 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
                 </p>
               </div>
               <div className="col-3">
+                <p>Evento/Passeio:</p>
+                <p>
+                  <b>{solicitacao.evento || "- -"}</b>
+                </p>
+              </div>
+              <div className="col-2">
                 <p>No Total de Kits:</p>
                 <p>
                   <b>{numero_total_kits}</b>
                 </p>
               </div>
-              <div className="col-3">
+              <div className="col-2">
                 <p>{labelData}</p>
                 <p>
                   <b>{log && log.criado_em.split(" ")[0]}</b>

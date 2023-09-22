@@ -39,12 +39,12 @@ export const CardStatusDeSolicitacao = (props) => {
     props;
 
   const [dietasAbertas, setDietasAbertas] = useState([]);
+  const [filteredSolicitations, setFilteredSolicitations] = useState(undefined);
 
   const nomeUsuario = localStorage.getItem("nome");
   const tipoPerfil = localStorage.getItem("tipo_perfil");
 
   let history = useHistory();
-  let filteredSolicitations = [];
 
   const initSocket = () => {
     return new Websocket(
@@ -67,26 +67,34 @@ export const CardStatusDeSolicitacao = (props) => {
 
     if (cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE) {
       if (tipoPerfil === `"${TERCEIRIZADA}"`) {
-        filteredSolicitations = solicitations.filter(
-          (solicitation) =>
-            ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO.toUpperCase() ===
-            solicitation.status
+        setFilteredSolicitations(
+          solicitations.filter(
+            (solicitation) =>
+              ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO.toUpperCase() ===
+              solicitation.status
+          )
         );
       } else if (tipoPerfil === TIPO_PERFIL.SUPERVISAO_NUTRICAO) {
-        filteredSolicitations = solicitations.filter(
-          (solicitation) =>
-            ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_NUTRISUPERVISOR.toUpperCase() ===
-            solicitation.status
+        setFilteredSolicitations(
+          solicitations.filter(
+            (solicitation) =>
+              ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_NUTRISUPERVISOR.toUpperCase() ===
+              solicitation.status
+          )
         );
       } else {
-        filteredSolicitations = solicitations.filter(
-          (solicitation) =>
-            nomeUsuario ===
-              `"${solicitation.nome_usuario_log_de_reclamacao}"` &&
-            ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_UE.toUpperCase() ===
-              solicitation.status
+        setFilteredSolicitations(
+          solicitations.filter(
+            (solicitation) =>
+              nomeUsuario ===
+                `"${solicitation.nome_usuario_log_de_reclamacao}"` &&
+              ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_UE.toUpperCase() ===
+                solicitation.status
+          )
         );
       }
+    } else {
+      setFilteredSolicitations([]);
     }
   }, []);
 
@@ -101,70 +109,76 @@ export const CardStatusDeSolicitacao = (props) => {
   };
 
   const renderSolicitations = (solicitations) => {
-    return solicitations.slice(0, 5).map((solicitation, key) => {
-      let conferida = conferidaClass(solicitation, cardTitle);
-      const text = (
-        <span>
-          Marca: {solicitation.marca},<br />
-          Editais: {solicitation.editais}
-        </span>
-      );
+    return (
+      filteredSolicitations &&
+      solicitations.slice(0, 5).map((solicitation, key) => {
+        let conferida = conferidaClass(solicitation, cardTitle);
+        const text = (
+          <span>
+            Marca: {solicitation.marca},<br />
+            Editais: {solicitation.editais}
+          </span>
+        );
 
-      return (
-        <NavLink
-          to={solicitation.link}
-          key={key}
-          data-cy={`${cardType}-${key}`}
-        >
-          <p className={`data ${conferida}`}>
-            {[
-              GESTAO_PRODUTO_CARDS.HOMOLOGADOS,
-              GESTAO_PRODUTO_CARDS.PRODUTOS_SUSPENSOS,
-            ].includes(cardTitle) ? (
-              <Tooltip
-                color="#42474a"
-                overlayStyle={{
-                  maxWidth: "320px",
-                  fontSize: "12px",
-                  fontWeight: "700",
-                }}
-                title={text}
-              >
-                <span style={{ fontWeight: "bold" }}>{solicitation.text}</span>
-              </Tooltip>
-            ) : (
-              solicitation.text
-            )}
-            <span className="float-right">{solicitation.date}</span>
-            {tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
-              qtdDietasAbertas(solicitation) > 0 && (
+        return (
+          <NavLink
+            to={solicitation.link}
+            key={key}
+            data-cy={`${cardType}-${key}`}
+          >
+            <p className={`data ${conferida}`}>
+              {[
+                GESTAO_PRODUTO_CARDS.HOMOLOGADOS,
+                GESTAO_PRODUTO_CARDS.PRODUTOS_SUSPENSOS,
+              ].includes(cardTitle) ? (
                 <Tooltip
-                  color="#686868"
+                  color="#42474a"
                   overlayStyle={{
-                    maxWidth: "140px",
+                    maxWidth: "320px",
                     fontSize: "12px",
                     fontWeight: "700",
                   }}
-                  title="Usuários visualizando simultaneamente"
+                  title={text}
                 >
-                  <span
-                    className={`mr-3 dietas-abertas float-right ${
-                      qtdDietasAbertas(solicitation) > 9 && "qtd-dois-digitos"
-                    }`}
-                  >
-                    {cardTitle.toString().includes("Recebidas") &&
-                      `${qtdDietasAbertas(solicitation)}`}
+                  <span style={{ fontWeight: "bold" }}>
+                    {solicitation.text}
                   </span>
                 </Tooltip>
+              ) : (
+                solicitation.text
               )}
-          </p>
-        </NavLink>
-      );
-    });
+              <span className="float-right">{solicitation.date}</span>
+              {tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
+                qtdDietasAbertas(solicitation) > 0 && (
+                  <Tooltip
+                    color="#686868"
+                    overlayStyle={{
+                      maxWidth: "140px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                    }}
+                    title="Usuários visualizando simultaneamente"
+                  >
+                    <span
+                      className={`mr-3 dietas-abertas float-right ${
+                        qtdDietasAbertas(solicitation) > 9 && "qtd-dois-digitos"
+                      }`}
+                    >
+                      {cardTitle.toString().includes("Recebidas") &&
+                        `${qtdDietasAbertas(solicitation)}`}
+                    </span>
+                  </Tooltip>
+                )}
+            </p>
+          </NavLink>
+        );
+      })
+    );
   };
 
   const renderVerMais = (solicitations) => {
     return (
+      filteredSolicitations &&
       solicitations.length > 5 && (
         <div className="container-link">
           <NavLink

@@ -53,7 +53,7 @@ export const getDiasCalendario = async (params) => {
   const url = "dias-calendario/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
-    const data = { data: response.data };
+    const data = { data: response.data, status: response.status };
     return data;
   }
 };
