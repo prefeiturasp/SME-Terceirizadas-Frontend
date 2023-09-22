@@ -141,9 +141,12 @@ const CardBody = (props) => {
                       * mínimo de 3 caracteres
                       <OnChange name="titulo">
                         {(value, previous) => {
-                          props.updateTituloDieta(value);
-                          props.updateNomeProduto(value);
-                          props.updateTituloAlimentacao(value);
+                          pathname === "/painel-dieta-especial" &&
+                            props.updateTituloDieta(value);
+                          pathname === "/painel-gestao-produto" &&
+                            props.updateNomeProduto(value);
+                          pathname === "/painel-gestao-alimentacao" &&
+                            props.updateTituloAlimentacao(value);
                           props.onChange(values, previous);
                         }}
                       </OnChange>
