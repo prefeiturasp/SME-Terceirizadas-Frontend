@@ -148,7 +148,13 @@ export class Calendario extends React.Component {
       showModalEditar,
       showModalConfirmarExclusao,
     } = this.state;
-    const { nomeObjeto, setObjeto, deleteObjeto, podeEditar } = this.props;
+    const {
+      nomeObjeto,
+      nomeObjetoMinusculo,
+      setObjeto,
+      deleteObjeto,
+      podeEditar,
+    } = this.props;
 
     return (
       <div className="card calendario-sobremesa mt-3">
@@ -166,8 +172,8 @@ export class Calendario extends React.Component {
             {tiposUnidades && objetos && (
               <>
                 <p>
-                  Para cadastrar dias de {nomeObjeto}, clique sobre o dia
-                  desejado e insira as informações de cadastro
+                  Para cadastrar um dia para {nomeObjetoMinusculo}, clique sobre
+                  o dia e selecione o tipo de unidade.
                 </p>
                 <Spin
                   tip={`Carregando dias de ${nomeObjeto}...`}
@@ -214,6 +220,7 @@ export class Calendario extends React.Component {
                     <ModalCadastrarNoCalendario
                       showModal={showModalCadastrar}
                       nomeObjetoNoCalendario={nomeObjeto}
+                      nomeObjetoNoCalendarioMinusculo={nomeObjetoMinusculo}
                       closeModal={() =>
                         this.setState({
                           showModalCadastrar: false,
@@ -229,6 +236,7 @@ export class Calendario extends React.Component {
                       <ModalEditar
                         showModal={showModalEditar}
                         nomeObjetoNoCalendario={nomeObjeto}
+                        nomeObjetoNoCalendarioMinusculo={nomeObjetoMinusculo}
                         closeModal={() =>
                           this.setState({ showModalEditar: false })
                         }
@@ -242,6 +250,7 @@ export class Calendario extends React.Component {
                       <ModalConfirmarExclusao
                         showModal={showModalConfirmarExclusao}
                         nomeObjetoNoCalendario={nomeObjeto}
+                        nomeObjetoNoCalendarioMinusculo={nomeObjetoMinusculo}
                         closeModal={() =>
                           this.setState({ showModalConfirmarExclusao: false })
                         }

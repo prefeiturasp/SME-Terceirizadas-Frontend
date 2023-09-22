@@ -159,6 +159,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     //form.initialize(solicitacao);
     form.change("data", solicitacao.data);
     form.change("local", solicitacao.local);
+    form.change("evento", solicitacao.evento);
     form.change("alunos_cei_e_ou_emei", solicitacao.alunos_cei_e_ou_emei);
     form.change("escola", solicitacao.escola);
     form.change("uuid", solicitacao.uuid);
@@ -177,6 +178,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
   const resetForm = (form) => {
     form.change("data", undefined);
     form.change("local", undefined);
+    form.change("evento", undefined);
     form.change("alunos_cei_e_ou_emei", undefined);
     form.change("solicitacao_emei", {});
     form.change("solicitacao_cei", { faixas_quantidades: {} });
@@ -294,6 +296,15 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                         { uuid: "CEI", nome: "CEI" },
                         { uuid: "EMEI", nome: "EMEI" },
                       ]}
+                      validate={required}
+                    />
+                  </div>
+                  <div className="col-9">
+                    <Field
+                      component={InputText}
+                      label="Evento/Atividade"
+                      name="evento"
+                      required
                       validate={required}
                     />
                   </div>

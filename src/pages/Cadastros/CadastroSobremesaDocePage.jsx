@@ -12,7 +12,7 @@ import { usuarioEhCODAEGestaoAlimentacao } from "helpers/utilities";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`,
-  titulo: "Cadastro de Sobremesa Doce",
+  titulo: "Sobremesa Doce",
 };
 
 const anteriores = [
@@ -29,6 +29,7 @@ export const CadastroSobremesaDocePage = () => {
       <Calendario
         getObjetos={getDiasSobremesaDoce}
         nomeObjeto="Sobremesa Doce"
+        nomeObjetoMinusculo="sobremesa doce"
         setObjeto={setDiaSobremesaDoce}
         deleteObjeto={deleteDiaSobremesaDoce}
         podeEditar={usuarioEhCODAEGestaoAlimentacao()}

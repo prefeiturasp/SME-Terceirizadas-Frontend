@@ -48,6 +48,7 @@ export default ({
   objSolicitacaoMIFinalizada,
   setObjSolicitacaoMIFinalizada,
   setSolicitacaoMedicaoInicial,
+  naoPodeFinalizar,
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
     useState(false);
@@ -361,10 +362,13 @@ export default ({
   const tiposAlimentacaoProgramasEProjetos = () => {
     let tiposAlimentacao = [];
     Object.keys(periodosInclusaoContinua).forEach((periodo) => {
-      const tipos = periodosEscolaSimples.find(
+      const periodoProgramasEProjetos = periodosEscolaSimples.find(
         (p) => p.periodo_escolar.nome === periodo
-      ).tipos_alimentacao;
-      tiposAlimentacao = [...tiposAlimentacao, ...tipos];
+      );
+      if (periodoProgramasEProjetos) {
+        const tipos = periodoProgramasEProjetos.tipos_alimentacao;
+        tiposAlimentacao = [...tiposAlimentacao, ...tipos];
+      }
     });
 
     return removeObjetosDuplicados(tiposAlimentacao, "nome");
@@ -467,7 +471,9 @@ export default ({
                 texto="Finalizar"
                 style={BUTTON_STYLE.GREEN}
                 className="float-right"
-                disabled={!usuarioEhEscolaTerceirizadaDiretor()}
+                disabled={
+                  !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
+                }
                 onClick={() => setShowModalFinalizarMedicao(true)}
               />
             ) : (

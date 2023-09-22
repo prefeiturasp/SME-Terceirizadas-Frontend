@@ -24,6 +24,7 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
     setObjetoAsync,
     objetos,
     nomeObjetoNoCalendario,
+    nomeObjetoNoCalendarioMinusculo,
   } = props;
 
   const [tipoUnidadesSalvoNoDia, setTipoUnidadesSalvoNoDia] = useState([]);
@@ -72,11 +73,11 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
             <Modal.Header closeButton>
               <Modal.Title>{`${
                 tipoUnidadesSalvoNoDia.length ? "Atualizar" : "Cadastrar"
-              } ${nomeObjetoNoCalendario}`}</Modal.Title>
+              } dia de ${nomeObjetoNoCalendario}`}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <p>
-                Cadastro de {nomeObjetoNoCalendario} para o dia{" "}
+                Cadastro de {nomeObjetoNoCalendarioMinusculo} para o dia{" "}
                 <strong>{getDDMMYYYfromDate(event.start)}</strong>, selecione o
                 tipo de unidade:
               </p>
@@ -92,7 +93,7 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
                   form.change("tipo_unidades", values_);
                 }}
                 overrideStrings={{
-                  selectSomeItems: "Selecione",
+                  selectSomeItems: "Selecionar unidades",
                   allItemsAreSelected:
                     "Todos os tipos de unidade estão selecionados",
                   selectAll: "Todos",
