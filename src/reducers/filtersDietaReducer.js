@@ -1,6 +1,6 @@
 //actions
 export const UPDATE_STATUS = "UPDATE_STATUS";
-export const UPDATE_TITULO = "UPDATE_TITULO";
+export const UPDATE_TITULO_DIETA = "UPDATE_TITULO_DIETA";
 export const UPDATE_LOTE = "UPDATE_LOTE";
 export const RESET_CAMPOS = "RESET_CAMPOS";
 
@@ -10,7 +10,7 @@ export const updateStatusDieta = (status) => ({
 });
 
 export const updateTituloDieta = (titulo) => ({
-  type: UPDATE_TITULO,
+  type: UPDATE_TITULO_DIETA,
   payload: titulo,
 });
 
@@ -39,7 +39,7 @@ export const filtersDietaReducer = (state = initialState, action) => {
         ...state,
         statusDieta: action.payload,
       };
-    case UPDATE_TITULO:
+    case UPDATE_TITULO_DIETA:
       return {
         ...state,
         tituloDieta: action.payload,
