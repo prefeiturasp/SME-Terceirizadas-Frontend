@@ -26,13 +26,17 @@ const ListagemPlanilhas = ({
     saveAs(url.replace("http://", "https://"));
   };
 
+  const tituloListagem = (modeloPlanilha) => {
+    return {
+      SERVIDOR: "Usuários Servidores",
+      NAO_SERVIDOR: "Usuários Não Servidores",
+      UE_PARCEIRA: "Usuários UEs Parceiras",
+    }[modeloPlanilha];
+  };
+
   return (
     <section className="tabela-carga-usuarios">
-      <header>
-        {filtros.modelo === "SERVIDOR"
-          ? "Usuários Servidores"
-          : "Usuários Não Servidores"}
-      </header>
+      <header>{tituloListagem(filtros.modelo)}</header>
       <article>
         <div className="grid-table header-table">
           <div>Nome do Arquivo</div>
