@@ -365,7 +365,6 @@ export default () => {
               periodoSelecionado={periodoSelecionado}
               escolaInstituicao={escolaInstituicao}
               periodosEscolaSimples={periodosEscolaSimples}
-              setPeriodosEscolaSimples={setPeriodosEscolaSimples}
               solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
               onClickInfoBasicas={onClickInfoBasicas}
               setLoadingSolicitacaoMedicaoInicial={(value) =>
