@@ -25,7 +25,7 @@ export default () => {
         <div className="card-body layout-embalagem">
           <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_LAYOUT_EMBALAGEM}`}>
             <Botao
-              texto="Cadastrar Cronograma"
+              texto="Cadastrar Layout de Embalagem"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
             />

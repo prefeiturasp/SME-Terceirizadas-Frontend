@@ -222,7 +222,7 @@ export default () => {
                     <Field
                       component={InputFile}
                       className="inputfile"
-                      texto="Inserir Imagem"
+                      texto="Inserir Layout"
                       name="files"
                       accept={FORMATOS_IMAGEM}
                       setFiles={setFiles1}
@@ -256,7 +256,7 @@ export default () => {
                     <Field
                       component={InputFile}
                       className="inputfile"
-                      texto="Inserir Imagem"
+                      texto="Inserir Layout"
                       name="files"
                       accept={FORMATOS_IMAGEM}
                       setFiles={setFiles2}
@@ -290,7 +290,7 @@ export default () => {
                     <Field
                       component={InputFile}
                       className="inputfile"
-                      texto="Inserir Imagem"
+                      texto="Inserir Layout"
                       name="files"
                       accept={FORMATOS_IMAGEM}
                       setFiles={setFiles3}
