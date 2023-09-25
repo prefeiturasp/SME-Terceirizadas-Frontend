@@ -12,6 +12,7 @@ import SelectSelecione from "components/Shareable/SelectSelecione";
 import {
   baixarExcelModeloNaoServidor,
   baixarExcelModeloServidor,
+  baixarExcelModeloUEParceira,
 } from "services/cargaUsuario.service";
 import { required } from "helpers/fieldValidators";
 import moment from "moment";
@@ -25,10 +26,6 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
   const inicioResultado = useRef();
 
   const OPTIONS_MODELO = [
-    {
-      uuid: "SERVIDOR",
-      nome: "Servidor",
-    },
     ...(!servidores
       ? [
           {
@@ -37,19 +34,19 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
           },
         ]
       : []),
+    {
+      uuid: "SERVIDOR",
+      nome: "Servidor",
+    },
+    {
+      uuid: "UE_PARCEIRA",
+      nome: "UEs Parceiras",
+    },
   ];
 
   const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
-  };
-
-  const downloadPlanilhaServidor = () => {
-    baixarExcelModeloServidor();
-  };
-
-  const downloadPlanilhaNaoServidor = () => {
-    baixarExcelModeloNaoServidor();
   };
 
   return (
@@ -61,9 +58,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
           style={BUTTON_STYLE.GREEN_OUTLINE}
           className="float-right ml-3"
           icon="fas fa-download"
-          onClick={() => {
-            downloadPlanilhaServidor();
-          }}
+          onClick={baixarExcelModeloServidor}
         />
         {!servidores && (
           <Botao
@@ -72,11 +67,17 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
             style={BUTTON_STYLE.GREEN_OUTLINE}
             className="float-right ml-3"
             icon="fas fa-download"
-            onClick={() => {
-              downloadPlanilhaNaoServidor();
-            }}
+            onClick={baixarExcelModeloNaoServidor}
           />
         )}
+        <Botao
+          texto="Modelo Planilha UEs Parceiras"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
+          className="float-right ml-3"
+          icon="fas fa-download"
+          onClick={baixarExcelModeloUEParceira}
+        />
       </div>
 
       <Form
