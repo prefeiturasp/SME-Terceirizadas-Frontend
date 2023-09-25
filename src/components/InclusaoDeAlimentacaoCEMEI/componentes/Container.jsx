@@ -15,6 +15,7 @@ import {
   formatarPeriodos,
 } from "components/InclusaoDeAlimentacao/helper";
 import { getQuantidadeAlunosEscola } from "services/escola.service";
+import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
 
 export const Container = () => {
   const [dados, setDados] = useState(null);
@@ -150,7 +151,7 @@ export const Container = () => {
 
   return (
     <div>
-      {!REQUISICOES_CONCLUIDAS && !erro && <div>Carregando...</div>}
+      {!REQUISICOES_CONCLUIDAS && !erro && <SigpaeLogoLoader />}
       {erro && (
         <div>Erro ao carregar informações. Tente novamente mais tarde.</div>
       )}
