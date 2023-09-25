@@ -163,7 +163,6 @@ const InputFile = (props) => {
     icone,
     input,
     meta,
-    multiple,
     name,
     required,
     title,
@@ -270,7 +269,7 @@ const InputFile = (props) => {
           data-cy={input.name}
           required={required}
           type="file"
-          multiple={ehPlanilhaMedicaoInicial ? true : multiple}
+          multiple={ehPlanilhaMedicaoInicial ? true : input.multiple}
           title={title}
         />
       </div>

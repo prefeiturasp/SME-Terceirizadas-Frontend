@@ -251,6 +251,8 @@ import StatusCronogramasPendentesDilog from "../pages/Dinutre/Cronogramas/Status
 import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
 import StatusSolicitacoesAlteracoesCronograma from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCronograma";
 import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroSuspensaoAtividades";
+import LayoutEmbalagemPage from "../pages/PreRecebimento/LayoutEmbalagemPage";
+import CadastroLayoutEmbalagemPage from "../pages/PreRecebimento/CadastroLayoutEmbalagemPage";
 
 const routesConfig = [
   {
@@ -1848,6 +1850,18 @@ const routesConfig = [
     component: StatusSolicitacoesAlteracoesCronograma,
     exact: false,
     tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.LAYOUT_EMBALAGEM}`,
+    component: LayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_LAYOUT_EMBALAGEM}`,
+    component: CadastroLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
 ];
 
