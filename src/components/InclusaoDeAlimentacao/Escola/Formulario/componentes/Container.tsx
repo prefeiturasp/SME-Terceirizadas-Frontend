@@ -1,5 +1,5 @@
 import HTTP_STATUS from "http-status-codes";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   getVinculosTipoAlimentacaoMotivoInclusaoEspecifico,
   getVinculosTipoAlimentacaoPorEscola,
@@ -19,7 +19,6 @@ import {
   getMotivosInclusaoContinua,
   getMotivosInclusaoNormal,
 } from "services/inclusaoDeAlimentacao";
-import { getMeusDados } from "services/perfil.service";
 import {
   abstraiPeriodosComAlunosMatriculados,
   exibeMotivoETEC,
@@ -35,9 +34,13 @@ import {
   ResponseQuantidadeAlunosEscolaInterface,
   ResponseVinculosTipoAlimentacaoPorEscolaInterface,
 } from "interfaces/responses.interface";
+import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
+import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
 
 export const Container = () => {
-  const [dados, setDados] = useState(null);
+  const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
+
   const [motivosSimples, setMotivosSimples] =
     useState<Array<MotivoSimplesInterface>>(undefined);
   const [motivosContinuos, setMotivosContinuos] = useState<
@@ -54,7 +57,8 @@ export const Container = () => {
   const [periodoNoite, setPeriodoNoite] = useState<
     PeriodoEscolarRascunhosInterface | boolean
   >(exibeMotivoETEC() ? undefined : true);
-  const [erro, setErro] = useState(false);
+
+  const [erro, setErro] = useState("");
 
   const getQuantidaDeAlunosPorPeriodoEEscolaAsync = async (
     periodos: Array<PeriodosInclusaoInterface>,
@@ -83,40 +87,15 @@ export const Container = () => {
             false
           )
         );
+      } else {
+        setErro(
+          "Erro ao carregar vinculos do tipo de alimentação da escola. Tente novamente mais tarde."
+        );
       }
-    }
-  };
-
-  const getMeusDadosAsync = async (): Promise<void> => {
-    const response = await getMeusDados();
-    if (response.status === HTTP_STATUS.OK) {
-      setDados(response.data);
-
-      const periodos = formatarPeriodos(
-        response.data.vinculo_atual.instituicao.periodos_escolares
-      );
-      const escola_uuid = response.data.vinculo_atual.instituicao.uuid;
-      getQuantidaDeAlunosPorPeriodoEEscolaAsync(periodos, escola_uuid);
-      const tipo_unidade_escolar_iniciais =
-        response.data.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais;
-      const vinculosTipoAlimentacaoMotivoInclusaoEspecifico =
-        await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico({
-          tipo_unidade_escolar_iniciais,
-        });
-      let periodosMotivoInclusaoEspecifico = [];
-      vinculosTipoAlimentacaoMotivoInclusaoEspecifico.data.forEach(
-        (vinculo) => {
-          let periodo = vinculo.periodo_escolar;
-          periodo.tipos_alimentacao = vinculo.tipos_alimentacao;
-          periodo.maximo_alunos = null;
-          periodosMotivoInclusaoEspecifico.push(periodo);
-        }
-      );
-      setPeriodosMotivoEspecifico(
-        formatarPeriodos(periodosMotivoInclusaoEspecifico)
-      );
     } else {
-      setErro(true);
+      setErro(
+        "Erro ao carregar quantidade de alunos da escola. Tente novamente mais tarde."
+      );
     }
   };
 
@@ -130,7 +109,9 @@ export const Container = () => {
       }
       setMotivosContinuos(response.data.results);
     } else {
-      setErro(true);
+      setErro(
+        "Erro ao carregar motivos de inclusão normal. Tente novamente mais tarde."
+      );
     }
   };
 
@@ -139,13 +120,15 @@ export const Container = () => {
     if (response.status === HTTP_STATUS.OK) {
       setMotivosSimples(response.data.results);
     } else {
-      setErro(true);
+      setErro(
+        "Erro ao carregar motivos de inclusão contínua. Tente novamente mais tarde."
+      );
     }
   };
 
   const getDiasUteisAsync = async (): Promise<void> => {
     const response = await getDiasUteis({
-      escola_uuid: dados.vinculo_atual.instituicao.uuid,
+      escola_uuid: meusDados.vinculo_atual.instituicao.uuid,
     });
     if (response.status === HTTP_STATUS.OK) {
       setProximosCincoDiasUteis(
@@ -155,7 +138,7 @@ export const Container = () => {
         dataParaUTC(new Date(response.data.proximos_dois_dias_uteis))
       );
     } else {
-      setErro(true);
+      setErro("Erro ao carregar dias úteis. Tente novamente mais tarde.");
     }
   };
 
@@ -171,23 +154,62 @@ export const Container = () => {
         );
       setPeriodoNoite(formatarPeriodos(response.data.results));
     } else {
-      setErro(true);
+      setErro(
+        "Erro ao carregar períodos escolares. Tente novamente mais tarde."
+      );
     }
   };
 
+  const requisicoesPreRender = async (): Promise<void> => {
+    await Promise.all([
+      !escolaEhCei() && getMotivosInclusaoContinuaAsync(),
+      getMotivosInclusaoNormalAsync(),
+      exibeMotivoETEC() && getBuscaPeriodosEscolaresAsync(),
+    ]);
+  };
+
+  const requisicoesPreRenderComMeusDados = async (): Promise<void> => {
+    const periodos = formatarPeriodos(
+      meusDados.vinculo_atual.instituicao.periodos_escolares
+    );
+    const escola_uuid = meusDados.vinculo_atual.instituicao.uuid;
+    const tipo_unidade_escolar_iniciais =
+      meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais;
+
+    await Promise.all([
+      getQuantidaDeAlunosPorPeriodoEEscolaAsync(periodos, escola_uuid),
+      getVinculosTipoAlimentacaoMotivoInclusaoEspecifico({
+        tipo_unidade_escolar_iniciais,
+      }),
+    ]).then(([, vinculosTipoAlimentacaoMotivoInclusaoEspecifico]) => {
+      let periodosMotivoInclusaoEspecifico = [];
+      vinculosTipoAlimentacaoMotivoInclusaoEspecifico.data.forEach(
+        (vinculo) => {
+          let periodo = vinculo.periodo_escolar;
+          periodo.tipos_alimentacao = vinculo.tipos_alimentacao;
+          periodo.maximo_alunos = null;
+          periodosMotivoInclusaoEspecifico.push(periodo);
+        }
+      );
+      setPeriodosMotivoEspecifico(
+        formatarPeriodos(periodosMotivoInclusaoEspecifico)
+      );
+    });
+  };
+
   useEffect(() => {
-    getMeusDadosAsync();
-    !escolaEhCei() && getMotivosInclusaoContinuaAsync();
-    getMotivosInclusaoNormalAsync();
-    exibeMotivoETEC() && getBuscaPeriodosEscolaresAsync();
+    requisicoesPreRender();
   }, []);
 
   useEffect(() => {
-    dados && getDiasUteisAsync();
-  }, [dados]);
+    if (meusDados) {
+      getDiasUteisAsync();
+      requisicoesPreRenderComMeusDados();
+    }
+  }, [meusDados]);
 
   const REQUISICOES_CONCLUIDAS =
-    dados &&
+    meusDados &&
     motivosContinuos &&
     motivosSimples &&
     periodos &&
@@ -197,13 +219,11 @@ export const Container = () => {
 
   return (
     <div>
-      {!REQUISICOES_CONCLUIDAS && !erro && <div>Carregando...</div>}
-      {erro && (
-        <div>Erro ao carregar informações. Tente novamente mais tarde.</div>
-      )}
+      {!REQUISICOES_CONCLUIDAS && !erro && <SigpaeLogoLoader />}
+      {!!erro && <div>{erro}</div>}
       {REQUISICOES_CONCLUIDAS && (
         <InclusaoDeAlimentacao
-          meusDados={dados}
+          meusDados={meusDados}
           motivosSimples={motivosSimples}
           motivosContinuos={motivosContinuos}
           periodos={periodos}
