@@ -57,17 +57,23 @@ export const Container = () => {
     }
   };
 
+  const requisicoesPreRender = async () => {
+    await Promise.all([
+      getMotivosAlteracaoCardapioAsync(),
+      getFeriadosAnoAsync(),
+    ]);
+  };
+
+  useEffect(() => {
+    requisicoesPreRender();
+  }, []);
+
   useEffect(() => {
     if (meusDados) {
       setPeriodos(meusDados.vinculo_atual.instituicao.periodos_escolares);
       getDiasUteisAsync();
     }
   }, [meusDados]);
-
-  useEffect(() => {
-    getMotivosAlteracaoCardapioAsync();
-    getFeriadosAnoAsync();
-  }, []);
 
   const REQUISICOES_CONCLUIDAS =
     meusDados &&
