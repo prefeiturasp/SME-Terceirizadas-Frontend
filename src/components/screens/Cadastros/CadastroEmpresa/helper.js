@@ -144,8 +144,9 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
     const contratos = valoresState.contratos.map((contrato, index) => ({
       numero: valoresForm[`numero_contrato_${index}`],
       processo: valoresForm[`numero_processo_${index}`],
-      ata_chamada_publica: valoresForm[`numero_ata_chamada_publica_${index}`],
-      pregao: valoresForm[`numero_pregao_${index}`],
+      ata: valoresForm[`numero_ata_${index}`],
+      pregao_chamada_publica:
+        valoresForm[`numero_pregao_chamada_publica_${index}`],
       vigencias: [
         {
           data_inicial: valoresForm[`vigencia_de_${index}`],
