@@ -30,7 +30,7 @@ export default () => {
       titulo: "Pré-Recebimento",
     },
     {
-      href: `/pre-recebimento/painel-aprovacoes`,
+      href: `/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`,
       titulo: "Painel de Aprovações",
     },
   ];
