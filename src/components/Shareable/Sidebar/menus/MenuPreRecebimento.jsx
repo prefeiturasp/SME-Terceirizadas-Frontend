@@ -15,6 +15,7 @@ import {
   usuarioEhEmpresaFornecedor,
   usuarioComAcessoAoPainelAprovacoes,
 } from "helpers/utilities";
+import { LAYOUT_EMBALAGEM } from "../../../../configs/constants";
 
 const MenuPreRecebimento = () => {
   return (
@@ -43,6 +44,11 @@ const MenuPreRecebimento = () => {
           to={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR}`}
         >
           Alteração de Cronograma
+        </LeafItem>
+      )}
+      {usuarioEhEmpresaFornecedor() && (
+        <LeafItem to={`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`}>
+          Layout de Embalagem
         </LeafItem>
       )}
     </Menu>
