@@ -9,8 +9,8 @@ import { getDiasUteis, getFeriadosAno } from "services/diasUteis.service";
 import MeusDadosContext from "context/MeusDadosContext";
 import { useEffect } from "react";
 import { AlteracaoDoTipoDeAlimentacaoCEI } from ".";
-import { Spin } from "antd";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
 
 export const Container = () => {
   const { meusDados } = useContext(MeusDadosContext);
@@ -132,7 +132,8 @@ export const Container = () => {
     !feriadosAno;
 
   return (
-    <Spin tip="Carregando..." spinning={LOADING && !erroAPI}>
+    <>
+      {LOADING && !erroAPI && <SigpaeLogoLoader />}
       {!!erroAPI && <div>{erroAPI}</div>}
       {!LOADING && !erroAPI && (
         <AlteracaoDoTipoDeAlimentacaoCEI
@@ -145,7 +146,7 @@ export const Container = () => {
           feriadosAno={feriadosAno}
         />
       )}
-    </Spin>
+    </>
   );
 };
 export default Container;
