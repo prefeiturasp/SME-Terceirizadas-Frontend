@@ -10,6 +10,7 @@ import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 import {
+  DETALHAR_ALTERACAO_CRONOGRAMA,
   DETALHE_CRONOGRAMA,
   PRE_RECEBIMENTO,
 } from "../../../configs/constants";
@@ -48,7 +49,7 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
     return itens.map((item) => ({
       texto: `${item.cronograma} - ${item.empresa}`,
       data: item.log_mais_recente,
-      link: "",
+      link: `/${PRE_RECEBIMENTO}/${DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${item.uuid}`,
     }));
   };
 
