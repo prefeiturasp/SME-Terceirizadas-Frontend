@@ -20,8 +20,8 @@ import { dateDelta, getDataObj } from "helpers/utilities";
 const contratosEstadoInicial = {
   numero_processo: null,
   numero_contrato: null,
-  numero_ata_chamada_publica: null,
-  numero_pregao: null,
+  numero_ata: null,
+  numero_pregao_chamada_publica: null,
   vigencias: null,
 };
 
@@ -112,18 +112,18 @@ export const ContratosFormSet = ({
                       </div>
                       <div className="col-4">
                         <Field
-                          name={`numero_ata_chamada_publica_${index}`}
+                          name={`numero_pregao_chamada_publica_${index}`}
                           component={InputText}
-                          label="Nº da ATA/Chamada Pública"
+                          label="Nº da Pregão Eletrônico/Chamada Pública"
                           required
                           validate={required}
                         />
                       </div>
                       <div className="col-4">
                         <Field
-                          name={`numero_pregao_${index}`}
+                          name={`numero_ata_${index}`}
                           component={InputText}
-                          label="Nº do Pregão Eletrônico"
+                          label="Nº da Ata"
                           required
                           validate={required}
                         />

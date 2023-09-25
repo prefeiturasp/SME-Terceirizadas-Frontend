@@ -93,8 +93,8 @@ export const CadastroEmpresa = () => {
     {
       numero_processo: null,
       numero_contrato: null,
-      numero_ata_chamada_publica: null,
-      numero_pregao: null,
+      numero_ata: null,
+      numero_pregao_chamada_publica: null,
       vigencia_de: null,
       vigencia_ate: null,
     },
@@ -265,9 +265,9 @@ export const CadastroEmpresa = () => {
     data.contratos.forEach((contrato, indice) => {
       data[`numero_contrato_${indice}`] = contrato.numero;
       data[`numero_processo_${indice}`] = contrato.processo;
-      data[`numero_ata_chamada_publica_${indice}`] =
-        contrato.ata_chamada_publica;
-      data[`numero_pregao_${indice}`] = contrato.pregao;
+      data[`numero_ata_${indice}`] = contrato.ata;
+      data[`numero_pregao_chamada_publica_${indice}`] =
+        contrato.pregao_chamada_publica;
       data[`vigencia_de_${indice}`] = contrato.vigencias[0].data_inicial;
       data[`vigencia_ate_${indice}`] = contrato.vigencias[0].data_final;
     });
