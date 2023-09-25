@@ -383,12 +383,6 @@ export default ({
     return removeObjetosDuplicados(tiposAlimentacao, "nome");
   };
 
-  console.log(
-    "frequenciasDietasPeriodosEspeciais",
-    frequenciasDietasPeriodosEspeciais
-  );
-  console.log("periodosEscolaSimples", periodosEscolaSimples);
-
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
