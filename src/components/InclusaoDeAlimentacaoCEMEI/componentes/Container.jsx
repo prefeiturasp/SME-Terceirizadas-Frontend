@@ -113,7 +113,9 @@ export const Container = () => {
   };
 
   const getDiasUteisAsync = async () => {
-    const response = await getDiasUteis();
+    const response = await getDiasUteis({
+      escola_uuid: dados.vinculo_atual.instituicao.uuid,
+    });
     if (response.status === HTTP_STATUS.OK) {
       setProximosCincoDiasUteis(
         dataParaUTC(new Date(response.data.proximos_cinco_dias_uteis))
@@ -130,8 +132,11 @@ export const Container = () => {
     getMeusDadosAsync();
     getMotivosInclusaoNormalAsync();
     getMotivosInclusaoContinuaAsync();
-    getDiasUteisAsync();
   }, []);
+
+  useEffect(() => {
+    dados && getDiasUteisAsync();
+  }, [dados]);
 
   const REQUISICOES_CONCLUIDAS =
     dados &&

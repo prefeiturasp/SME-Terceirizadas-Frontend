@@ -144,7 +144,9 @@ export const Container = () => {
   };
 
   const getDiasUteisAsync = async (): Promise<void> => {
-    const response = await getDiasUteis();
+    const response = await getDiasUteis({
+      escola_uuid: dados.vinculo_atual.instituicao.uuid,
+    });
     if (response.status === HTTP_STATUS.OK) {
       setProximosCincoDiasUteis(
         dataParaUTC(new Date(response.data.proximos_cinco_dias_uteis))
