@@ -27,7 +27,7 @@ class Container extends Component {
 
     getMotivosSuspensaoCardapio().then((response) => {
       this.setState({
-        motivos: agregarDefault(response.results),
+        motivos: agregarDefault(response.data.results),
       });
     });
 

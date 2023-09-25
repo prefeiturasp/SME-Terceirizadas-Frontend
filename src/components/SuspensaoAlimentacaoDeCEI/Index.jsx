@@ -30,38 +30,28 @@ class SuspensaoAlimentacaoDeCEI extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
       uuid: null,
       salvarAtualizarLbl: "Salvar Rascunho",
       ehOutroMotivo: false,
       periodos_escolares: [],
       periodos: [],
-      suspensoesDeAlimentacaoList: [],
+      suspensoesDeAlimentacaoList: null,
     };
 
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
   }
 
-  componentDidUpdate() {
-    const { motivos, meusDados, periodos, proximos_dois_dias_uteis } =
-      this.props;
-    const { loading } = this.state;
-    if (
-      motivos !== [] &&
-      periodos !== [] &&
-      meusDados !== null &&
-      proximos_dois_dias_uteis !== null &&
-      loading
-    ) {
-      periodos.forEach((periodo) => {
-        periodo["check"] = false;
-      });
-      this.setState({
-        loading: false,
-        periodos,
-      });
+  componentDidMount() {
+    const { periodos } = this.props;
 
+    periodos.forEach((periodo) => {
+      periodo["check"] = false;
+    });
+    this.setState({
+      periodos,
+    });
+    if (!this.state.suspensoesDeAlimentacaoList) {
       this.buscaMeusRascunhos();
     }
   }
@@ -268,7 +258,6 @@ class SuspensaoAlimentacaoDeCEI extends Component {
 
   render() {
     const {
-      loading,
       ehOutroMotivo,
       periodos,
       uuid,
@@ -278,10 +267,8 @@ class SuspensaoAlimentacaoDeCEI extends Component {
     const { motivos, proximos_dois_dias_uteis, handleSubmit, meusDados } =
       this.props;
     return (
-      <section className="section-main-form">
-        {loading ? (
-          <div>Carregando...</div>
-        ) : (
+      suspensoesDeAlimentacaoList && (
+        <section className="section-main-form">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -423,8 +410,8 @@ class SuspensaoAlimentacaoDeCEI extends Component {
               </article>
             </main>
           </form>
-        )}
-      </section>
+        </section>
+      )
     );
   }
 }
