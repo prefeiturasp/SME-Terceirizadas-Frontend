@@ -129,6 +129,14 @@ export default () => {
   const voltarPagina = () =>
     history.push(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
 
+  const getCronogramasFiltrado = (numero_cronograma) => {
+    if (numero_cronograma) {
+      const reg = new RegExp(numero_cronograma, "iu");
+      return cronogramas.filter((a) => reg.test(a.value));
+    }
+    return cronogramas;
+  };
+
   useEffect(() => {
     setCarregando(true);
 
@@ -163,7 +171,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={AutoCompleteSelectField}
-                      options={cronogramas}
+                      options={getCronogramasFiltrado(values.cronograma)}
                       label="Nº do Cronograma"
                       name={`cronograma`}
                       className="input-busca-produto"
@@ -177,9 +185,11 @@ export default () => {
                         let cronograma = cronogramas.find(
                           (c) => c.numero === value
                         );
-                        values.cronograma_uuid = cronograma.uuid;
-                        values.pregao = cronograma.pregao_chamada_publica;
-                        values.nome_produto = cronograma.nome_produto;
+                        if (cronograma) {
+                          values.cronograma_uuid = cronograma.uuid;
+                          values.pregao = cronograma.pregao_chamada_publica;
+                          values.nome_produto = cronograma.nome_produto;
+                        }
                       }}
                     </OnChange>
                   </div>
