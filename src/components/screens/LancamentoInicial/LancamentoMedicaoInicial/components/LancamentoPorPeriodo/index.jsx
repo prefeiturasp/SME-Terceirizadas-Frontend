@@ -39,7 +39,6 @@ import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
 export default ({
   escolaInstituicao,
   periodosEscolaSimples,
-  setPeriodosEscolaSimples,
   solicitacaoMedicaoInicial,
   onClickInfoBasicas,
   periodoSelecionado,
@@ -81,6 +80,8 @@ export default ({
   const [erroAPI, setErroAPI] = useState("");
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
+
+  const [periodosEspecificos, setPeriodosEspecificos] = useState([]);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
     const response = await getPeriodosInclusaoContinua({
@@ -154,6 +155,7 @@ export default ({
   };
 
   const getSolicitacoesInclusoesComEventoEspecificoAsync = async () => {
+    setPeriodosEspecificos([]);
     const escola_uuid = escolaInstituicao.uuid;
     const tipo_solicitacao = "Inclusão de";
     const response =
@@ -168,11 +170,18 @@ export default ({
         vinculo.periodo_escolar.eh_periodo_especifico = true;
         return vinculo;
       });
-      let periodos = periodosEscolaSimples.concat(data);
+      const nomesPeriodosNormais = periodosEscolaSimples.map(
+        (vinculo) => vinculo.periodo_escolar.nome
+      );
+      const pEspecificos = data.filter(
+        (vinculo) =>
+          !nomesPeriodosNormais.includes(vinculo.periodo_escolar.nome)
+      );
+      let periodos = periodosEscolaSimples.concat(pEspecificos);
       periodos = periodos.sort((obj1, obj2) =>
         obj1.periodo_escolar.posicao > obj2.periodo_escolar.posicao ? 1 : -1
       );
-      setPeriodosEscolaSimples(periodos);
+      setPeriodosEspecificos(periodos);
     } else {
       setErroAPI(
         "Erro ao carregar Inclusões Autorizadas com Evento Específico. Tente novamente mais tarde."
@@ -386,6 +395,30 @@ export default ({
           </div>
           {!ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
             frequenciasDietasPeriodosEspeciais &&
+            periodosEspecificos.length &&
+            periodosEspecificos.map((periodo, index) => (
+              <CardLancamento
+                key={index}
+                textoCabecalho={periodo.periodo_escolar.nome}
+                cor={CORES[index]}
+                tipos_alimentacao={periodo.tipos_alimentacao}
+                periodoSelecionado={periodoSelecionado}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                ehPeriodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico
+                }
+                periodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico ? periodo : null
+                }
+                frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
+              />
+            ))}
+
+          {!ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
+            frequenciasDietasPeriodosEspeciais &&
+            !periodosEspecificos.length &&
             periodosEscolaSimples.map((periodo, index) => (
               <CardLancamento
                 key={index}
