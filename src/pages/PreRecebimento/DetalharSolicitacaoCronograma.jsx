@@ -22,21 +22,17 @@ const anteriores = [
     titulo: "Pré-Recebimento",
   },
   {
-    href: `/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`,
+    href: `/${PRE_RECEBIMENTO}/${
+      usuarioEhEmpresaFornecedor()
+        ? SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR
+        : SOLICITACAO_ALTERACAO_CRONOGRAMA
+    }`,
     titulo: "Alteração do Cronograma",
   },
 ];
 
 export default () => (
-  <Page
-    botaoVoltar
-    voltarPara={`/${PRE_RECEBIMENTO}/${
-      usuarioEhEmpresaFornecedor()
-        ? SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR
-        : SOLICITACAO_ALTERACAO_CRONOGRAMA
-    }`}
-    titulo={atual.titulo}
-  >
+  <Page botaoVoltar titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
     <AlterarCronograma analiseSolicitacao={true} />
   </Page>
