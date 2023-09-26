@@ -137,6 +137,7 @@ export default ({ setFiltros, setLayoutsEmbalagens, setConsultaRealizada }) => {
                   form.reset({});
                   setLayoutsEmbalagens([]);
                   setConsultaRealizada(false);
+                  setFiltros({});
                 }}
               />
             </div>

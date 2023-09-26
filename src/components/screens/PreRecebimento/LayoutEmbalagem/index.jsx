@@ -9,7 +9,7 @@ import { Paginacao } from "../../../Shareable/Paginacao";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
-  const [filtros, setFiltros] = useState();
+  const [filtros, setFiltros] = useState({});
   const [page, setPage] = useState(1);
   const [totalResultados, setTotalResultados] = useState(0);
   const [consultaRealizada, setConsultaRealizada] = useState(false);
@@ -35,10 +35,8 @@ export default () => {
   };
 
   useEffect(() => {
-    if (filtros) {
-      buscarResultados(1);
-      setPage(1);
-    }
+    buscarResultados(1);
+    setPage(1);
   }, [filtros]);
 
   return (
