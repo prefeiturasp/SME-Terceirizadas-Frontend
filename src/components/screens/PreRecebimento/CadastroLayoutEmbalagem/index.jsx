@@ -19,6 +19,7 @@ import ModalConfirmar from "./components/ModalConfirmar";
 import { useHistory } from "react-router-dom";
 import TooltipIcone from "../../../Shareable/TooltipIcone";
 import ModalCancelar from "./components/ModalCancelar";
+import { DEZ_MB } from "../../../../constants/shared";
 
 const FORMATOS_IMAGEM = "PDF, PNG, JPG ou JPEG";
 
@@ -240,6 +241,7 @@ export default () => {
                       toastSuccess={"Imagem incluída com sucesso!"}
                       alignLeft
                       multiple={true}
+                      limiteTamanho={DEZ_MB}
                     />
                     <label className="col-12 label-imagem">
                       <span className="red">Campo Obrigatório:&nbsp;</span>
@@ -274,6 +276,7 @@ export default () => {
                       toastSuccess={"Imagem incluída com sucesso!"}
                       alignLeft
                       multiple={true}
+                      limiteTamanho={DEZ_MB}
                     />
                     <label className="col-12 label-imagem">
                       <span className="red">Campo Obrigatório:&nbsp;</span>
@@ -308,6 +311,7 @@ export default () => {
                       toastSuccess={"Imagem incluída com sucesso!"}
                       alignLeft
                       multiple={true}
+                      limiteTamanho={DEZ_MB}
                     />
                     <label className="col-12 label-imagem">
                       <span className="red">IMPORTANTE:&nbsp;</span>
