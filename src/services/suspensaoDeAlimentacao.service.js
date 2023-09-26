@@ -60,19 +60,13 @@ export const getSuspensoesDeAlimentacaoSalvas = () => {
     });
 };
 
-export const getMotivosSuspensaoCardapio = () => {
+export const getMotivosSuspensaoCardapio = async () => {
   const url = `${API_URL}/motivos-suspensao-cardapio/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET",
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then((result) => {
-      return result.json();
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const enviarSuspensaoDeAlimentacao = (uuid) => {
