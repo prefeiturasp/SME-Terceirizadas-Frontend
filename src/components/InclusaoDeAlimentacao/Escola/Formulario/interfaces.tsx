@@ -40,6 +40,7 @@ export interface ValuesFormInclusaoDeAlimentacaoInterface {
 export interface InclusoesDeAlimentacaoValuesInterface {
   motivo: string;
   data: string;
+  evento: string;
 }
 
 export interface InclusoesDeAlimentacaoFromRequestInterface {
