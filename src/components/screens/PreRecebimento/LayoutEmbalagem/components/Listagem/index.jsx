@@ -2,12 +2,13 @@ import React from "react";
 
 import "./styles.scss";
 
-const Listagem = ({ objetos }) => {
+export default ({ objetos }) => {
   return (
     <div className="listagem-layouts-embalagens">
       <div className="titulo-verde mt-4 mb-3">
         Layouts de Embalagens Cadastrados
       </div>
+
       <article>
         <div className="grid-table header-table">
           <div>Nº do Cronograma</div>
@@ -16,6 +17,7 @@ const Listagem = ({ objetos }) => {
           <div>Status</div>
           <div>Data de Cadastro</div>
         </div>
+
         {objetos.map((objeto) => {
           return (
             <>
@@ -33,5 +35,3 @@ const Listagem = ({ objetos }) => {
     </div>
   );
 };
-
-export default Listagem;
