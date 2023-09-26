@@ -1,7 +1,7 @@
 import React from "react";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
-import Container from "components/SolicitacaoDeKitLanche/Container";
+import { Container } from "components/SolicitacaoDeKitLanche/Container";
 import { Container as ContainerCEMEI } from "components/SolicitacaoKitLancheCEMEI/componentes/Container";
 import PainelPedidosKitLancheDRE from "components/SolicitacaoDeKitLanche/DRE/PainelPedidos/Container";
 import PainelPedidosKitLancheCODAE from "components/SolicitacaoDeKitLanche/CODAE/PainelPedidos/Container";

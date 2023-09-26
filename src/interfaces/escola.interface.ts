@@ -55,3 +55,11 @@ export interface QuantidadeAlunosEscolaInterface {
   quantidade_alunos: number;
   uuid: string;
 }
+
+export interface EnderecoInterface {
+  logradouro: string;
+  numero: number;
+  complemento: string;
+  bairro: string;
+  cep: number;
+}
