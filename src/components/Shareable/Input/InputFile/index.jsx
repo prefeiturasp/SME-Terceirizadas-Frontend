@@ -78,47 +78,53 @@ const InputFile = (props) => {
       const nameParts = file.name.split(".");
       const extensao = nameParts[nameParts.length - 1].toLowerCase();
 
-      if (extensao === "pdf" && hasPDF) {
-        toastError("Já existe um arquivo PDF anexado.");
-        valido = false;
-      } else if (["xls", "xlsx", "xlsm"].includes(extensao) && hasXLS) {
-        toastError("Já existe uma planilha anexada.");
-        valido = false;
+      if (props.ehPlanilhaMedicaoInicial) {
+        if (extensao === "pdf" && hasPDF) {
+          toastError("Já existe um arquivo PDF anexado.");
+          valido = false;
+        } else if (["xls", "xlsx", "xlsm"].includes(extensao) && hasXLS) {
+          toastError("Já existe uma planilha anexada.");
+          valido = false;
+        }
+        if (!["xls", "xlsx", "xlsm", "pdf"].includes(extensao)) {
+          toastError(`Extensão do arquivo não suportada: ${extensao}`);
+          valido = false;
+        } else if (extensao === "pdf" && file.size > DEZ_MB) {
+          toastError(`Tamanho máximo: 10MB`);
+          valido = false;
+        } else if (
+          ["xls", "xlsx", "xlsm"].includes(extensao) &&
+          file.size > VINTE_CINCO_MB
+        ) {
+          toastError(`Tamanho máximo: 25MB`);
+          valido = false;
+        }
       } else {
-        if (props.ehPlanilhaMedicaoInicial) {
-          if (!["xls", "xlsx", "xlsm", "pdf"].includes(extensao)) {
-            toastError(`Extensão do arquivo não suportada: ${extensao}`);
-            valido = false;
-          } else if (extensao === "pdf" && file.size > DEZ_MB) {
-            toastError(`Tamanho máximo: 10MB`);
-            valido = false;
-          } else if (
-            ["xls", "xlsx", "xlsm"].includes(extensao) &&
-            file.size > VINTE_CINCO_MB
-          ) {
-            toastError(`Tamanho máximo: 25MB`);
-            valido = false;
-          }
-        } else {
-          if (!lista_extensoes.includes(extensao)) {
-            toastError(
-              `Extensão do arquivo não suportada: ${extensao.toUpperCase()}`
-            );
-            valido = false;
-          } else if (extensao === "pdf" && file.size > DEZ_MB) {
-            toastError(
-              `Arquivo PDF superior a 10MB, não é possível fazer o upload`
-            );
-            valido = false;
-          } else if (
-            ["xls", "xlsx", "xlsm"].includes(extensao) &&
-            file.size > VINTE_CINCO_MB
-          ) {
-            toastError(
-              `Arquivo de planilha superior a 25MB, não é possível fazer o upload`
-            );
-            valido = false;
-          }
+        if (!lista_extensoes.includes(extensao)) {
+          toastError(
+            `Extensão do arquivo não suportada: ${extensao.toUpperCase()}`
+          );
+          valido = false;
+        } else if (props.limiteTamanho && file.size > props.limiteTamanho) {
+          toastError(
+            `Arquivo superior a ${Math.floor(
+              props.limiteTamanho / 10 ** 6
+            )}MB, não é possível fazer o upload`
+          );
+          valido = false;
+        } else if (extensao === "pdf" && file.size > DEZ_MB) {
+          toastError(
+            `Arquivo PDF superior a 10MB, não é possível fazer o upload`
+          );
+          valido = false;
+        } else if (
+          ["xls", "xlsx", "xlsm"].includes(extensao) &&
+          file.size > VINTE_CINCO_MB
+        ) {
+          toastError(
+            `Arquivo de planilha superior a 25MB, não é possível fazer o upload`
+          );
+          valido = false;
         }
       }
     });
