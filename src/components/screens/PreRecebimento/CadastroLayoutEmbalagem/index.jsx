@@ -20,7 +20,7 @@ import { useHistory } from "react-router-dom";
 import TooltipIcone from "../../../Shareable/TooltipIcone";
 import ModalCancelar from "./components/ModalCancelar";
 
-const FORMATOS_IMAGEM = "PNG, JPG ou JPEG";
+const FORMATOS_IMAGEM = "PDF, PNG, JPG ou JPEG";
 
 export default () => {
   const history = useHistory();
