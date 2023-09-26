@@ -28,10 +28,6 @@ export default ({ setFiltros, setLayoutsEmbalagens, setConsultaRealizada }) => {
 
   const opcoesStatus = [
     {
-      value: "Layout Criado",
-      choice: "LAYOUT_CRIADO",
-    },
-    {
       value: "Enviado para Análise",
       choice: "ENVIADO_PARA_ANALISE",
     },
