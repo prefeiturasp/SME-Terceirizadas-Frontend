@@ -27,7 +27,6 @@ const renderParteAvulsa = (
   tipoSolicitacao
 ) => {
   const diasMotivosFormatados = formataMotivosDias(inclusoes);
-
   const getDia = (dia) => {
     return inclusaoDeAlimentacao[
       !ehInclusaoCei(tipoSolicitacao)
@@ -86,7 +85,11 @@ const renderParteAvulsa = (
               ? "inclusoes"
               : "dias_motivos_da_inclusao_cei"
           ]
-            .filter((inclusao) => inclusao.motivo.nome.includes("Outro"))
+            .filter(
+              (inclusao) =>
+                inclusao.motivo.nome.includes("Outro") ||
+                inclusao.motivo.nome.includes("Evento Específico")
+            )
             .map((inclusao, key) => {
               return [
                 <tr className="row" key={key}>
@@ -118,10 +121,18 @@ const renderParteAvulsa = (
                   </td>
                 </tr>,
                 <tr className="row" key={key}>
-                  <th className="col-12">Qual o motivo?</th>
+                  <th className="col-12">
+                    {inclusao.motivo.nome.includes("Evento Específico")
+                      ? "Descrição do Evento 333"
+                      : "Qual o motivo?"}
+                  </th>
                 </tr>,
                 <tr className="row" key={key}>
-                  <td className="col-12">{inclusao.outro_motivo}</td>
+                  <td className="col-12">
+                    {inclusao.motivo.nome.includes("Evento Específico")
+                      ? inclusao.evento
+                      : inclusao.outro_motivo}
+                  </td>
                 </tr>,
                 <hr key={key} />,
               ];

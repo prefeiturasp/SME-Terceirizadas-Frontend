@@ -86,6 +86,22 @@ export const InclusaoBody = ({ ...props }) => {
                   ) : (
                     <div className="col-3" />
                   )}
+                  {inclusao.evento && (
+                    <>
+                      <div className="col-md-9 offset-md-3">
+                        <p>Descrição do Evento:</p>
+                      </div>
+                      <div className="col-md-9 offset-md-3">
+                        <p>{inclusao.evento}</p>
+                      </div>
+                      <div className="col-12 mb-3">
+                        <div
+                          className="linha-divisoria"
+                          style={{ height: "1px", backgroundColor: "#858796" }}
+                        ></div>
+                      </div>
+                    </>
+                  )}
                 </div>
               );
             })}

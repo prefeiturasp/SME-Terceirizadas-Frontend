@@ -259,7 +259,7 @@ export const Filtros = ({ ...props }) => {
                       selected={
                         values.tipos_unidade ||
                         (unidadeEducacional && [
-                          unidadeEducacional.tipo_unidade.uuid,
+                          unidadeEducacional.tipo_unidade?.uuid,
                         ]) ||
                         []
                       }
