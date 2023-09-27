@@ -242,6 +242,7 @@ export const PAINEL_APROVACOES = "painel-aprovacoes";
 export const SOLICITACOES_ALTERACOES = "solicitacoes-alteracoes";
 export const ALTERACOES_APROVADAS = "alteracoes-aprovadas";
 export const ALTERACOES_REPROVADAS = "alteracoes-reprovadas";
+export const ALTERACOES_CODAE = "alteracoes-codae";
 
 export const AGUARDANDO_DILOG = "aguardando-dilog";
 export const ASSINADO_CODAE = "assinado-codae";

@@ -83,4 +83,11 @@
       color: $redCard;
     }
   }
+
+  &.card-alteracoes-codae {
+    border-left-color: $orangeLight !important;
+    i {
+      color: $orangeLight;
+    }
+  }
 }
