@@ -47,7 +47,7 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-cadastro-layout-embalagem">
+      <div className="card mt-3 card-detalhar-layout-embalagem">
         <div className="card-body">
           <div className="subtitulo mb-3">Dados do Produto</div>
           <div className="row mt-3">
