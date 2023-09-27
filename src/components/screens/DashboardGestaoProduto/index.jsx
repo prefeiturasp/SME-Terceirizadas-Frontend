@@ -27,7 +27,6 @@ export default class DashboardGestaoProduto extends Component {
       erro: false,
       ehTerceirizada: false,
       loading: true,
-      filtrosDesabilitados: true,
       filtroAtivo: false,
     };
     this.typingTimeout = null;
@@ -41,7 +40,6 @@ export default class DashboardGestaoProduto extends Component {
   loadDashBoardGestaoProdutos = () => {
     this.setState({
       loading: true,
-      filtrosDesabilitados: true,
     });
     getDashboardGestaoProdutos()
       .then((response) => {
@@ -59,13 +57,11 @@ export default class DashboardGestaoProduto extends Component {
             cardsFiltered: cards.concat(),
             ehTerceirizada,
             loading: false,
-            filtrosDesabilitados: false,
           });
         } else {
           this.setState({
             erro: true,
             loading: false,
-            filtrosDesabilitados: false,
           });
         }
       })
@@ -162,7 +158,7 @@ export default class DashboardGestaoProduto extends Component {
   };
 
   render() {
-    const { cardsFiltered, erro, loading, filtrosDesabilitados } = this.state;
+    const { cardsFiltered, erro, loading } = this.state;
     return (
       <div>
         {erro && <div>Erro ao carregar painel gerencial</div>}
@@ -172,9 +168,9 @@ export default class DashboardGestaoProduto extends Component {
             dataAtual={dataAtual()}
             onChange={this.onPesquisaChanged}
             ehDashboardGestaoProduto={true}
-            filtrosDesabilitados={filtrosDesabilitados}
+            filtrosDesabilitados={loading}
           >
-            {!loading && !filtrosDesabilitados && !erro ? (
+            {!loading && !erro ? (
               cardsFiltered.map((card, index) => {
                 const card2 = cardsFiltered[index + 1]
                   ? cardsFiltered[index + 1]
