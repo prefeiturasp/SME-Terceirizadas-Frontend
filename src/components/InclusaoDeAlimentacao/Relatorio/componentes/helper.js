@@ -1,7 +1,11 @@
 export const formataMotivosDias = (inclusoes) => {
   const motivosDias = {};
+  const excludedWords = ["Outro", "Evento Específico"];
+
   inclusoes
-    .filter((inclusao) => !inclusao.motivo.nome.includes("Outro"))
+    .filter((inclusao) =>
+      excludedWords.every((word) => !inclusao.motivo.nome.includes(word))
+    )
     .forEach((inclusao) => {
       const motivo = inclusao.motivo.nome;
       if (motivosDias[motivo]) {

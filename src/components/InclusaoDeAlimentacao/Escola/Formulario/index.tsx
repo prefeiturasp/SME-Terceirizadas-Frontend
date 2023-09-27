@@ -24,6 +24,7 @@ import arrayMutators from "final-form-arrays";
 import {
   AdicionarDia,
   DataInclusaoNormal,
+  EventoEspecifico,
   OutroMotivo,
   PeriodosInclusaoNormal,
 } from "./componentes/InclusaoNormal";
@@ -161,6 +162,27 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
             motivo.uuid === values.inclusoes[index].motivo
         )
         .nome.includes("Outro")
+    );
+  };
+
+  const eventoEspecificoSelecionado = (
+    values: ValuesFormInclusaoDeAlimentacaoInterface,
+    index: number
+  ): boolean => {
+    return (
+      values.inclusoes &&
+      values.inclusoes[index] &&
+      values.inclusoes[index].motivo &&
+      motivosSimples.find(
+        (motivo: MotivoSimplesInterface) =>
+          motivo.uuid === values.inclusoes[index].motivo
+      ) &&
+      motivosSimples
+        .find(
+          (motivo: MotivoSimplesInterface) =>
+            motivo.uuid === values.inclusoes[index].motivo
+        )
+        .nome.includes("Evento Específico")
     );
   };
 
@@ -647,6 +669,12 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                         {outroMotivoSelecionado(values, index) && (
                           <div className="mt-3">
                             <OutroMotivo name={name} />
+                          </div>
+                        )}
+
+                        {eventoEspecificoSelecionado(values, index) && (
+                          <div className="mt-3">
+                            <EventoEspecifico name={name} />
                           </div>
                         )}
                         <hr />
