@@ -123,7 +123,7 @@ const renderParteAvulsa = (
                 <tr className="row" key={key}>
                   <th className="col-12">
                     {inclusao.motivo.nome.includes("Evento Específico")
-                      ? "Descrição do Evento 333"
+                      ? "Descrição do Evento"
                       : "Qual o motivo?"}
                   </th>
                 </tr>,
