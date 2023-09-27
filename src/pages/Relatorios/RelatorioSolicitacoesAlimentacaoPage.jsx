@@ -1,7 +1,7 @@
 import React from "react";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
-import { RELATORIO_SOLICITACOES_ALIMENTACAO } from "../../configs/constants";
+import { RELATORIO_SOLICITACOES_ALIMENTACAO } from "configs/constants";
 import { RelatorioSolicitacoesAlimentacao } from "components/screens/Relatorios/SolicitacoesAlimentacao";
 import {
   usuarioEhCODAEGestaoAlimentacao,
