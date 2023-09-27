@@ -36,20 +36,41 @@ export const DashboardNutrimanifestacao = () => {
 
   const { meusDados } = useContext(MeusDadosContext);
 
+  const params_periodo = (params) => {
+    let parametros = { ...params };
+    let isAllUndefined = true;
+    for (let key in parametros) {
+      if (
+        key !== "limit" &&
+        key !== "offset" &&
+        parametros[key] !== undefined
+      ) {
+        isAllUndefined = false;
+        break;
+      }
+    }
+    if (isAllUndefined) {
+      parametros.periodo = 60;
+    }
+    return parametros;
+  };
+
   const LOADING = !canceladas || !negadas || !autorizadas;
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
 
   const getSolicitacoesAsync = async (params = null) => {
     setLoadingAcompanhamentoSolicitacoes(true);
 
-    const response = await getSolicitacoesCanceladasNutrimanifestacao(params);
+    const response = await getSolicitacoesCanceladasNutrimanifestacao(
+      params_periodo(params)
+    );
     if (response.status === HTTP_STATUS.OK) {
       setCanceladas(ajustarFormatoLog(response.data.results));
     } else {
       setErro("Erro ao carregar solicitações canceladas");
     }
     const responseNegadas = await getSolicitacoesNegadasNutrimanifestacao(
-      params
+      params_periodo(params)
     );
     if (responseNegadas.status === HTTP_STATUS.OK) {
       setNegadas(ajustarFormatoLog(responseNegadas.data.results));
@@ -58,7 +79,7 @@ export const DashboardNutrimanifestacao = () => {
     }
 
     const responseAutorizadas =
-      await getSolicitacoesAutorizadasNutrimanifestacao(params);
+      await getSolicitacoesAutorizadasNutrimanifestacao(params_periodo(params));
     if (responseAutorizadas.status === HTTP_STATUS.OK) {
       setAutorizadas(ajustarFormatoLog(responseAutorizadas.data.results));
     } else {
