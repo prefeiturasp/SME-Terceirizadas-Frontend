@@ -59,7 +59,9 @@ function SolicitacoesPorStatusGenerico(props) {
 
   const getSolicitacoesAsync = async (params = null) => {
     if (params.data_evento) {
-      params.data_evento = converterDDMMYYYYparaYYYYMMDD(params.data_evento);
+      params.data_evento = params.data_evento.includes("/")
+        ? converterDDMMYYYYparaYYYYMMDD(params.data_evento)
+        : params.data_evento;
     }
     if (params.titulo) {
       params.busca = params.titulo;
@@ -97,11 +99,15 @@ function SolicitacoesPorStatusGenerico(props) {
       params["tipo_solicitacao"] = values.tipo_solicitacao;
     }
     if (values.data_evento) {
-      params["data_evento"] = converterDDMMYYYYparaYYYYMMDD(values.data_evento);
+      params["data_evento"] = values.data_evento.includes("/")
+        ? converterDDMMYYYYparaYYYYMMDD(values.data_evento)
+        : values.data_evento;
     }
+    setLoading(true);
     setTimeout(async () => {
       await getSolicitacoesAsync(params);
       setCurrentPage(page);
+      setLoading(false);
     }, 500);
   };
 
@@ -186,13 +192,15 @@ function SolicitacoesPorStatusGenerico(props) {
                           name="periodo"
                           naoDesabilitarPrimeiraOpcao
                           placeholder="Período"
+                          disabled={props.disabled || loading}
                           initialValue={PERIODOS_OPTIONS[0].uuid}
                           options={PERIODOS_OPTIONS}
                         />
                       </div>
                       <OnChange name="periodo">
-                        {(value) => {
-                          getSolicitacoesAsync({
+                        {async (value) => {
+                          setLoading(true);
+                          await getSolicitacoesAsync({
                             lote: values.lote,
                             status: values.status,
                             busca:
@@ -205,6 +213,7 @@ function SolicitacoesPorStatusGenerico(props) {
                             diretoria_regional: values.diretoria_regional,
                             ...PARAMS,
                           });
+                          setLoading(false);
                           setCurrentPage(1);
                         }}
                       </OnChange>
@@ -213,17 +222,18 @@ function SolicitacoesPorStatusGenerico(props) {
                           component={InputText}
                           name="titulo"
                           placeholder="Pesquisar"
-                          disabled={props.disabled}
+                          disabled={props.disabled || loading}
                           initialValue={propsAlimentacaoRedux.tituloAlimentacao}
                         />
                         <div className="warning-num-charac">
                           * mínimo de 3 caracteres
                         </div>
                         <OnChange name="titulo">
-                          {(value) => {
+                          {async (value) => {
                             clearTimeout(typingTimeout);
                             typingTimeout = setTimeout(async () => {
-                              getSolicitacoesAsync({
+                              setLoading(true);
+                              await getSolicitacoesAsync({
                                 busca: value && value.length > 2 ? value : null,
                                 status: values.status,
                                 periodo: values.periodo,
@@ -233,6 +243,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                 diretoria_regional: values.diretoria_regional,
                                 ...PARAMS,
                               });
+                              setLoading(false);
                               setCurrentPage(1);
                             }, 1000);
                           }}
@@ -243,6 +254,7 @@ function SolicitacoesPorStatusGenerico(props) {
                           <Field
                             component={Select}
                             options={listaStatus}
+                            disabled={props.disabled || loading}
                             name="status"
                             placeholder="Conferência Status"
                             naoDesabilitarPrimeiraOpcao
@@ -251,8 +263,9 @@ function SolicitacoesPorStatusGenerico(props) {
                             }
                           />
                           <OnChange name="status">
-                            {(value) => {
-                              getSolicitacoesAsync({
+                            {async (value) => {
+                              setLoading(true);
+                              await getSolicitacoesAsync({
                                 status: value,
                                 lote: values.lote,
                                 busca:
@@ -265,6 +278,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                 diretoria_regional: values.diretoria_regional,
                                 ...PARAMS,
                               });
+                              setLoading(false);
                               setCurrentPage(1);
                             }}
                           </OnChange>
@@ -280,11 +294,13 @@ function SolicitacoesPorStatusGenerico(props) {
                           initialValue={
                             propsAlimentacaoRedux.tipoSolicitacaoAlimentacao
                           }
+                          disabled={props.disabled || loading}
                           options={TIPOS_SOLICITACOES_OPTIONS}
                         />
                         <OnChange name="tipo_solicitacao">
-                          {(value) => {
-                            getSolicitacoesAsync({
+                          {async (value) => {
+                            setLoading(true);
+                            await getSolicitacoesAsync({
                               lote: values.lote,
                               status: values.status,
                               busca:
@@ -297,6 +313,7 @@ function SolicitacoesPorStatusGenerico(props) {
                               diretoria_regional: values.diretoria_regional,
                               ...PARAMS,
                             });
+                            setLoading(false);
                             setCurrentPage(1);
                           }}
                         </OnChange>
@@ -310,11 +327,13 @@ function SolicitacoesPorStatusGenerico(props) {
                           initialValue={
                             propsAlimentacaoRedux.dataEventoAlimentacao
                           }
+                          disabled={props.disabled || loading}
                           placeholder="Data do evento"
                         />
                         <OnChange name="data_evento">
-                          {(value) => {
-                            getSolicitacoesAsync({
+                          {async (value) => {
+                            setLoading(true);
+                            await getSolicitacoesAsync({
                               lote: values.lote,
                               status: values.status,
                               busca:
@@ -327,6 +346,7 @@ function SolicitacoesPorStatusGenerico(props) {
                               diretoria_regional: values.diretoria_regional,
                               ...PARAMS,
                             });
+                            setLoading(false);
                             setCurrentPage(1);
                           }}
                         </OnChange>
@@ -339,11 +359,13 @@ function SolicitacoesPorStatusGenerico(props) {
                             name="diretoria_regional"
                             placeholder="Filtrar por DRE"
                             initialValue={propsAlimentacaoRedux.dreAlimentacao}
+                            disabled={props.disabled || loading}
                             naoDesabilitarPrimeiraOpcao
                           />
                           <OnChange name="diretoria_regional">
-                            {(value) => {
-                              getSolicitacoesAsync({
+                            {async (value) => {
+                              setLoading(true);
+                              await getSolicitacoesAsync({
                                 lote: values.lote,
                                 status: values.status,
                                 busca:
@@ -356,6 +378,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                 diretoria_regional: value,
                                 ...PARAMS,
                               });
+                              setLoading(false);
                               setCurrentPage(1);
                             }}
                           </OnChange>
@@ -376,11 +399,13 @@ function SolicitacoesPorStatusGenerico(props) {
                               initialValue={
                                 propsAlimentacaoRedux.loteAlimentacao
                               }
+                              disabled={props.disabled || loading}
                               naoDesabilitarPrimeiraOpcao
                             />
                             <OnChange name="lote">
-                              {(value) => {
-                                getSolicitacoesAsync({
+                              {async (value) => {
+                                setLoading(true);
+                                await getSolicitacoesAsync({
                                   lote: value,
                                   status: values.status,
                                   busca:
@@ -393,6 +418,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                   diretoria_regional: values.diretoria_regional,
                                   ...PARAMS,
                                 });
+                                setLoading(false);
                                 setCurrentPage(1);
                               }}
                             </OnChange>
