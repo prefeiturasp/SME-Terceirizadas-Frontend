@@ -253,6 +253,7 @@ import StatusSolicitacoesAlteracoesCronograma from "../pages/Dinutre/Solicitacoe
 import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroSuspensaoAtividades";
 import LayoutEmbalagemPage from "../pages/PreRecebimento/LayoutEmbalagemPage";
 import CadastroLayoutEmbalagemPage from "../pages/PreRecebimento/CadastroLayoutEmbalagemPage";
+import DetalharLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharLayoutEmbalagemPage";
 
 const routesConfig = [
   {
@@ -1860,6 +1861,12 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_LAYOUT_EMBALAGEM}`,
     component: CadastroLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_LAYOUT_EMBALAGEM}`,
+    component: DetalharLayoutEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
