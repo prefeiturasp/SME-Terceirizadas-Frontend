@@ -97,10 +97,7 @@ export const Filtros = ({ ...props }) => {
   };
 
   const getEscolaSimplesAsync = async () => {
-    let uuidEscola = null;
-    if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
-      uuidEscola = meusDados.vinculo_atual.instituicao.uuid;
-    }
+    let uuidEscola = meusDados.vinculo_atual.instituicao.uuid;
     const response = await getEscolaSimples(uuidEscola);
     if (response.status === HTTP_STATUS.OK) {
       let unidadeEducacional = response.data;
@@ -128,7 +125,9 @@ export const Filtros = ({ ...props }) => {
     getTiposUnidadeEscolarAsync();
     getEscolasSimplissimaComDREUnpaginatedAsync();
     getTerceirizadasAsync();
-    getEscolaSimplesAsync();
+    if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
+      getEscolaSimplesAsync();
+    }
   }, []);
 
   const filtroEscolas = (unidadesEducacionais, values) => {
