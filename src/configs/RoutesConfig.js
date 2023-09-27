@@ -254,6 +254,7 @@ import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroSuspen
 import LayoutEmbalagemPage from "../pages/PreRecebimento/LayoutEmbalagemPage";
 import CadastroLayoutEmbalagemPage from "../pages/PreRecebimento/CadastroLayoutEmbalagemPage";
 import DetalharLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharLayoutEmbalagemPage";
+import StatusSolicitacoesAlteracoesCodae from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCodae";
 
 const routesConfig = [
   {
@@ -1851,6 +1852,15 @@ const routesConfig = [
     component: StatusSolicitacoesAlteracoesCronograma,
     exact: false,
     tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
+  },
+  {
+    path: `/${constants.CRONOGRAMA}/${constants.ALTERACOES_CODAE}`,
+    component: StatusSolicitacoesAlteracoesCodae,
+    exact: false,
+    tipoUsuario: usuarioEhCronograma() ||
+      usuarioEhDilogDiretoria() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhDinutreDiretoria(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.LAYOUT_EMBALAGEM}`,
