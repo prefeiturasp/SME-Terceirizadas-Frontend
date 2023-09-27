@@ -329,7 +329,7 @@ export default () => {
                     <Field
                       component={TextArea}
                       label="Observação"
-                      name="observacao"
+                      name="observacoes"
                     />
                   </div>
                 </div>
