@@ -13,6 +13,7 @@ import {
   PRE_RECEBIMENTO,
 } from "../../../../../../configs/constants";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { getListaCronogramasLayout } from "../../../../../../services/cronograma.service";
 import { getListaFiltradaAutoCompleteSelect } from "../../../../../../helpers/autoCompleteSelect";
 
@@ -28,24 +29,17 @@ export default ({ setFiltros, setLayoutsEmbalagens, setConsultaRealizada }) => {
 
   const opcoesStatus = [
     {
-      value: "Enviado para Análise",
-      choice: "ENVIADO_PARA_ANALISE",
+      label: "Enviado para Análise",
+      value: "ENVIADO_PARA_ANALISE",
     },
     {
-      value: "Aprovado",
-      choice: "APROVADO",
+      label: "Aprovado",
+      value: "APROVADO",
     },
   ];
 
   const onSubmit = async (values) => {
-    const finalValues = { ...values };
-
-    values.status &&
-      (finalValues.status = opcoesStatus.filter(
-        (e) => e.value === values.status
-      )[0].choice);
-
-    setFiltros({ ...finalValues });
+    setFiltros({ ...values });
   };
 
   useEffect(() => {
@@ -103,11 +97,13 @@ export default ({ setFiltros, setLayoutsEmbalagens, setConsultaRealizada }) => {
 
               <div className="col-6 mt-2">
                 <Field
-                  component={AutoCompleteSelectField}
+                  component={MultiSelect}
+                  disableSearch
                   options={opcoesStatus}
                   label="Filtrar por Status"
                   name="status"
-                  placeholder="Selecione um Status"
+                  nomeDoItemNoPlural="Status"
+                  placeholder="Selecione os Status"
                 />
               </div>
             </div>
