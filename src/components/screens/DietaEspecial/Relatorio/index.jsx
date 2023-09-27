@@ -36,12 +36,15 @@ import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
-import ModalHistorico from "../../../Shareable/ModalHistorico";
+import ModalHistorico from "components/Shareable/ModalHistorico";
 import { Spin } from "antd";
 import "./style.scss";
 import ModalAvisoDietaImportada from "./componentes/ModalAvisoDietaImportada";
 import { Websocket } from "services/websocket";
-import { usuarioEhCoordenadorNutriCODAE } from "helpers/utilities";
+import {
+  usuarioEhEmpresaTerceirizada,
+  usuarioEhCoordenadorNutriCODAE,
+} from "helpers/utilities";
 
 const Relatorio = ({ visao }) => {
   const [dietaEspecial, setDietaEspecial] = useState(null);
@@ -322,7 +325,7 @@ const Relatorio = ({ visao }) => {
                 exibirUsuariosSimultaneos() ? "col-3" : "col-12"
               } col-3 mb-3`}
             >
-              {dietaEspecial && !editar && (
+              {dietaEspecial && !editar && !usuarioEhEmpresaTerceirizada() && (
                 <BotaoImprimir uuid={dietaEspecial.uuid} />
               )}
               {dietaEspecial && !editar && historico && (
