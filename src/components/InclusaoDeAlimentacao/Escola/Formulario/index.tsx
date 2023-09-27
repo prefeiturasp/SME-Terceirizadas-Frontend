@@ -671,7 +671,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                             <OutroMotivo name={name} />
                           </div>
                         )}
-                        
+
                         {eventoEspecificoSelecionado(values, index) && (
                           <div className="mt-3">
                             <EventoEspecifico name={name} />
