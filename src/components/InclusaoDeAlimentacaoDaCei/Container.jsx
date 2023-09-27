@@ -34,7 +34,11 @@ export const Container = () => {
   const getMotivosInclusaoNormalAsync = async () => {
     const response = await getMotivosInclusaoNormal();
     if (response.status === HTTP_STATUS.OK) {
-      setMotivos(response.data.results);
+      setMotivos(
+        response.data.results.filter(
+          (motivo) => motivo.nome !== "Evento Específico"
+        )
+      );
     } else {
       setErro(
         "Erro ao carregar motivos de inclusão normal. Tente novamente mais tarde."
