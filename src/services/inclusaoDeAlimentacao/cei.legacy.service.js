@@ -46,9 +46,15 @@ export const getQuantidadeAlunosFaixaEtaria = async (
   uuid,
   data_referencia_str
 ) => {
-  return await axios.get(
-    `/${QUANTIDADE_ALUNOS_POR_PERIODO}/${uuid}/alunos-por-faixa-etaria/${data_referencia_str}/`
-  );
+  const response = await axios
+    .get(
+      `/${QUANTIDADE_ALUNOS_POR_PERIODO}/${uuid}/alunos-por-faixa-etaria/${data_referencia_str}/`
+    )
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getQuantidadeAlunosPeriodoEscolar = async (uuidEscola) => {

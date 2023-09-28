@@ -738,13 +738,15 @@ SolicitacaoDeKitLanche = reduxForm({
         props.meusDados.vinculo_atual.instituicao.uuid,
         converterDDMMYYYYparaYYYYMMDD(values.evento_data)
       );
-      if (response.status === 200 && response.data.count > 0) {
+      if (response.status === 200) {
         dispatch({
           type: "LOAD_ALUNOS_POR_FAIXA_ETARIA",
           data: response.data.results
             .filter((info) => info.faixa_etaria.inicio >= 12)
             .sort((a, b) => a.faixa_etaria.inicio - b.faixa_etaria.inicio),
         });
+      } else {
+        toastError(getError(response.data));
       }
     }
     if (

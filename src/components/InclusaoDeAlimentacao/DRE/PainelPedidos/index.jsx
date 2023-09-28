@@ -7,8 +7,8 @@ import {
   filtraPrioritarios,
   filtraRegular,
   ordenarPedidosDataMaisRecente,
-} from "../../../../helpers/painelPedidos";
-import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
+} from "helpers/painelPedidos";
+import { dataAtualDDMMYYYY, getError, safeConcatOn } from "helpers/utilities";
 import { dreListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import { formatarOpcoesLote } from "helpers/utilities";
@@ -17,6 +17,7 @@ import HTTP_STATUS from "http-status-codes";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
 import { meusDados } from "services/perfil.service";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -79,6 +80,23 @@ class PainelPedidos extends Component {
         paramsFromPrevPage
       ),
     ]);
+    if (avulsas.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError(
+        "Erro ao carregar inclusões normais (EMEI, EMEF, etc.): " +
+          getError(avulsas.data)
+      );
+    }
+    if (continuas.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError(
+        "Erro ao carregar inclusões contínuas: " + getError(continuas.data)
+      );
+    }
+    if (cei.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError("Erro ao carregar inclusões CEI: " + getError(cei.data));
+    }
+    if (cemei.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError("Erro ao carregar inclusões CEMEI: " + getError(cemei.data));
+    }
     const inclusoes = safeConcatOn("results", avulsas, continuas, cei, cemei);
     const pedidosPrioritarios = ordenarPedidosDataMaisRecente(
       filtraPrioritarios(inclusoes)
