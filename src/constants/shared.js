@@ -14,6 +14,9 @@ export const DEZ_MB = 10485760;
 export const VINTE_CINCO_MB = 26214400;
 export const TODOS = "TODOS";
 
+export const JS_DATE_JANEIRO = 0;
+export const JS_DATE_FEVEREIRO = 1;
+export const JS_DATE_JULHO = 6;
 export const JS_DATE_NOVEMBRO = 10;
 export const JS_DATE_DEZEMBRO = 11;
 
