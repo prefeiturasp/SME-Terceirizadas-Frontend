@@ -25,11 +25,16 @@ export default ({
   periodosInclusaoContinua = null,
   periodoEspecifico = null,
   frequenciasDietasCEUGESTAO,
+  errosAoSalvar,
 }) => {
   const history = useHistory();
   const location = useLocation();
 
   let alimentacoesFormatadas = [];
+
+  const meusErros =
+    errosAoSalvar &&
+    errosAoSalvar.filter((obj) => obj.periodo_escolar === textoCabecalho);
 
   const nomePeriodoGrupo = () => {
     let nome = "";
@@ -172,7 +177,9 @@ export default ({
       onSubmit={() => {}}
       render={() => (
         <div
-          className="lancamento-por-periodo-card mt-3"
+          className={`lancamento-por-periodo-card mt-3 ${
+            meusErros && meusErros.length ? "border-danger" : ""
+          }`}
           style={{ color: cor }}
         >
           <div className="row">
@@ -214,7 +221,7 @@ export default ({
               </span>
               <span>ALIMENTAÇÕES</span>
             </div>
-            <div className="col-8 alimentacoes-por-tipo">
+            <div className="col-7 alimentacoes-por-tipo">
               <div className="row">
                 <div className="col-4">
                   {alimentacoesFormatadas.slice(0, 3)}
@@ -227,36 +234,50 @@ export default ({
                 </div>
               </div>
             </div>
-            <div className="col-2 pr-0">
-              <Botao
-                texto={
-                  [
-                    "MEDICAO_APROVADA_PELA_DRE",
-                    "MEDICAO_APROVADA_PELA_CODAE",
-                  ].includes(solicitacaoMedicaoInicial.status) ||
-                  [
-                    "MEDICAO_APROVADA_PELA_DRE",
-                    "MEDICAO_APROVADA_PELA_CODAE",
-                  ].includes(statusPeriodo())
-                    ? "Visualizar"
-                    : [
-                        "MEDICAO_CORRECAO_SOLICITADA",
-                        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-                      ].includes(solicitacaoMedicaoInicial.status) &&
+            <div className="col-3">
+              <div className="row" style={{ height: "100%" }}>
+                <div className="col-9 d-flex flex-column">
+                  {meusErros &&
+                    meusErros.map((obj, idxErros) => {
+                      return (
+                        <span className="mt-auto mensagem-erro" key={idxErros}>
+                          {obj.erro}
+                        </span>
+                      );
+                    })}
+                </div>
+                <div className="col-3 pr-0 d-flex flex-column">
+                  <Botao
+                    texto={
                       [
-                        "MEDICAO_CORRECAO_SOLICITADA",
-                        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-                        "MEDICAO_CORRIGIDA_PELA_UE",
-                        "MEDICAO_CORRIGIDA_PARA_CODAE",
+                        "MEDICAO_APROVADA_PELA_DRE",
+                        "MEDICAO_APROVADA_PELA_CODAE",
+                      ].includes(solicitacaoMedicaoInicial.status) ||
+                      [
+                        "MEDICAO_APROVADA_PELA_DRE",
+                        "MEDICAO_APROVADA_PELA_CODAE",
                       ].includes(statusPeriodo())
-                    ? "Corrigir"
-                    : "Editar"
-                }
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3 botao-editar-visualizar-card"
-                onClick={() => handleClickEditar()}
-                disabled={desabilitarBotaoEditar()}
-              />
+                        ? "Visualizar"
+                        : [
+                            "MEDICAO_CORRECAO_SOLICITADA",
+                            "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+                          ].includes(solicitacaoMedicaoInicial.status) &&
+                          [
+                            "MEDICAO_CORRECAO_SOLICITADA",
+                            "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+                            "MEDICAO_CORRIGIDA_PELA_UE",
+                            "MEDICAO_CORRIGIDA_PARA_CODAE",
+                          ].includes(statusPeriodo())
+                        ? "Corrigir"
+                        : "Editar"
+                    }
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    className="mt-auto"
+                    onClick={() => handleClickEditar()}
+                    disabled={desabilitarBotaoEditar()}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
