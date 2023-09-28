@@ -82,6 +82,7 @@ export default ({
     useState(false);
 
   const [periodosEspecificos, setPeriodosEspecificos] = useState([]);
+  const [errosAoSalvar, setErrosAoSalvar] = useState([]);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
     const response = await getPeriodosInclusaoContinua({
@@ -383,6 +384,7 @@ export default ({
     return removeObjetosDuplicados(tiposAlimentacao, "nome");
   };
 
+  // console.log('errosAoSalvar => ', errosAoSalvar);
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
@@ -413,6 +415,7 @@ export default ({
                   periodo.periodo_escolar.eh_periodo_especifico ? periodo : null
                 }
                 frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
+                errosAoSalvar={errosAoSalvar}
               />
             ))}
 
@@ -436,6 +439,7 @@ export default ({
                   periodo.periodo_escolar.eh_periodo_especifico ? periodo : null
                 }
                 frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
+                errosAoSalvar={errosAoSalvar}
               />
             ))}
           {ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
@@ -467,6 +471,7 @@ export default ({
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
                 periodosInclusaoContinua={periodosInclusaoContinua}
                 frequenciasDietasCEUGESTAO={frequenciasDietasCEUGESTAO}
+                errosAoSalvar={errosAoSalvar}
               />
             )}
           {((solicitacoesKitLanchesAutorizadas &&
@@ -546,6 +551,7 @@ export default ({
           <ModalFinalizarMedicao
             showModal={showModalFinalizarMedicao}
             closeModal={() => setShowModalFinalizarMedicao(false)}
+            setErrosAoSalvar={(value) => setErrosAoSalvar(value)}
             setObjSolicitacaoMIFinalizada={setObjSolicitacaoMIFinalizada}
             escolaInstituicao={escolaInstituicao}
             solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
