@@ -21,6 +21,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     solicitacaoMedicaoInicial,
     setObjSolicitacaoMIFinalizada,
     onClickInfoBasicas,
+    setErrosAoSalvar,
   } = props;
 
   const [opcaoSelecionada, setOpcaoSelecionada] = useState(null);
@@ -149,10 +150,12 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Medição Inicial finalizada com sucesso!");
       setObjSolicitacaoMIFinalizada(response.data);
-      handleHideModal();
+      setErrosAoSalvar([]);
     } else {
+      setErrosAoSalvar(response.data);
       toastError("Não foi possível finalizar as alterações!");
     }
+    handleHideModal();
     onClickInfoBasicas();
   };
 
