@@ -1857,7 +1857,8 @@ const routesConfig = [
     path: `/${constants.CRONOGRAMA}/${constants.ALTERACOES_CODAE}`,
     component: StatusSolicitacoesAlteracoesCodae,
     exact: false,
-    tipoUsuario: usuarioEhCronograma() ||
+    tipoUsuario:
+      usuarioEhCronograma() ||
       usuarioEhDilogDiretoria() ||
       usuarioEhCodaeDilog() ||
       usuarioEhDinutreDiretoria(),

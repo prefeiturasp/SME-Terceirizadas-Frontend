@@ -121,10 +121,11 @@ export default () => {
               <hr />
               <div className="row mb-3">
                 <div className="col-12">
-                  <label className="label-dados-produto mb-2">
-                    Observações
-                  </label>
-                  <TextArea input={{ value: objeto.observacoes }} disabled />
+                  <TextArea
+                    label="Observações"
+                    input={{ value: objeto.observacoes }}
+                    disabled
+                  />
                 </div>
               </div>
             </>
