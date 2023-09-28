@@ -23,6 +23,12 @@ import {
 import { PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { Spin } from "antd";
 import { ajustarFormatoLog } from "../helper";
+import {
+  JS_DATE_DEZEMBRO,
+  JS_DATE_FEVEREIRO,
+  JS_DATE_JANEIRO,
+  JS_DATE_JULHO,
+} from "constants/shared";
 
 export const DashboardNutrimanifestacao = () => {
   const [canceladas, setCanceladas] = useState(null);
@@ -50,7 +56,14 @@ export const DashboardNutrimanifestacao = () => {
       }
     }
     if (isAllUndefined) {
-      parametros.periodo = 60;
+      parametros.periodo = [
+        JS_DATE_JANEIRO,
+        JS_DATE_FEVEREIRO,
+        JS_DATE_JULHO,
+        JS_DATE_DEZEMBRO,
+      ].includes(new Date().getMonth())
+        ? 30
+        : 7;
     }
     return parametros;
   };

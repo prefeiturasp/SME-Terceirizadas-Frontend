@@ -40,6 +40,12 @@ import {
 import { connect } from "react-redux";
 import { Spin } from "antd";
 import CardBody from "components/Shareable/CardBody";
+import {
+  JS_DATE_DEZEMBRO,
+  JS_DATE_FEVEREIRO,
+  JS_DATE_JANEIRO,
+  JS_DATE_JULHO,
+} from "constants/shared";
 
 export const DashboardCODAE = (props) => {
   const { cards, lotes, diretoriasRegionais, handleSubmit, meusDados } = props;
@@ -112,11 +118,17 @@ export const DashboardCODAE = (props) => {
       }
     }
     if (isAllUndefined) {
-      parametros.periodo = 60;
+      parametros.periodo = [
+        JS_DATE_JANEIRO,
+        JS_DATE_FEVEREIRO,
+        JS_DATE_JULHO,
+        JS_DATE_DEZEMBRO,
+      ].includes(new Date().getMonth())
+        ? 30
+        : 7;
     }
     return parametros;
   };
-
   const getSolicitacoesAsync = async (params = null) => {
     setLoadingAcompanhamentoSolicitacoes(true);
 
