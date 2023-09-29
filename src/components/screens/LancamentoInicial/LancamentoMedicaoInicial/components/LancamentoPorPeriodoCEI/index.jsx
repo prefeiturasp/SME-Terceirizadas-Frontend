@@ -136,6 +136,7 @@ export default ({
             escolaInstituicao={escolaInstituicao}
             solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
             onClickInfoBasicas={onClickInfoBasicas}
+            setErrosAoSalvar={() => {}}
           />
         </>
       )}
