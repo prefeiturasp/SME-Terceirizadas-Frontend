@@ -233,30 +233,31 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     }
   };
 
-  const carregarRascunho = (
+  const carregarRascunho = async (
     form: FormApi<any, Partial<any>>,
     values: ValuesFormInclusaoDeAlimentacaoInterface,
     inclusao:
       | RascunhosInclusaoDeAlimentacaoNormalInterface
       | RascunhosInclusaoDeAlimentacaoContinuaInterface
-  ): void => {
+  ): Promise<void> => {
+    setCarregandoRascunho(true);
     setUuid(inclusao.uuid);
     setIdExterno(inclusao.id_externo);
-    form.change("uuid", inclusao.uuid);
-    form.change("id_externo", inclusao.id_externo);
+    await form.change("uuid", inclusao.uuid);
+    await form.change("id_externo", inclusao.id_externo);
     const inclusao_ = deepCopy(inclusao);
     if (inclusao_.inclusoes) {
       carregarRascunhoNormal(form, inclusao_);
     } else {
       carregarRascunhoContinuo(form, values, inclusao_);
     }
+    setCarregandoRascunho(false);
   };
 
-  const carregarRascunhoNormal = (
+  const carregarRascunhoNormal = async (
     form: FormApi<any, Partial<any>>,
     inclusao_: any
-  ): void => {
-    setCarregandoRascunho(true);
+  ): Promise<void> => {
     if (
       inclusao_.inclusoes &&
       inclusao_.inclusoes[0].motivo &&
@@ -299,16 +300,16 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
           (qp_) => qp_.nome === qp.periodo_escolar.nome
         );
       }
-      form.change(`quantidades_periodo[${index}].checked`, true);
-      form.change(
+      await form.change(`quantidades_periodo[${index}].checked`, true);
+      await form.change(
         `quantidades_periodo[${index}].multiselect`,
         "multiselect-wrapper-enabled"
       );
-      form.change(
+      await form.change(
         `quantidades_periodo[${index}].tipos_alimentacao_selecionados`,
         qp.tipos_alimentacao.map((t) => t.uuid)
       );
-      form.change(
+      await form.change(
         `quantidades_periodo[${index}].numero_alunos`,
         qp.numero_alunos
       );
