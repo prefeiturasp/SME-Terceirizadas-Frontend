@@ -48,6 +48,7 @@ export default ({
   setObjSolicitacaoMIFinalizada,
   setSolicitacaoMedicaoInicial,
   naoPodeFinalizar,
+  setFinalizandoMedicao,
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
     useState(false);
@@ -556,6 +557,7 @@ export default ({
             escolaInstituicao={escolaInstituicao}
             solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
             onClickInfoBasicas={onClickInfoBasicas}
+            setFinalizandoMedicao={setFinalizandoMedicao}
           />
           <ModalSolicitacaoDownload
             show={exibirModalCentralDownloads}

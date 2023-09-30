@@ -22,6 +22,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     setObjSolicitacaoMIFinalizada,
     onClickInfoBasicas,
     setErrosAoSalvar,
+    setFinalizandoMedicao,
   } = props;
 
   const [opcaoSelecionada, setOpcaoSelecionada] = useState(null);
@@ -118,6 +119,8 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
   };
 
   const handleFinalizarMedicao = async () => {
+    setFinalizandoMedicao(true);
+
     let data = new FormData();
     data.append("escola", String(escolaInstituicao.uuid));
 
@@ -143,6 +146,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
       });
       data.append("anexos", JSON.stringify(payloadAnexos));
     }
+    handleHideModal();
     const response = await updateSolicitacaoMedicaoInicial(
       solicitacaoMedicaoInicial.uuid,
       data
@@ -150,12 +154,13 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Medição Inicial finalizada com sucesso!");
       setObjSolicitacaoMIFinalizada(response.data);
+      setFinalizandoMedicao(false);
       setErrosAoSalvar([]);
     } else {
       setErrosAoSalvar(response.data);
+      setFinalizandoMedicao(false);
       toastError("Não foi possível finalizar as alterações!");
     }
-    handleHideModal();
     onClickInfoBasicas();
   };
 
@@ -163,6 +168,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     <Modal
       dialogClassName="modal-50w"
       show={showModal}
+      backdrop="static"
       onHide={() => handleHideModal()}
     >
       <Modal.Header closeButton>
