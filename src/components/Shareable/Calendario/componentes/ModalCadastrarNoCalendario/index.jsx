@@ -9,32 +9,31 @@ import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import "./style.scss";
-import { setDiaSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
 import HTTP_STATUS from "http-status-codes";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { getError } from "helpers/utilities";
 import { useEffect } from "react";
 
-export const ModalCadastrarSobremesa = ({ ...props }) => {
+export const ModalCadastrarNoCalendario = ({ ...props }) => {
   const {
     tiposUnidades,
     event,
     showModal,
     closeModal,
-    getDiasSobremesaDoceAsync,
-    diasSobremesaDoce,
+    getObjetosAsync,
+    setObjetoAsync,
+    objetos,
+    nomeObjetoNoCalendario,
+    nomeObjetoNoCalendarioMinusculo,
   } = props;
 
   const [tipoUnidadesSalvoNoDia, setTipoUnidadesSalvoNoDia] = useState([]);
 
   useEffect(() => {
     setTipoUnidadesSalvoNoDia(
-      diasSobremesaDoce
-        .filter(
-          (diaSobremesa) =>
-            diaSobremesa.data === getDDMMYYYfromDate(event.start)
-        )
-        .map((diaSobremesa) => diaSobremesa.tipo_unidade.uuid)
+      objetos
+        .filter((obj) => obj.data === getDDMMYYYfromDate(event.start))
+        .map((obj) => obj.tipo_unidade.uuid)
     );
   }, [event.start]);
 
@@ -43,15 +42,15 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
       tipo_unidades: values.tipo_unidades,
       data: getYYYYMMDDfromDate(event.start),
     };
-    const response = await setDiaSobremesaDoce(payload);
+    const response = await setObjetoAsync(payload);
     if (response.status === HTTP_STATUS.CREATED) {
       if (tipoUnidadesSalvoNoDia.length === 0) {
-        toastSuccess("Dia de sobremesa criado com sucesso");
+        toastSuccess(`Dia de ${nomeObjetoNoCalendario} criado com sucesso`);
       } else {
-        toastSuccess("Dia de sobremesa atualizado com sucesso");
+        toastSuccess(`Dia de ${nomeObjetoNoCalendario} atualizado com sucesso`);
       }
       closeModal();
-      getDiasSobremesaDoceAsync();
+      getObjetosAsync();
     } else {
       toastError(getError(response.data));
     }
@@ -74,11 +73,11 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
             <Modal.Header closeButton>
               <Modal.Title>{`${
                 tipoUnidadesSalvoNoDia.length ? "Atualizar" : "Cadastrar"
-              } Sobremesa Doce`}</Modal.Title>
+              } dia de ${nomeObjetoNoCalendario}`}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <p>
-                Cadastro de sobremesa doce para o dia{" "}
+                Cadastro de {nomeObjetoNoCalendarioMinusculo} para o dia{" "}
                 <strong>{getDDMMYYYfromDate(event.start)}</strong>, selecione o
                 tipo de unidade:
               </p>
@@ -94,7 +93,7 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
                   form.change("tipo_unidades", values_);
                 }}
                 overrideStrings={{
-                  selectSomeItems: "Selecione",
+                  selectSomeItems: "Selecionar unidades",
                   allItemsAreSelected:
                     "Todos os tipos de unidade estão selecionados",
                   selectAll: "Todos",

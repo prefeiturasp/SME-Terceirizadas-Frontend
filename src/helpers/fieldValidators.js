@@ -71,7 +71,7 @@ export const dataDuplicada = (listaDatas) => (value) => {
 };
 
 export const requiredMultiselect = (array) =>
-  array !== [] ? undefined : "Campo obrigatório";
+  array && array.length > 0 ? undefined : "Campo obrigatório";
 
 export const requiredMultiselectKhan = (array) =>
   (array === undefined || array.length === 0) && "Campo obrigatório";

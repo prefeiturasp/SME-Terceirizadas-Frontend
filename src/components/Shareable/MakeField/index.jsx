@@ -13,7 +13,15 @@ const MyPicker = (props) => {
     props.onChange(val);
     form.change(name, value);
   };
-  return <TimePicker {...props} onPanelChange={setVal} onBlur={onBlur} />;
+  return (
+    <TimePicker
+      showSecond={false}
+      {...props}
+      format="HH:mm"
+      onPanelChange={setVal}
+      onBlur={onBlur}
+    />
+  );
 };
 
 export const makeField =

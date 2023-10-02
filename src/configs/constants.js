@@ -36,7 +36,9 @@ export const NUTRIMANIFESTACAO = "nutrimanifestacao";
 export const MEDICAO = "medicao";
 export const DINUTRE = "dinutre";
 export const DILOG = "dilog";
+export const CRONOGRAMA = "cronograma";
 
+export const AGUARDANDO_ASSINATURAS = "aguardando-assinaturas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
@@ -148,6 +150,7 @@ export const EDITAR_EMPRESA = "editar-empresa";
 export const EMPRESAS_CADASTRADAS = "empresas-cadastradas";
 export const FAIXAS_ETARIAS = "faixas-etarias";
 export const SOBREMESA_DOCE = "sobremesa-doce";
+export const SUSPENSAO_ATIVIDADES = "suspensao-atividades";
 export const CONSULTA_KITS = "consulta-kits";
 export const KITS = "kits";
 export const LOTE = "lote";
@@ -219,6 +222,10 @@ export const DETALHE_CRONOGRAMA = "detalhe-cronograma";
 export const ALTERACAO_CRONOGRAMA = "altera-cronograma";
 export const DETALHAR_ALTERACAO_CRONOGRAMA = "detalhe-alteracao-cronograma";
 
+export const LAYOUT_EMBALAGEM = "layout-embalagem";
+export const CADASTRO_LAYOUT_EMBALAGEM = "cadastro-layout-embalagem";
+export const DETALHAR_LAYOUT_EMBALAGEM = "detalhe-layout-embalagem";
+
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";
 
@@ -237,6 +244,7 @@ export const PAINEL_APROVACOES = "painel-aprovacoes";
 export const SOLICITACOES_ALTERACOES = "solicitacoes-alteracoes";
 export const ALTERACOES_APROVADAS = "alteracoes-aprovadas";
 export const ALTERACOES_REPROVADAS = "alteracoes-reprovadas";
+export const ALTERACOES_CODAE = "alteracoes-codae";
 
 export const AGUARDANDO_DILOG = "aguardando-dilog";
 export const ASSINADO_CODAE = "assinado-codae";

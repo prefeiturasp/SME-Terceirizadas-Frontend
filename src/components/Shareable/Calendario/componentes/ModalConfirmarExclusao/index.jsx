@@ -7,20 +7,26 @@ import { getDDMMYYYfromDate } from "configs/helper";
 import React from "react";
 import { Modal } from "react-bootstrap";
 import { Form } from "react-final-form";
-import { deleteDiaSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
 import HTTP_STATUS from "http-status-codes";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { getError } from "helpers/utilities";
 
 export const ModalConfirmarExclusao = ({ ...props }) => {
-  const { event, showModal, closeModal, getDiasSobremesaDoceAsync } = props;
+  const {
+    event,
+    showModal,
+    closeModal,
+    getObjetosAsync,
+    nomeObjetoNoCalendario,
+    deleteObjetoAsync,
+  } = props;
 
   const onSubmit = async () => {
-    const response = await deleteDiaSobremesaDoce(event.uuid);
+    const response = await deleteObjetoAsync(event.uuid);
     if (response.status === HTTP_STATUS.NO_CONTENT) {
-      toastSuccess("Dia de sobremesa excluído com sucesso");
+      toastSuccess(`Registro excluído com sucesso`);
       closeModal();
-      getDiasSobremesaDoceAsync();
+      getObjetosAsync();
     } else {
       toastError(getError(response.data));
     }
@@ -36,12 +42,12 @@ export const ModalConfirmarExclusao = ({ ...props }) => {
         {({ handleSubmit, submitting }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Header closeButton>
-              <Modal.Title>Excluir Sobremesa Doce</Modal.Title>
+              <Modal.Title>Excluir {nomeObjetoNoCalendario}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <p>
                 Deseja realmente excluir o cadastro de{" "}
-                <strong>Sobremesa doce</strong> para a unidade{" "}
+                <strong>{nomeObjetoNoCalendario}</strong> para a unidade{" "}
                 <strong>{event.title}</strong> no dia{" "}
                 <strong>{getDDMMYYYfromDate(event.start)}</strong>?
               </p>

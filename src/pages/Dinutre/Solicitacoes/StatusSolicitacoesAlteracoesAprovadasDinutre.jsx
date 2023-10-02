@@ -1,12 +1,7 @@
 import React from "react";
 import Page from "components/Shareable/Page/Page";
 import Breadcrumb from "components/Shareable/Breadcrumb";
-import {
-  ALTERACOES_APROVADAS,
-  DINUTRE,
-  PAINEL_APROVACOES,
-  PRE_RECEBIMENTO,
-} from "configs/constants";
+import { PAINEL_APROVACOES, PRE_RECEBIMENTO } from "configs/constants";
 import {
   getDashboardSolicitacoesAlteracao,
   getDashboardSolicitacoesAlteracaoComFiltros,
@@ -15,13 +10,17 @@ import { SolicitacoesCronogramaStatusGenerico } from "components/screens/Solicit
 import { CARD_SOLICITACOES_APROVADAS_DINUTRE } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
 
 const atual = {
-  href: `/${DINUTRE}/${ALTERACOES_APROVADAS}`,
-  titulo: "Alterações Aprovadas",
+  href: CARD_SOLICITACOES_APROVADAS_DINUTRE.href,
+  titulo: CARD_SOLICITACOES_APROVADAS_DINUTRE.titulo,
 };
 
 const limit = 10;
 
-const paramsDefault = { status: "APROVADO_DINUTRE", offset: 0, limit: limit };
+const paramsDefault = {
+  status: CARD_SOLICITACOES_APROVADAS_DINUTRE.incluir_status,
+  offset: 0,
+  limit: limit,
+};
 
 export default () => {
   const anteriores = [
@@ -30,7 +29,7 @@ export default () => {
       titulo: "Pré-Recebimento",
     },
     {
-      href: `/pre-recebimento/painel-aprovacoes`,
+      href: `/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`,
       titulo: "Painel de Aprovações",
     },
   ];

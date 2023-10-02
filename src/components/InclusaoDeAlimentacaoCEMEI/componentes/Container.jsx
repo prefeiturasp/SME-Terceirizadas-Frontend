@@ -15,6 +15,7 @@ import {
   formatarPeriodos,
 } from "components/InclusaoDeAlimentacao/helper";
 import { getQuantidadeAlunosEscola } from "services/escola.service";
+import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
 
 export const Container = () => {
   const [dados, setDados] = useState(null);
@@ -113,7 +114,9 @@ export const Container = () => {
   };
 
   const getDiasUteisAsync = async () => {
-    const response = await getDiasUteis();
+    const response = await getDiasUteis({
+      escola_uuid: dados.vinculo_atual.instituicao.uuid,
+    });
     if (response.status === HTTP_STATUS.OK) {
       setProximosCincoDiasUteis(
         dataParaUTC(new Date(response.data.proximos_cinco_dias_uteis))
@@ -130,8 +133,11 @@ export const Container = () => {
     getMeusDadosAsync();
     getMotivosInclusaoNormalAsync();
     getMotivosInclusaoContinuaAsync();
-    getDiasUteisAsync();
   }, []);
+
+  useEffect(() => {
+    dados && getDiasUteisAsync();
+  }, [dados]);
 
   const REQUISICOES_CONCLUIDAS =
     dados &&
@@ -145,7 +151,7 @@ export const Container = () => {
 
   return (
     <div>
-      {!REQUISICOES_CONCLUIDAS && !erro && <div>Carregando...</div>}
+      {!REQUISICOES_CONCLUIDAS && !erro && <SigpaeLogoLoader />}
       {erro && (
         <div>Erro ao carregar informações. Tente novamente mais tarde.</div>
       )}

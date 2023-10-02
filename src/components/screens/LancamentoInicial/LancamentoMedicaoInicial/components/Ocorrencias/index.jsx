@@ -14,6 +14,7 @@ export default ({
   solicitacaoMedicaoInicial,
   onClickInfoBasicas,
   setObjSolicitacaoMIFinalizada,
+  setFinalizandoMedicao,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalHistorico, setShowModalHistorico] = useState(false);
@@ -161,6 +162,7 @@ export default ({
         setObjSolicitacaoMIFinalizada={(value) =>
           setObjSolicitacaoMIFinalizada(value)
         }
+        setFinalizandoMedicao={setFinalizandoMedicao}
       />
     </>
   );

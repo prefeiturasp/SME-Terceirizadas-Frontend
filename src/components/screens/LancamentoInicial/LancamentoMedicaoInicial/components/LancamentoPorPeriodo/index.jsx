@@ -13,6 +13,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesInclusoesEtecAutorizadasEscola,
+  getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola,
   getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
@@ -46,6 +47,8 @@ export default ({
   objSolicitacaoMIFinalizada,
   setObjSolicitacaoMIFinalizada,
   setSolicitacaoMedicaoInicial,
+  naoPodeFinalizar,
+  setFinalizandoMedicao,
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
     useState(false);
@@ -68,11 +71,19 @@ export default ({
   const [periodosCEUGESTAO, setPeriodosCEUGESTAO] = useState(undefined);
   const [frequenciasDietasCEUGESTAO, setFrequenciasDietasCEUGESTAO] =
     useState(undefined);
+
+  const [
+    frequenciasDietasPeriodosEspeciais,
+    setFrequenciasDietasPeriodosEspeciais,
+  ] = useState(undefined);
   const [quantidadeAlimentacoesLancadas, setQuantidadeAlimentacoesLancadas] =
     useState(undefined);
   const [erroAPI, setErroAPI] = useState("");
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
+
+  const [periodosEspecificos, setPeriodosEspecificos] = useState([]);
+  const [errosAoSalvar, setErrosAoSalvar] = useState([]);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
     const response = await getPeriodosInclusaoContinua({
@@ -145,6 +156,41 @@ export default ({
     }
   };
 
+  const getSolicitacoesInclusoesComEventoEspecificoAsync = async () => {
+    setPeriodosEspecificos([]);
+    const escola_uuid = escolaInstituicao.uuid;
+    const tipo_solicitacao = "Inclusão de";
+    const response =
+      await getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola({
+        escola_uuid,
+        mes,
+        ano,
+        tipo_solicitacao,
+      });
+    if (response.status === HTTP_STATUS.OK) {
+      const data = response.data.map((vinculo) => {
+        vinculo.periodo_escolar.eh_periodo_especifico = true;
+        return vinculo;
+      });
+      const nomesPeriodosNormais = periodosEscolaSimples.map(
+        (vinculo) => vinculo.periodo_escolar.nome
+      );
+      const pEspecificos = data.filter(
+        (vinculo) =>
+          !nomesPeriodosNormais.includes(vinculo.periodo_escolar.nome)
+      );
+      let periodos = periodosEscolaSimples.concat(pEspecificos);
+      periodos = periodos.sort((obj1, obj2) =>
+        obj1.periodo_escolar.posicao > obj2.periodo_escolar.posicao ? 1 : -1
+      );
+      setPeriodosEspecificos(periodos);
+    } else {
+      setErroAPI(
+        "Erro ao carregar Inclusões Autorizadas com Evento Específico. Tente novamente mais tarde."
+      );
+    }
+  };
+
   const getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync = async () => {
     const params = { uuid_solicitacao: solicitacaoMedicaoInicial.uuid };
     const response = await getQuantidadeAlimentacoesLancadasPeriodoGrupo(
@@ -188,11 +234,26 @@ export default ({
     }
   };
 
+  const getFrequenciasDietasAsync = async () => {
+    const response = await getCEUGESTAOFrequenciasDietas(
+      solicitacaoMedicaoInicial.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setFrequenciasDietasPeriodosEspeciais(response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar frequência de dietas de escolas CEU GESTÃO. Tente novamente mais tarde."
+      );
+    }
+  };
+
   useEffect(() => {
     getPeriodosInclusaoContinuaAsync();
     getSolicitacoesKitLanchesAutorizadasAsync();
     getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
     getSolicitacoesInclusoesEtecAutorizadasAsync();
+    getSolicitacoesInclusoesComEventoEspecificoAsync();
+    solicitacaoMedicaoInicial && getFrequenciasDietasAsync();
     solicitacaoMedicaoInicial &&
       getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync() &&
       ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
@@ -312,15 +373,19 @@ export default ({
   const tiposAlimentacaoProgramasEProjetos = () => {
     let tiposAlimentacao = [];
     Object.keys(periodosInclusaoContinua).forEach((periodo) => {
-      const tipos = periodosEscolaSimples.find(
+      const periodoProgramasEProjetos = periodosEscolaSimples.find(
         (p) => p.periodo_escolar.nome === periodo
-      ).tipos_alimentacao;
-      tiposAlimentacao = [...tiposAlimentacao, ...tipos];
+      );
+      if (periodoProgramasEProjetos) {
+        const tipos = periodoProgramasEProjetos.tipos_alimentacao;
+        tiposAlimentacao = [...tiposAlimentacao, ...tipos];
+      }
     });
 
     return removeObjetosDuplicados(tiposAlimentacao, "nome");
   };
 
+  // console.log('errosAoSalvar => ', errosAoSalvar);
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
@@ -332,6 +397,32 @@ export default ({
             </div>
           </div>
           {!ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
+            frequenciasDietasPeriodosEspeciais &&
+            periodosEspecificos.length &&
+            periodosEspecificos.map((periodo, index) => (
+              <CardLancamento
+                key={index}
+                textoCabecalho={periodo.periodo_escolar.nome}
+                cor={CORES[index]}
+                tipos_alimentacao={periodo.tipos_alimentacao}
+                periodoSelecionado={periodoSelecionado}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                ehPeriodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico
+                }
+                periodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico ? periodo : null
+                }
+                frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
+                errosAoSalvar={errosAoSalvar}
+              />
+            ))}
+
+          {!ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
+            frequenciasDietasPeriodosEspeciais &&
+            !periodosEspecificos.length &&
             periodosEscolaSimples.map((periodo, index) => (
               <CardLancamento
                 key={index}
@@ -342,6 +433,14 @@ export default ({
                 solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
                 objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                ehPeriodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico
+                }
+                periodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico ? periodo : null
+                }
+                frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
+                errosAoSalvar={errosAoSalvar}
               />
             ))}
           {ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
@@ -373,6 +472,7 @@ export default ({
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
                 periodosInclusaoContinua={periodosInclusaoContinua}
                 frequenciasDietasCEUGESTAO={frequenciasDietasCEUGESTAO}
+                errosAoSalvar={errosAoSalvar}
               />
             )}
           {((solicitacoesKitLanchesAutorizadas &&
@@ -410,7 +510,9 @@ export default ({
                 texto="Finalizar"
                 style={BUTTON_STYLE.GREEN}
                 className="float-right"
-                disabled={!usuarioEhEscolaTerceirizadaDiretor()}
+                disabled={
+                  !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
+                }
                 onClick={() => setShowModalFinalizarMedicao(true)}
               />
             ) : (
@@ -450,10 +552,12 @@ export default ({
           <ModalFinalizarMedicao
             showModal={showModalFinalizarMedicao}
             closeModal={() => setShowModalFinalizarMedicao(false)}
+            setErrosAoSalvar={(value) => setErrosAoSalvar(value)}
             setObjSolicitacaoMIFinalizada={setObjSolicitacaoMIFinalizada}
             escolaInstituicao={escolaInstituicao}
             solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
             onClickInfoBasicas={onClickInfoBasicas}
+            setFinalizandoMedicao={setFinalizandoMedicao}
           />
           <ModalSolicitacaoDownload
             show={exibirModalCentralDownloads}

@@ -141,9 +141,12 @@ const CardBody = (props) => {
                       * mínimo de 3 caracteres
                       <OnChange name="titulo">
                         {(value, previous) => {
-                          props.updateTituloDieta(value);
-                          props.updateNomeProduto(value);
-                          props.updateTituloAlimentacao(value);
+                          pathname === "/painel-dieta-especial" &&
+                            props.updateTituloDieta(value);
+                          pathname === "/painel-gestao-produto" &&
+                            props.updateNomeProduto(value);
+                          pathname === "/painel-gestao-alimentacao" &&
+                            props.updateTituloAlimentacao(value);
                           props.onChange(values, previous);
                         }}
                       </OnChange>
@@ -157,6 +160,7 @@ const CardBody = (props) => {
                           name="tipo_solicitacao"
                           naoDesabilitarPrimeiraOpcao
                           placeholder="Tipo de Solicitação"
+                          disabled={props.filtrosDesabilitados}
                           options={TIPOS_SOLICITACOES_OPTIONS}
                         />
                       </div>
@@ -171,6 +175,7 @@ const CardBody = (props) => {
                           name="data_evento"
                           minDate={null}
                           component={InputComData}
+                          disabled={props.filtrosDesabilitados}
                           placeholder="Data do evento"
                         />
                         <OnChange name="data_evento">
@@ -251,6 +256,7 @@ const CardBody = (props) => {
                             component={Select}
                             options={TIPOS_SOLICITACOES_OPTIONS}
                             name="tipo_solicitacao"
+                            disabled={props.filtrosDesabilitados}
                             naoDesabilitarPrimeiraOpcao
                           />
                           <OnChange name="tipo_solicitacao">
@@ -266,6 +272,7 @@ const CardBody = (props) => {
                             minDate={null}
                             component={InputComData}
                             placeholder="Data do evento"
+                            disabled={props.filtrosDesabilitados}
                           />
                           <OnChange name="data_evento">
                             {(data) => {

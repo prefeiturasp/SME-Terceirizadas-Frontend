@@ -1,8 +1,11 @@
 import {
+  AGUARDANDO_ASSINATURAS,
   AGUARDANDO_DILOG,
   ALTERACOES_APROVADAS,
+  ALTERACOES_CODAE,
   ALTERACOES_REPROVADAS,
   ASSINADO_CODAE,
+  CRONOGRAMA,
   DILOG,
   DINUTRE,
   SOLICITACOES_ALTERACOES,
@@ -33,7 +36,7 @@ export const CARD_CRONOGRAMAS_ASSINADOS = {
   icon: "fa-check",
   style: "card-cronogramas-assinados",
   incluir_status: ["ASSINADO_CODAE"],
-  href: `/${DINUTRE}/${ASSINADO_CODAE}`,
+  href: `/${ASSINADO_CODAE}`,
 };
 
 export const CARD_PENDENTES_ASSINATURA_DILOG = {
@@ -42,7 +45,7 @@ export const CARD_PENDENTES_ASSINATURA_DILOG = {
   icon: "fa-exclamation-triangle",
   style: "card-pendente-assinatura",
   incluir_status: ["ASSINADO_DINUTRE"],
-  href: `/${DINUTRE}/${SOLICITACOES_PENDENTES}`,
+  href: `/${DILOG}/${SOLICITACOES_PENDENTES}`,
 };
 
 export const CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS = {
@@ -55,7 +58,7 @@ export const CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS = {
     "ASSINADO_FORNECEDOR",
     "ASSINADO_DINUTRE",
   ],
-  href: `#`,
+  href: `/${CRONOGRAMA}/${AGUARDANDO_ASSINATURAS}`,
 };
 
 export const CARD_SOLICITACOES_ALTERACOES_DINUTRE = {
@@ -73,7 +76,7 @@ export const CARD_VISAO_CRONOGRAMA_SOLICITACOES_ALTERACOES_EM_ANALISE = {
   icon: "fa-exclamation-triangle",
   style: "card-solicitacoes-alteracoes",
   incluir_status: ["EM_ANALISE"],
-  href: `#`,
+  href: `/${CRONOGRAMA}/${SOLICITACOES_ALTERACOES}`,
 };
 
 export const CARD_SOLICITACOES_APROVADAS_DINUTRE = {
@@ -121,6 +124,15 @@ export const CARD_SOLICITACOES_REPROVADAS_DILOG = {
   href: `/${DILOG}/${ALTERACOES_REPROVADAS}`,
 };
 
+export const CARD_SOLICITACOES_ALTERACOES_CODAE = {
+  id: "Alterações CODAE",
+  titulo: "Alterações CODAE",
+  icon: "fa-info-circle",
+  style: "card-alteracoes-codae",
+  incluir_status: ["ALTERACAO_ENVIADA_FORNECEDOR", "FORNECEDOR_CIENTE"],
+  href: `/${CRONOGRAMA}/${ALTERACOES_CODAE}`,
+};
+
 export const cards_dinutre = [
   CARD_PENDENTES_ASSINATURA,
   CARD_AGUARDANDO_ASSINATURA,
@@ -141,16 +153,19 @@ export const cards_alteracao_dinutre = [
   CARD_SOLICITACOES_ALTERACOES_DINUTRE,
   CARD_SOLICITACOES_APROVADAS_DINUTRE,
   CARD_SOLICITACOES_REPROVADAS_DINUTRE,
+  CARD_SOLICITACOES_ALTERACOES_CODAE,
 ];
 
 export const cards_alteracao_dilog = [
   CARD_SOLICITACOES_ALTERACOES_DILOG,
   CARD_SOLICITACOES_APROVADAS_DILOG,
   CARD_SOLICITACOES_REPROVADAS_DILOG,
+  CARD_SOLICITACOES_ALTERACOES_CODAE,
 ];
 
 export const cards_alteracao_visao_cronograma = [
   CARD_VISAO_CRONOGRAMA_SOLICITACOES_ALTERACOES_EM_ANALISE,
   CARD_SOLICITACOES_APROVADAS_DILOG,
   CARD_SOLICITACOES_REPROVADAS_DILOG,
+  CARD_SOLICITACOES_ALTERACOES_CODAE,
 ];

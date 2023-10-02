@@ -115,6 +115,20 @@ export const OutroMotivo = ({ name }) => {
   );
 };
 
+export const EventoEspecifico = ({ name }) => {
+  return (
+    <div className="mb-3">
+      <Field
+        component={TextArea}
+        label="Descrição do Evento"
+        name={`${name}.evento`}
+        required
+        validate={composeValidators(required, maxLength(1500))}
+      />
+    </div>
+  );
+};
+
 export const PeriodosInclusaoNormal = ({
   form,
   values,

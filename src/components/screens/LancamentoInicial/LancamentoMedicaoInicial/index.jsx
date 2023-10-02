@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
+import HTTP_STATUS from "http-status-codes";
 import { addMonths, getYear, format, getMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Select, Skeleton } from "antd";
+import { Select, Skeleton, Spin } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 
 import InformacoesEscola from "./components/InformacoesEscola";
@@ -22,11 +23,13 @@ import {
   getSolicitacaoMedicaoInicial,
   getSolicitacoesLancadas,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { getDiasCalendario } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { ehEscolaTipoCEI } from "../../../../helpers/utilities";
 import "./styles.scss";
 import InformacoesMedicaoInicialCEI from "./components/InformacoesMedicaoInicialCEI";
 import LancamentoPorPeriodoCEI from "./components/LancamentoPorPeriodoCEI";
+import { toastError } from "../../../Shareable/Toast/dialogs";
 
 export default () => {
   const [ano, setAno] = useState(null);
@@ -48,6 +51,8 @@ export default () => {
     status: null,
   });
   const [open, setOpen] = useState(false);
+  const [naoPodeFinalizar, setNaoPodeFinalizar] = useState(true);
+  const [finalizandoMedicao, setFinalizandoMedicao] = useState(false);
 
   const history = useHistory();
   const location = useLocation();
@@ -180,6 +185,7 @@ export default () => {
     };
 
     const solicitacao = await getSolicitacaoMedicaoInicial(payload);
+    getDiasCalendarioAsync(payload);
     setSolicitacaoMedicaoInicial(solicitacao.data[0]);
   };
 
@@ -190,6 +196,33 @@ export default () => {
         return <Option key={periodo.dataBRT}>{periodo.periodo}</Option>;
       })
     : [];
+
+  const getDiasCalendarioAsync = async (payload) => {
+    payload["escola_uuid"] = payload["escola"];
+    delete payload["escola"];
+    const response = await getDiasCalendario(payload);
+    if (response.status === HTTP_STATUS.OK) {
+      const listaDiasLetivos = response.data.filter(
+        (dia) => dia.dia_letivo === true
+      );
+      if (listaDiasLetivos.length) {
+        const ultimoDiaLetivo = listaDiasLetivos[listaDiasLetivos.length - 1];
+        const dataUltimoDia = new Date(
+          `${payload["ano"]}/${payload["mes"]}/${ultimoDiaLetivo.dia}`
+        );
+        const dataHoje = new Date();
+        if (dataHoje.getTime() > dataUltimoDia.getTime()) {
+          setNaoPodeFinalizar(false);
+        } else {
+          setNaoPodeFinalizar(true);
+        }
+      }
+    } else {
+      toastError(
+        "Erro ao carregar calendário do mês. Tente novamente mais tarde."
+      );
+    }
+  };
 
   const handleChangeSelectPeriodo = async (value) => {
     setMes(null);
@@ -298,53 +331,63 @@ export default () => {
                 setObjSolicitacaoMIFinalizada={(value) =>
                   setObjSolicitacaoMIFinalizada(value)
                 }
+                setFinalizandoMedicao={setFinalizandoMedicao}
               />
               <hr className="linha-form mt-4 mb-4" />
             </>
           )}
-        {mes &&
-          ano &&
-          periodosEscolaSimples &&
-          !loadingSolicitacaoMedInicial &&
-          (ehEscolaTipoCEI(escolaInstituicao) ? (
-            <LancamentoPorPeriodoCEI
-              panoramaGeral={panoramaGeral}
-              mes={mes}
-              ano={ano}
-              periodoSelecionado={periodoSelecionado}
-              escolaInstituicao={escolaInstituicao}
-              periodosEscolaSimples={periodosEscolaSimples}
-              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-              onClickInfoBasicas={onClickInfoBasicas}
-              setLoadingSolicitacaoMedicaoInicial={(value) =>
-                setLoadingSolicitacaoMedicaoInicial(value)
-              }
-              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
-              setObjSolicitacaoMIFinalizada={(value) =>
-                setObjSolicitacaoMIFinalizada(value)
-              }
-              setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
-            />
-          ) : (
-            <LancamentoPorPeriodo
-              panoramaGeral={panoramaGeral}
-              mes={mes}
-              ano={ano}
-              periodoSelecionado={periodoSelecionado}
-              escolaInstituicao={escolaInstituicao}
-              periodosEscolaSimples={periodosEscolaSimples}
-              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-              onClickInfoBasicas={onClickInfoBasicas}
-              setLoadingSolicitacaoMedicaoInicial={(value) =>
-                setLoadingSolicitacaoMedicaoInicial(value)
-              }
-              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
-              setObjSolicitacaoMIFinalizada={(value) =>
-                setObjSolicitacaoMIFinalizada(value)
-              }
-              setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
-            />
-          ))}
+        <Spin
+          spinning={finalizandoMedicao}
+          tip="Finalizando medição inicial. Aguarde..."
+        >
+          {mes &&
+            ano &&
+            periodosEscolaSimples &&
+            !loadingSolicitacaoMedInicial &&
+            (ehEscolaTipoCEI(escolaInstituicao) ? (
+              <LancamentoPorPeriodoCEI
+                panoramaGeral={panoramaGeral}
+                mes={mes}
+                ano={ano}
+                periodoSelecionado={periodoSelecionado}
+                escolaInstituicao={escolaInstituicao}
+                periodosEscolaSimples={periodosEscolaSimples}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                onClickInfoBasicas={onClickInfoBasicas}
+                setLoadingSolicitacaoMedicaoInicial={(value) =>
+                  setLoadingSolicitacaoMedicaoInicial(value)
+                }
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                setObjSolicitacaoMIFinalizada={(value) =>
+                  setObjSolicitacaoMIFinalizada(value)
+                }
+                setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
+                naoPodeFinalizar={naoPodeFinalizar}
+                setFinalizandoMedicao={setFinalizandoMedicao}
+              />
+            ) : (
+              <LancamentoPorPeriodo
+                panoramaGeral={panoramaGeral}
+                mes={mes}
+                ano={ano}
+                periodoSelecionado={periodoSelecionado}
+                escolaInstituicao={escolaInstituicao}
+                periodosEscolaSimples={periodosEscolaSimples}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                onClickInfoBasicas={onClickInfoBasicas}
+                setLoadingSolicitacaoMedicaoInicial={(value) =>
+                  setLoadingSolicitacaoMedicaoInicial(value)
+                }
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                setObjSolicitacaoMIFinalizada={(value) =>
+                  setObjSolicitacaoMIFinalizada(value)
+                }
+                setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
+                naoPodeFinalizar={naoPodeFinalizar}
+                setFinalizandoMedicao={setFinalizandoMedicao}
+              />
+            ))}
+        </Spin>
       </div>
     </div>
   );

@@ -29,6 +29,7 @@ export const montaObjetoRequisicao = (values, alunosPorFaixaEtaria) => {
     ),
     escola: values.escola,
     local: values.local,
+    evento: values.evento,
     quantidade_alunos: values.quantidade_alunos,
     alunos_com_dieta_especial_participantes:
       values.alunos_com_dieta_especial_participantes
