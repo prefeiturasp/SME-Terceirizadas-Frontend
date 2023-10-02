@@ -10,6 +10,8 @@ export const tipoDeStatus = (status) => {
     case "Aprovado DINUTRE":
     case "Aprovado DILOG":
     case "Aprovado CODAE":
+    case "Alteração enviada ao fornecedor":
+    case "Fornecedor Ciente":
       return "aprovado";
 
     case "Solicitada Alteração":
@@ -26,7 +28,9 @@ export const tipoDeStatus = (status) => {
 };
 
 export const tipoDeStatusClasse = (status) => {
-  return tipoDeStatus(status.status_evento_explicacao) === "aprovado"
+  return status.criado_em === null && status.usuario === null
+    ? "pending"
+    : tipoDeStatus(status.status_evento_explicacao) === "aprovado"
     ? "active"
     : tipoDeStatus(status.status_evento_explicacao) === "reprovado"
     ? "disapproved"
