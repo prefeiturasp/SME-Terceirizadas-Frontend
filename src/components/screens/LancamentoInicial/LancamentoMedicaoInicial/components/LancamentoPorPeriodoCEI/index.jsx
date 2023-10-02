@@ -16,6 +16,7 @@ export default ({
   periodoSelecionado,
   onClickInfoBasicas,
   setObjSolicitacaoMIFinalizada,
+  setFinalizandoMedicao,
 }) => {
   const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
@@ -137,6 +138,7 @@ export default ({
             solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
             onClickInfoBasicas={onClickInfoBasicas}
             setErrosAoSalvar={() => {}}
+            setFinalizandoMedicao={setFinalizandoMedicao}
           />
         </>
       )}

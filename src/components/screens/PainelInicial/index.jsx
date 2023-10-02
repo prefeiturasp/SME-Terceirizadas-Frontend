@@ -1,12 +1,12 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { Row, Col } from "antd";
-import CardLogo from "../../Shareable/CardLogo/CardLogo";
-import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
-import IconeGestaoDeProduto from "../../Shareable/Icones/IconeGestaoDeProduto";
-import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
-import IconeAbastecimento from "../../Shareable/Icones/IconeAbastecimento";
-import IconeMedicaoInicial from "../../Shareable/Icones/IconeMedicaoInicial";
+import CardLogo from "components/Shareable/CardLogo/CardLogo";
+import IconeGestaoDeAlimentacao from "components/Shareable/Icones/IconeGestaoDeAlimentacao";
+import IconeGestaoDeProduto from "components/Shareable/Icones/IconeGestaoDeProduto";
+import IconeDietaEspecial from "components/Shareable/Icones/IconeDietaEspecial";
+import IconeAbastecimento from "components/Shareable/Icones/IconeAbastecimento";
+import IconeMedicaoInicial from "components/Shareable/Icones/IconeMedicaoInicial";
 import {
   usuarioEhEmpresaTerceirizada,
   usuarioEhQualquerCODAE,
