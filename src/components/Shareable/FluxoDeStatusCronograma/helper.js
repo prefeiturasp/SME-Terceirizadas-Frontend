@@ -15,6 +15,7 @@ export const tipoDeStatus = (status) => {
       return "aprovado";
 
     case "Solicitada Alteração":
+    case "Alteração CODAE":
       return "alterado";
 
     case "Reprovado DILOG":
