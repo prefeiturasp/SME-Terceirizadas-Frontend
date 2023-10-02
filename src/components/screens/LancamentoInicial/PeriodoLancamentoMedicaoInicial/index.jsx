@@ -2709,10 +2709,8 @@ export default () => {
                               "MEDICAO_APROVADA_PELA_DRE") ||
                           disableBotaoSalvarLancamentos ||
                           !calendarioMesConsiderado ||
-                          (!(
-                            urlParams.get("ehPeriodoEspecifico") === "true" ||
-                            grupoLocation === "Programas e Projetos"
-                          ) &&
+                          (urlParams.get("ehPeriodoEspecifico") !== "true" &&
+                            grupoLocation !== "Programas e Projetos" &&
                             !todosCamposDeRepeticaoSobremesaDocePreenchidos(
                               diasSobremesaDoce,
                               formValuesAtualizados,
