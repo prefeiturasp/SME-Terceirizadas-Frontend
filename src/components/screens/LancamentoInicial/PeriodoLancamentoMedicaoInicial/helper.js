@@ -348,7 +348,10 @@ export const desabilitarField = (
       );
     }
   }
-  if (ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)) {
+  if (
+    ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola) ||
+    location.state.periodoEspecifico
+  ) {
     return (
       validacaoSemana(dia) ||
       rowName === "numero_de_alunos" ||
@@ -398,7 +401,13 @@ export const desabilitarField = (
     } else {
       if (rowName === "dietas_autorizadas") {
         return true;
-      } else if (!validacaoDiaLetivo(dia) || validacaoSemana(dia)) {
+      } else if (validacaoSemana(dia)) {
+        return true;
+      } else if (
+        !Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+          key.includes(`__dia_${dia}`)
+        )
+      ) {
         return true;
       } else {
         return false;
@@ -943,23 +952,5 @@ export const desabilitarBotaoColunaObservacoes = (
           categoria.id,
           valoresPeriodosLancamentos
         )))
-  );
-};
-
-export const todosCamposDeRepeticaoSobremesaDocePreenchidos = (
-  diasSobremesaDoce,
-  formValuesAtualizados,
-  categoriasDeMedicao
-) => {
-  const categoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
-    categoria.nome.includes("ALIMENTAÇÃO")
-  );
-  return diasSobremesaDoce.every(
-    (dataSobremesa) =>
-      formValuesAtualizados[
-        `repeticao_sobremesa__dia_${dataSobremesa.split("-")[2]}__categoria_${
-          categoriaAlimentacao.id
-        }`
-      ]
   );
 };

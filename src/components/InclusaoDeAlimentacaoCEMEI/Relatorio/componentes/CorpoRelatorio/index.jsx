@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { formataMotivosDias } from "components/InclusaoDeAlimentacao/Relatorio/componentes/helper";
 import { tiposAlimentacaoPorPeriodoETipoUnidade } from "components/InclusaoDeAlimentacaoCEMEI/helpers";
 import Botao from "components/Shareable/Botao";
 import {
@@ -26,6 +25,7 @@ import {
   periodosDaInclusao,
 } from "../../helpers";
 import "./style.scss";
+import { formataMotivosDiasComOutros } from "components/InclusaoDeAlimentacao/Relatorio/componentes/helper";
 
 export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
   const [imprimindo, setImprimindo] = useState(false);
@@ -136,7 +136,9 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
       <table className="table-reasons">
         <tbody>
           {Object.entries(
-            formataMotivosDias(solicitacao.dias_motivos_da_inclusao_cemei)
+            formataMotivosDiasComOutros(
+              solicitacao.dias_motivos_da_inclusao_cemei
+            )
           ).map((dadosMotivo, key) => {
             const [motivo, datas] = dadosMotivo;
             return (

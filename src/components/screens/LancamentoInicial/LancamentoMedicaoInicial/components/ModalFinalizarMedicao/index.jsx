@@ -21,6 +21,8 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     solicitacaoMedicaoInicial,
     setObjSolicitacaoMIFinalizada,
     onClickInfoBasicas,
+    setErrosAoSalvar,
+    setFinalizandoMedicao,
   } = props;
 
   const [opcaoSelecionada, setOpcaoSelecionada] = useState(null);
@@ -117,12 +119,17 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
   };
 
   const handleFinalizarMedicao = async () => {
+    setFinalizandoMedicao(true);
+
     let data = new FormData();
     data.append("escola", String(escolaInstituicao.uuid));
-    data.append(
-      "tipo_contagem_alimentacoes",
-      String(solicitacaoMedicaoInicial.tipo_contagem_alimentacoes.uuid)
-    );
+
+    if (solicitacaoMedicaoInicial.tipo_contagem_alimentacoes) {
+      data.append(
+        "tipo_contagem_alimentacoes",
+        String(solicitacaoMedicaoInicial.tipo_contagem_alimentacoes?.uuid)
+      );
+    }
     data.append(
       "responsaveis",
       JSON.stringify(solicitacaoMedicaoInicial.responsaveis)
@@ -139,7 +146,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
       });
       data.append("anexos", JSON.stringify(payloadAnexos));
     }
-
+    handleHideModal();
     const response = await updateSolicitacaoMedicaoInicial(
       solicitacaoMedicaoInicial.uuid,
       data
@@ -147,8 +154,11 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Medição Inicial finalizada com sucesso!");
       setObjSolicitacaoMIFinalizada(response.data);
-      handleHideModal();
+      setFinalizandoMedicao(false);
+      setErrosAoSalvar([]);
     } else {
+      setErrosAoSalvar(response.data);
+      setFinalizandoMedicao(false);
       toastError("Não foi possível finalizar as alterações!");
     }
     onClickInfoBasicas();
@@ -158,6 +168,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     <Modal
       dialogClassName="modal-50w"
       show={showModal}
+      backdrop="static"
       onHide={() => handleHideModal()}
     >
       <Modal.Header closeButton>

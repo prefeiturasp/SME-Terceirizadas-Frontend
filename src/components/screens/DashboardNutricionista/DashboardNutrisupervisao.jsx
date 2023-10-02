@@ -27,6 +27,12 @@ import {
 import { PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { Spin } from "antd";
 import { ajustarFormatoLog } from "../helper";
+import {
+  JS_DATE_DEZEMBRO,
+  JS_DATE_FEVEREIRO,
+  JS_DATE_JANEIRO,
+  JS_DATE_JULHO,
+} from "constants/shared";
 
 export const DashboardNutrisupervisao = () => {
   const [canceladas, setCanceladas] = useState(null);
@@ -51,17 +57,47 @@ export const DashboardNutrisupervisao = () => {
     !aguardandoRespostaEmpresa;
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
 
+  const params_periodo = (params) => {
+    let parametros = { ...params };
+    let isAllUndefined = true;
+    for (let key in parametros) {
+      if (
+        key !== "limit" &&
+        key !== "offset" &&
+        parametros[key] !== undefined
+      ) {
+        isAllUndefined = false;
+        break;
+      }
+    }
+    if (isAllUndefined) {
+      parametros.periodo = [
+        JS_DATE_JANEIRO,
+        JS_DATE_FEVEREIRO,
+        JS_DATE_JULHO,
+        JS_DATE_DEZEMBRO,
+      ].includes(new Date().getMonth())
+        ? 30
+        : 7;
+    }
+    return parametros;
+  };
+
   const getSolicitacoesAsync = async (params = null) => {
     setLoadingAcompanhamentoSolicitacoes(true);
 
-    const response = await getSolicitacoesCanceladasNutrisupervisao(params);
+    const response = await getSolicitacoesCanceladasNutrisupervisao(
+      params_periodo(params)
+    );
     if (response.status === HTTP_STATUS.OK) {
       setCanceladas(ajustarFormatoLog(response.data.results));
     } else {
       setErro("Erro ao carregar solicitações canceladas");
     }
 
-    const responseNegadas = await getSolicitacoesNegadasNutrisupervisao(params);
+    const responseNegadas = await getSolicitacoesNegadasNutrisupervisao(
+      params_periodo(params)
+    );
     if (responseNegadas.status === HTTP_STATUS.OK) {
       setNegadas(ajustarFormatoLog(responseNegadas.data.results));
     } else {
@@ -69,7 +105,7 @@ export const DashboardNutrisupervisao = () => {
     }
 
     const responseAutorizadas = await getSolicitacoesAutorizadasNutrisupervisao(
-      params
+      params_periodo(params)
     );
     if (responseAutorizadas.status === HTTP_STATUS.OK) {
       setAutorizadas(ajustarFormatoLog(responseAutorizadas.data.results));

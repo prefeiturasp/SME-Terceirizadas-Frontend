@@ -288,3 +288,88 @@ export const validarCamposComInclusoesDeAlimentacaoSemObservacao = (
     return false;
   }
 };
+
+export const exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI = (
+  inclusoesAutorizadas,
+  row,
+  column,
+  categoria,
+  inputsInclusaoComErro,
+  exibirTooltipAoSalvar
+) => {
+  return (
+    inclusoesAutorizadas.some(
+      (inclusao) =>
+        String(inclusao.dia) === String(column.dia) &&
+        inclusao.faixas_etarias.includes(row.uuid) &&
+        row.name === "frequencia" &&
+        categoria.nome === "ALIMENTAÇÃO"
+    ) &&
+    inputsInclusaoComErro.some(
+      (inputComErro) =>
+        inputComErro.nome ===
+        `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
+    ) &&
+    exibirTooltipAoSalvar
+  );
+};
+
+export const exibirTooltipSuspensoesAutorizadasCEI = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  suspensoesAutorizadas
+) => {
+  const maxMatriculados = Number(
+    formValuesAtualizados[
+      `matriculados__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
+    ]
+  );
+  const value =
+    formValuesAtualizados[
+      `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    value &&
+    (!["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
+    Number(value) < maxMatriculados &&
+    row.name === "frequencia" &&
+    categoria.nome === "ALIMENTAÇÃO" &&
+    suspensoesAutorizadas &&
+    suspensoesAutorizadas.filter((suspensao) => suspensao.dia === column.dia)
+      .length > 0
+  );
+};
+
+export const frequenciaComSuspensaoAutorizadaPreenchida = (
+  formValuesAtualizados,
+  column,
+  categoria,
+  suspensoesAutorizadas,
+  errors
+) => {
+  const frequenciasMesmoDia = Object.fromEntries(
+    Object.entries(formValuesAtualizados).filter(
+      ([key, value]) =>
+        key.includes("frequencia") &&
+        key.includes(`__dia_${column.dia}__`) &&
+        !["Mês anterior", "Mês posterior", null].includes(value)
+    )
+  );
+  const errosMesmoDia = Object.fromEntries(
+    Object.entries(errors).filter(([key]) =>
+      key.includes(`__dia_${column.dia}__categoria_${categoria.id}`)
+    )
+  );
+
+  return (
+    Object.keys(frequenciasMesmoDia).length > 0 &&
+    categoria.nome === "ALIMENTAÇÃO" &&
+    suspensoesAutorizadas &&
+    suspensoesAutorizadas.filter((suspensao) => suspensao.dia === column.dia)
+      .length > 0 &&
+    Object.keys(errosMesmoDia).length === 0
+  );
+};

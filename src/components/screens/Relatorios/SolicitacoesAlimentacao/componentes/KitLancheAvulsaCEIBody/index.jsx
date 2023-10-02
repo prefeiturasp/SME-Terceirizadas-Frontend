@@ -62,13 +62,9 @@ export const KitLancheAvulsaCEIBody = ({ ...props }) => {
                 </p>
               </div>
               <div className="col-3">
-                <p>Opção Desejada:</p>
+                <p>Evento/Passeio:</p>
                 <p>
-                  <b>
-                    {solicitacao.solicitacao_kit_lanche.kits
-                      .map((kit) => kit.nome)
-                      .join(", ")}
-                  </b>
+                  <b>{solicitacao.evento || "- -"}</b>
                 </p>
               </div>
               <div className="col-3">
@@ -87,6 +83,16 @@ export const KitLancheAvulsaCEIBody = ({ ...props }) => {
                       solicitacao.solicitacao_kit_lanche
                         .tempo_passeio_explicacao
                     }
+                  </b>
+                </p>
+              </div>
+              <div className="col-3">
+                <p>Opção Desejada:</p>
+                <p>
+                  <b>
+                    {solicitacao.solicitacao_kit_lanche.kits
+                      .map((kit) => kit.nome)
+                      .join(", ")}
                   </b>
                 </p>
               </div>

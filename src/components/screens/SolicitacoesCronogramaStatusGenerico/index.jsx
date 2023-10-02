@@ -5,11 +5,16 @@ import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
 import CardListarSolicitacoesCronograma from "components/Shareable/CardListarSolicitacoesCronograma";
 import { Paginacao } from "components/Shareable/Paginacao";
-import { gerarLinkDoItem } from "components/screens/helper";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
+import {
+  DETALHAR_ALTERACAO_CRONOGRAMA,
+  DETALHE_CRONOGRAMA,
+  PRE_RECEBIMENTO,
+} from "../../../configs/constants";
+import { gerarParametrosConsulta } from "../../../helpers/utilities";
 
 export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
   const {
@@ -36,7 +41,7 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
     return itens.map((item) => ({
       texto: `${item.numero} - ${item.produto} - ${item.empresa}`,
       data: item.log_mais_recente,
-      link: gerarLinkDoItem(item),
+      link: `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${item.uuid}`,
     }));
   };
 
@@ -44,16 +49,17 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
     return itens.map((item) => ({
       texto: `${item.cronograma} - ${item.empresa}`,
       data: item.log_mais_recente,
-      link: "",
+      link: `/${PRE_RECEBIMENTO}/${DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${item.uuid}`,
     }));
   };
 
   const getSolicitacoesAsync = async (params, filtrar = false) => {
     let response;
+    let parametros = gerarParametrosConsulta(params);
     if (!filtrar) {
-      response = await getSolicitacoes(params);
+      response = await getSolicitacoes(parametros);
     } else {
-      response = await getSolicitacoesComFiltros(params);
+      response = await getSolicitacoesComFiltros(parametros);
     }
     if (response.status === HTTP_STATUS.OK) {
       let solicitacoes_new = response.data.results

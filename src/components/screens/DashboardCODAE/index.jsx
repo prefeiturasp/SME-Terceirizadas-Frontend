@@ -40,6 +40,12 @@ import {
 import { connect } from "react-redux";
 import { Spin } from "antd";
 import CardBody from "components/Shareable/CardBody";
+import {
+  JS_DATE_DEZEMBRO,
+  JS_DATE_FEVEREIRO,
+  JS_DATE_JANEIRO,
+  JS_DATE_JULHO,
+} from "constants/shared";
 
 export const DashboardCODAE = (props) => {
   const { cards, lotes, diretoriasRegionais, handleSubmit, meusDados } = props;
@@ -112,56 +118,40 @@ export const DashboardCODAE = (props) => {
       }
     }
     if (isAllUndefined) {
-      parametros.periodo = 60;
+      parametros.periodo = [
+        JS_DATE_JANEIRO,
+        JS_DATE_FEVEREIRO,
+        JS_DATE_JULHO,
+        JS_DATE_DEZEMBRO,
+      ].includes(new Date().getMonth())
+        ? 30
+        : 7;
     }
     return parametros;
   };
-
   const getSolicitacoesAsync = async (params = null) => {
-    let pendentesAutorizacaoListSolicitacao = [];
-    let canceladasListSolicitacao = [];
-    let negadasListSolicitacao = [];
-    let autorizadasListSolicitacao = [];
-    let questionamentosListSolicitacao = [];
-
     setLoadingAcompanhamentoSolicitacoes(true);
 
-    await getSolicitacoesPendentesAutorizacaoCodaeSemFiltro(params).then(
-      (response) => {
-        pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(
-          response.data.results
-        );
-      }
-    );
-
-    await getSolicitacoesCanceladasCodae(params_periodo(params)).then(
-      (response) => {
-        canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
-      }
-    );
-
-    await getSolicitacoesNegadasCodae(params_periodo(params)).then(
-      (response) => {
-        negadasListSolicitacao = ajustarFormatoLog(response.data.results);
-      }
-    );
-
-    await getSolicitacoesAutorizadasCodae(params_periodo(params)).then(
-      (response) => {
-        autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
-      }
-    );
-
-    await getSolicitacoesComQuestionamentoCodae(params).then((response) => {
-      questionamentosListSolicitacao = ajustarFormatoLog(response.data.results);
-    });
+    const [
+      responsePendentesAutorizacao,
+      responseAutorizadas,
+      responseCanceladas,
+      responseNegadas,
+      responseQuestionamentos,
+    ] = await Promise.all([
+      getSolicitacoesPendentesAutorizacaoCodaeSemFiltro(params),
+      getSolicitacoesAutorizadasCodae(params_periodo(params)),
+      getSolicitacoesCanceladasCodae(params_periodo(params)),
+      getSolicitacoesNegadasCodae(params_periodo(params)),
+      getSolicitacoesComQuestionamentoCodae(params),
+    ]);
 
     setSolicitacoesFiltradas({
-      pendentes: pendentesAutorizacaoListSolicitacao,
-      questionadas: questionamentosListSolicitacao,
-      autorizadas: autorizadasListSolicitacao,
-      negadas: negadasListSolicitacao,
-      canceladas: canceladasListSolicitacao,
+      pendentes: ajustarFormatoLog(responsePendentesAutorizacao.data.results),
+      autorizadas: ajustarFormatoLog(responseAutorizadas.data.results),
+      negadas: ajustarFormatoLog(responseNegadas.data.results),
+      canceladas: ajustarFormatoLog(responseCanceladas.data.results),
+      questionadas: ajustarFormatoLog(responseQuestionamentos.data.results),
     });
 
     setLoadingAcompanhamentoSolicitacoes(false);
@@ -336,6 +326,7 @@ export const DashboardCODAE = (props) => {
             <CardBody
               exibirFiltrosDataEventoETipoSolicitacao={true}
               titulo={"Acompanhamento solicitações"}
+              filtrosDesabilitados={loadingAcompanhamentoSolicitacoes}
               dataAtual={dataAtual()}
               onChange={(value) => {
                 clearTimeout(typingTimeout);

@@ -247,6 +247,14 @@ import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/Detalha
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
+import StatusCronogramasPendentesDilog from "../pages/Dinutre/Cronogramas/StatusCronogramasPendentesDilog";
+import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
+import StatusSolicitacoesAlteracoesCronograma from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCronograma";
+import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroSuspensaoAtividades";
+import LayoutEmbalagemPage from "../pages/PreRecebimento/LayoutEmbalagemPage";
+import CadastroLayoutEmbalagemPage from "../pages/PreRecebimento/CadastroLayoutEmbalagemPage";
+import DetalharLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharLayoutEmbalagemPage";
+import StatusSolicitacoesAlteracoesCodae from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCodae";
 
 const routesConfig = [
   {
@@ -618,6 +626,12 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/${constants.SOBREMESA_DOCE}`,
     component: CadastroSobremesaDocePage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao(),
+  },
+  {
+    path: `/configuracoes/cadastros/${constants.SUSPENSAO_ATIVIDADES}`,
+    component: CadastroSuspensaoDeAtividadesPage,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao(),
   },
@@ -1770,12 +1784,6 @@ const routesConfig = [
     tipoUsuario: usuarioEhDinutreDiretoria(),
   },
   {
-    path: `/${constants.DINUTRE}/${constants.ASSINADO_CODAE}`,
-    component: StatusCronogramasAssinadoCODAE,
-    exact: false,
-    tipoUsuario: usuarioEhDinutreDiretoria(),
-  },
-  {
     path: `/${constants.DINUTRE}/${constants.SOLICITACOES_ALTERACOES}`,
     component: StatusSolicitacoesAlteracoesDinutre,
     exact: false,
@@ -1794,6 +1802,12 @@ const routesConfig = [
     tipoUsuario: usuarioEhDinutreDiretoria(),
   },
   {
+    path: `/${constants.DILOG}/${constants.SOLICITACOES_PENDENTES}`,
+    component: StatusCronogramasPendentesDilog,
+    exact: false,
+    tipoUsuario: usuarioEhDilogDiretoria(),
+  },
+  {
     path: `/${constants.DILOG}/${constants.SOLICITACOES_ALTERACOES}`,
     component: StatusSolicitacoesAlteracoesDilog,
     exact: false,
@@ -1803,13 +1817,69 @@ const routesConfig = [
     path: `/${constants.DILOG}/${constants.ALTERACOES_APROVADAS}`,
     component: StatusSolicitacoesAlteracoesAprovadasDilog,
     exact: false,
-    tipoUsuario: usuarioEhDilogDiretoria(),
+    tipoUsuario:
+      usuarioEhDilogDiretoria() ||
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog(),
   },
   {
     path: `/${constants.DILOG}/${constants.ALTERACOES_REPROVADAS}`,
     component: StatusSolicitacoesAlteracoesReprovadasDilog,
     exact: false,
-    tipoUsuario: usuarioEhDilogDiretoria(),
+    tipoUsuario:
+      usuarioEhDilogDiretoria() ||
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog(),
+  },
+  {
+    path: `/${constants.CRONOGRAMA}/${constants.AGUARDANDO_ASSINATURAS}`,
+    component: StatusAguardandoAssinaturasCronograma,
+    exact: false,
+    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
+  },
+  {
+    path: `/${constants.ASSINADO_CODAE}`,
+    component: StatusCronogramasAssinadoCODAE,
+    exact: false,
+    tipoUsuario:
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhDilogDiretoria() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCronograma(),
+  },
+  {
+    path: `/${constants.CRONOGRAMA}/${constants.SOLICITACOES_ALTERACOES}`,
+    component: StatusSolicitacoesAlteracoesCronograma,
+    exact: false,
+    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
+  },
+  {
+    path: `/${constants.CRONOGRAMA}/${constants.ALTERACOES_CODAE}`,
+    component: StatusSolicitacoesAlteracoesCodae,
+    exact: false,
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhDilogDiretoria() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhDinutreDiretoria(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.LAYOUT_EMBALAGEM}`,
+    component: LayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_LAYOUT_EMBALAGEM}`,
+    component: CadastroLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_LAYOUT_EMBALAGEM}`,
+    component: DetalharLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
 ];
 
