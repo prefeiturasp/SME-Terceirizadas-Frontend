@@ -1,25 +1,26 @@
-import React, { Fragment } from "react";
-import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
+import React, { Fragment, useState } from "react";
+import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
   ehInclusaoCei,
   justificativaAoNegarSolicitacao,
   justificativaAoAprovarSolicitacao,
-} from "../../../../helpers/utilities";
-import Botao from "../../../Shareable/Botao";
+} from "helpers/utilities";
+import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
   BUTTON_ICON,
-} from "../../../Shareable/Botao/constants";
-import { getRelatorioAlteracaoCardapio } from "../../../../services/relatorios";
-import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
-import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
-import "./style.scss";
+} from "components/Shareable/Botao/constants";
+import { getRelatorioAlteracaoCardapio } from "services/relatorios";
+import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
+import TabelaFaixaEtaria from "components/Shareable/TabelaFaixaEtaria";
 import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
+import "./style.scss";
 
 export const CorpoRelatorio = (props) => {
   const { alteracaoDeCardapio, prazoDoPedidoMensagem, tipoSolicitacao } = props;
+  const [baixandoPDF, setBaixandoPDF] = useState(false);
 
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     alteracaoDeCardapio.logs
@@ -45,13 +46,21 @@ export const CorpoRelatorio = (props) => {
           <Botao
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
-            icon={BUTTON_ICON.PRINT}
+            icon={!baixandoPDF && BUTTON_ICON.PRINT}
+            texto={
+              baixandoPDF && (
+                <img src="/assets/image/ajax-loader.gif" alt="ajax-loader" />
+              )
+            }
+            disabled={baixandoPDF}
             className="float-right"
-            onClick={() => {
-              getRelatorioAlteracaoCardapio(
+            onClick={async () => {
+              setBaixandoPDF(true);
+              await getRelatorioAlteracaoCardapio(
                 alteracaoDeCardapio.uuid,
                 tipoSolicitacao
               );
+              setBaixandoPDF(false);
             }}
           />
         </p>
