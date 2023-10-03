@@ -100,7 +100,19 @@
   .title-message {
     color: $gray;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: bold;
+
+    &.green {
+      color: $green;
+    }
+
+    &.yellow {
+      color: $yellow;
+    }
+
+    &.red {
+      color: $red;
+    }
   }
 
   table.table-periods {
