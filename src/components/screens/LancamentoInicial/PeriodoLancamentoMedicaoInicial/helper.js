@@ -427,6 +427,18 @@ export const desabilitarField = (
   ) {
     return false;
   } else if (
+    `refeicao__dia_${dia}__categoria_${categoria}` in
+      dadosValoresInclusoesAutorizadasState &&
+    rowName === "repeticao_refeicao"
+  ) {
+    return false;
+  } else if (
+    `sobremesa__dia_${dia}__categoria_${categoria}` in
+      dadosValoresInclusoesAutorizadasState &&
+    rowName === "repeticao_sobremesa"
+  ) {
+    return false;
+  } else if (
     `${rowName}__dia_${dia}__categoria_${categoria}` ===
       `frequencia__dia_${dia}__categoria_${categoria}` &&
     Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
