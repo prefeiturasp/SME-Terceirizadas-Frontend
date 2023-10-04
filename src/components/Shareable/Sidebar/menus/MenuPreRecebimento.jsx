@@ -15,7 +15,11 @@ import {
   usuarioEhEmpresaFornecedor,
   usuarioComAcessoAoPainelAprovacoes,
 } from "helpers/utilities";
-import { LAYOUT_EMBALAGEM } from "../../../../configs/constants";
+import {
+  LAYOUT_EMBALAGEM,
+  PAINEL_LAYOUT_EMBALAGEM,
+} from "../../../../configs/constants";
+import { usuarioComAcessoAoPainelEmbalagens } from "../../../../helpers/utilities";
 
 const MenuPreRecebimento = () => {
   return (
@@ -48,6 +52,11 @@ const MenuPreRecebimento = () => {
       )}
       {usuarioEhEmpresaFornecedor() && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`}>
+          Layout de Embalagem
+        </LeafItem>
+      )}
+      {usuarioComAcessoAoPainelEmbalagens() && (
+        <LeafItem to={`/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`}>
           Layout de Embalagem
         </LeafItem>
       )}
