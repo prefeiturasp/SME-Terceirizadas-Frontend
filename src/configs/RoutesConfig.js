@@ -134,6 +134,7 @@ import {
   usuarioComAcessoTelaDetalharNotificacaoOcorrencia,
   usuarioComAcessoAoPainelAprovacoes,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
+  usuarioComAcessoAoPainelEmbalagens,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -255,6 +256,8 @@ import LayoutEmbalagemPage from "../pages/PreRecebimento/LayoutEmbalagemPage";
 import CadastroLayoutEmbalagemPage from "../pages/PreRecebimento/CadastroLayoutEmbalagemPage";
 import DetalharLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharLayoutEmbalagemPage";
 import StatusSolicitacoesAlteracoesCodae from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCodae";
+import PainelLayoutEmbalagemPage from "../pages/PreRecebimento/PainelLayoutEmbalagemPage";
+import StatusLayoutPendenteAprovacao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutPendenteAprovacao";
 
 const routesConfig = [
   {
@@ -1880,6 +1883,18 @@ const routesConfig = [
     component: DetalharLayoutEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}`,
+    component: PainelLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.PENDENTES_APROVACAO}/`,
+    component: StatusLayoutPendenteAprovacao,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
   },
 ];
 
