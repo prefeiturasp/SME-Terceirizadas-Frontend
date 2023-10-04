@@ -499,6 +499,14 @@ export const usuarioComAcessoAoPainelAprovacoes = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioComAcessoAoPainelEmbalagens = () => {
+  return [
+    PERFIL.DILOG_QUALIDADE,
+    PERFIL.COORDENADOR_GESTAO_PRODUTO,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhLogistica = () => {
   return [
     PERFIL.COORDENADOR_LOGISTICA,

@@ -43,6 +43,7 @@ import {
   MenuLogistica,
   MenuPreRecebimento,
 } from "./menus";
+import { usuarioEhCoordenadorGpCODAE } from "../../../helpers/utilities";
 
 export const SidebarContent = () => {
   const [activeMenu, setActiveMenu] = useState("");
@@ -147,7 +148,9 @@ export const SidebarContent = () => {
     usuarioEhDilogQualidade();
 
   const exibirMenuPreRecebimento =
-    usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor();
+    usuarioEhPreRecebimento() ||
+    usuarioEhEmpresaFornecedor() ||
+    usuarioEhCoordenadorGpCODAE();
 
   const _props = {
     activeMenu,

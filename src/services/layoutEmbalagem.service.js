@@ -8,3 +8,6 @@ export const listarLayoutsEmbalagens = async (params) =>
 
 export const detalharLayoutEmabalagem = async (uuid) =>
   await axios.get(`/layouts-de-embalagem/${uuid}/`);
+
+export const getDashboardLayoutEmbalagem = async (params = null) =>
+  await axios.get(`/layouts-de-embalagem/dashboard/`, { params });
