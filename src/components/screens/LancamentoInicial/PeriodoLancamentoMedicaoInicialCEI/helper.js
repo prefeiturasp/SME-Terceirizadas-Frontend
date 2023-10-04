@@ -350,35 +350,64 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
 
 export const formatarLinhasTabelaAlimentacaoCEI = (
   response_log_matriculados_por_faixa_etaria_dia,
-  periodoGrupo
+  periodoGrupo,
+  valores_medicao = null
 ) => {
   let faixas_etarias_alimentacao = [];
   let faixas_etarias_objs_alimentacao = [];
   let linhasTabelaAlimentacaoCEI = [];
 
-  response_log_matriculados_por_faixa_etaria_dia.data.forEach((log) => {
-    !faixas_etarias_alimentacao.find(
-      (faixa) => faixa === log.faixa_etaria.__str__
-    ) && faixas_etarias_alimentacao.push(log.faixa_etaria.__str__);
-  });
+  const formataFaixasPeriodoManhaTarde = () => {
+    if (["MANHA", "TARDE"].includes(periodoGrupo)) {
+      faixas_etarias_alimentacao = faixas_etarias_alimentacao.filter(
+        (faixa) => faixa === "04 anos a 06 anos"
+      );
+    }
+  };
 
-  if (["MANHA", "TARDE"].includes(periodoGrupo)) {
-    faixas_etarias_alimentacao = faixas_etarias_alimentacao.filter(
-      (faixa) => faixa === "04 anos a 06 anos"
-    );
+  if (valores_medicao) {
+    valores_medicao.forEach((valor) => {
+      valor.faixa_etaria_str &&
+        !faixas_etarias_alimentacao.find(
+          (faixa) => faixa === valor.faixa_etaria_str
+        ) &&
+        faixas_etarias_alimentacao.push(valor.faixa_etaria_str);
+    });
+
+    formataFaixasPeriodoManhaTarde();
+
+    faixas_etarias_alimentacao.forEach((faixa) => {
+      const valorMedicao = valores_medicao.find(
+        (valor) => valor.faixa_etaria_str === faixa
+      );
+      valorMedicao &&
+        faixas_etarias_objs_alimentacao.push({
+          inicio: valorMedicao.faixa_etaria_inicio,
+          __str__: valorMedicao.faixa_etaria_str,
+          uuid: valorMedicao.faixa_etaria,
+        });
+    });
+  } else {
+    response_log_matriculados_por_faixa_etaria_dia.data.forEach((log) => {
+      !faixas_etarias_alimentacao.find(
+        (faixa) => faixa === log.faixa_etaria.__str__
+      ) && faixas_etarias_alimentacao.push(log.faixa_etaria.__str__);
+    });
+
+    formataFaixasPeriodoManhaTarde();
+
+    faixas_etarias_alimentacao.forEach((faixa) => {
+      const log = response_log_matriculados_por_faixa_etaria_dia.data.find(
+        (log) => log.faixa_etaria.__str__ === faixa
+      );
+      log &&
+        faixas_etarias_objs_alimentacao.push({
+          inicio: log.faixa_etaria.inicio,
+          __str__: log.faixa_etaria.__str__,
+          uuid: log.faixa_etaria.uuid,
+        });
+    });
   }
-
-  faixas_etarias_alimentacao.forEach((faixa) => {
-    const log = response_log_matriculados_por_faixa_etaria_dia.data.find(
-      (log) => log.faixa_etaria.__str__ === faixa
-    );
-    log &&
-      faixas_etarias_objs_alimentacao.push({
-        inicio: log.faixa_etaria.inicio,
-        __str__: log.faixa_etaria.__str__,
-        uuid: log.faixa_etaria.uuid,
-      });
-  });
 
   faixas_etarias_objs_alimentacao
     .sort((a, b) => a.inicio - b.inicio)
@@ -410,34 +439,64 @@ export const formatarLinhasTabelaAlimentacaoCEI = (
 
 export const formatarLinhasTabelasDietasCEI = (
   response_log_dietas_autorizadas_cei,
-  periodoGrupo
+  periodoGrupo,
+  valores_medicao = null
 ) => {
   let faixas_etarias_dieta = [];
   let faixas_etarias_objs_dieta = [];
   let linhasTabelasDietasCEI = [];
 
-  response_log_dietas_autorizadas_cei.data.forEach((log) => {
-    !faixas_etarias_dieta.find((faixa) => faixa === log.faixa_etaria.__str__) &&
-      faixas_etarias_dieta.push(log.faixa_etaria.__str__);
-  });
+  const formataFaixasPeriodoManhaTarde = () => {
+    if (["MANHA", "TARDE"].includes(periodoGrupo)) {
+      faixas_etarias_dieta = faixas_etarias_dieta.filter(
+        (faixa) => faixa === "04 anos a 06 anos"
+      );
+    }
+  };
 
-  if (["MANHA", "TARDE"].includes(periodoGrupo)) {
-    faixas_etarias_dieta = faixas_etarias_dieta.filter(
-      (faixa) => faixa === "04 anos a 06 anos"
-    );
+  if (valores_medicao) {
+    valores_medicao.forEach((valor) => {
+      valor.faixa_etaria_str &&
+        !faixas_etarias_dieta.find(
+          (faixa) => faixa === valor.faixa_etaria_str
+        ) &&
+        faixas_etarias_dieta.push(valor.faixa_etaria_str);
+    });
+
+    formataFaixasPeriodoManhaTarde();
+
+    faixas_etarias_dieta.forEach((faixa) => {
+      const valorMedicao = valores_medicao.find(
+        (valor) => valor.faixa_etaria_str === faixa
+      );
+      valorMedicao &&
+        faixas_etarias_objs_dieta.push({
+          inicio: valorMedicao.faixa_etaria_inicio,
+          __str__: valorMedicao.faixa_etaria_str,
+          uuid: valorMedicao.faixa_etaria,
+        });
+    });
+  } else {
+    response_log_dietas_autorizadas_cei.data.forEach((log) => {
+      !faixas_etarias_dieta.find(
+        (faixa) => faixa === log.faixa_etaria.__str__
+      ) && faixas_etarias_dieta.push(log.faixa_etaria.__str__);
+    });
+
+    formataFaixasPeriodoManhaTarde();
+
+    faixas_etarias_dieta.forEach((faixa) => {
+      const log = response_log_dietas_autorizadas_cei.data.find(
+        (log) => log.faixa_etaria.__str__ === faixa
+      );
+      log &&
+        faixas_etarias_objs_dieta.push({
+          inicio: log.faixa_etaria.inicio,
+          __str__: log.faixa_etaria.__str__,
+          uuid: log.faixa_etaria.uuid,
+        });
+    });
   }
-
-  faixas_etarias_dieta.forEach((faixa) => {
-    const log = response_log_dietas_autorizadas_cei.data.find(
-      (log) => log.faixa_etaria.__str__ === faixa
-    );
-    log &&
-      faixas_etarias_objs_dieta.push({
-        inicio: log.faixa_etaria.inicio,
-        __str__: log.faixa_etaria.__str__,
-        uuid: log.faixa_etaria.uuid,
-      });
-  });
 
   faixas_etarias_objs_dieta
     .sort((a, b) => a.inicio - b.inicio)
@@ -637,8 +696,11 @@ export const categoriasParaExibir = (
     }
   );
 
-  if (response_log_dietas_autorizadas_cei.data.length) {
-    let categoriasDietasParaDeletar = [];
+  let categoriasDietasParaDeletar = [];
+  if (!response_log_dietas_autorizadas_cei.data.length) {
+    categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO A");
+    categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO B");
+  } else if (response_log_dietas_autorizadas_cei.data.length) {
     for (const categoria of response_categorias_medicao) {
       if (
         categoria.nome === "DIETA ESPECIAL - TIPO A" &&
@@ -666,11 +728,12 @@ export const categoriasParaExibir = (
         categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO B");
       }
     }
-    response_categorias_medicao = response_categorias_medicao.filter(
-      (categoria) => {
-        return !categoriasDietasParaDeletar.includes(categoria.nome);
-      }
-    );
   }
+  response_categorias_medicao = response_categorias_medicao.filter(
+    (categoria) => {
+      return !categoriasDietasParaDeletar.includes(categoria.nome);
+    }
+  );
+
   return response_categorias_medicao;
 };
