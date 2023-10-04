@@ -9,7 +9,11 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { ehEscolaTipoCEUGESTAO, tiposAlimentacaoETEC } from "helpers/utilities";
+import {
+  ehEscolaTipoCEI,
+  ehEscolaTipoCEUGESTAO,
+  tiposAlimentacaoETEC,
+} from "helpers/utilities";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
@@ -827,16 +831,28 @@ export const defaultValue = (
   valoresLancamentos,
   categoria,
   form,
-  periodoGrupo
+  periodoGrupo,
+  solicitacao
 ) => {
   let result = null;
+  let valorLancamento = null;
 
-  const valorLancamento = valoresLancamentos.find(
-    (valor) =>
-      Number(valor.categoria_medicao) === Number(categoria.id) &&
-      Number(valor.dia) === Number(column.dia) &&
-      valor.nome_campo === row.name
-  );
+  if (solicitacao && ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+    valorLancamento = valoresLancamentos.find(
+      (valor) =>
+        Number(valor.categoria_medicao) === Number(categoria.id) &&
+        Number(valor.dia) === Number(column.dia) &&
+        valor.nome_campo === row.name &&
+        valor.faixa_etaria === row.uuid
+    );
+  } else {
+    valorLancamento = valoresLancamentos.find(
+      (valor) =>
+        Number(valor.categoria_medicao) === Number(categoria.id) &&
+        Number(valor.dia) === Number(column.dia) &&
+        valor.nome_campo === row.name
+    );
+  }
 
   if (valorLancamento) {
     result = valorLancamento.valor;
@@ -850,16 +866,29 @@ export const defaultValue = (
   ) {
     result = "Mês posterior";
   }
+
   if (form && periodoGrupo) {
-    form.change(
-      `${row.name}__dia_${column.dia}__categoria_${
-        categoria.id
-      }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-        0,
-        5
-      )}`,
-      result
-    );
+    if (solicitacao && ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+      form.change(
+        `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${
+          categoria.id
+        }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+          0,
+          5
+        )}`,
+        result
+      );
+    } else {
+      form.change(
+        `${row.name}__dia_${column.dia}__categoria_${
+          categoria.id
+        }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+          0,
+          5
+        )}`,
+        result
+      );
+    }
   }
 
   return result;
