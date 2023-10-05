@@ -226,7 +226,10 @@ export const LAYOUT_EMBALAGEM = "layout-embalagem";
 export const CADASTRO_LAYOUT_EMBALAGEM = "cadastro-layout-embalagem";
 export const DETALHAR_LAYOUT_EMBALAGEM = "detalhe-layout-embalagem";
 export const PAINEL_LAYOUT_EMBALAGEM = "painel-layout-embalagem";
-export const PENDENTES_APROVACAO = "pendentes-aprovacao";
+export const CARDS_LAYOUT_EMBALAGEM = {
+  PENDENTES_APROVACAO: "pendentes-aprovacao",
+  APROVADOS: "aprovados",
+};
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";
