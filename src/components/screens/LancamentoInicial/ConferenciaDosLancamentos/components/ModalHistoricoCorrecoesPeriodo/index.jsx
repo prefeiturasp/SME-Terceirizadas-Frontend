@@ -20,10 +20,16 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
     switch (acao) {
       case "MEDICAO_CORRECAO_SOLICITADA":
         return "Devolvidos para ajustes pela DRE";
+      case "MEDICAO_CORRECAO_SOLICITADA_CODAE":
+        return "Devolvidos para ajustes pela CODAE";
       case "MEDICAO_CORRIGIDA_PELA_UE":
         return "Corrigidos para DRE";
+      case "MEDICAO_CORRIGIDA_PARA_CODAE":
+        return "Corrigidos para CODAE";
       case "MEDICAO_APROVADA_PELA_DRE":
         return "Aprovado pela DRE";
+      case "MEDICAO_APROVADA_PELA_CODAE":
+        return "Aprovado pela CODAE";
       default:
         return acao;
     }
@@ -43,6 +49,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
   const selecionarHistorico = (index, acao) => {
     switch (acao) {
       case "MEDICAO_CORRECAO_SOLICITADA":
+      case "MEDICAO_CORRECAO_SOLICITADA_CODAE":
         setDetalhesHistoricoAtivo(
           <HistoricoCorrecaoSolicitada
             historico={historicos[index]}
@@ -53,6 +60,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
         );
         break;
       case "MEDICAO_CORRIGIDA_PELA_UE":
+      case "MEDICAO_CORRIGIDA_PARA_CODAE":
         setDetalhesHistoricoAtivo(
           <HistoricoCorrecaoEscola
             historico={historicos[index]}
@@ -63,6 +71,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
         );
         break;
       case "MEDICAO_APROVADA_PELA_DRE":
+      case "MEDICAO_APROVADA_PELA_CODAE":
         setDetalhesHistoricoAtivo(
           <HistoricoAprovacao
             historico={historicos[index]}
