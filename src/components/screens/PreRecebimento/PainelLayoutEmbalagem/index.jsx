@@ -43,7 +43,7 @@ export default () => {
   const formatarCardsLayout = (items) => {
     return items.sort(ordenarPorLogMaisRecente).map((item) => ({
       text: gerarTextoCardLayout(item),
-      date: item.log_mais_recente,
+      date: item.log_mais_recente.slice(0, 10),
       link: gerarLinkLayout(item),
       status: item.status,
     }));
