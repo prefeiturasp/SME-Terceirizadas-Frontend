@@ -1892,13 +1892,13 @@ const routesConfig = [
     tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.CARDS_LAYOUT_EMBALAGEM.PENDENTES_APROVACAO}/`,
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.PENDENTES_APROVACAO}/`,
     component: StatusLayoutPendenteAprovacao,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.CARDS_LAYOUT_EMBALAGEM.APROVADOS}/`,
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.APROVADOS}/`,
     component: StatusLayoutAprovados,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
