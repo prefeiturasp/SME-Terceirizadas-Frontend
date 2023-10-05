@@ -1,7 +1,7 @@
 import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
-import { cards } from "./constants";
+import { cardsAprovacao, cardsAlteracao } from "./constants";
 import {
   parseDataHoraBrToMoment,
   comparaObjetosMoment,
@@ -19,7 +19,11 @@ export default () => {
   const [carregando, setCarregando] = useState(false);
   const [filtrado, setFiltrado] = useState(false);
 
-  const [cardsLayout, setCardsLayout] = useState(cards);
+  const [cardsAprovacaoLayout, setCardsAprovacaoLayout] =
+    useState(cardsAprovacao);
+
+  const [cardsAlteracaoLayout, setCardsAlteracaoLayout] =
+    useState(cardsAlteracao);
 
   const ordenarPorLogMaisRecente = (a, b) => {
     let data_a = parseDataHoraBrToMoment(a.log_mais_recente);
@@ -49,6 +53,22 @@ export default () => {
     }));
   };
 
+  const agruparCardsPorStatus = (cardsIniciais, dadosDashboard) => {
+    const cardsAgrupados = [];
+
+    cardsIniciais.forEach((card) => {
+      card.items = [];
+      dadosDashboard.data.results.forEach((data) => {
+        if (card.incluir_status.includes(data.status)) {
+          card.items = [...card.items, ...data.dados];
+        }
+      });
+      cardsAgrupados.push(card);
+    });
+
+    return cardsAgrupados;
+  };
+
   const buscarLayouts = useCallback(async (filtros = null) => {
     setCarregando(true);
 
@@ -56,18 +76,18 @@ export default () => {
       filtros ? filtros : {}
     );
 
-    let cards = [];
-    cardsLayout.forEach((card) => {
-      card.items = [];
-      dadosDashboard.data.results.forEach((data) => {
-        if (card.incluir_status.includes(data.status)) {
-          card.items = [...card.items, ...data.dados];
-        }
-      });
-      cards.push(card);
-    });
+    let cardsAprovacao = agruparCardsPorStatus(
+      cardsAprovacaoLayout,
+      dadosDashboard
+    );
 
-    setCardsLayout(cards);
+    let cardsAlteracao = agruparCardsPorStatus(
+      cardsAlteracaoLayout,
+      dadosDashboard
+    );
+
+    setCardsAprovacaoLayout(cardsAprovacao);
+    setCardsAlteracaoLayout(cardsAlteracao);
     setCarregando(false);
   }, []);
 
@@ -150,7 +170,76 @@ export default () => {
             </div>
           </div>
           <div className="row">
-            {cardsLayout.map((card, index) => (
+            {cardsAprovacaoLayout.map((card, index) => (
+              <div className="col-6 mb-4" key={index}>
+                <CardCronograma
+                  cardTitle={card.titulo}
+                  cardType={card.style}
+                  solicitations={formatarCardsLayout(
+                    card.items ? card.items : []
+                  )}
+                  icon={card.icon}
+                  href={card.href}
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="card-title">
+            <div className="row">
+              <div className="col-4">Alteração de Layout</div>
+              <div className="col-8">
+                <Form
+                  initialValues={{
+                    numero_cronograma: "",
+                    nome_produto: "",
+                    nome_fornecedor: "",
+                  }}
+                  onSubmit={() => {}}
+                >
+                  {({ values }) => (
+                    <div className="row text-right">
+                      <div className="col-4">
+                        <Field
+                          component={InputText}
+                          name="numero_cronograma"
+                          placeholder="Filtrar por N° do Cronograma"
+                        />
+
+                        <OnChange name="numero_cronograma">
+                          {(value) => filtrarLayouts(value, values)}
+                        </OnChange>
+                      </div>
+                      <div className="col-4">
+                        <Field
+                          component={InputText}
+                          name="nome_produto"
+                          placeholder="Filtrar por Nome do Produto"
+                        />
+
+                        <OnChange name="nome_produto">
+                          {(value) => filtrarLayouts(value, values)}
+                        </OnChange>
+                      </div>
+                      <div className="col-4">
+                        <Field
+                          component={InputText}
+                          name="nome_fornecedor"
+                          placeholder="Filtrar por Nome do Fornecedor"
+                        />
+
+                        <OnChange name="nome_fornecedor">
+                          {(value) => filtrarLayouts(value, values)}
+                        </OnChange>
+                      </div>
+                    </div>
+                  )}
+                </Form>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            {cardsAlteracaoLayout.map((card, index) => (
               <div className="col-6 mb-4" key={index}>
                 <CardCronograma
                   cardTitle={card.titulo}
