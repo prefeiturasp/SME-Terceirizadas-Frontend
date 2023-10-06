@@ -93,9 +93,11 @@ export default () => {
 
   const filtrarLayouts = debounce((value, values) => {
     const { nome_produto, numero_cronograma, nome_fornecedor } = values;
+
     const podeFiltrar = [nome_produto, numero_cronograma, nome_fornecedor].some(
       (value) => value && value.length > 2
     );
+
     if (podeFiltrar) {
       setCarregando(true);
       let newParams = Object.assign({}, { ...values });
@@ -116,60 +118,60 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-painel-layout-embalagem">
         <div className="card-body painel-layout-embalagem">
-          <div className="card-title">
-            <div className="row">
-              <div className="col-4">Aprovação de Layouts</div>
-              <div className="col-8">
-                <Form
-                  initialValues={{
-                    numero_cronograma: "",
-                    nome_produto: "",
-                    nome_fornecedor: "",
-                  }}
-                  onSubmit={() => {}}
-                >
-                  {({ values }) => (
-                    <div className="row text-right">
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          name="numero_cronograma"
-                          placeholder="Filtrar por N° do Cronograma"
-                        />
+          <h5 className="card-title mt-3">Aprovação de Layouts</h5>
 
-                        <OnChange name="numero_cronograma">
-                          {(value) => filtrarLayouts(value, values)}
-                        </OnChange>
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          name="nome_produto"
-                          placeholder="Filtrar por Nome do Produto"
-                        />
+          <div className="row mt-4">
+            <div className="col">
+              <Form
+                initialValues={{
+                  numero_cronograma: "",
+                  nome_produto: "",
+                  nome_fornecedor: "",
+                }}
+                onSubmit={() => {}}
+              >
+                {({ values }) => (
+                  <div className="row text-right">
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        name="numero_cronograma"
+                        placeholder="Filtrar por N° do Cronograma"
+                      />
 
-                        <OnChange name="nome_produto">
-                          {(value) => filtrarLayouts(value, values)}
-                        </OnChange>
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          name="nome_fornecedor"
-                          placeholder="Filtrar por Nome do Fornecedor"
-                        />
-
-                        <OnChange name="nome_fornecedor">
-                          {(value) => filtrarLayouts(value, values)}
-                        </OnChange>
-                      </div>
+                      <OnChange name="numero_cronograma">
+                        {(value) => filtrarLayouts(value, values)}
+                      </OnChange>
                     </div>
-                  )}
-                </Form>
-              </div>
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        name="nome_produto"
+                        placeholder="Filtrar por Nome do Produto"
+                      />
+
+                      <OnChange name="nome_produto">
+                        {(value) => filtrarLayouts(value, values)}
+                      </OnChange>
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        name="nome_fornecedor"
+                        placeholder="Filtrar por Nome do Fornecedor"
+                      />
+
+                      <OnChange name="nome_fornecedor">
+                        {(value) => filtrarLayouts(value, values)}
+                      </OnChange>
+                    </div>
+                  </div>
+                )}
+              </Form>
             </div>
           </div>
-          <div className="row">
+
+          <div className="row mt-4">
             {cardsAprovacaoLayout.map((card, index) => (
               <div className="col-6 mb-4" key={index}>
                 <CardCronograma
@@ -185,60 +187,9 @@ export default () => {
             ))}
           </div>
 
-          <div className="card-title">
-            <div className="row">
-              <div className="col-4">Alteração de Layout</div>
-              <div className="col-8">
-                <Form
-                  initialValues={{
-                    numero_cronograma: "",
-                    nome_produto: "",
-                    nome_fornecedor: "",
-                  }}
-                  onSubmit={() => {}}
-                >
-                  {({ values }) => (
-                    <div className="row text-right">
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          name="numero_cronograma"
-                          placeholder="Filtrar por N° do Cronograma"
-                        />
+          <h5 className="card-title mt-3">Alteração de Layout</h5>
 
-                        <OnChange name="numero_cronograma">
-                          {(value) => filtrarLayouts(value, values)}
-                        </OnChange>
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          name="nome_produto"
-                          placeholder="Filtrar por Nome do Produto"
-                        />
-
-                        <OnChange name="nome_produto">
-                          {(value) => filtrarLayouts(value, values)}
-                        </OnChange>
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          name="nome_fornecedor"
-                          placeholder="Filtrar por Nome do Fornecedor"
-                        />
-
-                        <OnChange name="nome_fornecedor">
-                          {(value) => filtrarLayouts(value, values)}
-                        </OnChange>
-                      </div>
-                    </div>
-                  )}
-                </Form>
-              </div>
-            </div>
-          </div>
-          <div className="row">
+          <div className="row mt-4">
             {cardsAlteracaoLayout.map((card, index) => (
               <div className="col-6 mb-4" key={index}>
                 <CardCronograma
