@@ -1,6 +1,8 @@
 import {
   PAINEL_LAYOUT_EMBALAGEM,
   PENDENTES_APROVACAO,
+  APROVADOS,
+  ENVIADOS_PARA_CORRECAO,
 } from "../../../../configs/constants";
 
 export const CARD_PENDENTES_APROVACAO = {
@@ -12,4 +14,24 @@ export const CARD_PENDENTES_APROVACAO = {
   href: `${PAINEL_LAYOUT_EMBALAGEM}/${PENDENTES_APROVACAO}`,
 };
 
-export const cards = [CARD_PENDENTES_APROVACAO];
+export const CARD_APROVADOS = {
+  id: "Aprovados",
+  titulo: "Aprovados",
+  icon: "fa-check",
+  style: "card-cronogramas-assinados",
+  incluir_status: ["APROVADO"],
+  href: `${PAINEL_LAYOUT_EMBALAGEM}/${APROVADOS}`,
+};
+
+export const CARD_ENVIADOS_PARA_CORRECAO = {
+  id: "Enviados para Correção",
+  titulo: "Enviados para Correção",
+  icon: "fa-pencil-alt",
+  style: "card-solicitacoes-reprovadas",
+  incluir_status: ["SOLICITADO_CORRECAO"],
+  href: `${PAINEL_LAYOUT_EMBALAGEM}/${ENVIADOS_PARA_CORRECAO}`,
+};
+
+export const cardsAprovacao = [CARD_PENDENTES_APROVACAO, CARD_APROVADOS];
+
+export const cardsAlteracao = [CARD_ENVIADOS_PARA_CORRECAO];
