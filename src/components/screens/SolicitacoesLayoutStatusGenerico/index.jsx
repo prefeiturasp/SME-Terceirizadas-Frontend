@@ -10,7 +10,7 @@ import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 import {
-  DETALHAR_LAYOUT_EMBALAGEM,
+  ANALISAR_LAYOUT_EMBALAGEM,
   PRE_RECEBIMENTO,
 } from "../../../configs/constants";
 import { gerarParametrosConsulta } from "../../../helpers/utilities";
@@ -31,7 +31,7 @@ export const SolicitacoesLayoutStatusGenerico = ({ ...props }) => {
     return itens.map((item) => ({
       texto: `${item.numero_cronograma} - ${item.nome_produto} - ${item.nome_empresa}`,
       data: item.log_mais_recente,
-      link: `/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`,
+      link: `/${PRE_RECEBIMENTO}/${ANALISAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`,
     }));
   };
 
