@@ -34,6 +34,7 @@ export default ({
 
   const meusErros =
     errosAoSalvar &&
+    errosAoSalvar.length > 0 &&
     errosAoSalvar.filter((obj) => obj.periodo_escolar === textoCabecalho);
 
   const nomePeriodoGrupo = () => {
