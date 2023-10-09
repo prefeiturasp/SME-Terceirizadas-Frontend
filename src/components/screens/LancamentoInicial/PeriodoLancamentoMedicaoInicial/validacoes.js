@@ -132,6 +132,14 @@ export const campoComSuspensaoAutorizadaESemObservacao = (
     if (
       formValuesAtualizados[
         `${alimentacao}__dia_${column.dia}__categoria_${categoria.id}`
+      ] &&
+      Number(
+        formValuesAtualizados[
+          `${alimentacao}__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) > 0 &&
+      !formValuesAtualizados[
+        `observacoes__dia_${column.dia}__categoria_${categoria.id}`
       ]
     ) {
       erro = true;
@@ -384,7 +392,8 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
         formValuesAtualizados,
         column,
         categoria,
-        suspensoesAutorizadas
+        suspensoesAutorizadas,
+        row
       ) ||
       campoRefeicaoComRPLAutorizadaESemObservacao(
         formValuesAtualizados,
@@ -919,13 +928,17 @@ export const exibirTooltipSuspensoesAutorizadas = (
 
   return (
     value &&
-    (!["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
+    Number(value) > 0 &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
     suspensoesAutorizadas &&
     suspensoesAutorizadas.filter(
       (suspensao) =>
         suspensao.dia === column.dia &&
         suspensao.alimentacoes.includes(row.name)
-    ).length > 0
+    ).length > 0 &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ]
   );
 };
 
