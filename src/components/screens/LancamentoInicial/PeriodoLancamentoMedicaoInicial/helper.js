@@ -900,12 +900,6 @@ export const ehDiaParaCorrigir = (
   valoresPeriodosLancamentos
 ) => {
   const existeAlgumCampoParaCorrigir = valoresPeriodosLancamentos
-    .filter(
-      (valor) =>
-        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
-          valor.nome_campo
-        )
-    )
     .filter((valor) => String(valor.dia) === String(dia))
     .filter((valor) => String(valor.categoria_medicao) === String(categoria))
     .filter((valor) => valor.habilitado_correcao === true)[0];
