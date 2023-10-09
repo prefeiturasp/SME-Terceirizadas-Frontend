@@ -208,7 +208,7 @@ export default ({ analise }) => {
       let response = await analiseCodaeLayoutEmbalagem(objeto.uuid, payload);
       if (response.status === 201 || response.status === 200) {
         setCarregando(false);
-        toastSuccess("Layout enviado para análise com sucesso!");
+        toastSuccess("Sua avaliação foi enviada com sucesso!");
         voltarPaginaPainel();
       } else {
         toastError("Ocorreu um erro ao analisar o Layout da Embalagem");
