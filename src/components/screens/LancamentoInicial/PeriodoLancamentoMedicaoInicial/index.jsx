@@ -1320,7 +1320,6 @@ export default () => {
       );
     };
     semanaSelecionada && formatar();
-
     valoresPeriodosLancamentos.findIndex(
       (valor) => valor.nome_campo !== "observacoes"
     ) !== -1 && setDisableBotaoSalvarLancamentos(false);
