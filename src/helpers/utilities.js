@@ -1099,3 +1099,7 @@ export const formataMesNome = (mes) => {
       return mes;
   }
 };
+
+export const ehFimDeSemana = (dateObj) => {
+  return dateObj.getDay() % 6 === 0;
+};
