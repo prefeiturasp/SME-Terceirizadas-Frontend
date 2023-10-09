@@ -266,6 +266,19 @@ export const desabilitarField = (
       valor.habilitado_correcao === true
   );
   if (
+    valorField &&
+    location.state &&
+    [
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_CORRIGIDA_PELA_UE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE",
+    ].includes(location.state.status_periodo)
+  ) {
+    return false;
+  }
+
+  if (
     location.state &&
     (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
       location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
