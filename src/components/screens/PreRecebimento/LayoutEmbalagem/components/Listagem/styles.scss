@@ -70,14 +70,6 @@
         }
       }
 
-      .green {
-        color: $green;
-      }
-
-      .red {
-        color: $red;
-      }
-
       div {
         display: grid;
         align-items: center;
@@ -93,5 +85,17 @@
         }
       }
     }
+  }
+
+  .green {
+    color: $green;
+  }
+
+  .red {
+    color: $red;
+  }
+
+  .orange {
+    color: $orange;
   }
 }

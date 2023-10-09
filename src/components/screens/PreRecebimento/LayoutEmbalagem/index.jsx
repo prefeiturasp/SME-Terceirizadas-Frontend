@@ -16,6 +16,9 @@ export default () => {
 
   const [layoutsEmbalagens, setLayoutsEmbalagens] = useState([]);
 
+  const perfilFornecedor =
+    JSON.parse(localStorage.getItem("perfil")) === "ADMINISTRADOR_EMPRESA";
+
   const buscarResultados = async (pageNumber) => {
     setCarregando(true);
 
@@ -55,7 +58,10 @@ export default () => {
               </div>
             ) : (
               <>
-                <Listagem objetos={layoutsEmbalagens} />
+                <Listagem
+                  objetos={layoutsEmbalagens}
+                  perfilFornecedor={perfilFornecedor}
+                />
                 <div className="row">
                   <div className="col">
                     <Paginacao
