@@ -259,6 +259,7 @@ import StatusSolicitacoesAlteracoesCodae from "../pages/Dinutre/Solicitacoes/Sta
 import PainelLayoutEmbalagemPage from "../pages/PreRecebimento/PainelLayoutEmbalagemPage";
 import StatusLayoutPendenteAprovacao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutPendenteAprovacao";
 import AnalisarLayoutEmbalagemPage from "../pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
+import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutEmbalagemPage";
 
 const routesConfig = [
   {
@@ -1902,6 +1903,12 @@ const routesConfig = [
     component: AnalisarLayoutEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CORRIGR_LAYOUT_EMBALAGEM}`,
+    component: CorrigirLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
 ];
 
