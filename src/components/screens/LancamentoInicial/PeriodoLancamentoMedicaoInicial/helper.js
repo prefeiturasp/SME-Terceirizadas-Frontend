@@ -257,7 +257,8 @@ export const desabilitarField = (
   inclusoesAutorizadas,
   categoriasDeMedicao,
   kitLanchesAutorizadas,
-  alteracoesAlimentacaoAutorizadas
+  alteracoesAlimentacaoAutorizadas,
+  diasParaCorrecao
 ) => {
   const valorField = valoresPeriodosLancamentos.some(
     (valor) =>
@@ -266,7 +267,14 @@ export const desabilitarField = (
       valor.habilitado_correcao === true
   );
   if (
-    valorField &&
+    (valorField ||
+      (diasParaCorrecao &&
+        diasParaCorrecao.find(
+          (diaParaCorrecao) =>
+            String(diaParaCorrecao.dia) === String(dia) &&
+            String(diaParaCorrecao.categoria_medicao) === String(categoria) &&
+            diaParaCorrecao.habilitado_correcao === true
+        ))) &&
     location.state &&
     [
       "MEDICAO_CORRECAO_SOLICITADA",

@@ -93,7 +93,7 @@ import {
   setPeriodoLancamento,
   updateValoresPeriodosLancamentos,
   getFeriadosNoMes,
-  // getDiasParaCorrecao
+  getDiasParaCorrecao,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
@@ -181,9 +181,7 @@ export default () => {
   const [showModalErro, setShowModalErro] = useState(false);
   const [valoresObservacoes, setValoresObservacoes] = useState([]);
   const [periodoGrupo, setPeriodoGrupo] = useState(null);
-  //const [diasParaCorrecao, setDiasParaCorrecao] = useState();
-
-  console.log(periodoGrupo);
+  const [diasParaCorrecao, setDiasParaCorrecao] = useState();
 
   const history = useHistory();
   const location = useLocation();
@@ -197,14 +195,6 @@ export default () => {
   const ehGrupoETECUrlParam =
     urlParams.get("ehGrupoETEC") === "true" ? true : false;
   const grupoLocation = location && location.state && location.state.grupo;
-
-  /*
-  const getDiasParaCorrecaoAsync = async () => {
-    const params = {
-      medicao_uuid: 
-    }
-    const response = await getDiasParaCorrecao();
-  };*/
 
   const getListaDiasSobremesaDoceAsync = async (escola_uuid) => {
     const params = {
@@ -849,6 +839,11 @@ export default () => {
       );
       setValoresPeriodosLancamentos(response_valores_periodos.data);
 
+      const response_dias_correcao = await getDiasParaCorrecao(params);
+      if (response_dias_correcao.status === HTTP_STATUS.OK) {
+        console.log(response_dias_correcao.data);
+        setDiasParaCorrecao(response_dias_correcao.data);
+      }
       let response_matriculados = [];
       let response_inclusoes_etec_autorizadas = [];
       let response_kit_lanches_autorizadas = [];
@@ -2313,7 +2308,8 @@ export default () => {
                                                         inclusoesAutorizadas,
                                                         categoriasDeMedicao,
                                                         kitLanchesAutorizadas,
-                                                        alteracoesAlimentacaoAutorizadas
+                                                        alteracoesAlimentacaoAutorizadas,
+                                                        diasParaCorrecao
                                                       )}
                                                       dia={column.dia}
                                                       defaultValue={defaultValue(
@@ -2498,7 +2494,8 @@ export default () => {
                                                           inclusoesAutorizadas,
                                                           categoriasDeMedicao,
                                                           kitLanchesAutorizadas,
-                                                          alteracoesAlimentacaoAutorizadas
+                                                          alteracoesAlimentacaoAutorizadas,
+                                                          diasParaCorrecao
                                                         )}
                                                         exibeTooltipPadraoRepeticaoDiasSobremesaDoce={exibirTooltipPadraoRepeticaoDiasSobremesaDoce(
                                                           formValuesAtualizados,

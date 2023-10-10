@@ -175,7 +175,7 @@ export const getLogMatriculadosPorFaixaEtariaDia = async (params) => {
 };
 
 export const getDiasParaCorrecao = async (params) => {
-  const url = "dias-para-correcao/";
+  const url = "medicao-inicial/dias-para-corrigir/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
