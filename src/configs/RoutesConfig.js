@@ -260,6 +260,7 @@ import PainelLayoutEmbalagemPage from "../pages/PreRecebimento/PainelLayoutEmbal
 import StatusLayoutPendenteAprovacao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutPendenteAprovacao";
 import StatusLayoutAprovados from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutAprovados";
 import StatusLayoutEnviadosParaCorrecao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutEnviadosParaCorrecao";
+import AnalisarLayoutEmbalagemPage from "../pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
 
 const routesConfig = [
   {
@@ -1907,6 +1908,12 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.ENVIADOS_PARA_CORRECAO}/`,
     component: StatusLayoutEnviadosParaCorrecao,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_LAYOUT_EMBALAGEM}`,
+    component: AnalisarLayoutEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
   },
