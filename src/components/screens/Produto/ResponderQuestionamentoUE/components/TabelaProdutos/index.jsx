@@ -160,6 +160,7 @@ const TabelaProdutos = ({
             uuidReclamacao: uuid,
             produto: produtoSelecionado,
           }}
+          produto={produtoSelecionado}
           labelJustificativa="Responder"
           showModal={exibirModal}
           closeModal={() => setExibirModal(false)}
