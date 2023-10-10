@@ -1777,7 +1777,8 @@ export default () => {
         formValuesAtualizados,
         column,
         categoria,
-        suspensoesAutorizadas
+        suspensoesAutorizadas,
+        row
       ) ||
       campoRefeicaoComRPLAutorizadaESemObservacao(
         formValuesAtualizados,
