@@ -93,6 +93,7 @@ import {
   setPeriodoLancamento,
   updateValoresPeriodosLancamentos,
   getFeriadosNoMes,
+  // getDiasParaCorrecao
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
@@ -180,6 +181,9 @@ export default () => {
   const [showModalErro, setShowModalErro] = useState(false);
   const [valoresObservacoes, setValoresObservacoes] = useState([]);
   const [periodoGrupo, setPeriodoGrupo] = useState(null);
+  //const [diasParaCorrecao, setDiasParaCorrecao] = useState();
+
+  console.log(periodoGrupo);
 
   const history = useHistory();
   const location = useLocation();
@@ -193,6 +197,14 @@ export default () => {
   const ehGrupoETECUrlParam =
     urlParams.get("ehGrupoETEC") === "true" ? true : false;
   const grupoLocation = location && location.state && location.state.grupo;
+
+  /*
+  const getDiasParaCorrecaoAsync = async () => {
+    const params = {
+      medicao_uuid: 
+    }
+    const response = await getDiasParaCorrecao();
+  };*/
 
   const getListaDiasSobremesaDoceAsync = async (escola_uuid) => {
     const params = {
@@ -2086,7 +2098,7 @@ export default () => {
                           <Field
                             component={CKEditorField}
                             name="justificativa_periodo"
-                            disabled={true}
+                            disabled
                           />
                         </div>
                       </div>

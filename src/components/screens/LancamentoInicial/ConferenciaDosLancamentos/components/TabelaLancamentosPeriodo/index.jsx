@@ -102,6 +102,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const [loading, setLoading] = useState(false);
   const [modoCorrecao, setModoCorrecao] = useState(false);
   const [valoresParaCorrecao, setValoresParaCorrecao] = useState({});
+  const [diasParaCorrecao, setDiasParaCorrecao] = useState([]);
+
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] =
     useState(false);
   const [showModalAprovarPeriodo, setShowModalAprovarPeriodo] = useState(false);
@@ -538,11 +540,6 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       uuidsValoresMedicaoParaCorrecao.push(uuidValorMedicao);
     });
 
-    if (uuidsValoresMedicaoParaCorrecao.length === 0) {
-      toastWarn("Não existem valores para correção");
-      return;
-    }
-
     const descricao_correcao =
       values[
         `descricao_correcao__periodo_grupo_${uuidMedicaoPeriodoGrupo.slice(
@@ -552,6 +549,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       ];
     const payload = {
       uuids_valores_medicao_para_correcao: uuidsValoresMedicaoParaCorrecao,
+      dias_para_corrigir: diasParaCorrecao,
       justificativa: descricao_correcao,
     };
     const response = usuarioEhDRE()
@@ -575,6 +573,31 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   };
 
   const onChangeCheckBox = (column, categoria, periodoGrupo) => {
+    if (
+      diasParaCorrecao.find(
+        (diaCorrecao) =>
+          diaCorrecao.dia === column.dia &&
+          diaCorrecao.categoria_medicao_uuid === categoria.uuid
+      )
+    ) {
+      setDiasParaCorrecao(
+        diasParaCorrecao.filter(
+          (diaCorrecao) =>
+            !(
+              diaCorrecao.dia === column.dia &&
+              diaCorrecao.categoria_medicao_uuid === categoria.uuid
+            )
+        )
+      );
+    } else {
+      const diasParaCorrecao_ = deepCopy(diasParaCorrecao);
+      diasParaCorrecao_.push({
+        dia: column.dia,
+        categoria_medicao_uuid: categoria.uuid,
+      });
+      setDiasParaCorrecao(diasParaCorrecao_);
+    }
+
     const keys = Object.keys(values).filter((key) =>
       key.includes(
         `dia_${column.dia}__categoria_${
