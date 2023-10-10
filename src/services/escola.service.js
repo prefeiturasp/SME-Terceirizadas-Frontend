@@ -83,7 +83,7 @@ export const getEscolasSimplissimaComDRE = () => {
 export const getEscolasSimplissimaComDREUnpaginated = async () =>
   axios.get("escolas-simplissima-com-dre-unpaginated/");
 
-export const getEscolasTrecTotal = async (params = {}) => {
+export const getEscolasTercTotal = async (params = {}) => {
   const url = "escolas-simplissima-com-dre-unpaginated/terc-total/";
   const response = await axios
     .get(url, { params: params })

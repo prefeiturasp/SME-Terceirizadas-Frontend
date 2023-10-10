@@ -20,7 +20,7 @@ import { lotesToOptions } from "../../helpers";
 import "../../style.scss";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 import { STATUS_SOLICITACOES, TIPOS_SOLICITACAO } from "../../constants";
-import { getEscolaSimples, getEscolasTrecTotal } from "services/escola.service";
+import { getEscolaSimples, getEscolasTercTotal } from "services/escola.service";
 import { InputComData } from "components/Shareable/DatePicker";
 import { getNomesTerceirizadas } from "services/produto.service";
 import Botao from "components/Shareable/Botao";
@@ -88,7 +88,7 @@ export const Filtros = ({ ...props }) => {
     if (usuarioEhEmpresaTerceirizada()) {
       params = { terceirizada: meusDados.vinculo_atual.instituicao.uuid };
     }
-    const response = await getEscolasTrecTotal(params);
+    const response = await getEscolasTercTotal(params);
     if (response.status === HTTP_STATUS.OK) {
       setUnidadesEducacionais(response.data);
     } else {

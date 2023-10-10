@@ -6,6 +6,8 @@ import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
 import VincularProdutosEditaisPage from "../pages/Cadastros/VincularProdutosEditaisPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
+import PermissaoLancamentosEspeciaisPage from "../pages/Cadastros/PermissaoLancamentosEspeciaisPage";
+import NovaPermissaoLancamentoEspecialPage from "../pages/Cadastros/NovaPermissaoLancamentoEspecialPage";
 import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
 import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
 import CadastroKitLanchePage from "../pages/Cadastros/CadastroKitLanchePage";
@@ -662,7 +664,19 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/tipos-alimentacao`,
     component: CadastroTipoAlimentacaoPage,
-    exact: false,
+    exact: true,
+    tipoUsuario: usuarioEhQualquerCODAE(),
+  },
+  {
+    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais`,
+    component: PermissaoLancamentosEspeciaisPage,
+    exact: true,
+    tipoUsuario: usuarioEhQualquerCODAE(),
+  },
+  {
+    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais/nova-permissao-lancamento-especial`,
+    component: NovaPermissaoLancamentoEspecialPage,
+    exact: true,
     tipoUsuario: usuarioEhQualquerCODAE(),
   },
   {
