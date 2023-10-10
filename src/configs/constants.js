@@ -228,6 +228,8 @@ export const DETALHAR_LAYOUT_EMBALAGEM = "detalhe-layout-embalagem";
 export const ANALISAR_LAYOUT_EMBALAGEM = "analise-layout-embalagem";
 export const PAINEL_LAYOUT_EMBALAGEM = "painel-layout-embalagem";
 export const PENDENTES_APROVACAO = "pendentes-aprovacao";
+export const APROVADOS = "aprovados";
+export const ENVIADOS_PARA_CORRECAO = "enviados-para-correcao";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";
