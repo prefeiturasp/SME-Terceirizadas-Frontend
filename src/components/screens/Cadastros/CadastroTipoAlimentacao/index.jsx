@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from "react";
-import HTTP_STATUS from "http-status-codes";
-
-import {
-  getVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
-  updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
-  getTiposDeAlimentacao,
-} from "services/cadastroTipoAlimentacao.service";
-
 import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
-
-import { ASelect } from "components/Shareable/MakeField";
+import { Link } from "react-router-dom";
+import HTTP_STATUS from "http-status-codes";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Select as SelectAntd } from "antd";
-
+import { Spin } from "antd";
+import { ASelect } from "components/Shareable/MakeField";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { Spin } from "antd";
 import "./style.scss";
+import {
+  getVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
+  updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
+  getTiposDeAlimentacao,
+} from "services/cadastroTipoAlimentacao.service";
 
 export default ({ tiposUnidadesEscolar }) => {
   const { Option } = SelectAntd;
@@ -110,33 +106,46 @@ export default ({ tiposUnidadesEscolar }) => {
                 <form onSubmit={handleSubmit}>
                   <section className="tipos-de-unidade">
                     <header>Tipos de Unidades</header>
-                    <article>
-                      <Field
-                        component={ASelect}
-                        suffixIcon={
-                          <CaretDownOutlined onClick={() => setOpen(!open)} />
+                    <div className="d-flex justify-content-between">
+                      <article>
+                        <Field
+                          component={ASelect}
+                          suffixIcon={
+                            <CaretDownOutlined onClick={() => setOpen(!open)} />
+                          }
+                          open={open}
+                          onBlur={() => setOpen(false)}
+                          onClick={() => setOpen(!open)}
+                          showSearch
+                          name="tipo_unidade_escolar"
+                          filterOption={(inputValue, option) =>
+                            option.props.children
+                              .toString()
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          }
+                          disabled={alterandoTiposDeAlimentacao}
+                        >
+                          {opcoesTiposUnidades}
+                        </Field>
+                        <OnChange name="tipo_unidade_escolar">
+                          {(value) => {
+                            getPeriodosEscolares(value);
+                          }}
+                        </OnChange>
+                      </article>
+                      <Link
+                        to={
+                          "/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais"
                         }
-                        open={open}
-                        onBlur={() => setOpen(false)}
-                        onClick={() => setOpen(!open)}
-                        showSearch
-                        name="tipo_unidade_escolar"
-                        filterOption={(inputValue, option) =>
-                          option.props.children
-                            .toString()
-                            .toLowerCase()
-                            .includes(inputValue.toLowerCase())
-                        }
-                        disabled={alterandoTiposDeAlimentacao}
+                        style={{ display: "contents" }}
                       >
-                        {opcoesTiposUnidades}
-                      </Field>
-                      <OnChange name="tipo_unidade_escolar">
-                        {(value) => {
-                          getPeriodosEscolares(value);
-                        }}
-                      </OnChange>
-                    </article>
+                        <Botao
+                          texto="Permissão de Lançamentos Especiais"
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                      </Link>
+                    </div>
                   </section>
                 </form>
               )}
@@ -157,9 +166,10 @@ export default ({ tiposUnidadesEscolar }) => {
                       </div>
                       <div className="col-2 mb-3">
                         <Botao
+                          className="float-right"
                           texto="Salvar"
                           type={BUTTON_TYPE.SUBMIT}
-                          style={`${BUTTON_STYLE.GREEN} w-100`}
+                          style={`${BUTTON_STYLE.GREEN}`}
                           disabled={pristine || submitting}
                         />
                       </div>
@@ -214,9 +224,10 @@ export default ({ tiposUnidadesEscolar }) => {
                       })}
                       <div className="offset-10 col-2 mt-3 mb-3">
                         <Botao
+                          className="float-right"
                           texto="Salvar"
                           type={BUTTON_TYPE.SUBMIT}
-                          style={`${BUTTON_STYLE.GREEN} w-100`}
+                          style={`${BUTTON_STYLE.GREEN}`}
                           disabled={pristine || submitting}
                         />
                       </div>
