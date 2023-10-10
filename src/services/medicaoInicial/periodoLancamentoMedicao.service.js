@@ -174,6 +174,25 @@ export const getLogMatriculadosPorFaixaEtariaDia = async (params) => {
   }
 };
 
+export const getAlimentacoesLancamentosEspeciais = async () => {
+  const response = await axios
+    .get("medicao-inicial/alimentacoes-lancamentos-especiais/")
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const criarPermissaoLancamentoEspecial = async (payload) => {
+  const url = "medicao-inicial/permissao-lancamentos-especiais/";
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const getDiasParaCorrecao = async (params) => {
   const url = "medicao-inicial/dias-para-corrigir/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);

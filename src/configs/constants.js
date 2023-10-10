@@ -156,9 +156,11 @@ export const KITS = "kits";
 export const LOTE = "lote";
 export const LOTES_CADASTRADOS = "lotes-cadastrados";
 export const HORARIO_COMBOS_ALIMENTACAO = "horario-combos-alimentacao";
-export const TIPO_ALIMENTACAO_UNIDADE_ESCOLAR =
-  "tipo-alimentacao-unidade-escolar";
 export const TIPOS_ALIMENTACAO = "tipos-alimentacao";
+export const PERMISSAO_LANCAMENTOS_ESPECIAIS =
+  "permissao-lancamentos-especiais";
+export const NOVA_PERMISSAO_LANCAMENTO_ESPECIAL =
+  "nova-permissao-lancamento-especial";
 export const DISPONIBILIZACAO_DE_SOLICITACOES =
   "disponibilizacao-de-solicitacoes";
 export const ENVIO_REQUISICOES_ENTREGA = "envio-requisicoes-entrega";
