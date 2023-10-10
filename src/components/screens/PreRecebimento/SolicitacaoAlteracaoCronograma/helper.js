@@ -31,6 +31,14 @@ export const option_status = [
     value: "REPROVADO_DILOG",
     label: "Reprovado DILOG",
   },
+  {
+    value: "ALTERACAO_ENVIADA_FORNECEDOR",
+    label: "Alteração Enviada ao Fornecedor",
+  },
+  {
+    value: "FORNECEDOR_CIENTE",
+    label: "Fornecedor Ciente",
+  },
 ];
 
 export const option_status_fornecedor = [
@@ -54,6 +62,10 @@ export const option_status_fornecedor = [
   {
     value: "ALTERACAO_ENVIADA_FORNECEDOR",
     label: "Recebida Alteração da CODAE",
+  },
+  {
+    value: "FORNECEDOR_CIENTE",
+    label: "Fornecedor Ciente",
   },
 ];
 
