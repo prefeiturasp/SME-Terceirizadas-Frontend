@@ -13,7 +13,13 @@ import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import "./style.scss";
 
-export const PeriodosCEIeouEMEI = ({ form, values, vinculos, periodos }) => {
+export const PeriodosCEIeouEMEI = ({
+  form,
+  values,
+  vinculos,
+  periodos,
+  motivoEspecifico,
+}) => {
   const getPeriodo = (indice) => {
     return values.quantidades_periodo[indice];
   };
@@ -45,81 +51,79 @@ export const PeriodosCEIeouEMEI = ({ form, values, vinculos, periodos }) => {
             </div>
             {values.quantidades_periodo[indice][`checked`] && (
               <>
-                {possuiAlunosCEIporPeriodo(
-                  getPeriodo(indice).nome,
-                  periodos
-                ) && (
-                  <>
-                    <div className="ml-5 mr-5">
-                      <div className="alunos-label mt-3">Alunos CEI</div>
-                      <div className="tipos-alimentacao mt-3 mb-3">
-                        Tipos de alimentação do período{" "}
-                        {getPeriodo(indice).nome}:{" "}
-                        <span>
-                          {tiposAlimentacaoPorPeriodoETipoUnidade(
-                            vinculos,
-                            getPeriodo(indice).nome,
-                            "CEI"
-                          )}
-                        </span>
+                {possuiAlunosCEIporPeriodo(getPeriodo(indice).nome, periodos) &&
+                  !motivoEspecifico && (
+                    <>
+                      <div className="ml-5 mr-5">
+                        <div className="alunos-label mt-3">Alunos CEI</div>
+                        <div className="tipos-alimentacao mt-3 mb-3">
+                          Tipos de alimentação do período{" "}
+                          {getPeriodo(indice).nome}:{" "}
+                          <span>
+                            {tiposAlimentacaoPorPeriodoETipoUnidade(
+                              vinculos,
+                              getPeriodo(indice).nome,
+                              "CEI"
+                            )}
+                          </span>
+                        </div>
+                        <table className="faixas-etarias-cei">
+                          <thead>
+                            <tr className="row">
+                              <th className="col-8">Faixa Etária</th>
+                              <th className="col-2 text-center">
+                                Alunos matriculados
+                              </th>
+                              <th className="col-2 text-center">Quantidade</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {values.quantidades_periodo[indice].CEI.map(
+                              (faixa, key) => {
+                                return (
+                                  <tr key={key} className="row">
+                                    <td className="col-8">{faixa.faixa}</td>
+                                    <td className="col-2 text-center">
+                                      {faixa.quantidade_alunos}
+                                    </td>
+                                    <td className="col-2 text-center">
+                                      <Field
+                                        component={InputText}
+                                        type="number"
+                                        name={`${name}.faixas.${faixa.faixa}`}
+                                        validate={
+                                          getPeriodo(indice).checked &&
+                                          composeValidators(
+                                            naoPodeSerZero,
+                                            maxValue(faixa.quantidade_alunos)
+                                          )
+                                        }
+                                      />
+                                    </td>
+                                  </tr>
+                                );
+                              }
+                            )}
+                            <tr className="row">
+                              <td className="col-8 font-weight-bold">Total</td>
+                              <td className="col-2 text-center">
+                                {totalAlunosPorPeriodoCEI(
+                                  periodos,
+                                  getPeriodo(indice).nome
+                                )}
+                              </td>
+                              <td className="col-2 text-center">
+                                {totalAlunosInputPorPeriodoCEI(
+                                  values,
+                                  getPeriodo(indice).nome
+                                )}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
-                      <table className="faixas-etarias-cei">
-                        <thead>
-                          <tr className="row">
-                            <th className="col-8">Faixa Etária</th>
-                            <th className="col-2 text-center">
-                              Alunos matriculados
-                            </th>
-                            <th className="col-2 text-center">Quantidade</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {values.quantidades_periodo[indice].CEI.map(
-                            (faixa, key) => {
-                              return (
-                                <tr key={key} className="row">
-                                  <td className="col-8">{faixa.faixa}</td>
-                                  <td className="col-2 text-center">
-                                    {faixa.quantidade_alunos}
-                                  </td>
-                                  <td className="col-2 text-center">
-                                    <Field
-                                      component={InputText}
-                                      type="number"
-                                      name={`${name}.faixas.${faixa.faixa}`}
-                                      validate={
-                                        getPeriodo(indice).checked &&
-                                        composeValidators(
-                                          naoPodeSerZero,
-                                          maxValue(faixa.quantidade_alunos)
-                                        )
-                                      }
-                                    />
-                                  </td>
-                                </tr>
-                              );
-                            }
-                          )}
-                          <tr className="row">
-                            <td className="col-8 font-weight-bold">Total</td>
-                            <td className="col-2 text-center">
-                              {totalAlunosPorPeriodoCEI(
-                                periodos,
-                                getPeriodo(indice).nome
-                              )}
-                            </td>
-                            <td className="col-2 text-center">
-                              {totalAlunosInputPorPeriodoCEI(
-                                values,
-                                getPeriodo(indice).nome
-                              )}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </>
-                )}
+                    </>
+                  )}
                 {alunosEMEIporPeriodo(getPeriodo(indice).nome, periodos) >
                   0 && (
                   <>
@@ -139,16 +143,22 @@ export const PeriodosCEIeouEMEI = ({ form, values, vinculos, periodos }) => {
                       <table className="faixas-etarias-cei">
                         <thead>
                           <tr className="row">
-                            <th className="col-8 my-auto">
-                              Alunos matriculados:{" "}
-                              <span className="font-weight-normal">
-                                {alunosEMEIporPeriodo(
-                                  getPeriodo(indice).nome,
-                                  periodos
-                                )}
-                              </span>
-                            </th>
-                            <th className="col-4 d-flex justify-content-center">
+                            {!motivoEspecifico && (
+                              <th className="col-8 my-auto">
+                                Alunos matriculados:{" "}
+                                <span className="font-weight-normal">
+                                  {alunosEMEIporPeriodo(
+                                    getPeriodo(indice).nome,
+                                    periodos
+                                  )}
+                                </span>
+                              </th>
+                            )}
+                            <th
+                              className={`${
+                                motivoEspecifico ? "col-12" : "col-4"
+                              } d-flex justify-content-center`}
+                            >
                               <span className="my-auto">Quantidade</span>
                               <Field
                                 className="ml-3"

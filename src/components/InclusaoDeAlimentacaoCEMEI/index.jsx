@@ -54,6 +54,8 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
   const [erroRascunhos, setErroRascunhos] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [motivoEspecifico, setMotivoEspecifico] = useState(false);
+  const [carregandoRascunho, setCarregandoRascunho] = useState(false);
 
   const {
     meusDados,
@@ -62,9 +64,12 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
     periodos,
-    periodosInclusaoContinua,
+    // periodosInclusaoContinua,
     vinculos,
+    periodosMotivoEspecifico,
   } = props;
+
+  // console.log('periodosMotivoEspecifico', periodosMotivoEspecifico);
 
   useEffect(() => {
     getRascunhos();
@@ -77,6 +82,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     await form.change("tipos_alimentacao_selecionados", []);
     await form.change("periodo_escolar");
     await form.change("numero_alunos", undefined);
+    setCarregandoRascunho(false);
   };
 
   const motivoSimplesSelecionado = (values) => {
@@ -176,6 +182,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   };
 
   const carregarRascunho = async (form, values, inclusao) => {
+    setCarregandoRascunho(true);
     await form.change("uuid", inclusao.uuid);
     await form.change("id_externo", inclusao.id_externo);
     const inclusao_ = deepCopy(inclusao);
@@ -184,6 +191,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     } else {
       carregarRascunhoContinuo(form, values, inclusao_);
     }
+    setCarregandoRascunho(false);
   };
 
   const buildFaixas = (values, inclusao) => {
@@ -322,13 +330,14 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
 
   const onSubmit = async (values, form) => {
     const values_ = deepCopy(values);
+    const ehMotivoEspecifico = ehMotivoInclusaoEspecifico(values);
     const tipoSolicitacao = motivoSimplesSelecionado(values)
       ? TIPO_SOLICITACAO.SOLICITACAO_NORMAL
       : TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
     const erro =
       tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-        ? validarSubmit(values_)
-        : validarSubmissaoContinua(values, meusDados);
+        ? validarSubmit(values_, meusDados, ehMotivoEspecifico)
+        : validarSubmissaoContinua(values, meusDados, ehMotivoEspecifico);
     if (erro) {
       toastError(erro);
       return;
@@ -350,6 +359,36 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
       )
     ) {
       setShowModal(true);
+    }
+  };
+
+  const ehMotivoInclusaoEspecifico = (values) => {
+    const motivos = motivoContinuoSelecionado(values)
+      ? motivosContinuos
+      : motivosSimples;
+    return (
+      values.inclusoes &&
+      values.inclusoes[0].motivo &&
+      motivos
+        .find((motivo) => motivo.uuid === values.inclusoes[0].motivo)
+        .nome.includes("Específico")
+    );
+  };
+
+  const checaMotivoInclusaoEspecifico = (values, form, value) => {
+    if (
+      (ehMotivoInclusaoEspecifico(values) && !carregandoRascunho) ||
+      (motivosSimples
+        .find((motivo) => motivo.uuid === value)
+        .nome.includes("Específico") &&
+        carregandoRascunho)
+    ) {
+      setMotivoEspecifico(true);
+      form.change("quantidades_periodo", undefined);
+      form.change("quantidades_periodo", periodosMotivoEspecifico);
+    } else {
+      form.change("quantidades_periodo", periodos);
+      setMotivoEspecifico(false);
     }
   };
 
@@ -441,7 +480,12 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                                   )
                                 ) {
                                   form.change("quantidades_periodo", undefined);
-                                  form.change("quantidades_periodo", periodos);
+                                  checaMotivoInclusaoEspecifico(
+                                    values,
+                                    form,
+                                    value
+                                  );
+                                  // form.change("quantidades_periodo", periodos);
                                   form.change("reload", !values.reload);
                                 }
                                 if (
@@ -496,6 +540,13 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                         form={form}
                         values={values}
                         periodos={periodos}
+                        // periodos={
+                        //   ehMotivoInclusaoEspecifico(values) ||
+                        //   (carregandoRascunho && motivoEspecifico)
+                        //     ? periodosMotivoEspecifico
+                        //     : periodos
+                        // }
+                        motivoEspecifico={motivoEspecifico}
                         vinculos={vinculos}
                         meusDados={meusDados}
                       />
@@ -507,7 +558,15 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                     <Recorrencia
                       values={values}
                       form={form}
-                      periodos={periodosInclusaoContinua}
+                      periodos={
+                        ehMotivoInclusaoEspecifico(values) ||
+                        (carregandoRascunho && motivoEspecifico)
+                          ? periodosMotivoEspecifico
+                          : periodos
+                      }
+                      ehMotivoInclusaoEspecifico={ehMotivoInclusaoEspecifico(
+                        values
+                      )}
                       push={push}
                       meusDados={meusDados}
                     />
@@ -515,7 +574,12 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                       <div className="mt-5">
                         <RecorrenciaTabela
                           values={values}
-                          periodos={periodosInclusaoContinua}
+                          periodos={
+                            ehMotivoInclusaoEspecifico(values) ||
+                            (carregandoRascunho && motivoEspecifico)
+                              ? periodosMotivoEspecifico
+                              : periodos
+                          }
                           form={form}
                           meusDados={meusDados}
                         />
