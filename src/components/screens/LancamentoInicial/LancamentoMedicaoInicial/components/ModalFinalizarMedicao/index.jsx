@@ -146,6 +146,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
       });
       data.append("anexos", JSON.stringify(payloadAnexos));
     }
+    data.append("finaliza_medicao", true);
     handleHideModal();
     const response = await updateSolicitacaoMedicaoInicial(
       solicitacaoMedicaoInicial.uuid,
