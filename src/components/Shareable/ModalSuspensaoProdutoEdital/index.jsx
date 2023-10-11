@@ -16,6 +16,7 @@ import {
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
 import { vinculosAtivosProdutoEditais } from "services/produto.service";
 import { meusDados } from "services/perfil.service";
+import { usuarioEhEscolaTerceirizadaQualquerPerfil } from "helpers/utilities";
 import "./style.scss";
 
 const ModalSuspensaoProdutoEdital = ({
@@ -43,7 +44,7 @@ const ModalSuspensaoProdutoEdital = ({
     const fetchDados = async () => {
       const resposta = await meusDados();
       setDados(resposta);
-      vinculosProdutoEditais();
+      !usuarioEhEscolaTerceirizadaQualquerPerfil() && vinculosProdutoEditais();
     };
 
     fetchDados();

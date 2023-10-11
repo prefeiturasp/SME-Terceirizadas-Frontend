@@ -156,9 +156,11 @@ export const KITS = "kits";
 export const LOTE = "lote";
 export const LOTES_CADASTRADOS = "lotes-cadastrados";
 export const HORARIO_COMBOS_ALIMENTACAO = "horario-combos-alimentacao";
-export const TIPO_ALIMENTACAO_UNIDADE_ESCOLAR =
-  "tipo-alimentacao-unidade-escolar";
 export const TIPOS_ALIMENTACAO = "tipos-alimentacao";
+export const PERMISSAO_LANCAMENTOS_ESPECIAIS =
+  "permissao-lancamentos-especiais";
+export const NOVA_PERMISSAO_LANCAMENTO_ESPECIAL =
+  "nova-permissao-lancamento-especial";
 export const DISPONIBILIZACAO_DE_SOLICITACOES =
   "disponibilizacao-de-solicitacoes";
 export const ENVIO_REQUISICOES_ENTREGA = "envio-requisicoes-entrega";
@@ -225,6 +227,7 @@ export const DETALHAR_ALTERACAO_CRONOGRAMA = "detalhe-alteracao-cronograma";
 export const LAYOUT_EMBALAGEM = "layout-embalagem";
 export const CADASTRO_LAYOUT_EMBALAGEM = "cadastro-layout-embalagem";
 export const DETALHAR_LAYOUT_EMBALAGEM = "detalhe-layout-embalagem";
+export const ANALISAR_LAYOUT_EMBALAGEM = "analise-layout-embalagem";
 export const PAINEL_LAYOUT_EMBALAGEM = "painel-layout-embalagem";
 export const PENDENTES_APROVACAO = "pendentes-aprovacao";
 export const APROVADOS = "aprovados";

@@ -4,7 +4,8 @@ import { toastError } from "../components/Shareable/Toast/dialogs";
 import HTTP_STATUS from "http-status-codes";
 import { getError } from "helpers/utilities";
 
-export const TOKEN_ALIAS = "TOKEN_CORESSO";
+export const TOKEN_ALIAS = "TOKEN_JWT";
+export const TOKEN_REFRESH_ALIAS = "TOKEN_REFRESH_JWT";
 
 const login = async (login, password) => {
   try {
@@ -20,6 +21,7 @@ const login = async (login, password) => {
     const isValid = isValidResponse(json);
     if (isValid) {
       localStorage.setItem(TOKEN_ALIAS, json.token);
+      localStorage.setItem(TOKEN_REFRESH_ALIAS, json.refresh);
 
       await fetch(`${CONFIG.API_URL}/usuarios/atualizar-cargo/`, {
         method: "GET",
@@ -129,6 +131,7 @@ const login = async (login, password) => {
 
 const logout = () => {
   localStorage.removeItem(TOKEN_ALIAS);
+  localStorage.removeItem(TOKEN_REFRESH_ALIAS);
   localStorage.removeItem("tipo_perfil");
   localStorage.removeItem("perfil");
   localStorage.removeItem("tipo_gestao");
@@ -148,10 +151,11 @@ const logout = () => {
 
 const getToken = () => {
   let token = localStorage.getItem(TOKEN_ALIAS);
-  if (token) {
+  let refresh = localStorage.getItem(TOKEN_REFRESH_ALIAS);
+  if (token && refresh) {
     if (isTokenExpired(token)) logout();
     if (needsToRefreshToken(token)) {
-      refreshToken(token).then((json) => {
+      refreshToken(refresh).then((json) => {
         if (isValidResponse(json))
           localStorage.setItem(TOKEN_ALIAS, json.token);
       });
@@ -174,9 +178,10 @@ const isValidResponse = (json) => {
     const decoded = decode(json.token);
     const test2 =
       decoded.user_id !== undefined &&
-      decoded.username !== undefined &&
       decoded.exp !== undefined &&
-      decoded.email !== undefined;
+      decoded.iat !== undefined &&
+      decoded.jti !== undefined &&
+      decoded.token_type === "access";
     const test1 = json.token.length >= 203 ? true : false;
     return test1 && test2;
   } catch (error) {
@@ -184,14 +189,14 @@ const isValidResponse = (json) => {
   }
 };
 
-export const refreshToken = async (token) => {
+export const refreshToken = async (refresh) => {
   try {
     const response = await fetch(`${CONFIG.API_URL}/api-token-refresh/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token }),
+      body: JSON.stringify({ refresh }),
     });
     const json = await response.json();
     return json;

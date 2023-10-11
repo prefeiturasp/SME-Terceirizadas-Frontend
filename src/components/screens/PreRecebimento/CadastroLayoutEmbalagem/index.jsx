@@ -77,10 +77,12 @@ export default () => {
       tipo_embalagem: "SECUNDARIA",
       imagens_do_tipo_de_embalagem: gerarImagens(secundaria),
     });
-    payload.tipos_de_embalagens.push({
-      tipo_embalagem: "TERCIARIA",
-      imagens_do_tipo_de_embalagem: gerarImagens(terciaria),
-    });
+    if (terciaria.length > 0) {
+      payload.tipos_de_embalagens.push({
+        tipo_embalagem: "TERCIARIA",
+        imagens_do_tipo_de_embalagem: gerarImagens(terciaria),
+      });
+    }
 
     return payload;
   };

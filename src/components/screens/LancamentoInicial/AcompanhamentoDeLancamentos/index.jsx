@@ -24,7 +24,7 @@ import { MESES, TIPO_PERFIL } from "constants/shared";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 import MeusDadosContext from "context/MeusDadosContext";
 import { getLotesSimples } from "services/lote.service";
-import { getEscolasTrecTotal } from "services/escola.service";
+import { getEscolasTercTotal } from "services/escola.service";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import {
   formatarOpcoesDRE,
@@ -166,7 +166,7 @@ export const AcompanhamentoDeLancamentos = () => {
 
       const getEscolasTrecTotalAsync = async () => {
         setCarregandoEscolas(true);
-        const response = await getEscolasTrecTotal({ dre: uuid });
+        const response = await getEscolasTercTotal({ dre: uuid });
         if (response.status === HTTP_STATUS.OK) {
           setNomesEscolas(
             response.data.map(
