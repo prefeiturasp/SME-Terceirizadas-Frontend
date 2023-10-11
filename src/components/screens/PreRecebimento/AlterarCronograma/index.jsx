@@ -127,7 +127,7 @@ export default ({ analiseSolicitacao }) => {
       values[`total_embalagens_${index}`] = etapa.total_embalagens;
       values[`etapa_${index}`] = etapa.etapa;
       values[`parte_${index}`] = etapa.parte;
-      values[`quantidade_${index}`] = etapa.quantidade;
+      values[`quantidade_${index}`] = formataMilhar(etapa.quantidade);
       values[`data_programada_${index}`] = etapa.data_programada;
     });
     setInitialValues(values);
@@ -140,7 +140,7 @@ export default ({ analiseSolicitacao }) => {
       values[`etapa_${index}`] = etapa.etapa;
       values[`parte_${index}`] = etapa.parte;
       values[`data_programada_${index}`] = etapa.data_programada;
-      values[`quantidade_${index}`] = etapa.quantidade;
+      values[`quantidade_${index}`] = formataMilhar(etapa.quantidade);
       values[`total_embalagens_${index}`] = etapa.total_embalagens;
     });
     values.quantidade_total = formataMilhar(cronograma.qtd_total_programada);

@@ -54,6 +54,8 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
   const [erroRascunhos, setErroRascunhos] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [motivoEspecifico, setMotivoEspecifico] = useState(false);
+  const [carregandoRascunho, setCarregandoRascunho] = useState(false);
 
   const {
     meusDados,
@@ -62,8 +64,9 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
     periodos,
-    periodosInclusaoContinua,
     vinculos,
+    vinculosMotivoEspecifico,
+    periodosMotivoEspecifico,
   } = props;
 
   useEffect(() => {
@@ -77,6 +80,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     await form.change("tipos_alimentacao_selecionados", []);
     await form.change("periodo_escolar");
     await form.change("numero_alunos", undefined);
+    setCarregandoRascunho(false);
   };
 
   const motivoSimplesSelecionado = (values) => {
@@ -176,6 +180,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   };
 
   const carregarRascunho = async (form, values, inclusao) => {
+    setCarregandoRascunho(true);
     await form.change("uuid", inclusao.uuid);
     await form.change("id_externo", inclusao.id_externo);
     const inclusao_ = deepCopy(inclusao);
@@ -184,6 +189,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     } else {
       carregarRascunhoContinuo(form, values, inclusao_);
     }
+    setCarregandoRascunho(false);
   };
 
   const buildFaixas = (values, inclusao) => {
@@ -209,7 +215,13 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   };
 
   const carregarRascunhoNormal = async (form, inclusao_) => {
-    const periodos_ = deepCopy(periodos);
+    const temMotivoEspecifico = inclusao_.dias_motivos_da_inclusao_cemei.some(
+      (i) => i.motivo.nome.includes("Específico")
+    );
+    let periodos_ = deepCopy(periodos);
+    if (temMotivoEspecifico) {
+      periodos_ = deepCopy(periodosMotivoEspecifico);
+    }
     inclusao_.dias_motivos_da_inclusao_cemei.forEach((i) => {
       i.motivo = i.motivo.uuid;
     });
@@ -246,8 +258,12 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
 
   const fluxoInclusaoNormal = async (values, form) => {
     if (!values.uuid) {
+      let vinculosAlimentacao = vinculos;
+      if (motivoEspecifico) {
+        vinculosAlimentacao = vinculosMotivoEspecifico;
+      }
       const response = await createInclusaoAlimentacaoCEMEI(
-        formataInclusaoCEMEI(values, vinculos)
+        formataInclusaoCEMEI(values, vinculosAlimentacao)
       );
       if (response.status === HTTP_STATUS.CREATED) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
@@ -322,13 +338,14 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
 
   const onSubmit = async (values, form) => {
     const values_ = deepCopy(values);
+    const ehMotivoEspecifico = ehMotivoInclusaoEspecifico(values);
     const tipoSolicitacao = motivoSimplesSelecionado(values)
       ? TIPO_SOLICITACAO.SOLICITACAO_NORMAL
       : TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
     const erro =
       tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-        ? validarSubmit(values_)
-        : validarSubmissaoContinua(values, meusDados);
+        ? validarSubmit(values_, meusDados, ehMotivoEspecifico)
+        : validarSubmissaoContinua(values, meusDados, ehMotivoEspecifico);
     if (erro) {
       toastError(erro);
       return;
@@ -351,6 +368,43 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     ) {
       setShowModal(true);
     }
+  };
+
+  const ehMotivoInclusaoEspecifico = (values) => {
+    const motivos = motivoContinuoSelecionado(values)
+      ? motivosContinuos
+      : motivosSimples;
+    return (
+      values.inclusoes &&
+      values.inclusoes[0].motivo &&
+      motivos
+        .find((motivo) => motivo.uuid === values.inclusoes[0].motivo)
+        .nome.includes("Específico")
+    );
+  };
+
+  const checaMotivoInclusaoEspecifico = (values, form, value) => {
+    if (
+      (ehMotivoInclusaoEspecifico(values) && !carregandoRascunho) ||
+      (motivosSimples
+        .find((motivo) => motivo.uuid === value)
+        .nome.includes("Específico") &&
+        carregandoRascunho)
+    ) {
+      setMotivoEspecifico(true);
+      form.change("quantidades_periodo", undefined);
+      form.change("quantidades_periodo", periodosMotivoEspecifico);
+    } else {
+      form.change("quantidades_periodo", periodos);
+      setMotivoEspecifico(false);
+    }
+  };
+
+  const getPeriodos = (values) => {
+    return ehMotivoInclusaoEspecifico(values) ||
+      (carregandoRascunho && motivoEspecifico)
+      ? periodosMotivoEspecifico
+      : periodos;
   };
 
   return (
@@ -441,7 +495,11 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                                   )
                                 ) {
                                   form.change("quantidades_periodo", undefined);
-                                  form.change("quantidades_periodo", periodos);
+                                  checaMotivoInclusaoEspecifico(
+                                    values,
+                                    form,
+                                    value
+                                  );
                                   form.change("reload", !values.reload);
                                 }
                                 if (
@@ -495,7 +553,8 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                       <PeriodosCEIeouEMEI
                         form={form}
                         values={values}
-                        periodos={periodos}
+                        periodos={getPeriodos(values)}
+                        motivoEspecifico={motivoEspecifico}
                         vinculos={vinculos}
                         meusDados={meusDados}
                       />
@@ -507,7 +566,10 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                     <Recorrencia
                       values={values}
                       form={form}
-                      periodos={periodosInclusaoContinua}
+                      periodos={getPeriodos(values)}
+                      ehMotivoInclusaoEspecifico={ehMotivoInclusaoEspecifico(
+                        values
+                      )}
                       push={push}
                       meusDados={meusDados}
                     />
@@ -515,7 +577,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                       <div className="mt-5">
                         <RecorrenciaTabela
                           values={values}
-                          periodos={periodosInclusaoContinua}
+                          periodos={getPeriodos(values)}
                           form={form}
                           meusDados={meusDados}
                         />

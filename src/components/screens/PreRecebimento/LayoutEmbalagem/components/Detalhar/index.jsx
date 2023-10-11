@@ -322,9 +322,9 @@ export default ({ analise }) => {
                         <BotaoAnexo urlAnexo={e.arquivo} />
                       </div>
                     ))}
-                    {retornaBotoesAprovacao(0, values)}
+                    {analise && retornaBotoesAprovacao(0, values)}
                   </div>
-                  {retornaTextoAprovacao(0, values)}
+                  {analise && retornaTextoAprovacao(0, values)}
                 </div>
 
                 <hr />
@@ -337,9 +337,9 @@ export default ({ analise }) => {
                         <BotaoAnexo urlAnexo={e.arquivo} />
                       </div>
                     ))}
-                    {retornaBotoesAprovacao(1, values)}
+                    {analise && retornaBotoesAprovacao(1, values)}
                   </div>
-                  {retornaTextoAprovacao(1, values)}
+                  {analise && retornaTextoAprovacao(1, values)}
                 </div>
 
                 {embalagemTerciaria.length > 0 && (
@@ -354,9 +354,9 @@ export default ({ analise }) => {
                             <BotaoAnexo urlAnexo={e.arquivo} />
                           </div>
                         ))}
-                        {retornaBotoesAprovacao(2, values)}
+                        {analise && retornaBotoesAprovacao(2, values)}
                       </div>
-                      {retornaTextoAprovacao(2, values)}
+                      {analise && retornaTextoAprovacao(2, values)}
                     </div>
                   </>
                 )}
