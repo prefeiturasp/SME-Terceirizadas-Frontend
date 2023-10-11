@@ -64,12 +64,10 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
     periodos,
-    // periodosInclusaoContinua,
     vinculos,
+    vinculosMotivoEspecifico,
     periodosMotivoEspecifico,
   } = props;
-
-  // console.log('periodosMotivoEspecifico', periodosMotivoEspecifico);
 
   useEffect(() => {
     getRascunhos();
@@ -217,7 +215,13 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   };
 
   const carregarRascunhoNormal = async (form, inclusao_) => {
-    const periodos_ = deepCopy(periodos);
+    const temMotivoEspecifico = inclusao_.dias_motivos_da_inclusao_cemei.some(
+      (i) => i.motivo.nome.includes("Específico")
+    );
+    let periodos_ = deepCopy(periodos);
+    if (temMotivoEspecifico) {
+      periodos_ = deepCopy(periodosMotivoEspecifico);
+    }
     inclusao_.dias_motivos_da_inclusao_cemei.forEach((i) => {
       i.motivo = i.motivo.uuid;
     });
@@ -254,8 +258,12 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
 
   const fluxoInclusaoNormal = async (values, form) => {
     if (!values.uuid) {
+      let vinculosAlimentacao = vinculos;
+      if (motivoEspecifico) {
+        vinculosAlimentacao = vinculosMotivoEspecifico;
+      }
       const response = await createInclusaoAlimentacaoCEMEI(
-        formataInclusaoCEMEI(values, vinculos)
+        formataInclusaoCEMEI(values, vinculosAlimentacao)
       );
       if (response.status === HTTP_STATUS.CREATED) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
@@ -539,13 +547,12 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                       <PeriodosCEIeouEMEI
                         form={form}
                         values={values}
-                        periodos={periodos}
-                        // periodos={
-                        //   ehMotivoInclusaoEspecifico(values) ||
-                        //   (carregandoRascunho && motivoEspecifico)
-                        //     ? periodosMotivoEspecifico
-                        //     : periodos
-                        // }
+                        periodos={
+                          ehMotivoInclusaoEspecifico(values) ||
+                          (carregandoRascunho && motivoEspecifico)
+                            ? periodosMotivoEspecifico
+                            : periodos
+                        }
                         motivoEspecifico={motivoEspecifico}
                         vinculos={vinculos}
                         meusDados={meusDados}

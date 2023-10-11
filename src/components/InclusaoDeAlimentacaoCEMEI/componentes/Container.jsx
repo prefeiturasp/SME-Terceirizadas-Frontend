@@ -28,6 +28,8 @@ export const Container = () => {
   const [periodosInclusaoContinua, setPeriodosInclusaoContinua] =
     useState(null);
   const [vinculos, setVinculos] = useState(null);
+  const [vinculosMotivoEspecifico, setVinculosMotivoEspecifico] =
+    useState(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
   const [periodosMotivoEspecifico, setPeriodosMotivoEspecifico] =
@@ -74,7 +76,7 @@ export const Container = () => {
     );
     if (response.status === HTTP_STATUS.OK) {
       setPeriodos(response.data);
-      console.log("response.data", response.data);
+      getVinculosMotivoEspcificoCEMEIAsync(escola, response.data);
     }
   };
   const getVinculosTipoAlimentacaoPorEscolaAsync = async (escola) => {
@@ -84,7 +86,10 @@ export const Container = () => {
     }
   };
 
-  const getVinculosMotivoEspcificoCEMEIAsync = async (escola) => {
+  const getVinculosMotivoEspcificoCEMEIAsync = async (
+    escola,
+    periodosNormais
+  ) => {
     const tipo_unidade_escolar_iniciais = escola.tipo_unidade_escolar_iniciais;
     const response = await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico({
       tipo_unidade_escolar_iniciais,
@@ -93,13 +98,27 @@ export const Container = () => {
       let periodosMotivoInclusaoEspecifico = [];
       response.data.forEach((vinculo) => {
         let periodo = vinculo.periodo_escolar;
-        periodo.tipos_alimentacao = vinculo.tipos_alimentacao;
+        let tipos_de_alimentacao = vinculo.tipos_alimentacao;
+        let periodoNormal = periodosNormais.find(
+          (p) => periodo.nome === p.nome
+        );
+        if (!periodoNormal) {
+          periodoNormal = periodosNormais.find((p) => p.nome === "INTEGRAL");
+          tipos_de_alimentacao = response.data.find(
+            (p) => p.periodo_escolar.nome === "INTEGRAL"
+          ).tipos_alimentacao;
+        }
+        periodo.CEI = periodoNormal.CEI;
+        periodo.EMEI = periodoNormal.EMEI;
+        periodo.tipos_alimentacao = tipos_de_alimentacao;
         periodo.maximo_alunos = null;
         periodosMotivoInclusaoEspecifico.push(periodo);
       });
-      setPeriodosMotivoEspecifico(
-        formatarPeriodos(periodosMotivoInclusaoEspecifico)
+      const periodosOrdenados = periodosMotivoInclusaoEspecifico.sort(
+        (obj1, obj2) => (obj1.posicao > obj2.posicao ? 1 : -1)
       );
+      setVinculosMotivoEspecifico(response.data);
+      setPeriodosMotivoEspecifico(formatarPeriodos(periodosOrdenados));
     }
   };
 
@@ -115,7 +134,6 @@ export const Container = () => {
       getQuantidaDeAlunosPorPeriodoEEscolaAsync(periodos, escola_uuid);
       getQuantidadeAlunosCEMEIporCEIEMEIAsync(escola, true);
       getVinculosTipoAlimentacaoPorEscolaAsync(escola);
-      getVinculosMotivoEspcificoCEMEIAsync(escola);
     } else {
       setErro(true);
     }
@@ -190,6 +208,7 @@ export const Container = () => {
           periodos={periodos}
           periodosInclusaoContinua={periodosInclusaoContinua}
           vinculos={vinculos}
+          vinculosMotivoEspecifico={vinculosMotivoEspecifico}
           proximosCincoDiasUteis={proximosCincoDiasUteis}
           proximosDoisDiasUteis={proximosDoisDiasUteis}
           periodosMotivoEspecifico={periodosMotivoEspecifico}
