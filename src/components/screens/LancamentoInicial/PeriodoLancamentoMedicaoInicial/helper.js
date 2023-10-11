@@ -266,6 +266,19 @@ export const desabilitarField = (
       valor.habilitado_correcao === true
   );
   if (
+    valorField &&
+    location.state &&
+    [
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_CORRIGIDA_PELA_UE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE",
+    ].includes(location.state.status_periodo)
+  ) {
+    return false;
+  }
+
+  if (
     location.state &&
     (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
       location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
@@ -900,12 +913,6 @@ export const ehDiaParaCorrigir = (
   valoresPeriodosLancamentos
 ) => {
   const existeAlgumCampoParaCorrigir = valoresPeriodosLancamentos
-    .filter(
-      (valor) =>
-        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
-          valor.nome_campo
-        )
-    )
     .filter((valor) => String(valor.dia) === String(dia))
     .filter((valor) => String(valor.categoria_medicao) === String(categoria))
     .filter((valor) => valor.habilitado_correcao === true)[0];

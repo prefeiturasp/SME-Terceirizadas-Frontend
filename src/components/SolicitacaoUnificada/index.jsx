@@ -80,6 +80,7 @@ const SolicitacaoUnificada = ({
   const carregarRascunho = (solicitacaoUnificada, form) => {
     form.change("data", solicitacaoUnificada.data);
     form.change("local", solicitacaoUnificada.local);
+    form.change("evento", solicitacaoUnificada.evento);
     form.change("uuid", solicitacaoUnificada.uuid);
     form.change(
       "descricao",
@@ -418,6 +419,15 @@ const SolicitacaoUnificada = ({
                             "Todas as escolas estão selecionadas",
                           selectAll: "Todas",
                         }}
+                      />
+                    </div>
+                    <div className="col-12">
+                      <Field
+                        component={InputText}
+                        label="Evento/Atividade"
+                        name="evento"
+                        required
+                        validate={required}
                       />
                     </div>
                   </div>

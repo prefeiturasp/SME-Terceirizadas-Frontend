@@ -23,6 +23,10 @@ export const options_status = [
     value: "ASSINADO_CODAE",
     label: "Assinado CODAE",
   },
+  {
+    value: "ALTERACAO_CODAE",
+    label: "Alteração CODAE",
+  },
 ];
 
 export const options_status_fornecedor = [
@@ -37,6 +41,10 @@ export const options_status_fornecedor = [
   {
     value: "ASSINADO_CODAE",
     label: "Assinado CODAE",
+  },
+  {
+    value: "ALTERACAO_CODAE",
+    label: "Alteração CODAE",
   },
 ];
 

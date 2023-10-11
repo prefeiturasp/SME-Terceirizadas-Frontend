@@ -78,25 +78,17 @@ export const formatarPayloadParaCorrecao = (
   payload
 ) => {
   let payloadParaCorrecao = [];
-  valoresPeriodosLancamentos
-    .filter(
-      (valor) =>
-        valor.habilitado_correcao &&
-        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
-          valor.nome_campo
-        )
-    )
-    .forEach((valor_lancamento) => {
-      payloadParaCorrecao.push(
-        payload.valores_medicao.filter(
-          (valor_medicao) =>
-            String(valor_lancamento.categoria_medicao) ===
-              valor_medicao.categoria_medicao &&
-            valor_lancamento.dia === valor_medicao.dia &&
-            valor_lancamento.nome_campo === valor_medicao.nome_campo
-        )[0]
-      );
-    });
+  valoresPeriodosLancamentos.forEach((valor_lancamento) => {
+    payloadParaCorrecao.push(
+      payload.valores_medicao.filter(
+        (valor_medicao) =>
+          String(valor_lancamento.categoria_medicao) ===
+            valor_medicao.categoria_medicao &&
+          valor_lancamento.dia === valor_medicao.dia &&
+          valor_lancamento.nome_campo === valor_medicao.nome_campo
+      )[0]
+    );
+  });
 
   return payloadParaCorrecao;
 };
@@ -587,12 +579,6 @@ export const ehDiaParaCorrigir = (
   valoresPeriodosLancamentos
 ) => {
   const existeAlgumCampoParaCorrigir = valoresPeriodosLancamentos
-    .filter(
-      (valor) =>
-        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
-          valor.nome_campo
-        )
-    )
     .filter((valor) => String(valor.dia) === String(dia))
     .filter((valor) => String(valor.categoria_medicao) === String(categoria))
     .filter((valor) => valor.habilitado_correcao === true)[0];

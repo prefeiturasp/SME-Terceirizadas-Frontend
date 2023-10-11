@@ -22,6 +22,7 @@ export const formatarSubmissao = (formValues, dadosUsuario) => {
     lista_kit_lanche_igual: false,
     escolas_quantidades,
     local: formValues.local,
+    evento: formValues.evento,
     solicitacao_kit_lanche: {
       data: formValues.data,
       descricao: formValues.descricao || "<p></p>",

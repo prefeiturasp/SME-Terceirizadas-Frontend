@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { getDiasUteis } from "services/diasUteis.service";
 import { getKitLanches } from "services/kitLanche";
-import { getEscolasTrecTotal } from "services/escola.service";
+import { getEscolasTercTotal } from "services/escola.service";
 import { dataParaUTC } from "helpers/utilities";
 import SolicitacaoUnificada from ".";
 import MeusDadosContext from "context/MeusDadosContext";
@@ -45,7 +45,7 @@ export const Container = () => {
   };
 
   const getEscolasTrecTotalAsync = async (dre_uuid) => {
-    const response = await getEscolasTrecTotal({ dre: dre_uuid });
+    const response = await getEscolasTercTotal({ dre: dre_uuid });
     if (response.status === HTTP_STATUS.OK) {
       setEscolas(response.data);
     } else {

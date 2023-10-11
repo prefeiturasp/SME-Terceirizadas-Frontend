@@ -4,6 +4,7 @@ import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
 import {
   LAYOUT_EMBALAGEM,
+  PAINEL_LAYOUT_EMBALAGEM,
   PRE_RECEBIMENTO,
   ANALISAR_LAYOUT_EMBALAGEM,
 } from "configs/constants";
@@ -20,12 +21,12 @@ const anteriores = [
     titulo: "Pré-Recebimento",
   },
   {
-    href: `/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`,
+    href: `/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`,
     titulo: "Layout de Embalagem",
   },
 ];
 
-const voltarPara = `/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`;
+const voltarPara = `/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`;
 
 export default () => (
   <Page botaoVoltar voltarPara={voltarPara} titulo={atual.titulo}>

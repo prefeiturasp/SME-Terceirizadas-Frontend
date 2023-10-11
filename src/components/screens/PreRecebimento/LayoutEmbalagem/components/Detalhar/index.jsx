@@ -17,6 +17,14 @@ import MeusDadosContext from "context/MeusDadosContext";
 import moment from "moment";
 import { textAreaRequired } from "helpers/fieldValidators";
 import ModalCancelarCorrecao from "./components/ModalCancelarCorrecao";
+import { PAINEL_LAYOUT_EMBALAGEM } from "../../../../../../configs/constants";
+import ModalCancelarAnalise from "./components/ModalCancelarAnalise";
+import ModalEnviarAnalise from "./components/ModalEnviarAnalise";
+import { analiseCodaeLayoutEmbalagem } from "../../../../../../services/layoutEmbalagem.service";
+import {
+  toastError,
+  toastSuccess,
+} from "../../../../../Shareable/Toast/dialogs";
 
 export default ({ analise }) => {
   const history = useHistory();
@@ -28,9 +36,14 @@ export default ({ analise }) => {
   const [embalagemTerciaria, setEmbalagemTerciaria] = useState([]);
   const [aprovacoes, setAprovacoes] = useState([]);
   const [modais, setModais] = useState([]);
+  const [modalCancelar, setModalCancelar] = useState(false);
+  const [modalEnviar, setModalEnviar] = useState(false);
 
   const voltarPagina = () =>
     history.push(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
+
+  const voltarPaginaPainel = () =>
+    history.push(`/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`);
 
   const carregarDados = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -88,12 +101,6 @@ export default ({ analise }) => {
             placeholder="Qual a sua observação para essa decisão?"
             required
             validate={textAreaRequired}
-          />
-          <Botao
-            texto="Salvar Considerações"
-            type={BUTTON_TYPE.SUBMIT}
-            style={BUTTON_STYLE.GREEN}
-            className="float-right ml-3"
           />
 
           <Botao
@@ -155,6 +162,67 @@ export default ({ analise }) => {
       </div>
     );
   };
+
+  const onSubmit = () => {
+    setModalEnviar(true);
+  };
+
+  const getAprovacao = (index) => {
+    if (aprovacoes[index] === true) {
+      return "APROVADO";
+    } else if (aprovacoes[index] === false) {
+      return "REPROVADO";
+    }
+  };
+
+  const formataPayload = (values) => {
+    let payload = {};
+
+    payload.tipos_de_embalagens = [];
+
+    payload.tipos_de_embalagens.push({
+      tipo_embalagem: "PRIMARIA",
+      status: getAprovacao(0),
+      complemento_do_status: values[`justificativa_${0}`],
+    });
+    payload.tipos_de_embalagens.push({
+      tipo_embalagem: "SECUNDARIA",
+      status: getAprovacao(1),
+      complemento_do_status: values[`justificativa_${1}`],
+    });
+    if (embalagemTerciaria.length > 0) {
+      payload.tipos_de_embalagens.push({
+        tipo_embalagem: "TERCIARIA",
+        status: getAprovacao(2),
+        complemento_do_status: values[`justificativa_${2}`],
+      });
+    }
+
+    return payload;
+  };
+
+  const enviarAnalise = async (values) => {
+    setCarregando(true);
+    let payload = formataPayload(values);
+    try {
+      let response = await analiseCodaeLayoutEmbalagem(objeto.uuid, payload);
+      if (response.status === 201 || response.status === 200) {
+        setCarregando(false);
+        toastSuccess("Sua avaliação foi enviada com sucesso!");
+        voltarPaginaPainel();
+      } else {
+        toastError("Ocorreu um erro ao analisar o Layout da Embalagem");
+        setCarregando(false);
+      }
+    } catch (error) {
+      toastError(error, "Ocorreu um erro ao analisar o Layout da Embalagem");
+    }
+  };
+
+  const validaAprovacoes =
+    aprovacoes[0] !== undefined &&
+    aprovacoes[1] !== undefined &&
+    (embalagemTerciaria.length === 0 || aprovacoes[2] !== undefined);
 
   useEffect(() => {
     setCarregando(true);
@@ -232,10 +300,20 @@ export default ({ analise }) => {
           <hr />
 
           <Form
-            onSubmit={() => {}}
+            onSubmit={onSubmit}
             initialValues={{}}
-            render={({ handleSubmit, values }) => (
+            render={({ handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
+                <ModalCancelarAnalise
+                  show={modalCancelar}
+                  handleClose={() => setModalCancelar(false)}
+                  cancelar={voltarPaginaPainel}
+                />
+                <ModalEnviarAnalise
+                  show={modalEnviar}
+                  handleClose={() => setModalEnviar(false)}
+                  enviar={() => enviarAnalise(values)}
+                />
                 <div className="subtitulo mb-3">Embalagem Primária</div>
                 <div className="row">
                   <div className="col-5">
@@ -300,7 +378,33 @@ export default ({ analise }) => {
 
                 <hr />
 
-                <BotaoVoltar onClick={voltarPagina} />
+                {analise ? (
+                  <>
+                    <Botao
+                      texto="Enviar para o Fornecedor"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      className="float-right ml-3"
+                      disabled={
+                        !validaAprovacoes || Object.keys(errors).length > 0
+                      }
+                      tooltipExterno={
+                        (!validaAprovacoes || Object.keys(errors).length > 0) &&
+                        "É necessário avaliar todas as embalagens antes de prosseguir."
+                      }
+                    />
+
+                    <Botao
+                      texto="Cancelar"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-right ml-3"
+                      onClick={() => setModalCancelar(true)}
+                    />
+                  </>
+                ) : (
+                  <BotaoVoltar onClick={voltarPagina} />
+                )}
               </form>
             )}
           />

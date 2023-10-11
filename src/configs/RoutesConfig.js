@@ -6,6 +6,8 @@ import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
 import VincularProdutosEditaisPage from "../pages/Cadastros/VincularProdutosEditaisPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
+import PermissaoLancamentosEspeciaisPage from "../pages/Cadastros/PermissaoLancamentosEspeciaisPage";
+import NovaPermissaoLancamentoEspecialPage from "../pages/Cadastros/NovaPermissaoLancamentoEspecialPage";
 import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
 import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
 import CadastroKitLanchePage from "../pages/Cadastros/CadastroKitLanchePage";
@@ -258,6 +260,8 @@ import DetalharLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharLayoutE
 import StatusSolicitacoesAlteracoesCodae from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCodae";
 import PainelLayoutEmbalagemPage from "../pages/PreRecebimento/PainelLayoutEmbalagemPage";
 import StatusLayoutPendenteAprovacao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutPendenteAprovacao";
+import StatusLayoutAprovados from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutAprovados";
+import StatusLayoutEnviadosParaCorrecao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutEnviadosParaCorrecao";
 import AnalisarLayoutEmbalagemPage from "../pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
 import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutEmbalagemPage";
 
@@ -661,7 +665,19 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/tipos-alimentacao`,
     component: CadastroTipoAlimentacaoPage,
-    exact: false,
+    exact: true,
+    tipoUsuario: usuarioEhQualquerCODAE(),
+  },
+  {
+    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais`,
+    component: PermissaoLancamentosEspeciaisPage,
+    exact: true,
+    tipoUsuario: usuarioEhQualquerCODAE(),
+  },
+  {
+    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais/nova-permissao-lancamento-especial`,
+    component: NovaPermissaoLancamentoEspecialPage,
+    exact: true,
     tipoUsuario: usuarioEhQualquerCODAE(),
   },
   {
@@ -1895,6 +1911,18 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.PENDENTES_APROVACAO}/`,
     component: StatusLayoutPendenteAprovacao,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.APROVADOS}/`,
+    component: StatusLayoutAprovados,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.ENVIADOS_PARA_CORRECAO}/`,
+    component: StatusLayoutEnviadosParaCorrecao,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
   },
