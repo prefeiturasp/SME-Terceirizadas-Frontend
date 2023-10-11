@@ -896,7 +896,23 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                               0,
                                               5
                                             )}`
-                                          ) && modoCorrecao
+                                          ) &&
+                                          modoCorrecao &&
+                                          ![
+                                            "Mês anterior",
+                                            "Mês posterior",
+                                          ].includes(
+                                            values[
+                                              `${row.name}__dia_${
+                                                column.dia
+                                              }__categoria_${
+                                                categoria.id
+                                              }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                                                0,
+                                                5
+                                              )}`
+                                            ]
+                                          )
                                             ? " input-para-correcao"
                                             : ""
                                         }`}

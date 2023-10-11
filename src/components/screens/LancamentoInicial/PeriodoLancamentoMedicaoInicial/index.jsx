@@ -74,6 +74,7 @@ import {
   desabilitarBotaoColunaObservacoes,
   desabilitarField,
   deveExistirObservacao,
+  ehDiaParaCorrigir,
   formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
@@ -1924,7 +1925,9 @@ export default () => {
     column,
     categoria,
     kitLanchesAutorizadas,
-    alteracoesAlimentacaoAutorizadas
+    alteracoesAlimentacaoAutorizadas,
+    valoresPeriodosLancamentos,
+    diasParaCorrecao
   ) => {
     if (
       (Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
@@ -1938,6 +1941,12 @@ export default () => {
     }
     return `${
       !validacaoDiaLetivo(column.dia) &&
+      !ehDiaParaCorrigir(
+        column.dia,
+        categoria.id,
+        valoresPeriodosLancamentos,
+        diasParaCorrecao
+      ) &&
       ((kitLanchesAutorizadas &&
         !kitLanchesAutorizadas.filter(
           (kitLanche) => kitLanche.dia === column.dia
@@ -2217,7 +2226,8 @@ export default () => {
                                                         formValuesAtualizados,
                                                         row,
                                                         valoresObservacoes,
-                                                        column.dia
+                                                        column.dia,
+                                                        diasParaCorrecao
                                                       )}
                                                       type={BUTTON_TYPE.BUTTON}
                                                       style={
@@ -2394,7 +2404,8 @@ export default () => {
                                                           formValuesAtualizados,
                                                           row,
                                                           valoresObservacoes,
-                                                          column.dia
+                                                          column.dia,
+                                                          diasParaCorrecao
                                                         )}
                                                         type={
                                                           BUTTON_TYPE.BUTTON
@@ -2454,7 +2465,9 @@ export default () => {
                                                           column,
                                                           categoria,
                                                           kitLanchesAutorizadas,
-                                                          alteracoesAlimentacaoAutorizadas
+                                                          alteracoesAlimentacaoAutorizadas,
+                                                          valoresPeriodosLancamentos,
+                                                          diasParaCorrecao
                                                         )}`}
                                                         component={
                                                           InputValueMedicao
