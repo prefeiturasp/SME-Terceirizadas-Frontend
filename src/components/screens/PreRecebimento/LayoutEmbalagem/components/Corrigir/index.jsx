@@ -104,9 +104,10 @@ export default () => {
       obterArquivosTipoDeEmbalagem(layoutEmbalagensSecundarias)
     );
 
-    setArquivosLayoutsTerciarios(
-      obterArquivosTipoDeEmbalagem(layoutEmbalagensTerciarias)
-    );
+    layoutEmbalagensTerciarias &&
+      setArquivosLayoutsTerciarios(
+        obterArquivosTipoDeEmbalagem(layoutEmbalagensTerciarias)
+      );
   };
 
   const obterArquivosTipoDeEmbalagem = (tipoDeEmbalagem) => {
@@ -328,7 +329,11 @@ export default () => {
       });
     }
 
-    if (layoutEmbalagensTerciarias.status === "REPROVADO") {
+    if (
+      layoutEmbalagensTerciarias &&
+      arquivosLayoutsTerciarios &&
+      layoutEmbalagensTerciarias.status === "REPROVADO"
+    ) {
       payload.tipos_de_embalagens.push({
         uuid: layoutEmbalagensTerciarias.uuid,
         tipo_embalagem: layoutEmbalagensTerciarias.tipo_embalagem,
@@ -407,11 +412,12 @@ export default () => {
                   setArquivosLayoutsSecundarios
                 )}
 
-                {renderizarSecaoTipoDeEmbalagem(
-                  layoutEmbalagensTerciarias,
-                  arquivosLayoutsTerciarios,
-                  setArquivosLayoutsTerciarios
-                )}
+                {layoutEmbalagensTerciarias &&
+                  renderizarSecaoTipoDeEmbalagem(
+                    layoutEmbalagensTerciarias,
+                    arquivosLayoutsTerciarios,
+                    setArquivosLayoutsTerciarios
+                  )}
 
                 <div className="row mb-3">
                   <div className="col-12">
