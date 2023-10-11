@@ -237,6 +237,7 @@ export default ({
                   }
                   required
                   apenasNumeros
+                  agrupadorMilhar
                   disabled={desabilitar[index]}
                 />
               </div>
