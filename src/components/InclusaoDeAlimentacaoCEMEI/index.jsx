@@ -400,6 +400,13 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     }
   };
 
+  const getPeriodos = (values) => {
+    return ehMotivoInclusaoEspecifico(values) ||
+      (carregandoRascunho && motivoEspecifico)
+      ? periodosMotivoEspecifico
+      : periodos;
+  };
+
   return (
     <div>
       <div className="mt-3">
@@ -493,7 +500,6 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                                     form,
                                     value
                                   );
-                                  // form.change("quantidades_periodo", periodos);
                                   form.change("reload", !values.reload);
                                 }
                                 if (
@@ -547,12 +553,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                       <PeriodosCEIeouEMEI
                         form={form}
                         values={values}
-                        periodos={
-                          ehMotivoInclusaoEspecifico(values) ||
-                          (carregandoRascunho && motivoEspecifico)
-                            ? periodosMotivoEspecifico
-                            : periodos
-                        }
+                        periodos={getPeriodos(values)}
                         motivoEspecifico={motivoEspecifico}
                         vinculos={vinculos}
                         meusDados={meusDados}
@@ -565,12 +566,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                     <Recorrencia
                       values={values}
                       form={form}
-                      periodos={
-                        ehMotivoInclusaoEspecifico(values) ||
-                        (carregandoRascunho && motivoEspecifico)
-                          ? periodosMotivoEspecifico
-                          : periodos
-                      }
+                      periodos={getPeriodos(values)}
                       ehMotivoInclusaoEspecifico={ehMotivoInclusaoEspecifico(
                         values
                       )}
@@ -581,12 +577,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                       <div className="mt-5">
                         <RecorrenciaTabela
                           values={values}
-                          periodos={
-                            ehMotivoInclusaoEspecifico(values) ||
-                            (carregandoRascunho && motivoEspecifico)
-                              ? periodosMotivoEspecifico
-                              : periodos
-                          }
+                          periodos={getPeriodos(values)}
                           form={form}
                           meusDados={meusDados}
                         />

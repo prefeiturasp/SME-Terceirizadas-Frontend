@@ -76,7 +76,7 @@ export const Container = () => {
     );
     if (response.status === HTTP_STATUS.OK) {
       setPeriodos(response.data);
-      getVinculosMotivoEspcificoCEMEIAsync(escola, response.data);
+      getVinculosMotivoEspecificoCEMEIAsync(escola, response.data);
     }
   };
   const getVinculosTipoAlimentacaoPorEscolaAsync = async (escola) => {
@@ -86,7 +86,7 @@ export const Container = () => {
     }
   };
 
-  const getVinculosMotivoEspcificoCEMEIAsync = async (
+  const getVinculosMotivoEspecificoCEMEIAsync = async (
     escola,
     periodosNormais
   ) => {

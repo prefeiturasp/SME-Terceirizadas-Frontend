@@ -49,7 +49,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     toastAprovaMensagemErro,
   } = props;
 
-  const getVinculosMotivoEspcificoCEMEIAsync = async (
+  const getVinculosMotivoEspecificoCEMEIAsync = async (
     escola,
     periodosNormais
   ) => {
@@ -98,7 +98,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
         const periodosEMEI = response.data.results.filter(
           (r) => r.tipo_unidade_escolar.iniciais === "EMEI"
         );
-        await getVinculosMotivoEspcificoCEMEIAsync(
+        await getVinculosMotivoEspecificoCEMEIAsync(
           inclusao.escola,
           periodosEMEI
         );
