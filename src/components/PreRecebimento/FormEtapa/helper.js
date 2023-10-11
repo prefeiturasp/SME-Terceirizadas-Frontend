@@ -6,16 +6,10 @@
 //                 setDuplicados: método set de um state indicando etapas/partes duplicadas
 
 export const onChangeEtapas = (changes, etapas, setRestante, setDuplicados) => {
-  let restante = changes.values.quantidade_total
-    ?.toString()
-    .replaceAll(".", "");
+  let restante = changes.values.quantidade_total?.toString().replace(".", "");
   etapas.forEach((e, index) => {
-    if (changes.values[`quantidade_${index}`]) {
-      let qtd = changes.values[`quantidade_${index}`]
-        .toString()
-        .replaceAll(".", "");
-      restante = restante - qtd;
-    }
+    if (changes.values[`quantidade_${index}`])
+      restante = restante - changes.values[`quantidade_${index}`];
   });
   setRestante(restante);
   if (etapas.length < 2) return;
