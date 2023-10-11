@@ -151,7 +151,9 @@ export default ({
                       <td className="borda-crono">{etapa.etapa}</td>
                       <td className="borda-crono">{etapa.parte}</td>
                       <td className="borda-crono">{etapa.data_programada}</td>
-                      <td className="borda-crono">{etapa.quantidade}</td>
+                      <td className="borda-crono">
+                        {formataMilhar(etapa.quantidade)}
+                      </td>
                       <td className="borda-crono">{etapa.total_embalagens}</td>
                     </tr>
                   );
@@ -190,7 +192,9 @@ export default ({
                       <td className="borda-crono">{etapa.data_programada}</td>
                       <td className="borda-crono">{etapa.etapa}</td>
                       <td className="borda-crono">{etapa.parte}</td>
-                      <td className="borda-crono">{etapa.quantidade}</td>
+                      <td className="borda-crono">
+                        {formataMilhar(etapa.quantidade)}
+                      </td>
                       <td className="borda-crono">
                         {cronograma.armazem && cronograma.armazem.nome_fantasia}
                       </td>

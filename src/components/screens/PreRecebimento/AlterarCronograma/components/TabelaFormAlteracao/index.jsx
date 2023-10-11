@@ -3,6 +3,7 @@ import { required } from "helpers/fieldValidators";
 import React from "react";
 import { Field } from "react-final-form";
 import "./styles.scss";
+import { formataMilhar } from "../../../../../../helpers/utilities";
 
 export default ({ solicitacao, somenteLeitura }) => {
   const pintaTabela = (campo, index) => {
@@ -71,7 +72,7 @@ export default ({ solicitacao, somenteLeitura }) => {
                       index
                     )}`}
                   >
-                    {etapa.quantidade}
+                    {formataMilhar(etapa.quantidade)}
                   </td>
                   <td
                     className={`borda-crono ${pintaTabela(

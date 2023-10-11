@@ -10,7 +10,7 @@ export const prepararPayloadCronograma = (
   let recebimentosPayload = prepararPayloadRecebimentos(values, recebimentos);
   return {
     cronograma: cronograma.uuid,
-    qtd_total_programada: values.quantidade_total.replace(".", ""),
+    qtd_total_programada: values.quantidade_total.replaceAll(".", ""),
     etapas: etapasPayload,
     programacoes_de_recebimento: recebimentosPayload,
     justificativa: values.justificativa,
@@ -44,7 +44,7 @@ export const prepararPayloadEtapas = (values, etapas) => {
           "YYYY-MM-DD"
         )
       : undefined,
-    quantidade: values[`quantidade_${index}`],
+    quantidade: values[`quantidade_${index}`].replaceAll(".", ""),
     total_embalagens: values[`total_embalagens_${index}`],
   }));
 
