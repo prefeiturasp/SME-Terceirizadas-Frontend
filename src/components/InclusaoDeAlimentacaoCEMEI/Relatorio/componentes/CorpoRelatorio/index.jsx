@@ -27,7 +27,11 @@ import {
 import "./style.scss";
 import { formataMotivosDiasComOutros } from "components/InclusaoDeAlimentacao/Relatorio/componentes/helper";
 
-export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
+export const CorpoRelatorio = ({
+  solicitacao,
+  vinculos,
+  ehMotivoEspecifico,
+}) => {
   const [imprimindo, setImprimindo] = useState(false);
 
   const justificativaNegacao =
@@ -262,27 +266,42 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                   <div className="tipos-alimentacao mt-3 mb-3">
                     Tipos de inclusão de alimentação:{" "}
                     <span>
-                      {tiposAlimentacaoPorPeriodoETipoUnidade(
-                        vinculos,
-                        periodo,
-                        "EMEI"
-                      )}
+                      {!ehMotivoEspecifico
+                        ? tiposAlimentacaoPorPeriodoETipoUnidade(
+                            vinculos,
+                            periodo,
+                            "EMEI"
+                          )
+                        : vinculos
+                            .find((v) => v.nome === periodo)
+                            .tipos_alimentacao.map((t) => t.nome)
+                            .join(", ")}
                     </span>
                   </div>
-                  <table className="faixas-etarias-cei">
+                  <table
+                    className={`${
+                      ehMotivoEspecifico ? "w-50" : ""
+                    } faixas-etarias-cei`}
+                  >
                     <thead>
                       <tr className="row">
-                        <th className="col-8 my-auto">
-                          Alunos matriculados:{" "}
-                          <span className="font-weight-normal">
-                            {
-                              solicitacao.quantidade_alunos_emei_da_inclusao_cemei.find(
-                                (q) => q.periodo_escolar.nome === periodo
-                              ).matriculados_quando_criado
-                            }
-                          </span>
-                        </th>
-                        <th className="col-4 d-flex justify-content-center">
+                        {!ehMotivoEspecifico && (
+                          <th className="col-8 my-auto">
+                            Alunos matriculados:{" "}
+                            <span className="font-weight-normal">
+                              {
+                                solicitacao.quantidade_alunos_emei_da_inclusao_cemei.find(
+                                  (q) => q.periodo_escolar.nome === periodo
+                                ).matriculados_quando_criado
+                              }
+                            </span>
+                          </th>
+                        )}
+                        <th
+                          className={`${
+                            ehMotivoEspecifico ? "col-6" : "col-4"
+                          } d-flex justify-content-center`}
+                        >
                           Quantidade:{" "}
                           {
                             solicitacao.quantidade_alunos_emei_da_inclusao_cemei.find(

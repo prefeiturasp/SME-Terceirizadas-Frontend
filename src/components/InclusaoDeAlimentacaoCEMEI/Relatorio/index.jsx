@@ -3,7 +3,10 @@ import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { getInclusaoCEMEI } from "services/inclusaoDeAlimentacao";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
-import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import {
+  getVinculosTipoAlimentacaoPorEscola,
+  getVinculosTipoAlimentacaoMotivoInclusaoEspecifico,
+} from "services/cadastroTipoAlimentacao.service";
 import { visualizaBotoesDoFluxo } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
@@ -26,6 +29,9 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [showModalMarcarConferencia, setShowModalMarcarConferencia] =
     useState(false);
   const [showModalCodaeAutorizar, setShowModalCodaeAutorizar] = useState(false);
+  const [vinculosMotivoEspecifico, setVinculosMotivoEspecifico] =
+    useState(null);
+  const [ehMotivoEspecifico, setEhMotivoEspecifico] = useState(false);
 
   const {
     endpointAprovaSolicitacao,
@@ -43,9 +49,60 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     toastAprovaMensagemErro,
   } = props;
 
-  const getVinculosTipoAlimentacaoPorEscolaAsync = async (escola) => {
-    const response = await getVinculosTipoAlimentacaoPorEscola(escola.uuid);
+  const getVinculosMotivoEspecificoCEMEIAsync = async (
+    escola,
+    periodosNormais
+  ) => {
+    const tipo_unidade_escolar_iniciais = escola.tipo_unidade.iniciais;
+    const response = await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico({
+      tipo_unidade_escolar_iniciais,
+    });
     if (response.status === HTTP_STATUS.OK) {
+      let periodosMotivoInclusaoEspecifico = [];
+      response.data.forEach((vinculo) => {
+        let periodo = vinculo.periodo_escolar;
+        let tipos_de_alimentacao = vinculo.tipos_alimentacao;
+        let periodoNormal = periodosNormais.find(
+          (p) => periodo.nome === p.periodo_escolar.nome
+        );
+        if (!periodoNormal) {
+          periodoNormal = periodosNormais.find(
+            (p) => p.periodo_escolar.nome === "INTEGRAL"
+          );
+          tipos_de_alimentacao = response.data.find(
+            (p) => p.periodo_escolar.nome === "INTEGRAL"
+          ).tipos_alimentacao;
+        }
+        periodo.tipos_alimentacao = tipos_de_alimentacao;
+        periodo.maximo_alunos = null;
+        periodosMotivoInclusaoEspecifico.push(periodo);
+      });
+      const periodosOrdenados = periodosMotivoInclusaoEspecifico.sort(
+        (obj1, obj2) => (obj1.posicao > obj2.posicao ? 1 : -1)
+      );
+      setVinculosMotivoEspecifico(periodosOrdenados);
+    }
+  };
+
+  const getVinculosTipoAlimentacaoPorEscolaAsync = async (inclusao) => {
+    const response = await getVinculosTipoAlimentacaoPorEscola(
+      inclusao.escola.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      const diasMotivos = inclusao.dias_motivos_da_inclusao_cemei;
+      const temMotivoEspecifico = diasMotivos.some((dm) =>
+        dm.motivo.nome.includes("Específico")
+      );
+      if (temMotivoEspecifico) {
+        setEhMotivoEspecifico(true);
+        const periodosEMEI = response.data.results.filter(
+          (r) => r.tipo_unidade_escolar.iniciais === "EMEI"
+        );
+        await getVinculosMotivoEspecificoCEMEIAsync(
+          inclusao.escola,
+          periodosEMEI
+        );
+      }
       setVinculos(response.data.results);
     }
   };
@@ -55,7 +112,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacao(response.data);
       if (!vinculos) {
-        getVinculosTipoAlimentacaoPorEscolaAsync(response.data.escola);
+        getVinculosTipoAlimentacaoPorEscolaAsync(response.data);
       }
     }
   };
@@ -134,7 +191,10 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                   <div className="card-body">
                     <CorpoRelatorio
                       solicitacao={solicitacao}
-                      vinculos={vinculos}
+                      vinculos={
+                        ehMotivoEspecifico ? vinculosMotivoEspecifico : vinculos
+                      }
+                      ehMotivoEspecifico={ehMotivoEspecifico}
                     />
                     {visualizaBotoesDoFluxo(solicitacao) && (
                       <div className="row">
