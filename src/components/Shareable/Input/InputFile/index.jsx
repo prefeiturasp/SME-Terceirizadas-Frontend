@@ -29,14 +29,10 @@ const InputFile = (props) => {
   };
 
   useEffect(() => {
-    if (props.arquivosPreCarregados) {
-      setFiles(props.arquivosPreCarregados);
-    }
-
     if (props.submitted) {
       setFiles([]);
     }
-  }, [props.arquivosPreCarregados, props.submitted]);
+  }, [props.submitted]);
 
   const deleteFile = (index) => {
     let newFiles = [...files];

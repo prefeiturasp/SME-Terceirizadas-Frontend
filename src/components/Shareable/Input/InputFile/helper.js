@@ -15,9 +15,9 @@ export async function readerFile(file) {
   return result_file;
 }
 
-export async function downloadAndConvertToBase64(imageUrl) {
+export async function downloadAndConvertToBase64(fileUrl) {
   try {
-    const response = await axios.get(imageUrl, {
+    const response = await axios.get(fileUrl, {
       responseType: "arraybuffer",
     });
 
