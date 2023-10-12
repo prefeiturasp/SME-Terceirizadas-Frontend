@@ -266,7 +266,6 @@ export default () => {
     const arquivosAtualizados = [...arquivos];
     arquivosAtualizados.splice(index, 1);
 
-    console.log("ARQUIVOS APOS REMOCAO", arquivosAtualizados);
     setArquivos(arquivosAtualizados);
   };
 
