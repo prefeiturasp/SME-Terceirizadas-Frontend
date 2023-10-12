@@ -25,7 +25,6 @@ import {
   toastError,
   toastSuccess,
 } from "../../../../../Shareable/Toast/dialogs";
-import { exibeError } from "../../../../../../helpers/utilities";
 import { downloadAndConvertToBase64 } from "../../../../../Shareable/Input/InputFile/helper";
 
 const TITULOS_SECOES_TIPOS_EMBALAGENS = {
@@ -40,9 +39,7 @@ export default () => {
   const history = useHistory();
   const [carregando, setCarregando] = useState(true);
   const [showModalConfirmar, setShowModalConfirmar] = useState(false);
-
   const [objeto, setObjeto] = useState({});
-
   const [layoutEmbalagensPrimarias, setLayoutEmbalagensPrimarias] = useState(
     {}
   );
@@ -51,21 +48,18 @@ export default () => {
   const [layoutEmbalagensTerciarias, setLayoutEmbalagensTerciarias] = useState(
     {}
   );
-
   const [arquivosLayoutsPrimarios, setArquivosLayoutsPrimarios] = useState();
   const [arquivosLayoutsSecundarios, setArquivosLayoutsSecundarios] =
     useState();
   const [arquivosLayoutsTerciarios, setArquivosLayoutsTerciarios] = useState();
 
   useEffect(() => {
-    setCarregando(true);
-
     carregarDados();
-
-    setCarregando(false);
   }, []);
 
   const carregarDados = async () => {
+    setCarregando(true);
+
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     const response = await detalharLayoutEmabalagem(uuid);
@@ -96,33 +90,40 @@ export default () => {
     setLayoutEmbalagensPrimarias(layoutEmbalagensPrimarias);
     setLayoutEmbalagensTerciarias(layoutEmbalagensTerciarias);
 
-    setArquivosLayoutsPrimarios(
-      obterArquivosTipoDeEmbalagem(layoutEmbalagensPrimarias)
+    obterArquivosTipoDeEmbalagem(
+      layoutEmbalagensPrimarias,
+      setArquivosLayoutsPrimarios
     );
 
-    setArquivosLayoutsSecundarios(
-      obterArquivosTipoDeEmbalagem(layoutEmbalagensSecundarias)
+    obterArquivosTipoDeEmbalagem(
+      layoutEmbalagensSecundarias,
+      setArquivosLayoutsSecundarios
     );
 
     layoutEmbalagensTerciarias &&
-      setArquivosLayoutsTerciarios(
-        obterArquivosTipoDeEmbalagem(layoutEmbalagensTerciarias)
+      obterArquivosTipoDeEmbalagem(
+        layoutEmbalagensTerciarias,
+        setArquivosLayoutsTerciarios
       );
+
+    setCarregando(false);
   };
 
-  const obterArquivosTipoDeEmbalagem = (tipoDeEmbalagem) => {
-    const arquivosTipoImagem = [];
-
-    tipoDeEmbalagem.imagens.forEach((imagem) => {
-      downloadAndConvertToBase64(imagem.arquivo).then((base64) => {
-        arquivosTipoImagem.push({
+  const obterArquivosTipoDeEmbalagem = async (
+    tipoDeEmbalagem,
+    setArquivosTipoEmbalagem
+  ) => {
+    const arquivosTipoImagem = await Promise.all(
+      tipoDeEmbalagem.imagens.map(async (imagem) => {
+        const base64 = await downloadAndConvertToBase64(imagem.arquivo);
+        return {
           nome: imagem.nome,
           base64,
-        });
-      });
-    });
+        };
+      })
+    );
 
-    return arquivosTipoImagem;
+    setArquivosTipoEmbalagem(arquivosTipoImagem);
   };
 
   const renderizarSecaoTipoDeEmbalagem = (
@@ -184,7 +185,6 @@ export default () => {
     setArquivosTipoDeLayoutEmbalagem
   ) => {
     const dadosCorrecao = tipoDeEmbalagem.complemento_do_status;
-    const nomeTipoLayout = tipoDeEmbalagem.tipo_embalagem;
 
     const setFiles = (arquivos) => {
       setFilesGeral(arquivos, setArquivosTipoDeLayoutEmbalagem);
@@ -229,7 +229,7 @@ export default () => {
             arquivosPreCarregados={arquivosTipoDeLayoutEmbalagem}
             className="inputfile"
             texto="Inserir Layout"
-            name={`files_${nomeTipoLayout.toLowerCase()}`}
+            name={"files"}
             accept={FORMATOS_IMAGEM}
             setFiles={setFiles}
             removeFile={removeFile}
@@ -281,24 +281,18 @@ export default () => {
 
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
+    const payload = formataPayload(values);
+    const response = await corrigirLayoutEmbalagem(uuid, payload);
 
-    let payload = formataPayload(values);
-
-    try {
-      let response = await corrigirLayoutEmbalagem(uuid, payload);
-
-      if (response.status === 200) {
-        setCarregando(false);
-        toastSuccess("Correção enviada com sucesso!");
-        setShowModalConfirmar(false);
-        voltarPagina();
-      } else {
-        toastError("Ocorreu um erro ao salvar o Layout da Embalagem");
-        setCarregando(false);
-      }
-    } catch (error) {
-      exibeError(error, "Ocorreu um erro ao salvar o Layout da Embalagem");
+    if (response.status === 200) {
+      toastSuccess("Correção enviada com sucesso!");
+      setShowModalConfirmar(false);
+      voltarPagina();
+    } else {
+      toastError("Ocorreu um erro ao salvar o Layout da Embalagem");
     }
+
+    setCarregando(false);
   };
 
   const formataPayload = (values) => {
