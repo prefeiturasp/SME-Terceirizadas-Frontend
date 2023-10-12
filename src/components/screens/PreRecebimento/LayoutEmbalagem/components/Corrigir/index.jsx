@@ -130,14 +130,15 @@ export default () => {
     arquivosTipoDeLayoutEmbalagem,
     setArquivosLayoutsPrimarios
   ) => {
-    return tipoDeEmbalagem.status === "APROVADO"
-      ? renderizarSecaoAprovada(tipoDeEmbalagem)
-      : arquivosTipoDeLayoutEmbalagem &&
-          renderizarSecaoReprovada(
-            tipoDeEmbalagem,
-            arquivosTipoDeLayoutEmbalagem,
-            setArquivosLayoutsPrimarios
-          );
+    if (tipoDeEmbalagem.status === "APROVADO")
+      return renderizarSecaoAprovada(tipoDeEmbalagem);
+
+    if (arquivosTipoDeLayoutEmbalagem && tipoDeEmbalagem.status === "REPROVADO")
+      return renderizarSecaoReprovada(
+        tipoDeEmbalagem,
+        arquivosTipoDeLayoutEmbalagem,
+        setArquivosLayoutsPrimarios
+      );
   };
 
   const renderizarSecaoAprovada = (tipoDeEmbalagem) => {
@@ -208,9 +209,7 @@ export default () => {
           </div>
           <div className="col data-hora-correcao">
             Correção Solicitada em:
-            <span className="ml-1">
-              {objeto.criado_em.replace(" ", " - ").slice(0, 18)}
-            </span>
+            <span className="ml-1">{objeto.log_mais_recente}</span>
           </div>
         </div>
 
@@ -353,6 +352,32 @@ export default () => {
     }));
   };
 
+  const desabilitarBotaoEnviar = () => {
+    const LAYOUT_PRIMARIO_REPROVADO_E_ARQUIVO =
+      layoutEmbalagensPrimarias &&
+      layoutEmbalagensPrimarias.status === "REPROVADO" &&
+      arquivosLayoutsPrimarios &&
+      arquivosLayoutsPrimarios.length === 0;
+
+    const LAYOUT_SECUNDARIO_REPROVADO_E_ARQUIVO =
+      layoutEmbalagensSecundarias &&
+      layoutEmbalagensSecundarias.status === "REPROVADO" &&
+      arquivosLayoutsSecundarios &&
+      arquivosLayoutsSecundarios.length === 0;
+
+    const LAYOUT_TERCIARIO_REPROVADO_E_ARQUIVO =
+      layoutEmbalagensTerciarias &&
+      layoutEmbalagensTerciarias.status === "REPROVADO" &&
+      arquivosLayoutsTerciarios &&
+      arquivosLayoutsTerciarios.length === 0;
+
+    return (
+      LAYOUT_PRIMARIO_REPROVADO_E_ARQUIVO ||
+      LAYOUT_SECUNDARIO_REPROVADO_E_ARQUIVO ||
+      LAYOUT_TERCIARIO_REPROVADO_E_ARQUIVO
+    );
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-corrigir-layout-embalagem">
@@ -435,7 +460,9 @@ export default () => {
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
                     className="float-right ml-3"
-                    disabled={Object.keys(errors).length > 0}
+                    disabled={
+                      Object.keys(errors).length > 0 || desabilitarBotaoEnviar()
+                    }
                   />
                   <Botao
                     texto="Cancelar"
