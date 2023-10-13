@@ -22,17 +22,19 @@ const anteriores = [
     titulo: "Pré-Recebimento",
   },
   {
-    href: `/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`,
+    href: usuarioComAcessoAoPainelEmbalagens()
+      ? `/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`
+      : `/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`,
     titulo: "Layout de Embalagem",
   },
 ];
 
-const voltarPara = usuarioComAcessoAoPainelEmbalagens()
-  ? `/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`
-  : `/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`;
-
 export default () => (
-  <Page botaoVoltar voltarPara={voltarPara} titulo={atual.titulo}>
+  <Page
+    botaoVoltar
+    voltarPara={anteriores[anteriores.length - 1].href}
+    titulo={atual.titulo}
+  >
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
     <Detalhar />
   </Page>
