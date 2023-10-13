@@ -17,6 +17,7 @@ import { formataMilhar } from "helpers/utilities";
 
 import moment from "moment";
 import { usuarioEhCronograma } from "../../../helpers/utilities";
+import { OnChange } from "react-final-form-listeners";
 
 export default ({
   etapas,
@@ -26,6 +27,7 @@ export default ({
   restante,
   unidadeMedida,
   ehAlteracao = false,
+  form,
 }) => {
   const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [desabilitar, setDesabilitar] = useState([]);
@@ -173,6 +175,12 @@ export default ({
                   esconderIcone
                   disabled={desabilitar[index]}
                 />
+                <OnChange name={`etapa_${index}`}>
+                  {() => {
+                    if (form)
+                      form.mutators.setFieldTouched(`parte_${index}`, true);
+                  }}
+                </OnChange>
               </div>
               <div className="col-4">
                 <Field
