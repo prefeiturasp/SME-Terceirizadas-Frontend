@@ -91,6 +91,16 @@ export const AcompanhamentoDeLancamentos = () => {
       const dashboardResults = response.data.results;
       if (!usuarioEhMedicao() || diretoriaRegional) {
         let NovoDashboardResults = [...dashboardResults];
+        if (usuarioEhMedicao()) {
+          const statusIndesejados = [
+            "MEDICAO_ENVIADA_PELA_UE",
+            "MEDICAO_CORRECAO_SOLICITADA",
+            "MEDICAO_CORRIGIDA_PELA_UE",
+          ];
+          NovoDashboardResults = NovoDashboardResults.filter(
+            (medicoes) => !statusIndesejados.includes(medicoes.status)
+          );
+        }
         if (usuarioEhEscolaTerceirizadaQualquerPerfil())
           NovoDashboardResults = NovoDashboardResults.filter(
             (medicoes) => medicoes.status !== "TODOS_OS_LANCAMENTOS"
