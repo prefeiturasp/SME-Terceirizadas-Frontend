@@ -3,11 +3,50 @@ import { NavLink } from "react-router-dom";
 import "./styles.scss";
 import {
   DETALHAR_LAYOUT_EMBALAGEM,
+  CORRIGR_LAYOUT_EMBALAGEM,
   PRE_RECEBIMENTO,
 } from "../../../../../../configs/constants";
-import { Tooltip } from "antd";
 
-export default ({ objetos }) => {
+export default ({ objetos, perfilFornecedor = false }) => {
+  const renderizarStatus = (status, perfilFornecedor) => {
+    return perfilFornecedor && status === "Solicitado Correção" ? (
+      <span className="orange">Pendente de Correção</span>
+    ) : (
+      status
+    );
+  };
+
+  const renderizarAcoes = (objeto) => {
+    const botaoDetalharVerde = (
+      <NavLink
+        className="float-left"
+        to={`/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM}?uuid=${objeto.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i title="Detalhar" className="fas fa-eye green" />
+        </span>
+      </NavLink>
+    );
+
+    const botaoCorrigirLaranja = (
+      <NavLink
+        className="float-left"
+        to={`/${PRE_RECEBIMENTO}/${CORRIGR_LAYOUT_EMBALAGEM}?uuid=${objeto.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i title="Corrigir" className="fas fa-edit orange" />
+        </span>
+      </NavLink>
+    );
+
+    return (
+      <>
+        {objeto.status === "Enviado para Análise" && botaoDetalharVerde}
+        {objeto.status === "Solicitado Correção" && botaoCorrigirLaranja}
+      </>
+    );
+  };
+
   return (
     <div className="listagem-layouts-embalagens">
       <div className="titulo-verde mt-4 mb-3">
@@ -31,20 +70,9 @@ export default ({ objetos }) => {
                 <div>{objeto.numero_cronograma}</div>
                 <div>{objeto.pregao_chamada_publica}</div>
                 <div>{objeto.nome_produto}</div>
-                <div>{objeto.status}</div>
+                <div>{renderizarStatus(objeto.status, perfilFornecedor)}</div>
                 <div>{objeto.criado_em.slice(0, 10)}</div>
-                <div>
-                  {objeto.status === "Enviado para Análise" && (
-                    <NavLink
-                      className="float-left"
-                      to={`/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM}?uuid=${objeto.uuid}`}
-                    >
-                      <Tooltip title="Detalhar">
-                        <i className="fas fa-eye green" />
-                      </Tooltip>
-                    </NavLink>
-                  )}
-                </div>
+                <div>{renderizarAcoes(objeto)}</div>
               </div>
             </>
           );

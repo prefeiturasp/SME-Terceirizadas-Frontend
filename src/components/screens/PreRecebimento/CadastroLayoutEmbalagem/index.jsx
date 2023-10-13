@@ -39,7 +39,7 @@ export default () => {
 
   const gerarImagens = (arr) =>
     arr.map((img) => ({
-      arquivo: img.arquivo,
+      arquivo: img.arquivo || img.base64,
       nome: img.nome,
     }));
 
@@ -103,8 +103,14 @@ export default () => {
   };
 
   const setFiles1 = (files) => {
-    let arquivos = files;
-    setPrimaria(arquivos);
+    const arquivosAtualizados = files.map((arquivo) => {
+      return {
+        nome: arquivo.nome,
+        base64: arquivo.base64 || arquivo.arquivo,
+      };
+    });
+
+    setPrimaria(arquivosAtualizados);
   };
 
   const removeFile2 = (index) => {
@@ -114,8 +120,14 @@ export default () => {
   };
 
   const setFiles2 = (files) => {
-    let arquivos = files;
-    setSecundaria(arquivos);
+    const arquivosAtualizados = files.map((arquivo) => {
+      return {
+        nome: arquivo.nome,
+        base64: arquivo.base64 || arquivo.arquivo,
+      };
+    });
+
+    setSecundaria(arquivosAtualizados);
   };
 
   const removeFile3 = (index) => {
@@ -125,8 +137,14 @@ export default () => {
   };
 
   const setFiles3 = (files) => {
-    let arquivos = files;
-    setTerciaria(arquivos);
+    const arquivosAtualizados = files.map((arquivo) => {
+      return {
+        nome: arquivo.nome,
+        base64: arquivo.base64 || arquivo.arquivo,
+      };
+    });
+
+    setTerciaria(arquivosAtualizados);
   };
 
   const voltarPagina = () =>
@@ -244,6 +262,7 @@ export default () => {
                       alignLeft
                       multiple={true}
                       limiteTamanho={DEZ_MB}
+                      concatenarNovosArquivos
                     />
                     <label className="col-12 label-imagem">
                       <span className="red">Campo Obrigatório:&nbsp;</span>
@@ -279,6 +298,7 @@ export default () => {
                       alignLeft
                       multiple={true}
                       limiteTamanho={DEZ_MB}
+                      concatenarNovosArquivos
                     />
                     <label className="col-12 label-imagem">
                       <span className="red">Campo Obrigatório:&nbsp;</span>
@@ -314,6 +334,7 @@ export default () => {
                       alignLeft
                       multiple={true}
                       limiteTamanho={DEZ_MB}
+                      concatenarNovosArquivos
                     />
                     <label className="col-12 label-imagem">
                       <span className="red">IMPORTANTE:&nbsp;</span>
