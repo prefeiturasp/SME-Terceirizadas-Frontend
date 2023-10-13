@@ -237,7 +237,7 @@ export default ({
             </div>
             <div className="col-3">
               <div className="row" style={{ height: "100%" }}>
-                <div className="col-9 d-flex flex-column">
+                <div className="col-8 d-flex flex-column">
                   {meusErros &&
                     meusErros.map((obj, idxErros) => {
                       return (
@@ -247,7 +247,7 @@ export default ({
                       );
                     })}
                 </div>
-                <div className="col-3 pr-0 d-flex flex-column">
+                <div className="col-4 pr-0 d-flex flex-column">
                   <Botao
                     texto={
                       [
@@ -272,7 +272,29 @@ export default ({
                         ? "Corrigir"
                         : "Editar"
                     }
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    style={
+                      [
+                        "MEDICAO_APROVADA_PELA_DRE",
+                        "MEDICAO_APROVADA_PELA_CODAE",
+                      ].includes(solicitacaoMedicaoInicial.status) ||
+                      [
+                        "MEDICAO_APROVADA_PELA_DRE",
+                        "MEDICAO_APROVADA_PELA_CODAE",
+                      ].includes(statusPeriodo())
+                        ? BUTTON_STYLE.GREEN_OUTLINE
+                        : [
+                            "MEDICAO_CORRECAO_SOLICITADA",
+                            "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+                          ].includes(solicitacaoMedicaoInicial.status) &&
+                          [
+                            "MEDICAO_CORRECAO_SOLICITADA",
+                            "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+                            "MEDICAO_CORRIGIDA_PELA_UE",
+                            "MEDICAO_CORRIGIDA_PARA_CODAE",
+                          ].includes(statusPeriodo())
+                        ? BUTTON_STYLE.GREEN
+                        : BUTTON_STYLE.GREEN_OUTLINE
+                    }
                     className="mt-auto"
                     onClick={() => handleClickEditar()}
                     disabled={desabilitarBotaoEditar()}
