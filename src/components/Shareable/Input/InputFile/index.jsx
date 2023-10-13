@@ -11,7 +11,7 @@ import { truncarString } from "../../../../helpers/utilities";
 import { DEZ_MB, VINTE_CINCO_MB } from "../../../../constants/shared";
 
 const InputFile = (props) => {
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState(props.arquivosPreCarregados || []);
   const inputRef = useRef(null);
 
   const openFile = (file) => {

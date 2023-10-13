@@ -12,6 +12,12 @@ export const detalharLayoutEmabalagem = async (uuid) =>
 export const getDashboardLayoutEmbalagem = async (params = null) =>
   await axios.get(`/layouts-de-embalagem/dashboard/`, { params });
 
+export const corrigirLayoutEmbalagem = async (uuid, payload) =>
+  await axios.patch(
+    `/layouts-de-embalagem/${uuid}/fornecedor-realiza-correcao/`,
+    payload
+  );
+
 export const analiseCodaeLayoutEmbalagem = async (uuid, payload) =>
   await axios.patch(
     `/layouts-de-embalagem/${uuid}/codae-aprova-ou-solicita-correcao/`,
