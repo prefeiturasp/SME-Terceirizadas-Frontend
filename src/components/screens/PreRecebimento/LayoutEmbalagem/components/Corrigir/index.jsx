@@ -347,28 +347,28 @@ export default () => {
   };
 
   const desabilitarBotaoEnviar = () => {
-    const LAYOUT_PRIMARIO_REPROVADO_E_ARQUIVO =
+    const LAYOUT_PRIMARIO_REPROVADO_E_SEM_ARQUIVO =
       layoutEmbalagensPrimarias &&
       layoutEmbalagensPrimarias.status === "REPROVADO" &&
       arquivosLayoutsPrimarios &&
       arquivosLayoutsPrimarios.length === 0;
 
-    const LAYOUT_SECUNDARIO_REPROVADO_E_ARQUIVO =
+    const LAYOUT_SECUNDARIO_REPROVADO_E_SEM_ARQUIVO =
       layoutEmbalagensSecundarias &&
       layoutEmbalagensSecundarias.status === "REPROVADO" &&
       arquivosLayoutsSecundarios &&
       arquivosLayoutsSecundarios.length === 0;
 
-    const LAYOUT_TERCIARIO_REPROVADO_E_ARQUIVO =
+    const LAYOUT_TERCIARIO_REPROVADO_E_SEM_ARQUIVO =
       layoutEmbalagensTerciarias &&
       layoutEmbalagensTerciarias.status === "REPROVADO" &&
       arquivosLayoutsTerciarios &&
       arquivosLayoutsTerciarios.length === 0;
 
     return (
-      LAYOUT_PRIMARIO_REPROVADO_E_ARQUIVO ||
-      LAYOUT_SECUNDARIO_REPROVADO_E_ARQUIVO ||
-      LAYOUT_TERCIARIO_REPROVADO_E_ARQUIVO
+      LAYOUT_PRIMARIO_REPROVADO_E_SEM_ARQUIVO ||
+      LAYOUT_SECUNDARIO_REPROVADO_E_SEM_ARQUIVO ||
+      LAYOUT_TERCIARIO_REPROVADO_E_SEM_ARQUIVO
     );
   };
 
