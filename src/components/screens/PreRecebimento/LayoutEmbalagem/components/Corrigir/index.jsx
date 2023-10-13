@@ -237,6 +237,7 @@ export default () => {
             alignLeft
             multiple={true}
             limiteTamanho={DEZ_MB}
+            concatenarNovosArquivos
           />
           <label className="col-12 label-imagem">
             <span className="red">Campo Obrigatório:&nbsp;</span>
@@ -255,7 +256,7 @@ export default () => {
     const arquivosAtualizados = arquivos.map((arquivo) => {
       return {
         nome: arquivo.nome,
-        base64: arquivo.arquivo,
+        base64: arquivo.base64 || arquivo.arquivo,
       };
     });
 
