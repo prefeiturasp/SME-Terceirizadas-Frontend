@@ -10,6 +10,7 @@ import {
 import {
   ANALISAR_LAYOUT_EMBALAGEM,
   DETALHAR_LAYOUT_EMBALAGEM,
+  DETALHAR_LAYOUT_EMBALAGEM_SOLICITACAO_ALTERACAO,
   PRE_RECEBIMENTO,
 } from "configs/constants";
 import { Field, Form } from "react-final-form";
@@ -47,6 +48,8 @@ export default () => {
   const gerarLinkLayout = (item) => {
     return item.status === "Aprovado"
       ? `/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`
+      : item.status === "Solicitado Correção"
+      ? `/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM_SOLICITACAO_ALTERACAO}?uuid=${item.uuid}`
       : `/${PRE_RECEBIMENTO}/${ANALISAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`;
   };
 
