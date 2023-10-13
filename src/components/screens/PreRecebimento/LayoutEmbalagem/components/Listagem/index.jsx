@@ -6,7 +6,6 @@ import {
   CORRIGR_LAYOUT_EMBALAGEM,
   PRE_RECEBIMENTO,
 } from "../../../../../../configs/constants";
-import { Tooltip } from "antd";
 
 export default ({ objetos, perfilFornecedor = false }) => {
   const renderizarStatus = (status, perfilFornecedor) => {
@@ -23,9 +22,9 @@ export default ({ objetos, perfilFornecedor = false }) => {
         className="float-left"
         to={`/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM}?uuid=${objeto.uuid}`}
       >
-        <Tooltip title="Detalhar">
-          <i className="fas fa-eye green" />
-        </Tooltip>
+        <span className="link-acoes px-2">
+          <i title="Detalhar" className="fas fa-eye green" />
+        </span>
       </NavLink>
     );
 
@@ -34,9 +33,9 @@ export default ({ objetos, perfilFornecedor = false }) => {
         className="float-left"
         to={`/${PRE_RECEBIMENTO}/${CORRIGR_LAYOUT_EMBALAGEM}?uuid=${objeto.uuid}`}
       >
-        <Tooltip title="Corrigir">
-          <i className="fas fa-edit orange" />
-        </Tooltip>
+        <span className="link-acoes px-2">
+          <i title="Corrigir" className="fas fa-edit orange" />
+        </span>
       </NavLink>
     );
 
