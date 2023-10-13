@@ -58,7 +58,6 @@ export default () => {
         setCarregando(false);
       }
     } catch (error) {
-      console.error("ERRO NO SALVAMENTO DO LAYOUT", error);
       exibeError(error, "Ocorreu um erro ao salvar o Layout da Embalagem");
     }
   };
