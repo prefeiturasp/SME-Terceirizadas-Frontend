@@ -44,6 +44,7 @@ import TabelaFormAlteracao from "./components/TabelaFormAlteracao";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
 import { fornecedorCienteAlteracaoCodae } from "../../../../services/cronograma.service";
 import { SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR } from "../../../../configs/constants";
+import { setFieldTouched } from "../../../../configs/mutators";
 
 export default ({ analiseSolicitacao }) => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -351,6 +352,7 @@ export default ({ analiseSolicitacao }) => {
               <Form
                 onSubmit={defineSubmit}
                 initialValues={initialValues}
+                mutators={{ setFieldTouched }}
                 validate={() => {}}
                 render={({ form, handleSubmit, values, errors }) => (
                   <form onSubmit={handleSubmit}>
@@ -402,6 +404,7 @@ export default ({ analiseSolicitacao }) => {
                           </div>
                         )}
                         <FormEtapa
+                          form={form}
                           etapas={etapas}
                           setEtapas={setEtapas}
                           values={values}
