@@ -1900,7 +1900,8 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_LAYOUT_EMBALAGEM}`,
     component: DetalharLayoutEmbalagemPage,
     exact: true,
-    tipoUsuario: usuarioEhEmpresaFornecedor(),
+    tipoUsuario:
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelEmbalagens(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}`,
