@@ -286,7 +286,7 @@ export default () => {
     const response = await corrigirLayoutEmbalagem(uuid, payload);
 
     if (response.status === 200) {
-      toastSuccess("Correção enviada com sucesso!");
+      toastSuccess("Correção Enviada com sucesso!");
       setShowModalConfirmar(false);
       voltarPagina();
     } else {
@@ -410,6 +410,7 @@ export default () => {
 
           <Form
             onSubmit={onSubmit}
+            initialValues={{ observacoes: objeto.observacoes }}
             render={({ handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
                 <ModalConfirmar
