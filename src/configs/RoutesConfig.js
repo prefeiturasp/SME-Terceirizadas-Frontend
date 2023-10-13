@@ -257,6 +257,7 @@ import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroSuspen
 import LayoutEmbalagemPage from "../pages/PreRecebimento/LayoutEmbalagemPage";
 import CadastroLayoutEmbalagemPage from "../pages/PreRecebimento/CadastroLayoutEmbalagemPage";
 import DetalharLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharLayoutEmbalagemPage";
+import DetalharSolicitacaoAlteracaoLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharSolicitacaoAlteracaoLayoutEmbalagemPage";
 import StatusSolicitacoesAlteracoesCodae from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCodae";
 import PainelLayoutEmbalagemPage from "../pages/PreRecebimento/PainelLayoutEmbalagemPage";
 import StatusLayoutPendenteAprovacao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutPendenteAprovacao";
@@ -1902,6 +1903,13 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_LAYOUT_EMBALAGEM_SOLICITACAO_ALTERACAO}`,
+    component: DetalharSolicitacaoAlteracaoLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario:
+      usuarioComAcessoAoPainelEmbalagens(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}`,
