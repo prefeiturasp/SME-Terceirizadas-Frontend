@@ -257,7 +257,8 @@ export const desabilitarField = (
   inclusoesAutorizadas,
   categoriasDeMedicao,
   kitLanchesAutorizadas,
-  alteracoesAlimentacaoAutorizadas
+  alteracoesAlimentacaoAutorizadas,
+  diasParaCorrecao
 ) => {
   const valorField = valoresPeriodosLancamentos.some(
     (valor) =>
@@ -266,7 +267,17 @@ export const desabilitarField = (
       valor.habilitado_correcao === true
   );
   if (
-    valorField &&
+    (valorField ||
+      (diasParaCorrecao &&
+        diasParaCorrecao.find(
+          (diaParaCorrecao) =>
+            String(diaParaCorrecao.dia) === String(dia) &&
+            String(diaParaCorrecao.categoria_medicao) === String(categoria) &&
+            diaParaCorrecao.habilitado_correcao === true
+        ))) &&
+    !["Mês anterior", "Mês posterior"].includes(
+      values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+    ) &&
     location.state &&
     [
       "MEDICAO_CORRECAO_SOLICITADA",
@@ -910,14 +921,24 @@ export const defaultValue = (
 export const ehDiaParaCorrigir = (
   dia,
   categoria,
-  valoresPeriodosLancamentos
+  valoresPeriodosLancamentos,
+  diasParaCorrecao
 ) => {
   const existeAlgumCampoParaCorrigir = valoresPeriodosLancamentos
     .filter((valor) => String(valor.dia) === String(dia))
     .filter((valor) => String(valor.categoria_medicao) === String(categoria))
     .filter((valor) => valor.habilitado_correcao === true)[0];
 
-  return existeAlgumCampoParaCorrigir;
+  return (
+    existeAlgumCampoParaCorrigir ||
+    (diasParaCorrecao &&
+      diasParaCorrecao.find(
+        (diaParaCorrecao) =>
+          String(diaParaCorrecao.dia) === String(dia) &&
+          String(diaParaCorrecao.categoria_medicao) === String(categoria) &&
+          diaParaCorrecao.habilitado_correcao === true
+      ))
+  );
 };
 
 export const textoBotaoObservacao = (
@@ -950,7 +971,8 @@ export const desabilitarBotaoColunaObservacoes = (
   formValuesAtualizados,
   row,
   valoresObservacoes,
-  dia
+  dia,
+  diasParaCorrecao
 ) => {
   const botaoEhAdicionar =
     textoBotaoObservacao(
@@ -983,7 +1005,8 @@ export const desabilitarBotaoColunaObservacoes = (
       !ehDiaParaCorrigir(
         column.dia,
         categoria.id,
-        valoresPeriodosLancamentos
+        valoresPeriodosLancamentos,
+        diasParaCorrecao
       )) ||
       (["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_APROVADA_PELA_CODAE"].includes(
         location.state.status_periodo
@@ -998,7 +1021,8 @@ export const desabilitarBotaoColunaObservacoes = (
         !ehDiaParaCorrigir(
           column.dia,
           categoria.id,
-          valoresPeriodosLancamentos
+          valoresPeriodosLancamentos,
+          diasParaCorrecao
         )))
   );
 };

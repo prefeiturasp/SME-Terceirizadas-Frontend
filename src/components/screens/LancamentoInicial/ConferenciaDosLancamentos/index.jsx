@@ -218,7 +218,6 @@ export const ConferenciaDosLancamentos = () => {
       setErroAPI("Erro ao carregar Medição Inicial.");
     }
     dados_iniciais && setDadosIniciais(dados_iniciais);
-    setLoading(false);
   };
 
   const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
@@ -240,9 +239,11 @@ export const ConferenciaDosLancamentos = () => {
   };
 
   useEffect(() => {
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+      getVinculosTipoAlimentacaoPorEscolaAsync(),
+    ]).then(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -377,9 +378,11 @@ export const ConferenciaDosLancamentos = () => {
         `Erro ao aprovar Período ${nomePeridoFormatado}. Tente novamente mais tarde.`
       );
     }
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+      getVinculosTipoAlimentacaoPorEscolaAsync(),
+    ]).then(() => setLoading(false));
   };
 
   const aprovarSolicitacaoMedicao = async () => {
@@ -402,9 +405,11 @@ export const ConferenciaDosLancamentos = () => {
         setErroAPI(msgErro);
       }
     }
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+      getVinculosTipoAlimentacaoPorEscolaAsync(),
+    ]).then(() => setLoading(false));
   };
 
   const solicitarCorrecaoMedicao = async () => {
@@ -422,9 +427,11 @@ export const ConferenciaDosLancamentos = () => {
     } else {
       setErroAPI(msgErro);
     }
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+      getVinculosTipoAlimentacaoPorEscolaAsync(),
+    ]).then(() => setLoading(false));
   };
 
   const handleClickDownload = async () => {
@@ -745,7 +752,10 @@ export const ConferenciaDosLancamentos = () => {
           showModal={showModalSalvarOcorrencia}
           setShowModal={(value) => setShowModalSalvarOcorrencia(value)}
           ocorrencia={ocorrencia}
-          atualizarDados={() => getSolMedInicialAsync()}
+          atualizarDados={async () => {
+            await getSolMedInicialAsync();
+            setLoading(false);
+          }}
           titulo={"Solicitar correção no formulário de ocorrências"}
           descricao={
             "Informe quais os pontos necessários de correção no Formulário de Ocorrências"
@@ -758,7 +768,10 @@ export const ConferenciaDosLancamentos = () => {
           showModal={showModalAprovarOcorrencia}
           setShowModal={(value) => setShowModalAprovarOcorrencia(value)}
           ocorrencia={ocorrencia}
-          atualizarDados={() => getSolMedInicialAsync()}
+          atualizarDados={async () => {
+            await getSolMedInicialAsync();
+            setLoading(false);
+          }}
           titulo={"Aprovar Formulário de Ocorrências"}
           descricao={"Deseja aprovar o Formulário de Ocorrências?"}
           temJustificativa={false}
