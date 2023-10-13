@@ -5,6 +5,7 @@ import { PAINEL_LAYOUT_EMBALAGEM, PRE_RECEBIMENTO } from "configs/constants";
 import { getDashboardLayoutEmbalagem } from "services/layoutEmbalagem.service";
 import { SolicitacoesLayoutStatusGenerico } from "components/screens/SolicitacoesLayoutStatusGenerico";
 import { CARD_ENVIADOS_PARA_CORRECAO } from "../../../components/screens/PreRecebimento/PainelLayoutEmbalagem/constants";
+import { DETALHAR_LAYOUT_EMBALAGEM_SOLICITACAO_ALTERACAO } from "../../../configs/constants";
 
 const atual = {
   href: CARD_ENVIADOS_PARA_CORRECAO.href,
@@ -45,6 +46,7 @@ export default () => {
         getSolicitacoes={getDashboardLayoutEmbalagem}
         params={paramsDefault}
         limit={limit}
+        urlBaseItem={`/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM_SOLICITACAO_ALTERACAO}`}
       />
     </Page>
   );

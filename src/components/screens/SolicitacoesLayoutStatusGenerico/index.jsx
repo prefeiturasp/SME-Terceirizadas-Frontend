@@ -9,14 +9,18 @@ import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
-import {
-  ANALISAR_LAYOUT_EMBALAGEM,
-  PRE_RECEBIMENTO,
-} from "../../../configs/constants";
 import { gerarParametrosConsulta } from "../../../helpers/utilities";
 
 export const SolicitacoesLayoutStatusGenerico = ({ ...props }) => {
-  const { getSolicitacoes, params, limit, titulo, icone, cardType } = props;
+  const {
+    getSolicitacoes,
+    params,
+    limit,
+    titulo,
+    icone,
+    cardType,
+    urlBaseItem,
+  } = props;
   const [solicitacoes, setSolicitacoes] = useState(null);
   const [erro, setErro] = useState("");
   const [filtrado, setFiltrado] = useState(false);
@@ -31,7 +35,7 @@ export const SolicitacoesLayoutStatusGenerico = ({ ...props }) => {
     return itens.map((item) => ({
       texto: `${item.numero_cronograma} - ${item.nome_produto} - ${item.nome_empresa}`,
       data: item.log_mais_recente.slice(0, 10),
-      link: `/${PRE_RECEBIMENTO}/${ANALISAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`,
+      link: `${urlBaseItem}?uuid=${item.uuid}`,
     }));
   };
 
