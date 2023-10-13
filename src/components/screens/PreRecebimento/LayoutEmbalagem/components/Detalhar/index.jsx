@@ -25,10 +25,13 @@ import {
   toastError,
   toastSuccess,
 } from "../../../../../Shareable/Toast/dialogs";
+import { usuarioComAcessoAoPainelEmbalagens } from "../../../../../../helpers/utilities";
 
 export default ({ analise }) => {
   const history = useHistory();
+
   const { meusDados } = useContext(MeusDadosContext);
+
   const [carregando, setCarregando] = useState(true);
   const [objeto, setObjeto] = useState({});
   const [embalagemPrimaria, setEmbalagemPrimaria] = useState([]);
@@ -39,7 +42,9 @@ export default ({ analise }) => {
   const [modalCancelar, setModalCancelar] = useState(false);
   const [modalEnviar, setModalEnviar] = useState(false);
 
-  const voltarPagina = () =>
+  const [visaoCODAE, setVisaoCODAE] = useState(null);
+
+  const voltarPaginaGrid = () =>
     history.push(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
 
   const voltarPaginaPainel = () =>
@@ -51,6 +56,7 @@ export default ({ analise }) => {
     const response = await detalharLayoutEmabalagem(uuid);
 
     setObjeto(response.data);
+    setVisaoCODAE(usuarioComAcessoAoPainelEmbalagens());
     setEmbalagemPrimaria(obterImagensEmbalagem(response, "PRIMARIA"));
     setEmbalagemSecundaria(obterImagensEmbalagem(response, "SECUNDARIA"));
     setEmbalagemTerciaria(obterImagensEmbalagem(response, "TERCIARIA"));
@@ -232,6 +238,37 @@ export default ({ analise }) => {
     setCarregando(false);
   }, []);
 
+  useEffect(() => {
+    definirAprovacoes();
+    definirInitialValues();
+  }, [visaoCODAE, objeto, aprovacoes]);
+
+  const definirAprovacoes = () => {
+    if (objeto && ["Aprovado"].includes(objeto.status)) {
+      const aprovacoesAtualizadas = objeto.tipos_de_embalagens.map(
+        (tipoEmbalagem) => (tipoEmbalagem.status === "APROVADO" ? true : false)
+      );
+      setAprovacoes(aprovacoesAtualizadas);
+    }
+  };
+
+  const definirInitialValues = () => {
+    return aprovacoes.length > 0
+      ? {
+          justificativa_0: objeto.tipos_de_embalagens[0].complemento_do_status,
+          justificativa_1: objeto.tipos_de_embalagens[1].complemento_do_status,
+          justificativa_2:
+            objeto.tipos_de_embalagens.length === 3
+              ? objeto.tipos_de_embalagens[2].complemento_do_status
+              : "",
+        }
+      : {
+          justificativa_0: "",
+          justificativa_1: "",
+          justificativa_2: "",
+        };
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-detalhar-layout-embalagem">
@@ -248,7 +285,15 @@ export default ({ analise }) => {
             </div>
             <div className="col-4">
               <label className="label-dados-produto">
-                {analise ? "Data do Cadastro" : "Nome do Produto"}
+                {visaoCODAE !== null ? (
+                  visaoCODAE ? (
+                    "Data do Cadastro"
+                  ) : (
+                    "Nome do Produto"
+                  )
+                ) : (
+                  <></>
+                )}
               </label>
             </div>
           </div>
@@ -265,9 +310,15 @@ export default ({ analise }) => {
             </div>
             <div className="col-4">
               <span className="valor-dados-produto">
-                {analise && objeto.criado_em
-                  ? objeto.criado_em.split(" ")[0]
-                  : objeto.nome_produto}
+                {visaoCODAE !== null ? (
+                  visaoCODAE && objeto.criado_em ? (
+                    objeto.criado_em.split(" ")[0]
+                  ) : (
+                    objeto.nome_produto
+                  )
+                ) : (
+                  <></>
+                )}
               </span>
             </div>
           </div>
@@ -301,7 +352,7 @@ export default ({ analise }) => {
 
           <Form
             onSubmit={onSubmit}
-            initialValues={{}}
+            initialValues={definirInitialValues()}
             render={({ handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
                 <ModalCancelarAnalise
@@ -324,7 +375,7 @@ export default ({ analise }) => {
                     ))}
                     {analise && retornaBotoesAprovacao(0, values)}
                   </div>
-                  {analise && retornaTextoAprovacao(0, values)}
+                  {(analise || visaoCODAE) && retornaTextoAprovacao(0, values)}
                 </div>
 
                 <hr />
@@ -339,7 +390,7 @@ export default ({ analise }) => {
                     ))}
                     {analise && retornaBotoesAprovacao(1, values)}
                   </div>
-                  {analise && retornaTextoAprovacao(1, values)}
+                  {(analise || visaoCODAE) && retornaTextoAprovacao(1, values)}
                 </div>
 
                 {embalagemTerciaria.length > 0 && (
@@ -356,7 +407,8 @@ export default ({ analise }) => {
                         ))}
                         {analise && retornaBotoesAprovacao(2, values)}
                       </div>
-                      {analise && retornaTextoAprovacao(2, values)}
+                      {(analise || visaoCODAE) &&
+                        retornaTextoAprovacao(2, values)}
                     </div>
                   </>
                 )}
@@ -403,7 +455,9 @@ export default ({ analise }) => {
                     />
                   </>
                 ) : (
-                  <BotaoVoltar onClick={voltarPagina} />
+                  <BotaoVoltar
+                    onClick={visaoCODAE ? voltarPaginaPainel : voltarPaginaGrid}
+                  />
                 )}
               </form>
             )}
