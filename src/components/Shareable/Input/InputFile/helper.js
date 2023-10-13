@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios from "../../../../services/_base";
+
 
 export async function readerFile(file) {
   let result_file = await new Promise((resolve) => {

@@ -227,6 +227,7 @@ export const DETALHAR_ALTERACAO_CRONOGRAMA = "detalhe-alteracao-cronograma";
 export const LAYOUT_EMBALAGEM = "layout-embalagem";
 export const CADASTRO_LAYOUT_EMBALAGEM = "cadastro-layout-embalagem";
 export const DETALHAR_LAYOUT_EMBALAGEM = "detalhe-layout-embalagem";
+export const DETALHAR_LAYOUT_EMBALAGEM_SOLICITACAO_ALTERACAO = "detalhe-layout-embalagem-solicitacao-alteracao";
 export const ANALISAR_LAYOUT_EMBALAGEM = "analise-layout-embalagem";
 export const CORRIGR_LAYOUT_EMBALAGEM = "corrigir-layout-embalagem";
 export const PAINEL_LAYOUT_EMBALAGEM = "painel-layout-embalagem";
