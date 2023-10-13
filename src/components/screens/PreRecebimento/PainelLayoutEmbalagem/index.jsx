@@ -7,7 +7,11 @@ import {
   comparaObjetosMoment,
   truncarString,
 } from "helpers/utilities";
-import { ANALISAR_LAYOUT_EMBALAGEM, PRE_RECEBIMENTO } from "configs/constants";
+import {
+  ANALISAR_LAYOUT_EMBALAGEM,
+  DETALHAR_LAYOUT_EMBALAGEM,
+  PRE_RECEBIMENTO,
+} from "configs/constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
@@ -41,7 +45,9 @@ export default () => {
   };
 
   const gerarLinkLayout = (item) => {
-    return `/${PRE_RECEBIMENTO}/${ANALISAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`;
+    return item.status === "Aprovado"
+      ? `/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`
+      : `/${PRE_RECEBIMENTO}/${ANALISAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`;
   };
 
   const formatarCardsLayout = (items) => {
