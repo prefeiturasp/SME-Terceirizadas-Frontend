@@ -115,7 +115,7 @@ export default () => {
   ) => {
     const arquivosTipoImagem = await Promise.all(
       tipoDeEmbalagem.imagens.map(async (imagem) => {
-        const base64 = await downloadAndConvertToBase64(imagem.arquivo);
+        const base64 = await downloadAndConvertToBase64(imagem.arquivo.replace("http", "https"));
         return {
           nome: imagem.nome,
           base64,
