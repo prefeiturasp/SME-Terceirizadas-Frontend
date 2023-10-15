@@ -1908,8 +1908,7 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_LAYOUT_EMBALAGEM_SOLICITACAO_ALTERACAO}`,
     component: DetalharSolicitacaoAlteracaoLayoutEmbalagemPage,
     exact: true,
-    tipoUsuario:
-      usuarioComAcessoAoPainelEmbalagens(),
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}`,
