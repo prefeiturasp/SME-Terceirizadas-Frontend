@@ -55,7 +55,20 @@ export default ({ analise }) => {
     const uuid = urlParams.get("uuid");
     const response = await detalharLayoutEmabalagem(uuid);
 
-    setObjeto(response.data);
+    const objeto = response.data;
+    objeto.tipos_de_embalagens = objeto.tipos_de_embalagens.sort((a, b) => {
+      const embalagemA = a.tipo_embalagem.toUpperCase();
+      const embalagemB = b.tipo_embalagem.toUpperCase();
+      if (embalagemA < embalagemB) {
+        return -1;
+      }
+      if (embalagemA > embalagemB) {
+        return 1;
+      }
+      return 0;
+    });
+
+    setObjeto(objeto);
     setVisaoCODAE(usuarioComAcessoAoPainelEmbalagens());
     setEmbalagemPrimaria(obterImagensEmbalagem(response, "PRIMARIA"));
     setEmbalagemSecundaria(obterImagensEmbalagem(response, "SECUNDARIA"));
@@ -248,21 +261,9 @@ export default ({ analise }) => {
 
   const definirAprovacoes = () => {
     if (objeto && ["Aprovado", "Solicitado Correção"].includes(objeto.status)) {
-      const aprovacoesAtualizadas = objeto.tipos_de_embalagens
-        .sort((a, b) => {
-          const embalagemA = a.tipo_embalagem.toUpperCase();
-          const embalagemB = b.tipo_embalagem.toUpperCase();
-          if (embalagemA < embalagemB) {
-            return -1;
-          }
-          if (embalagemA > embalagemB) {
-            return 1;
-          }
-          return 0;
-        })
-        .map((tipoEmbalagem) =>
-          tipoEmbalagem.status === "APROVADO" ? true : false
-        );
+      const aprovacoesAtualizadas = objeto.tipos_de_embalagens.map(
+        (tipoEmbalagem) => (tipoEmbalagem.status === "APROVADO" ? true : false)
+      );
       setAprovacoes(aprovacoesAtualizadas);
     }
   };
@@ -338,7 +339,7 @@ export default ({ analise }) => {
             </div>
           </div>
 
-          {analise && (
+          {(analise || visaoCODAE) && (
             <>
               <hr />
               <p>Empresa:</p>
@@ -455,7 +456,7 @@ export default ({ analise }) => {
                   </>
                 )}
 
-                {!analise && objeto.observacoes && (
+                {!visaoCODAE && objeto.observacoes && (
                   <>
                     <hr />
                     <div className="row mb-3">
