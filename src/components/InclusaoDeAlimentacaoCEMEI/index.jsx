@@ -119,6 +119,20 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     );
   };
 
+  const motivoEspecificoSelecionado = (values, index) => {
+    return (
+      values &&
+      values.inclusoes &&
+      values.inclusoes[index].motivo &&
+      motivosSimples.find(
+        (motivo) => motivo.uuid === values.inclusoes[index].motivo
+      ) &&
+      motivosSimples.find(
+        (motivo) => motivo.uuid === values.inclusoes[index].motivo
+      ).nome === "Evento Específico"
+    );
+  };
+
   const getRascunhos = async () => {
     const responseRascunhosNormais = await getInclusaoCEMEIRascunhos();
     const responseRascunhosContinuas =
@@ -541,7 +555,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                             <OutroMotivo name={name} />
                           </div>
                         )}
-                        {motivoEspecifico && (
+                        {motivoEspecificoSelecionado(values, index) && (
                           <div className="mb-3">
                             <Field
                               component={TextArea}
