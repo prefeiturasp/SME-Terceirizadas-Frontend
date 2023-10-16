@@ -9,7 +9,10 @@ import {
 } from "services/medicaoInicial/dashboard.service";
 import { CardMedicaoPorStatus } from "./components/CardMedicaoPorStatus";
 import "./style.scss";
-import { MEDICAO_CARD_NOME_POR_STATUS_DRE } from "./constants";
+import {
+  MEDICAO_CARD_NOME_POR_STATUS_DRE,
+  STATUS_RELACAO_DRE_UE,
+} from "./constants";
 import { Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
@@ -92,13 +95,8 @@ export const AcompanhamentoDeLancamentos = () => {
       if (!usuarioEhMedicao() || diretoriaRegional) {
         let NovoDashboardResults = [...dashboardResults];
         if (usuarioEhMedicao()) {
-          const statusIndesejados = [
-            "MEDICAO_ENVIADA_PELA_UE",
-            "MEDICAO_CORRECAO_SOLICITADA",
-            "MEDICAO_CORRIGIDA_PELA_UE",
-          ];
           NovoDashboardResults = NovoDashboardResults.filter(
-            (medicoes) => !statusIndesejados.includes(medicoes.status)
+            (medicoes) => !STATUS_RELACAO_DRE_UE.includes(medicoes.status)
           );
         }
         if (usuarioEhEscolaTerceirizadaQualquerPerfil())
@@ -298,7 +296,10 @@ export const AcompanhamentoDeLancamentos = () => {
       {erroAPI && <div>{erroAPI}</div>}
       <Spin tip="Carregando..." spinning={LOADING}>
         {!erroAPI && !LOADING && (
-          <Form onSubmit={onSubmit}>
+          <Form
+            onSubmit={onSubmit}
+            initialValues={{ diretoria_regional: diretoriaRegional }}
+          >
             {({ handleSubmit, form, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card mt-3">
@@ -323,6 +324,7 @@ export const AcompanhamentoDeLancamentos = () => {
                             .includes(inputValue.toLowerCase())
                         }
                         naoDesabilitarPrimeiraOpcao
+                        disabled={LOADING || loadingComFiltros}
                       >
                         {diretoriasRegionais}
                       </Field>
