@@ -786,7 +786,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               />
               {categoriasDeMedicao &&
                 categoriasDeMedicao.length > 0 &&
-                categoriasDeMedicao.map((categoria) => [
+                categoriasDeMedicao.map((categoria, idx) => [
                   <div key={categoria.id}>
                     <b className="pb-2 section-title">{categoria.nome}</b>
                     <section className="tabela-tipos-alimentacao">
@@ -1046,14 +1046,23 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                       </article>
                     </section>
                   </div>,
-                  <LegendaDiasNaoLetivos
-                    key={categoria.id}
-                    diasCalendario={diasCalendario}
-                    feriadosNoMes={feriadosNoMes}
-                    anoSolicitacao={anoSolicitacao}
-                    mesSolicitacao={mesSolicitacao}
-                  />,
+                  idx === 0 && categoriasDeMedicao.length > 1 && (
+                    <LegendaDiasNaoLetivos
+                      diasCalendario={diasCalendario}
+                      feriadosNoMes={feriadosNoMes}
+                      anoSolicitacao={anoSolicitacao}
+                      mesSolicitacao={mesSolicitacao}
+                      weekColumns={weekColumns}
+                    />
+                  ),
                 ])}
+              <LegendaDiasNaoLetivos
+                diasCalendario={diasCalendario}
+                feriadosNoMes={feriadosNoMes}
+                anoSolicitacao={anoSolicitacao}
+                mesSolicitacao={mesSolicitacao}
+                weekColumns={weekColumns}
+              />
               {usuarioEhDRE() && logPeriodoAprovado && (
                 <div className="row">
                   <div className="col-12">

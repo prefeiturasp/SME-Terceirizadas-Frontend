@@ -4,20 +4,32 @@ import { ehFimDeSemana } from "helpers/utilities";
 import "./style.scss";
 
 export const LegendaDiasNaoLetivos = ({ ...props }) => {
-  const { diasCalendario, feriadosNoMes, anoSolicitacao, mesSolicitacao } =
-    props;
+  const {
+    diasCalendario,
+    feriadosNoMes,
+    anoSolicitacao,
+    mesSolicitacao,
+    weekColumns,
+  } = props;
 
   return (
     <div className="legenda-dias-nao-letivos mb-3">
-      {feriadosNoMes.map((diaFeriado, index) => {
-        return (
-          <div key={index} className="d-flex">
-            <div key={index} className="square mr-1 my-auto" />
-            {diaFeriado.dia} - {diaFeriado.feriado}
-          </div>
-        );
-      })}
+      {feriadosNoMes
+        .filter((feriadoNoMes) =>
+          weekColumns.find((weekColumn) => weekColumn.dia === feriadoNoMes.dia)
+        )
+        .map((diaFeriado, index) => {
+          return (
+            <div key={index} className="d-flex">
+              <div key={index} className="mr-1 my-auto" />* {diaFeriado.dia} -
+              Feriado: {diaFeriado.feriado}
+            </div>
+          );
+        })}
       {diasCalendario
+        .filter((diaCalendario) =>
+          weekColumns.find((weekColumn) => weekColumn.dia === diaCalendario.dia)
+        )
         .filter(
           (diaCalendario) =>
             !diaCalendario.dia_letivo &&
@@ -36,7 +48,7 @@ export const LegendaDiasNaoLetivos = ({ ...props }) => {
           return (
             !ehFimDeSemana(dateObj) && (
               <div key={index} className="d-flex">
-                <div key={index} className="square mr-1 my-auto" />
+                <div key={index} className="mr-1 my-auto" />*{" "}
                 {diaCalendario.dia} - Dia não letivo
               </div>
             )
