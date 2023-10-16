@@ -2596,8 +2596,7 @@ export default () => {
                                                           row,
                                                           column,
                                                           categoria,
-                                                          alteracoesAlimentacaoAutorizadas,
-                                                          validacaoDiaLetivo
+                                                          alteracoesAlimentacaoAutorizadas
                                                         )}
                                                         exibeTooltipLancheEmergencialZeroAutorizado={exibirTooltipLancheEmergencialZeroAutorizado(
                                                           formValuesAtualizados,

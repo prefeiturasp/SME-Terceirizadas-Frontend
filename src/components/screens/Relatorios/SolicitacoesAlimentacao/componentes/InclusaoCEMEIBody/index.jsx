@@ -1,14 +1,59 @@
 import React, { useState, useEffect, Fragment } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import {
+  getVinculosTipoAlimentacaoPorEscola,
+  getVinculosTipoAlimentacaoMotivoInclusaoEspecifico,
+} from "services/cadastroTipoAlimentacao.service";
 
 export const InclusaoCEMEIBody = ({ ...props }) => {
   const { solicitacao, item, index, filtros, labelData } = props;
   const [vinculosAlimentacao, setVinculosAlimentacao] = useState(undefined);
+  const [vinculosMotivoEspecifico, setVinculosMotivoEspecifico] =
+    useState(undefined);
   const [showDetail, setShowDetail] = useState(false);
   const log = solicitacao.logs[solicitacao.logs.length - 1];
 
   const unique = (arr) => [...new Set(arr)];
+  const temMotivoEspecifico = solicitacao.dias_motivos_da_inclusao_cemei.some(
+    (inc) => inc.motivo.nome === "Evento Específico"
+  );
+
+  const getVinculosMotivoEspecificoCEMEIAsync = async (vinculosAlimentacao) => {
+    const tipo_unidade_escolar_iniciais =
+      solicitacao.escola.tipo_unidade.iniciais;
+    const response = await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico({
+      tipo_unidade_escolar_iniciais,
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      const vincuosNormaisEMEI = vinculosAlimentacao.filter(
+        (vinculo) => vinculo.tipo_unidade_escolar.iniciais === "EMEI"
+      );
+
+      let vinculosEspecificos = response.data.map((vinculo) => {
+        let periodo = vinculo.periodo_escolar;
+        let tipos_de_alimentacao = vinculo.tipos_alimentacao;
+
+        let vinculoNormal = vincuosNormaisEMEI.find(
+          (obj) => obj.periodo_escolar.nome === periodo.nome
+        );
+        if (!vinculoNormal) {
+          vinculoNormal = vincuosNormaisEMEI.find(
+            (obj) => obj.periodo_escolar.nome === "INTEGRAL"
+          );
+          tipos_de_alimentacao = response.data.find(
+            (p) => p.periodo_escolar.nome === "INTEGRAL"
+          ).tipos_alimentacao;
+          vinculo.tipos_alimentacao = tipos_de_alimentacao;
+        }
+        vinculo.tipo_unidade_escolar = vinculoNormal.tipo_unidade_escolar;
+        return vinculo;
+      });
+      vinculosEspecificos = vinculosEspecificos.sort((obj1, obj2) =>
+        obj1.periodo_escolar.posicao > obj2.periodo_escolar.posicao ? 1 : -1
+      );
+      setVinculosMotivoEspecifico(vinculosEspecificos);
+    }
+  };
 
   const nomes_periodos = unique(
     solicitacao.quantidade_alunos_cei_da_inclusao_cemei
@@ -21,6 +66,7 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
       setVinculosAlimentacao(response.data.results);
+      await getVinculosMotivoEspecificoCEMEIAsync(response.data.results);
     }
   };
 
@@ -110,10 +156,23 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                   ) : (
                     <div className="col-3" />
                   )}
+                  {inclusao.descricao_evento && (
+                    <>
+                      <div className="col-12">
+                        <p>Descrição do Evento:</p>
+                      </div>
+                      <div className="col-12">
+                        <p>
+                          <b>{inclusao.descricao_evento}</b>
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </div>
               );
             })}
             {vinculosAlimentacao &&
+              !temMotivoEspecifico &&
               nomes_periodos.map((periodo, idx) => {
                 const vinculosCEI = vinculosAlimentacao.find(
                   (vinc) =>
@@ -248,6 +307,69 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                                         Alunos Matriculados:{" "}
                                         {faixa.matriculados_quando_criado}
                                       </th>
+                                      <th className="col-4 text-center">
+                                        Quantidade: {faixa.quantidade_alunos}
+                                      </th>
+                                    </tr>
+                                  );
+                                })}
+                              </thead>
+                              <tbody />
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </Fragment>
+                );
+              })}
+            {vinculosMotivoEspecifico &&
+              temMotivoEspecifico &&
+              nomes_periodos.map((periodo, idx) => {
+                const vinculosEMEI = vinculosMotivoEspecifico.find(
+                  (vinc) =>
+                    vinc.periodo_escolar.nome === periodo &&
+                    vinc.tipo_unidade_escolar.iniciais === "EMEI"
+                );
+                const tiposAlimentacaoEMEI = vinculosEMEI.tipos_alimentacao
+                  .map((ta) => ta.nome)
+                  .join(", ");
+
+                const faixasEMEI =
+                  solicitacao.quantidade_alunos_emei_da_inclusao_cemei.filter(
+                    (qa) => qa.periodo_escolar.nome === periodo
+                  );
+                return (
+                  <Fragment key={idx}>
+                    {faixasEMEI.length ? (
+                      <div className="row">
+                        <div className="col-12">
+                          <div className="container-fluid pr-0">
+                            <label className="label-periodo-cei-cemei">
+                              Alunos EMEI
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-12 mt-3">
+                          <div className=" container-fluid pr-0">
+                            <p>
+                              Tipos de Inclusão de Alimentação:{" "}
+                              <b>{tiposAlimentacaoEMEI}</b>
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-6">
+                          <div className=" container-fluid pr-0">
+                            <table className="table table-bordered table-items">
+                              <thead>
+                                {faixasEMEI.map((faixa, idxFaixa) => {
+                                  return (
+                                    <tr
+                                      className="table-head-items"
+                                      key={idxFaixa}
+                                    >
                                       <th className="col-4 text-center">
                                         Quantidade: {faixa.quantidade_alunos}
                                       </th>
