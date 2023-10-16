@@ -17,7 +17,7 @@ export const getValoresPeriodosLancamentos = async (params) => {
   const url = "medicao-inicial/valores-medicao/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
-    const data = { data: response.data };
+    const data = { data: response.data, status: response.status };
     return data;
   }
 };
@@ -44,7 +44,7 @@ export const getMatriculadosPeriodo = async (params) => {
   const url = "matriculados-no-mes/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
-    const data = { data: response.data };
+    const data = { data: response.data, status: response.status };
     return data;
   }
 };
@@ -62,7 +62,16 @@ export const getFeriadosNoMes = async (params) => {
   const url = "medicao-inicial/medicao/feriados-no-mes/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
-    const data = { data: response.data };
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getFeriadosNoMesComNome = async (params) => {
+  const url = "medicao-inicial/medicao/feriados-no-mes-com-nome/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
     return data;
   }
 };
@@ -71,7 +80,7 @@ export const getLogDietasAutorizadasPeriodo = async (params) => {
   const url = "log-quantidade-dietas-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
-    const data = { data: response.data };
+    const data = { data: response.data, status: response.status };
     return data;
   }
 };
@@ -80,7 +89,7 @@ export const getLogDietasAutorizadasCEIPeriodo = async (params) => {
   const url = "log-quantidade-dietas-autorizadas-cei/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
-    const data = { data: response.data };
+    const data = { data: response.data, status: response.status };
     return data;
   }
 };

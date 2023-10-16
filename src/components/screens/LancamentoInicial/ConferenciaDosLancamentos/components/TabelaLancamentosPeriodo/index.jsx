@@ -51,6 +51,7 @@ import {
   deepCopy,
   usuarioEhDRE,
   usuarioEhMedicao,
+  ehFimDeSemana,
 } from "helpers/utilities";
 import { ModalAprovarPeriodo } from "../ModalAprovarPeriodo";
 import { ModalCancelarCorrecao } from "../ModalCancelarCorrecao";
@@ -65,6 +66,7 @@ import {
   drePedeCorrecaMedicao,
   codaePedeCorrecaPeriodo,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { LegendaDiasNaoLetivos } from "../LegendaDiasNaoLetivos";
 
 export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const {
@@ -79,6 +81,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     getPeriodosGruposMedicaoAsync,
     setOcorrenciaExpandida,
     solicitacao,
+    feriadosNoMes,
+    diasCalendario,
   } = props;
 
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
@@ -180,6 +184,49 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const logPeriodoReprovadoCODAE = periodoGrupo.logs.find(
     (log) => log.status_evento_explicacao === "Correção solicitada pela CODAE"
   );
+
+  const diaEhFeriado = (dia) => {
+    return feriadosNoMes.find(
+      (diaFeriado) => String(diaFeriado.dia) === String(dia)
+    );
+  };
+
+  const diaEhFeriadoByIndex = (index) => {
+    return feriadosNoMes.find(
+      (diaFeriado) => String(diaFeriado.dia) === String(weekColumns[index].dia)
+    );
+  };
+
+  const diaEhNaoLetivoEDeSemana = (dia) => {
+    const dateObj = new Date(
+      `${anoSolicitacao}-${mesSolicitacao}-${(parseInt(dia) + 1)
+        .toString()
+        .padStart(2, "0")}`
+    );
+    return (
+      diasCalendario.find(
+        (diaCalendario) =>
+          String(diaCalendario.dia) === String(dia) && !diaCalendario.dia_letivo
+      ) && !ehFimDeSemana(dateObj)
+    );
+  };
+
+  const diaEhNaoLetivoEDeSemanaByIndex = (index) => {
+    const dateObj = new Date(
+      `${anoSolicitacao}-${mesSolicitacao}-${(
+        parseInt(weekColumns[index].dia) + 1
+      )
+        .toString()
+        .padStart(2, "0")}`
+    );
+    return (
+      diasCalendario.find(
+        (diaCalendario) =>
+          String(diaCalendario.dia) === String(weekColumns[index].dia) &&
+          !diaCalendario.dia_letivo
+      ) && !ehFimDeSemana(dateObj)
+    );
+  };
 
   useEffect(() => {
     if (showTabelaLancamentosPeriodo) {
@@ -739,7 +786,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               />
               {categoriasDeMedicao &&
                 categoriasDeMedicao.length > 0 &&
-                categoriasDeMedicao.map((categoria) => (
+                categoriasDeMedicao.map((categoria, idx) => [
                   <div key={categoria.id}>
                     <b className="pb-2 section-title">{categoria.nome}</b>
                     <section className="tabela-tipos-alimentacao">
@@ -775,9 +822,18 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                 />
                                 <div
                                   key={column.dia}
-                                  className="label-dias-semana-tabela"
+                                  className={`label-dias-semana-tabela ${
+                                    diaEhFeriado(column.dia) ||
+                                    diaEhNaoLetivoEDeSemana(column.dia)
+                                      ? "dia-nao-letivo-header"
+                                      : ""
+                                  }`}
                                 >
                                   {column.dia}
+                                  {diaEhFeriado(column.dia) ||
+                                  diaEhNaoLetivoEDeSemana(column.dia)
+                                    ? " *"
+                                    : ""}
                                 </div>
                                 <OnChange
                                   name={`ckbox_dias_semana__dia_${
@@ -799,7 +855,21 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                 </OnChange>
                               </div>
                             ) : (
-                              <div key={column.dia}>{column.dia}</div>
+                              <div
+                                className={`${
+                                  diaEhFeriado(column.dia) ||
+                                  diaEhNaoLetivoEDeSemana(column.dia)
+                                    ? "dia-nao-letivo-header"
+                                    : ""
+                                }`}
+                                key={column.dia}
+                              >
+                                {column.dia}
+                                {diaEhFeriado(column.dia) ||
+                                diaEhNaoLetivoEDeSemana(column.dia)
+                                  ? " *"
+                                  : ""}
+                              </div>
                             );
                           })}
                         </div>
@@ -810,7 +880,17 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                         >
                           <div />
                           {diasSemana.map((dia, index) => (
-                            <div key={index}>{dia}</div>
+                            <div
+                              className={`${
+                                diaEhFeriadoByIndex(index) ||
+                                diaEhNaoLetivoEDeSemanaByIndex(index)
+                                  ? "dia-nao-letivo-header"
+                                  : ""
+                              }`}
+                              key={index}
+                            >
+                              {dia}
+                            </div>
                           ))}
                         </div>
                         {escolherTabela(categoria).map((row, index) => {
@@ -915,6 +995,11 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                           )
                                             ? " input-para-correcao"
                                             : ""
+                                        }${
+                                          diaEhFeriado(column.dia) ||
+                                          diaEhNaoLetivoEDeSemana(column.dia)
+                                            ? " dia-nao-letivo"
+                                            : ""
                                         }`}
                                       >
                                         <Field
@@ -960,8 +1045,24 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                         })}
                       </article>
                     </section>
-                  </div>
-                ))}
+                  </div>,
+                  idx === 0 && categoriasDeMedicao.length > 1 && (
+                    <LegendaDiasNaoLetivos
+                      diasCalendario={diasCalendario}
+                      feriadosNoMes={feriadosNoMes}
+                      anoSolicitacao={anoSolicitacao}
+                      mesSolicitacao={mesSolicitacao}
+                      weekColumns={weekColumns}
+                    />
+                  ),
+                ])}
+              <LegendaDiasNaoLetivos
+                diasCalendario={diasCalendario}
+                feriadosNoMes={feriadosNoMes}
+                anoSolicitacao={anoSolicitacao}
+                mesSolicitacao={mesSolicitacao}
+                weekColumns={weekColumns}
+              />
               {usuarioEhDRE() && logPeriodoAprovado && (
                 <div className="row">
                   <div className="col-12">
