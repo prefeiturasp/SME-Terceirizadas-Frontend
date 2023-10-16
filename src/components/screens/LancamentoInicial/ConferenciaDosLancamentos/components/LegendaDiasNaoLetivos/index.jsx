@@ -10,6 +10,9 @@ export const LegendaDiasNaoLetivos = ({ ...props }) => {
     anoSolicitacao,
     mesSolicitacao,
     weekColumns,
+    values,
+    categoria,
+    periodoGrupo,
   } = props;
 
   return (
@@ -18,6 +21,30 @@ export const LegendaDiasNaoLetivos = ({ ...props }) => {
         .filter((feriadoNoMes) =>
           weekColumns.find((weekColumn) => weekColumn.dia === feriadoNoMes.dia)
         )
+        .filter((diaCalendario) => {
+          return (
+            !["Mês anterior", "Mês posterior"].includes(
+              values[
+                `frequencia__dia_${diaCalendario.dia}__categoria_${
+                  categoria.id
+                }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                  0,
+                  5
+                )}`
+              ]
+            ) &&
+            !["Mês anterior", "Mês posterior"].includes(
+              values[
+                `lanche_emergencial__dia_${diaCalendario.dia}__categoria_${
+                  categoria.id
+                }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                  0,
+                  5
+                )}`
+              ]
+            )
+          );
+        })
         .map((diaFeriado, index) => {
           return (
             <div key={index} className="d-flex">
@@ -30,6 +57,30 @@ export const LegendaDiasNaoLetivos = ({ ...props }) => {
         .filter((diaCalendario) =>
           weekColumns.find((weekColumn) => weekColumn.dia === diaCalendario.dia)
         )
+        .filter((diaCalendario) => {
+          return (
+            !["Mês anterior", "Mês posterior"].includes(
+              values[
+                `frequencia__dia_${diaCalendario.dia}__categoria_${
+                  categoria.id
+                }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                  0,
+                  5
+                )}`
+              ]
+            ) &&
+            !["Mês anterior", "Mês posterior"].includes(
+              values[
+                `lanche_emergencial__dia_${diaCalendario.dia}__categoria_${
+                  categoria.id
+                }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                  0,
+                  5
+                )}`
+              ]
+            )
+          );
+        })
         .filter(
           (diaCalendario) =>
             !diaCalendario.dia_letivo &&
