@@ -248,21 +248,21 @@ export default ({ analise }) => {
 
   const definirAprovacoes = () => {
     if (objeto && ["Aprovado", "Solicitado Correção"].includes(objeto.status)) {
-      const aprovacoesAtualizadas = objeto.tipos_de_embalagens.sort(
-        (a, b) => {
+      const aprovacoesAtualizadas = objeto.tipos_de_embalagens
+        .sort((a, b) => {
           const embalagemA = a.tipo_embalagem.toUpperCase();
           const embalagemB = b.tipo_embalagem.toUpperCase();
           if (embalagemA < embalagemB) {
             return -1;
           }
           if (embalagemA > embalagemB) {
-             return 1;
+            return 1;
           }
           return 0;
-        }
-      ).map(
-        (tipoEmbalagem) => (tipoEmbalagem.status === "APROVADO" ? true : false)
-      );
+        })
+        .map((tipoEmbalagem) =>
+          tipoEmbalagem.status === "APROVADO" ? true : false
+        );
       setAprovacoes(aprovacoesAtualizadas);
     }
   };
@@ -380,7 +380,16 @@ export default ({ analise }) => {
                   handleClose={() => setModalEnviar(false)}
                   enviar={() => enviarAnalise(values)}
                 />
-                <div className={`${ Object.keys(objeto).length !== 0 && objeto.tipos_de_embalagens[0].status === "REPROVADO" ? "subtitulo-laranja" : "subtitulo"}  mb-3`}>Embalagem Primária</div>
+                <div
+                  className={`${
+                    Object.keys(objeto).length !== 0 &&
+                    objeto.tipos_de_embalagens[0].status === "REPROVADO"
+                      ? "subtitulo-laranja"
+                      : "subtitulo"
+                  }  mb-3`}
+                >
+                  Embalagem Primária
+                </div>
                 <div className="row">
                   <div className="col-5">
                     {embalagemPrimaria.map((e) => (
@@ -395,7 +404,16 @@ export default ({ analise }) => {
 
                 <hr />
 
-                <div className={`${ Object.keys(objeto).length !== 0 && objeto.tipos_de_embalagens[1].status === "REPROVADO" ? "subtitulo-laranja" : "subtitulo"}  mb-3`}>Embalagem Secundária</div>
+                <div
+                  className={`${
+                    Object.keys(objeto).length !== 0 &&
+                    objeto.tipos_de_embalagens[1].status === "REPROVADO"
+                      ? "subtitulo-laranja"
+                      : "subtitulo"
+                  }  mb-3`}
+                >
+                  Embalagem Secundária
+                </div>
                 <div className="row">
                   <div className="col-5">
                     {embalagemSecundaria.map((e) => (
@@ -412,7 +430,16 @@ export default ({ analise }) => {
                   <>
                     <hr />
 
-                    <div className={`${ Object.keys(objeto).length !== 0 && objeto.tipos_de_embalagens[2].status === "REPROVADO" ? "subtitulo-laranja" : "subtitulo"}  mb-3`}>Embalagem Terciária</div>
+                    <div
+                      className={`${
+                        Object.keys(objeto).length !== 0 &&
+                        objeto.tipos_de_embalagens[2].status === "REPROVADO"
+                          ? "subtitulo-laranja"
+                          : "subtitulo"
+                      }  mb-3`}
+                    >
+                      Embalagem Terciária
+                    </div>
                     <div className="row">
                       <div className="col-5">
                         {embalagemTerciaria.map((e) => (
