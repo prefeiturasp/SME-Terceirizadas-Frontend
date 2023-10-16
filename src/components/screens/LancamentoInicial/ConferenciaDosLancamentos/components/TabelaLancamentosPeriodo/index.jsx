@@ -228,6 +228,58 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     );
   };
 
+  const ehDiaNaoLetivoOuFeriado = (column, categoria) => {
+    return (
+      !["Mês anterior", "Mês posterior"].includes(
+        values[
+          `frequencia__dia_${column.dia}__categoria_${
+            categoria.id
+          }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+            0,
+            5
+          )}`
+        ]
+      ) &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[
+          `lanche_emergencial__dia_${column.dia}__categoria_${
+            categoria.id
+          }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+            0,
+            5
+          )}`
+        ]
+      ) &&
+      (diaEhFeriado(column.dia) || diaEhNaoLetivoEDeSemana(column.dia))
+    );
+  };
+
+  const ehDiaNaoLetivoOuFeriadoByIndex = (index, categoria) => {
+    return (
+      !["Mês anterior", "Mês posterior"].includes(
+        values[
+          `frequencia__dia_${weekColumns[index].dia}__categoria_${
+            categoria.id
+          }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+            0,
+            5
+          )}`
+        ]
+      ) &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[
+          `lanche_emergencial__dia_${weekColumns[index].dia}__categoria_${
+            categoria.id
+          }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+            0,
+            5
+          )}`
+        ]
+      ) &&
+      (diaEhFeriadoByIndex(index) || diaEhNaoLetivoEDeSemanaByIndex(index))
+    );
+  };
+
   useEffect(() => {
     if (showTabelaLancamentosPeriodo) {
       const formatarTabelasAsync = async () => {
@@ -823,15 +875,13 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                 <div
                                   key={column.dia}
                                   className={`label-dias-semana-tabela ${
-                                    diaEhFeriado(column.dia) ||
-                                    diaEhNaoLetivoEDeSemana(column.dia)
+                                    ehDiaNaoLetivoOuFeriado(column, categoria)
                                       ? "dia-nao-letivo-header"
                                       : ""
                                   }`}
                                 >
                                   {column.dia}
-                                  {diaEhFeriado(column.dia) ||
-                                  diaEhNaoLetivoEDeSemana(column.dia)
+                                  {ehDiaNaoLetivoOuFeriado(column, categoria)
                                     ? " *"
                                     : ""}
                                 </div>
@@ -857,16 +907,14 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                             ) : (
                               <div
                                 className={`${
-                                  diaEhFeriado(column.dia) ||
-                                  diaEhNaoLetivoEDeSemana(column.dia)
+                                  ehDiaNaoLetivoOuFeriado(column, categoria)
                                     ? "dia-nao-letivo-header"
                                     : ""
                                 }`}
                                 key={column.dia}
                               >
                                 {column.dia}
-                                {diaEhFeriado(column.dia) ||
-                                diaEhNaoLetivoEDeSemana(column.dia)
+                                {ehDiaNaoLetivoOuFeriado(column, categoria)
                                   ? " *"
                                   : ""}
                               </div>
@@ -882,8 +930,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                           {diasSemana.map((dia, index) => (
                             <div
                               className={`${
-                                diaEhFeriadoByIndex(index) ||
-                                diaEhNaoLetivoEDeSemanaByIndex(index)
+                                ehDiaNaoLetivoOuFeriadoByIndex(index, categoria)
                                   ? "dia-nao-letivo-header"
                                   : ""
                               }`}
@@ -996,8 +1043,10 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                             ? " input-para-correcao"
                                             : ""
                                         }${
-                                          diaEhFeriado(column.dia) ||
-                                          diaEhNaoLetivoEDeSemana(column.dia)
+                                          ehDiaNaoLetivoOuFeriado(
+                                            column,
+                                            categoria
+                                          )
                                             ? " dia-nao-letivo"
                                             : ""
                                         }`}
@@ -1053,6 +1102,9 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                       anoSolicitacao={anoSolicitacao}
                       mesSolicitacao={mesSolicitacao}
                       weekColumns={weekColumns}
+                      values={values}
+                      categoria={categoria}
+                      periodoGrupo={periodoGrupo}
                     />
                   ),
                 ])}
@@ -1062,6 +1114,9 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 anoSolicitacao={anoSolicitacao}
                 mesSolicitacao={mesSolicitacao}
                 weekColumns={weekColumns}
+                values={values}
+                categoria={categoriasDeMedicao[0]}
+                periodoGrupo={periodoGrupo}
               />
               {usuarioEhDRE() && logPeriodoAprovado && (
                 <div className="row">
