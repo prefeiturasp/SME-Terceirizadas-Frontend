@@ -10,48 +10,110 @@ export const LegendaDiasNaoLetivos = ({ ...props }) => {
     anoSolicitacao,
     mesSolicitacao,
     weekColumns,
+    values,
+    categoria,
+    periodoGrupo,
   } = props;
+
+  const getListaDiasLabels = () => {
+    const listaDiasLabels = [];
+    feriadosNoMes
+      .filter((feriadoNoMes) =>
+        weekColumns.find((weekColumn) => weekColumn.dia === feriadoNoMes.dia)
+      )
+      .filter((diaCalendario) => {
+        return (
+          !["Mês anterior", "Mês posterior"].includes(
+            values[
+              `frequencia__dia_${diaCalendario.dia}__categoria_${
+                categoria.id
+              }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                0,
+                5
+              )}`
+            ]
+          ) &&
+          !["Mês anterior", "Mês posterior"].includes(
+            values[
+              `lanche_emergencial__dia_${diaCalendario.dia}__categoria_${
+                categoria.id
+              }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                0,
+                5
+              )}`
+            ]
+          )
+        );
+      })
+      .forEach((diaFeriado) => {
+        listaDiasLabels.push({
+          dia: diaFeriado.dia,
+          label: `Feriado: ${diaFeriado.feriado}`,
+        });
+      });
+
+    diasCalendario
+      .filter((diaCalendario) =>
+        weekColumns.find((weekColumn) => weekColumn.dia === diaCalendario.dia)
+      )
+      .filter((diaCalendario) => {
+        return (
+          !["Mês anterior", "Mês posterior"].includes(
+            values[
+              `frequencia__dia_${diaCalendario.dia}__categoria_${
+                categoria.id
+              }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                0,
+                5
+              )}`
+            ]
+          ) &&
+          !["Mês anterior", "Mês posterior"].includes(
+            values[
+              `lanche_emergencial__dia_${diaCalendario.dia}__categoria_${
+                categoria.id
+              }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                0,
+                5
+              )}`
+            ]
+          )
+        );
+      })
+      .filter(
+        (diaCalendario) =>
+          !diaCalendario.dia_letivo &&
+          !feriadosNoMes.find(
+            (diaFeriado) => diaFeriado.dia === diaCalendario.dia
+          )
+      )
+      .forEach((diaCalendario) => {
+        const dateObj = new Date(
+          `${anoSolicitacao}-${mesSolicitacao}-${(
+            parseInt(diaCalendario.dia) + 1
+          )
+            .toString()
+            .padStart(2, "0")}`
+        );
+        !ehFimDeSemana(dateObj) &&
+          listaDiasLabels.push({
+            dia: diaCalendario.dia,
+            label: "Dia não letivo",
+          });
+      });
+
+    return listaDiasLabels.sort((obj1, obj2) => (obj1.dia > obj2.dia ? 1 : -1));
+  };
 
   return (
     <div className="legenda-dias-nao-letivos mb-3">
-      {feriadosNoMes
-        .filter((feriadoNoMes) =>
-          weekColumns.find((weekColumn) => weekColumn.dia === feriadoNoMes.dia)
-        )
-        .map((diaFeriado, index) => {
+      {getListaDiasLabels() &&
+        getListaDiasLabels().map((diaLabel, index) => {
           return (
             <div key={index} className="d-flex">
-              <div key={index} className="mr-1 my-auto" />* {diaFeriado.dia} -
-              Feriado: {diaFeriado.feriado}
+              <div key={index} className="mr-1 my-auto" />* {diaLabel.dia} -{" "}
+              {diaLabel.label}
             </div>
-          );
-        })}
-      {diasCalendario
-        .filter((diaCalendario) =>
-          weekColumns.find((weekColumn) => weekColumn.dia === diaCalendario.dia)
-        )
-        .filter(
-          (diaCalendario) =>
-            !diaCalendario.dia_letivo &&
-            !feriadosNoMes.find(
-              (diaFeriado) => diaFeriado.dia === diaCalendario.dia
-            )
-        )
-        .map((diaCalendario, index) => {
-          const dateObj = new Date(
-            `${anoSolicitacao}-${mesSolicitacao}-${(
-              parseInt(diaCalendario.dia) + 1
-            )
-              .toString()
-              .padStart(2, "0")}`
-          );
-          return (
-            !ehFimDeSemana(dateObj) && (
-              <div key={index} className="d-flex">
-                <div key={index} className="mr-1 my-auto" />*{" "}
-                {diaCalendario.dia} - Dia não letivo
-              </div>
-            )
           );
         })}
     </div>
