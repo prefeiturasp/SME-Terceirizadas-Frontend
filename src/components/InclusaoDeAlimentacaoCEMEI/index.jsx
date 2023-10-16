@@ -16,12 +16,13 @@ import {
 } from "services/inclusaoDeAlimentacao";
 import { Rascunhos } from "./componentes/Rascunhos";
 import Select from "components/Shareable/Select";
-import { required } from "helpers/fieldValidators";
+import { maxLength, required } from "helpers/fieldValidators";
 import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
   deepCopy,
   getError,
+  composeValidators,
 } from "helpers/utilities";
 import { FieldArray } from "react-final-form-arrays";
 import arrayMutators from "final-form-arrays";
@@ -49,6 +50,7 @@ import {
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { validarSubmissaoContinua } from "components/InclusaoDeAlimentacao/validacao";
 import { formatarSubmissaoSolicitacaoContinua } from "components/InclusaoDeAlimentacao/helper";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 
 export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
@@ -537,6 +539,20 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                         {outroMotivoSelecionado(values, index) && (
                           <div className="mt-3">
                             <OutroMotivo name={name} />
+                          </div>
+                        )}
+                        {motivoEspecifico && (
+                          <div className="mb-3">
+                            <Field
+                              component={TextArea}
+                              label="Descrição do Evento"
+                              name={`${name}.descricao_evento`}
+                              required
+                              validate={composeValidators(
+                                required,
+                                maxLength(1500)
+                              )}
+                            />
                           </div>
                         )}
                         <hr />

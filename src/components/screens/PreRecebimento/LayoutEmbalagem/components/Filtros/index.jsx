@@ -36,6 +36,10 @@ export default ({ setFiltros, setLayoutsEmbalagens, setConsultaRealizada }) => {
       label: "Aprovado",
       value: "APROVADO",
     },
+    {
+      label: "Pendente de Correção",
+      value: "SOLICITADO_CORRECAO",
+    },
   ];
 
   const onSubmit = async (values) => {
