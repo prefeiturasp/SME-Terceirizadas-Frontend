@@ -59,6 +59,14 @@
       text-align: center;
       display: grid;
       grid-template-columns: 15% 12.15% 12.15% 12.15% 12.15% 12.15% 12.15% 12.15%;
+
+      .dia-nao-letivo-header {
+        background-color: $grayHeader !important;
+      }
+
+      .dia-nao-letivo {
+        background-color: $grayCard !important;
+      }
     }
 
     .header-table {

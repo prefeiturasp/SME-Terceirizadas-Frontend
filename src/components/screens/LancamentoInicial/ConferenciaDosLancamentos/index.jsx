@@ -32,6 +32,10 @@ import {
   codaeAprovaPeriodo,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
+  getFeriadosNoMesComNome,
+  getDiasCalendario,
+} from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import {
   MEDICAO_STATUS_DE_PROGRESSO,
   OCORRENCIA_STATUS_DE_PROGRESSO,
 } from "./constants";
@@ -85,9 +89,44 @@ export const ConferenciaDosLancamentos = () => {
     useState(true);
   const [showModal, setShowModal] = useState(false);
 
+  const [feriadosNoMes, setFeriadosNoMes] = useState();
+  const [diasCalendario, setDiasCalendario] = useState();
+
   const visualizarModal = () => {
     setShowModal(true);
   };
+
+  const getFeriadosNoMesAsync = async (mes, ano) => {
+    const params_feriados_no_mes = {
+      mes: mes,
+      ano: ano,
+    };
+    const response = await getFeriadosNoMesComNome(params_feriados_no_mes);
+    if (response.status === HTTP_STATUS.OK) {
+      setFeriadosNoMes(response.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar feriados do mês para esta escola. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const getDiasCalendarioAsync = async (mes, ano) => {
+    const params_dias_calendario = {
+      escola_uuid: location.state.escolaUuid,
+      mes: mes,
+      ano: ano,
+    };
+    const response = await getDiasCalendario(params_dias_calendario);
+    if (response.status === HTTP_STATUS.OK) {
+      setDiasCalendario(response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar dias do calendário escolar para esta escola. Tente novamente mais tarde."
+      );
+    }
+  };
+
   const getPeriodosGruposMedicaoAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
@@ -219,6 +258,13 @@ export const ConferenciaDosLancamentos = () => {
     }
     dados_iniciais && setDadosIniciais(dados_iniciais);
   };
+
+  useEffect(() => {
+    if (mesSolicitacao && anoSolicitacao) {
+      !feriadosNoMes && getFeriadosNoMesAsync(mesSolicitacao, anoSolicitacao);
+      !diasCalendario && getDiasCalendarioAsync(mesSolicitacao, anoSolicitacao);
+    }
+  }, [mesSolicitacao, anoSolicitacao]);
 
   const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
     const escolaUuid = location.state.escolaUuid;
@@ -668,7 +714,7 @@ export const ConferenciaDosLancamentos = () => {
                       </div>
                       <div className="col-12 mt-3">
                         {periodosGruposMedicao.map((periodoGrupo, index) => {
-                          return (
+                          return [
                             <TabelaLancamentosPeriodo
                               key={index}
                               periodoGrupo={periodoGrupo}
@@ -693,8 +739,10 @@ export const ConferenciaDosLancamentos = () => {
                                 setOcorrenciaExpandida(false)
                               }
                               solicitacao={solicitacao}
-                            />
-                          );
+                              feriadosNoMes={feriadosNoMes}
+                              diasCalendario={diasCalendario}
+                            />,
+                          ];
                         })}
                       </div>
                     </div>
