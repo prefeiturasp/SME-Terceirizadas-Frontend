@@ -67,3 +67,9 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
     cor: "azul-escuro",
   },
 };
+
+export const STATUS_RELACAO_DRE_UE = [
+  "MEDICAO_ENVIADA_PELA_UE",
+  "MEDICAO_CORRECAO_SOLICITADA",
+  "MEDICAO_CORRIGIDA_PELA_UE",
+];
