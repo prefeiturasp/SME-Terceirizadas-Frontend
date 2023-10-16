@@ -184,6 +184,18 @@ export const CorpoRelatorio = ({
                     );
                   })}
                 </tr>
+                {motivo.includes("Específico")}
+                <tr className="row">
+                  <th className="col-12">Dercrição do evento:</th>
+                </tr>
+                <tr className="row">
+                  <td className="col-12">
+                    {
+                      solicitacao.dias_motivos_da_inclusao_cemei[key]
+                        .descricao_evento
+                    }
+                  </td>
+                </tr>
               </div>
             );
           })}
