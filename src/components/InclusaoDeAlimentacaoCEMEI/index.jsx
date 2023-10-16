@@ -123,6 +123,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     return (
       values &&
       values.inclusoes &&
+      values.inclusoes[index] &&
       values.inclusoes[index].motivo &&
       motivosSimples.find(
         (motivo) => motivo.uuid === values.inclusoes[index].motivo
