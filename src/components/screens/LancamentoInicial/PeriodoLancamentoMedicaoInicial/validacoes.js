@@ -1118,8 +1118,7 @@ export const exibirTooltipLancheEmergencialAutorizado = (
   row,
   column,
   categoria,
-  alteracoesAlimentacaoAutorizadas,
-  validacaoDiaLetivo
+  alteracoesAlimentacaoAutorizadas
 ) => {
   const value =
     formValuesAtualizados[
@@ -1136,8 +1135,7 @@ export const exibirTooltipLancheEmergencialAutorizado = (
     row.name.includes("lanche_emergencial") &&
     alteracoesAlimentacaoAutorizadas.filter(
       (alteracao) => alteracao.dia === column.dia
-    ).length > 0 &&
-    validacaoDiaLetivo(column.dia)
+    ).length > 0
   );
 };
 
