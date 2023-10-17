@@ -6,9 +6,11 @@ pipeline {
       namespace = "${env.branchname == 'development' ? 'sme-sigpae-dev' : env.branchname == 'homolog' ? 'sme-sigpae-hom' : env.branchname == 'homolog-r2' ? 'sme-sigpae-hom2' : 'sme-sigpae' }" 
     }
   
-    agent {
-      node { label 'builder' }
-    }
+    agent { kubernetes { 
+              label 'builder'
+              defaultContainer 'builder'
+            }
+          }
 
     options {
       buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
@@ -23,7 +25,7 @@ pipeline {
         }
 
         stage('AnaliseCodigo') {
-	      when { branch 'homolog' }
+	      when { branch 'testejenkins2' }
           steps {
               withSonarQubeEnv('sonarqube-local'){
                 sh 'echo "[ INFO ] Iniciando analise Sonar..." && sonar-scanner \
@@ -34,7 +36,7 @@ pipeline {
         }
 
         stage('Testes') {
-          when { branch 'homolog_' }
+          when { branch 'testejenkins2' }
           steps {
                 sh 'npm install'
                 sh 'npm run-script eslint'
@@ -45,7 +47,7 @@ pipeline {
         }
 
         stage('Build') {
-          when { anyOf { branch 'master'; branch 'main'; branch "story/*"; branch 'development'; branch 'release'; branch 'homolog';  } } 
+          when { anyOf { branch 'master'; branch 'main'; branch "story/*"; branch 'development'; branch 'release'; branch 'testejenkins2';  } } 
           steps {
             script {
               imagename1 = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/sigpae-frontend"
@@ -59,7 +61,7 @@ pipeline {
         }
 	    
         stage('Deploy'){
-            when { anyOf {  branch 'master'; branch 'main'; branch 'development'; branch 'release'; branch 'homolog';  } }        
+            when { anyOf {  branch 'master'; branch 'main'; branch 'development'; branch 'release'; branch 'testejenkins2';  } }        
             steps {
                 script{
                     if ( env.branchname == 'main' ||  env.branchname == 'master' ) {
