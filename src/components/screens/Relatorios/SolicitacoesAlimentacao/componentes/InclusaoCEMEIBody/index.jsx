@@ -162,7 +162,7 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                         <p>Descrição do Evento:</p>
                       </div>
                       <div className="col-12">
-                        <p>
+                        <p className="text-justify">
                           <b>{inclusao.descricao_evento}</b>
                         </p>
                       </div>
