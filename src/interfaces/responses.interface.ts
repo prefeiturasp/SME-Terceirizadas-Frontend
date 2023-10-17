@@ -2,6 +2,10 @@ import {
   QuantidadeAlunosEscolaInterface,
   VinculoTipoAlimentacaoPorEscolaInterface,
 } from "interfaces/escola.interface";
+import {
+  EscolasComPermissoesLancamentosEspeciaisInterface,
+  PermissaoLancamentosEspeciaisInterface,
+} from "interfaces/medicao_inicial.interface";
 
 export interface ResponseInterface {
   data: Object;
@@ -25,5 +29,23 @@ export interface ResponseQuantidadeAlunosEscolaInterface
     next: string | null;
     previous: string | null;
     results: Array<QuantidadeAlunosEscolaInterface>;
+  };
+}
+
+export interface ResponsePermissoesLancamentosEspeciaisInterface
+  extends ResponseInterface {
+  data: {
+    count: number;
+    next: string | null;
+    page_size: string | null;
+    previous: string | null;
+    results: PermissaoLancamentosEspeciaisInterface[];
+  };
+}
+
+export interface ResponseEscolasComPermissoesLancamentosEspeciaisInterface
+  extends ResponseInterface {
+  data: {
+    results: EscolasComPermissoesLancamentosEspeciaisInterface[];
   };
 }

@@ -5,11 +5,11 @@ import Page from "../../components/Shareable/Page/Page";
 import {
   CADASTROS,
   CONFIGURACOES,
-  TIPO_ALIMENTACAO_UNIDADE_ESCOLAR,
+  TIPOS_ALIMENTACAO,
 } from "../../configs/constants";
 
 const atual = {
-  href: `/${CONFIGURACOES}/${CADASTROS}/${TIPO_ALIMENTACAO_UNIDADE_ESCOLAR}`,
+  href: `/${CONFIGURACOES}/${CADASTROS}/${TIPOS_ALIMENTACAO}`,
   titulo: "Cadastro de tipo de alimentação",
 };
 

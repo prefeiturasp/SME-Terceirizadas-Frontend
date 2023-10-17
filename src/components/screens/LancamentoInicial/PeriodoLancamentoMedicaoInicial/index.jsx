@@ -74,6 +74,7 @@ import {
   desabilitarBotaoColunaObservacoes,
   desabilitarField,
   deveExistirObservacao,
+  ehDiaParaCorrigir,
   formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
@@ -93,6 +94,7 @@ import {
   setPeriodoLancamento,
   updateValoresPeriodosLancamentos,
   getFeriadosNoMes,
+  getDiasParaCorrecao,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
@@ -180,6 +182,7 @@ export default () => {
   const [showModalErro, setShowModalErro] = useState(false);
   const [valoresObservacoes, setValoresObservacoes] = useState([]);
   const [periodoGrupo, setPeriodoGrupo] = useState(null);
+  const [diasParaCorrecao, setDiasParaCorrecao] = useState();
 
   const history = useHistory();
   const location = useLocation();
@@ -837,6 +840,11 @@ export default () => {
       );
       setValoresPeriodosLancamentos(response_valores_periodos.data);
 
+      const response_dias_correcao = await getDiasParaCorrecao(params);
+      if (response_dias_correcao.status === HTTP_STATUS.OK) {
+        console.log(response_dias_correcao.data);
+        setDiasParaCorrecao(response_dias_correcao.data);
+      }
       let response_matriculados = [];
       let response_inclusoes_etec_autorizadas = [];
       let response_kit_lanches_autorizadas = [];
@@ -1320,7 +1328,6 @@ export default () => {
       );
     };
     semanaSelecionada && formatar();
-
     valoresPeriodosLancamentos.findIndex(
       (valor) => valor.nome_campo !== "observacoes"
     ) !== -1 && setDisableBotaoSalvarLancamentos(false);
@@ -1778,7 +1785,8 @@ export default () => {
         formValuesAtualizados,
         column,
         categoria,
-        suspensoesAutorizadas
+        suspensoesAutorizadas,
+        row
       ) ||
       campoRefeicaoComRPLAutorizadaESemObservacao(
         formValuesAtualizados,
@@ -1917,7 +1925,9 @@ export default () => {
     column,
     categoria,
     kitLanchesAutorizadas,
-    alteracoesAlimentacaoAutorizadas
+    alteracoesAlimentacaoAutorizadas,
+    valoresPeriodosLancamentos,
+    diasParaCorrecao
   ) => {
     if (
       (Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
@@ -1931,6 +1941,12 @@ export default () => {
     }
     return `${
       !validacaoDiaLetivo(column.dia) &&
+      !ehDiaParaCorrigir(
+        column.dia,
+        categoria.id,
+        valoresPeriodosLancamentos,
+        diasParaCorrecao
+      ) &&
       ((kitLanchesAutorizadas &&
         !kitLanchesAutorizadas.filter(
           (kitLanche) => kitLanche.dia === column.dia
@@ -2086,7 +2102,7 @@ export default () => {
                           <Field
                             component={CKEditorField}
                             name="justificativa_periodo"
-                            disabled={true}
+                            disabled
                           />
                         </div>
                       </div>
@@ -2210,7 +2226,8 @@ export default () => {
                                                         formValuesAtualizados,
                                                         row,
                                                         valoresObservacoes,
-                                                        column.dia
+                                                        column.dia,
+                                                        diasParaCorrecao
                                                       )}
                                                       type={BUTTON_TYPE.BUTTON}
                                                       style={
@@ -2301,7 +2318,8 @@ export default () => {
                                                         inclusoesAutorizadas,
                                                         categoriasDeMedicao,
                                                         kitLanchesAutorizadas,
-                                                        alteracoesAlimentacaoAutorizadas
+                                                        alteracoesAlimentacaoAutorizadas,
+                                                        diasParaCorrecao
                                                       )}
                                                       dia={column.dia}
                                                       defaultValue={defaultValue(
@@ -2386,7 +2404,8 @@ export default () => {
                                                           formValuesAtualizados,
                                                           row,
                                                           valoresObservacoes,
-                                                          column.dia
+                                                          column.dia,
+                                                          diasParaCorrecao
                                                         )}
                                                         type={
                                                           BUTTON_TYPE.BUTTON
@@ -2446,7 +2465,9 @@ export default () => {
                                                           column,
                                                           categoria,
                                                           kitLanchesAutorizadas,
-                                                          alteracoesAlimentacaoAutorizadas
+                                                          alteracoesAlimentacaoAutorizadas,
+                                                          valoresPeriodosLancamentos,
+                                                          diasParaCorrecao
                                                         )}`}
                                                         component={
                                                           InputValueMedicao
@@ -2486,7 +2507,8 @@ export default () => {
                                                           inclusoesAutorizadas,
                                                           categoriasDeMedicao,
                                                           kitLanchesAutorizadas,
-                                                          alteracoesAlimentacaoAutorizadas
+                                                          alteracoesAlimentacaoAutorizadas,
+                                                          diasParaCorrecao
                                                         )}
                                                         exibeTooltipPadraoRepeticaoDiasSobremesaDoce={exibirTooltipPadraoRepeticaoDiasSobremesaDoce(
                                                           formValuesAtualizados,
@@ -2574,8 +2596,7 @@ export default () => {
                                                           row,
                                                           column,
                                                           categoria,
-                                                          alteracoesAlimentacaoAutorizadas,
-                                                          validacaoDiaLetivo
+                                                          alteracoesAlimentacaoAutorizadas
                                                         )}
                                                         exibeTooltipLancheEmergencialZeroAutorizado={exibirTooltipLancheEmergencialZeroAutorizado(
                                                           formValuesAtualizados,

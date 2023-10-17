@@ -38,21 +38,12 @@ export const getRelatorioKitLancheUnificado = (uuid) => {
     });
 };
 
-export const getRelatorioAlteracaoCardapio = (uuid, tipoSolicitacao) => {
-  const url = `${getAlteracaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
-  fetch(url, {
-    method: "GET",
-    headers: authToken,
+export const getRelatorioAlteracaoCardapio = async (uuid, tipoSolicitacao) => {
+  let url = `${getAlteracaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
+  const { data } = await axios.get(url, {
     responseType: "blob",
-  })
-    .then((response) => response.blob())
-    .then((data) => {
-      let a = document.createElement("a");
-      const fileURL = URL.createObjectURL(data);
-      a.href = fileURL;
-      a.download = `alteracao_do_tipo_de_alimentacao.pdf`;
-      a.click();
-    });
+  });
+  saveAs(data, "alteracao_do_tipo_de_alimentacao.pdf");
 };
 
 export const getRelatorioDietaEspecial = async (uuid) => {

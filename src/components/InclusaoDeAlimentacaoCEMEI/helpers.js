@@ -82,12 +82,18 @@ export const formataInclusaoCEMEI = (values, vinculos) => {
               vinculo.periodo_escolar.nome === quantidade_periodo.nome
           ).periodo_escolar.uuid,
           quantidade_alunos: quantidade_periodo.alunos_emei,
-          matriculados_quando_criado: quantidade_periodo.EMEI,
+          matriculados_quando_criado: quantidade_periodo.EMEI
+            ? quantidade_periodo.EMEI
+            : "1",
         });
       }
     });
 
   return values;
+};
+
+export const tiposAlimentacaoMotivoEspecifico = (periodo) => {
+  return periodo.tipos_alimentacao.map((ta) => ta.nome).join(", ");
 };
 
 export const validarSubmit = (values) => {

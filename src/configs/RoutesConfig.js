@@ -6,6 +6,8 @@ import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
 import VincularProdutosEditaisPage from "../pages/Cadastros/VincularProdutosEditaisPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
+import PermissaoLancamentosEspeciaisPage from "../pages/Cadastros/PermissaoLancamentosEspeciaisPage";
+import NovaPermissaoLancamentoEspecialPage from "../pages/Cadastros/NovaPermissaoLancamentoEspecialPage";
 import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
 import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
 import CadastroKitLanchePage from "../pages/Cadastros/CadastroKitLanchePage";
@@ -134,6 +136,7 @@ import {
   usuarioComAcessoTelaDetalharNotificacaoOcorrencia,
   usuarioComAcessoAoPainelAprovacoes,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
+  usuarioComAcessoAoPainelEmbalagens,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -254,7 +257,14 @@ import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroSuspen
 import LayoutEmbalagemPage from "../pages/PreRecebimento/LayoutEmbalagemPage";
 import CadastroLayoutEmbalagemPage from "../pages/PreRecebimento/CadastroLayoutEmbalagemPage";
 import DetalharLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharLayoutEmbalagemPage";
+import DetalharSolicitacaoAlteracaoLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharSolicitacaoAlteracaoLayoutEmbalagemPage";
 import StatusSolicitacoesAlteracoesCodae from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCodae";
+import PainelLayoutEmbalagemPage from "../pages/PreRecebimento/PainelLayoutEmbalagemPage";
+import StatusLayoutPendenteAprovacao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutPendenteAprovacao";
+import StatusLayoutAprovados from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutAprovados";
+import StatusLayoutEnviadosParaCorrecao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutEnviadosParaCorrecao";
+import AnalisarLayoutEmbalagemPage from "../pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
+import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutEmbalagemPage";
 
 const routesConfig = [
   {
@@ -656,7 +666,19 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/tipos-alimentacao`,
     component: CadastroTipoAlimentacaoPage,
-    exact: false,
+    exact: true,
+    tipoUsuario: usuarioEhQualquerCODAE(),
+  },
+  {
+    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais`,
+    component: PermissaoLancamentosEspeciaisPage,
+    exact: true,
+    tipoUsuario: usuarioEhQualquerCODAE(),
+  },
+  {
+    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais/nova-permissao-lancamento-especial`,
+    component: NovaPermissaoLancamentoEspecialPage,
+    exact: true,
     tipoUsuario: usuarioEhQualquerCODAE(),
   },
   {
@@ -1878,6 +1900,49 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_LAYOUT_EMBALAGEM}`,
     component: DetalharLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_LAYOUT_EMBALAGEM_SOLICITACAO_ALTERACAO}`,
+    component: DetalharSolicitacaoAlteracaoLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}`,
+    component: PainelLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.PENDENTES_APROVACAO}/`,
+    component: StatusLayoutPendenteAprovacao,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.APROVADOS}/`,
+    component: StatusLayoutAprovados,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_LAYOUT_EMBALAGEM}/${constants.ENVIADOS_PARA_CORRECAO}/`,
+    component: StatusLayoutEnviadosParaCorrecao,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_LAYOUT_EMBALAGEM}`,
+    component: AnalisarLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CORRIGR_LAYOUT_EMBALAGEM}`,
+    component: CorrigirLayoutEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },

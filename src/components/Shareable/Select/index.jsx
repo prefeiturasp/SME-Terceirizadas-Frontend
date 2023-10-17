@@ -44,7 +44,7 @@ export const Select = (props) => {
         {...input}
         className={`form-control ${className} ${
           meta &&
-          (usarDirty ? meta.dirty : meta.touched) &&
+          (usarDirty ? meta.dirty || meta.touched : meta.touched) &&
           meta.error &&
           "invalid-field"
         }`}

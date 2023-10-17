@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from "react";
 import { OnChange } from "react-final-form-listeners";
 import { Field } from "react-final-form";
 import { Modal } from "react-bootstrap";
-import { Spin, Tabs } from "antd";
+import { Tabs } from "antd";
 import {
   addDays,
   format,
@@ -29,6 +29,10 @@ import {
   formatarLinhasTabelaEtecAlimentacao,
   validacaoSemana,
 } from "components/screens/LancamentoInicial/PeriodoLancamentoMedicaoInicial/helper";
+import {
+  formatarLinhasTabelaAlimentacaoCEI,
+  formatarLinhasTabelasDietasCEI,
+} from "components/screens/LancamentoInicial/PeriodoLancamentoMedicaoInicialCEI/helper";
 import { removeObjetosDuplicados } from "components/screens/LancamentoInicial/LancamentoMedicaoInicial/components/LancamentoPorPeriodo/helpers";
 import InputText from "components/Shareable/Input/InputText";
 import CKEditorField from "components/Shareable/CKEditorField";
@@ -42,7 +46,13 @@ import {
   initialStateWeekColumns,
   PERIODO_STATUS_DE_PROGRESSO,
 } from "../../constants";
-import { deepCopy, usuarioEhDRE, usuarioEhMedicao } from "helpers/utilities";
+import {
+  ehEscolaTipoCEI,
+  deepCopy,
+  usuarioEhDRE,
+  usuarioEhMedicao,
+  ehFimDeSemana,
+} from "helpers/utilities";
 import { ModalAprovarPeriodo } from "../ModalAprovarPeriodo";
 import { ModalCancelarCorrecao } from "../ModalCancelarCorrecao";
 import { ModalSalvarCorrecao } from "../ModalSalvarCorrecao";
@@ -56,6 +66,7 @@ import {
   drePedeCorrecaMedicao,
   codaePedeCorrecaPeriodo,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { LegendaDiasNaoLetivos } from "../LegendaDiasNaoLetivos";
 
 export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const {
@@ -70,6 +81,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     getPeriodosGruposMedicaoAsync,
     setOcorrenciaExpandida,
     solicitacao,
+    feriadosNoMes,
+    diasCalendario,
   } = props;
 
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
@@ -93,6 +106,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const [loading, setLoading] = useState(false);
   const [modoCorrecao, setModoCorrecao] = useState(false);
   const [valoresParaCorrecao, setValoresParaCorrecao] = useState({});
+  const [diasParaCorrecao, setDiasParaCorrecao] = useState([]);
+
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] =
     useState(false);
   const [showModalAprovarPeriodo, setShowModalAprovarPeriodo] = useState(false);
@@ -100,6 +115,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     useState(false);
   const [showModalSalvarSolicitacao, setShowModalSalvarSolicitacao] =
     useState(false);
+  const [erroAPI, setErroAPI] = useState("");
 
   const exibirBotoesDRE =
     usuarioEhDRE() &&
@@ -169,126 +185,299 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     (log) => log.status_evento_explicacao === "Correção solicitada pela CODAE"
   );
 
+  const diaEhFeriado = (dia) => {
+    return feriadosNoMes.find(
+      (diaFeriado) => String(diaFeriado.dia) === String(dia)
+    );
+  };
+
+  const diaEhFeriadoByIndex = (index) => {
+    return feriadosNoMes.find(
+      (diaFeriado) => String(diaFeriado.dia) === String(weekColumns[index].dia)
+    );
+  };
+
+  const diaEhNaoLetivoEDeSemana = (dia) => {
+    const dateObj = new Date(
+      `${anoSolicitacao}-${mesSolicitacao}-${(parseInt(dia) + 1)
+        .toString()
+        .padStart(2, "0")}`
+    );
+    return (
+      diasCalendario.find(
+        (diaCalendario) =>
+          String(diaCalendario.dia) === String(dia) && !diaCalendario.dia_letivo
+      ) && !ehFimDeSemana(dateObj)
+    );
+  };
+
+  const diaEhNaoLetivoEDeSemanaByIndex = (index) => {
+    const dateObj = new Date(
+      `${anoSolicitacao}-${mesSolicitacao}-${(
+        parseInt(weekColumns[index].dia) + 1
+      )
+        .toString()
+        .padStart(2, "0")}`
+    );
+    return (
+      diasCalendario.find(
+        (diaCalendario) =>
+          String(diaCalendario.dia) === String(weekColumns[index].dia) &&
+          !diaCalendario.dia_letivo
+      ) && !ehFimDeSemana(dateObj)
+    );
+  };
+
+  const ehDiaNaoLetivoOuFeriado = (column, categoria) => {
+    return (
+      !["Mês anterior", "Mês posterior"].includes(
+        values[
+          `frequencia__dia_${column.dia}__categoria_${
+            categoria.id
+          }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+            0,
+            5
+          )}`
+        ]
+      ) &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[
+          `lanche_emergencial__dia_${column.dia}__categoria_${
+            categoria.id
+          }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+            0,
+            5
+          )}`
+        ]
+      ) &&
+      (diaEhFeriado(column.dia) || diaEhNaoLetivoEDeSemana(column.dia))
+    );
+  };
+
+  const ehDiaNaoLetivoOuFeriadoByIndex = (index, categoria) => {
+    return (
+      !["Mês anterior", "Mês posterior"].includes(
+        values[
+          `frequencia__dia_${weekColumns[index].dia}__categoria_${
+            categoria.id
+          }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+            0,
+            5
+          )}`
+        ]
+      ) &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[
+          `lanche_emergencial__dia_${weekColumns[index].dia}__categoria_${
+            categoria.id
+          }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+            0,
+            5
+          )}`
+        ]
+      ) &&
+      (diaEhFeriadoByIndex(index) || diaEhNaoLetivoEDeSemanaByIndex(index))
+    );
+  };
+
   useEffect(() => {
     if (showTabelaLancamentosPeriodo) {
-      const getCategoriasDeMedicaoAsync = async () => {
-        if (!categoriasDeMedicao) {
-          let response_categorias_medicao = await getCategoriasDeMedicao();
-          if (periodoGrupo.nome_periodo_grupo.includes("Solicitações")) {
-            setCategoriasDeMedicao(
-              response_categorias_medicao.data.filter((cat) =>
-                cat.nome.includes("SOLICITAÇÕES")
+      const formatarTabelasAsync = async () => {
+        try {
+          setLoading(true);
+          const params_get_valores_periodos = {
+            uuid_medicao_periodo_grupo: periodoGrupo.uuid_medicao_periodo_grupo,
+          };
+          const response_valores_periodos = await getValoresPeriodosLancamentos(
+            params_get_valores_periodos
+          );
+          setValoresLancamentos(response_valores_periodos.data);
+          let categoriasMedicao;
+          const getCategoriasDeMedicaoAsync = async () => {
+            if (!categoriasDeMedicao) {
+              let response_categorias_medicao = await getCategoriasDeMedicao();
+              if (periodoGrupo.nome_periodo_grupo.includes("Solicitações")) {
+                categoriasMedicao = response_categorias_medicao.data.filter(
+                  (cat) => cat.nome.includes("SOLICITAÇÕES")
+                );
+                setCategoriasDeMedicao(categoriasMedicao);
+              } else if (periodoGrupo.nome_periodo_grupo === "ETEC") {
+                categoriasMedicao = response_categorias_medicao.data.filter(
+                  (cat) => cat.nome === "ALIMENTAÇÃO"
+                );
+                setCategoriasDeMedicao(categoriasMedicao);
+              } else {
+                categoriasMedicao = response_categorias_medicao.data.filter(
+                  (cat) => !cat.nome.includes("SOLICITAÇÕES")
+                );
+                setCategoriasDeMedicao(categoriasMedicao);
+              }
+
+              if (ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+                categoriasMedicao = response_categorias_medicao.data.filter(
+                  (cat) =>
+                    !cat.nome.includes("SOLICITAÇÕES") &&
+                    !cat.nome.includes("ENTERAL")
+                );
+                setCategoriasDeMedicao(categoriasMedicao);
+              }
+            }
+          };
+          await getCategoriasDeMedicaoAsync();
+
+          let items = [];
+          Array.apply(null, {
+            length: isSunday(lastDayOfMonth(data))
+              ? getWeeksInMonth(data) - 1
+              : getDay(startOfMonth(data)) === 0
+              ? getWeeksInMonth(data) + 1
+              : getWeeksInMonth(data),
+          }).map((e, i) =>
+            items.push({
+              key: `${i + 1}`,
+              label: `Semana ${i + 1}`,
+            })
+          );
+          setTabItems(items);
+
+          const formatarLinhasTabelasCEI = async () => {
+            const idCategoriaAlimentacao =
+              (categoriasMedicao || categoriasDeMedicao).length &&
+              (categoriasMedicao || categoriasDeMedicao).find((categoria) =>
+                categoria.nome.includes("ALIMENTAÇÃO")
+              ).id;
+
+            const linhasTabelaAlimentacaoCEI =
+              formatarLinhasTabelaAlimentacaoCEI(
+                [],
+                periodoGrupo.nome_periodo_grupo,
+                response_valores_periodos.data.filter(
+                  (valor) => valor.categoria_medicao === idCategoriaAlimentacao
+                )
+              );
+            setTabelaAlimentacaoRows(linhasTabelaAlimentacaoCEI);
+
+            let linhasTabelasDietasCEI = formatarLinhasTabelasDietasCEI(
+              [],
+              periodoGrupo,
+              response_valores_periodos.data.filter(
+                (valor) => valor.categoria_medicao !== idCategoriaAlimentacao
               )
             );
-          } else if (periodoGrupo.nome_periodo_grupo === "ETEC") {
-            setCategoriasDeMedicao(
-              response_categorias_medicao.data.filter(
-                (cat) => cat.nome === "ALIMENTAÇÃO"
-              )
+            setTabelaDietaRows(linhasTabelasDietasCEI);
+
+            let categoriasParaDeletar = [];
+            (categoriasMedicao || categoriasDeMedicao).forEach(
+              (categoria) =>
+                !response_valores_periodos.data.find(
+                  (valor) => valor.categoria_medicao === categoria.id
+                ) && categoriasParaDeletar.push(categoria.id)
             );
+            categoriasMedicao = categoriasMedicao.filter((categoria) => {
+              return !categoriasParaDeletar.includes(categoria.id);
+            });
+            setCategoriasDeMedicao(categoriasMedicao);
+          };
+
+          if (ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+            await formatarLinhasTabelasCEI();
           } else {
-            setCategoriasDeMedicao(
-              response_categorias_medicao.data.filter(
-                (cat) => !cat.nome.includes("SOLICITAÇÕES")
-              )
-            );
+            if (periodoGrupo.nome_periodo_grupo === "ETEC") {
+              const linhasTabelaEtecAlimentacao =
+                formatarLinhasTabelaEtecAlimentacao();
+              setTabelaEtecAlimentacaoRows(linhasTabelaEtecAlimentacao);
+            } else if (
+              !periodoGrupo.nome_periodo_grupo.includes("Solicitações")
+            ) {
+              if (periodoGrupo.nome_periodo_grupo === "Programas e Projetos") {
+                let periodos;
+                let tiposAlimentacao = [];
+                const getPeriodosInclusaoContinuaAsync = async () => {
+                  const response = await getPeriodosInclusaoContinua({
+                    mes: mesSolicitacao,
+                    ano: anoSolicitacao,
+                    escola: solicitacao.escola_uuid,
+                  });
+                  if (response.status === HTTP_STATUS.OK) {
+                    periodos = response.data.periodos;
+                  } else {
+                    toastError(
+                      "Erro ao carregar períodos de inclusão contínua. Tente novamente mais tarde."
+                    );
+                    periodos = periodosSimples[0];
+                  }
+                  Object.keys(periodos).forEach((periodo) => {
+                    const tipos = periodosSimples.find(
+                      (p) => p.periodo_escolar.nome === periodo
+                    ).tipos_alimentacao;
+                    tiposAlimentacao = [...tiposAlimentacao, ...tipos];
+                  });
+                  const tipos_alimentacao = removeObjetosDuplicados(
+                    tiposAlimentacao,
+                    "nome"
+                  );
+                  const tiposAlimentacaoFormatadas =
+                    formatarLinhasTabelaAlimentacao(
+                      tipos_alimentacao,
+                      periodoGrupo,
+                      solicitacao
+                    );
+                  setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
+                  const linhasTabelasDietas =
+                    formatarLinhasTabelasDietas(tipos_alimentacao);
+                  setTabelaDietaRows(linhasTabelasDietas);
+                  const cloneLinhasTabelasDietas =
+                    deepCopy(linhasTabelasDietas);
+                  const linhasTabelaDietaEnteral =
+                    formatarLinhasTabelaDietaEnteral(
+                      tipos_alimentacao,
+                      cloneLinhasTabelasDietas
+                    );
+                  setTabelaDietaEnteralRows(linhasTabelaDietaEnteral);
+                };
+                getPeriodosInclusaoContinuaAsync();
+              } else {
+                const periodo = periodosSimples.find(
+                  (periodo) => periodo.periodo_escolar.nome === periodoEscolar
+                );
+                const tipos_alimentacao = periodo.tipos_alimentacao;
+                const tiposAlimentacaoFormatadas =
+                  formatarLinhasTabelaAlimentacao(
+                    tipos_alimentacao,
+                    periodoGrupo,
+                    solicitacao
+                  );
+                setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
+                const linhasTabelasDietas =
+                  formatarLinhasTabelasDietas(tipos_alimentacao);
+                setTabelaDietaRows(linhasTabelasDietas);
+                const cloneLinhasTabelasDietas = deepCopy(linhasTabelasDietas);
+                const linhasTabelaDietaEnteral =
+                  formatarLinhasTabelaDietaEnteral(
+                    tipos_alimentacao,
+                    cloneLinhasTabelasDietas
+                  );
+                setTabelaDietaEnteralRows(linhasTabelaDietaEnteral);
+              }
+            } else {
+              const linhasTabelaSolicitacoesAlimentacao =
+                formatarLinhasTabelaSolicitacoesAlimentacao();
+              setTabelaSolicitacoesAlimentacaoRows(
+                linhasTabelaSolicitacoesAlimentacao
+              );
+            }
           }
+
+          setLoading(false);
+          setErroAPI("");
+        } catch (error) {
+          setLoading(false);
+          setErroAPI(
+            `Erro ao carregar período ${periodoGrupo.nome_periodo_grupo}. Tente novamente mais tarde.`
+          );
         }
       };
-      getCategoriasDeMedicaoAsync();
-
-      let items = [];
-      Array.apply(null, {
-        length: isSunday(lastDayOfMonth(data))
-          ? getWeeksInMonth(data) - 1
-          : getDay(startOfMonth(data)) === 0
-          ? getWeeksInMonth(data) + 1
-          : getWeeksInMonth(data),
-      }).map((e, i) =>
-        items.push({
-          key: `${i + 1}`,
-          label: `Semana ${i + 1}`,
-        })
-      );
-      setTabItems(items);
-
-      if (periodoGrupo.nome_periodo_grupo === "ETEC") {
-        const linhasTabelaEtecAlimentacao =
-          formatarLinhasTabelaEtecAlimentacao();
-        setTabelaEtecAlimentacaoRows(linhasTabelaEtecAlimentacao);
-      } else if (!periodoGrupo.nome_periodo_grupo.includes("Solicitações")) {
-        if (periodoGrupo.nome_periodo_grupo === "Programas e Projetos") {
-          let periodos;
-          let tiposAlimentacao = [];
-          const getPeriodosInclusaoContinuaAsync = async () => {
-            const response = await getPeriodosInclusaoContinua({
-              mes: mesSolicitacao,
-              ano: anoSolicitacao,
-              escola: solicitacao.escola_uuid,
-            });
-            if (response.status === HTTP_STATUS.OK) {
-              periodos = response.data.periodos;
-            } else {
-              toastError(
-                "Erro ao carregar períodos de inclusão contínua. Tente novamente mais tarde."
-              );
-              periodos = periodosSimples[0];
-            }
-            Object.keys(periodos).forEach((periodo) => {
-              const tipos = periodosSimples.find(
-                (p) => p.periodo_escolar.nome === periodo
-              ).tipos_alimentacao;
-              tiposAlimentacao = [...tiposAlimentacao, ...tipos];
-            });
-            const tipos_alimentacao = removeObjetosDuplicados(
-              tiposAlimentacao,
-              "nome"
-            );
-            const tiposAlimentacaoFormatadas = formatarLinhasTabelaAlimentacao(
-              tipos_alimentacao,
-              periodoGrupo,
-              solicitacao
-            );
-            setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
-            const linhasTabelasDietas =
-              formatarLinhasTabelasDietas(tipos_alimentacao);
-            setTabelaDietaRows(linhasTabelasDietas);
-            const cloneLinhasTabelasDietas = deepCopy(linhasTabelasDietas);
-            const linhasTabelaDietaEnteral = formatarLinhasTabelaDietaEnteral(
-              tipos_alimentacao,
-              cloneLinhasTabelasDietas
-            );
-            setTabelaDietaEnteralRows(linhasTabelaDietaEnteral);
-          };
-          getPeriodosInclusaoContinuaAsync();
-        } else {
-          const periodo = periodosSimples.find(
-            (periodo) => periodo.periodo_escolar.nome === periodoEscolar
-          );
-          const tipos_alimentacao = periodo.tipos_alimentacao;
-          const tiposAlimentacaoFormatadas = formatarLinhasTabelaAlimentacao(
-            tipos_alimentacao,
-            periodoGrupo,
-            solicitacao
-          );
-          setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
-          const linhasTabelasDietas =
-            formatarLinhasTabelasDietas(tipos_alimentacao);
-          setTabelaDietaRows(linhasTabelasDietas);
-          const cloneLinhasTabelasDietas = deepCopy(linhasTabelasDietas);
-          const linhasTabelaDietaEnteral = formatarLinhasTabelaDietaEnteral(
-            tipos_alimentacao,
-            cloneLinhasTabelasDietas
-          );
-          setTabelaDietaEnteralRows(linhasTabelaDietaEnteral);
-        }
-      } else {
-        const linhasTabelaSolicitacoesAlimentacao =
-          formatarLinhasTabelaSolicitacoesAlimentacao();
-        setTabelaSolicitacoesAlimentacaoRows(
-          linhasTabelaSolicitacoesAlimentacao
-        );
-      }
+      formatarTabelasAsync();
     }
 
     setData(new Date(`${mesSolicitacao}/01/${anoSolicitacao}`));
@@ -339,20 +528,14 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   }, [data, semanaSelecionada]);
 
   const onClickVisualizarFechar = async (periodoGrupo) => {
-    setLoading(true);
     setShowTabelaLancamentosPeriodo(!showTabelaLancamentosPeriodo);
     setPeriodoEscolar(periodoGrupo.periodo_escolar);
     if (!showTabelaLancamentosPeriodo) {
+      setLoading(true);
       setOcorrenciaExpandida();
-      const params = {
-        uuid_medicao_periodo_grupo: periodoGrupo.uuid_medicao_periodo_grupo,
-      };
-      const response_valores_periodos = await getValoresPeriodosLancamentos(
-        params
-      );
-      setValoresLancamentos(response_valores_periodos.data);
+    } else {
+      setErroAPI("");
     }
-    setLoading(false);
   };
 
   const escolherTabela = (categoria) => {
@@ -456,11 +639,6 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       uuidsValoresMedicaoParaCorrecao.push(uuidValorMedicao);
     });
 
-    if (uuidsValoresMedicaoParaCorrecao.length === 0) {
-      toastWarn("Não existem valores para correção");
-      return;
-    }
-
     const descricao_correcao =
       values[
         `descricao_correcao__periodo_grupo_${uuidMedicaoPeriodoGrupo.slice(
@@ -470,6 +648,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       ];
     const payload = {
       uuids_valores_medicao_para_correcao: uuidsValoresMedicaoParaCorrecao,
+      dias_para_corrigir: diasParaCorrecao,
       justificativa: descricao_correcao,
     };
     const response = usuarioEhDRE()
@@ -493,6 +672,31 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   };
 
   const onChangeCheckBox = (column, categoria, periodoGrupo) => {
+    if (
+      diasParaCorrecao.find(
+        (diaCorrecao) =>
+          diaCorrecao.dia === column.dia &&
+          diaCorrecao.categoria_medicao_uuid === categoria.uuid
+      )
+    ) {
+      setDiasParaCorrecao(
+        diasParaCorrecao.filter(
+          (diaCorrecao) =>
+            !(
+              diaCorrecao.dia === column.dia &&
+              diaCorrecao.categoria_medicao_uuid === categoria.uuid
+            )
+        )
+      );
+    } else {
+      const diasParaCorrecao_ = deepCopy(diasParaCorrecao);
+      diasParaCorrecao_.push({
+        dia: column.dia,
+        categoria_medicao_uuid: categoria.uuid,
+      });
+      setDiasParaCorrecao(diasParaCorrecao_);
+    }
+
     const keys = Object.keys(values).filter((key) =>
       key.includes(
         `dia_${column.dia}__categoria_${
@@ -555,6 +759,24 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     return undefined;
   };
 
+  const getNameFieldInputValueMedicao = (row, column, categoria) => {
+    if (ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+      return `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${
+        categoria.id
+      }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+        0,
+        5
+      )}`;
+    } else {
+      return `${row.name}__dia_${column.dia}__categoria_${
+        categoria.id
+      }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+        0,
+        5
+      )}`;
+    }
+  };
+
   return (
     <div key={key}>
       <div className="content-section-acompanhamento-lancamento mb-3">
@@ -583,415 +805,522 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
           </p>
         </div>
       </div>
-      {showTabelaLancamentosPeriodo &&
-      ((tabelaAlimentacaoRows && tabelaDietaRows && tabelaDietaEnteralRows) ||
-        tabelaSolicitacoesAlimentacaoRows ||
-        tabelaEtecAlimentacaoRows) &&
-      valoresLancamentos ? (
-        <>
-          <p className="section-title-conf-lancamentos">Lançamentos da UE</p>
-          <div className="weeks-tabs mb-2">
-            <Tabs
-              activeKey={semanaSelecionada}
-              onChange={(key) => onChangeSemana(key)}
-              type="card"
-              className={`${
-                semanaSelecionada === 1 ? "default-color-first-semana" : ""
-              }`}
-              items={tabItems}
-            />
-            {categoriasDeMedicao &&
-              categoriasDeMedicao.length > 0 &&
-              categoriasDeMedicao.map((categoria) => (
-                <div key={categoria.id}>
-                  <b className="pb-2 section-title">{categoria.nome}</b>
-                  <section className="tabela-tipos-alimentacao">
-                    <article>
-                      <div
-                        className={"grid-table-tipos-alimentacao header-table"}
-                      >
-                        <div />
-                        {weekColumns.map((column) => {
-                          return modoCorrecao &&
-                            !validacaoSemana(column.dia, semanaSelecionada) ? (
-                            <div
-                              className="dias-semana-tabela"
-                              key={column.dia}
-                            >
-                              <Field
-                                className="input-dias-semana-tabela"
-                                component={"input"}
-                                type="checkbox"
-                                name={`ckbox_dias_semana__dia_${
-                                  column.dia
-                                }__categoria_${
-                                  categoria.id
-                                }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-                                  0,
-                                  5
-                                )}`}
-                              />
+      {loading && (
+        <div className="carregando-conteudo">
+          <div className="text-logo-sigpae-loader text-center">
+            <img src="/assets/image/sigpae-loader.gif" alt="sigpae-loader" />
+            <div>Carregando...</div>
+          </div>
+        </div>
+      )}
+      {!!erroAPI && showTabelaLancamentosPeriodo && (
+        <div className="text-center mb-3">{erroAPI}</div>
+      )}
+      {!loading &&
+        showTabelaLancamentosPeriodo &&
+        ((tabelaAlimentacaoRows && tabelaDietaRows && tabelaDietaEnteralRows) ||
+          tabelaSolicitacoesAlimentacaoRows ||
+          tabelaEtecAlimentacaoRows ||
+          (ehEscolaTipoCEI({ nome: solicitacao.escola }) &&
+            tabelaAlimentacaoRows)) &&
+        valoresLancamentos && (
+          <>
+            <p className="section-title-conf-lancamentos">Lançamentos da UE</p>
+            <div className="weeks-tabs mb-2">
+              <Tabs
+                activeKey={semanaSelecionada}
+                onChange={(key) => onChangeSemana(key)}
+                type="card"
+                className={`${
+                  semanaSelecionada === 1 ? "default-color-first-semana" : ""
+                }`}
+                items={tabItems}
+              />
+              {categoriasDeMedicao &&
+                categoriasDeMedicao.length > 0 &&
+                categoriasDeMedicao.map((categoria, idx) => [
+                  <div key={categoria.id}>
+                    <b className="pb-2 section-title">{categoria.nome}</b>
+                    <section className="tabela-tipos-alimentacao">
+                      <article>
+                        <div
+                          className={
+                            "grid-table-tipos-alimentacao header-table"
+                          }
+                        >
+                          <div />
+                          {weekColumns.map((column) => {
+                            return modoCorrecao &&
+                              !validacaoSemana(
+                                column.dia,
+                                semanaSelecionada
+                              ) ? (
                               <div
+                                className="dias-semana-tabela"
                                 key={column.dia}
-                                className="label-dias-semana-tabela"
                               >
-                                {column.dia}
-                              </div>
-                              <OnChange
-                                name={`ckbox_dias_semana__dia_${
-                                  column.dia
-                                }__categoria_${
-                                  categoria.id
-                                }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-                                  0,
-                                  5
-                                )}`}
-                              >
-                                {() =>
-                                  onChangeCheckBox(
-                                    column,
-                                    categoria,
-                                    periodoGrupo
-                                  )
-                                }
-                              </OnChange>
-                            </div>
-                          ) : (
-                            <div key={column.dia}>{column.dia}</div>
-                          );
-                        })}
-                      </div>
-                      <div
-                        className={"grid-table-tipos-alimentacao header-table"}
-                      >
-                        <div />
-                        {diasSemana.map((dia, index) => (
-                          <div key={index}>{dia}</div>
-                        ))}
-                      </div>
-                      {escolherTabela(categoria).map((row, index) => {
-                        return (
-                          <Fragment key={index}>
-                            <div
-                              className={`grid-table-tipos-alimentacao body-table-alimentacao`}
-                            >
-                              <div className="nome-linha">
-                                <b className="pl-2">{row.nome}</b>
-                              </div>
-                              {weekColumns.map((column) => (
+                                <Field
+                                  className="input-dias-semana-tabela"
+                                  component={"input"}
+                                  type="checkbox"
+                                  name={`ckbox_dias_semana__dia_${
+                                    column.dia
+                                  }__categoria_${
+                                    categoria.id
+                                  }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                                    0,
+                                    5
+                                  )}`}
+                                />
                                 <div
                                   key={column.dia}
-                                  className={`${
-                                    validacaoSemana(
-                                      column.dia,
-                                      semanaSelecionada
-                                    )
-                                      ? "input-desabilitado"
-                                      : row.name === "observacoes"
-                                      ? "input-habilitado-observacoes"
-                                      : "input-habilitado"
+                                  className={`label-dias-semana-tabela ${
+                                    ehDiaNaoLetivoOuFeriado(column, categoria)
+                                      ? "dia-nao-letivo-header"
+                                      : ""
                                   }`}
                                 >
-                                  {row.name === "observacoes" ? (
-                                    !validacaoSemana(
-                                      column.dia,
-                                      semanaSelecionada
-                                    ) && (
-                                      <Botao
-                                        texto={"Visualizar"}
-                                        type={BUTTON_TYPE.BUTTON}
-                                        style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                                        onClick={() =>
-                                          onClickBotaoObservacao(
-                                            column.dia,
-                                            categoria.id
-                                          )
-                                        }
-                                        disabled={
-                                          !valoresLancamentos.find(
-                                            (valor) =>
-                                              valor.nome_campo ===
-                                                "observacoes" &&
-                                              Number(valor.dia) ===
-                                                Number(column.dia) &&
-                                              Number(
-                                                valor.categoria_medicao
-                                              ) === Number(categoria.id)
-                                          )
-                                        }
-                                      />
+                                  {column.dia}
+                                  {ehDiaNaoLetivoOuFeriado(column, categoria)
+                                    ? " *"
+                                    : ""}
+                                </div>
+                                <OnChange
+                                  name={`ckbox_dias_semana__dia_${
+                                    column.dia
+                                  }__categoria_${
+                                    categoria.id
+                                  }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                                    0,
+                                    5
+                                  )}`}
+                                >
+                                  {() =>
+                                    onChangeCheckBox(
+                                      column,
+                                      categoria,
+                                      periodoGrupo
                                     )
-                                  ) : (
-                                    <div
-                                      className={`field-values-input${
-                                        ehInputParaCorrecao(
-                                          `dia_${column.dia}__categoria_${
-                                            categoria.id
-                                          }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-                                            0,
-                                            5
-                                          )}`
-                                        ) && modoCorrecao
-                                          ? " input-para-correcao"
-                                          : ""
+                                  }
+                                </OnChange>
+                              </div>
+                            ) : (
+                              <div
+                                className={`${
+                                  ehDiaNaoLetivoOuFeriado(column, categoria)
+                                    ? "dia-nao-letivo-header"
+                                    : ""
+                                }`}
+                                key={column.dia}
+                              >
+                                {column.dia}
+                                {ehDiaNaoLetivoOuFeriado(column, categoria)
+                                  ? " *"
+                                  : ""}
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div
+                          className={
+                            "grid-table-tipos-alimentacao header-table"
+                          }
+                        >
+                          <div />
+                          {diasSemana.map((dia, index) => (
+                            <div
+                              className={`${
+                                ehDiaNaoLetivoOuFeriadoByIndex(index, categoria)
+                                  ? "dia-nao-letivo-header"
+                                  : ""
+                              }`}
+                              key={index}
+                            >
+                              {dia}
+                            </div>
+                          ))}
+                        </div>
+                        {escolherTabela(categoria).map((row, index) => {
+                          return (
+                            <Fragment key={index}>
+                              <div
+                                className={`grid-table-tipos-alimentacao body-table-alimentacao`}
+                              >
+                                {ehEscolaTipoCEI({
+                                  nome: solicitacao.escola,
+                                }) ? (
+                                  <div className="linha-cei">
+                                    <b
+                                      className={`nome-linha-cei pl-2 ${
+                                        row.name === "observacoes" && "mt-2"
                                       }`}
                                     >
-                                      <Field
-                                        className={`m-2`}
-                                        component={InputValueMedicao}
-                                        classNameToNextInput={getClassNameToNextInput(
-                                          row,
-                                          column,
-                                          categoria,
-                                          index
-                                        )}
-                                        classNameToPrevInput={getClassNameToPrevInput(
-                                          row,
-                                          column,
-                                          categoria,
-                                          index
-                                        )}
-                                        apenasNumeros
-                                        name={`${row.name}__dia_${
-                                          column.dia
-                                        }__categoria_${
-                                          categoria.id
-                                        }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-                                          0,
-                                          5
-                                        )}`}
-                                        disabled={true}
-                                        defaultValue={defaultValue(
-                                          column,
-                                          row,
-                                          semanaSelecionada,
-                                          valoresLancamentos,
-                                          categoria,
-                                          form,
-                                          periodoGrupo
-                                        )}
-                                      />
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </Fragment>
-                        );
-                      })}
-                    </article>
-                  </section>
-                </div>
-              ))}
-            {usuarioEhDRE() && logPeriodoAprovado && (
-              <div className="row">
-                <div className="col-12">
-                  <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
-                    periodoGrupo.nome_periodo_grupo
-                  )}  aprovado em ${logPeriodoAprovado.criado_em}`}</p>
-                </div>
-              </div>
-            )}
-
-            {usuarioEhMedicao() && logPeriodoAprovadoCODAE && (
-              <div className="row">
-                <div className="col-12">
-                  <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
-                    periodoGrupo.nome_periodo_grupo
-                  )}  aprovado em ${logPeriodoAprovadoCODAE.criado_em}`}</p>
-                </div>
-              </div>
-            )}
-            {usuarioEhMedicao() && logPeriodoReprovadoCODAE && (
-              <div className="row">
-                <div className="col-12">
-                  <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
-                    periodoGrupo.nome_periodo_grupo
-                  )}  devolvido para ajustes pela CODAE em ${
-                    logPeriodoReprovadoCODAE.criado_em
-                  }`}</p>
-                </div>
-              </div>
-            )}
-            {usuarioEhDRE() && logPeriodoReprovado && (
-              <div className="row">
-                <div className="col-12">
-                  <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
-                    periodoGrupo.nome_periodo_grupo
-                  )}  devolvido para ajustes pela DRE em ${
-                    logPeriodoReprovado.criado_em
-                  }`}</p>
-                </div>
-              </div>
-            )}
-            {modoCorrecao && (
-              <>
-                <div className="red">
-                  Selecione
-                  <b>
-                    {" "}
-                    nas tabelas acima os dias em que a unidade deve realizar as
-                    correções{" "}
-                  </b>
-                  e informe no campo abaixo todas as correções a serem
-                  realizadas.
-                </div>
-                <div className="mt-3">
-                  <p className="mb-0">
-                    Descrição da Correção <span className="red">*</span>
-                  </p>
-                  <Field
-                    component={CKEditorField}
-                    name={`descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-                      0,
-                      5
-                    )}`}
-                    placeholder="Informe quais os pontos necessários de correção da Medição Inicial"
-                    required
-                  />
-                </div>
-              </>
-            )}
-            <div className="periodo-final-tabela-lancamento mb-4">
-              <div
-                className={`col-${
-                  modoCorrecao
-                    ? 7
-                    : [
-                        "MEDICAO_APROVADA_PELA_CODAE",
-                        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-                      ].includes(solicitacao.status)
-                    ? 12
-                    : 8
-                } pl-0 pr-4`}
-              >
-                <p className="section-title-conf-lancamentos periodo mb-0">
-                  {periodoGrupo.nome_periodo_grupo}
-                </p>
-              </div>
-              {modoCorrecao ? (
-                <div className="col-5 px-0">
-                  <Botao
-                    texto="Salvar Solicitação de Correção para UE"
-                    style={BUTTON_STYLE.GREEN}
-                    className="float-right"
-                    disabled={
-                      !values[
-                        `descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-                          0,
-                          5
-                        )}`
-                      ] || !algumCheckboxMarcado()
-                    }
-                    onClick={() => setShowModalSalvarSolicitacao(true)}
-                  />
-                  <Botao
-                    texto="Cancelar"
-                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                    className="mr-3 float-right"
-                    onClick={() => setShowModalCancelarSolicitacao(true)}
-                  />
-                </div>
-              ) : (
-                (exibirBotoesDRE || exibirBotoesCODAE) && (
-                  <div className="botoes col-4 px-0">
-                    <Botao
-                      texto="Solicitar Correção"
-                      style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                      className="col-6 mr-3"
-                      onClick={() => setModoCorrecao(true)}
-                      disabled={
-                        statusPermitidosCorrecaoDRE ||
-                        statusPermitidosCorrecaoCODAE
-                      }
+                                      {row.nome}
+                                    </b>
+                                    {row.name !== "observacoes" && (
+                                      <b className="faixa-etaria pl-2">
+                                        {row.faixa_etaria}
+                                      </b>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <div className="nome-linha">
+                                    <b className="pl-2">{row.nome}</b>
+                                  </div>
+                                )}
+                                {weekColumns.map((column) => (
+                                  <div
+                                    key={column.dia}
+                                    className={`${
+                                      validacaoSemana(
+                                        column.dia,
+                                        semanaSelecionada
+                                      )
+                                        ? "input-desabilitado"
+                                        : row.name === "observacoes"
+                                        ? "input-habilitado-observacoes"
+                                        : "input-habilitado"
+                                    }`}
+                                  >
+                                    {row.name === "observacoes" ? (
+                                      !validacaoSemana(
+                                        column.dia,
+                                        semanaSelecionada
+                                      ) && (
+                                        <Botao
+                                          texto={"Visualizar"}
+                                          type={BUTTON_TYPE.BUTTON}
+                                          style={
+                                            BUTTON_STYLE.GREEN_OUTLINE_WHITE
+                                          }
+                                          onClick={() =>
+                                            onClickBotaoObservacao(
+                                              column.dia,
+                                              categoria.id
+                                            )
+                                          }
+                                          disabled={
+                                            !valoresLancamentos.find(
+                                              (valor) =>
+                                                valor.nome_campo ===
+                                                  "observacoes" &&
+                                                Number(valor.dia) ===
+                                                  Number(column.dia) &&
+                                                Number(
+                                                  valor.categoria_medicao
+                                                ) === Number(categoria.id)
+                                            )
+                                          }
+                                        />
+                                      )
+                                    ) : (
+                                      <div
+                                        className={`field-values-input${
+                                          ehInputParaCorrecao(
+                                            `dia_${column.dia}__categoria_${
+                                              categoria.id
+                                            }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                                              0,
+                                              5
+                                            )}`
+                                          ) &&
+                                          modoCorrecao &&
+                                          ![
+                                            "Mês anterior",
+                                            "Mês posterior",
+                                          ].includes(
+                                            values[
+                                              `${row.name}__dia_${
+                                                column.dia
+                                              }__categoria_${
+                                                categoria.id
+                                              }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                                                0,
+                                                5
+                                              )}`
+                                            ]
+                                          )
+                                            ? " input-para-correcao"
+                                            : ""
+                                        }${
+                                          ehDiaNaoLetivoOuFeriado(
+                                            column,
+                                            categoria
+                                          )
+                                            ? " dia-nao-letivo"
+                                            : ""
+                                        }`}
+                                      >
+                                        <Field
+                                          className={`m-2`}
+                                          component={InputValueMedicao}
+                                          classNameToNextInput={getClassNameToNextInput(
+                                            row,
+                                            column,
+                                            categoria,
+                                            index
+                                          )}
+                                          classNameToPrevInput={getClassNameToPrevInput(
+                                            row,
+                                            column,
+                                            categoria,
+                                            index
+                                          )}
+                                          apenasNumeros
+                                          name={getNameFieldInputValueMedicao(
+                                            row,
+                                            column,
+                                            categoria
+                                          )}
+                                          disabled={true}
+                                          defaultValue={defaultValue(
+                                            column,
+                                            row,
+                                            semanaSelecionada,
+                                            valoresLancamentos,
+                                            categoria,
+                                            form,
+                                            periodoGrupo,
+                                            solicitacao
+                                          )}
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </Fragment>
+                          );
+                        })}
+                      </article>
+                    </section>
+                  </div>,
+                  idx === 0 && categoriasDeMedicao.length > 1 && (
+                    <LegendaDiasNaoLetivos
+                      diasCalendario={diasCalendario}
+                      feriadosNoMes={feriadosNoMes}
+                      anoSolicitacao={anoSolicitacao}
+                      mesSolicitacao={mesSolicitacao}
+                      weekColumns={weekColumns}
+                      values={values}
+                      categoria={categoria}
+                      periodoGrupo={periodoGrupo}
                     />
-                    <Botao
-                      texto="Aprovar Período"
-                      style={BUTTON_STYLE.GREEN}
-                      className="col-5"
-                      onClick={() => setShowModalAprovarPeriodo(true)}
-                      disabled={
-                        statusPermitidosAprovacaoDRE ||
-                        statusPermitidosAprovacaoCODAE
-                      }
+                  ),
+                ])}
+              <LegendaDiasNaoLetivos
+                diasCalendario={diasCalendario}
+                feriadosNoMes={feriadosNoMes}
+                anoSolicitacao={anoSolicitacao}
+                mesSolicitacao={mesSolicitacao}
+                weekColumns={weekColumns}
+                values={values}
+                categoria={categoriasDeMedicao[0]}
+                periodoGrupo={periodoGrupo}
+              />
+              {usuarioEhDRE() && logPeriodoAprovado && (
+                <div className="row">
+                  <div className="col-12">
+                    <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
+                      periodoGrupo.nome_periodo_grupo
+                    )}  aprovado em ${logPeriodoAprovado.criado_em}`}</p>
+                  </div>
+                </div>
+              )}
+
+              {usuarioEhMedicao() && logPeriodoAprovadoCODAE && (
+                <div className="row">
+                  <div className="col-12">
+                    <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
+                      periodoGrupo.nome_periodo_grupo
+                    )}  aprovado em ${logPeriodoAprovadoCODAE.criado_em}`}</p>
+                  </div>
+                </div>
+              )}
+              {usuarioEhMedicao() && logPeriodoReprovadoCODAE && (
+                <div className="row">
+                  <div className="col-12">
+                    <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
+                      periodoGrupo.nome_periodo_grupo
+                    )}  devolvido para ajustes pela CODAE em ${
+                      logPeriodoReprovadoCODAE.criado_em
+                    }`}</p>
+                  </div>
+                </div>
+              )}
+              {usuarioEhDRE() && logPeriodoReprovado && (
+                <div className="row">
+                  <div className="col-12">
+                    <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
+                      periodoGrupo.nome_periodo_grupo
+                    )}  devolvido para ajustes pela DRE em ${
+                      logPeriodoReprovado.criado_em
+                    }`}</p>
+                  </div>
+                </div>
+              )}
+              {modoCorrecao && (
+                <>
+                  <div className="red">
+                    Selecione
+                    <b>
+                      {" "}
+                      nas tabelas acima os dias em que a unidade deve realizar
+                      as correções{" "}
+                    </b>
+                    e informe no campo abaixo todas as correções a serem
+                    realizadas.
+                  </div>
+                  <div className="mt-3">
+                    <p className="mb-0">
+                      Descrição da Correção <span className="red">*</span>
+                    </p>
+                    <Field
+                      component={CKEditorField}
+                      name={`descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                        0,
+                        5
+                      )}`}
+                      placeholder="Informe quais os pontos necessários de correção da Medição Inicial"
+                      required
                     />
                   </div>
-                )
+                </>
               )}
+              <div className="periodo-final-tabela-lancamento mb-4">
+                <div
+                  className={`col-${
+                    modoCorrecao
+                      ? 7
+                      : [
+                          "MEDICAO_APROVADA_PELA_CODAE",
+                          "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+                        ].includes(solicitacao.status)
+                      ? 12
+                      : 8
+                  } pl-0 pr-4`}
+                >
+                  <p className="section-title-conf-lancamentos periodo mb-0">
+                    {periodoGrupo.nome_periodo_grupo}
+                  </p>
+                </div>
+                {modoCorrecao ? (
+                  <div className="col-5 px-0">
+                    <Botao
+                      texto="Salvar Solicitação de Correção para UE"
+                      style={BUTTON_STYLE.GREEN}
+                      className="float-right"
+                      disabled={
+                        !values[
+                          `descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                            0,
+                            5
+                          )}`
+                        ] || !algumCheckboxMarcado()
+                      }
+                      onClick={() => setShowModalSalvarSolicitacao(true)}
+                    />
+                    <Botao
+                      texto="Cancelar"
+                      style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                      className="mr-3 float-right"
+                      onClick={() => setShowModalCancelarSolicitacao(true)}
+                    />
+                  </div>
+                ) : (
+                  (exibirBotoesDRE || exibirBotoesCODAE) && (
+                    <div className="botoes col-4 px-0">
+                      <Botao
+                        texto="Solicitar Correção"
+                        style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                        className="col-6 mr-3"
+                        onClick={() => setModoCorrecao(true)}
+                        disabled={
+                          statusPermitidosCorrecaoDRE ||
+                          statusPermitidosCorrecaoCODAE
+                        }
+                      />
+                      <Botao
+                        texto="Aprovar Período"
+                        style={BUTTON_STYLE.GREEN}
+                        className="col-5"
+                        onClick={() => setShowModalAprovarPeriodo(true)}
+                        disabled={
+                          statusPermitidosAprovacaoDRE ||
+                          statusPermitidosAprovacaoCODAE
+                        }
+                      />
+                    </div>
+                  )
+                )}
+              </div>
+              <hr />
             </div>
-            <hr />
-          </div>
-          <ModalAprovarPeriodo
-            showModal={showModalAprovarPeriodo}
-            setShowModal={(value) => setShowModalAprovarPeriodo(value)}
-            periodoGrupo={periodoGrupo}
-            aprovarPeriodo={(nomePeridoFormatado) => {
-              setShowTabelaLancamentosPeriodo(!showTabelaLancamentosPeriodo);
-              aprovarPeriodo(periodoGrupo, nomePeridoFormatado);
-            }}
-          />
-          <ModalCancelarCorrecao
-            showModal={showModalCancelarSolicitacao}
-            setShowModal={(value) => setShowModalCancelarSolicitacao(value)}
-            cancelarCorrecao={() =>
-              cancelarCorrecao(periodoGrupo.uuid_medicao_periodo_grupo)
-            }
-          />
-          <ModalSalvarCorrecao
-            showModal={showModalSalvarSolicitacao}
-            setShowModal={(value) => setShowModalSalvarSolicitacao(value)}
-            periodoGrupo={periodoGrupo}
-            salvarCorrecao={() =>
-              salvarCorrecao(periodoGrupo.uuid_medicao_periodo_grupo)
-            }
-          />
-          <Modal
-            dialogClassName="modal-50w"
-            show={showModalObservacaoDiaria}
-            onHide={() => setShowModalObservacaoDiaria(false)}
-          >
-            <Modal.Header closeButton>
-              <Modal.Title>Observação Diária</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div className="col-4 mt-0">
-                <label className="font-weight-bold">Data do Lançamento</label>
-                <Field
-                  className="data_lancamento_modal"
-                  component={InputText}
-                  name="data_lancamento"
-                  disabled
-                />
-              </div>
-              <div className="col-12 mt-3">
-                <label className="font-weight-bold">Observação</label>
-                <Field
-                  component={CKEditorField}
-                  name="observacao_modal"
-                  disabled
-                />
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <div className="col-12">
-                <Botao
-                  className="float-right"
-                  texto="Voltar"
-                  type={BUTTON_TYPE.BUTTON}
-                  onClick={() => setShowModalObservacaoDiaria(false)}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                />
-              </div>
-            </Modal.Footer>
-          </Modal>
-        </>
-      ) : (
-        loading && (
-          <div className="carregando-conteudo">
-            <Spin tip="Carregando..." />
-          </div>
-        )
-      )}
+            <ModalAprovarPeriodo
+              showModal={showModalAprovarPeriodo}
+              setShowModal={(value) => setShowModalAprovarPeriodo(value)}
+              periodoGrupo={periodoGrupo}
+              aprovarPeriodo={(nomePeridoFormatado) => {
+                setShowTabelaLancamentosPeriodo(!showTabelaLancamentosPeriodo);
+                aprovarPeriodo(periodoGrupo, nomePeridoFormatado);
+              }}
+            />
+            <ModalCancelarCorrecao
+              showModal={showModalCancelarSolicitacao}
+              setShowModal={(value) => setShowModalCancelarSolicitacao(value)}
+              cancelarCorrecao={() =>
+                cancelarCorrecao(periodoGrupo.uuid_medicao_periodo_grupo)
+              }
+            />
+            <ModalSalvarCorrecao
+              showModal={showModalSalvarSolicitacao}
+              setShowModal={(value) => setShowModalSalvarSolicitacao(value)}
+              periodoGrupo={periodoGrupo}
+              salvarCorrecao={() =>
+                salvarCorrecao(periodoGrupo.uuid_medicao_periodo_grupo)
+              }
+            />
+            <Modal
+              dialogClassName="modal-50w"
+              show={showModalObservacaoDiaria}
+              onHide={() => setShowModalObservacaoDiaria(false)}
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Observação Diária</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="col-4 mt-0">
+                  <label className="font-weight-bold">Data do Lançamento</label>
+                  <Field
+                    className="data_lancamento_modal"
+                    component={InputText}
+                    name="data_lancamento"
+                    disabled
+                  />
+                </div>
+                <div className="col-12 mt-3">
+                  <label className="font-weight-bold">Observação</label>
+                  <Field
+                    component={CKEditorField}
+                    name="observacao_modal"
+                    disabled
+                  />
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <div className="col-12">
+                  <Botao
+                    className="float-right"
+                    texto="Voltar"
+                    type={BUTTON_TYPE.BUTTON}
+                    onClick={() => setShowModalObservacaoDiaria(false)}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                  />
+                </div>
+              </Modal.Footer>
+            </Modal>
+          </>
+        )}
     </div>
   );
 };

@@ -32,6 +32,10 @@ import {
   codaeAprovaPeriodo,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
+  getFeriadosNoMesComNome,
+  getDiasCalendario,
+} from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import {
   MEDICAO_STATUS_DE_PROGRESSO,
   OCORRENCIA_STATUS_DE_PROGRESSO,
 } from "./constants";
@@ -85,9 +89,44 @@ export const ConferenciaDosLancamentos = () => {
     useState(true);
   const [showModal, setShowModal] = useState(false);
 
+  const [feriadosNoMes, setFeriadosNoMes] = useState();
+  const [diasCalendario, setDiasCalendario] = useState();
+
   const visualizarModal = () => {
     setShowModal(true);
   };
+
+  const getFeriadosNoMesAsync = async (mes, ano) => {
+    const params_feriados_no_mes = {
+      mes: mes,
+      ano: ano,
+    };
+    const response = await getFeriadosNoMesComNome(params_feriados_no_mes);
+    if (response.status === HTTP_STATUS.OK) {
+      setFeriadosNoMes(response.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar feriados do mês para esta escola. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const getDiasCalendarioAsync = async (mes, ano) => {
+    const params_dias_calendario = {
+      escola_uuid: location.state.escolaUuid,
+      mes: mes,
+      ano: ano,
+    };
+    const response = await getDiasCalendario(params_dias_calendario);
+    if (response.status === HTTP_STATUS.OK) {
+      setDiasCalendario(response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar dias do calendário escolar para esta escola. Tente novamente mais tarde."
+      );
+    }
+  };
+
   const getPeriodosGruposMedicaoAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
@@ -218,8 +257,14 @@ export const ConferenciaDosLancamentos = () => {
       setErroAPI("Erro ao carregar Medição Inicial.");
     }
     dados_iniciais && setDadosIniciais(dados_iniciais);
-    setLoading(false);
   };
+
+  useEffect(() => {
+    if (mesSolicitacao && anoSolicitacao) {
+      !feriadosNoMes && getFeriadosNoMesAsync(mesSolicitacao, anoSolicitacao);
+      !diasCalendario && getDiasCalendarioAsync(mesSolicitacao, anoSolicitacao);
+    }
+  }, [mesSolicitacao, anoSolicitacao]);
 
   const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
     const escolaUuid = location.state.escolaUuid;
@@ -240,9 +285,11 @@ export const ConferenciaDosLancamentos = () => {
   };
 
   useEffect(() => {
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+      getVinculosTipoAlimentacaoPorEscolaAsync(),
+    ]).then(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -377,9 +424,11 @@ export const ConferenciaDosLancamentos = () => {
         `Erro ao aprovar Período ${nomePeridoFormatado}. Tente novamente mais tarde.`
       );
     }
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+      getVinculosTipoAlimentacaoPorEscolaAsync(),
+    ]).then(() => setLoading(false));
   };
 
   const aprovarSolicitacaoMedicao = async () => {
@@ -402,9 +451,11 @@ export const ConferenciaDosLancamentos = () => {
         setErroAPI(msgErro);
       }
     }
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+      getVinculosTipoAlimentacaoPorEscolaAsync(),
+    ]).then(() => setLoading(false));
   };
 
   const solicitarCorrecaoMedicao = async () => {
@@ -422,9 +473,11 @@ export const ConferenciaDosLancamentos = () => {
     } else {
       setErroAPI(msgErro);
     }
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+      getVinculosTipoAlimentacaoPorEscolaAsync(),
+    ]).then(() => setLoading(false));
   };
 
   const handleClickDownload = async () => {
@@ -661,7 +714,7 @@ export const ConferenciaDosLancamentos = () => {
                       </div>
                       <div className="col-12 mt-3">
                         {periodosGruposMedicao.map((periodoGrupo, index) => {
-                          return (
+                          return [
                             <TabelaLancamentosPeriodo
                               key={index}
                               periodoGrupo={periodoGrupo}
@@ -686,8 +739,10 @@ export const ConferenciaDosLancamentos = () => {
                                 setOcorrenciaExpandida(false)
                               }
                               solicitacao={solicitacao}
-                            />
-                          );
+                              feriadosNoMes={feriadosNoMes}
+                              diasCalendario={diasCalendario}
+                            />,
+                          ];
                         })}
                       </div>
                     </div>
@@ -745,7 +800,10 @@ export const ConferenciaDosLancamentos = () => {
           showModal={showModalSalvarOcorrencia}
           setShowModal={(value) => setShowModalSalvarOcorrencia(value)}
           ocorrencia={ocorrencia}
-          atualizarDados={() => getSolMedInicialAsync()}
+          atualizarDados={async () => {
+            await getSolMedInicialAsync();
+            setLoading(false);
+          }}
           titulo={"Solicitar correção no formulário de ocorrências"}
           descricao={
             "Informe quais os pontos necessários de correção no Formulário de Ocorrências"
@@ -758,7 +816,10 @@ export const ConferenciaDosLancamentos = () => {
           showModal={showModalAprovarOcorrencia}
           setShowModal={(value) => setShowModalAprovarOcorrencia(value)}
           ocorrencia={ocorrencia}
-          atualizarDados={() => getSolMedInicialAsync()}
+          atualizarDados={async () => {
+            await getSolMedInicialAsync();
+            setLoading(false);
+          }}
           titulo={"Aprovar Formulário de Ocorrências"}
           descricao={"Deseja aprovar o Formulário de Ocorrências?"}
           temJustificativa={false}

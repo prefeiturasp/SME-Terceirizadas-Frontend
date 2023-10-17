@@ -10,6 +10,18 @@ import "./style.scss";
 export const FluxoDeStatusCronograma = ({ listaDeStatus, solicitacao }) => {
   const history = useHistory();
 
+  let ultimoStatus = listaDeStatus.slice(-1)[0];
+
+  if (
+    ultimoStatus.status_evento_explicacao === "Alteração enviada ao fornecedor"
+  ) {
+    listaDeStatus.push({
+      status_evento_explicacao: "Fornecedor Ciente",
+      criado_em: null,
+      usuario: null,
+    });
+  }
+
   const item = (status, key) => {
     const content = (
       <>
