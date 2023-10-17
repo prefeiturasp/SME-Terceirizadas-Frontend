@@ -9,7 +9,11 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { ehEscolaTipoCEUGESTAO, tiposAlimentacaoETEC } from "helpers/utilities";
+import {
+  ehEscolaTipoCEI,
+  ehEscolaTipoCEUGESTAO,
+  tiposAlimentacaoETEC,
+} from "helpers/utilities";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
@@ -253,7 +257,8 @@ export const desabilitarField = (
   inclusoesAutorizadas,
   categoriasDeMedicao,
   kitLanchesAutorizadas,
-  alteracoesAlimentacaoAutorizadas
+  alteracoesAlimentacaoAutorizadas,
+  diasParaCorrecao
 ) => {
   const valorField = valoresPeriodosLancamentos.some(
     (valor) =>
@@ -262,7 +267,17 @@ export const desabilitarField = (
       valor.habilitado_correcao === true
   );
   if (
-    valorField &&
+    (valorField ||
+      (diasParaCorrecao &&
+        diasParaCorrecao.find(
+          (diaParaCorrecao) =>
+            String(diaParaCorrecao.dia) === String(dia) &&
+            String(diaParaCorrecao.categoria_medicao) === String(categoria) &&
+            diaParaCorrecao.habilitado_correcao === true
+        ))) &&
+    !["Mês anterior", "Mês posterior"].includes(
+      values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+    ) &&
     location.state &&
     [
       "MEDICAO_CORRECAO_SOLICITADA",
@@ -437,6 +452,18 @@ export const desabilitarField = (
     !["Mês anterior", "Mês posterior"].includes(
       values[`${rowName}__dia_${dia}__categoria_${categoria}`]
     )
+  ) {
+    return false;
+  } else if (
+    `refeicao__dia_${dia}__categoria_${categoria}` in
+      dadosValoresInclusoesAutorizadasState &&
+    rowName === "repeticao_refeicao"
+  ) {
+    return false;
+  } else if (
+    `sobremesa__dia_${dia}__categoria_${categoria}` in
+      dadosValoresInclusoesAutorizadasState &&
+    rowName === "repeticao_sobremesa"
   ) {
     return false;
   } else if (
@@ -828,16 +855,28 @@ export const defaultValue = (
   valoresLancamentos,
   categoria,
   form,
-  periodoGrupo
+  periodoGrupo,
+  solicitacao
 ) => {
   let result = null;
+  let valorLancamento = null;
 
-  const valorLancamento = valoresLancamentos.find(
-    (valor) =>
-      Number(valor.categoria_medicao) === Number(categoria.id) &&
-      Number(valor.dia) === Number(column.dia) &&
-      valor.nome_campo === row.name
-  );
+  if (solicitacao && ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+    valorLancamento = valoresLancamentos.find(
+      (valor) =>
+        Number(valor.categoria_medicao) === Number(categoria.id) &&
+        Number(valor.dia) === Number(column.dia) &&
+        valor.nome_campo === row.name &&
+        valor.faixa_etaria === row.uuid
+    );
+  } else {
+    valorLancamento = valoresLancamentos.find(
+      (valor) =>
+        Number(valor.categoria_medicao) === Number(categoria.id) &&
+        Number(valor.dia) === Number(column.dia) &&
+        valor.nome_campo === row.name
+    );
+  }
 
   if (valorLancamento) {
     result = valorLancamento.valor;
@@ -851,16 +890,29 @@ export const defaultValue = (
   ) {
     result = "Mês posterior";
   }
+
   if (form && periodoGrupo) {
-    form.change(
-      `${row.name}__dia_${column.dia}__categoria_${
-        categoria.id
-      }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-        0,
-        5
-      )}`,
-      result
-    );
+    if (solicitacao && ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+      form.change(
+        `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${
+          categoria.id
+        }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+          0,
+          5
+        )}`,
+        result
+      );
+    } else {
+      form.change(
+        `${row.name}__dia_${column.dia}__categoria_${
+          categoria.id
+        }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+          0,
+          5
+        )}`,
+        result
+      );
+    }
   }
 
   return result;
@@ -869,14 +921,24 @@ export const defaultValue = (
 export const ehDiaParaCorrigir = (
   dia,
   categoria,
-  valoresPeriodosLancamentos
+  valoresPeriodosLancamentos,
+  diasParaCorrecao
 ) => {
   const existeAlgumCampoParaCorrigir = valoresPeriodosLancamentos
     .filter((valor) => String(valor.dia) === String(dia))
     .filter((valor) => String(valor.categoria_medicao) === String(categoria))
     .filter((valor) => valor.habilitado_correcao === true)[0];
 
-  return existeAlgumCampoParaCorrigir;
+  return (
+    existeAlgumCampoParaCorrigir ||
+    (diasParaCorrecao &&
+      diasParaCorrecao.find(
+        (diaParaCorrecao) =>
+          String(diaParaCorrecao.dia) === String(dia) &&
+          String(diaParaCorrecao.categoria_medicao) === String(categoria) &&
+          diaParaCorrecao.habilitado_correcao === true
+      ))
+  );
 };
 
 export const textoBotaoObservacao = (
@@ -909,7 +971,8 @@ export const desabilitarBotaoColunaObservacoes = (
   formValuesAtualizados,
   row,
   valoresObservacoes,
-  dia
+  dia,
+  diasParaCorrecao
 ) => {
   const botaoEhAdicionar =
     textoBotaoObservacao(
@@ -942,7 +1005,8 @@ export const desabilitarBotaoColunaObservacoes = (
       !ehDiaParaCorrigir(
         column.dia,
         categoria.id,
-        valoresPeriodosLancamentos
+        valoresPeriodosLancamentos,
+        diasParaCorrecao
       )) ||
       (["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_APROVADA_PELA_CODAE"].includes(
         location.state.status_periodo
@@ -957,7 +1021,8 @@ export const desabilitarBotaoColunaObservacoes = (
         !ehDiaParaCorrigir(
           column.dia,
           categoria.id,
-          valoresPeriodosLancamentos
+          valoresPeriodosLancamentos,
+          diasParaCorrecao
         )))
   );
 };

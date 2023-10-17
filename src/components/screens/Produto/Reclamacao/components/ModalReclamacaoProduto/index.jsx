@@ -25,7 +25,7 @@ import {
 } from "components/Shareable/Botao/constants";
 
 import { escolaOuNutriReclamaDoProduto } from "services/produto.service";
-import { getEscolasTrecTotal } from "services/escola.service";
+import { getEscolasTercTotal } from "services/escola.service";
 
 import "./style.scss";
 
@@ -50,7 +50,7 @@ export default class ModalReclamacaoProduto extends Component {
 
   UNSAFE_componentWillMount = async () => {
     const meusDadosResposta = await meusDados();
-    const escolasResposta = await getEscolasTrecTotal();
+    const escolasResposta = await getEscolasTercTotal();
     this.setState({
       meusDados: meusDadosResposta,
       escolas: escolasResposta.data.map((escola) => {

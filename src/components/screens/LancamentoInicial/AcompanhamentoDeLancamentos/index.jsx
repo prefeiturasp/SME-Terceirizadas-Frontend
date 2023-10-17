@@ -9,7 +9,10 @@ import {
 } from "services/medicaoInicial/dashboard.service";
 import { CardMedicaoPorStatus } from "./components/CardMedicaoPorStatus";
 import "./style.scss";
-import { MEDICAO_CARD_NOME_POR_STATUS_DRE } from "./constants";
+import {
+  MEDICAO_CARD_NOME_POR_STATUS_DRE,
+  STATUS_RELACAO_DRE_UE,
+} from "./constants";
 import { Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
@@ -24,7 +27,7 @@ import { MESES, TIPO_PERFIL } from "constants/shared";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 import MeusDadosContext from "context/MeusDadosContext";
 import { getLotesSimples } from "services/lote.service";
-import { getEscolasTrecTotal } from "services/escola.service";
+import { getEscolasTercTotal } from "services/escola.service";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import {
   formatarOpcoesDRE,
@@ -91,6 +94,11 @@ export const AcompanhamentoDeLancamentos = () => {
       const dashboardResults = response.data.results;
       if (!usuarioEhMedicao() || diretoriaRegional) {
         let NovoDashboardResults = [...dashboardResults];
+        if (usuarioEhMedicao()) {
+          NovoDashboardResults = NovoDashboardResults.filter(
+            (medicoes) => !STATUS_RELACAO_DRE_UE.includes(medicoes.status)
+          );
+        }
         if (usuarioEhEscolaTerceirizadaQualquerPerfil())
           NovoDashboardResults = NovoDashboardResults.filter(
             (medicoes) => medicoes.status !== "TODOS_OS_LANCAMENTOS"
@@ -166,7 +174,7 @@ export const AcompanhamentoDeLancamentos = () => {
 
       const getEscolasTrecTotalAsync = async () => {
         setCarregandoEscolas(true);
-        const response = await getEscolasTrecTotal({ dre: uuid });
+        const response = await getEscolasTercTotal({ dre: uuid });
         if (response.status === HTTP_STATUS.OK) {
           setNomesEscolas(
             response.data.map(
@@ -288,7 +296,10 @@ export const AcompanhamentoDeLancamentos = () => {
       {erroAPI && <div>{erroAPI}</div>}
       <Spin tip="Carregando..." spinning={LOADING}>
         {!erroAPI && !LOADING && (
-          <Form onSubmit={onSubmit}>
+          <Form
+            onSubmit={onSubmit}
+            initialValues={{ diretoria_regional: diretoriaRegional }}
+          >
             {({ handleSubmit, form, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card mt-3">
@@ -313,6 +324,7 @@ export const AcompanhamentoDeLancamentos = () => {
                             .includes(inputValue.toLowerCase())
                         }
                         naoDesabilitarPrimeiraOpcao
+                        disabled={LOADING || loadingComFiltros}
                       >
                         {diretoriasRegionais}
                       </Field>

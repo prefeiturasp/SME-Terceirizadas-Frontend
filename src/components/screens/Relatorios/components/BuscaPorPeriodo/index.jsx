@@ -9,7 +9,7 @@ import {
 } from "../../../../../helpers/utilities";
 import { getDiretoriaregionalSimplissima } from "../../../../../services/diretoriaRegional.service";
 import { TODOS } from "../../../../../constants/shared";
-import { getEscolasTrecTotal } from "services/escola.service";
+import { getEscolasTercTotal } from "services/escola.service";
 
 class BuscaPorPeriodo extends Component {
   constructor(props) {
@@ -52,7 +52,7 @@ class BuscaPorPeriodo extends Component {
           ];
         } else if (usuarioEhDRE()) {
           const dre_uuid = meusDados.vinculo_atual.instituicao.uuid;
-          getEscolasTrecTotal({ dre: dre_uuid }).then((response) => {
+          getEscolasTercTotal({ dre: dre_uuid }).then((response) => {
             escolas = [{ nome: TODOS, uuid: TODOS }].concat(response.data);
           });
 

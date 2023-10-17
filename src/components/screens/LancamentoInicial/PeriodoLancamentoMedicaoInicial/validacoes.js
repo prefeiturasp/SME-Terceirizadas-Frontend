@@ -1,4 +1,8 @@
-import { deepCopy, ehEscolaTipoCEUGESTAO } from "helpers/utilities";
+import {
+  deepCopy,
+  ehEscolaTipoCEUGESTAO,
+  ehFimDeSemana,
+} from "helpers/utilities";
 
 export const repeticaoSobremesaDoceComValorESemObservacao = (
   values,
@@ -128,6 +132,14 @@ export const campoComSuspensaoAutorizadaESemObservacao = (
     if (
       formValuesAtualizados[
         `${alimentacao}__dia_${column.dia}__categoria_${categoria.id}`
+      ] &&
+      Number(
+        formValuesAtualizados[
+          `${alimentacao}__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) > 0 &&
+      !formValuesAtualizados[
+        `observacoes__dia_${column.dia}__categoria_${categoria.id}`
       ]
     ) {
       erro = true;
@@ -308,6 +320,32 @@ export const camposLancheEmergTabelaEtec = (
   return erro;
 };
 
+export const camposDiaNaoLetivoEmDiaUtilESemObservacao = (
+  location,
+  dia,
+  validacaoDiaLetivo,
+  feriadosNoMes,
+  formValuesAtualizados,
+  categoria
+) => {
+  let erro = false;
+  const mesAnoSelecionado = new Date(location.state.mesAnoSelecionado);
+  const dateObj = new Date(
+    `${mesAnoSelecionado.getFullYear()}-${
+      mesAnoSelecionado.getMonth() + 1
+    }-${dia}`
+  );
+  if (
+    !validacaoDiaLetivo(dia) &&
+    !ehFimDeSemana(dateObj) &&
+    !feriadosNoMes.includes(dia) &&
+    !formValuesAtualizados[`observacoes__dia_${dia}__categoria_${categoria.id}`]
+  ) {
+    erro = true;
+  }
+  return erro;
+};
+
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   formValuesAtualizados,
   dia,
@@ -354,7 +392,8 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
         formValuesAtualizados,
         column,
         categoria,
-        suspensoesAutorizadas
+        suspensoesAutorizadas,
+        row
       ) ||
       campoRefeicaoComRPLAutorizadaESemObservacao(
         formValuesAtualizados,
@@ -386,6 +425,14 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
         categoria,
         inclusoesEtecAutorizadas,
         ehGrupoETECUrlParam
+      ) ||
+      camposDiaNaoLetivoEmDiaUtilESemObservacao(
+        location,
+        dia,
+        validacaoDiaLetivo,
+        feriadosNoMes,
+        formValuesAtualizados,
+        categoria
       )
     );
   }
@@ -881,13 +928,17 @@ export const exibirTooltipSuspensoesAutorizadas = (
 
   return (
     value &&
-    (!["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
+    Number(value) > 0 &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
     suspensoesAutorizadas &&
     suspensoesAutorizadas.filter(
       (suspensao) =>
         suspensao.dia === column.dia &&
         suspensao.alimentacoes.includes(row.name)
-    ).length > 0
+    ).length > 0 &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ]
   );
 };
 
@@ -1067,8 +1118,7 @@ export const exibirTooltipLancheEmergencialAutorizado = (
   row,
   column,
   categoria,
-  alteracoesAlimentacaoAutorizadas,
-  validacaoDiaLetivo
+  alteracoesAlimentacaoAutorizadas
 ) => {
   const value =
     formValuesAtualizados[
@@ -1085,8 +1135,7 @@ export const exibirTooltipLancheEmergencialAutorizado = (
     row.name.includes("lanche_emergencial") &&
     alteracoesAlimentacaoAutorizadas.filter(
       (alteracao) => alteracao.dia === column.dia
-    ).length > 0 &&
-    validacaoDiaLetivo(column.dia)
+    ).length > 0
   );
 };
 

@@ -338,7 +338,7 @@ export default () => {
           )}
         <Spin
           spinning={finalizandoMedicao}
-          tip="Finalizando medição inicial. Aguarde..."
+          tip="Finalizando medição inicial. Pode demorar um pouco. Aguarde..."
         >
           {mes &&
             ano &&

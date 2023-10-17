@@ -120,6 +120,8 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.2",
+    "@types/react-final-form-listeners": "^1.0.1",
+    "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^9.0.2",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.12.1",

@@ -9,7 +9,10 @@ import {
 } from "services/inclusaoDeAlimentacao";
 import { getMeusDados } from "services/perfil.service";
 import { getQuantidadeAlunosCEMEIporCEIEMEI } from "services/aluno.service";
-import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import {
+  getVinculosTipoAlimentacaoPorEscola,
+  getVinculosTipoAlimentacaoMotivoInclusaoEspecifico,
+} from "services/cadastroTipoAlimentacao.service";
 import {
   abstraiPeriodosComAlunosMatriculados,
   formatarPeriodos,
@@ -25,8 +28,12 @@ export const Container = () => {
   const [periodosInclusaoContinua, setPeriodosInclusaoContinua] =
     useState(null);
   const [vinculos, setVinculos] = useState(null);
+  const [vinculosMotivoEspecifico, setVinculosMotivoEspecifico] =
+    useState(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
+  const [periodosMotivoEspecifico, setPeriodosMotivoEspecifico] =
+    useState(null);
 
   const [erro, setErro] = useState(false);
 
@@ -69,12 +76,49 @@ export const Container = () => {
     );
     if (response.status === HTTP_STATUS.OK) {
       setPeriodos(response.data);
+      getVinculosMotivoEspecificoCEMEIAsync(escola, response.data);
     }
   };
   const getVinculosTipoAlimentacaoPorEscolaAsync = async (escola) => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola.uuid);
     if (response.status === HTTP_STATUS.OK) {
       setVinculos(response.data.results);
+    }
+  };
+
+  const getVinculosMotivoEspecificoCEMEIAsync = async (
+    escola,
+    periodosNormais
+  ) => {
+    const tipo_unidade_escolar_iniciais = escola.tipo_unidade_escolar_iniciais;
+    const response = await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico({
+      tipo_unidade_escolar_iniciais,
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      let periodosMotivoInclusaoEspecifico = [];
+      response.data.forEach((vinculo) => {
+        let periodo = vinculo.periodo_escolar;
+        let tipos_de_alimentacao = vinculo.tipos_alimentacao;
+        let periodoNormal = periodosNormais.find(
+          (p) => periodo.nome === p.nome
+        );
+        if (!periodoNormal) {
+          periodoNormal = periodosNormais.find((p) => p.nome === "INTEGRAL");
+          tipos_de_alimentacao = response.data.find(
+            (p) => p.periodo_escolar.nome === "INTEGRAL"
+          ).tipos_alimentacao;
+        }
+        periodo.CEI = periodoNormal.CEI;
+        periodo.EMEI = periodoNormal.EMEI;
+        periodo.tipos_alimentacao = tipos_de_alimentacao;
+        periodo.maximo_alunos = null;
+        periodosMotivoInclusaoEspecifico.push(periodo);
+      });
+      const periodosOrdenados = periodosMotivoInclusaoEspecifico.sort(
+        (obj1, obj2) => (obj1.posicao > obj2.posicao ? 1 : -1)
+      );
+      setVinculosMotivoEspecifico(response.data);
+      setPeriodosMotivoEspecifico(formatarPeriodos(periodosOrdenados));
     }
   };
 
@@ -147,7 +191,8 @@ export const Container = () => {
     periodos &&
     periodosInclusaoContinua &&
     proximosDoisDiasUteis &&
-    proximosCincoDiasUteis;
+    proximosCincoDiasUteis &&
+    periodosMotivoEspecifico;
 
   return (
     <div>
@@ -163,8 +208,10 @@ export const Container = () => {
           periodos={periodos}
           periodosInclusaoContinua={periodosInclusaoContinua}
           vinculos={vinculos}
+          vinculosMotivoEspecifico={vinculosMotivoEspecifico}
           proximosCincoDiasUteis={proximosCincoDiasUteis}
           proximosDoisDiasUteis={proximosDoisDiasUteis}
+          periodosMotivoEspecifico={periodosMotivoEspecifico}
         />
       )}
     </div>

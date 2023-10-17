@@ -385,16 +385,13 @@ export default ({
     return removeObjetosDuplicados(tiposAlimentacao, "nome");
   };
 
-  // console.log('errosAoSalvar => ', errosAoSalvar);
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
       {!erroAPI && quantidadeAlimentacoesLancadas && (
         <>
-          <div className="row pb-2">
-            <div className="col">
-              <b className="section-title">Períodos</b>
-            </div>
+          <div className="pb-2">
+            <b className="section-title">Períodos</b>
           </div>
           {!ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
             frequenciasDietasPeriodosEspeciais &&

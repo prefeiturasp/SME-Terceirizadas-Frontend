@@ -44,6 +44,7 @@ import TabelaFormAlteracao from "./components/TabelaFormAlteracao";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
 import { fornecedorCienteAlteracaoCodae } from "../../../../services/cronograma.service";
 import { SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR } from "../../../../configs/constants";
+import { setFieldTouched } from "../../../../configs/mutators";
 
 export default ({ analiseSolicitacao }) => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -127,7 +128,7 @@ export default ({ analiseSolicitacao }) => {
       values[`total_embalagens_${index}`] = etapa.total_embalagens;
       values[`etapa_${index}`] = etapa.etapa;
       values[`parte_${index}`] = etapa.parte;
-      values[`quantidade_${index}`] = etapa.quantidade;
+      values[`quantidade_${index}`] = formataMilhar(etapa.quantidade);
       values[`data_programada_${index}`] = etapa.data_programada;
     });
     setInitialValues(values);
@@ -140,7 +141,7 @@ export default ({ analiseSolicitacao }) => {
       values[`etapa_${index}`] = etapa.etapa;
       values[`parte_${index}`] = etapa.parte;
       values[`data_programada_${index}`] = etapa.data_programada;
-      values[`quantidade_${index}`] = etapa.quantidade;
+      values[`quantidade_${index}`] = formataMilhar(etapa.quantidade);
       values[`total_embalagens_${index}`] = etapa.total_embalagens;
     });
     values.quantidade_total = formataMilhar(cronograma.qtd_total_programada);
@@ -351,6 +352,7 @@ export default ({ analiseSolicitacao }) => {
               <Form
                 onSubmit={defineSubmit}
                 initialValues={initialValues}
+                mutators={{ setFieldTouched }}
                 validate={() => {}}
                 render={({ form, handleSubmit, values, errors }) => (
                   <form onSubmit={handleSubmit}>
@@ -402,6 +404,7 @@ export default ({ analiseSolicitacao }) => {
                           </div>
                         )}
                         <FormEtapa
+                          form={form}
                           etapas={etapas}
                           setEtapas={setEtapas}
                           values={values}
