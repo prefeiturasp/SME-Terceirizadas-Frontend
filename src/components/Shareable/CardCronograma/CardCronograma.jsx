@@ -33,7 +33,7 @@ export const CardCronograma = (props) => {
   };
 
   return (
-    <div className={`card card-panel card-colored ${cardType}`}>
+    <div className={`card card-panel-cronograma card-colored ${cardType}`}>
       <div className={`card-title-status ajuste-icones`}>
         <div>
           <i className={"fas " + icon} />
