@@ -63,19 +63,10 @@ export const escolaCancelarSolicitacaoDeInclusaoDeAlimentacao = async (
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "PATCH",
-    body: JSON.stringify(payload),
-  };
-  let status = 0;
-  try {
-    const res = await fetch(url, OBJ_REQUEST);
-    const data = await res.json();
-    status = res.status;
-    return { ...data, status: status };
-  } catch (error) {
-    return error.json();
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 
