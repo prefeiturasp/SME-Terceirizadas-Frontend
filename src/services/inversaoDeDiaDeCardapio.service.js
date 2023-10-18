@@ -255,9 +255,11 @@ export const getTerceirizadaPedidosDeInversoes = (filtroAplicado) => {
     });
 };
 
-export const escolaCancelaInversaoDiaCardapio = async (uuid, payload) => {
+export const escolaCancelaInversaoDiaCardapio = async (uuid, justificativa) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
-  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  const response = await axios
+    .patch(url, { justificativa })
+    .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
