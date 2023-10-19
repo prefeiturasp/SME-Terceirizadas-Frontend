@@ -11,11 +11,19 @@ export const KitLancheUnificadoBody = ({ ...props }) => {
       <td>
         {item.dre_iniciais} - {item.lote_nome}
       </td>
-      {filtros.status && filtros.status === "RECEBIDAS" ? (
-        <td>Várias Terceirizadas</td>
-      ) : (
-        <td>Várias Escolas</td>
-      )}
+      {filtros.status === "RECEBIDAS" && <td>Várias Terceirizadas</td>}
+      {filtros.status !== "RECEBIDAS" &&
+        !usuarioEhEscolaTerceirizadaQualquerPerfil() && (
+          <td>
+            {solicitacao.escolas_quantidades.length > 1
+              ? `${solicitacao.escolas_quantidades.length} Escolas`
+              : `${solicitacao.escolas_quantidades[0].escola.nome}`}
+          </td>
+        )}
+      {filtros.status !== "RECEBIDAS" &&
+        usuarioEhEscolaTerceirizadaQualquerPerfil() && (
+          <td>{item.escola_nome}</td>
+        )}
       <td>{item.desc_doc}</td>
       <td className="text-center">
         {item.data_evento}{" "}
