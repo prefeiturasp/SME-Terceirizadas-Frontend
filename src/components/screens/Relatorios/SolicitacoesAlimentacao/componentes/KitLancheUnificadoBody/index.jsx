@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { usuarioEhEscolaTerceirizadaQualquerPerfil } from "../../../../../../helpers/utilities";
+import { usuarioEhEscolaTerceirizadaQualquerPerfil } from "helpers/utilities";
 
 export const KitLancheUnificadoBody = ({ ...props }) => {
   const { solicitacao, item, index, filtros, labelData } = props;
