@@ -265,6 +265,7 @@ import StatusLayoutAprovados from "../pages/PreRecebimento/CardsLayoutEmbalagem/
 import StatusLayoutEnviadosParaCorrecao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutEnviadosParaCorrecao";
 import AnalisarLayoutEmbalagemPage from "../pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
 import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutEmbalagemPage";
+import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayoutEmbalagemPage";
 
 const routesConfig = [
   {
@@ -1943,6 +1944,12 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CORRIGR_LAYOUT_EMBALAGEM}`,
     component: CorrigirLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ATUALIZAR_LAYOUT_EMBALAGEM}`,
+    component: AtualizarLayoutEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
