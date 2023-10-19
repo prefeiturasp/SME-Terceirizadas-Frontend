@@ -35,6 +35,7 @@ import {
   getFeriadosNoMesComNome,
   getDiasCalendario,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
 import {
   MEDICAO_STATUS_DE_PROGRESSO,
   OCORRENCIA_STATUS_DE_PROGRESSO,
@@ -91,6 +92,7 @@ export const ConferenciaDosLancamentos = () => {
 
   const [feriadosNoMes, setFeriadosNoMes] = useState();
   const [diasCalendario, setDiasCalendario] = useState();
+  const [diasSobremesaDoce, setDiasSobremesaDoce] = useState();
 
   const visualizarModal = () => {
     setShowModal(true);
@@ -263,6 +265,7 @@ export const ConferenciaDosLancamentos = () => {
     if (mesSolicitacao && anoSolicitacao) {
       !feriadosNoMes && getFeriadosNoMesAsync(mesSolicitacao, anoSolicitacao);
       !diasCalendario && getDiasCalendarioAsync(mesSolicitacao, anoSolicitacao);
+      getListaDiasSobremesaDoceAsync();
     }
   }, [mesSolicitacao, anoSolicitacao]);
 
@@ -277,6 +280,21 @@ export const ConferenciaDosLancamentos = () => {
       setErroAPI(
         "Erro ao carregar períodos simples. Tente novamente mais tarde."
       );
+    }
+  };
+
+  const getListaDiasSobremesaDoceAsync = async () => {
+    const escola_uuid = location.state.escolaUuid;
+    const params = {
+      mes: Number(mesSolicitacao),
+      ano: Number(anoSolicitacao),
+      escola_uuid,
+    };
+    const response = await getListaDiasSobremesaDoce(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setDiasSobremesaDoce(response.data);
+    } else {
+      toastError("Erro ao carregar dias de sobremesa doce");
     }
   };
 
@@ -741,6 +759,7 @@ export const ConferenciaDosLancamentos = () => {
                               solicitacao={solicitacao}
                               feriadosNoMes={feriadosNoMes}
                               diasCalendario={diasCalendario}
+                              diasSobremesaDoce={diasSobremesaDoce}
                             />,
                           ];
                         })}

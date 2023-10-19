@@ -67,6 +67,7 @@ import {
   codaePedeCorrecaPeriodo,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { LegendaDiasNaoLetivos } from "../LegendaDiasNaoLetivos";
+import { exibirTooltipRepeticaoDiasSobremesaDoceDreCodae } from "../../../PeriodoLancamentoMedicaoInicial/validacoes";
 
 export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const {
@@ -83,6 +84,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     solicitacao,
     feriadosNoMes,
     diasCalendario,
+    diasSobremesaDoce,
   } = props;
 
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
@@ -1082,6 +1084,15 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                             form,
                                             periodoGrupo,
                                             solicitacao
+                                          )}
+                                          exibeTooltipPadraoRepeticaoDiasSobremesaDoce={exibirTooltipRepeticaoDiasSobremesaDoceDreCodae(
+                                            semanaSelecionada,
+                                            mesSolicitacao,
+                                            anoSolicitacao,
+                                            diasSobremesaDoce,
+                                            column,
+                                            row,
+                                            categoria
                                           )}
                                         />
                                       </div>

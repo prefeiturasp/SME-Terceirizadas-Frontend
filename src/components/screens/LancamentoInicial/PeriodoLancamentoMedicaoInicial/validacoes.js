@@ -1269,12 +1269,16 @@ export const exibirTooltipRepeticao = (
     value &&
     Number(value) > 0 &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
-    ((row.name.includes("repeticao_refeicao") &&
+    (!!(
+      row.name.includes("repeticao_refeicao") &&
       (!maxRefeicao ||
-        (Number(maxRefeicao) && Number(value) > Number(maxRefeicao)))) ||
-      (row.name.includes("repeticao_sobremesa") &&
+        (Number(maxRefeicao) && Number(value) > Number(maxRefeicao)))
+    ) ||
+      !!(
+        row.name.includes("repeticao_sobremesa") &&
         (!maxSobremesa ||
-          (Number(maxSobremesa) && Number(value) > Number(maxSobremesa)))))
+          (Number(maxSobremesa) && Number(value) > Number(maxSobremesa)))
+      ))
   );
 };
 
@@ -1337,8 +1341,30 @@ export const exibirTooltipRepeticaoDiasSobremesaDoceDiferenteZero = (
         .toString()
         .padStart(2, "0")}-${column.dia}`
     ) &&
-    sobremesaValue > 0 &&
+    Number(sobremesaValue) > 0 &&
     !observacoesValue &&
-    sobremesaValue >= Number(value)
+    Number(sobremesaValue) >= Number(value)
+  );
+};
+
+export const exibirTooltipRepeticaoDiasSobremesaDoceDreCodae = (
+  semanaSelecionada,
+  mesSolicitacao,
+  anoSolicitacao,
+  diasSobremesaDoce,
+  column,
+  row,
+  categoria
+) => {
+  return (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    !(Number(semanaSelecionada) === 1 && Number(column.dia) > 20) &&
+    !(
+      [4, 5, 6].includes(Number(semanaSelecionada)) && Number(column.dia) < 10
+    ) &&
+    row.name === "repeticao_sobremesa" &&
+    diasSobremesaDoce.includes(
+      `${anoSolicitacao}-${mesSolicitacao}-${column.dia}`
+    )
   );
 };

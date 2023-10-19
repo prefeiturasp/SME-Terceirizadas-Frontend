@@ -842,7 +842,6 @@ export default () => {
 
       const response_dias_correcao = await getDiasParaCorrecao(params);
       if (response_dias_correcao.status === HTTP_STATUS.OK) {
-        console.log(response_dias_correcao.data);
         setDiasParaCorrecao(response_dias_correcao.data);
       }
       let response_matriculados = [];
