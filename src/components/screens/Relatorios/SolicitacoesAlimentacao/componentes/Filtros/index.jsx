@@ -8,8 +8,7 @@ import {
   deepCopy,
   usuarioEhDRE,
   usuarioEhEmpresaTerceirizada,
-  usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
 } from "helpers/utilities";
 import React, { useState } from "react";
 import { useEffect } from "react";
@@ -82,10 +81,11 @@ export const Filtros = ({ ...props }) => {
 
   const getEscolasSimplissimaComDREUnpaginatedAsync = async () => {
     let params = null;
-    if (usuarioEhDRE()) {
+    if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      params = { escola: meusDados.vinculo_atual.instituicao.uuid };
+    } else if (usuarioEhDRE()) {
       params = { dre: meusDados.vinculo_atual.instituicao.uuid };
-    }
-    if (usuarioEhEmpresaTerceirizada()) {
+    } else if (usuarioEhEmpresaTerceirizada()) {
       params = { terceirizada: meusDados.vinculo_atual.instituicao.uuid };
     }
     const response = await getEscolasTercTotal(params);
@@ -121,11 +121,14 @@ export const Filtros = ({ ...props }) => {
   };
 
   useEffect(() => {
-    getLotesSimplesAsync();
-    getTiposUnidadeEscolarAsync();
-    getEscolasSimplissimaComDREUnpaginatedAsync();
-    getTerceirizadasAsync();
-    if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
+    Promise.all([
+      getLotesSimplesAsync(),
+      getTiposUnidadeEscolarAsync(),
+      getEscolasSimplissimaComDREUnpaginatedAsync(),
+      getTerceirizadasAsync(),
+    ]);
+
+    if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
       getEscolaSimplesAsync();
     }
   }, []);
@@ -295,7 +298,11 @@ export const Filtros = ({ ...props }) => {
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
-                        allItemsAreSelected: "Todos os tipos de unidade",
+                        allItemsAreSelected:
+                          unidadesEducacionais.length > 1
+                            ? "Todos os tipos de unidade"
+                            : unidadesEducacionais[0] &&
+                              unidadesEducacionais[0].nome,
                         selectAll: "Todos",
                       }}
                       disabled={!values.status || unidadeEducacional}

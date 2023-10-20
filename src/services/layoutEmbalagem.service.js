@@ -23,3 +23,6 @@ export const analiseCodaeLayoutEmbalagem = async (uuid, payload) =>
     `/layouts-de-embalagem/${uuid}/codae-aprova-ou-solicita-correcao/`,
     payload
   );
+
+export const atualizacaoLayoutEmbalagem = async (uuid, payload) =>
+  await axios.patch(`/layouts-de-embalagem/${uuid}/`, payload);
