@@ -58,8 +58,6 @@ export default () => {
     const layoutDeEmbalagem = definirLayoutDeEmbalagem(response);
     const aprovacoes = definirAprovacoes(layoutDeEmbalagem);
     definirInitialValues(layoutDeEmbalagem, aprovacoes);
-
-    console.log("LAYOUT DE EMBALAGEM", layoutDeEmbalagem);
   };
 
   const definirLayoutDeEmbalagem = (response) => {
