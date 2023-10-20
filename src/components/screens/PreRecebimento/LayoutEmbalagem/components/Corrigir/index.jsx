@@ -142,7 +142,6 @@ export default ({ atualizar }) => {
     arquivosTipoDeLayoutEmbalagem,
     setArquivosLayoutsPrimarios
   ) => {
-    console.log(arquivosTipoDeLayoutEmbalagem);
     if (atualizar && arquivosTipoDeLayoutEmbalagem) {
       return renderizarSecaoAtualizacao(
         tipoDeEmbalagem,
