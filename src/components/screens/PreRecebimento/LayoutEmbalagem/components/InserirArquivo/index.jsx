@@ -21,19 +21,13 @@ const TOOLTIPS_TIPOS_EMBALAGENS = {
 
 const FORMATOS_IMAGEM = "PDF, PNG, JPG ou JPEG";
 
-export default ({
-  setFiles,
-  removeFile,
-  arquivosIniciais,
-  atualizar,
-  tipoEmbalagem,
-}) => {
+export default ({ setFiles, removeFile, arquivosIniciais, tipoEmbalagem }) => {
   return (
     <>
       <div className="row">
         <div className="col">
           <div className="subtitulo">
-            {!(atualizar && tipoEmbalagem === "TERCIARIA") && (
+            {tipoEmbalagem !== "TERCIARIA" && (
               <span className="asterisco">* </span>
             )}
             {"Layout " + TITULOS_SECOES_TIPOS_EMBALAGENS[tipoEmbalagem]}
@@ -61,7 +55,12 @@ export default ({
           concatenarNovosArquivos
         />
         <label className="col-12 label-imagem">
-          <span className="red">Campo Obrigatório:&nbsp;</span>
+          <span className="red">
+            {tipoEmbalagem === "TERCIARIA"
+              ? "IMPORTANTE:"
+              : "Campo Obrigatório:"}
+            &nbsp;
+          </span>
           {"Envie um arquivo nos formatos: " +
             FORMATOS_IMAGEM +
             ", com até 10MB"}

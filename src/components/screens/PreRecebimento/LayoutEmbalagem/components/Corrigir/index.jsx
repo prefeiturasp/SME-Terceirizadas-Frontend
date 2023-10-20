@@ -142,6 +142,7 @@ export default ({ atualizar }) => {
     arquivosTipoDeLayoutEmbalagem,
     setArquivosLayoutsPrimarios
   ) => {
+    console.log(arquivosTipoDeLayoutEmbalagem);
     if (atualizar && arquivosTipoDeLayoutEmbalagem) {
       return renderizarSecaoAtualizacao(
         tipoDeEmbalagem,
@@ -149,7 +150,10 @@ export default ({ atualizar }) => {
         setArquivosLayoutsPrimarios
       );
     } else {
-      if (tipoDeEmbalagem.status === "APROVADO")
+      if (
+        arquivosTipoDeLayoutEmbalagem &&
+        tipoDeEmbalagem.status === "APROVADO"
+      )
         return renderizarSecaoAprovada(tipoDeEmbalagem);
 
       if (

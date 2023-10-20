@@ -46,7 +46,7 @@ export default ({ objetos, perfilFornecedor = false }) => {
         to={`/${PRE_RECEBIMENTO}/${ATUALIZAR_LAYOUT_EMBALAGEM}?uuid=${objeto.uuid}`}
       >
         <span className="link-acoes px-2">
-          <i title="Corrigir" className="fas fa-photo-video green" />
+          <i title="Atualizar Layout" className="fas fa-photo-video green" />
         </span>
       </NavLink>
     );
