@@ -1,4 +1,4 @@
-@import "../../../styles/variables.scss";
+@import "styles/variables.scss";
 
 .card-title-status {
   font-weight: 600;
@@ -14,7 +14,7 @@
   }
 }
 
-.card-panel {
+.card-panel-cronograma {
   border-left: 10px solid !important;
   i {
     padding: 0 10px;
