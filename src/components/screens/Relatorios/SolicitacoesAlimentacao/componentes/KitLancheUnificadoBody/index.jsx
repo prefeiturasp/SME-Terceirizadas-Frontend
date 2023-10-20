@@ -22,7 +22,7 @@ export const KitLancheUnificadoBody = ({ ...props }) => {
         )}
       {filtros.status !== "RECEBIDAS" &&
         usuarioEhEscolaTerceirizadaQualquerPerfil() && (
-          <td>{item.escola_nome}</td>
+          <td>{solicitacao.escolas_quantidades[0].escola.nome}</td>
         )}
       <td>{item.desc_doc}</td>
       <td className="text-center">
