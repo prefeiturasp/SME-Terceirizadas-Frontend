@@ -17,7 +17,6 @@ export async function readerFile(file) {
 }
 
 export async function downloadAndConvertToBase64(fileUrl) {
-  try {
     let finalFileUrl = fileUrl;
     if (ENVIRONMENT === "homolog" || ENVIRONMENT === "production")
       finalFileUrl = finalFileUrl.replace("http://", "https://");
@@ -41,8 +40,4 @@ export async function downloadAndConvertToBase64(fileUrl) {
     } else {
       throw new Error("Falha ao baixar a imagem.");
     }
-  } catch (error) {
-    console.error("Erro:", error);
-    throw error;
-  }
 }
