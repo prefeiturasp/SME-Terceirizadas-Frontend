@@ -1368,3 +1368,118 @@ export const exibirTooltipRepeticaoDiasSobremesaDoceDreCodae = (
     )
   );
 };
+
+export const exibirTooltipInclusaoAlimentacaoAutorizadaDreCodae = (
+  semanaSelecionada,
+  inclusoesAutorizadas,
+  column,
+  row,
+  categoria
+) => {
+  return (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    !(Number(semanaSelecionada) === 1 && Number(column.dia) > 20) &&
+    !(
+      [4, 5, 6].includes(Number(semanaSelecionada)) && Number(column.dia) < 10
+    ) &&
+    row.name === "frequencia" &&
+    inclusoesAutorizadas.filter((inclusao) => inclusao.dia === column.dia)
+      .length > 0
+  );
+};
+
+export const exibirTooltipAlteracaoAlimentacaoAutorizadaDreCodae = (
+  semanaSelecionada,
+  alteracoesAlimentacaoAutorizadas,
+  column,
+  row,
+  categoria
+) => {
+  return (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    !(Number(semanaSelecionada) === 1 && Number(column.dia) > 20) &&
+    !(
+      [4, 5, 6].includes(Number(semanaSelecionada)) && Number(column.dia) < 10
+    ) &&
+    ((row.name === "lanche" &&
+      alteracoesAlimentacaoAutorizadas.filter(
+        (alteracao) =>
+          alteracao.dia === column.dia && alteracao.motivo.includes("LPR")
+      ).length > 0) ||
+      (row.name === "refeicao" &&
+        !row.name.includes("repeticao") &&
+        alteracoesAlimentacaoAutorizadas.filter(
+          (alteracao) =>
+            alteracao.dia === column.dia && alteracao.motivo.includes("RPL")
+        ).length > 0))
+  );
+};
+
+const todasAlimentacoesSuspensas = (periodo, suspensoesAutorizadas, column) => {
+  const tiposAlimentacaoPeriodo = periodo.tipos_alimentacao
+    .flatMap((tipo_ali) =>
+      tipo_ali.nome
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replaceAll(/ /g, "_")
+    )
+    .filter((tipo_ali) => tipo_ali !== "lanche_emergencial");
+  const tiposAlimentacaoSuspensasDia = [
+    ...new Set(
+      suspensoesAutorizadas
+        .filter((suspensao) => suspensao.dia === column.dia)
+        .flatMap((suspensao) => suspensao.alimentacoes)
+    ),
+  ];
+
+  return tiposAlimentacaoPeriodo.every((tipo_ali) =>
+    tiposAlimentacaoSuspensasDia.includes(tipo_ali)
+  );
+};
+
+export const exibirTooltipSuspensaoAutorizadaFrequenciaDreCodae = (
+  semanaSelecionada,
+  suspensoesAutorizadas,
+  column,
+  row,
+  categoria,
+  periodo
+) => {
+  return (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    !(Number(semanaSelecionada) === 1 && Number(column.dia) > 20) &&
+    !(
+      [4, 5, 6].includes(Number(semanaSelecionada)) && Number(column.dia) < 10
+    ) &&
+    row.name === "frequencia" &&
+    suspensoesAutorizadas.filter((suspensao) => suspensao.dia === column.dia)
+      .length > 0 &&
+    todasAlimentacoesSuspensas(periodo, suspensoesAutorizadas, column)
+  );
+};
+
+export const exibirTooltipSuspensaoAutorizadaAlimentacaoDreCodae = (
+  semanaSelecionada,
+  suspensoesAutorizadas,
+  column,
+  row,
+  categoria,
+  periodo
+) => {
+  return (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    !(Number(semanaSelecionada) === 1 && Number(column.dia) > 20) &&
+    !(
+      [4, 5, 6].includes(Number(semanaSelecionada)) && Number(column.dia) < 10
+    ) &&
+    [
+      ...new Set(
+        suspensoesAutorizadas
+          .filter((suspensao) => suspensao.dia === column.dia)
+          .flatMap((suspensao) => suspensao.alimentacoes)
+      ),
+    ].includes(row.name) &&
+    !todasAlimentacoesSuspensas(periodo, suspensoesAutorizadas, column)
+  );
+};
