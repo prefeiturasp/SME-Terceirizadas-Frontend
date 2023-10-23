@@ -34,6 +34,7 @@ import {
 import {
   getFeriadosNoMesComNome,
   getDiasCalendario,
+  getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
 import {
@@ -46,7 +47,11 @@ import { ModalEnviarParaCodaeECodaeAprovar } from "./components/ModalEnviarParaC
 import { ModalSolicitarCorrecaoUE } from "./components/ModalSolicitarCorrecaoUE";
 import { ModalHistoricoCorrecoesPeriodo } from "./components/ModalHistoricoCorrecoesPeriodo";
 import ModalHistorico from "components/Shareable/ModalHistorico";
-import { usuarioEhDRE, usuarioEhMedicao } from "helpers/utilities";
+import {
+  ehEscolaTipoCEI,
+  usuarioEhDRE,
+  usuarioEhMedicao,
+} from "helpers/utilities";
 
 export const ConferenciaDosLancamentos = () => {
   const location = useLocation();
@@ -261,28 +266,6 @@ export const ConferenciaDosLancamentos = () => {
     dados_iniciais && setDadosIniciais(dados_iniciais);
   };
 
-  useEffect(() => {
-    if (mesSolicitacao && anoSolicitacao) {
-      !feriadosNoMes && getFeriadosNoMesAsync(mesSolicitacao, anoSolicitacao);
-      !diasCalendario && getDiasCalendarioAsync(mesSolicitacao, anoSolicitacao);
-      getListaDiasSobremesaDoceAsync();
-    }
-  }, [mesSolicitacao, anoSolicitacao]);
-
-  const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
-    const escolaUuid = location.state.escolaUuid;
-    const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
-      escolaUuid
-    );
-    if (response_vinculos.status === HTTP_STATUS.OK) {
-      setPeriodosSimples(response_vinculos.data.results);
-    } else {
-      setErroAPI(
-        "Erro ao carregar períodos simples. Tente novamente mais tarde."
-      );
-    }
-  };
-
   const getListaDiasSobremesaDoceAsync = async () => {
     const escola_uuid = location.state.escolaUuid;
     const params = {
@@ -298,8 +281,66 @@ export const ConferenciaDosLancamentos = () => {
     }
   };
 
-  const getHistorico = () => {
-    return historico;
+  useEffect(() => {
+    if (mesSolicitacao && anoSolicitacao) {
+      !feriadosNoMes && getFeriadosNoMesAsync(mesSolicitacao, anoSolicitacao);
+      !diasCalendario && getDiasCalendarioAsync(mesSolicitacao, anoSolicitacao);
+      !ehEscolaTipoCEI({ nome: solicitacao.escola }) &&
+        getListaDiasSobremesaDoceAsync();
+    }
+  }, [mesSolicitacao, anoSolicitacao]);
+
+  const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
+    const escolaUuid = location.state.escolaUuid;
+    const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
+      escolaUuid
+    );
+    if (response_vinculos.status === HTTP_STATUS.OK) {
+      setPeriodosSimples(response_vinculos.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar períodos simples. Tente novamente mais tarde."
+      );
+    }
+    await getPeriodosComEventoEspecificoAsync(response_vinculos.data.results);
+  };
+
+  const getPeriodosComEventoEspecificoAsync = async (
+    periodosSimplesVinculos
+  ) => {
+    const escola_uuid = location.state.escolaUuid;
+    const tipo_solicitacao = "Inclusão de";
+    const mes = Number(location.state.mes);
+    const ano = Number(location.state.ano);
+    const response =
+      await getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola({
+        escola_uuid,
+        mes,
+        ano,
+        tipo_solicitacao,
+      });
+    if (response.status === HTTP_STATUS.OK) {
+      const data = response.data.map((vinculo) => {
+        vinculo.periodo_escolar.eh_periodo_especifico = true;
+        return vinculo;
+      });
+      const nomesPeriodosNormais = periodosSimplesVinculos.map(
+        (vinculo) => vinculo.periodo_escolar.nome
+      );
+      const pEspecificos = data.filter(
+        (vinculo) =>
+          !nomesPeriodosNormais.includes(vinculo.periodo_escolar.nome)
+      );
+      let periodos = periodosSimplesVinculos.concat(pEspecificos);
+      periodos = periodos.sort((obj1, obj2) =>
+        obj1.periodo_escolar.posicao > obj2.periodo_escolar.posicao ? 1 : -1
+      );
+      setPeriodosSimples(periodos);
+    } else {
+      setErroAPI(
+        "Erro ao carregar Inclusões Autorizadas com Evento Específico. Tente novamente mais tarde."
+      );
+    }
   };
 
   useEffect(() => {
@@ -507,6 +548,10 @@ export const ConferenciaDosLancamentos = () => {
     } else {
       toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
     }
+  };
+
+  const getHistorico = () => {
+    return historico;
   };
 
   return (
