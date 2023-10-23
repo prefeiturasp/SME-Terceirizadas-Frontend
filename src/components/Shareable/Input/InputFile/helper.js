@@ -1,4 +1,5 @@
 import axios from "../../../../services/_base";
+import { ENVIRONMENT } from "constants/config";
 
 export async function readerFile(file) {
   let result_file = await new Promise((resolve) => {
@@ -17,7 +18,11 @@ export async function readerFile(file) {
 
 export async function downloadAndConvertToBase64(fileUrl) {
   try {
-    const response = await axios.get(fileUrl, {
+    let finalFileUrl = fileUrl;
+    if (ENVIRONMENT === "homolog" || ENVIRONMENT === "production")
+      finalFileUrl = finalFileUrl.replace("http://", "https://");
+
+    const response = await axios.get(finalFileUrl, {
       responseType: "arraybuffer",
     });
 
