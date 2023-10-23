@@ -1,0 +1,33 @@
+@import "../../../../../../styles/variables.scss";
+
+.card-detalhar-layout-embalagem {
+  .subtitulo {
+    color: $greenDark;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0px;
+  }
+
+  .subtitulo-laranja {
+    color: $orange;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0px;
+  }
+
+  .label-imagem {
+    font-size: 12px;
+    margin: 0 !important;
+  }
+
+  .label-dados-produto {
+    font-weight: bold;
+    color: $blackSubtle;
+  }
+
+  .valor-dados-produto {
+    font-weight: bold;
+    font-size: 20px;
+    color: $greenDark;
+  }
+}
