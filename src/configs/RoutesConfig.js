@@ -250,6 +250,7 @@ import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/Detalha
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
+import CadastroFabricantePage from "pages/Cadastros/CadastroFabricantePage";
 import StatusCronogramasPendentesDilog from "../pages/Dinutre/Cronogramas/StatusCronogramasPendentesDilog";
 import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
 import StatusSolicitacoesAlteracoesCronograma from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCronograma";
@@ -836,6 +837,12 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.MARCAS}`,
     component: CadastroMarcaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog(),
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.FABRICANTES}`,
+    component: CadastroFabricantePage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog(),
   },
