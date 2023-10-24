@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import HTTP_STATUS from "http-status-codes";
 import { FormApi } from "final-form";
@@ -28,6 +28,7 @@ import "./style.scss";
 
 export const PermissaoLancamentosEspeciais = () => {
   const [erroAPI, setErroAPI] = useState("");
+  const history = useHistory();
   const [permissoes, setPermissoes] = useState<
     PermissaoLancamentosEspeciaisInterface[]
   >([]);
@@ -86,6 +87,17 @@ export const PermissaoLancamentosEspeciais = () => {
 
     await getPermissoesLancamentosEspeciaisAsync(page);
     setLoading(false);
+  };
+
+  const handleClickEditar = (
+    permissao: PermissaoLancamentosEspeciaisInterface
+  ) => {
+    history.push({
+      pathname:
+        "/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais/editar-permissao-lancamento-especial",
+      search: `uuid=${permissao.uuid}`,
+      state: { permissao: permissao },
+    });
   };
 
   useEffect(() => {
@@ -170,14 +182,16 @@ export const PermissaoLancamentosEspeciais = () => {
                             return (
                               <tr key={key} className="row">
                                 <td className="col-3">
-                                  <div>{permissao.escola}</div>
+                                  <div>{permissao.escola.nome}</div>
                                 </td>
                                 <td className="col-1">
-                                  <div>{permissao.periodo_escolar}</div>
+                                  <div>{permissao.periodo_escolar.nome}</div>
                                 </td>
                                 <td className="col-4">
                                   <div>
-                                    {permissao.alimentacoes_lancamento_especial}
+                                    {permissao.alimentacoes_lancamento_especial
+                                      .map((ali) => ali.nome)
+                                      .join(", ")}
                                   </div>
                                 </td>
                                 <td className="col-2">
@@ -193,8 +207,7 @@ export const PermissaoLancamentosEspeciais = () => {
                                     type={BUTTON_TYPE.BUTTON}
                                     style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
                                     icon={BUTTON_ICON.EDIT}
-                                    onClick={() => {}}
-                                    disabled
+                                    onClick={() => handleClickEditar(permissao)}
                                   />
                                 </td>
                               </tr>
