@@ -25,6 +25,7 @@ import { getEscolaSimples, getEscolasTercTotal } from "services/escola.service";
 import {
   getAlimentacoesLancamentosEspeciais,
   criarPermissaoLancamentoEspecial,
+  atualizarPermissaoLancamentoEspecial,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import MeusDadosContext from "context/MeusDadosContext";
 import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
@@ -60,6 +61,8 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
   const ehEscolaValida = (labelEscola: string) => {
     return escolas?.find((escola) => escola.label === labelEscola);
   };
+
+  const [valoresIniciais, setValoresIniciais] = useState({});
 
   const getDiretoriasRegionaisAsync = async () => {
     setCarregandoDREs(true);
@@ -155,9 +158,43 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
     setLoading(false);
   };
 
+  const getInitialValues = async () => {
+    let initialValues = {
+      uuid: null,
+      diretoria_regional: null,
+      escola: null,
+      periodo_escolar: null,
+      data_inicial: null,
+      data_final: null,
+      alimentacoes_lancamento_especial: [],
+    };
+
+    if (history.location.state && history.location.state.permissao) {
+      const permissao = history.location.state.permissao;
+      await getEscolasTercTotalAsync(permissao.diretoria_regional.uuid);
+      const escolaLabel = `${permissao.escola.codigo_eol} - ${permissao.escola.nome}`;
+      await getEscolaSimplesAsync(escolaLabel);
+      const alimentacoesPermissao =
+        permissao.alimentacoes_lancamento_especial.map((ali) => ali.uuid);
+      setAliLancEspeciaisSelecionadas(alimentacoesPermissao);
+
+      initialValues = {
+        uuid: permissao.uuid,
+        diretoria_regional: permissao.diretoria_regional.uuid,
+        escola: escolaLabel,
+        periodo_escolar: permissao.periodo_escolar.uuid,
+        data_inicial: permissao.data_inicial,
+        data_final: permissao.data_final,
+        alimentacoes_lancamento_especial: alimentacoesPermissao,
+      };
+    }
+    setValoresIniciais(initialValues);
+  };
+
   useEffect(() => {
     getDiretoriasRegionaisAsync();
     getAlimentacoesLancamentosEspeciaisAsync();
+    getInitialValues();
   }, []);
 
   const onChangeCheckBox = (form: FormApi, e: CheckboxChangeEvent) => {
@@ -325,9 +362,16 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
 
   const onSubmit = async (values: Record<string, any>) => {
     const payload = formatarValues(values);
-
-    const response = await criarPermissaoLancamentoEspecial(payload);
-    if (response.status === HTTP_STATUS.CREATED) {
+    let response = undefined;
+    if (values.uuid) {
+      response = await atualizarPermissaoLancamentoEspecial(
+        payload,
+        values.uuid
+      );
+    } else {
+      response = await criarPermissaoLancamentoEspecial(payload);
+    }
+    if ([HTTP_STATUS.CREATED, HTTP_STATUS.OK].includes(response.status)) {
       toastSuccess("Permissão de Lançamento Especial salva com sucesso!");
       history.push(
         "/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais"
@@ -348,7 +392,10 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
           spinning={LOADING || carregandoEscolas || loading}
         >
           {!erroAPI && !LOADING && diretoriasRegionais && (
-            <Form onSubmit={(values) => onSubmit(values)}>
+            <Form
+              onSubmit={(values) => onSubmit(values)}
+              initialValues={valoresIniciais}
+            >
               {({ handleSubmit, form, values }) => (
                 <form onSubmit={handleSubmit}>
                   <div className="row">
@@ -364,6 +411,7 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                         naoDesabilitarPrimeiraOpcao
                         validate={required}
                         required
+                        disabled={values.uuid ? true : false}
                       />
                       <OnChange name="diretoria_regional">
                         {(value) => getEscolasTercTotalAsync(value)}
@@ -386,7 +434,9 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                         placeholder={"Selecione uma unidade educacional"}
                         required
                         disabled={
-                          !values.diretoria_regional || carregandoEscolas
+                          !values.diretoria_regional ||
+                          carregandoEscolas ||
+                          values.uuid
                         }
                       />
                       <OnChange name="escola">
@@ -407,7 +457,7 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                         naoDesabilitarPrimeiraOpcao
                         validate={required}
                         required
-                        disabled={!ehEscolaValida(values.escola)}
+                        disabled={!ehEscolaValida(values.escola) || values.uuid}
                       />
                     </div>
                     <div className="col-4">
@@ -416,7 +466,7 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                         label="Data Início da Permissão"
                         name="data_inicial"
                         minDate={null}
-                        initialValue={dataInicio}
+                        // initialValue={dataInicio}
                         disabled={
                           !values.diretoria_regional ||
                           !ehEscolaValida(values.escola)
