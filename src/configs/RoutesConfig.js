@@ -684,6 +684,12 @@ const routesConfig = [
     tipoUsuario: usuarioEhQualquerCODAE(),
   },
   {
+    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais/editar-permissao-lancamento-especial`,
+    component: NovaPermissaoLancamentoEspecialPage,
+    exact: true,
+    tipoUsuario: usuarioEhQualquerCODAE(),
+  },
+  {
     path: `/configuracoes/cadastros/horario-combos-alimentacao`,
     component: CadastroHorarioComboAlimentacaoPage,
     exact: false,
