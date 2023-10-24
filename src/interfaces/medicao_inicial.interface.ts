@@ -1,5 +1,6 @@
 import {
   EscolaComLoteEDREInterface,
+  DiretoriaRegionalInterface,
   PeriodoEscolarInterface,
 } from "interfaces/escola.interface";
 
@@ -17,7 +18,7 @@ export interface PermissaoLancamentosEspeciaisInterface {
   criado_por: number;
   data_final: string | null;
   data_inicial: string | null;
-  diretoria_regional: number;
+  diretoria_regional: DiretoriaRegionalInterface;
   escola: EscolaComLoteEDREInterface;
   id: number;
   periodo_escolar: PeriodoEscolarInterface;

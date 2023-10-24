@@ -29,6 +29,7 @@ import {
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import MeusDadosContext from "context/MeusDadosContext";
 import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
+import { PermissaoLancamentosEspeciaisInterface } from "interfaces/medicao_inicial.interface";
 
 import "./style.scss";
 
@@ -159,18 +160,27 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
   };
 
   const getInitialValues = async () => {
-    let initialValues = {
+    let initialValues: {
+      uuid: string | null;
+      diretoria_regional: string | null;
+      escola: string | null;
+      periodo_escolar: string | null;
+      data_inicial: string | Date | null;
+      data_final: string | Date | null;
+      alimentacoes_lancamento_especial: Array<string>;
+    } = {
       uuid: null,
       diretoria_regional: null,
       escola: null,
       periodo_escolar: null,
-      data_inicial: null,
+      data_inicial: new Date(),
       data_final: null,
       alimentacoes_lancamento_especial: [],
     };
 
     if (history.location.state && history.location.state.permissao) {
-      const permissao = history.location.state.permissao;
+      const permissao: PermissaoLancamentosEspeciaisInterface =
+        history.location.state.permissao;
       await getEscolasTercTotalAsync(permissao.diretoria_regional.uuid);
       const escolaLabel = `${permissao.escola.codigo_eol} - ${permissao.escola.nome}`;
       await getEscolaSimplesAsync(escolaLabel);
@@ -457,7 +467,7 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                         naoDesabilitarPrimeiraOpcao
                         validate={required}
                         required
-                        disabled={!ehEscolaValida(values.escola) || values.uuid}
+                        disabled={!ehEscolaValida(values.escola)}
                       />
                     </div>
                     <div className="col-4">
@@ -466,7 +476,6 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                         label="Data Início da Permissão"
                         name="data_inicial"
                         minDate={null}
-                        // initialValue={dataInicio}
                         disabled={
                           !values.diretoria_regional ||
                           !ehEscolaValida(values.escola)
