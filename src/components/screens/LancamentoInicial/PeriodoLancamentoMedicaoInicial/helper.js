@@ -457,13 +457,19 @@ export const desabilitarField = (
   } else if (
     `refeicao__dia_${dia}__categoria_${categoria}` in
       dadosValoresInclusoesAutorizadasState &&
-    rowName === "repeticao_refeicao"
+    rowName === "repeticao_refeicao" &&
+    !["Mês anterior", "Mês posterior"].includes(
+      values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+    )
   ) {
     return false;
   } else if (
     `sobremesa__dia_${dia}__categoria_${categoria}` in
       dadosValoresInclusoesAutorizadasState &&
-    rowName === "repeticao_sobremesa"
+    rowName === "repeticao_sobremesa" &&
+    !["Mês anterior", "Mês posterior"].includes(
+      values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+    )
   ) {
     return false;
   } else if (
@@ -499,7 +505,7 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   mes,
   ano,
   periodos_escolares,
-  location
+  location = null
 ) => {
   const params = {};
   params["escola_uuid"] = escolaUuuid;
@@ -508,6 +514,7 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   params["ano"] = ano;
   params["periodos_escolares"] = periodos_escolares;
   if (
+    location &&
     location.state.grupo &&
     location.state.grupo.includes("Programas e Projetos")
   ) {
@@ -616,7 +623,8 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
 export const formatarLinhasTabelaAlimentacao = (
   tipos_alimentacao,
   periodoGrupo,
-  solicitacao
+  solicitacao,
+  eh_periodo_especifico = false
 ) => {
   const tiposAlimentacaoFormatadas = tipos_alimentacao
     .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
@@ -656,7 +664,8 @@ export const formatarLinhasTabelaAlimentacao = (
 
   const matriculadosOuNumeroDeAlunos = () => {
     return periodoGrupo.grupo === "Programas e Projetos" ||
-      ehEscolaTipoCEUGESTAO(solicitacao.escola)
+      ehEscolaTipoCEUGESTAO(solicitacao.escola) ||
+      eh_periodo_especifico
       ? {
           nome: "Número de Alunos",
           name: "numero_de_alunos",

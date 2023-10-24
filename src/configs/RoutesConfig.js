@@ -1540,10 +1540,7 @@ const routesConfig = [
     path: `/${constants.MEDICAO_INICIAL}/${constants.CONFERENCIA_DOS_LANCAMENTOS}`,
     component: ConferenciaDosLancamentosPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhDRE() ||
-      usuarioEhMedicao() ||
-      usuarioEhEscolaTerceirizadaQualquerPerfil(),
+    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.DETALHAMENTO_DO_LANCAMENTO}`,

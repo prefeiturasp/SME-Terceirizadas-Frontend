@@ -33,7 +33,8 @@
     "react/no-string-refs": "off", // TODO: investigar  essa regra.
     "no-dupe-else-if": 0,
     "no-import-assign": 0,
-    "no-setter-return": 0
+    "no-setter-return": 0,
+    "no-console": "error"
   },
   "settings": {
     "react": {
