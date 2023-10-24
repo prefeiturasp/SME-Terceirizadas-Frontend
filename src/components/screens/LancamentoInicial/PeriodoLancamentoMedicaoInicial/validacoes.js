@@ -76,6 +76,26 @@ export const campoComInclusaoContinuaValor0ESemObservacao = (
   return erro;
 };
 
+export const campoLancheEmergencialComZeroOuSemObservacao = (
+  values,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  const value =
+    values[`lanche_emergencial__dia_${column.dia}__categoria_${categoria.id}`];
+
+  return (
+    (!value || Number(value) === 0) &&
+    !values[`observacoes__dia_${column.dia}__categoria_${categoria.id}`] &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === column.dia
+    ).length > 0
+  );
+};
+
 export const campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao = (
   dia,
   categoria,
@@ -241,41 +261,6 @@ export const camposKitLancheSolicitacoesAlimentacaoESemObservacao = (
   return erro;
 };
 
-export const camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao = (
-  formValuesAtualizados,
-  column,
-  categoria,
-  alteracoesAlimentacaoAutorizadas
-) => {
-  let erro = false;
-  const lancheEmergencialValue =
-    formValuesAtualizados[
-      `lanche_emergencial__dia_${column.dia}__categoria_${categoria.id}`
-    ];
-  if (
-    alteracoesAlimentacaoAutorizadas &&
-    !formValuesAtualizados[
-      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
-    ] &&
-    categoria.nome.includes("SOLICITAÇÕES") &&
-    lancheEmergencialValue &&
-    alteracoesAlimentacaoAutorizadas.filter(
-      (alteracao) => alteracao.dia === column.dia
-    ).length === 0
-  ) {
-    erro = true;
-  }
-  if (
-    alteracoesAlimentacaoAutorizadas &&
-    categoria.nome.includes("SOLICITAÇÕES") &&
-    lancheEmergencialValue &&
-    Number(lancheEmergencialValue) === 0
-  ) {
-    erro = true;
-  }
-  return erro;
-};
-
 export const camposLancheEmergTabelaEtec = (
   formValuesAtualizados,
   column,
@@ -413,12 +398,6 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
         categoria,
         kitLanchesAutorizadas
       ) ||
-      camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao(
-        formValuesAtualizados,
-        column,
-        categoria,
-        alteracoesAlimentacaoAutorizadas
-      ) ||
       camposLancheEmergTabelaEtec(
         formValuesAtualizados,
         column,
@@ -433,6 +412,12 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
         feriadosNoMes,
         formValuesAtualizados,
         categoria
+      ) ||
+      campoLancheEmergencialComZeroOuSemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        alteracoesAlimentacaoAutorizadas
       )
     );
   }
@@ -1126,7 +1111,7 @@ export const exibirTooltipLancheEmergencialAutorizado = (
     ];
 
   return (
-    !value &&
+    (!value || Number(value) === 0) &&
     !formValuesAtualizados[
       `observacoes__dia_${column.dia}__categoria_${categoria.id}`
     ] &&
