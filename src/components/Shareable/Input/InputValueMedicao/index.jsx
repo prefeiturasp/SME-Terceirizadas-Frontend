@@ -223,7 +223,7 @@ export const InputText = (props) => {
             "Há autorização de Lanche Emergencial para esta data. Informe a quantidade ofertada."
           }
         >
-          <i className="fas fa-info icone-info-success" />
+          <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
       {exibeTooltipFrequenciaZeroTabelaEtec && (
@@ -318,7 +318,7 @@ export const InputText = (props) => {
             exibeTooltipKitLancheSolAlimentacoes ||
             exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas ||
             exibeTooltipLancheEmergencialNaoAutorizado ||
-            exibeTooltipLancheEmergencialZeroAutorizado ||
+            exibeTooltipLancheEmergencialAutorizado ||
             exibeTooltipFrequenciaZeroTabelaEtec ||
             exibeTooltipLancheEmergTabelaEtec ||
             exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero ||
