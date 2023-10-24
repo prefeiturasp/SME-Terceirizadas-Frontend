@@ -162,6 +162,8 @@ export const PERMISSAO_LANCAMENTOS_ESPECIAIS =
   "permissao-lancamentos-especiais";
 export const NOVA_PERMISSAO_LANCAMENTO_ESPECIAL =
   "nova-permissao-lancamento-especial";
+export const EDITAR_PERMISSAO_LANCAMENTO_ESPECIAL =
+  "editar-permissao-lancamento-especial";
 export const DISPONIBILIZACAO_DE_SOLICITACOES =
   "disponibilizacao-de-solicitacoes";
 export const ENVIO_REQUISICOES_ENTREGA = "envio-requisicoes-entrega";
