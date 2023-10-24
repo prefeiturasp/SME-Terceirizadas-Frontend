@@ -48,6 +48,10 @@ export const InputText = (props) => {
     exibeTooltipRepeticao,
     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI,
     exibeTooltipSuspensoesAutorizadasCEI,
+    exibeTooltipInclusaoAlimentacaoAutorizadaDreCodae,
+    exibeTooltipAlteracaoAlimentacaoAutorizadaDreCodae,
+    exibeTooltipSuspensaoAutorizadaFrequenciaDreCodae,
+    exibeTooltipSuspensaoAutorizadaAlimentacaoDreCodae,
   } = props;
 
   let msgTooltip = "";
@@ -270,6 +274,30 @@ export const InputText = (props) => {
           }
         >
           <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipInclusaoAlimentacaoAutorizadaDreCodae && (
+        <Tooltip title={"Foi autorizada inclusão de alimentações neste dia."}>
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
+      {exibeTooltipAlteracaoAlimentacaoAutorizadaDreCodae && (
+        <Tooltip title={"Há autorização de LPR ou RPL para este dia."}>
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
+      {exibeTooltipSuspensaoAutorizadaFrequenciaDreCodae && (
+        <Tooltip
+          title={"Há suspensão de alimentações autorizada para este dia."}
+        >
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
+      {exibeTooltipSuspensaoAutorizadaAlimentacaoDreCodae && (
+        <Tooltip
+          title={"Há suspensão deste tipo de alimentação para este dia."}
+        >
+          <i className="fas fa-info icone-info-success" />
         </Tooltip>
       )}
 
