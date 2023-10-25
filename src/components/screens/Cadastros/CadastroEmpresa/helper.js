@@ -142,6 +142,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
     });
 
     const contratos = valoresState.contratos.map((contrato, index) => ({
+      uuid: contrato.uuid,
       numero: valoresForm[`numero_contrato_${index}`],
       processo: valoresForm[`numero_processo_${index}`],
       ata: valoresForm[`numero_ata_${index}`],
