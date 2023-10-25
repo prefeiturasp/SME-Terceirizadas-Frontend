@@ -38,5 +38,5 @@ module.exports = {
   HOME: "",
   ENVIRONMENT: ENVIRONMENT,
   CES_URL: CES_URL,
-  CES_TOKEN: CES_TOKEN
+  CES_TOKEN: CES_TOKEN,
 };

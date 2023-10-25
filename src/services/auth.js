@@ -46,9 +46,8 @@ const login = async (login, password) => {
         },
       }).then((result) => {
         const response = result.json();
-        response.then(async (result_)  => {
+        response.then(async (result_) => {
           if (result.status === HTTP_STATUS.OK) {
-
             criarUsuarioCES(result_.registro_funcional);
 
             localStorage.setItem(
