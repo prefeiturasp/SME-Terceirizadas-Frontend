@@ -436,7 +436,7 @@ export const TIPOS_SOLICITACOES_OPTIONS = [
     uuid: "Alteração",
   },
   { nome: "Kit Lanche", uuid: "KIT_LANCHE" },
-  { nome: "Kit Lanche Unificado", uuid: "Kit Lanche Passeio Unificado" },
+  { nome: "Kit Lanche Unificado", uuid: "Kit Lanche Unificado" },
   { nome: "Inversão de dia de Cardápio", uuid: "Inversão" },
   { nome: "Suspensão de Alimentação", uuid: "Suspensão" },
 ];
