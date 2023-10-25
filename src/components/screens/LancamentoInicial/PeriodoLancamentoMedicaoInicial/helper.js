@@ -284,23 +284,27 @@ export const desabilitarField = (
       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
       "MEDICAO_CORRIGIDA_PELA_UE",
       "MEDICAO_CORRIGIDA_PARA_CODAE",
-    ].includes(location.state.status_periodo)
+    ].includes(location.state.status_periodo) &&
+    !["matriculados", "numero_de_alunos", "dietas_autorizadas"].includes(
+      rowName
+    )
   ) {
     return false;
   }
 
   if (
-    location.state &&
-    (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
-      location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
-      location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
-      ([
-        "MEDICAO_CORRECAO_SOLICITADA",
-        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-        "MEDICAO_CORRIGIDA_PELA_UE",
-        "MEDICAO_CORRIGIDA_PARA_CODAE",
-      ].includes(location.state.status_periodo) &&
-        !valorField))
+    (location.state &&
+      (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
+        location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
+        location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
+        ([
+          "MEDICAO_CORRECAO_SOLICITADA",
+          "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+          "MEDICAO_CORRIGIDA_PELA_UE",
+          "MEDICAO_CORRIGIDA_PARA_CODAE",
+        ].includes(location.state.status_periodo) &&
+          !valorField))) ||
+    ["matriculados", "numero_de_alunos", "dietas_autorizadas"].includes(rowName)
   ) {
     return true;
   }

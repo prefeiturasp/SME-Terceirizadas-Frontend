@@ -678,21 +678,23 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
 
   const salvarCorrecao = async (uuidMedicaoPeriodoGrupo) => {
     let uuidsValoresMedicaoParaCorrecao = [];
-    Object.keys(valoresParaCorrecao).forEach((key) => {
-      const keySplitted = key.split("__");
-      const nome_campo = keySplitted[0];
-      const dia = keySplitted[1].match(/\d/g).join("");
-      const idCategoria = keySplitted[2].match(/\d/g).join("");
-      const lancamento = valoresLancamentos.find(
-        (valor) =>
-          valor.nome_campo === nome_campo &&
-          Number(valor.dia) === Number(dia) &&
-          Number(valor.categoria_medicao) === Number(idCategoria)
-      );
+    if (!ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+      Object.keys(valoresParaCorrecao).forEach((key) => {
+        const keySplitted = key.split("__");
+        const nome_campo = keySplitted[0];
+        const dia = keySplitted[1].match(/\d/g).join("");
+        const idCategoria = keySplitted[2].match(/\d/g).join("");
+        const lancamento = valoresLancamentos.find(
+          (valor) =>
+            valor.nome_campo === nome_campo &&
+            Number(valor.dia) === Number(dia) &&
+            Number(valor.categoria_medicao) === Number(idCategoria)
+        );
 
-      const uuidValorMedicao = lancamento.uuid;
-      uuidsValoresMedicaoParaCorrecao.push(uuidValorMedicao);
-    });
+        const uuidValorMedicao = lancamento.uuid;
+        uuidsValoresMedicaoParaCorrecao.push(uuidValorMedicao);
+      });
+    }
 
     const descricao_correcao =
       values[
