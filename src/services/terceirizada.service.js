@@ -53,24 +53,8 @@ export const getTerceirizada_razoes = () => {
     });
 };
 
-export const getTerceirizadaUUID = (uuid) => {
-  const url = `${API_URL}/terceirizadas/${uuid}/`;
-  let status = 0;
-  return fetch(url, {
-    headers: authToken,
-    method: "GET",
-  })
-    .then((response) => {
-      status = response.status;
-      return response.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
-};
+export const getTerceirizadaUUID = async (uuid) =>
+  await axios.get(`/terceirizadas/${uuid}/`);
 
 export const createNaoTerceirizada = (payload) => {
   const url = `${API_URL}/empresas-nao-terceirizadas/`;
@@ -135,29 +119,14 @@ export const updateTerceirizada = (uuid, payload) => {
     });
 };
 
-export const updateNaoTerceirizada = (uuid, payload) => {
-  const url = `${API_URL}/empresas-nao-terceirizadas/${uuid}/`;
-
-  let status = 0;
-  return fetch(url, {
-    method: "PUT",
-    body: JSON.stringify(payload),
-    headers: authToken,
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
-};
+export const updateNaoTerceirizada = async (uuid, payload) =>
+  await axios.patch(`/empresas-nao-terceirizadas/${uuid}/`, payload);
 
 export const encerraContratoTerceirizada = async (uuid) =>
   await axios.patch(`/contratos/${uuid}/encerrar-contrato/`);
+
+export const obterNumeroContratosCadastrados = async () =>
+  await axios.get("/contratos/numeros-contratos-cadastrados/");
 
 export const getRelatorioQuantitativo = async (params) => {
   if (params) {
