@@ -56,26 +56,8 @@ export const getTerceirizada_razoes = () => {
 export const getTerceirizadaUUID = async (uuid) =>
   await axios.get(`/terceirizadas/${uuid}/`);
 
-export const createNaoTerceirizada = (payload) => {
-  const url = `${API_URL}/empresas-nao-terceirizadas/`;
-
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers: authToken,
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
-};
+export const createNaoTerceirizada = async (uuid, payload) =>
+  await axios.patch("/empresas-nao-terceirizadas/", payload);
 
 export const createTerceirizada = (payload) => {
   const url = `${API_URL}/terceirizadas/`;
