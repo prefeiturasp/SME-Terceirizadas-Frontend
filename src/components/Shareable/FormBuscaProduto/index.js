@@ -230,7 +230,7 @@ export const FormBuscaProduto = ({
                     </div>
                   )}
                 </div>
-                <div className="col-4">
+                <div className="col-4 data-prod-hom">
                   <Field
                     component={InputComData}
                     label="Homologados até:"
@@ -243,6 +243,8 @@ export const FormBuscaProduto = ({
                         : moment()._d
                     }
                     writable={true}
+                    showMonthDropdown={true}
+                    showYearDropdown={true}
                     disabled={values.agrupado_por_nome_e_marca}
                   />
                 </div>
