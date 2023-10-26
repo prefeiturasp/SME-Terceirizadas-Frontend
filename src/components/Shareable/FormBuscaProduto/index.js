@@ -242,6 +242,7 @@ export const FormBuscaProduto = ({
                         ? moment(values.data_final, "DD/MM/YYYY")._d
                         : moment()._d
                     }
+                    writable={true}
                     disabled={values.agrupado_por_nome_e_marca}
                   />
                 </div>
