@@ -7,7 +7,7 @@ import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectFiel
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { required } from "../../../../../../helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
-import { getListaCronogramasLayout } from "../../../../../../services/cronograma.service";
+import { getListaCronogramasPraCadastro } from "../../../../../../services/cronograma.service";
 import {
   Arquivo,
   ArquivoPayload,
@@ -55,7 +55,7 @@ export default () => {
   };
 
   const buscaCronogramas = async (): Promise<void> => {
-    let response = await getListaCronogramasLayout();
+    let response = await getListaCronogramasPraCadastro();
     let lista = response.data.results.map((crono: CronogramaSimples) => {
       crono.value = crono.numero;
       return crono;
@@ -284,7 +284,7 @@ export default () => {
 
                 <div className="mt-4 mb-4">
                   <Botao
-                    texto="Enviar Para Análise"
+                    texto="Salvar e Enviar"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
                     className="float-right ml-3"
