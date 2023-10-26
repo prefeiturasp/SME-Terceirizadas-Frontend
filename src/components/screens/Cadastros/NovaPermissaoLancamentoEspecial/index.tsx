@@ -411,6 +411,7 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                   <div className="row">
                     <div className="col-4">
                       <Field
+                        className="diretoria-regional-select"
                         component={Select}
                         options={[
                           { nome: "Selecione uma DRE", uuid: "" },
