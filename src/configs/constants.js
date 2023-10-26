@@ -240,6 +240,10 @@ export const PENDENTES_APROVACAO = "pendentes-aprovacao";
 export const APROVADOS = "aprovados";
 export const ENVIADOS_PARA_CORRECAO = "enviados-para-correcao";
 
+export const DOCUMENTOS_RECEBIMENTO = "documentos-recebimento";
+export const CADASTRO_DOCUMENTOS_RECEBIMENTO =
+  "cadastro-documentos-recebimento";
+
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";
 
