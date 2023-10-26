@@ -16,6 +16,7 @@ import {
   usuarioComAcessoAoPainelAprovacoes,
 } from "helpers/utilities";
 import {
+  DOCUMENTOS_RECEBIMENTO,
   LAYOUT_EMBALAGEM,
   PAINEL_LAYOUT_EMBALAGEM,
 } from "../../../../configs/constants";
@@ -58,6 +59,11 @@ const MenuPreRecebimento = () => {
       {usuarioComAcessoAoPainelEmbalagens() && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`}>
           Layout de Embalagem
+        </LeafItem>
+      )}
+      {usuarioEhEmpresaFornecedor() && (
+        <LeafItem to={`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`}>
+          Documentos de Recebimento
         </LeafItem>
       )}
     </Menu>

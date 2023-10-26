@@ -267,6 +267,8 @@ import StatusLayoutEnviadosParaCorrecao from "../pages/PreRecebimento/CardsLayou
 import AnalisarLayoutEmbalagemPage from "../pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
 import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutEmbalagemPage";
 import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayoutEmbalagemPage";
+import DocumentosRecebimentoPage from "../pages/PreRecebimento/DocumentosRecebimentoPage";
+import CadastroDocumentosRecebimentoPage from "../pages/PreRecebimento/CadastroDocumentosRecebimentoPage";
 
 const routesConfig = [
   {
@@ -1960,6 +1962,18 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ATUALIZAR_LAYOUT_EMBALAGEM}`,
     component: AtualizarLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DOCUMENTOS_RECEBIMENTO}`,
+    component: DocumentosRecebimentoPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_DOCUMENTOS_RECEBIMENTO}`,
+    component: CadastroDocumentosRecebimentoPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
