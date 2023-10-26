@@ -13,6 +13,7 @@ import {
   ArquivoPayload,
   CronogramaSimples,
   DocumentosRecebimentoPayload,
+  DocumentosState,
   TiposDocumentosPayload,
 } from "../../interfaces";
 import InserirDocumento from "../InserirDocumento";
@@ -37,7 +38,7 @@ export default () => {
   const [carregando, setCarregando] = useState<boolean>(true);
   const [cronogramas, setCronogramas] = useState<Array<CronogramaSimples>>([]);
   const [laudo, setLaudo] = useState<Array<ArquivoPayload>>([]);
-  const [documentos, setDocumentos] = useState({});
+  const [documentos, setDocumentos] = useState<DocumentosState>({});
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const onSubmit = (): void => {
@@ -171,7 +172,6 @@ export default () => {
           <Form
             onSubmit={onSubmit}
             initialValues={{}}
-            //validate={() => {}}
             render={({ handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
                 <ModalCadastrar
@@ -266,7 +266,7 @@ export default () => {
                 </div>
 
                 {values.tipos_de_documentos?.map(
-                  (value: string, index: number) => (
+                  (value: string, idx: number) => (
                     <InserirDocumento
                       setFiles={(files: Array<Arquivo>) =>
                         setFilesDocumentos(files, value)
@@ -275,7 +275,7 @@ export default () => {
                         removeFileDocumentos(index, value)
                       }
                       tipoDocumento={value}
-                      key={index}
+                      key={idx}
                     />
                   )
                 )}

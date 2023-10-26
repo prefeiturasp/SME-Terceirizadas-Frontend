@@ -32,3 +32,7 @@ export interface DocumentosRecebimentoPayload {
   numero_laudo: string;
   tipos_de_documentos: Array<TiposDocumentosPayload>;
 }
+
+export interface DocumentosState {
+  [key: string]: Array<ArquivoPayload>;
+}
