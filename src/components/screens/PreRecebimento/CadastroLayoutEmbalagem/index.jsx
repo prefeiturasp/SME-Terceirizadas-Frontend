@@ -5,7 +5,7 @@ import { Field, Form } from "react-final-form";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 import { required } from "../../../../helpers/fieldValidators";
 import InputText from "../../../Shareable/Input/InputText";
-import { getListaCronogramasLayout } from "../../../../services/cronograma.service";
+import { getListaCronogramasPraCadastro } from "../../../../services/cronograma.service";
 import { cadastraLayoutEmbalagem } from "../../../../services/layoutEmbalagem.service";
 import { OnChange } from "react-final-form-listeners";
 import Botao from "../../../Shareable/Botao";
@@ -84,7 +84,7 @@ export default () => {
   };
 
   const buscaCronogramas = async () => {
-    let response = await getListaCronogramasLayout();
+    let response = await getListaCronogramasPraCadastro();
     let lista = response.data.results.map((crono) => {
       crono.value = crono.numero;
       return crono;
