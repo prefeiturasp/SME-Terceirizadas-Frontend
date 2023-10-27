@@ -137,6 +137,7 @@ import {
   usuarioComAcessoAoPainelAprovacoes,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioComAcessoAoPainelEmbalagens,
+  usuarioEhOrgaoFiscalizador,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1147,7 +1148,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhDRE() ||
-      usuarioEhCODAENutriManifestacao(),
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
@@ -1181,7 +1183,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RECLAMACAO_DE_PRODUTO}`,
@@ -1209,7 +1212,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.CORRECAO_DE_PRODUTO}`,
@@ -1230,7 +1234,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao(),
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RESPONDER_QUESTIONAMENTOS_DA_CODAE}`,
@@ -1272,7 +1277,8 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_NAO_HOMOLOGADAS}`,
@@ -1287,7 +1293,8 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: "/painel-gestao-produto",
@@ -1302,7 +1309,8 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhDRE(),
+      usuarioEhDRE() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
@@ -1327,7 +1335,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGestaoAlimentacao(),
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ATIVACAO_DE_PRODUTO}/consulta`,
@@ -1352,7 +1361,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAENutriManifestacao() ||
-      usuarioEhDRE(),
+      usuarioEhDRE() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
@@ -1362,7 +1372,8 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao(),
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,

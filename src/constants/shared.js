@@ -67,6 +67,7 @@ export const TIPO_PERFIL = {
   NUTRICAO_MANIFESTACAO: `"nutricao_manifestacao"`,
   PRE_RECEBIMENTO: `"pre_recebimento"`,
   MEDICAO: `"medicao"`,
+  ORGAO_FISCALIZADOR: `"orgao_fiscalizador"`,
 };
 
 export const TIPO_USUARIO = {

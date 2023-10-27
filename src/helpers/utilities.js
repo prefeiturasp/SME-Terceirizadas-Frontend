@@ -675,6 +675,10 @@ export const usuarioEhMedicao = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.MEDICAO;
 };
 
+export const usuarioEhOrgaoFiscalizador = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ORGAO_FISCALIZADOR;
+};
+
 export const acessoModuloMedicaoInicialEscola = () => {
   return (
     localStorage.getItem("acesso_modulo_medicao_inicial") === "true" ||
