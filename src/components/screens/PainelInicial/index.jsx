@@ -22,6 +22,7 @@ import {
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaAbastecimentoDiretor,
   exibirModuloMedicaoInicial,
+  usuarioEhOrgaoFiscalizador,
 } from "helpers/utilities";
 import { ACOMPANHAMENTO_DE_LANCAMENTOS } from "configs/constants";
 
@@ -72,7 +73,8 @@ const PainelInicial = ({ history }) => {
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhDRE() ||
         usuarioEhEscolaTerceirizadaDiretor() ||
-        usuarioEhEscolaTerceirizada()) && (
+        usuarioEhEscolaTerceirizada() ||
+        usuarioEhOrgaoFiscalizador()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Gestão de Produto"}

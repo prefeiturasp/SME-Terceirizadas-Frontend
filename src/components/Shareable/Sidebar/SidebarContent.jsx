@@ -30,6 +30,8 @@ import {
   usuarioEhCodaeDilog,
   usuarioEhDilog,
   usuarioEhDilogQualidade,
+  usuarioEhCoordenadorGpCODAE,
+  usuarioEhOrgaoFiscalizador,
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -43,7 +45,6 @@ import {
   MenuLogistica,
   MenuPreRecebimento,
 } from "./menus";
-import { usuarioEhCoordenadorGpCODAE } from "../../../helpers/utilities";
 
 export const SidebarContent = () => {
   const [activeMenu, setActiveMenu] = useState("");
@@ -104,7 +105,8 @@ export const SidebarContent = () => {
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhEscolaTerceirizada() ||
     usuarioEhDRE() ||
-    usuarioEhEmpresaTerceirizada();
+    usuarioEhEmpresaTerceirizada() ||
+    usuarioEhOrgaoFiscalizador();
   const exibirCadastros =
     usuarioEhCodaeDilog() ||
     usuarioEhMedicao() ||
@@ -136,7 +138,8 @@ export const SidebarContent = () => {
     !usuarioEhOutrosDilog() &&
     !usuarioEhPreRecebimentoSemLogistica() &&
     !usuarioEhQualquerUsuarioEmpresa() &&
-    !usuarioEhDilog();
+    !usuarioEhDilog() &&
+    !usuarioEhOrgaoFiscalizador();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||

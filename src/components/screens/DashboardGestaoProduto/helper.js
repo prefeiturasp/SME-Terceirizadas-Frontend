@@ -10,6 +10,7 @@ import {
   usuarioEhCogestorDRE,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
+  usuarioEhOrgaoFiscalizador,
 } from "helpers/utilities";
 import {
   RELATORIO,
@@ -51,7 +52,8 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   if (
     (usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao()) &&
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhOrgaoFiscalizador()) &&
     [
       CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo,
       CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo,
