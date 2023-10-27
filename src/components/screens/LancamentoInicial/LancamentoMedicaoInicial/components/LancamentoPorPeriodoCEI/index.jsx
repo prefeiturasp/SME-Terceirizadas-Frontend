@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import Botao from "components/Shareable/Botao";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
-import { CORES } from "../LancamentoPorPeriodo/helpers";
-import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
-import CardLancamentoCEI from "./CardLancamentoCEI";
-import { relatorioMedicaoInicialPDF } from "services/relatorios";
-import HTTP_STATUS from "http-status-codes";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import CardLancamentoCEI from "./CardLancamentoCEI";
 import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
+import { CORES } from "../LancamentoPorPeriodo/helpers";
+import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
+import { relatorioMedicaoInicialPDF } from "services/relatorios";
+import { getQuantidadeAlimentacoesLancadasPeriodoGrupo } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
 export default ({
   solicitacaoMedicaoInicial,
@@ -23,37 +24,8 @@ export default ({
     useState(false);
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
     useState(false);
-
-  const quantidadeAlimentacoesLancadas = [
-    {
-      nome_periodo_grupo: "INTEGRAL",
-      status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
-      qtd_alunos: 100,
-      qtd_refeicoes_diarias: 5,
-      valor_total: 500,
-    },
-    {
-      nome_periodo_grupo: "PARCIAL",
-      status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
-      qtd_alunos: 100,
-      qtd_refeicoes_diarias: 3,
-      valor_total: 300,
-    },
-    {
-      nome_periodo_grupo: "MANHA",
-      status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
-      qtd_alunos: 100,
-      qtd_refeicoes_diarias: 2,
-      valor_total: 200,
-    },
-    {
-      nome_periodo_grupo: "TARDE",
-      status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
-      qtd_alunos: 100,
-      qtd_refeicoes_diarias: 2,
-      valor_total: 200,
-    },
-  ];
+  const [quantidadeAlimentacoesLancadas, setQuantidadeAlimentacoesLancadas] =
+    useState(undefined);
 
   const gerarPDFMedicaoInicial = async () => {
     const response = await relatorioMedicaoInicialPDF(
@@ -87,20 +59,34 @@ export default ({
     );
   };
 
+  const getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync = async () => {
+    const params = { uuid_solicitacao: solicitacaoMedicaoInicial.uuid };
+    const response = await getQuantidadeAlimentacoesLancadasPeriodoGrupo(
+      params
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setQuantidadeAlimentacoesLancadas(response.data.results);
+    } else {
+      toastError(
+        "Erro ao carregar quantidades de alimentações lançadas. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  useEffect(() => {
+    solicitacaoMedicaoInicial &&
+      getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
+  }, [periodoSelecionado, solicitacaoMedicaoInicial]);
+
   return (
     <div>
-      {solicitacaoMedicaoInicial && (
+      {solicitacaoMedicaoInicial && quantidadeAlimentacoesLancadas && (
         <>
           <div className="row pb-2">
             <div className="col">
               <b className="section-title">Períodos</b>
             </div>
           </div>
-          <ModalSolicitacaoDownload
-            show={exibirModalCentralDownloads}
-            setShow={setExibirModalCentralDownloads}
-          />
-
           {periodosComAlunos.map((nomePeriodo, index) => (
             <CardLancamentoCEI
               key={index}
@@ -139,6 +125,10 @@ export default ({
             onClickInfoBasicas={onClickInfoBasicas}
             setErrosAoSalvar={() => {}}
             setFinalizandoMedicao={setFinalizandoMedicao}
+          />
+          <ModalSolicitacaoDownload
+            show={exibirModalCentralDownloads}
+            setShow={setExibirModalCentralDownloads}
           />
         </>
       )}
