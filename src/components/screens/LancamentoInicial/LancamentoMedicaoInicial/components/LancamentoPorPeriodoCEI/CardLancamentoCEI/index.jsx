@@ -11,6 +11,7 @@ import {
 import "./styles.scss";
 import {
   desabilitarBotaoEditar,
+  justificativaPeriodo,
   statusPeriodo,
   styleBotaoCardLancamento,
   textoBotaoCardLancamento,
@@ -65,6 +66,11 @@ export default ({
         mesAnoSelecionado: periodoSelecionado,
         status_periodo: getStatusPeriodo(),
         status_solicitacao: solicitacaoMedicaoInicial.status,
+        justificativa_periodo: justificativaPeriodo(
+          quantidadeAlimentacoesLancadas,
+          null,
+          textoCabecalho
+        ),
         ...location.state,
       },
     });
