@@ -201,6 +201,7 @@ export const listarCardsPermitidos = () => {
       TIPO_PERFIL.DIRETORIA_REGIONAL,
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
       TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
+      TIPO_PERFIL.ORGAO_FISCALIZADOR,
     ].includes(perfil)
   ) {
     const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
@@ -212,14 +213,17 @@ export const listarCardsPermitidos = () => {
     cardAguardandoAnaliseReclamacao.incluir_status.push(
       ESCOLA_OU_NUTRICIONISTA_RECLAMOU
     );
-
-    return [
+    const listaDeCards = [
       CARD_PRODUTOS_SUSPENSOS,
       CARD_NAO_HOMOLOGADOS,
       cardHomologados,
       cardAguardandoAnaliseReclamacao,
-      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE,
     ];
+    if (perfil !== TIPO_PERFIL.ORGAO_FISCALIZADOR) {
+      listaDeCards.push(CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE);
+    }
+
+    return listaDeCards;
   }
 
   const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);

@@ -1234,7 +1234,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao(),
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RESPONDER_QUESTIONAMENTOS_DA_CODAE}`,
@@ -1371,7 +1372,8 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao(),
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
