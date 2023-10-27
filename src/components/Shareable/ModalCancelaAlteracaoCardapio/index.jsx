@@ -78,10 +78,12 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
               {tipoSolicitacao !== TIPO_SOLICITACAO.SOLICITACAO_CEI && (
                 <>
                   <p>Selecione a(s) data(s) para solicitar o cancelamento:</p>
-                  <p>
-                    Período solicitado: {solicitacao.data_inicial} a{" "}
-                    {solicitacao.data_final}
-                  </p>
+                  {solicitacao.data_inicial && (
+                    <p>
+                      Período solicitado: {solicitacao.data_inicial} a{" "}
+                      {solicitacao.data_final}
+                    </p>
+                  )}
                   {solicitacao.datas_intervalo.map((dia, key_) => {
                     return (
                       <label key={key_} className="mr-3">
