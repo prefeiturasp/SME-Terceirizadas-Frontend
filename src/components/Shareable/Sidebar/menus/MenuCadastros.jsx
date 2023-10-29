@@ -16,6 +16,7 @@ import {
   TIPOS_EMBALAGENS,
   UNIDADES_MEDIDA,
   MARCAS,
+  FABRICANTES,
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -113,9 +114,14 @@ const MenuCadastros = () => {
         </LeafItem>
       )}
       {(usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog()) && (
-        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${MARCAS}`}>
-          Marcas
-        </LeafItem>
+        <>
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${MARCAS}`}>
+            Marcas
+          </LeafItem>
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${FABRICANTES}`}>
+            Fabricantes
+          </LeafItem>
+        </>
       )}
     </Menu>
   );

@@ -3,6 +3,7 @@ import CONFIG from "../constants/config";
 import { toastError } from "../components/Shareable/Toast/dialogs";
 import HTTP_STATUS from "http-status-codes";
 import { getError } from "helpers/utilities";
+import { criarUsuarioCES } from "./ces.service";
 
 export const TOKEN_ALIAS = "TOKEN_JWT";
 export const TOKEN_REFRESH_ALIAS = "TOKEN_REFRESH_JWT";
@@ -18,6 +19,7 @@ const login = async (login, password) => {
       },
     });
     const json = await response.json();
+
     const isValid = isValidResponse(json);
     if (isValid) {
       localStorage.setItem(TOKEN_ALIAS, json.token);
@@ -44,8 +46,14 @@ const login = async (login, password) => {
         },
       }).then((result) => {
         const response = result.json();
-        response.then((result_) => {
+        response.then(async (result_) => {
           if (result.status === HTTP_STATUS.OK) {
+            criarUsuarioCES(result_.registro_funcional);
+
+            localStorage.setItem(
+              "registro_funcional",
+              JSON.stringify(result_.registro_funcional)
+            );
             localStorage.setItem(
               "tipo_perfil",
               JSON.stringify(result_.tipo_usuario)

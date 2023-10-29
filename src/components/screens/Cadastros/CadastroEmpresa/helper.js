@@ -141,20 +141,28 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       };
     });
 
-    const contratos = valoresState.contratos.map((contrato, index) => ({
-      numero: valoresForm[`numero_contrato_${index}`],
-      processo: valoresForm[`numero_processo_${index}`],
-      ata: valoresForm[`numero_ata_${index}`],
-      pregao_chamada_publica:
-        valoresForm[`numero_pregao_chamada_publica_${index}`],
-      vigencias: [
-        {
-          data_inicial: valoresForm[`vigencia_de_${index}`],
-          data_final: valoresForm[`vigencia_ate_${index}`],
-        },
-      ],
-      encerrado: contrato.encerrado ? true : false,
-    }));
+    const contratos = valoresState.contratos.map((contrato, index) => {
+      const payloadContrato = {
+        uuid: contrato.uuid,
+        processo: valoresForm[`numero_processo_${index}`],
+        ata: valoresForm[`numero_ata_${index}`],
+        pregao_chamada_publica:
+          valoresForm[`numero_pregao_chamada_publica_${index}`],
+        vigencias: [
+          {
+            data_inicial: valoresForm[`vigencia_de_${index}`],
+            data_final: valoresForm[`vigencia_ate_${index}`],
+          },
+        ],
+        encerrado: contrato.encerrado ? true : false,
+      };
+
+      if (!contrato.uuid) {
+        payloadContrato.numero = valoresForm[`numero_contrato_${index}`];
+      }
+
+      return payloadContrato;
+    });
 
     const contatos = [...contatosEmpresa];
 

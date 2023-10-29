@@ -1,4 +1,5 @@
 import axios from "../../../../services/_base";
+import { ENVIRONMENT } from "constants/config";
 
 export async function readerFile(file) {
   let result_file = await new Promise((resolve) => {
@@ -16,28 +17,27 @@ export async function readerFile(file) {
 }
 
 export async function downloadAndConvertToBase64(fileUrl) {
-  try {
-    const response = await axios.get(fileUrl, {
-      responseType: "arraybuffer",
+  let finalFileUrl = fileUrl;
+  if (ENVIRONMENT === "homolog" || ENVIRONMENT === "production")
+    finalFileUrl = finalFileUrl.replace("http://", "https://");
+
+  const response = await axios.get(finalFileUrl, {
+    responseType: "arraybuffer",
+  });
+
+  if (response.status === 200) {
+    const contentType = response.headers["content-type"];
+    const blob = new Blob([response.data], { type: contentType });
+
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64Data = reader.result;
+        resolve(base64Data);
+      };
+      reader.readAsDataURL(blob);
     });
-
-    if (response.status === 200) {
-      const contentType = response.headers["content-type"];
-      const blob = new Blob([response.data], { type: contentType });
-
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const base64Data = reader.result;
-          resolve(base64Data);
-        };
-        reader.readAsDataURL(blob);
-      });
-    } else {
-      throw new Error("Falha ao baixar a imagem.");
-    }
-  } catch (error) {
-    console.error("Erro:", error);
-    throw error;
+  } else {
+    throw new Error("Falha ao baixar a imagem.");
   }
 }

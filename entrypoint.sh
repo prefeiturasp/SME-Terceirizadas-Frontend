@@ -16,12 +16,19 @@ set -xe
   : "${NODE_ENV?Precisa de uma variavel de ambiente NODE_ENV}"
 
 set -xe
-  : "${WEBSOCKET_SERVER?Precisa de uma variavel de ambiente WEBSOCKET_SERVER}"  
+  : "${WEBSOCKET_SERVER?Precisa de uma variavel de ambiente WEBSOCKET_SERVER}"
+
+set -xe
+  : "${CES_URL?Precisa de uma variavel de ambiente CES_URL}"
+
+set -xe
+  : "${CES_TOKEN?Precisa de uma variavel de ambiente CES_TOKEN}"
 
 sed -i "s,API_URL_REPLACE_ME,$API_URL,g" /usr/share/nginx/html/static/js/main*.js
 sed -i "s,SERVER_NAME,$SERVER_NAME,g" /etc/nginx/conf.d/default.conf
 sed -i "s,WEBSOCKET_SERVER,$WEBSOCKET_SERVER,g" /etc/nginx/conf.d/default.conf
 sed -i "s,SENTRY_URL_REPLACE_ME,$SENTRY_URL,g" /usr/share/nginx/html/static/js/main*.js
 sed -i "s,NODE_ENV_REPLACE_ME,$NODE_ENV,g" /usr/share/nginx/html/static/js/main*.js
-
+sed -i "s,CES_URL_REPLACE_ME,$CES_URL,g" /usr/share/nginx/html/static/js/main*.js
+sed -i "s,CES_TOKEN_REPLACE_ME,$CES_TOKEN,g" /usr/share/nginx/html/static/js/main*.js
 exec "$@"

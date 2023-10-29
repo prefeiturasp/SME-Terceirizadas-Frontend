@@ -143,6 +143,7 @@ export const SUSPENSAO_DE_PRODUTO = "relatorio-produtos-suspensos";
 export const ATIVACAO_DE_PRODUTO = "ativacao-de-produto";
 export const CADASTROS = "cadastros";
 export const MARCAS = "marcas";
+export const FABRICANTES = "fabricantes";
 export const EDITAIS_CONTRATOS = "editais-contratos";
 export const EDITAIS_CADASTRADOS = "editais-cadastrados";
 export const EMPRESA = "empresa";
@@ -161,6 +162,8 @@ export const PERMISSAO_LANCAMENTOS_ESPECIAIS =
   "permissao-lancamentos-especiais";
 export const NOVA_PERMISSAO_LANCAMENTO_ESPECIAL =
   "nova-permissao-lancamento-especial";
+export const EDITAR_PERMISSAO_LANCAMENTO_ESPECIAL =
+  "editar-permissao-lancamento-especial";
 export const DISPONIBILIZACAO_DE_SOLICITACOES =
   "disponibilizacao-de-solicitacoes";
 export const ENVIO_REQUISICOES_ENTREGA = "envio-requisicoes-entrega";
@@ -231,10 +234,15 @@ export const DETALHAR_LAYOUT_EMBALAGEM_SOLICITACAO_ALTERACAO =
   "detalhe-layout-embalagem-solicitacao-alteracao";
 export const ANALISAR_LAYOUT_EMBALAGEM = "analise-layout-embalagem";
 export const CORRIGR_LAYOUT_EMBALAGEM = "corrigir-layout-embalagem";
+export const ATUALIZAR_LAYOUT_EMBALAGEM = "atualizar-layout-embalagem";
 export const PAINEL_LAYOUT_EMBALAGEM = "painel-layout-embalagem";
 export const PENDENTES_APROVACAO = "pendentes-aprovacao";
 export const APROVADOS = "aprovados";
 export const ENVIADOS_PARA_CORRECAO = "enviados-para-correcao";
+
+export const DOCUMENTOS_RECEBIMENTO = "documentos-recebimento";
+export const CADASTRO_DOCUMENTOS_RECEBIMENTO =
+  "cadastro-documentos-recebimento";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";

@@ -437,7 +437,7 @@ export const TIPOS_SOLICITACOES_OPTIONS = [
     uuid: "Alteração",
   },
   { nome: "Kit Lanche", uuid: "KIT_LANCHE" },
-  { nome: "Kit Lanche Unificado", uuid: "Kit Lanche Passeio Unificado" },
+  { nome: "Kit Lanche Unificado", uuid: "Kit Lanche Unificado" },
   { nome: "Inversão de dia de Cardápio", uuid: "Inversão" },
   { nome: "Suspensão de Alimentação", uuid: "Suspensão" },
 ];
@@ -482,6 +482,29 @@ export const TIPOS_OCORRENCIAS_OPTIONS = [
   {
     value: "FALTA_ESPACO_ARMAZENAMENTO",
     label: "Falta de espaço no freezer para armazenamento",
+  },
+];
+
+export const OUTROS_DOCUMENTOS_OPTIONS = [
+  {
+    value: "DECLARACAO_LEI_1512010",
+    label: "Declaração de atendimento a Lei Municipal: 15.120/10",
+  },
+  {
+    value: "CERTIFICADO_CONF_ORGANICA",
+    label: "Certificado de conformidade orgânica",
+  },
+  {
+    value: "RASTREABILIDADE",
+    label: "Rastreabilidade",
+  },
+  {
+    value: "DECLARACAO_MATERIA_ORGANICA",
+    label: "Declaração de Matéria Láctea",
+  },
+  {
+    value: "OUTROS",
+    label: "Outros",
   },
 ];
 

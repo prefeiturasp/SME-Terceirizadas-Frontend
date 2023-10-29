@@ -26,6 +26,9 @@ import {
   toastSuccess,
 } from "../../../../../Shareable/Toast/dialogs";
 import { downloadAndConvertToBase64 } from "../../../../../Shareable/Input/InputFile/helper";
+import { atualizacaoLayoutEmbalagem } from "../../../../../../services/layoutEmbalagem.service";
+import ModalAtualizar from "./components/ModalAtualizar";
+import InserirArquivo from "../InserirArquivo";
 
 const TITULOS_SECOES_TIPOS_EMBALAGENS = {
   PRIMARIA: "Embalagem Primária",
@@ -35,10 +38,10 @@ const TITULOS_SECOES_TIPOS_EMBALAGENS = {
 
 const FORMATOS_IMAGEM = "PDF, PNG, JPG ou JPEG";
 
-export default () => {
+export default ({ atualizar }) => {
   const history = useHistory();
   const [carregando, setCarregando] = useState(true);
-  const [showModalConfirmar, setShowModalConfirmar] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [objeto, setObjeto] = useState({});
   const [layoutEmbalagensPrimarias, setLayoutEmbalagensPrimarias] = useState(
     {}
@@ -90,21 +93,28 @@ export default () => {
     setLayoutEmbalagensPrimarias(layoutEmbalagensPrimarias);
     setLayoutEmbalagensTerciarias(layoutEmbalagensTerciarias);
 
-    obterArquivosTipoDeEmbalagem(
+    await obterArquivosTipoDeEmbalagem(
       layoutEmbalagensPrimarias,
       setArquivosLayoutsPrimarios
     );
 
-    obterArquivosTipoDeEmbalagem(
+    await obterArquivosTipoDeEmbalagem(
       layoutEmbalagensSecundarias,
       setArquivosLayoutsSecundarios
     );
 
     layoutEmbalagensTerciarias &&
-      obterArquivosTipoDeEmbalagem(
+      (await obterArquivosTipoDeEmbalagem(
         layoutEmbalagensTerciarias,
         setArquivosLayoutsTerciarios
-      );
+      ));
+
+    if (atualizar && !layoutEmbalagensTerciarias) {
+      setLayoutEmbalagensTerciarias({
+        tipo_embalagem: "TERCIARIA",
+      });
+      setArquivosLayoutsTerciarios([]);
+    }
 
     setCarregando(false);
   };
@@ -115,16 +125,13 @@ export default () => {
   ) => {
     const arquivosTipoImagem = await Promise.all(
       tipoDeEmbalagem.imagens.map(async (imagem) => {
-        const base64 = await downloadAndConvertToBase64(
-          imagem.arquivo.replace("http", "https")
-        );
+        const base64 = await downloadAndConvertToBase64(imagem.arquivo);
         return {
           nome: imagem.nome,
           base64,
         };
       })
     );
-
     setArquivosTipoEmbalagem(arquivosTipoImagem);
   };
 
@@ -133,15 +140,29 @@ export default () => {
     arquivosTipoDeLayoutEmbalagem,
     setArquivosLayoutsPrimarios
   ) => {
-    if (tipoDeEmbalagem.status === "APROVADO")
-      return renderizarSecaoAprovada(tipoDeEmbalagem);
-
-    if (arquivosTipoDeLayoutEmbalagem && tipoDeEmbalagem.status === "REPROVADO")
-      return renderizarSecaoReprovada(
+    if (atualizar && arquivosTipoDeLayoutEmbalagem) {
+      return renderizarSecaoAtualizacao(
         tipoDeEmbalagem,
         arquivosTipoDeLayoutEmbalagem,
         setArquivosLayoutsPrimarios
       );
+    } else {
+      if (
+        arquivosTipoDeLayoutEmbalagem &&
+        tipoDeEmbalagem.status === "APROVADO"
+      )
+        return renderizarSecaoAprovada(tipoDeEmbalagem);
+
+      if (
+        arquivosTipoDeLayoutEmbalagem &&
+        tipoDeEmbalagem.status === "REPROVADO"
+      )
+        return renderizarSecaoReprovada(
+          tipoDeEmbalagem,
+          arquivosTipoDeLayoutEmbalagem,
+          setArquivosLayoutsPrimarios
+        );
+    }
   };
 
   const renderizarSecaoAprovada = (tipoDeEmbalagem) => {
@@ -176,6 +197,37 @@ export default () => {
           </div>
         </div>
 
+        <hr />
+      </>
+    );
+  };
+
+  const renderizarSecaoAtualizacao = (
+    tipoDeEmbalagem,
+    arquivosTipoDeLayoutEmbalagem,
+    setArquivosTipoDeLayoutEmbalagem
+  ) => {
+    const setFiles = (arquivos) => {
+      setFilesGeral(arquivos, setArquivosTipoDeLayoutEmbalagem);
+    };
+
+    const removeFile = (index) => {
+      removeFileGeral(
+        index,
+        arquivosTipoDeLayoutEmbalagem,
+        setArquivosTipoDeLayoutEmbalagem
+      );
+    };
+
+    return (
+      <>
+        <InserirArquivo
+          setFiles={setFiles}
+          removeFile={removeFile}
+          arquivosIniciais={arquivosTipoDeLayoutEmbalagem}
+          atualizar={true}
+          tipoEmbalagem={tipoDeEmbalagem.tipo_embalagem}
+        />
         <hr />
       </>
     );
@@ -276,7 +328,7 @@ export default () => {
     history.push(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
 
   const onSubmit = () => {
-    setShowModalConfirmar(true);
+    setShowModal(true);
   };
 
   const enviarCorrecaoLayoutEmbalagem = async (values) => {
@@ -289,7 +341,26 @@ export default () => {
 
     if (response.status === 200) {
       toastSuccess("Correção Enviada com sucesso!");
-      setShowModalConfirmar(false);
+      setShowModal(false);
+      voltarPagina();
+    } else {
+      toastError("Ocorreu um erro ao salvar o Layout da Embalagem");
+    }
+
+    setCarregando(false);
+  };
+
+  const atualizarLayoutEmbalagem = async (values) => {
+    setCarregando(true);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+    const payload = formataPayload(values);
+    const response = await atualizacaoLayoutEmbalagem(uuid, payload);
+
+    if (response.status === 200) {
+      toastSuccess("Layout atualizado e enviado para análise com sucesso!");
+      setShowModal(false);
       voltarPagina();
     } else {
       toastError("Ocorreu um erro ao salvar o Layout da Embalagem");
@@ -304,7 +375,7 @@ export default () => {
 
     payload.tipos_de_embalagens = [];
 
-    if (layoutEmbalagensPrimarias.status === "REPROVADO") {
+    if (layoutEmbalagensPrimarias.status === "REPROVADO" || atualizar) {
       payload.tipos_de_embalagens.push({
         uuid: layoutEmbalagensPrimarias.uuid,
         tipo_embalagem: layoutEmbalagensPrimarias.tipo_embalagem,
@@ -314,7 +385,7 @@ export default () => {
       });
     }
 
-    if (layoutEmbalagensSecundarias.status === "REPROVADO") {
+    if (layoutEmbalagensSecundarias.status === "REPROVADO" || atualizar) {
       payload.tipos_de_embalagens.push({
         uuid: layoutEmbalagensSecundarias.uuid,
         tipo_embalagem: layoutEmbalagensSecundarias.tipo_embalagem,
@@ -327,7 +398,8 @@ export default () => {
     if (
       layoutEmbalagensTerciarias &&
       arquivosLayoutsTerciarios &&
-      layoutEmbalagensTerciarias.status === "REPROVADO"
+      arquivosLayoutsTerciarios.length > 0 &&
+      (layoutEmbalagensTerciarias.status === "REPROVADO" || atualizar)
     ) {
       payload.tipos_de_embalagens.push({
         uuid: layoutEmbalagensTerciarias.uuid,
@@ -374,6 +446,19 @@ export default () => {
     );
   };
 
+  const desabilitarBotaoEnviarAtualizar = () => {
+    const LAYOUT_PRIMARIO_REPROVADO_E_SEM_ARQUIVO =
+      arquivosLayoutsPrimarios && arquivosLayoutsPrimarios.length === 0;
+
+    const LAYOUT_SECUNDARIO_REPROVADO_E_SEM_ARQUIVO =
+      arquivosLayoutsSecundarios && arquivosLayoutsSecundarios.length === 0;
+
+    return (
+      LAYOUT_PRIMARIO_REPROVADO_E_SEM_ARQUIVO ||
+      LAYOUT_SECUNDARIO_REPROVADO_E_SEM_ARQUIVO
+    );
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-corrigir-layout-embalagem">
@@ -415,12 +500,21 @@ export default () => {
             initialValues={{ observacoes: objeto.observacoes }}
             render={({ handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
-                <ModalConfirmar
-                  show={showModalConfirmar}
-                  handleClose={() => setShowModalConfirmar(false)}
-                  loading={carregando}
-                  handleSim={() => enviarCorrecaoLayoutEmbalagem(values)}
-                />
+                {atualizar ? (
+                  <ModalAtualizar
+                    show={showModal}
+                    handleClose={() => setShowModal(false)}
+                    loading={carregando}
+                    handleSim={() => atualizarLayoutEmbalagem(values)}
+                  />
+                ) : (
+                  <ModalConfirmar
+                    show={showModal}
+                    handleClose={() => setShowModal(false)}
+                    loading={carregando}
+                    handleSim={() => enviarCorrecaoLayoutEmbalagem(values)}
+                  />
+                )}
 
                 {renderizarSecaoTipoDeEmbalagem(
                   layoutEmbalagensPrimarias,
@@ -434,7 +528,7 @@ export default () => {
                   setArquivosLayoutsSecundarios
                 )}
 
-                {layoutEmbalagensTerciarias &&
+                {(layoutEmbalagensTerciarias || atualizar) &&
                   renderizarSecaoTipoDeEmbalagem(
                     layoutEmbalagensTerciarias,
                     arquivosLayoutsTerciarios,
@@ -453,12 +547,15 @@ export default () => {
 
                 <div className="mt-4 mb-4">
                   <Botao
-                    texto="Enviar Correção"
+                    texto={atualizar ? "Atualizar Layout" : "Enviar Correção"}
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
                     className="float-right ml-3"
                     disabled={
-                      Object.keys(errors).length > 0 || desabilitarBotaoEnviar()
+                      Object.keys(errors).length > 0 ||
+                      (atualizar
+                        ? desabilitarBotaoEnviarAtualizar()
+                        : desabilitarBotaoEnviar())
                     }
                   />
                   <Botao

@@ -270,6 +270,8 @@ export const AcompanhamentoDeLancamentos = () => {
         search: `uuid=${uuidSolicitacaoMedicao}`,
         state: {
           escolaUuid: escolaUuid,
+          mes: mes,
+          ano: ano,
         },
       });
     }

@@ -2,7 +2,6 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { Form } from "react-final-form";
 import { Botao } from "components/Shareable/Botao";
-import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 import { PERIODO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import {
   LANCAMENTO_INICIAL,
@@ -10,6 +9,12 @@ import {
   PERIODO_LANCAMENTO_CEI,
 } from "configs/constants";
 import "./styles.scss";
+import {
+  desabilitarBotaoEditar,
+  statusPeriodo,
+  styleBotaoCardLancamento,
+  textoBotaoCardLancamento,
+} from "../../LancamentoPorPeriodo/helpers";
 
 export default ({
   textoCabecalho = null,
@@ -27,22 +32,6 @@ export default ({
     );
   };
 
-  const statusPeriodo = () => {
-    const obj = quantidadeAlimentacoesLancadas.find(
-      (each) => each.nome_periodo_grupo === textoCabecalho
-    );
-    if (obj) {
-      return obj.status;
-    } else if (
-      solicitacaoMedicaoInicial.status ===
-      "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE"
-    ) {
-      return solicitacaoMedicaoInicial.status;
-    } else {
-      return "Não Preenchido";
-    }
-  };
-
   const textoCabecalhoFormatado = (textoCabecalho) => {
     switch (textoCabecalho) {
       case "MANHA":
@@ -58,6 +47,15 @@ export default ({
     }
   };
 
+  const getStatusPeriodo = () => {
+    return statusPeriodo(
+      quantidadeAlimentacoesLancadas,
+      solicitacaoMedicaoInicial,
+      null,
+      textoCabecalho
+    );
+  };
+
   const handleClickEditar = () => {
     history.push({
       pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO_CEI}`,
@@ -65,7 +63,7 @@ export default ({
       state: {
         periodo: textoCabecalho,
         mesAnoSelecionado: periodoSelecionado,
-        status_periodo: statusPeriodo(),
+        status_periodo: getStatusPeriodo(),
         status_solicitacao: solicitacaoMedicaoInicial.status,
         ...location.state,
       },
@@ -85,9 +83,23 @@ export default ({
               {textoCabecalhoFormatado(textoCabecalho)}
             </div>
             <div className="col-3 pr-0">
-              <div className="float-right status-card-periodo-grupo">
-                {PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()]
-                  ? PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()].nome
+              <div
+                className={`float-right status-card-periodo-grupo ${
+                  [
+                    "MEDICAO_CORRECAO_SOLICITADA",
+                    "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+                  ].includes(getStatusPeriodo())
+                    ? "red"
+                    : [
+                        "MEDICAO_CORRIGIDA_PELA_UE",
+                        "MEDICAO_CORRIGIDA_PARA_CODAE",
+                      ].includes(getStatusPeriodo())
+                    ? "blue"
+                    : ""
+                }`}
+              >
+                {PERIODO_STATUS_DE_PROGRESSO[getStatusPeriodo()]
+                  ? PERIODO_STATUS_DE_PROGRESSO[getStatusPeriodo()].nome
                   : "Não Preenchido"}
               </div>
             </div>
@@ -104,12 +116,16 @@ export default ({
               </span>
               <span>ALIMENTAÇÕES</span>
             </div>
-            <div className="col-8 alimentacoes-por-tipo">
+            <div className="col-7 alimentacoes-por-tipo">
               <div className="row">
                 <div className="col-8">
                   <div className="mt-4 mb-2">
                     <span style={{ color: cor }}>
-                      <b>{qtdAlimentacaoPeriodoFiltrada()[0]?.qtd_alunos}</b>
+                      <b>
+                        {qtdAlimentacaoPeriodoFiltrada().length > 0
+                          ? qtdAlimentacaoPeriodoFiltrada()[0].quantidade_alunos
+                          : 0}
+                      </b>
                     </span>
                     <span className="ml-1">
                       - alunos atendidos com{" "}
@@ -124,14 +140,34 @@ export default ({
                 </div>
               </div>
             </div>
-            <div className="col-2 pr-0">
-              <Botao
-                texto="Editar"
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3 botao-editar-visualizar-card"
-                onClick={() => handleClickEditar()}
-                disabled={false}
-              />
+            <div className="col-3">
+              <div className="row" style={{ height: "100%" }}>
+                <div className="col-8 d-flex flex-column" />
+                <div className="col-4 pr-0 d-flex flex-column">
+                  <Botao
+                    texto={textoBotaoCardLancamento(
+                      quantidadeAlimentacoesLancadas,
+                      solicitacaoMedicaoInicial,
+                      null,
+                      textoCabecalho
+                    )}
+                    style={styleBotaoCardLancamento(
+                      quantidadeAlimentacoesLancadas,
+                      solicitacaoMedicaoInicial,
+                      null,
+                      textoCabecalho
+                    )}
+                    className="mt-auto"
+                    onClick={() => handleClickEditar()}
+                    disabled={desabilitarBotaoEditar(
+                      quantidadeAlimentacoesLancadas,
+                      solicitacaoMedicaoInicial,
+                      null,
+                      textoCabecalho
+                    )}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

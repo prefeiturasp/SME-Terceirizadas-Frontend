@@ -124,34 +124,53 @@ export const CorpoRelatorio = ({ ...props }) => {
             <b>Solicitação de Alteração</b>
           </p>
         </div>
-        <div className="col-4">
-          <p>Tipo de Alteração:</p>
-          <p>
-            <b>{solicitacao.motivo.nome}</b>
-          </p>
-        </div>
-        <div className="col-3">
-          <p>Alterar de:</p>
-          <p>
-            <b>
-              {solicitacao.data_inicial
-                ? solicitacao.data_inicial
-                : solicitacao.alterar_dia}
-            </b>
-          </p>
-        </div>
-
-        <div className="col-3">
-          {solicitacao.data_final && (
-            <>
-              <p>Até o dia:</p>
-              <p>
-                <b>{solicitacao.data_final}</b>
-              </p>
-            </>
-          )}
-        </div>
       </div>
+      <table className="table-periods-alteracao">
+        <thead>
+          <tr className="row">
+            <th className="col-2">Tipo de Alteração</th>
+            {solicitacao.alterar_dia ? (
+              <th className="col-2">Alterar dia</th>
+            ) : (
+              <th className="col-2">Dia(s) de Alteração</th>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="row">
+            <td className="col-2">{solicitacao.motivo.nome}</td>
+            {solicitacao.datas_intervalo.map((data_intervalo, key) => {
+              return (
+                <td
+                  className={`col-2 ${
+                    key > 0 && key % 5 === 0 ? "offset-2" : ""
+                  }`}
+                  key={key}
+                >
+                  <span
+                    className={
+                      data_intervalo.cancelado_justificativa
+                        ? `data-cancelada`
+                        : ""
+                    }
+                  >
+                    {data_intervalo.data}
+                  </span>
+                  <br />
+                  {data_intervalo.cancelado_justificativa && (
+                    <span className="justificativa">
+                      justificativa:{" "}
+                      <span className="font-weight-normal">
+                        {data_intervalo.cancelado_justificativa}
+                      </span>
+                    </span>
+                  )}
+                </td>
+              );
+            })}
+          </tr>
+        </tbody>
+      </table>
       {dadosTabela.map((periodo, index) => {
         return (
           <div className="row" key={index}>
@@ -324,7 +343,7 @@ export const CorpoRelatorio = ({ ...props }) => {
         );
       })}
       <hr />
-      {solicitacao && solicitacao.observacao && (
+      {solicitacao?.observacao && (
         <div className="row mt-3">
           <div className="col-12">
             <p>Observações:</p>
@@ -336,6 +355,29 @@ export const CorpoRelatorio = ({ ...props }) => {
             />
           </div>
         </div>
+      )}
+      {solicitacao.datas_intervalo.find(
+        (data_intervalo) => data_intervalo.cancelado_justificativa
+      ) && (
+        <>
+          <hr />
+          <p>
+            <strong>Histórico de cancelamento</strong>
+            {solicitacao.datas_intervalo
+              .filter(
+                (data_intervalo) => data_intervalo.cancelado_justificativa
+              )
+              .map((data_intervalo, key) => {
+                return (
+                  <div key={key}>
+                    {data_intervalo.data}
+                    {" - justificativa: "}
+                    {data_intervalo.cancelado_justificativa}
+                  </div>
+                );
+              })}
+          </p>
+        </>
       )}
       {solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs) && (
         <div className="row">

@@ -137,7 +137,6 @@ import {
   usuarioComAcessoAoPainelAprovacoes,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioComAcessoAoPainelEmbalagens,
-  usuarioEhOrgaoFiscalizador,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -251,6 +250,7 @@ import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/Detalha
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
+import CadastroFabricantePage from "pages/Cadastros/CadastroFabricantePage";
 import StatusCronogramasPendentesDilog from "../pages/Dinutre/Cronogramas/StatusCronogramasPendentesDilog";
 import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
 import StatusSolicitacoesAlteracoesCronograma from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCronograma";
@@ -266,6 +266,7 @@ import StatusLayoutAprovados from "../pages/PreRecebimento/CardsLayoutEmbalagem/
 import StatusLayoutEnviadosParaCorrecao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutEnviadosParaCorrecao";
 import AnalisarLayoutEmbalagemPage from "../pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
 import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutEmbalagemPage";
+import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayoutEmbalagemPage";
 
 const routesConfig = [
   {
@@ -683,6 +684,12 @@ const routesConfig = [
     tipoUsuario: usuarioEhQualquerCODAE(),
   },
   {
+    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais/editar-permissao-lancamento-especial`,
+    component: NovaPermissaoLancamentoEspecialPage,
+    exact: true,
+    tipoUsuario: usuarioEhQualquerCODAE(),
+  },
+  {
     path: `/configuracoes/cadastros/horario-combos-alimentacao`,
     component: CadastroHorarioComboAlimentacaoPage,
     exact: false,
@@ -836,6 +843,12 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.MARCAS}`,
     component: CadastroMarcaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog(),
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.FABRICANTES}`,
+    component: CadastroFabricantePage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog(),
   },
@@ -1148,8 +1161,7 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhDRE() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhCODAENutriManifestacao(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
@@ -1183,8 +1195,7 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhEscolaTerceirizadaDiretor(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RECLAMACAO_DE_PRODUTO}`,
@@ -1212,8 +1223,7 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhEscolaTerceirizadaDiretor(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.CORRECAO_DE_PRODUTO}`,
@@ -1234,8 +1244,7 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhCODAENutriManifestacao(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RESPONDER_QUESTIONAMENTOS_DA_CODAE}`,
@@ -1277,8 +1286,7 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhEscolaTerceirizadaDiretor(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_NAO_HOMOLOGADAS}`,
@@ -1293,8 +1301,7 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhEscolaTerceirizadaDiretor(),
   },
   {
     path: "/painel-gestao-produto",
@@ -1309,8 +1316,7 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhDRE() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhDRE(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
@@ -1335,8 +1341,7 @@ const routesConfig = [
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhCODAEGestaoAlimentacao(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ATIVACAO_DE_PRODUTO}/consulta`,
@@ -1361,8 +1366,7 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAENutriManifestacao() ||
-      usuarioEhDRE() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhDRE(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
@@ -1372,8 +1376,7 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhCODAENutriManifestacao(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
@@ -1543,10 +1546,7 @@ const routesConfig = [
     path: `/${constants.MEDICAO_INICIAL}/${constants.CONFERENCIA_DOS_LANCAMENTOS}`,
     component: ConferenciaDosLancamentosPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhDRE() ||
-      usuarioEhMedicao() ||
-      usuarioEhEscolaTerceirizadaQualquerPerfil(),
+    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.DETALHAMENTO_DO_LANCAMENTO}`,
@@ -1954,6 +1954,12 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CORRIGR_LAYOUT_EMBALAGEM}`,
     component: CorrigirLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ATUALIZAR_LAYOUT_EMBALAGEM}`,
+    component: AtualizarLayoutEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },

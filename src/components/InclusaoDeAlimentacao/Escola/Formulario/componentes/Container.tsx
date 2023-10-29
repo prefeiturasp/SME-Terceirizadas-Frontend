@@ -23,6 +23,7 @@ import {
   abstraiPeriodosComAlunosMatriculados,
   exibeMotivoETEC,
   formatarPeriodos,
+  formatarPeriodosEspecificosEMEF,
 } from "../../../helper";
 import {
   MotivoContinuoInterface,
@@ -192,7 +193,7 @@ export const Container = () => {
         }
       );
       setPeriodosMotivoEspecifico(
-        formatarPeriodos(periodosMotivoInclusaoEspecifico)
+        formatarPeriodosEspecificosEMEF(periodosMotivoInclusaoEspecifico)
       );
     });
   };

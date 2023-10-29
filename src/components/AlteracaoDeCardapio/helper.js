@@ -85,6 +85,11 @@ export const formataValues = (values) => {
       values.data_inicial.split("/").reverse().join("-"),
       values.data_final.split("/").reverse().join("-")
     ).map((data) => ({ data: data }));
+  } else if (values.alterar_dia) {
+    values.datas_intervalo = getDaysArray(
+      values.alterar_dia.split("/").reverse().join("-"),
+      values.alterar_dia.split("/").reverse().join("-")
+    ).map((data) => ({ data: data }));
   }
   return values;
 };
