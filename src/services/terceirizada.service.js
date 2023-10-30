@@ -56,8 +56,8 @@ export const getTerceirizada_razoes = () => {
 export const getTerceirizadaUUID = async (uuid) =>
   await axios.get(`/terceirizadas/${uuid}/`);
 
-export const createNaoTerceirizada = async (uuid, payload) =>
-  await axios.patch("/empresas-nao-terceirizadas/", payload);
+export const createNaoTerceirizada = async (payload) =>
+  await axios.post("/empresas-nao-terceirizadas/", payload);
 
 export const createTerceirizada = (payload) => {
   const url = `${API_URL}/terceirizadas/`;
