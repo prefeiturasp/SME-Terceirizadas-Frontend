@@ -1,4 +1,3 @@
-import { DocumentosRecebimento } from "components/screens/PreRecebimento/DocumentosRecebimento/interfaces";
 import {
   QuantidadeAlunosEscolaInterface,
   VinculoTipoAlimentacaoPorEscolaInterface,
@@ -7,6 +6,7 @@ import {
   EscolasComPermissoesLancamentosEspeciaisInterface,
   PermissaoLancamentosEspeciaisInterface,
 } from "interfaces/medicao_inicial.interface";
+import { DocumentosRecebimento } from "./pre_recebimento.interface";
 
 export interface ResponseInterface {
   data: Object;

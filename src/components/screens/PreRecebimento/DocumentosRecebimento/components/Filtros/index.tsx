@@ -17,12 +17,14 @@ import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectFiel
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { InputComData } from "components/Shareable/DatePicker";
 import { getListaCronogramasPraCadastro } from "../../../../../../services/cronograma.service";
+import { getListaCompletaProdutosLogistica } from "../../../../../../services/produto.service";
 import { getListaFiltradaAutoCompleteSelect } from "../../../../../../helpers/autoCompleteSelect";
+import { FiltrosDocumentosRecebimento } from "../../interfaces";
+import { ProdutoLogistica } from "interfaces/produto.interface";
 import {
   CronogramaSimples,
   DocumentosRecebimento,
-  FiltrosDocumentosRecebimento,
-} from "../../interfaces";
+} from "interfaces/pre_recebimento.interface";
 
 const FORM_NAME = "filtrosDocumentosRecebimento";
 
@@ -40,6 +42,14 @@ const Filtros: React.FC<Props> = ({
   const [dadosCronogramas, setDadosCronogramas] = useState<
     Array<CronogramaSimples>
   >([]);
+  const [listaProdutos, setListaProdutos] = useState<Array<ProdutoLogistica>>(
+    []
+  );
+
+  const buscarListaProdutos = async (): Promise<void> => {
+    const response = await getListaCompletaProdutosLogistica();
+    setListaProdutos(response.data.results);
+  };
 
   const buscarDadosCronogramas = async (): Promise<void> => {
     const response = await getListaCronogramasPraCadastro();
@@ -53,7 +63,7 @@ const Filtros: React.FC<Props> = ({
     },
   ];
 
-  const onSubmit = async (values: Record<string, any>) => {
+  const onSubmit = async (values: Record<string, any>): Promise<void> => {
     let filtros = { ...values };
     if (values.data_criacao) {
       delete filtros.data_criacao;
@@ -66,6 +76,7 @@ const Filtros: React.FC<Props> = ({
 
   useEffect(() => {
     buscarDadosCronogramas();
+    buscarListaProdutos();
   }, []);
 
   return (
@@ -81,7 +92,7 @@ const Filtros: React.FC<Props> = ({
                 <Field
                   component={AutoCompleteSelectField}
                   options={getListaFiltradaAutoCompleteSelect(
-                    dadosCronogramas.map((e) => e.nome_produto),
+                    listaProdutos.map((e) => e.nome),
                     values.nome_produto,
                     true
                   )}
