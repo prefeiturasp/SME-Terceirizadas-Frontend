@@ -118,13 +118,12 @@ export class InversaoDeDiaDeCardapio extends Component {
     let tiposAlimentacao = [];
     for (let periodo in vinculos) {
       let listaTiposAlimentacao = vinculos[periodo].tipos_alimentacao;
-      for (let tipoAlimentacao in listaTiposAlimentacao) {
+      for (let tipoAlimentacao of listaTiposAlimentacao) {
         if (
-          !tiposAlimentacao.filter(
-            (t) => t.nome === listaTiposAlimentacao[tipoAlimentacao].nome
-          ).length > 0
+          tipoAlimentacao.nome !== "Lanche Emergencial" &&
+          !tiposAlimentacao.some((t) => t.nome === tipoAlimentacao.nome)
         ) {
-          tiposAlimentacao.push(listaTiposAlimentacao[tipoAlimentacao]);
+          tiposAlimentacao.push(tipoAlimentacao);
         }
       }
     }
