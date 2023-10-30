@@ -4,6 +4,24 @@ export const formatarTiposDeAlimentacao = (tiposAlimentacao) => {
   });
 };
 
+export const formatarPeriodosEspecificosEMEF = (periodos) => {
+  periodos.forEach((periodo) => {
+    periodo["checked"] = false;
+    periodo["tipos_alimentacao_selecionados"] = [];
+    periodo["numero_alunos"] = null;
+    periodo["multiselect"] = "multiselect-wrapper-disabled";
+    periodo["dias_semana"] = [];
+
+    // Filtrar o array 'tipos_alimentacao' para remover o objeto com nome 'Lanche Emergencial'
+    if (periodo["tipos_alimentacao"]) {
+      periodo["tipos_alimentacao"] = periodo["tipos_alimentacao"].filter(
+        (tipo) => tipo.nome !== "Lanche Emergencial"
+      );
+    }
+  });
+  return periodos;
+};
+
 export const formatarPeriodos = (periodos) => {
   periodos.forEach((periodo) => {
     periodo["checked"] = false;
