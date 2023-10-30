@@ -3,7 +3,7 @@ import HTTP_STATUS from "http-status-codes";
 import { CustomToolbar } from "components/Shareable/Calendario/componentes/CustomToolbar";
 import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 import moment from "moment";
-import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+// import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { formataComoEventos } from "components/Shareable/Calendario/helpers";
 import { Spin } from "antd";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
@@ -14,7 +14,7 @@ import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
 import { toastSuccess } from "components/Shareable/Toast/dialogs";
 import "components/Shareable/Calendario/style.scss";
 
-const DragAndDropCalendar = withDragAndDrop(Calendar);
+// const DragAndDropCalendar = withDragAndDrop(Calendar);
 
 const localizer = momentLocalizer(moment);
 export class Calendario extends React.Component {
@@ -141,7 +141,7 @@ export class Calendario extends React.Component {
     const {
       objetos,
       loadingDiasCalendario,
-      tiposUnidades,
+      // tiposUnidades,
       erroAPI,
       currentEvent,
       showModalCadastrar,
@@ -159,17 +159,14 @@ export class Calendario extends React.Component {
     return (
       <div className="card calendario-sobremesa mt-3">
         <div className="card-body">
-          <Spin
-            tip="Carregando calendário..."
-            spinning={(!tiposUnidades || !objetos) && !erroAPI}
-          >
+          <Spin tip="Carregando calendário..." spinning={!objetos && !erroAPI}>
             {erroAPI && (
               <div>
                 Erro ao carregar dados sobre tipos de unidades. Tente novamente
                 mais tarde.
               </div>
             )}
-            {tiposUnidades && objetos && (
+            {objetos && (
               <>
                 <p>
                   Para cadastrar um dia para {nomeObjetoMinusculo}, clique sobre
@@ -179,7 +176,7 @@ export class Calendario extends React.Component {
                   tip={`Carregando dias de ${nomeObjeto}...`}
                   spinning={loadingDiasCalendario}
                 >
-                  <DragAndDropCalendar
+                  <Calendar
                     style={{ height: 1000 }}
                     formats={{
                       weekdayFormat: (date, culture, localizer) =>
@@ -227,7 +224,7 @@ export class Calendario extends React.Component {
                         })
                       }
                       objetos={objetos}
-                      tiposUnidades={tiposUnidades}
+                      // tiposUnidades={tiposUnidades}
                       event={currentEvent}
                       getObjetosAsync={this.getObjetosAsync}
                       setObjetoAsync={setObjeto}

@@ -19,7 +19,7 @@ import {
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${SUSPENSAO_ATIVIDADES}`,
-  titulo: "Suspensão de Atividades",
+  titulo: "Calendario de Cronogramas",
 };
 
 const anteriores = [
@@ -35,7 +35,7 @@ export const CadastroSuspensaoDeAtividadesPage = () => {
       <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
       <Calendario
         getObjetos={getDiasSuspensaoAtividades}
-        nomeObjeto="Suspensão de Atividades"
+        nomeObjeto="Calendario de Cronogramas"
         nomeObjetoMinusculo="suspensão de atividades"
         setObjeto={setDiaSuspensaoAtividades}
         deleteObjeto={deleteDiaSuspensaoAtividades}
