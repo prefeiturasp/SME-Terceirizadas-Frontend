@@ -311,30 +311,38 @@ class FoodSuspensionEditor extends Component {
     });
   };
 
+  filtrarLancheEmergencial(tipos) {
+    return tipos.filter((tipo) => tipo.nome !== "Lanche Emergencial");
+  }
+
   periodosOptions(period) {
     const { alunosCEIouEMEI, vinculos } = this.state;
     let periodos = vinculos
-      ? vinculos.find((v) => v.periodo_escolar.nome === period.nome)
-          .tipos_alimentacao
+      ? this.filtrarLancheEmergencial(
+          vinculos.find((v) => v.periodo_escolar.nome === period.nome)
+            .tipos_alimentacao
+        )
       : [];
     if (escolaEhCEMEI()) {
       periodos = period.tipos_alimentacao;
     }
     if (alunosCEIouEMEI[period.nome]) {
       if (alunosCEIouEMEI[period.nome].length === 2) {
-        periodos = vinculos
-          .find(
-            (v) =>
-              v.tipo_unidade_escolar.iniciais.includes("CEI") &&
-              v.periodo_escolar.nome === period.nome
-          )
-          .tipos_alimentacao.concat(
-            vinculos.find(
+        periodos = this.filtrarLancheEmergencial(
+          vinculos
+            .find(
               (v) =>
-                v.tipo_unidade_escolar.iniciais.includes("EMEI") &&
+                v.tipo_unidade_escolar.iniciais.includes("CEI") &&
                 v.periodo_escolar.nome === period.nome
-            ).tipos_alimentacao
-          );
+            )
+            .tipos_alimentacao.concat(
+              vinculos.find(
+                (v) =>
+                  v.tipo_unidade_escolar.iniciais.includes("EMEI") &&
+                  v.periodo_escolar.nome === period.nome
+              ).tipos_alimentacao
+            )
+        );
       } else if (alunosCEIouEMEI[period.nome].includes("CEI")) {
         periodos = vinculos.find(
           (v) =>
@@ -342,11 +350,13 @@ class FoodSuspensionEditor extends Component {
             v.periodo_escolar.nome === period.nome
         ).tipos_alimentacao;
       } else if (alunosCEIouEMEI[period.nome].includes("EMEI")) {
-        periodos = vinculos.find(
-          (v) =>
-            v.tipo_unidade_escolar.iniciais.includes("EMEI") &&
-            v.periodo_escolar.nome === period.nome
-        ).tipos_alimentacao;
+        periodos = this.filtrarLancheEmergencial(
+          vinculos.find(
+            (v) =>
+              v.tipo_unidade_escolar.iniciais.includes("EMEI") &&
+              v.periodo_escolar.nome === period.nome
+          ).tipos_alimentacao
+        );
       }
     }
     return periodos.map((p) => ({
@@ -410,13 +420,14 @@ class FoodSuspensionEditor extends Component {
           }
         );
     }
-    const { motivos, meusDados, proximos_dois_dias_uteis } = this.props;
-    const { loading, periodos } = this.state;
+    const { motivos, periodos, meusDados, proximos_dois_dias_uteis } =
+      this.props;
+    const { loading } = this.state;
     if (
-      motivos !== [] &&
-      periodos !== [] &&
-      meusDados !== null &&
-      proximos_dois_dias_uteis !== null &&
+      motivos?.length > 0 &&
+      periodos?.length > 0 &&
+      meusDados &&
+      proximos_dois_dias_uteis &&
       loading
     ) {
       this.setState({
