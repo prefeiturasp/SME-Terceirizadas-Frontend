@@ -1,3 +1,4 @@
+import { DocumentosRecebimento } from "components/screens/PreRecebimento/DocumentosRecebimento/interfaces";
 import {
   QuantidadeAlunosEscolaInterface,
   VinculoTipoAlimentacaoPorEscolaInterface,
@@ -47,5 +48,14 @@ export interface ResponseEscolasComPermissoesLancamentosEspeciaisInterface
   extends ResponseInterface {
   data: {
     results: EscolasComPermissoesLancamentosEspeciaisInterface[];
+  };
+}
+
+export interface ResponseDocumentosRecebimento extends ResponseInterface {
+  data: {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: DocumentosRecebimento[];
   };
 }

@@ -21,8 +21,16 @@ export interface OptionMultiselect {
   label: string;
 }
 
+export type TiposDocumento =
+  | "LAUDO"
+  | "DECLARACAO_LEI_1512010"
+  | "CERTIFICADO_CONF_ORGANICA"
+  | "RASTREABILIDADE"
+  | "DECLARACAO_MATERIA_ORGANICA"
+  | "OUTROS";
+
 export interface TiposDocumentosPayload {
-  tipo_documento: string;
+  tipo_documento: TiposDocumento;
   arquivos_do_tipo_de_documento: Array<ArquivoPayload>;
   descricao_documento?: string;
 }
@@ -35,4 +43,20 @@ export interface DocumentosRecebimentoPayload {
 
 export interface DocumentosState {
   [key: string]: Array<ArquivoPayload>;
+}
+
+export interface FiltrosDocumentosRecebimento {
+  nome_produto?: string;
+  numero_cronograma?: string;
+  status?: string;
+  data_criacao?: string;
+}
+
+export interface DocumentosRecebimento {
+  criado_em: string;
+  nome_produto: string;
+  numero_cronograma: string;
+  pregao_chamada_publica: string;
+  status: string;
+  uuid: string;
 }
