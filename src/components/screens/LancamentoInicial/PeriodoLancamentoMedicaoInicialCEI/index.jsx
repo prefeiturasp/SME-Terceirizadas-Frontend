@@ -53,6 +53,7 @@ import {
   desabilitarBotaoColunaObservacoes,
   desabilitarField,
   deveExistirObservacao,
+  ehDiaParaCorrigir,
   formatarLinhasTabelaAlimentacaoCEI,
   formatarLinhasTabelasDietasCEI,
   formatarPayloadParaCorrecao,
@@ -64,12 +65,13 @@ import {
 import {
   getCategoriasDeMedicao,
   getDiasCalendario,
-  getValoresPeriodosLancamentos,
-  setPeriodoLancamento,
-  updateValoresPeriodosLancamentos,
+  getDiasParaCorrecao,
   getFeriadosNoMes,
   getLogMatriculadosPorFaixaEtariaDia,
   getLogDietasAutorizadasCEIPeriodo,
+  getValoresPeriodosLancamentos,
+  setPeriodoLancamento,
+  updateValoresPeriodosLancamentos,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import * as perfilService from "services/perfil.service";
 import { escolaCorrigeMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
@@ -139,6 +141,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const [valoresObservacoes, setValoresObservacoes] = useState([]);
   const [periodoGrupo, setPeriodoGrupo] = useState(null);
   const [tabItems, setTabItems] = useState(null);
+  const [diasParaCorrecao, setDiasParaCorrecao] = useState(null);
 
   const history = useHistory();
   const location = useLocation();
@@ -256,6 +259,11 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         params
       );
       setValoresPeriodosLancamentos(response_valores_periodos.data);
+
+      const response_dias_correcao = await getDiasParaCorrecao(params);
+      if (response_dias_correcao.status === HTTP_STATUS.OK) {
+        setDiasParaCorrecao(response_dias_correcao.data);
+      }
 
       const params_dias_calendario = {
         escola_uuid: escola.uuid,
@@ -744,7 +752,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const onSubmit = async (
     values,
     dadosValoresInclusoesAutorizadasState,
-    ehSalvamentoAutomático = false,
+    ehSalvamentoAutomatico = false,
     chamarFuncaoFormatar = true,
     ehCorrecao = false
   ) => {
@@ -757,7 +765,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         setExibirTooltipAoSalvar
       )
     ) {
-      if (ehSalvamentoAutomático) {
+      if (ehSalvamentoAutomatico) {
         setInputsInclusaoComErro([]);
         setExibirTooltipAoSalvar(false);
         return;
@@ -801,14 +809,11 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     );
     if (payload.valores_medicao.length === 0)
       return (
-        !ehSalvamentoAutomático && toastWarn("Não há valores para serem salvos")
+        !ehSalvamentoAutomatico && toastWarn("Não há valores para serem salvos")
       );
 
     if (ehCorrecao) {
-      const payloadParaCorrecao = formatarPayloadParaCorrecao(
-        valoresPeriodosLancamentos,
-        payload
-      );
+      const payloadParaCorrecao = formatarPayloadParaCorrecao(payload);
       const response = await escolaCorrigeMedicao(
         valoresPeriodosLancamentos[0].medicao_uuid,
         payloadParaCorrecao
@@ -834,24 +839,24 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         payload
       );
       if (response.status === HTTP_STATUS.OK) {
-        !ehSalvamentoAutomático &&
+        !ehSalvamentoAutomatico &&
           toastSuccess("Lançamentos salvos com sucesso");
         valores_medicao_response = response.data.valores_medicao;
       } else {
         return (
-          !ehSalvamentoAutomático && toastError("Erro ao salvar lançamentos.")
+          !ehSalvamentoAutomatico && toastError("Erro ao salvar lançamentos.")
         );
       }
     } else {
       setLoading(true);
       const response = await setPeriodoLancamento(payload);
       if (response.status === HTTP_STATUS.CREATED) {
-        !ehSalvamentoAutomático &&
+        !ehSalvamentoAutomatico &&
           toastSuccess("Lançamentos salvos com sucesso");
         valores_medicao_response = response.data.valores_medicao;
       } else {
         return (
-          !ehSalvamentoAutomático && toastError("Erro ao salvar lançamentos.")
+          !ehSalvamentoAutomatico && toastError("Erro ao salvar lançamentos.")
         );
       }
     }
@@ -1099,7 +1104,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
       dadosValoresInclusoesAutorizadasState
         ? ""
-        : !validacaoDiaLetivo(column.dia)
+        : !validacaoDiaLetivo(column.dia) &&
+          !ehDiaParaCorrigir(column.dia, categoria.id, diasParaCorrecao)
         ? "nao-eh-dia-letivo"
         : ""
     }`;
@@ -1354,7 +1360,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                     formValuesAtualizados,
                                                     row,
                                                     valoresObservacoes,
-                                                    column.dia
+                                                    column.dia,
+                                                    diasParaCorrecao
                                                   )}
                                                   type={BUTTON_TYPE.BUTTON}
                                                   style={
@@ -1446,7 +1453,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                     grupoLocation,
                                                     valoresPeriodosLancamentos,
                                                     feriadosNoMes,
-                                                    row.uuid
+                                                    row.uuid,
+                                                    diasParaCorrecao
                                                   )}
                                                   defaultValue={defaultValue(
                                                     column,
