@@ -14,6 +14,7 @@ import {
   CronogramaSimples,
   DocumentosRecebimentoPayload,
   DocumentosState,
+  TiposDocumento,
   TiposDocumentosPayload,
 } from "../../interfaces";
 import InserirDocumento from "../InserirDocumento";
@@ -104,7 +105,7 @@ export default () => {
   const formataPayload = (values): DocumentosRecebimentoPayload => {
     let documentosPayload: Array<TiposDocumentosPayload> =
       values.tipos_de_documentos?.map(
-        (valor: string): TiposDocumentosPayload => {
+        (valor: TiposDocumento): TiposDocumentosPayload => {
           return {
             tipo_documento: valor,
             arquivos_do_tipo_de_documento: documentos[valor],

@@ -11,6 +11,7 @@ import {
 import "./styles.scss";
 import {
   desabilitarBotaoEditar,
+  justificativaPeriodo,
   statusPeriodo,
   styleBotaoCardLancamento,
   textoBotaoCardLancamento,
@@ -38,12 +39,21 @@ export default ({
         return "Infantil Manhã";
       case "TARDE":
         return "Infantil Tarde";
-
       case "PARCIAL":
         return "Período Parcial";
-
       case "INTEGRAL":
         return "Período Integral";
+    }
+  };
+
+  const numeroRefeicoesDiarias = (textoCabecalho) => {
+    switch (textoCabecalho) {
+      case "PARCIAL":
+        return 3;
+      case "INTEGRAL":
+        return 5;
+      default:
+        return 2;
     }
   };
 
@@ -65,6 +75,11 @@ export default ({
         mesAnoSelecionado: periodoSelecionado,
         status_periodo: getStatusPeriodo(),
         status_solicitacao: solicitacaoMedicaoInicial.status,
+        justificativa_periodo: justificativaPeriodo(
+          quantidadeAlimentacoesLancadas,
+          null,
+          textoCabecalho
+        ),
         ...location.state,
       },
     });
@@ -129,11 +144,7 @@ export default ({
                     </span>
                     <span className="ml-1">
                       - alunos atendidos com{" "}
-                      {
-                        qtdAlimentacaoPeriodoFiltrada()[0]
-                          ?.qtd_refeicoes_diarias
-                      }{" "}
-                      refeições diárias
+                      {numeroRefeicoesDiarias(textoCabecalho)} refeições diárias
                     </span>
                     <br />
                   </div>

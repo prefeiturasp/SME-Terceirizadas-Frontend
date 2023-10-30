@@ -1493,7 +1493,7 @@ export default () => {
   const onSubmit = async (
     values,
     dadosValoresInclusoesAutorizadasState,
-    ehSalvamentoAutomático = false,
+    ehSalvamentoAutomatico = false,
     chamarFuncaoFormatar = true,
     ehCorrecao = false
   ) => {
@@ -1507,7 +1507,7 @@ export default () => {
       feriadosNoMes
     );
     if (erro) {
-      !ehSalvamentoAutomático && toastError(erro);
+      !ehSalvamentoAutomatico && toastError(erro);
       return;
     }
     const urlParams = new URLSearchParams(window.location.search);
@@ -1548,7 +1548,7 @@ export default () => {
     );
     if (payload.valores_medicao.length === 0)
       return (
-        !ehSalvamentoAutomático && toastWarn("Não há valores para serem salvos")
+        !ehSalvamentoAutomatico && toastWarn("Não há valores para serem salvos")
       );
 
     if (ehCorrecao) {
@@ -1578,24 +1578,24 @@ export default () => {
         payload
       );
       if (response.status === HTTP_STATUS.OK) {
-        !ehSalvamentoAutomático &&
+        !ehSalvamentoAutomatico &&
           toastSuccess("Lançamentos salvos com sucesso");
         valores_medicao_response = response.data.valores_medicao;
       } else {
         return (
-          !ehSalvamentoAutomático && toastError("Erro ao salvar lançamentos.")
+          !ehSalvamentoAutomatico && toastError("Erro ao salvar lançamentos.")
         );
       }
     } else {
       setLoading(true);
       const response = await setPeriodoLancamento(payload);
       if (response.status === HTTP_STATUS.CREATED) {
-        !ehSalvamentoAutomático &&
+        !ehSalvamentoAutomatico &&
           toastSuccess("Lançamentos salvos com sucesso");
         valores_medicao_response = response.data.valores_medicao;
       } else {
         return (
-          !ehSalvamentoAutomático && toastError("Erro ao salvar lançamentos.")
+          !ehSalvamentoAutomatico && toastError("Erro ao salvar lançamentos.")
         );
       }
     }
