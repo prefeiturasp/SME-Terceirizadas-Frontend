@@ -9,9 +9,7 @@ interface Props {
 const Listagem: React.FC<Props> = ({ objetos }) => {
   return (
     <div className="listagem-documentos-recebimento">
-      <div className="titulo-verde mt-4 mb-3">
-        Layouts de Embalagens Cadastrados
-      </div>
+      <div className="titulo-verde mt-4 mb-3">Documentos Cadastrados</div>
 
       <article>
         <div className="grid-table header-table">
