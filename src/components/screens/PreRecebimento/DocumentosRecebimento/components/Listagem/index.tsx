@@ -1,6 +1,6 @@
 import React from "react";
 import "./styles.scss";
-import { DocumentosRecebimento } from "../../interfaces";
+import { DocumentosRecebimento } from "interfaces/pre_recebimento.interface";
 
 interface Props {
   objetos: Array<DocumentosRecebimento>;
