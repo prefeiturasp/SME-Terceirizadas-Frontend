@@ -11,7 +11,6 @@ import { getListaCronogramasPraCadastro } from "../../../../../../services/crono
 import {
   Arquivo,
   ArquivoPayload,
-  CronogramaSimples,
   DocumentosRecebimentoPayload,
   DocumentosState,
   TiposDocumento,
@@ -33,6 +32,7 @@ import {
   toastSuccess,
 } from "../../../../../Shareable/Toast/dialogs";
 import { cadastraDocumentoRecebimento } from "../../../../../../services/documentosRecebimento.service";
+import { CronogramaSimples } from "interfaces/pre_recebimento.interface";
 
 export default () => {
   const history = useHistory();
