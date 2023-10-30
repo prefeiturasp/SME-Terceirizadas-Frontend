@@ -632,7 +632,7 @@ class FoodSuspensionEditor extends Component {
             <div className="card solicitation mt-3">
               <div className="card-body">
                 <div className="card-title font-weight-bold">
-                  Descrição da Suspensão 555
+                  Descrição da Suspensão
                 </div>
                 {dias_razoes.map((dia_motivo, key) => {
                   return (
@@ -716,7 +716,7 @@ class FoodSuspensionEditor extends Component {
                   </div>
                   {escolaEhCEMEI() && <div className="col-3">Alunos</div>}
                   <div className={`col-${escolaEhCEMEI() ? "3" : "4"}`}>
-                    Tipo de Alimentação 333
+                    Tipo de Alimentação
                   </div>
                   <div className={`col-${escolaEhCEMEI() ? "3" : "4"}`}>
                     Nº de Alunos
