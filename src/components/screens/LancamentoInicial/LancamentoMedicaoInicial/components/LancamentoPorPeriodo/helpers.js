@@ -1,5 +1,6 @@
 import { get, set } from "lodash";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
+import { usuarioEhDiretorUE } from "helpers/utilities";
 
 const grupos = {
   convencional: "Convencional",
@@ -323,4 +324,39 @@ export const styleBotaoCardLancamento = (
       )
     ? BUTTON_STYLE.GREEN
     : BUTTON_STYLE.GREEN_OUTLINE;
+};
+
+export const renderBotaoEnviarCorrecao = (solicitacaoMedicaoInicial) => {
+  return (
+    solicitacaoMedicaoInicial &&
+    [
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+    ].includes(solicitacaoMedicaoInicial.status) &&
+    usuarioEhDiretorUE()
+  );
+};
+
+export const verificaSeEnviarCorrecaoDisabled = (
+  quantidadeAlimentacoesLancadas,
+  solicitacaoMedicaoInicial
+) => {
+  return (
+    quantidadeAlimentacoesLancadas.some(
+      (periodo) =>
+        ![
+          "MEDICAO_APROVADA_PELA_DRE",
+          "MEDICAO_APROVADA_PELA_CODAE",
+          "MEDICAO_CORRIGIDA_PELA_UE",
+          "MEDICAO_CORRIGIDA_PARA_CODAE",
+        ].includes(periodo.status)
+    ) ||
+    (solicitacaoMedicaoInicial.com_ocorrencias &&
+      ![
+        "MEDICAO_APROVADA_PELA_DRE",
+        "MEDICAO_APROVADA_PELA_CODAE",
+        "MEDICAO_CORRIGIDA_PELA_UE",
+        "MEDICAO_CORRIGIDA_PARA_CODAE",
+      ].includes(solicitacaoMedicaoInicial.ocorrencia.status))
+  );
 };
