@@ -14,6 +14,7 @@ export default ({ closeModal, showModal, periodoGrupo, onSubmit }) => {
     setLoadingModal(true);
     await onSubmit();
     closeModal();
+    setLoadingModal(false);
   };
 
   return (
@@ -27,21 +28,23 @@ export default ({ closeModal, showModal, periodoGrupo, onSubmit }) => {
             {`Deseja salvar as correções realizadas no Período ${periodoGrupo}?`}
           </p>
         </Modal.Body>
-        <Modal.Footer className="float-right">
-          <Botao
-            className="ml-3"
-            texto="Não"
-            type={BUTTON_TYPE.BUTTON}
-            onClick={closeModal}
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-          />
-          <Botao
-            className="ml-3 mr-3"
-            texto="Sim"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            onClick={() => onClickSim()}
-          />
+        <Modal.Footer>
+          <div className="col-12">
+            <Botao
+              className="float-right"
+              texto="Sim"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              onClick={() => onClickSim()}
+            />
+            <Botao
+              className="float-right mr-2"
+              texto="Não"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={closeModal}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+            />
+          </div>
         </Modal.Footer>
       </Spin>
     </Modal>
