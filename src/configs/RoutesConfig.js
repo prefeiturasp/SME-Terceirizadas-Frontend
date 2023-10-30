@@ -137,6 +137,7 @@ import {
   usuarioComAcessoAoPainelAprovacoes,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioComAcessoAoPainelEmbalagens,
+  usuarioEhOrgaoFiscalizador,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -267,6 +268,8 @@ import StatusLayoutEnviadosParaCorrecao from "../pages/PreRecebimento/CardsLayou
 import AnalisarLayoutEmbalagemPage from "../pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
 import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutEmbalagemPage";
 import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayoutEmbalagemPage";
+import DocumentosRecebimentoPage from "../pages/PreRecebimento/DocumentosRecebimentoPage";
+import CadastroDocumentosRecebimentoPage from "../pages/PreRecebimento/CadastroDocumentosRecebimentoPage";
 
 const routesConfig = [
   {
@@ -1161,7 +1164,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhDRE() ||
-      usuarioEhCODAENutriManifestacao(),
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
@@ -1195,7 +1199,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RECLAMACAO_DE_PRODUTO}`,
@@ -1223,7 +1228,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.CORRECAO_DE_PRODUTO}`,
@@ -1244,7 +1250,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao(),
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RESPONDER_QUESTIONAMENTOS_DA_CODAE}`,
@@ -1286,7 +1293,8 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_NAO_HOMOLOGADAS}`,
@@ -1301,7 +1309,8 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: "/painel-gestao-produto",
@@ -1316,7 +1325,8 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhDRE(),
+      usuarioEhDRE() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
@@ -1341,7 +1351,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGestaoAlimentacao(),
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ATIVACAO_DE_PRODUTO}/consulta`,
@@ -1366,7 +1377,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAENutriManifestacao() ||
-      usuarioEhDRE(),
+      usuarioEhDRE() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
@@ -1376,7 +1388,8 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao(),
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhOrgaoFiscalizador(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
@@ -1960,6 +1973,18 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ATUALIZAR_LAYOUT_EMBALAGEM}`,
     component: AtualizarLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DOCUMENTOS_RECEBIMENTO}`,
+    component: DocumentosRecebimentoPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_DOCUMENTOS_RECEBIMENTO}`,
+    component: CadastroDocumentosRecebimentoPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
