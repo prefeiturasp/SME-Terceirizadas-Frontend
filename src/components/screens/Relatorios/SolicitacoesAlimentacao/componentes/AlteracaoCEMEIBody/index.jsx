@@ -268,6 +268,30 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                 </div>
               </div>
             )}
+            {solicitacao.datas_intervalo.find(
+              (data_intervalo) => data_intervalo.cancelado_justificativa
+            ) && (
+              <>
+                <hr />
+                <p>
+                  <strong>Histórico de cancelamento</strong>
+                  {solicitacao.datas_intervalo
+                    .filter(
+                      (data_intervalo) => data_intervalo.cancelado_justificativa
+                    )
+                    .map((data_intervalo, key) => {
+                      return (
+                        <div className="cancelado_justificativa" key={key}>
+                          {data_intervalo.data}
+                          {" - "}
+                          justificativa:{" "}
+                          {data_intervalo.cancelado_justificativa}
+                        </div>
+                      );
+                    })}
+                </p>
+              </>
+            )}
           </div>
         </td>
       </tr>
