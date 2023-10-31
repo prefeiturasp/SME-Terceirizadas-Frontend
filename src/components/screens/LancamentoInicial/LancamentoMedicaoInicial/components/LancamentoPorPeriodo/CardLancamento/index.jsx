@@ -42,7 +42,9 @@ export default ({
   const meusErros =
     errosAoSalvar &&
     errosAoSalvar.length > 0 &&
-    errosAoSalvar.filter((obj) => obj.periodo_escolar === textoCabecalho);
+    errosAoSalvar.filter((obj) =>
+      [textoCabecalho, grupo].includes(obj.periodo_escolar)
+    );
 
   const qtdAlimentacaoPeriodoFiltrada = () => {
     return quantidadeAlimentacoesLancadas.filter(

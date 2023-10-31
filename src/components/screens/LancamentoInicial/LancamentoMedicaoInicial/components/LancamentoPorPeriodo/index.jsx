@@ -457,6 +457,7 @@ export default ({
               objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
               ehGrupoSolicitacoesDeAlimentacao={true}
               quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+              errosAoSalvar={errosAoSalvar}
             />
           )}
           {solicitacoesInclusoesEtecAutorizadas &&
