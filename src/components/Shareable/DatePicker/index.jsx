@@ -108,7 +108,7 @@ export class InputComData extends Component {
       visitedError,
       writable,
       usarDirty,
-      excludeDates
+      excludeDates,
     } = this.props;
     return (
       <div className="datepicker">
