@@ -1056,11 +1056,7 @@ class AlteracaoCardapio extends Component {
                     }
                     maxDate={fimDoCalendario()}
                     label="Alterar dia"
-                    disabled={
-                      this.props.data_inicial ||
-                      this.props.data_final ||
-                      !(motivo && this.DisabledDataInicial(motivo))
-                    }
+                    disabled={this.props.data_inicial || this.props.data_final}
                     validate={this.ehDiaUtil}
                     usarDirty={true}
                   />
