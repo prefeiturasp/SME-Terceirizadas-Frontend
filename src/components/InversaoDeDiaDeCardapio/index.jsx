@@ -361,7 +361,9 @@ export class InversaoDeDiaDeCardapio extends Component {
             onBlur={(event) => this.validaDiasUteis(event.target.value)}
             onChange={(value) => this.validaDiasUteis(value)}
             minDate={proximos_dois_dias_uteis}
-            excludeDates={[moment(this.state[fieldDataInicial]).add(-1, "days")["_d"]]}
+            excludeDates={[
+              moment(this.state[fieldDataInicial]).add(-1, "days")["_d"],
+            ]}
             maxDate={
               new Date().getMonth() === JS_DATE_NOVEMBRO
                 ? fimDoCalendario()
