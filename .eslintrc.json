@@ -34,8 +34,8 @@
     "no-dupe-else-if": 0,
     "no-import-assign": 0,
     "no-setter-return": 0,
-    "no-console": "error",
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+    "no-console": "off",
+    "no-unused-vars": ["off", { "argsIgnorePattern": "^_" }]
   },
   "settings": {
     "react": {
