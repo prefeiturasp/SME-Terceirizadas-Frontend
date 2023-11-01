@@ -59,7 +59,7 @@ const ModalCestasBasicas = () => {
           </div>
 
           <div className="row gray-bg">
-            <div className="col-12 texto-contato">
+            <div className="col-12">
               Em caso de dúvidas, entre em contato com a{" "}
               <span className="font-weight-bold">DIAF - DRE </span>
               ou envie e-mail para:{" "}
