@@ -7,6 +7,10 @@ export interface DocumentosRecebimento {
   uuid: string;
 }
 
+export interface DocumentosRecebimentoDetalhado extends DocumentosRecebimento {
+  numero_laudo: string;
+}
+
 export interface CronogramaSimples {
   uuid: string;
   nome_produto: string;
