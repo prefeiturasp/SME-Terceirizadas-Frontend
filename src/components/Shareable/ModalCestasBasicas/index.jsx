@@ -16,7 +16,9 @@ const ModalCestasBasicas = () => {
     <Modal dialogClassName="modal-cestas" show={showModal} onHide={closeModal}>
       <>
         <Modal.Header closeButton>
-          <Modal.Title>AVISO | Cesta Básica</Modal.Title>
+          <Modal.Title>
+            <strong>AVISO | Cesta Básica</strong>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="row">
@@ -57,7 +59,7 @@ const ModalCestasBasicas = () => {
           </div>
 
           <div className="row gray-bg">
-            <div className="col-12 ">
+            <div className="col-12 texto-contato">
               Em caso de dúvidas, entre em contato com a{" "}
               <span className="font-weight-bold">DIAF - DRE </span>
               ou envie e-mail para:{" "}
