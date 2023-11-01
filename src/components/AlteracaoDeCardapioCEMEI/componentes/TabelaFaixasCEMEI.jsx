@@ -38,11 +38,8 @@ export const TabelaFaixasCEMEI = ({
 
   return (
     <>
-      {((periodo.EMEI > 0 &&
-        ["EMEI", "TODOS"].includes(values.alunos_cei_e_ou_emei)) ||
-        (periodo.CEI.length > 0 &&
-          periodo.CEI.some((obj) => obj.quantidade_alunos > 0) &&
-          ["CEI", "TODOS"].includes(values.alunos_cei_e_ou_emei))) && (
+      {(periodo.nome === "INTEGRAL" ||
+        ["EMEI", "TODOS"].includes(values.alunos_cei_e_ou_emei)) && (
         <div className="row">
           <div className="col-12">
             <label
@@ -95,6 +92,7 @@ export const TabelaFaixasCEMEI = ({
 
       {periodoCEI &&
         values.alunos_cei_e_ou_emei &&
+        periodo.nome === "INTEGRAL" &&
         ["CEI", "TODOS"].includes(values.alunos_cei_e_ou_emei) &&
         values.substituicoes[periodoIndice] &&
         values.substituicoes[periodoIndice].checked &&
