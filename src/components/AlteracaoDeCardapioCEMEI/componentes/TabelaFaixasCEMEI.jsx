@@ -115,6 +115,7 @@ export const TabelaFaixasCEMEI = ({
                     )}
                     naoDesabilitarPrimeiraOpcao
                     validate={totalFrequenciaCEI > 0 && required}
+                    required
                   />
                 )}
                 {!ehMotivoRPL(values) && (
@@ -131,6 +132,7 @@ export const TabelaFaixasCEMEI = ({
                     )}
                     nomeDoItemNoPlural="Alimentos"
                     validate={totalFrequenciaCEI > 0 && required}
+                    required
                   />
                 )}
                 <OnChange
@@ -158,6 +160,7 @@ export const TabelaFaixasCEMEI = ({
                     )}
                     nomeDoItemNoPlural="Substitutos"
                     validate={totalFrequenciaCEI > 0 && required}
+                    required
                   />
                 )}
                 {ehMotivoRPL(values) && (
@@ -174,6 +177,7 @@ export const TabelaFaixasCEMEI = ({
                     name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_para]`}
                     nomeDoItemNoPlural="Substitutos"
                     validate={totalFrequenciaCEI > 0 && required}
+                    required
                   />
                 )}
               </div>
@@ -185,7 +189,9 @@ export const TabelaFaixasCEMEI = ({
                     <tr>
                       <th className="col-7">Faixa Etária</th>
                       <th className="col-3 text-center">Alunos matriculados</th>
-                      <th className="col-2 text-center">Quantidade</th>
+                      <th className="col-2 text-center">
+                        <span className="asterisco">* </span>Quantidade
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -203,6 +209,7 @@ export const TabelaFaixasCEMEI = ({
                                 type="number"
                                 name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][quantidade_alunos]`}
                                 validate={composeValidators(
+                                  required,
                                   naoPodeSerZero,
                                   maxValue(parseInt(faixa.quantidade_alunos))
                                 )}
@@ -210,6 +217,7 @@ export const TabelaFaixasCEMEI = ({
                                 min={0}
                                 step="1"
                                 className="input-quantidades"
+                                required
                               />
                               <OnChange
                                 name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][quantidade_alunos]`}
@@ -286,6 +294,7 @@ export const TabelaFaixasCEMEI = ({
                   )}
                   nomeDoItemNoPlural="Alimentos"
                   validate={totalFrequenciaEMEI > 0 && required}
+                  required
                 />
                 <OnChange
                   name={`substituicoes[${periodoIndice}][emei][tipos_alimentacao_de]`}
@@ -311,6 +320,7 @@ export const TabelaFaixasCEMEI = ({
                   )}
                   nomeDoItemNoPlural="Substitutos"
                   validate={totalFrequenciaEMEI > 0 && required}
+                  required
                 />
               </div>
             </div>
@@ -325,6 +335,7 @@ export const TabelaFaixasCEMEI = ({
                       <th className="col-4">
                         <div className="row">
                           <div className="col-6 mt-2 text-center">
+                            <span className="asterisco">* </span>
                             Quantidade
                           </div>
                           <div className="col-6">
@@ -333,6 +344,7 @@ export const TabelaFaixasCEMEI = ({
                               type="number"
                               name={`substituicoes[${periodoIndice}][emei][quantitade_alunos]`}
                               validate={composeValidators(
+                                required,
                                 naoPodeSerZero,
                                 maxValue(parseInt(periodo.EMEI))
                               )}
@@ -340,6 +352,7 @@ export const TabelaFaixasCEMEI = ({
                               min={0}
                               step="1"
                               className="input-quantidades"
+                              required
                             />
                             <OnChange
                               name={`substituicoes[${periodoIndice}][emei][quantitade_alunos]`}
