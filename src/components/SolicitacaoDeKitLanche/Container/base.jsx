@@ -48,6 +48,7 @@ import {
   validateFormKitLanchePasseio,
   validateFormKitLanchePasseioCei,
 } from "./validators";
+import { Tooltip } from "antd";
 
 const { SOLICITACAO_CEI, SOLICITACAO_NORMAL } = TIPO_SOLICITACAO;
 
@@ -74,6 +75,7 @@ export class SolicitacaoDeKitLanche extends Component {
       botaoConfirma: true,
       alunosComDietaEspecial: [],
       carregandoRascunhos: false,
+      erro: "",
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.refresh = this.refresh.bind(this);
@@ -86,6 +88,26 @@ export class SolicitacaoDeKitLanche extends Component {
 
     this.validatorsLocalPasseio = [required, maxLength(160)];
   }
+
+  validarQuantidadeAlunos = (value) => {
+    const { meusDados } = this.props;
+    if (
+      meusDados.vinculo_atual &&
+      meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
+        "CEU GESTAO"
+    ) {
+      const maximo = meusDados.vinculo_atual.instituicao.quantidade_alunos;
+      if (value > maximo) {
+        this.setState({
+          erro: `O número de alunos não pode ser maior que ${maximo}`,
+        });
+      } else if (value < 1) {
+        this.setState({ erro: `Deve  haver pelo menos um aluno` });
+      } else {
+        this.setState({ erro: "" });
+      }
+    }
+  };
 
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
@@ -466,6 +488,13 @@ export class SolicitacaoDeKitLanche extends Component {
     return qtdeAlunos * this.state.kitsChecked.length;
   }
 
+  validationRules = [
+    required,
+    maxValue(this.props.meusDados.vinculo_atual.instituicao.quantidade_alunos),
+    naoPodeSerZero,
+    this.validarQuantidadeAlunos,
+  ];
+
   render() {
     const {
       alunosPorFaixaEtaria,
@@ -487,6 +516,7 @@ export class SolicitacaoDeKitLanche extends Component {
       kitsChecked,
       alunosComDietaEspecial,
       carregandoRascunhos,
+      erro,
     } = this.state;
     return (
       <div>
@@ -558,25 +588,33 @@ export class SolicitacaoDeKitLanche extends Component {
               </div>
               {!ehCei && meusDados ? (
                 <div className="form-group row">
-                  <div className="col-3">
+                  <div className="field-values-input col-3">
                     <Field
                       component={InputText}
                       name="quantidade_alunos"
                       type="number"
                       label="Número de alunos"
                       required
-                      validate={
-                        meusDados.vinculo_atual &&
-                        meusDados.vinculo_atual.instituicao
-                          .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
-                          ? [
-                              required,
-                              maxValue(meusDados.quantidade_alunos),
-                              naoPodeSerZero,
-                            ]
-                          : false
-                      }
+                      validate={(value) => {
+                        if (
+                          !meusDados.vinculo_atual ||
+                          meusDados.vinculo_atual.instituicao
+                            .tipo_unidade_escolar_iniciais === "CEU GESTAO"
+                        ) {
+                          return undefined;
+                        }
+                        const errors = this.validationRules
+                          .map((validate) => validate(value))
+                          .filter((error) => error !== undefined);
+
+                        return errors.length > 0 ? errors : undefined;
+                      }}
                     />
+                    {erro && (
+                      <Tooltip title={erro}>
+                        <i className="fas fa-info icone-info-error" />
+                      </Tooltip>
+                    )}
                   </div>
                   <div className="col-9">
                     <Field
