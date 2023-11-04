@@ -471,6 +471,7 @@ export default ({
                 objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
                 ehGrupoETEC={true}
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                errosAoSalvar={errosAoSalvar}
               />
             )}
           <div className="mt-4">
