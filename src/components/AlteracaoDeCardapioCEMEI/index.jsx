@@ -41,6 +41,7 @@ import {
 } from "services/alteracaoDeCardapio/escola.service";
 import "./style.scss";
 import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
+import { formataValues } from "components/AlteracaoDeCardapio/helper";
 
 export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
   const {
@@ -131,7 +132,9 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     }
     const formatedValues = formatarPayload(values_, meusDados);
     if (!uuid) {
-      const response = await createAlteracaoCardapioCEMEI(formatedValues);
+      const response = await createAlteracaoCardapioCEMEI(
+        formataValues(formatedValues)
+      );
       if (response.status === HTTP_STATUS.CREATED) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
           iniciarPedido(response.data.uuid, form);
@@ -143,7 +146,10 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
         toastError(getError(response.data));
       }
     } else {
-      const response = await updateAlteracaoCardapioCEMEI(uuid, formatedValues);
+      const response = await updateAlteracaoCardapioCEMEI(
+        uuid,
+        formataValues(formatedValues)
+      );
       if (response.status === HTTP_STATUS.OK) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
           iniciarPedido(uuid, form);
@@ -554,10 +560,14 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       maxDate={fimDoCalendario()}
                       label="Alterar dia"
                       disabled={values.data_inicial || desabilitarAlterarDia}
-                      validate={composeValidators(
-                        required,
-                        ehDiaUtil(values, motivos, feriadosAno)
-                      )}
+                      validate={
+                        values.data_inicial
+                          ? ehDiaUtil(values, motivos, feriadosAno)
+                          : composeValidators(
+                              required,
+                              ehDiaUtil(values, motivos, feriadosAno)
+                            )
+                      }
                       usarDirty={true}
                     />
                     <OnChange name="alterar_dia">
@@ -582,11 +592,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                           ? moment().toDate()
                           : proximosDoisDiasUteis
                       }
-                      maxDate={
-                        maximo5DiasUteis
-                          ? proximosCincoDiasUteis
-                          : fimDoCalendario()
-                      }
+                      maxDate={fimDoCalendario()}
                     />
                     <OnChange name="data_inicial">
                       {(value) => {
@@ -610,11 +616,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       minDate={
                         values.data_inicial && getDataObj(values.data_inicial)
                       }
-                      maxDate={
-                        maximo5DiasUteis
-                          ? proximosCincoDiasUteis
-                          : fimDoCalendario()
-                      }
+                      maxDate={fimDoCalendario()}
                     />
                     <OnChange name="data_final">
                       {(value) => {

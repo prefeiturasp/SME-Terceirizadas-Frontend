@@ -16,13 +16,16 @@ import { ModalRemoveContrato } from "../ModalRemoveContrato";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { numeroProcessoContratoSEIMask } from "constants/shared";
 import { dateDelta, getDataObj } from "helpers/utilities";
+import { composeValidators } from "../../../../../../helpers/fieldValidators";
+import { deletaValues } from "../../../../../../helpers/formHelper";
 
 const contratosEstadoInicial = {
   numero_processo: null,
   numero_contrato: null,
   numero_ata: null,
   numero_pregao_chamada_publica: null,
-  vigencias: null,
+  vigencia_de: null,
+  vigencia_ate: null,
 };
 
 export const ContratosFormSet = ({
@@ -31,19 +34,31 @@ export const ContratosFormSet = ({
   setContratos,
   terceirizada,
   values,
+  numerosContratosCadastrados,
 }) => {
   const [contratoARemover, setContratoARemover] = useState({});
   const [exibirModalRemoverContrato, setExibirModalRemoverContrato] =
     useState(false);
+
   const adicionaContrato = () => {
-    contratos = contratos.concat([contratosEstadoInicial]);
-    setContratos(contratos);
+    const novosContratos = [...contratos, contratosEstadoInicial];
+    setContratos(novosContratos);
   };
 
   const removeContrato = (index) => {
-    let newContratos = [...contratos];
-    newContratos.splice(index, 1);
-    setContratos(newContratos);
+    const camposParaDeletar = [
+      "numero_processo",
+      "numero_contrato",
+      "numero_ata",
+      "numero_pregao_chamada_publica",
+      "vigencia_de",
+      "vigencia_ate",
+    ];
+    deletaValues(contratos, camposParaDeletar, values, index);
+
+    const novosContratos = [...contratos];
+    novosContratos.splice(index, 1);
+    setContratos(novosContratos);
   };
 
   const encerraContrato = async () => {
@@ -69,6 +84,12 @@ export const ContratosFormSet = ({
   const abrirModalRemoverContrato = (index) => {
     setExibirModalRemoverContrato(true);
     setContratoARemover(contratos[index]);
+  };
+
+  const contratoJaCadastrado = (value) => {
+    return numerosContratosCadastrados.includes(value)
+      ? "Nº de Contrato já informado"
+      : undefined;
   };
 
   return (
@@ -107,7 +128,13 @@ export const ContratosFormSet = ({
                           component={InputText}
                           label="Nº do Contrato"
                           required
-                          validate={required}
+                          validate={composeValidators(
+                            required,
+                            !contratos[index].uuid
+                              ? contratoJaCadastrado
+                              : () => {}
+                          )}
+                          disabled={!!contratos[index].uuid}
                         />
                       </div>
                       <div className="col-4">
@@ -172,7 +199,7 @@ export const ContratosFormSet = ({
                             <div className="col-2">
                               <Botao
                                 className="btn-encerrar-contrato"
-                                texto="Encerrar Contrato"
+                                texto="Encerrar Vigência"
                                 onClick={() => abrirModalRemoverContrato(index)}
                                 type={BUTTON_TYPE.BUTTON}
                                 style={BUTTON_STYLE.RED_OUTLINE}
@@ -182,19 +209,20 @@ export const ContratosFormSet = ({
                         ))}
                     </div>
                     <div className="flex-center my-3">
-                      <Botao
-                        texto="+ Adicionar"
-                        className="mr-4"
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                        onClick={() => adicionaContrato()}
-                      />
-
-                      {index > 0 && (
-                        <Tooltip title="Remover Contrato">
+                      {index === contratos.length - 1 && (
+                        <Botao
+                          texto="+ Adicionar"
+                          className="mr-3"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          onClick={() => adicionaContrato()}
+                        />
+                      )}
+                      {index > 0 && !contratos[index].uuid && (
+                        <Tooltip title="Remover">
                           <span>
                             <Botao
-                              texto="Remover Contrato"
+                              texto="Remover"
                               icon="fas fa-trash"
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN_OUTLINE}

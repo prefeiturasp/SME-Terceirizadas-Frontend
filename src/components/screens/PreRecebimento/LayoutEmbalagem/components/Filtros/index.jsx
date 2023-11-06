@@ -14,7 +14,7 @@ import {
 } from "../../../../../../configs/constants";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
-import { getListaCronogramasLayout } from "../../../../../../services/cronograma.service";
+import { getListaCronogramasPraCadastro } from "../../../../../../services/cronograma.service";
 import { getListaFiltradaAutoCompleteSelect } from "../../../../../../helpers/autoCompleteSelect";
 
 const FORM_NAME = "filtrosLayoutsEmbalagens";
@@ -23,7 +23,7 @@ export default ({ setFiltros, setLayoutsEmbalagens, setConsultaRealizada }) => {
   const [dadosCronogramas, setDadosCronogramas] = useState([]);
 
   const buscarDadosCronogramas = async () => {
-    const response = await getListaCronogramasLayout();
+    const response = await getListaCronogramasPraCadastro();
     setDadosCronogramas(response.data.results);
   };
 

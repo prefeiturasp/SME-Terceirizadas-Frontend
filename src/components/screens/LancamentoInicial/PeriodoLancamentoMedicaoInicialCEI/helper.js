@@ -73,23 +73,13 @@ export const formatarPayloadPeriodoLancamento = (
   return { ...values, valores_medicao: valoresMedicao };
 };
 
-export const formatarPayloadParaCorrecao = (
-  valoresPeriodosLancamentos,
-  payload
-) => {
-  let payloadParaCorrecao = [];
-  valoresPeriodosLancamentos.forEach((valor_lancamento) => {
-    payloadParaCorrecao.push(
-      payload.valores_medicao.filter(
-        (valor_medicao) =>
-          String(valor_lancamento.categoria_medicao) ===
-            valor_medicao.categoria_medicao &&
-          valor_lancamento.dia === valor_medicao.dia &&
-          valor_lancamento.nome_campo === valor_medicao.nome_campo
-      )[0]
-    );
-  });
-
+export const formatarPayloadParaCorrecao = (payload) => {
+  let payloadParaCorrecao = payload.valores_medicao.filter(
+    (valor) =>
+      !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
+        valor.nome_campo
+      )
+  );
   return payloadParaCorrecao;
 };
 
@@ -143,7 +133,8 @@ export const desabilitarField = (
   grupoLocation,
   valoresPeriodosLancamentos,
   feriadosNoMes,
-  uuidFaixaEtaria
+  uuidFaixaEtaria,
+  diasParaCorrecao
 ) => {
   const resultado = inclusoesAutorizadas.some(
     (inclusao) =>
@@ -154,23 +145,36 @@ export const desabilitarField = (
   );
   if (resultado) return false;
 
-  const valorField = valoresPeriodosLancamentos
-    .filter((valor) => valor.nome_campo === rowName)
-    .filter((valor) => String(valor.dia) === String(dia))
-    .filter((valor) => String(valor.categoria_medicao) === String(categoria))
-    .filter((valor) => valor.habilitado_correcao === true)[0];
   if (
+    ehDiaParaCorrigir(dia, categoria, diasParaCorrecao) &&
+    !["Mês anterior", "Mês posterior"].includes(
+      values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+    ) &&
     location.state &&
-    (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
-      location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
-      location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
-      ([
-        "MEDICAO_CORRECAO_SOLICITADA",
-        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-        "MEDICAO_CORRIGIDA_PELA_UE",
-        "MEDICAO_CORRIGIDA_PARA_CODAE",
-      ].includes(location.state.status_periodo) &&
-        !valorField))
+    [
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_CORRIGIDA_PELA_UE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE",
+    ].includes(location.state.status_periodo) &&
+    !["matriculados", "dietas_autorizadas"].includes(rowName)
+  ) {
+    return false;
+  }
+
+  if (
+    (location.state &&
+      (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
+        location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
+        location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
+        ([
+          "MEDICAO_CORRECAO_SOLICITADA",
+          "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+          "MEDICAO_CORRIGIDA_PELA_UE",
+          "MEDICAO_CORRIGIDA_PARA_CODAE",
+        ].includes(location.state.status_periodo) &&
+          !ehDiaParaCorrigir(dia, categoria, diasParaCorrecao)))) ||
+    ["matriculados", "dietas_autorizadas"].includes(rowName)
   ) {
     return true;
   }
@@ -573,17 +577,16 @@ export const defaultValue = (
   return result;
 };
 
-export const ehDiaParaCorrigir = (
-  dia,
-  categoria,
-  valoresPeriodosLancamentos
-) => {
-  const existeAlgumCampoParaCorrigir = valoresPeriodosLancamentos
-    .filter((valor) => String(valor.dia) === String(dia))
-    .filter((valor) => String(valor.categoria_medicao) === String(categoria))
-    .filter((valor) => valor.habilitado_correcao === true)[0];
-
-  return existeAlgumCampoParaCorrigir;
+export const ehDiaParaCorrigir = (dia, categoria, diasParaCorrecao) => {
+  return (
+    diasParaCorrecao &&
+    diasParaCorrecao.find(
+      (diaParaCorrecao) =>
+        String(diaParaCorrecao.dia) === String(dia) &&
+        String(diaParaCorrecao.categoria_medicao) === String(categoria) &&
+        diaParaCorrecao.habilitado_correcao === true
+    )
+  );
 };
 
 export const textoBotaoObservacao = (
@@ -616,7 +619,8 @@ export const desabilitarBotaoColunaObservacoes = (
   formValuesAtualizados,
   row,
   valoresObservacoes,
-  dia
+  dia,
+  diasParaCorrecao
 ) => {
   const botaoEhAdicionar =
     textoBotaoObservacao(
@@ -646,11 +650,7 @@ export const desabilitarBotaoColunaObservacoes = (
             (valor) => String(valor.categoria_medicao) === String(categoria.id)
           )[0])) &&
       botaoEhAdicionar &&
-      !ehDiaParaCorrigir(
-        column.dia,
-        categoria.id,
-        valoresPeriodosLancamentos
-      )) ||
+      !ehDiaParaCorrigir(column.dia, categoria.id, diasParaCorrecao)) ||
       (["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_APROVADA_PELA_CODAE"].includes(
         location.state.status_periodo
       ) &&
@@ -661,11 +661,7 @@ export const desabilitarBotaoColunaObservacoes = (
         "MEDICAO_CORRIGIDA_PELA_UE",
         "MEDICAO_CORRIGIDA_PARA_CODAE",
       ].includes(location.state.status_periodo) &&
-        !ehDiaParaCorrigir(
-          column.dia,
-          categoria.id,
-          valoresPeriodosLancamentos
-        )))
+        !ehDiaParaCorrigir(column.dia, categoria.id, diasParaCorrecao)))
   );
 };
 

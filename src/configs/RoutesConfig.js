@@ -251,6 +251,7 @@ import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/Detalha
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
+import CadastroFabricantePage from "pages/Cadastros/CadastroFabricantePage";
 import StatusCronogramasPendentesDilog from "../pages/Dinutre/Cronogramas/StatusCronogramasPendentesDilog";
 import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
 import StatusSolicitacoesAlteracoesCronograma from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCronograma";
@@ -266,6 +267,9 @@ import StatusLayoutAprovados from "../pages/PreRecebimento/CardsLayoutEmbalagem/
 import StatusLayoutEnviadosParaCorrecao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutEnviadosParaCorrecao";
 import AnalisarLayoutEmbalagemPage from "../pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
 import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutEmbalagemPage";
+import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayoutEmbalagemPage";
+import DocumentosRecebimentoPage from "../pages/PreRecebimento/DocumentosRecebimentoPage";
+import CadastroDocumentosRecebimentoPage from "../pages/PreRecebimento/CadastroDocumentosRecebimentoPage";
 
 const routesConfig = [
   {
@@ -683,6 +687,12 @@ const routesConfig = [
     tipoUsuario: usuarioEhQualquerCODAE(),
   },
   {
+    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais/editar-permissao-lancamento-especial`,
+    component: NovaPermissaoLancamentoEspecialPage,
+    exact: true,
+    tipoUsuario: usuarioEhQualquerCODAE(),
+  },
+  {
     path: `/configuracoes/cadastros/horario-combos-alimentacao`,
     component: CadastroHorarioComboAlimentacaoPage,
     exact: false,
@@ -836,6 +846,12 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.MARCAS}`,
     component: CadastroMarcaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog(),
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.FABRICANTES}`,
+    component: CadastroFabricantePage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog(),
   },
@@ -1543,10 +1559,7 @@ const routesConfig = [
     path: `/${constants.MEDICAO_INICIAL}/${constants.CONFERENCIA_DOS_LANCAMENTOS}`,
     component: ConferenciaDosLancamentosPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhDRE() ||
-      usuarioEhMedicao() ||
-      usuarioEhEscolaTerceirizadaQualquerPerfil(),
+    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.DETALHAMENTO_DO_LANCAMENTO}`,
@@ -1954,6 +1967,24 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CORRIGR_LAYOUT_EMBALAGEM}`,
     component: CorrigirLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ATUALIZAR_LAYOUT_EMBALAGEM}`,
+    component: AtualizarLayoutEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DOCUMENTOS_RECEBIMENTO}`,
+    component: DocumentosRecebimentoPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_DOCUMENTOS_RECEBIMENTO}`,
+    component: CadastroDocumentosRecebimentoPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },

@@ -76,6 +76,26 @@ export const campoComInclusaoContinuaValor0ESemObservacao = (
   return erro;
 };
 
+export const campoLancheEmergencialComZeroOuSemObservacao = (
+  values,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  const value =
+    values[`lanche_emergencial__dia_${column.dia}__categoria_${categoria.id}`];
+
+  return (
+    (!value || Number(value) === 0) &&
+    !values[`observacoes__dia_${column.dia}__categoria_${categoria.id}`] &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === column.dia
+    ).length > 0
+  );
+};
+
 export const campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao = (
   dia,
   categoria,
@@ -241,41 +261,6 @@ export const camposKitLancheSolicitacoesAlimentacaoESemObservacao = (
   return erro;
 };
 
-export const camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao = (
-  formValuesAtualizados,
-  column,
-  categoria,
-  alteracoesAlimentacaoAutorizadas
-) => {
-  let erro = false;
-  const lancheEmergencialValue =
-    formValuesAtualizados[
-      `lanche_emergencial__dia_${column.dia}__categoria_${categoria.id}`
-    ];
-  if (
-    alteracoesAlimentacaoAutorizadas &&
-    !formValuesAtualizados[
-      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
-    ] &&
-    categoria.nome.includes("SOLICITAÇÕES") &&
-    lancheEmergencialValue &&
-    alteracoesAlimentacaoAutorizadas.filter(
-      (alteracao) => alteracao.dia === column.dia
-    ).length === 0
-  ) {
-    erro = true;
-  }
-  if (
-    alteracoesAlimentacaoAutorizadas &&
-    categoria.nome.includes("SOLICITAÇÕES") &&
-    lancheEmergencialValue &&
-    Number(lancheEmergencialValue) === 0
-  ) {
-    erro = true;
-  }
-  return erro;
-};
-
 export const camposLancheEmergTabelaEtec = (
   formValuesAtualizados,
   column,
@@ -413,12 +398,6 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
         categoria,
         kitLanchesAutorizadas
       ) ||
-      camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao(
-        formValuesAtualizados,
-        column,
-        categoria,
-        alteracoesAlimentacaoAutorizadas
-      ) ||
       camposLancheEmergTabelaEtec(
         formValuesAtualizados,
         column,
@@ -433,6 +412,12 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
         feriadosNoMes,
         formValuesAtualizados,
         categoria
+      ) ||
+      campoLancheEmergencialComZeroOuSemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        alteracoesAlimentacaoAutorizadas
       )
     );
   }
@@ -1126,7 +1111,7 @@ export const exibirTooltipLancheEmergencialAutorizado = (
     ];
 
   return (
-    !value &&
+    (!value || Number(value) === 0) &&
     !formValuesAtualizados[
       `observacoes__dia_${column.dia}__categoria_${categoria.id}`
     ] &&
@@ -1269,12 +1254,16 @@ export const exibirTooltipRepeticao = (
     value &&
     Number(value) > 0 &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
-    ((row.name.includes("repeticao_refeicao") &&
+    (!!(
+      row.name.includes("repeticao_refeicao") &&
       (!maxRefeicao ||
-        (Number(maxRefeicao) && Number(value) > Number(maxRefeicao)))) ||
-      (row.name.includes("repeticao_sobremesa") &&
+        (Number(maxRefeicao) && Number(value) > Number(maxRefeicao)))
+    ) ||
+      !!(
+        row.name.includes("repeticao_sobremesa") &&
         (!maxSobremesa ||
-          (Number(maxSobremesa) && Number(value) > Number(maxSobremesa)))))
+          (Number(maxSobremesa) && Number(value) > Number(maxSobremesa)))
+      ))
   );
 };
 
@@ -1337,8 +1326,145 @@ export const exibirTooltipRepeticaoDiasSobremesaDoceDiferenteZero = (
         .toString()
         .padStart(2, "0")}-${column.dia}`
     ) &&
-    sobremesaValue > 0 &&
+    Number(sobremesaValue) > 0 &&
     !observacoesValue &&
-    sobremesaValue >= Number(value)
+    Number(sobremesaValue) >= Number(value)
+  );
+};
+
+export const exibirTooltipRepeticaoDiasSobremesaDoceDreCodae = (
+  semanaSelecionada,
+  mesSolicitacao,
+  anoSolicitacao,
+  diasSobremesaDoce,
+  column,
+  row,
+  categoria
+) => {
+  return (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    !(Number(semanaSelecionada) === 1 && Number(column.dia) > 20) &&
+    !(
+      [4, 5, 6].includes(Number(semanaSelecionada)) && Number(column.dia) < 10
+    ) &&
+    row.name === "repeticao_sobremesa" &&
+    diasSobremesaDoce.includes(
+      `${anoSolicitacao}-${mesSolicitacao}-${column.dia}`
+    )
+  );
+};
+
+export const exibirTooltipInclusaoAlimentacaoAutorizadaDreCodae = (
+  semanaSelecionada,
+  inclusoesAutorizadas,
+  column,
+  row,
+  categoria
+) => {
+  return (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    !(Number(semanaSelecionada) === 1 && Number(column.dia) > 20) &&
+    !(
+      [4, 5, 6].includes(Number(semanaSelecionada)) && Number(column.dia) < 10
+    ) &&
+    row.name === "frequencia" &&
+    inclusoesAutorizadas.filter((inclusao) => inclusao.dia === column.dia)
+      .length > 0
+  );
+};
+
+export const exibirTooltipAlteracaoAlimentacaoAutorizadaDreCodae = (
+  semanaSelecionada,
+  alteracoesAlimentacaoAutorizadas,
+  column,
+  row,
+  categoria
+) => {
+  return (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    !(Number(semanaSelecionada) === 1 && Number(column.dia) > 20) &&
+    !(
+      [4, 5, 6].includes(Number(semanaSelecionada)) && Number(column.dia) < 10
+    ) &&
+    ((row.name === "lanche" &&
+      alteracoesAlimentacaoAutorizadas.filter(
+        (alteracao) =>
+          alteracao.dia === column.dia && alteracao.motivo.includes("LPR")
+      ).length > 0) ||
+      (row.name === "refeicao" &&
+        !row.name.includes("repeticao") &&
+        alteracoesAlimentacaoAutorizadas.filter(
+          (alteracao) =>
+            alteracao.dia === column.dia && alteracao.motivo.includes("RPL")
+        ).length > 0))
+  );
+};
+
+const todasAlimentacoesSuspensas = (periodo, suspensoesAutorizadas, column) => {
+  const tiposAlimentacaoPeriodo = periodo.tipos_alimentacao
+    .flatMap((tipo_ali) =>
+      tipo_ali.nome
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replaceAll(/ /g, "_")
+    )
+    .filter((tipo_ali) => tipo_ali !== "lanche_emergencial");
+  const tiposAlimentacaoSuspensasDia = [
+    ...new Set(
+      suspensoesAutorizadas
+        .filter((suspensao) => suspensao.dia === column.dia)
+        .flatMap((suspensao) => suspensao.alimentacoes)
+    ),
+  ];
+
+  return tiposAlimentacaoPeriodo.every((tipo_ali) =>
+    tiposAlimentacaoSuspensasDia.includes(tipo_ali)
+  );
+};
+
+export const exibirTooltipSuspensaoAutorizadaFrequenciaDreCodae = (
+  semanaSelecionada,
+  suspensoesAutorizadas,
+  column,
+  row,
+  categoria,
+  periodo
+) => {
+  return (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    !(Number(semanaSelecionada) === 1 && Number(column.dia) > 20) &&
+    !(
+      [4, 5, 6].includes(Number(semanaSelecionada)) && Number(column.dia) < 10
+    ) &&
+    row.name === "frequencia" &&
+    suspensoesAutorizadas.filter((suspensao) => suspensao.dia === column.dia)
+      .length > 0 &&
+    todasAlimentacoesSuspensas(periodo, suspensoesAutorizadas, column)
+  );
+};
+
+export const exibirTooltipSuspensaoAutorizadaAlimentacaoDreCodae = (
+  semanaSelecionada,
+  suspensoesAutorizadas,
+  column,
+  row,
+  categoria,
+  periodo
+) => {
+  return (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    !(Number(semanaSelecionada) === 1 && Number(column.dia) > 20) &&
+    !(
+      [4, 5, 6].includes(Number(semanaSelecionada)) && Number(column.dia) < 10
+    ) &&
+    [
+      ...new Set(
+        suspensoesAutorizadas
+          .filter((suspensao) => suspensao.dia === column.dia)
+          .flatMap((suspensao) => suspensao.alimentacoes)
+      ),
+    ].includes(row.name) &&
+    !todasAlimentacoesSuspensas(periodo, suspensoesAutorizadas, column)
   );
 };

@@ -8,7 +8,8 @@ export const STATUS_SOLICITACOES = [
 export const TIPOS_SOLICITACAO = [
   { label: "Inclusão de Alimentação", value: "INC_ALIMENTA" },
   { label: "Alteração do Tipo de Alimentação", value: "ALT_CARDAPIO" },
-  { label: "Kit Lanche", value: "KIT_LANCHE_AVULSA" },
+  { label: "Kit Lanche Passeio", value: "KIT_LANCHE_AVULSA" },
+  { label: "Kit Lanche Unificado", value: "KIT_LANCHE_UNIFICADO" },
   { label: "Inversão de Dia de Cardápio", value: "INV_CARDAPIO" },
   { label: "Suspensão de Alimentação", value: "SUSP_ALIMENTACAO" },
 ];

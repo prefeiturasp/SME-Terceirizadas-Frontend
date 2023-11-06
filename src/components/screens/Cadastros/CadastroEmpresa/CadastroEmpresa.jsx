@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import moment from "moment";
 import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
@@ -21,6 +21,7 @@ import {
   getTerceirizadaUUID,
   updateNaoTerceirizada,
   updateTerceirizada,
+  obterNumeroContratosCadastrados,
 } from "services/terceirizada.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { formatarCPFouCNPJ, getError } from "helpers/utilities";
@@ -58,7 +59,7 @@ export const CadastroEmpresa = () => {
     telefone_representante: undefined,
     bairro: undefined,
   });
-  const [carregando, setCarregando] = useState(false);
+  const [carregando, setCarregando] = useState(true);
   const [ehDistribuidor, setEhDistribuidor] = useState(false);
   const [superUser, setSuperUser] = useState({
     email: null,
@@ -110,6 +111,9 @@ export const CadastroEmpresa = () => {
       email: "",
     },
   ]);
+
+  const numerosContratosCadastrados = useRef([]);
+
   const atribuiContatosEmpresaForm = (data) => {
     const { contatos } = data;
     contatos
@@ -334,171 +338,179 @@ export const CadastroEmpresa = () => {
     }
   };
 
-  useEffect(() => {
+  const carregarDados = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
 
     if (uuid) {
       setUuid(uuid);
-      setCarregando(true);
       setTituloModal("Confirma atualização de Empresa?");
 
-      getTerceirizadaUUID(uuid).then((response) => {
-        if (response.status !== HTTP_STATUS.NOT_FOUND) {
-          let lotesNomesSelecionados = [];
-          let lotesSelecionados = [];
-          response.data.lotes.forEach((lote) => {
-            lotesNomesSelecionados.push(lote.nome);
-            lotesSelecionados.push(lote.uuid);
-          });
-          setLotesSelecionados(lotesSelecionados);
-        }
+      const response = await getTerceirizadaUUID(uuid);
 
+      if (response.status !== HTTP_STATUS.NOT_FOUND) {
+        let lotesNomesSelecionados = [];
+        let lotesSelecionados = [];
+
+        response.data.lotes.forEach((lote) => {
+          lotesNomesSelecionados.push(lote.nome);
+          lotesSelecionados.push(lote.uuid);
+        });
+
+        setLotesSelecionados(lotesSelecionados);
         setaValoresForm(response.data);
-        setCarregando(false);
-      });
+      }
     }
 
+    const response = await obterNumeroContratosCadastrados();
+    numerosContratosCadastrados.current =
+      response.data.numeros_contratos_cadastrados;
+
     setEhDistribuidor(verificarUsuarioEhDistribuidor());
+
+    setCarregando(false);
+  };
+
+  useEffect(() => {
+    carregarDados();
   }, []);
 
   return (
-    <Spin tip="Carregando..." spinning={carregando}>
+    <Spin spinning={carregando}>
       <div className="cadastro cadastro-empresa pt-3">
         <div className="card">
           <div>
             <div>
-              {!carregando && (
-                <Form
-                  initialValues={initialValuesForm}
-                  onSubmit={onSubmit}
-                  render={({ form, handleSubmit, values }) => (
-                    <form onSubmit={handleSubmit}>
-                      <DadosEmpresa ehDistribuidor={ehDistribuidor} />
-                      <EnderecoEmpresa
-                        values={values}
-                        ehDistribuidor={ehDistribuidor}
-                        contatosEmpresaForm={contatosEmpresaForm}
-                        setContatosEmpresaForm={setContatosEmpresaForm}
-                        contatosEmpresa={contatosEmpresa}
-                        setContatosEmpresa={setContatosEmpresa}
-                      />
-                      <AdministradorSistemaFormSet
-                        ehDistribuidor={ehDistribuidor}
-                        superUser={superUser}
-                        setSuperUser={setSuperUser}
-                      />
-                      <UsuarioResponsavel ehDistribuidor={ehDistribuidor} />
-                      <ContatoFormSet
-                        ehDistribuidor={ehDistribuidor}
-                        values={values}
-                        contatosPessoaEmpresa={contatosPessoaEmpresa}
-                        setContatosPessoaEmpresa={setContatosPessoaEmpresa}
-                      />
-                      <NutricionistaFormSet
-                        ehDistribuidor={ehDistribuidor}
-                        contatosTerceirizadaForm={contatosTerceirizadaForm}
-                        setContatosTerceirizadaForm={
-                          setContatosTerceirizadaForm
-                        }
-                        contatosNutricionista={contatosNutricionista}
-                        setContatosNutricionista={setContatosNutricionista}
-                      />
-                      <ContratosFormSet
-                        ehDistribuidor={ehDistribuidor}
-                        contratos={contratos}
-                        setContratos={setContratos}
-                        terceirizada={terceirizada}
-                        values={values}
-                      />
-                      <LotesFormSet
-                        ehDistribuidor={ehDistribuidor}
-                        lotesSelecionados={lotesSelecionados}
-                        setLotesSelecionados={setLotesSelecionados}
-                        terceirizada={terceirizada}
-                      />
-                      <ModalCadastroEmpresa
-                        titulo={tituloModal}
-                        values={values}
-                        onSubmit={() => handleSubmit()}
-                        closeModal={fecharModal}
-                        showModal={exibirModal}
-                      />
-                      {/* Situação */}
-                      {ehDistribuidor && (
-                        <div className="card-body">
-                          <div className="w-25">
-                            <Field
-                              component={Select}
-                              label="Situação"
-                              name="situacao"
-                              required
-                              options={[
-                                {
-                                  nome: "Selecione...",
-                                  uuid: "",
-                                },
-                                {
-                                  nome: "Ativo",
-                                  uuid: true,
-                                },
-                                {
-                                  nome: "Inativo",
-                                  uuid: false,
-                                },
-                              ]}
-                            />
-                          </div>
-                        </div>
-                      )}
-                      {/* /Situação */}
+              <Form
+                initialValues={initialValuesForm}
+                onSubmit={onSubmit}
+                render={({ form, handleSubmit, values }) => (
+                  <form onSubmit={handleSubmit}>
+                    <DadosEmpresa ehDistribuidor={ehDistribuidor} />
+                    <EnderecoEmpresa
+                      values={values}
+                      ehDistribuidor={ehDistribuidor}
+                      contatosEmpresaForm={contatosEmpresaForm}
+                      setContatosEmpresaForm={setContatosEmpresaForm}
+                      contatosEmpresa={contatosEmpresa}
+                      setContatosEmpresa={setContatosEmpresa}
+                    />
+                    <AdministradorSistemaFormSet
+                      ehDistribuidor={ehDistribuidor}
+                      superUser={superUser}
+                      setSuperUser={setSuperUser}
+                    />
+                    <UsuarioResponsavel ehDistribuidor={ehDistribuidor} />
+                    <ContatoFormSet
+                      ehDistribuidor={ehDistribuidor}
+                      values={values}
+                      contatosPessoaEmpresa={contatosPessoaEmpresa}
+                      setContatosPessoaEmpresa={setContatosPessoaEmpresa}
+                    />
+                    <NutricionistaFormSet
+                      ehDistribuidor={ehDistribuidor}
+                      contatosTerceirizadaForm={contatosTerceirizadaForm}
+                      setContatosTerceirizadaForm={setContatosTerceirizadaForm}
+                      contatosNutricionista={contatosNutricionista}
+                      setContatosNutricionista={setContatosNutricionista}
+                    />
+                    <ContratosFormSet
+                      ehDistribuidor={ehDistribuidor}
+                      contratos={contratos}
+                      setContratos={setContratos}
+                      terceirizada={terceirizada}
+                      values={values}
+                      numerosContratosCadastrados={
+                        numerosContratosCadastrados.current
+                      }
+                    />
+                    <LotesFormSet
+                      ehDistribuidor={ehDistribuidor}
+                      lotesSelecionados={lotesSelecionados}
+                      setLotesSelecionados={setLotesSelecionados}
+                      terceirizada={terceirizada}
+                    />
+                    <ModalCadastroEmpresa
+                      titulo={tituloModal}
+                      values={values}
+                      onSubmit={() => handleSubmit()}
+                      closeModal={fecharModal}
+                      showModal={exibirModal}
+                    />
+                    {/* Situação */}
+                    {ehDistribuidor && (
                       <div className="card-body">
-                        <div className="row mt-5">
-                          {uuid === null ? (
-                            <div className="col-12 text-right">
-                              <Botao
-                                texto="Cancelar"
-                                onClick={() => form.restart()}
-                                type={BUTTON_TYPE.BUTTON}
-                                style={BUTTON_STYLE.GREEN_OUTLINE}
-                              />
-                              <Botao
-                                texto={"Salvar"}
-                                className="ml-3"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  abrirModal();
-                                }}
-                                type={BUTTON_TYPE.SUBMIT}
-                                style={BUTTON_STYLE.GREEN}
-                              />
-                            </div>
-                          ) : (
-                            <div className="col-12 text-right">
-                              <Link to="/configuracoes/cadastros/empresas-cadastradas">
-                                <Botao
-                                  texto="Cancelar"
-                                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                                />
-                              </Link>
-                              <Botao
-                                texto={"Atualizar"}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  abrirModal();
-                                }}
-                                className="ml-3"
-                                type={BUTTON_TYPE.SUBMIT}
-                                style={BUTTON_STYLE.GREEN}
-                              />
-                            </div>
-                          )}
+                        <div className="w-25">
+                          <Field
+                            component={Select}
+                            label="Situação"
+                            name="situacao"
+                            required
+                            options={[
+                              {
+                                nome: "Selecione...",
+                                uuid: "",
+                              },
+                              {
+                                nome: "Ativo",
+                                uuid: true,
+                              },
+                              {
+                                nome: "Inativo",
+                                uuid: false,
+                              },
+                            ]}
+                          />
                         </div>
                       </div>
-                    </form>
-                  )}
-                />
-              )}
+                    )}
+                    {/* /Situação */}
+                    <div className="card-body">
+                      <div className="row mt-5">
+                        {uuid === null ? (
+                          <div className="col-12 text-right">
+                            <Botao
+                              texto="Cancelar"
+                              onClick={() => form.restart()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto={"Salvar"}
+                              className="ml-3"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                abrirModal();
+                              }}
+                              type={BUTTON_TYPE.SUBMIT}
+                              style={BUTTON_STYLE.GREEN}
+                            />
+                          </div>
+                        ) : (
+                          <div className="col-12 text-right">
+                            <Link to="/configuracoes/cadastros/empresas-cadastradas">
+                              <Botao
+                                texto="Cancelar"
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                              />
+                            </Link>
+                            <Botao
+                              texto={"Atualizar"}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                abrirModal();
+                              }}
+                              className="ml-3"
+                              type={BUTTON_TYPE.SUBMIT}
+                              style={BUTTON_STYLE.GREEN}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </form>
+                )}
+              />
             </div>
           </div>
         </div>

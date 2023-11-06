@@ -6,33 +6,55 @@ import {
   CADASTROS,
   CONFIGURACOES,
   NOVA_PERMISSAO_LANCAMENTO_ESPECIAL,
+  EDITAR_PERMISSAO_LANCAMENTO_ESPECIAL,
   TIPOS_ALIMENTACAO,
   PERMISSAO_LANCAMENTOS_ESPECIAIS,
 } from "../../configs/constants";
+import { useHistory } from "react-router-dom";
 
-const atual = {
-  href: `/${CONFIGURACOES}/${CADASTROS}/${TIPOS_ALIMENTACAO}/${PERMISSAO_LANCAMENTOS_ESPECIAIS}/${NOVA_PERMISSAO_LANCAMENTO_ESPECIAL}`,
-  titulo: "Nova Permissão de Lançamento Especial",
+export default () => {
+  const breadcrumbURL = () => {
+    const history = useHistory();
+    if (history.location.pathname.includes("editar")) {
+      return EDITAR_PERMISSAO_LANCAMENTO_ESPECIAL;
+    } else {
+      return NOVA_PERMISSAO_LANCAMENTO_ESPECIAL;
+    }
+  };
+
+  const breadcrumbTitle = () => {
+    const history = useHistory();
+    if (history.location.pathname.includes("editar")) {
+      return "Editar Permissão de Lançamento Especial";
+    } else {
+      return "Nova Permissão de Lançamento Especial";
+    }
+  };
+
+  const atual = {
+    href: `/${CONFIGURACOES}/${CADASTROS}/${TIPOS_ALIMENTACAO}/${PERMISSAO_LANCAMENTOS_ESPECIAIS}/${breadcrumbURL()}`,
+    titulo: breadcrumbTitle(),
+  };
+
+  const anteriores = [
+    {
+      href: `/${CONFIGURACOES}/${CADASTROS}`,
+      titulo: "Cadastros",
+    },
+    {
+      href: `/${CONFIGURACOES}/${CADASTROS}/${TIPOS_ALIMENTACAO}`,
+      titulo: "Cadastro de tipo de alimentação",
+    },
+    {
+      href: `/${CONFIGURACOES}/${CADASTROS}/${TIPOS_ALIMENTACAO}/${PERMISSAO_LANCAMENTOS_ESPECIAIS}`,
+      titulo: "Permissão de Lançamentos Especiais",
+    },
+  ];
+
+  return (
+    <Page titulo={atual.titulo} botaoVoltar>
+      <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
+      <NovaPermissaoLancamentoEspecial />
+    </Page>
+  );
 };
-
-const anteriores = [
-  {
-    href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros",
-  },
-  {
-    href: `/${CONFIGURACOES}/${CADASTROS}/${TIPOS_ALIMENTACAO}`,
-    titulo: "Cadastro de tipo de alimentação",
-  },
-  {
-    href: `/${CONFIGURACOES}/${CADASTROS}/${TIPOS_ALIMENTACAO}/${PERMISSAO_LANCAMENTOS_ESPECIAIS}`,
-    titulo: "Permissão de Lançamentos Especiais",
-  },
-];
-
-export default () => (
-  <Page titulo={atual.titulo} botaoVoltar>
-    <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
-    <NovaPermissaoLancamentoEspecial />
-  </Page>
-);

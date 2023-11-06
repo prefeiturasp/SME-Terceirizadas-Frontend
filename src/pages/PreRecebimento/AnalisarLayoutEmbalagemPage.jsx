@@ -8,7 +8,7 @@ import {
   PRE_RECEBIMENTO,
   ANALISAR_LAYOUT_EMBALAGEM,
 } from "configs/constants";
-import Detalhar from "../../components/screens/PreRecebimento/LayoutEmbalagem/components/Detalhar";
+import Analisar from "../../components/screens/PreRecebimento/LayoutEmbalagem/components/Analisar";
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}/${ANALISAR_LAYOUT_EMBALAGEM}`,
@@ -31,6 +31,6 @@ const voltarPara = `/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`;
 export default () => (
   <Page botaoVoltar voltarPara={voltarPara} titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-    <Detalhar analise />
+    <Analisar />
   </Page>
 );

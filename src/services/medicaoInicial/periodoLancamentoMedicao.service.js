@@ -202,6 +202,15 @@ export const criarPermissaoLancamentoEspecial = async (payload) => {
   }
 };
 
+export const atualizarPermissaoLancamentoEspecial = async (payload, uuid) => {
+  const url = `medicao-inicial/permissao-lancamentos-especiais/${uuid}/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const getDiasParaCorrecao = async (params) => {
   const url = "medicao-inicial/dias-para-corrigir/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);

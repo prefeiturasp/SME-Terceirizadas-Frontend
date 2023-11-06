@@ -34,7 +34,9 @@ import {
 import {
   getFeriadosNoMesComNome,
   getDiasCalendario,
+  getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
 import {
   MEDICAO_STATUS_DE_PROGRESSO,
   OCORRENCIA_STATUS_DE_PROGRESSO,
@@ -45,7 +47,11 @@ import { ModalEnviarParaCodaeECodaeAprovar } from "./components/ModalEnviarParaC
 import { ModalSolicitarCorrecaoUE } from "./components/ModalSolicitarCorrecaoUE";
 import { ModalHistoricoCorrecoesPeriodo } from "./components/ModalHistoricoCorrecoesPeriodo";
 import ModalHistorico from "components/Shareable/ModalHistorico";
-import { usuarioEhDRE, usuarioEhMedicao } from "helpers/utilities";
+import {
+  ehEscolaTipoCEI,
+  usuarioEhDRE,
+  usuarioEhMedicao,
+} from "helpers/utilities";
 
 export const ConferenciaDosLancamentos = () => {
   const location = useLocation();
@@ -91,6 +97,7 @@ export const ConferenciaDosLancamentos = () => {
 
   const [feriadosNoMes, setFeriadosNoMes] = useState();
   const [diasCalendario, setDiasCalendario] = useState();
+  const [diasSobremesaDoce, setDiasSobremesaDoce] = useState();
 
   const visualizarModal = () => {
     setShowModal(true);
@@ -259,10 +266,27 @@ export const ConferenciaDosLancamentos = () => {
     dados_iniciais && setDadosIniciais(dados_iniciais);
   };
 
+  const getListaDiasSobremesaDoceAsync = async () => {
+    const escola_uuid = location.state.escolaUuid;
+    const params = {
+      mes: Number(mesSolicitacao),
+      ano: Number(anoSolicitacao),
+      escola_uuid,
+    };
+    const response = await getListaDiasSobremesaDoce(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setDiasSobremesaDoce(response.data);
+    } else {
+      toastError("Erro ao carregar dias de sobremesa doce");
+    }
+  };
+
   useEffect(() => {
     if (mesSolicitacao && anoSolicitacao) {
       !feriadosNoMes && getFeriadosNoMesAsync(mesSolicitacao, anoSolicitacao);
       !diasCalendario && getDiasCalendarioAsync(mesSolicitacao, anoSolicitacao);
+      !ehEscolaTipoCEI({ nome: solicitacao.escola }) &&
+        getListaDiasSobremesaDoceAsync();
     }
   }, [mesSolicitacao, anoSolicitacao]);
 
@@ -278,10 +302,45 @@ export const ConferenciaDosLancamentos = () => {
         "Erro ao carregar períodos simples. Tente novamente mais tarde."
       );
     }
+    await getPeriodosComEventoEspecificoAsync(response_vinculos.data.results);
   };
 
-  const getHistorico = () => {
-    return historico;
+  const getPeriodosComEventoEspecificoAsync = async (
+    periodosSimplesVinculos
+  ) => {
+    const escola_uuid = location.state.escolaUuid;
+    const tipo_solicitacao = "Inclusão de";
+    const mes = Number(location.state.mes);
+    const ano = Number(location.state.ano);
+    const response =
+      await getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola({
+        escola_uuid,
+        mes,
+        ano,
+        tipo_solicitacao,
+      });
+    if (response.status === HTTP_STATUS.OK) {
+      const data = response.data.map((vinculo) => {
+        vinculo.periodo_escolar.eh_periodo_especifico = true;
+        return vinculo;
+      });
+      const nomesPeriodosNormais = periodosSimplesVinculos.map(
+        (vinculo) => vinculo.periodo_escolar.nome
+      );
+      const pEspecificos = data.filter(
+        (vinculo) =>
+          !nomesPeriodosNormais.includes(vinculo.periodo_escolar.nome)
+      );
+      let periodos = periodosSimplesVinculos.concat(pEspecificos);
+      periodos = periodos.sort((obj1, obj2) =>
+        obj1.periodo_escolar.posicao > obj2.periodo_escolar.posicao ? 1 : -1
+      );
+      setPeriodosSimples(periodos);
+    } else {
+      setErroAPI(
+        "Erro ao carregar Inclusões Autorizadas com Evento Específico. Tente novamente mais tarde."
+      );
+    }
   };
 
   useEffect(() => {
@@ -489,6 +548,10 @@ export const ConferenciaDosLancamentos = () => {
     } else {
       toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
     }
+  };
+
+  const getHistorico = () => {
+    return historico;
   };
 
   return (
@@ -741,6 +804,7 @@ export const ConferenciaDosLancamentos = () => {
                               solicitacao={solicitacao}
                               feriadosNoMes={feriadosNoMes}
                               diasCalendario={diasCalendario}
+                              diasSobremesaDoce={diasSobremesaDoce}
                             />,
                           ];
                         })}
