@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
-import { Collapse, Input, Select } from "antd";
+import { Collapse, Input } from "antd";
 import Botao from "components/Shareable/Botao";
-import { CaretDownOutlined } from "@ant-design/icons";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   BUTTON_ICON,
@@ -16,6 +15,7 @@ import {
   setSolicitacaoMedicaoInicial,
   updateSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 
 export default ({
   periodoSelecionado,
@@ -25,8 +25,9 @@ export default ({
   onClickInfoBasicas,
 }) => {
   const [tiposDeContagem, setTiposDeContagem] = useState([]);
-  const [tipoDeContagemSelecionada, setTipoDeContagemSelecionada] =
-    useState(null);
+  const [tipoDeContagemSelecionada, setTipoDeContagemSelecionada] = useState(
+    []
+  );
   const [responsaveis, setResponsaveis] = useState([
     {
       nome: "",
@@ -43,9 +44,7 @@ export default ({
   ]);
   const [emEdicao, setEmEdicao] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { Option } = Select;
   const { Panel } = Collapse;
-  const [openSelect, setOpenSelect] = useState(false);
 
   const location = useLocation();
 
@@ -62,7 +61,7 @@ export default ({
       });
       setResponsaveis(resps);
       setTipoDeContagemSelecionada(
-        solicitacaoMedicaoInicial.tipo_contagem_alimentacoes.uuid
+        solicitacaoMedicaoInicial.tipos_contagem_alimentacao.map((t) => t.uuid)
       );
     }
     if (!solicitacaoMedicaoInicial) {
@@ -76,7 +75,7 @@ export default ({
 
   const opcoesContagem = tiposDeContagem
     ? tiposDeContagem.map((tipo) => {
-        return <Option key={tipo.uuid}>{tipo.nome}</Option>;
+        return { value: tipo.uuid, label: tipo.nome };
       })
     : [];
 
@@ -127,15 +126,15 @@ export default ({
     return component;
   };
 
-  const handleChangeTipoContagem = (value) => {
-    setTipoDeContagemSelecionada(value);
+  const handleChangeTipoContagem = (values) => {
+    setTipoDeContagemSelecionada(values);
   };
 
   const handleClickEditar = () => {
     setEmEdicao(true);
     !solicitacaoMedicaoInicial &&
       opcoesContagem.length > 0 &&
-      setTipoDeContagemSelecionada(tiposDeContagem[0].uuid);
+      setTipoDeContagemSelecionada([tiposDeContagem[0].uuid]);
   };
 
   const handleClickSalvar = async () => {
@@ -163,10 +162,12 @@ export default ({
     if (solicitacaoMedicaoInicial) {
       let data = new FormData();
       data.append("escola", String(escolaInstituicao.uuid));
-      data.append(
-        "tipo_contagem_alimentacoes",
-        String(tipoDeContagemSelecionada)
-      );
+      for (let index = 0; index < tipoDeContagemSelecionada.length; index++) {
+        data.append(
+          "tipos_contagem_alimentacao[]",
+          tipoDeContagemSelecionada[index]
+        );
+      }
       data.append("responsaveis", JSON.stringify(responsaveisPayload));
       const response = await updateSolicitacaoMedicaoInicial(
         solicitacaoMedicaoInicial.uuid,
@@ -210,7 +211,7 @@ export default ({
     } else {
       const payload = {
         escola: escolaInstituicao.uuid,
-        tipo_contagem_alimentacoes: tipoDeContagemSelecionada,
+        tipos_contagem_alimentacao: tipoDeContagemSelecionada,
         responsaveis: responsaveisPayload,
         mes: format(new Date(periodoSelecionado), "MM").toString(),
         ano: getYear(new Date(periodoSelecionado)).toString(),
@@ -230,7 +231,9 @@ export default ({
 
   const getDefaultValueSelectTipoContagem = () => {
     if (solicitacaoMedicaoInicial)
-      return solicitacaoMedicaoInicial.tipo_contagem_alimentacoes.nome;
+      return solicitacaoMedicaoInicial.tipos_contagem_alimentacao.map(
+        (t) => t.nome
+      );
     if (opcoesContagem.length) return tiposDeContagem[0].nome;
   };
 
@@ -250,22 +253,20 @@ export default ({
                     Método de Contagem das Alimentações Servidas
                   </b>
                   {opcoesContagem.length > 0 && (
-                    <Select
-                      suffixIcon={
-                        <CaretDownOutlined
-                          onClick={() => setOpenSelect(!openSelect)}
-                        />
-                      }
+                    <StatefulMultiSelect
                       name="contagem_refeicoes"
-                      open={openSelect}
-                      onClick={() => setOpenSelect(!openSelect)}
-                      defaultValue={getDefaultValueSelectTipoContagem()}
-                      onChange={(value) => handleChangeTipoContagem(value)}
-                      className="mt-2"
+                      selected={tipoDeContagemSelecionada}
+                      options={opcoesContagem || []}
+                      onSelectedChanged={(values) =>
+                        handleChangeTipoContagem(values)
+                      }
+                      hasSelectAll={false}
+                      overrideStrings={{
+                        selectSomeItems: "Selecione os métodos de contagem",
+                        allItemsAreSelected: "Todos os métodos selecionados",
+                      }}
                       disabled={!emEdicao}
-                    >
-                      {opcoesContagem}
-                    </Select>
+                    />
                   )}
                 </div>
                 <div className="col-7 info-label">
