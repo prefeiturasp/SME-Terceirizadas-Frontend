@@ -592,11 +592,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                           ? moment().toDate()
                           : proximosDoisDiasUteis
                       }
-                      maxDate={
-                        maximo5DiasUteis
-                          ? proximosCincoDiasUteis
-                          : fimDoCalendario()
-                      }
+                      maxDate={fimDoCalendario()}
                     />
                     <OnChange name="data_inicial">
                       {(value) => {
@@ -620,11 +616,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       minDate={
                         values.data_inicial && getDataObj(values.data_inicial)
                       }
-                      maxDate={
-                        maximo5DiasUteis
-                          ? proximosCincoDiasUteis
-                          : fimDoCalendario()
-                      }
+                      maxDate={fimDoCalendario()}
                     />
                     <OnChange name="data_final">
                       {(value) => {
