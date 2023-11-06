@@ -6,7 +6,10 @@ import {
   EscolasComPermissoesLancamentosEspeciaisInterface,
   PermissaoLancamentosEspeciaisInterface,
 } from "interfaces/medicao_inicial.interface";
-import { DocumentosRecebimento } from "./pre_recebimento.interface";
+import {
+  DocumentosRecebimento,
+  DocumentosRecebimentoDetalhado,
+} from "./pre_recebimento.interface";
 
 export interface ResponseInterface {
   data: Object;
@@ -58,4 +61,9 @@ export interface ResponseDocumentosRecebimento extends ResponseInterface {
     previous: string | null;
     results: DocumentosRecebimento[];
   };
+}
+
+export interface ResponseDocumentosRecebimentoDetalhado
+  extends ResponseInterface {
+  data: DocumentosRecebimentoDetalhado;
 }
