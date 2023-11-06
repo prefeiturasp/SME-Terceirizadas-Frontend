@@ -11,7 +11,7 @@ import Detalhar from "components/screens/PreRecebimento/DocumentosRecebimento/co
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}`,
-  titulo: "Detalhar Documentos de Recebimento",
+  titulo: "Detalhar Documento de Recebimento",
 };
 
 const anteriores = [
