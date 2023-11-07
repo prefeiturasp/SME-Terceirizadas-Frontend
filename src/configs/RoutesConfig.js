@@ -270,6 +270,7 @@ import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutE
 import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayoutEmbalagemPage";
 import DocumentosRecebimentoPage from "../pages/PreRecebimento/DocumentosRecebimentoPage";
 import CadastroDocumentosRecebimentoPage from "../pages/PreRecebimento/CadastroDocumentosRecebimentoPage";
+import DetalharDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharDocumentosRecebimentoPage";
 
 const routesConfig = [
   {
@@ -1985,6 +1986,12 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_DOCUMENTOS_RECEBIMENTO}`,
     component: CadastroDocumentosRecebimentoPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_DOCUMENTO_RECEBIMENTO}`,
+    component: DetalharDocumentosRecebimentoPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },

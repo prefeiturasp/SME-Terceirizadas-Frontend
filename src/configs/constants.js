@@ -243,6 +243,7 @@ export const ENVIADOS_PARA_CORRECAO = "enviados-para-correcao";
 export const DOCUMENTOS_RECEBIMENTO = "documentos-recebimento";
 export const CADASTRO_DOCUMENTOS_RECEBIMENTO =
   "cadastro-documentos-recebimento";
+export const DETALHAR_DOCUMENTO_RECEBIMENTO = "detalhe-documento-recebimento";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";

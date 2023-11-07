@@ -7,7 +7,7 @@ import {
 } from "services/layoutEmbalagem.service";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { Field, Form } from "react-final-form";
-import BotaoAnexo from "../Detalhar/components/BotaoAnexo";
+import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
 import InputFile from "components/Shareable/Input/InputFile";
 import { DEZ_MB } from "../../../../../../constants/shared";
 import Botao from "../../../../../Shareable/Botao";

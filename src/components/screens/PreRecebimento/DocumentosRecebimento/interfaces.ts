@@ -1,29 +1,21 @@
-export interface Arquivo {
+import {
+  TiposDocumentoChoices,
+  Arquivo,
+} from "interfaces/pre_recebimento.interface";
+
+export interface ArquivoForm {
   nome: string;
   base64: string;
 }
 
-export interface ArquivoPayload {
-  nome: string;
-  arquivo: string;
-}
-
 export interface OptionMultiselect {
-  value: string;
+  value: TiposDocumentoChoices;
   label: string;
 }
 
-export type TiposDocumento =
-  | "LAUDO"
-  | "DECLARACAO_LEI_1512010"
-  | "CERTIFICADO_CONF_ORGANICA"
-  | "RASTREABILIDADE"
-  | "DECLARACAO_MATERIA_ORGANICA"
-  | "OUTROS";
-
 export interface TiposDocumentosPayload {
-  tipo_documento: TiposDocumento;
-  arquivos_do_tipo_de_documento: Array<ArquivoPayload>;
+  tipo_documento: TiposDocumentoChoices;
+  arquivos_do_tipo_de_documento: Array<Arquivo>;
   descricao_documento?: string;
 }
 
@@ -34,7 +26,7 @@ export interface DocumentosRecebimentoPayload {
 }
 
 export interface DocumentosState {
-  [key: string]: Array<ArquivoPayload>;
+  [key: string]: Array<Arquivo>;
 }
 
 export interface FiltrosDocumentosRecebimento {

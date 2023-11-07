@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
 import { detalharLayoutEmabalagem } from "services/layoutEmbalagem.service";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
-import BotaoAnexo from "./components/BotaoAnexo";
+import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
