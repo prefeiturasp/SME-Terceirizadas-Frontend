@@ -1,14 +1,31 @@
 import React, { useEffect, useState } from "react";
-import Botao from "components/Shareable/Botao";
-import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
-import { CORES } from "../LancamentoPorPeriodo/helpers";
-import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
-import CardLancamentoCEI from "./CardLancamentoCEI";
-import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import HTTP_STATUS from "http-status-codes";
-import { toastError } from "components/Shareable/Toast/dialogs";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "components/Shareable/Botao/constants";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
+import CardLancamentoCEI from "./CardLancamentoCEI";
 import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
+import {
+  CORES,
+  renderBotaoEnviarCorrecao,
+  verificaSeEnviarCorrecaoDisabled,
+} from "../LancamentoPorPeriodo/helpers";
+import {
+  getError,
+  usuarioEhEscolaTerceirizadaDiretor,
+} from "helpers/utilities";
+import { relatorioMedicaoInicialPDF } from "services/relatorios";
+import {
+  escolaEnviaCorrecaoMedicaoInicialCODAE,
+  escolaEnviaCorrecaoMedicaoInicialDRE,
+  getQuantidadeAlimentacoesLancadasPeriodoGrupo,
+  getSolicitacaoMedicaoInicial,
+} from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
 export default ({
   solicitacaoMedicaoInicial,
@@ -17,43 +34,19 @@ export default ({
   onClickInfoBasicas,
   setObjSolicitacaoMIFinalizada,
   setFinalizandoMedicao,
+  setSolicitacaoMedicaoInicial,
+  mes,
+  ano,
 }) => {
   const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
     useState(false);
-
-  const quantidadeAlimentacoesLancadas = [
-    {
-      nome_periodo_grupo: "INTEGRAL",
-      status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
-      qtd_alunos: 100,
-      qtd_refeicoes_diarias: 5,
-      valor_total: 500,
-    },
-    {
-      nome_periodo_grupo: "PARCIAL",
-      status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
-      qtd_alunos: 100,
-      qtd_refeicoes_diarias: 3,
-      valor_total: 300,
-    },
-    {
-      nome_periodo_grupo: "MANHA",
-      status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
-      qtd_alunos: 100,
-      qtd_refeicoes_diarias: 2,
-      valor_total: 200,
-    },
-    {
-      nome_periodo_grupo: "TARDE",
-      status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
-      qtd_alunos: 100,
-      qtd_refeicoes_diarias: 2,
-      valor_total: 200,
-    },
-  ];
+  const [quantidadeAlimentacoesLancadas, setQuantidadeAlimentacoesLancadas] =
+    useState(undefined);
+  const [showModalEnviarCorrecao, setShowModalEnviarCorrecao] = useState(false);
+  const [desabilitaSim, setDesabilitaSim] = useState(false);
 
   const gerarPDFMedicaoInicial = async () => {
     const response = await relatorioMedicaoInicialPDF(
@@ -87,20 +80,63 @@ export default ({
     );
   };
 
+  const escolaEnviaCorrecaoDreCodae = async () => {
+    setDesabilitaSim(true);
+    const endpoint =
+      solicitacaoMedicaoInicial.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+        ? escolaEnviaCorrecaoMedicaoInicialCODAE
+        : escolaEnviaCorrecaoMedicaoInicialDRE;
+    const response = await endpoint(solicitacaoMedicaoInicial.uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Correção da Medição Inicial enviada com sucesso!");
+      getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
+      getSolicitacaoMedicaoInicialAsync();
+      setShowModalEnviarCorrecao(false);
+    } else {
+      toastError(getError(response.data));
+    }
+    setDesabilitaSim(false);
+  };
+
+  const getSolicitacaoMedicaoInicialAsync = async () => {
+    const payload = {
+      escola: escolaInstituicao.uuid,
+      mes: mes,
+      ano: ano,
+    };
+
+    const solicitacao = await getSolicitacaoMedicaoInicial(payload);
+    setSolicitacaoMedicaoInicial(solicitacao.data[0]);
+  };
+
+  const getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync = async () => {
+    const params = { uuid_solicitacao: solicitacaoMedicaoInicial.uuid };
+    const response = await getQuantidadeAlimentacoesLancadasPeriodoGrupo(
+      params
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setQuantidadeAlimentacoesLancadas(response.data.results);
+    } else {
+      toastError(
+        "Erro ao carregar quantidades de alimentações lançadas. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  useEffect(() => {
+    solicitacaoMedicaoInicial &&
+      getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
+  }, [periodoSelecionado, solicitacaoMedicaoInicial]);
+
   return (
     <div>
-      {solicitacaoMedicaoInicial && (
+      {solicitacaoMedicaoInicial && quantidadeAlimentacoesLancadas && (
         <>
           <div className="row pb-2">
             <div className="col">
               <b className="section-title">Períodos</b>
             </div>
           </div>
-          <ModalSolicitacaoDownload
-            show={exibirModalCentralDownloads}
-            setShow={setExibirModalCentralDownloads}
-          />
-
           {periodosComAlunos.map((nomePeriodo, index) => (
             <CardLancamentoCEI
               key={index}
@@ -122,12 +158,28 @@ export default ({
                 onClick={() => setShowModalFinalizarMedicao(true)}
               />
             ) : (
-              <Botao
-                texto="Exportar PDF"
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right mr-3"
-                onClick={() => gerarPDFMedicaoInicial()}
-              />
+              <div className="row">
+                <div className="col-12 text-right">
+                  <Botao
+                    texto="Exportar PDF"
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={() => gerarPDFMedicaoInicial()}
+                  />
+                  {renderBotaoEnviarCorrecao(solicitacaoMedicaoInicial) && (
+                    <Botao
+                      texto="Enviar Correção"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
+                      onClick={() => setShowModalEnviarCorrecao(true)}
+                      disabled={verificaSeEnviarCorrecaoDisabled(
+                        quantidadeAlimentacoesLancadas,
+                        solicitacaoMedicaoInicial
+                      )}
+                    />
+                  )}
+                </div>
+              </div>
             )}
           </div>
           <ModalFinalizarMedicao
@@ -139,6 +191,32 @@ export default ({
             onClickInfoBasicas={onClickInfoBasicas}
             setErrosAoSalvar={() => {}}
             setFinalizandoMedicao={setFinalizandoMedicao}
+          />
+          <ModalSolicitacaoDownload
+            show={exibirModalCentralDownloads}
+            setShow={setExibirModalCentralDownloads}
+          />
+          <ModalPadraoSimNao
+            showModal={showModalEnviarCorrecao}
+            closeModal={() => setShowModalEnviarCorrecao(false)}
+            tituloModal={`Enviar Correção para ${
+              solicitacaoMedicaoInicial.status ===
+              "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                ? "CODAE"
+                : "DRE"
+            }`}
+            descricaoModal={
+              <p className="col-12 my-3 p-0">
+                Deseja enviar a correção para{" "}
+                {solicitacaoMedicaoInicial.status ===
+                "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                  ? "CODAE"
+                  : "DRE"}
+                ?
+              </p>
+            }
+            funcaoSim={escolaEnviaCorrecaoDreCodae}
+            desabilitaSim={desabilitaSim}
           />
         </>
       )}

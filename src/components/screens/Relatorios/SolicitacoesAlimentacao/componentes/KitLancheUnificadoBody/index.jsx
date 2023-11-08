@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { usuarioEhEscolaTerceirizadaQualquerPerfil } from "helpers/utilities";
 
 export const KitLancheUnificadoBody = ({ ...props }) => {
   const { solicitacao, item, index, filtros, labelData } = props;
@@ -10,11 +11,19 @@ export const KitLancheUnificadoBody = ({ ...props }) => {
       <td>
         {item.dre_iniciais} - {item.lote_nome}
       </td>
-      {filtros.status && filtros.status === "RECEBIDAS" ? (
-        <td>Várias Terceirizadas</td>
-      ) : (
-        <td>Várias Escolas</td>
-      )}
+      {filtros.status === "RECEBIDAS" && <td>Várias Terceirizadas</td>}
+      {filtros.status !== "RECEBIDAS" &&
+        !usuarioEhEscolaTerceirizadaQualquerPerfil() && (
+          <td>
+            {solicitacao.escolas_quantidades.length > 1
+              ? `${solicitacao.escolas_quantidades.length} Escolas`
+              : `${solicitacao.escolas_quantidades[0].escola.nome}`}
+          </td>
+        )}
+      {filtros.status !== "RECEBIDAS" &&
+        usuarioEhEscolaTerceirizadaQualquerPerfil() && (
+          <td>{solicitacao.escolas_quantidades[0].escola.nome}</td>
+        )}
       <td>{item.desc_doc}</td>
       <td className="text-center">
         {item.data_evento}{" "}
@@ -22,9 +31,14 @@ export const KitLancheUnificadoBody = ({ ...props }) => {
           ? `- ${item.data_evento_fim}`
           : ""}
       </td>
-      <td className="text-center">
-        {item.numero_alunos !== 0 ? item.numero_alunos : "-"}
-      </td>
+      {!usuarioEhEscolaTerceirizadaQualquerPerfil() && (
+        <td className="text-center">{item.numero_alunos || "-"}</td>
+      )}
+      {usuarioEhEscolaTerceirizadaQualquerPerfil() && (
+        <td className="text-center">
+          {solicitacao.escolas_quantidades[0].quantidade_alunos || "-"}
+        </td>
+      )}
       <td className="text-center">
         <i
           className={`fas fa-${showDetail ? "angle-up" : "angle-down"}`}

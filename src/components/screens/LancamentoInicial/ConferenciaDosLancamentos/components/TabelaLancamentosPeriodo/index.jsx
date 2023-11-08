@@ -27,6 +27,9 @@ import {
   formatarLinhasTabelasDietas,
   formatarLinhasTabelaSolicitacoesAlimentacao,
   formatarLinhasTabelaEtecAlimentacao,
+  getSolicitacoesInclusaoAutorizadasAsync,
+  getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
+  getSolicitacoesSuspensoesAutorizadasAsync,
   validacaoSemana,
 } from "components/screens/LancamentoInicial/PeriodoLancamentoMedicaoInicial/helper";
 import {
@@ -67,6 +70,13 @@ import {
   codaePedeCorrecaPeriodo,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { LegendaDiasNaoLetivos } from "../LegendaDiasNaoLetivos";
+import {
+  exibirTooltipAlteracaoAlimentacaoAutorizadaDreCodae,
+  exibirTooltipInclusaoAlimentacaoAutorizadaDreCodae,
+  exibirTooltipSuspensaoAutorizadaFrequenciaDreCodae,
+  exibirTooltipSuspensaoAutorizadaAlimentacaoDreCodae,
+  exibirTooltipRepeticaoDiasSobremesaDoceDreCodae,
+} from "../../../PeriodoLancamentoMedicaoInicial/validacoes";
 
 export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const {
@@ -83,6 +93,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     solicitacao,
     feriadosNoMes,
     diasCalendario,
+    diasSobremesaDoce,
   } = props;
 
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
@@ -115,6 +126,12 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     useState(false);
   const [showModalSalvarSolicitacao, setShowModalSalvarSolicitacao] =
     useState(false);
+  const [inclusoesAutorizadas, setInclusoesAutorizadas] = useState(null);
+  const [
+    alteracoesAlimentacaoAutorizadas,
+    setAlteracoesAlimentacaoAutorizadas,
+  ] = useState(null);
+  const [suspensoesAutorizadas, setSuspensoesAutorizadas] = useState(null);
   const [erroAPI, setErroAPI] = useState("");
 
   const exibirBotoesDRE =
@@ -445,7 +462,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   formatarLinhasTabelaAlimentacao(
                     tipos_alimentacao,
                     periodoGrupo,
-                    solicitacao
+                    solicitacao,
+                    periodo.periodo_escolar.eh_periodo_especifico
                   );
                 setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
                 const linhasTabelasDietas =
@@ -468,12 +486,49 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
             }
           }
 
+          if (
+            !ehEscolaTipoCEI({ nome: solicitacao.escola }) &&
+            periodosSimples.find(
+              (periodo) =>
+                periodo.periodo_escolar.nome === periodoGrupo.nome_periodo_grupo
+            )
+          ) {
+            const response_inclusoes_autorizadas =
+              await getSolicitacoesInclusaoAutorizadasAsync(
+                solicitacao.escola_uuid,
+                mesSolicitacao,
+                anoSolicitacao,
+                [periodoGrupo.nome_periodo_grupo]
+              );
+            setInclusoesAutorizadas(response_inclusoes_autorizadas);
+
+            const response_alteracoes_alimentacao_autorizadas =
+              await getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync(
+                solicitacao.escola_uuid,
+                mesSolicitacao,
+                anoSolicitacao,
+                periodoGrupo.nome_periodo_grupo
+              );
+            setAlteracoesAlimentacaoAutorizadas(
+              response_alteracoes_alimentacao_autorizadas
+            );
+
+            const response_suspensoes_autorizadas =
+              await getSolicitacoesSuspensoesAutorizadasAsync(
+                solicitacao.escola_uuid,
+                mesSolicitacao,
+                anoSolicitacao,
+                periodoGrupo.nome_periodo_grupo
+              );
+            setSuspensoesAutorizadas(response_suspensoes_autorizadas);
+          }
+
           setLoading(false);
           setErroAPI("");
         } catch (error) {
           setLoading(false);
           setErroAPI(
-            `Erro ao carregar período ${periodoGrupo.nome_periodo_grupo}. Tente novamente mais tarde.`
+            `Erro ao carregar período ${periodoGrupo.nome_periodo_grupo}. Tente novamente mais tarde. "${error}"`
           );
         }
       };
@@ -623,21 +678,23 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
 
   const salvarCorrecao = async (uuidMedicaoPeriodoGrupo) => {
     let uuidsValoresMedicaoParaCorrecao = [];
-    Object.keys(valoresParaCorrecao).forEach((key) => {
-      const keySplitted = key.split("__");
-      const nome_campo = keySplitted[0];
-      const dia = keySplitted[1].match(/\d/g).join("");
-      const idCategoria = keySplitted[2].match(/\d/g).join("");
-      const lancamento = valoresLancamentos.find(
-        (valor) =>
-          valor.nome_campo === nome_campo &&
-          Number(valor.dia) === Number(dia) &&
-          Number(valor.categoria_medicao) === Number(idCategoria)
-      );
+    if (!ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+      Object.keys(valoresParaCorrecao).forEach((key) => {
+        const keySplitted = key.split("__");
+        const nome_campo = keySplitted[0];
+        const dia = keySplitted[1].match(/\d/g).join("");
+        const idCategoria = keySplitted[2].match(/\d/g).join("");
+        const lancamento = valoresLancamentos.find(
+          (valor) =>
+            valor.nome_campo === nome_campo &&
+            Number(valor.dia) === Number(dia) &&
+            Number(valor.categoria_medicao) === Number(idCategoria)
+        );
 
-      const uuidValorMedicao = lancamento.uuid;
-      uuidsValoresMedicaoParaCorrecao.push(uuidValorMedicao);
-    });
+        const uuidValorMedicao = lancamento.uuid;
+        uuidsValoresMedicaoParaCorrecao.push(uuidValorMedicao);
+      });
+    }
 
     const descricao_correcao =
       values[
@@ -1083,6 +1140,100 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                             periodoGrupo,
                                             solicitacao
                                           )}
+                                          exibeTooltipPadraoRepeticaoDiasSobremesaDoce={
+                                            !ehEscolaTipoCEI({
+                                              nome: solicitacao.escola,
+                                            }) &&
+                                            exibirTooltipRepeticaoDiasSobremesaDoceDreCodae(
+                                              semanaSelecionada,
+                                              mesSolicitacao,
+                                              anoSolicitacao,
+                                              diasSobremesaDoce,
+                                              column,
+                                              row,
+                                              categoria
+                                            )
+                                          }
+                                          exibeTooltipInclusaoAlimentacaoAutorizadaDreCodae={
+                                            !ehEscolaTipoCEI({
+                                              nome: solicitacao.escola,
+                                            }) &&
+                                            periodosSimples.find(
+                                              (periodo) =>
+                                                periodo.periodo_escolar.nome ===
+                                                periodoGrupo.nome_periodo_grupo
+                                            ) &&
+                                            exibirTooltipInclusaoAlimentacaoAutorizadaDreCodae(
+                                              semanaSelecionada,
+                                              inclusoesAutorizadas,
+                                              column,
+                                              row,
+                                              categoria
+                                            )
+                                          }
+                                          exibeTooltipAlteracaoAlimentacaoAutorizadaDreCodae={
+                                            !ehEscolaTipoCEI({
+                                              nome: solicitacao.escola,
+                                            }) &&
+                                            periodosSimples.find(
+                                              (periodo) =>
+                                                periodo.periodo_escolar.nome ===
+                                                periodoGrupo.nome_periodo_grupo
+                                            ) &&
+                                            exibirTooltipAlteracaoAlimentacaoAutorizadaDreCodae(
+                                              semanaSelecionada,
+                                              alteracoesAlimentacaoAutorizadas,
+                                              column,
+                                              row,
+                                              categoria
+                                            )
+                                          }
+                                          exibeTooltipSuspensaoAutorizadaFrequenciaDreCodae={
+                                            !ehEscolaTipoCEI({
+                                              nome: solicitacao.escola,
+                                            }) &&
+                                            periodosSimples.find(
+                                              (periodo) =>
+                                                periodo.periodo_escolar.nome ===
+                                                periodoGrupo.nome_periodo_grupo
+                                            ) &&
+                                            exibirTooltipSuspensaoAutorizadaFrequenciaDreCodae(
+                                              semanaSelecionada,
+                                              suspensoesAutorizadas,
+                                              column,
+                                              row,
+                                              categoria,
+                                              periodosSimples.find(
+                                                (periodo) =>
+                                                  periodo.periodo_escolar
+                                                    .nome ===
+                                                  periodoGrupo.nome_periodo_grupo
+                                              )
+                                            )
+                                          }
+                                          exibeTooltipSuspensaoAutorizadaAlimentacaoDreCodae={
+                                            !ehEscolaTipoCEI({
+                                              nome: solicitacao.escola,
+                                            }) &&
+                                            periodosSimples.find(
+                                              (periodo) =>
+                                                periodo.periodo_escolar.nome ===
+                                                periodoGrupo.nome_periodo_grupo
+                                            ) &&
+                                            exibirTooltipSuspensaoAutorizadaAlimentacaoDreCodae(
+                                              semanaSelecionada,
+                                              suspensoesAutorizadas,
+                                              column,
+                                              row,
+                                              categoria,
+                                              periodosSimples.find(
+                                                (periodo) =>
+                                                  periodo.periodo_escolar
+                                                    .nome ===
+                                                  periodoGrupo.nome_periodo_grupo
+                                              )
+                                            )
+                                          }
                                         />
                                       </div>
                                     )}

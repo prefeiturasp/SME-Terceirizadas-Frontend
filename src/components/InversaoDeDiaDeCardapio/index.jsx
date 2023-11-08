@@ -118,13 +118,12 @@ export class InversaoDeDiaDeCardapio extends Component {
     let tiposAlimentacao = [];
     for (let periodo in vinculos) {
       let listaTiposAlimentacao = vinculos[periodo].tipos_alimentacao;
-      for (let tipoAlimentacao in listaTiposAlimentacao) {
+      for (let tipoAlimentacao of listaTiposAlimentacao) {
         if (
-          !tiposAlimentacao.filter(
-            (t) => t.nome === listaTiposAlimentacao[tipoAlimentacao].nome
-          ).length > 0
+          tipoAlimentacao.nome !== "Lanche Emergencial" &&
+          !tiposAlimentacao.some((t) => t.nome === tipoAlimentacao.nome)
         ) {
-          tiposAlimentacao.push(listaTiposAlimentacao[tipoAlimentacao]);
+          tiposAlimentacao.push(tipoAlimentacao);
         }
       }
     }
@@ -361,7 +360,10 @@ export class InversaoDeDiaDeCardapio extends Component {
             validate={required}
             onBlur={(event) => this.validaDiasUteis(event.target.value)}
             onChange={(value) => this.validaDiasUteis(value)}
-            minDate={this.state[fieldDataInicial]}
+            minDate={proximos_dois_dias_uteis}
+            excludeDates={[
+              moment(this.state[fieldDataInicial]).add(-1, "days")["_d"],
+            ]}
             maxDate={
               new Date().getMonth() === JS_DATE_NOVEMBRO
                 ? fimDoCalendario()

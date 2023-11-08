@@ -2,7 +2,6 @@ import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Form } from "react-final-form";
 import { Botao } from "components/Shareable/Botao";
-import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 import { PERIODO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import {
   LANCAMENTO_INICIAL,
@@ -10,6 +9,14 @@ import {
   PERIODO_LANCAMENTO,
 } from "configs/constants";
 import "./styles.scss";
+import {
+  desabilitarBotaoEditar,
+  justificativaPeriodo,
+  nomePeriodoGrupo,
+  statusPeriodo,
+  styleBotaoCardLancamento,
+  textoBotaoCardLancamento,
+} from "../helpers";
 
 export default ({
   textoCabecalho = null,
@@ -35,23 +42,15 @@ export default ({
   const meusErros =
     errosAoSalvar &&
     errosAoSalvar.length > 0 &&
-    errosAoSalvar.filter((obj) => obj.periodo_escolar === textoCabecalho);
-
-  const nomePeriodoGrupo = () => {
-    let nome = "";
-    if (grupo) {
-      nome += grupo;
-    }
-    if (textoCabecalho) {
-      nome += textoCabecalho;
-    }
-    return nome.trim();
-  };
+    errosAoSalvar.filter((obj) =>
+      [textoCabecalho, grupo].includes(obj.periodo_escolar)
+    );
 
   const qtdAlimentacaoPeriodoFiltrada = () => {
     return quantidadeAlimentacoesLancadas.filter(
       (qtdAlimentacaoPeriodo) =>
-        qtdAlimentacaoPeriodo.nome_periodo_grupo === nomePeriodoGrupo()
+        qtdAlimentacaoPeriodo.nome_periodo_grupo ===
+        nomePeriodoGrupo(grupo, textoCabecalho)
     );
   };
 
@@ -103,25 +102,12 @@ export default ({
       ));
   }
 
-  const desabilitarBotaoEditar = () => {
-    if (
-      !solicitacaoMedicaoInicial ||
-      ["Não Preenchido", "MEDICAO_ENVIADA_PELA_UE"].includes(statusPeriodo())
-    ) {
-      return true;
-    } else if (
-      [
-        "MEDICAO_APROVADA_PELA_DRE",
-        "MEDICAO_CORRECAO_SOLICITADA",
-        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-      ].includes(solicitacaoMedicaoInicial.status) ||
-      statusPeriodo() === "MEDICAO_APROVADA_PELA_DRE"
-    ) {
-      return false;
-    }
-    return (
-      solicitacaoMedicaoInicial.status !==
-      "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE"
+  const getStatusPeriodo = () => {
+    return statusPeriodo(
+      quantidadeAlimentacoesLancadas,
+      solicitacaoMedicaoInicial,
+      grupo,
+      textoCabecalho
     );
   };
 
@@ -134,9 +120,13 @@ export default ({
         grupo,
         mesAnoSelecionado: periodoSelecionado,
         tipos_alimentacao: tipos_alimentacao,
-        status_periodo: statusPeriodo(),
+        status_periodo: getStatusPeriodo(),
         status_solicitacao: solicitacaoMedicaoInicial.status,
-        justificativa_periodo: justificativaPeriodo(),
+        justificativa_periodo: justificativaPeriodo(
+          quantidadeAlimentacoesLancadas,
+          grupo,
+          textoCabecalho
+        ),
         periodosInclusaoContinua: periodosInclusaoContinua,
         solicitacaoMedicaoInicial: solicitacaoMedicaoInicial,
         frequenciasDietasCEUGESTAO: frequenciasDietasCEUGESTAO,
@@ -144,33 +134,6 @@ export default ({
         ...location.state,
       },
     });
-  };
-
-  const statusPeriodo = () => {
-    const obj = quantidadeAlimentacoesLancadas.find(
-      (each) => each.nome_periodo_grupo === nomePeriodoGrupo()
-    );
-    if (obj) {
-      return obj.status;
-    } else if (
-      solicitacaoMedicaoInicial.status ===
-      "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE"
-    ) {
-      return solicitacaoMedicaoInicial.status;
-    } else {
-      return "Não Preenchido";
-    }
-  };
-
-  const justificativaPeriodo = () => {
-    const obj = quantidadeAlimentacoesLancadas.find(
-      (each) => each.nome_periodo_grupo === nomePeriodoGrupo()
-    );
-    if (obj) {
-      return obj.justificativa;
-    } else {
-      return null;
-    }
   };
 
   return (
@@ -194,18 +157,18 @@ export default ({
                   [
                     "MEDICAO_CORRECAO_SOLICITADA",
                     "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-                  ].includes(statusPeriodo())
+                  ].includes(getStatusPeriodo())
                     ? "red"
                     : [
                         "MEDICAO_CORRIGIDA_PELA_UE",
                         "MEDICAO_CORRIGIDA_PARA_CODAE",
-                      ].includes(statusPeriodo())
+                      ].includes(getStatusPeriodo())
                     ? "blue"
                     : ""
                 }`}
               >
-                {PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()]
-                  ? PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()].nome
+                {PERIODO_STATUS_DE_PROGRESSO[getStatusPeriodo()]
+                  ? PERIODO_STATUS_DE_PROGRESSO[getStatusPeriodo()].nome
                   : "Não Preenchido"}
               </div>
             </div>
@@ -249,55 +212,26 @@ export default ({
                 </div>
                 <div className="col-4 pr-0 d-flex flex-column">
                   <Botao
-                    texto={
-                      [
-                        "MEDICAO_APROVADA_PELA_DRE",
-                        "MEDICAO_APROVADA_PELA_CODAE",
-                      ].includes(solicitacaoMedicaoInicial.status) ||
-                      [
-                        "MEDICAO_APROVADA_PELA_DRE",
-                        "MEDICAO_APROVADA_PELA_CODAE",
-                      ].includes(statusPeriodo())
-                        ? "Visualizar"
-                        : [
-                            "MEDICAO_CORRECAO_SOLICITADA",
-                            "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-                          ].includes(solicitacaoMedicaoInicial.status) &&
-                          [
-                            "MEDICAO_CORRECAO_SOLICITADA",
-                            "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-                            "MEDICAO_CORRIGIDA_PELA_UE",
-                            "MEDICAO_CORRIGIDA_PARA_CODAE",
-                          ].includes(statusPeriodo())
-                        ? "Corrigir"
-                        : "Editar"
-                    }
-                    style={
-                      [
-                        "MEDICAO_APROVADA_PELA_DRE",
-                        "MEDICAO_APROVADA_PELA_CODAE",
-                      ].includes(solicitacaoMedicaoInicial.status) ||
-                      [
-                        "MEDICAO_APROVADA_PELA_DRE",
-                        "MEDICAO_APROVADA_PELA_CODAE",
-                      ].includes(statusPeriodo())
-                        ? BUTTON_STYLE.GREEN_OUTLINE
-                        : [
-                            "MEDICAO_CORRECAO_SOLICITADA",
-                            "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-                          ].includes(solicitacaoMedicaoInicial.status) &&
-                          [
-                            "MEDICAO_CORRECAO_SOLICITADA",
-                            "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-                            "MEDICAO_CORRIGIDA_PELA_UE",
-                            "MEDICAO_CORRIGIDA_PARA_CODAE",
-                          ].includes(statusPeriodo())
-                        ? BUTTON_STYLE.GREEN
-                        : BUTTON_STYLE.GREEN_OUTLINE
-                    }
+                    texto={textoBotaoCardLancamento(
+                      quantidadeAlimentacoesLancadas,
+                      solicitacaoMedicaoInicial,
+                      grupo,
+                      textoCabecalho
+                    )}
+                    style={styleBotaoCardLancamento(
+                      quantidadeAlimentacoesLancadas,
+                      solicitacaoMedicaoInicial,
+                      grupo,
+                      textoCabecalho
+                    )}
                     className="mt-auto"
                     onClick={() => handleClickEditar()}
-                    disabled={desabilitarBotaoEditar()}
+                    disabled={desabilitarBotaoEditar(
+                      quantidadeAlimentacoesLancadas,
+                      solicitacaoMedicaoInicial,
+                      grupo,
+                      textoCabecalho
+                    )}
                   />
                 </div>
               </div>

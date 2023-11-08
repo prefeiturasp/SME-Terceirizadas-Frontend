@@ -5,6 +5,7 @@ import {
   DETALHAR_LAYOUT_EMBALAGEM,
   CORRIGR_LAYOUT_EMBALAGEM,
   PRE_RECEBIMENTO,
+  ATUALIZAR_LAYOUT_EMBALAGEM,
 } from "../../../../../../configs/constants";
 
 export default ({ objetos, perfilFornecedor = false }) => {
@@ -39,10 +40,22 @@ export default ({ objetos, perfilFornecedor = false }) => {
       </NavLink>
     );
 
+    const botaoAtualizar = (
+      <NavLink
+        className="float-left"
+        to={`/${PRE_RECEBIMENTO}/${ATUALIZAR_LAYOUT_EMBALAGEM}?uuid=${objeto.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i title="Atualizar Layout" className="fas fa-photo-video green" />
+        </span>
+      </NavLink>
+    );
+
     return (
       <>
         {objeto.status === "Enviado para Análise" && botaoDetalharVerde}
         {objeto.status === "Solicitado Correção" && botaoCorrigirLaranja}
+        {objeto.status === "Aprovado" && botaoAtualizar}
       </>
     );
   };

@@ -221,7 +221,7 @@ export const TabelaResultado = ({ ...props }) => {
               {filtros.status && filtros.status === "RECEBIDAS" ? (
                 <th className="col-3">Terceirizada</th>
               ) : (
-                <th className="col-3">Unidade Educadional</th>
+                <th className="col-3">Unidade Educacional</th>
               )}
               <th className="col-2">Tipo de Solicitação</th>
               <th className="col-2 text-center">Data do Evento</th>

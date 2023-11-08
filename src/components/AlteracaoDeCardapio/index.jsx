@@ -142,7 +142,7 @@ class AlteracaoCardapio extends Component {
     const escola = meusDados && meusDados.vinculo_atual.instituicao.uuid;
     if (periodos.length > 0 && escola && !loadQuantidadeAlunos) {
       getQuantidaDeAlunosPorPeriodoEEscola(escola).then((response) => {
-        if (periodos !== []) {
+        if (periodos.length > 0) {
           periodos = abstraiPeriodosComAlunosMatriculados(
             periodos,
             response.results,
@@ -786,7 +786,6 @@ class AlteracaoCardapio extends Component {
   };
 
   onChangeMotivo = (uuidMotivo) => {
-    // passar periodos
     const motivo = this.props.motivos.find((d) => d.uuid === uuidMotivo);
     let periodos = this.state.periodos;
     this.setState({ motivo });
@@ -802,6 +801,8 @@ class AlteracaoCardapio extends Component {
       );
     });
     this.props.change("alterar_dia", "");
+    this.props.change("data_inicial", "");
+    this.props.change("data_final", "");
     periodos = periodos.map((periodo) => {
       periodo["substituicoes"] = [];
       return periodo;
@@ -1073,7 +1074,8 @@ class AlteracaoCardapio extends Component {
                       maxDate={fimDoCalendario()}
                       disabled={
                         this.props.alterar_dia ||
-                        (motivo && this.DisabledDataInicial(motivo))
+                        (motivo && this.DisabledDataInicial(motivo)) ||
+                        !motivo
                       }
                       onChange={(value) => {
                         this.obtemDataInicial(value);
@@ -1084,7 +1086,9 @@ class AlteracaoCardapio extends Component {
                       component={InputComData}
                       name="data_final"
                       label="Até"
-                      disabled={dataInicial === null || this.props.alterar_dia}
+                      disabled={
+                        !this.props.data_inicial || this.props.alterar_dia
+                      }
                       minDate={dataInicial}
                       maxDate={limiteDataFinal}
                     />

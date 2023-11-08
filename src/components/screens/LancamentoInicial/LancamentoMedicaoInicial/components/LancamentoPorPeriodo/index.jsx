@@ -8,6 +8,8 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
 import {
   getPeriodosInclusaoContinua,
   getSolicitacoesKitLanchesAutorizadasEscola,
@@ -24,17 +26,18 @@ import {
   getQuantidadeAlimentacoesLancadasPeriodoGrupo,
   getSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { CORES, removeObjetosDuplicados } from "./helpers";
+import {
+  CORES,
+  removeObjetosDuplicados,
+  renderBotaoEnviarCorrecao,
+  verificaSeEnviarCorrecaoDisabled,
+} from "./helpers";
 import {
   ehEscolaTipoCEUGESTAO,
   getError,
-  usuarioEhDiretorUE,
   usuarioEhEscolaTerceirizadaDiretor,
 } from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
-import { ENVIRONMENT } from "constants/config";
-import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
-import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
 
 export default ({
   escolaInstituicao,
@@ -288,7 +291,7 @@ export default ({
     }
   };
 
-  const getSolicitacaoMedicalInicial = async () => {
+  const getSolicitacaoMedicaoInicialAsync = async () => {
     const payload = {
       escola: escolaInstituicao.uuid,
       mes: mes,
@@ -320,17 +323,6 @@ export default ({
     );
   };
 
-  const renderBotaoEnviarCorrecao = () => {
-    return (
-      solicitacaoMedicaoInicial &&
-      [
-        "MEDICAO_CORRECAO_SOLICITADA",
-        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-      ].includes(solicitacaoMedicaoInicial.status) &&
-      usuarioEhDiretorUE()
-    );
-  };
-
   const escolaEnviaCorrecaoDreCodae = async () => {
     setDesabilitaSim(true);
     const endpoint =
@@ -341,33 +333,12 @@ export default ({
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Correção da Medição Inicial enviada com sucesso!");
       getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
-      getSolicitacaoMedicalInicial();
+      getSolicitacaoMedicaoInicialAsync();
       setShowModalEnviarCorrecao(false);
     } else {
       toastError(getError(response.data));
     }
     setDesabilitaSim(false);
-  };
-
-  const verificaSeEnviarCorrecaoDisabled = () => {
-    return (
-      quantidadeAlimentacoesLancadas.some(
-        (periodo) =>
-          ![
-            "MEDICAO_APROVADA_PELA_DRE",
-            "MEDICAO_APROVADA_PELA_CODAE",
-            "MEDICAO_CORRIGIDA_PELA_UE",
-            "MEDICAO_CORRIGIDA_PARA_CODAE",
-          ].includes(periodo.status)
-      ) ||
-      (solicitacaoMedicaoInicial.com_ocorrencias &&
-        ![
-          "MEDICAO_APROVADA_PELA_DRE",
-          "MEDICAO_APROVADA_PELA_CODAE",
-          "MEDICAO_CORRIGIDA_PELA_UE",
-          "MEDICAO_CORRIGIDA_PARA_CODAE",
-        ].includes(solicitacaoMedicaoInicial.ocorrencia.status))
-    );
   };
 
   const tiposAlimentacaoProgramasEProjetos = () => {
@@ -486,6 +457,7 @@ export default ({
               objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
               ehGrupoSolicitacoesDeAlimentacao={true}
               quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+              errosAoSalvar={errosAoSalvar}
             />
           )}
           {solicitacoesInclusoesEtecAutorizadas &&
@@ -499,6 +471,7 @@ export default ({
                 objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
                 ehGrupoETEC={true}
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                errosAoSalvar={errosAoSalvar}
               />
             )}
           <div className="mt-4">
@@ -528,18 +501,20 @@ export default ({
                     <Botao
                       texto="Exportar PDF"
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="mr-3"
                       onClick={() => gerarPDFMedicaoInicial()}
-                      disabled={ENVIRONMENT === "production"}
                     />
                   )}
-                  {renderBotaoEnviarCorrecao() && (
+                  {renderBotaoEnviarCorrecao(solicitacaoMedicaoInicial) && (
                     <Botao
                       texto="Enviar Correção"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
                       onClick={() => setShowModalEnviarCorrecao(true)}
-                      disabled={verificaSeEnviarCorrecaoDisabled()}
+                      disabled={verificaSeEnviarCorrecaoDisabled(
+                        quantidadeAlimentacoesLancadas,
+                        solicitacaoMedicaoInicial
+                      )}
                     />
                   )}
                 </div>

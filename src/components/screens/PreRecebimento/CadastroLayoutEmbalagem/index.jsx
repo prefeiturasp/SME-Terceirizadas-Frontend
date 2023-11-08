@@ -5,10 +5,9 @@ import { Field, Form } from "react-final-form";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 import { required } from "../../../../helpers/fieldValidators";
 import InputText from "../../../Shareable/Input/InputText";
-import { getListaCronogramasLayout } from "../../../../services/cronograma.service";
+import { getListaCronogramasPraCadastro } from "../../../../services/cronograma.service";
 import { cadastraLayoutEmbalagem } from "../../../../services/layoutEmbalagem.service";
 import { OnChange } from "react-final-form-listeners";
-import InputFile from "components/Shareable/Input/InputFile";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
@@ -17,11 +16,8 @@ import { exibeError } from "helpers/utilities";
 import { LAYOUT_EMBALAGEM, PRE_RECEBIMENTO } from "configs/constants";
 import ModalConfirmar from "./components/ModalConfirmar";
 import { useHistory } from "react-router-dom";
-import TooltipIcone from "../../../Shareable/TooltipIcone";
 import ModalCancelar from "./components/ModalCancelar";
-import { DEZ_MB } from "../../../../constants/shared";
-
-const FORMATOS_IMAGEM = "PDF, PNG, JPG ou JPEG";
+import InserirArquivo from "../LayoutEmbalagem/components/InserirArquivo";
 
 export default () => {
   const history = useHistory();
@@ -88,7 +84,7 @@ export default () => {
   };
 
   const buscaCronogramas = async () => {
-    let response = await getListaCronogramasLayout();
+    let response = await getListaCronogramasPraCadastro();
     let lista = response.data.results.map((crono) => {
       crono.value = crono.numero;
       return crono;
@@ -238,112 +234,27 @@ export default () => {
 
                 <hr />
 
-                <div className="subtitulo">
-                  <span className="required-asterisk">*</span>
-                  Layout Embalagem Primária
-                  <TooltipIcone
-                    tooltipText={
-                      "É a embalagem de acondicionamento mais próxima do produto. Ex.: Saco plástico do Macarrão."
-                    }
-                  />
-                </div>
-
-                <div className="row">
-                  <article>
-                    <Field
-                      component={InputFile}
-                      className="inputfile"
-                      texto="Inserir Layout"
-                      name="files"
-                      accept={FORMATOS_IMAGEM}
-                      setFiles={setFiles1}
-                      removeFile={removeFile1}
-                      toastSuccess={"Imagem incluída com sucesso!"}
-                      alignLeft
-                      multiple={true}
-                      limiteTamanho={DEZ_MB}
-                      concatenarNovosArquivos
-                    />
-                    <label className="col-12 label-imagem">
-                      <span className="red">Campo Obrigatório:&nbsp;</span>
-                      {"Envie um arquivo nos formatos: " +
-                        FORMATOS_IMAGEM +
-                        ", com até 10MB"}
-                    </label>
-                  </article>
-                </div>
-                <hr />
-
-                <div className="subtitulo">
-                  <span className="required-asterisk">*</span>
-                  Layout Embalagem Secundária
-                  <TooltipIcone
-                    tooltipText={
-                      "É a embalagem que envolve a embalagem primária e pode agrupar os produtos. Ex.: Caixa contendo os pacotes de Macarrão."
-                    }
-                  />
-                </div>
-
-                <div className="row">
-                  <article>
-                    <Field
-                      component={InputFile}
-                      className="inputfile"
-                      texto="Inserir Layout"
-                      name="files"
-                      accept={FORMATOS_IMAGEM}
-                      setFiles={setFiles2}
-                      removeFile={removeFile2}
-                      toastSuccess={"Imagem incluída com sucesso!"}
-                      alignLeft
-                      multiple={true}
-                      limiteTamanho={DEZ_MB}
-                      concatenarNovosArquivos
-                    />
-                    <label className="col-12 label-imagem">
-                      <span className="red">Campo Obrigatório:&nbsp;</span>
-                      {"Envie um arquivo nos formatos: " +
-                        FORMATOS_IMAGEM +
-                        ", com até 10MB"}
-                    </label>
-                  </article>
-                </div>
+                <InserirArquivo
+                  setFiles={setFiles1}
+                  removeFile={removeFile1}
+                  tipoEmbalagem={"PRIMARIA"}
+                />
 
                 <hr />
 
-                <div className="subtitulo">
-                  Layout Embalagem Terciária
-                  <TooltipIcone
-                    tooltipText={
-                      "É a embalagem de acondicionamento mais distante do produto. Ex.: Pallets contendo caixas de Macarrão."
-                    }
-                  />
-                </div>
+                <InserirArquivo
+                  setFiles={setFiles2}
+                  removeFile={removeFile2}
+                  tipoEmbalagem={"SECUNDARIA"}
+                />
 
-                <div className="row">
-                  <article>
-                    <Field
-                      component={InputFile}
-                      className="inputfile"
-                      texto="Inserir Layout"
-                      name="files"
-                      accept={FORMATOS_IMAGEM}
-                      setFiles={setFiles3}
-                      removeFile={removeFile3}
-                      toastSuccess={"Imagem incluída com sucesso!"}
-                      alignLeft
-                      multiple={true}
-                      limiteTamanho={DEZ_MB}
-                      concatenarNovosArquivos
-                    />
-                    <label className="col-12 label-imagem">
-                      <span className="red">IMPORTANTE:&nbsp;</span>
-                      {" Envie um arquivo nos formatos: " +
-                        FORMATOS_IMAGEM +
-                        ", com até 10MB"}
-                    </label>
-                  </article>
-                </div>
+                <hr />
+
+                <InserirArquivo
+                  setFiles={setFiles3}
+                  removeFile={removeFile3}
+                  tipoEmbalagem={"TERCIARIA"}
+                />
 
                 <hr />
 

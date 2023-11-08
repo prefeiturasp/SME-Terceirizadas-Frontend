@@ -24,6 +24,7 @@ export interface TipoUnidadeEscolarInterface {
 }
 
 export interface PeriodoEscolarInterface {
+  uuid: string;
   nome: string;
   posicao: number;
   possui_alunos_regulares: boolean | null;
