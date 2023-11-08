@@ -183,7 +183,12 @@ export const campoRefeicaoComRPLAutorizadaESemObservacao = (
     ).length > 0 &&
     formValuesAtualizados[
       `refeicao__dia_${column.dia}__categoria_${categoria.id}`
-    ]
+    ] &&
+    Number(
+      formValuesAtualizados[
+        `refeicao__dia_${column.dia}__categoria_${categoria.id}`
+      ]
+    ) !== 0
   ) {
     erro = true;
   }
@@ -642,7 +647,8 @@ export const validacoesTabelaAlimentacao = (
     existeAlteracaoAlimentacaoRPL &&
     inputName.includes("lanche") &&
     !inputName.includes("emergencial") &&
-    !allValues[`refeicao__dia_${dia}__categoria_${categoria}`]
+    (!allValues[`refeicao__dia_${dia}__categoria_${categoria}`] ||
+      Number(allValues[`refeicao__dia_${dia}__categoria_${categoria}`]) === 0)
   ) {
     if (Number(value) > 2 * maxFrequencia) {
       return "Lançamento maior que 2x a frequência de alunos no dia.";
@@ -787,6 +793,7 @@ export const validacoesTabelasDietas = (
     return "O número máximo de alimentações foi excedido. É preciso subtrair o aluno com Dieta Especial Autorizada do apontamento de Refeição na planilha de Alimentação.";
   } else if (
     value &&
+    Number(value) !== 0 &&
     Number(value) +
       Number(
         allValues[`lanche__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
@@ -938,10 +945,10 @@ export const exibirTooltipRPLAutorizadas = (
     formValuesAtualizados[
       `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
     ];
-
   return (
     value &&
-    (!["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    Number(value) > 0 &&
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
       (alteracao) =>
