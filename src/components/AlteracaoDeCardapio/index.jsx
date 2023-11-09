@@ -20,6 +20,7 @@ import {
 } from "../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
+  deepCopy,
   escolaEhCei,
   escolaEhCEMEI,
   fimDoCalendario,
@@ -466,82 +467,68 @@ class AlteracaoCardapio extends Component {
     );
   }
 
-  onSubmit(values) {
-    return new Promise(() => {
-      values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-      const status = values.status;
-      delete values.status;
-      const erros = validateSubmit(values, this.props.meusDados);
-      if (!erros) {
-        this.resetaTodoPeriodoCheck();
-        this.resetForm("alteracaoCardapio");
-        values = formataValues(values);
-        if (!values.uuid) {
-          escolaCriarSolicitacaoDeAlteracaoCardapio(
-            values,
-            TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-          )
-            .then(async (response) => {
-              if (response.status === HTTP_STATUS.CREATED) {
-                if (status === STATUS_DRE_A_VALIDAR) {
-                  await this.enviaAlteracaoCardapio(response.data.uuid);
-                } else {
-                  toastSuccess(
-                    "Alteração do Tipo de Alimentação salva com sucesso"
-                  );
-                  this.refresh();
-                  this.resetForm("alteracaoCardapio");
-                }
-                this.resetForm();
-              }
-              if (response.status === HTTP_STATUS.BAD_REQUEST) {
-                response.data.non_field_errors.forEach((erro) => {
-                  toastError(erro);
-                });
-              }
-            })
-            .catch((error) => {
-              toastError(getError(error.data));
-              this.resetForm("alteracaoCardapio");
-              this.refresh();
-            });
+  async onSubmit(values) {
+    let values_ = deepCopy(values);
+    values_.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+    const status = values_.status;
+    delete values_.status;
+    const erros = validateSubmit(values_, this.props.meusDados);
+    if (!erros) {
+      values_ = formataValues(values_);
+      if (!values_.uuid) {
+        const response = await escolaCriarSolicitacaoDeAlteracaoCardapio(
+          values_,
+          TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+        );
+        if (response.status === HTTP_STATUS.CREATED) {
+          if (status === STATUS_DRE_A_VALIDAR) {
+            await this.enviaAlteracaoCardapio(response.data.uuid);
+          } else {
+            toastSuccess("Alteração do Tipo de Alimentação salva com sucesso");
+            this.refresh();
+            this.resetaTodoPeriodoCheck();
+            this.resetForm("alteracaoCardapio");
+          }
+          this.resetForm();
         } else {
-          escolaAlterarSolicitacaoDeAlteracaoCardapio(
-            values.uuid,
-            JSON.stringify(values),
-            TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-          ).then(
-            async (res) => {
-              if (res.status === HTTP_STATUS.OK) {
-                if (status === STATUS_DRE_A_VALIDAR) {
-                  await this.enviaAlteracaoCardapio(res.data.uuid);
-                  this.refresh();
-                } else {
-                  toastSuccess(
-                    "Alteração do Tipo de Alimentação salva com sucesso"
-                  );
-                  this.refresh();
-                  this.resetForm("alteracaoCardapio");
-                }
-              } else {
-                toastError(
-                  `Houve um erro ao enviar ao salvar alteração do tipo de alimentação: ${getError(
-                    res.data
-                  )}`
-                );
-              }
-            },
-            function () {
-              toastError(
-                "Houve um erro ao salvar a Alteração do Tipo de Alimentação"
-              );
-            }
-          );
+          toastError(getError(response.data));
         }
       } else {
-        toastError(erros);
+        escolaAlterarSolicitacaoDeAlteracaoCardapio(
+          values_.uuid,
+          JSON.stringify(values_),
+          TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+        ).then(
+          async (res) => {
+            if (res.status === HTTP_STATUS.OK) {
+              if (status === STATUS_DRE_A_VALIDAR) {
+                await this.enviaAlteracaoCardapio(res.data.uuid);
+                this.refresh();
+              } else {
+                toastSuccess(
+                  "Alteração do Tipo de Alimentação salva com sucesso"
+                );
+                this.refresh();
+                this.resetForm("alteracaoCardapio");
+              }
+            } else {
+              toastError(
+                `Houve um erro ao enviar ao salvar alteração do tipo de alimentação: ${getError(
+                  res.data
+                )}`
+              );
+            }
+          },
+          function () {
+            toastError(
+              "Houve um erro ao salvar a Alteração do Tipo de Alimentação"
+            );
+          }
+        );
       }
-    });
+    } else {
+      toastError(erros);
+    }
   }
 
   showModal() {
