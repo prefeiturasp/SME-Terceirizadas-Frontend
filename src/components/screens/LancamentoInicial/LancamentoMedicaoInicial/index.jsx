@@ -25,7 +25,10 @@ import {
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getDiasCalendario } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
-import { ehEscolaTipoCEI } from "../../../../helpers/utilities";
+import {
+  ehEscolaTipoCEI,
+  ehEscolaTipoCEMEI,
+} from "../../../../helpers/utilities";
 import "./styles.scss";
 import InformacoesMedicaoInicialCEI from "./components/InformacoesMedicaoInicialCEI";
 import LancamentoPorPeriodoCEI from "./components/LancamentoPorPeriodoCEI";
@@ -299,7 +302,8 @@ export default () => {
         </div>
         {loadingSolicitacaoMedInicial ? (
           <Skeleton paragraph={false} active />
-        ) : ehEscolaTipoCEI(escolaInstituicao) ? (
+        ) : ehEscolaTipoCEI(escolaInstituicao) ||
+          ehEscolaTipoCEMEI(escolaInstituicao) ? (
           <InformacoesMedicaoInicialCEI
             periodoSelecionado={periodoSelecionado}
             escolaInstituicao={escolaInstituicao}
@@ -344,7 +348,8 @@ export default () => {
             ano &&
             periodosEscolaSimples &&
             !loadingSolicitacaoMedInicial &&
-            (ehEscolaTipoCEI(escolaInstituicao) ? (
+            (ehEscolaTipoCEI(escolaInstituicao) ||
+            ehEscolaTipoCEMEI(escolaInstituicao) ? (
               <LancamentoPorPeriodoCEI
                 panoramaGeral={panoramaGeral}
                 mes={mes}
