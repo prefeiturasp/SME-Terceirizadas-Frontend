@@ -12,11 +12,14 @@ import {
 } from "components/Shareable/Botao/constants";
 import { DETALHAMENTO_DO_LANCAMENTO } from "configs/constants";
 import {
+  getTiposDeContagemAlimentacao,
   setSolicitacaoMedicaoInicial,
   updateSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getAlunosListagem } from "services/perfil.service";
 import TabelaAlunosParciais from "./TabelaAlunosParciais";
+import { ehEscolaTipoCEMEI } from "../../../../../../helpers/utilities";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 
 export default ({
   periodoSelecionado,
@@ -49,6 +52,10 @@ export default ({
   const [isModalDuplicata, setIsModalDuplicata] = useState(false);
   const [isModalNaoParcial, setIsModalNaoParcial] = useState(false);
   const [alunosAdicionados, setAlunosAdicionados] = useState([]);
+  const [tiposDeContagem, setTiposDeContagem] = useState([]);
+  const [tipoDeContagemSelecionada, setTipoDeContagemSelecionada] = useState(
+    []
+  );
 
   const { Panel } = Collapse;
 
@@ -67,11 +74,20 @@ export default ({
   };
 
   useEffect(() => {
+    async function fetch() {
+      const response = await getTiposDeContagemAlimentacao();
+      setTiposDeContagem(response.data);
+    }
+    fetch();
+
     if (solicitacaoMedicaoInicial) {
       const resps = responsaveis.map((resp, indice) => {
         return solicitacaoMedicaoInicial.responsaveis[indice] || resp;
       });
       setResponsaveis(resps);
+      setTipoDeContagemSelecionada(
+        solicitacaoMedicaoInicial.tipos_contagem_alimentacao.map((t) => t.uuid)
+      );
       solicitacaoMedicaoInicial?.ue_possui_alunos_periodo_parcial
         ? (setUePossuiAlunosPeriodoParcial("true"),
           setShowPesquisaAluno(true),
@@ -85,6 +101,10 @@ export default ({
       setEmEdicao(true);
     }
     setIsOpen(true);
+  }, []);
+
+  useEffect(() => {
+    getDefaultValueSelectTipoContagem();
   }, []);
 
   const setaResponsavel = (input, event, indice) => {
@@ -136,6 +156,9 @@ export default ({
 
   const handleClickEditar = () => {
     setEmEdicao(true);
+    !solicitacaoMedicaoInicial &&
+      opcoesContagem.length > 0 &&
+      setTipoDeContagemSelecionada([tiposDeContagem[0].uuid]);
   };
 
   const handleClickSalvar = async () => {
@@ -221,6 +244,7 @@ export default ({
     } else {
       const payload = {
         escola: escolaInstituicao.uuid,
+        tipos_contagem_alimentacao: tipoDeContagemSelecionada,
         responsaveis: responsaveisPayload,
         ue_possui_alunos_periodo_parcial:
           uePossuiAlunosPeriodoParcial === "true",
@@ -280,6 +304,24 @@ export default ({
     setIsModalNaoParcial(false);
   };
 
+  const opcoesContagem = tiposDeContagem
+    ? tiposDeContagem.map((tipo) => {
+        return { value: tipo.uuid, label: tipo.nome };
+      })
+    : [];
+
+  const handleChangeTipoContagem = (values) => {
+    setTipoDeContagemSelecionada(values);
+  };
+
+  const getDefaultValueSelectTipoContagem = () => {
+    if (solicitacaoMedicaoInicial)
+      return solicitacaoMedicaoInicial.tipos_contagem_alimentacao.map(
+        (t) => t.nome
+      );
+    if (opcoesContagem.length) return tiposDeContagem[0].nome;
+  };
+
   return (
     <div className="row mt-4 info-med-inicial collapse-adjustments">
       <div className="col-12 panel-med-inicial">
@@ -331,6 +373,30 @@ export default ({
           >
             <Panel header="Informações Básicas da Medição Inicial" key="1">
               <div className="row">
+                {ehEscolaTipoCEMEI(escolaInstituicao) && (
+                  <div className="col-5 info-label select-medicao-inicial">
+                    <b className="mb-2">
+                      Método de Contagem das Alimentações Servidas
+                    </b>
+                    {opcoesContagem.length > 0 && (
+                      <StatefulMultiSelect
+                        name="contagem_refeicoes"
+                        selected={tipoDeContagemSelecionada}
+                        options={opcoesContagem || []}
+                        onSelectedChanged={(values) =>
+                          handleChangeTipoContagem(values)
+                        }
+                        hasSelectAll={false}
+                        overrideStrings={{
+                          selectSomeItems: "Selecione os métodos de contagem",
+                          allItemsAreSelected: "Todos os métodos selecionados",
+                        }}
+                        disabled={!emEdicao}
+                      />
+                    )}
+                  </div>
+                )}
+
                 <div className="col-7 info-label">
                   <label className="mt-2 mb-2">
                     Nome da Empresa Responsável pelo Atendimento
