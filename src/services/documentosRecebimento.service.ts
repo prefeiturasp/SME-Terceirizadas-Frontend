@@ -22,11 +22,13 @@ export const listarDocumentosRecebimento = async (
 ): Promise<ResponseDocumentosRecebimento> =>
   await axios.get("/documentos-de-recebimento/", { params });
 
+// Service retorna vários status diferente dentro dos resultados, filtros são apenas strings
 export const getDashboardDocumentosRecebimento = async (
   params: FiltrosDashboardDocumentos = null
 ): Promise<ResponseDocumentosRecebimentoDashboard> =>
   await axios.get(`/documentos-de-recebimento/dashboard/`, { params });
 
+// Service retorna apenas um status nos resultados, filtros em formatos de array são transformados em parametros de URL
 export const getDashboardDocumentosRecebimentoPorStatus = async (
   params: URLSearchParams = null
 ): Promise<ResponseDocumentosPorStatusDashboard> =>
