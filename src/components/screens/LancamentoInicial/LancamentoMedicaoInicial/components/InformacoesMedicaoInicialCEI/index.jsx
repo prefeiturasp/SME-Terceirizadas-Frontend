@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
-import { Collapse, Input, Checkbox, Modal } from "antd";
+import { Collapse, Checkbox, Modal } from "antd";
 import Botao from "components/Shareable/Botao";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
@@ -20,6 +20,27 @@ import { getAlunosListagem } from "services/perfil.service";
 import TabelaAlunosParciais from "./TabelaAlunosParciais";
 import { ehEscolaTipoCEMEI } from "../../../../../../helpers/utilities";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import ResponsaveisInputs from "../ResponsaveisInput";
+
+const RESPONSABLES_INITIAL_STATE = [
+  { nome: "", rf: "" },
+  { nome: "", rf: "" },
+  { nome: "", rf: "" },
+];
+
+function useResponsaveis(initialState) {
+  const [responsaveis, setResponsaveis] = useState(initialState);
+
+  const setaResponsavel = useCallback((input, value, index) => {
+    setResponsaveis((currentResponsaveis) =>
+      currentResponsaveis.map((resp, i) =>
+        i === index ? { ...resp, [input]: value } : resp
+      )
+    );
+  }, []);
+
+  return { responsaveis, setaResponsavel };
+}
 
 export default ({
   periodoSelecionado,
@@ -28,20 +49,10 @@ export default ({
   solicitacaoMedicaoInicial,
   onClickInfoBasicas,
 }) => {
-  const [responsaveis, setResponsaveis] = useState([
-    {
-      nome: "",
-      rf: "",
-    },
-    {
-      nome: "",
-      rf: "",
-    },
-    {
-      nome: "",
-      rf: "",
-    },
-  ]);
+  const { responsaveis, setaResponsavel } = useResponsaveis(
+    RESPONSABLES_INITIAL_STATE
+  );
+
   const [uePossuiAlunosPeriodoParcial, setUePossuiAlunosPeriodoParcial] =
     useState(undefined);
   const [emEdicao, setEmEdicao] = useState(false);
@@ -81,77 +92,37 @@ export default ({
     fetch();
 
     if (solicitacaoMedicaoInicial) {
-      const resps = responsaveis.map((resp, indice) => {
-        return solicitacaoMedicaoInicial.responsaveis[indice] || resp;
+      solicitacaoMedicaoInicial.responsaveis.forEach((responsavel, index) => {
+        setaResponsavel("nome", responsavel.nome, index);
+        setaResponsavel("rf", responsavel.rf, index);
       });
-      setResponsaveis(resps);
       setTipoDeContagemSelecionada(
         solicitacaoMedicaoInicial.tipos_contagem_alimentacao.map((t) => t.uuid)
       );
-      solicitacaoMedicaoInicial?.ue_possui_alunos_periodo_parcial
-        ? (setUePossuiAlunosPeriodoParcial("true"),
-          setShowPesquisaAluno(true),
-          setLoading(true),
-          getAlunos(),
-          setAlunosAdicionados(
-            solicitacaoMedicaoInicial.alunos_periodo_parcial
-          ))
-        : setUePossuiAlunosPeriodoParcial("false");
+      if (solicitacaoMedicaoInicial.ue_possui_alunos_periodo_parcial) {
+        setUePossuiAlunosPeriodoParcial("true");
+        setShowPesquisaAluno(true);
+        setLoading(true);
+        getAlunos();
+        setAlunosAdicionados(solicitacaoMedicaoInicial.alunos_periodo_parcial);
+      } else {
+        setUePossuiAlunosPeriodoParcial("false");
+      }
     } else {
       setEmEdicao(true);
     }
     setIsOpen(true);
-  }, []);
+  }, [setaResponsavel, solicitacaoMedicaoInicial]);
 
   useEffect(() => {
     getDefaultValueSelectTipoContagem();
   }, []);
 
-  const setaResponsavel = (input, event, indice) => {
-    let responsavel = responsaveis;
-    responsavel[indice][input] = event;
-    setResponsaveis(responsaveis);
-  };
-
-  const verificarInput = (event, responsavel) => {
+  const verificarInput = (event, index) => {
     if (!/[0-9]/.test(event.key)) {
       event.preventDefault();
     }
-    setaResponsavel("rf", event.target.value, responsavel);
-  };
-
-  const renderDadosResponsaveis = () => {
-    let component = [];
-    for (let responsavel = 0; responsavel <= 2; responsavel++) {
-      component.push(
-        <div className="row col-12 pr-0 mt-2" key={responsavel}>
-          <div className="col-8">
-            <Input
-              className="mt-2"
-              name={`responsavel_nome_${responsavel}`}
-              defaultValue={responsaveis[responsavel]["nome"]}
-              onChange={(event) =>
-                setaResponsavel("nome", event.target.value, responsavel)
-              }
-              disabled={!emEdicao}
-            />
-          </div>
-          <div className="col-4 pr-0">
-            <Input
-              maxLength={7}
-              className="mt-2"
-              name={`responsavel_rf_${responsavel}`}
-              onKeyPress={(event) => verificarInput(event, responsavel)}
-              onChange={(event) => verificarInput(event, responsavel)}
-              defaultValue={responsaveis[responsavel]["rf"]}
-              disabled={!emEdicao}
-            />
-          </div>
-        </div>
-      );
-    }
-
-    return component;
+    setaResponsavel("rf", event.target.value, index);
   };
 
   const handleClickEditar = () => {
@@ -198,10 +169,12 @@ export default ({
       let data = new FormData();
       data.append("escola", String(escolaInstituicao.uuid));
       data.append("responsaveis", JSON.stringify(responsaveisPayload));
-      data.append(
-        "ue_possui_alunos_periodo_parcial",
-        uePossuiAlunosPeriodoParcial === "true"
-      );
+      for (let index = 0; index < tipoDeContagemSelecionada.length; index++) {
+        data.append(
+          "tipos_contagem_alimentacao[]",
+          tipoDeContagemSelecionada[index]
+        );
+      }
       if (Array.isArray(alunosAdicionados) && alunosAdicionados.length > 0) {
         const uuidsDosAlunos = alunosAdicionados.map((aluno) => aluno.uuid);
         data.append("alunos_periodo_parcial", JSON.stringify(uuidsDosAlunos));
@@ -446,7 +419,12 @@ export default ({
                   <label>RF</label>
                   <label className="asterisk-label">*</label>
                 </div>
-                {renderDadosResponsaveis()}
+                <ResponsaveisInputs
+                  responsaveis={responsaveis}
+                  setaResponsavel={setaResponsavel}
+                  verificarInput={verificarInput}
+                  emEdicao={emEdicao}
+                />
                 {(!location.state ||
                   location.state.status !== "Aprovado pela DRE") &&
                   !location.pathname.includes(DETALHAMENTO_DO_LANCAMENTO) && (
