@@ -138,6 +138,7 @@ import {
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioComAcessoAoPainelEmbalagens,
   usuarioEhOrgaoFiscalizador,
+  usuarioComAcessoAoPainelDocumentos,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -271,6 +272,8 @@ import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayou
 import DocumentosRecebimentoPage from "../pages/PreRecebimento/DocumentosRecebimentoPage";
 import CadastroDocumentosRecebimentoPage from "../pages/PreRecebimento/CadastroDocumentosRecebimentoPage";
 import DetalharDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharDocumentosRecebimentoPage";
+import PainelDocumentosRecebimentoPage from "../pages/PreRecebimento/PainelDocumentosRecebimentoPage";
+import StatusDocumentoPendenteAprovacao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoPendenteAprovacao";
 
 const routesConfig = [
   {
@@ -1994,6 +1997,18 @@ const routesConfig = [
     component: DetalharDocumentosRecebimentoPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_DOCUMENTOS_RECEBIMENTO}`,
+    component: PainelDocumentosRecebimentoPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_DOCUMENTOS_RECEBIMENTO}/${constants.PENDENTES_APROVACAO}/`,
+    component: StatusDocumentoPendenteAprovacao,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
   },
 ];
 

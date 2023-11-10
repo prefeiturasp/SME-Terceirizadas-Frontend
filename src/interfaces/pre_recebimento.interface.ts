@@ -39,3 +39,21 @@ export interface CronogramaSimples {
   pregao_chamada_publica: string;
   value?: string;
 }
+
+export interface DocumentosRecebimentoDashboard {
+  log_mais_recente: string;
+  nome_empresa: string;
+  nome_produto: string;
+  numero_cronograma: string;
+  status: string;
+  uuid: string;
+}
+
+export interface FiltrosDashboardDocumentos {
+  nome_produto?: string;
+  numero_cronograma?: string;
+  nome_fornecedor?: string;
+  status?: string[];
+  offset?: number;
+  limit?: number;
+}

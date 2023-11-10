@@ -6,6 +6,10 @@ import {
   PAINEL_APROVACOES,
   SOLICITACAO_ALTERACAO_CRONOGRAMA,
   SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR,
+  DOCUMENTOS_RECEBIMENTO,
+  LAYOUT_EMBALAGEM,
+  PAINEL_DOCUMENTOS_RECEBIMENTO,
+  PAINEL_LAYOUT_EMBALAGEM,
 } from "configs/constants";
 import {
   usuarioEhCronograma,
@@ -14,13 +18,9 @@ import {
   usuarioEhPreRecebimento,
   usuarioEhEmpresaFornecedor,
   usuarioComAcessoAoPainelAprovacoes,
+  usuarioComAcessoAoPainelDocumentos,
+  usuarioComAcessoAoPainelEmbalagens,
 } from "helpers/utilities";
-import {
-  DOCUMENTOS_RECEBIMENTO,
-  LAYOUT_EMBALAGEM,
-  PAINEL_LAYOUT_EMBALAGEM,
-} from "../../../../configs/constants";
-import { usuarioComAcessoAoPainelEmbalagens } from "../../../../helpers/utilities";
 
 const MenuPreRecebimento = () => {
   return (
@@ -63,6 +63,11 @@ const MenuPreRecebimento = () => {
       )}
       {usuarioEhEmpresaFornecedor() && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`}>
+          Documentos de Recebimento
+        </LeafItem>
+      )}
+      {usuarioComAcessoAoPainelDocumentos() && (
+        <LeafItem to={`/${PRE_RECEBIMENTO}/${PAINEL_DOCUMENTOS_RECEBIMENTO}`}>
           Documentos de Recebimento
         </LeafItem>
       )}
