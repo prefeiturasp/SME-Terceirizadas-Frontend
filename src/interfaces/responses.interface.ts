@@ -8,6 +8,7 @@ import {
 } from "interfaces/medicao_inicial.interface";
 import {
   DocumentosRecebimento,
+  DocumentosRecebimentoDashboard,
   DocumentosRecebimentoDetalhado,
 } from "./pre_recebimento.interface";
 
@@ -66,4 +67,25 @@ export interface ResponseDocumentosRecebimento extends ResponseInterface {
 export interface ResponseDocumentosRecebimentoDetalhado
   extends ResponseInterface {
   data: DocumentosRecebimentoDetalhado;
+}
+
+export interface ResponseDocumentosRecebimentoDashboard
+  extends ResponseInterface {
+  data: {
+    results: Array<{
+      status: string;
+      dados: Array<DocumentosRecebimentoDashboard>;
+    }>;
+  };
+}
+
+export interface ResponseDocumentosPorStatusDashboard
+  extends ResponseInterface {
+  data: {
+    results: {
+      status: string;
+      dados: Array<DocumentosRecebimentoDashboard>;
+      total: number;
+    };
+  };
 }
