@@ -169,6 +169,10 @@ export default ({
       let data = new FormData();
       data.append("escola", String(escolaInstituicao.uuid));
       data.append("responsaveis", JSON.stringify(responsaveisPayload));
+      data.append(
+        "ue_possui_alunos_periodo_parcial",
+        uePossuiAlunosPeriodoParcial === "true"
+      );
       for (let index = 0; index < tipoDeContagemSelecionada.length; index++) {
         data.append(
           "tipos_contagem_alimentacao[]",
