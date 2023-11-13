@@ -30,7 +30,7 @@ export default () => {
     },
     {
       href: `/${PRE_RECEBIMENTO}/${PAINEL_DOCUMENTOS_RECEBIMENTO}`,
-      titulo: "Layout de Embalagens",
+      titulo: "Documentos de Recebimento",
     },
   ];
 
