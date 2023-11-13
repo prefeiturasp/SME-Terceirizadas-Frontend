@@ -119,8 +119,8 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-painel-layout-embalagem">
-        <div className="card-body painel-layout-embalagem">
+      <div className="card mt-3 card-painel-documentos-recebimento">
+        <div className="card-body painel-documentos-recebimento">
           <h5 className="card-title mt-3">Aprovação de Documentos</h5>
 
           <div className="row mt-4">
