@@ -235,7 +235,11 @@ export default () => {
       let response = await analisaDocumentoRecebimento(payload, objeto.uuid);
       if (response.status === 201 || response.status === 200) {
         setCarregando(false);
-        toastSuccess("Documentos aprovados com sucesso!");
+        toastSuccess(
+          values.correcao_solicitada
+            ? "Correções solicitadas ao Fornecedor com sucesso!"
+            : "Documentos aprovados com sucesso!"
+        );
         setShowModalAprovar(false);
         setShowModalCorrecao(false);
         voltarPagina();
