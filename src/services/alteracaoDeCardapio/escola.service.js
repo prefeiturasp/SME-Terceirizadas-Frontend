@@ -40,36 +40,17 @@ export const escolaCriarSolicitacaoDeAlteracaoCardapio = async (
   }
 };
 
-export const escolaAlterarSolicitacaoDeAlteracaoCardapio = (
+export const escolaAlterarSolicitacaoDeAlteracaoCardapio = async (
   uuid,
   payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
-
-  if (tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI) {
-    return axios.patch(
-      `${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${payload.uuid}/`,
-      payload
-    );
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  let status = 0;
-  return fetch(url, {
-    method: "PUT",
-    body: payload,
-    headers: AUTH_TOKEN,
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
 };
 
 export const escolaExcluirSolicitacaoDeAlteracaoCardapio = (
