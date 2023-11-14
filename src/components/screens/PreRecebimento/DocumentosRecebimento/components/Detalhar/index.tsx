@@ -8,11 +8,10 @@ import { detalharDocumentoRecebimento } from "services/documentosRecebimento.ser
 import InputText from "components/Shareable/Input/InputText";
 import {
   DocumentosRecebimentoDetalhado,
-  TiposDocumentoChoices,
   TiposDocumentos,
 } from "interfaces/pre_recebimento.interface";
-import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
-import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
+import ArquivosTipoRecebimento from "../ArquivosTipoDocumento";
+import OutrosDocumentos from "../OutrosDocumentos";
 
 export default () => {
   const history = useHistory();
@@ -40,25 +39,6 @@ export default () => {
 
     setLaudo(laudo);
     setObjeto(objeto);
-  };
-
-  const retornaTextoTipoDocumento = (
-    tipoDocumento: TiposDocumentoChoices
-  ): string => {
-    return OUTROS_DOCUMENTOS_OPTIONS.find((x) => x.value === tipoDocumento)
-      .label;
-  };
-
-  const renderizaArquivos = (lista: TiposDocumentos) => {
-    return lista?.arquivos.map((arquivo, index) => {
-      return (
-        <div className="row mt-2" key={index}>
-          <div className="col-4">
-            <BotaoAnexo urlAnexo={arquivo.arquivo} />
-          </div>
-        </div>
-      );
-    });
   };
 
   useEffect(() => {
@@ -122,30 +102,11 @@ export default () => {
               />
             </div>
           </div>
-          {renderizaArquivos(laudo)}
+          <ArquivosTipoRecebimento lista={laudo} />
 
           <hr />
 
-          <div className="subtitulo">Outros Documentos</div>
-
-          <ul className="secao-tipo-documento">
-            {objeto.tipos_de_documentos?.map((tipo, index) => (
-              <li key={index}>
-                <div className="subtitulo-documento">
-                  {retornaTextoTipoDocumento(tipo.tipo_documento)}
-                </div>
-                {tipo.tipo_documento === "OUTROS" && (
-                  <InputText
-                    label="Descrição do documento"
-                    valorInicial={tipo.descricao_documento}
-                    required
-                    disabled={true}
-                  />
-                )}
-                {renderizaArquivos(tipo)}
-              </li>
-            ))}
-          </ul>
+          <OutrosDocumentos documento={objeto} />
 
           <hr />
 
