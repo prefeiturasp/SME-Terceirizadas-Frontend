@@ -7,6 +7,44 @@ export interface DocumentosRecebimento {
   uuid: string;
 }
 
+export interface DocumentosRecebimentoDetalhado extends DocumentosRecebimento {
+  numero_laudo: string;
+  tipos_de_documentos: Array<TiposDocumentos>;
+}
+
+export interface DocumentosRecebimentoParaAnalise
+  extends DocumentosRecebimentoDetalhado {
+  correcao_solicitada: string;
+  data_fabricacao_lote: string;
+  data_final_lote: string;
+  datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
+  numero_empenho: string;
+  quantidade_laudo: number;
+  saldo_laudo: number;
+  validade_produto: string;
+  numero_sei: string;
+  fornecedor: string;
+  unidade_medida: string;
+  laboratorio: string;
+}
+
+export interface DatasFabricacaoPrazos {
+  data_fabricacao: string;
+  prazo_maximo_recebimento: string;
+  data_maxima_recebimento?: string;
+  justificativa?: string;
+}
+
+export interface UnidadeMedidaSimples {
+  uuid: string;
+  nome: string;
+  abreviacao: string;
+}
+
+export interface LaboratorioSimples {
+  uuid: string;
+  nome: string;
+}
 export interface Arquivo {
   nome: string;
   arquivo: string;
@@ -20,16 +58,18 @@ export type TiposDocumentoChoices =
   | "DECLARACAO_MATERIA_ORGANICA"
   | "OUTROS";
 
+export type PrazoRecebimentoChoices =
+  | "30"
+  | "60"
+  | "90"
+  | "120"
+  | "180"
+  | "OUTRO";
 export interface TiposDocumentos {
   tipo_documento: TiposDocumentoChoices;
   arquivos: Array<Arquivo>;
   descricao_documento?: string;
   uuid: string;
-}
-
-export interface DocumentosRecebimentoDetalhado extends DocumentosRecebimento {
-  numero_laudo: string;
-  tipos_de_documentos: Array<TiposDocumentos>;
 }
 
 export interface CronogramaSimples {

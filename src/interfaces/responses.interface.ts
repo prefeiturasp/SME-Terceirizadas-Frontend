@@ -10,6 +10,7 @@ import {
   DocumentosRecebimento,
   DocumentosRecebimentoDashboard,
   DocumentosRecebimentoDetalhado,
+  DocumentosRecebimentoParaAnalise,
 } from "./pre_recebimento.interface";
 
 export interface ResponseInterface {
@@ -88,4 +89,9 @@ export interface ResponseDocumentosPorStatusDashboard
       total: number;
     };
   };
+}
+
+export interface ResponseDocumentosRecebimentoParaAnalise
+  extends ResponseInterface {
+  data: DocumentosRecebimentoParaAnalise;
 }

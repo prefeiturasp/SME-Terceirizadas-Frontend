@@ -190,6 +190,30 @@ button.general-button {
     }
   }
 
+  &.orange-button-outline {
+    color: $orange;
+    border: 1px solid $orange;
+    background-color: transparent;
+    &:not(:disabled) {
+      i {
+        color: $orange;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      color: $white;
+      background-color: $orange;
+      i {
+        color: $white;
+      }
+    }
+    &:disabled {
+      background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
+
   &.no-border {
     border: none;
   }
