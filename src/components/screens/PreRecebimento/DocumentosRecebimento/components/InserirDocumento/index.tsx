@@ -2,7 +2,7 @@ import React from "react";
 import { Field } from "react-final-form";
 import InputFile from "components/Shareable/Input/InputFile";
 import { DEZ_MB } from "../../../../../../constants/shared";
-import { ArquivoForm, OptionMultiselect } from "../../interfaces";
+import { ArquivoForm, OptionsTipoDocumento } from "../../interfaces";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { textAreaRequired } from "helpers/fieldValidators";
 import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
@@ -21,7 +21,7 @@ const InserirDocumento: React.FC<Props> = ({
   tipoDocumento = "",
 }) => {
   const titulo = OUTROS_DOCUMENTOS_OPTIONS.find(
-    (obj: OptionMultiselect) => obj.value === tipoDocumento
+    (obj: OptionsTipoDocumento) => obj.value === tipoDocumento
   )?.label;
   return (
     <>

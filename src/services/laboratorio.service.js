@@ -11,6 +11,9 @@ export const getLaboratorios = async (params) => {
 export const getListaLaboratorios = async () =>
   await axios.get("/laboratorios/lista-laboratorios/");
 
+export const getListaLaboratoriosCredenciados = async () =>
+  await axios.get("/laboratorios/lista-laboratorios-credenciados/");
+
 export const cadastraLaboratorio = async (payload) =>
   await axios.post("/laboratorios/", payload);
 

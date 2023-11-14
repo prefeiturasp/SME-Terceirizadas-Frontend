@@ -1,6 +1,6 @@
-import { OptionMultiselect } from "./interfaces";
+import { OptionsPrazoRecebimento, OptionsTipoDocumento } from "./interfaces";
 
-export const OUTROS_DOCUMENTOS_OPTIONS: OptionMultiselect[] = [
+export const OUTROS_DOCUMENTOS_OPTIONS: OptionsTipoDocumento[] = [
   {
     value: "DECLARACAO_LEI_1512010",
     label: "Declaração de atendimento a Lei Municipal: 15.120/10",
@@ -20,5 +20,32 @@ export const OUTROS_DOCUMENTOS_OPTIONS: OptionMultiselect[] = [
   {
     value: "OUTROS",
     label: "Outros",
+  },
+];
+
+export const PRAZO_RECEBIMENTO_OPTIONS: OptionsPrazoRecebimento[] = [
+  {
+    uuid: "30",
+    nome: "30 Dias",
+  },
+  {
+    uuid: "60",
+    nome: "60 Dias",
+  },
+  {
+    uuid: "90",
+    nome: "90 Dias",
+  },
+  {
+    uuid: "120",
+    nome: "120 Dias",
+  },
+  {
+    uuid: "180",
+    nome: "180 Dias",
+  },
+  {
+    uuid: "OUTRO",
+    nome: "Outros",
   },
 ];
