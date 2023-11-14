@@ -35,7 +35,7 @@ import ModalGenerico from "./components/ModalGenerico";
 import ModalCorrecao from "./components/ModalCorrecao";
 import { AnaliseDocumentoPayload, OptionsGenerico } from "../../interfaces";
 import createDecorator from "final-form-calculate";
-import { exibeError } from "helpers/utilities";
+import { exibeError, formataMilhar } from "helpers/utilities";
 import {
   toastError,
   toastSuccess,
@@ -167,12 +167,12 @@ export default () => {
     let payload: AnaliseDocumentoPayload = {
       numero_empenho: values.numero_empenho,
       laboratorio: values.laboratorio,
-      quantidade_laudo: values.quantidade_laudo,
+      quantidade_laudo: formataMilhar(values.quantidade_laudo),
       unidade_medida: values.unidade_medida,
       data_fabricacao_lote: values.data_fabricacao_lote,
       validade_produto: values.validade_produto,
       data_final_lote: values.data_final_lote,
-      saldo_laudo: values.saldo_laudo,
+      saldo_laudo: formataMilhar(values.saldo_laudo),
       datas_fabricacao_e_prazos: prazos.map((prazo, index) => ({
         data_fabricacao: values[`data_fabricacao_${index}`],
         prazo_maximo_recebimento: values[`prazo_maximo_${index}`],
@@ -239,9 +239,11 @@ export default () => {
       laboratorio: doc.laboratorio,
       quantidade_laudo: doc.quantidade_laudo?.toString(),
       unidade_medida: doc.unidade_medida,
-      data_fabricacao_lote: doc.data_fabricacao_lote,
-      validade_produto: doc.validade_produto,
-      data_final_lote: doc.data_final_lote,
+      data_fabricacao_lote: doc.data_fabricacao_lote
+        ? doc.numero_empenho
+        : undefined,
+      validade_produto: doc.validade_produto ? doc.validade_produto : undefined,
+      data_final_lote: doc.data_final_lote ? doc.data_final_lote : undefined,
       saldo_laudo: doc.saldo_laudo?.toString(),
     };
     doc.datas_fabricacao_e_prazos?.map((obj, index) => {
