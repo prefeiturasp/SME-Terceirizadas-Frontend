@@ -1,0 +1,60 @@
+@import "../../../../../../styles/variables.scss";
+
+.card-analisar-documentos-recebimento {
+  color: $blackInput;
+  font-size: 14px;
+
+  .input-analise {
+    height: 35px !important;
+  }
+
+  .btn-acao {
+    padding-top: 30px;
+    height: 35px;
+  }
+
+  .green-bold {
+    color: $greenDark;
+    font-weight: bold;
+  }
+
+  .aviso-laboratorio {
+    border-radius: 5px;
+    border: 0.5px solid $redCard;
+    margin-top: 30px;
+    height: 35px;
+    font-size: 12px;
+    line-height: 125%;
+    display: flex;
+
+    i {
+      font-size: 16px;
+      color: $red;
+      margin: auto;
+    }
+
+    span {
+      margin: auto 10px;
+    }
+  }
+
+  .subtitulo {
+    color: $greenDark;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0px;
+  }
+
+  .subtitulo-documento {
+    color: $greenDark;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 12px 0px;
+  }
+
+  .secao-tipo-documento {
+    ::marker {
+      color: $greenDark;
+    }
+  }
+}

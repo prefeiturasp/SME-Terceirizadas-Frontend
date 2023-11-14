@@ -3,6 +3,10 @@ import React, { useEffect, useState } from "react";
 import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
 import { cardsAprovacao } from "./constants";
 import {
+  ANALISAR_DOCUMENTO_RECEBIMENTO,
+  PRE_RECEBIMENTO,
+} from "configs/constants";
+import {
   parseDataHoraBrToMoment,
   comparaObjetosMoment,
   truncarString,
@@ -51,7 +55,7 @@ export default () => {
     return items.sort(ordenarPorLogMaisRecente).map((item) => ({
       text: gerarTextoCardDocumento(item),
       date: item.log_mais_recente.slice(0, 10),
-      link: "",
+      link: `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`,
       status: item.status,
     }));
   };
