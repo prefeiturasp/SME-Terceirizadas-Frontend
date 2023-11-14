@@ -275,6 +275,7 @@ import DetalharDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharD
 import PainelDocumentosRecebimentoPage from "../pages/PreRecebimento/PainelDocumentosRecebimentoPage";
 import StatusDocumentoPendenteAprovacao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoPendenteAprovacao";
 import StatusDocumentoAprovados from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoAprovados";
+import AnalisarDocumentosRecebimentoPage from "../pages/PreRecebimento/AnalisarDocumentosRecebimentoPage";
 
 const routesConfig = [
   {
@@ -2016,6 +2017,12 @@ const routesConfig = [
     component: StatusDocumentoAprovados,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_DOCUMENTO_RECEBIMENTO}`,
+    component: AnalisarDocumentosRecebimentoPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
   },
 ];
 

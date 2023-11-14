@@ -9,6 +9,7 @@ export const BUTTON_STYLE = {
   GRAY_OUTLINE: "gray-button-outline",
   GRAY: "gray-button",
   DARK_OUTLINE: "dark-button-outline",
+  ORANGE_OUTLINE: "orange-button-outline",
 };
 
 export const BUTTON_ICON = {
