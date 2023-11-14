@@ -63,12 +63,11 @@ export default ({
     const periodos = escolaInstituicao.periodos_escolares
       .filter((periodo) => periodo.possui_alunos_regulares)
       .map((periodo) => periodo.nome);
-
     if (solicitacaoMedicaoInicial?.ue_possui_alunos_periodo_parcial) {
       periodos.splice(1, 0, "PARCIAL");
     }
     setPeriodosComAlunos(periodos);
-  }, [escolaInstituicao]);
+  }, [escolaInstituicao, solicitacaoMedicaoInicial]);
 
   const renderBotaoFinalizar = () => {
     if (!solicitacaoMedicaoInicial) {
@@ -137,6 +136,7 @@ export default ({
               <b className="section-title">Períodos</b>
             </div>
           </div>
+
           {periodosComAlunos.map((nomePeriodo, index) => (
             <CardLancamentoCEI
               key={index}
