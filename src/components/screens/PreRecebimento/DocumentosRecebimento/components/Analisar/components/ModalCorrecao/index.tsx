@@ -46,14 +46,14 @@ const ModalCorrecao: React.FC<Props> = ({
         </Modal.Body>
         <Modal.Footer>
           <Botao
-            texto="Não"
+            texto="Cancelar"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => handleClose()}
             style={BUTTON_STYLE.GREEN_OUTLINE}
             className="ml-3"
           />
           <Botao
-            texto="Sim"
+            texto="Enviar"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
             className="ml-3"

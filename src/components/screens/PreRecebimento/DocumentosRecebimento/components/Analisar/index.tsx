@@ -23,17 +23,12 @@ import { getListaLaboratoriosCredenciados } from "services/laboratorio.service";
 import InputText from "components/Shareable/Input/InputText";
 import {
   DocumentosRecebimentoParaAnalise,
-  TiposDocumentoChoices,
   TiposDocumentos,
   UnidadeMedidaSimples,
 } from "interfaces/pre_recebimento.interface";
-import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
 import { required } from "helpers/fieldValidators";
 import { deletaValues } from "helpers/formHelper";
-import {
-  OUTROS_DOCUMENTOS_OPTIONS,
-  PRAZO_RECEBIMENTO_OPTIONS,
-} from "../../constants";
+import { PRAZO_RECEBIMENTO_OPTIONS } from "../../constants";
 import { Field, Form } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
 import ModalGenerico from "./components/ModalGenerico";
@@ -45,6 +40,8 @@ import {
   toastError,
   toastSuccess,
 } from "../../../../../Shareable/Toast/dialogs";
+import ArquivosTipoRecebimento from "../ArquivosTipoDocumento";
+import OutrosDocumentos from "../OutrosDocumentos";
 
 export default () => {
   const history = useHistory();
@@ -59,9 +56,11 @@ export default () => {
   const [showModalAprovar, setShowModalAprovar] = useState(false);
   const [showModalCorrecao, setShowModalCorrecao] = useState(false);
   const [prazos, setPrazos] = useState([true]);
-  const [unidades, setUnidades] = useState([]);
-  const [laboratorios, setLaboratorios] = useState([]);
-  const [initialValues, setInitialValues] = useState({});
+  const [unidades, setUnidades] = useState<OptionsGenerico[]>([]);
+  const [laboratorios, setLaboratorios] = useState<OptionsGenerico[]>([]);
+  const [initialValues, setInitialValues] = useState<AnaliseDocumentoPayload>(
+    {} as AnaliseDocumentoPayload
+  );
 
   const voltarPagina = () =>
     history.push(`/${PRE_RECEBIMENTO}/${PAINEL_DOCUMENTOS_RECEBIMENTO}`);
@@ -104,26 +103,7 @@ export default () => {
     setLaboratorios(objeto);
   };
 
-  const retornaTextoTipoDocumento = (
-    tipoDocumento: TiposDocumentoChoices
-  ): string => {
-    return OUTROS_DOCUMENTOS_OPTIONS.find((x) => x.value === tipoDocumento)
-      .label;
-  };
-
-  const renderizaArquivos = (lista: TiposDocumentos) => {
-    return lista?.arquivos?.map((arquivo, index) => {
-      return (
-        <div className="row mt-2" key={index}>
-          <div className="col-4">
-            <BotaoAnexo urlAnexo={arquivo.arquivo} />
-          </div>
-        </div>
-      );
-    });
-  };
-
-  const adicionaPrazo = () => {
+  const adicionaPrazo = (): void => {
     setPrazos([...prazos, true]);
   };
 
@@ -252,10 +232,10 @@ export default () => {
     }
   };
 
-  const geraInitialValues = (doc: DocumentosRecebimentoParaAnalise) => {
+  const geraInitialValues = (doc: DocumentosRecebimentoParaAnalise): void => {
     let newPrazos = [];
     let iniciais = {
-      numero_empenho: doc.numero_empenho,
+      numero_empenho: doc.numero_empenho ? doc.numero_empenho : undefined,
       laboratorio: doc.laboratorio,
       quantidade_laudo: doc.quantidade_laudo?.toString(),
       unidade_medida: doc.unidade_medida,
@@ -271,7 +251,7 @@ export default () => {
       newPrazos.push(true);
     });
     if (newPrazos.length > prazos.length) setPrazos(newPrazos);
-    setInitialValues(iniciais);
+    setInitialValues(iniciais as AnaliseDocumentoPayload);
   };
 
   useEffect(() => {
@@ -423,7 +403,7 @@ export default () => {
                 <div className="subtitulo-documento">
                   Laudo enviado pelo Fornecedor:
                 </div>
-                {renderizaArquivos(laudo)}
+                <ArquivosTipoRecebimento lista={laudo} />
 
                 <hr />
 
@@ -612,26 +592,7 @@ export default () => {
 
                 <hr />
 
-                <div className="subtitulo">Outros Documentos</div>
-
-                <ul className="secao-tipo-documento">
-                  {objeto.tipos_de_documentos?.map((tipo, index) => (
-                    <li key={index}>
-                      <div className="subtitulo-documento">
-                        {retornaTextoTipoDocumento(tipo.tipo_documento)}
-                      </div>
-                      {tipo.tipo_documento === "OUTROS" && (
-                        <InputText
-                          label="Descrição do documento"
-                          valorInicial={tipo.descricao_documento}
-                          required
-                          disabled={true}
-                        />
-                      )}
-                      {renderizaArquivos(tipo)}
-                    </li>
-                  ))}
-                </ul>
+                <OutrosDocumentos documento={objeto} />
 
                 <hr />
 
