@@ -270,7 +270,7 @@ export default () => {
       iniciais[`justificativa_${index}`] = obj.justificativa;
       newPrazos.push(true);
     });
-    setPrazos(newPrazos);
+    if (newPrazos.length > prazos.length) setPrazos(newPrazos);
     setInitialValues(iniciais);
   };
 
@@ -488,7 +488,8 @@ export default () => {
                       className="input-analise"
                       required
                       validate={required}
-                      minDate={new Date()}
+                      minDate={null}
+                      maxDate={new Date()}
                     />
                   </div>
                   <div className="col-4">
@@ -538,7 +539,8 @@ export default () => {
                           className="input-analise"
                           required
                           validate={required}
-                          minDate={new Date()}
+                          minDate={null}
+                          maxDate={new Date()}
                         />
                       </div>
                       <div className="col-4">

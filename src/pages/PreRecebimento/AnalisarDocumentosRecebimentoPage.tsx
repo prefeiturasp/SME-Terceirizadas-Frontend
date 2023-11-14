@@ -11,7 +11,7 @@ import Analisar from "components/screens/PreRecebimento/DocumentosRecebimento/co
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}`,
-  titulo: "Analisar Documento de Recebimento",
+  titulo: "Analisar Documentos de Recebimento",
 };
 
 const anteriores = [
