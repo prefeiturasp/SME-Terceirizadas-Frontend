@@ -49,7 +49,6 @@ export interface FiltrosDocumentosRecebimento {
 }
 
 export interface AnaliseDocumentoPayload {
-  numero_empenho: string;
   laboratorio: string;
   quantidade_laudo: string;
   unidade_medida: string;
