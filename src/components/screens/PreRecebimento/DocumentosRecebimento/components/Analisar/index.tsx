@@ -165,7 +165,6 @@ export default () => {
     values: AnaliseDocumentoPayload
   ): AnaliseDocumentoPayload => {
     let payload: AnaliseDocumentoPayload = {
-      numero_empenho: values.numero_empenho,
       laboratorio: values.laboratorio,
       quantidade_laudo: values.quantidade_laudo?.split(".").join(""),
       unidade_medida: values.unidade_medida,
@@ -235,7 +234,6 @@ export default () => {
   const geraInitialValues = (doc: DocumentosRecebimentoParaAnalise): void => {
     let newPrazos = [];
     let iniciais = {
-      numero_empenho: doc.numero_empenho ? doc.numero_empenho : undefined,
       laboratorio: doc.laboratorio,
       quantidade_laudo: doc.quantidade_laudo?.toString(),
       unidade_medida: doc.unidade_medida,
@@ -388,17 +386,6 @@ export default () => {
                       valorInicial={objeto.numero_laudo}
                       required
                       disabled={true}
-                    />
-                  </div>
-                  <div className="col-6">
-                    <Field
-                      component={InputText}
-                      label="Nº do Empenho"
-                      name={`numero_empenho`}
-                      placeholder="Digite o Nº do Empenho"
-                      required
-                      validate={required}
-                      proibeLetras
                     />
                   </div>
                 </div>
