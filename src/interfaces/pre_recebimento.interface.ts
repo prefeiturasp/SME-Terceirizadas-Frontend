@@ -18,7 +18,6 @@ export interface DocumentosRecebimentoParaAnalise
   data_fabricacao_lote: string;
   data_final_lote: string;
   datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
-  numero_empenho: string;
   quantidade_laudo: number;
   saldo_laudo: number;
   validade_produto: string;
