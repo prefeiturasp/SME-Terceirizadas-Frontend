@@ -165,6 +165,12 @@ export const getProdutosRelatorioSuspenso = async (params) => {
   });
 };
 
+export const relatorioProdutosSuspensosPDF = async (params) => {
+  return await axios.get(`/produtos/relatorio-produto-suspenso-pdf/`, {
+    params,
+  });
+};
+
 export const getProtocolosDietaEspecial = async () => {
   return await axios.get(`/protocolo-dieta-especial/lista-nomes/`);
 };
