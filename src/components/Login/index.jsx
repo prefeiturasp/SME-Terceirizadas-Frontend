@@ -34,6 +34,7 @@ import {
 } from "components/screens/Cadastros/CadastroEmpresa/helper";
 import { composeValidators, deepCopy } from "helpers/utilities";
 import { Form, Field as FieldFF } from "react-final-form";
+import { getError } from "../../helpers/utilities";
 
 const TOOLTIP_CPF = `Somente números`;
 const TOOLTIP_CNPJ = `Somente números`;
@@ -160,8 +161,8 @@ export class Login extends Component {
             bloquearBotao: false,
             componenteAtivo: this.COMPONENTE.LOGIN,
           });
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(response.data.detail);
+        } else {
+          toastError(getError(response.data.detail));
           this.setState({ bloquearBotao: false });
         }
       });
