@@ -1,6 +1,8 @@
 import {
   TiposDocumentoChoices,
   Arquivo,
+  PrazoRecebimentoChoices,
+  DatasFabricacaoPrazos,
 } from "interfaces/pre_recebimento.interface";
 
 export interface ArquivoForm {
@@ -8,9 +10,19 @@ export interface ArquivoForm {
   base64: string;
 }
 
-export interface OptionMultiselect {
+export interface OptionsTipoDocumento {
   value: TiposDocumentoChoices;
   label: string;
+}
+
+export interface OptionsPrazoRecebimento {
+  uuid: PrazoRecebimentoChoices;
+  nome: string;
+}
+
+export interface OptionsGenerico {
+  uuid: string;
+  nome: string;
 }
 
 export interface TiposDocumentosPayload {
@@ -34,4 +46,17 @@ export interface FiltrosDocumentosRecebimento {
   numero_cronograma?: string;
   status?: string;
   data_criacao?: string;
+}
+
+export interface AnaliseDocumentoPayload {
+  numero_empenho: string;
+  laboratorio: string;
+  quantidade_laudo: string;
+  unidade_medida: string;
+  data_fabricacao_lote: string;
+  validade_produto: string;
+  data_final_lote: string;
+  saldo_laudo: string;
+  datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
+  correcao_solicitada: string;
 }

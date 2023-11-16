@@ -3,6 +3,10 @@ import React, { useEffect, useState } from "react";
 import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
 import { cardsAprovacao } from "./constants";
 import {
+  ANALISAR_DOCUMENTO_RECEBIMENTO,
+  PRE_RECEBIMENTO,
+} from "configs/constants";
+import {
   parseDataHoraBrToMoment,
   comparaObjetosMoment,
   truncarString,
@@ -51,7 +55,7 @@ export default () => {
     return items.sort(ordenarPorLogMaisRecente).map((item) => ({
       text: gerarTextoCardDocumento(item),
       date: item.log_mais_recente.slice(0, 10),
-      link: "",
+      link: `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`,
       status: item.status,
     }));
   };
@@ -119,8 +123,8 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-painel-layout-embalagem">
-        <div className="card-body painel-layout-embalagem">
+      <div className="card mt-3 card-painel-documentos-recebimento">
+        <div className="card-body painel-documentos-recebimento">
           <h5 className="card-title mt-3">Aprovação de Documentos</h5>
 
           <div className="row mt-4">

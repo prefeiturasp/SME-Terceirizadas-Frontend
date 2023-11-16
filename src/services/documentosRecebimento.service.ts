@@ -1,10 +1,14 @@
-import { DocumentosRecebimentoPayload } from "components/screens/PreRecebimento/DocumentosRecebimento/interfaces";
+import {
+  AnaliseDocumentoPayload,
+  DocumentosRecebimentoPayload,
+} from "components/screens/PreRecebimento/DocumentosRecebimento/interfaces";
 import axios from "./_base";
 import {
   ResponseDocumentosPorStatusDashboard,
   ResponseDocumentosRecebimento,
   ResponseDocumentosRecebimentoDashboard,
   ResponseDocumentosRecebimentoDetalhado,
+  ResponseDocumentosRecebimentoParaAnalise,
 } from "interfaces/responses.interface";
 import { FiltrosDashboardDocumentos } from "interfaces/pre_recebimento.interface";
 
@@ -15,6 +19,11 @@ export const cadastraDocumentoRecebimento = async (
 export const detalharDocumentoRecebimento = async (
   uuid: string
 ): Promise<ResponseDocumentosRecebimentoDetalhado> =>
+  await axios.get(`/documentos-de-recebimento/${uuid}/`);
+
+export const detalharDocumentoParaAnalise = async (
+  uuid: string
+): Promise<ResponseDocumentosRecebimentoParaAnalise> =>
   await axios.get(`/documentos-de-recebimento/${uuid}/`);
 
 export const listarDocumentosRecebimento = async (
@@ -33,3 +42,21 @@ export const getDashboardDocumentosRecebimentoPorStatus = async (
   params: URLSearchParams = null
 ): Promise<ResponseDocumentosPorStatusDashboard> =>
   await axios.get(`/documentos-de-recebimento/dashboard/`, { params });
+
+export const analisaDocumentoRecebimentoRascunho = async (
+  payload: AnaliseDocumentoPayload,
+  uuid: string
+) =>
+  await axios.patch(
+    `/documentos-de-recebimento/${uuid}/analise-documentos-rascunho/`,
+    payload
+  );
+
+export const analisaDocumentoRecebimento = async (
+  payload: AnaliseDocumentoPayload,
+  uuid: string
+) =>
+  await axios.patch(
+    `/documentos-de-recebimento/${uuid}/analise-documentos/`,
+    payload
+  );
