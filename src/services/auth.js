@@ -4,22 +4,40 @@ import { toastError } from "../components/Shareable/Toast/dialogs";
 import HTTP_STATUS from "http-status-codes";
 import { getError } from "helpers/utilities";
 import { criarUsuarioCES } from "./ces.service";
+import axios from "./_base";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 export const TOKEN_ALIAS = "TOKEN_JWT";
 export const TOKEN_REFRESH_ALIAS = "TOKEN_REFRESH_JWT";
 
+const postLogin = async (login_, password) => {
+  const url = CONFIG.JWT_AUTH;
+  const response = await axios
+    .post(
+      url,
+      { login: login_, password: password },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    )
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 const login = async (login, password) => {
   try {
-    const response = await fetch(CONFIG.JWT_AUTH, {
-      method: "POST",
-      body: JSON.stringify({ login, password }),
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
-    const json = await response.json();
-
+    const response = await postLogin(login, password);
+    if (response.status !== HTTP_STATUS.OK) {
+      toastError(getError(response.data));
+      return;
+    }
+    const json = await response.data;
     const isValid = isValidResponse(json);
     if (isValid) {
       localStorage.setItem(TOKEN_ALIAS, json.token);
