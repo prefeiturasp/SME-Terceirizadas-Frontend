@@ -756,6 +756,13 @@ export const validacoesTabelasDietas = (
   const maxFrequenciaAlimentacao = Number(
     allValues[`frequencia__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
   );
+  const lanche_4h_value = Number(
+    allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`]
+  );
+  const lanche_value = Number(
+    allValues[`lanche__dia_${dia}__categoria_${categoria}`]
+  );
+  const totalLanchesDieta = lanche_4h_value + lanche_value;
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
   if (
     value &&
@@ -811,6 +818,14 @@ export const validacoesTabelasDietas = (
       inputName.includes("refeicao"))
   ) {
     return "Frequência acima inválida ou não preenchida.";
+  } else if (
+    inputName.includes("frequencia") &&
+    categoria !== idCategoriaAlimentacao &&
+    value &&
+    totalLanchesDieta &&
+    Number(value) < totalLanchesDieta
+  ) {
+    return "Quantidade de dietas especiais autorizadas foi excedida.";
   }
   if (
     ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola) ||
