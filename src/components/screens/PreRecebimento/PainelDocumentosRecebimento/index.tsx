@@ -1,7 +1,7 @@
 import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
-import { cardsAprovacao } from "./constants";
+import { cardsPainel } from "./constants";
 import {
   ANALISAR_DOCUMENTO_RECEBIMENTO,
   PRE_RECEBIMENTO,
@@ -29,7 +29,7 @@ export default () => {
   const [filtrado, setFiltrado] = useState<boolean>(false);
 
   const [cardsAprovacaoDocumento, setCardsAprovacaoDocumento] =
-    useState<CardConfig[]>(cardsAprovacao);
+    useState<CardConfig[]>(cardsPainel);
 
   const ordenarPorLogMaisRecente = (
     a: DocumentosRecebimentoDashboard,
