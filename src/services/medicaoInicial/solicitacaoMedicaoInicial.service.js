@@ -232,3 +232,12 @@ export const getCEUGESTAOFrequenciasDietas = async (uuid) => {
     return data;
   }
 };
+
+export const getPeriodosEscolaCemeiComAlunosEmei = async (params) => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/periodos-escola-cemei-com-alunos-emei/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

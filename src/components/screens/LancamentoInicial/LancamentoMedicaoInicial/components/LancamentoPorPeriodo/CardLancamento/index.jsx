@@ -18,7 +18,7 @@ import {
   textoBotaoCardLancamento,
 } from "../helpers";
 
-export default ({
+export const CardLancamento = ({
   textoCabecalho = null,
   grupo,
   cor,

@@ -10,17 +10,19 @@ import {
   getSolicitacoesSuspensoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 
-export const formatarPayloadPeriodoLancamento = (
+export const formatarPayloadPeriodoLancamentoCeiCemei = (
   values,
   tabelaAlimentacaoCEIRows,
   dadosIniciaisFiltered,
-  diasDaSemanaSelecionada
+  diasDaSemanaSelecionada,
+  ehEmeiDaCemeiLocation
 ) => {
   if (
-    (values["periodo_escolar"] &&
-      values["periodo_escolar"].includes("Solicitações")) ||
-    values["periodo_escolar"] === "ETEC" ||
-    values["periodo_escolar"] === "Programas e Projetos"
+    ehEmeiDaCemeiLocation &&
+    ((values["periodo_escolar"] &&
+      values["periodo_escolar"].includes("Infantil")) ||
+      values["periodo_escolar"] === "ETEC" ||
+      values["periodo_escolar"] === "Programas e Projetos")
   ) {
     values["grupo"] = values["periodo_escolar"];
     delete values["periodo_escolar"];
@@ -46,17 +48,28 @@ export const formatarPayloadPeriodoLancamento = (
       const keySplitted = arr[0].split("__");
       const categoria = keySplitted.pop();
       const idCategoria = categoria.match(/\d/g).join("");
-      const dia = keySplitted[2].match(/\d/g).join("");
+      let dia = null;
       const nome_campo = keySplitted[0];
-      const uuid_faixa_etaria = keySplitted[1].replace("faixa_", "");
 
-      return valoresMedicao.push({
-        dia: dia,
-        valor: ["<p></p>\n", ""].includes(arr[1]) ? 0 : arr[1],
-        nome_campo: nome_campo,
-        categoria_medicao: idCategoria,
-        faixa_etaria: uuid_faixa_etaria,
-      });
+      if (ehEmeiDaCemeiLocation) {
+        dia = keySplitted[1].match(/\d/g).join("");
+        return valoresMedicao.push({
+          dia: dia,
+          valor: ["<p></p>\n", ""].includes(arr[1]) ? 0 : arr[1],
+          nome_campo: nome_campo,
+          categoria_medicao: idCategoria,
+        });
+      } else {
+        dia = keySplitted[2].match(/\d/g).join("");
+        const uuid_faixa_etaria = keySplitted[1].replace("faixa_", "");
+        return valoresMedicao.push({
+          dia: dia,
+          valor: ["<p></p>\n", ""].includes(arr[1]) ? 0 : arr[1],
+          nome_campo: nome_campo,
+          categoria_medicao: idCategoria,
+          faixa_etaria: uuid_faixa_etaria,
+        });
+      }
     });
 
   valoresMedicao = valoresMedicao.filter((valorMed) => {
@@ -186,42 +199,70 @@ export const desabilitarField = (
     locale: ptBR,
   }).toString();
 
-  if (
-    ["Mês anterior", "Mês posterior"].includes(
-      values[
-        `${rowName}__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
-      ]
-    ) ||
-    (mesConsiderado === mesAtual &&
-      Number(dia) >= format(mesAnoDefault, "dd")) ||
-    !validacaoDiaLetivo(dia)
-  ) {
-    return true;
-  } else if (
-    (nomeCategoria === "ALIMENTAÇÃO" &&
-      (rowName === "matriculados" ||
-        !values[
-          `matriculados__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
-        ])) ||
-    (nomeCategoria.includes("DIETA") &&
-      (rowName === "dietas_autorizadas" ||
-        !values[
+  if (location && location.state && location.state.ehEmeiDaCemei) {
+    if (
+      ["Mês anterior", "Mês posterior"].includes(
+        values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+      ) ||
+      (mesConsiderado === mesAtual &&
+        Number(dia) >= format(mesAnoDefault, "dd")) ||
+      !validacaoDiaLetivo(dia)
+    ) {
+      return true;
+    } else if (
+      (nomeCategoria === "ALIMENTAÇÃO" &&
+        (rowName === "matriculados" ||
+          !values[`matriculados__dia_${dia}__categoria_${categoria}`])) ||
+      (nomeCategoria.includes("DIETA") &&
+        (rowName === "dietas_autorizadas" ||
+          !values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`])) ||
+      Number(
+        values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+      ) === 0 ||
+      Number(values[`matriculados__dia_${dia}__categoria_${categoria}`]) === 0
+    ) {
+      return true;
+    } else if (rowName === "frequencia") {
+      return false;
+    }
+  } else {
+    if (
+      ["Mês anterior", "Mês posterior"].includes(
+        values[
+          `${rowName}__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+        ]
+      ) ||
+      (mesConsiderado === mesAtual &&
+        Number(dia) >= format(mesAnoDefault, "dd")) ||
+      !validacaoDiaLetivo(dia)
+    ) {
+      return true;
+    } else if (
+      (nomeCategoria === "ALIMENTAÇÃO" &&
+        (rowName === "matriculados" ||
+          !values[
+            `matriculados__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+          ])) ||
+      (nomeCategoria.includes("DIETA") &&
+        (rowName === "dietas_autorizadas" ||
+          !values[
+            `dietas_autorizadas__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+          ])) ||
+      Number(
+        values[
           `dietas_autorizadas__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
-        ])) ||
-    Number(
-      values[
-        `dietas_autorizadas__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
-      ]
-    ) === 0 ||
-    Number(
-      values[
-        `matriculados__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
-      ]
-    ) === 0
-  ) {
-    return true;
-  } else if (rowName === "frequencia") {
-    return false;
+        ]
+      ) === 0 ||
+      Number(
+        values[
+          `matriculados__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+        ]
+      ) === 0
+    ) {
+      return true;
+    } else if (rowName === "frequencia") {
+      return false;
+    }
   }
 };
 
@@ -431,6 +472,65 @@ export const formatarLinhasTabelaAlimentacaoCEI = (
   });
 
   return linhasTabelaAlimentacaoCEI;
+};
+
+export const formatarLinhasTabelaAlimentacaoEmeiDaCemei = (
+  tiposAlimentacao
+) => {
+  const tiposAlimentacaoFormatadas = tiposAlimentacao.map((alimentacao) => {
+    return {
+      ...alimentacao,
+      name: alimentacao.nome
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replaceAll(/ /g, "_"),
+    };
+  });
+  const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
+    (ali) => ali.nome === "Refeição"
+  );
+  if (indexRefeicao !== -1) {
+    tiposAlimentacaoFormatadas[indexRefeicao].nome = "Refeição 1ª Oferta";
+    tiposAlimentacaoFormatadas.splice(indexRefeicao + 1, 0, {
+      nome: "Repetição Refeição",
+      name: "repeticao_refeicao",
+      uuid: null,
+    });
+  }
+
+  const indexSobremesa = tiposAlimentacaoFormatadas.findIndex(
+    (ali) => ali.nome === "Sobremesa"
+  );
+  if (indexSobremesa !== -1) {
+    tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1º Oferta";
+    tiposAlimentacaoFormatadas.splice(indexSobremesa + 1, 0, {
+      nome: "Repetição Sobremesa",
+      name: "repeticao_sobremesa",
+      uuid: null,
+    });
+  }
+
+  tiposAlimentacaoFormatadas.unshift(
+    {
+      nome: "Matriculados",
+      name: "matriculados",
+      uuid: null,
+    },
+    {
+      nome: "Frequência",
+      name: "frequencia",
+      uuid: null,
+    }
+  );
+
+  tiposAlimentacaoFormatadas.push({
+    nome: "Observações",
+    name: "observacoes",
+    uuid: null,
+  });
+
+  return tiposAlimentacaoFormatadas;
 };
 
 export const formatarLinhasTabelasDietasCEI = (
