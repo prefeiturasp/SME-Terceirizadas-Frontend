@@ -42,7 +42,7 @@ function useResponsaveis(initialState) {
   return { responsaveis, setaResponsavel };
 }
 
-export default ({
+export const InformacoesMedicaoInicialCEI = ({
   periodoSelecionado,
   escolaInstituicao,
   nomeTerceirizada,

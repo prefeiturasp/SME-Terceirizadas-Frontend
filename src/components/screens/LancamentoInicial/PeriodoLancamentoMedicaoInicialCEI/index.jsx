@@ -42,6 +42,7 @@ import {
   botaoAdicionarObrigatorioTabelaAlimentacao,
   validacoesTabelaAlimentacaoCEI,
   validacoesTabelasDietasCEI,
+  validacoesTabelaAlimentacaoEmeidaCemei,
   validarFormulario,
   validarCamposComInclusoesDeAlimentacaoSemObservacao,
   exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI,
@@ -55,9 +56,10 @@ import {
   deveExistirObservacao,
   ehDiaParaCorrigir,
   formatarLinhasTabelaAlimentacaoCEI,
+  formatarLinhasTabelaAlimentacaoEmeiDaCemei,
   formatarLinhasTabelasDietasCEI,
   formatarPayloadParaCorrecao,
-  formatarPayloadPeriodoLancamento,
+  formatarPayloadPeriodoLancamentoCeiCemei,
   getSolicitacoesInclusaoAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
   textoBotaoObservacao,
@@ -69,6 +71,7 @@ import {
   getFeriadosNoMes,
   getLogMatriculadosPorFaixaEtariaDia,
   getLogDietasAutorizadasCEIPeriodo,
+  getMatriculadosPeriodo,
   getValoresPeriodosLancamentos,
   setPeriodoLancamento,
   updateValoresPeriodosLancamentos,
@@ -105,6 +108,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     valoresMatriculadosFaixaEtariaDia,
     setValoresMatriculadosFaixaEtariaDia,
   ] = useState([]);
+  const [valoresMatriculadosEmeiDaCemei, setValoresMatriculadosEmeiDaCemei] =
+    useState([]);
   const [logQtdDietasAutorizadasCEI, setLogQtdDietasAutorizadasCEI] = useState(
     []
   );
@@ -149,6 +154,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   let mesAnoDefault = new Date();
 
   const grupoLocation = location && location.state && location.state.grupo;
+  const ehEmeiDaCemeiLocation =
+    location && location.state && location.state.ehEmeiDaCemei;
 
   useEffect(() => {
     const mesAnoSelecionado = location.state
@@ -203,6 +210,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
       let response_log_matriculados_por_faixa_etaria_dia = [];
       let response_log_dietas_autorizadas_cei = [];
+      let response_matriculados_emei_da_cemei = [];
 
       let response_categorias_medicao = await getCategoriasDeMedicao();
 
@@ -220,10 +228,30 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         response_log_matriculados_por_faixa_etaria_dia.data
       );
 
-      const linhasTabelaAlimentacaoCEI = formatarLinhasTabelaAlimentacaoCEI(
-        response_log_matriculados_por_faixa_etaria_dia,
-        periodoGrupo
-      );
+      if (ehEmeiDaCemeiLocation) {
+        const params_matriculados = {
+          escola_uuid: escola.uuid,
+          mes: mes,
+          ano: ano,
+          tipo_turma: "REGULAR",
+          periodo_escolar: periodo,
+        };
+        response_matriculados_emei_da_cemei = await getMatriculadosPeriodo(
+          params_matriculados
+        );
+        setValoresMatriculadosEmeiDaCemei(
+          response_matriculados_emei_da_cemei.data
+        );
+      }
+
+      const linhasTabelaAlimentacaoCEI = ehEmeiDaCemeiLocation
+        ? formatarLinhasTabelaAlimentacaoEmeiDaCemei(
+            location.state.tiposAlimentacao
+          )
+        : formatarLinhasTabelaAlimentacaoCEI(
+            response_log_matriculados_por_faixa_etaria_dia,
+            periodoGrupo
+          );
       setTabelaAlimentacaoCEIRows(linhasTabelaAlimentacaoCEI);
 
       const params_dietas_autorizadas_cei = {
@@ -250,12 +278,14 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
       let params = {
         uuid_solicitacao_medicao: uuid,
-        nome_grupo: location.state.grupo,
+        nome_grupo: ehEmeiDaCemeiLocation ? periodo : location.state.grupo,
       };
-      params = {
-        ...params,
-        nome_periodo_escolar: periodo,
-      };
+      if (!ehEmeiDaCemeiLocation) {
+        params = {
+          ...params,
+          nome_periodo_escolar: periodo,
+        };
+      }
       const response_valores_periodos = await getValoresPeriodosLancamentos(
         params
       );
@@ -293,7 +323,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         linhasTabelasDietasCEI,
         mesAnoSelecionado,
         response_log_matriculados_por_faixa_etaria_dia.data,
-        response_log_dietas_autorizadas_cei.data
+        response_log_dietas_autorizadas_cei.data,
+        response_matriculados_emei_da_cemei.data
       );
 
       let items = [];
@@ -325,12 +356,14 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     tabelaDietaCEIRows,
     mesAno,
     matriculadosFaixaEtariaDia,
-    logQtdDietasAutorizadasCEI
+    logQtdDietasAutorizadasCEI,
+    matriculadosEmeiDaCemei
   ) => {
     let dadosValoresMedicoes = {};
     let dadosValoresMatriculadosFaixaEtariaDia = {};
     let dadosValoresDietasAutorizadas = {};
     let dadosValoresForaDoMes = {};
+    let dadosValoresMatriculadosEmeiDaCemei = {};
     let periodoEscolar = "MANHA";
     let justificativaPeriodo = "";
     if (location.state) {
@@ -442,15 +475,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                           ] = `${qtdDietasTipoA}`);
                       });
                   }
+                  let nameInputField = null;
+                  if (ehEmeiDaCemeiLocation) {
+                    nameInputField = `${row.name}__dia_${dia}__categoria_${categoria.id}`;
+                  } else {
+                    nameInputField = `${row.name}__faixa_${row.uuid}__dia_${dia}__categoria_${categoria.id}`;
+                  }
                   if (
                     Number(semanaSelecionada) === 1 &&
                     Number(dia) > 20 &&
                     diasSemana.includes(dia)
                   ) {
                     result = "Mês anterior";
-                    dadosValoresForaDoMes[
-                      `${row.name}__faixa_${row.uuid}__dia_${dia}__categoria_${categoria.id}`
-                    ] = result;
+                    dadosValoresForaDoMes[nameInputField] = result;
                   }
                   if (
                     [4, 5, 6].includes(Number(semanaSelecionada)) &&
@@ -458,9 +495,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                     diasSemana.includes(dia)
                   ) {
                     result = "Mês posterior";
-                    dadosValoresForaDoMes[
-                      `${row.name}__faixa_${row.uuid}__dia_${dia}__categoria_${categoria.id}`
-                    ] = result;
+                    dadosValoresForaDoMes[nameInputField] = result;
                   }
                 }
               })
@@ -468,7 +503,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
         valoresMedicao &&
           valoresMedicao.forEach((valor_medicao) => {
-            if (valor_medicao.nome_campo === "observacoes") {
+            if (
+              valor_medicao.nome_campo === "observacoes" ||
+              ehEmeiDaCemeiLocation
+            ) {
               dadosValoresMedicoes[
                 `${valor_medicao.nome_campo}__dia_${valor_medicao.dia}__categoria_${valor_medicao.categoria_medicao}`
               ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
@@ -509,6 +547,15 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           : null;
       });
 
+    ehEmeiDaCemeiLocation &&
+      matriculadosEmeiDaCemei &&
+      idCategoriaAlimentacao &&
+      matriculadosEmeiDaCemei.forEach((objMatriculadoEmeiDaCemei) => {
+        dadosValoresMatriculadosEmeiDaCemei[
+          `matriculados__dia_${objMatriculadoEmeiDaCemei.dia}__categoria_${idCategoriaAlimentacao}`
+        ] = objMatriculadoEmeiDaCemei.quantidade_alunos;
+      });
+
     valoresMedicao &&
       valoresMedicao.length > 0 &&
       setUltimaAtualizacaoMedicao(valoresMedicao[0].medicao_alterado_em);
@@ -517,6 +564,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       ...dadosMesPeriodo,
       ...dadosValoresMedicoes,
       ...dadosValoresMatriculadosFaixaEtariaDia,
+      ...dadosValoresMatriculadosEmeiDaCemei,
       ...dadosValoresDietasAutorizadas,
       ...dadosValoresForaDoMes,
       semanaSelecionada,
@@ -592,7 +640,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         tabelaDietaCEIRows,
         mesAnoConsiderado,
         valoresMatriculadosFaixaEtariaDia,
-        logQtdDietasAutorizadasCEI
+        logQtdDietasAutorizadasCEI,
+        valoresMatriculadosEmeiDaCemei
       );
     };
     semanaSelecionada && formatar();
@@ -663,14 +712,16 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
       const keySplitted = key.split("__");
       const uuid_faixa_etaria = keySplitted[1].replace("faixa_", "");
+      let nameMatriculadoInputField = null;
+      if (ehEmeiDaCemeiLocation) {
+        nameMatriculadoInputField = `matriculados__dia_${dia}__categoria_${categoria}`;
+      } else {
+        nameMatriculadoInputField = `matriculados__faixa_${uuid_faixa_etaria}__dia_${dia}__categoria_${categoria}`;
+      }
       if (
         !(key.includes("observacoes") || key.includes("matriculados")) &&
         Number(value) >
-          Number(
-            valuesMesmoDiaDaObservacao[
-              `matriculados__faixa_${uuid_faixa_etaria}__dia_${dia}__categoria_${categoria}`
-            ]
-          )
+          Number(valuesMesmoDiaDaObservacao[nameMatriculadoInputField])
       ) {
         qtdCamposComErro++;
       }
@@ -685,13 +736,16 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       const keySplitted = v[0].split("__");
       const categoria = keySplitted.pop();
       const idCategoria = categoria.match(/\d/g).join("");
-      const dia = keySplitted[v[0].includes("observacoes") ? 1 : 2]
+      const dia = keySplitted[
+        v[0].includes("observacoes") || ehEmeiDaCemeiLocation ? 1 : 2
+      ]
         .match(/\d/g)
         .join("");
       const nome_campo = keySplitted[0];
-      const uuid_faixa_etaria = v[0].includes("observacoes")
-        ? ""
-        : keySplitted[1].replace("faixa_", "");
+      const uuid_faixa_etaria =
+        v[0].includes("observacoes") || ehEmeiDaCemeiLocation
+          ? ""
+          : keySplitted[1].replace("faixa_", "");
 
       return valoresMedicao.push({
         dia: dia,
@@ -712,8 +766,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       eh_observacao: true,
     };
     if (
-      (values["periodo_escolar"] &&
-        values["periodo_escolar"].includes("Solicitações")) ||
+      (ehEmeiDaCemeiLocation &&
+        values["periodo_escolar"] &&
+        values["periodo_escolar"].includes("Infantil")) ||
       values["periodo_escolar"] === "ETEC" ||
       values["periodo_escolar"] === "Programas e Projetos"
     ) {
@@ -802,12 +857,12 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       )
       .filter(([key]) => key.includes("categoria"));
 
-    const payload = formatarPayloadPeriodoLancamento(
+    const payload = formatarPayloadPeriodoLancamentoCeiCemei(
       valuesClone,
       tabelaAlimentacaoCEIRows,
       dadosIniciaisFiltered,
       diasDaSemanaSelecionada,
-      grupoLocation
+      ehEmeiDaCemeiLocation
     );
     if (payload.valores_medicao.length === 0)
       return (
@@ -872,7 +927,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         tabelaDietaCEIRows,
         mesAnoConsiderado,
         valoresMatriculadosFaixaEtariaDia,
-        logQtdDietasAutorizadasCEI
+        logQtdDietasAutorizadasCEI,
+        valoresMatriculadosEmeiDaCemei
       );
     }
     setLoading(false);
@@ -1075,6 +1131,18 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           idCategoria,
           allValues,
           uuidFaixaEtaria
+        );
+      }
+    };
+
+  const fieldValidationsTabelasEmeidaCemei =
+    (rowName, dia, idCategoria, nomeCategoria) => (value, allValues) => {
+      if (nomeCategoria === "ALIMENTAÇÃO") {
+        return validacoesTabelaAlimentacaoEmeidaCemei(
+          rowName,
+          dia,
+          idCategoria,
+          allValues
         );
       }
     };
@@ -1325,15 +1393,20 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                               className={`nome-linha-cei pl-2 ${
                                                 row.name === "observacoes" &&
                                                 "mt-2"
+                                              } ${
+                                                row.name !== "observacoes" &&
+                                                ehEmeiDaCemeiLocation &&
+                                                "mt-3"
                                               }`}
                                             >
                                               {row.nome}
                                             </b>
-                                            {row.name !== "observacoes" && (
-                                              <b className="faixa-etaria pl-2">
-                                                {row.faixa_etaria}
-                                              </b>
-                                            )}
+                                            {row.name !== "observacoes" &&
+                                              !ehEmeiDaCemeiLocation && (
+                                                <b className="faixa-etaria pl-2">
+                                                  {row.faixa_etaria}
+                                                </b>
+                                              )}
                                           </div>
                                           {weekColumns.map((column) => (
                                             <div
@@ -1424,89 +1497,164 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                 )
                                               ) : (
                                                 <div className="field-values-input">
-                                                  <Field
-                                                    className={`m-2 ${classNameFieldTabelaAlimentacao(
-                                                      row,
-                                                      column,
-                                                      categoria
-                                                    )}`}
-                                                    component={
-                                                      InputValueMedicao
-                                                    }
-                                                    classNameToNextInput={getClassNameToNextInput(
-                                                      row,
-                                                      column,
-                                                      categoria,
-                                                      index
-                                                    )}
-                                                    classNameToPrevInput={getClassNameToPrevInput(
-                                                      row,
-                                                      column,
-                                                      categoria,
-                                                      index
-                                                    )}
-                                                    apenasNumeros
-                                                    name={`${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`}
-                                                    disabled={desabilitarField(
-                                                      column.dia,
-                                                      row.name,
-                                                      categoria.id,
-                                                      categoria.nome,
-                                                      formValuesAtualizados,
-                                                      mesAnoConsiderado,
-                                                      mesAnoDefault,
-                                                      inclusoesAutorizadas,
-                                                      validacaoDiaLetivo,
-                                                      validacaoSemana,
-                                                      location,
-                                                      grupoLocation,
-                                                      valoresPeriodosLancamentos,
-                                                      feriadosNoMes,
-                                                      row.uuid,
-                                                      diasParaCorrecao
-                                                    )}
-                                                    defaultValue={defaultValue(
-                                                      column,
-                                                      row
-                                                    )}
-                                                    exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI={exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI(
-                                                      inclusoesAutorizadas,
-                                                      row,
-                                                      column,
-                                                      categoria,
-                                                      inputsInclusaoComErro,
-                                                      exibirTooltipAoSalvar
-                                                    )}
-                                                    exibeTooltipSuspensoesAutorizadasCEI={exibirTooltipSuspensoesAutorizadasCEI(
-                                                      formValuesAtualizados,
-                                                      row,
-                                                      column,
-                                                      categoria,
-                                                      suspensoesAutorizadas
-                                                    )}
-                                                    validate={fieldValidationsTabelasCEI(
-                                                      row.name,
-                                                      column.dia,
-                                                      categoria.id,
-                                                      categoria.nome,
-                                                      row.uuid
-                                                    )}
-                                                  />
-                                                  <OnChange
-                                                    name={`${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`}
-                                                  >
-                                                    {(value, previous) => {
-                                                      onChangeInput(
-                                                        value,
-                                                        previous,
-                                                        errors,
-                                                        formValuesAtualizados,
-                                                        column.dia,
-                                                        categoria,
-                                                        column
-                                                      );
-                                                    }}
-                                                  </OnChange>
+                                                  {ehEmeiDaCemeiLocation ? (
+                                                    <>
+                                                      <Field
+                                                        className={`m-2 ${classNameFieldTabelaAlimentacao(
+                                                          row,
+                                                          column,
+                                                          categoria
+                                                        )}`}
+                                                        component={
+                                                          InputValueMedicao
+                                                        }
+                                                        classNameToNextInput={getClassNameToNextInput(
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          index
+                                                        )}
+                                                        classNameToPrevInput={getClassNameToPrevInput(
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          index
+                                                        )}
+                                                        apenasNumeros
+                                                        name={`${row.name}__dia_${column.dia}__categoria_${categoria.id}`}
+                                                        disabled={desabilitarField(
+                                                          column.dia,
+                                                          row.name,
+                                                          categoria.id,
+                                                          categoria.nome,
+                                                          formValuesAtualizados,
+                                                          mesAnoConsiderado,
+                                                          mesAnoDefault,
+                                                          inclusoesAutorizadas,
+                                                          validacaoDiaLetivo,
+                                                          validacaoSemana,
+                                                          location,
+                                                          grupoLocation,
+                                                          valoresPeriodosLancamentos,
+                                                          feriadosNoMes,
+                                                          null,
+                                                          diasParaCorrecao
+                                                        )}
+                                                        defaultValue={defaultValue(
+                                                          column,
+                                                          row
+                                                        )}
+                                                        validate={fieldValidationsTabelasEmeidaCemei(
+                                                          row.name,
+                                                          column.dia,
+                                                          categoria.id,
+                                                          categoria.nome,
+                                                          null
+                                                        )}
+                                                      />
+                                                      <OnChange
+                                                        name={`${row.name}__dia_${column.dia}__categoria_${categoria.id}`}
+                                                      >
+                                                        {(value, previous) => {
+                                                          onChangeInput(
+                                                            value,
+                                                            previous,
+                                                            errors,
+                                                            formValuesAtualizados,
+                                                            column.dia,
+                                                            categoria,
+                                                            column
+                                                          );
+                                                        }}
+                                                      </OnChange>
+                                                    </>
+                                                  ) : (
+                                                    <>
+                                                      <Field
+                                                        className={`m-2 ${classNameFieldTabelaAlimentacao(
+                                                          row,
+                                                          column,
+                                                          categoria
+                                                        )}`}
+                                                        component={
+                                                          InputValueMedicao
+                                                        }
+                                                        classNameToNextInput={getClassNameToNextInput(
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          index
+                                                        )}
+                                                        classNameToPrevInput={getClassNameToPrevInput(
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          index
+                                                        )}
+                                                        apenasNumeros
+                                                        name={`${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`}
+                                                        disabled={desabilitarField(
+                                                          column.dia,
+                                                          row.name,
+                                                          categoria.id,
+                                                          categoria.nome,
+                                                          formValuesAtualizados,
+                                                          mesAnoConsiderado,
+                                                          mesAnoDefault,
+                                                          inclusoesAutorizadas,
+                                                          validacaoDiaLetivo,
+                                                          validacaoSemana,
+                                                          location,
+                                                          grupoLocation,
+                                                          valoresPeriodosLancamentos,
+                                                          feriadosNoMes,
+                                                          row.uuid,
+                                                          diasParaCorrecao
+                                                        )}
+                                                        defaultValue={defaultValue(
+                                                          column,
+                                                          row
+                                                        )}
+                                                        exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI={exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI(
+                                                          inclusoesAutorizadas,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          inputsInclusaoComErro,
+                                                          exibirTooltipAoSalvar
+                                                        )}
+                                                        exibeTooltipSuspensoesAutorizadasCEI={exibirTooltipSuspensoesAutorizadasCEI(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          suspensoesAutorizadas
+                                                        )}
+                                                        validate={fieldValidationsTabelasCEI(
+                                                          row.name,
+                                                          column.dia,
+                                                          categoria.id,
+                                                          categoria.nome,
+                                                          row.uuid
+                                                        )}
+                                                      />
+                                                      <OnChange
+                                                        name={`${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`}
+                                                      >
+                                                        {(value, previous) => {
+                                                          onChangeInput(
+                                                            value,
+                                                            previous,
+                                                            errors,
+                                                            formValuesAtualizados,
+                                                            column.dia,
+                                                            categoria,
+                                                            column
+                                                          );
+                                                        }}
+                                                      </OnChange>
+                                                    </>
+                                                  )}
                                                 </div>
                                               )}
                                             </div>
