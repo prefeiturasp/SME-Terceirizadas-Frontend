@@ -694,6 +694,22 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
         const uuidValorMedicao = lancamento.uuid;
         uuidsValoresMedicaoParaCorrecao.push(uuidValorMedicao);
       });
+    } else if (ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+      Object.keys(valoresParaCorrecao).forEach((key) => {
+        const keySplitted = key.split("__");
+        const nome_campo = keySplitted[0];
+        const dia = keySplitted[2].match(/\d/g).join("");
+        const idCategoria = keySplitted[3].match(/\d/g).join("");
+        const lancamento = valoresLancamentos.find(
+          (valor) =>
+            valor.nome_campo === nome_campo &&
+            Number(valor.dia) === Number(dia) &&
+            Number(valor.categoria_medicao) === Number(idCategoria)
+        );
+
+        const uuidValorMedicao = lancamento.uuid;
+        uuidsValoresMedicaoParaCorrecao.push(uuidValorMedicao);
+      });
     }
 
     const descricao_correcao =
@@ -728,65 +744,48 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     toastWarn("Solicitação de correção cancelada");
   };
 
-  const onChangeCheckBox = (column, categoria, periodoGrupo) => {
-    if (
-      diasParaCorrecao.find(
-        (diaCorrecao) =>
-          diaCorrecao.dia === column.dia &&
-          diaCorrecao.categoria_medicao_uuid === categoria.uuid
-      )
-    ) {
-      setDiasParaCorrecao(
-        diasParaCorrecao.filter(
+  const onChangeCheckBox = (column, categoria, periodoGrupo, isChecked) => {
+    setDiasParaCorrecao((prevState) => {
+      if (isChecked) {
+        return [
+          ...prevState,
+          {
+            dia: column.dia,
+            categoria_medicao_uuid: categoria.uuid,
+          },
+        ];
+      } else {
+        return prevState.filter(
           (diaCorrecao) =>
-            !(
-              diaCorrecao.dia === column.dia &&
-              diaCorrecao.categoria_medicao_uuid === categoria.uuid
-            )
-        )
-      );
-    } else {
-      const diasParaCorrecao_ = deepCopy(diasParaCorrecao);
-      diasParaCorrecao_.push({
-        dia: column.dia,
-        categoria_medicao_uuid: categoria.uuid,
-      });
-      setDiasParaCorrecao(diasParaCorrecao_);
-    }
+            diaCorrecao.dia !== column.dia ||
+            diaCorrecao.categoria_medicao_uuid !== categoria.uuid
+        );
+      }
+    });
 
-    const keys = Object.keys(values).filter((key) =>
-      key.includes(
-        `dia_${column.dia}__categoria_${
-          categoria.id
-        }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-          0,
-          5
-        )}`
-      )
-    );
-    const valuesParaCorrecao = Object.keys(values)
-      .filter(
-        (key) =>
-          keys.includes(key) &&
-          !key.includes("ckbox_dias_semana") &&
-          values[key] &&
-          values[
-            `ckbox_dias_semana__dia_${column.dia}__categoria_${
-              categoria.id
-            }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-              0,
-              5
-            )}`
-          ]
-      )
-      .reduce((object, key) => {
-        return Object.assign(object, {
-          [key]: values[key],
-        });
+    const chaveBase = `dia_${column.dia}__categoria_${
+      categoria.id
+    }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+      0,
+      5
+    )}`;
+    const keys = Object.keys(values).filter((key) => key.includes(chaveBase));
+
+    if (isChecked) {
+      const novosValores = keys.reduce((obj, key) => {
+        if (!key.includes("ckbox_dias_semana") && values[key]) {
+          obj[key] = values[key];
+        }
+        return obj;
       }, {});
-    setValoresParaCorrecao(
-      Object.assign(valoresParaCorrecao, valuesParaCorrecao)
-    );
+      setValoresParaCorrecao({ ...valoresParaCorrecao, ...novosValores });
+    } else {
+      const valoresAtualizados = { ...valoresParaCorrecao };
+      keys.forEach((key) => {
+        delete valoresAtualizados[key];
+      });
+      setValoresParaCorrecao(valoresAtualizados);
+    }
   };
 
   const getClassNameToNextInput = (row, column, categoria, index) => {
@@ -952,11 +951,12 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                     5
                                   )}`}
                                 >
-                                  {() =>
+                                  {(value) =>
                                     onChangeCheckBox(
                                       column,
                                       categoria,
-                                      periodoGrupo
+                                      periodoGrupo,
+                                      value
                                     )
                                   }
                                 </OnChange>
