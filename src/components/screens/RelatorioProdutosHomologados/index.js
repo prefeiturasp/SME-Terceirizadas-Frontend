@@ -26,6 +26,7 @@ import "./style.scss";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import MeusDadosContext from "context/MeusDadosContext";
+import { formataParams } from "./helper";
 
 const RelatorioProdutosHomologados = () => {
   const { meusDados } = useContext(MeusDadosContext);
@@ -58,7 +59,7 @@ const RelatorioProdutosHomologados = () => {
 
   const getProdutosHomologados = async (filtros_ = filtros) => {
     setCarregando(true);
-    const response = await getProdutosPorTerceirizada(filtros_);
+    const response = await getProdutosPorTerceirizada(formataParams(filtros_));
     if (response.status === HTTP_STATUS.OK) {
       setDadosProdutos(response.data.results);
       setQuantidadeHomologados(response.data.count);
@@ -155,7 +156,7 @@ const RelatorioProdutosHomologados = () => {
                         type={BUTTON_TYPE.BUTTON}
                         disabled={exportando}
                         onClick={() => {
-                          exportarXLSX(filtros);
+                          exportarXLSX(formataParams(filtros));
                         }}
                         className="mr-3"
                       />
@@ -172,7 +173,9 @@ const RelatorioProdutosHomologados = () => {
                         style={BUTTON_STYLE.GREEN}
                         icon={BUTTON_ICON.PRINT}
                         onClick={async () => {
-                          const params = gerarParametrosConsulta(filtros);
+                          const params = gerarParametrosConsulta(
+                            formataParams(filtros)
+                          );
                           setCarregando(true);
                           await exportarPDF(params);
                           setCarregando(false);
