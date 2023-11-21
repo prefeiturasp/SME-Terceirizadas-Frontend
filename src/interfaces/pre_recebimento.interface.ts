@@ -23,8 +23,9 @@ export interface DocumentosRecebimentoParaAnalise
   validade_produto: string;
   numero_sei: string;
   fornecedor: string;
-  unidade_medida: string;
-  laboratorio: string;
+  unidade_medida: UnidadeMedidaSimples;
+  laboratorio: LaboratorioSimples;
+  log_mais_recente: string;
 }
 
 export interface DatasFabricacaoPrazos {
