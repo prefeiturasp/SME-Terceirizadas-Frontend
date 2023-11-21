@@ -576,10 +576,12 @@ export const flegarHomologacaoPDF = async (uuid) => {
 };
 
 export const getProdutosPorTerceirizada = async (params) => {
-  return await axios.get(
-    `/painel-gerencial-homologacoes-produtos/filtro-por-parametros-agrupado-terceirizada/`,
-    { params }
-  );
+  const url = `/painel-gerencial-homologacoes-produtos/filtro-por-parametros-agrupado-terceirizada/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getPDFRelatorioProdutosHomologados = async (params) => {
