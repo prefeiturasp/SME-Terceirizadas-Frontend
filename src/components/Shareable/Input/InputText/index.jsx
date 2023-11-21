@@ -36,6 +36,7 @@ export const InputText = (props) => {
     proibeLetras,
     proibeNumeros,
     agrupadorMilhar,
+    valorInicial,
   } = props;
   return (
     <div className={`input ${icone && "icon"}`}>
@@ -75,6 +76,7 @@ export const InputText = (props) => {
         title={title}
         pattern={pattern}
         maxLength={maxlength}
+        value={valorInicial || input.value}
         onInput={(e) => {
           e.target.value = toUppercaseActive
             ? e.target.value.toUpperCase()
@@ -131,6 +133,7 @@ InputText.propTypes = {
   required: PropTypes.bool,
   type: PropTypes.string,
   contador: PropTypes.number,
+  valorInicial: PropTypes.string,
 };
 
 InputText.defaultProps = {

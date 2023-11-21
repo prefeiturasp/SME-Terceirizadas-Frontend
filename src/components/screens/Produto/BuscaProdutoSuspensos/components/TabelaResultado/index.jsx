@@ -1,8 +1,19 @@
 import React, { Fragment, useState } from "react";
-import { getProdutosRelatorioSuspenso } from "services/produto.service";
+import {
+  getProdutosRelatorioSuspenso,
+  relatorioProdutosSuspensosPDF,
+} from "services/produto.service";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { Spin } from "antd";
 import { Paginacao } from "components/Shareable/Paginacao";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+} from "components/Shareable/Botao/constants";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import HTTP_STATUS from "http-status-codes";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 const TabelaResultado = ({
   produtosCount,
@@ -14,6 +25,17 @@ const TabelaResultado = ({
   page,
 }) => {
   const [carregando, setCarregando] = useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
+
+  const handleClickDownload = async () => {
+    const response = await relatorioProdutosSuspensosPDF(filtros);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
+  };
 
   const nextPage = (page) => {
     setCarregando(true);
@@ -79,6 +101,19 @@ const TabelaResultado = ({
               pageSize={pageSize}
             />
           </div>
+          <div className="col-12">
+            <Botao
+              texto="Exportar PDF"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              className="float-right ml-3"
+              onClick={() => handleClickDownload()}
+            />
+          </div>
+          <ModalSolicitacaoDownload
+            show={exibirModalCentralDownloads}
+            setShow={setExibirModalCentralDownloads}
+          />
         </div>
       </Spin>
     </div>

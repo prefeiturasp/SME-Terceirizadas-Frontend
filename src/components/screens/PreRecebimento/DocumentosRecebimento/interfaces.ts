@@ -1,29 +1,33 @@
-export interface Arquivo {
+import {
+  TiposDocumentoChoices,
+  Arquivo,
+  PrazoRecebimentoChoices,
+  DatasFabricacaoPrazos,
+} from "interfaces/pre_recebimento.interface";
+
+export interface ArquivoForm {
   nome: string;
   base64: string;
 }
 
-export interface ArquivoPayload {
-  nome: string;
-  arquivo: string;
-}
-
-export interface OptionMultiselect {
-  value: string;
+export interface OptionsTipoDocumento {
+  value: TiposDocumentoChoices;
   label: string;
 }
 
-export type TiposDocumento =
-  | "LAUDO"
-  | "DECLARACAO_LEI_1512010"
-  | "CERTIFICADO_CONF_ORGANICA"
-  | "RASTREABILIDADE"
-  | "DECLARACAO_MATERIA_ORGANICA"
-  | "OUTROS";
+export interface OptionsPrazoRecebimento {
+  uuid: PrazoRecebimentoChoices;
+  nome: string;
+}
+
+export interface OptionsGenerico {
+  uuid: string;
+  nome: string;
+}
 
 export interface TiposDocumentosPayload {
-  tipo_documento: TiposDocumento;
-  arquivos_do_tipo_de_documento: Array<ArquivoPayload>;
+  tipo_documento: TiposDocumentoChoices;
+  arquivos_do_tipo_de_documento: Array<Arquivo>;
   descricao_documento?: string;
 }
 
@@ -34,7 +38,7 @@ export interface DocumentosRecebimentoPayload {
 }
 
 export interface DocumentosState {
-  [key: string]: Array<ArquivoPayload>;
+  [key: string]: Array<Arquivo>;
 }
 
 export interface FiltrosDocumentosRecebimento {
@@ -42,4 +46,16 @@ export interface FiltrosDocumentosRecebimento {
   numero_cronograma?: string;
   status?: string;
   data_criacao?: string;
+}
+
+export interface AnaliseDocumentoPayload {
+  laboratorio: string;
+  quantidade_laudo: string;
+  unidade_medida: string;
+  data_fabricacao_lote: string;
+  validade_produto: string;
+  data_final_lote: string;
+  saldo_laudo: string;
+  datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
+  correcao_solicitada: string;
 }

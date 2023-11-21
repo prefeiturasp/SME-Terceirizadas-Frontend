@@ -138,6 +138,7 @@ import {
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioComAcessoAoPainelEmbalagens,
   usuarioEhOrgaoFiscalizador,
+  usuarioComAcessoAoPainelDocumentos,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -270,6 +271,11 @@ import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutE
 import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayoutEmbalagemPage";
 import DocumentosRecebimentoPage from "../pages/PreRecebimento/DocumentosRecebimentoPage";
 import CadastroDocumentosRecebimentoPage from "../pages/PreRecebimento/CadastroDocumentosRecebimentoPage";
+import DetalharDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharDocumentosRecebimentoPage";
+import PainelDocumentosRecebimentoPage from "../pages/PreRecebimento/PainelDocumentosRecebimentoPage";
+import StatusDocumentoPendenteAprovacao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoPendenteAprovacao";
+import StatusDocumentoAprovados from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoAprovados";
+import AnalisarDocumentosRecebimentoPage from "../pages/PreRecebimento/AnalisarDocumentosRecebimentoPage";
 
 const routesConfig = [
   {
@@ -1987,6 +1993,36 @@ const routesConfig = [
     component: CadastroDocumentosRecebimentoPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_DOCUMENTO_RECEBIMENTO}`,
+    component: DetalharDocumentosRecebimentoPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_DOCUMENTOS_RECEBIMENTO}`,
+    component: PainelDocumentosRecebimentoPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_DOCUMENTOS_RECEBIMENTO}/${constants.PENDENTES_APROVACAO}/`,
+    component: StatusDocumentoPendenteAprovacao,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_DOCUMENTOS_RECEBIMENTO}/${constants.APROVADOS}/`,
+    component: StatusDocumentoAprovados,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_DOCUMENTO_RECEBIMENTO}`,
+    component: AnalisarDocumentosRecebimentoPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
   },
 ];
 

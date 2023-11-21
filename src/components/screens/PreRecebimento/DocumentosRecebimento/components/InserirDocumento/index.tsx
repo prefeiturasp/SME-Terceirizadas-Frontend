@@ -2,15 +2,15 @@ import React from "react";
 import { Field } from "react-final-form";
 import InputFile from "components/Shareable/Input/InputFile";
 import { DEZ_MB } from "../../../../../../constants/shared";
-import { OUTROS_DOCUMENTOS_OPTIONS } from "constants/shared";
-import { Arquivo, OptionMultiselect } from "../../interfaces";
+import { ArquivoForm, OptionsTipoDocumento } from "../../interfaces";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { textAreaRequired } from "helpers/fieldValidators";
+import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
 
 const FORMATOS_IMAGEM = "PDF, PNG, JPG ou JPEG";
 
 interface Props {
-  setFiles(_files: Array<Arquivo>): void;
+  setFiles(_files: Array<ArquivoForm>): void;
   removeFile: (_index: number) => void;
   tipoDocumento?: string;
 }
@@ -21,7 +21,7 @@ const InserirDocumento: React.FC<Props> = ({
   tipoDocumento = "",
 }) => {
   const titulo = OUTROS_DOCUMENTOS_OPTIONS.find(
-    (obj: OptionMultiselect) => obj.value === tipoDocumento
+    (obj: OptionsTipoDocumento) => obj.value === tipoDocumento
   )?.label;
   return (
     <>

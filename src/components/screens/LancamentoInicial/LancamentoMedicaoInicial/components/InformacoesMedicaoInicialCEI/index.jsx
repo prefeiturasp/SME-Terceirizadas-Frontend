@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
-import { Collapse, Input, Checkbox, Modal } from "antd";
+import { Collapse, Checkbox, Modal } from "antd";
 import Botao from "components/Shareable/Botao";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
@@ -12,33 +12,47 @@ import {
 } from "components/Shareable/Botao/constants";
 import { DETALHAMENTO_DO_LANCAMENTO } from "configs/constants";
 import {
+  getTiposDeContagemAlimentacao,
   setSolicitacaoMedicaoInicial,
   updateSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getAlunosListagem } from "services/perfil.service";
 import TabelaAlunosParciais from "./TabelaAlunosParciais";
+import { ehEscolaTipoCEMEI } from "../../../../../../helpers/utilities";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import ResponsaveisInputs from "../ResponsaveisInput";
 
-export default ({
+const RESPONSABLES_INITIAL_STATE = [
+  { nome: "", rf: "" },
+  { nome: "", rf: "" },
+  { nome: "", rf: "" },
+];
+
+function useResponsaveis(initialState) {
+  const [responsaveis, setResponsaveis] = useState(initialState);
+
+  const setaResponsavel = useCallback((input, value, index) => {
+    setResponsaveis((currentResponsaveis) =>
+      currentResponsaveis.map((resp, i) =>
+        i === index ? { ...resp, [input]: value } : resp
+      )
+    );
+  }, []);
+
+  return { responsaveis, setaResponsavel };
+}
+
+export const InformacoesMedicaoInicialCEI = ({
   periodoSelecionado,
   escolaInstituicao,
   nomeTerceirizada,
   solicitacaoMedicaoInicial,
   onClickInfoBasicas,
 }) => {
-  const [responsaveis, setResponsaveis] = useState([
-    {
-      nome: "",
-      rf: "",
-    },
-    {
-      nome: "",
-      rf: "",
-    },
-    {
-      nome: "",
-      rf: "",
-    },
-  ]);
+  const { responsaveis, setaResponsavel } = useResponsaveis(
+    RESPONSABLES_INITIAL_STATE
+  );
+
   const [uePossuiAlunosPeriodoParcial, setUePossuiAlunosPeriodoParcial] =
     useState(undefined);
   const [emEdicao, setEmEdicao] = useState(false);
@@ -49,6 +63,10 @@ export default ({
   const [isModalDuplicata, setIsModalDuplicata] = useState(false);
   const [isModalNaoParcial, setIsModalNaoParcial] = useState(false);
   const [alunosAdicionados, setAlunosAdicionados] = useState([]);
+  const [tiposDeContagem, setTiposDeContagem] = useState([]);
+  const [tipoDeContagemSelecionada, setTipoDeContagemSelecionada] = useState(
+    []
+  );
 
   const { Panel } = Collapse;
 
@@ -67,75 +85,51 @@ export default ({
   };
 
   useEffect(() => {
+    async function fetch() {
+      const response = await getTiposDeContagemAlimentacao();
+      setTiposDeContagem(response.data);
+    }
+    fetch();
+
     if (solicitacaoMedicaoInicial) {
-      const resps = responsaveis.map((resp, indice) => {
-        return solicitacaoMedicaoInicial.responsaveis[indice] || resp;
+      solicitacaoMedicaoInicial.responsaveis.forEach((responsavel, index) => {
+        setaResponsavel("nome", responsavel.nome, index);
+        setaResponsavel("rf", responsavel.rf, index);
       });
-      setResponsaveis(resps);
-      solicitacaoMedicaoInicial?.ue_possui_alunos_periodo_parcial
-        ? (setUePossuiAlunosPeriodoParcial("true"),
-          setShowPesquisaAluno(true),
-          setLoading(true),
-          getAlunos(),
-          setAlunosAdicionados(
-            solicitacaoMedicaoInicial.alunos_periodo_parcial
-          ))
-        : setUePossuiAlunosPeriodoParcial("false");
+      setTipoDeContagemSelecionada(
+        solicitacaoMedicaoInicial.tipos_contagem_alimentacao.map((t) => t.uuid)
+      );
+      if (solicitacaoMedicaoInicial.ue_possui_alunos_periodo_parcial) {
+        setUePossuiAlunosPeriodoParcial("true");
+        setShowPesquisaAluno(true);
+        setLoading(true);
+        getAlunos();
+        setAlunosAdicionados(solicitacaoMedicaoInicial.alunos_periodo_parcial);
+      } else {
+        setUePossuiAlunosPeriodoParcial("false");
+      }
     } else {
       setEmEdicao(true);
     }
     setIsOpen(true);
+  }, [setaResponsavel, solicitacaoMedicaoInicial]);
+
+  useEffect(() => {
+    getDefaultValueSelectTipoContagem();
   }, []);
 
-  const setaResponsavel = (input, event, indice) => {
-    let responsavel = responsaveis;
-    responsavel[indice][input] = event;
-    setResponsaveis(responsaveis);
-  };
-
-  const verificarInput = (event, responsavel) => {
+  const verificarInput = (event, index) => {
     if (!/[0-9]/.test(event.key)) {
       event.preventDefault();
     }
-    setaResponsavel("rf", event.target.value, responsavel);
-  };
-
-  const renderDadosResponsaveis = () => {
-    let component = [];
-    for (let responsavel = 0; responsavel <= 2; responsavel++) {
-      component.push(
-        <div className="row col-12 pr-0 mt-2" key={responsavel}>
-          <div className="col-8">
-            <Input
-              className="mt-2"
-              name={`responsavel_nome_${responsavel}`}
-              defaultValue={responsaveis[responsavel]["nome"]}
-              onChange={(event) =>
-                setaResponsavel("nome", event.target.value, responsavel)
-              }
-              disabled={!emEdicao}
-            />
-          </div>
-          <div className="col-4 pr-0">
-            <Input
-              maxLength={7}
-              className="mt-2"
-              name={`responsavel_rf_${responsavel}`}
-              onKeyPress={(event) => verificarInput(event, responsavel)}
-              onChange={(event) => verificarInput(event, responsavel)}
-              defaultValue={responsaveis[responsavel]["rf"]}
-              disabled={!emEdicao}
-            />
-          </div>
-        </div>
-      );
-    }
-
-    return component;
+    setaResponsavel("rf", event.target.value, index);
   };
 
   const handleClickEditar = () => {
     setEmEdicao(true);
+    !solicitacaoMedicaoInicial &&
+      opcoesContagem.length > 0 &&
+      setTipoDeContagemSelecionada([tiposDeContagem[0].uuid]);
   };
 
   const handleClickSalvar = async () => {
@@ -179,6 +173,12 @@ export default ({
         "ue_possui_alunos_periodo_parcial",
         uePossuiAlunosPeriodoParcial === "true"
       );
+      for (let index = 0; index < tipoDeContagemSelecionada.length; index++) {
+        data.append(
+          "tipos_contagem_alimentacao[]",
+          tipoDeContagemSelecionada[index]
+        );
+      }
       if (Array.isArray(alunosAdicionados) && alunosAdicionados.length > 0) {
         const uuidsDosAlunos = alunosAdicionados.map((aluno) => aluno.uuid);
         data.append("alunos_periodo_parcial", JSON.stringify(uuidsDosAlunos));
@@ -221,6 +221,7 @@ export default ({
     } else {
       const payload = {
         escola: escolaInstituicao.uuid,
+        tipos_contagem_alimentacao: tipoDeContagemSelecionada,
         responsaveis: responsaveisPayload,
         ue_possui_alunos_periodo_parcial:
           uePossuiAlunosPeriodoParcial === "true",
@@ -280,6 +281,24 @@ export default ({
     setIsModalNaoParcial(false);
   };
 
+  const opcoesContagem = tiposDeContagem
+    ? tiposDeContagem.map((tipo) => {
+        return { value: tipo.uuid, label: tipo.nome };
+      })
+    : [];
+
+  const handleChangeTipoContagem = (values) => {
+    setTipoDeContagemSelecionada(values);
+  };
+
+  const getDefaultValueSelectTipoContagem = () => {
+    if (solicitacaoMedicaoInicial)
+      return solicitacaoMedicaoInicial.tipos_contagem_alimentacao.map(
+        (t) => t.nome
+      );
+    if (opcoesContagem.length) return tiposDeContagem[0].nome;
+  };
+
   return (
     <div className="row mt-4 info-med-inicial collapse-adjustments">
       <div className="col-12 panel-med-inicial">
@@ -331,6 +350,30 @@ export default ({
           >
             <Panel header="Informações Básicas da Medição Inicial" key="1">
               <div className="row">
+                {ehEscolaTipoCEMEI(escolaInstituicao) && (
+                  <div className="col-5 info-label select-medicao-inicial">
+                    <b className="mb-2">
+                      Método de Contagem das Alimentações Servidas
+                    </b>
+                    {opcoesContagem.length > 0 && (
+                      <StatefulMultiSelect
+                        name="contagem_refeicoes"
+                        selected={tipoDeContagemSelecionada}
+                        options={opcoesContagem || []}
+                        onSelectedChanged={(values) =>
+                          handleChangeTipoContagem(values)
+                        }
+                        hasSelectAll={false}
+                        overrideStrings={{
+                          selectSomeItems: "Selecione os métodos de contagem",
+                          allItemsAreSelected: "Todos os métodos selecionados",
+                        }}
+                        disabled={!emEdicao}
+                      />
+                    )}
+                  </div>
+                )}
+
                 <div className="col-7 info-label">
                   <label className="mt-2 mb-2">
                     Nome da Empresa Responsável pelo Atendimento
@@ -380,7 +423,12 @@ export default ({
                   <label>RF</label>
                   <label className="asterisk-label">*</label>
                 </div>
-                {renderDadosResponsaveis()}
+                <ResponsaveisInputs
+                  responsaveis={responsaveis}
+                  setaResponsavel={setaResponsavel}
+                  verificarInput={verificarInput}
+                  emEdicao={emEdicao}
+                />
                 {(!location.state ||
                   location.state.status !== "Aprovado pela DRE") &&
                   !location.pathname.includes(DETALHAMENTO_DO_LANCAMENTO) && (

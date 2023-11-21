@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
-import CardLancamento from "./CardLancamento";
+import { CardLancamento } from "./CardLancamento";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,

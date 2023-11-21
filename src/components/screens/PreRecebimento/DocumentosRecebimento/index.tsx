@@ -50,8 +50,8 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-layout-embalagem">
-        <div className="card-body layout-embalagem">
+      <div className="card mt-3 card-documentos-recebimento">
+        <div className="card-body documentos-recebimento">
           <Filtros
             setFiltros={setFiltros}
             setDocumentos={setDocumentos}
