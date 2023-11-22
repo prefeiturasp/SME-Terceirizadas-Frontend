@@ -2,6 +2,7 @@ import {
   PAINEL_DOCUMENTOS_RECEBIMENTO,
   PENDENTES_APROVACAO,
   APROVADOS,
+  ENVIADOS_PARA_CORRECAO,
 } from "../../../../configs/constants";
 import { CardConfig } from "./interfaces";
 
@@ -23,4 +24,17 @@ export const CARD_APROVADOS: CardConfig = {
   href: `${PAINEL_DOCUMENTOS_RECEBIMENTO}/${APROVADOS}`,
 };
 
-export const cardsAprovacao = [CARD_PENDENTES_APROVACAO, CARD_APROVADOS];
+export const CARD_ENVIADOS_PARA_CORRECAO: CardConfig = {
+  id: "Enviados para Correção",
+  titulo: "Enviados para Correção",
+  icon: "fa-pencil-alt",
+  style: "card-solicitacoes-reprovadas",
+  incluir_status: ["ENVIADO_PARA_CORRECAO"],
+  href: `${PAINEL_DOCUMENTOS_RECEBIMENTO}/${ENVIADOS_PARA_CORRECAO}`,
+};
+
+export const cardsPainel = [
+  CARD_PENDENTES_APROVACAO,
+  CARD_APROVADOS,
+  CARD_ENVIADOS_PARA_CORRECAO,
+];
