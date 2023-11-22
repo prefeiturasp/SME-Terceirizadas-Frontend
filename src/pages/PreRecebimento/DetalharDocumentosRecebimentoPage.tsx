@@ -14,7 +14,7 @@ import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}`,
-  titulo: "Detalhar Documento de Recebimento",
+  titulo: "Detalhar Documentos de Recebimento",
 };
 
 const link = usuarioEhEmpresaFornecedor()

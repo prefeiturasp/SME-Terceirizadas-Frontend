@@ -190,7 +190,7 @@ export default () => {
                 {prazo.prazo_maximo_recebimento !== "OUTRO" && (
                   <div className="col-4">
                     <InputText
-                      label="Saldo do Laudo"
+                      label="Data Máxima de Recebimento"
                       valorInicial={prazo.data_maxima_recebimento}
                       disabled={true}
                     />
