@@ -185,6 +185,27 @@ export const validacoesTabelaAlimentacaoCEI = (
   return undefined;
 };
 
+export const validacoesTabelaAlimentacaoEmeidaCemei = (
+  rowName,
+  dia,
+  categoria,
+  allValues
+) => {
+  const maxMatriculados = Number(
+    allValues[`matriculados__dia_${dia}__categoria_${categoria}`]
+  );
+  const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
+
+  if (
+    rowName === "frequencia" &&
+    Number(allValues[inputName]) > Number(maxMatriculados)
+  ) {
+    return "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos matriculados no período.";
+  }
+
+  return undefined;
+};
+
 export const validacoesTabelasDietasCEI = (
   rowName,
   dia,

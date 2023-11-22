@@ -1,0 +1,7 @@
+@import "../../../../../../styles/variables.scss";
+
+.secao-tipo-documento {
+  ::marker {
+    color: $greenDark;
+  }
+}

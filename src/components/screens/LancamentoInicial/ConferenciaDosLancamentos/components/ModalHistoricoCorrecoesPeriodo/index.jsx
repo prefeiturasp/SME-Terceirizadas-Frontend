@@ -35,6 +35,17 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
     }
   };
 
+  const instituicao = (acao) => {
+    switch (acao) {
+      case "MEDICAO_APROVADA_PELA_DRE":
+        return "DRE";
+      case "MEDICAO_APROVADA_PELA_CODAE":
+        return "CODAE";
+      default:
+        return acao;
+    }
+  };
+
   const retornaIniciais = (email) => {
     const nome = email.split(" ");
     let iniciais = "";
@@ -78,6 +89,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
             retornaIniciais={retornaIniciais}
             solicitacao={solicitacao}
             formatarTitulo={(acao) => formatarTitulo(acao)}
+            instituicao={(acao) => instituicao(acao)}
           />
         );
         break;
@@ -142,7 +154,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
                           </span>
                         </Tooltip>
                         <span className="mb-0">
-                          {historico.usuario.nome.substr(0, 20)}
+                          {historico.usuario.nome.substr(0, 21)}
                         </span>
                       </div>
                       <div className="col-3 mb-1">

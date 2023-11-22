@@ -3,7 +3,13 @@ import { formataMesNome } from "helpers/utilities";
 import "./style.scss";
 
 export const HistoricoAprovacao = ({ ...props }) => {
-  const { solicitacao, historico, retornaIniciais, formatarTitulo } = props;
+  const {
+    solicitacao,
+    historico,
+    retornaIniciais,
+    formatarTitulo,
+    instituicao,
+  } = props;
 
   return (
     <Fragment>
@@ -37,7 +43,9 @@ export const HistoricoAprovacao = ({ ...props }) => {
         </div>
         <div className="col-12 mb-3">
           <label className="cor-texo-detalhes">
-            <b>DRE aprovou o lançamento dos períodos</b>
+            <b>
+              {instituicao(historico.acao)} aprovou o lançamento dos períodos
+            </b>
           </label>
         </div>
         <div className="col-12">

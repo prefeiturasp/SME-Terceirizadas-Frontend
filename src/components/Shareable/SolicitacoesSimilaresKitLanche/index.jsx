@@ -61,7 +61,12 @@ export const SolicitacoesSimilaresKitLanche = ({ ...props }) => {
                   <b>{solicitacao.local}</b>
                 </p>
               </div>
-              <div className="col-4" />
+              <div className="col-4">
+                <p>Evento/Atividade:</p>
+                <p>
+                  <b>{solicitacao.evento}</b>
+                </p>
+              </div>
             </div>
             {solicitacao.solicitacao_kit_lanche && kitsCEI && (
               <table className="faixas-etarias-cei mt-3">

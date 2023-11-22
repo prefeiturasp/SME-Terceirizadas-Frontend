@@ -1,0 +1,47 @@
+@import "../../../../../../styles/variables.scss";
+
+.card-detalhar-documentos-recebimento-codae {
+  color: $blackInput;
+  font-size: 14px;
+
+  .green-bold {
+    color: $greenDark;
+    font-weight: bold;
+  }
+
+  .subtitulo {
+    color: $greenDark;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0px;
+  }
+
+  .subtitulo-documento {
+    color: $greenDark;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 12px 0px;
+  }
+
+  .flex-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .status {
+    background-color: $green;
+    border-radius: 50px;
+    border: 1px solid $greenDark;
+    color: white;
+    padding: 2px 8px;
+    height: 10%;
+    margin: auto 0;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 700;
+
+    i {
+      margin-right: 8px;
+    }
+  }
+}

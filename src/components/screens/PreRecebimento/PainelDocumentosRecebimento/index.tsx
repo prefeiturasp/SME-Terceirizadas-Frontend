@@ -4,6 +4,7 @@ import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
 import { cardsPainel } from "./constants";
 import {
   ANALISAR_DOCUMENTO_RECEBIMENTO,
+  DETALHAR_DOCUMENTO_RECEBIMENTO,
   PRE_RECEBIMENTO,
 } from "configs/constants";
 import {
@@ -55,9 +56,17 @@ export default () => {
     return items.sort(ordenarPorLogMaisRecente).map((item) => ({
       text: gerarTextoCardDocumento(item),
       date: item.log_mais_recente.slice(0, 10),
-      link: `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`,
+      link: gerarLinkDocumento(item),
       status: item.status,
     }));
+  };
+
+  const gerarLinkDocumento = (item: DocumentosRecebimentoDashboard): string => {
+    return item.status === "Aprovado"
+      ? `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
+      : item.status === "Enviado para Análise"
+      ? `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
+      : ``;
   };
 
   const agruparCardsPorStatus = (
