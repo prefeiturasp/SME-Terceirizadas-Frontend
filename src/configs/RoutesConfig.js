@@ -1998,7 +1998,8 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_DOCUMENTO_RECEBIMENTO}`,
     component: DetalharDocumentosRecebimentoPage,
     exact: true,
-    tipoUsuario: usuarioEhEmpresaFornecedor(),
+    tipoUsuario:
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelEmbalagens(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_DOCUMENTOS_RECEBIMENTO}`,

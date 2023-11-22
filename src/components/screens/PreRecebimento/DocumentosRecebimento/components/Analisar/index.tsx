@@ -234,9 +234,9 @@ export default () => {
   const geraInitialValues = (doc: DocumentosRecebimentoParaAnalise): void => {
     let newPrazos = [];
     let iniciais = {
-      laboratorio: doc.laboratorio,
+      laboratorio: doc.laboratorio.uuid,
       quantidade_laudo: doc.quantidade_laudo?.toString(),
-      unidade_medida: doc.unidade_medida,
+      unidade_medida: doc.unidade_medida.uuid,
       data_fabricacao_lote: doc.data_fabricacao_lote
         ? doc.data_fabricacao_lote
         : undefined,
