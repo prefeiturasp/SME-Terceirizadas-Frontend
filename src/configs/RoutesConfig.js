@@ -276,6 +276,7 @@ import PainelDocumentosRecebimentoPage from "../pages/PreRecebimento/PainelDocum
 import StatusDocumentoPendenteAprovacao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoPendenteAprovacao";
 import StatusDocumentoAprovados from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoAprovados";
 import AnalisarDocumentosRecebimentoPage from "../pages/PreRecebimento/AnalisarDocumentosRecebimentoPage";
+import CorrigirDocumentosRecebimentoPage from "../pages/PreRecebimento/CorrigirDocumentosRecebimentoPage";
 
 const routesConfig = [
   {
@@ -2022,7 +2023,13 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_DOCUMENTO_RECEBIMENTO}`,
     component: AnalisarDocumentosRecebimentoPage,
     exact: true,
-    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+    tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CORRIGIR_DOCUMENTOS_RECEBIMENTO}`,
+    component: CorrigirDocumentosRecebimentoPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
 ];
 
