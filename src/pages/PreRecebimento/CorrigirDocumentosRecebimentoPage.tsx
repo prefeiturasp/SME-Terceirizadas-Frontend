@@ -30,7 +30,6 @@ const voltarPara = `/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`;
 export default () => (
   <Page botaoVoltar voltarPara={voltarPara} titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-    <></>
     <Corrigir />
   </Page>
 );
