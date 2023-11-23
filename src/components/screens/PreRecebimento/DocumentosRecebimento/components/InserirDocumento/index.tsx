@@ -2,7 +2,7 @@ import React from "react";
 import { Field } from "react-final-form";
 import InputFile from "components/Shareable/Input/InputFile";
 import { DEZ_MB } from "../../../../../../constants/shared";
-import { ArquivoForm, OptionsTipoDocumento } from "../../interfaces";
+import { ArquivoForm } from "../../interfaces";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { textAreaRequired } from "helpers/fieldValidators";
 import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
@@ -13,16 +13,19 @@ interface Props {
   setFiles(_files: Array<ArquivoForm>): void;
   removeFile: (_index: number) => void;
   tipoDocumento?: string;
+  arquivosIniciais?: ArquivoForm[];
 }
 
 const InserirDocumento: React.FC<Props> = ({
   setFiles,
   removeFile,
   tipoDocumento = "",
+  arquivosIniciais = [],
 }) => {
   const titulo = OUTROS_DOCUMENTOS_OPTIONS.find(
-    (obj: OptionsTipoDocumento) => obj.value === tipoDocumento
+    (obj) => obj.value === tipoDocumento
   )?.label;
+
   return (
     <>
       {titulo && (
@@ -35,6 +38,7 @@ const InserirDocumento: React.FC<Props> = ({
           </div>
         </div>
       )}
+
       {tipoDocumento === "OUTROS" && (
         <div className="mt-1">
           <Field
@@ -47,9 +51,11 @@ const InserirDocumento: React.FC<Props> = ({
           />
         </div>
       )}
+
       <div className="row">
         <Field
           component={InputFile}
+          arquivosPreCarregados={arquivosIniciais}
           className="inputfile"
           texto={titulo ? "Anexar Documentos" : "Anexar Laudo"}
           name={"files"}
@@ -62,6 +68,7 @@ const InserirDocumento: React.FC<Props> = ({
           limiteTamanho={DEZ_MB}
           concatenarNovosArquivos
         />
+
         <label className="col-12 label-imagem">
           <span className="red">Campo Obrigatório: &nbsp;</span>
           {"Envie um arquivo nos formatos: " +
