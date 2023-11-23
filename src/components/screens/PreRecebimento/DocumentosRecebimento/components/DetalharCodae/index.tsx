@@ -9,6 +9,7 @@ import { useHistory } from "react-router-dom";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
 import { detalharDocumentoParaAnalise } from "services/documentosRecebimento.service";
 import InputText from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
   DocumentosRecebimentoParaAnalise,
   TiposDocumentos,
@@ -23,6 +24,7 @@ export default () => {
   const [objeto, setObjeto] = useState<DocumentosRecebimentoParaAnalise>(
     {} as DocumentosRecebimentoParaAnalise
   );
+  const [aprovado, setAprovado] = useState(true);
   const [laudo, setLaudo] = useState<TiposDocumentos>();
 
   const voltarPaginaPainel = () =>
@@ -42,6 +44,7 @@ export default () => {
 
     setLaudo(laudo);
     setObjeto(objeto);
+    setAprovado(objeto.status === "Aprovado");
   };
 
   useEffect(() => {
@@ -58,10 +61,17 @@ export default () => {
         <div className="card-body">
           <div className="flex-header">
             <div className="subtitulo">Dados Gerais</div>
-            <div className="status">
-              <i className="fas fa-check-circle" />
-              Documentos aprovados em {objeto.log_mais_recente}
-            </div>
+            {aprovado ? (
+              <div className="status aprovado">
+                <i className="fas fa-check-circle" />
+                Documentos aprovados em {objeto.log_mais_recente?.criado_em}
+              </div>
+            ) : (
+              <div className="status correcao">
+                <i className="fas fa-check-circle" />
+                Solicitada Correção em {objeto.log_mais_recente?.criado_em}
+              </div>
+            )}
           </div>
 
           <div className="row">
@@ -114,6 +124,36 @@ export default () => {
           <ArquivosTipoRecebimento lista={laudo} />
 
           <hr />
+
+          {aprovado === false && (
+            <>
+              <div className="subtitulo laranja">Solicitação de Correção</div>
+              <div className="row">
+                <div className="col-6">
+                  Data da Solicitação:
+                  <strong>
+                    {" "}
+                    {objeto.log_mais_recente?.criado_em.split("-")[0]}
+                  </strong>
+                </div>
+
+                <div className="col-6">
+                  Solicitado por:
+                  <strong> {objeto.log_mais_recente?.usuario}</strong>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-12">
+                  <TextArea
+                    label="Correções Necessárias"
+                    valorInicial={objeto.correcao_solicitada}
+                    disabled={true}
+                  />
+                </div>
+              </div>
+              <hr />
+            </>
+          )}
 
           <div className="subtitulo">Dados do Laudo</div>
 

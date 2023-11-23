@@ -25,7 +25,10 @@ export interface DocumentosRecebimentoParaAnalise
   fornecedor: string;
   unidade_medida: UnidadeMedidaSimples;
   laboratorio: LaboratorioSimples;
-  log_mais_recente: string;
+  log_mais_recente: {
+    usuario: string;
+    criado_em: string;
+  };
 }
 
 export interface DatasFabricacaoPrazos {
