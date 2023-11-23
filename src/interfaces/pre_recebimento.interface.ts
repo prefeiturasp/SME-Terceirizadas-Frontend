@@ -9,12 +9,12 @@ export interface DocumentosRecebimento {
 
 export interface DocumentosRecebimentoDetalhado extends DocumentosRecebimento {
   numero_laudo: string;
+  correcao_solicitada: string;
   tipos_de_documentos: Array<TiposDocumentos>;
 }
 
 export interface DocumentosRecebimentoParaAnalise
   extends DocumentosRecebimentoDetalhado {
-  correcao_solicitada: string;
   data_fabricacao_lote: string;
   data_final_lote: string;
   datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
