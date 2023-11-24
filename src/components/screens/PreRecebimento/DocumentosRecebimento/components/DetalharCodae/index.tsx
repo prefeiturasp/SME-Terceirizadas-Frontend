@@ -68,7 +68,7 @@ export default () => {
               </div>
             ) : (
               <div className="status correcao">
-                <i className="fas fa-check-circle" />
+                <i className="fas fa-exclamation-triangle" />
                 Solicitada Correção em {objeto.log_mais_recente?.criado_em}
               </div>
             )}
