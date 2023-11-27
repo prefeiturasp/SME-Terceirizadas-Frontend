@@ -62,7 +62,7 @@ export default () => {
   };
 
   const gerarLinkDocumento = (item: DocumentosRecebimentoDashboard): string => {
-    return item.status === "Aprovado"
+    return ["Aprovado", "Enviado para Correção"].includes(item.status)
       ? `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
       : item.status === "Enviado para Análise"
       ? `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`

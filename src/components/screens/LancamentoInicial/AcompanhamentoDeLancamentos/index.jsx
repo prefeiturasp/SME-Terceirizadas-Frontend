@@ -48,6 +48,7 @@ import { required } from "helpers/fieldValidators";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { MEDICAO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 
 export const AcompanhamentoDeLancamentos = () => {
   const history = useHistory();
@@ -291,6 +292,23 @@ export const AcompanhamentoDeLancamentos = () => {
       return !mudancaDre;
     }
     return true;
+  };
+
+  const desabilitaAcoes = (dado) => {
+    return (
+      dado.status ===
+      MEDICAO_STATUS_DE_PROGRESSO.MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE.nome
+    );
+  };
+
+  const getTooltipAcoes = (dado) => {
+    if (
+      dado.status ===
+      MEDICAO_STATUS_DE_PROGRESSO.MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE.nome
+    ) {
+      return "Aguardando envio pela unidade";
+    }
+    return "";
   };
 
   return (
@@ -555,7 +573,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                         <td className="col-2 text-center">
                                           <Botao
                                             type={BUTTON_TYPE.BUTTON}
-                                            style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
+                                            style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border mr-2`}
                                             icon={BUTTON_ICON.EYE}
                                             onClick={() =>
                                               handleClickVisualizar(
@@ -566,6 +584,10 @@ export const AcompanhamentoDeLancamentos = () => {
                                                 dado.status
                                               )
                                             }
+                                            disabled={desabilitaAcoes(dado)}
+                                            tooltipExterno={getTooltipAcoes(
+                                              dado
+                                            )}
                                           />
                                           <Botao
                                             type={BUTTON_TYPE.BUTTON}
@@ -574,6 +596,10 @@ export const AcompanhamentoDeLancamentos = () => {
                                             onClick={() =>
                                               handleClickDownload(dado.uuid)
                                             }
+                                            disabled={desabilitaAcoes(dado)}
+                                            tooltipExterno={getTooltipAcoes(
+                                              dado
+                                            )}
                                           />
                                         </td>
                                       </tr>

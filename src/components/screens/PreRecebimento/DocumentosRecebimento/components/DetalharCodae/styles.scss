@@ -4,16 +4,15 @@
   color: $blackInput;
   font-size: 14px;
 
-  .green-bold {
-    color: $greenDark;
-    font-weight: bold;
-  }
-
   .subtitulo {
     color: $greenDark;
     font-size: 16px;
     font-weight: bold;
     margin: 8px 0px;
+
+    &.laranja {
+      color: $orange;
+    }
   }
 
   .subtitulo-documento {
@@ -29,16 +28,25 @@
   }
 
   .status {
-    background-color: $green;
     border-radius: 50px;
-    border: 1px solid $greenDark;
-    color: white;
     padding: 2px 8px;
     height: 10%;
     margin: auto 0;
     font-size: 13px;
     font-style: normal;
     font-weight: 700;
+
+    &.aprovado {
+      background-color: $green;
+      border: 1px solid $greenDark;
+      color: white;
+    }
+
+    &.correcao {
+      background-color: white;
+      border: 1px solid $orange;
+      color: $orange;
+    }
 
     i {
       margin-right: 8px;
