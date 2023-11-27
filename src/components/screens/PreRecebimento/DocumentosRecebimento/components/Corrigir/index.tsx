@@ -21,7 +21,7 @@ import {
 import Botao from "../../../../../Shareable/Botao";
 import { useHistory } from "react-router-dom";
 import { DOCUMENTOS_RECEBIMENTO, PRE_RECEBIMENTO } from "configs/constants";
-import ModalCadastrar from "../ModalCadastrar";
+import ModalConfirmarEnvio from "../ModalConfirmarEnvio";
 import { exibeError } from "helpers/utilities";
 import {
   toastError,
@@ -305,12 +305,19 @@ export default () => {
           <div className="row">
             <div className="col-6">
               Data da Criação:
-              <span className="green-bold"> {objeto.criado_em}</span>
+              <span className="green-bold">
+                {" "}
+                {objeto?.log_mais_recente?.criado_em.split("-")[0]}
+              </span>
             </div>
 
             <div className="col-6">
               Status:
-              <span className="orange-bold"> {objeto.status}</span>
+              <span className="orange-bold">
+                {" "}
+                {objeto?.status === "Enviado para Correção" &&
+                  "Solicitada Correção"}
+              </span>
             </div>
           </div>
 
@@ -318,7 +325,7 @@ export default () => {
             <div className="col-12">
               <TextArea
                 label="Correções Necessárias"
-                input={{ value: objeto.correcao_solicitada }}
+                input={{ value: objeto?.correcao_solicitada }}
                 disabled
               />
             </div>
@@ -332,32 +339,28 @@ export default () => {
             <div className="col-6">
               <InputText
                 label="Nº do Cronograma"
-                valorInicial={objeto.numero_cronograma}
-                required
+                valorInicial={objeto?.numero_cronograma}
                 disabled
               />
             </div>
             <div className="col-6">
               <InputText
                 label="Nº do Pregão/Chamada Pública"
-                valorInicial={objeto.pregao_chamada_publica}
-                required
+                valorInicial={objeto?.pregao_chamada_publica}
                 disabled
               />
             </div>
             <div className="col-6">
               <InputText
                 label="Nome do Produto"
-                valorInicial={objeto.nome_produto}
-                required
+                valorInicial={objeto?.nome_produto}
                 disabled
               />
             </div>
             <div className="col-6">
               <InputText
                 label="Nº do Laudo"
-                valorInicial={objeto.numero_laudo}
-                required
+                valorInicial={objeto?.numero_laudo}
                 disabled
               />
             </div>
@@ -368,11 +371,12 @@ export default () => {
             initialValues={initialValues.current}
             render={({ handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
-                <ModalCadastrar
+                <ModalConfirmarEnvio
                   show={showModal}
                   handleClose={() => setShowModal(false)}
                   loading={carregando}
                   handleSim={() => corrigirDocumentosRecebimento(values)}
+                  correcao
                 />
 
                 {arquivosLaudoForm && (
