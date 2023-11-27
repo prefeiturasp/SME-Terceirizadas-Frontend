@@ -1,6 +1,7 @@
 import {
   AnaliseDocumentoPayload,
   DocumentosRecebimentoPayload,
+  CorrecaoDocumentoPayload,
 } from "components/screens/PreRecebimento/DocumentosRecebimento/interfaces";
 import axios from "./_base";
 import {
@@ -58,5 +59,14 @@ export const analisaDocumentoRecebimento = async (
 ) =>
   await axios.patch(
     `/documentos-de-recebimento/${uuid}/analise-documentos/`,
+    payload
+  );
+
+export const corrigirDocumentoRecebimento = async (
+  payload: CorrecaoDocumentoPayload,
+  uuid: string
+) =>
+  await axios.patch(
+    `/documentos-de-recebimento/${uuid}/corrigir-documentos/`,
     payload
   );
