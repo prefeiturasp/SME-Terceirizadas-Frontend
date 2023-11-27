@@ -700,6 +700,13 @@ export const acessoModuloMedicaoInicialDRE = () => {
   );
 };
 
+export const acessoModuloMedicaoInicialCODAE = () => {
+  return (
+    localStorage.getItem("acesso_modulo_medicao_inicial") === "true" &&
+    (usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAENutriManifestacao())
+  );
+};
+
 export const converterDDMMYYYYparaYYYYMMDD = (data) => {
   return moment(data, "DD/MM/YYYY").format("YYYY-MM-DD");
 };
@@ -976,7 +983,9 @@ export const exibirModuloMedicaoInicial = () => {
       ((usuarioEhEscolaTerceirizada() ||
         usuarioEhEscolaTerceirizadaDiretor()) &&
         !usuarioEscolaEhGestaoDireta()) ||
-      usuarioEhMedicao()
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao()
     );
 
   switch (localStorage.getItem("tipo_perfil")) {
@@ -986,6 +995,8 @@ export const exibirModuloMedicaoInicial = () => {
       return acessoModuloMedicaoInicialDRE();
     case `"medicao"`:
       return true;
+    case `"codae"`:
+      return acessoModuloMedicaoInicialCODAE();
     default:
       return false;
   }
