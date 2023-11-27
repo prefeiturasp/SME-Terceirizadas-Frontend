@@ -70,7 +70,7 @@ const InserirDocumento: React.FC<Props> = ({
         />
 
         <label className="col-12 label-imagem">
-          <span className="red">Campo Obrigatório: &nbsp;</span>
+          <span className="red">* Campo Obrigatório: &nbsp;</span>
           {"Envie um arquivo nos formatos: " +
             FORMATOS_IMAGEM +
             ", com até 10MB"}
