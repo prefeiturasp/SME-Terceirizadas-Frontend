@@ -573,7 +573,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                         <td className="col-2 text-center">
                                           <Botao
                                             type={BUTTON_TYPE.BUTTON}
-                                            style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
+                                            style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border mr-2`}
                                             icon={BUTTON_ICON.EYE}
                                             onClick={() =>
                                               handleClickVisualizar(
