@@ -299,7 +299,7 @@ export default () => {
         <div className="card-body corrigir-documentos-recebimento">
           <div className="row">
             <div className="col-6">
-              Data da Criação:
+              Data da Solicitação:
               <span className="green-bold">
                 {" "}
                 {objeto?.log_mais_recente?.criado_em.split("-")[0]}
