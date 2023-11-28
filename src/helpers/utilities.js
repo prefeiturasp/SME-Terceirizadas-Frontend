@@ -995,7 +995,8 @@ export const exibirModuloMedicaoInicial = () => {
       return acessoModuloMedicaoInicialDRE();
     case `"medicao"`:
       return true;
-    case `"codae"`:
+    case `"nutricao_manifestacao"`:
+    case `"gestao_alimentacao_terceirizada"`:
       return acessoModuloMedicaoInicialCODAE();
     default:
       return false;
