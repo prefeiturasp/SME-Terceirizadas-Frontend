@@ -62,7 +62,7 @@ export const AcompanhamentoDeLancamentos = () => {
   const [statusSelecionado, setStatusSelecionado] = useState(null);
   const [resultados, setResultados] = useState(null);
   const [mesesAnos, setMesesAnos] = useState(null);
-  const [lotes, setLotes] = useState(DEFAULT_STATE);
+  const [lotes, setLotes] = useState([]);
   const [tiposUnidades, setTiposUnidades] = useState(DEFAULT_STATE);
   const [nomesEscolas, setNomesEscolas] = useState(DEFAULT_STATE);
   const [diretoriasRegionais, setDiretoriasRegionais] = useState(null);
