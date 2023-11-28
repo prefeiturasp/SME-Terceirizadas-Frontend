@@ -38,6 +38,6 @@ export async function downloadAndConvertToBase64(fileUrl) {
       reader.readAsDataURL(blob);
     });
   } else {
-    throw new Error("Falha ao baixar a imagem.");
+    throw new Error("Falha ao baixar arquivo.");
   }
 }

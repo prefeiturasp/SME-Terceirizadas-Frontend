@@ -9,12 +9,16 @@ export interface DocumentosRecebimento {
 
 export interface DocumentosRecebimentoDetalhado extends DocumentosRecebimento {
   numero_laudo: string;
+  correcao_solicitada: string;
   tipos_de_documentos: Array<TiposDocumentos>;
+  log_mais_recente: {
+    usuario: string;
+    criado_em: string;
+  };
 }
 
 export interface DocumentosRecebimentoParaAnalise
   extends DocumentosRecebimentoDetalhado {
-  correcao_solicitada: string;
   data_fabricacao_lote: string;
   data_final_lote: string;
   datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
@@ -25,10 +29,6 @@ export interface DocumentosRecebimentoParaAnalise
   fornecedor: string;
   unidade_medida: UnidadeMedidaSimples;
   laboratorio: LaboratorioSimples;
-  log_mais_recente: {
-    usuario: string;
-    criado_em: string;
-  };
 }
 
 export interface DatasFabricacaoPrazos {
