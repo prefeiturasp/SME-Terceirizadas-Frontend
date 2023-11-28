@@ -35,7 +35,6 @@ import {
   Arquivo,
   DocumentosRecebimentoDetalhado,
   TiposDocumentoChoices,
-  // TiposDocumentos,
 } from "interfaces/pre_recebimento.interface";
 import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
 
@@ -58,8 +57,6 @@ export default () => {
   const [objeto, setObjeto] = useState<DocumentosRecebimentoDetalhado>(
     {} as DocumentosRecebimentoDetalhado
   );
-  // const [laudo, setLaudo] = useState<TiposDocumentos>();
-  // const [documentos, setDocumentos] = useState<TiposDocumentos[]>();
 
   const [arquivosLaudoForm, setArquivosLaudoForm] =
     useState<ArquivosDocumentoForm>();
@@ -86,8 +83,6 @@ export default () => {
     const documentos = objeto.tipos_de_documentos;
 
     setObjeto(objeto);
-    // setLaudo(laudo);
-    // setDocumentos(documentos);
 
     const arquivosLaudoForm = {
       tipoDocumento: laudo.tipo_documento,
