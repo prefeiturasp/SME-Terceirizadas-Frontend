@@ -263,6 +263,8 @@ export default () => {
   const desabilitarBotaoSalvar = (values: Record<string, any>) => {
     const laudoInvalido = arquivosLaudoForm?.arquivosForm.length === 0;
 
+    const nenhumDocumentoSelecionado = values.tipos_de_documentos?.length === 0;
+
     const documentosValidos = values.tipos_de_documentos?.every(
       (tipoDocumento: TiposDocumentoChoices) => {
         return (
@@ -274,7 +276,7 @@ export default () => {
       }
     );
 
-    return laudoInvalido || !documentosValidos;
+    return laudoInvalido || nenhumDocumentoSelecionado || !documentosValidos;
   };
 
   const filtrarArquivosDocumentosForm = (
