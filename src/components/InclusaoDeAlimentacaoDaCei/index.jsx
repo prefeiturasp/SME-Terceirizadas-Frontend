@@ -277,7 +277,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
           periodo.uuid,
           dataInclusao
         );
-        if (response.status === HTTP_STATUS.OK) {
+        if (response.status === HTTP_STATUS.OK && response.data.count > 0) {
           let _periodos_e_faixas = {
             nome: periodo.nome,
             uuid: periodo.uuid,
@@ -304,8 +304,6 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
             _periodos_e_faixas["total_matriculados"] = total_matriculados;
           }
           periodos_e_faixas.push(_periodos_e_faixas);
-        } else {
-          toastError(getError(response.data));
         }
       }
       setValoresIniciais({
