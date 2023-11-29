@@ -28,6 +28,7 @@ export const CardLancamentoCEI = ({
   periodoSelecionado,
   periodosEscolaCemeiComAlunosEmei,
   tiposAlimentacao,
+  uuidPeriodoEscolar,
 }) => {
   const history = useHistory();
 
@@ -115,6 +116,7 @@ export const CardLancamentoCEI = ({
           periodosEscolaCemeiComAlunosEmei,
           textoCabecalho
         ),
+        uuidPeriodoEscolar: uuidPeriodoEscolar,
         tiposAlimentacao: tiposAlimentacao,
         ...location.state,
       },
