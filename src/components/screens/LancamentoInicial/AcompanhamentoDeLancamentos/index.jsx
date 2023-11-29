@@ -141,6 +141,14 @@ export const AcompanhamentoDeLancamentos = () => {
     }
   };
 
+  const desabilitaExportarPDF = (dado) => {
+    return (
+      usuarioEhDRE() &&
+      dado.status === "Corrigido para CODAE" &&
+      !dado.dre_ciencia_correcao_data
+    );
+  };
+
   const DREPrecisaDarCiencia = (dado) => {
     return (
       usuarioEhDRE() &&
@@ -650,11 +658,11 @@ export const AcompanhamentoDeLancamentos = () => {
                                             }
                                             disabled={
                                               desabilitaAcoes(dado) ||
-                                              DREPrecisaDarCiencia(dado)
+                                              desabilitaExportarPDF(dado)
                                             }
                                             tooltipExterno={
                                               getTooltipAcoes(dado) ||
-                                              (DREPrecisaDarCiencia(dado) &&
+                                              (desabilitaExportarPDF(dado) &&
                                                 "Só será possível exportar o PDF com as assinaturas, após a Ciência das Correções pela DRE.")
                                             }
                                           />

@@ -207,6 +207,15 @@ export const ConferenciaDosLancamentos = () => {
       "MEDICAO_CORRECAO_SOLICITADA",
     ].includes(solicitacao.ocorrencia.status);
 
+  const desabilitaBotaoExportarPDF = () => {
+    return (
+      usuarioEhDRE() &&
+      solicitacao &&
+      solicitacao.status === "MEDICAO_CORRIGIDA_PARA_CODAE" &&
+      !solicitacao.dre_ciencia_correcao_data
+    );
+  };
+
   const habilitaBotaoCienteCorrecoes = () => {
     const todosPeriodosGruposAprovadosCODAE = !periodosGruposMedicao.some(
       (periodoGrupo) => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_CODAE"
@@ -393,7 +402,11 @@ export const ConferenciaDosLancamentos = () => {
         (periodoGrupo) => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_CODAE"
       );
       if (
-        (solicitacao.status === "MEDICAO_APROVADA_PELA_DRE" &&
+        ([
+          "MEDICAO_APROVADA_PELA_DRE",
+          "MEDICAO_CORRIGIDA_PARA_CODAE",
+          "MEDICAO_APROVADA_PELA_CODAE",
+        ].includes(solicitacao.status) &&
           usuarioEhDRE()) ||
         (solicitacao.status === "MEDICAO_APROVADA_PELA_CODAE" &&
           usuarioEhMedicao())
@@ -848,9 +861,9 @@ export const ConferenciaDosLancamentos = () => {
                         texto="Exportar PDF"
                         style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
                         onClick={() => handleClickDownload()}
-                        disabled={habilitaBotaoCienteCorrecoes()}
+                        disabled={desabilitaBotaoExportarPDF()}
                         tooltipExterno={
-                          habilitaBotaoCienteCorrecoes() &&
+                          desabilitaBotaoExportarPDF() &&
                           "Só será possível exportar o PDF com as assinaturas, após a Ciência das Correções pela DRE."
                         }
                       />
