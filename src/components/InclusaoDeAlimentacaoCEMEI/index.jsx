@@ -66,6 +66,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
     periodos,
+    periodosInclusaoContinua,
     vinculos,
     vinculosMotivoEspecifico,
     periodosMotivoEspecifico,
@@ -421,6 +422,8 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     return ehMotivoInclusaoEspecifico(values) ||
       (carregandoRascunho && motivoEspecifico)
       ? periodosMotivoEspecifico
+      : motivoContinuoSelecionado(values)
+      ? periodosInclusaoContinua
       : periodos;
   };
 
