@@ -20,11 +20,6 @@ export interface OptionsPrazoRecebimento {
   nome: string;
 }
 
-export interface OptionsGenerico {
-  uuid: string;
-  nome: string;
-}
-
 export interface TiposDocumentosPayload {
   tipo_documento: TiposDocumentoChoices;
   arquivos_do_tipo_de_documento: Array<Arquivo>;

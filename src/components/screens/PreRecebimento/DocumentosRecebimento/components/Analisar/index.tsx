@@ -23,6 +23,7 @@ import { getListaLaboratoriosCredenciados } from "services/laboratorio.service";
 import InputText from "components/Shareable/Input/InputText";
 import {
   DocumentosRecebimentoParaAnalise,
+  OptionsGenerico,
   TiposDocumentos,
   UnidadeMedidaSimples,
 } from "interfaces/pre_recebimento.interface";
@@ -33,7 +34,7 @@ import { Field, Form } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
 import ModalGenerico from "./components/ModalGenerico";
 import ModalCorrecao from "./components/ModalCorrecao";
-import { AnaliseDocumentoPayload, OptionsGenerico } from "../../interfaces";
+import { AnaliseDocumentoPayload } from "../../interfaces";
 import createDecorator from "final-form-calculate";
 import { exibeError } from "helpers/utilities";
 import {

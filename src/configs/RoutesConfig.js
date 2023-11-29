@@ -277,6 +277,8 @@ import StatusDocumentoPendenteAprovacao from "../pages/PreRecebimento/CardsDocum
 import StatusDocumentoAprovados from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoAprovados";
 import StatusDocumentoEnviadosParaCorrecao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoEnviadosParaCorrecao";
 import AnalisarDocumentosRecebimentoPage from "../pages/PreRecebimento/AnalisarDocumentosRecebimentoPage";
+import FichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/FichaTecnicaPage";
+import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/CadastroFichaTecnicaPage";
 
 const routesConfig = [
   {
@@ -2031,6 +2033,18 @@ const routesConfig = [
     component: AnalisarDocumentosRecebimentoPage,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.FICHA_TECNICA}`,
+    component: FichaTecnicaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_FICHA_TECNICA}`,
+    component: CadastroFichaTecnicaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
 ];
 

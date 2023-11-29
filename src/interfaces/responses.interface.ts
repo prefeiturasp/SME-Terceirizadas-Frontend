@@ -11,6 +11,7 @@ import {
   DocumentosRecebimentoDashboard,
   DocumentosRecebimentoDetalhado,
   DocumentosRecebimentoParaAnalise,
+  FichaTecnica,
 } from "./pre_recebimento.interface";
 
 export interface ResponseInterface {
@@ -94,4 +95,8 @@ export interface ResponseDocumentosPorStatusDashboard
 export interface ResponseDocumentosRecebimentoParaAnalise
   extends ResponseInterface {
   data: DocumentosRecebimentoParaAnalise;
+}
+
+export interface ResponseFichaTecnica extends ResponseInterface {
+  data: FichaTecnica;
 }
