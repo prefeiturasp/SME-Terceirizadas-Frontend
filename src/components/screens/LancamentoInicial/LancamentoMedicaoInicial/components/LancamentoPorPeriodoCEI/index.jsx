@@ -161,6 +161,26 @@ export const LancamentoPorPeriodoCEI = ({
     return tiposAlimentacao;
   };
 
+  const uuidPeriodoEscolar = (nomePeriodo) => {
+    let uuidPeriodo = null;
+    if (
+      ehEmeiDaCemei(
+        escolaInstituicao,
+        periodosEscolaCemeiComAlunosEmei,
+        nomePeriodo
+      )
+    ) {
+      const periodo = periodosEscolaSimples.find(
+        (p) =>
+          `Infantil ${p.periodo_escolar.nome}` === nomePeriodo &&
+          p.tipo_unidade_escolar.iniciais === "EMEI"
+      );
+      uuidPeriodo = periodo?.periodo_escolar?.uuid;
+    }
+
+    return uuidPeriodo;
+  };
+
   return (
     <div>
       {solicitacaoMedicaoInicial && quantidadeAlimentacoesLancadas && (
@@ -184,6 +204,7 @@ export const LancamentoPorPeriodoCEI = ({
                 periodosEscolaCemeiComAlunosEmei
               }
               tiposAlimentacao={tiposAlimentacaoPeriodosEmei(nomePeriodo)}
+              uuidPeriodoEscolar={uuidPeriodoEscolar(nomePeriodo)}
             />
           ))}
           <div className="mt-4">

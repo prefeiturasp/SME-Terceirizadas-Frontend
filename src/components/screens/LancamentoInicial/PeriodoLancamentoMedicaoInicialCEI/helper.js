@@ -9,6 +9,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { deepCopy } from "../../../../helpers/utilities";
 
 export const formatarPayloadPeriodoLancamentoCeiCemei = (
   values,
@@ -622,20 +623,75 @@ export const formatarLinhasTabelasDietasCEI = (
   return linhasTabelasDietasCEI;
 };
 
+export const formatarLinhasTabelasDietasEmeiDaCemei = (tiposAlimentacao) => {
+  const linhasTabelasDietas = [];
+  linhasTabelasDietas.push(
+    {
+      nome: "Dietas Autorizadas",
+      name: "dietas_autorizadas",
+      uuid: null,
+    },
+    {
+      nome: "Frequência",
+      name: "frequencia",
+      uuid: null,
+    }
+  );
+
+  const indexLanche4h = tiposAlimentacao.findIndex((ali) =>
+    ali.nome.includes("4h")
+  );
+  if (indexLanche4h !== -1) {
+    linhasTabelasDietas.push({
+      nome: tiposAlimentacao[indexLanche4h].nome,
+      name: tiposAlimentacao[indexLanche4h].nome
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replaceAll(/ /g, "_"),
+      uuid: tiposAlimentacao[indexLanche4h].uuid,
+    });
+  }
+
+  const indexLanche = tiposAlimentacao.findIndex(
+    (ali) => ali.nome === "Lanche"
+  );
+  if (indexLanche !== -1) {
+    linhasTabelasDietas.push({
+      nome: "Lanche",
+      name: "Lanche"
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replaceAll(/ /g, "_"),
+      uuid: tiposAlimentacao[indexLanche].uuid,
+    });
+  }
+
+  linhasTabelasDietas.push({
+    nome: "Observações",
+    name: "observacoes",
+    uuid: null,
+  });
+
+  return linhasTabelasDietas;
+};
+
 export const formatarLinhasTabelaDietaEnteral = (
   tipos_alimentacao,
   linhasTabelasDietas
 ) => {
+  const linhasTabelaDietaEnteral = deepCopy(linhasTabelasDietas);
   const indexRefeicaoDieta = tipos_alimentacao.findIndex(
     (ali) => ali.nome === "Refeição"
   );
-  linhasTabelasDietas.splice(linhasTabelasDietas.length - 1, 0, {
+  linhasTabelaDietaEnteral.splice(linhasTabelaDietaEnteral.length - 1, 0, {
     nome: "Refeição",
     name: "refeicao",
     uuid: tipos_alimentacao[indexRefeicaoDieta].uuid,
   });
 
-  return linhasTabelasDietas;
+  return linhasTabelaDietaEnteral;
 };
 
 export const validacaoSemana = (dia, semanaSelecionada) => {
@@ -766,56 +822,61 @@ export const desabilitarBotaoColunaObservacoes = (
 };
 
 export const categoriasParaExibir = (
+  ehEmeiDaCemeiLocation,
   response_categorias_medicao,
   response_log_dietas_autorizadas_cei
 ) => {
-  response_categorias_medicao = response_categorias_medicao.data.filter(
-    (categoria) => {
-      return (
-        !categoria.nome.includes("SOLICITAÇÕES") &&
-        !categoria.nome.includes("ENTERAL")
-      );
-    }
-  );
-
-  let categoriasDietasParaDeletar = [];
-  if (!response_log_dietas_autorizadas_cei.data.length) {
-    categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO A");
-    categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO B");
-  } else if (response_log_dietas_autorizadas_cei.data.length) {
-    for (const categoria of response_categorias_medicao) {
-      if (
-        categoria.nome === "DIETA ESPECIAL - TIPO A" &&
-        (!response_log_dietas_autorizadas_cei.data.filter((dieta) =>
-          dieta.classificacao.toUpperCase().includes("TIPO A")
-        ).length ||
-          !response_log_dietas_autorizadas_cei.data.filter(
-            (dieta) =>
-              dieta.classificacao.toUpperCase().includes("TIPO A") &&
-              Number(dieta.quantidade) !== 0
-          ).length)
-      ) {
-        categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO A");
-      } else if (
-        categoria.nome === "DIETA ESPECIAL - TIPO B" &&
-        (!response_log_dietas_autorizadas_cei.data.filter((dieta) =>
-          dieta.classificacao.toUpperCase().includes("TIPO B")
-        ).length ||
-          !response_log_dietas_autorizadas_cei.data.filter(
-            (dieta) =>
-              dieta.classificacao.toUpperCase().includes("TIPO B") &&
-              Number(dieta.quantidade) !== 0
-          ).length)
-      ) {
-        categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO B");
+  if (ehEmeiDaCemeiLocation) {
+    response_categorias_medicao = response_categorias_medicao.data.filter(
+      (categoria) => {
+        return !categoria.nome.includes("SOLICITAÇÕES");
+      }
+    );
+    return response_categorias_medicao;
+  } else {
+    response_categorias_medicao = response_categorias_medicao.data.filter(
+      (categoria) => {
+        return (
+          !categoria.nome.includes("SOLICITAÇÕES") &&
+          !categoria.nome.includes("ENTERAL")
+        );
+      }
+    );
+    let categoriasDietasParaDeletar = [];
+    if (!response_log_dietas_autorizadas_cei.data?.length) {
+      categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO A");
+      categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO B");
+    } else if (response_log_dietas_autorizadas_cei.data?.length) {
+      for (const categoria of response_categorias_medicao) {
+        if (
+          categoria.nome === "DIETA ESPECIAL - TIPO A" &&
+          (!response_log_dietas_autorizadas_cei.data.filter((dieta) =>
+            dieta.classificacao.toUpperCase().includes("TIPO A")
+          ).length ||
+            !response_log_dietas_autorizadas_cei.data.filter(
+              (dieta) =>
+                dieta.classificacao.toUpperCase().includes("TIPO A") &&
+                Number(dieta.quantidade) !== 0
+            ).length)
+        ) {
+          categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO A");
+        } else if (
+          categoria.nome === "DIETA ESPECIAL - TIPO B" &&
+          (!response_log_dietas_autorizadas_cei.data.filter((dieta) =>
+            dieta.classificacao.toUpperCase().includes("TIPO B")
+          ).length ||
+            !response_log_dietas_autorizadas_cei.data.filter(
+              (dieta) =>
+                dieta.classificacao.toUpperCase().includes("TIPO B") &&
+                Number(dieta.quantidade) !== 0
+            ).length)
+        ) {
+          categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO B");
+        }
       }
     }
-  }
-  response_categorias_medicao = response_categorias_medicao.filter(
-    (categoria) => {
+    return response_categorias_medicao.filter((categoria) => {
       return !categoriasDietasParaDeletar.includes(categoria.nome);
-    }
-  );
-
-  return response_categorias_medicao;
+    });
+  }
 };
