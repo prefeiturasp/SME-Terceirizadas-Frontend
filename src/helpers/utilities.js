@@ -1126,3 +1126,11 @@ export const formataMesNome = (mes) => {
 export const ehFimDeSemana = (dateObj) => {
   return dateObj.getDay() % 6 === 0;
 };
+
+export const getISOLocalDatetimeString = () => {
+  const date = new Date();
+  const isoDateTime = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60000
+  ).toISOString();
+  return isoDateTime;
+};

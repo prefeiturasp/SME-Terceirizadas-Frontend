@@ -7,6 +7,7 @@ import {
   getDashboardMedicaoInicial,
   getMesesAnosSolicitacoesMedicaoinicial,
 } from "services/medicaoInicial/dashboard.service";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { CardMedicaoPorStatus } from "./components/CardMedicaoPorStatus";
 import "./style.scss";
 import {
@@ -31,6 +32,8 @@ import { getEscolasTercTotal } from "services/escola.service";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import {
   formatarOpcoesDRE,
+  getError,
+  getISOLocalDatetimeString,
   usuarioEhDRE,
   usuarioEhMedicao,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
@@ -47,8 +50,8 @@ import {
 import { required } from "helpers/fieldValidators";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
-import { toastError } from "components/Shareable/Toast/dialogs";
 import { MEDICAO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
+import { updateSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
 export const AcompanhamentoDeLancamentos = () => {
   const history = useHistory();
@@ -120,6 +123,31 @@ export const AcompanhamentoDeLancamentos = () => {
     setLoading(false);
     setLoadingComFiltros(false);
     setMudancaDre(false);
+  };
+
+  const atualizaSolicitacaoMedicaoInicial = async (solicitacao) => {
+    setLoadingComFiltros(true);
+    let payload = new FormData();
+    payload.append("dre_ciencia_correcao_data", getISOLocalDatetimeString());
+    const response = await updateSolicitacaoMedicaoInicial(
+      solicitacao.uuid,
+      payload
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Assinatura confirmada com sucesso!");
+    } else {
+      setLoadingComFiltros(false);
+      toastError(getError(response.data));
+    }
+  };
+
+  const DREPrecisaDarCiencia = (dado) => {
+    return (
+      usuarioEhDRE() &&
+      dado.status === "Corrigido para CODAE" &&
+      !dado.dre_ciencia_correcao_data &&
+      dado.todas_medicoes_e_ocorrencia_aprovados_por_medicao
+    );
   };
 
   useEffect(() => {
@@ -573,7 +601,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                         <td className="col-2 text-center">
                                           <Botao
                                             type={BUTTON_TYPE.BUTTON}
-                                            style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border mr-2`}
+                                            style={`${BUTTON_STYLE.GREEN_OUTLINE} border-0`}
                                             icon={BUTTON_ICON.EYE}
                                             onClick={() =>
                                               handleClickVisualizar(
@@ -585,21 +613,50 @@ export const AcompanhamentoDeLancamentos = () => {
                                               )
                                             }
                                             disabled={desabilitaAcoes(dado)}
-                                            tooltipExterno={getTooltipAcoes(
-                                              dado
-                                            )}
                                           />
+                                          {usuarioEhDRE() &&
+                                            dado.status ===
+                                              "Corrigido para CODAE" && (
+                                              <Botao
+                                                type={BUTTON_TYPE.BUTTON}
+                                                style={`${BUTTON_STYLE.GREEN_OUTLINE} border-0`}
+                                                icon={BUTTON_ICON.EDIT}
+                                                onClick={async () => {
+                                                  await atualizaSolicitacaoMedicaoInicial(
+                                                    dado
+                                                  );
+                                                  await getDashboardMedicaoInicialAsync(
+                                                    {
+                                                      status: statusSelecionado,
+                                                      ...values,
+                                                    }
+                                                  );
+                                                }}
+                                                disabled={
+                                                  !DREPrecisaDarCiencia(dado)
+                                                }
+                                                tooltipExterno={
+                                                  DREPrecisaDarCiencia(dado) &&
+                                                  "Ciente das correções"
+                                                }
+                                              />
+                                            )}
                                           <Botao
                                             type={BUTTON_TYPE.BUTTON}
-                                            style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
+                                            style={`${BUTTON_STYLE.GREEN_OUTLINE} border-0`}
                                             icon={BUTTON_ICON.DOWNLOAD}
                                             onClick={() =>
                                               handleClickDownload(dado.uuid)
                                             }
-                                            disabled={desabilitaAcoes(dado)}
-                                            tooltipExterno={getTooltipAcoes(
-                                              dado
-                                            )}
+                                            disabled={
+                                              desabilitaAcoes(dado) ||
+                                              DREPrecisaDarCiencia(dado)
+                                            }
+                                            tooltipExterno={
+                                              getTooltipAcoes(dado) ||
+                                              (DREPrecisaDarCiencia(dado) &&
+                                                "Só será possível exportar o PDF com as assinaturas, após a Ciência das Correções pela DRE.")
+                                            }
                                           />
                                         </td>
                                       </tr>
