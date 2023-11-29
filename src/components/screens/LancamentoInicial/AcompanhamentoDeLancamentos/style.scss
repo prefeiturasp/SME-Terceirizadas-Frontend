@@ -86,6 +86,11 @@ div.acompanhamento-de-lancamentos {
         cursor: pointer;
       }
     }
+
+    &.greenLight {
+      color: $greenLight;
+      border-color: $greenLight;
+    }
   }
 
   div.titulo-tabela {

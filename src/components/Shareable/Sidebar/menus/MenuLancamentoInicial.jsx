@@ -12,6 +12,8 @@ import {
   usuarioEhDRE,
   usuarioEhEscolaTerceirizada,
   usuarioEhMedicao,
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao,
 } from "helpers/utilities";
 
 export default () => {
@@ -30,7 +32,9 @@ export default () => {
         )}
         {(usuarioEhDRE() ||
           usuarioEhMedicao() ||
-          usuarioEhEscolaTerceirizadaQualquerPerfil()) && (
+          usuarioEhEscolaTerceirizadaQualquerPerfil() ||
+          usuarioEhCODAEGestaoAlimentacao() ||
+          usuarioEhCODAENutriManifestacao()) && (
           <LeafItem to={`/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`}>
             Acompanhamento de Lançamentos
           </LeafItem>

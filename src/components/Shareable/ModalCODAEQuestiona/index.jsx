@@ -13,19 +13,14 @@ export const ModalCODAEQuestiona = ({ ...props }) => {
     showModal,
     closeModal,
     uuid,
-    justificativa,
     loadSolicitacao,
     endpoint,
     tipoSolicitacao,
   } = props;
 
-  const enviarQuestionamento = async (uuid) => {
+  const enviarQuestionamento = async (values) => {
     let resp = "";
-    resp = await endpoint(
-      uuid,
-      { observacao_questionamento_codae: justificativa },
-      tipoSolicitacao
-    );
+    resp = await endpoint(uuid, values, tipoSolicitacao);
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
       loadSolicitacao(uuid, tipoSolicitacao);
@@ -34,6 +29,7 @@ export const ModalCODAEQuestiona = ({ ...props }) => {
       toastError(resp.data.detail);
     }
   };
+
   return (
     <Modal
       dialogClassName="modal-50w modal-question"
@@ -41,7 +37,7 @@ export const ModalCODAEQuestiona = ({ ...props }) => {
       onHide={closeModal}
     >
       <Form
-        onSubmit={() => {}}
+        onSubmit={enviarQuestionamento}
         render={({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Header closeButton>
@@ -62,7 +58,7 @@ export const ModalCODAEQuestiona = ({ ...props }) => {
                     component={CKEditorField}
                     label="Observação"
                     placeholder="Alguma observação para a Terceirizada?"
-                    name="justificativa"
+                    name="observacao_questionamento_codae"
                   />
                 </div>
               </div>
@@ -79,10 +75,7 @@ export const ModalCODAEQuestiona = ({ ...props }) => {
                   />
                   <Botao
                     texto="Enviar"
-                    type={BUTTON_TYPE.BUTTON}
-                    onClick={() => {
-                      enviarQuestionamento(uuid);
-                    }}
+                    type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
                     className="ml-3"
                   />

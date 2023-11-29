@@ -54,3 +54,7 @@ export interface AnaliseDocumentoPayload {
   datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
   correcao_solicitada: string;
 }
+
+export interface CorrecaoDocumentoPayload {
+  tipos_de_documentos: Array<TiposDocumentosPayload>;
+}

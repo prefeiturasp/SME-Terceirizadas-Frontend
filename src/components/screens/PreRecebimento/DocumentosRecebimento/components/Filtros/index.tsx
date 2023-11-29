@@ -61,6 +61,14 @@ const Filtros: React.FC<Props> = ({
       label: "Enviado para Análise",
       value: "ENVIADO_PARA_ANALISE",
     },
+    {
+      label: "Solicitada Correção",
+      value: "ENVIADO_PARA_CORRECAO",
+    },
+    {
+      label: "Aprovado",
+      value: "APROVADO",
+    },
   ];
 
   const onSubmit = async (values: Record<string, any>): Promise<void> => {

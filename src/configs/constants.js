@@ -246,6 +246,8 @@ export const CADASTRO_DOCUMENTOS_RECEBIMENTO =
 export const DETALHAR_DOCUMENTO_RECEBIMENTO = "detalhe-documento-recebimento";
 export const ANALISAR_DOCUMENTO_RECEBIMENTO = "analise-documento-recebimento";
 export const PAINEL_DOCUMENTOS_RECEBIMENTO = "painel-documentos-recebimento";
+export const CORRIGIR_DOCUMENTOS_RECEBIMENTO =
+  "corrigir-documentos-recebimento";
 
 export const FICHA_TECNICA = "ficha-tecnica";
 export const CADASTRO_FICHA_TECNICA = "cadastro-ficha-tecnica";

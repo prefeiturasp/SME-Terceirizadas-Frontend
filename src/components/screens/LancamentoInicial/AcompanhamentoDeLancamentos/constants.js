@@ -66,6 +66,14 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
     nome: <div>Corrigido</div>,
     cor: "azul-escuro",
   },
+  MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE: {
+    nome: (
+      <div>
+        Em Preenchimento <br /> pela Unidade
+      </div>
+    ),
+    cor: "greenLight",
+  },
 };
 
 export const STATUS_RELACAO_DRE_UE = [

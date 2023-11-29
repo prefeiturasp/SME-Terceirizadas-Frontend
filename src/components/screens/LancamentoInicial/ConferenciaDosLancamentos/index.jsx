@@ -30,6 +30,7 @@ import {
   codaeAprovaSolicitacaoMedicao,
   codaeSolicitaCorrecaoUE,
   codaeAprovaPeriodo,
+  updateSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
   getFeriadosNoMesComNome,
@@ -51,6 +52,8 @@ import {
   ehEscolaTipoCEI,
   usuarioEhDRE,
   usuarioEhMedicao,
+  getError,
+  getISOLocalDatetimeString,
 } from "helpers/utilities";
 
 export const ConferenciaDosLancamentos = () => {
@@ -203,6 +206,45 @@ export const ConferenciaDosLancamentos = () => {
       "MEDICAO_CORRIGIDA_PELA_UE",
       "MEDICAO_CORRECAO_SOLICITADA",
     ].includes(solicitacao.ocorrencia.status);
+
+  const desabilitaBotaoExportarPDF = () => {
+    return (
+      usuarioEhDRE() &&
+      solicitacao &&
+      solicitacao.status === "MEDICAO_CORRIGIDA_PARA_CODAE" &&
+      !solicitacao.dre_ciencia_correcao_data
+    );
+  };
+
+  const habilitaBotaoCienteCorrecoes = () => {
+    const todosPeriodosGruposAprovadosCODAE = !periodosGruposMedicao.some(
+      (periodoGrupo) => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_CODAE"
+    );
+    return (
+      usuarioEhDRE() &&
+      solicitacao &&
+      solicitacao.status === "MEDICAO_CORRIGIDA_PARA_CODAE" &&
+      !solicitacao.dre_ciencia_correcao_data &&
+      todosPeriodosGruposAprovadosCODAE &&
+      (!solicitacao.ocorrencia ||
+        solicitacao.ocorrencia.status === "MEDICAO_APROVADA_PELA_CODAE")
+    );
+  };
+
+  const atualizaSolicitacaoMedicaoInicial = async () => {
+    let payload = new FormData();
+    payload.append("dre_ciencia_correcao_data", getISOLocalDatetimeString());
+    const response = await updateSolicitacaoMedicaoInicial(
+      solicitacao.uuid,
+      payload
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Assinatura confirmada com sucesso!");
+      await getSolMedInicialAsync();
+    } else {
+      toastError(getError(response.data));
+    }
+  };
 
   const getSolMedInicialAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -360,7 +402,11 @@ export const ConferenciaDosLancamentos = () => {
         (periodoGrupo) => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_CODAE"
       );
       if (
-        (solicitacao.status === "MEDICAO_APROVADA_PELA_DRE" &&
+        ([
+          "MEDICAO_APROVADA_PELA_DRE",
+          "MEDICAO_CORRIGIDA_PARA_CODAE",
+          "MEDICAO_APROVADA_PELA_CODAE",
+        ].includes(solicitacao.status) &&
           usuarioEhDRE()) ||
         (solicitacao.status === "MEDICAO_APROVADA_PELA_CODAE" &&
           usuarioEhMedicao())
@@ -815,6 +861,11 @@ export const ConferenciaDosLancamentos = () => {
                         texto="Exportar PDF"
                         style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
                         onClick={() => handleClickDownload()}
+                        disabled={desabilitaBotaoExportarPDF()}
+                        tooltipExterno={
+                          desabilitaBotaoExportarPDF() &&
+                          "Só será possível exportar o PDF com as assinaturas, após a Ciência das Correções pela DRE."
+                        }
                       />
                       {((![
                         "MEDICAO_APROVADA_PELA_DRE",
@@ -852,6 +903,19 @@ export const ConferenciaDosLancamentos = () => {
                             disabled={desabilitarEnviarParaCodaeECodaeAprovar}
                           />
                         </>
+                      )}
+                      {usuarioEhDRE() && (
+                        <Botao
+                          className="ml-3"
+                          texto="Ciente das Correções"
+                          style={BUTTON_STYLE.GREEN}
+                          onClick={async () => {
+                            setLoading(true);
+                            await atualizaSolicitacaoMedicaoInicial();
+                            setLoading(false);
+                          }}
+                          disabled={loading || !habilitaBotaoCienteCorrecoes()}
+                        />
                       )}
                     </div>
                   </div>
