@@ -824,7 +824,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         categoriasDeMedicao,
         inclusoesAutorizadas,
         setInputsInclusaoComErro,
-        setExibirTooltipAoSalvar
+        setExibirTooltipAoSalvar,
+        validacaoDiaLetivo
       );
     }
     const valuesMesmoDiaDaObservacao = Object.fromEntries(
@@ -958,7 +959,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         categoriasDeMedicao,
         inclusoesAutorizadas,
         setInputsInclusaoComErro,
-        setExibirTooltipAoSalvar
+        setExibirTooltipAoSalvar,
+        validacaoDiaLetivo
       )
     ) {
       if (ehSalvamentoAutomatico) {
@@ -1223,7 +1225,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         categoriasDeMedicao,
         inclusoesAutorizadas,
         setInputsInclusaoComErro,
-        setExibirTooltipAoSalvar
+        setExibirTooltipAoSalvar,
+        validacaoDiaLetivo
       );
     }
 
@@ -1797,7 +1800,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           column,
                                                           categoria,
                                                           inputsInclusaoComErro,
-                                                          exibirTooltipAoSalvar
+                                                          exibirTooltipAoSalvar,
+                                                          validacaoDiaLetivo
                                                         )}
                                                         exibeTooltipSuspensoesAutorizadasCEI={exibirTooltipSuspensoesAutorizadasCEI(
                                                           formValuesAtualizados,
