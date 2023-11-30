@@ -352,6 +352,15 @@ export default () => {
                     <div className="row">
                       <div className="col-8">
                         <InputText
+                          label="Nome da Empresa/Organização"
+                          valorInicial={proponente.nome_fantasia}
+                          disabled={true}
+                        />
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-8">
+                        <InputText
                           label="Endereço"
                           valorInicial={proponente.endereco}
                           disabled={true}
