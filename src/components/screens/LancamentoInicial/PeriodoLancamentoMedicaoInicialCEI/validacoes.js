@@ -236,8 +236,10 @@ export const validacoesTabelaAlimentacaoEmeidaCemei = (
     existeAlteracaoAlimentacaoLPR &&
     inputName.includes("refeicao") &&
     !inputName.includes("repeticao") &&
-    !allValues[`lanche__dia_${dia}__categoria_${categoria}`] &&
-    !allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`]
+    (!allValues[`lanche__dia_${dia}__categoria_${categoria}`] ||
+      Number(allValues[`lanche__dia_${dia}__categoria_${categoria}`]) === 0) &&
+    (!allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`] ||
+      Number(allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`]) === 0)
   ) {
     if (Number(value) > 2 * maxFrequencia) {
       return "Lançamento maior que 2x a frequência de alunos no dia.";
@@ -321,6 +323,7 @@ export const validacoesTabelasDietasEmeidaCemei = (
     return "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos com dietas autorizadas.";
   } else if (
     value &&
+    Number(value) > 0 &&
     Number(value) +
       Number(
         allValues[`refeicao__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
