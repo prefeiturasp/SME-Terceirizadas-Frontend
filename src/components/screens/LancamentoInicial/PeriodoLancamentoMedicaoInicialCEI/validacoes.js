@@ -189,18 +189,71 @@ export const validacoesTabelaAlimentacaoEmeidaCemei = (
   rowName,
   dia,
   categoria,
-  allValues
+  allValues,
+  value,
+  alteracoesAlimentacaoAutorizadas
 ) => {
+  const maxFrequencia = Number(
+    allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
+  );
   const maxMatriculados = Number(
     allValues[`matriculados__dia_${dia}__categoria_${categoria}`]
   );
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
+
+  const existeAlteracaoAlimentacaoRPL =
+    alteracoesAlimentacaoAutorizadas &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === dia && alteracao.motivo.includes("RPL")
+    ).length > 0;
+
+  const existeAlteracaoAlimentacaoLPR =
+    alteracoesAlimentacaoAutorizadas &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === dia && alteracao.motivo.includes("LPR")
+    ).length > 0;
 
   if (
     rowName === "frequencia" &&
     Number(allValues[inputName]) > Number(maxMatriculados)
   ) {
     return "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos matriculados no período.";
+  } else if (
+    value &&
+    existeAlteracaoAlimentacaoRPL &&
+    inputName.includes("lanche") &&
+    !inputName.includes("emergencial") &&
+    (!allValues[`refeicao__dia_${dia}__categoria_${categoria}`] ||
+      Number(allValues[`refeicao__dia_${dia}__categoria_${categoria}`]) === 0)
+  ) {
+    if (Number(value) > 2 * maxFrequencia) {
+      return "Lançamento maior que 2x a frequência de alunos no dia.";
+    } else {
+      return undefined;
+    }
+  } else if (
+    value &&
+    existeAlteracaoAlimentacaoLPR &&
+    inputName.includes("refeicao") &&
+    !inputName.includes("repeticao") &&
+    !allValues[`lanche__dia_${dia}__categoria_${categoria}`] &&
+    !allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`]
+  ) {
+    if (Number(value) > 2 * maxFrequencia) {
+      return "Lançamento maior que 2x a frequência de alunos no dia.";
+    } else {
+      return undefined;
+    }
+  } else if (
+    value &&
+    Number(value) > maxFrequencia &&
+    (inputName.includes("refeicao") ||
+      inputName.includes("sobremesa") ||
+      inputName.includes("lanche")) &&
+    !inputName.includes("repeticao") &&
+    !inputName.includes("emergencial")
+  ) {
+    return "Lançamento maior que a frequência de alunos no dia.";
   }
 
   return undefined;
@@ -426,7 +479,7 @@ export const exibirTooltipSuspensoesAutorizadasCEI = (
     value &&
     Number(value) > 0 &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
-    Number(value) < maxMatriculados &&
+    Number(value) <= maxMatriculados &&
     row.name === "frequencia" &&
     categoria.nome === "ALIMENTAÇÃO" &&
     suspensoesAutorizadas &&

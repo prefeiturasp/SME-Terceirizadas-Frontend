@@ -66,6 +66,7 @@ import {
   getSolicitacoesInclusaoAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
   textoBotaoObservacao,
+  getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
 } from "./helper";
 import {
   getCategoriasDeMedicao,
@@ -84,6 +85,11 @@ import * as perfilService from "services/perfil.service";
 import { escolaCorrigeMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { DETALHAMENTO_DO_LANCAMENTO, MEDICAO_INICIAL } from "configs/constants";
 import "./styles.scss";
+import {
+  exibirTooltipLPRAutorizadas,
+  exibirTooltipRPLAutorizadas,
+  exibirTooltipSuspensoesAutorizadas,
+} from "../PeriodoLancamentoMedicaoInicial/validacoes";
 
 export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const initialStateWeekColumns = [
@@ -107,6 +113,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState([]);
   const [inclusoesAutorizadas, setInclusoesAutorizadas] = useState(null);
   const [suspensoesAutorizadas, setSuspensoesAutorizadas] = useState(null);
+  const [
+    alteracoesAlimentacaoAutorizadas,
+    setAlteracoesAlimentacaoAutorizadas,
+  ] = useState(null);
   const [exibirTooltipAoSalvar, setExibirTooltipAoSalvar] = useState(false);
   const [inputsInclusaoComErro, setInputsInclusaoComErro] = useState([]);
   const [
@@ -208,6 +218,18 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           location
         );
       setInclusoesAutorizadas(response_inclusoes_autorizadas);
+
+      let response_alteracoes_alimentacao_autorizadas = [];
+      response_alteracoes_alimentacao_autorizadas =
+        await getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync(
+          escola.uuid,
+          mes,
+          ano,
+          periodo
+        );
+      setAlteracoesAlimentacaoAutorizadas(
+        response_alteracoes_alimentacao_autorizadas
+      );
 
       let response_suspensoes_autorizadas = [];
       response_suspensoes_autorizadas =
@@ -1261,7 +1283,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           rowName,
           dia,
           idCategoria,
-          allValues
+          allValues,
+          value,
+          alteracoesAlimentacaoAutorizadas
         );
       } else if (nomeCategoria.includes("DIETA")) {
         return validacoesTabelasDietasEmeidaCemei(
@@ -1674,6 +1698,27 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                         defaultValue={defaultValue(
                                                           column,
                                                           row
+                                                        )}
+                                                        exibeTooltipSuspensoesAutorizadas={exibirTooltipSuspensoesAutorizadas(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          suspensoesAutorizadas
+                                                        )}
+                                                        exibeTooltipRPLAutorizadas={exibirTooltipRPLAutorizadas(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          alteracoesAlimentacaoAutorizadas
+                                                        )}
+                                                        exibeTooltipLPRAutorizadas={exibirTooltipLPRAutorizadas(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          alteracoesAlimentacaoAutorizadas
                                                         )}
                                                         validate={fieldValidationsTabelasEmeidaCemei(
                                                           row.name,
