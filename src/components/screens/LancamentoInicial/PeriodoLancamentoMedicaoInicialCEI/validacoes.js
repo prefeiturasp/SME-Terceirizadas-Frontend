@@ -361,7 +361,8 @@ export const validarCamposComInclusoesDeAlimentacaoSemObservacao = (
   categoriasDeMedicao,
   inclusoesAutorizadas,
   setInputsInclusaoComErro,
-  setExibirTooltipAoSalvar
+  setExibirTooltipAoSalvar,
+  validacaoDiaLetivo
 ) => {
   const categoria = categoriasDeMedicao.find(
     (categoria) => categoria.nome === "ALIMENTAÇÃO"
@@ -413,7 +414,11 @@ export const validarCamposComInclusoesDeAlimentacaoSemObservacao = (
     const frequenciasNaoPreenchidas = inputFrequencias.filter(
       (inputFrequencia) => !inputFrequencia.valor
     );
-    if (frequenciasNaoPreenchidas.length > 0 && !observacaoDaColuna.valor) {
+    if (
+      frequenciasNaoPreenchidas.length > 0 &&
+      !observacaoDaColuna.valor &&
+      !validacaoDiaLetivo(inclusao.dia)
+    ) {
       frequenciasNaoPreenchidas.forEach((inputFrequencia) =>
         diasFaixasComErro.push(inputFrequencia)
       );
@@ -442,7 +447,8 @@ export const exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI = (
   column,
   categoria,
   inputsInclusaoComErro,
-  exibirTooltipAoSalvar
+  exibirTooltipAoSalvar,
+  validacaoDiaLetivo
 ) => {
   return (
     inclusoesAutorizadas.some(
@@ -457,6 +463,7 @@ export const exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI = (
         inputComErro.nome ===
         `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
     ) &&
+    !validacaoDiaLetivo(column.dia) &&
     exibirTooltipAoSalvar
   );
 };
