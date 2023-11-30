@@ -426,7 +426,7 @@ export const exibirTooltipSuspensoesAutorizadasCEI = (
     value &&
     Number(value) > 0 &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
-    Number(value) < maxMatriculados &&
+    Number(value) <= maxMatriculados &&
     row.name === "frequencia" &&
     categoria.nome === "ALIMENTAÇÃO" &&
     suspensoesAutorizadas &&
