@@ -9,7 +9,10 @@
     }
   },
   "lint-staged": {
-    "*.js": "prettier --write"
+    "*.{jsx,js,scss,tsx,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "jest": {
     "watchPathIgnorePatterns": [
