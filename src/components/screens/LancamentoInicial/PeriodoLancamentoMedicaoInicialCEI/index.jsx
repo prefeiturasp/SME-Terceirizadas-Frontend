@@ -84,6 +84,7 @@ import * as perfilService from "services/perfil.service";
 import { escolaCorrigeMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { DETALHAMENTO_DO_LANCAMENTO, MEDICAO_INICIAL } from "configs/constants";
 import "./styles.scss";
+import { exibirTooltipSuspensoesAutorizadas } from "../PeriodoLancamentoMedicaoInicial/validacoes";
 
 export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const initialStateWeekColumns = [
@@ -1674,6 +1675,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                         defaultValue={defaultValue(
                                                           column,
                                                           row
+                                                        )}
+                                                        exibeTooltipSuspensoesAutorizadas={exibirTooltipSuspensoesAutorizadas(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          suspensoesAutorizadas
                                                         )}
                                                         validate={fieldValidationsTabelasEmeidaCemei(
                                                           row.name,
