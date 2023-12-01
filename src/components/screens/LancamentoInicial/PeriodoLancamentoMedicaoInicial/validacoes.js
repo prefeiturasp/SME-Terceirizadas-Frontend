@@ -176,6 +176,7 @@ export const campoRefeicaoComRPLAutorizadaESemObservacao = (
 ) => {
   let erro = false;
   if (
+    categoria.nome === "ALIMENTAÇÃO" &&
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
       (alteracao) =>
@@ -203,6 +204,7 @@ export const campoLancheComLPRAutorizadaESemObservacao = (
 ) => {
   let erro = false;
   if (
+    categoria.nome === "ALIMENTAÇÃO" &&
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
       (alteracao) =>
@@ -964,6 +966,7 @@ export const exibirTooltipRPLAutorizadas = (
       `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
     ];
   return (
+    categoria.nome === "ALIMENTAÇÃO" &&
     value &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
     Number(value) > 0 &&
@@ -990,6 +993,7 @@ export const exibirTooltipLPRAutorizadas = (
     ];
 
   return (
+    categoria.nome === "ALIMENTAÇÃO" &&
     value &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
     Number(value) > 0 &&
