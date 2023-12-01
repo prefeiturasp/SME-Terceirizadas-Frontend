@@ -86,6 +86,8 @@ import { escolaCorrigeMedicao } from "services/medicaoInicial/solicitacaoMedicao
 import { DETALHAMENTO_DO_LANCAMENTO, MEDICAO_INICIAL } from "configs/constants";
 import "./styles.scss";
 import {
+  campoLancheComLPRAutorizadaESemObservacao,
+  campoRefeicaoComRPLAutorizadaESemObservacao,
   exibirTooltipLPRAutorizadas,
   exibirTooltipRPLAutorizadas,
   exibirTooltipSuspensoesAutorizadas,
@@ -1161,7 +1163,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     formValuesAtualizados,
     dia,
     categoria,
-    column
+    column,
+    row
   ) => {
     if (deepEqual(formValuesAtualizados, dadosIniciais)) {
       setDisableBotaoSalvarLancamentos(true);
@@ -1231,16 +1234,34 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     }
 
     if (
-      frequenciaComSuspensaoAutorizadaPreenchida(
+      (frequenciaComSuspensaoAutorizadaPreenchida(
         formValuesAtualizados,
         column,
         categoria,
         suspensoesAutorizadas,
         errors
       ) &&
-      !formValuesAtualizados[
-        `observacoes__dia_${column.dia}__categoria_${categoria.id}`
-      ]
+        !formValuesAtualizados[
+          `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+        ]) ||
+      (categoria.nome.includes("ALIMENTAÇÃO") &&
+        (exibirTooltipRPLAutorizadas(
+          formValuesAtualizados,
+          row,
+          column,
+          categoria,
+          alteracoesAlimentacaoAutorizadas
+        ) ||
+          exibirTooltipLPRAutorizadas(
+            formValuesAtualizados,
+            row,
+            column,
+            categoria,
+            alteracoesAlimentacaoAutorizadas
+          )) &&
+        !formValuesAtualizados[
+          `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+        ])
     ) {
       setDisableBotaoSalvarLancamentos(true);
       setExibirTooltip(true);
@@ -1617,6 +1638,18 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                             `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
                                                           ]
                                                         )) ||
+                                                      campoRefeicaoComRPLAutorizadaESemObservacao(
+                                                        formValuesAtualizados,
+                                                        column,
+                                                        categoria,
+                                                        alteracoesAlimentacaoAutorizadas
+                                                      ) ||
+                                                      campoLancheComLPRAutorizadaESemObservacao(
+                                                        formValuesAtualizados,
+                                                        column,
+                                                        categoria,
+                                                        alteracoesAlimentacaoAutorizadas
+                                                      ) ||
                                                       frequenciaComSuspensaoAutorizadaPreenchida(
                                                         formValuesAtualizados,
                                                         column,
@@ -1742,7 +1775,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                             formValuesAtualizados,
                                                             column.dia,
                                                             categoria,
-                                                            column
+                                                            column,
+                                                            row
                                                           );
                                                         }}
                                                       </OnChange>
@@ -1829,7 +1863,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                             formValuesAtualizados,
                                                             column.dia,
                                                             categoria,
-                                                            column
+                                                            column,
+                                                            row
                                                           );
                                                         }}
                                                       </OnChange>
