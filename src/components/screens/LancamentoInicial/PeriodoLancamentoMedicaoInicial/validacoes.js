@@ -150,6 +150,7 @@ export const campoComSuspensaoAutorizadaESemObservacao = (
       });
   alimentacoes.forEach((alimentacao) => {
     if (
+      categoria.nome === "ALIMENTAÇÃO" &&
       formValuesAtualizados[
         `${alimentacao}__dia_${column.dia}__categoria_${categoria.id}`
       ] &&
@@ -939,6 +940,7 @@ export const exibirTooltipSuspensoesAutorizadas = (
     ];
 
   return (
+    categoria.nome === "ALIMENTAÇÃO" &&
     value &&
     Number(value) > 0 &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
