@@ -49,7 +49,8 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
 
     return (
       <>
-        {objeto.status === "Enviado para Análise" && botaoDetalharVerde}
+        {["Enviado para Análise", "Aprovado"].includes(objeto.status) &&
+          botaoDetalharVerde}
         {objeto.status === "Enviado para Correção" && botaoCorrigirLaranja}
       </>
     );
