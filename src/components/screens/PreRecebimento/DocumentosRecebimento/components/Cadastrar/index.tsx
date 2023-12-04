@@ -136,16 +136,16 @@ export default () => {
     try {
       let response = await cadastraDocumentoRecebimento(payload);
       if (response.status === 201 || response.status === 200) {
-        setCarregando(false);
         toastSuccess("Documentos enviados com sucesso!");
-        setShowModal(false);
         voltarPagina();
       } else {
         toastError("Ocorreu um erro ao salvar o Documento de Recebimento");
-        setCarregando(false);
       }
     } catch (error) {
       exibeError(error, "Ocorreu um erro ao salvar o Documento de Recebimento");
+    } finally {
+      setShowModal(false);
+      setCarregando(false);
     }
   };
 
@@ -245,6 +245,9 @@ export default () => {
                   <InserirDocumento
                     setFiles={setFilesLaudo}
                     removeFile={removeFileLaudo}
+                    formatosAceitos="PDF"
+                    multiplosArquivos={false}
+                    concatenarNovosArquivos={false}
                   />
                 </div>
 
