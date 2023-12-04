@@ -95,7 +95,7 @@ export default () => {
     payload.contrato = values.contrato;
     payload.empresa = empresaSelecionada.uuid;
     payload.produto = values.produto;
-    payload.qtd_total_programada = values.quantidade_total.replaceAll(".", "");
+    payload.qtd_total_programada = values.quantidade_total?.replaceAll(".", "");
     payload.unidade_medida = values.unidade_medida;
     payload.armazem = values.armazem;
     payload.tipo_embalagem = values.tipo_embalagem;
@@ -109,7 +109,7 @@ export default () => {
             "YYYY-MM-DD"
           )
         : undefined,
-      quantidade: values[`quantidade_${index}`].replaceAll(".", ""),
+      quantidade: values[`quantidade_${index}`]?.replaceAll(".", ""),
       total_embalagens: values[`total_embalagens_${index}`],
     }));
 
