@@ -17,6 +17,7 @@ export const TextArea = (props) => {
     required,
     maxLength,
     contador,
+    valorInicial,
   } = props;
   return (
     <div className="textarea">
@@ -40,6 +41,7 @@ export const TextArea = (props) => {
         placeholder={placeholder}
         maxLength={maxLength}
         required={required}
+        value={valorInicial || input.value}
       />
       {contador && (
         <ContadorCaracteres atual={input.value.length} max={contador} />
@@ -61,6 +63,7 @@ TextArea.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   contador: PropTypes.number,
+  valorInicial: PropTypes.string,
 };
 
 TextArea.defaultProps = {

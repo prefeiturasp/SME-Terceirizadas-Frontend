@@ -10,6 +10,7 @@ import {
   LAYOUT_EMBALAGEM,
   PAINEL_DOCUMENTOS_RECEBIMENTO,
   PAINEL_LAYOUT_EMBALAGEM,
+  FICHA_TECNICA,
 } from "configs/constants";
 import {
   usuarioEhCronograma,
@@ -69,6 +70,11 @@ const MenuPreRecebimento = () => {
       {usuarioComAcessoAoPainelDocumentos() && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${PAINEL_DOCUMENTOS_RECEBIMENTO}`}>
           Documentos de Recebimento
+        </LeafItem>
+      )}
+      {usuarioEhEmpresaFornecedor() && (
+        <LeafItem to={`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`}>
+          Ficha Técnica do Produto
         </LeafItem>
       )}
     </Menu>

@@ -16,7 +16,7 @@ const TOOLTIPS_TIPOS_EMBALAGENS = {
   SECUNDARIA:
     "É a embalagem que envolve a embalagem primária e pode agrupar os produtos. Ex.: Caixa contendo os pacotes de Macarrão.",
   TERCIARIA:
-    "É a embalagem de acondicionamento mais distante do produto. Ex.: Pallets contendo caixas de Macarrão.",
+    "É a embalagem de acondicionamento mais distante do produto. Ex.: Caixas que envolvem as embalagens secundárias e primárias.",
 };
 
 const FORMATOS_IMAGEM = "PDF, PNG, JPG ou JPEG";

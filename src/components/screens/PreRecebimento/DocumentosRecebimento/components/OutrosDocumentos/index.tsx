@@ -6,6 +6,7 @@ import {
 import InputText from "components/Shareable/Input/InputText";
 import ArquivosTipoRecebimento from "../ArquivosTipoDocumento";
 import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
+import "./styles.scss";
 
 export interface Props {
   documento: DocumentosRecebimentoDetalhado;

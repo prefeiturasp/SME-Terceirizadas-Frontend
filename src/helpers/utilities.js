@@ -700,6 +700,13 @@ export const acessoModuloMedicaoInicialDRE = () => {
   );
 };
 
+export const acessoModuloMedicaoInicialCODAE = () => {
+  return (
+    localStorage.getItem("acesso_modulo_medicao_inicial") === "true" &&
+    (usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAENutriManifestacao())
+  );
+};
+
 export const converterDDMMYYYYparaYYYYMMDD = (data) => {
   return moment(data, "DD/MM/YYYY").format("YYYY-MM-DD");
 };
@@ -976,7 +983,9 @@ export const exibirModuloMedicaoInicial = () => {
       ((usuarioEhEscolaTerceirizada() ||
         usuarioEhEscolaTerceirizadaDiretor()) &&
         !usuarioEscolaEhGestaoDireta()) ||
-      usuarioEhMedicao()
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao()
     );
 
   switch (localStorage.getItem("tipo_perfil")) {
@@ -986,6 +995,9 @@ export const exibirModuloMedicaoInicial = () => {
       return acessoModuloMedicaoInicialDRE();
     case `"medicao"`:
       return true;
+    case `"nutricao_manifestacao"`:
+    case `"gestao_alimentacao_terceirizada"`:
+      return acessoModuloMedicaoInicialCODAE();
     default:
       return false;
   }
@@ -1113,4 +1125,12 @@ export const formataMesNome = (mes) => {
 
 export const ehFimDeSemana = (dateObj) => {
   return dateObj.getDay() % 6 === 0;
+};
+
+export const getISOLocalDatetimeString = () => {
+  const date = new Date();
+  const isoDateTime = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60000
+  ).toISOString();
+  return isoDateTime;
 };

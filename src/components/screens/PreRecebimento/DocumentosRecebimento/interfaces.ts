@@ -20,11 +20,6 @@ export interface OptionsPrazoRecebimento {
   nome: string;
 }
 
-export interface OptionsGenerico {
-  uuid: string;
-  nome: string;
-}
-
 export interface TiposDocumentosPayload {
   tipo_documento: TiposDocumentoChoices;
   arquivos_do_tipo_de_documento: Array<Arquivo>;
@@ -58,4 +53,8 @@ export interface AnaliseDocumentoPayload {
   saldo_laudo: string;
   datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
   correcao_solicitada: string;
+}
+
+export interface CorrecaoDocumentoPayload {
+  tipos_de_documentos: Array<TiposDocumentosPayload>;
 }

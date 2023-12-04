@@ -22,7 +22,7 @@ import {
 import Botao from "../../../../../Shareable/Botao";
 import { useHistory } from "react-router-dom";
 import { DOCUMENTOS_RECEBIMENTO, PRE_RECEBIMENTO } from "configs/constants";
-import ModalCadastrar from "../ModalCadastrar";
+import ModalConfirmarEnvio from "../ModalConfirmarEnvio";
 import { exibeError } from "helpers/utilities";
 import {
   toastError,
@@ -177,7 +177,7 @@ export default () => {
             initialValues={{}}
             render={({ handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
-                <ModalCadastrar
+                <ModalConfirmarEnvio
                   show={showModal}
                   handleClose={() => setShowModal(false)}
                   loading={carregando}

@@ -1,9 +1,10 @@
 import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
-import { cardsAprovacao } from "./constants";
+import { cardsPainel } from "./constants";
 import {
   ANALISAR_DOCUMENTO_RECEBIMENTO,
+  DETALHAR_DOCUMENTO_RECEBIMENTO,
   PRE_RECEBIMENTO,
 } from "configs/constants";
 import {
@@ -29,7 +30,7 @@ export default () => {
   const [filtrado, setFiltrado] = useState<boolean>(false);
 
   const [cardsAprovacaoDocumento, setCardsAprovacaoDocumento] =
-    useState<CardConfig[]>(cardsAprovacao);
+    useState<CardConfig[]>(cardsPainel);
 
   const ordenarPorLogMaisRecente = (
     a: DocumentosRecebimentoDashboard,
@@ -55,9 +56,17 @@ export default () => {
     return items.sort(ordenarPorLogMaisRecente).map((item) => ({
       text: gerarTextoCardDocumento(item),
       date: item.log_mais_recente.slice(0, 10),
-      link: `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`,
+      link: gerarLinkDocumento(item),
       status: item.status,
     }));
+  };
+
+  const gerarLinkDocumento = (item: DocumentosRecebimentoDashboard): string => {
+    return ["Aprovado", "Enviado para Correção"].includes(item.status)
+      ? `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
+      : item.status === "Enviado para Análise"
+      ? `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
+      : ``;
   };
 
   const agruparCardsPorStatus = (

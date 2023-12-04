@@ -1,3 +1,5 @@
+import { TerceirizadaSimplesInterface } from "./terceirizada.interface";
+
 export interface DocumentosRecebimento {
   criado_em: string;
   nome_produto: string;
@@ -9,12 +11,16 @@ export interface DocumentosRecebimento {
 
 export interface DocumentosRecebimentoDetalhado extends DocumentosRecebimento {
   numero_laudo: string;
+  correcao_solicitada: string;
   tipos_de_documentos: Array<TiposDocumentos>;
+  log_mais_recente: {
+    usuario: string;
+    criado_em: string;
+  };
 }
 
 export interface DocumentosRecebimentoParaAnalise
   extends DocumentosRecebimentoDetalhado {
-  correcao_solicitada: string;
   data_fabricacao_lote: string;
   data_final_lote: string;
   datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
@@ -23,8 +29,8 @@ export interface DocumentosRecebimentoParaAnalise
   validade_produto: string;
   numero_sei: string;
   fornecedor: string;
-  unidade_medida: string;
-  laboratorio: string;
+  unidade_medida: UnidadeMedidaSimples;
+  laboratorio: LaboratorioSimples;
 }
 
 export interface DatasFabricacaoPrazos {
@@ -95,4 +101,49 @@ export interface FiltrosDashboardDocumentos {
   status?: string[];
   offset?: number;
   limit?: number;
+}
+
+export interface OptionsGenerico {
+  uuid: string;
+  nome: string;
+}
+
+export type CategoriaChoices = "PERECIVEIS" | "NAO_PERECIVEIS";
+
+export interface ProdutoSimples {
+  uuid: string;
+  nome: string;
+}
+
+export interface MarcaSimples {
+  uuid: string;
+  nome: string;
+}
+
+export interface FabricanteSimples {
+  uuid: string;
+  nome: string;
+}
+
+export interface FichaTecnica {
+  uuid: string;
+  numero: string;
+  produto: ProdutoSimples;
+  pregao_chamada_publica: string;
+  marca: MarcaSimples;
+  categoria: string;
+  status: string;
+  criado_em: string;
+  empresa: TerceirizadaSimplesInterface;
+  fabricante: FabricanteSimples;
+  cnpj_fabricante: string;
+  cep_fabricante: string;
+  endereco_fabricante: string;
+  numero_fabricante: string;
+  complemento_fabricante: string;
+  bairro_fabricante: string;
+  cidade_fabricante: string;
+  estado_fabricante: string;
+  email_fabricante: string;
+  telefone_fabricante: string;
 }

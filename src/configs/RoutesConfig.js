@@ -275,7 +275,11 @@ import DetalharDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharD
 import PainelDocumentosRecebimentoPage from "../pages/PreRecebimento/PainelDocumentosRecebimentoPage";
 import StatusDocumentoPendenteAprovacao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoPendenteAprovacao";
 import StatusDocumentoAprovados from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoAprovados";
+import StatusDocumentoEnviadosParaCorrecao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoEnviadosParaCorrecao";
 import AnalisarDocumentosRecebimentoPage from "../pages/PreRecebimento/AnalisarDocumentosRecebimentoPage";
+import CorrigirDocumentosRecebimentoPage from "../pages/PreRecebimento/CorrigirDocumentosRecebimentoPage";
+import FichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/FichaTecnicaPage";
+import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/CadastroFichaTecnicaPage";
 
 const routesConfig = [
   {
@@ -1559,13 +1563,19 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhDRE() ||
       usuarioEhMedicao() ||
-      usuarioEhEscolaTerceirizadaQualquerPerfil(),
+      usuarioEhEscolaTerceirizadaQualquerPerfil() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.CONFERENCIA_DOS_LANCAMENTOS}`,
     component: ConferenciaDosLancamentosPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao(),
+    tipoUsuario:
+      usuarioEhDRE() ||
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.DETALHAMENTO_DO_LANCAMENTO}`,
@@ -1998,7 +2008,8 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_DOCUMENTO_RECEBIMENTO}`,
     component: DetalharDocumentosRecebimentoPage,
     exact: true,
-    tipoUsuario: usuarioEhEmpresaFornecedor(),
+    tipoUsuario:
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelEmbalagens(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_DOCUMENTOS_RECEBIMENTO}`,
@@ -2019,10 +2030,34 @@ const routesConfig = [
     tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
   },
   {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_DOCUMENTOS_RECEBIMENTO}/${constants.ENVIADOS_PARA_CORRECAO}/`,
+    component: StatusDocumentoEnviadosParaCorrecao,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
+  },
+  {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_DOCUMENTO_RECEBIMENTO}`,
     component: AnalisarDocumentosRecebimentoPage,
     exact: true,
-    tipoUsuario: usuarioComAcessoAoPainelEmbalagens(),
+    tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CORRIGIR_DOCUMENTOS_RECEBIMENTO}`,
+    component: CorrigirDocumentosRecebimentoPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.FICHA_TECNICA}`,
+    component: FichaTecnicaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_FICHA_TECNICA}`,
+    component: CadastroFichaTecnicaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
 ];
 
