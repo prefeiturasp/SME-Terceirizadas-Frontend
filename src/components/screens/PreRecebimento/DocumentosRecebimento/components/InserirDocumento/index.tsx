@@ -7,13 +7,14 @@ import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { textAreaRequired } from "helpers/fieldValidators";
 import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
 
-const FORMATOS_IMAGEM = "PDF, PNG, JPG ou JPEG";
-
 interface Props {
   setFiles(_files: Array<ArquivoForm>): void;
   removeFile: (_index: number) => void;
   tipoDocumento?: string;
   arquivosIniciais?: ArquivoForm[];
+  formatosAceitos?: string;
+  multiplosArquivos?: boolean;
+  concatenarNovosArquivos?: boolean;
 }
 
 const InserirDocumento: React.FC<Props> = ({
@@ -21,6 +22,9 @@ const InserirDocumento: React.FC<Props> = ({
   removeFile,
   tipoDocumento = "",
   arquivosIniciais = [],
+  formatosAceitos = "PDF, PNG, JPG ou JPEG",
+  multiplosArquivos = true,
+  concatenarNovosArquivos = true,
 }) => {
   const titulo = OUTROS_DOCUMENTOS_OPTIONS.find(
     (obj) => obj.value === tipoDocumento
@@ -59,21 +63,25 @@ const InserirDocumento: React.FC<Props> = ({
           className="inputfile"
           texto={titulo ? "Anexar Documentos" : "Anexar Laudo"}
           name={"files"}
-          accept={FORMATOS_IMAGEM}
+          accept={formatosAceitos}
           setFiles={setFiles}
           removeFile={removeFile}
           toastSuccess={"Imagem incluída com sucesso!"}
           alignLeft
-          multiple={true}
+          multiple={multiplosArquivos}
           limiteTamanho={DEZ_MB}
-          concatenarNovosArquivos
+          concatenarNovosArquivos={concatenarNovosArquivos}
         />
 
         <label className="col-12 label-imagem">
           <span className="red">* Campo Obrigatório: &nbsp;</span>
-          {"Envie um arquivo nos formatos: " +
-            FORMATOS_IMAGEM +
-            ", com até 10MB"}
+          {titulo
+            ? "Envie um arquivo nos formatos: " +
+              formatosAceitos +
+              ", com até 10MB"
+            : "Envie um arquivo no formato: " +
+              formatosAceitos +
+              " com até 10MB"}
         </label>
       </div>
     </>
