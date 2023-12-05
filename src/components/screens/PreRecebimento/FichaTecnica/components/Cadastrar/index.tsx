@@ -12,7 +12,7 @@ import { getTerceirizadaUUID } from "services/terceirizada.service";
 import { required, email } from "helpers/fieldValidators";
 import { Spin, Steps } from "antd";
 import {
-  FichaTecnica,
+  FichaTecnicaDetalhada,
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
 import { CATEGORIA_OPTIONS } from "../../constants";
@@ -42,7 +42,7 @@ import {
 } from "../../../../../Shareable/Toast/dialogs";
 import { getListaFiltradaAutoCompleteSelect } from "../../../../../../helpers/autoCompleteSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
-import { ResponseFichaTecnica } from "interfaces/responses.interface";
+import { ResponseFichaTecnicaDetalhada } from "interfaces/responses.interface";
 
 export default () => {
   const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
@@ -58,7 +58,7 @@ export default () => {
     );
   const [desabilitaEndereco, setDesabilitaEndereco] = useState(true);
   const [collapse, setCollapse] = useState([]);
-  const [ficha, setFicha] = useState<FichaTecnica>({} as FichaTecnica);
+  const [ficha, setFicha] = useState<FichaTecnicaDetalhada>({} as FichaTecnicaDetalhada);
   const [initialValues, setInitialValues] = useState<FichaTecnicaPayload>({});
 
   const onSubmit = (): void => {};
@@ -113,7 +113,7 @@ export default () => {
     }
   };
 
-  const geraInitialValues = (ficha: FichaTecnica): void => {
+  const geraInitialValues = (ficha: FichaTecnicaDetalhada): void => {
     let iniciais: FichaTecnicaPayload = {
       produto: ficha.produto.nome,
       marca: ficha.marca.uuid,
@@ -165,7 +165,7 @@ export default () => {
 
     try {
       setCarregando(true);
-      let response: ResponseFichaTecnica;
+      let response: ResponseFichaTecnicaDetalhada;
       if (ficha.uuid) {
         response = await editaRascunhoFichaTecnica(payload, ficha.uuid);
       } else {
