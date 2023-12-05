@@ -1001,9 +1001,10 @@ class AlteracaoCardapio extends Component {
                   alteracaoCardapioList={alteracaoCardapioList}
                   removerRascunho={this.OnDeleteButtonClicked}
                   resetForm={(event) => this.resetForm(event)}
-                  carregarRascunho={(params) =>
-                    this.OnEditButtonClicked(params)
-                  }
+                  carregarRascunho={async (params) => {
+                    await this.onChangeMotivo(params.motivo.uuid);
+                    await this.OnEditButtonClicked(params);
+                  }}
                 />
               </section>
             )}
@@ -1135,7 +1136,6 @@ class AlteracaoCardapio extends Component {
                         disabled={this.deveDesabilitarSeletorDeAlimentacao(
                           indice
                         )}
-                        multiple
                         selected={optionsAlimentacaoDe[periodo.nome] || []}
                         options={
                           this.formataOpcoesDe(
@@ -1149,26 +1149,45 @@ class AlteracaoCardapio extends Component {
                         }
                         validate={periodo.validador}
                       />
-                      <Field
-                        component={MultiSelect}
-                        disableSearch
-                        name="tipos_alimentacao_para"
-                        disabled={this.deveDesabilitarSeletorDeAlimentacao(
-                          indice
-                        )}
-                        multiple
-                        selected={optionsAlimentacaoDe[periodo.nome] || []}
-                        options={periodo.substituicoes || []}
-                        nomeDoItemNoPlural="Substitutos"
-                        onChange={(values) => {
-                          this.verificaSeEhLancheNoTipoDeAlimentacao(
-                            values,
-                            substituicoesAlimentacao[indice].substituicoes,
-                            periodo.nome
-                          );
-                        }}
-                        validate={periodo.validador}
-                      />
+                      {this.state.motivo &&
+                      this.state.motivo.nome &&
+                      this.state.motivo.nome.includes("RPL") ? (
+                        <Field
+                          component={Select}
+                          disabled={this.deveDesabilitarSeletorDeAlimentacao(
+                            indice
+                          )}
+                          name="tipos_alimentacao_para"
+                          options={[{ nome: "Selecione", uuid: "" }].concat(
+                            periodo.substituicoes.map((subs) => ({
+                              nome: subs.label,
+                              uuid: subs.value,
+                            }))
+                          )}
+                          naoDesabilitarPrimeiraOpcao
+                          validate={periodo.validador}
+                        />
+                      ) : (
+                        <Field
+                          component={MultiSelect}
+                          disableSearch
+                          name="tipos_alimentacao_para"
+                          disabled={this.deveDesabilitarSeletorDeAlimentacao(
+                            indice
+                          )}
+                          selected={optionsAlimentacaoDe[periodo.nome] || []}
+                          options={periodo.substituicoes || []}
+                          nomeDoItemNoPlural="Substitutos"
+                          onChange={(values) => {
+                            this.verificaSeEhLancheNoTipoDeAlimentacao(
+                              values,
+                              substituicoesAlimentacao[indice].substituicoes,
+                              periodo.nome
+                            );
+                          }}
+                          validate={periodo.validador}
+                        />
+                      )}
                       <Field
                         component={InputText}
                         onChange={(event) =>
