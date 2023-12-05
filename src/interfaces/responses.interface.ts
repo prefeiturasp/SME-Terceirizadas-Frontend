@@ -11,6 +11,7 @@ import {
   DocumentosRecebimentoDashboard,
   DocumentosRecebimentoDetalhado,
   DocumentosRecebimentoParaAnalise,
+  FichaTecnicaDetalhada,
   FichaTecnica,
 } from "./pre_recebimento.interface";
 
@@ -97,6 +98,15 @@ export interface ResponseDocumentosRecebimentoParaAnalise
   data: DocumentosRecebimentoParaAnalise;
 }
 
-export interface ResponseFichaTecnica extends ResponseInterface {
-  data: FichaTecnica;
+export interface ResponseFichasTecnicas extends ResponseInterface {
+  data: {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: FichaTecnica[];
+  };
+}
+
+export interface ResponseFichaTecnicaDetalhada extends ResponseInterface {
+  data: FichaTecnicaDetalhada;
 }
