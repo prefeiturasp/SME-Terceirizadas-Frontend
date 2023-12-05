@@ -98,9 +98,9 @@ const Filtros: React.FC<Props> = ({
                     values.nome_produto,
                     true
                   )}
-                  label="Filtrar por Nome do Produto"
+                  label="Filtrar por Produto"
                   name="nome_produto"
-                  placeholder="Selecione um Produto"
+                  placeholder="Selecione os Status"
                 />
               </div>
 
@@ -130,9 +130,9 @@ const Filtros: React.FC<Props> = ({
                 <Field
                   component={InputComData}
                   className="input-data"
-                  label="Filtrar por Data da Criação"
+                  label="Filtrar por Data do Cadastro"
                   name="data_criacao"
-                  placeholder="Selecione a Data de Criação"
+                  placeholder="Selecione a Data do Cadastro"
                   writable={false}
                   minDate={null}
                   maxDate={null}
