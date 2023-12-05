@@ -13,9 +13,33 @@ export class CardPendenteAcao extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: this.props.pedidos,
+      pedidosFiltrados: this.props.pedidos.map((solicitacao) => {
+        solicitacao["solicitacoes_similares"] =
+          solicitacao.solicitacoes_similares?.map((sol_similar) => {
+            sol_similar.collapsed = true;
+            return sol_similar;
+          });
+        return solicitacao;
+      }),
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
+    this.collapseSolicitacaoSimilar =
+      this.collapseSolicitacaoSimilar.bind(this);
+  }
+
+  collapseSolicitacaoSimilar(idxPedido, idxSolicitacaoSimilar) {
+    const { pedidosFiltrados } = this.state;
+
+    const novoPedidosFiltrados = pedidosFiltrados.map((pedido, index) => {
+      if (index === idxPedido) {
+        const solicitacaoSimilar =
+          pedido.solicitacoes_similares[idxSolicitacaoSimilar];
+        solicitacaoSimilar.collapsed = !solicitacaoSimilar.collapsed;
+      }
+      return pedido;
+    });
+
+    this.setState({ pedidosFiltrados: novoPedidosFiltrados });
   }
 
   filtrarPedidos(event) {
@@ -32,8 +56,26 @@ export class CardPendenteAcao extends Component {
     this.setState({ pedidosFiltrados });
   }
 
+  renderSolicitacoesSimilares(idxPedido, pedido) {
+    return pedido.solicitacoes_similares?.map((solicitacao, index) => {
+      return (
+        <p className="gatilho-style" key={index}>
+          <i className="fa fa-info-circle mr-1" aria-hidden="true" />
+          <b>
+            {`#${solicitacao.id_externo}`}
+            <ToggleExpandir
+              onClick={() => this.collapseSolicitacaoSimilar(idxPedido, index)}
+              ativo={!solicitacao.collapsed}
+              className="icon-padding"
+            />
+          </b>
+        </p>
+      );
+    });
+  }
+
   render() {
-    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel } = this.props;
+    const { pedidos, titulo, tipoDeCard, colunaDataLabel } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
       <div className="card card-pendency-approval food-inclusion">
@@ -91,10 +133,11 @@ export class CardPendenteAcao extends Component {
             <table className="orders-table mt-4 ml-3 mr-3">
               <thead>
                 <tr className="row">
-                  <th className="col-3">Código do Pedido</th>
-                  <th className="col-3">Código EOL</th>
+                  <th className="col-2">Código do Pedido</th>
+                  <th className="col-2">Código EOL</th>
                   <th className="col-3">Nome da Escola</th>
-                  <th className="col-3">{ultimaColunaLabel || "Data"}</th>
+                  <th className="col-3">{colunaDataLabel || "Data"}</th>
+                  <th className="col-2">Solic. Similares</th>
                 </tr>
               </thead>
               <tbody>
@@ -117,11 +160,14 @@ export class CardPendenteAcao extends Component {
                       )}
                     >
                       <tr className="row">
-                        <td className="col-3">{pedido.id_externo}</td>
-                        <td className="col-3">{pedido.escola.codigo_eol}</td>
+                        <td className="col-2">{pedido.id_externo}</td>
+                        <td className="col-2">{pedido.escola.codigo_eol}</td>
                         <td className="col-3">{pedido.escola.nome}</td>
                         <td className="col-3">
                           {pedido.data_inicial || dataMaisProxima}
+                        </td>
+                        <td className="col-2 solicitacao-consolidada-collapse">
+                          {this.renderSolicitacoesSimilares(key, pedido)}
                         </td>
                       </tr>
                     </Link>
