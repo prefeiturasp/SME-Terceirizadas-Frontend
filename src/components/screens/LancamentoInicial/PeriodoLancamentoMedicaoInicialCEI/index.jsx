@@ -86,6 +86,9 @@ import { escolaCorrigeMedicao } from "services/medicaoInicial/solicitacaoMedicao
 import { DETALHAMENTO_DO_LANCAMENTO, MEDICAO_INICIAL } from "configs/constants";
 import "./styles.scss";
 import {
+  campoComSuspensaoAutorizadaESemObservacao,
+  campoLancheComLPRAutorizadaESemObservacao,
+  campoRefeicaoComRPLAutorizadaESemObservacao,
   exibirTooltipLPRAutorizadas,
   exibirTooltipRPLAutorizadas,
   exibirTooltipSuspensoesAutorizadas,
@@ -1161,7 +1164,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     formValuesAtualizados,
     dia,
     categoria,
-    column
+    column,
+    row
   ) => {
     if (deepEqual(formValuesAtualizados, dadosIniciais)) {
       setDisableBotaoSalvarLancamentos(true);
@@ -1231,13 +1235,38 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     }
 
     if (
-      frequenciaComSuspensaoAutorizadaPreenchida(
-        formValuesAtualizados,
-        column,
-        categoria,
-        suspensoesAutorizadas,
-        errors
-      ) &&
+      categoria.nome.includes("ALIMENTAÇÃO") &&
+      ((!ehEmeiDaCemeiLocation &&
+        frequenciaComSuspensaoAutorizadaPreenchida(
+          formValuesAtualizados,
+          column,
+          categoria,
+          suspensoesAutorizadas,
+          errors,
+          categoriasDeMedicao
+        )) ||
+        exibirTooltipRPLAutorizadas(
+          formValuesAtualizados,
+          row,
+          column,
+          categoria,
+          alteracoesAlimentacaoAutorizadas
+        ) ||
+        exibirTooltipLPRAutorizadas(
+          formValuesAtualizados,
+          row,
+          column,
+          categoria,
+          alteracoesAlimentacaoAutorizadas
+        ) ||
+        (ehEmeiDaCemeiLocation &&
+          exibirTooltipSuspensoesAutorizadas(
+            formValuesAtualizados,
+            row,
+            column,
+            categoria,
+            suspensoesAutorizadas
+          ))) &&
       !formValuesAtualizados[
         `observacoes__dia_${column.dia}__categoria_${categoria.id}`
       ]
@@ -1617,13 +1646,34 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                             `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
                                                           ]
                                                         )) ||
-                                                      frequenciaComSuspensaoAutorizadaPreenchida(
+                                                      campoRefeicaoComRPLAutorizadaESemObservacao(
                                                         formValuesAtualizados,
                                                         column,
                                                         categoria,
-                                                        suspensoesAutorizadas,
-                                                        errors
-                                                      )
+                                                        alteracoesAlimentacaoAutorizadas
+                                                      ) ||
+                                                      campoLancheComLPRAutorizadaESemObservacao(
+                                                        formValuesAtualizados,
+                                                        column,
+                                                        categoria,
+                                                        alteracoesAlimentacaoAutorizadas
+                                                      ) ||
+                                                      (!ehEmeiDaCemeiLocation &&
+                                                        frequenciaComSuspensaoAutorizadaPreenchida(
+                                                          formValuesAtualizados,
+                                                          column,
+                                                          categoria,
+                                                          suspensoesAutorizadas,
+                                                          errors,
+                                                          categoriasDeMedicao
+                                                        )) ||
+                                                      (ehEmeiDaCemeiLocation &&
+                                                        campoComSuspensaoAutorizadaESemObservacao(
+                                                          formValuesAtualizados,
+                                                          column,
+                                                          categoria,
+                                                          suspensoesAutorizadas
+                                                        ))
                                                         ? textoBotaoObservacao(
                                                             formValuesAtualizados[
                                                               `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
@@ -1742,7 +1792,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                             formValuesAtualizados,
                                                             column.dia,
                                                             categoria,
-                                                            column
+                                                            column,
+                                                            row
                                                           );
                                                         }}
                                                       </OnChange>
@@ -1829,7 +1880,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                             formValuesAtualizados,
                                                             column.dia,
                                                             categoria,
-                                                            column
+                                                            column,
+                                                            row
                                                           );
                                                         }}
                                                       </OnChange>

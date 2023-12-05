@@ -150,6 +150,7 @@ export const campoComSuspensaoAutorizadaESemObservacao = (
       });
   alimentacoes.forEach((alimentacao) => {
     if (
+      categoria.nome === "ALIMENTAÇÃO" &&
       formValuesAtualizados[
         `${alimentacao}__dia_${column.dia}__categoria_${categoria.id}`
       ] &&
@@ -176,6 +177,7 @@ export const campoRefeicaoComRPLAutorizadaESemObservacao = (
 ) => {
   let erro = false;
   if (
+    categoria.nome === "ALIMENTAÇÃO" &&
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
       (alteracao) =>
@@ -203,6 +205,7 @@ export const campoLancheComLPRAutorizadaESemObservacao = (
 ) => {
   let erro = false;
   if (
+    categoria.nome === "ALIMENTAÇÃO" &&
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
       (alteracao) =>
@@ -937,6 +940,7 @@ export const exibirTooltipSuspensoesAutorizadas = (
     ];
 
   return (
+    categoria.nome === "ALIMENTAÇÃO" &&
     value &&
     Number(value) > 0 &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
@@ -964,6 +968,7 @@ export const exibirTooltipRPLAutorizadas = (
       `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
     ];
   return (
+    categoria.nome === "ALIMENTAÇÃO" &&
     value &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
     Number(value) > 0 &&
@@ -990,6 +995,7 @@ export const exibirTooltipLPRAutorizadas = (
     ];
 
   return (
+    categoria.nome === "ALIMENTAÇÃO" &&
     value &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
     Number(value) > 0 &&
