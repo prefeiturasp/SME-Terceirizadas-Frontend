@@ -381,6 +381,9 @@ export default () => {
                     <InserirDocumento
                       setFiles={setFilesLaudo}
                       removeFile={removeFileLaudo}
+                      formatosAceitos="PDF"
+                      multiplosArquivos={false}
+                      concatenarNovosArquivos={false}
                       arquivosIniciais={arquivosLaudoForm.arquivosForm}
                     />
                   </div>
