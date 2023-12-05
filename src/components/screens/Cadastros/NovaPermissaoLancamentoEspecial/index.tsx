@@ -19,7 +19,12 @@ import {
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { required } from "helpers/fieldValidators";
-import { deepCopy, getError } from "helpers/utilities";
+import {
+  deepCopy,
+  getAmanha,
+  getError,
+  maxEntreDatas,
+} from "helpers/utilities";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getEscolaSimples, getEscolasTercTotal } from "services/escola.service";
 import {
@@ -32,6 +37,7 @@ import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
 import { PermissaoLancamentosEspeciaisInterface } from "interfaces/medicao_inicial.interface";
 
 import "./style.scss";
+import { NovaPermissaoInterface } from "./interfaces";
 
 export const NovaPermissaoLancamentoEspecial: React.FC = () => {
   const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
@@ -63,7 +69,8 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
     return escolas?.find((escola) => escola.label === labelEscola);
   };
 
-  const [valoresIniciais, setValoresIniciais] = useState({});
+  const [valoresIniciais, setValoresIniciais] =
+    useState<NovaPermissaoInterface>();
 
   const getDiretoriasRegionaisAsync = async () => {
     setCarregandoDREs(true);
@@ -160,20 +167,12 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
   };
 
   const getInitialValues = async () => {
-    let initialValues: {
-      uuid: string | null;
-      diretoria_regional: string | null;
-      escola: string | null;
-      periodo_escolar: string | null;
-      data_inicial: string | Date | null;
-      data_final: string | Date | null;
-      alimentacoes_lancamento_especial: Array<string>;
-    } = {
+    let initialValues: NovaPermissaoInterface = {
       uuid: null,
       diretoria_regional: null,
       escola: null,
       periodo_escolar: null,
-      data_inicial: new Date(),
+      data_inicial: getAmanha(),
       data_final: null,
       alimentacoes_lancamento_especial: [],
     };
@@ -468,7 +467,12 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                         naoDesabilitarPrimeiraOpcao
                         validate={required}
                         required
-                        disabled={!ehEscolaValida(values.escola)}
+                        disabled={
+                          !ehEscolaValida(values.escola) ||
+                          (valoresIniciais?.uuid &&
+                            dataInicio &&
+                            dataInicio <= new Date())
+                        }
                       />
                     </div>
                     <div className="col-4">
@@ -476,10 +480,13 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                         component={InputComData}
                         label="Data Início da Permissão"
                         name="data_inicial"
-                        minDate={null}
+                        minDate={getAmanha()}
                         disabled={
                           !values.diretoria_regional ||
-                          !ehEscolaValida(values.escola)
+                          !ehEscolaValida(values.escola) ||
+                          (valoresIniciais?.uuid &&
+                            dataInicio &&
+                            dataInicio <= new Date())
                         }
                         placeholder="De"
                       />
@@ -507,10 +514,15 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                         component={InputComData}
                         label="Data Fim da Permissão"
                         name="data_final"
-                        minDate={dataInicio}
+                        minDate={maxEntreDatas([getAmanha(), dataInicio])}
                         disabled={
                           !values.diretoria_regional ||
-                          !ehEscolaValida(values.escola)
+                          !ehEscolaValida(values.escola) ||
+                          (valoresIniciais?.uuid &&
+                            dataInicio &&
+                            dataFim &&
+                            dataInicio <= new Date() &&
+                            dataFim <= new Date())
                         }
                         placeholder="Até"
                       />
@@ -548,6 +560,11 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                               key={alimentacao.uuid}
                               value={alimentacao.uuid}
                               name={`ck_lancamentos_especiais__${alimentacao.uuid}`}
+                              disabled={
+                                valoresIniciais?.uuid &&
+                                dataInicio &&
+                                dataInicio <= new Date()
+                              }
                             >
                               {alimentacao.nome}
                             </Checkbox>
