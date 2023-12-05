@@ -85,11 +85,6 @@ export default ({
       return;
     }
 
-    if (codigoEol === meusDadosEscola.codigo_eol) {
-      setDadosIniciais({ ...values, nome_escola: undefined });
-      toastError("Escola de destino deve ser diferente da escola de origem.");
-      return;
-    }
     setCarregandoEscola(true);
 
     const params = { codigo_eol: codigoEol };
