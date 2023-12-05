@@ -1001,9 +1001,10 @@ class AlteracaoCardapio extends Component {
                   alteracaoCardapioList={alteracaoCardapioList}
                   removerRascunho={this.OnDeleteButtonClicked}
                   resetForm={(event) => this.resetForm(event)}
-                  carregarRascunho={(params) =>
-                    this.OnEditButtonClicked(params)
-                  }
+                  carregarRascunho={async (params) => {
+                    await this.onChangeMotivo(params.motivo.uuid);
+                    await this.OnEditButtonClicked(params);
+                  }}
                 />
               </section>
             )}
