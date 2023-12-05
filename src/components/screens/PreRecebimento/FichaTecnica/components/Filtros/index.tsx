@@ -100,7 +100,7 @@ const Filtros: React.FC<Props> = ({
                   )}
                   label="Filtrar por Produto"
                   name="nome_produto"
-                  placeholder="Selecione os Status"
+                  placeholder="Selecione um Produto"
                 />
               </div>
 
