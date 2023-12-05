@@ -91,5 +91,10 @@ export const formataValues = (values) => {
       values.alterar_dia.split("/").reverse().join("-")
     ).map((data) => ({ data: data }));
   }
+  values.substituicoes.forEach((subs) => {
+    if (typeof subs.tipos_alimentacao_para === "string") {
+      subs.tipos_alimentacao_para = [subs.tipos_alimentacao_para];
+    }
+  });
   return values;
 };

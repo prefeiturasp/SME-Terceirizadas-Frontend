@@ -8,6 +8,7 @@ export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_ALTERACAO_TIPO_ALIMENTACAO:
       if (action.data !== null) {
+        const motivoNome = action.data.motivo.nome;
         if (
           action.data.data_inicial === action.data.data_final &&
           action.data.data_inicial !== null &&
@@ -26,9 +27,9 @@ export default function reducer(state = {}, action) {
             tipos_alimentacao_de: extrairTiposALimentacao(
               substituicao.tipos_alimentacao_de
             ),
-            tipos_alimentacao_para: extrairTiposALimentacao(
-              substituicao.tipos_alimentacao_para
-            ),
+            tipos_alimentacao_para: motivoNome.includes("RPL")
+              ? substituicao.tipos_alimentacao_para[0].uuid
+              : extrairTiposALimentacao(substituicao.tipos_alimentacao_para),
             numero_de_alunos: substituicao.qtd_alunos,
           };
         });
