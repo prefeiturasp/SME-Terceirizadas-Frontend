@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import { tipoDeStatusClasse } from "./helper";
 import "./style.scss";
 
-export const FluxoDeStatusCronograma = ({ listaDeStatus, solicitacao }) => {
+export const FluxoDeStatusPreRecebimento = ({ listaDeStatus, solicitacao }) => {
   const history = useHistory();
 
   let ultimoStatus = listaDeStatus.slice(-1)[0];

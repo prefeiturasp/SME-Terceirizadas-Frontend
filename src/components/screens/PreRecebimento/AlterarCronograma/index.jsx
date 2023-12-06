@@ -36,7 +36,7 @@ import {
   usuarioEhEmpresaFornecedor,
 } from "helpers/utilities";
 import { Radio, Spin } from "antd";
-import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCronograma";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { textAreaRequired } from "helpers/fieldValidators";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
@@ -325,7 +325,7 @@ export default ({ analiseSolicitacao }) => {
                 <p className="head-green mt-3 ml-3 mb-5">
                   Status do Cronograma
                 </p>
-                <FluxoDeStatusCronograma
+                <FluxoDeStatusPreRecebimento
                   listaDeStatus={solicitacaoAlteracaoCronograma.logs}
                   solicitacao={true}
                 />

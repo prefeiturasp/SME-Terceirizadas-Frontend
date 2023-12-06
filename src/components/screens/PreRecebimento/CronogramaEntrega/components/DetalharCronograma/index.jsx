@@ -24,7 +24,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCronograma";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 
 export default () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -108,7 +108,9 @@ export default () => {
                     <p className="head-green mt-3 ml-3 mb-5">
                       Status do Cronograma
                     </p>
-                    <FluxoDeStatusCronograma listaDeStatus={cronograma.logs} />
+                    <FluxoDeStatusPreRecebimento
+                      listaDeStatus={cronograma.logs}
+                    />
                   </div>
                   <hr className="hr-detalhar" />
                 </>
