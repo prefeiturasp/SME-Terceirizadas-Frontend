@@ -12,6 +12,7 @@ import { getTerceirizadaUUID } from "services/terceirizada.service";
 import { required, email } from "helpers/fieldValidators";
 import { Spin, Steps } from "antd";
 import {
+  CategoriaChoices,
   FichaTecnica,
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
@@ -43,6 +44,8 @@ import {
 import { getListaFiltradaAutoCompleteSelect } from "../../../../../../helpers/autoCompleteSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 import { ResponseFichaTecnica } from "interfaces/responses.interface";
+import FormPereciveis from "./components/FormPereciveis";
+import FormNaoPereciveis from "./components/FormNaoPereciveis";
 
 export default () => {
   const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
@@ -117,7 +120,7 @@ export default () => {
     let iniciais: FichaTecnicaPayload = {
       produto: ficha.produto.nome,
       marca: ficha.marca.uuid,
-      categoria: ficha.categoria,
+      categoria: ficha.categoria as CategoriaChoices,
       pregao_chamada_publica: ficha.pregao_chamada_publica,
       fabricante: ficha.fabricante.nome,
       cnpj_fabricante: ficha.cnpj_fabricante,
@@ -155,10 +158,37 @@ export default () => {
       email_fabricante: values.email_fabricante || "",
       telefone_fabricante:
         removeCaracteresEspeciais(values.telefone_fabricante) || "",
+      prazo_validade: values.prazo_validade,
+      componentes_produto: values.componentes_produto,
+      alergenicos: stringToBoolean(values.alergenicos as string),
+      //ingredientes_alergenicos: values.alergenicos === "1" ? values.ingredientes_alergenicos : "",
+      gluten: stringToBoolean(values.gluten as string),
+      lactose: stringToBoolean(values.lactose as string),
+      //lactose_detalhe: values.lactose === "1" ? values.lactose_detalhe : "",
     };
+    if (payload.alergenicos) {
+      payload.ingredientes_alergenicos = values.ingredientes_alergenicos;
+    }
+    if (payload.lactose) {
+      payload.lactose_detalhe = values.lactose_detalhe;
+    }
+    if (payload.categoria === "PERECIVEIS") {
+      payload = {
+        ...payload,
+        numero_registro: values.numero_registro,
+        agroecologico: stringToBoolean(values.agroecologico as string),
+        organico: stringToBoolean(values.organico as string),
+      };
+      if (payload.organico) {
+        payload.mecanismo_controle = values.mecanismo_controle;
+      }
+    }
 
     return payload;
   };
+
+  const stringToBoolean = (str: string): boolean =>
+    str === "1" ? true : str === "0" ? false : undefined;
 
   const salvarRascunho = async (values: FichaTecnicaPayload) => {
     const payload = formataPayload(values);
@@ -335,6 +365,9 @@ export default () => {
                     <span className="font-weight-bold" key={1}>
                       Empresa ou Organização{" "}
                       <span className="verde-escuro">Fabricante</span>
+                    </span>,
+                    <span className="font-weight-bold" key={1}>
+                      Detalhes do <span className="verde-escuro">Produto</span>
                     </span>,
                   ]}
                   id="collapseFichaTecnica"
@@ -560,6 +593,15 @@ export default () => {
                         />
                       </div>
                     </div>
+                  </section>
+
+                  <section id="formProduto">
+                    {values["categoria"] === "PERECIVEIS" && (
+                      <FormPereciveis values={values} />
+                    )}
+                    {values["categoria"] === "NAO_PERECIVEIS" && (
+                      <FormNaoPereciveis values={values} />
+                    )}
                   </section>
                 </Collapse>
 

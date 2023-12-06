@@ -125,6 +125,8 @@ export interface FabricanteSimples {
   nome: string;
 }
 
+export type MecanismoControleChoices = "CERTIFICACAO" | "OPAC" | "OCS";
+
 export interface FichaTecnica {
   uuid: string;
   numero: string;
@@ -146,4 +148,15 @@ export interface FichaTecnica {
   estado_fabricante: string;
   email_fabricante: string;
   telefone_fabricante: string;
+  prazo_validade: string;
+  numero_registro: string;
+  agroecologico: boolean;
+  organico: boolean;
+  mecanismo_controle: MecanismoControleChoices;
+  componentes_produto: string;
+  alergenicos: boolean;
+  ingredientes_alergenicos: string;
+  gluten: boolean;
+  lactose: boolean;
+  lactose_detalhe: string;
 }
