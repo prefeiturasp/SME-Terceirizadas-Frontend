@@ -12,9 +12,7 @@ interface Props {
 }
 
 const Listagem: React.FC<Props> = ({ objetos }) => {
-
   const renderizarAcoes = (objeto: FichaTecnica): ReactElement => {
-
     const botaoContinuarCadastro = (
       <NavLink
         className="float-left"
@@ -26,12 +24,7 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
       </NavLink>
     );
 
-    return (
-      <>
-        {objeto.status === "Rascunho" && botaoContinuarCadastro}
-      </>
-    );
-
+    return <>{objeto.status === "Rascunho" && botaoContinuarCadastro}</>;
   };
 
   return (
