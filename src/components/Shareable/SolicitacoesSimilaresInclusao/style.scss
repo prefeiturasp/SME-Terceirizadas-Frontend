@@ -106,13 +106,13 @@ table.periodos-emef {
 
   tbody {
     tr {
-      border: 1px solid $grayDisabled;
-      border-top: none;
-      border-bottom: none;
       color: $blackSubtle;
+      border-left: 1px solid #c0c0c0;
+      border-right: 1px solid #c0c0c0;
 
       td {
         padding: 0.5em;
+        border-bottom: 1px solid #c0c0c0;
       }
     }
   }
