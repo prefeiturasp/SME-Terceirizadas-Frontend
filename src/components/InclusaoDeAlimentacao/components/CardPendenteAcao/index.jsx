@@ -78,7 +78,7 @@ export class CardPendenteAcao extends Component {
             </Link>
             <ToggleExpandir
               onClick={() => this.collapseSolicitacaoSimilar(idxPedido, index)}
-              ativo={!solicitacao.collapsed}
+              ativo={solicitacao.collapsed}
               className="icon-padding"
             />
           </b>

@@ -20,6 +20,8 @@ import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/Relatorio
 import { getRelatorioInclusaoAlimentacao } from "services/relatorios";
 import { WEEK } from "configs/constants";
 import InclusoesCEI from "./InclusoesCEI";
+import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
+import { SolicitacoesSimilaresInclusao } from "components/Shareable/SolicitacoesSimilaresInclusao";
 
 const renderParteAvulsa = (
   inclusaoDeAlimentacao,
@@ -169,6 +171,14 @@ export const CorpoRelatorio = ({ ...props }) => {
   const { tipoSolicitacao, prazoDoPedidoMensagem, inclusaoDeAlimentacao } =
     props;
 
+  const [solicitacoesSimilares, setSolicitacoesSimilares] = useState([
+    inclusaoDeAlimentacao,
+  ]);
+
+  // const [solicitacoesSimilares, setSolicitacoesSimilares] = useState(
+  //   props.solicitacoesSimilares
+  // );
+
   const [baixandoPDF, setBaixandoPDF] = useState(false);
 
   const exibirNovoComponeneteCEI =
@@ -177,6 +187,20 @@ export const CorpoRelatorio = ({ ...props }) => {
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     inclusaoDeAlimentacao.logs
   );
+
+  const collapseSolicitacaoSimilar = (idxSolicitacaoSimilar) => {
+    const novoSolicitacoesSimilares = solicitacoesSimilares.map(
+      (solicitacaoSimilar, index) => {
+        if (index === idxSolicitacaoSimilar) {
+          solicitacaoSimilar.collapsed = !solicitacaoSimilar.collapsed;
+        }
+        return solicitacaoSimilar;
+      }
+    );
+
+    setSolicitacoesSimilares(novoSolicitacoesSimilares);
+  };
+
   return (
     <div>
       <div className="row">
@@ -275,6 +299,40 @@ export const CorpoRelatorio = ({ ...props }) => {
           />
         </div>
       )}
+      <hr />
+      <div className="row mt-3">
+        <div className="col-2">
+          {solicitacoesSimilares &&
+            solicitacoesSimilares.map((solicitacao, idxSolicitacaoSimilar) => {
+              return (
+                <p key={idxSolicitacaoSimilar}>
+                  Solicitação Similar:
+                  <b className="gatilho-style">
+                    {`#${solicitacao.id_externo}`}
+                    <ToggleExpandir
+                      onClick={() =>
+                        collapseSolicitacaoSimilar(idxSolicitacaoSimilar)
+                      }
+                      ativo={solicitacao.collapsed}
+                      className="icon-padding"
+                    />
+                  </b>
+                </p>
+              );
+            })}
+        </div>
+      </div>
+      {solicitacoesSimilares &&
+        solicitacoesSimilares.length > 0 &&
+        solicitacoesSimilares.map((s, idxSolicitacaoSimilar) => {
+          return (
+            <SolicitacoesSimilaresInclusao
+              key={idxSolicitacaoSimilar}
+              solicitacao={s}
+              index={idxSolicitacaoSimilar}
+            />
+          );
+        })}
       <hr />
       {ehInclusaoContinua(tipoSolicitacao)
         ? renderParteContinua(inclusaoDeAlimentacao)
