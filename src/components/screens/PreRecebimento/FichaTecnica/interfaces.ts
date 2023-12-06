@@ -38,3 +38,11 @@ export interface FichaTecnicaPayload {
   lactose?: boolean | string;
   lactose_detalhe?: string;
 }
+
+export interface FiltrosFichaTecnica {
+  numero_ficha?: string;
+  nome_produto?: string;
+  pregao_chamada_publica?: string;
+  status?: string;
+  data_cadastro?: string;
+}

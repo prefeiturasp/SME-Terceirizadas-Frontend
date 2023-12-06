@@ -503,13 +503,19 @@ export const frequenciaComSuspensaoAutorizadaPreenchida = (
   column,
   categoria,
   suspensoesAutorizadas,
-  errors
+  errors,
+  categoriasDeMedicao
 ) => {
+  const categoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
+    categoria.nome.includes("ALIMENTAÇÃO")
+  );
   const frequenciasMesmoDia = Object.fromEntries(
     Object.entries(formValuesAtualizados).filter(
       ([key, value]) =>
         key.includes("frequencia") &&
-        key.includes(`__dia_${column.dia}__`) &&
+        key.includes(
+          `__dia_${column.dia}__categoria_${categoriaAlimentacao.id}`
+        ) &&
         !["Mês anterior", "Mês posterior", null].includes(value)
     )
   );

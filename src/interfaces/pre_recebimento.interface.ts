@@ -130,6 +130,15 @@ export type MecanismoControleChoices = "CERTIFICACAO" | "OPAC" | "OCS";
 export interface FichaTecnica {
   uuid: string;
   numero: string;
+  nome_produto: string;
+  pregao_chamada_publica: string;
+  criado_em: string;
+  status: string;
+}
+
+export interface FichaTecnicaDetalhada {
+  uuid: string;
+  numero: string;
   produto: ProdutoSimples;
   pregao_chamada_publica: string;
   marca: MarcaSimples;

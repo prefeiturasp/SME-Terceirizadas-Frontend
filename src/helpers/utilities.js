@@ -1134,3 +1134,13 @@ export const getISOLocalDatetimeString = () => {
   ).toISOString();
   return isoDateTime;
 };
+
+export const getAmanha = () => {
+  const amanha = new Date();
+  amanha.setDate(amanha.getDate() + 1);
+  return amanha;
+};
+
+export const maxEntreDatas = (arrayDeDatas) => {
+  return new Date(Math.max(...arrayDeDatas));
+};

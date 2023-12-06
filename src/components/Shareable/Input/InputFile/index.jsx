@@ -130,13 +130,12 @@ const InputFile = (props) => {
     });
     if (valido) {
       let localFiles = [];
-      let data = [];
       Array.from(event.target.files).forEach((file) => {
         readerFile(file)
           .then((anexo) => {
-            data.push(anexo);
             localFiles.push({
               nome: props.nomeNovoArquivo || file.name,
+              arquivo: anexo.arquivo,
               base64: anexo.arquivo,
             });
           })
@@ -150,7 +149,7 @@ const InputFile = (props) => {
                 props.setFiles(allFiles);
                 setFiles(allFiles);
               } else {
-                props.setFiles(data);
+                props.setFiles(localFiles);
                 setFiles(localFiles);
               }
             }
