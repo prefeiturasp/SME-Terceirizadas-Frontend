@@ -1,8 +1,4 @@
-import {
-  deepCopy,
-  ehEscolaTipoCEUGESTAO,
-  ehFimDeSemana,
-} from "helpers/utilities";
+import { deepCopy, ehEscolaTipoCEUGESTAO } from "helpers/utilities";
 
 export const repeticaoSobremesaDoceComValorESemObservacao = (
   values,
@@ -313,32 +309,6 @@ export const camposLancheEmergTabelaEtec = (
   return erro;
 };
 
-export const camposDiaNaoLetivoEmDiaUtilESemObservacao = (
-  location,
-  dia,
-  validacaoDiaLetivo,
-  feriadosNoMes,
-  formValuesAtualizados,
-  categoria
-) => {
-  let erro = false;
-  const mesAnoSelecionado = new Date(location.state.mesAnoSelecionado);
-  const dateObj = new Date(
-    `${mesAnoSelecionado.getFullYear()}-${
-      mesAnoSelecionado.getMonth() + 1
-    }-${dia}`
-  );
-  if (
-    !validacaoDiaLetivo(dia) &&
-    !ehFimDeSemana(dateObj) &&
-    !feriadosNoMes.includes(dia) &&
-    !formValuesAtualizados[`observacoes__dia_${dia}__categoria_${categoria.id}`]
-  ) {
-    erro = true;
-  }
-  return erro;
-};
-
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   formValuesAtualizados,
   dia,
@@ -412,14 +382,6 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
         categoria,
         inclusoesEtecAutorizadas,
         ehGrupoETECUrlParam
-      ) ||
-      camposDiaNaoLetivoEmDiaUtilESemObservacao(
-        location,
-        dia,
-        validacaoDiaLetivo,
-        feriadosNoMes,
-        formValuesAtualizados,
-        categoria
       ) ||
       campoLancheEmergencialComZeroOuSemObservacao(
         formValuesAtualizados,
