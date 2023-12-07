@@ -1,3 +1,4 @@
+import { LogSolicitacoesUsuarioSimples } from "./dados_comuns.interface";
 import { TerceirizadaSimplesInterface } from "./terceirizada.interface";
 
 export interface DocumentosRecebimento {
@@ -12,7 +13,8 @@ export interface DocumentosRecebimento {
 export interface DocumentosRecebimentoDetalhado extends DocumentosRecebimento {
   numero_laudo: string;
   correcao_solicitada: string;
-  tipos_de_documentos: Array<TiposDocumentos>;
+  tipos_de_documentos: TiposDocumentos[];
+  logs: LogSolicitacoesUsuarioSimples[];
   log_mais_recente: {
     usuario: string;
     criado_em: string;
@@ -70,6 +72,7 @@ export type PrazoRecebimentoChoices =
   | "120"
   | "180"
   | "OUTRO";
+
 export interface TiposDocumentos {
   tipo_documento: TiposDocumentoChoices;
   arquivos: Array<Arquivo>;
