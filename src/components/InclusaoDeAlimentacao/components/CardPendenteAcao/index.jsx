@@ -15,11 +15,11 @@ export class CardPendenteAcao extends Component {
     this.state = {
       collapsed: true,
       pedidosFiltrados: this.props.pedidos.map((solicitacao) => {
-        solicitacao["solicitacoes_similares"] = [solicitacao];
-        // solicitacao.solicitacoes_similares?.map((sol_similar) => {
-        //   sol_similar.collapsed = true;
-        //   return sol_similar;
-        // });
+        solicitacao["solicitacoes_similares"] =
+          solicitacao.solicitacoes_similares.map((sol_similar) => {
+            sol_similar.collapsed = false;
+            return sol_similar;
+          });
         return solicitacao;
       }),
     };
@@ -58,7 +58,7 @@ export class CardPendenteAcao extends Component {
   }
 
   renderSolicitacoesSimilares(idxPedido, pedido) {
-    return pedido.solicitacoes_similares?.map((solicitacao, index) => {
+    return pedido.solicitacoes_similares.map((solicitacao, index) => {
       return (
         <p className="gatilho-style" key={index}>
           <i className="fa fa-info-circle mr-1" aria-hidden="true" />
@@ -229,7 +229,7 @@ export class CardPendenteAcao extends Component {
                           {this.renderSolicitacoesSimilares(key, pedido)}
                         </td>
                       </tr>
-                      {pedido.solicitacoes_similares?.map(
+                      {pedido.solicitacoes_similares.map(
                         (s, idxSolicitacaoSimilar) => {
                           return (
                             <SolicitacoesSimilaresInclusao

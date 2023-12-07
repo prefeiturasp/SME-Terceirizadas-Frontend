@@ -171,13 +171,9 @@ export const CorpoRelatorio = ({ ...props }) => {
   const { tipoSolicitacao, prazoDoPedidoMensagem, inclusaoDeAlimentacao } =
     props;
 
-  const [solicitacoesSimilares, setSolicitacoesSimilares] = useState([
-    inclusaoDeAlimentacao,
-  ]);
-
-  // const [solicitacoesSimilares, setSolicitacoesSimilares] = useState(
-  //   props.solicitacoesSimilares
-  // );
+  const [solicitacoesSimilares, setSolicitacoesSimilares] = useState(
+    props.solicitacoesSimilares
+  );
 
   const [baixandoPDF, setBaixandoPDF] = useState(false);
 
