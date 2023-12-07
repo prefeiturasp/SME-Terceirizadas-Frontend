@@ -327,7 +327,6 @@ export default ({ analiseSolicitacao }) => {
                 </p>
                 <FluxoDeStatusPreRecebimento
                   listaDeStatus={solicitacaoAlteracaoCronograma.logs}
-                  solicitacao={true}
                 />
               </div>
               <hr className="hr-detalhar" />

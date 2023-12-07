@@ -110,6 +110,7 @@ export default () => {
                     </p>
                     <FluxoDeStatusPreRecebimento
                       listaDeStatus={cronograma.logs}
+                      itensClicaveisCronograma
                     />
                   </div>
                   <hr className="hr-detalhar" />
