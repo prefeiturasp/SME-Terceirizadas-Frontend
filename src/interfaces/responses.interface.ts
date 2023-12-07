@@ -20,6 +20,17 @@ export interface ResponseInterface {
   status: number;
 }
 
+export interface ListagemPaginada<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
+export interface ListagemNaoPaginada<T> {
+  results: T[];
+}
+
 export interface ResponseVinculosTipoAlimentacaoPorEscolaInterface
   extends ResponseInterface {
   data: {
@@ -59,12 +70,7 @@ export interface ResponseEscolasComPermissoesLancamentosEspeciaisInterface
 }
 
 export interface ResponseDocumentosRecebimento extends ResponseInterface {
-  data: {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: DocumentosRecebimento[];
-  };
+  data: ListagemPaginada<DocumentosRecebimento>;
 }
 
 export interface ResponseDocumentosRecebimentoDetalhado
@@ -99,12 +105,7 @@ export interface ResponseDocumentosRecebimentoParaAnalise
 }
 
 export interface ResponseFichasTecnicas extends ResponseInterface {
-  data: {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: FichaTecnica[];
-  };
+  data: ListagemPaginada<FichaTecnica>;
 }
 
 export interface ResponseFichaTecnicaDetalhada extends ResponseInterface {
