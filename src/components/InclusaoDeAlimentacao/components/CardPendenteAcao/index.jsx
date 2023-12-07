@@ -8,6 +8,10 @@ import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { SolicitacoesSimilaresInclusao } from "components/Shareable/SolicitacoesSimilaresInclusao";
+import {
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhDRE,
+} from "helpers/utilities";
 
 export class CardPendenteAcao extends Component {
   constructor(props) {
@@ -150,7 +154,9 @@ export class CardPendenteAcao extends Component {
                   <th className="col-2">Código EOL</th>
                   <th className="col-3">Nome da Escola</th>
                   <th className="col-3">{colunaDataLabel || "Data"}</th>
-                  <th className="col-2">Solic. Similares</th>
+                  {(usuarioEhCODAEGestaoAlimentacao() || usuarioEhDRE()) && (
+                    <th className="col-2">Solic. Similares</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -225,21 +231,25 @@ export class CardPendenteAcao extends Component {
                             {pedido.data_inicial || dataMaisProxima}
                           </Link>
                         </td>
-                        <td className="col-2 solicitacao-consolidada-collapse">
-                          {this.renderSolicitacoesSimilares(key, pedido)}
-                        </td>
+                        {(usuarioEhCODAEGestaoAlimentacao() ||
+                          usuarioEhDRE()) && (
+                          <td className="col-2 solicitacao-consolidada-collapse">
+                            {this.renderSolicitacoesSimilares(key, pedido)}
+                          </td>
+                        )}
                       </tr>
-                      {pedido.solicitacoes_similares.map(
-                        (s, idxSolicitacaoSimilar) => {
-                          return (
-                            <SolicitacoesSimilaresInclusao
-                              key={idxSolicitacaoSimilar}
-                              solicitacao={s}
-                              index={idxSolicitacaoSimilar}
-                            />
-                          );
-                        }
-                      )}
+                      {(usuarioEhCODAEGestaoAlimentacao() || usuarioEhDRE()) &&
+                        pedido.solicitacoes_similares.map(
+                          (s, idxSolicitacaoSimilar) => {
+                            return (
+                              <SolicitacoesSimilaresInclusao
+                                key={idxSolicitacaoSimilar}
+                                solicitacao={s}
+                                index={idxSolicitacaoSimilar}
+                              />
+                            );
+                          }
+                        )}
                     </>
                   );
                 })}

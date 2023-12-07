@@ -22,6 +22,10 @@ import { WEEK } from "configs/constants";
 import InclusoesCEI from "./InclusoesCEI";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { SolicitacoesSimilaresInclusao } from "components/Shareable/SolicitacoesSimilaresInclusao";
+import {
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhDRE,
+} from "helpers/utilities";
 
 const renderParteAvulsa = (
   inclusaoDeAlimentacao,
@@ -296,40 +300,41 @@ export const CorpoRelatorio = ({ ...props }) => {
         </div>
       )}
       <hr />
-      <div className="row mt-3">
-        <div className="col-2">
-          {solicitacoesSimilares &&
-            solicitacoesSimilares.map((solicitacao, idxSolicitacaoSimilar) => {
+      {(usuarioEhCODAEGestaoAlimentacao() || usuarioEhDRE()) &&
+        solicitacoesSimilares &&
+        solicitacoesSimilares.length > 0 && (
+          <>
+            {solicitacoesSimilares.map((solicitacao, idxSolicitacaoSimilar) => {
               return (
-                <p key={idxSolicitacaoSimilar}>
-                  Solicitação Similar:
-                  <b className="gatilho-style">
-                    {`#${solicitacao.id_externo}`}
-                    <ToggleExpandir
-                      onClick={() =>
-                        collapseSolicitacaoSimilar(idxSolicitacaoSimilar)
-                      }
-                      ativo={solicitacao.collapsed}
-                      className="icon-padding"
-                    />
-                  </b>
-                </p>
+                <>
+                  <div className="row" key={idxSolicitacaoSimilar}>
+                    <div className="col-2">
+                      <p>
+                        Solicitação Similar:
+                        <b className="gatilho-style">
+                          {`#${solicitacao.id_externo}`}
+                          <ToggleExpandir
+                            onClick={() =>
+                              collapseSolicitacaoSimilar(idxSolicitacaoSimilar)
+                            }
+                            ativo={solicitacao.collapsed}
+                            className="icon-padding"
+                          />
+                        </b>
+                      </p>
+                    </div>
+                  </div>
+                  <SolicitacoesSimilaresInclusao
+                    key={idxSolicitacaoSimilar}
+                    solicitacao={solicitacao}
+                    index={idxSolicitacaoSimilar}
+                  />
+                </>
               );
             })}
-        </div>
-      </div>
-      {solicitacoesSimilares &&
-        solicitacoesSimilares.length > 0 &&
-        solicitacoesSimilares.map((s, idxSolicitacaoSimilar) => {
-          return (
-            <SolicitacoesSimilaresInclusao
-              key={idxSolicitacaoSimilar}
-              solicitacao={s}
-              index={idxSolicitacaoSimilar}
-            />
-          );
-        })}
-      <hr />
+            <hr />
+          </>
+        )}
       {ehInclusaoContinua(tipoSolicitacao)
         ? renderParteContinua(inclusaoDeAlimentacao)
         : renderParteAvulsa(
