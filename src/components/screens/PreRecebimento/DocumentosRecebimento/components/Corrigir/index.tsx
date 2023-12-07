@@ -311,7 +311,7 @@ export default () => {
               Data da Solicitação:
               <span className="green-bold">
                 {" "}
-                {objeto?.log_mais_recente?.criado_em.split("-")[0]}
+                {objeto?.logs?.slice(-1)[0].criado_em.split(" ")[0]}
               </span>
             </div>
 

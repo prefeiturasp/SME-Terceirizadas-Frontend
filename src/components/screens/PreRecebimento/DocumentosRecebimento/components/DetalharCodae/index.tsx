@@ -71,12 +71,12 @@ export default () => {
             {aprovado ? (
               <div className="status aprovado">
                 <i className="fas fa-check-circle" />
-                Documentos aprovados em {objeto.log_mais_recente?.criado_em}
+                Documentos aprovados em {objeto?.logs?.slice(-1)[0].criado_em}
               </div>
             ) : (
               <div className="status correcao">
                 <i className="fas fa-exclamation-triangle" />
-                Solicitada Correção em {objeto.log_mais_recente?.criado_em}
+                Solicitada Correção em {objeto?.logs?.slice(-1)[0].criado_em}
               </div>
             )}
           </div>
@@ -140,13 +140,13 @@ export default () => {
                   Data da Solicitação:
                   <strong>
                     {" "}
-                    {objeto.log_mais_recente?.criado_em.split("-")[0]}
+                    {objeto?.logs?.slice(-1)[0].criado_em.split(" ")[0]}
                   </strong>
                 </div>
 
                 <div className="col-6">
                   Solicitado por:
-                  <strong> {objeto.log_mais_recente?.usuario}</strong>
+                  <strong> {objeto?.logs?.slice(-1)[0].usuario.nome}</strong>
                 </div>
               </div>
               <div className="row">

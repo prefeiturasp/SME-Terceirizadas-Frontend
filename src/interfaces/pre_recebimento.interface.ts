@@ -15,10 +15,6 @@ export interface DocumentosRecebimentoDetalhado extends DocumentosRecebimento {
   correcao_solicitada: string;
   tipos_de_documentos: TiposDocumentos[];
   logs: LogSolicitacoesUsuarioSimples[];
-  log_mais_recente: {
-    usuario: string;
-    criado_em: string;
-  };
 }
 
 export interface DocumentosRecebimentoParaAnalise
