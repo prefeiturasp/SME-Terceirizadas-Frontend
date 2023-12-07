@@ -4,6 +4,7 @@ import "./styles.scss";
 import { Field, Form } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 import { required } from "../../../../../../helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
 import { downloadAndConvertToBase64 } from "../../../../../Shareable/Input/InputFile/helper";
@@ -299,6 +300,12 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-corrigir-documentos-recebimento">
         <div className="card-body corrigir-documentos-recebimento">
+          {objeto.logs && (
+            <div className="row my-4">
+              <FluxoDeStatusPreRecebimento listaDeStatus={objeto.logs} />
+            </div>
+          )}
+
           <div className="row">
             <div className="col-6">
               Data da Solicitação:

@@ -4,6 +4,7 @@ import "./styles.scss";
 import { DOCUMENTOS_RECEBIMENTO, PRE_RECEBIMENTO } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 import { detalharDocumentoRecebimento } from "services/documentosRecebimento.service";
 import InputText from "components/Shareable/Input/InputText";
 import {
@@ -53,6 +54,12 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-detalhar-documentos-recebimento">
         <div className="card-body">
+          {objeto.logs && (
+            <div className="row my-4">
+              <FluxoDeStatusPreRecebimento listaDeStatus={objeto.logs} />
+            </div>
+          )}
+
           <div className="row">
             <div className="col-6">
               Data da Criação:

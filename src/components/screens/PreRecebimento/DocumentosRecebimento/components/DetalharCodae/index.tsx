@@ -7,6 +7,7 @@ import {
 } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 import { detalharDocumentoParaAnalise } from "services/documentosRecebimento.service";
 import InputText from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
@@ -59,6 +60,12 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-detalhar-documentos-recebimento-codae">
         <div className="card-body">
+          {objeto.logs && (
+            <div className="row my-4">
+              <FluxoDeStatusPreRecebimento listaDeStatus={objeto.logs} />
+            </div>
+          )}
+
           <div className="flex-header">
             <div className="subtitulo">Dados Gerais</div>
             {aprovado ? (
