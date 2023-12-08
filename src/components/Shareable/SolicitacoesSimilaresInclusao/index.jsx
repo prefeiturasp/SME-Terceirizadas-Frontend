@@ -66,17 +66,21 @@ export const SolicitacoesSimilaresInclusao = ({ ...props }) => {
               <div className="col-4">
                 <p>Data da Inclusão:</p>
                 <p>
-                  <b>{solicitacao.logs[0].criado_em.split(" ")[0]}</b>
+                  <b>
+                    {solicitacao.logs &&
+                      solicitacao.logs.length > 0 &&
+                      solicitacao.logs[0].criado_em.split(" ")[0]}
+                  </b>
                 </p>
               </div>
               <div className="col-4">
                 <p>Status da Solicitação:</p>
                 <p>
                   <b>
-                    {
+                    {solicitacao.logs &&
+                      solicitacao.logs.length > 0 &&
                       solicitacao.logs[solicitacao.logs.length - 1]
-                        .status_evento_explicacao
-                    }
+                        .status_evento_explicacao}
                   </b>
                 </p>
               </div>
