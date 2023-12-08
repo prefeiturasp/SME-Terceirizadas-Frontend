@@ -1,6 +1,9 @@
 import { FichaTecnicaPayload } from "components/screens/PreRecebimento/FichaTecnica/interfaces";
 import axios from "./_base";
-import { ResponseFichaTecnicaDetalhada, ResponseFichasTecnicas } from "interfaces/responses.interface";
+import {
+  ResponseFichaTecnicaDetalhada,
+  ResponseFichasTecnicas,
+} from "interfaces/responses.interface";
 
 export const cadastraRascunhoFichaTecnica = async (
   payload: FichaTecnicaPayload
@@ -15,7 +18,8 @@ export const editaRascunhoFichaTecnica = async (
 
 export const getFichaTecnica = async (
   uuid: string
-): Promise<ResponseFichaTecnicaDetalhada> => await axios.get(`/ficha-tecnica/${uuid}/`);
+): Promise<ResponseFichaTecnicaDetalhada> =>
+  await axios.get(`/ficha-tecnica/${uuid}/`);
 
 export const listarFichastecnicas = async (
   params: URLSearchParams

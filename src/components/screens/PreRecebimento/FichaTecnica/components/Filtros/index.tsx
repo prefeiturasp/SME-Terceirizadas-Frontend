@@ -21,9 +21,7 @@ import { getListaCompletaProdutosLogistica } from "../../../../../../services/pr
 import { getListaFiltradaAutoCompleteSelect } from "../../../../../../helpers/autoCompleteSelect";
 import { FiltrosFichaTecnica } from "../../interfaces";
 import { ProdutoLogistica } from "interfaces/produto.interface";
-import {
-  FichaTecnica,
-} from "interfaces/pre_recebimento.interface";
+import { FichaTecnica } from "interfaces/pre_recebimento.interface";
 
 const FORM_NAME = "filtrosFichaTecnica";
 
@@ -46,7 +44,6 @@ const Filtros: React.FC<Props> = ({
     const response = await getListaCompletaProdutosLogistica();
     setListaProdutos(response.data.results);
   };
-
 
   const opcoesStatus = [
     {
@@ -141,9 +138,7 @@ const Filtros: React.FC<Props> = ({
             </div>
 
             <div className="pt-4 pb-4">
-              <NavLink
-                to={`/${PRE_RECEBIMENTO}/${CADASTRO_FICHA_TECNICA}`}
-              >
+              <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_FICHA_TECNICA}`}>
                 <Botao
                   texto="Cadastrar Ficha Técnica"
                   type={BUTTON_TYPE.BUTTON}

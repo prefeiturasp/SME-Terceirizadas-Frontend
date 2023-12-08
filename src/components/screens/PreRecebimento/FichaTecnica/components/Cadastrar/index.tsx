@@ -58,7 +58,9 @@ export default () => {
     );
   const [desabilitaEndereco, setDesabilitaEndereco] = useState(true);
   const [collapse, setCollapse] = useState([]);
-  const [ficha, setFicha] = useState<FichaTecnicaDetalhada>({} as FichaTecnicaDetalhada);
+  const [ficha, setFicha] = useState<FichaTecnicaDetalhada>(
+    {} as FichaTecnicaDetalhada
+  );
   const [initialValues, setInitialValues] = useState<FichaTecnicaPayload>({});
 
   const onSubmit = (): void => {};
