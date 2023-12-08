@@ -7,15 +7,44 @@ import {
 import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
+import { SolicitacoesSimilaresInclusao } from "components/Shareable/SolicitacoesSimilaresInclusao";
+import {
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhDRE,
+} from "helpers/utilities";
 
 export class CardPendenteAcao extends Component {
   constructor(props) {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: this.props.pedidos,
+      pedidosFiltrados: this.props.pedidos.map((solicitacao) => {
+        solicitacao["solicitacoes_similares"] =
+          solicitacao.solicitacoes_similares.map((sol_similar) => {
+            sol_similar.collapsed = false;
+            return sol_similar;
+          });
+        return solicitacao;
+      }),
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
+    this.collapseSolicitacaoSimilar =
+      this.collapseSolicitacaoSimilar.bind(this);
+  }
+
+  collapseSolicitacaoSimilar(idxPedido, idxSolicitacaoSimilar) {
+    const { pedidosFiltrados } = this.state;
+
+    const novoPedidosFiltrados = pedidosFiltrados.map((pedido, index) => {
+      if (index === idxPedido) {
+        const solicitacaoSimilar =
+          pedido.solicitacoes_similares[idxSolicitacaoSimilar];
+        solicitacaoSimilar.collapsed = !solicitacaoSimilar.collapsed;
+      }
+      return pedido;
+    });
+
+    this.setState({ pedidosFiltrados: novoPedidosFiltrados });
   }
 
   filtrarPedidos(event) {
@@ -32,8 +61,38 @@ export class CardPendenteAcao extends Component {
     this.setState({ pedidosFiltrados });
   }
 
+  renderSolicitacoesSimilares(idxPedido, pedido) {
+    return pedido.solicitacoes_similares.map((solicitacao, index) => {
+      return (
+        <p className="gatilho-style" key={index}>
+          <i className="fa fa-info-circle mr-1" aria-hidden="true" />
+          <b>
+            <Link
+              style={{
+                color: "#0c6b45",
+              }}
+              to={gerarLinkRelatorio(
+                `inclusao-de-alimentacao${
+                  pedido.dias_motivos_da_inclusao_cemei ? "-cemei" : ""
+                }`,
+                pedido
+              )}
+            >
+              {`#${solicitacao.id_externo}`}
+            </Link>
+            <ToggleExpandir
+              onClick={() => this.collapseSolicitacaoSimilar(idxPedido, index)}
+              ativo={solicitacao.collapsed}
+              className="icon-padding"
+            />
+          </b>
+        </p>
+      );
+    });
+  }
+
   render() {
-    const { pedidos, titulo, tipoDeCard, ultimaColunaLabel } = this.props;
+    const { pedidos, titulo, tipoDeCard, colunaDataLabel } = this.props;
     const { collapsed, pedidosFiltrados } = this.state;
     return (
       <div className="card card-pendency-approval food-inclusion">
@@ -91,10 +150,13 @@ export class CardPendenteAcao extends Component {
             <table className="orders-table mt-4 ml-3 mr-3">
               <thead>
                 <tr className="row">
-                  <th className="col-3">Código do Pedido</th>
-                  <th className="col-3">Código EOL</th>
+                  <th className="col-2">Código do Pedido</th>
+                  <th className="col-2">Código EOL</th>
                   <th className="col-3">Nome da Escola</th>
-                  <th className="col-3">{ultimaColunaLabel || "Data"}</th>
+                  <th className="col-3">{colunaDataLabel || "Data"}</th>
+                  {(usuarioEhCODAEGestaoAlimentacao() || usuarioEhDRE()) && (
+                    <th className="col-2">Solic. Similares</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -107,24 +169,88 @@ export class CardPendenteAcao extends Component {
                     ? pedido.dias_motivos_da_inclusao_cemei[0].data
                     : pedido.data;
                   return (
-                    <Link
-                      key={key}
-                      to={gerarLinkRelatorio(
-                        `inclusao-de-alimentacao${
-                          pedido.dias_motivos_da_inclusao_cemei ? "-cemei" : ""
-                        }`,
-                        pedido
-                      )}
-                    >
-                      <tr className="row">
-                        <td className="col-3">{pedido.id_externo}</td>
-                        <td className="col-3">{pedido.escola.codigo_eol}</td>
-                        <td className="col-3">{pedido.escola.nome}</td>
-                        <td className="col-3">
-                          {pedido.data_inicial || dataMaisProxima}
+                    <>
+                      <tr className="row" key={key}>
+                        <td className="col-2">
+                          <Link
+                            className="text-dark"
+                            to={gerarLinkRelatorio(
+                              `inclusao-de-alimentacao${
+                                pedido.dias_motivos_da_inclusao_cemei
+                                  ? "-cemei"
+                                  : ""
+                              }`,
+                              pedido
+                            )}
+                          >
+                            {pedido.id_externo}
+                          </Link>
                         </td>
+                        <td className="col-2">
+                          <Link
+                            className="text-dark"
+                            to={gerarLinkRelatorio(
+                              `inclusao-de-alimentacao${
+                                pedido.dias_motivos_da_inclusao_cemei
+                                  ? "-cemei"
+                                  : ""
+                              }`,
+                              pedido
+                            )}
+                          >
+                            {pedido.escola.codigo_eol}
+                          </Link>
+                        </td>
+                        <td className="col-3">
+                          <Link
+                            className="text-dark"
+                            to={gerarLinkRelatorio(
+                              `inclusao-de-alimentacao${
+                                pedido.dias_motivos_da_inclusao_cemei
+                                  ? "-cemei"
+                                  : ""
+                              }`,
+                              pedido
+                            )}
+                          >
+                            {pedido.escola.nome}
+                          </Link>
+                        </td>
+                        <td className="col-3">
+                          <Link
+                            className="text-dark"
+                            to={gerarLinkRelatorio(
+                              `inclusao-de-alimentacao${
+                                pedido.dias_motivos_da_inclusao_cemei
+                                  ? "-cemei"
+                                  : ""
+                              }`,
+                              pedido
+                            )}
+                          >
+                            {pedido.data_inicial || dataMaisProxima}
+                          </Link>
+                        </td>
+                        {(usuarioEhCODAEGestaoAlimentacao() ||
+                          usuarioEhDRE()) && (
+                          <td className="col-2 solicitacao-consolidada-collapse">
+                            {this.renderSolicitacoesSimilares(key, pedido)}
+                          </td>
+                        )}
                       </tr>
-                    </Link>
+                      {(usuarioEhCODAEGestaoAlimentacao() || usuarioEhDRE()) &&
+                        pedido.solicitacoes_similares.map(
+                          (s, idxSolicitacaoSimilar) => {
+                            return (
+                              <SolicitacoesSimilaresInclusao
+                                key={idxSolicitacaoSimilar}
+                                solicitacao={s}
+                                index={idxSolicitacaoSimilar}
+                              />
+                            );
+                          }
+                        )}
+                    </>
                   );
                 })}
               </tbody>
