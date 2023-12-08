@@ -209,7 +209,7 @@ export const ConferenciaDosLancamentos = () => {
 
   const desabilitaBotaoExportarPDF = () => {
     return (
-      usuarioEhDRE() &&
+      (usuarioEhDRE() || usuarioEhMedicao()) &&
       solicitacao &&
       solicitacao.status === "MEDICAO_CORRIGIDA_PARA_CODAE" &&
       !solicitacao.dre_ciencia_correcao_data
@@ -900,7 +900,16 @@ export const ConferenciaDosLancamentos = () => {
                             onClick={() =>
                               setShowModalEnviarParaCodaeECodaeAprovar(true)
                             }
-                            disabled={desabilitarEnviarParaCodaeECodaeAprovar}
+                            disabled={
+                              desabilitarEnviarParaCodaeECodaeAprovar ||
+                              (usuarioEhMedicao() &&
+                                desabilitaBotaoExportarPDF())
+                            }
+                            tooltipExterno={
+                              usuarioEhMedicao() &&
+                              desabilitaBotaoExportarPDF() &&
+                              "Só será possível Aprovar Medição com as assinaturas, após a Ciência das Correções pela DRE."
+                            }
                           />
                         </>
                       )}
