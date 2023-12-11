@@ -46,6 +46,7 @@ import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectFiel
 import { ResponseFichaTecnicaDetalhada } from "interfaces/responses.interface";
 import FormPereciveis from "./components/FormPereciveis";
 import FormNaoPereciveis from "./components/FormNaoPereciveis";
+import { OnChange } from "react-final-form-listeners";
 
 export default () => {
   const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
@@ -283,7 +284,7 @@ export default () => {
             onSubmit={onSubmit}
             initialValues={initialValues}
             decorators={[cepCalculator]}
-            render={({ handleSubmit, values }) => (
+            render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="steps">
                   <Steps
@@ -325,6 +326,13 @@ export default () => {
                         "Caso não localize o produto no seletor, faça o cadastro no botão Cadastrar Produto."
                       }
                     />
+                    <OnChange name="produto">
+                      {(value) => {
+                        if (form.getState().dirty) {
+                          form.restart({ produto: value });
+                        }
+                      }}
+                    </OnChange>
                   </div>
                   <div className="col-6">
                     <Field

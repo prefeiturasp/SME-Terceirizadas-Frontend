@@ -1,5 +1,4 @@
 import React from "react";
-//import "./styles.scss";
 import { Field } from "react-final-form";
 import { required } from "helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
