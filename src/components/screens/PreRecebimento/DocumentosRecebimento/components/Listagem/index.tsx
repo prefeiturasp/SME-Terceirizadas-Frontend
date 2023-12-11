@@ -7,6 +7,8 @@ import {
   DETALHAR_DOCUMENTO_RECEBIMENTO,
   CORRIGIR_DOCUMENTOS_RECEBIMENTO,
 } from "../../../../../../configs/constants";
+import { downloadArquivoLaudoAssinado } from "services/documentosRecebimento.service";
+import { saveAs } from "file-saver";
 
 interface Props {
   objetos: Array<DocumentosRecebimento>;
@@ -36,6 +38,19 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
       </NavLink>
     );
 
+    const baixarArquivoLaudo = async () => {
+      const response = await downloadArquivoLaudoAssinado(objeto.uuid);
+      saveAs(response.data, `laudo_cronograma_${objeto.numero_cronograma}.pdf`);
+    };
+
+    const botaoBaixarLaudo = (
+      <span className="link-acoes px-2">
+        <button onClick={baixarArquivoLaudo}>
+          <i title="Baixar Laudo" className="fas fa-file-download green" />
+        </button>
+      </span>
+    );
+
     const botaoCorrigirLaranja = (
       <NavLink
         className="float-left"
@@ -52,6 +67,7 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
         {["Enviado para Análise", "Aprovado"].includes(objeto.status) &&
           botaoDetalharVerde}
         {objeto.status === "Enviado para Correção" && botaoCorrigirLaranja}
+        {objeto.status === "Aprovado" && botaoBaixarLaudo}
       </>
     );
   };
@@ -79,7 +95,7 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
                 <div>{objeto.nome_produto}</div>
                 <div>{objeto.criado_em}</div>
                 <div>{renderizarStatus(objeto.status)}</div>
-                <div>{renderizarAcoes(objeto)}</div>
+                <div className="actions">{renderizarAcoes(objeto)}</div>
               </div>
             </>
           );
