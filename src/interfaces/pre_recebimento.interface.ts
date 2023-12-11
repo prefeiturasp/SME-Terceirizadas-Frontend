@@ -125,7 +125,7 @@ export interface FabricanteSimples {
   nome: string;
 }
 
-export type MecanismoControleChoices = "CERTIFICACAO" | "OPAC" | "OCS";
+export type MecanismoControleChoices = "CERTIFICACAO" | "OPAC" | "OCS" | "";
 
 export interface FichaTecnica {
   uuid: string;

@@ -120,11 +120,11 @@ export default () => {
 
   const geraInitialValues = (ficha: FichaTecnicaDetalhada): void => {
     let iniciais: FichaTecnicaPayload = {
-      produto: ficha.produto.nome,
+      produto: ficha.produto?.nome,
       marca: ficha.marca.uuid,
       categoria: ficha.categoria as CategoriaChoices,
       pregao_chamada_publica: ficha.pregao_chamada_publica,
-      fabricante: ficha.fabricante.nome,
+      fabricante: ficha.fabricante?.nome,
       cnpj_fabricante: ficha.cnpj_fabricante,
       cep_fabricante: ficha.cep_fabricante,
       endereco_fabricante: ficha.endereco_fabricante,
@@ -135,6 +135,17 @@ export default () => {
       estado_fabricante: ficha.estado_fabricante,
       email_fabricante: ficha.email_fabricante,
       telefone_fabricante: ficha.telefone_fabricante,
+      prazo_validade: ficha.prazo_validade,
+      numero_registro: ficha.numero_registro,
+      agroecologico: booleanToString(ficha.agroecologico),
+      organico: booleanToString(ficha.organico),
+      mecanismo_controle: ficha.mecanismo_controle,
+      componentes_produto: ficha.componentes_produto,
+      alergenicos: booleanToString(ficha.alergenicos),
+      ingredientes_alergenicos: ficha.ingredientes_alergenicos,
+      gluten: booleanToString(ficha.gluten),
+      lactose: booleanToString(ficha.lactose),
+      lactose_detalhe: ficha.lactose_detalhe,
     };
     setInitialValues(iniciais as FichaTecnicaPayload);
   };
@@ -160,29 +171,31 @@ export default () => {
       email_fabricante: values.email_fabricante || "",
       telefone_fabricante:
         removeCaracteresEspeciais(values.telefone_fabricante) || "",
-      prazo_validade: values.prazo_validade,
-      componentes_produto: values.componentes_produto,
+      prazo_validade: values.prazo_validade || "",
+      componentes_produto: values.componentes_produto || "",
       alergenicos: stringToBoolean(values.alergenicos as string),
-      //ingredientes_alergenicos: values.alergenicos === "1" ? values.ingredientes_alergenicos : "",
       gluten: stringToBoolean(values.gluten as string),
       lactose: stringToBoolean(values.lactose as string),
-      //lactose_detalhe: values.lactose === "1" ? values.lactose_detalhe : "",
+      mecanismo_controle: "",
+      ingredientes_alergenicos: "",
+      lactose_detalhe: "",
+      numero_registro: "",
     };
     if (payload.alergenicos) {
-      payload.ingredientes_alergenicos = values.ingredientes_alergenicos;
+      payload.ingredientes_alergenicos = values.ingredientes_alergenicos || "";
     }
     if (payload.lactose) {
-      payload.lactose_detalhe = values.lactose_detalhe;
+      payload.lactose_detalhe = values.lactose_detalhe || "";
     }
     if (payload.categoria === "PERECIVEIS") {
       payload = {
         ...payload,
-        numero_registro: values.numero_registro,
+        numero_registro: values.numero_registro || "",
         agroecologico: stringToBoolean(values.agroecologico as string),
         organico: stringToBoolean(values.organico as string),
       };
       if (payload.organico) {
-        payload.mecanismo_controle = values.mecanismo_controle;
+        payload.mecanismo_controle = values.mecanismo_controle || "";
       }
     }
 
@@ -191,6 +204,9 @@ export default () => {
 
   const stringToBoolean = (str: string): boolean =>
     str === "1" ? true : str === "0" ? false : undefined;
+
+  const booleanToString = (str: boolean): string =>
+    str === true ? "1" : str === false ? "0" : undefined;
 
   const salvarRascunho = async (values: FichaTecnicaPayload) => {
     const payload = formataPayload(values);
