@@ -148,16 +148,38 @@ export const desabilitarField = (
   valoresPeriodosLancamentos,
   feriadosNoMes,
   uuidFaixaEtaria,
-  diasParaCorrecao
+  diasParaCorrecao,
+  ehEmeiDaCemeiLocation
 ) => {
-  const resultado = inclusoesAutorizadas.some(
-    (inclusao) =>
-      dia === String(inclusao.dia) &&
-      rowName === "frequencia" &&
-      inclusao.faixas_etarias.includes(uuidFaixaEtaria) &&
-      nomeCategoria === "ALIMENTAÇÃO"
-  );
-  if (resultado) return false;
+  if (!ehEmeiDaCemeiLocation) {
+    const resultado = inclusoesAutorizadas.some(
+      (inclusao) =>
+        dia === String(inclusao.dia) &&
+        rowName === "frequencia" &&
+        inclusao.faixas_etarias.includes(uuidFaixaEtaria) &&
+        nomeCategoria === "ALIMENTAÇÃO"
+    );
+    if (resultado) return false;
+  } else {
+    const resultado = inclusoesAutorizadas.some(
+      (inclusao) =>
+        dia === String(inclusao.dia) &&
+        (inclusao.alimentacoes.includes(
+          rowName.includes("repeticao") ? rowName.split("_")[1] : rowName
+        ) ||
+          rowName === "frequencia")
+    );
+    if (nomeCategoria !== "ALIMENTAÇÃO") {
+      if (resultado)
+        return (
+          Number(
+            values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+          ) === 0
+        );
+    } else {
+      if (resultado) return false;
+    }
+  }
 
   if (
     ehDiaParaCorrigir(dia, categoria, diasParaCorrecao) &&

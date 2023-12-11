@@ -191,7 +191,9 @@ export const validacoesTabelaAlimentacaoEmeidaCemei = (
   categoria,
   allValues,
   value,
-  alteracoesAlimentacaoAutorizadas
+  alteracoesAlimentacaoAutorizadas,
+  inclusoesAutorizadas,
+  validacaoDiaLetivo
 ) => {
   const maxFrequencia = Number(
     allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
@@ -200,6 +202,15 @@ export const validacoesTabelaAlimentacaoEmeidaCemei = (
     allValues[`matriculados__dia_${dia}__categoria_${categoria}`]
   );
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
+
+  if (
+    rowName === "frequencia" &&
+    !allValues[`frequencia__dia_${dia}__categoria_${categoria}`] &&
+    !validacaoDiaLetivo(dia) &&
+    inclusoesAutorizadas.some((inclusao) => dia === String(inclusao.dia))
+  ) {
+    return "Há solicitação de alimentação autorizada para esta data. Insira o número de frequentes.";
+  }
 
   const existeAlteracaoAlimentacaoRPL =
     alteracoesAlimentacaoAutorizadas &&
@@ -376,6 +387,7 @@ export const validarCamposComInclusoesDeAlimentacaoSemObservacao = (
       idxInclusao++
     ) {
       const inclusao = inclusoesAutorizadas[idxInclusao];
+      if (!inclusao.faixas_etarias) return;
       for (
         let idxFaixaEtaria = 0;
         idxFaixaEtaria < inclusao.faixas_etarias.length;

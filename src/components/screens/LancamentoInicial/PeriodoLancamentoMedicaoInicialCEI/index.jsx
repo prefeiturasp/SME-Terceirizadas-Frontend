@@ -1317,7 +1317,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           idCategoria,
           allValues,
           value,
-          alteracoesAlimentacaoAutorizadas
+          alteracoesAlimentacaoAutorizadas,
+          inclusoesAutorizadas,
+          validacaoDiaLetivo
         );
       } else if (nomeCategoria.includes("DIETA")) {
         return validacoesTabelasDietasEmeidaCemei(
@@ -1331,6 +1333,47 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         );
       }
     };
+
+  const classNameFieldTabelaAlimentacaoEMEI = (
+    row,
+    column,
+    categoria,
+    kitLanchesAutorizadas,
+    alteracoesAlimentacaoAutorizadas,
+    valoresPeriodosLancamentos,
+    diasParaCorrecao
+  ) => {
+    if (
+      Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+        String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
+      ) ||
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
+        dadosValoresInclusoesAutorizadasState
+    ) {
+      return "";
+    }
+    return `${
+      !validacaoDiaLetivo(column.dia) &&
+      !ehDiaParaCorrigir(
+        column.dia,
+        categoria.id,
+        valoresPeriodosLancamentos,
+        diasParaCorrecao
+      ) &&
+      ((kitLanchesAutorizadas &&
+        !kitLanchesAutorizadas.filter(
+          (kitLanche) => kitLanche.dia === column.dia
+        ).length &&
+        row.name === "kit_lanche") ||
+        (alteracoesAlimentacaoAutorizadas &&
+          !alteracoesAlimentacaoAutorizadas.filter(
+            (lancheEmergencial) => lancheEmergencial.dia === column.dia
+          ).length &&
+          row.name === "lanche_emergencial"))
+        ? "nao-eh-dia-letivo"
+        : ""
+    }`;
+  };
 
   const classNameFieldTabelaAlimentacao = (row, column, categoria) => {
     const resultado = inclusoesAutorizadas.some(
@@ -1708,7 +1751,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                   {ehEmeiDaCemeiLocation ? (
                                                     <>
                                                       <Field
-                                                        className={`m-2 ${classNameFieldTabelaAlimentacao(
+                                                        className={`m-2 ${classNameFieldTabelaAlimentacaoEMEI(
                                                           row,
                                                           column,
                                                           categoria
@@ -1746,7 +1789,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           valoresPeriodosLancamentos,
                                                           feriadosNoMes,
                                                           null,
-                                                          diasParaCorrecao
+                                                          diasParaCorrecao,
+                                                          ehEmeiDaCemeiLocation
                                                         )}
                                                         defaultValue={defaultValue(
                                                           column,
@@ -1839,7 +1883,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           valoresPeriodosLancamentos,
                                                           feriadosNoMes,
                                                           row.uuid,
-                                                          diasParaCorrecao
+                                                          diasParaCorrecao,
+                                                          ehEmeiDaCemeiLocation
                                                         )}
                                                         defaultValue={defaultValue(
                                                           column,
