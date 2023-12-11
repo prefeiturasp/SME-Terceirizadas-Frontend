@@ -12,7 +12,7 @@ import { getTerceirizadaUUID } from "services/terceirizada.service";
 import { required, email } from "helpers/fieldValidators";
 import { Spin, Steps } from "antd";
 import {
-  CategoriaChoices,
+  CategoriaFichaTecnicaChoices,
   FichaTecnicaDetalhada,
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
@@ -123,7 +123,7 @@ export default () => {
     let iniciais: FichaTecnicaPayload = {
       produto: ficha.produto?.nome,
       marca: ficha.marca.uuid,
-      categoria: ficha.categoria as CategoriaChoices,
+      categoria: ficha.categoria as CategoriaFichaTecnicaChoices,
       pregao_chamada_publica: ficha.pregao_chamada_publica,
       fabricante: ficha.fabricante?.nome,
       cnpj_fabricante: ficha.cnpj_fabricante,

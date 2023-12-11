@@ -107,7 +107,7 @@ export interface OptionsGenerico {
   nome: string;
 }
 
-export type CategoriaChoices = "PERECIVEIS" | "NAO_PERECIVEIS";
+export type CategoriaFichaTecnicaChoices = "PERECIVEIS" | "NAO_PERECIVEIS";
 
 export interface ProdutoSimples {
   uuid: string;
@@ -141,7 +141,7 @@ export interface FichaTecnicaDetalhada {
   produto: ProdutoSimples;
   pregao_chamada_publica: string;
   marca: MarcaSimples;
-  categoria: string;
+  categoria: CategoriaFichaTecnicaChoices;
   status: string;
   criado_em: string;
   empresa: TerceirizadaSimplesInterface;
