@@ -49,6 +49,7 @@ import {
   exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI,
   exibirTooltipSuspensoesAutorizadasCEI,
   frequenciaComSuspensaoAutorizadaPreenchida,
+  campoComInclusaoAutorizadaValorZeroESemObservacao,
 } from "./validacoes";
 import {
   categoriasParaExibir,
@@ -89,6 +90,7 @@ import {
   campoComSuspensaoAutorizadaESemObservacao,
   campoLancheComLPRAutorizadaESemObservacao,
   campoRefeicaoComRPLAutorizadaESemObservacao,
+  exibeTooltipInclusoesAutorizadasComZero,
   exibirTooltipLPRAutorizadas,
   exibirTooltipRPLAutorizadas,
   exibirTooltipSuspensoesAutorizadas,
@@ -1259,6 +1261,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           categoria,
           alteracoesAlimentacaoAutorizadas
         ) ||
+        exibeTooltipInclusoesAutorizadasComZero(
+          formValuesAtualizados,
+          row,
+          column,
+          categoria,
+          inclusoesAutorizadas
+        ) ||
         (ehEmeiDaCemeiLocation &&
           exibirTooltipSuspensoesAutorizadas(
             formValuesAtualizados,
@@ -1687,13 +1696,20 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           inclusoesAutorizadas,
                                                           formValuesAtualizados[
                                                             `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
-                                                          ]
+                                                          ],
+                                                          formValuesAtualizados
                                                         )) ||
                                                       campoRefeicaoComRPLAutorizadaESemObservacao(
                                                         formValuesAtualizados,
                                                         column,
                                                         categoria,
                                                         alteracoesAlimentacaoAutorizadas
+                                                      ) ||
+                                                      campoComInclusaoAutorizadaValorZeroESemObservacao(
+                                                        formValuesAtualizados,
+                                                        column,
+                                                        categoria,
+                                                        inclusoesAutorizadas
                                                       ) ||
                                                       campoLancheComLPRAutorizadaESemObservacao(
                                                         formValuesAtualizados,
@@ -1802,6 +1818,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           column,
                                                           categoria,
                                                           suspensoesAutorizadas
+                                                        )}
+                                                        exibeTooltipInclusoesAutorizadasComZero={exibeTooltipInclusoesAutorizadasComZero(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          inclusoesAutorizadas
                                                         )}
                                                         exibeTooltipRPLAutorizadas={exibirTooltipRPLAutorizadas(
                                                           formValuesAtualizados,

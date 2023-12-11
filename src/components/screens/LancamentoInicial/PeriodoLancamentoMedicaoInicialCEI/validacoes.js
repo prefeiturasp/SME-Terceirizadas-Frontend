@@ -82,6 +82,53 @@ const campoComInclusaoSemObservacaoCEI = (
   return false;
 };
 
+export const campoComInclusaoAutorizadaValorZeroESemObservacao = (
+  formValuesAtualizados,
+  column,
+  categoria,
+  inclusoesAutorizadas
+) => {
+  let erro = false;
+  if (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    inclusoesAutorizadas &&
+    inclusoesAutorizadas.some(
+      (inclusao) => column.dia === String(inclusao.dia)
+    ) &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ] &&
+    (Number(
+      formValuesAtualizados[
+        `frequencia__dia_${column.dia}__categoria_${categoria.id}`
+      ]
+    ) === 0 ||
+      Number(
+        formValuesAtualizados[
+          `lanche__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) === 0 ||
+      Number(
+        formValuesAtualizados[
+          `lanche_4h__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) === 0 ||
+      Number(
+        formValuesAtualizados[
+          `refeicao__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) === 0 ||
+      Number(
+        formValuesAtualizados[
+          `sobremesa__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) === 0)
+  ) {
+    erro = true;
+  }
+  return erro;
+};
+
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   column,
   categoria,
