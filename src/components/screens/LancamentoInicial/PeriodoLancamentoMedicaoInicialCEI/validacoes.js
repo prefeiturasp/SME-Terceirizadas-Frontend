@@ -129,6 +129,35 @@ export const campoComInclusaoAutorizadaValorZeroESemObservacao = (
   return erro;
 };
 
+export const exibirTooltipErroQtdMaiorQueAutorizado = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  inclusoesAutorizadas
+) => {
+  return (
+    row.name !== "matriculados" &&
+    inclusoesAutorizadas &&
+    inclusoesAutorizadas.some(
+      (inclusao) => column.dia === String(inclusao.dia)
+    ) &&
+    Number(
+      formValuesAtualizados[
+        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+      ]
+    ) >
+      Number(
+        inclusoesAutorizadas.find(
+          (inclusao) => column.dia === String(inclusao.dia)
+        ).numero_alunos
+      ) &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ]
+  );
+};
+
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   column,
   categoria,

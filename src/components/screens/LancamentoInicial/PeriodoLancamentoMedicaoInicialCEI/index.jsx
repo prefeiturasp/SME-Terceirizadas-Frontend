@@ -50,6 +50,7 @@ import {
   exibirTooltipSuspensoesAutorizadasCEI,
   frequenciaComSuspensaoAutorizadaPreenchida,
   campoComInclusaoAutorizadaValorZeroESemObservacao,
+  exibirTooltipErroQtdMaiorQueAutorizado,
 } from "./validacoes";
 import {
   categoriasParaExibir,
@@ -1811,6 +1812,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                         defaultValue={defaultValue(
                                                           column,
                                                           row
+                                                        )}
+                                                        exibeTooltipErroQtdMaiorQueAutorizado={exibirTooltipErroQtdMaiorQueAutorizado(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          inclusoesAutorizadas
                                                         )}
                                                         exibeTooltipSuspensoesAutorizadas={exibirTooltipSuspensoesAutorizadas(
                                                           formValuesAtualizados,
