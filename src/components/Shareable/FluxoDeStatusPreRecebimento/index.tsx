@@ -4,10 +4,20 @@ import {
 } from "configs/constants";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { tipoDeStatusClasse } from "./helper";
+import { tipoDeStatusClasse, tituloItem } from "./helper";
+import { validate } from "uuid";
 import "./style.scss";
+import { LogSolicitacoesUsuarioSimples } from "interfaces/dados_comuns.interface";
 
-export const FluxoDeStatusCronograma = ({ listaDeStatus, solicitacao }) => {
+interface FluxoDeStatusPreRecebimentoProps {
+  listaDeStatus: LogSolicitacoesUsuarioSimples[];
+  itensClicaveisCronograma?: boolean;
+}
+
+export const FluxoDeStatusPreRecebimento = ({
+  listaDeStatus,
+  itensClicaveisCronograma,
+}: FluxoDeStatusPreRecebimentoProps) => {
   const history = useHistory();
 
   let ultimoStatus = listaDeStatus.slice(-1)[0];
@@ -17,12 +27,13 @@ export const FluxoDeStatusCronograma = ({ listaDeStatus, solicitacao }) => {
   ) {
     listaDeStatus.push({
       status_evento_explicacao: "Fornecedor Ciente",
-      criado_em: null,
-      usuario: null,
+      criado_em: "",
+      usuario: { nome: "", uuid: "" },
+      justificativa: "",
     });
   }
 
-  const item = (status, key) => {
+  const item = (status: LogSolicitacoesUsuarioSimples, key: number) => {
     const content = (
       <>
         {status.criado_em}
@@ -31,7 +42,7 @@ export const FluxoDeStatusCronograma = ({ listaDeStatus, solicitacao }) => {
       </>
     );
 
-    const isClickable = !solicitacao && status.justificativa;
+    const uuidValido = validate(status.justificativa);
 
     return (
       <li
@@ -39,10 +50,12 @@ export const FluxoDeStatusCronograma = ({ listaDeStatus, solicitacao }) => {
         className={`${tipoDeStatusClasse(status)}`}
         style={{
           width: `${100 / listaDeStatus.length}%`,
-          cursor: isClickable ? "pointer" : "default",
+          cursor:
+            itensClicaveisCronograma && uuidValido ? "pointer" : "default",
         }}
         onClick={() => {
-          isClickable &&
+          itensClicaveisCronograma &&
+            uuidValido &&
             history.push(
               `/${PRE_RECEBIMENTO}/${DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${status.justificativa}`
             );
@@ -57,13 +70,11 @@ export const FluxoDeStatusCronograma = ({ listaDeStatus, solicitacao }) => {
     <div className="w-100">
       <ul className={`progressbar-titles fluxos`}>
         {listaDeStatus.map((status, key) => (
-          <li key={key}>{status.status_evento_explicacao}</li>
+          <li key={key}>{tituloItem(status.status_evento_explicacao)}</li>
         ))}
       </ul>
-      <ul className="progressbar-cronograma">
-        {listaDeStatus.map((status, key) => (
-          <>{item(status, key)}</>
-        ))}
+      <ul className="progressbar-dados">
+        {listaDeStatus.map((status, key) => item(status, key))}
       </ul>
     </div>
   );

@@ -7,6 +7,7 @@ import {
 } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 import { detalharDocumentoParaAnalise } from "services/documentosRecebimento.service";
 import InputText from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
@@ -59,17 +60,23 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-detalhar-documentos-recebimento-codae">
         <div className="card-body">
+          {objeto.logs && (
+            <div className="row my-4">
+              <FluxoDeStatusPreRecebimento listaDeStatus={objeto.logs} />
+            </div>
+          )}
+
           <div className="flex-header">
             <div className="subtitulo">Dados Gerais</div>
             {aprovado ? (
               <div className="status aprovado">
                 <i className="fas fa-check-circle" />
-                Documentos aprovados em {objeto.log_mais_recente?.criado_em}
+                Documentos aprovados em {objeto?.logs?.slice(-1)[0].criado_em}
               </div>
             ) : (
               <div className="status correcao">
                 <i className="fas fa-exclamation-triangle" />
-                Solicitada Correção em {objeto.log_mais_recente?.criado_em}
+                Solicitada Correção em {objeto?.logs?.slice(-1)[0].criado_em}
               </div>
             )}
           </div>
@@ -133,13 +140,13 @@ export default () => {
                   Data da Solicitação:
                   <strong>
                     {" "}
-                    {objeto.log_mais_recente?.criado_em.split("-")[0]}
+                    {objeto?.logs?.slice(-1)[0].criado_em.split(" ")[0]}
                   </strong>
                 </div>
 
                 <div className="col-6">
                   Solicitado por:
-                  <strong> {objeto.log_mais_recente?.usuario}</strong>
+                  <strong> {objeto?.logs?.slice(-1)[0].usuario.nome}</strong>
                 </div>
               </div>
               <div className="row">

@@ -13,6 +13,7 @@ import {
 } from "../../../../../Shareable/Botao/constants";
 import Botao from "../../../../../Shareable/Botao";
 import SelectSelecione from "components/Shareable/SelectSelecione";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 import {
   analisaDocumentoRecebimento,
   analisaDocumentoRecebimentoRascunho,
@@ -338,6 +339,12 @@ export default () => {
                     </>
                   }
                 />
+
+                {objeto.logs && (
+                  <div className="row my-4">
+                    <FluxoDeStatusPreRecebimento listaDeStatus={objeto.logs} />
+                  </div>
+                )}
 
                 <div className="subtitulo">Dados Gerais</div>
                 <div className="row">

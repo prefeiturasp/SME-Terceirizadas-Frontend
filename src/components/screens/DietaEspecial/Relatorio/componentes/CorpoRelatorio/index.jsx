@@ -95,11 +95,14 @@ const CorpoRelatorio = ({
           substituicoes={dietaEspecial.substituicoes}
           key={4}
         />,
+        dietaEspecial.data_inicio && dietaEspecial.data_fim && (
+          <PeriodoVigencia key={5} />
+        ),
         <InformacoesAdicionaisLeitura
           informacoes_adicionais={dietaEspecial.informacoes_adicionais}
-          key={5}
+          key={6}
         />,
-        <IdentificacaoNutricionista key={6} />,
+        <IdentificacaoNutricionista key={7} />,
       ];
     } else if (
       dietaEspecial.eh_importado === false &&
@@ -149,11 +152,14 @@ const CorpoRelatorio = ({
           substituicoes={dietaEspecial.substituicoes}
           key={4}
         />,
+        dietaEspecial.data_inicio && dietaEspecial.data_fim && (
+          <PeriodoVigencia key={5} />
+        ),
         <InformacoesAdicionaisLeitura
           informacoes_adicionais={dietaEspecial.informacoes_adicionais}
-          key={5}
+          key={6}
         />,
-        <IdentificacaoNutricionista key={6} />,
+        <IdentificacaoNutricionista key={7} />,
       ];
     } else if (
       dietaEspecial.status_solicitacao === "CODAE_NEGOU_PEDIDO" &&
@@ -176,11 +182,14 @@ const CorpoRelatorio = ({
           substituicoes={dietaEspecial.substituicoes}
           key={4}
         />,
+        dietaEspecial.data_inicio && dietaEspecial.data_fim && (
+          <PeriodoVigencia key={5} />
+        ),
         <InformacoesAdicionaisLeitura
           informacoes_adicionais={dietaEspecial.informacoes_adicionais}
-          key={5}
+          key={6}
         />,
-        <IdentificacaoNutricionista key={6} />,
+        <IdentificacaoNutricionista key={7} />,
       ];
     } else if (
       dietaEspecial.eh_importado === true &&
