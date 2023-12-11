@@ -107,7 +107,7 @@ export interface OptionsGenerico {
   nome: string;
 }
 
-export type CategoriaChoices = "PERECIVEIS" | "NAO_PERECIVEIS";
+export type CategoriaFichaTecnicaChoices = "PERECIVEIS" | "NAO_PERECIVEIS";
 
 export interface ProdutoSimples {
   uuid: string;
@@ -124,6 +124,8 @@ export interface FabricanteSimples {
   nome: string;
 }
 
+export type MecanismoControleChoices = "CERTIFICACAO" | "OPAC" | "OCS" | "";
+
 export interface FichaTecnica {
   uuid: string;
   numero: string;
@@ -139,7 +141,7 @@ export interface FichaTecnicaDetalhada {
   produto: ProdutoSimples;
   pregao_chamada_publica: string;
   marca: MarcaSimples;
-  categoria: string;
+  categoria: CategoriaFichaTecnicaChoices;
   status: string;
   criado_em: string;
   empresa: TerceirizadaSimplesInterface;
@@ -154,4 +156,15 @@ export interface FichaTecnicaDetalhada {
   estado_fabricante: string;
   email_fabricante: string;
   telefone_fabricante: string;
+  prazo_validade: string;
+  numero_registro: string;
+  agroecologico: boolean;
+  organico: boolean;
+  mecanismo_controle: MecanismoControleChoices;
+  componentes_produto: string;
+  alergenicos: boolean;
+  ingredientes_alergenicos: string;
+  gluten: boolean;
+  lactose: boolean;
+  lactose_detalhe: string;
 }
