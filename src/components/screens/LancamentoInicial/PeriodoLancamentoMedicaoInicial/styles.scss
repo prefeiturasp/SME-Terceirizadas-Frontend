@@ -272,3 +272,22 @@
 .mt-legenda {
   margin-top: 50px !important;
 }
+
+.input-alimentacao-permissao-lancamento-especial {
+  background-color: #fdf7e9;
+}
+
+.legenda-lancamentos-especiais {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 12px;
+
+  .legenda-cor {
+    width: 12px;
+    height: 12px;
+    background-color: #fdf7e9;
+    margin-right: 8px;
+    border: 1px solid #e9eaea;
+  }
+}

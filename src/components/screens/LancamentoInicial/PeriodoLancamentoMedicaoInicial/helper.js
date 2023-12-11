@@ -9,6 +9,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { getPermissoesLancamentosEspeciaisMesAno } from "services/medicaoInicial/permissaoLancamentosEspeciais.service";
 import {
   ehEscolaTipoCEI,
   ehEscolaTipoCEUGESTAO,
@@ -258,7 +259,10 @@ export const desabilitarField = (
   categoriasDeMedicao,
   kitLanchesAutorizadas,
   alteracoesAlimentacaoAutorizadas,
-  diasParaCorrecao
+  diasParaCorrecao,
+  ehPeriodoEscolarSimples,
+  permissoesLancamentosEspeciaisPorDia,
+  alimentacoesLancamentosEspeciais
 ) => {
   const valorField = valoresPeriodosLancamentos.some(
     (valor) =>
@@ -447,6 +451,33 @@ export const desabilitarField = (
     }
   }
 
+  if (
+    ehPeriodoEscolarSimples &&
+    nomeCategoria === "ALIMENTAÇÃO" &&
+    permissoesLancamentosEspeciaisPorDia &&
+    alimentacoesLancamentosEspeciais.includes(rowName)
+  ) {
+    const alimentacoesLancamentosEspeciaisDia = [
+      ...new Set(
+        permissoesLancamentosEspeciaisPorDia
+          .filter((permissao) => permissao.dia === dia)
+          .flatMap((permissao) => permissao.alimentacoes)
+      ),
+    ];
+
+    if (
+      (alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+        validacaoDiaLetivo(dia)) ||
+      (alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+        !validacaoDiaLetivo(dia) &&
+        inclusoesAutorizadas.filter((inc) => inc.dia === dia).length)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
     return true;
   }
@@ -574,6 +605,27 @@ export const getSolicitacoesSuspensoesAutorizadasAsync = async (
     return responseSuspensoesAutorizadas.data.results;
   } else {
     toastError("Erro ao carregar Suspensões Autorizadas");
+    return [];
+  }
+};
+
+export const getPermissoesLancamentosEspeciaisMesAnoAsync = async (
+  escolaUuuid,
+  mes,
+  ano,
+  nome_periodo_escolar
+) => {
+  const params = {};
+  params["escola_uuid"] = escolaUuuid;
+  params["mes"] = mes;
+  params["ano"] = ano;
+  params["nome_periodo_escolar"] = nome_periodo_escolar;
+  const responsePermissoesLancamentosEspeciaisMesAno =
+    await getPermissoesLancamentosEspeciaisMesAno(params);
+  if (responsePermissoesLancamentosEspeciaisMesAno.status === HTTP_STATUS.OK) {
+    return responsePermissoesLancamentosEspeciaisMesAno.data.results;
+  } else {
+    toastError("Erro ao carregar Permissões de Lançamentos Especiais");
     return [];
   }
 };

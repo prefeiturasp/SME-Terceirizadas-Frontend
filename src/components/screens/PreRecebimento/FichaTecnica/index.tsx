@@ -25,10 +25,9 @@ export default () => {
       page: pageNumber,
       ...filtros,
     });
-    const response: ResponseFichasTecnicas =
-      await listarFichastecnicas(params);
+    const response: ResponseFichasTecnicas = await listarFichastecnicas(params);
 
-      setFichas(response.data.results);
+    setFichas(response.data.results);
     setTotalResultados(response.data.count);
     setConsultaRealizada(true);
 
