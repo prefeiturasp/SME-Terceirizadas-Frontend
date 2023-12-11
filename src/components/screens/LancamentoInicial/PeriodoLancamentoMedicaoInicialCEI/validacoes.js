@@ -82,6 +82,82 @@ const campoComInclusaoSemObservacaoCEI = (
   return false;
 };
 
+export const campoComInclusaoAutorizadaValorZeroESemObservacao = (
+  formValuesAtualizados,
+  column,
+  categoria,
+  inclusoesAutorizadas
+) => {
+  let erro = false;
+  if (
+    categoria.nome === "ALIMENTAÇÃO" &&
+    inclusoesAutorizadas &&
+    inclusoesAutorizadas.some(
+      (inclusao) => column.dia === String(inclusao.dia)
+    ) &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ] &&
+    (Number(
+      formValuesAtualizados[
+        `frequencia__dia_${column.dia}__categoria_${categoria.id}`
+      ]
+    ) === 0 ||
+      Number(
+        formValuesAtualizados[
+          `lanche__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) === 0 ||
+      Number(
+        formValuesAtualizados[
+          `lanche_4h__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) === 0 ||
+      Number(
+        formValuesAtualizados[
+          `refeicao__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) === 0 ||
+      Number(
+        formValuesAtualizados[
+          `sobremesa__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) === 0)
+  ) {
+    erro = true;
+  }
+  return erro;
+};
+
+export const exibirTooltipErroQtdMaiorQueAutorizado = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  inclusoesAutorizadas
+) => {
+  return (
+    row.name !== "matriculados" &&
+    inclusoesAutorizadas &&
+    inclusoesAutorizadas.some(
+      (inclusao) => column.dia === String(inclusao.dia)
+    ) &&
+    Number(
+      formValuesAtualizados[
+        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+      ]
+    ) >
+      Number(
+        inclusoesAutorizadas.find(
+          (inclusao) => column.dia === String(inclusao.dia)
+        ).numero_alunos
+      ) &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ]
+  );
+};
+
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   column,
   categoria,
@@ -191,7 +267,9 @@ export const validacoesTabelaAlimentacaoEmeidaCemei = (
   categoria,
   allValues,
   value,
-  alteracoesAlimentacaoAutorizadas
+  alteracoesAlimentacaoAutorizadas,
+  inclusoesAutorizadas,
+  validacaoDiaLetivo
 ) => {
   const maxFrequencia = Number(
     allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
@@ -200,6 +278,15 @@ export const validacoesTabelaAlimentacaoEmeidaCemei = (
     allValues[`matriculados__dia_${dia}__categoria_${categoria}`]
   );
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
+
+  if (
+    rowName === "frequencia" &&
+    !allValues[`frequencia__dia_${dia}__categoria_${categoria}`] &&
+    !validacaoDiaLetivo(dia) &&
+    inclusoesAutorizadas.some((inclusao) => dia === String(inclusao.dia))
+  ) {
+    return "Há solicitação de alimentação autorizada para esta data. Insira o número de frequentes.";
+  }
 
   const existeAlteracaoAlimentacaoRPL =
     alteracoesAlimentacaoAutorizadas &&
@@ -376,6 +463,7 @@ export const validarCamposComInclusoesDeAlimentacaoSemObservacao = (
       idxInclusao++
     ) {
       const inclusao = inclusoesAutorizadas[idxInclusao];
+      if (!inclusao.faixas_etarias) return;
       for (
         let idxFaixaEtaria = 0;
         idxFaixaEtaria < inclusao.faixas_etarias.length;
