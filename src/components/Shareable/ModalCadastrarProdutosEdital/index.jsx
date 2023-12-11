@@ -105,7 +105,7 @@ export default ({ closeModal, showModal, produto, changePage }) => {
                       onChange
                     />
                   </div>
-                  <div className="col-8">
+                  <div className="col-8 ajuste-height">
                     <label className="col-form-label mb-1">
                       <span className="asterisco">* </span>
                       Nome

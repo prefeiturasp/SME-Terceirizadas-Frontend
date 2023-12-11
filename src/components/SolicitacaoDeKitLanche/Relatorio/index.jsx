@@ -303,11 +303,11 @@ const Relatorio = (props) => {
                       solicitacao={solicitacaoKitLanche}
                     />
                     {visualizaBotoesDoFluxo(solicitacaoKitLanche) && (
-                      <div className="form-group row float-right mt-4">
+                      <div className="form-group row float-right mt-4 mr-2">
                         {EXIBIR_BOTAO_NAO_APROVAR && (
                           <Botao
                             texto={textoBotaoNaoAprova}
-                            className="ml-3"
+                            className="custom-col-width ml-3"
                             onClick={() => showNaoAprovaModal("Não")}
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -335,7 +335,7 @@ const Relatorio = (props) => {
                                   : handleSubmit()
                               }
                               style={BUTTON_STYLE.GREEN}
-                              className="ml-3"
+                              className="custom-col-width ml-3"
                             />
                           ))}
                         {EXIBIR_BOTAO_QUESTIONAMENTO && (

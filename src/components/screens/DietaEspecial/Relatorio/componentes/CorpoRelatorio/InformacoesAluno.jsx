@@ -96,7 +96,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
       <div className="col-12 mb-3 p-0">
         <label className="sectionName">Dados do aluno</label>
       </div>
-      <div className="row col-3 mb-3">
+      <div className="row col-3 mb-3 p-0">
         <Field
           component={InputText}
           name="aluno.codigo_eol"
@@ -161,7 +161,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
             usuarioEhEscolaTerceirizada()) &&
             solicitacaoEhDoCardAutorizadas(status_solicitacao) && (
               <div className="row pl-4 mt-2">
-                <span className="input-file">
+                <span className="input-file custom-col-width p-0">
                   <input
                     className="inputfile"
                     name="foto_aluno"
@@ -173,7 +173,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
                 </span>
                 <Botao
                   texto={!atualizandoImagem ? "Atualizar imagem" : "Aguarde..."}
-                  className="mr-3"
+                  className="custom-col-width mr-3"
                   onClick={() => inputRef.current.click()}
                   disabled={fotoAlunoSrc || atualizandoImagem}
                   type={BUTTON_TYPE.BUTTON}
@@ -186,6 +186,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
                     deletandoImagem
                   }
                   texto={!deletandoImagem ? "Deletar imagem" : "Aguarde..."}
+                  className="custom-col-width"
                   onClick={() => deletarFoto()}
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.RED}

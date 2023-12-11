@@ -282,7 +282,7 @@ class Relatorio extends Component {
                 {visualizaBotoesDoFluxoSolicitacaoUnificada(
                   solicitacaoUnificada
                 ) && (
-                  <div className="form-group row float-right mt-4">
+                  <div className="form-group row float-right justify-content-end mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
                         texto={textoBotaoNaoAprova}

@@ -377,7 +377,7 @@ class Relatorio extends Component {
                   solicitacao={inclusaoDeAlimentacao}
                 />
                 {visualizaBotoesDoFluxo(inclusaoDeAlimentacao) && (
-                  <div className="form-group row float-right mt-4">
+                  <div className="form-group row float-right mt-4 mr-3">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
                         texto={textoBotaoNaoAprova}

@@ -568,7 +568,7 @@ export const CorpoRelatorio = ({ ...props }) => {
       />
       {visualizaBotoesDoFluxo(solicitacaoKitLancheCEMEI) && (
         <>
-          <div className="form-group row float-right mt-4">
+          <div className="form-group d-flex justify-content-end mt-4">
             {EXIBIR_BOTAO_NAO_APROVAR && (
               <Botao
                 texto={textoBotaoNaoAprova}

@@ -3,23 +3,37 @@
 .card-body {
   &.card-enrolled {
     padding: 15px 35px !important;
+
     .title {
+      display: block;
       font-size: 12px;
       color: $blackInput;
-      .col-5 {
-        margin-left: inherit;
-      }
     }
+
     .rectangle {
       font-size: 14px;
-      display: flex;
-      justify-content: center;
+      display: block; // Mudança para inline-block
+      text-align: center;
       color: #686868;
       background-color: #e8e8e8;
-      border: 1px solid $grayLight;
+      border: 1px solid #ccc;
       border-radius: 4px;
-      padding: 10px 30px;
+      padding: 10px;
     }
+
+    .title-rectangle-wrapper {
+      width: auto;
+      display: inline-block; // Alterado para inline-flex
+      flex-direction: column; // Direção da coluna para alinhar título e retângulo
+      align-items: flex-start; // Alinha os itens à esquerda
+      margin-left: 16px; // Espaçamento entre os wrappers
+      padding: 0;
+    }
+
+    .title-rectangle-wrapper:first-child {
+      margin-left: 0; // Remove a margem do primeiro wrapper
+    }
+
     .beside-text {
       padding-left: 10px;
       font-size: 12px;

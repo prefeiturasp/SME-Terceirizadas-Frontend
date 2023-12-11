@@ -160,7 +160,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
           <div className="form-row">
             <div className="col-12 col-md-4 col-xl-4">
               <div className="row">
-                <label className="ml-3">Data cadastro</label>
+                <label className="ml-1">Data cadastro</label>
               </div>
               <div className="row">
                 <div className="col mt-1">
@@ -208,7 +208,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
             </div>
             <div className="col-12 col-md-3 col-xl-3 check-tipos-prod">
               <div className="row">
-                <label className="ml-3">Tipo de produto</label>
+                <label className="ml-1">Tipo de produto</label>
               </div>
 
               <div className="row">

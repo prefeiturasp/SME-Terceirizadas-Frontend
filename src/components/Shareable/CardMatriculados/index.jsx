@@ -10,35 +10,33 @@ export default class CardMatriculados extends Component {
     return escolaEhCEMEI() ? (
       <div className="card mt-1">
         <div className="card-body card-enrolled">
-          <div className="row title">
-            <div className="p-0">
-              <span>
-                Total de Matriculados
-                <div className="rectangle">
-                  {meusDados &&
-                    pontuarValor(
+          <div className="row">
+            <div className="title-rectangle-wrapper">
+              <span className="title">Total de Matriculados</span>
+              <div className="rectangle">
+                {meusDados &&
+                  pontuarValor(
+                    meusDados.vinculo_atual.instituicao
+                      .quantidade_alunos_cei_da_cemei +
                       meusDados.vinculo_atual.instituicao
-                        .quantidade_alunos_cei_da_cemei +
-                        meusDados.vinculo_atual.instituicao
-                          .quantidade_alunos_emei_da_cemei
-                    )}
-                </div>
-              </span>
+                        .quantidade_alunos_emei_da_cemei
+                  )}
+              </div>
             </div>
-            <div className="p-0 ml-3">
-              <span>
-                Matriculados CEI
-                <div className="rectangle">
-                  {meusDados &&
-                    pontuarValor(
-                      meusDados.vinculo_atual.instituicao
-                        .quantidade_alunos_cei_da_cemei
-                    )}
-                </div>
-              </span>
+
+            <div className="title-rectangle-wrapper">
+              <span className="title">Matriculados CEI</span>
+              <div className="rectangle">
+                {meusDados &&
+                  pontuarValor(
+                    meusDados.vinculo_atual.instituicao
+                      .quantidade_alunos_cei_da_cemei
+                  )}
+              </div>
             </div>
-            <div className="p-0 ml-3">
-              <span>Matriculados EMEI</span>
+
+            <div className="title-rectangle-wrapper">
+              <span className="title">Matriculados EMEI</span>
               <div className="rectangle">
                 {meusDados &&
                   pontuarValor(
@@ -58,7 +56,7 @@ export default class CardMatriculados extends Component {
       <div className="card">
         <div className="card-body card-enrolled">
           <div className="row title">
-            <div className="col-5">Nº de Matriculados</div>
+            <div className="col-5 p-0">Nº de Matriculados</div>
             {collapsed !== undefined && (
               <div className="offset-6 col-1 my-auto text-right">
                 <ToggleExpandir
@@ -69,8 +67,10 @@ export default class CardMatriculados extends Component {
             )}
           </div>
           <div className="row">
-            <div className="rectangle">
-              {numeroAlunos && pontuarValor(numeroAlunos)}
+            <div className="col-1 px-0">
+              <div className="rectangle">
+                {numeroAlunos && pontuarValor(numeroAlunos)}
+              </div>
             </div>
             <div className="col-6 beside-text mt-auto">
               Informação automática disponibilizada pelo Cadastro da Unidade

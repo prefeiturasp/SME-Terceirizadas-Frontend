@@ -107,8 +107,9 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
                 </>
               )}
               <div className="row pl-3 pr-3">
-                <span className="required-asterisk">*</span>
-                <label>Justificativa</label>
+                <span className="required-asterisk-2">
+                  <label>Justificativa</label>
+                </span>
                 <Field
                   className="col-12 pb-5"
                   component="textarea"
