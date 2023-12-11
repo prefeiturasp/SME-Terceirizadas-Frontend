@@ -466,11 +466,14 @@ export const desabilitarField = (
     ];
 
     if (
-      (alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+      ((alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
         validacaoDiaLetivo(dia)) ||
-      (alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
-        !validacaoDiaLetivo(dia) &&
-        inclusoesAutorizadas.filter((inc) => inc.dia === dia).length)
+        (alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+          !validacaoDiaLetivo(dia) &&
+          inclusoesAutorizadas.filter((inc) => inc.dia === dia).length)) &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+      )
     ) {
       return false;
     } else {
