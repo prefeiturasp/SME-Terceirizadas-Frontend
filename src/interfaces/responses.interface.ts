@@ -104,6 +104,11 @@ export interface ResponseDocumentosRecebimentoParaAnalise
   data: DocumentosRecebimentoParaAnalise;
 }
 
+export interface ResponseDownloadArquivoLaudoAssinado
+  extends ResponseInterface {
+  data: Blob;
+}
+
 export interface ResponseFichasTecnicas extends ResponseInterface {
   data: ListagemPaginada<FichaTecnica>;
 }
