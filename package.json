@@ -4,9 +4,15 @@
   "private": true,
   "husky": {
     "hooks": {
-      "pre-commit": "npm run-script prettier; npm run-script eslint",
+      "pre-commit": "npm run-script prettier && npm run-script eslint",
       "pre-push": "npm run-script eslint"
     }
+  },
+  "lint-staged": {
+    "*.{jsx,js,scss,tsx,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "jest": {
     "watchPathIgnorePatterns": [
@@ -55,7 +61,6 @@
     "multiselect-react-dropdown": "^2.0.25",
     "node-sass": "^8.0.0",
     "patch-package": "^7.0.1",
-    "prettier": "^2.8.8",
     "ramda": "^0.28.0",
     "react": "^18.2.0",
     "react-big-calendar": "^1.8.1",
@@ -92,7 +97,8 @@
     "prettier": "prettier  --check src/**/**/**/*.{jsx,js,scss,tsx,ts}",
     "prettier-fix": "prettier  --write src/**/**/**/*.{jsx,js,scss,tsx,ts}",
     "coverage": "react-scripts test --coverage --watchAll=false",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -127,9 +133,11 @@
     "enzyme-adapter-react-16": "^1.12.1",
     "enzyme-to-json": "^3.3.5",
     "fetch-mock": "^8.3.0",
-    "husky": "^3.0.9",
+    "husky": "^8.0.0",
+    "lint-staged": "^12.5.0",
     "msw": "^0.35.0",
     "node-localstorage": "^1.3.1",
+    "prettier": "^2.8.8",
     "react-scripts": "^5.0.1"
   },
   "setupFiles": [

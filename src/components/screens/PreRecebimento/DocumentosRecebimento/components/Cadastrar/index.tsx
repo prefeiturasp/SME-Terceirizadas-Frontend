@@ -9,15 +9,12 @@ import { required } from "../../../../../../helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
 import { getListaCronogramasPraCadastro } from "../../../../../../services/cronograma.service";
 import {
-  Arquivo,
-  ArquivoPayload,
+  ArquivoForm,
   DocumentosRecebimentoPayload,
   DocumentosState,
-  TiposDocumento,
   TiposDocumentosPayload,
 } from "../../interfaces";
 import InserirDocumento from "../InserirDocumento";
-import { OUTROS_DOCUMENTOS_OPTIONS } from "constants/shared";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -25,20 +22,25 @@ import {
 import Botao from "../../../../../Shareable/Botao";
 import { useHistory } from "react-router-dom";
 import { DOCUMENTOS_RECEBIMENTO, PRE_RECEBIMENTO } from "configs/constants";
-import ModalCadastrar from "../ModalCadastrar";
+import ModalConfirmarEnvio from "../ModalConfirmarEnvio";
 import { exibeError } from "helpers/utilities";
 import {
   toastError,
   toastSuccess,
 } from "../../../../../Shareable/Toast/dialogs";
 import { cadastraDocumentoRecebimento } from "../../../../../../services/documentosRecebimento.service";
-import { CronogramaSimples } from "interfaces/pre_recebimento.interface";
+import {
+  Arquivo,
+  CronogramaSimples,
+  TiposDocumentoChoices,
+} from "interfaces/pre_recebimento.interface";
+import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
 
 export default () => {
   const history = useHistory();
   const [carregando, setCarregando] = useState<boolean>(true);
   const [cronogramas, setCronogramas] = useState<Array<CronogramaSimples>>([]);
-  const [laudo, setLaudo] = useState<Array<ArquivoPayload>>([]);
+  const [laudo, setLaudo] = useState<Array<Arquivo>>([]);
   const [documentos, setDocumentos] = useState<DocumentosState>({});
   const [showModal, setShowModal] = useState<boolean>(false);
 
@@ -71,8 +73,8 @@ export default () => {
     setLaudo(newFiles);
   };
 
-  const setFilesLaudo = (files: Array<Arquivo>): void => {
-    const arquivosAtualizados = files.map((arquivo: Arquivo) => {
+  const setFilesLaudo = (files: Array<ArquivoForm>): void => {
+    const arquivosAtualizados = files.map((arquivo: ArquivoForm) => {
       return {
         nome: arquivo.nome,
         arquivo: arquivo.base64,
@@ -88,8 +90,8 @@ export default () => {
     setDocumentos(newFiles);
   };
 
-  const setFilesDocumentos = (files: Array<Arquivo>, key: string): void => {
-    const arquivosAtualizados = files.map((arquivo: Arquivo) => {
+  const setFilesDocumentos = (files: Array<ArquivoForm>, key: string): void => {
+    const arquivosAtualizados = files.map((arquivo: ArquivoForm) => {
       return {
         nome: arquivo.nome,
         arquivo: arquivo.base64,
@@ -105,7 +107,7 @@ export default () => {
   const formataPayload = (values): DocumentosRecebimentoPayload => {
     let documentosPayload: Array<TiposDocumentosPayload> =
       values.tipos_de_documentos?.map(
-        (valor: TiposDocumento): TiposDocumentosPayload => {
+        (valor: TiposDocumentoChoices): TiposDocumentosPayload => {
           return {
             tipo_documento: valor,
             arquivos_do_tipo_de_documento: documentos[valor],
@@ -175,7 +177,7 @@ export default () => {
             initialValues={{}}
             render={({ handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
-                <ModalCadastrar
+                <ModalConfirmarEnvio
                   show={showModal}
                   handleClose={() => setShowModal(false)}
                   loading={carregando}
@@ -269,7 +271,7 @@ export default () => {
                 {values.tipos_de_documentos?.map(
                   (value: string, idx: number) => (
                     <InserirDocumento
-                      setFiles={(files: Array<Arquivo>) =>
+                      setFiles={(files: Array<ArquivoForm>) =>
                         setFilesDocumentos(files, value)
                       }
                       removeFile={(index: number) =>

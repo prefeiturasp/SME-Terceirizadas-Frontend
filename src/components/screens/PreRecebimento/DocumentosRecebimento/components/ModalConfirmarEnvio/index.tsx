@@ -12,13 +12,15 @@ interface Props {
   handleClose(): void;
   loading: boolean;
   handleSim(): void;
+  correcao?: boolean;
 }
 
-const ModalCadastrar: React.FC<Props> = ({
+const ModalConfirmarEnvio: React.FC<Props> = ({
   show,
   handleClose,
   loading,
   handleSim,
+  correcao,
 }) => {
   return (
     <Modal show={show} onHide={handleClose} backdrop={"static"}>
@@ -30,10 +32,16 @@ const ModalCadastrar: React.FC<Props> = ({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>
-            Deseja enviar os documentos recebidos para{" "}
-            <strong>Análise da CODAE?</strong>
-          </p>
+          {correcao ? (
+            <p>
+              Deseja enviar as correções para <strong>Análise da CODAE?</strong>
+            </p>
+          ) : (
+            <p>
+              Deseja enviar os documentos recebidos para{" "}
+              <strong>Análise da CODAE?</strong>
+            </p>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Botao
@@ -56,4 +64,4 @@ const ModalCadastrar: React.FC<Props> = ({
   );
 };
 
-export default ModalCadastrar;
+export default ModalConfirmarEnvio;

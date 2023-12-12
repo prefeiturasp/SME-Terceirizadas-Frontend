@@ -18,7 +18,7 @@ import {
   textoBotaoCardLancamento,
 } from "../helpers";
 
-export default ({
+export const CardLancamento = ({
   textoCabecalho = null,
   grupo,
   cor,
@@ -146,12 +146,12 @@ export default ({
           }`}
           style={{ color: cor }}
         >
-          <div className="row">
-            <div className="col-9 pl-0 mb-2 periodo-cabecalho">
+          <div className="wraper-periodo-status mb-2">
+            <div className="periodo-cabecalho">
               {grupo && grupo}
               {textoCabecalho}
             </div>
-            <div className="col-3 pr-0">
+            <div>
               <div
                 className={`float-right status-card-periodo-grupo ${
                   [
@@ -173,9 +173,9 @@ export default ({
               </div>
             </div>
           </div>
-          <div className="row">
+          <div className="wraper-contadores-alimentacao">
             <div
-              className="col-2 total-alimentacoes p-2"
+              className="total-alimentacoes p-2"
               style={{ backgroundColor: cor }}
             >
               <span>
@@ -185,7 +185,7 @@ export default ({
               </span>
               <span>ALIMENTAÇÕES</span>
             </div>
-            <div className="col-7 alimentacoes-por-tipo">
+            <div className="alimentacoes-por-tipo">
               <div className="row">
                 <div className="col-4">
                   {alimentacoesFormatadas.slice(0, 3)}
@@ -198,7 +198,7 @@ export default ({
                 </div>
               </div>
             </div>
-            <div className="col-3">
+            <div>
               <div className="row" style={{ height: "100%" }}>
                 <div className="col-8 d-flex flex-column">
                   {meusErros &&

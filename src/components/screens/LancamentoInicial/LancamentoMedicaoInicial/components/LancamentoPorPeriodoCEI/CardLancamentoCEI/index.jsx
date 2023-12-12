@@ -4,27 +4,50 @@ import { Form } from "react-final-form";
 import { Botao } from "components/Shareable/Botao";
 import { PERIODO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import {
-  LANCAMENTO_INICIAL,
-  LANCAMENTO_MEDICAO_INICIAL,
-  PERIODO_LANCAMENTO_CEI,
-} from "configs/constants";
-import "./styles.scss";
-import {
   desabilitarBotaoEditar,
   justificativaPeriodo,
   statusPeriodo,
   styleBotaoCardLancamento,
   textoBotaoCardLancamento,
 } from "../../LancamentoPorPeriodo/helpers";
+import { ehEscolaTipoCEMEI } from "../../../../../../../helpers/utilities";
+import {
+  LANCAMENTO_INICIAL,
+  LANCAMENTO_MEDICAO_INICIAL,
+  PERIODO_LANCAMENTO_CEI,
+} from "configs/constants";
+import "./styles.scss";
+import { ehEmeiDaCemei } from "../helpers";
 
-export default ({
+export const CardLancamentoCEI = ({
   textoCabecalho = null,
   cor,
   solicitacaoMedicaoInicial,
+  escolaInstituicao,
   quantidadeAlimentacoesLancadas,
   periodoSelecionado,
+  periodosEscolaCemeiComAlunosEmei,
+  tiposAlimentacao,
+  uuidPeriodoEscolar,
 }) => {
   const history = useHistory();
+
+  let alimentacoesFormatadas = [];
+
+  if (
+    ehEscolaTipoCEMEI(escolaInstituicao) &&
+    periodosEscolaCemeiComAlunosEmei.includes(textoCabecalho)
+  ) {
+    alimentacoesFormatadas = tiposAlimentacao.map((tipoAlimentacao, key) => (
+      <div key={key} className="mb-2">
+        <span style={{ color: cor }}>
+          <b>0</b>
+        </span>
+        <span className="ml-1">- {tipoAlimentacao.nome}</span>
+        <br />
+      </div>
+    ));
+  }
 
   const qtdAlimentacaoPeriodoFiltrada = () => {
     return quantidadeAlimentacoesLancadas.filter(
@@ -43,6 +66,14 @@ export default ({
         return "Período Parcial";
       case "INTEGRAL":
         return "Período Integral";
+      case "Infantil INTEGRAL":
+        return "Infantil Integral";
+      case "Infantil MANHA":
+        return "Infantil Manhã";
+      case "Infantil TARDE":
+        return "Infantil Tarde";
+      default:
+        return textoCabecalho;
     }
   };
 
@@ -80,6 +111,13 @@ export default ({
           null,
           textoCabecalho
         ),
+        ehEmeiDaCemei: ehEmeiDaCemei(
+          escolaInstituicao,
+          periodosEscolaCemeiComAlunosEmei,
+          textoCabecalho
+        ),
+        uuidPeriodoEscolar: uuidPeriodoEscolar,
+        tiposAlimentacao: tiposAlimentacao,
         ...location.state,
       },
     });
@@ -93,11 +131,11 @@ export default ({
           className="lancamento-por-periodo-card mt-3"
           style={{ color: cor }}
         >
-          <div className="row">
-            <div className="col-9 pl-0 mb-2 periodo-cabecalho">
+          <div className="wraper-periodo-status mb-2">
+            <div className="periodo-cabecalho">
               {textoCabecalhoFormatado(textoCabecalho)}
             </div>
-            <div className="col-3 pr-0">
+            <div>
               <div
                 className={`float-right status-card-periodo-grupo ${
                   [
@@ -119,9 +157,9 @@ export default ({
               </div>
             </div>
           </div>
-          <div className="row">
+          <div className="wraper-contadores-alimentacao">
             <div
-              className="col-2 total-alimentacoes p-2"
+              className="total-alimentacoes p-2"
               style={{ backgroundColor: cor }}
             >
               <span>
@@ -131,27 +169,47 @@ export default ({
               </span>
               <span>ALIMENTAÇÕES</span>
             </div>
-            <div className="col-7 alimentacoes-por-tipo">
-              <div className="row">
-                <div className="col-8">
-                  <div className="mt-4 mb-2">
-                    <span style={{ color: cor }}>
-                      <b>
-                        {qtdAlimentacaoPeriodoFiltrada().length > 0
-                          ? qtdAlimentacaoPeriodoFiltrada()[0].quantidade_alunos
-                          : 0}
-                      </b>
-                    </span>
-                    <span className="ml-1">
-                      - alunos atendidos com{" "}
-                      {numeroRefeicoesDiarias(textoCabecalho)} refeições diárias
-                    </span>
-                    <br />
+            <div className="alimentacoes-por-tipo">
+              {ehEmeiDaCemei(
+                escolaInstituicao,
+                periodosEscolaCemeiComAlunosEmei,
+                textoCabecalho
+              ) ? (
+                <div className="row">
+                  <div className="col-4">
+                    {alimentacoesFormatadas.slice(0, 3)}
+                  </div>
+                  <div className="col-4">
+                    {alimentacoesFormatadas.slice(3, 6)}
+                  </div>
+                  <div className="col-4">
+                    {alimentacoesFormatadas.slice(6, 9)}
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="row">
+                  <div className="col-8">
+                    <div className="mt-4 mb-2">
+                      <span style={{ color: cor }}>
+                        <b>
+                          {qtdAlimentacaoPeriodoFiltrada().length > 0
+                            ? qtdAlimentacaoPeriodoFiltrada()[0]
+                                .quantidade_alunos
+                            : 0}
+                        </b>
+                      </span>
+                      <span className="ml-1">
+                        - alunos atendidos com{" "}
+                        {numeroRefeicoesDiarias(textoCabecalho)} refeições
+                        diárias
+                      </span>
+                      <br />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="col-3">
+            <div>
               <div className="row" style={{ height: "100%" }}>
                 <div className="col-8 d-flex flex-column" />
                 <div className="col-4 pr-0 d-flex flex-column">

@@ -185,6 +185,82 @@ export const validacoesTabelaAlimentacaoCEI = (
   return undefined;
 };
 
+export const validacoesTabelaAlimentacaoEmeidaCemei = (
+  rowName,
+  dia,
+  categoria,
+  allValues,
+  value,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  const maxFrequencia = Number(
+    allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
+  );
+  const maxMatriculados = Number(
+    allValues[`matriculados__dia_${dia}__categoria_${categoria}`]
+  );
+  const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
+
+  const existeAlteracaoAlimentacaoRPL =
+    alteracoesAlimentacaoAutorizadas &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === dia && alteracao.motivo.includes("RPL")
+    ).length > 0;
+
+  const existeAlteracaoAlimentacaoLPR =
+    alteracoesAlimentacaoAutorizadas &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === dia && alteracao.motivo.includes("LPR")
+    ).length > 0;
+
+  if (
+    rowName === "frequencia" &&
+    Number(allValues[inputName]) > Number(maxMatriculados)
+  ) {
+    return "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos matriculados no período.";
+  } else if (
+    value &&
+    existeAlteracaoAlimentacaoRPL &&
+    inputName.includes("lanche") &&
+    !inputName.includes("emergencial") &&
+    (!allValues[`refeicao__dia_${dia}__categoria_${categoria}`] ||
+      Number(allValues[`refeicao__dia_${dia}__categoria_${categoria}`]) === 0)
+  ) {
+    if (Number(value) > 2 * maxFrequencia) {
+      return "Lançamento maior que 2x a frequência de alunos no dia.";
+    } else {
+      return undefined;
+    }
+  } else if (
+    value &&
+    existeAlteracaoAlimentacaoLPR &&
+    inputName.includes("refeicao") &&
+    !inputName.includes("repeticao") &&
+    (!allValues[`lanche__dia_${dia}__categoria_${categoria}`] ||
+      Number(allValues[`lanche__dia_${dia}__categoria_${categoria}`]) === 0) &&
+    (!allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`] ||
+      Number(allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`]) === 0)
+  ) {
+    if (Number(value) > 2 * maxFrequencia) {
+      return "Lançamento maior que 2x a frequência de alunos no dia.";
+    } else {
+      return undefined;
+    }
+  } else if (
+    value &&
+    Number(value) > maxFrequencia &&
+    (inputName.includes("refeicao") ||
+      inputName.includes("sobremesa") ||
+      inputName.includes("lanche")) &&
+    !inputName.includes("repeticao") &&
+    !inputName.includes("emergencial")
+  ) {
+    return "Lançamento maior que a frequência de alunos no dia.";
+  }
+
+  return undefined;
+};
+
 export const validacoesTabelasDietasCEI = (
   rowName,
   dia,
@@ -209,12 +285,84 @@ export const validacoesTabelasDietasCEI = (
   return undefined;
 };
 
+export const validacoesTabelasDietasEmeidaCemei = (
+  rowName,
+  dia,
+  categoria,
+  nomeCategoria,
+  allValues,
+  value,
+  categoriasDeMedicao
+) => {
+  const idCategoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
+    categoria.nome.includes("ALIMENTAÇÃO")
+  ).id;
+  const maxFrequenciaAlimentacao = Number(
+    allValues[`frequencia__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
+  );
+  const maxDietasAutorizadas = Number(
+    allValues[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+  );
+  const maxFrequencia = Number(
+    allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
+  );
+  const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
+
+  if (
+    value &&
+    Number(value) > maxFrequencia &&
+    (inputName.includes("lanche_4h") ||
+      inputName.includes("lanche") ||
+      inputName.includes("refeicao"))
+  ) {
+    return "A quantidade não pode ser maior do que a quantidade inserida em Frequência.";
+  } else if (
+    rowName === "frequencia" &&
+    Number(allValues[inputName]) > Number(maxDietasAutorizadas)
+  ) {
+    return "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos com dietas autorizadas.";
+  } else if (
+    value &&
+    Number(value) > 0 &&
+    Number(value) +
+      Number(
+        allValues[`refeicao__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
+      ) >
+      maxFrequenciaAlimentacao &&
+    inputName.includes("refeicao")
+  ) {
+    return "O número máximo de alimentações foi excedido. É preciso subtrair o aluno com Dieta Especial Autorizada do apontamento de Refeição na planilha de Alimentação.";
+  } else if (
+    value &&
+    Number(value) !== 0 &&
+    ((Number(value) +
+      Number(
+        allValues[`lanche__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
+      ) >
+      maxFrequenciaAlimentacao &&
+      rowName === "lanche") ||
+      (Number(value) +
+        Number(
+          allValues[
+            `lanche_4h__dia_${dia}__categoria_${idCategoriaAlimentacao}`
+          ]
+        ) >
+        maxFrequenciaAlimentacao &&
+        rowName === "lanche_4h"))
+  ) {
+    return "O número máximo de alimentações foi excedido. É preciso subtrair o aluno com Dieta Especial Autorizada do apontamento de Lanche na planilha de Alimentação.";
+  }
+
+  return undefined;
+};
+
 export const validarCamposComInclusoesDeAlimentacaoSemObservacao = (
   values,
   categoriasDeMedicao,
   inclusoesAutorizadas,
   setInputsInclusaoComErro,
-  setExibirTooltipAoSalvar
+  setExibirTooltipAoSalvar,
+  validacaoDiaLetivo
 ) => {
   const categoria = categoriasDeMedicao.find(
     (categoria) => categoria.nome === "ALIMENTAÇÃO"
@@ -266,7 +414,11 @@ export const validarCamposComInclusoesDeAlimentacaoSemObservacao = (
     const frequenciasNaoPreenchidas = inputFrequencias.filter(
       (inputFrequencia) => !inputFrequencia.valor
     );
-    if (frequenciasNaoPreenchidas.length > 0 && !observacaoDaColuna.valor) {
+    if (
+      frequenciasNaoPreenchidas.length > 0 &&
+      !observacaoDaColuna.valor &&
+      !validacaoDiaLetivo(inclusao.dia)
+    ) {
       frequenciasNaoPreenchidas.forEach((inputFrequencia) =>
         diasFaixasComErro.push(inputFrequencia)
       );
@@ -295,7 +447,8 @@ export const exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI = (
   column,
   categoria,
   inputsInclusaoComErro,
-  exibirTooltipAoSalvar
+  exibirTooltipAoSalvar,
+  validacaoDiaLetivo
 ) => {
   return (
     inclusoesAutorizadas.some(
@@ -310,6 +463,7 @@ export const exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI = (
         inputComErro.nome ===
         `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
     ) &&
+    !validacaoDiaLetivo(column.dia) &&
     exibirTooltipAoSalvar
   );
 };
@@ -335,7 +489,7 @@ export const exibirTooltipSuspensoesAutorizadasCEI = (
     value &&
     Number(value) > 0 &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
-    Number(value) < maxMatriculados &&
+    Number(value) <= maxMatriculados &&
     row.name === "frequencia" &&
     categoria.nome === "ALIMENTAÇÃO" &&
     suspensoesAutorizadas &&
@@ -349,13 +503,19 @@ export const frequenciaComSuspensaoAutorizadaPreenchida = (
   column,
   categoria,
   suspensoesAutorizadas,
-  errors
+  errors,
+  categoriasDeMedicao
 ) => {
+  const categoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
+    categoria.nome.includes("ALIMENTAÇÃO")
+  );
   const frequenciasMesmoDia = Object.fromEntries(
     Object.entries(formValuesAtualizados).filter(
       ([key, value]) =>
         key.includes("frequencia") &&
-        key.includes(`__dia_${column.dia}__`) &&
+        key.includes(
+          `__dia_${column.dia}__categoria_${categoriaAlimentacao.id}`
+        ) &&
         !["Mês anterior", "Mês posterior", null].includes(value)
     )
   );

@@ -1,7 +1,11 @@
 import React from "react";
 import "./styles.scss";
 
-export default ({ urlAnexo }) => {
+export interface Props {
+  urlAnexo: string;
+}
+
+const BotaoAnexo: React.FC<Props> = ({ urlAnexo }) => {
   return (
     <a
       href={urlAnexo}
@@ -16,3 +20,5 @@ export default ({ urlAnexo }) => {
     </a>
   );
 };
+
+export default BotaoAnexo;

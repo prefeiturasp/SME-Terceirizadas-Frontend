@@ -8,7 +8,7 @@ import {
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
-import CardLancamentoCEI from "./CardLancamentoCEI";
+import { CardLancamentoCEI } from "./CardLancamentoCEI";
 import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
 import {
   CORES,
@@ -16,9 +16,11 @@ import {
   verificaSeEnviarCorrecaoDisabled,
 } from "../LancamentoPorPeriodo/helpers";
 import {
+  ehEscolaTipoCEMEI,
   getError,
   usuarioEhEscolaTerceirizadaDiretor,
 } from "helpers/utilities";
+import { ehEmeiDaCemei } from "./helpers";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import {
   escolaEnviaCorrecaoMedicaoInicialCODAE,
@@ -27,16 +29,18 @@ import {
   getSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
-export default ({
-  solicitacaoMedicaoInicial,
-  escolaInstituicao,
-  periodoSelecionado,
-  onClickInfoBasicas,
-  setObjSolicitacaoMIFinalizada,
-  setFinalizandoMedicao,
-  setSolicitacaoMedicaoInicial,
+export const LancamentoPorPeriodoCEI = ({
   mes,
   ano,
+  periodoSelecionado,
+  escolaInstituicao,
+  periodosEscolaSimples,
+  periodosEscolaCemeiComAlunosEmei,
+  solicitacaoMedicaoInicial,
+  onClickInfoBasicas,
+  setObjSolicitacaoMIFinalizada,
+  setSolicitacaoMedicaoInicial,
+  setFinalizandoMedicao,
 }) => {
   const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
@@ -60,15 +64,21 @@ export default ({
   };
 
   useEffect(() => {
-    const periodos = escolaInstituicao.periodos_escolares
+    let periodos = escolaInstituicao.periodos_escolares
       .filter((periodo) => periodo.possui_alunos_regulares)
       .map((periodo) => periodo.nome);
-
     if (solicitacaoMedicaoInicial?.ue_possui_alunos_periodo_parcial) {
       periodos.splice(1, 0, "PARCIAL");
     }
+
+    if (ehEscolaTipoCEMEI(escolaInstituicao)) {
+      periodos = periodos
+        .filter((periodo) => !["MANHA", "TARDE"].includes(periodo))
+        .concat(periodosEscolaCemeiComAlunosEmei);
+    }
+
     setPeriodosComAlunos(periodos);
-  }, [escolaInstituicao]);
+  }, [escolaInstituicao, solicitacaoMedicaoInicial]);
 
   const renderBotaoFinalizar = () => {
     if (!solicitacaoMedicaoInicial) {
@@ -128,6 +138,49 @@ export default ({
       getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
   }, [periodoSelecionado, solicitacaoMedicaoInicial]);
 
+  const tiposAlimentacaoPeriodosEmei = (nomePeriodo) => {
+    let tiposAlimentacao = [];
+
+    if (
+      ehEmeiDaCemei(
+        escolaInstituicao,
+        periodosEscolaCemeiComAlunosEmei,
+        nomePeriodo
+      )
+    ) {
+      const periodo = periodosEscolaSimples.find(
+        (p) =>
+          `Infantil ${p.periodo_escolar.nome}` === nomePeriodo &&
+          p.tipo_unidade_escolar.iniciais === "EMEI"
+      );
+      tiposAlimentacao = periodo?.tipos_alimentacao.filter(
+        (alimentacao) => alimentacao.nome !== "Lanche Emergencial"
+      );
+    }
+
+    return tiposAlimentacao;
+  };
+
+  const uuidPeriodoEscolar = (nomePeriodo) => {
+    let uuidPeriodo = null;
+    if (
+      ehEmeiDaCemei(
+        escolaInstituicao,
+        periodosEscolaCemeiComAlunosEmei,
+        nomePeriodo
+      )
+    ) {
+      const periodo = periodosEscolaSimples.find(
+        (p) =>
+          `Infantil ${p.periodo_escolar.nome}` === nomePeriodo &&
+          p.tipo_unidade_escolar.iniciais === "EMEI"
+      );
+      uuidPeriodo = periodo?.periodo_escolar?.uuid;
+    }
+
+    return uuidPeriodo;
+  };
+
   return (
     <div>
       {solicitacaoMedicaoInicial && quantidadeAlimentacoesLancadas && (
@@ -137,6 +190,7 @@ export default ({
               <b className="section-title">Períodos</b>
             </div>
           </div>
+
           {periodosComAlunos.map((nomePeriodo, index) => (
             <CardLancamentoCEI
               key={index}
@@ -146,6 +200,11 @@ export default ({
               escolaInstituicao={escolaInstituicao}
               quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
               periodoSelecionado={periodoSelecionado}
+              periodosEscolaCemeiComAlunosEmei={
+                periodosEscolaCemeiComAlunosEmei
+              }
+              tiposAlimentacao={tiposAlimentacaoPeriodosEmei(nomePeriodo)}
+              uuidPeriodoEscolar={uuidPeriodoEscolar(nomePeriodo)}
             />
           ))}
           <div className="mt-4">

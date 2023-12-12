@@ -6,7 +6,13 @@ import {
   EscolasComPermissoesLancamentosEspeciaisInterface,
   PermissaoLancamentosEspeciaisInterface,
 } from "interfaces/medicao_inicial.interface";
-import { DocumentosRecebimento } from "./pre_recebimento.interface";
+import {
+  DocumentosRecebimento,
+  DocumentosRecebimentoDashboard,
+  DocumentosRecebimentoDetalhado,
+  DocumentosRecebimentoParaAnalise,
+  FichaTecnica,
+} from "./pre_recebimento.interface";
 
 export interface ResponseInterface {
   data: Object;
@@ -58,4 +64,39 @@ export interface ResponseDocumentosRecebimento extends ResponseInterface {
     previous: string | null;
     results: DocumentosRecebimento[];
   };
+}
+
+export interface ResponseDocumentosRecebimentoDetalhado
+  extends ResponseInterface {
+  data: DocumentosRecebimentoDetalhado;
+}
+
+export interface ResponseDocumentosRecebimentoDashboard
+  extends ResponseInterface {
+  data: {
+    results: Array<{
+      status: string;
+      dados: Array<DocumentosRecebimentoDashboard>;
+    }>;
+  };
+}
+
+export interface ResponseDocumentosPorStatusDashboard
+  extends ResponseInterface {
+  data: {
+    results: {
+      status: string;
+      dados: Array<DocumentosRecebimentoDashboard>;
+      total: number;
+    };
+  };
+}
+
+export interface ResponseDocumentosRecebimentoParaAnalise
+  extends ResponseInterface {
+  data: DocumentosRecebimentoParaAnalise;
+}
+
+export interface ResponseFichaTecnica extends ResponseInterface {
+  data: FichaTecnica;
 }

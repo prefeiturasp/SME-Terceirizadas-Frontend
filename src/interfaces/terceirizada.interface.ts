@@ -42,3 +42,21 @@ export interface TerceirizadaInterface {
   nome_fantasia: string;
   uuid: string;
 }
+
+export interface TerceirizadaComEnderecoInterface
+  extends TerceirizadaInterface {
+  endereco: string;
+  numero: string;
+  complemento: string;
+  bairro: string;
+  cep: string;
+  cidade: string;
+  estado: string;
+  responsavel_email: string;
+  responsavel_telefone: string;
+}
+
+export interface TerceirizadaSimplesInterface {
+  uuid: string;
+  razao_social: string;
+}

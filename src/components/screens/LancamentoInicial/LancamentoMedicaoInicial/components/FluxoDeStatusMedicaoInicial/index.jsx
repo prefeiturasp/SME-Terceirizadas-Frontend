@@ -2,7 +2,7 @@ import React from "react";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoMedicaoInicial } from "components/Shareable/FluxoDeStatus/helper";
 
-export default ({ solicitacaoMedicaoInicial }) => {
+export const FluxoDeStatusMedicaoInicial = ({ solicitacaoMedicaoInicial }) => {
   const logs = () => {
     if (solicitacaoMedicaoInicial && solicitacaoMedicaoInicial.logs.length) {
       if (

@@ -92,7 +92,10 @@ const PainelInicial = ({ history }) => {
               (usuarioEhEscolaTerceirizada() ||
                 usuarioEhEscolaTerceirizadaDiretor()) &&
                 history.push("/lancamento-inicial/lancamento-medicao-inicial");
-              (usuarioEhDRE() || usuarioEhMedicao()) &&
+              (usuarioEhDRE() ||
+                usuarioEhMedicao() ||
+                usuarioEhCODAEGestaoAlimentacao() ||
+                usuarioEhCODAENutriManifestacao()) &&
                 history.push(
                   `/medicao-inicial/${ACOMPANHAMENTO_DE_LANCAMENTOS}`
                 );

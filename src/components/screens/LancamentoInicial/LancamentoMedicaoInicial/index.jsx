@@ -8,9 +8,12 @@ import { CaretDownOutlined } from "@ant-design/icons";
 
 import InformacoesEscola from "./components/InformacoesEscola";
 import InformacoesMedicaoInicial from "./components/InformacoesMedicaoInicial";
-import FluxoDeStatusMedicaoInicial from "./components/FluxoDeStatusMedicaoInicial";
 import LancamentoPorPeriodo from "./components/LancamentoPorPeriodo";
 import Ocorrencias from "./components/Ocorrencias";
+import { FluxoDeStatusMedicaoInicial } from "./components/FluxoDeStatusMedicaoInicial";
+import { InformacoesMedicaoInicialCEI } from "./components/InformacoesMedicaoInicialCEI";
+import { LancamentoPorPeriodoCEI } from "./components/LancamentoPorPeriodoCEI";
+import { toastError } from "../../../Shareable/Toast/dialogs";
 
 import {
   DETALHAMENTO_DO_LANCAMENTO,
@@ -20,16 +23,17 @@ import * as perfilService from "services/perfil.service";
 import { getEscolaSimples } from "services/escola.service";
 import { getPanoramaEscola } from "services/dietaEspecial.service";
 import {
+  getPeriodosEscolaCemeiComAlunosEmei,
   getSolicitacaoMedicaoInicial,
   getSolicitacoesLancadas,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getDiasCalendario } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
-import { ehEscolaTipoCEI } from "../../../../helpers/utilities";
+import {
+  ehEscolaTipoCEI,
+  ehEscolaTipoCEMEI,
+} from "../../../../helpers/utilities";
 import "./styles.scss";
-import InformacoesMedicaoInicialCEI from "./components/InformacoesMedicaoInicialCEI";
-import LancamentoPorPeriodoCEI from "./components/LancamentoPorPeriodoCEI";
-import { toastError } from "../../../Shareable/Toast/dialogs";
 
 export default () => {
   const [ano, setAno] = useState(null);
@@ -41,6 +45,10 @@ export default () => {
   const [escolaInstituicao, setEscolaInstituicao] = useState(null);
   const [loteEscolaSimples, setLoteEscolaSimples] = useState(null);
   const [periodosEscolaSimples, setPeriodosEscolaSimples] = useState(null);
+  const [
+    periodosEscolaCemeiComAlunosEmei,
+    setPeriodosEscolaCemeiComAlunosEmei,
+  ] = useState(null);
   const [solicitacaoMedicaoInicial, setSolicitacaoMedicaoInicial] =
     useState(null);
   const [periodoFromSearchParam, setPeriodoFromSearchParam] = useState(null);
@@ -164,6 +172,20 @@ export default () => {
           " / " +
           getYear(dataFromSearch).toString();
         setPeriodoFromSearchParam(periodoFromSearch);
+      }
+
+      if (ehEscolaTipoCEMEI(escola)) {
+        const payload = {
+          mes,
+          ano,
+        };
+
+        const response = await getPeriodosEscolaCemeiComAlunosEmei(payload);
+        if (response.status === HTTP_STATUS.OK) {
+          setPeriodosEscolaCemeiComAlunosEmei(response.data.results);
+        } else {
+          toastError("Erro ao obter períodos com alunos EMEI");
+        }
       }
 
       const periodoInicialSelecionado = !location.search
@@ -299,7 +321,8 @@ export default () => {
         </div>
         {loadingSolicitacaoMedInicial ? (
           <Skeleton paragraph={false} active />
-        ) : ehEscolaTipoCEI(escolaInstituicao) ? (
+        ) : ehEscolaTipoCEI(escolaInstituicao) ||
+          ehEscolaTipoCEMEI(escolaInstituicao) ? (
           <InformacoesMedicaoInicialCEI
             periodoSelecionado={periodoSelecionado}
             escolaInstituicao={escolaInstituicao}
@@ -344,7 +367,8 @@ export default () => {
             ano &&
             periodosEscolaSimples &&
             !loadingSolicitacaoMedInicial &&
-            (ehEscolaTipoCEI(escolaInstituicao) ? (
+            (ehEscolaTipoCEI(escolaInstituicao) ||
+            ehEscolaTipoCEMEI(escolaInstituicao) ? (
               <LancamentoPorPeriodoCEI
                 panoramaGeral={panoramaGeral}
                 mes={mes}
@@ -352,6 +376,9 @@ export default () => {
                 periodoSelecionado={periodoSelecionado}
                 escolaInstituicao={escolaInstituicao}
                 periodosEscolaSimples={periodosEscolaSimples}
+                periodosEscolaCemeiComAlunosEmei={
+                  periodosEscolaCemeiComAlunosEmei
+                }
                 solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
                 onClickInfoBasicas={onClickInfoBasicas}
                 setLoadingSolicitacaoMedicaoInicial={(value) =>

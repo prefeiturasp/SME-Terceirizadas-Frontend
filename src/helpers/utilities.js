@@ -507,6 +507,13 @@ export const usuarioComAcessoAoPainelEmbalagens = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioComAcessoAoPainelDocumentos = () => {
+  return [
+    PERFIL.DILOG_QUALIDADE,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhLogistica = () => {
   return [
     PERFIL.COORDENADOR_LOGISTICA,
@@ -690,6 +697,13 @@ export const acessoModuloMedicaoInicialDRE = () => {
   return (
     localStorage.getItem("possui_escolas_com_acesso_ao_medicao_inicial") ===
     "true"
+  );
+};
+
+export const acessoModuloMedicaoInicialCODAE = () => {
+  return (
+    localStorage.getItem("acesso_modulo_medicao_inicial") === "true" &&
+    (usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAENutriManifestacao())
   );
 };
 
@@ -969,7 +983,9 @@ export const exibirModuloMedicaoInicial = () => {
       ((usuarioEhEscolaTerceirizada() ||
         usuarioEhEscolaTerceirizadaDiretor()) &&
         !usuarioEscolaEhGestaoDireta()) ||
-      usuarioEhMedicao()
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao()
     );
 
   switch (localStorage.getItem("tipo_perfil")) {
@@ -979,6 +995,9 @@ export const exibirModuloMedicaoInicial = () => {
       return acessoModuloMedicaoInicialDRE();
     case `"medicao"`:
       return true;
+    case `"nutricao_manifestacao"`:
+    case `"gestao_alimentacao_terceirizada"`:
+      return acessoModuloMedicaoInicialCODAE();
     default:
       return false;
   }
@@ -1106,4 +1125,12 @@ export const formataMesNome = (mes) => {
 
 export const ehFimDeSemana = (dateObj) => {
   return dateObj.getDay() % 6 === 0;
+};
+
+export const getISOLocalDatetimeString = () => {
+  const date = new Date();
+  const isoDateTime = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60000
+  ).toISOString();
+  return isoDateTime;
 };

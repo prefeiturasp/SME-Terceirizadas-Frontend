@@ -1,0 +1,49 @@
+.accordionComponent > .card {
+  border-radius: 5px !important;
+}
+
+.accordionComponent > .card > .card-header {
+  border-radius: 5px !important;
+  margin-bottom: 0 !important;
+  background-color: #fff;
+}
+
+.accordionComponent .card-header,
+.accordionComponent .card-body {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header {
+  height: 50px;
+  border-left: #198459 solid 8px;
+
+  .card-header-content {
+    height: 100%;
+    align-content: center;
+    justify-content: space-between;
+    color: #42474a;
+
+    .flex {
+      display: flex;
+    }
+
+    .texto-obrigatorio {
+      font-size: 12px;
+      margin: auto 0;
+      color: #686868;
+      font-weight: normal;
+    }
+
+    .titulo {
+      margin: auto 0;
+    }
+  }
+}
+
+.span-icone-toogle {
+  color: #42474a;
+}
+
+.card {
+  overflow: visible;
+}
