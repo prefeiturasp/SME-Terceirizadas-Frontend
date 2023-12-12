@@ -30,7 +30,7 @@ const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
             component={InputText}
             label="Componentes do Produto"
             name={`componentes_produto`}
-            placeholder="Digite o Número do Registro do Órgão Competente"
+            placeholder="Digite todos os componentes utilizados na composição do produto"
             className="input-ficha-tecnica"
             required
             validate={required}
