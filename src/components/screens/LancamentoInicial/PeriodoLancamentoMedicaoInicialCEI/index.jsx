@@ -1827,14 +1827,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                               String(
                                                                 inclusao.dia
                                                               )
-                                                          ) &&
-                                                          inclusoesAutorizadas.find(
-                                                            (inclusao) =>
-                                                              column.dia ===
-                                                              String(
-                                                                inclusao.dia
-                                                              )
-                                                          ).numero_alunos
+                                                          )?.numero_alunos
                                                         }
                                                         exibeTooltipSuspensoesAutorizadas={exibirTooltipSuspensoesAutorizadas(
                                                           formValuesAtualizados,
