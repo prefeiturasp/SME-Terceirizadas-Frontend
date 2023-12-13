@@ -107,6 +107,7 @@ export default () => {
             inicioResultado={inicioResultado}
             armazens={armazens}
           />
+
           {meusDados && podeCadastrar(meusDados.vinculo_atual.perfil.nome) && (
             <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}`}>
               <Botao
@@ -119,6 +120,7 @@ export default () => {
           )}
           {cronogramas && (
             <>
+              <hr />
               <ListagemCronogramas
                 cronogramas={cronogramas}
                 ativos={ativos}
