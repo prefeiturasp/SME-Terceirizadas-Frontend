@@ -29,6 +29,7 @@ import { downloadAndConvertToBase64 } from "../../../../../Shareable/Input/Input
 import { atualizacaoLayoutEmbalagem } from "../../../../../../services/layoutEmbalagem.service";
 import ModalAtualizar from "./components/ModalAtualizar";
 import InserirArquivo from "../InserirArquivo";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 
 const TITULOS_SECOES_TIPOS_EMBALAGENS = {
   PRIMARIA: "Embalagem Primária",
@@ -463,6 +464,11 @@ export default ({ atualizar }) => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-corrigir-layout-embalagem">
         <div className="card-body">
+          {objeto.logs && (
+            <div className="row my-4">
+              <FluxoDeStatusPreRecebimento listaDeStatus={objeto.logs} />
+            </div>
+          )}
           <div className="subtitulo mb-3">Dados do Produto</div>
           <div className="row mt-3">
             <div className="col-4">
