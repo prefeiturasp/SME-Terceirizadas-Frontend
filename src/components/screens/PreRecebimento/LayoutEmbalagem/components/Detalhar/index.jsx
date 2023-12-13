@@ -26,6 +26,7 @@ import {
   toastSuccess,
 } from "../../../../../Shareable/Toast/dialogs";
 import { usuarioComAcessoAoPainelEmbalagens } from "../../../../../../helpers/utilities";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 
 export default ({ analise }) => {
   const history = useHistory();
@@ -289,6 +290,11 @@ export default ({ analise }) => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-detalhar-layout-embalagem">
         <div className="card-body">
+          {objeto.logs && (
+            <div className="row my-4">
+              <FluxoDeStatusPreRecebimento listaDeStatus={objeto.logs} />
+            </div>
+          )}
           <div className="subtitulo mb-3">Dados do Produto</div>
           <div className="row mt-3">
             <div className="col-4">

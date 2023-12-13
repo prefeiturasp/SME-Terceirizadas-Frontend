@@ -21,11 +21,15 @@ export const tipoDeStatusClasse = (status: LogSolicitacoesUsuarioSimples) => {
     case "Documento enviado para análise":
     case "Documento aprovado":
     case "Documento correção realizada":
+    case "Layout enviado para análise":
+    case "Layout aprovado":
+    case "Layout correção realizada":
       return "active";
 
     case "Solicitada Alteração":
     case "Alteração CODAE":
     case "Documento enviado para correção":
+    case "Layout solicitado correção":
       return "questioned";
 
     case "Reprovado DILOG":
@@ -44,6 +48,10 @@ export const tituloItem = (statusEventoExplicacao: string): string => {
     "Documento correção realizada": "Enviado para Análise",
     "Documento enviado para correção": "Enviado para Correção",
     "Documento aprovado": "Aprovado",
+    "Layout enviado para análise": "Enviado para Análise",
+    "Layout solicitado correção": "Solicitado Correção",
+    "Layout correção realizada": "Enviado para Análise",
+    "Layout aprovado": "Aprovado",
   };
 
   return statusMap[statusEventoExplicacao] || statusEventoExplicacao;
