@@ -1820,6 +1820,15 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           categoria,
                                                           inclusoesAutorizadas
                                                         )}
+                                                        numeroDeInclusoesAutorizadas={
+                                                          inclusoesAutorizadas.find(
+                                                            (inclusao) =>
+                                                              column.dia ===
+                                                              String(
+                                                                inclusao.dia
+                                                              )
+                                                          )?.numero_alunos
+                                                        }
                                                         exibeTooltipSuspensoesAutorizadas={exibirTooltipSuspensoesAutorizadas(
                                                           formValuesAtualizados,
                                                           row,

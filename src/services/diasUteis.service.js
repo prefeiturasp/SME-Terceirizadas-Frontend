@@ -19,3 +19,7 @@ export const getFeriadosAno = async () => {
     return data;
   }
 };
+
+export const getFeriadosAnoAtualEProximo = async () => {
+  return await axios.get(`/feriados-ano/ano-atual-e-proximo/`);
+};

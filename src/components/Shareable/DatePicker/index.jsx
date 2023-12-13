@@ -109,6 +109,7 @@ export class InputComData extends Component {
       writable,
       usarDirty,
       excludeDates,
+      filterDate,
     } = this.props;
     return (
       <div className="datepicker">
@@ -170,6 +171,7 @@ export class InputComData extends Component {
             name={name}
             popperPlacement={popperPlacement || undefined}
             excludeDates={excludeDates}
+            filterDate={filterDate}
           />
           {hasIcon && (
             <i onClick={this.openDatepicker} className="fas fa-calendar-alt" />

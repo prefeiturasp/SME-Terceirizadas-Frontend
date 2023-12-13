@@ -788,7 +788,7 @@ export const validacoesTabelasDietas = (
     return "Frequência acima inválida ou não preenchida.";
   } else if (
     inputName.includes("frequencia") &&
-    !location.state.periodo.includes("INTEGRAL") &&
+    !location.state.periodo?.includes("INTEGRAL") &&
     categoria !== idCategoriaAlimentacao &&
     value &&
     totalLanchesDieta &&

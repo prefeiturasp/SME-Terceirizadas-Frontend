@@ -18,18 +18,13 @@ export const tipoDeStatusClasse = (status: LogSolicitacoesUsuarioSimples) => {
     case "Aprovado CODAE":
     case "Alteração enviada ao fornecedor":
     case "Fornecedor Ciente":
-    case "Documento enviado para análise":
-    case "Documento aprovado":
-    case "Documento correção realizada":
-    case "Layout enviado para análise":
-    case "Layout aprovado":
-    case "Layout correção realizada":
+    case "Enviado para Análise":
+    case "Aprovado":
       return "active";
 
     case "Solicitada Alteração":
     case "Alteração CODAE":
-    case "Documento enviado para correção":
-    case "Layout solicitado correção":
+    case "Enviado para Correção":
       return "questioned";
 
     case "Reprovado DILOG":
@@ -40,19 +35,4 @@ export const tipoDeStatusClasse = (status: LogSolicitacoesUsuarioSimples) => {
     default:
       return "pending";
   }
-};
-
-export const tituloItem = (statusEventoExplicacao: string): string => {
-  const statusMap = {
-    "Documento enviado para análise": "Enviado para Análise",
-    "Documento correção realizada": "Enviado para Análise",
-    "Documento enviado para correção": "Enviado para Correção",
-    "Documento aprovado": "Aprovado",
-    "Layout enviado para análise": "Enviado para Análise",
-    "Layout solicitado correção": "Solicitado Correção",
-    "Layout correção realizada": "Enviado para Análise",
-    "Layout aprovado": "Aprovado",
-  };
-
-  return statusMap[statusEventoExplicacao] || statusEventoExplicacao;
 };

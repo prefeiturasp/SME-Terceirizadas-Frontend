@@ -10,6 +10,7 @@ import {
   ResponseDocumentosRecebimentoDashboard,
   ResponseDocumentosRecebimentoDetalhado,
   ResponseDocumentosRecebimentoParaAnalise,
+  ResponseDownloadArquivoLaudoAssinado,
 } from "interfaces/responses.interface";
 import { FiltrosDashboardDocumentos } from "interfaces/pre_recebimento.interface";
 
@@ -69,4 +70,12 @@ export const corrigirDocumentoRecebimento = async (
   await axios.patch(
     `/documentos-de-recebimento/${uuid}/corrigir-documentos/`,
     payload
+  );
+
+export const downloadArquivoLaudoAssinado = async (
+  uuid: string
+): Promise<ResponseDownloadArquivoLaudoAssinado> =>
+  await axios.get(
+    `/documentos-de-recebimento/${uuid}/download-laudo-assinado/`,
+    { responseType: "blob" }
   );

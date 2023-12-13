@@ -21,7 +21,7 @@ export default () => {
     exibirModuloMedicaoInicial() && (
       <Menu
         id="LancamentoInicial"
-        icon="fas fa-pencil-alt"
+        icon="fas fa-tachometer-alt"
         title={"Medição Inicial"}
       >
         {(usuarioEhEscolaTerceirizada() ||

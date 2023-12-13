@@ -37,9 +37,16 @@ export class CardPendenteAcao extends Component {
 
     const novoPedidosFiltrados = pedidosFiltrados.map((pedido, index) => {
       if (index === idxPedido) {
-        const solicitacaoSimilar =
-          pedido.solicitacoes_similares[idxSolicitacaoSimilar];
-        solicitacaoSimilar.collapsed = !solicitacaoSimilar.collapsed;
+        pedido.solicitacoes_similares = pedido.solicitacoes_similares.map(
+          (solicitacaoSimilar, i) => {
+            if (i === idxSolicitacaoSimilar) {
+              solicitacaoSimilar.collapsed = !solicitacaoSimilar.collapsed;
+            } else {
+              solicitacaoSimilar.collapsed = false;
+            }
+            return solicitacaoSimilar;
+          }
+        );
       }
       return pedido;
     });

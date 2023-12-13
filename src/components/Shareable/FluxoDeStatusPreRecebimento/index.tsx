@@ -4,7 +4,7 @@ import {
 } from "configs/constants";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { tipoDeStatusClasse, tituloItem } from "./helper";
+import { tipoDeStatusClasse } from "./helper";
 import { validate } from "uuid";
 import "./style.scss";
 import { LogSolicitacoesUsuarioSimples } from "interfaces/dados_comuns.interface";
@@ -70,7 +70,7 @@ export const FluxoDeStatusPreRecebimento = ({
     <div className="w-100">
       <ul className={`progressbar-titles fluxos`}>
         {listaDeStatus.map((status, key) => (
-          <li key={key}>{tituloItem(status.status_evento_explicacao)}</li>
+          <li key={key}>{status.status_evento_explicacao}</li>
         ))}
       </ul>
       <ul className="progressbar-dados">
