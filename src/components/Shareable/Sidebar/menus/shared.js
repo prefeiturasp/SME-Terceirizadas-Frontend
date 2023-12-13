@@ -51,6 +51,10 @@ export const Menu = ({ id, title, icon, children }) => (
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
+        const otherElements = document.querySelectorAll(".collapse.show");
+        otherElements.forEach(element => {
+          element.classList.toggle("show");
+        });
         const currentElement = document.querySelector(`#collapse${id}`);
         currentElement.classList.toggle("show");
       }}
