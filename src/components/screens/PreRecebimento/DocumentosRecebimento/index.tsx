@@ -64,7 +64,7 @@ export default () => {
               </div>
             ) : (
               <>
-                <Listagem objetos={documentos} />
+                <Listagem objetos={documentos} setCarregando={setCarregando} />
                 <div className="row">
                   <div className="col">
                     <Paginacao
