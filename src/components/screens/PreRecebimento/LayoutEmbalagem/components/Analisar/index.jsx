@@ -43,10 +43,10 @@ export default () => {
     false,
   ]);
 
-  useEffect(() => {
+  useEffect(async () => {
     setCarregando(true);
 
-    carregarDados();
+    await carregarDados();
 
     setCarregando(false);
   }, []);

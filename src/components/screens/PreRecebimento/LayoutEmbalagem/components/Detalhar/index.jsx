@@ -247,10 +247,10 @@ export default ({ analise }) => {
     aprovacoes[1] !== undefined &&
     (embalagemTerciaria.length === 0 || aprovacoes[2] !== undefined);
 
-  useEffect(() => {
+  useEffect(async () => {
     setCarregando(true);
 
-    carregarDados();
+    await carregarDados();
 
     setCarregando(false);
   }, []);
