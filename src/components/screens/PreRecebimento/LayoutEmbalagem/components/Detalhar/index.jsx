@@ -52,6 +52,7 @@ export default ({ analise }) => {
     history.push(`/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`);
 
   const carregarDados = async () => {
+    setCarregando(true);
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     const response = await detalharLayoutEmabalagem(uuid);
@@ -74,6 +75,7 @@ export default ({ analise }) => {
     setEmbalagemPrimaria(obterImagensEmbalagem(response, "PRIMARIA"));
     setEmbalagemSecundaria(obterImagensEmbalagem(response, "SECUNDARIA"));
     setEmbalagemTerciaria(obterImagensEmbalagem(response, "TERCIARIA"));
+    setCarregando(false);
   };
 
   const obterImagensEmbalagem = (response, tipo_embalagem) => {
@@ -247,10 +249,10 @@ export default ({ analise }) => {
     aprovacoes[1] !== undefined &&
     (embalagemTerciaria.length === 0 || aprovacoes[2] !== undefined);
 
-  useEffect(async () => {
+  useEffect(() => {
     setCarregando(true);
 
-    await carregarDados();
+    carregarDados();
 
     setCarregando(false);
   }, []);
