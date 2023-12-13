@@ -1519,7 +1519,7 @@ export default () => {
           !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
           !ehGrupoETECUrlParam &&
           grupoLocation !== "Programas e Projetos"
-            ? tipoAlimentacao.uuid
+            ? tipoAlimentacao?.uuid || ""
             : "",
       });
     });
@@ -2463,7 +2463,7 @@ export default () => {
                                               >
                                                 <div
                                                   className={`nome-linha${
-                                                    alimentacoesLancamentosEspeciais.includes(
+                                                    alimentacoesLancamentosEspeciais?.includes(
                                                       row.name
                                                     )
                                                       ? " input-alimentacao-permissao-lancamento-especial"
@@ -2487,7 +2487,7 @@ export default () => {
                                                         ? "input-habilitado-observacoes"
                                                         : "input-habilitado"
                                                     }${
-                                                      alimentacoesLancamentosEspeciais.includes(
+                                                      alimentacoesLancamentosEspeciais?.includes(
                                                         row.name
                                                       )
                                                         ? " input-alimentacao-permissao-lancamento-especial"
