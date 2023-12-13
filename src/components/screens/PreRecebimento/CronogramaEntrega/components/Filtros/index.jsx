@@ -96,7 +96,6 @@ export default ({
                   name="status"
                   multiple
                   nomeDoItemNoPlural="status"
-                  pluralFeminino
                   options={montarOptionsStatus()}
                 />
               </div>
