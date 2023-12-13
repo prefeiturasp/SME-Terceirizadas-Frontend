@@ -25,6 +25,7 @@ export const tipoDeStatusClasse = (status: LogSolicitacoesUsuarioSimples) => {
     case "Solicitada Alteração":
     case "Alteração CODAE":
     case "Enviado para Correção":
+    case "Solicitado Correção":
       return "questioned";
 
     case "Reprovado DILOG":
