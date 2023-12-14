@@ -53,6 +53,7 @@ export const InputText = (props) => {
     exibeTooltipSuspensaoAutorizadaFrequenciaDreCodae,
     exibeTooltipSuspensaoAutorizadaAlimentacaoDreCodae,
     exibeTooltipInclusoesAutorizadasComZero,
+    exibeTooltipDietasInclusaoDiaNaoLetivoCEI,
   } = props;
 
   let msgTooltip = "";
@@ -286,6 +287,16 @@ export const InputText = (props) => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
+      {exibeTooltipDietasInclusaoDiaNaoLetivoCEI && (
+        <Tooltip
+          title={
+            "Existe autorização para o Lançamento de Dietas Especiais para o dia. Justifique a ausência do apontamento!"
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+
       {exibeTooltipInclusaoAlimentacaoAutorizadaDreCodae && (
         <Tooltip title={"Foi autorizada inclusão de alimentações neste dia."}>
           <i className="fas fa-info icone-info-success" />
@@ -333,6 +344,7 @@ export const InputText = (props) => {
             exibeTooltipLancheEmergTabelaEtec ||
             exibeTooltipInclusoesAutorizadasComZero ||
             exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero ||
+            exibeTooltipDietasInclusaoDiaNaoLetivoCEI ||
             (exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI &&
               !input.value) ||
             exibeTooltipSuspensoesAutorizadasCEI)

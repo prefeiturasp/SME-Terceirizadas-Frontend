@@ -51,6 +51,7 @@ import {
   frequenciaComSuspensaoAutorizadaPreenchida,
   campoComInclusaoAutorizadaValorZeroESemObservacao,
   exibirTooltipErroQtdMaiorQueAutorizado,
+  exibirTooltipDietasInclusaoDiaNaoLetivoCEI,
 } from "./validacoes";
 import {
   categoriasParaExibir,
@@ -1413,6 +1414,11 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       dadosValoresInclusoesAutorizadasState
         ? ""
         : !validacaoDiaLetivo(column.dia) &&
+          !inclusoesAutorizadas.some(
+            (inclusao) =>
+              parseInt(column.dia) === parseInt(inclusao.dia) &&
+              row.name === "frequencia"
+          ) &&
           !ehDiaParaCorrigir(column.dia, categoria.id, diasParaCorrecao)
         ? "nao-eh-dia-letivo"
         : ""
@@ -1929,6 +1935,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                         defaultValue={defaultValue(
                                                           column,
                                                           row
+                                                        )}
+                                                        exibeTooltipDietasInclusaoDiaNaoLetivoCEI={exibirTooltipDietasInclusaoDiaNaoLetivoCEI(
+                                                          inclusoesAutorizadas,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          formValuesAtualizados
                                                         )}
                                                         exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI={exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI(
                                                           inclusoesAutorizadas,

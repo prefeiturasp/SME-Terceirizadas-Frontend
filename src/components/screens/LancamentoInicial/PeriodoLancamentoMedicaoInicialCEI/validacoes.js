@@ -529,6 +529,37 @@ export const validarCamposComInclusoesDeAlimentacaoSemObservacao = (
   }
 };
 
+export const exibirTooltipDietasInclusaoDiaNaoLetivoCEI = (
+  inclusoesAutorizadas,
+  row,
+  column,
+  categoria,
+  formValuesAtualizados
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  const numDietas =
+    formValuesAtualizados[
+      `dietas_autorizadas__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    categoria.nome !== "ALIMENTAÇÃO" &&
+    row.name === "frequencia" &&
+    Number(numDietas) > 0 &&
+    !value &&
+    inclusoesAutorizadas.some(
+      (inclusao) => parseInt(inclusao.dia) === parseInt(column.dia)
+    ) &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ]
+  );
+};
+
 export const exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI = (
   inclusoesAutorizadas,
   row,
