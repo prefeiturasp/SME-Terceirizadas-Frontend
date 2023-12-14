@@ -19,6 +19,8 @@ import {
   usuarioEhAdministradorNutriCODAE,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCoordenadorNutriCODAE,
+  usuarioEscolaEhGestaoDireta,
+  usuarioEscolaEhGestaoParceira,
 } from "helpers/utilities";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
@@ -32,9 +34,14 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhEscolaTerceirizada() ||
     usuarioEhMedicao() ||
     usuarioEhEmpresaTerceirizada() ||
-    usuarioEhNutricionistaSupervisao();
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEscolaEhGestaoDireta() ||
+    usuarioEscolaEhGestaoParceira();
   const exibeNovaSolicitacao =
-    usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
+    usuarioEhEscolaTerceirizadaDiretor() ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEscolaEhGestaoDireta() ||
+    usuarioEscolaEhGestaoParceira();
   const exibeConsultaDieta =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -42,8 +49,12 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhEscolaTerceirizada() ||
-    usuarioEhDRE();
-  usuarioEhMedicao() || usuarioEhCODAEDietaEspecial() || usuarioEhDRE();
+    usuarioEhDRE() ||
+    usuarioEhMedicao() ||
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhDRE() ||
+    usuarioEscolaEhGestaoDireta() ||
+    usuarioEscolaEhGestaoParceira();
   const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
   const exibeRelatorioDietasEspeciais =
     usuarioEhEmpresaTerceirizada() ||
@@ -81,7 +92,9 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
         </LeafItem>
       )}
       {(usuarioEhEscolaTerceirizadaDiretor() ||
-        usuarioEhEscolaTerceirizada()) && (
+        usuarioEhEscolaTerceirizada() ||
+        usuarioEscolaEhGestaoDireta() ||
+        usuarioEscolaEhGestaoParceira()) && (
         <LeafItem to={`/${DIETA_ESPECIAL}/${CANCELAMENTO}`}>
           Cancel. Dieta Especial
         </LeafItem>

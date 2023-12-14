@@ -8,6 +8,8 @@ import {
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhEmpresaTerceirizada,
   usuarioEhEscolaTerceirizada,
+  usuarioEscolaEhGestaoDireta,
+  usuarioEscolaEhGestaoParceira,
 } from "helpers/utilities";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import { getMeusLotes } from "services/lote.service";
@@ -66,7 +68,10 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     !inativasTemporariamente;
 
   const EXIBE_ATALHOS_SOLICITACOES =
-    usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
+    usuarioEhEscolaTerceirizadaDiretor() ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEscolaEhGestaoDireta() ||
+    usuarioEscolaEhGestaoParceira();
 
   const getSolicitacoesAsync = async (params = null) => {
     setLoading(true);
