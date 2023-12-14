@@ -20,4 +20,17 @@
       align-items: center;
     }
   }
+
+  .botoes {
+    display: flex;
+    justify-content: space-between;
+
+    .botao-cadastrar {
+      align-self: flex-start;
+    }
+
+    .botoes-form {
+      align-self: flex-end;
+    }
+  }
 }
