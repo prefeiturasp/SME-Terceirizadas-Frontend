@@ -177,6 +177,9 @@ export const desabilitarField = (
         );
       if (resultado)
         return (
+          !values[
+            `dietas_autorizadas__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+          ] ||
           Number(
             values[
               `dietas_autorizadas__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
