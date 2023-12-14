@@ -52,6 +52,7 @@ import {
   campoComInclusaoAutorizadaValorZeroESemObservacao,
   exibirTooltipErroQtdMaiorQueAutorizado,
   exibirTooltipDietasInclusaoDiaNaoLetivoCEI,
+  campoDietaComInclusaoAutorizadaSemObservacao,
 } from "./validacoes";
 import {
   categoriasParaExibir,
@@ -1285,6 +1286,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       setDisableBotaoSalvarLancamentos(true);
       setExibirTooltip(true);
     }
+    if (
+      !ehEmeiDaCemeiLocation &&
+      campoDietaComInclusaoAutorizadaSemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        inclusoesAutorizadas,
+        logQtdDietasAutorizadasCEI
+      )
+    ) {
+      setDisableBotaoSalvarLancamentos(true);
+      setExibirTooltip(true);
+    }
 
     if (
       deveExistirObservacao(
@@ -1711,6 +1725,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                         column,
                                                         categoria,
                                                         alteracoesAlimentacaoAutorizadas
+                                                      ) ||
+                                                      campoDietaComInclusaoAutorizadaSemObservacao(
+                                                        formValuesAtualizados,
+                                                        column,
+                                                        categoria,
+                                                        inclusoesAutorizadas,
+                                                        logQtdDietasAutorizadasCEI
                                                       ) ||
                                                       campoComInclusaoAutorizadaValorZeroESemObservacao(
                                                         formValuesAtualizados,
