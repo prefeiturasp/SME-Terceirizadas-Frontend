@@ -51,11 +51,11 @@ export const Menu = ({ id, title, icon, children }) => (
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        const otherElements = document.querySelectorAll(".collapse.show");
-        otherElements.forEach(element => {
-          element.classList.toggle("show");
-        });
         const currentElement = document.querySelector(`#collapse${id}`);
+        const otherElements = document.querySelectorAll(".show");
+        otherElements.forEach((element) => {
+          if (element !== currentElement) element.classList.remove("show");
+        });
         currentElement.classList.toggle("show");
       }}
     >
