@@ -152,14 +152,38 @@ export const desabilitarField = (
   ehEmeiDaCemeiLocation
 ) => {
   if (!ehEmeiDaCemeiLocation) {
-    const resultado = inclusoesAutorizadas.some(
-      (inclusao) =>
-        dia === String(inclusao.dia) &&
-        rowName === "frequencia" &&
-        inclusao.faixas_etarias.includes(uuidFaixaEtaria) &&
-        nomeCategoria === "ALIMENTAÇÃO"
-    );
-    if (resultado) return false;
+    if (nomeCategoria === "ALIMENTAÇÃO") {
+      if (validacaoDiaLetivo(dia)) {
+        const resultado = inclusoesAutorizadas.some(
+          (inclusao) =>
+            parseInt(dia) === parseInt(inclusao.dia) &&
+            rowName === "frequencia" &&
+            inclusao.faixas_etarias.includes(uuidFaixaEtaria)
+        );
+        if (resultado) return false;
+      } else {
+        const resultado = inclusoesAutorizadas.some(
+          (inclusao) =>
+            parseInt(dia) === parseInt(inclusao.dia) && rowName === "frequencia"
+        );
+        if (resultado) return false;
+      }
+    } else {
+      const resultado =
+        !validacaoDiaLetivo(dia) &&
+        inclusoesAutorizadas.some(
+          (inclusao) =>
+            parseInt(dia) === parseInt(inclusao.dia) && rowName === "frequencia"
+        );
+      if (resultado)
+        return (
+          Number(
+            values[
+              `dietas_autorizadas__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+            ]
+          ) === 0
+        );
+    }
   } else {
     const resultado = inclusoesAutorizadas.some(
       (inclusao) =>

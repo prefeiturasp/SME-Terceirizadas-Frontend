@@ -82,6 +82,49 @@ const campoComInclusaoSemObservacaoCEI = (
   return false;
 };
 
+export const campoDietaComInclusaoAutorizadaSemObservacao = (
+  formValuesAtualizados,
+  column,
+  categoria,
+  inclusoesAutorizadas,
+  logQtdDietasAutorizadasCEI
+) => {
+  let erro = false;
+  let uuidFaixasDietas = [];
+  logQtdDietasAutorizadasCEI &&
+    logQtdDietasAutorizadasCEI.forEach(
+      (log) =>
+        !uuidFaixasDietas.find((faixa) => faixa === log.faixa_etaria.uuid) &&
+        uuidFaixasDietas.push(log.faixa_etaria.uuid)
+    );
+  if (
+    categoria.nome !== "ALIMENTAÇÃO" &&
+    inclusoesAutorizadas &&
+    inclusoesAutorizadas.some(
+      (inclusao) => parseInt(column.dia) === parseInt(inclusao.dia)
+    ) &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ]
+  ) {
+    uuidFaixasDietas.forEach((uuidFaixa) => {
+      if (
+        Number(
+          formValuesAtualizados[
+            `dietas_autorizadas__faixa_${uuidFaixa}__dia_${column.dia}__categoria_${categoria.id}`
+          ]
+        ) > 0 &&
+        !formValuesAtualizados[
+          `frequencia__faixa_${uuidFaixa}__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) {
+        erro = true;
+      }
+    });
+  }
+  return erro;
+};
+
 export const campoComInclusaoAutorizadaValorZeroESemObservacao = (
   formValuesAtualizados,
   column,
@@ -527,6 +570,37 @@ export const validarCamposComInclusoesDeAlimentacaoSemObservacao = (
     setExibirTooltipAoSalvar(false);
     return false;
   }
+};
+
+export const exibirTooltipDietasInclusaoDiaNaoLetivoCEI = (
+  inclusoesAutorizadas,
+  row,
+  column,
+  categoria,
+  formValuesAtualizados
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  const numDietas =
+    formValuesAtualizados[
+      `dietas_autorizadas__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    categoria.nome !== "ALIMENTAÇÃO" &&
+    row.name === "frequencia" &&
+    Number(numDietas) > 0 &&
+    !value &&
+    inclusoesAutorizadas.some(
+      (inclusao) => parseInt(inclusao.dia) === parseInt(column.dia)
+    ) &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ]
+  );
 };
 
 export const exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI = (

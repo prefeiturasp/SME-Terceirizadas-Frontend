@@ -51,6 +51,8 @@ import {
   frequenciaComSuspensaoAutorizadaPreenchida,
   campoComInclusaoAutorizadaValorZeroESemObservacao,
   exibirTooltipErroQtdMaiorQueAutorizado,
+  exibirTooltipDietasInclusaoDiaNaoLetivoCEI,
+  campoDietaComInclusaoAutorizadaSemObservacao,
 } from "./validacoes";
 import {
   categoriasParaExibir,
@@ -1284,6 +1286,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       setDisableBotaoSalvarLancamentos(true);
       setExibirTooltip(true);
     }
+    if (
+      !ehEmeiDaCemeiLocation &&
+      campoDietaComInclusaoAutorizadaSemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        inclusoesAutorizadas,
+        logQtdDietasAutorizadasCEI
+      )
+    ) {
+      setDisableBotaoSalvarLancamentos(true);
+      setExibirTooltip(true);
+    }
 
     if (
       deveExistirObservacao(
@@ -1413,6 +1428,11 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       dadosValoresInclusoesAutorizadasState
         ? ""
         : !validacaoDiaLetivo(column.dia) &&
+          !inclusoesAutorizadas.some(
+            (inclusao) =>
+              parseInt(column.dia) === parseInt(inclusao.dia) &&
+              row.name === "frequencia"
+          ) &&
           !ehDiaParaCorrigir(column.dia, categoria.id, diasParaCorrecao)
         ? "nao-eh-dia-letivo"
         : ""
@@ -1706,6 +1726,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                         categoria,
                                                         alteracoesAlimentacaoAutorizadas
                                                       ) ||
+                                                      campoDietaComInclusaoAutorizadaSemObservacao(
+                                                        formValuesAtualizados,
+                                                        column,
+                                                        categoria,
+                                                        inclusoesAutorizadas,
+                                                        logQtdDietasAutorizadasCEI
+                                                      ) ||
                                                       campoComInclusaoAutorizadaValorZeroESemObservacao(
                                                         formValuesAtualizados,
                                                         column,
@@ -1929,6 +1956,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                         defaultValue={defaultValue(
                                                           column,
                                                           row
+                                                        )}
+                                                        exibeTooltipDietasInclusaoDiaNaoLetivoCEI={exibirTooltipDietasInclusaoDiaNaoLetivoCEI(
+                                                          inclusoesAutorizadas,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          formValuesAtualizados
                                                         )}
                                                         exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI={exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI(
                                                           inclusoesAutorizadas,
