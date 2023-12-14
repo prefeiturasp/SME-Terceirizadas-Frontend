@@ -15,6 +15,7 @@ import {
   usuarioEhEmpresaDistribuidora,
   usuarioComAcessoTelaEntregasDilog,
   usuarioEscolaEhGestaoDireta,
+  usuarioEscolaEhGestaoParceira,
   usuarioEhMedicao,
   exibirGA,
   usuarioEhDilogQualidadeOuCronograma,
@@ -71,7 +72,9 @@ export const SidebarContent = () => {
   // criterios de exibicao abaixo
   const exibeMenuValidandoAmbiente = exibirGA();
   const exibirPainelInicial =
-    !usuarioEhEscolaAbastecimento() &&
+    (!usuarioEhEscolaAbastecimento() ||
+      usuarioEscolaEhGestaoDireta() ||
+      usuarioEscolaEhGestaoParceira()) &&
     !usuarioEhEscolaAbastecimentoDiretor() &&
     !usuarioComAcessoTelaEntregasDilog() &&
     !usuarioEhLogistica() &&
@@ -95,7 +98,9 @@ export const SidebarContent = () => {
     usuarioEhEscolaTerceirizada() ||
     usuarioEhDRE() ||
     usuarioEhEmpresaTerceirizada() ||
-    usuarioEhMedicao();
+    usuarioEhMedicao() ||
+    usuarioEscolaEhGestaoDireta() ||
+    usuarioEscolaEhGestaoParceira();
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||

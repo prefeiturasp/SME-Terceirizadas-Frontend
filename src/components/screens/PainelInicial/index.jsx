@@ -23,6 +23,8 @@ import {
   usuarioEhEscolaAbastecimentoDiretor,
   exibirModuloMedicaoInicial,
   usuarioEhOrgaoFiscalizador,
+  usuarioEscolaEhGestaoDireta,
+  usuarioEscolaEhGestaoParceira,
 } from "helpers/utilities";
 import { ACOMPANHAMENTO_DE_LANCAMENTOS } from "configs/constants";
 
@@ -57,7 +59,9 @@ const PainelInicial = ({ history }) => {
         usuarioEhEmpresaTerceirizada() ||
         usuarioEhDRE() ||
         usuarioEhEscolaTerceirizadaDiretor() ||
-        usuarioEhEscolaTerceirizada()) && (
+        usuarioEhEscolaTerceirizada() ||
+        usuarioEscolaEhGestaoDireta() ||
+        usuarioEscolaEhGestaoParceira()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Dieta Especial"}
