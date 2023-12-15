@@ -26,13 +26,24 @@ import {
 } from "../../helpers";
 import "./style.scss";
 import { formataMotivosDiasComOutros } from "components/InclusaoDeAlimentacao/Relatorio/componentes/helper";
+import { ToggleExpandir } from "components/Shareable/ToggleExpandir";
+import { SolicitacoesSimilaresInclusao } from "components/Shareable/SolicitacoesSimilaresInclusao";
+import {
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhDRE,
+} from "helpers/utilities";
 
 export const CorpoRelatorio = ({
   solicitacao,
   vinculos,
   ehMotivoEspecifico,
+  solicitacoesSimilares,
 }) => {
   const [imprimindo, setImprimindo] = useState(false);
+
+  const [solicitacoesSimilaresState, setSolicitacoesSimilares] = useState(
+    solicitacoesSimilares
+  );
 
   const justificativaNegacao =
     solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs);
@@ -48,6 +59,19 @@ export const CorpoRelatorio = ({
       toastError("Houve um erro ao imprimir o relatório");
     }
     setImprimindo(false);
+  };
+
+  const collapseSolicitacaoSimilar = (idxSolicitacaoSimilar) => {
+    const novoSolicitacoesSimilares = solicitacoesSimilaresState.map(
+      (solicitacaoSimilar, index) => {
+        if (index === idxSolicitacaoSimilar) {
+          solicitacaoSimilar.collapsed = !solicitacaoSimilar.collapsed;
+        }
+        return solicitacaoSimilar;
+      }
+    );
+
+    setSolicitacoesSimilares(novoSolicitacoesSimilares);
   };
 
   return (
@@ -134,6 +158,45 @@ export const CorpoRelatorio = ({
         </div>
       )}
       <hr />
+      {(usuarioEhCODAEGestaoAlimentacao() || usuarioEhDRE()) &&
+        solicitacoesSimilaresState &&
+        solicitacoesSimilaresState.length > 0 && (
+          <>
+            {solicitacoesSimilaresState.map(
+              (inclusaoDeAlimentacao, idxSolicitacaoSimilar) => {
+                return (
+                  <>
+                    <div className="row" key={idxSolicitacaoSimilar}>
+                      <div className="col-2">
+                        <p>
+                          Solicitação Similar:
+                          <b className="gatilho-style">
+                            {`#${inclusaoDeAlimentacao.id_externo}`}
+                            <ToggleExpandir
+                              onClick={() =>
+                                collapseSolicitacaoSimilar(
+                                  idxSolicitacaoSimilar
+                                )
+                              }
+                              ativo={inclusaoDeAlimentacao.collapsed}
+                              className="icon-padding"
+                            />
+                          </b>
+                        </p>
+                      </div>
+                    </div>
+                    <SolicitacoesSimilaresInclusao
+                      key={idxSolicitacaoSimilar}
+                      solicitacao={inclusaoDeAlimentacao}
+                      index={idxSolicitacaoSimilar}
+                    />
+                  </>
+                );
+              }
+            )}
+            <hr />
+          </>
+        )}
       <p>
         <strong>Solicitação de Inclusão de Alimentação</strong>
       </p>
