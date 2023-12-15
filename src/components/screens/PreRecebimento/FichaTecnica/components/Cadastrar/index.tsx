@@ -388,11 +388,11 @@ export default () => {
                       Empresa ou Organização{" "}
                       <span className="verde-escuro">Proponente</span>
                     </span>,
-                    <span className="font-weight-bold" key={1}>
+                    <span className="fw-bold" key={1}>
                       Empresa ou Organização{" "}
                       <span className="verde-escuro">Fabricante</span>
                     </span>,
-                    <span className="font-weight-bold" key={1}>
+                    <span className="fw-bold" key={1}>
                       Detalhes do <span className="verde-escuro">Produto</span>
                     </span>,
                   ]}

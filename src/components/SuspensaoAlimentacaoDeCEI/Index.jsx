@@ -300,7 +300,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
             </div>
             <main className="card">
               <article className="card-body">
-                <header className="card-title font-weight-bold">
+                <header className="card-title fw-bold">
                   Descrição da Suspensão
                 </header>
                 <section className="section-motivo-data">

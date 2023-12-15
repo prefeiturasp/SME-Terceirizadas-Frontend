@@ -612,7 +612,7 @@ export default ({ naoEditavel = false }) => {
                   Laboratórios Credenciados
                 </div>
                 <div className="texto-laboratorios">
-                  <p className="font-weight-bold">Lembrete!</p>
+                  <p className="fw-bold">Lembrete!</p>
                   <p className="">
                     Verifique se o laboratório está credenciado em órgãos
                     oficiais (Ministério da Saúde, Ministério da Agricultura,

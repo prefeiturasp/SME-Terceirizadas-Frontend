@@ -415,7 +415,7 @@ export default ({ analiseSolicitacao }) => {
                       </>
                     )}
                     <div className="mt-4">
-                      <label className="label font-weight-normal">
+                      <label className="label fw-normal">
                         <span>* </span>Justificativa
                       </label>
                       <Field
@@ -476,7 +476,7 @@ export default ({ analiseSolicitacao }) => {
                               solicitacaoAlteracaoCronograma.status ===
                                 "Reprovado DINUTRE") && (
                               <>
-                                <label className="label font-weight-normal">
+                                <label className="label fw-normal">
                                   <span>* </span>Justificativa
                                 </label>
                                 <Field

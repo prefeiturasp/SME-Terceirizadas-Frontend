@@ -77,19 +77,19 @@ const TabelaDietas = ({ solicitacoes }) => {
                   <div className="row">
                     <div className="row col-lg-10 ms-0">
                       <div>
-                        <p className="font-weight-bold mb-0">
+                        <p className="fw-bold mb-0">
                           Quantidade Ativas <br />
                         </p>
                         {dados.ativas}
                       </div>
                       <div className="ps-4">
-                        <p className="font-weight-bold mb-0">
+                        <p className="fw-bold mb-0">
                           Classificação da Dieta Especial <br />
                         </p>
                         {dados.classificacao_dieta_ativa || "--"}
                       </div>
                       <div className="ps-4">
-                        <p className="font-weight-bold mb-0">
+                        <p className="fw-bold mb-0">
                           Quantidade Inativas <br />
                         </p>
                         {dados.inativas}

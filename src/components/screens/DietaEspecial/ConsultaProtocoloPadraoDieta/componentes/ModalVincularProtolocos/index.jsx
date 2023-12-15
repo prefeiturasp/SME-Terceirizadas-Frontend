@@ -56,7 +56,7 @@ export const ModalVincularProtocolos = ({
     <Modal dialogClassName="modal-50w" show={showModal} backdrop={"static"}>
       <Modal.Header>
         <Modal.Title>
-          <h5 className="font-weight-bold text-dark">
+          <h5 className="fw-bold text-dark">
             Selecionar protocolos padrão aos editais
           </h5>
         </Modal.Title>

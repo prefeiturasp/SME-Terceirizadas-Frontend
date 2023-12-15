@@ -449,9 +449,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                               inclusaoDeAlimentacao.status ===
                                 "ESCOLA_CANCELOU") && (
                               <p className="justificativa-cancelamento dark-red">
-                                <span className="font-weight-bold">
-                                  justificativa:{" "}
-                                </span>
+                                <span className="fw-bold">justificativa: </span>
                                 {quantidade_por_periodo.cancelado_justificativa ||
                                   inclusaoDeAlimentacao.logs.find(
                                     (log) =>

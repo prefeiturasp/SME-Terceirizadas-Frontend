@@ -502,9 +502,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
             </div>
             <div className="card solicitation mt-2">
               <div className="card-body">
-                <div className="card-title font-weight-bold">
-                  Descrição da Alteração
-                </div>
+                <div className="card-title fw-bold">Descrição da Alteração</div>
                 <div className="row">
                   <div className="col-4">
                     <Field

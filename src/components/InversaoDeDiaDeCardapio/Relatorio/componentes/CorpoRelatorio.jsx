@@ -121,7 +121,7 @@ export const CorpoRelatorio = (props) => {
         <div className="row">
           <div className="col-12 report-label-value">
             <p>Tipos de Alimentação para inversão:</p>
-            <p className="font-weight-bold">
+            <p className="fw-bold">
               {stringSeparadaPorVirgulas(
                 inversaoDiaCardapio.tipos_alimentacao,
                 "nome"
@@ -161,7 +161,7 @@ export const CorpoRelatorio = (props) => {
         <div className="col-12 report-label-value">
           <p>Motivo</p>
           <p
-            className="value font-weight-bold"
+            className="value fw-bold"
             dangerouslySetInnerHTML={{
               __html: inversaoDiaCardapio.motivo,
             }}
@@ -173,7 +173,7 @@ export const CorpoRelatorio = (props) => {
           <div className="col-12 report-label-value">
             <p>Observações</p>
             <p
-              className="font-weight-bold value"
+              className="fw-bold value"
               dangerouslySetInnerHTML={{
                 __html: inversaoDiaCardapio.observacao,
               }}

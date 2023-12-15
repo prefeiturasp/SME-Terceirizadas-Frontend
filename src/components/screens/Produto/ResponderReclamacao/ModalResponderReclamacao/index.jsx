@@ -118,7 +118,7 @@ export default class ModalResponderReclamacao extends Component {
                 </div>
                 <section className="form-row attachments">
                   <div className="col-9">
-                    <div className="card-title font-weight-bold cinza-escuro">
+                    <div className="card-title fw-bold cinza-escuro">
                       Anexar
                     </div>
                     <div className="text">

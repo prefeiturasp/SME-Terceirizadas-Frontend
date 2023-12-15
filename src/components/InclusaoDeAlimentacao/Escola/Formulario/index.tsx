@@ -548,7 +548,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
             </div>
             <div className="card solicitation mt-2">
               <div className="card-body">
-                <div className="card-title font-weight-bold">
+                <div className="card-title fw-bold">
                   Descrição da Inclusão de Alimentação
                 </div>
                 <FieldArray name="inclusoes">

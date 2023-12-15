@@ -175,7 +175,7 @@ export const CorpoRelatorio = (props) => {
                     {data_intervalo.cancelado_justificativa && (
                       <span className="justificativa">
                         justificativa:{" "}
-                        <span className="font-weight-normal">
+                        <span className="fw-normal">
                           {data_intervalo.cancelado_justificativa}
                         </span>
                       </span>

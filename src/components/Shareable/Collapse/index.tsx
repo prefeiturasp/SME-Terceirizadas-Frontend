@@ -33,9 +33,7 @@ const Collapse: React.FC<Props> = ({
 
                 <div className="flex">
                   <div className="texto-obrigatorio">
-                    <span className="required-asterisk font-weight-bold">
-                      *
-                    </span>
+                    <span className="required-asterisk fw-bold">*</span>
                     Campos de Preenchimento Obrigatório
                   </div>
                   <div className="col-1 align-self-center">

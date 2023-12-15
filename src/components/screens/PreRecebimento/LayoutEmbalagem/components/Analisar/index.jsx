@@ -361,9 +361,9 @@ export default () => {
 
           <hr />
           <p>Empresa:</p>
-          <p className="font-weight-bold">{layoutDeEmbalagem.nome_empresa}</p>
+          <p className="fw-bold">{layoutDeEmbalagem.nome_empresa}</p>
           <p>Produto:</p>
-          <p className="font-weight-bold">{layoutDeEmbalagem.nome_produto}</p>
+          <p className="fw-bold">{layoutDeEmbalagem.nome_produto}</p>
 
           {layoutDeEmbalagem.observacoes && (
             <>

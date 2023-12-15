@@ -367,7 +367,7 @@ class solicitacaoDietaEspecial extends Component {
             </div>
           </div>
           <hr />
-          <span className="card-title font-weight-bold cinza-escuro">
+          <span className="card-title fw-bold cinza-escuro">
             Descrição da Solicitação
           </span>
           {!this.state.aluno_nao_matriculado && (

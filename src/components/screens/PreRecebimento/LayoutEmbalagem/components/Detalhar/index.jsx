@@ -351,9 +351,9 @@ export default ({ analise }) => {
             <>
               <hr />
               <p>Empresa:</p>
-              <p className="font-weight-bold">{objeto.nome_empresa}</p>
+              <p className="fw-bold">{objeto.nome_empresa}</p>
               <p>Produto:</p>
-              <p className="font-weight-bold">{objeto.nome_produto}</p>
+              <p className="fw-bold">{objeto.nome_produto}</p>
 
               {objeto.observacoes && (
                 <>

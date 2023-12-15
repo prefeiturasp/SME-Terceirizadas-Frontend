@@ -565,19 +565,19 @@ export class Login extends Component {
     return (
       <div className="form">
         <div className="texto-simples mt-3">
-          <span className="texto-simples-verde font-weight-bold">
+          <span className="texto-simples-verde fw-bold">
             Servidor Municipal: &nbsp;
           </span>
           Digite seu <strong>RF</strong>.
         </div>
         <div className="texto-simples mt-3">
-          <span className="texto-simples-verde font-weight-bold">
+          <span className="texto-simples-verde fw-bold">
             Fornecedor ou Distribuidor: &nbsp;
           </span>
           Digite seu <strong>CPF</strong>.
         </div>
         <div className="texto-simples mt-3">
-          <span className="texto-simples-verde font-weight-bold">
+          <span className="texto-simples-verde fw-bold">
             Rede Parceira: &nbsp;
           </span>
           Digite seu <strong>CPF</strong>.
@@ -663,9 +663,7 @@ export class Login extends Component {
                   Seja bem-vindo(a) ao <strong>SIGPAE</strong>
                 </p>
                 <p>SISTEMA DE GESTÂO DO PROGRAMA DE ALIMENTAÇÂO ESCOLAR!</p>
-                <p className="font-weight-bold">
-                  Atualize sua senha de acesso:
-                </p>
+                <p className="fw-bold">Atualize sua senha de acesso:</p>
                 <div className="row">
                   <div className="col-12">
                     <FieldFF

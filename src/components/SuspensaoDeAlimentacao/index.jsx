@@ -631,9 +631,7 @@ class FoodSuspensionEditor extends Component {
             <div className="mt-2 page-title">{title}</div>
             <div className="card solicitation mt-3">
               <div className="card-body">
-                <div className="card-title font-weight-bold">
-                  Descrição da Suspensão
-                </div>
+                <div className="card-title fw-bold">Descrição da Suspensão</div>
                 {dias_razoes.map((dia_motivo, key) => {
                   return (
                     <FormSection

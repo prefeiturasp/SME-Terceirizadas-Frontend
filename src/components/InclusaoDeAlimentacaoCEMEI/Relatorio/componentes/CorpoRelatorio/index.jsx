@@ -318,7 +318,7 @@ export const CorpoRelatorio = ({
                           );
                         })}
                       <tr className="row">
-                        <td className="col-8 font-weight-bold">Total</td>
+                        <td className="col-8 fw-bold">Total</td>
                         <td className="col-2 text-center">
                           {solicitacao.quantidade_alunos_cei_da_inclusao_cemei
                             .filter((q) => q.periodo_escolar.nome === periodo)
@@ -366,7 +366,7 @@ export const CorpoRelatorio = ({
                         {!ehMotivoEspecifico && (
                           <th className="col-8 my-auto">
                             Alunos matriculados:{" "}
-                            <span className="font-weight-normal">
+                            <span className="fw-normal">
                               {
                                 solicitacao.quantidade_alunos_emei_da_inclusao_cemei.find(
                                   (q) => q.periodo_escolar.nome === periodo

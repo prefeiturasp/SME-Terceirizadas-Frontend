@@ -411,7 +411,7 @@ class ContratosRelacionados extends Component {
                   <div className="inputs-select-lote-dre">
                     {lotes.length ? (
                       <div>
-                        <label className="label font-weight-normal">
+                        <label className="label fw-normal">
                           <span>* </span>Lote
                         </label>
                         <Field
@@ -442,7 +442,7 @@ class ContratosRelacionados extends Component {
 
                     {diretoriasRegionais.length ? (
                       <div>
-                        <label className="label font-weight-normal">
+                        <label className="label fw-normal">
                           <span>* </span>DRE
                         </label>
                         <Field
@@ -521,7 +521,7 @@ class ContratosRelacionados extends Component {
                 <div>
                   {empresas.length ? (
                     <div>
-                      <label className="label font-weight-normal">
+                      <label className="label fw-normal">
                         <span>* </span>Empresa
                       </label>
                       <Field

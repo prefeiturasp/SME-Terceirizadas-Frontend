@@ -430,7 +430,7 @@ export class InversaoDeDiaDeCardapio extends Component {
             <div className="mt-2 page-title">{this.state.title}</div>
             <div className="card inversao-dia-cardapio border rounded mt-2">
               <div className="card-body">
-                <label className="card-title font-weight-bold">
+                <label className="card-title fw-bold">
                   Descrição da Inversão
                 </label>
                 <div className="row">

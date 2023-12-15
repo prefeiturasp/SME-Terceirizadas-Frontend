@@ -68,7 +68,7 @@ export default ({
     let textoPadrao = (
       <div>
         Faltam
-        <span className="font-weight-bold">
+        <span className="fw-bold">
           &nbsp;
           {formataMilhar(qtdFaltante)}
           &nbsp;

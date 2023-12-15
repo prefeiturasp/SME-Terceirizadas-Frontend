@@ -166,7 +166,7 @@ export const QuantidadeAlunosEMEI = ({ meusDados }) => {
               name="solicitacao_emei.matriculados_quando_criado"
             />
             Alunos matriculados:{" "}
-            <span className="font-weight-normal">
+            <span className="fw-normal">
               {
                 meusDados.vinculo_atual.instituicao
                   .quantidade_alunos_emei_da_cemei
@@ -290,7 +290,7 @@ export const TabelaFaixasEtariasCEI = ({ faixasEtariasCEI, values }) => {
           );
         })}
         <tr className="row">
-          <td className="col-8 font-weight-bold">Total</td>
+          <td className="col-8 fw-bold">Total</td>
           <td className="col-2 text-center">
             {faixasEtariasCEI
               .filter((faixa) => faixa.faixa_etaria.inicio > 11)

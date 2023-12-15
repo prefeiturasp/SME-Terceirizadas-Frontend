@@ -404,7 +404,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                   <div className="card-body">
                     <Field component="input" type="hidden" name="uuid" />
                     <Field component="input" type="hidden" name="escola" />
-                    <div className="card-title font-weight-bold descricao">
+                    <div className="card-title fw-bold descricao">
                       Descrição da Alteração do Tipo de Alimentação
                     </div>
                     <div className="row">
@@ -677,7 +677,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                             );
                                           })}
                                         <tr className="row">
-                                          <td className="col-8 font-weight-bold">
+                                          <td className="col-8 fw-bold">
                                             Total
                                           </td>
                                           <td className="col-2 text-center">

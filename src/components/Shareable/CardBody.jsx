@@ -50,7 +50,7 @@ const CardBody = (props) => {
   return (
     <div className="card mt-3">
       <div className="card-body dash-terc">
-        <div className="card-title font-weight-bold dashboard-card-title">
+        <div className="card-title fw-bold dashboard-card-title">
           <Form
             onSubmit={() => {}}
             initialValues={{}}

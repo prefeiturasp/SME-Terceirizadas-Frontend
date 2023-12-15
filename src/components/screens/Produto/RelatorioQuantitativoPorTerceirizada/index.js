@@ -232,7 +232,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
           </Modal.Title>
         </Modal.Header>
         <section className="m-3">
-          <p className="text-black font-weight-bold mb-1">
+          <p className="text-black fw-bold mb-1">
             {filtros && gerarLabelPorFiltro(filtros)}
           </p>
           <TabelaQuantitativoPorTerceirizada dadosRelatorio={dadosRelatorio} />

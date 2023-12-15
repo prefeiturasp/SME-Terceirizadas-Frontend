@@ -76,7 +76,7 @@ export const ModalCancelarInclusaoContinua = ({ ...props }) => {
               {solicitacao.quantidades_periodo.map(
                 (quantidade_periodo, key) => {
                   return [
-                    <div key={key} className="row font-weight-bold">
+                    <div key={key} className="row fw-bold">
                       <div className="col-1">De</div>
                       <div className="col-1">Até</div>
                       <div className="col-3">Repetir</div>

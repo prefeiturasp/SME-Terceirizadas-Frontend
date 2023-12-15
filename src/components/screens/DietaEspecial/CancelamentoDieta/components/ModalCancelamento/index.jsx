@@ -57,7 +57,7 @@ export default ({ dieta, showModal, setShowModal, filtros, setFiltros }) => {
             <Modal.Body>
               <section className="row attachments">
                 <div className="col-9">
-                  <div className="card-title font-weight-bold cinza-escuro mt-4">
+                  <div className="card-title fw-bold cinza-escuro mt-4">
                     <span className="required-asterisk">*</span>Laudo
                   </div>
                   <div className="text">
