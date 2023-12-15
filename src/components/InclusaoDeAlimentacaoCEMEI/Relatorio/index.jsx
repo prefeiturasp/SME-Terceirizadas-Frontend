@@ -191,6 +191,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                   <div className="card-body">
                     <CorpoRelatorio
                       solicitacao={solicitacao}
+                      solicitacoesSimilares={solicitacao.solicitacoes_similares}
                       vinculos={
                         ehMotivoEspecifico ? vinculosMotivoEspecifico : vinculos
                       }

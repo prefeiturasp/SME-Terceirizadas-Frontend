@@ -24,6 +24,7 @@ import {
   toastError,
   toastSuccess,
 } from "../../../../../Shareable/Toast/dialogs";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 
 export default () => {
   const history = useHistory();
@@ -42,10 +43,10 @@ export default () => {
     false,
   ]);
 
-  useEffect(() => {
+  useEffect(async () => {
     setCarregando(true);
 
-    carregarDados();
+    await carregarDados();
 
     setCarregando(false);
   }, []);
@@ -317,6 +318,13 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-detalhar-layout-embalagem">
         <div className="card-body">
+          {layoutDeEmbalagem.logs && (
+            <div className="row my-4">
+              <FluxoDeStatusPreRecebimento
+                listaDeStatus={layoutDeEmbalagem.logs}
+              />
+            </div>
+          )}
           <div className="subtitulo mb-3">Dados do Produto</div>
           <div className="row mt-3">
             <div className="col-4">

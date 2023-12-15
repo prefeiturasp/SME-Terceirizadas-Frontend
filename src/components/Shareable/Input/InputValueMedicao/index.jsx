@@ -52,6 +52,8 @@ export const InputText = (props) => {
     exibeTooltipAlteracaoAlimentacaoAutorizadaDreCodae,
     exibeTooltipSuspensaoAutorizadaFrequenciaDreCodae,
     exibeTooltipSuspensaoAutorizadaAlimentacaoDreCodae,
+    exibeTooltipInclusoesAutorizadasComZero,
+    exibeTooltipDietasInclusaoDiaNaoLetivoCEI,
   } = props;
 
   let msgTooltip = "";
@@ -161,6 +163,15 @@ export const InputText = (props) => {
         <Tooltip
           title={
             "Há autorização de LPR para essa data. Justifique o apontamento de Lanche. Obrigatório adicionar observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipInclusoesAutorizadasComZero && (
+        <Tooltip
+          title={
+            "Nenhuma frequência e alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -276,6 +287,16 @@ export const InputText = (props) => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
+      {exibeTooltipDietasInclusaoDiaNaoLetivoCEI && (
+        <Tooltip
+          title={
+            "Existe autorização para o Lançamento de Dietas Especiais para o dia. Justifique a ausência do apontamento!"
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+
       {exibeTooltipInclusaoAlimentacaoAutorizadaDreCodae && (
         <Tooltip title={"Foi autorizada inclusão de alimentações neste dia."}>
           <i className="fas fa-info icone-info-success" />
@@ -321,7 +342,9 @@ export const InputText = (props) => {
             exibeTooltipLancheEmergencialAutorizado ||
             exibeTooltipFrequenciaZeroTabelaEtec ||
             exibeTooltipLancheEmergTabelaEtec ||
+            exibeTooltipInclusoesAutorizadasComZero ||
             exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero ||
+            exibeTooltipDietasInclusaoDiaNaoLetivoCEI ||
             (exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI &&
               !input.value) ||
             exibeTooltipSuspensoesAutorizadasCEI)

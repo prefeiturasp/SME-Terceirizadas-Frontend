@@ -44,7 +44,7 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
         }
       )}
       <article className="tabela-rows">
-        <div className="faixa-etaria">Total {">>"} </div>
+        <div className="faixa-etaria">Total</div>
         <div className="alunos-matriculados">{total_matriculados || "N/A"}</div>
         <div className="quantidade">{total}</div>
       </article>

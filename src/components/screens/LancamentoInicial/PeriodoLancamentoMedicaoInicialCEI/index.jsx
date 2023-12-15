@@ -49,6 +49,10 @@ import {
   exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI,
   exibirTooltipSuspensoesAutorizadasCEI,
   frequenciaComSuspensaoAutorizadaPreenchida,
+  campoComInclusaoAutorizadaValorZeroESemObservacao,
+  exibirTooltipErroQtdMaiorQueAutorizado,
+  exibirTooltipDietasInclusaoDiaNaoLetivoCEI,
+  campoDietaComInclusaoAutorizadaSemObservacao,
 } from "./validacoes";
 import {
   categoriasParaExibir,
@@ -89,6 +93,7 @@ import {
   campoComSuspensaoAutorizadaESemObservacao,
   campoLancheComLPRAutorizadaESemObservacao,
   campoRefeicaoComRPLAutorizadaESemObservacao,
+  exibeTooltipInclusoesAutorizadasComZero,
   exibirTooltipLPRAutorizadas,
   exibirTooltipRPLAutorizadas,
   exibirTooltipSuspensoesAutorizadas,
@@ -1259,6 +1264,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           categoria,
           alteracoesAlimentacaoAutorizadas
         ) ||
+        exibeTooltipInclusoesAutorizadasComZero(
+          formValuesAtualizados,
+          row,
+          column,
+          categoria,
+          inclusoesAutorizadas
+        ) ||
         (ehEmeiDaCemeiLocation &&
           exibirTooltipSuspensoesAutorizadas(
             formValuesAtualizados,
@@ -1270,6 +1282,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       !formValuesAtualizados[
         `observacoes__dia_${column.dia}__categoria_${categoria.id}`
       ]
+    ) {
+      setDisableBotaoSalvarLancamentos(true);
+      setExibirTooltip(true);
+    }
+    if (
+      !ehEmeiDaCemeiLocation &&
+      campoDietaComInclusaoAutorizadaSemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        inclusoesAutorizadas,
+        logQtdDietasAutorizadasCEI
+      )
     ) {
       setDisableBotaoSalvarLancamentos(true);
       setExibirTooltip(true);
@@ -1317,7 +1342,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           idCategoria,
           allValues,
           value,
-          alteracoesAlimentacaoAutorizadas
+          alteracoesAlimentacaoAutorizadas,
+          inclusoesAutorizadas,
+          validacaoDiaLetivo
         );
       } else if (nomeCategoria.includes("DIETA")) {
         return validacoesTabelasDietasEmeidaCemei(
@@ -1331,6 +1358,47 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         );
       }
     };
+
+  const classNameFieldTabelaAlimentacaoEMEI = (
+    row,
+    column,
+    categoria,
+    kitLanchesAutorizadas,
+    alteracoesAlimentacaoAutorizadas,
+    valoresPeriodosLancamentos,
+    diasParaCorrecao
+  ) => {
+    if (
+      Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+        String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
+      ) ||
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
+        dadosValoresInclusoesAutorizadasState
+    ) {
+      return "";
+    }
+    return `${
+      !validacaoDiaLetivo(column.dia) &&
+      !ehDiaParaCorrigir(
+        column.dia,
+        categoria.id,
+        valoresPeriodosLancamentos,
+        diasParaCorrecao
+      ) &&
+      ((kitLanchesAutorizadas &&
+        !kitLanchesAutorizadas.filter(
+          (kitLanche) => kitLanche.dia === column.dia
+        ).length &&
+        row.name === "kit_lanche") ||
+        (alteracoesAlimentacaoAutorizadas &&
+          !alteracoesAlimentacaoAutorizadas.filter(
+            (lancheEmergencial) => lancheEmergencial.dia === column.dia
+          ).length &&
+          row.name === "lanche_emergencial"))
+        ? "nao-eh-dia-letivo"
+        : ""
+    }`;
+  };
 
   const classNameFieldTabelaAlimentacao = (row, column, categoria) => {
     const resultado = inclusoesAutorizadas.some(
@@ -1360,6 +1428,11 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       dadosValoresInclusoesAutorizadasState
         ? ""
         : !validacaoDiaLetivo(column.dia) &&
+          !inclusoesAutorizadas.some(
+            (inclusao) =>
+              parseInt(column.dia) === parseInt(inclusao.dia) &&
+              row.name === "frequencia"
+          ) &&
           !ehDiaParaCorrigir(column.dia, categoria.id, diasParaCorrecao)
         ? "nao-eh-dia-letivo"
         : ""
@@ -1644,13 +1717,27 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           inclusoesAutorizadas,
                                                           formValuesAtualizados[
                                                             `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
-                                                          ]
+                                                          ],
+                                                          formValuesAtualizados
                                                         )) ||
                                                       campoRefeicaoComRPLAutorizadaESemObservacao(
                                                         formValuesAtualizados,
                                                         column,
                                                         categoria,
                                                         alteracoesAlimentacaoAutorizadas
+                                                      ) ||
+                                                      campoDietaComInclusaoAutorizadaSemObservacao(
+                                                        formValuesAtualizados,
+                                                        column,
+                                                        categoria,
+                                                        inclusoesAutorizadas,
+                                                        logQtdDietasAutorizadasCEI
+                                                      ) ||
+                                                      campoComInclusaoAutorizadaValorZeroESemObservacao(
+                                                        formValuesAtualizados,
+                                                        column,
+                                                        categoria,
+                                                        inclusoesAutorizadas
                                                       ) ||
                                                       campoLancheComLPRAutorizadaESemObservacao(
                                                         formValuesAtualizados,
@@ -1708,7 +1795,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                   {ehEmeiDaCemeiLocation ? (
                                                     <>
                                                       <Field
-                                                        className={`m-2 ${classNameFieldTabelaAlimentacao(
+                                                        className={`m-2 ${classNameFieldTabelaAlimentacaoEMEI(
                                                           row,
                                                           column,
                                                           categoria
@@ -1746,18 +1833,42 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           valoresPeriodosLancamentos,
                                                           feriadosNoMes,
                                                           null,
-                                                          diasParaCorrecao
+                                                          diasParaCorrecao,
+                                                          ehEmeiDaCemeiLocation
                                                         )}
                                                         defaultValue={defaultValue(
                                                           column,
                                                           row
                                                         )}
+                                                        exibeTooltipErroQtdMaiorQueAutorizado={exibirTooltipErroQtdMaiorQueAutorizado(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          inclusoesAutorizadas
+                                                        )}
+                                                        numeroDeInclusoesAutorizadas={
+                                                          inclusoesAutorizadas.find(
+                                                            (inclusao) =>
+                                                              column.dia ===
+                                                              String(
+                                                                inclusao.dia
+                                                              )
+                                                          )?.numero_alunos
+                                                        }
                                                         exibeTooltipSuspensoesAutorizadas={exibirTooltipSuspensoesAutorizadas(
                                                           formValuesAtualizados,
                                                           row,
                                                           column,
                                                           categoria,
                                                           suspensoesAutorizadas
+                                                        )}
+                                                        exibeTooltipInclusoesAutorizadasComZero={exibeTooltipInclusoesAutorizadasComZero(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          inclusoesAutorizadas
                                                         )}
                                                         exibeTooltipRPLAutorizadas={exibirTooltipRPLAutorizadas(
                                                           formValuesAtualizados,
@@ -1839,11 +1950,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           valoresPeriodosLancamentos,
                                                           feriadosNoMes,
                                                           row.uuid,
-                                                          diasParaCorrecao
+                                                          diasParaCorrecao,
+                                                          ehEmeiDaCemeiLocation
                                                         )}
                                                         defaultValue={defaultValue(
                                                           column,
                                                           row
+                                                        )}
+                                                        exibeTooltipDietasInclusaoDiaNaoLetivoCEI={exibirTooltipDietasInclusaoDiaNaoLetivoCEI(
+                                                          inclusoesAutorizadas,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          formValuesAtualizados
                                                         )}
                                                         exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI={exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI(
                                                           inclusoesAutorizadas,

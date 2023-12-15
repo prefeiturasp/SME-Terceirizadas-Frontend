@@ -332,6 +332,9 @@ class Relatorio extends Component {
               <div className="card-body">
                 <CorpoRelatorio
                   inclusaoDeAlimentacao={inclusaoDeAlimentacao}
+                  solicitacoesSimilares={
+                    inclusaoDeAlimentacao.solicitacoes_similares
+                  }
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                   tipoSolicitacao={tipoSolicitacao}
                   meusDados={meusDados}

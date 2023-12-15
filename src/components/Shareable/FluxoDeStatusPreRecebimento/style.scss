@@ -26,8 +26,9 @@
   justify-content: space-around;
 }
 
-.progressbar-cronograma {
+.progressbar-dados {
   li {
+    color: $grayPlaceholder;
     list-style-type: none;
     font-weight: bold;
     font-size: 9px;

@@ -1,14 +1,18 @@
-import { CategoriaChoices } from "interfaces/pre_recebimento.interface";
+import {
+  CategoriaFichaTecnicaChoices,
+  MecanismoControleChoices,
+} from "interfaces/pre_recebimento.interface";
 
 export interface OptionsCategoria {
-  uuid: CategoriaChoices;
+  uuid: CategoriaFichaTecnicaChoices;
   nome: string;
 }
 
+// boolean | string -> tratado como string no form, enviado como boolean pro backend
 export interface FichaTecnicaPayload {
   produto?: string;
   marca?: string;
-  categoria?: string;
+  categoria?: CategoriaFichaTecnicaChoices;
   empresa?: string;
   pregao_chamada_publica?: string;
   fabricante?: string;
@@ -22,6 +26,17 @@ export interface FichaTecnicaPayload {
   estado_fabricante?: string;
   email_fabricante?: string;
   telefone_fabricante?: string;
+  prazo_validade?: string;
+  numero_registro?: string;
+  agroecologico?: boolean | string;
+  organico?: boolean | string;
+  mecanismo_controle?: MecanismoControleChoices;
+  componentes_produto?: string;
+  alergenicos?: boolean | string;
+  ingredientes_alergenicos?: string;
+  gluten?: boolean | string;
+  lactose?: boolean | string;
+  lactose_detalhe?: string;
 }
 
 export interface FiltrosFichaTecnica {
