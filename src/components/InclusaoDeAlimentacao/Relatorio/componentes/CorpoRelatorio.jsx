@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
@@ -6,6 +7,7 @@ import {
   ehInclusaoContinua,
   ehInclusaoCei,
   justificativaAoNegarSolicitacao,
+  gerarLinkRelatorio,
 } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
@@ -312,7 +314,22 @@ export const CorpoRelatorio = ({ ...props }) => {
                       <p>
                         Solicitação Similar:
                         <b className="gatilho-style">
-                          {`#${solicitacao.id_externo}`}
+                          <Link
+                            style={{
+                              color: "#0c6b45",
+                            }}
+                            to={gerarLinkRelatorio(
+                              `inclusao-de-alimentacao${
+                                solicitacao.dias_motivos_da_inclusao_cemei
+                                  ? "-cemei"
+                                  : ""
+                              }`,
+                              solicitacao
+                            )}
+                            target="blank"
+                          >
+                            {`#${solicitacao.id_externo}`}
+                          </Link>
                           <ToggleExpandir
                             onClick={() =>
                               collapseSolicitacaoSimilar(idxSolicitacaoSimilar)
