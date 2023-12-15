@@ -84,7 +84,7 @@ export const CardLancamento = ({
         <span style={{ color: cor }}>
           <b>{quantidadeAlimentacao(alimentacao)}</b>
         </span>
-        <span className="ml-1">- {alimentacao}</span>
+        <span className="ms-1">- {alimentacao}</span>
         <br />
       </div>
     ));
@@ -96,7 +96,7 @@ export const CardLancamento = ({
           <span style={{ color: cor }}>
             <b>{quantidadeAlimentacao(alimentacao.nome)}</b>
           </span>
-          <span className="ml-1">- {alimentacao.nome}</span>
+          <span className="ms-1">- {alimentacao.nome}</span>
           <br />
         </div>
       ));

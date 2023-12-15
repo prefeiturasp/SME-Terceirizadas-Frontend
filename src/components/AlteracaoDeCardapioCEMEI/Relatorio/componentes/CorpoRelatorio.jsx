@@ -317,8 +317,8 @@ export const CorpoRelatorio = ({ ...props }) => {
                         <thead>
                           <tr>
                             <th className="col-7">
-                              <span className="ml-5">Alunos matriculados</span>
-                              <b className="ml-5">
+                              <span className="ms-5">Alunos matriculados</span>
+                              <b className="ms-5">
                                 {
                                   periodo.substituicoesEMEI
                                     .matriculados_quando_criado
@@ -326,8 +326,8 @@ export const CorpoRelatorio = ({ ...props }) => {
                               </b>
                             </th>
                             <th className="col-5">
-                              <span className="ml-5">Quantidade</span>
-                              <b className="ml-5">
+                              <span className="ms-5">Quantidade</span>
+                              <b className="ms-5">
                                 {periodo.substituicoesEMEI.qtd_alunos}
                               </b>
                             </th>

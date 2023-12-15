@@ -127,7 +127,7 @@ class RelatorioAnaliseSensorial extends Component {
           {homologacao !== null && (
             <article>
               <div className="row">
-                <div className="row col-12 ml-0">
+                <div className="row col-12 ms-0">
                   <div className="col-6 pl-0">
                     <p className="text-muted">
                       Solicitação de análise sensorial
@@ -142,7 +142,7 @@ class RelatorioAnaliseSensorial extends Component {
                     </p>
                   </div>
 
-                  <section className="texto-wysiwyg row col-7 ml-0">
+                  <section className="texto-wysiwyg row col-7 ms-0">
                     <div className="col-7">
                       <p
                         dangerouslySetInnerHTML={{
@@ -162,7 +162,7 @@ class RelatorioAnaliseSensorial extends Component {
                           homologacao.produto
                         );
                       }}
-                      className="ml-1"
+                      className="ms-1"
                     />
                     <Botao
                       texto={"Responder"}
@@ -172,7 +172,7 @@ class RelatorioAnaliseSensorial extends Component {
                         homologacao.ultima_analise
                       )}
                       onClick={() => this.showModal()}
-                      className="ml-1"
+                      className="ms-1"
                     />
                     <Botao
                       type={BUTTON_TYPE.BUTTON}
@@ -184,7 +184,7 @@ class RelatorioAnaliseSensorial extends Component {
                           homologacao.produto
                         );
                       }}
-                      className="ml-1"
+                      className="ms-1"
                     />
                   </div>
                 </div>

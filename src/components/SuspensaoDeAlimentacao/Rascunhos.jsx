@@ -26,9 +26,9 @@ export class Rascunhos extends Component {
         return (
           <div key={key} className="bg-white draft border rounded mt-1 p-2">
             <div className="mt-2">
-              <label className="bold ml-3">{`Suspensão de Alimentação # ${id_externo}`}</label>
+              <label className="bold ms-3">{`Suspensão de Alimentação # ${id_externo}`}</label>
               <span
-                className="ml-3 p-1 border rounded"
+                className="ms-3 p-1 border rounded"
                 style={{ background: backgroundColor }}
               >
                 {suspensaoDeAlimentacao.status}
@@ -49,7 +49,7 @@ export class Rascunhos extends Component {
                 <i className="fas fa-edit" />
               </span>
             </div>
-            <div className="ml-3">
+            <div className="ms-3">
               <p>
                 {`Data(s): ${stringSeparadaPorVirgulas(
                   suspensaoDeAlimentacao.suspensoes_alimentacao,

@@ -28,7 +28,7 @@ export const ModalPadraoSimNao = ({ ...props }) => {
           type={BUTTON_TYPE.BUTTON}
           onClick={closeModal}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="ml-3"
+          className="ms-3"
         />
         <Botao
           texto={
@@ -42,7 +42,7 @@ export const ModalPadraoSimNao = ({ ...props }) => {
           onClick={() => funcaoSim()}
           style={BUTTON_STYLE.GREEN}
           disabled={desabilitaSim}
-          className="ml-3"
+          className="ms-3"
         />
       </Modal.Footer>
     </Modal>

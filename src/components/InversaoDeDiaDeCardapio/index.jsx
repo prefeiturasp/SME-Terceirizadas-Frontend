@@ -508,7 +508,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                     <Botao
                       texto={this.state.salvarAtualizarLbl}
                       onClick={handleSubmit((values) => this.onSubmit(values))}
-                      className="ml-3"
+                      className="ms-3"
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       type={BUTTON_TYPE.SUBMIT}
                     />
@@ -522,7 +522,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                       )}
                       style={BUTTON_STYLE.GREEN}
                       type={BUTTON_TYPE.SUBMIT}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

@@ -214,7 +214,7 @@ const Relatorio = (props) => {
         texto="Marcar Conferência"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
-        className="ml-3"
+        className="ms-3"
         onClick={() => {
           showModalMarcarConferencia();
         }}
@@ -307,7 +307,7 @@ const Relatorio = (props) => {
                         {EXIBIR_BOTAO_NAO_APROVAR && (
                           <Botao
                             texto={textoBotaoNaoAprova}
-                            className="custom-col-width ml-3"
+                            className="custom-col-width ms-3"
                             onClick={() => showNaoAprovaModal("Não")}
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -335,7 +335,7 @@ const Relatorio = (props) => {
                                   : handleSubmit()
                               }
                               style={BUTTON_STYLE.GREEN}
-                              className="custom-col-width ml-3"
+                              className="custom-col-width ms-3"
                             />
                           ))}
                         {EXIBIR_BOTAO_QUESTIONAMENTO && (
@@ -349,13 +349,13 @@ const Relatorio = (props) => {
                             type={BUTTON_TYPE.BUTTON}
                             onClick={() => showQuestionamentoModal("Sim")}
                             style={BUTTON_STYLE.GREEN}
-                            className="ml-3"
+                            className="ms-3"
                           />
                         )}
                         {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
                           <div className="form-group float-end mt-4">
                             {solicitacaoKitLanche.terceirizada_conferiu_gestao ? (
-                              <label className="ml-3 conferido">
+                              <label className="ms-3 conferido">
                                 <i className="fas fa-check mr-2" />
                                 Solicitação Conferida
                               </label>

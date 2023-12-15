@@ -25,7 +25,7 @@ export default ({ show, handleClose, cancelar }) => {
             handleClose();
           }}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="ml-3"
+          className="ms-3"
         />
         <Botao
           texto="Sim"
@@ -35,7 +35,7 @@ export default ({ show, handleClose, cancelar }) => {
             handleClose();
           }}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
         />
       </Modal.Footer>
     </Modal>

@@ -116,7 +116,7 @@ const TabelaProdutos = ({
                       >
                         <Botao
                           texto="Ver produto"
-                          className="ml-3"
+                          className="ms-3"
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                         />

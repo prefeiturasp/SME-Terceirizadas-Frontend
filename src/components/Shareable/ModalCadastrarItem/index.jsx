@@ -147,13 +147,13 @@ export default ({
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
                       style={BUTTON_STYLE.DARK_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Salvar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                     />
                   </div>

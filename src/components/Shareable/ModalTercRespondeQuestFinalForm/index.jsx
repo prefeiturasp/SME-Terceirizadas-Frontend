@@ -75,14 +75,14 @@ export const ModalTercRespondeQuestFinalForm = ({ ...props }) => {
                     type={BUTTON_TYPE.BUTTON}
                     onClick={closeModal}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   <Botao
                     texto="Enviar"
                     type={BUTTON_TYPE.SUBMIT}
                     disabled={values.justificativa === undefined || submitting}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </div>
               </div>

@@ -137,7 +137,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
 
             <div className="col-12 col-md-4 col-xl-4">
               <div className="row">
-                <label className="ml-3">Data análise sensorial</label>
+                <label className="ms-3">Data análise sensorial</label>
               </div>
               <div className="row">
                 <div className="col mt-1">
@@ -178,14 +178,14 @@ const FormBuscaProduto = ({ onSubmit }) => {
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-end ml-3"
+              className="float-end ms-3"
             />
 
             <Botao
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-end ml-3"
+              className="float-end ms-3"
               onClick={() => form.reset()}
             />
           </div>

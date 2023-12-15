@@ -329,14 +329,14 @@ export const InformacoesMedicaoInicialCEI = ({
                   texto="SIM"
                   type={BUTTON_TYPE.BUTTON}
                   onClick={handleModalNaoParcialDelete}
-                  className="ml-3"
+                  className="ms-3"
                 />
                 <Botao
                   key="nao"
                   texto="NÃO"
                   type={BUTTON_TYPE.BUTTON}
                   onClick={handleModalNaoParcialClose}
-                  className="ml-3"
+                  className="ms-3"
                 />
               </>,
             ]}
@@ -436,7 +436,7 @@ export const InformacoesMedicaoInicialCEI = ({
                       <Botao
                         texto="Salvar"
                         style={BUTTON_STYLE.GREEN}
-                        className="float-end ml-3"
+                        className="float-end ms-3"
                         onClick={() => handleClickSalvar()}
                         disabled={!emEdicao}
                       />
@@ -444,7 +444,7 @@ export const InformacoesMedicaoInicialCEI = ({
                         texto="Editar"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         icon={BUTTON_ICON.PEN}
-                        className="float-end ml-3"
+                        className="float-end ms-3"
                         onClick={() => handleClickEditar()}
                         disabled={emEdicao}
                       />

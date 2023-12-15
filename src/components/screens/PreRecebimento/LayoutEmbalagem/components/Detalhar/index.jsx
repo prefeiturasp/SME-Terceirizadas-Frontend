@@ -99,7 +99,7 @@ export default ({ analise }) => {
       let texto = values[`justificativa_${index}`].split("|");
       return (
         <div className="col-7">
-          <div className="subtitulo row ml-5">
+          <div className="subtitulo row ms-5">
             <div className="w-5">
               <i className="fas fa-check mr-2" />
             </div>
@@ -128,7 +128,7 @@ export default ({ analise }) => {
               texto="Cancelar"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-end ml-3"
+              className="float-end ms-3"
               onClick={() => {
                 changeModal(index, true);
               }}
@@ -174,7 +174,7 @@ export default ({ analise }) => {
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon="fas fa-times"
-          className="ml-4"
+          className="ms-4"
           onClick={() => {
             changeAprovacoes(index, false);
             values[`justificativa_${index}`] = "";
@@ -479,7 +479,7 @@ export default ({ analise }) => {
                       texto="Enviar para o Fornecedor"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="float-end ml-3"
+                      className="float-end ms-3"
                       disabled={
                         !validaAprovacoes || Object.keys(errors).length > 0
                       }
@@ -493,7 +493,7 @@ export default ({ analise }) => {
                       texto="Cancelar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-end ml-3"
+                      className="float-end ms-3"
                       onClick={() => setModalCancelar(true)}
                     />
                   </>

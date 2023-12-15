@@ -49,7 +49,7 @@ export default ({ guia, handleClose, botaoAcao }) => {
             type={BUTTON_TYPE.BUTTON}
             onClick={() => baixarPDFGuiaRemessa()}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           {botaoAcao(guia)}
         </Modal.Footer>

@@ -681,14 +681,14 @@ const ModalCadastroVinculo = ({
                     }}
                     disabled={Object.keys(errors).length > 0}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3 float-end"
+                    className="ms-3 float-end"
                   />
                   <Botao
                     texto="Cancelar"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={handleClose}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3 float-end"
+                    className="ms-3 float-end"
                   />
                 </div>
               </Modal.Footer>

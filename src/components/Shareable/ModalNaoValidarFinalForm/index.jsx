@@ -117,14 +117,14 @@ export const ModalNaoValidarFinalForm = ({ ...props }) => {
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={desabilitaBotaoSim}
-                className="ml-3"
+                className="ms-3"
               />
             </Modal.Footer>
           </form>

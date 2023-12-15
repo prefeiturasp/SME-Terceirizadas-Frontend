@@ -30,7 +30,7 @@ export const Botoes = ({
           icon={verUnicoProduto && BUTTON_ICON.ARROW_LEFT}
         />
         <Botao
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             setModal("Questionar terceirizada");
             setProdutoAAtualizar(produto);
@@ -45,7 +45,7 @@ export const Botoes = ({
           }
         />
         <Botao
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             setModal("Recusar reclamação");
             setProdutoAAtualizar(produto);
@@ -61,7 +61,7 @@ export const Botoes = ({
           }
         />
         <Botao
-          className="ml-3 mr-3"
+          className="ms-3 mr-3"
           onClick={() => {
             setModal("Aceitar reclamação");
             setProdutoAAtualizar(produto);

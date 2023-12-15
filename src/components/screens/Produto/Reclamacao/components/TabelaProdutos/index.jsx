@@ -92,7 +92,7 @@ export default class TabelaProdutos extends Component {
                     >
                       <Botao
                         texto="Ver produto"
-                        className="ml-3"
+                        className="ms-3"
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
@@ -100,7 +100,7 @@ export default class TabelaProdutos extends Component {
                     <Botao
                       texto="Reclamação"
                       disabled={!escolasRequisicaoConcluida}
-                      className="ml-3"
+                      className="ms-3"
                       onClick={this.abreModalReclamacao}
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN}

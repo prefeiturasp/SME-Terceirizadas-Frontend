@@ -48,7 +48,7 @@ class ConfirmarEmailPage extends Component {
                     texto="Ir para o Login"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </Link>
               </div>

@@ -153,7 +153,7 @@ class Step2 extends Component {
             />
           </div>
         </div>
-        <div className="row card-title font-weight-bold ml-2">
+        <div className="row card-title font-weight-bold ms-2">
           Necessário o preenchimento das informações nutricionais abaixo
         </div>
         {informacoesAgrupadas &&

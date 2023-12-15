@@ -357,7 +357,7 @@ export const DisponibilizacaoDeSolicitacoes = (props) => {
                     setLoading(true);
                   }}
                   style={BUTTON_STYLE.BLUE}
-                  className="ml-3"
+                  className="ms-3"
                   disabled={loading}
                 />
                 <Botao
@@ -369,7 +369,7 @@ export const DisponibilizacaoDeSolicitacoes = (props) => {
                     setSolicitacaoUuid(null);
                   }}
                   style={BUTTON_STYLE.BLUE}
-                  className="ml-3"
+                  className="ms-3"
                 />
               </Modal.Footer>
             </Spin>

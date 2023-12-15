@@ -231,7 +231,7 @@ export default () => {
                     texto="Enviar"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-2 mr-2"
+                    className="ms-2 mr-2"
                     onClick={() => {
                       setShowModal(true);
                     }}
@@ -243,7 +243,7 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       icon={BUTTON_ICON.FILE_EXCEL}
-                      className="ml-2 mr-2"
+                      className="ms-2 mr-2"
                       onClick={solicitaExcelGuias}
                     />
                   </Spin>
@@ -285,7 +285,7 @@ export default () => {
                 enviarSolicitacoesMarcadas();
               }}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               disabled={carregandoModal}
             />
             <Botao
@@ -295,7 +295,7 @@ export default () => {
                 setShowModal(false);
               }}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
           </Modal.Footer>
         </Spin>

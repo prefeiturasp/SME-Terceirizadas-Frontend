@@ -701,7 +701,7 @@ export class SolicitacaoDeKitLanche extends Component {
                         status: "RASCUNHO",
                       })
                     )}
-                    className="ml-3"
+                    className="ms-3"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                   />
@@ -716,7 +716,7 @@ export class SolicitacaoDeKitLanche extends Component {
                       })
                     )}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </div>
               </div>
@@ -741,7 +741,7 @@ export class SolicitacaoDeKitLanche extends Component {
                         })
                       )}
                       style={BUTTON_STYLE.BLUE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   )}
                   <Botao
@@ -749,7 +749,7 @@ export class SolicitacaoDeKitLanche extends Component {
                     type={BUTTON_TYPE.BUTTON}
                     onClick={this.handleConfirmation}
                     style={BUTTON_STYLE.BLUE_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </Modal.Footer>
               </Modal>

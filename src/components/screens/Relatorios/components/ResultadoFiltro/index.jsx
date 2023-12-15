@@ -106,7 +106,7 @@ class ResultadoFiltro extends Component {
             <div className="cabecalho-direito">
               <section>
                 <Botao
-                  className="ml-2"
+                  className="ms-2"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.PRINT}
                   texto={"Imprimir"}
@@ -114,7 +114,7 @@ class ResultadoFiltro extends Component {
                   type={BUTTON_TYPE.BUTTON}
                 />
                 <Botao
-                  className="ml-2"
+                  className="ms-2"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.SAIR}
                   texto={"Sair"}

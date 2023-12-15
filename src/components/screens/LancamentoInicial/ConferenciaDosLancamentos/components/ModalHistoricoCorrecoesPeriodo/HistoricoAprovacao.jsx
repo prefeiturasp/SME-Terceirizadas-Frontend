@@ -53,7 +53,7 @@ export const HistoricoAprovacao = ({ ...props }) => {
             {historico &&
               historico.alteracoes.map((alteracao, alteracaoIdx) => {
                 return (
-                  <li className="ml-3 cor-texo-detalhes" key={alteracaoIdx}>
+                  <li className="ms-3 cor-texo-detalhes" key={alteracaoIdx}>
                     <b>{alteracao.periodo_escolar}</b>
                   </li>
                 );

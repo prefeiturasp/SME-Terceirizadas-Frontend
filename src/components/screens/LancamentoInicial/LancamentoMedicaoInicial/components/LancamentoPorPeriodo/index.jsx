@@ -509,7 +509,7 @@ export default ({
                       texto="Enviar Correção"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       onClick={() => setShowModalEnviarCorrecao(true)}
                       disabled={verificaSeEnviarCorrecaoDisabled(
                         quantidadeAlimentacoesLancadas,

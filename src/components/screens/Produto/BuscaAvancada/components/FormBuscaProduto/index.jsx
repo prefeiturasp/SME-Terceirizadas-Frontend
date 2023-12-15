@@ -160,7 +160,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
           <div className="form-row">
             <div className="col-12 col-md-4 col-xl-4">
               <div className="row">
-                <label className="ml-1">Data cadastro</label>
+                <label className="ms-1">Data cadastro</label>
               </div>
               <div className="row">
                 <div className="col mt-1">
@@ -208,11 +208,11 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
             </div>
             <div className="col-12 col-md-3 col-xl-3 check-tipos-prod">
               <div className="row">
-                <label className="ml-1">Tipo de produto</label>
+                <label className="ms-1">Tipo de produto</label>
               </div>
 
               <div className="row">
-                <div className="col mt-2 ml-1">
+                <div className="col mt-2 ms-1">
                   <Field
                     className="check-tipo-produto"
                     component={CheckboxField}
@@ -296,7 +296,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-end ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
 
@@ -304,7 +304,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-end ml-3"
+              className="float-end ms-3"
               onClick={() => {
                 form.reset({
                   tipo_produto_comum: undefined,

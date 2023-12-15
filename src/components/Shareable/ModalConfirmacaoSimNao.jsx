@@ -36,14 +36,14 @@ const ModalConfirmacaoSimNao = ({
             onNaoClick();
           }}
           style={BUTTON_STYLE.BLUE_OUTLINE}
-          className="ml-3"
+          className="ms-3"
         />
         <Botao
           texto="Sim"
           type={BUTTON_TYPE.BUTTON}
           onClick={onSimClick}
           style={BUTTON_STYLE.BLUE}
-          className="ml-3"
+          className="ms-3"
         />
       </Modal.Footer>
     </Modal>

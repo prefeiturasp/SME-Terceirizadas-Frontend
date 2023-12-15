@@ -155,7 +155,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
       <Modal.Body>
         <div className="row">
           <div className="col">
-            <p className="ml-2">
+            <p className="ms-2">
               Neste mês, a direção da Unidade Educacional considera que o
               serviço foi realizado a contento?
             </p>
@@ -263,14 +263,14 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
               type={BUTTON_TYPE.BUTTON}
               onClick={() => handleHideModal()}
               style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto="Finalizar Atualização"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => handleFinalizarAtualizacao()}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               disabled={disableFinalizarMedicao}
             />
           </div>

@@ -29,7 +29,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
             texto="Histórico"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="float-end mt-3 mb-3 ml-3"
+            className="float-end mt-3 mb-3 ms-3"
             onClick={visualizarModal}
           />
         </td>
@@ -113,7 +113,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
             texto="Criar cópia"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
-            className="float-end mt-3 mb-3 ml-3"
+            className="float-end mt-3 mb-3 ms-3"
             onClick={() => {
               history.push(
                 `/dieta-especial/protocolo-padrao/${protocoloPadrao.uuid}/criar-copia`
@@ -124,7 +124,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
             texto="Editar"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
-            className="float-end mt-3 mb-3 ml-3"
+            className="float-end mt-3 mb-3 ms-3"
             onClick={() => {
               history.push(
                 `/dieta-especial/protocolo-padrao/${protocoloPadrao.uuid}/editar`

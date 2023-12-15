@@ -374,7 +374,7 @@ export const Filtros = ({ ...props }) => {
                     texto="Consultar"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </div>
               </div>

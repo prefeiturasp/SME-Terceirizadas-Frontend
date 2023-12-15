@@ -31,7 +31,7 @@ export default ({ show, handleClose, loading, handleSim }) => {
             texto="Ciente"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
-            className="ml-3"
+            className="ms-3"
             onClick={() => handleSim()}
           />
         </Modal.Footer>

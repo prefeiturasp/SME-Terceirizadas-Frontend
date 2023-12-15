@@ -511,7 +511,7 @@ class EditaisContratos extends Component {
                       onClick={() => {
                         this.salvaFormulario();
                       }}
-                      className="ml-3"
+                      className="ms-3"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                     />

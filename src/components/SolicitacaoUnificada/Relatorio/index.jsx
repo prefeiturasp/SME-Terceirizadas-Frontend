@@ -203,7 +203,7 @@ class Relatorio extends Component {
           texto="Marcar Conferência"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             this.showModalMarcarConferencia();
           }}
@@ -286,7 +286,7 @@ class Relatorio extends Component {
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
                         texto={textoBotaoNaoAprova}
-                        className="ml-3 mr-3 mt-4"
+                        className="ms-3 mr-3 mt-4"
                         onClick={() => this.showNaoAprovaModal("Não")}
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -310,7 +310,7 @@ class Relatorio extends Component {
                               : this.handleSubmit()
                           }
                           style={BUTTON_STYLE.GREEN}
-                          className="ml-3 mr-3 mt-4"
+                          className="ms-3 mr-3 mt-4"
                         />
                       ))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
@@ -324,13 +324,13 @@ class Relatorio extends Component {
                         type={BUTTON_TYPE.BUTTON}
                         onClick={() => this.showQuestionamentoModal("Sim")}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3 mr-3 mt-4"
+                        className="ms-3 mr-3 mt-4"
                       />
                     )}
                     {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
                       <div className="form-group float-end mt-4">
                         {solicitacaoUnificada.terceirizada_conferiu_gestao ? (
-                          <label className="ml-3 conferido">
+                          <label className="ms-3 conferido">
                             <i className="fas fa-check mr-2" />
                             Solicitação Conferida
                           </label>

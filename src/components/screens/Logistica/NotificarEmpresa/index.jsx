@@ -373,7 +373,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                                   <div className="col-12">
                                     <Botao
                                       texto="Solicitar Alteração"
-                                      className="ml-3 botao-menor"
+                                      className="ms-3 botao-menor"
                                       onClick={() => {
                                         setModalAlteracao(index);
                                       }}
@@ -387,7 +387,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                                         aprovaPrevisao(index);
                                       }}
                                       style={BUTTON_STYLE.GREEN}
-                                      className="ml-3 botao-menor"
+                                      className="ms-3 botao-menor"
                                       icon="fas fa-check"
                                     />
                                   </div>
@@ -467,11 +467,11 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                           setModalCancelar(true);
                         }}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="ml-3"
+                        className="ms-3"
                       />
                       <Botao
                         texto="Salvar Notificação"
-                        className="ml-3"
+                        className="ms-3"
                         onClick={() => {
                           salvarNotificacao(values);
                         }}
@@ -486,7 +486,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                         }}
                         disabled={validaForm(values)}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
+                        className="ms-3"
                       />
                     </div>
                   )}
@@ -500,7 +500,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                         }}
                         disabled={!confereAprovacoes() || confereAssinar()}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
+                        className="ms-3"
                       />
 
                       <Botao
@@ -511,7 +511,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                         }}
                         disabled={!confereAprovacoes() || !confereAssinar()}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
+                        className="ms-3"
                       />
                     </>
                   )}

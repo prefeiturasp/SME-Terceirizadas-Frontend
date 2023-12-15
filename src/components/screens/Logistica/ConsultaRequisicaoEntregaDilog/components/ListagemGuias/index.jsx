@@ -214,7 +214,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
               setShowModalGuia(false);
             }}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>
@@ -248,7 +248,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                 );
               }}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               disabled={carregandoModal}
             />
             <Botao
@@ -258,7 +258,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                 setShowModal(false);
               }}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
           </Modal.Footer>
         </Spin>

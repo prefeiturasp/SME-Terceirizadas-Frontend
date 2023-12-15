@@ -107,7 +107,7 @@ class Mensagem extends Component {
                     onClick={handleSubmit((values) => {
                       this.onSubmit(values);
                     })}
-                    className="ml-3"
+                    className="ms-3"
                     disabled={!tipo_email || tipo_email === "Selecione"}
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}

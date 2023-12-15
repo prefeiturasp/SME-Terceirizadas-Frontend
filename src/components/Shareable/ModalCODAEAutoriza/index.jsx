@@ -106,7 +106,7 @@ export class ModalCODAEAutoriza extends Component {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Sim"
@@ -116,7 +116,7 @@ export class ModalCODAEAutoriza extends Component {
                       }}
                       disabled={this.state.desabilitarSubmit}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

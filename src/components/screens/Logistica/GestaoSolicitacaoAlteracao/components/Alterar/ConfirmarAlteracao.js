@@ -87,7 +87,7 @@ export default ({
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         onClick={form.submit}
-        className="float-end ml-3"
+        className="float-end ms-3"
       />
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -100,14 +100,14 @@ export default ({
             type={BUTTON_TYPE.SUBMIT}
             style={BUTTON_STYLE.BLUE}
             onClick={responderSolicitacao}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Não"
             type={BUTTON_TYPE.BUTTON}
             onClick={handleClose}
             style={BUTTON_STYLE.BLUE_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>

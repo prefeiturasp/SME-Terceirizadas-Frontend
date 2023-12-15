@@ -330,7 +330,7 @@ export default class TabelaProdutos extends Component {
                     >
                       <Botao
                         texto="Ver produto"
-                        className="ml-3"
+                        className="ms-3"
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
@@ -420,7 +420,7 @@ export default class TabelaProdutos extends Component {
                               "supervisao_nutricao" && (
                               <Botao
                                 texto="Questionar nutricionista supervisor"
-                                className="ml-3"
+                                className="ms-3"
                                 type={BUTTON_TYPE.BUTTON}
                                 style={BUTTON_STYLE.GREEN_OUTLINE}
                                 disabled={desabilitaQuestionarNutrisupervisao}
@@ -437,7 +437,7 @@ export default class TabelaProdutos extends Component {
                             )}
                           <Botao
                             texto="Questionar U.E"
-                            className="ml-3"
+                            className="ms-3"
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
                             disabled={desabilitaQuestionarUE}
@@ -470,7 +470,7 @@ export default class TabelaProdutos extends Component {
                           />
                           <Botao
                             texto="Responder"
-                            className="ml-3 botaoResponder"
+                            className="ms-3 botaoResponder"
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN}
                             disabled={

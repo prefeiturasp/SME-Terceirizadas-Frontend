@@ -169,7 +169,7 @@ const Reclamacao = ({
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
           onClick={() => setExibirModal(true)}
-          className="ml-3 mr-3"
+          className="ms-3 mr-3"
           disabled={responder_deve_aparecer(reclamacao.status)}
         />
       </div>

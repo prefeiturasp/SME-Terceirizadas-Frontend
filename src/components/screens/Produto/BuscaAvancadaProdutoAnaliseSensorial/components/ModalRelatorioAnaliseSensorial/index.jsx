@@ -114,7 +114,7 @@ const ModalRelatorioAnaliseSensorial = ({
 
                         <div className="row mt-3">
                           <div className="col">
-                            <div className="ml-3">
+                            <div className="ms-3">
                               <label>Empresa solicitante (Terceirizada)</label>
                               <br />
                               <b>
@@ -129,7 +129,7 @@ const ModalRelatorioAnaliseSensorial = ({
                         <hr />
                         <div className="row mt-3">
                           <div className="col-6">
-                            <div className="ml-3">
+                            <div className="ms-3">
                               <label>Informações adicionais</label>
                               <br />
                               <b
@@ -172,7 +172,7 @@ const ModalRelatorioAnaliseSensorial = ({
                         <hr />
                         <div className="row mt-3">
                           <div className="col-3">
-                            <div className="ml-3">
+                            <div className="ms-3">
                               <label>Número de protocolo AS.</label>
                               <br />
                               <b>

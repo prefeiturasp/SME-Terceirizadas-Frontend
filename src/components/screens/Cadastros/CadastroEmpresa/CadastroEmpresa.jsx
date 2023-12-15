@@ -477,7 +477,7 @@ export const CadastroEmpresa = () => {
                             />
                             <Botao
                               texto={"Salvar"}
-                              className="ml-3"
+                              className="ms-3"
                               onClick={(e) => {
                                 e.preventDefault();
                                 abrirModal();
@@ -500,7 +500,7 @@ export const CadastroEmpresa = () => {
                                 e.preventDefault();
                                 abrirModal();
                               }}
-                              className="ml-3"
+                              className="ms-3"
                               type={BUTTON_TYPE.SUBMIT}
                               style={BUTTON_STYLE.GREEN}
                             />

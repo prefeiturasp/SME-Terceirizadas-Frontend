@@ -549,13 +549,13 @@ export default () => {
                     texto="Assinar e Enviar Cronograma"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-end ml-3"
+                    className="float-end ms-3"
                   />
                   <Botao
                     texto="Salvar Rascunho"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-end ml-3"
+                    className="float-end ms-3"
                     onClick={() => salvarCronograma(values, true)}
                     disabled={validaRascunho(values)}
                   />

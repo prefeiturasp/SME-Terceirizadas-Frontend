@@ -185,7 +185,7 @@ export default ({ atualizar }) => {
           </div>
 
           <div className="col-7">
-            <div className="subtitulo row ml-5">
+            <div className="subtitulo row ms-5">
               <div className="w-5">
                 <i className="fas fa-check mr-2" />
               </div>
@@ -263,7 +263,7 @@ export default ({ atualizar }) => {
           </div>
           <div className="col data-hora-correcao">
             Correção Solicitada em:
-            <span className="ml-1">{objeto.log_mais_recente}</span>
+            <span className="ms-1">{objeto.log_mais_recente}</span>
           </div>
         </div>
 
@@ -550,7 +550,7 @@ export default ({ atualizar }) => {
                     texto={atualizar ? "Atualizar Layout" : "Enviar Correção"}
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-end ml-3"
+                    className="float-end ms-3"
                     disabled={
                       Object.keys(errors).length > 0 ||
                       (atualizar
@@ -562,7 +562,7 @@ export default ({ atualizar }) => {
                     texto="Cancelar"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-end ml-3"
+                    className="float-end ms-3"
                     onClick={voltarPagina}
                   />
                 </div>

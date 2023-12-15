@@ -88,7 +88,7 @@ export default () => {
                   texto="Vincular"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="float-end ml-3"
+                  className="float-end ms-3"
                   onClick={() => {
                     vincularGuias();
                   }}

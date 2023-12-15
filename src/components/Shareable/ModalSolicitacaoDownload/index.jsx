@@ -29,7 +29,7 @@ const ModalSolicitacaoDownload = ({ show, setShow }) => {
           type={BUTTON_TYPE.BUTTON}
           onClick={handleClose}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="ml-3"
+          className="ms-3"
         />
         <Botao
           texto="Ir para a Central de Downloads"
@@ -38,7 +38,7 @@ const ModalSolicitacaoDownload = ({ show, setShow }) => {
             history.push(`/${CENTRAL_DOWNLOADS}`);
           }}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
         />
       </Modal.Footer>
     </Modal>

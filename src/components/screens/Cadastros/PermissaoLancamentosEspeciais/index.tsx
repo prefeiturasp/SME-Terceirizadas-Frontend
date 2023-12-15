@@ -149,7 +149,7 @@ export const PermissaoLancamentosEspeciais = () => {
                         }}
                       />
                       <Botao
-                        className="ml-3"
+                        className="ms-3"
                         texto="Filtrar"
                         style={BUTTON_STYLE.GREEN}
                         onClick={() =>

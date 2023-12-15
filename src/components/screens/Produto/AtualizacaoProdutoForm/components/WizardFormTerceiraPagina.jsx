@@ -337,7 +337,7 @@ class WizardFormTerceiraPagina extends Component {
             <Botao
               texto={"Cancelar"}
               type={BUTTON_TYPE.BUTTON}
-              className="ml-3"
+              className="ms-3"
               style={BUTTON_STYLE.GREEN_OUTLINE}
               onClick={() => {
                 this.props.showModal(true);
@@ -346,7 +346,7 @@ class WizardFormTerceiraPagina extends Component {
           )}
           <Botao
             texto={"Enviar"}
-            className="ml-3"
+            className="ms-3"
             type={BUTTON_TYPE.SUBMIT}
             style={BUTTON_STYLE.GREEN_OUTLINE}
             disabled={pristine || submitting}

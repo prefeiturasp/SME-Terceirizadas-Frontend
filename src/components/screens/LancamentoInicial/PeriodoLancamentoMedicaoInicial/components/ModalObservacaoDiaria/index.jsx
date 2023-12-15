@@ -309,7 +309,7 @@ export default ({
             ] &&
               !!values[`observacoes__dia_${dia}__categoria_${categoria}`])) ? (
             <Botao
-              className="ml-3 float-start"
+              className="ms-3 float-start"
               texto="Excluir"
               disabled={
                 location.state &&
@@ -328,14 +328,14 @@ export default ({
           )}
           <div className="botoes-right">
             <Botao
-              className="ml-3"
+              className="ms-3"
               texto="Voltar"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => onClickVoltar()}
               style={BUTTON_STYLE.GREEN_OUTLINE}
             />
             <Botao
-              className="ml-3 mr-3"
+              className="ms-3 mr-3"
               texto="Salvar"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}

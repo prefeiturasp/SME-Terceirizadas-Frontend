@@ -116,7 +116,7 @@ export default ({
                           texto="Histórico"
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
-                          className="ml-3"
+                          className="ms-3"
                           onClick={visualizarModalHistorico}
                         />
                         {[
@@ -127,7 +127,7 @@ export default ({
                           solicitacaoMedicaoInicial.ocorrencia.status
                         ) && (
                           <Botao
-                            className="float-end ml-3"
+                            className="float-end ms-3"
                             texto="Atualizar Formulário de Ocorrências"
                             style={BUTTON_STYLE.GREEN}
                             onClick={() => setShowModal(true)}

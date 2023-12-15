@@ -126,14 +126,14 @@ export default ({
               texto="SIM"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => excluirAluno(registroCodigoEol)}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               key="nao"
               texto="NÃO"
               type={BUTTON_TYPE.BUTTON}
               onClick={handleModalExcluirClose}
-              className="ml-3"
+              className="ms-3"
             />
           </>,
         ]}
@@ -182,7 +182,7 @@ export default ({
           <Botao
             texto="Adicionar"
             style={BUTTON_STYLE.GREEN}
-            className="ml-2"
+            className="ms-2"
             onClick={() => {
               const alunoSelecionado = alunos.find(
                 (aluno) =>

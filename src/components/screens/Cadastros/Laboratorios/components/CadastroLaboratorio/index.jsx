@@ -266,13 +266,13 @@ export default ({ naoEditavel = false }) => {
             texto="Salvar"
             type={BUTTON_TYPE.SUBMIT}
             style={BUTTON_STYLE.GREEN}
-            className="float-end ml-3"
+            className="float-end ms-3"
           />
           <Botao
             texto="Cancelar"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="float-end ml-3"
+            className="float-end ms-3"
             onClick={() => {
               setShowModalCancelar(true);
             }}
@@ -300,7 +300,7 @@ export default ({ naoEditavel = false }) => {
                 setShowModalCancelar(false);
               }}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto="Sim"
@@ -314,7 +314,7 @@ export default ({ naoEditavel = false }) => {
                   : history.push("/");
               }}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
             />
           </Modal.Footer>
         </Modal>
@@ -341,7 +341,7 @@ export default ({ naoEditavel = false }) => {
                 setCarregando(false);
               }}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto="Sim"
@@ -350,7 +350,7 @@ export default ({ naoEditavel = false }) => {
                 salvarLaboratorio(formValues);
               }}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
             />
           </Modal.Footer>
         </Modal>

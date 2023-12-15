@@ -193,7 +193,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                 <Botao
                   style={BUTTON_STYLE.GREEN}
                   texto="Consultar"
-                  className="ml-3"
+                  className="ms-3"
                   type={BUTTON_TYPE.SUBMIT}
                   disabled={loading || submitting}
                 />

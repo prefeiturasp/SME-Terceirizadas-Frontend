@@ -154,7 +154,7 @@ export class SolicitacaoVigente extends Component {
                           style={{ color: corIcone }}
                           className={iconClassName}
                         />
-                        <label className="ml-1 pr-3 ">{texto}</label>
+                        <label className="ms-1 pr-3 ">{texto}</label>
                         <ToggleExpandir
                           onClick={() => this.activateSolicitacao(key)}
                           ativo={solicitacaoVigente.active}

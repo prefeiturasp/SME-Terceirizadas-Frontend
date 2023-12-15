@@ -36,7 +36,7 @@ export const field = ({ input, meta, options }) => {
           onChange={handleChange}
           onFocus={onFocus}
         />
-        <label className="form-check-label ml-2" htmlFor={`checkbox-${index}`}>
+        <label className="form-check-label ms-2" htmlFor={`checkbox-${index}`}>
           {`${label}`}
         </label>
       </div>

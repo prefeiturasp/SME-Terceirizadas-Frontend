@@ -45,7 +45,7 @@ export default class CardMatriculados extends Component {
                   )}
               </div>
             </div>
-            <div className="col-6 beside-text mt-auto ml-2">
+            <div className="col-6 beside-text mt-auto ms-2">
               Informação automática disponibilizada pelo Cadastro da Unidade
               Escolar <br />
             </div>
