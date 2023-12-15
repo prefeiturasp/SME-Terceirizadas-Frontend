@@ -146,7 +146,7 @@ export const AlunosMatriculados = () => {
                 current={page}
               />
               <div className="row">
-                <div className="col-12 text-right">
+                <div className="col-12 text-end">
                   <Botao
                     className="me-2"
                     texto="Baixar XLSX"

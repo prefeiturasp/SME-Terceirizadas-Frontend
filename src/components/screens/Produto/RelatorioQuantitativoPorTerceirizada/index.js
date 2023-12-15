@@ -191,7 +191,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
                   </Col>
                 </Row>
                 <div className="row row-botoes">
-                  <div className="col-12 text-right col-botoes">
+                  <div className="col-12 text-end col-botoes">
                     <Botao
                       texto="Limpar Filtros"
                       type={BUTTON_TYPE.BUTTON}

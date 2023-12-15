@@ -52,7 +52,7 @@ export default ({
                   </p>
                 </div>
                 {solicitacaoMedicaoInicial.ocorrencia ? (
-                  <div className="col-8 text-right">
+                  <div className="col-8 text-end">
                     <span className="status-ocorrencia text-center me-3">
                       <b
                         className={

@@ -16,7 +16,7 @@ export const Botoes = ({
 }) => {
   return (
     <div className="row mb-3">
-      <div className="col-12 text-right">
+      <div className="col-12 text-end">
         <Botao
           onClick={() => {
             setVerProduto(verUnicoProduto ? null : produto);

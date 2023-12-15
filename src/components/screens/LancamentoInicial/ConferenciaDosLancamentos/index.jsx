@@ -692,7 +692,7 @@ export const ConferenciaDosLancamentos = () => {
                             </div>
                             {solicitacao.com_ocorrencias ? (
                               <Fragment>
-                                <div className="col-6 text-right">
+                                <div className="col-6 text-end">
                                   <span className="status-ocorrencia text-center me-3">
                                     <b
                                       className={
@@ -757,7 +757,7 @@ export const ConferenciaDosLancamentos = () => {
                                     logCorrecaoOcorrenciaCODAE &&
                                     `${textoOcorrencia} ${logCorrecaoOcorrenciaCODAE.criado_em}`}
                                 </div>
-                                <div className="col-7 text-right mt-3">
+                                <div className="col-7 text-end mt-3">
                                   <Botao
                                     texto="Histórico"
                                     type={BUTTON_TYPE.BUTTON}

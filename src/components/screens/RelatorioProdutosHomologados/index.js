@@ -148,7 +148,7 @@ const RelatorioProdutosHomologados = () => {
                   />
                   <hr />
                   <div className="row">
-                    <div className="col-12 text-right">
+                    <div className="col-12 text-end">
                       <Botao
                         texto="Exportar Excel"
                         style={BUTTON_STYLE.GREEN_OUTLINE}

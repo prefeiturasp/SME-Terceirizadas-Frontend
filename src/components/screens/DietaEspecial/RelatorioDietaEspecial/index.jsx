@@ -145,7 +145,7 @@ export const RelatorioDietaEspecial = () => {
                     {dietasEspeciais && (
                       <>
                         <div className="row">
-                          <div className="total-dietas col-12 text-right">
+                          <div className="total-dietas col-12 text-end">
                             Total de dietas:
                             <div className="numero-total-dietas">
                               {dietasEspeciais.count}
@@ -166,7 +166,7 @@ export const RelatorioDietaEspecial = () => {
                           </div>
                         )}
                         <div className="row">
-                          <div className="col-12 text-right">
+                          <div className="col-12 text-end">
                             <Botao
                               texto="Exportar PDF"
                               style={

@@ -10635,11 +10635,11 @@ button.bg-dark:focus {
   white-space: nowrap;
 }
 
-.text-left {
+.text-start {
   text-align: left !important;
 }
 
-.text-right {
+.text-end {
   text-align: right !important;
 }
 

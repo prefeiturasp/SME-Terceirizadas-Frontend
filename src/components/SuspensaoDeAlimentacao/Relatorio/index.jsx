@@ -205,7 +205,7 @@ class RelatorioSuspensaoAlimentacao extends Component {
                     <>
                       {" "}
                       <div className="row">
-                        <div className="col-12 text-right">
+                        <div className="col-12 text-end">
                           <Botao
                             texto="Cancelar"
                             onClick={() =>

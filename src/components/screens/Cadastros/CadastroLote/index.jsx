@@ -471,7 +471,7 @@ class CadastroLote extends Component {
               )}
               <div className="row mt-5">
                 {!deactivate && (
-                  <div className="col-12 text-right">
+                  <div className="col-12 text-end">
                     {!uuid && (
                       <Botao
                         texto="Limpar Campos"

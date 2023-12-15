@@ -62,7 +62,7 @@ const CardBody = (props) => {
                       ehTerceirizada && props.listaStatus && props.listaLotes
                         ? "col-3"
                         : ehDashboardGestaoProduto
-                        ? "col-12 text-right"
+                        ? "col-12 text-end"
                         : exibirFiltrosDataEventoETipoSolicitacao
                         ? "col-3 px-0"
                         : "col-6"

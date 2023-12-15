@@ -165,7 +165,7 @@ class Step2 extends Component {
                     <div className="title col-4">
                       {this.retornaNomesFormatados(informacao)}
                     </div>
-                    <div className="col-8 text-right">
+                    <div className="col-8 text-end">
                       <ToggleExpandir
                         onClick={() => this.activateInformacao(key)}
                         ativo={informacao.active}

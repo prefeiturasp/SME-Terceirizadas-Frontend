@@ -218,7 +218,7 @@ export const LancamentoPorPeriodoCEI = ({
               />
             ) : (
               <div className="row">
-                <div className="col-12 text-right">
+                <div className="col-12 text-end">
                   <Botao
                     texto="Exportar PDF"
                     style={BUTTON_STYLE.GREEN_OUTLINE}

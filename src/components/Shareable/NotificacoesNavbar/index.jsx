@@ -58,7 +58,7 @@ export default () => {
                 >
                   {notificacao.lido ? "Lida" : "Não Lida"}
                 </td>
-                <td className="py-1 px-2 align-middle w-25 text-right">
+                <td className="py-1 px-2 align-middle w-25 text-end">
                   {notificacao.criado_em}
                 </td>
               </tr>

@@ -143,7 +143,7 @@ export const FormBuscaProduto = ({
             </Col>
           </Row>
           <div className="row">
-            <div className="col-12 text-right">
+            <div className="col-12 text-end">
               {!!exibirBotaoVoltar && (
                 <Botao
                   type={BUTTON_TYPE.BUTTON}

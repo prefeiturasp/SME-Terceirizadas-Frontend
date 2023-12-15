@@ -243,7 +243,7 @@ export class Login extends Component {
           </Modal.Body>
         </Modal>
         <form className="login" onSubmit={handleSubmit(this.handleSubmit)}>
-          <p className="como-acessar text-right">
+          <p className="como-acessar text-end">
             <span onClick={() => this.openModal()}>Como Acessar?</span>
           </p>
           <Field

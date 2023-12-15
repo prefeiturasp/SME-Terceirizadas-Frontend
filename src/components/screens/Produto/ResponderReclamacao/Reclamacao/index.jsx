@@ -163,7 +163,7 @@ const Reclamacao = ({
           return <LogReclamacao key={index} log={log} />;
         })}
       </div>
-      <div className="text-right">
+      <div className="text-end">
         <Botao
           texto="Responder"
           type={BUTTON_TYPE.BUTTON}

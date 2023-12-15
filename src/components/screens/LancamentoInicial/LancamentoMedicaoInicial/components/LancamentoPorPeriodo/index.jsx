@@ -487,7 +487,7 @@ export default ({
               />
             ) : (
               <div className="row">
-                <div className="col-12 text-right">
+                <div className="col-12 text-end">
                   {renderBotaoExportarPlanilha() && (
                     <a href={getPathPlanilhaOcorr()}>
                       <Botao

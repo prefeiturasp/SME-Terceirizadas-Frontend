@@ -468,7 +468,7 @@ export const CadastroEmpresa = () => {
                     <div className="card-body">
                       <div className="row mt-5">
                         {uuid === null ? (
-                          <div className="col-12 text-right">
+                          <div className="col-12 text-end">
                             <Botao
                               texto="Cancelar"
                               onClick={() => form.restart()}
@@ -487,7 +487,7 @@ export const CadastroEmpresa = () => {
                             />
                           </div>
                         ) : (
-                          <div className="col-12 text-right">
+                          <div className="col-12 text-end">
                             <Link to="/configuracoes/cadastros/empresas-cadastradas">
                               <Botao
                                 texto="Cancelar"

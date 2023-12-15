@@ -149,7 +149,7 @@ export class SolicitacaoVigente extends Component {
                       <div className="col-4">
                         {`Solicitação: # ${solicitacaoVigente.id_externo}`}
                       </div>
-                      <div className="col-8 text-right">
+                      <div className="col-8 text-end">
                         <i
                           style={{ color: corIcone }}
                           className={iconClassName}

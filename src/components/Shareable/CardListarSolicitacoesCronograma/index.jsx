@@ -25,7 +25,7 @@ export default (props) => {
                         <p className={`data ms-4`}>{`${value.texto}`}</p>
                       </NavLink>
                     </div>
-                    <span className={`date-time col-3 text-right`}>
+                    <span className={`date-time col-3 text-end`}>
                       {value.data}
                     </span>
                   </div>

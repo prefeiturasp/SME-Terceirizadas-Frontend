@@ -522,7 +522,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                 className="input-busca-nome-item"
                               />
                             </div>
-                            <div className="col-4 mt-auto text-right">
+                            <div className="col-4 mt-auto text-end">
                               <Botao
                                 type={BUTTON_TYPE.BUTTON}
                                 onClick={() => resetForm(form)}

@@ -199,7 +199,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                     />
                     {visualizaBotoesDoFluxo(solicitacao) && (
                       <div className="row">
-                        <div className="col-12 text-right">
+                        <div className="col-12 text-end">
                           {EXIBIR_BOTAO_NAO_APROVAR && (
                             <Botao
                               texto={textoBotaoNaoAprova}

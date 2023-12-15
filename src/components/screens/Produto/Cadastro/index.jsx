@@ -534,7 +534,7 @@ class cadastroProduto extends Component {
                   <div className="col-12 mt-3">
                     <hr />
                   </div>
-                  <div className="col-12 text-right pt-3">
+                  <div className="col-12 text-end pt-3">
                     <Botao
                       texto={"Anterior"}
                       className="me-3"

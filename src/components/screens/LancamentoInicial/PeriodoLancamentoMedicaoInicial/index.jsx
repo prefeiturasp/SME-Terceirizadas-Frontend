@@ -2096,7 +2096,7 @@ export default () => {
 
   return (
     <>
-      <div className="text-right botao-voltar-lancamento-medicao">
+      <div className="text-end botao-voltar-lancamento-medicao">
         <Botao
           type={BUTTON_TYPE.BUTTON}
           texto={"Voltar"}

@@ -589,7 +589,7 @@ export default () => {
                                 onClick={() =>
                                   toggleBtnAlimentos(alimento.uuid, index)
                                 }
-                                className="btn btn-link btn-block text-left px-0"
+                                className="btn btn-link btn-block text-start px-0"
                                 type="button"
                                 data-toggle="collapse"
                                 data-target={`#collapse_${alimento.uuid}`}

@@ -488,7 +488,7 @@ class EditaisContratos extends Component {
 
               <footer>
                 <div className="card-body row">
-                  <div className="col-12 text-right">
+                  <div className="col-12 text-end">
                     {!uuid ? (
                       <Botao
                         texto="Cancelar"

@@ -96,7 +96,7 @@ class Mensagem extends Component {
               </div>
               <div className="row pt-3 mt-5">
                 <div className="col-4 mt-4" />
-                <div className="col-8 text-right">
+                <div className="col-8 text-end">
                   <Botao
                     texto="Cancelar"
                     onClick={() => this.props.reset()}

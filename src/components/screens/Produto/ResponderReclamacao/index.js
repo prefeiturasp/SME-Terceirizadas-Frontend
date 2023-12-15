@@ -100,7 +100,7 @@ const TabelaProdutos = ({
               </div>
               {ativos.includes(indexProduto) && (
                 <Fragment key={indexProduto}>
-                  <div className="mt-2 text-right">
+                  <div className="mt-2 text-end">
                     <Link
                       to={`/gestao-produto/relatorio?uuid=${produto.ultima_homologacao.uuid}`}
                     >

@@ -283,7 +283,7 @@ export const Filtros = ({ ...props }) => {
                 </div>
 
                 <div className="row mt-3">
-                  <div className="col-12 text-right">
+                  <div className="col-12 text-end">
                     <Botao
                       texto="Limpar Filtros"
                       style={BUTTON_STYLE.GREEN_OUTLINE}

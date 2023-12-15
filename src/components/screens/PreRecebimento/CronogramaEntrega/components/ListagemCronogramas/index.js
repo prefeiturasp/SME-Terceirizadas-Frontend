@@ -56,7 +56,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
               Resultados da Pesquisa
             </p>
           </div>
-          <div className="col-7 text-right">
+          <div className="col-7 text-end">
             <p className="helper-grid-alunos-matriculados">
               <i className="fa fa-info-circle me-2" />
               Veja a descrição do produto passando o mouse sobre o nome.

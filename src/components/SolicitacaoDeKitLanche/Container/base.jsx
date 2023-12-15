@@ -684,7 +684,7 @@ export class SolicitacaoDeKitLanche extends Component {
                 />
               </div>
               <div className="row mt-5">
-                <div className="col-12 text-right">
+                <div className="col-12 text-end">
                   <Botao
                     texto="Cancelar"
                     onClick={(e) => this.resetForm(e)}

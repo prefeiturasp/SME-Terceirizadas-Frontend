@@ -41,7 +41,7 @@ const Collapse: React.FC<Props> = ({
                   <div className="col-1 align-self-center">
                     <button
                       onClick={() => toggleCollapse(index)}
-                      className="btn btn-link btn-block text-right px-0"
+                      className="btn btn-link btn-block text-end px-0"
                       type="button"
                       data-toggle="collapse"
                       data-target={`#collapse_${index}`}

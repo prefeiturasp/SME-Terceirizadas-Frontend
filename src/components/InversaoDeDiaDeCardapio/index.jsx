@@ -496,7 +496,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                     />
                   </div>
                 </div>
-                <div className="row text-right mt-4">
+                <div className="row text-end mt-4">
                   <div className="col-12 mt-2">
                     <Botao
                       texto="Cancelar"

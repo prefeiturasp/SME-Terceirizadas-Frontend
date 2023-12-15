@@ -376,7 +376,7 @@ export const DisponibilizacaoDeSolicitacoes = (props) => {
           </Modal>
         </article>
         <div className="row mb-3">
-          <div className="col-12 text-right pt-3">
+          <div className="col-12 text-end pt-3">
             <Botao
               style={BUTTON_STYLE.GREEN_OUTLINE}
               texto="Enviar todos"

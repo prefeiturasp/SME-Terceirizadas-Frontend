@@ -212,7 +212,7 @@ const DetalheDoProduto = ({
               <div className="school-container col-md-12 me-4">
                 <div className="row pt-2 pb-2 title">
                   <div className="title col-4">{informacao.nome}</div>
-                  <div className="col-8 text-right">
+                  <div className="col-8 text-end">
                     <ToggleExpandir
                       onClick={() => {
                         ativos.includes(index)

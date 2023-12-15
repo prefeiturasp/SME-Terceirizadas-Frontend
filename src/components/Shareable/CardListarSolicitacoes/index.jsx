@@ -60,9 +60,7 @@ export class CardListarSolicitacoes extends Component {
                           </p>
                         </NavLink>
                       </div>
-                      <span
-                        className={`date-time col-3 text-right ${conferida}`}
-                      >
+                      <span className={`date-time col-3 text-end ${conferida}`}>
                         {value.date}
                       </span>
                     </div>

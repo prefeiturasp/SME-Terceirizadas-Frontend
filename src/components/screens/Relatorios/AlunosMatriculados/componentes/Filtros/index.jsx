@@ -247,7 +247,7 @@ export const Filtros = ({ ...props }) => {
               </>
             )}
             <div className="row mt-3">
-              <div className="col-12 text-right">
+              <div className="col-12 text-end">
                 <Botao
                   texto="Limpar Filtros"
                   type={BUTTON_TYPE.BUTTON}
