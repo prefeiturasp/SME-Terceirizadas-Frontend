@@ -144,7 +144,7 @@ export default class CorpoRelatorio extends Component {
         )}
         <article className="flex-botoes-relatorio">
           <div className="row col-12">
-            <div className="row col-10 ml-0">
+            <div className="row col-10 ms-0">
               {logAnaliseSensorial && (
                 <>
                   <div className="col-6 pl-0">
@@ -164,7 +164,7 @@ export default class CorpoRelatorio extends Component {
               )}
 
               {logAnaliseSensorial && (
-                <section className="texto-wysiwyg row col-12 ml-0">
+                <section className="texto-wysiwyg row col-12 ms-0">
                   <div className="col-12">
                     <p
                       dangerouslySetInnerHTML={{

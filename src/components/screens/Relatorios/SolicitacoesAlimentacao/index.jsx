@@ -163,7 +163,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
                     type={BUTTON_TYPE.BUTTON}
                     disabled={submitting}
                     onClick={() => exportarXLSX()}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   {exibirModalCentralDownloads && (
                     <ModalSolicitacaoDownload

@@ -322,7 +322,7 @@ export default ({ analiseSolicitacao }) => {
           {solicitacaoAlteracaoCronograma && (
             <>
               <div className="row pb-3">
-                <p className="head-green mt-3 ml-3 mb-5">
+                <p className="head-green mt-3 ms-3 mb-5">
                   Status do Cronograma
                 </p>
                 <FluxoDeStatusPreRecebimento

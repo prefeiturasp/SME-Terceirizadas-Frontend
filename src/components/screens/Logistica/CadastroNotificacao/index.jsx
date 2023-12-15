@@ -135,7 +135,7 @@ export default () => {
           texto="Excluir Vínculo"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => setModal(guia)}
         />
       );
@@ -145,7 +145,7 @@ export default () => {
           texto="Vincular Guia"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             setGuiaModal(false);
             vincularGuia(guia);
@@ -228,7 +228,7 @@ export default () => {
                     texto="Salvar Rascunho"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-end ml-3"
+                    className="float-end ms-3"
                     onClick={salvarNotificacao}
                     disabled={guiasVinculadas.length === 0}
                   />

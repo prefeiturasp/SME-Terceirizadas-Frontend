@@ -163,7 +163,7 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
               setShowModalGuia(false);
             }}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>
@@ -194,7 +194,7 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
                 );
               }}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               disabled={carregandoModal}
             />
             <Botao
@@ -204,7 +204,7 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
                 setShowModal(false);
               }}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
           </Modal.Footer>
         </Spin>

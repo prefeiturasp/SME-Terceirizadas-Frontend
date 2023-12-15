@@ -110,7 +110,7 @@ class CardsComBandeira extends Component {
           <div className="col-12">
             <p className="float-end">
               <Botao
-                className="ml-2"
+                className="ms-2"
                 style={BUTTON_STYLE.BLUE_OUTLINE}
                 icon={BUTTON_ICON.PRINT}
                 texto={"Imprimir"}

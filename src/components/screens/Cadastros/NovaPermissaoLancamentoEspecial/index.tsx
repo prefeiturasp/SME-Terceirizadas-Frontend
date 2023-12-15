@@ -556,7 +556,7 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                           {aliLancEspeciais.map((alimentacao) => (
                             <Checkbox
                               onChange={(e) => onChangeCheckBox(form, e)}
-                              className="ck-lancamentos-especiais mb-3 mr-4 ml-3"
+                              className="ck-lancamentos-especiais mb-3 mr-4 ms-3"
                               key={alimentacao.uuid}
                               value={alimentacao.uuid}
                               name={`ck_lancamentos_especiais__${alimentacao.uuid}`}

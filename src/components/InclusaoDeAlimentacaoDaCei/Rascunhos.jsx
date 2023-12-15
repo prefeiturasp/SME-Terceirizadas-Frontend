@@ -16,11 +16,11 @@ export const Rascunhos = ({
         return (
           <div key={key} className="draft bg-white border rounded mt-1 p-2">
             <div className="mt-2">
-              <label className="bold ml-3">
+              <label className="bold ms-3">
                 {`Inclusão de Alimentação # ${id_externo}`}
               </label>
               <span
-                className="ml-3 p-1 border rounded"
+                className="ms-3 p-1 border rounded"
                 style={{ background: backgroundColor }}
               >
                 {inclusao.status}
@@ -35,7 +35,7 @@ export const Rascunhos = ({
                 <i className="fas fa-edit" />
               </span>
             </div>
-            <div className="ml-3">
+            <div className="ms-3">
               <p>{inclusao.data}</p>
             </div>
           </div>

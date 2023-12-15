@@ -881,7 +881,7 @@ export const ConferenciaDosLancamentos = () => {
                           usuarioEhMedicao())) && (
                         <>
                           <Botao
-                            className="ml-3"
+                            className="ms-3"
                             texto="Solicitar Correção"
                             style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
                             onClick={() =>
@@ -890,7 +890,7 @@ export const ConferenciaDosLancamentos = () => {
                             disabled={desabilitarSolicitarCorrecao}
                           />
                           <Botao
-                            className="ml-3"
+                            className="ms-3"
                             texto={
                               usuarioEhMedicao()
                                 ? "Aprovar Medição"
@@ -915,7 +915,7 @@ export const ConferenciaDosLancamentos = () => {
                       )}
                       {usuarioEhDRE() && (
                         <Botao
-                          className="ml-3"
+                          className="ms-3"
                           texto="Ciente das Correções"
                           style={BUTTON_STYLE.GREEN}
                           onClick={async () => {

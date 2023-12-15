@@ -137,7 +137,7 @@ export default ({
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-end ml-3"
+                className="float-end ms-3"
                 disabled={submitting}
               />
 
@@ -145,7 +145,7 @@ export default ({
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-end ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset({});
                   setGuias(undefined);

@@ -106,7 +106,7 @@ const TabelaResultado = ({
               texto="Exportar PDF"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
-              className="float-end ml-3"
+              className="float-end ms-3"
               onClick={() => handleClickDownload()}
             />
           </div>

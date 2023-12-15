@@ -65,7 +65,7 @@ export default () => {
             texto={`Realizar reposição`}
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="float-end ml-3"
+            className="float-end ms-3"
           />
         </NavLink>
       );
@@ -81,7 +81,7 @@ export default () => {
             texto={`Realizar conferência`}
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="float-end ml-3"
+            className="float-end ms-3"
           />
         </NavLink>
       );
@@ -169,7 +169,7 @@ export default () => {
                     texto="Imprimir Guia"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-end ml-3"
+                    className="float-end ms-3"
                     onClick={() => baixarPDFGuiaRemessa(guia)}
                   />
                 </div>

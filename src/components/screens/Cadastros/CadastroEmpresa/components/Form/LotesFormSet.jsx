@@ -107,7 +107,7 @@ export const LotesFormSet = (props) => {
                     Lotes de atendimento
                     <span
                       onClick={() => setAtualizarLotes(!atualizarLotes)}
-                      className="link editar-lotes ml-3"
+                      className="link editar-lotes ms-3"
                     >
                       editar lotes
                     </span>

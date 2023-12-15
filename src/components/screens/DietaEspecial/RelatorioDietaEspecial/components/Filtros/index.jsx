@@ -299,7 +299,7 @@ export const Filtros = ({ ...props }) => {
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                       icon={BUTTON_ICON.FILTER}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

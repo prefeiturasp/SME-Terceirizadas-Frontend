@@ -176,7 +176,7 @@ export const QuantidadeAlunosEMEI = ({ meusDados }) => {
           <th className="col-4 d-flex justify-content-center">
             <span className="my-auto">Quantidade</span>
             <Field
-              className="ml-3"
+              className="ms-3"
               component={InputText}
               type="number"
               name="solicitacao_emei.quantidade_alunos"

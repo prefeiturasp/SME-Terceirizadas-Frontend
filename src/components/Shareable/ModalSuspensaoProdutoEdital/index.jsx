@@ -216,12 +216,12 @@ const ModalSuspensaoProdutoEdital = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={closeModalSuspender}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   <Botao
                     texto="Suspender"
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => {
                       const todosEditaisSelecionados =

@@ -75,7 +75,7 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
             </div>
             <div className="col col-lg-9 col-xl-6">
               <div className="row">
-                <label className="ml-3">Data da solicitação</label>
+                <label className="ms-3">Data da solicitação</label>
               </div>
               <div className="row">
                 <div className="col mt-1">
@@ -117,7 +117,7 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-end ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
 
@@ -125,7 +125,7 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-end ml-3"
+              className="float-end ms-3"
               onClick={() => {
                 form.reset({
                   nome_produto: undefined,

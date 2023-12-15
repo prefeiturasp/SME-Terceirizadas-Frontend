@@ -494,7 +494,7 @@ class CadastroLote extends Component {
                     <Botao
                       texto={"Salvar"}
                       onClick={handleSubmit(() => this.exibirModal())}
-                      className="ml-3"
+                      className="ms-3"
                       type={BUTTON_STYLE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                     />

@@ -130,7 +130,7 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                   <>
                     <p>
                       Selecione a(s) data(s) para solicitar o cancelamento:
-                      <span className="ml-2">
+                      <span className="ms-2">
                         {solicitacao.data_inicial} até {solicitacao.data_final}
                       </span>
                     </p>
@@ -159,14 +159,14 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={submitting}
-                className="ml-3"
+                className="ms-3"
               />
             </Modal.Footer>
           </form>

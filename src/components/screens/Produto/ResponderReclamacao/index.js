@@ -108,7 +108,7 @@ const TabelaProdutos = ({
                         texto="Ver produto"
                         type={BUTTON_TYPE.SUBMIT}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="ml-3 mr-3"
+                        className="ms-3 mr-3"
                       />
                     </Link>
                   </div>

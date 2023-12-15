@@ -22,7 +22,7 @@ export default (props) => {
                   <div key={key} className="row">
                     <div className="col-9">
                       <NavLink key={key} to={value.link}>
-                        <p className={`data ml-4`}>{`${value.texto}`}</p>
+                        <p className={`data ms-4`}>{`${value.texto}`}</p>
                       </NavLink>
                     </div>
                     <span className={`date-time col-3 text-right`}>

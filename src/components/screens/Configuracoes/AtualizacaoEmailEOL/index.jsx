@@ -162,14 +162,14 @@ export default () => {
                       texto="Salvar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="float-end ml-3"
+                      className="float-end ms-3"
                     />
 
                     <Botao
                       texto="Limpar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-end ml-3"
+                      className="float-end ms-3"
                       onClick={() => {
                         form.restart({});
                         setRfBuscado(false);

@@ -73,7 +73,7 @@ export const CardLancamentoCEI = ({
         <span style={{ color: cor }}>
           <b>{quantidadeAlimentacao(tipoAlimentacao.nome)}</b>
         </span>
-        <span className="ml-1">- {tipoAlimentacao.nome}</span>
+        <span className="ms-1">- {tipoAlimentacao.nome}</span>
         <br />
       </div>
     ));
@@ -189,7 +189,7 @@ export const CardLancamentoCEI = ({
                             : 0}
                         </b>
                       </span>
-                      <span className="ml-1">
+                      <span className="ms-1">
                         - alunos atendidos com{" "}
                         {numeroRefeicoesDiarias(textoCabecalho)} refeições
                         diárias

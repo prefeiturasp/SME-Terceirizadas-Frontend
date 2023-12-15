@@ -295,7 +295,7 @@ export default ({
                       <Botao
                         texto="Salvar"
                         style={BUTTON_STYLE.GREEN}
-                        className="float-end ml-3"
+                        className="float-end ms-3"
                         onClick={() => handleClickSalvar()}
                         disabled={!emEdicao}
                       />
@@ -303,7 +303,7 @@ export default ({
                         texto="Editar"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         icon={BUTTON_ICON.PEN}
-                        className="float-end ml-3"
+                        className="float-end ms-3"
                         onClick={() => handleClickEditar()}
                         disabled={emEdicao}
                       />

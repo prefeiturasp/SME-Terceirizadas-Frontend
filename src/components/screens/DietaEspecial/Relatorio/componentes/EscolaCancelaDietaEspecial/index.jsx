@@ -28,7 +28,7 @@ const EscolaCancelaDietaEspecial = ({ uuid, onCancelar }) => {
         <div className="form-group row float-end mt-4">
           <Botao
             texto="Cancelar"
-            className="ml-3"
+            className="ms-3"
             onClick={() => setShowModal(true)}
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}

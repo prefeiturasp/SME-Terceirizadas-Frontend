@@ -192,13 +192,13 @@ export default () => {
                     texto="Salvar"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-end ml-3"
+                    className="float-end ms-3"
                   />
                   <Botao
                     texto="Cancelar"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-end ml-3"
+                    className="float-end ms-3"
                     onClick={() => {
                       setShowModalCancelar(true);
                     }}
@@ -231,7 +231,7 @@ export default () => {
                         setShowModalCancelar(false);
                       }}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Sim"
@@ -243,7 +243,7 @@ export default () => {
                         );
                       }}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </Modal.Footer>
                 </Modal>
@@ -270,7 +270,7 @@ export default () => {
                         setCarregando(false);
                       }}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Sim"
@@ -279,7 +279,7 @@ export default () => {
                         salvarDados(values, form);
                       }}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </Modal.Footer>
                 </Modal>

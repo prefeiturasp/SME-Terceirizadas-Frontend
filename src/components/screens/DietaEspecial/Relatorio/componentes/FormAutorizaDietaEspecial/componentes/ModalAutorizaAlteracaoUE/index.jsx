@@ -82,13 +82,13 @@ export default (props) => (
             type={BUTTON_TYPE.BUTTON}
             onClick={props.handleSubmit}
             style={BUTTON_STYLE.GREEN}
-            className="ml-3 float-end"
+            className="ms-3 float-end"
           />
           <Botao
             texto="Cancelar"
             onClick={props.closeModal}
             style={BUTTON_STYLE.DARK_OUTLINE}
-            className="ml-3 float-end"
+            className="ms-3 float-end"
           />
         </div>
       </Modal.Footer>

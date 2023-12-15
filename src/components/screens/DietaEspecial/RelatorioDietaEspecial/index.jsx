@@ -195,7 +195,7 @@ export const RelatorioDietaEspecial = () => {
                                   : BUTTON_ICON.FILE_EXCEL
                               }
                               disabled={imprimindoPdf || imprimindoExcel}
-                              className="ml-3"
+                              className="ms-3"
                               onClick={() => exportarXLSX(values)}
                             />
                             {exibirModalCentralDownloads && (

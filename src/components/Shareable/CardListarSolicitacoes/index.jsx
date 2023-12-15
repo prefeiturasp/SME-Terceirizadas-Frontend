@@ -44,7 +44,7 @@ export class CardListarSolicitacoes extends Component {
                             }`
                           }
                         >
-                          <p className={`data ml-4 ${conferida}`}>
+                          <p className={`data ms-4 ${conferida}`}>
                             {[
                               GESTAO_PRODUTO_CARDS.HOMOLOGADOS,
                               GESTAO_PRODUTO_CARDS.PRODUTOS_SUSPENSOS,

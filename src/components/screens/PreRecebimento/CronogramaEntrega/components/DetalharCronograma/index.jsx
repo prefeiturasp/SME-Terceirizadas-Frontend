@@ -82,7 +82,7 @@ export default () => {
         texto="Baixar PDF Cronograma"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN_OUTLINE}
-        className="float-end ml-3"
+        className="float-end ms-3"
         onClick={() => baixarPDFCronograma()}
       />
     );
@@ -105,7 +105,7 @@ export default () => {
               {cronograma.logs && (
                 <>
                   <div className="row pb-3">
-                    <p className="head-green mt-3 ml-3 mb-5">
+                    <p className="head-green mt-3 ms-3 mb-5">
                       Status do Cronograma
                     </p>
                     <FluxoDeStatusPreRecebimento
@@ -158,7 +158,7 @@ export default () => {
                     texto="Voltar"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-end ml-3"
+                    className="float-end ms-3"
                     onClick={() => handleBack()}
                   />
                   {botaoImprimir}

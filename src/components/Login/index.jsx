@@ -477,11 +477,11 @@ export class Login extends Component {
                 />
               </div>
             </div>
-            <div className="alinha-direita mt-3 ml-4">
+            <div className="alinha-direita mt-3 ms-4">
               <Botao
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 texto="Cancelar"
-                className="col-md-2 ml-3"
+                className="col-md-2 ms-3"
                 disabled={bloquearBotao}
                 onClick={() =>
                   this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
@@ -491,7 +491,7 @@ export class Login extends Component {
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 texto="Cadastrar"
-                className="col-md-2 ml-3"
+                className="col-md-2 ms-3"
                 disabled={bloquearBotao}
               />
             </div>
@@ -606,7 +606,7 @@ export class Login extends Component {
 
                 <div className="alinha-direita">
                   <Botao
-                    className="col-md-3 ml-3"
+                    className="col-md-3 ms-3"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     texto="Cancelar"
                     type={BUTTON_TYPE.SUBMIT}
@@ -615,7 +615,7 @@ export class Login extends Component {
                     }
                   />
                   <Botao
-                    className="col-md-3 ml-3"
+                    className="col-md-3 ms-3"
                     style={BUTTON_STYLE.GREEN}
                     texto="Continuar"
                     type={BUTTON_TYPE.SUBMIT}

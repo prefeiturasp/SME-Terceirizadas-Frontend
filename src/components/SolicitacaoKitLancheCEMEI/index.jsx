@@ -396,7 +396,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                       texto={
                         values.uuid ? "Atualizar rascunho" : "Salvar rascunho"
                       }
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -410,7 +410,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                         handleSubmit((values) => onSubmit(values, form));
                       }}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

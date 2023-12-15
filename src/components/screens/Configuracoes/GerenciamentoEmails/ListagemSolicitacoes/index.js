@@ -70,13 +70,13 @@ export default ({
                           className="grid-table body-table hand-cursor"
                         >
                           <div className="col-12 row-email-icons">
-                            <span className="ml-5 col-10 email">
+                            <span className="ms-5 col-10 email">
                               {emailDict.email}
                             </span>
                             <span className="icons">
                               <Tooltip title="Editar e-mail">
                                 <FormOutlined
-                                  className="ml-5 mr-3"
+                                  className="ms-5 mr-3"
                                   onClick={() => {
                                     setShowModal(true);
                                     setTerceirizada(terceirizada);

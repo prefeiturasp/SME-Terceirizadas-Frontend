@@ -360,7 +360,7 @@ class WizardFormSegundaPagina extends React.Component {
             <Botao
               texto={"Cancelar"}
               type={BUTTON_TYPE.BUTTON}
-              className="ml-3"
+              className="ms-3"
               style={BUTTON_STYLE.GREEN_OUTLINE}
               onClick={() => {
                 this.props.showModal(true);
@@ -371,7 +371,7 @@ class WizardFormSegundaPagina extends React.Component {
             <Botao
               texto={"Próximo"}
               type={BUTTON_TYPE.SUBMIT}
-              className="ml-3"
+              className="ms-3"
               style={BUTTON_STYLE.GREEN_OUTLINE}
               onClick={() => {
                 this.props.passouSegundoStep(valuesForm);

@@ -68,7 +68,7 @@ export default ({ resultado, changePage }) => {
                           </button>
                           |
                           <button
-                            className="botaoExcluir ml-2"
+                            className="botaoExcluir ms-2"
                             onClick={() => openModalExcluir(item)}
                             disabled={
                               (item.tipo === "UNIDADE_MEDIDA" ||

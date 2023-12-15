@@ -22,14 +22,14 @@ export default (props) => (
           props.closeModal();
         }}
         style={BUTTON_STYLE.BLUE}
-        className="ml-3"
+        className="ms-3"
       />
       <Botao
         texto="NÃO"
         type={BUTTON_TYPE.BUTTON}
         onClick={props.closeModal}
         style={BUTTON_STYLE.BLUE}
-        className="ml-3"
+        className="ms-3"
       />
     </Modal.Footer>
   </Modal>

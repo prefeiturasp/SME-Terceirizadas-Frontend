@@ -402,7 +402,7 @@ const FormAutorizaDietaEspecial = ({
                         type={BUTTON_TYPE.BUTTON}
                         onClick={() => validaAlergias(form)}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3 float-end"
+                        className="ms-3 float-end"
                         disabled={submitting}
                       />
                       <Botao
@@ -410,7 +410,7 @@ const FormAutorizaDietaEspecial = ({
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.RED_OUTLINE}
                         onClick={() => setShowModalNegaDieta(true)}
-                        className="ml-3 float-end"
+                        className="ms-3 float-end"
                         disabled={submitting}
                       />
                     </>
@@ -426,7 +426,7 @@ const FormAutorizaDietaEspecial = ({
                         type={BUTTON_TYPE.BUTTON}
                         onClick={() => validaAlergias(form)}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3 float-end"
+                        className="ms-3 float-end"
                         disabled={submitting}
                       />
                       <Botao
@@ -434,7 +434,7 @@ const FormAutorizaDietaEspecial = ({
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.RED_OUTLINE}
                         onClick={() => cancelar()}
-                        className="ml-3 float-end"
+                        className="ms-3 float-end"
                         disabled={submitting}
                       />
                     </>

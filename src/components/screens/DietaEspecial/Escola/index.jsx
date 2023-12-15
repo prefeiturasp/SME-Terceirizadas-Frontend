@@ -360,7 +360,7 @@ class solicitacaoDietaEspecial extends Component {
                   });
                 }}
               />
-              <div className="ml-3">
+              <div className="ms-3">
                 Dieta Especial Destina-se à Aluno Não Matriculado na Rede
                 Municipal de Ensino
               </div>

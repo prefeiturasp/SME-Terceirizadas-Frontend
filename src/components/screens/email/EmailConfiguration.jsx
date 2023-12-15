@@ -226,7 +226,7 @@ class EmailConfiguration extends Component {
                 texto="Salvar"
                 type={BUTTON_TYPE.SUBMIT}
                 disabled={pristine || submitting}
-                className="ml-2"
+                className="ms-2"
                 onClick={handleSubmit((values) =>
                   this.onSubmit({
                     ...values,

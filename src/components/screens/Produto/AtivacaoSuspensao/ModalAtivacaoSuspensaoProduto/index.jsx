@@ -225,13 +225,13 @@ const ModalAtivacaoSuspensaoProduto = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={closeModal}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   <Botao
                     texto="Enviar"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                     disabled={
                       submitting ||
                       peloMenosUmCaractere(values.justificativa) !==

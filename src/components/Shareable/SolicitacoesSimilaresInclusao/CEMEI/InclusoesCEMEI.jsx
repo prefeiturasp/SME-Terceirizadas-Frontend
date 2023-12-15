@@ -147,7 +147,7 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
                     </div>
                   </div>
                   <div className="col-12 mt-3">
-                    <div className="container-fluid pr-0 ml-4">
+                    <div className="container-fluid pr-0 ms-4">
                       <p>
                         Tipos de Inclusão de Alimentação:{" "}
                         <b
@@ -226,7 +226,7 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
                     </div>
                   </div>
                   <div className="col-12 mt-3">
-                    <div className="container-fluid pr-0 ml-4">
+                    <div className="container-fluid pr-0 ms-4">
                       <p>
                         Tipos de Inclusão de Alimentação:{" "}
                         <b

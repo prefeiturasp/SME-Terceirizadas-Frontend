@@ -293,7 +293,7 @@ export default () => {
                     texto="Salvar e Enviar"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-end ml-3"
+                    className="float-end ms-3"
                     disabled={
                       Object.keys(errors).length > 0 || validaArquivos(values)
                     }
@@ -302,7 +302,7 @@ export default () => {
                     texto="Cancelar"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-end ml-3"
+                    className="float-end ms-3"
                     onClick={() => voltarPagina()}
                   />
                 </div>

@@ -182,7 +182,7 @@ export default ({ solicitacao, updatePage }) => {
                           type={BUTTON_TYPE.BUTTON}
                           onClick={handleClose}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
-                          className="float-end ml-3"
+                          className="float-end ms-3"
                         />
                       </div>
                     </div>

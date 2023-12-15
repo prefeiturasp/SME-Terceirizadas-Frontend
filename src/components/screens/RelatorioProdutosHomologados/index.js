@@ -129,7 +129,7 @@ const RelatorioProdutosHomologados = () => {
                     <p className="totalHomologadosValor">
                       Total de produtos homologados:{" "}
                       <b>{quantidadeHomologados}</b>
-                      <span className="ml-5">
+                      <span className="ms-5">
                         Total de marcas homologadas: <b>{quantidadeMarcas}</b>{" "}
                       </span>
                     </p>

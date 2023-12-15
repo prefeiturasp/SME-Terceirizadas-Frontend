@@ -123,9 +123,9 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
 
                           {cronograma.status === "Assinado CODAE" && (
                             <>
-                              <span className="ml-1">| </span>
+                              <span className="ms-1">| </span>
                               <span
-                                className="float-start ml-1 link-acoes green"
+                                className="float-start ms-1 link-acoes green"
                                 onClick={() => baixarPDFCronograma(cronograma)}
                               >
                                 Imprimir
@@ -136,9 +136,9 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                             (usuarioEhEmpresaFornecedor() ||
                               usuarioEhCronograma()) && (
                               <>
-                                <span className="ml-1">|</span>
+                                <span className="ms-1">|</span>
                                 <NavLink
-                                  className="float-start ml-1"
+                                  className="float-start ms-1"
                                   to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${cronograma.uuid}`}
                                 >
                                   <span className="link-acoes green">

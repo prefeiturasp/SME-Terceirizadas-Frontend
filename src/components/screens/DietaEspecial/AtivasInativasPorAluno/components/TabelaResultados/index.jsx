@@ -75,7 +75,7 @@ const TabelaDietas = ({ solicitacoes }) => {
                     />
                   </div>
                   <div className="row">
-                    <div className="row col-lg-10 ml-0">
+                    <div className="row col-lg-10 ms-0">
                       <div>
                         <p className="font-weight-bold mb-0">
                           Quantidade Ativas <br />

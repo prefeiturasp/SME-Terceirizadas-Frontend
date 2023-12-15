@@ -177,7 +177,7 @@ const Relatorio = ({ visao }) => {
           texto="Autorizar"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             setCarregando(true);
             escolaCancelaSolicitacao(uuid).then(() => {
@@ -211,7 +211,7 @@ const Relatorio = ({ visao }) => {
         texto="Marcar Conferência"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
-        className="ml-3"
+        className="ms-3"
         onClick={() => {
           setShowModalMarcarConferencia(true);
         }}
@@ -227,7 +227,7 @@ const Relatorio = ({ visao }) => {
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.PRINT}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             gerarProtocolo(uuid, eh_importado);
           }}
@@ -244,7 +244,7 @@ const Relatorio = ({ visao }) => {
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.PEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => habilitarEdicao()}
         />
       </div>
@@ -412,7 +412,7 @@ const Relatorio = ({ visao }) => {
                   texto="Negar"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.RED}
-                  className="ml-3"
+                  className="ms-3"
                   onClick={() => setShowNaoAprovaModal(true)}
                 />
               </div>,
@@ -424,7 +424,7 @@ const Relatorio = ({ visao }) => {
               status === statusEnum.CODAE_NEGOU_PEDIDO) && (
               <div className="form-group float-end mt-4">
                 {dietaEspecial.conferido ? (
-                  <label className="ml-3 conferido">
+                  <label className="ms-3 conferido">
                     <i className="fas fa-check mr-2" />
                     Solicitação Conferida
                   </label>

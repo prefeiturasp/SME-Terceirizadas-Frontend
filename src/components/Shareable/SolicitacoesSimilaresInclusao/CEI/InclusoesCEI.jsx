@@ -119,7 +119,7 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                     </div>
                     <div className="col-12 mt-3">
                       <div className="container-fluid pr-0">
-                        <span style={{ fontWeight: "normal" }} className="ml-4">
+                        <span style={{ fontWeight: "normal" }} className="ms-4">
                           Tipos de Inclusão de Alimentação:{" "}
                           <b
                             style={{

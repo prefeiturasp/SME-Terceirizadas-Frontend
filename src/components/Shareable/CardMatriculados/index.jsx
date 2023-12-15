@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import { ToggleExpandir } from "../../Shareable/ToggleExpandir";
+import { escolaEhCEMEI, pontuarValor } from "helpers/utilities";
 import "./style.scss";
-import { escolaEhCEMEI, pontuarValor } from "../../../helpers/utilities";
 
 export default class CardMatriculados extends Component {
   render() {
-    const { collapsed, numeroAlunos, meusDados } = this.props;
+    const { numeroAlunos, meusDados } = this.props;
 
     return escolaEhCEMEI() ? (
       <div className="card mt-1">
@@ -45,7 +44,7 @@ export default class CardMatriculados extends Component {
                   )}
               </div>
             </div>
-            <div className="col-6 beside-text mt-auto ml-2">
+            <div className="col-6 beside-text mt-auto ms-2">
               Informação automática disponibilizada pelo Cadastro da Unidade
               Escolar <br />
             </div>
@@ -56,15 +55,7 @@ export default class CardMatriculados extends Component {
       <div className="card">
         <div className="card-body card-enrolled">
           <div className="row title">
-            <div className="col-5 p-0">Nº de Matriculados</div>
-            {collapsed !== undefined && (
-              <div className="offset-6 col-1 my-auto text-right">
-                <ToggleExpandir
-                  onClick={this.props.alterarCollapse}
-                  ativo={!collapsed}
-                />
-              </div>
-            )}
+            <div className="col-5 pl-0 pb-2">Nº de Matriculados</div>
           </div>
           <div className="row">
             <div className="col-1 px-0">
