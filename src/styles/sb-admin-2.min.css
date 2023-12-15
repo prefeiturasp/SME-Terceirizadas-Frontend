@@ -6526,7 +6526,7 @@ button.bg-dark:hover {
   border-top-left-radius: 0.35rem !important;
   border-top-right-radius: 0.35rem !important;
 }
-.rounded-right {
+.rounded-end {
   border-top-right-radius: 0.35rem !important;
   border-bottom-right-radius: 0.35rem !important;
 }
@@ -6534,7 +6534,7 @@ button.bg-dark:hover {
   border-bottom-right-radius: 0.35rem !important;
   border-bottom-left-radius: 0.35rem !important;
 }
-.rounded-left {
+.rounded-start {
   border-top-left-radius: 0.35rem !important;
   border-bottom-left-radius: 0.35rem !important;
 }

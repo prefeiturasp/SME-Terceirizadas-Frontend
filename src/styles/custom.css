@@ -7046,7 +7046,7 @@ button.bg-dark:focus {
   border-top-right-radius: 0.25rem !important;
 }
 
-.rounded-right {
+.rounded-end {
   border-top-right-radius: 0.25rem !important;
   border-bottom-right-radius: 0.25rem !important;
 }
@@ -7056,7 +7056,7 @@ button.bg-dark:focus {
   border-bottom-left-radius: 0.25rem !important;
 }
 
-.rounded-left {
+.rounded-start {
   border-top-left-radius: 0.25rem !important;
   border-bottom-left-radius: 0.25rem !important;
 }
