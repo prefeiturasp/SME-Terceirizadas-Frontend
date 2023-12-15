@@ -34,7 +34,7 @@ export default ({ setResultado, nomes, setFiltros }) => {
   };
 
   return (
-    <>
+    <div className="filtros-produtos-logistica">
       <Form
         onSubmit={onSubmit}
         initialValues={{}}
@@ -105,6 +105,6 @@ export default ({ setResultado, nomes, setFiltros }) => {
           </form>
         )}
       />
-    </>
+    </div>
   );
 };
