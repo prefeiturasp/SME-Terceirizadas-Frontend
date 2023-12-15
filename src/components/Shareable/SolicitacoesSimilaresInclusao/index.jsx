@@ -4,6 +4,7 @@ import { ehEscolaTipoCEI, ehEscolaTipoCEMEI } from "../../../helpers/utilities";
 
 import { SolicitacoesSimilaresInclusaoNormal } from "./Normal";
 import { SolicitacoesSimilaresInclusaoCEI } from "./CEI";
+import { SolicitacoesSimilaresInclusaoCEMEI } from "./CEMEI";
 
 export const SolicitacoesSimilaresInclusao = ({ ...props }) => {
   const { solicitacao, index } = props;
@@ -16,7 +17,12 @@ export const SolicitacoesSimilaresInclusao = ({ ...props }) => {
       />
     );
   } else if (ehEscolaTipoCEMEI(solicitacao.escola)) {
-    return;
+    return (
+      <SolicitacoesSimilaresInclusaoCEMEI
+        solicitacao={solicitacao}
+        index={index}
+      />
+    );
   }
   return (
     <SolicitacoesSimilaresInclusaoNormal
