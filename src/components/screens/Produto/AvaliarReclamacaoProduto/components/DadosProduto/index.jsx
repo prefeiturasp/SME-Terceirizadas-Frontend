@@ -117,7 +117,7 @@ export class DadosProduto extends Component {
                       <ToggleExpandir
                         onClick={() => this.activateInformacao(key)}
                         ativo={informacao.active}
-                        className="float-right"
+                        className="float-end"
                       />
                     </div>
                   </div>

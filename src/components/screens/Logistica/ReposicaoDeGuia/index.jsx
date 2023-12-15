@@ -945,7 +945,7 @@ export default () => {
                     ref={editarButton}
                   />
 
-                  <span className="float-right tooltip-botao">
+                  <span className="float-end tooltip-botao">
                     <Botao
                       texto="Finalizar reposição"
                       type={BUTTON_TYPE.BUTTON}

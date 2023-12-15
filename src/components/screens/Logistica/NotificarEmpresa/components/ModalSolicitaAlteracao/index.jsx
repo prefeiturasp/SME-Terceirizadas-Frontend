@@ -67,7 +67,7 @@ export default ({ index, handleClose, aprovacoes, setAprovacoes }) => {
                   type={BUTTON_TYPE.BUTTON}
                   onClick={handleClose}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="float-right ml-3"
+                  className="float-end ml-3"
                 />
                 <Botao
                   texto="Salvar"
@@ -75,7 +75,7 @@ export default ({ index, handleClose, aprovacoes, setAprovacoes }) => {
                   onClick={form.submit}
                   style={BUTTON_STYLE.GREEN}
                   disabled={!values.justificativa}
-                  className="float-right ml-3"
+                  className="float-end ml-3"
                 />
               </Modal.Footer>
             </>

@@ -98,7 +98,7 @@ const TabelaDietas = ({ solicitacoes }) => {
                     <div className="col-lg-2 pr-0">
                       <Link
                         to={`/aluno/dieta-especial?codigo_eol=${dados.codigo_eol}`}
-                        className="float-right"
+                        className="float-end"
                       >
                         <Botao
                           texto="Visualizar"

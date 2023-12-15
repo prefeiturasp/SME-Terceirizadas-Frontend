@@ -50,7 +50,7 @@ export default ({ values, disabled }) => {
         texto="Registrar"
         type={BUTTON_TYPE.SUBMIT}
         style={BUTTON_STYLE.GREEN}
-        className="float-right ml-3"
+        className="float-end ml-3"
         onClick={handleShow}
         disabled={disabled}
       />

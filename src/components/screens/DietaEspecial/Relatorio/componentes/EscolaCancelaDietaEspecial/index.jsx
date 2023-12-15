@@ -25,7 +25,7 @@ const EscolaCancelaDietaEspecial = ({ uuid, onCancelar }) => {
         }}
       />
       {!usuarioEhNutricionistaSupervisao() && !usuarioEhDRE() && (
-        <div className="form-group row float-right mt-4">
+        <div className="form-group row float-end mt-4">
           <Botao
             texto="Cancelar"
             className="ml-3"

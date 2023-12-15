@@ -1415,7 +1415,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                     <Botao
                       texto="Salvar Solicitação de Correção para UE"
                       style={BUTTON_STYLE.GREEN}
-                      className="float-right"
+                      className="float-end"
                       disabled={
                         !values[
                           `descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
@@ -1429,7 +1429,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                     <Botao
                       texto="Cancelar"
                       style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                      className="mr-3 float-right"
+                      className="mr-3 float-end"
                       onClick={() => setShowModalCancelarSolicitacao(true)}
                     />
                   </div>
@@ -1516,7 +1516,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               <Modal.Footer>
                 <div className="col-12">
                   <Botao
-                    className="float-right"
+                    className="float-end"
                     texto="Voltar"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => setShowModalObservacaoDiaria(false)}

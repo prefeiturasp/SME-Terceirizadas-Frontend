@@ -479,7 +479,7 @@ export default ({
               <Botao
                 texto="Finalizar"
                 style={BUTTON_STYLE.GREEN}
-                className="float-right"
+                className="float-end"
                 disabled={
                   !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
                 }

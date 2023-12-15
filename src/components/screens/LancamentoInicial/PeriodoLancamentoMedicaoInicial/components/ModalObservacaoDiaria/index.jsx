@@ -309,7 +309,7 @@ export default ({
             ] &&
               !!values[`observacoes__dia_${dia}__categoria_${categoria}`])) ? (
             <Botao
-              className="ml-3 float-left"
+              className="ml-3 float-start"
               texto="Excluir"
               disabled={
                 location.state &&

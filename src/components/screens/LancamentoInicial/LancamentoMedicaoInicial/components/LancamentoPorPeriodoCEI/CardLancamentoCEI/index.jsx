@@ -128,7 +128,7 @@ export const CardLancamentoCEI = ({
             </div>
             <div>
               <div
-                className={`float-right status-card-periodo-grupo ${
+                className={`float-end status-card-periodo-grupo ${
                   [
                     "MEDICAO_CORRECAO_SOLICITADA",
                     "MEDICAO_CORRECAO_SOLICITADA_CODAE",

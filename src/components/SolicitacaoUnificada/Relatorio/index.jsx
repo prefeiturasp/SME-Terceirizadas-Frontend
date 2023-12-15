@@ -282,7 +282,7 @@ class Relatorio extends Component {
                 {visualizaBotoesDoFluxoSolicitacaoUnificada(
                   solicitacaoUnificada
                 ) && (
-                  <div className="form-group row float-right justify-content-end mt-4">
+                  <div className="form-group row float-end justify-content-end mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
                         texto={textoBotaoNaoAprova}
@@ -328,7 +328,7 @@ class Relatorio extends Component {
                       />
                     )}
                     {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-                      <div className="form-group float-right mt-4">
+                      <div className="form-group float-end mt-4">
                         {solicitacaoUnificada.terceirizada_conferiu_gestao ? (
                           <label className="ml-3 conferido">
                             <i className="fas fa-check mr-2" />

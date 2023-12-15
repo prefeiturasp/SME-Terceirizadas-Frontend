@@ -8065,18 +8065,6 @@ button.bg-dark:focus {
   }
 }
 
-.float-left {
-  float: left !important;
-}
-
-.float-right {
-  float: right !important;
-}
-
-.float-none {
-  float: none !important;
-}
-
 @media (min-width: 576px) {
   .float-sm-left {
     float: left !important;

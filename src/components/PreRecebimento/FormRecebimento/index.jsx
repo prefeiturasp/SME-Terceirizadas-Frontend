@@ -91,7 +91,7 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           icon="fas fa-trash"
-                          className="float-right ml-3"
+                          className="float-end ml-3"
                           onClick={() => deletaRecebimento(index)}
                         />
                       </div>

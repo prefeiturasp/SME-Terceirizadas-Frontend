@@ -63,7 +63,7 @@ export default ({
               texto="Ciente da Alteração"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ml-3"
               onClick={() => {
                 handleShow();
               }}
@@ -84,7 +84,7 @@ export default ({
             type={BUTTON_TYPE.BUTTON}
             disabled={!podeSubmeter}
             style={BUTTON_STYLE.GREEN}
-            className="float-right ml-3"
+            className="float-end ml-3"
             onClick={() => {
               if (!podeSubmeter) {
                 toastError("Selecione os campos obrigatórios");
@@ -109,7 +109,7 @@ export default ({
             type={BUTTON_TYPE.BUTTON}
             disabled={!podeSubmeter}
             style={BUTTON_STYLE.GREEN}
-            className="float-right ml-3"
+            className="float-end ml-3"
             onClick={() => {
               if (!podeSubmeter) {
                 toastError("Selecione os campos obrigatórios");
@@ -134,7 +134,7 @@ export default ({
               texto="Enviar DINUTRE"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ml-3"
               onClick={() => handleShow()}
               disabled={!podeSubmeter}
             />
@@ -155,7 +155,7 @@ export default ({
               texto="Enviar DILOG"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ml-3"
               onClick={() => handleShow()}
               disabled={disabledDinutre}
             />
@@ -177,7 +177,7 @@ export default ({
               texto="Enviar Fornecedor"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ml-3"
               onClick={() => handleShow()}
               disabled={disabledDilog}
             />
@@ -193,7 +193,7 @@ export default ({
         texto="Voltar"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN_OUTLINE}
-        className="float-right ml-3"
+        className="float-end ml-3"
         onClick={() => handleBack()}
       />
     </>

@@ -436,7 +436,7 @@ export const InformacoesMedicaoInicialCEI = ({
                       <Botao
                         texto="Salvar"
                         style={BUTTON_STYLE.GREEN}
-                        className="float-right ml-3"
+                        className="float-end ml-3"
                         onClick={() => handleClickSalvar()}
                         disabled={!emEdicao}
                       />
@@ -444,7 +444,7 @@ export const InformacoesMedicaoInicialCEI = ({
                         texto="Editar"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         icon={BUTTON_ICON.PEN}
-                        className="float-right ml-3"
+                        className="float-end ml-3"
                         onClick={() => handleClickEditar()}
                         disabled={emEdicao}
                       />

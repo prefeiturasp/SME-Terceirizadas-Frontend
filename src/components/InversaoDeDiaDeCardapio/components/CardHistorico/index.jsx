@@ -105,7 +105,7 @@ export class CardHistorico extends Component {
                     titulo="imprimir"
                     style={BUTTON_STYLE.BLUE}
                     icon={BUTTON_ICON.PRINT}
-                    className="float-right"
+                    className="float-end"
                   />
                 </div>
               </div>

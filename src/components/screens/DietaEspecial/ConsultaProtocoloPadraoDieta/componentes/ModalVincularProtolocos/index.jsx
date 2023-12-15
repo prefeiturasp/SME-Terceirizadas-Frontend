@@ -163,13 +163,13 @@ export const ModalVincularProtocolos = ({
                 type={BUTTON_TYPE.BUTTON}
                 onClick={() => closeModal(false)}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right mr-3"
+                className="float-end mr-3"
               />
               <Botao
                 texto="Vincular"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right"
+                className="float-end"
                 disabled={
                   submitting ||
                   !values.editais_destino ||

@@ -129,7 +129,7 @@ export class AnexosProdutoField extends Component {
                   {file.nome}
                 </a>
                 <span
-                  className="float-right"
+                  className="float-end"
                   onClick={() => this.deleteFile(key)}
                 >
                   <i className="fas fa-trash-alt" />

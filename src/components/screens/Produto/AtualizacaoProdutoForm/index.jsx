@@ -283,7 +283,7 @@ class AtualizacaoProdutoForm extends Component {
                     texto="Histórico"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     onClick={this.showModalHistorico}
-                    className="float-right"
+                    className="float-end"
                   />
                 </div>
               </div>

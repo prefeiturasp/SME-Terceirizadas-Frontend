@@ -371,14 +371,14 @@ export default ({
             <div className="mt-5">
               <Botao
                 texto="Enviar"
-                className="float-right ml-3"
+                className="float-end ml-3"
                 type={BUTTON_TYPE.SUBMIT}
                 disabled={submitting}
                 style={BUTTON_STYLE.GREEN}
               />
               <Botao
                 texto="Limpar Campos"
-                className="float-right ml-3"
+                className="float-end ml-3"
                 onClick={() => {
                   setDadosIniciais(null);
                   setSolicitacoesVigentes(null);

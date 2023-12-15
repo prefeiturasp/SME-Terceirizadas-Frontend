@@ -101,7 +101,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
               );
             })}
             <div className="button-row mt-3">
-              <span className="float-right tooltip-botao ">
+              <span className="float-end tooltip-botao ">
                 <Botao
                   texto={textoBotao}
                   type={BUTTON_TYPE.BUTTON}

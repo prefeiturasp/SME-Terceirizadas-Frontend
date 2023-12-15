@@ -240,13 +240,13 @@ const FormFiltros = ({
                 <div className="mt-4">
                   <Botao
                     texto="Consultar"
-                    className="float-right ml-3"
+                    className="float-end ml-3"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
                   />
                   <Botao
                     texto="Limpar Filtros"
-                    className="float-right ml-3"
+                    className="float-end ml-3"
                     onClick={() => {
                       if (tipoUsuario === TIPO_PERFIL.ESCOLA)
                         form.restart({

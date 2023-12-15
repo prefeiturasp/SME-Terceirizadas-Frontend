@@ -186,7 +186,7 @@ class Step3 extends Component {
                             {anexo.nome}
                           </a>
                           <span
-                            className="float-right"
+                            className="float-end"
                             onClick={() =>
                               this.props.removerAnexo(anexo.uuid, key)
                             }

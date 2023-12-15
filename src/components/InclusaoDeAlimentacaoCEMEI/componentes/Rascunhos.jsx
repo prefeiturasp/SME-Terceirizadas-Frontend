@@ -27,7 +27,7 @@ export const Rascunhos = ({
                 {inclusaoDeAlimentacao.status}
               </span>
             </div>
-            <div className="icon-draft-card float-right">
+            <div className="icon-draft-card float-end">
               Criado em: {inclusaoDeAlimentacao.criado_em}
               <span
                 onClick={() =>

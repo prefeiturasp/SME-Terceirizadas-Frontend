@@ -24,7 +24,7 @@ export class Rascunhos extends Component {
               RASCUNHO
             </span>
           </div>
-          <div className="icon-draft-card float-right">
+          <div className="icon-draft-card float-end">
             Criado em: {solicitacaoUnificada.solicitacao_kit_lanche.criado_em}
             <span onClick={() => OnDeleteButtonClicked(id_externo, uuid)}>
               <i className="fas fa-trash" />

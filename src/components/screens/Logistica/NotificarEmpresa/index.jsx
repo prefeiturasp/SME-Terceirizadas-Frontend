@@ -368,7 +368,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                           <div className="ocorrencia" key={index}>
                             <div className="titulo-verde">
                               {labelOcorrencia(ocorrencia)}
-                              <div className="row float-right">
+                              <div className="row float-end">
                                 {fiscal && !aprovacoes[index] && (
                                   <div className="col-12">
                                     <Botao
@@ -456,7 +456,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                     }
                   )}
 
-                <div className="row float-right mt-4">
+                <div className="row float-end mt-4">
                   {botaoVoltar && <BotaoVoltar onClick={handleClickVoltar} />}
                   {naoEditavel === false && (
                     <div className="col-12">

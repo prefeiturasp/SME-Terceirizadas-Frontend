@@ -220,7 +220,7 @@ const DetalheDoProduto = ({
                           : setAtivos([...ativos, index]);
                       }}
                       ativo={ativos.includes(index)}
-                      className="float-right"
+                      className="float-end"
                     />
                   </div>
                 </div>

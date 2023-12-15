@@ -636,7 +636,7 @@ export default () => {
                     texto="Salvar Rascunho"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
+                    className="float-end ml-3"
                     onClick={() => salvarRascunho(values)}
                     disabled={validaRascunho(values)}
                   />

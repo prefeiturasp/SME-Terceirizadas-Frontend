@@ -179,7 +179,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               await getRelatorioKitLancheCEMEI(solicitacaoKitLancheCEMEI.uuid);
               setImprimindo(false);
             }}
-            className="float-right"
+            className="float-end"
           />
         </div>
       </div>
@@ -572,7 +572,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             {EXIBIR_BOTAO_NAO_APROVAR && (
               <Botao
                 texto={textoBotaoNaoAprova}
-                className="float-right"
+                className="float-end"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={() => {
@@ -635,7 +635,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               />
             )}
             {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-              <div className="form-group float-right mt-4">
+              <div className="form-group float-end mt-4">
                 {solicitacaoKitLancheCEMEI.terceirizada_conferiu_gestao ? (
                   <label className="ml-3 conferido">
                     <i className="fas fa-check mr-2" />

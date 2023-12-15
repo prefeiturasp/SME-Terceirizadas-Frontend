@@ -85,7 +85,7 @@ export default () => {
                   texto="Imprimir"
                   style={BUTTON_STYLE.BLUE}
                   icon={BUTTON_ICON.PRINT}
-                  className="float-right"
+                  className="float-end"
                   onClick={imprimeRelatorio}
                 />
               </div>

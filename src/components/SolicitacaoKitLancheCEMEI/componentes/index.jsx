@@ -126,7 +126,7 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
                           required
                           validate={required}
                           value={kit.uuid}
-                          className="float-right"
+                          className="float-end"
                           name={name}
                           disabled={CARD_DISABLED}
                         />

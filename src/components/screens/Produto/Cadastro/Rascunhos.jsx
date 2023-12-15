@@ -20,7 +20,7 @@ export class Rascunhos extends Component {
                 {"RASCUNHO"}
               </span>
             </div>
-            <div className="icon-draft-card float-right">
+            <div className="icon-draft-card float-end">
               Criado em: {produto.criado_em}
               <span
                 onClick={() =>

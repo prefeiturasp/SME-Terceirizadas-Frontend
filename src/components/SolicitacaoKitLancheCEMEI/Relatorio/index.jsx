@@ -75,7 +75,7 @@ export const Relatorio = ({ ...props }) => {
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 icon={BUTTON_ICON.ARROW_LEFT}
                 onClick={() => history.push("/painel-gestao-alimentacao")}
-                className="float-right"
+                className="float-end"
               />
             </div>
           </div>

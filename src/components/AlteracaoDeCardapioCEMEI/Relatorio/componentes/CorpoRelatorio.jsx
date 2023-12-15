@@ -55,7 +55,7 @@ export const CorpoRelatorio = ({ ...props }) => {
           style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
           icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
           disabled={imprimindo}
-          className="float-right"
+          className="float-end"
           onClick={imprimirRelatorio}
         />
       </p>

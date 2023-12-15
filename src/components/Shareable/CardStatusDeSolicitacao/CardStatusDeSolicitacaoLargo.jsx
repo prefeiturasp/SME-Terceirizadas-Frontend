@@ -29,7 +29,7 @@ export const CardStatusDeSolicitacaoLargo = (props) => {
             >
               <p className="data">
                 {solicitacao.descricao || solicitacao.text}
-                <span className="mr-3 float-right">
+                <span className="mr-3 float-end">
                   {solicitacao.data_log || solicitacao.date}
                 </span>
               </p>
