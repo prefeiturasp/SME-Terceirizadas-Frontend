@@ -9476,7 +9476,7 @@ button.bg-dark:hover {
     margin-left: auto !important;
   }
 }
-.text-monospace {
+.font-monospace {
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace !important;
 }
