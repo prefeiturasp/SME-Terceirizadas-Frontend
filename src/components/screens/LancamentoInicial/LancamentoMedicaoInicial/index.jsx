@@ -68,6 +68,22 @@ export default () => {
   const proximosDozeMeses = 12;
   let periodos = [];
 
+  const getPeriodosEscolaCemeiComAlunosEmeiAsync = async (escola, mes, ano) => {
+    if (ehEscolaTipoCEMEI(escola)) {
+      const payload = {
+        mes,
+        ano,
+      };
+
+      const response = await getPeriodosEscolaCemeiComAlunosEmei(payload);
+      if (response.status === HTTP_STATUS.OK) {
+        setPeriodosEscolaCemeiComAlunosEmei(response.data.results);
+      } else {
+        toastError("Erro ao obter períodos com alunos EMEI");
+      }
+    }
+  };
+
   useEffect(() => {
     async function fetch() {
       const meusDados = await perfilService.meusDados();
@@ -174,19 +190,7 @@ export default () => {
         setPeriodoFromSearchParam(periodoFromSearch);
       }
 
-      if (ehEscolaTipoCEMEI(escola)) {
-        const payload = {
-          mes,
-          ano,
-        };
-
-        const response = await getPeriodosEscolaCemeiComAlunosEmei(payload);
-        if (response.status === HTTP_STATUS.OK) {
-          setPeriodosEscolaCemeiComAlunosEmei(response.data.results);
-        } else {
-          toastError("Erro ao obter períodos com alunos EMEI");
-        }
-      }
+      await getPeriodosEscolaCemeiComAlunosEmeiAsync(escola, mes, ano);
 
       const periodoInicialSelecionado = !location.search
         ? periodos[0].dataBRT.toString()
@@ -252,9 +256,12 @@ export default () => {
     setLoadingSolicitacaoMedicaoInicial(true);
     setPeriodoSelecionado(value);
     await getSolicitacaoMedInicial(value, escolaInstituicao.uuid);
+    const mes = format(new Date(value), "MM").toString();
+    const ano = getYear(new Date(value)).toString();
+    setMes(mes);
+    setAno(ano);
+    await getPeriodosEscolaCemeiComAlunosEmeiAsync(escolaInstituicao, mes, ano);
     setLoadingSolicitacaoMedicaoInicial(false);
-    setMes(format(new Date(value), "MM").toString());
-    setAno(getYear(new Date(value)).toString());
     history.replace({
       pathname: location.pathname,
       search: `?mes=${format(new Date(value), "MM").toString()}&ano=${getYear(
