@@ -35,6 +35,7 @@ import {
   usuarioEhOrgaoFiscalizador,
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
+import { ENVIRONMENT } from "constants/config";
 import {
   MenuGestaoDeAlimentacao,
   MenuDietaEspecial,
@@ -71,10 +72,13 @@ export const SidebarContent = () => {
   // Para utilizar esse componente com outros perfis precisa atualizar os
   // criterios de exibicao abaixo
   const exibeMenuValidandoAmbiente = exibirGA();
+
+  const usuarioEscolaEhGestaoDiretaParceira =
+    (usuarioEscolaEhGestaoDireta() || usuarioEscolaEhGestaoParceira()) &&
+    !["production"].includes(ENVIRONMENT);
+
   const exibirPainelInicial =
-    (!usuarioEhEscolaAbastecimento() ||
-      usuarioEscolaEhGestaoDireta() ||
-      usuarioEscolaEhGestaoParceira()) &&
+    (!usuarioEhEscolaAbastecimento() || usuarioEscolaEhGestaoDiretaParceira) &&
     !usuarioEhEscolaAbastecimentoDiretor() &&
     !usuarioComAcessoTelaEntregasDilog() &&
     !usuarioEhLogistica() &&
@@ -99,8 +103,7 @@ export const SidebarContent = () => {
     usuarioEhDRE() ||
     usuarioEhEmpresaTerceirizada() ||
     usuarioEhMedicao() ||
-    usuarioEscolaEhGestaoDireta() ||
-    usuarioEscolaEhGestaoParceira();
+    usuarioEscolaEhGestaoDiretaParceira;
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||

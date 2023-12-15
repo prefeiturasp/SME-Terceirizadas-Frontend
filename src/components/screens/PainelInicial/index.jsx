@@ -27,9 +27,14 @@ import {
   usuarioEscolaEhGestaoParceira,
 } from "helpers/utilities";
 import { ACOMPANHAMENTO_DE_LANCAMENTOS } from "configs/constants";
+import { ENVIRONMENT } from "constants/config";
 
 const PainelInicial = ({ history }) => {
   const exibeMenuValidandoAmbiente = exibirGA();
+
+  const usuarioEscolaEhGestaoDiretaParceira =
+    (usuarioEscolaEhGestaoDireta() || usuarioEscolaEhGestaoParceira()) &&
+    !["production"].includes(ENVIRONMENT);
 
   return (
     <Row className="mt-3" gutter={[16, 16]}>
@@ -60,8 +65,7 @@ const PainelInicial = ({ history }) => {
         usuarioEhDRE() ||
         usuarioEhEscolaTerceirizadaDiretor() ||
         usuarioEhEscolaTerceirizada() ||
-        usuarioEscolaEhGestaoDireta() ||
-        usuarioEscolaEhGestaoParceira()) && (
+        usuarioEscolaEhGestaoDiretaParceira) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Dieta Especial"}
