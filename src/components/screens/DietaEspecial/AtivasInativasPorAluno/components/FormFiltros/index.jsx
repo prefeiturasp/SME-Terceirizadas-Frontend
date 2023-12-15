@@ -207,7 +207,7 @@ const FormFiltros = ({
               </div>
             </div>
             <div className="row">
-              <div className="col-3 cod-eol-aluno p-0">
+              <div className="col-3 cod-eol-aluno">
                 <Field
                   label="Cód. EOL do Aluno"
                   component={InputText}
