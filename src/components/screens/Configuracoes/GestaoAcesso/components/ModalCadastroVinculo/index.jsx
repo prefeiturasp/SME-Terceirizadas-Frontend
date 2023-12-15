@@ -300,7 +300,7 @@ const ModalCadastroVinculo = ({
                             validate={required}
                           />
                         </div>
-                        <div className="col-1 pl-0">
+                        <div className="col-1 ps-0">
                           <Botao
                             texto=""
                             icon="fas fa-search"
@@ -543,7 +543,7 @@ const ModalCadastroVinculo = ({
                             validate={composeValidators(required, validaCPF)}
                           />
                         </div>
-                        <div className="col-6 pl-0">
+                        <div className="col-6 ps-0">
                           <Botao
                             texto=""
                             icon="fas fa-search"

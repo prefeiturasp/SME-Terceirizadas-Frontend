@@ -493,7 +493,7 @@ export default ({
                       <Botao
                         texto="Exportar Planilha de Ocorrências"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="mr-3"
+                        className="me-3"
                       />
                     </a>
                   )}

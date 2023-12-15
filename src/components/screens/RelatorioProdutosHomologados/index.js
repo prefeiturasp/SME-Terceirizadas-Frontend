@@ -158,7 +158,7 @@ const RelatorioProdutosHomologados = () => {
                         onClick={() => {
                           exportarXLSX(formataParams(filtros));
                         }}
-                        className="mr-3"
+                        className="me-3"
                       />
                       {exibirModalCentralDownloads && (
                         <ModalSolicitacaoDownload

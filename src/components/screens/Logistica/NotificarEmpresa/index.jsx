@@ -398,7 +398,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                                   aprovacoes[index].aprovado && (
                                     <div className="col-12">
                                       <div className="texto-aprovacao">
-                                        <i className="fas fa-check mr-2" />
+                                        <i className="fas fa-check me-2" />
                                         {
                                           aprovacoes[index]
                                             .justificativa_alteracao

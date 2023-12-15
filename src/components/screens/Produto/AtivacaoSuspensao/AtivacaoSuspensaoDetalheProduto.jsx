@@ -67,7 +67,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
             <div className="row">
               <div className="col-12 text-right">
                 <Botao
-                  className="mr-3"
+                  className="me-3"
                   style={BUTTON_STYLE.GREEN}
                   texto="Voltar"
                   icon={BUTTON_ICON.ARROW_LEFT}
@@ -76,7 +76,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
                 />
                 <Botao
                   texto={"Ativar"}
-                  className="mr-3"
+                  className="me-3"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   disabled={ativo}
@@ -84,7 +84,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
                 />
                 <Botao
                   texto={"Suspender"}
-                  className="mr-3"
+                  className="me-3"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   disabled={!ativo}
@@ -103,7 +103,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
                 <div className="row">
                   <div className="col-12 text-right">
                     <Botao
-                      className="mr-3"
+                      className="me-3"
                       style={BUTTON_STYLE.GREEN}
                       texto="Voltar"
                       icon={BUTTON_ICON.ARROW_LEFT}
@@ -112,7 +112,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
                     />
                     <Botao
                       texto={"Ativar"}
-                      className="mr-3"
+                      className="me-3"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       disabled={ativo}
@@ -120,7 +120,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
                     />
                     <Botao
                       texto={"Suspender"}
-                      className="mr-3"
+                      className="me-3"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       disabled={!ativo}

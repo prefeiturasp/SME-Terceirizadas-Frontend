@@ -80,7 +80,7 @@ export default () => {
                         className="input-busca-produto"
                       />
                     </div>
-                    <div className="col-6 pl-0">
+                    <div className="col-6 ps-0">
                       <Botao
                         texto=""
                         icon="fas fa-search"

@@ -62,7 +62,7 @@ export default ({ ...props }) => {
       <span className="page-title">{`Suspensão de Alimentação - Solicitação # ${
         solicitacaoSuspensao ? solicitacaoSuspensao.id_externo : ""
       }`}</span>
-      <div className="card mt-3 card-relatorio-suspensao pl-3 pr-3">
+      <div className="card mt-3 card-relatorio-suspensao ps-3 pe-3">
         <div className="card-body">
           {solicitacaoSuspensao && (
             <CorpoRelatorio solicitacaoSuspensao={solicitacaoSuspensao} />
@@ -100,7 +100,7 @@ export default ({ ...props }) => {
             <div className="form-group float-end mt-4">
               {solicitacaoSuspensao.terceirizada_conferiu_gestao ? (
                 <label className="ms-3 conferido">
-                  <i className="fas fa-check mr-2" />
+                  <i className="fas fa-check me-2" />
                   Solicitação Conferida
                 </label>
               ) : (

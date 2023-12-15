@@ -300,7 +300,7 @@ function StatusSolicitacoes(props) {
   return (
     <div className="card mt-3">
       <div className="card-body">
-        <div className="pr-3">
+        <div className="pe-3">
           <InputSearchPendencias
             voltarLink={`/`}
             filterList={onPesquisarChanged}

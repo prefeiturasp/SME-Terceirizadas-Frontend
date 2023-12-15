@@ -366,7 +366,7 @@ export default ({ reposicao }) => {
               <span className="float-end">
                 <Botao
                   texto="Cancelar"
-                  className="mr-3"
+                  className="me-3"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={() => {

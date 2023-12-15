@@ -2279,7 +2279,7 @@ export default () => {
                                               className={`grid-table-tipos-alimentacao body-table-alimentacao`}
                                             >
                                               <div className="nome-linha">
-                                                <b className="pl-2">
+                                                <b className="ps-2">
                                                   {row.nome}
                                                 </b>
                                               </div>
@@ -2470,7 +2470,7 @@ export default () => {
                                                       : ""
                                                   }`}
                                                 >
-                                                  <b className="pl-2">
+                                                  <b className="ps-2">
                                                     {row.nome}
                                                   </b>
                                                 </div>

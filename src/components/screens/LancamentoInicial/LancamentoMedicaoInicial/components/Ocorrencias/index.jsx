@@ -53,7 +53,7 @@ export default ({
                 </div>
                 {solicitacaoMedicaoInicial.ocorrencia ? (
                   <div className="col-8 text-right">
-                    <span className="status-ocorrencia text-center mr-3">
+                    <span className="status-ocorrencia text-center me-3">
                       <b
                         className={
                           [
@@ -75,14 +75,14 @@ export default ({
                       </b>
                     </span>
                     <span
-                      className="download-ocorrencias mr-0"
+                      className="download-ocorrencias me-0"
                       onClick={() =>
                         medicaoInicialExportarOcorrenciasPDF(
                           solicitacaoMedicaoInicial.ocorrencia.ultimo_arquivo
                         )
                       }
                     >
-                      <i className={`${BUTTON_ICON.DOWNLOAD} mr-2`} />
+                      <i className={`${BUTTON_ICON.DOWNLOAD} me-2`} />
                       Formulário de Ocorrências
                     </span>
                   </div>

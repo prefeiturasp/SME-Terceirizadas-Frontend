@@ -302,7 +302,7 @@ export const InformacoesMedicaoInicialCEI = ({
   return (
     <div className="row mt-4 info-med-inicial collapse-adjustments">
       <div className="col-12 panel-med-inicial">
-        <div className="pl-0 label-adjustments">
+        <div className="ps-0 label-adjustments">
           <Modal
             title="Erro ao adicionar"
             open={isModalDuplicata}
@@ -385,7 +385,7 @@ export const InformacoesMedicaoInicialCEI = ({
               <div className="row">
                 <div className="col-7 info-label">
                   <label className="asterisk-label">*</label>
-                  <label className="value-label mt-2 mb-2 mr-3">
+                  <label className="value-label mt-2 mb-2 me-3">
                     A UE possui alunos no período parcial?
                   </label>
                   {options.map((option) => (
@@ -412,14 +412,14 @@ export const InformacoesMedicaoInicialCEI = ({
                 />
               )}
 
-              <div className="row mt-4 mr-0">
+              <div className="row mt-4 me-0">
                 <div className="col-8">
                   <label>
                     Responsáveis por acompanhar a prestação de serviços
                   </label>
                   <label className="asterisk-label">*</label>
                 </div>
-                <div className="col-4 pl-0">
+                <div className="col-4 ps-0">
                   <label>RF</label>
                   <label className="asterisk-label">*</label>
                 </div>
@@ -432,7 +432,7 @@ export const InformacoesMedicaoInicialCEI = ({
                 {(!location.state ||
                   location.state.status !== "Aprovado pela DRE") &&
                   !location.pathname.includes(DETALHAMENTO_DO_LANCAMENTO) && (
-                    <div className="mt-3 pr-2">
+                    <div className="mt-3 pe-2">
                       <Botao
                         texto="Salvar"
                         style={BUTTON_STYLE.GREEN}

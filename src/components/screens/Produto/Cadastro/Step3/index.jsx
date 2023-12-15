@@ -181,7 +181,7 @@ class Step3 extends Component {
                             rel="noopener noreferrer"
                             target="_blank"
                             href={anexo.arquivo}
-                            className="link ms-1 mr-5"
+                            className="link ms-1 me-5"
                           >
                             {anexo.nome}
                           </a>

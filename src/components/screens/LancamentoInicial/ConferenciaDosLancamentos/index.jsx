@@ -693,7 +693,7 @@ export const ConferenciaDosLancamentos = () => {
                             {solicitacao.com_ocorrencias ? (
                               <Fragment>
                                 <div className="col-6 text-right">
-                                  <span className="status-ocorrencia text-center mr-3">
+                                  <span className="status-ocorrencia text-center me-3">
                                     <b
                                       className={
                                         [
@@ -714,7 +714,7 @@ export const ConferenciaDosLancamentos = () => {
                                   </span>
                                   {ocorrencia && ocorrenciaExpandida ? (
                                     <span
-                                      className="download-ocorrencias mr-0"
+                                      className="download-ocorrencias me-0"
                                       onClick={() => {
                                         medicaoInicialExportarOcorrenciasPDF(
                                           ocorrencia.ultimo_arquivo
@@ -726,7 +726,7 @@ export const ConferenciaDosLancamentos = () => {
                                       }}
                                     >
                                       <i
-                                        className={`${BUTTON_ICON.DOWNLOAD} mr-2`}
+                                        className={`${BUTTON_ICON.DOWNLOAD} me-2`}
                                       />
                                       Download de Ocorrências
                                     </span>

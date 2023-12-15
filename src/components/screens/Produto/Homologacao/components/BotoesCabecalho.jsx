@@ -106,7 +106,7 @@ export const BotoesCabecalho = ({
             texto="Histórico"
             style={BUTTON_STYLE.GREEN_OUTLINE}
             onClick={() => setShowModal(true)}
-            className="mr-2 float-end"
+            className="me-2 float-end"
           />
           {checaStatus(homologacao.status) && ehGPCODAE && ehCardSuspensos && (
             <Botao
@@ -117,7 +117,7 @@ export const BotoesCabecalho = ({
                 setShowModalSuspender(true);
                 setAcao("ativação");
               }}
-              className="mr-2 float-end"
+              className="me-2 float-end"
             />
           )}
           {checaStatus(homologacao.status) && ehGPCODAE && !ehCardSuspensos && (
@@ -129,7 +129,7 @@ export const BotoesCabecalho = ({
                 setShowModalSuspender(true);
                 setAcao("suspensão");
               }}
-              className="mr-2 float-end"
+              className="me-2 float-end"
             />
           )}
           {homologacao.status === "CODAE_HOMOLOGADO" &&
@@ -140,7 +140,7 @@ export const BotoesCabecalho = ({
                 type={BUTTON_TYPE.BUTTON}
                 onClick={() => setShowModalAnaliseSensorial(true)}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="mr-2 float-end"
+                className="me-2 float-end"
               />
             )}
         </div>

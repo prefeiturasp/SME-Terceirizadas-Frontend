@@ -46,7 +46,7 @@ export default ({ showModal, closeModal, setSolicitacaoSuspensao, uuid }) => {
                   </p>
                 </div>
               </div>
-              <div className="row pl-3 pr-3">
+              <div className="row ps-3 pe-3">
                 <label>* Justificativa</label>
                 <Field
                   className="col-12 pb-5"

@@ -528,7 +528,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                 onClick={() => resetForm(form)}
                                 style={BUTTON_STYLE.GREEN_OUTLINE}
                                 texto="Limpar"
-                                className="mr-3"
+                                className="me-3"
                               />
                               <Botao
                                 type={BUTTON_TYPE.SUBMIT}
@@ -553,7 +553,7 @@ export const AcompanhamentoDeLancamentos = () => {
                               <table className="resultados">
                                 <thead>
                                   <tr className="row">
-                                    <th className="col-5 pl-2">
+                                    <th className="col-5 ps-2">
                                       {usuarioEhEscolaTerceirizadaQualquerPerfil()
                                         ? "Período do Lançamento"
                                         : "Nome da UE"}
@@ -584,7 +584,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                   {resultados.dados.map((dado, key) => {
                                     return (
                                       <tr key={key} className="row">
-                                        <td className="col-5 pl-2 pt-3">
+                                        <td className="col-5 ps-2 pt-3">
                                           {usuarioEhEscolaTerceirizadaQualquerPerfil()
                                             ? dado.mes_ano
                                             : dado.escola}

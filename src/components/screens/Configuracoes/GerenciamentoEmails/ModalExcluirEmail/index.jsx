@@ -48,7 +48,7 @@ export const ModalExcluirEmail = ({ ...props }) => {
           style={BUTTON_STYLE.GREEN_OUTLINE}
         />
         <Botao
-          className="ms-3 mr-3"
+          className="ms-3 me-3"
           texto="Sim"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}

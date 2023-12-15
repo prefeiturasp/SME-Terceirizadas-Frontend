@@ -7,7 +7,7 @@ import { RELATORIO } from "../../../configs/constants";
 export const CardStatusDeSolicitacaoLargo = (props) => {
   const { titulo, tipo, solicitacoes, icone } = props;
   return (
-    <div className={`card card-panel card-colored ${tipo} mb-4 mr-4`}>
+    <div className={`card card-panel card-colored ${tipo} mb-4 me-4`}>
       <div className="card-title-status">
         <i className={"fas " + icone} />
         {titulo}
@@ -29,7 +29,7 @@ export const CardStatusDeSolicitacaoLargo = (props) => {
             >
               <p className="data">
                 {solicitacao.descricao || solicitacao.text}
-                <span className="mr-3 float-end">
+                <span className="me-3 float-end">
                   {solicitacao.data_log || solicitacao.date}
                 </span>
               </p>

@@ -27,7 +27,7 @@ export const Sidebar = ({ ...props }) => {
     <div>
       <div className="mb-5" />
       <ul
-        className={`navbar-nav bg-gradiente-sme sidebar sidebar-dark accordion pl-2 pt-5
+        className={`navbar-nav bg-gradiente-sme sidebar sidebar-dark accordion ps-2 pt-5
         ${toggled && "toggled"}`}
         id="accordionSidebar"
       >

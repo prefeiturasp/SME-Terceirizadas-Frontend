@@ -18,11 +18,11 @@ export class CardListarSolicitacoes extends Component {
     const { titulo, tipo, solicitacoes, icone } = this.props;
     return (
       <Fragment>
-        <div className={`card card-list-panel card-colored ${tipo} mb-4 mr-4`}>
+        <div className={`card card-list-panel card-colored ${tipo} mb-4 me-4`}>
           <div className="card-title-status">
             <i className={"fas " + icone} />
             {titulo}
-            <span className="float-end pr-4">Data/Hora</span>
+            <span className="float-end pe-4">Data/Hora</span>
           </div>
           <hr />
           <div className="card-body card-body-sme">

@@ -76,7 +76,7 @@ export default ({
                             <span className="icons">
                               <Tooltip title="Editar e-mail">
                                 <FormOutlined
-                                  className="ms-5 mr-3"
+                                  className="ms-5 me-3"
                                   onClick={() => {
                                     setShowModal(true);
                                     setTerceirizada(terceirizada);

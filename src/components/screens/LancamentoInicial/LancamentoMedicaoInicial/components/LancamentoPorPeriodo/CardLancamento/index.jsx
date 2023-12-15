@@ -210,7 +210,7 @@ export const CardLancamento = ({
                       );
                     })}
                 </div>
-                <div className="col-4 pr-0 d-flex flex-column">
+                <div className="col-4 pe-0 d-flex flex-column">
                   <Botao
                     texto={textoBotaoCardLancamento(
                       quantidadeAlimentacoesLancadas,

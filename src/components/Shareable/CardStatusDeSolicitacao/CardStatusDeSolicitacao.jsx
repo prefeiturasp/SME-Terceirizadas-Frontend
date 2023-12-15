@@ -160,7 +160,7 @@ export const CardStatusDeSolicitacao = (props) => {
                     title="Usuários visualizando simultaneamente"
                   >
                     <span
-                      className={`mr-3 dietas-abertas float-end ${
+                      className={`me-3 dietas-abertas float-end ${
                         qtdDietasAbertas(solicitation) > 9 && "qtd-dois-digitos"
                       }`}
                     >

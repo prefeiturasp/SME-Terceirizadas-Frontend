@@ -199,7 +199,7 @@ export default () => {
               />
               <div className="row">
                 <div className="col-12 pb-3">
-                  <span className="green-dot mr-1" />
+                  <span className="green-dot me-1" />
                   {guiasVinculadas.length} Guia(s) já vinculada(s) a
                   notificação.
                 </div>

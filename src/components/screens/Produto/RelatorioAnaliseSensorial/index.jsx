@@ -128,7 +128,7 @@ class RelatorioAnaliseSensorial extends Component {
             <article>
               <div className="row">
                 <div className="row col-12 ms-0">
-                  <div className="col-6 pl-0">
+                  <div className="col-6 ps-0">
                     <p className="text-muted">
                       Solicitação de análise sensorial
                     </p>

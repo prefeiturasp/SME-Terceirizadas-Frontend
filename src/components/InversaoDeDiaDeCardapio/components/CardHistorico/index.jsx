@@ -69,10 +69,10 @@ export class CardHistorico extends Component {
         <div className="card-header">
           <div className="row">
             <div className="col-11">
-              <i className="fas fa-history mr-2" />
+              <i className="fas fa-history me-2" />
               {titulo}
             </div>
-            <div className="pl-5 col-1">
+            <div className="ps-5 col-1">
               <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
                 ativo={!collapsed}

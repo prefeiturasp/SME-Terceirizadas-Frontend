@@ -537,7 +537,7 @@ class cadastroProduto extends Component {
                   <div className="col-12 text-right pt-3">
                     <Botao
                       texto={"Anterior"}
-                      className="mr-3"
+                      className="me-3"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       disabled={currentStep === 0}
@@ -547,7 +547,7 @@ class cadastroProduto extends Component {
                     />
                     <Botao
                       texto={"Salvar Rascunho"}
-                      className="mr-3 salvarRascunho"
+                      className="me-3 salvarRascunho"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                       onClick={handleSubmit((values) =>

@@ -101,7 +101,7 @@ export const CorpoRelatorio = ({
             <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="pl-2 my-auto offset-1 col-5">
+        <div className="ps-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
@@ -274,7 +274,7 @@ export const CorpoRelatorio = ({
         return (
           <div key={key}>
             <div className={`period-quantity number-${key}`}>{periodo}</div>
-            <div className="pl-3 pr-3 pb-3">
+            <div className="ps-3 pe-3 pb-3">
               {inclusaoPossuiCEInestePeriodo(solicitacao, periodo) && (
                 <>
                   <div className="alunos-label mt-3">Alunos CEI</div>

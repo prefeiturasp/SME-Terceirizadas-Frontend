@@ -44,7 +44,7 @@ const TabelaDietas = ({ solicitacoes }) => {
                     alt="foto-aluno"
                   />
                 </div>
-                <div className="col-xl-11 col-lg-10 pr-0 pl-4">
+                <div className="col-xl-11 col-lg-10 pe-0 ps-4">
                   <div className="mb-3">
                     <Form
                       onSubmit={() => {}}
@@ -82,20 +82,20 @@ const TabelaDietas = ({ solicitacoes }) => {
                         </p>
                         {dados.ativas}
                       </div>
-                      <div className="pl-4">
+                      <div className="ps-4">
                         <p className="font-weight-bold mb-0">
                           Classificação da Dieta Especial <br />
                         </p>
                         {dados.classificacao_dieta_ativa || "--"}
                       </div>
-                      <div className="pl-4">
+                      <div className="ps-4">
                         <p className="font-weight-bold mb-0">
                           Quantidade Inativas <br />
                         </p>
                         {dados.inativas}
                       </div>
                     </div>
-                    <div className="col-lg-2 pr-0">
+                    <div className="col-lg-2 pe-0">
                       <Link
                         to={`/aluno/dieta-especial?codigo_eol=${dados.codigo_eol}`}
                         className="float-end"

@@ -9,7 +9,7 @@ export const HistoricoCorrecaoSolicitada = ({ ...props }) => {
     <Fragment>
       <div className="row mt-3">
         <div className="col-8">
-          <label className="iniciais-usuario align-middle text-center mr-3">
+          <label className="iniciais-usuario align-middle text-center me-3">
             {retornaIniciais(historico.usuario.email)}
           </label>
           <label className="cor-texo-detalhes">{historico.usuario.nome}</label>

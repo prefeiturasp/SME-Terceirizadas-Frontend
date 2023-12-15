@@ -380,7 +380,7 @@ class Relatorio extends Component {
                   solicitacao={inclusaoDeAlimentacao}
                 />
                 {visualizaBotoesDoFluxo(inclusaoDeAlimentacao) && (
-                  <div className="form-group row float-end mt-4 mr-3">
+                  <div className="form-group row float-end mt-4 me-3">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
                         texto={textoBotaoNaoAprova}
@@ -448,7 +448,7 @@ class Relatorio extends Component {
                       <div className="form-group float-end mt-4">
                         {inclusaoDeAlimentacao.terceirizada_conferiu_gestao ? (
                           <label className="ms-3 conferido">
-                            <i className="fas fa-check mr-2" />
+                            <i className="fas fa-check me-2" />
                             Solicitação Conferida
                           </label>
                         ) : (

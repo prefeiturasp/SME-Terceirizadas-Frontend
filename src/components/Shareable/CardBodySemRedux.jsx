@@ -86,7 +86,7 @@ const CardBodySemRedux = (props) => {
               <>
                 <div
                   className={`${
-                    ehEscola ? "offset-3 col-3 pl-0" : "col-3 pl-0"
+                    ehEscola ? "offset-3 col-3 ps-0" : "col-3 ps-0"
                   }`}
                 >
                   <Field
@@ -102,7 +102,7 @@ const CardBodySemRedux = (props) => {
                     props.onChange(props.values);
                   }}
                 </OnChange>
-                <div className="col-3 pl-0">
+                <div className="col-3 ps-0">
                   <Field
                     name="data_evento"
                     minDate={null}

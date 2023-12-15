@@ -188,7 +188,7 @@ export default ({ atualizar }) => {
           <div className="col-7">
             <div className="subtitulo row ms-5">
               <div className="w-5">
-                <i className="fas fa-check mr-2" />
+                <i className="fas fa-check me-2" />
               </div>
               <div className="w-95">
                 <div>{dataEHoraAprovacao}</div>

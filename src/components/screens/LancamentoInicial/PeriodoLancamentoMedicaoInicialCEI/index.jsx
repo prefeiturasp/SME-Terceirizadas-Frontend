@@ -1650,7 +1650,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                         >
                                           <div className="linha-cei">
                                             <b
-                                              className={`nome-linha-cei pl-2 ${
+                                              className={`nome-linha-cei ps-2 ${
                                                 row.name === "observacoes" &&
                                                 "mt-2"
                                               } ${
@@ -1663,7 +1663,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                             </b>
                                             {row.name !== "observacoes" &&
                                               !ehEmeiDaCemeiLocation && (
-                                                <b className="faixa-etaria pl-2">
+                                                <b className="faixa-etaria ps-2">
                                                   {row.faixa_etaria}
                                                 </b>
                                               )}

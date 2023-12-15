@@ -140,7 +140,7 @@ export class SolicitacaoVigente extends Component {
               return (
                 <div className="pb-2" key={key}>
                   <div
-                    className="school-container col-md-12 mr-4"
+                    className="school-container col-md-12 me-4"
                     style={
                       solicitacaoVigente.active ? { background: "#F2FBFE" } : {}
                     }
@@ -154,7 +154,7 @@ export class SolicitacaoVigente extends Component {
                           style={{ color: corIcone }}
                           className={iconClassName}
                         />
-                        <label className="ms-1 pr-3 ">{texto}</label>
+                        <label className="ms-1 pe-3 ">{texto}</label>
                         <ToggleExpandir
                           onClick={() => this.activateSolicitacao(key)}
                           ativo={solicitacaoVigente.active}
@@ -227,7 +227,7 @@ export class SolicitacaoVigente extends Component {
                                 style={BUTTON_STYLE.BLUE_OUTLINE}
                                 type={BUTTON_TYPE.BUTTON}
                                 icon={BUTTON_ICON.FILE_ALT}
-                                className="mr-3"
+                                className="me-3"
                               />
                             </div>
                           </div>

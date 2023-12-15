@@ -190,7 +190,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               </label>
             </div>
             <div className="col-12">
-              <div className="container-fluid pr-0">
+              <div className="container-fluid pe-0">
                 {periodo.substituicoesCEI && (
                   <div className="row">
                     <div className="col-12">

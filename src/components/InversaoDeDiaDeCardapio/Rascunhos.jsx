@@ -46,7 +46,7 @@ export class Rascunhos extends Component {
                       : inversaoDeDiaDeCardapio.data_de_inversao}
                   </b>{" "}
                   <i
-                    className={"fa fa-arrow-right ms-2 mr-2"}
+                    className={"fa fa-arrow-right ms-2 me-2"}
                     style={{ color: "#2881BB" }}
                   />{" "}
                   para o dia:
@@ -65,7 +65,7 @@ export class Rascunhos extends Component {
                           : inversaoDeDiaDeCardapio.data_de_inversao_2}
                       </b>{" "}
                       <i
-                        className={"fa fa-arrow-right ms-2 mr-2"}
+                        className={"fa fa-arrow-right ms-2 me-2"}
                         style={{ color: "#2881BB" }}
                       />{" "}
                       para o dia:

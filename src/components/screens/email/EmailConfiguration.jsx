@@ -209,7 +209,7 @@ class EmailConfiguration extends Component {
               <Botao
                 texto="Cancelar"
                 type={BUTTON_TYPE.BUTTON}
-                className="mr-2"
+                className="me-2"
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={this.showModal}
               />

@@ -53,7 +53,7 @@ export default ({ resultado, changePage }) => {
                         <td>{item.tipo}</td>
                         <td className="acoes">
                           <button
-                            className="botaoEditar mr-2"
+                            className="botaoEditar me-2"
                             onClick={() => openModal(item)}
                             disabled={
                               (item.tipo === "UNIDADE_MEDIDA" ||
@@ -63,7 +63,7 @@ export default ({ resultado, changePage }) => {
                                 : false
                             }
                           >
-                            <FormOutlined className="mr-1" />
+                            <FormOutlined className="me-1" />
                             Editar
                           </button>
                           |
@@ -78,7 +78,7 @@ export default ({ resultado, changePage }) => {
                                 : false
                             }
                           >
-                            <DeleteOutlined className="mr-1" />
+                            <DeleteOutlined className="me-1" />
                             Excluir
                           </button>
                         </td>

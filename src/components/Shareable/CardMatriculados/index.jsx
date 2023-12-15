@@ -55,7 +55,7 @@ export default class CardMatriculados extends Component {
       <div className="card">
         <div className="card-body card-enrolled">
           <div className="row title">
-            <div className="col-5 pl-0 pb-2">Nº de Matriculados</div>
+            <div className="col-5 ps-0 pb-2">Nº de Matriculados</div>
           </div>
           <div className="row">
             <div className="col-1 px-0">

@@ -460,7 +460,7 @@ export default class TabelaProdutos extends Component {
                         <div key={4} className="botao-reclamacao mt-4">
                           <Botao
                             texto="Solicitar análise sensorial"
-                            className="mr-3"
+                            className="me-3"
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
                             onClick={() =>

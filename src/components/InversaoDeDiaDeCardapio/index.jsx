@@ -342,7 +342,7 @@ export class InversaoDeDiaDeCardapio extends Component {
         </div>
         <div className={`col-md-12 col-lg-1 for-span`}>
           <i className="fas fa-arrow-left" />
-          <span className="pl-1 pr-1">para</span>
+          <span className="ps-1 pe-1">para</span>
           <i className="fas fa-arrow-right" />
         </div>
         <div

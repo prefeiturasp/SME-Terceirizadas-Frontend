@@ -130,7 +130,7 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
               {faixasCEI.length ? (
                 <div className="row">
                   <div className="col-12">
-                    <div className="container-fluid pr-0">
+                    <div className="container-fluid pe-0">
                       <label
                         style={{
                           background: "#eaffe3",
@@ -147,7 +147,7 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
                     </div>
                   </div>
                   <div className="col-12 mt-3">
-                    <div className="container-fluid pr-0 ms-4">
+                    <div className="container-fluid pe-0 ms-4">
                       <p>
                         Tipos de Inclusão de Alimentação:{" "}
                         <b
@@ -161,7 +161,7 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
                     </div>
                   </div>
                   <div className="col-12">
-                    <div className="container-fluid pr-0">
+                    <div className="container-fluid pe-0">
                       <table className="table table-bordered table-items">
                         <thead>
                           <tr className="row table-head-items">
@@ -209,7 +209,7 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
               {faixasEMEI.length ? (
                 <div className="row">
                   <div className="col-12">
-                    <div className="container-fluid pr-0">
+                    <div className="container-fluid pe-0">
                       <label
                         style={{
                           background: "#eaffe3",
@@ -226,7 +226,7 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
                     </div>
                   </div>
                   <div className="col-12 mt-3">
-                    <div className="container-fluid pr-0 ms-4">
+                    <div className="container-fluid pe-0 ms-4">
                       <p>
                         Tipos de Inclusão de Alimentação:{" "}
                         <b
@@ -240,7 +240,7 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
                     </div>
                   </div>
                   <div className="col-12">
-                    <div className="container-fluid pr-0">
+                    <div className="container-fluid pe-0">
                       <table className="table table-bordered table-items">
                         <thead>
                           {faixasEMEI.map((faixa, idxFaixa) => {
@@ -292,14 +292,14 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
               {faixasEMEI.length ? (
                 <div className="row">
                   <div className="col-12">
-                    <div className="container-fluid pr-0">
+                    <div className="container-fluid pe-0">
                       <label className="label-periodo-cei-cemei">
                         Alunos EMEI
                       </label>
                     </div>
                   </div>
                   <div className="col-12 mt-3">
-                    <div className=" container-fluid pr-0">
+                    <div className=" container-fluid pe-0">
                       <p>
                         Tipos de Inclusão de Alimentação:{" "}
                         <b>{tiposAlimentacaoEMEI}</b>
@@ -307,7 +307,7 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
                     </div>
                   </div>
                   <div className="col-6">
-                    <div className=" container-fluid pr-0">
+                    <div className=" container-fluid pe-0">
                       <table className="table table-bordered table-items">
                         <thead>
                           {faixasEMEI.map((faixa, idxFaixa) => {

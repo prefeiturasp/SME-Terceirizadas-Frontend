@@ -473,7 +473,7 @@ class solicitacaoDietaEspecial extends Component {
                       texto={
                         !atualizandoImagem ? "Atualizar imagem" : "Aguarde..."
                       }
-                      className="mr-3"
+                      className="me-3"
                       onClick={() => this.inputRef.click()}
                       disabled={
                         fotoAlunoSrc ||

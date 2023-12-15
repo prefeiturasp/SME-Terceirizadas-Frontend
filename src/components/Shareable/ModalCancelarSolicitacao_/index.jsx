@@ -83,7 +83,7 @@ const ModalCancelarSolicitacao = ({
               <div className="form-row">
                 <div className="row">
                   <div className="col-12">
-                    <p className="label--red pl-1">
+                    <p className="label--red ps-1">
                       {solicitacao &&
                         mensagemCancelamento(
                           solicitacao.status,
@@ -98,7 +98,7 @@ const ModalCancelarSolicitacao = ({
                   solicitacao.tipo ===
                     TIPOS_SOLICITACAO_LABEL.SOLICITACAO_UNIFICADA &&
                   visao === DRE ? (
-                    <div className="col-6 pl-0 mb-2">
+                    <div className="col-6 ps-0 mb-2">
                       <div className="mb-2">
                         <span className="label--red">* </span>
                         Selecione a(s) unidade(s) para solicitar o cancelamento:

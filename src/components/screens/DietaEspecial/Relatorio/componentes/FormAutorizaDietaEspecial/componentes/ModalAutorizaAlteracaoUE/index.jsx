@@ -72,7 +72,7 @@ export default (props) => (
       </Modal.Body>
       <Modal.Footer className="row">
         <div className="col-12" style={{ alignItems: "flex-end" }}>
-          <div className="mr-2 float-start">
+          <div className="me-2 float-start">
             <p>
               <b>Deseja continuar?</b>
             </p>

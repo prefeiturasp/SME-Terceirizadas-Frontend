@@ -86,7 +86,7 @@ const TabelaProdutos = ({
                     className={`table-body-cell ${bordas} d-flex justify-content-between`}
                   >
                     <i
-                      className={`fas fa-${icone} mr-3`}
+                      className={`fas fa-${icone} me-3`}
                       onClick={() => {
                         ativos.includes(indexProduto)
                           ? setAtivos(
@@ -108,7 +108,7 @@ const TabelaProdutos = ({
                         texto="Ver produto"
                         type={BUTTON_TYPE.SUBMIT}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="ms-3 mr-3"
+                        className="ms-3 me-3"
                       />
                     </Link>
                   </div>

@@ -45,7 +45,7 @@ export const ModalEnviarParaCodaeECodaeAprovar = ({ ...props }) => {
             style={BUTTON_STYLE.GREEN}
           />
           <Botao
-            className="float-end mr-2"
+            className="float-end me-2"
             texto="Não"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => setShowModal(false)}

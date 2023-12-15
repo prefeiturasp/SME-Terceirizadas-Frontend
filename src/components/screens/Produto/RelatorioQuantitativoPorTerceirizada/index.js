@@ -198,7 +198,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       disabled={submitting}
                       onClick={form.reset}
-                      className="mr-3"
+                      className="me-3"
                     />
                     <Botao
                       texto="Consultar"
@@ -254,7 +254,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
               style={BUTTON_STYLE.BLUE_OUTLINE}
               icon={BUTTON_ICON.ARROW_LEFT}
               onClick={handleClose}
-              className="float-end mr-2"
+              className="float-end me-2"
             />
           </section>
         </Modal.Footer>

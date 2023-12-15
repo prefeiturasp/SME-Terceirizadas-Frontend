@@ -33,7 +33,7 @@ export const CardMedicaoPorStatus = ({ ...props }) => {
           page !== 1 && onPageChanged(1);
         }
       }}
-      className={`card-medicao-por-status ${classeCor} mr-3 mb-3`}
+      className={`card-medicao-por-status ${classeCor} me-3 mb-3`}
     >
       <div className="pt-2">
         <div className="titulo">{children}</div>

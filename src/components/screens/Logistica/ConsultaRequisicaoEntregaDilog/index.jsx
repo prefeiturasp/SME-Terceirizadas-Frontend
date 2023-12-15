@@ -231,7 +231,7 @@ export default () => {
                     texto="Enviar"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ms-2 mr-2"
+                    className="ms-2 me-2"
                     onClick={() => {
                       setShowModal(true);
                     }}
@@ -243,7 +243,7 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       icon={BUTTON_ICON.FILE_EXCEL}
-                      className="ms-2 mr-2"
+                      className="ms-2 me-2"
                       onClick={solicitaExcelGuias}
                     />
                   </Spin>

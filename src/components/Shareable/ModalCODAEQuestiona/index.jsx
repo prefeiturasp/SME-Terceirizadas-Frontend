@@ -44,14 +44,10 @@ export const ModalCODAEQuestiona = ({ ...props }) => {
               <Modal.Title>Questionamento</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <div className="row">
-                <div className="col-12">
-                  <p className="title">
-                    É possível atender a solicitação com todos os itens
-                    previstos no contrato?
-                  </p>
-                </div>
-              </div>
+              <p className="title">
+                É possível atender a solicitação com todos os itens previstos no
+                contrato?
+              </p>
               <div className="row">
                 <div className="col-12">
                   <Field

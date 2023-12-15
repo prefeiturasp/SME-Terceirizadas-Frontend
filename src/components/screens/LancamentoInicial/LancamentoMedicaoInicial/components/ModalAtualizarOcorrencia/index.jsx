@@ -227,7 +227,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
                   </OnChange>
                 </div>
               ) : null}
-              <div className="row pl-2">
+              <div className="row ps-2">
                 {showButtonAnexarPlanilha && (
                   <div className="col-12">
                     <Field

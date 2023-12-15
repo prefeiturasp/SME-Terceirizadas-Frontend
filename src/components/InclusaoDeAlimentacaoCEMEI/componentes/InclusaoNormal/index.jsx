@@ -32,7 +32,7 @@ export const PeriodosCEIeouEMEI = ({
           motivoEspecifico ? (
             <div className="periodos_cei_emei mt-1 mb-3" key={indice}>
               <div
-                className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
+                className={`period-quantity number-${indice} ps-5 pt-2 pb-2`}
               >
                 <label htmlFor="check" className="checkbox-label">
                   <Field
@@ -54,7 +54,7 @@ export const PeriodosCEIeouEMEI = ({
                 </label>
               </div>
               {values.quantidades_periodo[indice][`checked`] && (
-                <div className="ms-5 mr-5">
+                <div className="ms-5 me-5">
                   <div className="alunos-label mt-3">Alunos EMEI</div>
                   <div className="tipos-alimentacao mt-3 mb-3">
                     Tipos de alimentação do período {getPeriodo(indice).nome}:{" "}
@@ -87,7 +87,7 @@ export const PeriodosCEIeouEMEI = ({
           ) : (
             <div className="periodos_cei_emei mt-1 mb-3" key={indice}>
               <div
-                className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
+                className={`period-quantity number-${indice} ps-5 pt-2 pb-2`}
               >
                 <label htmlFor="check" className="checkbox-label">
                   <Field
@@ -116,7 +116,7 @@ export const PeriodosCEIeouEMEI = ({
                   ) &&
                     !motivoEspecifico && (
                       <>
-                        <div className="ms-5 mr-5">
+                        <div className="ms-5 me-5">
                           <div className="alunos-label mt-3">Alunos CEI</div>
                           <div className="tipos-alimentacao mt-3 mb-3">
                             Tipos de alimentação do período{" "}
@@ -193,7 +193,7 @@ export const PeriodosCEIeouEMEI = ({
                   {alunosEMEIporPeriodo(getPeriodo(indice).nome, periodos) >
                     0 && (
                     <>
-                      <div className="ms-5 mr-5">
+                      <div className="ms-5 me-5">
                         <div className="alunos-label mt-3">Alunos EMEI</div>
                         <div className="tipos-alimentacao mt-3 mb-3">
                           Tipos de alimentação do período{" "}

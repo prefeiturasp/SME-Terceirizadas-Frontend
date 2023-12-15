@@ -144,7 +144,7 @@ export default ({
       </Modal>
       <div className="col-6 info-label">
         <label className="asterisk-label">*</label>
-        <label className="value-label mt-3 mb-2 mr-3">
+        <label className="value-label mt-3 mb-2 me-3">
           Pesquise o Código EOL ou o Nome do Aluno
         </label>
         <div

@@ -227,7 +227,7 @@ export const PeriodosInclusaoNormal = ({
               <div className="row">
                 <div className="col-3">
                   <div
-                    className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
+                    className={`period-quantity number-${indice} ps-5 pt-2 pb-2`}
                   >
                     <label htmlFor="check" className="checkbox-label">
                       <Field

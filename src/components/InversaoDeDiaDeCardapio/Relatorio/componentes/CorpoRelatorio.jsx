@@ -59,7 +59,7 @@ export const CorpoRelatorio = (props) => {
             <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="pl-2 my-auto offset-1 col-5">
+        <div className="ps-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
@@ -138,7 +138,7 @@ export const CorpoRelatorio = (props) => {
         </tr>
         <tr>
           <td />
-          <td className="pr-5">
+          <td className="pe-5">
             {inversaoDiaCardapio.cardapio_de
               ? inversaoDiaCardapio.cardapio_de.data
               : inversaoDiaCardapio.data_de_inversao}
@@ -152,7 +152,7 @@ export const CorpoRelatorio = (props) => {
         {inversaoDiaCardapio.data_de_inversao_2 && (
           <tr>
             <td />
-            <td className="pr-5">{inversaoDiaCardapio.data_de_inversao_2}</td>
+            <td className="pe-5">{inversaoDiaCardapio.data_de_inversao_2}</td>
             <td>{inversaoDiaCardapio.data_para_inversao_2}</td>
           </tr>
         )}

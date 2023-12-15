@@ -145,7 +145,7 @@ export const ModalCancelarInclusaoContinua = ({ ...props }) => {
                   ];
                 }
               )}
-              <div className="row pl-3 pr-3">
+              <div className="row ps-3 pe-3">
                 <span className="required-asterisk">*</span>
                 <label>Justificativa</label>
                 <Field

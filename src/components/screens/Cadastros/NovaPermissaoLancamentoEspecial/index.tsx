@@ -556,7 +556,7 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                           {aliLancEspeciais.map((alimentacao) => (
                             <Checkbox
                               onChange={(e) => onChangeCheckBox(form, e)}
-                              className="ck-lancamentos-especiais mb-3 mr-4 ms-3"
+                              className="ck-lancamentos-especiais mb-3 me-4 ms-3"
                               key={alimentacao.uuid}
                               value={alimentacao.uuid}
                               name={`ck_lancamentos_especiais__${alimentacao.uuid}`}
@@ -584,7 +584,7 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                         <Botao
                           texto="Cancelar"
                           style={BUTTON_STYLE.GREEN_OUTLINE}
-                          className="mr-3"
+                          className="me-3"
                         />
                       </Link>
                       <Botao

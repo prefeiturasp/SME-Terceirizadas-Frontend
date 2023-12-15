@@ -61,7 +61,7 @@ export const Botoes = ({
           }
         />
         <Botao
-          className="ms-3 mr-3"
+          className="ms-3 me-3"
           onClick={() => {
             setModal("Aceitar reclamação");
             setProdutoAAtualizar(produto);

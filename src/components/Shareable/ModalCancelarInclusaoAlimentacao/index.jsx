@@ -103,7 +103,7 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                         </p>
                         {datas.map((dia, key_) => {
                           return (
-                            <label key={key_} className="mr-3">
+                            <label key={key_} className="me-3">
                               <Field
                                 name="datas"
                                 component="input"
@@ -140,7 +140,7 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                     </p>
                   </>
                 )}
-              <div className="row pl-3 pr-3">
+              <div className="row ps-3 pe-3">
                 <span className="required-asterisk-2">
                   <label>Justificativa</label>
                 </span>

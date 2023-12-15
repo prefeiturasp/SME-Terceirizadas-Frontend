@@ -154,7 +154,7 @@ const CardBody = (props) => {
                   </div>
                   {exibirFiltrosDataEventoETipoSolicitacao && (
                     <>
-                      <div className={"col-3 pl-0"}>
+                      <div className={"col-3 ps-0"}>
                         <Field
                           component={Select}
                           name="tipo_solicitacao"
@@ -170,7 +170,7 @@ const CardBody = (props) => {
                           props.onChange(values);
                         }}
                       </OnChange>
-                      <div className="col-3 pl-0">
+                      <div className="col-3 ps-0">
                         <Field
                           name="data_evento"
                           minDate={null}

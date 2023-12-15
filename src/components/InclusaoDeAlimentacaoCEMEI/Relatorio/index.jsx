@@ -253,7 +253,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                             <div className="form-group float-end mt-4">
                               {solicitacao.terceirizada_conferiu_gestao ? (
                                 <label className="ms-3 conferido">
-                                  <i className="fas fa-check mr-2" />
+                                  <i className="fas fa-check me-2" />
                                   Solicitação Conferida
                                 </label>
                               ) : (

@@ -334,7 +334,7 @@ const Relatorio = ({ visao }) => {
                   texto="Histórico"
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={showModalHistorico}
-                  className={`mr-2 ${
+                  className={`me-2 ${
                     exibirUsuariosSimultaneos() ? "float-end" : "float-start"
                   }`}
                 />
@@ -407,7 +407,7 @@ const Relatorio = ({ visao }) => {
                 }}
                 setCarregando={setCarregando}
               />,
-              <div className="form-group row float-end mt-4 mr-3" key={1}>
+              <div className="form-group row float-end mt-4 me-3" key={1}>
                 <Botao
                   texto="Negar"
                   type={BUTTON_TYPE.BUTTON}
@@ -425,7 +425,7 @@ const Relatorio = ({ visao }) => {
               <div className="form-group float-end mt-4">
                 {dietaEspecial.conferido ? (
                   <label className="ms-3 conferido">
-                    <i className="fas fa-check mr-2" />
+                    <i className="fas fa-check me-2" />
                     Solicitação Conferida
                   </label>
                 ) : (

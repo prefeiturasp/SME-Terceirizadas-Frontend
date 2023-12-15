@@ -303,7 +303,7 @@ const Relatorio = (props) => {
                       solicitacao={solicitacaoKitLanche}
                     />
                     {visualizaBotoesDoFluxo(solicitacaoKitLanche) && (
-                      <div className="form-group row float-end mt-4 mr-2">
+                      <div className="form-group row float-end mt-4 me-2">
                         {EXIBIR_BOTAO_NAO_APROVAR && (
                           <Botao
                             texto={textoBotaoNaoAprova}
@@ -356,7 +356,7 @@ const Relatorio = (props) => {
                           <div className="form-group float-end mt-4">
                             {solicitacaoKitLanche.terceirizada_conferiu_gestao ? (
                               <label className="ms-3 conferido">
-                                <i className="fas fa-check mr-2" />
+                                <i className="fas fa-check me-2" />
                                 Solicitação Conferida
                               </label>
                             ) : (

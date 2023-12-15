@@ -899,7 +899,7 @@ export default () => {
                       texto="Cancelar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="mr-3"
+                      className="me-3"
                       onClick={() => cancelarConferencia(values)}
                     />
                     <Botao

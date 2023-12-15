@@ -127,7 +127,7 @@ export class CardPendenteAcao extends Component {
               />
               <i className="fas fa-search inside-input" />
             </div>
-            <table className="orders-table mt-4 ms-3 mr-3">
+            <table className="orders-table mt-4 ms-3 me-3">
               <thead>
                 <tr className="row">
                   <th className="col-2">Código do Pedido</th>
@@ -199,7 +199,7 @@ export class CardPendenteAcao extends Component {
                                       key={idxSolicitacaoSimilar}
                                     >
                                       <i
-                                        className="fa fa-info-circle mr-1"
+                                        className="fa fa-info-circle me-1"
                                         aria-hidden="true"
                                       />
                                       <b>

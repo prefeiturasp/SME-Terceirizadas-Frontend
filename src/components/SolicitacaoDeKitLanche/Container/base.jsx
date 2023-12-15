@@ -656,7 +656,7 @@ export class SolicitacaoDeKitLanche extends Component {
               <div className="kits-total form-group row mt-2 pt-3">
                 <div className="col-12">
                   <label>{"Número total de kits:"}</label>
-                  <span className="font-weight-bold pl-2">
+                  <span className="font-weight-bold ps-2">
                     {this.getNumeroTotalDeKits()}
                   </span>
                 </div>

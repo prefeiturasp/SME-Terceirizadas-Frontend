@@ -393,7 +393,7 @@ class ContratosRelacionados extends Component {
                   })}
                 </section>
                 <aside>
-                  <div className={`col-1 mt-auto mb-1 mr-1`}>
+                  <div className={`col-1 mt-auto mb-1 me-1`}>
                     <Botao
                       texto="+"
                       type={BUTTON_TYPE.BUTTON}

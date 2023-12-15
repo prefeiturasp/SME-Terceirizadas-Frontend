@@ -124,7 +124,7 @@ export class AnexosProdutoField extends Component {
                   rel="noopener noreferrer"
                   target="_blank"
                   onClick={() => this.openFile(file)}
-                  className="link ms-1 mr-5"
+                  className="link ms-1 me-5"
                 >
                   {file.nome}
                 </a>

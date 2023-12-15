@@ -203,7 +203,7 @@ export const CardLancamentoCEI = ({
             <div>
               <div className="row" style={{ height: "100%" }}>
                 <div className="col-8 d-flex flex-column" />
-                <div className="col-4 pr-0 d-flex flex-column">
+                <div className="col-4 pe-0 d-flex flex-column">
                   <Botao
                     texto={textoBotaoCardLancamento(
                       quantidadeAlimentacoesLancadas,

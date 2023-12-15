@@ -216,7 +216,7 @@ export const AlunosDietaEspecial = ({
           <div className="row">
             <div className="col-2">{"Código EOL"}</div>
             <div className="col-8">{"Nome do Aluno"}</div>
-            <div className="pl-5 col-1 toggle-right">
+            <div className="ps-5 col-1 toggle-right">
               <ToggleExpandir
                 onClick={() => setCollapseAlunos(!collapseAlunos)}
                 ativo={collapseAlunos}

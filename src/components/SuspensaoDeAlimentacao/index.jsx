@@ -733,7 +733,7 @@ class FoodSuspensionEditor extends Component {
                         <Field component={"input"} type="hidden" name="value" />
                         <div className={`col-${escolaEhCEMEI() ? "3" : "4"}`}>
                           <div
-                            className={`period-quantity number-${key} pl-5 pt-2 pb-2`}
+                            className={`period-quantity number-${key} ps-5 pt-2 pb-2`}
                           >
                             <label htmlFor="check" className="checkbox-label">
                               <Field

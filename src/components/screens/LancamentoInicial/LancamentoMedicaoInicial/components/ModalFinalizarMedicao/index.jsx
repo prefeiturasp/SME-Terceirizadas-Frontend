@@ -203,7 +203,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
             </Radio>
           </Radio.Group>
         </div>
-        <div className="row pl-2">
+        <div className="row ps-2">
           {showButtonAnexarPlanilha && (
             <Form
               onSubmit={() => {}}

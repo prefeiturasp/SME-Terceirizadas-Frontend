@@ -46,14 +46,10 @@ export const ModalCODAEQuestionaFinalForm = ({ ...props }) => {
         render={({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Body>
-              <div className="row">
-                <div className="col-12">
-                  <p className="title">
-                    É possível atender a solicitação com todos os itens
-                    previstos no contrato?
-                  </p>
-                </div>
-              </div>
+              <p className="title">
+                É possível atender a solicitação com todos os itens previstos no
+                contrato?
+              </p>
               <div className="form-row">
                 <div className="form-group col-12">
                   <Field

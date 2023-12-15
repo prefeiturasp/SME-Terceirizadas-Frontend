@@ -404,7 +404,7 @@ export const FormBuscaProduto = ({
                 <Botao
                   type={BUTTON_TYPE.BUTTON}
                   texto={"Voltar"}
-                  className="mr-3"
+                  className="me-3"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.ARROW_LEFT}
                   onClick={() => history.goBack()}
@@ -414,7 +414,7 @@ export const FormBuscaProduto = ({
                 <Botao
                   texto="Limpar Filtros"
                   type={BUTTON_TYPE.BUTTON}
-                  className="mr-3"
+                  className="me-3"
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={() => {
                     form.reset();

@@ -97,7 +97,7 @@ const ModalRelatorioDietaEspecial = ({
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.ARROW_LEFT}
-          className="mr-2"
+          className="me-2"
           onClick={closeModal}
         />,
         <Botao
