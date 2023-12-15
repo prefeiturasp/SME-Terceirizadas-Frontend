@@ -39,13 +39,13 @@
 .thead-td-solicitacoes-similares {
   color: white !important;
   padding: 10px !important;
-  border-left: none !important;
+  border-start: none !important;
 }
 
 .tbody-td-solicitacoes-similares {
   color: black !important;
   padding: 10px !important;
-  border-left: none !important;
+  border-start: none !important;
 }
 
 .remove-padding {
@@ -67,7 +67,7 @@ table.faixas-etarias-cei {
       th {
         padding: 1em;
         &:not(:first-child) {
-          border-left: 1px solid $grayDisabled;
+          border-start: 1px solid $grayDisabled;
         }
       }
     }
@@ -82,7 +82,7 @@ table.faixas-etarias-cei {
       td {
         padding: 0.5em;
         &:not(:first-child) {
-          border-left: 1px solid $grayDisabled;
+          border-start: 1px solid $grayDisabled;
         }
       }
     }

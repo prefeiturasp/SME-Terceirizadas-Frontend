@@ -2,7 +2,7 @@
   padding: 12px;
 
   .ant-table-cell {
-    border-right: 1px solid #ccc;
+    border-end: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
   }
 
@@ -23,7 +23,7 @@
   }
   /* Estilização para a última célula da linha para remover a borda direita */
   .ant-table-row > .ant-table-cell:last-child {
-    border-right: none;
+    border-end: none;
   }
 
   /* Se você também deseja ter uma borda ao redor de toda a tabela, adicione o seguinte: */

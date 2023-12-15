@@ -36,12 +36,12 @@
         align-items: center;
         text-align: left;
         height: 100%;
-        border-right: 1px solid #e9eaea;
+        border-end: 1px solid #e9eaea;
         padding: 0;
         padding-left: 8px;
 
         &:last-child {
-          border-right: 0px solid #e9eaea;
+          border-end: 0px solid #e9eaea;
         }
       }
     }
@@ -86,12 +86,12 @@
         text-align: left;
         height: 100%;
         border-bottom: 1px solid #e9eaea;
-        border-right: 1px solid #e9eaea;
+        border-end: 1px solid #e9eaea;
         padding: 0;
         padding-left: 8px;
 
         &:last-child {
-          border-right: 0px solid #e9eaea;
+          border-end: 0px solid #e9eaea;
         }
       }
     }

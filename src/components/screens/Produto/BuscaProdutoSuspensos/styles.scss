@@ -67,10 +67,10 @@
           align-items: center;
           flex-wrap: wrap;
           padding-left: 1em;
-          border-left: 1px solid #c2c2c2;
+          border-start: 1px solid #c2c2c2;
 
           &:first-child {
-            border-left: 0px;
+            border-start: 0px;
           }
         }
       }

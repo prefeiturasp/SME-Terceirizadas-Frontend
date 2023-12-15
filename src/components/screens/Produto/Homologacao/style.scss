@@ -68,7 +68,7 @@ table.table-ficha-identificacao-produto {
       th {
         padding: 1em;
         &:not(:first-child) {
-          border-left: 1px solid $grayDisabled;
+          border-start: 1px solid $grayDisabled;
         }
       }
     }
@@ -89,7 +89,7 @@ table.table-ficha-identificacao-produto {
       td {
         padding: 0.5em;
         &:not(:first-child) {
-          border-left: 1px solid $grayDisabled;
+          border-start: 1px solid $grayDisabled;
         }
       }
     }

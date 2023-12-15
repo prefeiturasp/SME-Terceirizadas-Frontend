@@ -3276,9 +3276,9 @@ input[type="button"].btn-block {
   vertical-align: 0.255em;
   content: "";
   border-top: 0.3em solid;
-  border-right: 0.3em solid transparent;
+  border-end: 0.3em solid transparent;
   border-bottom: 0;
-  border-left: 0.3em solid transparent;
+  border-start: 0.3em solid transparent;
 }
 
 .dropdown-toggle:empty::after {
@@ -3372,9 +3372,9 @@ input[type="button"].btn-block {
   vertical-align: 0.255em;
   content: "";
   border-top: 0;
-  border-right: 0.3em solid transparent;
+  border-end: 0.3em solid transparent;
   border-bottom: 0.3em solid;
-  border-left: 0.3em solid transparent;
+  border-start: 0.3em solid transparent;
 }
 
 .dropup .dropdown-toggle:empty::after {
@@ -3395,9 +3395,9 @@ input[type="button"].btn-block {
   vertical-align: 0.255em;
   content: "";
   border-top: 0.3em solid transparent;
-  border-right: 0;
+  border-end: 0;
   border-bottom: 0.3em solid transparent;
-  border-left: 0.3em solid;
+  border-start: 0.3em solid;
 }
 
 .dropright .dropdown-toggle:empty::after {
@@ -3433,7 +3433,7 @@ input[type="button"].btn-block {
   vertical-align: 0.255em;
   content: "";
   border-top: 0.3em solid transparent;
-  border-right: 0.3em solid;
+  border-end: 0.3em solid;
   border-bottom: 0.3em solid transparent;
 }
 
@@ -4140,7 +4140,7 @@ input[type="button"].btn-block {
   color: #495057;
   content: "Browse";
   background-color: #e9ecef;
-  border-left: inherit;
+  border-start: inherit;
   border-radius: 0 0.25rem 0.25rem 0;
 }
 
@@ -5007,7 +5007,7 @@ input[type="button"].btn-block {
   }
   .card-group > .card + .card {
     margin-left: 0;
-    border-left: 0;
+    border-start: 0;
   }
   .card-group > .card:not(:last-child) {
     border-top-right-radius: 0;
@@ -5805,8 +5805,8 @@ a.badge-dark.focus {
 }
 
 .list-group-flush .list-group-item {
-  border-right: 0;
-  border-left: 0;
+  border-end: 0;
+  border-start: 0;
   border-radius: 0;
 }
 
@@ -6339,7 +6339,7 @@ a.close.disabled {
 .bs-tooltip-auto[x-placement^="right"] .arrow::before {
   right: 0;
   border-width: 0.4rem 0.4rem 0.4rem 0;
-  border-right-color: #000;
+  border-end-color: #000;
 }
 
 .bs-tooltip-bottom,
@@ -6375,7 +6375,7 @@ a.close.disabled {
 .bs-tooltip-auto[x-placement^="left"] .arrow::before {
   left: 0;
   border-width: 0.4rem 0 0.4rem 0.4rem;
-  border-left-color: #000;
+  border-start-color: #000;
 }
 
 .tooltip-inner {
@@ -6474,14 +6474,14 @@ a.close.disabled {
 .bs-popover-auto[x-placement^="right"] > .arrow::before {
   left: 0;
   border-width: 0.5rem 0.5rem 0.5rem 0;
-  border-right-color: rgba(0, 0, 0, 0.25);
+  border-end-color: rgba(0, 0, 0, 0.25);
 }
 
 .bs-popover-right > .arrow::after,
 .bs-popover-auto[x-placement^="right"] > .arrow::after {
   left: 1px;
   border-width: 0.5rem 0.5rem 0.5rem 0;
-  border-right-color: #fff;
+  border-end-color: #fff;
 }
 
 .bs-popover-bottom,
@@ -6537,14 +6537,14 @@ a.close.disabled {
 .bs-popover-auto[x-placement^="left"] > .arrow::before {
   right: 0;
   border-width: 0.5rem 0 0.5rem 0.5rem;
-  border-left-color: rgba(0, 0, 0, 0.25);
+  border-start-color: rgba(0, 0, 0, 0.25);
 }
 
 .bs-popover-left > .arrow::after,
 .bs-popover-auto[x-placement^="left"] > .arrow::after {
   right: 1px;
   border-width: 0.5rem 0 0.5rem 0.5rem;
-  border-left-color: #fff;
+  border-start-color: #fff;
 }
 
 .popover-header {
@@ -6788,7 +6788,7 @@ a.close.disabled {
   height: 2rem;
   vertical-align: text-bottom;
   border: 0.25em solid currentColor;
-  border-right-color: transparent;
+  border-end-color: transparent;
   border-radius: 50%;
   -webkit-animation: spinner-border 0.75s linear infinite;
   animation: spinner-border 0.75s linear infinite;
@@ -6965,16 +6965,16 @@ button.bg-dark:focus {
   border-top: 1px solid #dee2e6 !important;
 }
 
-.border-right {
-  border-right: 1px solid #dee2e6 !important;
+.border-end {
+  border-end: 1px solid #dee2e6 !important;
 }
 
 .border-bottom {
   border-bottom: 1px solid #dee2e6 !important;
 }
 
-.border-left {
-  border-left: 1px solid #dee2e6 !important;
+.border-start {
+  border-start: 1px solid #dee2e6 !important;
 }
 
 .border-0 {
@@ -6985,16 +6985,16 @@ button.bg-dark:focus {
   border-top: 0 !important;
 }
 
-.border-right-0 {
-  border-right: 0 !important;
+.border-end-0 {
+  border-end: 0 !important;
 }
 
 .border-bottom-0 {
   border-bottom: 0 !important;
 }
 
-.border-left-0 {
-  border-left: 0 !important;
+.border-start-0 {
+  border-start: 0 !important;
 }
 
 .border-primary {

@@ -195,15 +195,15 @@
     }
 
     .faixa-etaria {
-      border-right: 0.5px solid #e9eaea;
+      border-end: 0.5px solid #e9eaea;
     }
     .alunos-matriculados {
-      border-left: 0.5px solid #e9eaea;
-      border-right: 0.5px solid #e9eaea;
+      border-start: 0.5px solid #e9eaea;
+      border-end: 0.5px solid #e9eaea;
     }
     .quantidade {
       display: flex;
-      border-left: 0.5px solid #e9eaea;
+      border-start: 0.5px solid #e9eaea;
     }
   }
 

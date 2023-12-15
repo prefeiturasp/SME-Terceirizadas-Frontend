@@ -23,7 +23,7 @@
         th {
           padding: 0.5em;
           &:not(:first-child) {
-            border-left: 1px solid $grayDisabled;
+            border-start: 1px solid $grayDisabled;
           }
         }
       }
@@ -33,10 +33,10 @@
       tr {
         td {
           padding: 0.5em;
-          border-left: 1px solid $grayDisabled;
+          border-start: 1px solid $grayDisabled;
           border-bottom: 1px solid $grayDisabled;
           &:last-child {
-            border-right: 1px solid $grayDisabled;
+            border-end: 1px solid $grayDisabled;
           }
         }
         &:last-child {

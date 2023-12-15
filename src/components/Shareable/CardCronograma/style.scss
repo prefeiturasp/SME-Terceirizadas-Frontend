@@ -15,7 +15,7 @@
 }
 
 .card-panel-cronograma {
-  border-left: 10px solid !important;
+  border-start: 10px solid !important;
   i {
     padding: 0 10px;
   }
@@ -52,40 +52,40 @@
 
 .card-colored {
   &.card-pendente-assinatura {
-    border-left-color: $orange !important;
+    border-start-color: $orange !important;
     i {
       color: $orange;
     }
   }
   &.card-aguardando-dilog {
-    border-left-color: $purple !important;
+    border-start-color: $purple !important;
     i {
       color: $purple;
     }
   }
   &.card-cronogramas-assinados {
-    border-left-color: $greenLight !important;
+    border-start-color: $greenLight !important;
     i {
       color: $greenLight;
     }
   }
 
   &.card-solicitacoes-alteracoes {
-    border-left-color: $blueButtonFont !important;
+    border-start-color: $blueButtonFont !important;
     i {
       color: $blueButtonFont;
     }
   }
 
   &.card-solicitacoes-reprovadas {
-    border-left-color: $redCard !important;
+    border-start-color: $redCard !important;
     i {
       color: $redCard;
     }
   }
 
   &.card-alteracoes-codae {
-    border-left-color: $orangeLight !important;
+    border-start-color: $orangeLight !important;
     i {
       color: $orangeLight;
     }

@@ -68,7 +68,7 @@ div.relatorio-inclusao-cemei {
         th {
           padding: 1em;
           &:not(:first-child) {
-            border-left: 1px solid $grayDisabled;
+            border-start: 1px solid $grayDisabled;
           }
         }
       }
@@ -83,7 +83,7 @@ div.relatorio-inclusao-cemei {
         td {
           padding: 0.5em;
           &:not(:first-child) {
-            border-left: 1px solid $grayDisabled;
+            border-start: 1px solid $grayDisabled;
           }
         }
       }

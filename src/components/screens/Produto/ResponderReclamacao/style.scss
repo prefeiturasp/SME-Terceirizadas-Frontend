@@ -6,7 +6,7 @@
 
 .tabela-resultado-consultar-reclamacao-produto {
   font-size: 14px;
-  border-left: 1px solid #e9eaea;
+  border-start: 1px solid #e9eaea;
   border-bottom: 1px solid #e9eaea;
 
   .table-grid {
@@ -18,13 +18,13 @@
     background: #f5f6f8;
     div:last-child {
       border-top: 1px solid #e9eaea;
-      border-left: 1px solid #e9eaea;
-      border-right: 1px solid #e9eaea;
+      border-start: 1px solid #e9eaea;
+      border-end: 1px solid #e9eaea;
     }
   }
 
   .table-header-cell {
-    border-left: 1px solid #e9eaea;
+    border-start: 1px solid #e9eaea;
     border-top: 1px solid #e9eaea;
     color: #42474a;
     text-align: left;
@@ -65,15 +65,15 @@
 
     div:last-child {
       border-top: 1px solid #e9eaea;
-      border-left: 1px solid #e9eaea;
-      border-right: 1px solid #e9eaea;
+      border-start: 1px solid #e9eaea;
+      border-end: 1px solid #e9eaea;
     }
   }
 
   .desativar-borda {
     border-bottom: 1px solid transparent;
-    border-left: 1px solid transparent;
-    border-right: 1px solid transparent;
+    border-start: 1px solid transparent;
+    border-end: 1px solid transparent;
   }
 
   .fas {

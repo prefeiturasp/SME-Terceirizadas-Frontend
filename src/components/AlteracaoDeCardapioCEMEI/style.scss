@@ -36,7 +36,7 @@ table.faixas-etarias-cei-alteracao {
       th {
         padding: 1em;
         &:not(:first-child) {
-          border-left: 1px solid $grayDisabled;
+          border-start: 1px solid $grayDisabled;
         }
       }
     }
@@ -51,7 +51,7 @@ table.faixas-etarias-cei-alteracao {
       td {
         padding: 1em;
         &:not(:first-child) {
-          border-left: 1px solid $grayDisabled;
+          border-start: 1px solid $grayDisabled;
         }
       }
     }

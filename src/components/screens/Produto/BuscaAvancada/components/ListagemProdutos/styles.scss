@@ -38,7 +38,7 @@
       border-top: 1px solid #e9eaea;
 
       .desativar-borda {
-        border-left: 0px solid #e9eaea;
+        border-start: 0px solid #e9eaea;
         color: #42474a;
         font-weight: 900;
       }
@@ -64,15 +64,15 @@
         align-items: center;
         text-align: center;
         justify-content: center;
-        border-left: 1px solid #e9eaea;
+        border-start: 1px solid #e9eaea;
       }
 
       div:first-child {
-        border-left: 0px solid #e9eaea;
+        border-start: 0px solid #e9eaea;
       }
 
       div:last-child {
-        border-left: 1px solid #e9eaea;
+        border-start: 1px solid #e9eaea;
       }
     }
 

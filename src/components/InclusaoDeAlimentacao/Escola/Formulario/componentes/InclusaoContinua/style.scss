@@ -39,7 +39,7 @@ div.recorrencia-e-detalhes {
           color: $gray;
           padding: 10px;
           &:not(:last-child) {
-            border-right: 1px solid #e9eaea;
+            border-end: 1px solid #e9eaea;
           }
           i {
             cursor: pointer;

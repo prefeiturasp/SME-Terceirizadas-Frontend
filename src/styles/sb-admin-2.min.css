@@ -3113,9 +3113,9 @@ input[type="submit"].btn-block {
   vertical-align: 0.255em;
   content: "";
   border-top: 0.3em solid;
-  border-right: 0.3em solid transparent;
+  border-end: 0.3em solid transparent;
   border-bottom: 0;
-  border-left: 0.3em solid transparent;
+  border-start: 0.3em solid transparent;
 }
 .dropdown-toggle:empty::after {
   margin-left: 0;
@@ -3199,9 +3199,9 @@ input[type="submit"].btn-block {
   vertical-align: 0.255em;
   content: "";
   border-top: 0;
-  border-right: 0.3em solid transparent;
+  border-end: 0.3em solid transparent;
   border-bottom: 0.3em solid;
-  border-left: 0.3em solid transparent;
+  border-start: 0.3em solid transparent;
 }
 .dropup .dropdown-toggle:empty::after {
   margin-left: 0;
@@ -3219,9 +3219,9 @@ input[type="submit"].btn-block {
   vertical-align: 0.255em;
   content: "";
   border-top: 0.3em solid transparent;
-  border-right: 0;
+  border-end: 0;
   border-bottom: 0.3em solid transparent;
-  border-left: 0.3em solid;
+  border-start: 0.3em solid;
 }
 .dropright .dropdown-toggle:empty::after {
   margin-left: 0;
@@ -3251,7 +3251,7 @@ input[type="submit"].btn-block {
   vertical-align: 0.255em;
   content: "";
   border-top: 0.3em solid transparent;
-  border-right: 0.3em solid;
+  border-end: 0.3em solid;
   border-bottom: 0.3em solid transparent;
 }
 .dropleft .dropdown-toggle:empty::after {
@@ -3882,7 +3882,7 @@ input[type="submit"].btn-block {
   color: #6e707e;
   content: "Browse";
   background-color: #eaecf4;
-  border-left: inherit;
+  border-start: inherit;
   border-radius: 0 0.35rem 0.35rem 0;
 }
 .custom-range {
@@ -4714,7 +4714,7 @@ input[type="submit"].btn-block {
   }
   .card-group > .card + .card {
     margin-left: 0;
-    border-left: 0;
+    border-start: 0;
   }
   .card-group > .card:not(:last-child) {
     border-top-right-radius: 0;
@@ -5435,8 +5435,8 @@ a.badge-dark:focus {
   }
 }
 .list-group-flush .list-group-item {
-  border-right: 0;
-  border-left: 0;
+  border-end: 0;
+  border-start: 0;
   border-radius: 0;
 }
 .list-group-flush .list-group-item:last-child {
@@ -5912,7 +5912,7 @@ a.close.disabled {
 .bs-tooltip-right .arrow::before {
   right: 0;
   border-width: 0.4rem 0.4rem 0.4rem 0;
-  border-right-color: #000;
+  border-end-color: #000;
 }
 .bs-tooltip-auto[x-placement^="bottom"],
 .bs-tooltip-bottom {
@@ -5942,7 +5942,7 @@ a.close.disabled {
 .bs-tooltip-left .arrow::before {
   left: 0;
   border-width: 0.4rem 0 0.4rem 0.4rem;
-  border-left-color: #000;
+  border-start-color: #000;
 }
 .tooltip-inner {
   max-width: 200px;
@@ -6032,13 +6032,13 @@ a.close.disabled {
 .bs-popover-right > .arrow::before {
   left: 0;
   border-width: 0.5rem 0.5rem 0.5rem 0;
-  border-right-color: rgba(0, 0, 0, 0.25);
+  border-end-color: rgba(0, 0, 0, 0.25);
 }
 .bs-popover-auto[x-placement^="right"] > .arrow::after,
 .bs-popover-right > .arrow::after {
   left: 1px;
   border-width: 0.5rem 0.5rem 0.5rem 0;
-  border-right-color: #fff;
+  border-end-color: #fff;
 }
 .bs-popover-auto[x-placement^="bottom"],
 .bs-popover-bottom {
@@ -6086,13 +6086,13 @@ a.close.disabled {
 .bs-popover-left > .arrow::before {
   right: 0;
   border-width: 0.5rem 0 0.5rem 0.5rem;
-  border-left-color: rgba(0, 0, 0, 0.25);
+  border-start-color: rgba(0, 0, 0, 0.25);
 }
 .bs-popover-auto[x-placement^="left"] > .arrow::after,
 .bs-popover-left > .arrow::after {
   right: 1px;
   border-width: 0.5rem 0 0.5rem 0.5rem;
-  border-left-color: #fff;
+  border-start-color: #fff;
 }
 .popover-header {
   padding: 0.5rem 0.75rem;
@@ -6320,7 +6320,7 @@ a.close.disabled {
   height: 2rem;
   vertical-align: text-bottom;
   border: 0.25em solid currentColor;
-  border-right-color: transparent;
+  border-end-color: transparent;
   border-radius: 50%;
   -webkit-animation: spinner-border 0.75s linear infinite;
   animation: spinner-border 0.75s linear infinite;
@@ -6465,14 +6465,14 @@ button.bg-dark:hover {
 .border-top {
   border-top: 1px solid #e3e6f0 !important;
 }
-.border-right {
-  border-right: 1px solid #e3e6f0 !important;
+.border-end {
+  border-end: 1px solid #e3e6f0 !important;
 }
 .border-bottom {
   border-bottom: 1px solid #e3e6f0 !important;
 }
-.border-left {
-  border-left: 1px solid #e3e6f0 !important;
+.border-start {
+  border-start: 1px solid #e3e6f0 !important;
 }
 .border-0 {
   border: 0 !important;
@@ -6480,14 +6480,14 @@ button.bg-dark:hover {
 .border-top-0 {
   border-top: 0 !important;
 }
-.border-right-0 {
-  border-right: 0 !important;
+.border-end-0 {
+  border-end: 0 !important;
 }
 .border-bottom-0 {
   border-bottom: 0 !important;
 }
-.border-left-0 {
-  border-left: 0 !important;
+.border-start-0 {
+  border-start: 0 !important;
 }
 .border-primary {
   border-color: #4e73df !important;
@@ -10005,20 +10005,20 @@ a:focus {
   -ms-flex-pack: center;
   justify-content: center;
 }
-.border-left-primary {
-  border-left: 0.25rem solid #4e73df !important;
+.border-start-primary {
+  border-start: 0.25rem solid #4e73df !important;
 }
-.border-left-success {
-  border-left: 0.25rem solid #1cc88a !important;
+.border-start-success {
+  border-start: 0.25rem solid #1cc88a !important;
 }
-.border-left-info {
-  border-left: 0.25rem solid #36b9cc !important;
+.border-start-info {
+  border-start: 0.25rem solid #36b9cc !important;
 }
-.border-left-warning {
-  border-left: 0.25rem solid #f6c23e !important;
+.border-start-warning {
+  border-start: 0.25rem solid #f6c23e !important;
 }
-.border-left-danger {
-  border-left: 0.25rem solid #e74a3b !important;
+.border-start-danger {
+  border-start: 0.25rem solid #e74a3b !important;
 }
 .border-bottom-primary {
   border-bottom: 0.25rem solid #4e73df !important;
@@ -10112,7 +10112,7 @@ a:focus {
 }
 .topbar .topbar-divider {
   width: 0;
-  border-right: 1px solid #e3e6f0;
+  border-end: 1px solid #e3e6f0;
   height: calc(4.375rem - 2rem);
   margin: auto 1rem;
 }
@@ -10155,8 +10155,8 @@ a:focus {
   white-space: normal;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  border-left: 1px solid #e3e6f0;
-  border-right: 1px solid #e3e6f0;
+  border-start: 1px solid #e3e6f0;
+  border-end: 1px solid #e3e6f0;
   border-bottom: 1px solid #e3e6f0;
   line-height: 1.3rem;
 }

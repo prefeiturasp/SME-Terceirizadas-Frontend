@@ -27,11 +27,11 @@
     }
 
     div:last-child {
-      border-left: 1px;
+      border-start: 1px;
     }
 
     div:nth-last-child(2) {
-      border-right: 0px;
+      border-end: 0px;
     }
   }
 
@@ -54,11 +54,11 @@
       border: 1px solid #e9eaea;
     }
     div:last-child {
-      border-left: 1px solid #e9eaea;
+      border-start: 1px solid #e9eaea;
     }
 
     div:nth-last-child(2) {
-      border-right: 0px;
+      border-end: 0px;
     }
   }
 

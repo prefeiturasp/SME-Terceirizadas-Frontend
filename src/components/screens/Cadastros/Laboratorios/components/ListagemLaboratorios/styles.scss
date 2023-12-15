@@ -37,10 +37,10 @@
         align-items: center;
         height: 100%;
         padding-left: 8px;
-        border-right: 1px solid #e9eaea;
+        border-end: 1px solid #e9eaea;
 
         &:last-child {
-          border-right: 0px solid #e9eaea;
+          border-end: 0px solid #e9eaea;
         }
       }
     }
@@ -75,12 +75,12 @@
         border-bottom: 1px solid #e9eaea;
         text-align: left;
         padding-left: 8px;
-        border-right: 1px solid #e9eaea;
+        border-end: 1px solid #e9eaea;
       }
 
       div:last-child {
         padding-left: 0;
-        border-right: 0px solid #e9eaea;
+        border-end: 0px solid #e9eaea;
       }
     }
   }

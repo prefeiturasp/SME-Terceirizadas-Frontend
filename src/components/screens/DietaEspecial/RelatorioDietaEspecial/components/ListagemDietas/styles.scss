@@ -45,7 +45,7 @@
         align-items: center;
         height: 100%;
         padding-left: 8px;
-        border-right: none !important;
+        border-end: none !important;
       }
     }
 
@@ -107,12 +107,12 @@
         text-align: left;
         padding-left: 8px;
         &:not(:last-child) {
-          border-right: 1px solid #e9eaea;
+          border-end: 1px solid #e9eaea;
         }
       }
 
       div:last-child {
-        border-right: 0px solid #e9eaea;
+        border-end: 0px solid #e9eaea;
       }
     }
   }

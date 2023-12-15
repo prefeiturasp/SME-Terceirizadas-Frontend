@@ -82,7 +82,7 @@ body.dark-content {
             color: white;
             background-color: #202020;
             &:hover {
-              border-left: 10px solid #919191;
+              border-start: 10px solid #919191;
               background-color: #525252;
             }
             &:not(:hover):not(:last-child) {
@@ -205,7 +205,7 @@ body.dark-content {
           margin-right: 0;
           border-radius: 0;
           &:hover {
-            border-left: 10px solid $greenHover;
+            border-start: 10px solid $greenHover;
           }
           &:not(:hover):not(:last-child) {
             border-bottom: 1px solid $greenHover;

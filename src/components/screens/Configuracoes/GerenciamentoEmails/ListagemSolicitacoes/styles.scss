@@ -59,11 +59,11 @@
         height: 100%;
         padding-left: 8px;
         &:not(:last-child) {
-          border-right: 1px solid #e9eaea;
+          border-end: 1px solid #e9eaea;
         }
 
         &:last-child {
-          border-right: 0px solid #e9eaea;
+          border-end: 0px solid #e9eaea;
         }
       }
     }
@@ -73,7 +73,7 @@
       color: #686868;
 
       .desativar-borda {
-        border-left: 0px solid #e9eaea;
+        border-start: 0px solid #e9eaea;
         color: #42474a;
         font-weight: 900;
       }
@@ -88,7 +88,7 @@
       }
 
       div:last-child {
-        border-right: 0px solid #e9eaea;
+        border-end: 0px solid #e9eaea;
       }
     }
 
@@ -118,10 +118,10 @@
       .grid-table {
         line-height: 12px;
         height: 36px;
-        border-left: 1px solid #e9eaea;
+        border-start: 1px solid #e9eaea;
 
         div {
-          border-right: 1px solid #e9eaea;
+          border-end: 1px solid #e9eaea;
         }
       }
 

@@ -40,12 +40,12 @@
     }
 
     .alunos-matriculados {
-      border-right: 0.5px solid $grayDisabled;
+      border-end: 0.5px solid $grayDisabled;
     }
 
     .quantidade {
       display: flex;
-      border-left: 0.5px solid $grayDisabled;
+      border-start: 0.5px solid $grayDisabled;
     }
   }
 }
@@ -53,8 +53,8 @@
 .tabela-faixa-etaria-cei {
   article {
     border-bottom: 1px solid $grayDisabled;
-    border-right: 1px solid $grayDisabled;
-    border-left: 1px solid $grayDisabled;
+    border-end: 1px solid $grayDisabled;
+    border-start: 1px solid $grayDisabled;
     display: grid;
     grid-template-columns: 50% 25% 25%;
     min-height: 48px;
@@ -72,12 +72,12 @@
     }
 
     .faixa-etaria {
-      border-right: 0.5px solid $grayDisabled;
+      border-end: 0.5px solid $grayDisabled;
     }
 
     .quantidade {
       display: flex;
-      border-left: 0.5px solid $grayDisabled;
+      border-start: 0.5px solid $grayDisabled;
     }
   }
 

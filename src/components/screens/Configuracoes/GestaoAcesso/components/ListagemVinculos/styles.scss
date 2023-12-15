@@ -42,11 +42,11 @@
         height: 100%;
         padding-left: 8px;
         &:not(:last-child) {
-          border-right: 1px solid #e8eaf3;
+          border-end: 1px solid #e8eaf3;
         }
 
         &:last-child {
-          border-right: 0px;
+          border-end: 0px;
         }
       }
     }
@@ -95,12 +95,12 @@
         text-align: left;
         padding-left: 8px;
         &:not(:last-child) {
-          border-right: 1px solid #e8eaf3;
+          border-end: 1px solid #e8eaf3;
         }
       }
 
       div:last-child {
-        border-right: 0px;
+        border-end: 0px;
       }
     }
   }

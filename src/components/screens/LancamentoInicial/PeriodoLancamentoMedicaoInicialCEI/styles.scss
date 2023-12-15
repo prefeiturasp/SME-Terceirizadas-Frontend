@@ -80,7 +80,7 @@
         display: grid;
         align-items: center;
         height: 100%;
-        border-right: none !important;
+        border-end: none !important;
       }
     }
 
@@ -97,7 +97,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        border-right: 1px solid #e9eaea !important;
+        border-end: 1px solid #e9eaea !important;
         border-bottom: 1px solid #e9eaea !important;
 
         .nome-linha-cei {
@@ -113,7 +113,7 @@
 
       .input-desabilitado {
         border: 0 !important;
-        border-right: 1px solid #e9eaea !important;
+        border-end: 1px solid #e9eaea !important;
         border-bottom: 1px solid #e9eaea !important;
         div.input input {
           font-size: 11px !important;
@@ -123,7 +123,7 @@
 
       .input-habilitado {
         border: 0 !important;
-        border-right: 1px solid #e9eaea !important;
+        border-end: 1px solid #e9eaea !important;
         border-bottom: 1px solid #e9eaea !important;
         display: flex;
         justify-content: center;
@@ -139,7 +139,7 @@
         display: flex;
         justify-content: center;
         border: 0 !important;
-        border-right: 1px solid #e9eaea !important;
+        border-end: 1px solid #e9eaea !important;
         border-bottom: 1px solid #e9eaea !important;
 
         button {
@@ -165,12 +165,12 @@
         text-align: left;
         padding-left: 8px;
         &:not(:last-child) {
-          border-right: 1px solid #e9eaea;
+          border-end: 1px solid #e9eaea;
         }
       }
 
       div:last-child {
-        border-right: 0px solid #e9eaea;
+        border-end: 0px solid #e9eaea;
       }
 
       .data_lancamento_modal {

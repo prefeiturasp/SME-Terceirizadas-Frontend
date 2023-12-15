@@ -29,7 +29,7 @@
   }
 
   .card-header-notificacao-lida {
-    border-left: #a4a4a4 solid 8px !important;
+    border-start: #a4a4a4 solid 8px !important;
     p,
     span {
       color: #a4a4a4 !important;
@@ -39,7 +39,7 @@
   .card-header-notificacao-pendente {
     background: #b40c021a !important;
     border: 1px solid #b40c02 !important;
-    border-left: #b40c02 solid 8px !important;
+    border-start: #b40c02 solid 8px !important;
   }
 
   #accordionNotificacoes .card-header,
@@ -81,7 +81,7 @@
   }
 
   .card-tipo-pendencia {
-    border-left: #b40c02 solid 8px;
+    border-start: #b40c02 solid 8px;
   }
   .span-tipo-pendencia {
     color: #b40c02;
@@ -91,7 +91,7 @@
     color: #0048a9;
   }
   .card-tipo-aviso {
-    border-left: #0048a9 solid 8px;
+    border-start: #0048a9 solid 8px;
   }
 
   .span-tipo-alerta {
@@ -99,7 +99,7 @@
   }
 
   .card-tipo-alerta {
-    border-left: #d06d12 solid 8px;
+    border-start: #d06d12 solid 8px;
   }
 
   .container-form-filtros {
