@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import { tiposAlimentacaoPorPeriodoETipoUnidade } from "components/InclusaoDeAlimentacaoCEMEI/helpers";
 import Botao from "components/Shareable/Botao";
 import {
@@ -18,6 +19,7 @@ import {
   corDaMensagem,
   justificativaAoNegarSolicitacao,
   prazoDoPedidoMensagem,
+  gerarLinkRelatorio,
 } from "helpers/utilities";
 import {
   inclusaoPossuiCEInestePeriodo,
@@ -171,7 +173,22 @@ export const CorpoRelatorio = ({
                         <p>
                           Solicitação Similar:
                           <b className="gatilho-style">
-                            {`#${inclusaoDeAlimentacao.id_externo}`}
+                            <Link
+                              style={{
+                                color: "#0c6b45",
+                              }}
+                              to={gerarLinkRelatorio(
+                                `inclusao-de-alimentacao${
+                                  inclusaoDeAlimentacao.dias_motivos_da_inclusao_cemei
+                                    ? "-cemei"
+                                    : ""
+                                }`,
+                                inclusaoDeAlimentacao
+                              )}
+                              target="blank"
+                            >
+                              {`#${inclusaoDeAlimentacao.id_externo}`}
+                            </Link>
                             <ToggleExpandir
                               onClick={() =>
                                 collapseSolicitacaoSimilar(
