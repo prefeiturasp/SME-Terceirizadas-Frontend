@@ -35,7 +35,7 @@ export const CardMedicaoPorStatus = ({ ...props }) => {
       }}
       className={`card-medicao-por-status ${classeCor} mr-3 mb-3`}
     >
-      <div className="p-2">
+      <div className="pt-2">
         <div className="titulo">{children}</div>
         <hr />
         <div className="total">{formatarPara4Digitos(total)}</div>
