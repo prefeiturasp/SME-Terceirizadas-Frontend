@@ -144,7 +144,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                     <br />
                     {guiaAtual.codigo_unidade}
                   </div>
-                  <div className="col border-left">
+                  <div className="col border-start">
                     <b>Nome Unidade Educacional</b>
                     <br />
                     {guiaAtual.nome_unidade}
@@ -167,7 +167,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                     <br />
                     {guiaAtual.contato_unidade}
                   </div>
-                  <div className="col border-left">
+                  <div className="col border-start">
                     <b>Telefone</b>
                     <br />
                     {guiaAtual.telefone_unidade}
