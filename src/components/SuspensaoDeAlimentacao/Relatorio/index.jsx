@@ -228,7 +228,7 @@ class RelatorioSuspensaoAlimentacao extends Component {
                     </>
                   )}
                 {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-                  <div className="form-group float-right mt-4">
+                  <div className="form-group float-end mt-4">
                     {suspensaoAlimentacao.terceirizada_conferiu_gestao ? (
                       <label className="ml-3 conferido">
                         <i className="fas fa-check mr-2" />

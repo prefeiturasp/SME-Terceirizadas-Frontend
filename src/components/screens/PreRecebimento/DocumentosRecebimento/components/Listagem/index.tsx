@@ -27,7 +27,7 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
   const renderizarAcoes = (objeto: DocumentosRecebimento): ReactElement => {
     const botaoDetalharVerde = (
       <NavLink
-        className="float-left"
+        className="float-start"
         to={`/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${objeto.uuid}`}
       >
         <span className="link-acoes px-2">
@@ -38,7 +38,7 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
 
     const botaoCorrigirLaranja = (
       <NavLink
-        className="float-left"
+        className="float-start"
         to={`/${PRE_RECEBIMENTO}/${CORRIGIR_DOCUMENTOS_RECEBIMENTO}?uuid=${objeto.uuid}`}
       >
         <span className="link-acoes px-2">

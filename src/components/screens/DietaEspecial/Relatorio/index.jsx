@@ -172,7 +172,7 @@ const Relatorio = ({ visao }) => {
 
   const BotaoAutorizaCancelamento = ({ uuid, onAutorizar, setCarregando }) => {
     return (
-      <div className="form-group row float-right mt-4">
+      <div className="form-group row float-end mt-4">
         <Botao
           texto="Autorizar"
           type={BUTTON_TYPE.BUTTON}
@@ -199,7 +199,7 @@ const Relatorio = ({ visao }) => {
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         icon={BUTTON_ICON.PRINT}
-        className="float-right botaoImprimirDieta"
+        className="float-end botaoImprimirDieta"
         onClick={() => gerarRelatorio(uuid)}
       />
     );
@@ -221,7 +221,7 @@ const Relatorio = ({ visao }) => {
 
   const BotaoGerarProtocolo = ({ uuid, eh_importado }) => {
     return (
-      <div className="form-group float-right mt-4">
+      <div className="form-group float-end mt-4">
         <Botao
           texto="Gerar Protocolo"
           type={BUTTON_TYPE.BUTTON}
@@ -238,7 +238,7 @@ const Relatorio = ({ visao }) => {
 
   const BotaoEditarDieta = ({ nome }) => {
     return (
-      <div className="form-group float-right mt-4">
+      <div className="form-group float-end mt-4">
         <Botao
           texto={nome}
           type={BUTTON_TYPE.BUTTON}
@@ -335,7 +335,7 @@ const Relatorio = ({ visao }) => {
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={showModalHistorico}
                   className={`mr-2 ${
-                    exibirUsuariosSimultaneos() ? "float-right" : "float-left"
+                    exibirUsuariosSimultaneos() ? "float-end" : "float-start"
                   }`}
                 />
               )}
@@ -407,7 +407,7 @@ const Relatorio = ({ visao }) => {
                 }}
                 setCarregando={setCarregando}
               />,
-              <div className="form-group row float-right mt-4 mr-3" key={1}>
+              <div className="form-group row float-end mt-4 mr-3" key={1}>
                 <Botao
                   texto="Negar"
                   type={BUTTON_TYPE.BUTTON}
@@ -422,7 +422,7 @@ const Relatorio = ({ visao }) => {
             (status === statusEnum.CODAE_AUTORIZADO ||
               dietaCancelada ||
               status === statusEnum.CODAE_NEGOU_PEDIDO) && (
-              <div className="form-group float-right mt-4">
+              <div className="form-group float-end mt-4">
                 {dietaEspecial.conferido ? (
                   <label className="ml-3 conferido">
                     <i className="fas fa-check mr-2" />

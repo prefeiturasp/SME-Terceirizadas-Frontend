@@ -26,7 +26,7 @@ export const Rascunhos = ({
                 {inclusao.status}
               </span>
             </div>
-            <div className="icon-draft-card float-right">
+            <div className="icon-draft-card float-end">
               Criado em: {inclusao.criado_em}
               <span onClick={() => removerRascunho(id_externo, uuid, values)}>
                 <i className="fas fa-trash" />

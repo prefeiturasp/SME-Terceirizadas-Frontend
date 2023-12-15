@@ -245,7 +245,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
               texto="Imprimir"
               onClick={() => getPdfRelatorioQuantitativo(filtros)}
               type={BUTTON_TYPE.BUTTON}
-              className="float-right"
+              className="float-end"
             />
             <Botao
               texto="voltar"
@@ -254,7 +254,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
               style={BUTTON_STYLE.BLUE_OUTLINE}
               icon={BUTTON_ICON.ARROW_LEFT}
               onClick={handleClose}
-              className="float-right mr-2"
+              className="float-end mr-2"
             />
           </section>
         </Modal.Footer>

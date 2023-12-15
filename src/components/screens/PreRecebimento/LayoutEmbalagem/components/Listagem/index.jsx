@@ -20,7 +20,7 @@ export default ({ objetos, perfilFornecedor = false }) => {
   const renderizarAcoes = (objeto) => {
     const botaoDetalharVerde = (
       <NavLink
-        className="float-left"
+        className="float-start"
         to={`/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM}?uuid=${objeto.uuid}`}
       >
         <span className="link-acoes px-2">
@@ -31,7 +31,7 @@ export default ({ objetos, perfilFornecedor = false }) => {
 
     const botaoCorrigirLaranja = (
       <NavLink
-        className="float-left"
+        className="float-start"
         to={`/${PRE_RECEBIMENTO}/${CORRIGR_LAYOUT_EMBALAGEM}?uuid=${objeto.uuid}`}
       >
         <span className="link-acoes px-2">
@@ -42,7 +42,7 @@ export default ({ objetos, perfilFornecedor = false }) => {
 
     const botaoAtualizar = (
       <NavLink
-        className="float-left"
+        className="float-start"
         to={`/${PRE_RECEBIMENTO}/${ATUALIZAR_LAYOUT_EMBALAGEM}?uuid=${objeto.uuid}`}
       >
         <span className="link-acoes px-2">

@@ -8582,11 +8582,11 @@ button.bg-dark:focus {
   }
 }
 
-.float-left {
+.float-start {
   float: left !important;
 }
 
-.float-right {
+.float-end {
   float: right !important;
 }
 

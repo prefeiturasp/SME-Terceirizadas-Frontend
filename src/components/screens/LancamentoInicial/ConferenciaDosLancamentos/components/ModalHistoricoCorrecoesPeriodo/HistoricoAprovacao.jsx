@@ -21,7 +21,7 @@ export const HistoricoAprovacao = ({ ...props }) => {
           <label className="cor-texo-detalhes">{historico.usuario.nome}</label>
         </div>
         <div className="col-4">
-          <label className="text-right float-right cor-texo-detalhes">
+          <label className="text-right float-end cor-texo-detalhes">
             {historico.criado_em.split(" ")[0].replaceAll("-", "/")}
             <br />
             {historico.criado_em.split(" ")[1]}

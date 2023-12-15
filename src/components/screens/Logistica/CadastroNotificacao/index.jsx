@@ -228,7 +228,7 @@ export default () => {
                     texto="Salvar Rascunho"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                    className="float-end ml-3"
                     onClick={salvarNotificacao}
                     disabled={guiasVinculadas.length === 0}
                   />

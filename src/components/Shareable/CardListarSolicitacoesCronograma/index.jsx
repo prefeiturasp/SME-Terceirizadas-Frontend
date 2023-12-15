@@ -11,7 +11,7 @@ export default (props) => {
         <div className="card-title-status">
           <i className={"fas " + icone} />
           {titulo}
-          <span className="float-right pr-4">Data/Hora</span>
+          <span className="float-end pr-4">Data/Hora</span>
         </div>
         <hr />
         <div className="card-body card-body-sme">

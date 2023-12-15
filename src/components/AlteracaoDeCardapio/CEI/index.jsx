@@ -715,7 +715,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                         )}
                       />
                     </div>
-                    <div className="row float-right mt-4">
+                    <div className="row float-end mt-4">
                       <div className="col-12">
                         <Botao
                           texto="Cancelar"

@@ -11,7 +11,7 @@ export const CardCronograma = (props) => {
         <NavLink key={key} to={solicitation.link}>
           <p key={key} className={`data`}>
             {solicitation.text}
-            <span className="float-right">{solicitation.date}</span>
+            <span className="float-end">{solicitation.date}</span>
           </p>
         </NavLink>
       );
@@ -42,7 +42,7 @@ export const CardCronograma = (props) => {
         {loading && (
           <img src="/assets/image/ajax-loader.gif" alt="ajax-loader" />
         )}
-        <span className="float-right my-auto">Data</span>
+        <span className="float-end my-auto">Data</span>
       </div>
       <hr />
       {renderSolicitations(solicitations)}

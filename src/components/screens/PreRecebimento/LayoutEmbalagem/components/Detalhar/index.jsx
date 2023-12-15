@@ -128,7 +128,7 @@ export default ({ analise }) => {
               texto="Cancelar"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-right ml-3"
+              className="float-end ml-3"
               onClick={() => {
                 changeModal(index, true);
               }}
@@ -479,7 +479,7 @@ export default ({ analise }) => {
                       texto="Enviar para o Fornecedor"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="float-right ml-3"
+                      className="float-end ml-3"
                       disabled={
                         !validaAprovacoes || Object.keys(errors).length > 0
                       }
@@ -493,7 +493,7 @@ export default ({ analise }) => {
                       texto="Cancelar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-right ml-3"
+                      className="float-end ml-3"
                       onClick={() => setModalCancelar(true)}
                     />
                   </>

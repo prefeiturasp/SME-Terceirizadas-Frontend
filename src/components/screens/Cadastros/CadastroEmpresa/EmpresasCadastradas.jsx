@@ -128,7 +128,7 @@ class EmpresasCadastradas extends Component {
                         <Tooltip title="Editar">
                           <span>
                             <NavLink
-                              className="float-left botao-editar"
+                              className="float-start botao-editar"
                               to={`/configuracoes/cadastros/editar-empresa?uuid=${empresa.uuid}`}
                             >
                               <i className="fas fa-edit" />

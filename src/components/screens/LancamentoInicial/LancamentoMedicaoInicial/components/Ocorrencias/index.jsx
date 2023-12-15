@@ -111,7 +111,7 @@ export default ({
                     )}
 
                     <div className="col-12 mt-4">
-                      <div className="float-right">
+                      <div className="float-end">
                         <Botao
                           texto="Histórico"
                           type={BUTTON_TYPE.BUTTON}
@@ -127,7 +127,7 @@ export default ({
                           solicitacaoMedicaoInicial.ocorrencia.status
                         ) && (
                           <Botao
-                            className="float-right ml-3"
+                            className="float-end ml-3"
                             texto="Atualizar Formulário de Ocorrências"
                             style={BUTTON_STYLE.GREEN}
                             onClick={() => setShowModal(true)}

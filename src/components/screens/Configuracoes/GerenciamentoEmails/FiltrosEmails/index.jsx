@@ -78,7 +78,7 @@ export default (props) => {
                     texto="Adicionar E-mails"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                    className="float-end ml-3"
                     onClick={() => {
                       handleAdicionarEmail();
                     }}

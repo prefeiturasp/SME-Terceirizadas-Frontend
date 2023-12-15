@@ -453,7 +453,7 @@ const SolicitacaoUnificada = ({
                                       <p className="local">{values.local}</p>
                                     </div>
                                     <div className="col-4">
-                                      <p className="float-right mt-3">
+                                      <p className="float-end mt-3">
                                         {values.data}
                                       </p>
                                     </div>
@@ -832,7 +832,7 @@ const SolicitacaoUnificada = ({
                                                         validate={required}
                                                         value={kit.uuid}
                                                         id={`${ue.codigo_eol}-${kit.uuid}`}
-                                                        className="float-right"
+                                                        className="float-end"
                                                         name={`unidades_escolares[${idx}].kits_selecionados`}
                                                         disabled={
                                                           [
@@ -896,7 +896,7 @@ const SolicitacaoUnificada = ({
                       </p>
                     </div>
                     <div className="col-6">
-                      <p className="float-right">
+                      <p className="float-end">
                         Total de Kits Lanche: {totalKits}
                       </p>
                     </div>

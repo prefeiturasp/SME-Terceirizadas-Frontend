@@ -49,7 +49,7 @@ const ListagemAlteracoesCronogramas = ({
                 <div>{alteracaoCronograma.criado_em.split(" ")[0]}</div>
                 <div>
                   <NavLink
-                    className="float-left"
+                    className="float-start"
                     to={`/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${alteracaoCronograma.uuid}`}
                   >
                     <span

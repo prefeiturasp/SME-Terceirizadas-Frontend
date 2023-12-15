@@ -192,7 +192,7 @@ export default class FaixasEtariasEditar extends Component {
           <div>
             <Botao
               texto="Finalizar"
-              className="float-right botao-finalizar"
+              className="float-end botao-finalizar"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
               disabled={this.state.meses.length > 0}
@@ -201,7 +201,7 @@ export default class FaixasEtariasEditar extends Component {
             {this.props.redefinir && (
               <Botao
                 texto="Cancelar"
-                className="float-right"
+                className="float-end"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={this.props.onCancelar}

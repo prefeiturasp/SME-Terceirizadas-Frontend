@@ -51,7 +51,7 @@ class EditaisCadastrados extends Component {
                       <td className="">
                         {edital.ativo && (
                           <NavLink
-                            className="float-left"
+                            className="float-start"
                             to={`/configuracoes/cadastros/editais-contratos?uuid=${edital.uuid}`}
                           >
                             <i className="fas fa-pen" />

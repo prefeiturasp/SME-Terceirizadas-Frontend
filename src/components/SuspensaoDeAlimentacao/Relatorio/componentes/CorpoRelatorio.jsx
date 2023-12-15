@@ -44,7 +44,7 @@ export const CorpoRelatorio = (props) => {
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
-            className="float-right"
+            className="float-end"
             onClick={() =>
               imprimeRelatorioSuspensaoAlimentacao(suspensaoAlimentacao.uuid)
             }

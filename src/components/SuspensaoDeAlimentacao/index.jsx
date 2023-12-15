@@ -848,7 +848,7 @@ class FoodSuspensionEditor extends Component {
                     name="observacao"
                   />
                 </div>
-                <div className="form-group row float-right mt-4">
+                <div className="form-group row float-end mt-4">
                   <div className="col-12">
                     <Botao
                       texto="Cancelar"

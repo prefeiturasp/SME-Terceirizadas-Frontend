@@ -87,7 +87,7 @@ export default ({ solicitacao, updatePage }) => {
         <Modal.Body>
           Confira a visão geral da Requisição de Entrega:{" "}
           <b>{solicitacao.numero_solicitacao}</b>.
-          <label className="float-right">
+          <label className="float-end">
             Data de entrega: <b>{solicitacao.guias[0].data_entrega}</b>
           </label>
           <div className="text-center">
@@ -182,7 +182,7 @@ export default ({ solicitacao, updatePage }) => {
                           type={BUTTON_TYPE.BUTTON}
                           onClick={handleClose}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
-                          className="float-right ml-3"
+                          className="float-end ml-3"
                         />
                       </div>
                     </div>

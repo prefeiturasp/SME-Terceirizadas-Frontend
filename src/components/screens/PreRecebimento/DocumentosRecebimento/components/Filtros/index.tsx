@@ -164,14 +164,14 @@ const Filtros: React.FC<Props> = ({
                 texto="Filtrar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ml-3"
               />
 
               <Botao
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ml-3"
                 onClick={() => {
                   form.reset({});
                   setDocumentos([]);

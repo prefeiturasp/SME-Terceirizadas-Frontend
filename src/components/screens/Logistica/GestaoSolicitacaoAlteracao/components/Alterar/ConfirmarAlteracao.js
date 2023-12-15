@@ -87,7 +87,7 @@ export default ({
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         onClick={form.submit}
-        className="float-right ml-3"
+        className="float-end ml-3"
       />
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

@@ -2719,7 +2719,7 @@ export default () => {
                       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                     ].includes(location.state.status_solicitacao) ? (
                       <Botao
-                        className="float-right"
+                        className="float-end"
                         texto="Salvar Correções"
                         type={BUTTON_TYPE.BUTTON}
                         style={`${BUTTON_STYLE.GREEN}`}
@@ -2728,7 +2728,7 @@ export default () => {
                       />
                     ) : (
                       <Botao
-                        className="float-right"
+                        className="float-end"
                         texto="Salvar Lançamentos"
                         type={BUTTON_TYPE.BUTTON}
                         style={`${BUTTON_STYLE.GREEN}`}

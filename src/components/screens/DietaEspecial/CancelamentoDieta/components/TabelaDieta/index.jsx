@@ -164,7 +164,7 @@ export default ({
             <div className="col">
               <Botao
                 texto="Solicitar Cancelamento"
-                className="float-right ml-3"
+                className="float-end ml-3"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={() => setShowModal(true)}

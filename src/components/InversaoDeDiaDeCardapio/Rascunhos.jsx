@@ -22,7 +22,7 @@ export class Rascunhos extends Component {
                   {"RASCUNHO"}
                 </span>
               </div>
-              <div className="icon-draft-card float-right">
+              <div className="icon-draft-card float-end">
                 Criado em: {inversaoDeDiaDeCardapio.criado_em}
                 <span onClick={() => removerRascunho(id_externo, uuid)}>
                   <i className="fas fa-trash" />

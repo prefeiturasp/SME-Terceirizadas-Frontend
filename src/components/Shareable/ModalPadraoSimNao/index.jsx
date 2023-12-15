@@ -22,7 +22,7 @@ export const ModalPadraoSimNao = ({ ...props }) => {
         <Modal.Title>{tituloModal}</Modal.Title>
       </Modal.Header>
       <Modal.Body>{descricaoModal}</Modal.Body>
-      <Modal.Footer className="float-right">
+      <Modal.Footer className="float-end">
         <Botao
           texto="Não"
           type={BUTTON_TYPE.BUTTON}

@@ -31,7 +31,7 @@ export class Rascunhos extends Component {
                     <b>{solicitacaoKitLanche.solicitacao_kit_lanche.data}</b>{" "}
                     Local do passeio: <b>{local}</b>
                   </label>
-                  <div className="icon-draft-card float-right">
+                  <div className="icon-draft-card float-end">
                     Salvo em:{" "}
                     {solicitacaoKitLanche.solicitacao_kit_lanche.criado_em}
                     <span

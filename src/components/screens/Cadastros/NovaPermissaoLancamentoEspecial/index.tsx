@@ -573,7 +573,7 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="row float-right mt-4">
+                  <div className="row float-end mt-4">
                     <div className="col-12">
                       <Link
                         to={

@@ -76,7 +76,7 @@ export default ({ values, disabled, uuidEdicao }) => {
         style={BUTTON_STYLE.GREEN}
         icon={BUTTON_ICON.ARROW_RIGHT}
         iconPosition="right"
-        className="float-right ml-3"
+        className="float-end ml-3"
         onClick={handleShow}
         disabled={disabled}
       />

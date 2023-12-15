@@ -812,7 +812,7 @@ export const ConferenciaDosLancamentos = () => {
                         {solicitacao.historico &&
                           solicitacao.historico !== "" && (
                             <Botao
-                              className="float-right"
+                              className="float-end"
                               texto="Histórico de correções"
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                               onClick={() =>
@@ -856,7 +856,7 @@ export const ConferenciaDosLancamentos = () => {
                         })}
                       </div>
                     </div>
-                    <div className="float-right">
+                    <div className="float-end">
                       <Botao
                         texto="Exportar PDF"
                         style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}

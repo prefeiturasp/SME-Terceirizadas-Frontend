@@ -37,7 +37,7 @@ export const ModalLancheEmergencial = ({
           type={BUTTON_TYPE.BUTTON}
           onClick={() => fecharModal()}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="float-right"
+          className="float-end"
         />
       </Modal.Footer>
     </Modal>

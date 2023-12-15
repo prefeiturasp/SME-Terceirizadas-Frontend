@@ -593,7 +593,7 @@ export default () => {
                     texto="Aprovar Documentos"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                    className="float-end ml-3"
                     icon="fas fa-check"
                     disabled={Object.keys(errors).length > 0}
                     onClick={() => setShowModalAprovar(true)}
@@ -603,7 +603,7 @@ export default () => {
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.ORANGE_OUTLINE}
                     icon="fas fa-pen"
-                    className="float-right ml-3"
+                    className="float-end ml-3"
                     disabled={Object.keys(errors).length > 0}
                     onClick={() => setShowModalCorrecao(true)}
                   />
@@ -611,14 +611,14 @@ export default () => {
                     texto="Salvar Alterações"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
+                    className="float-end ml-3"
                     onClick={() => setShowModalSalvar(true)}
                   />
                   <Botao
                     texto="Cancelar"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
+                    className="float-end ml-3"
                     onClick={() => setShowModalCancelar(true)}
                   />
                 </div>

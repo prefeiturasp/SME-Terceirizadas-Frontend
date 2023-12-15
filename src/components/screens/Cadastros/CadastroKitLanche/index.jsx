@@ -191,14 +191,14 @@ export default ({ uuid }) => {
                       texto="Salvar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3 float-right"
+                      className="ml-3 float-end"
                       disabled={submitting || desabilitarBotao}
                     />
                     <Botao
                       texto="Cancelar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3 float-right"
+                      className="ml-3 float-end"
                       onClick={() => form.reset(modeloKitLanche)}
                     />
                   </div>

@@ -894,7 +894,7 @@ export default () => {
                     style={{ display: "none" }}
                     ref={editarButton}
                   />
-                  <span className="float-right tooltip-botao">
+                  <span className="float-end tooltip-botao">
                     <Botao
                       texto="Cancelar"
                       type={BUTTON_TYPE.BUTTON}

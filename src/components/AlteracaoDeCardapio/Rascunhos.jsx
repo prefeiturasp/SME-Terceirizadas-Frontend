@@ -27,7 +27,7 @@ export class Rascunhos extends Component {
                 {alteracaoDeCardapio.status}
               </span>
             </div>
-            <div className="icon-draft-card float-right">
+            <div className="icon-draft-card float-end">
               Salvo em: {alteracaoDeCardapio.criado_em}
               <span onClick={() => removerRascunho(id_externo, uuid, form)}>
                 <i className="fas fa-trash" />

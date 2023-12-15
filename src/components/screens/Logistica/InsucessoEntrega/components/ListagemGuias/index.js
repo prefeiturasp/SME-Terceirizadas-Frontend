@@ -60,7 +60,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                   >
                     <span>
                       <NavLink
-                        className="float-left"
+                        className="float-start"
                         to={`/${LOGISTICA}/${REGISTRAR_INSUCESSO}?uuid=${guia.uuid}`}
                         onClick={(event) => validaLink(desabilitar, event)}
                         disabled={desabilitar}

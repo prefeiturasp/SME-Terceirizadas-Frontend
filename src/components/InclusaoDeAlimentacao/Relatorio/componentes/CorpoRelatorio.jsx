@@ -196,7 +196,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               )
             }
             disabled={baixandoPDF}
-            className="float-right"
+            className="float-end"
             onClick={async () => {
               setBaixandoPDF(true);
               await getRelatorioInclusaoAlimentacao(

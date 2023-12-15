@@ -158,7 +158,7 @@ export class SolicitacaoVigente extends Component {
                         <ToggleExpandir
                           onClick={() => this.activateSolicitacao(key)}
                           ativo={solicitacaoVigente.active}
-                          className="float-right"
+                          className="float-end"
                         />
                       </div>
                     </div>

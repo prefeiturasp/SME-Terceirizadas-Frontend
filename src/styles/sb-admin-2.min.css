@@ -7575,10 +7575,10 @@ button.bg-dark:hover {
     align-self: stretch !important;
   }
 }
-.float-left {
+.float-start {
   float: left !important;
 }
-.float-right {
+.float-end {
   float: right !important;
 }
 .float-none {

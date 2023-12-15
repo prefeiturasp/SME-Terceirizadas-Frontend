@@ -39,7 +39,7 @@ export const CardMedicaoPorStatus = ({ ...props }) => {
         <div className="titulo">{children}</div>
         <hr />
         <div className="total">{formatarPara4Digitos(total)}</div>
-        <div className="conferir-lista float-right">Conferir lista</div>
+        <div className="conferir-lista float-end">Conferir lista</div>
       </div>
     </div>
   );

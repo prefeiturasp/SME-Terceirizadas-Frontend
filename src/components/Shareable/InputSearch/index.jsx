@@ -14,7 +14,7 @@ export const InputSearch = (props) => (
         />
         <i className="fas fa-search" />
       </span>
-      <div className="float-right">
+      <div className="float-end">
         {!props.esconderImprimir && (
           <Botao
             icon={BUTTON_ICON.PRINT}

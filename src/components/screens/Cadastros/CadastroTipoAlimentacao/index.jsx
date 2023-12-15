@@ -166,7 +166,7 @@ export default ({ tiposUnidadesEscolar }) => {
                       </div>
                       <div className="col-2 mb-3">
                         <Botao
-                          className="float-right"
+                          className="float-end"
                           texto="Salvar"
                           type={BUTTON_TYPE.SUBMIT}
                           style={`${BUTTON_STYLE.GREEN}`}
@@ -224,7 +224,7 @@ export default ({ tiposUnidadesEscolar }) => {
                       })}
                       <div className="offset-10 col-2 mt-3 mb-3">
                         <Botao
-                          className="float-right"
+                          className="float-end"
                           texto="Salvar"
                           type={BUTTON_TYPE.SUBMIT}
                           style={`${BUTTON_STYLE.GREEN}`}

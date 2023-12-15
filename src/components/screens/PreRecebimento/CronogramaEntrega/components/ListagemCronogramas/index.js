@@ -114,7 +114,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                       {cronograma.status !== "Rascunho" ? (
                         <>
                           <NavLink
-                            className="float-left"
+                            className="float-start"
                             to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${cronograma.uuid}`}
                           >
                             <span className="link-acoes green">Detalhar</span>
@@ -124,7 +124,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                             <>
                               <span className="ml-1">| </span>
                               <span
-                                className="float-left ml-1 link-acoes green"
+                                className="float-start ml-1 link-acoes green"
                                 onClick={() => baixarPDFCronograma(cronograma)}
                               >
                                 Imprimir
@@ -137,7 +137,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                               <>
                                 <span className="ml-1">|</span>
                                 <NavLink
-                                  className="float-left ml-1"
+                                  className="float-start ml-1"
                                   to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${cronograma.uuid}`}
                                 >
                                   <span className="link-acoes green">
@@ -155,7 +155,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                         <>
                           {usuarioEhCronogramaCriacaoEdicao() && (
                             <NavLink
-                              className="float-left"
+                              className="float-start"
                               to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${cronograma.uuid}`}
                             >
                               <span className="link-acoes green">Editar</span>
