@@ -7453,10 +7453,6 @@ button.bg-dark:focus {
   border-color: #fff !important;
 }
 
-.rounded-sm {
-  border-radius: 0.2rem !important;
-}
-
 .rounded {
   border-radius: 0.35rem !important;
 }
@@ -7479,10 +7475,6 @@ button.bg-dark:focus {
 .rounded-left {
   border-top-left-radius: 0.35rem !important;
   border-bottom-left-radius: 0.35rem !important;
-}
-
-.rounded-lg {
-  border-radius: 0.3rem !important;
 }
 
 .rounded-circle {
