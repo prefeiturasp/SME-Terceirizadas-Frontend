@@ -1,22 +1,26 @@
-.accordionComponent > .card {
+.accordionFiltros > .card {
   border-radius: 5px !important;
 }
 
-.accordionComponent > .card > .card-header {
+.accordionFiltros > .card > .card-header {
   border-radius: 5px !important;
   margin-bottom: 0 !important;
   background-color: #fff;
 }
 
-.accordionComponent .card-header,
-.accordionComponent .card-body {
+.accordionFiltros .card-header,
+.accordionFiltros .card-body {
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
-.accordionComponent {
+.accordionFiltros {
   .card-header {
-    height: 50px;
-    border-left: #198459 solid 8px;
+    height: 40px;
+
+    &.open {
+      border-bottom: none;
+      padding-bottom: -16px;
+    }
 
     .card-header-content {
       height: 100%;
@@ -28,21 +32,19 @@
         display: flex;
       }
 
-      .texto-obrigatorio {
-        font-size: 12px;
-        margin: auto 0;
-        color: #686868;
-        font-weight: normal;
-      }
-
       .titulo {
-        margin: auto 0;
+        margin: auto 16px;
+        color: #0c6b45;
+
+        i {
+          margin-right: 16px;
+        }
       }
     }
   }
 
   .span-icone-toogle {
-    color: #42474a;
+    color: #0c6b45;
   }
 
   .card {
