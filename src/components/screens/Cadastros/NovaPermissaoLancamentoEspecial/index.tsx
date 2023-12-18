@@ -538,16 +538,16 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                       </OnChange>
                     </div>
                   </div>
-                  <div className="row col mt-3">
+                  <div className="row mt-3">
                     <Field
                       component="input"
                       type="hidden"
                       name="alimentacoes_lancamento_especial"
                     />
-                    <div className="titulo-permissoes-lancamentos">
+                    <div className="titulo-permissoes-lancamentos col-3">
                       Permissões de Lançamentos Especiais:
                     </div>
-                    <div>
+                    <div className="col-9">
                       <div>
                         <Checkbox.Group
                           className="check-boxes-lancamentos-especiais"
