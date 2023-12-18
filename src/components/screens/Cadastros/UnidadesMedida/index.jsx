@@ -8,6 +8,7 @@ import {
   getNomesEAbreviacoesUnidadesMedida,
 } from "services/qualidade.service";
 import { Paginacao } from "components/Shareable/Paginacao";
+import "./styles.scss";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -61,8 +62,8 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3">
-        <div className="card-body">
+      <div className="card mt-3 card-unidades-medida">
+        <div className="card-body unidades-medida">
           <Filtros
             setFiltros={setFiltros}
             nomesUnidadesMedida={nomesUnidadesMedida}
@@ -73,6 +74,7 @@ export default () => {
 
           {unidadesMedida && (
             <>
+              <hr />
               <ListagemUnidadesMedida unidadesMedida={unidadesMedida} />
               <div className="row">
                 <div className="col">
