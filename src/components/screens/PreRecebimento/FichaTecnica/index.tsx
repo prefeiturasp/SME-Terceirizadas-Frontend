@@ -1,28 +1,77 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
+import { Paginacao } from "../../../Shareable/Paginacao";
+import Filtros from "./components/Filtros";
+import Listagem from "./components/Listagem";
+import { FiltrosFichaTecnica } from "./interfaces";
+import { ResponseFichasTecnicas } from "interfaces/responses.interface";
+import { FichaTecnica } from "interfaces/pre_recebimento.interface";
+import { gerarParametrosConsulta } from "../../../../helpers/utilities";
+import { listarFichastecnicas } from "services/fichaTecnica.service";
 import "./styles.scss";
-import { NavLink } from "react-router-dom";
-import Botao from "components/Shareable/Botao";
-import {
-  BUTTON_TYPE,
-  BUTTON_STYLE,
-} from "components/Shareable/Botao/constants";
-import { CADASTRO_FICHA_TECNICA, PRE_RECEBIMENTO } from "configs/constants";
 
 export default () => {
-  const [carregando] = useState<boolean>(false);
+  const [carregando, setCarregando] = useState<boolean>(false);
+  const [filtros, setFiltros] = useState<FiltrosFichaTecnica>({});
+  const [page, setPage] = useState<number>(1);
+  const [totalResultados, setTotalResultados] = useState<number>(0);
+  const [consultaRealizada, setConsultaRealizada] = useState<boolean>(false);
+  const [fichas, setFichas] = useState<Array<FichaTecnica>>([]);
+
+  const buscarResultados = async (pageNumber: number) => {
+    setCarregando(true);
+
+    const params: URLSearchParams = gerarParametrosConsulta({
+      page: pageNumber,
+      ...filtros,
+    });
+    const response: ResponseFichasTecnicas = await listarFichastecnicas(params);
+
+    setFichas(response.data.results);
+    setTotalResultados(response.data.count);
+    setConsultaRealizada(true);
+
+    setCarregando(false);
+  };
+
+  const nextPage = (page: number) => {
+    buscarResultados(page);
+    setPage(page);
+  };
+
+  useEffect(() => {
+    buscarResultados(1);
+    setPage(1);
+  }, [filtros]);
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-ficha-tecnica">
         <div className="card-body ficha-tecnica">
-          <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_FICHA_TECNICA}`}>
-            <Botao
-              texto="Cadastrar Ficha Técnica"
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.GREEN}
-            />
-          </NavLink>
+          <Filtros
+            setFiltros={setFiltros}
+            setFichas={setFichas}
+            setConsultaRealizada={setConsultaRealizada}
+          />
+          {consultaRealizada &&
+            (fichas.length === 0 ? (
+              <div className="text-center mt-4 mb-4">
+                Nenhum resultado encontrado
+              </div>
+            ) : (
+              <>
+                <Listagem objetos={fichas} />
+                <div className="row">
+                  <div className="col">
+                    <Paginacao
+                      current={page}
+                      total={totalResultados}
+                      onChange={nextPage}
+                    />
+                  </div>
+                </div>
+              </>
+            ))}
         </div>
       </div>
     </Spin>

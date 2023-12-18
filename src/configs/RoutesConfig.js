@@ -114,6 +114,7 @@ import {
   usuarioEhCronograma,
   usuarioComAcessoTelaEntregasDilog,
   usuarioEscolaEhGestaoDireta,
+  usuarioEscolaEhGestaoParceira,
   validaPerfilEscolaMistaParceira,
   usuarioEhCoordenadorCODAE,
   usuarioEhDilogQualidade,
@@ -332,21 +333,30 @@ const routesConfig = [
     component: DietaEspecialEscolaPage,
     exact: false,
     tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEscolaEhGestaoDireta() ||
+      usuarioEscolaEhGestaoParceira(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.CANCELAMENTO}`,
     component: CancelamentoDietaPage,
     exact: false,
     tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEscolaEhGestaoDireta() ||
+      usuarioEscolaEhGestaoParceira(),
   },
   {
     path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL_ALTERACAO_UE}`,
     component: DietaEspecialAlteracaoUEPage,
     exact: false,
     tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEscolaEhGestaoDireta() ||
+      usuarioEscolaEhGestaoParceira(),
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,
@@ -1031,7 +1041,9 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEmpresaTerceirizada() ||
-      usuarioEhMedicao(),
+      usuarioEhMedicao() ||
+      usuarioEscolaEhGestaoDireta() ||
+      usuarioEscolaEhGestaoParceira(),
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_PENDENTES}`,

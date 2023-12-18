@@ -11,12 +11,24 @@ import {
   DocumentosRecebimentoDashboard,
   DocumentosRecebimentoDetalhado,
   DocumentosRecebimentoParaAnalise,
+  FichaTecnicaDetalhada,
   FichaTecnica,
 } from "./pre_recebimento.interface";
 
 export interface ResponseInterface {
   data: Object;
   status: number;
+}
+
+export interface ListagemPaginada<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
+export interface ListagemNaoPaginada<T> {
+  results: T[];
 }
 
 export interface ResponseVinculosTipoAlimentacaoPorEscolaInterface
@@ -58,12 +70,7 @@ export interface ResponseEscolasComPermissoesLancamentosEspeciaisInterface
 }
 
 export interface ResponseDocumentosRecebimento extends ResponseInterface {
-  data: {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: DocumentosRecebimento[];
-  };
+  data: ListagemPaginada<DocumentosRecebimento>;
 }
 
 export interface ResponseDocumentosRecebimentoDetalhado
@@ -97,6 +104,15 @@ export interface ResponseDocumentosRecebimentoParaAnalise
   data: DocumentosRecebimentoParaAnalise;
 }
 
-export interface ResponseFichaTecnica extends ResponseInterface {
-  data: FichaTecnica;
+export interface ResponseDownloadArquivoLaudoAssinado
+  extends ResponseInterface {
+  data: Blob;
+}
+
+export interface ResponseFichasTecnicas extends ResponseInterface {
+  data: ListagemPaginada<FichaTecnica>;
+}
+
+export interface ResponseFichaTecnicaDetalhada extends ResponseInterface {
+  data: FichaTecnicaDetalhada;
 }

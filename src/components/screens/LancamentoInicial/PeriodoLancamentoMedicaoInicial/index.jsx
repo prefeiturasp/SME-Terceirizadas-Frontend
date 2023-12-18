@@ -77,6 +77,7 @@ import {
   ehDiaParaCorrigir,
   formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
+  getPermissoesLancamentosEspeciaisMesAnoAsync,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
   getSolicitacoesInclusaoAutorizadasAsync,
   getSolicitacoesInclusoesEtecAutorizadasAsync,
@@ -144,6 +145,15 @@ export default () => {
   ] = useState(null);
   const [kitLanchesAutorizadas, setKitLanchesAutorizadas] = useState(null);
   const [
+    permissoesLancamentosEspeciaisPorDia,
+    setPermissoesLancamentosEspeciaisPorDia,
+  ] = useState(null);
+  const [
+    alimentacoesLancamentosEspeciais,
+    setAlimentacoesLancamentosEspeciais,
+  ] = useState(null);
+  const [dataInicioPermissoes, setDataInicioPermissoes] = useState(null);
+  const [
     dadosValoresInclusoesAutorizadasState,
     setDadosValoresInclusoesAutorizadasState,
   ] = useState(null);
@@ -184,6 +194,7 @@ export default () => {
   const [valoresObservacoes, setValoresObservacoes] = useState([]);
   const [periodoGrupo, setPeriodoGrupo] = useState(null);
   const [diasParaCorrecao, setDiasParaCorrecao] = useState();
+  const [ehPeriodoEscolarSimples, setEhPeriodoEscolarSimples] = useState(null);
 
   const history = useHistory();
   const location = useLocation();
@@ -365,6 +376,10 @@ export default () => {
       getListaDiasSobremesaDoceAsync(escola.uuid);
 
       const periodos_escolares = response_vinculos.data.results;
+      const ehPeriodoSimples = periodos_escolares
+        .map((periodo) => periodo.periodo_escolar.nome)
+        .includes(location.state.periodo);
+      setEhPeriodoEscolarSimples(ehPeriodoSimples);
 
       let periodo = periodos_escolares[0];
       const ehPeriodoEspecifico =
@@ -850,6 +865,7 @@ export default () => {
       let response_kit_lanches_autorizadas = [];
       let response_suspensoes_autorizadas = [];
       let response_alteracoes_alimentacao_autorizadas = [];
+      let response_permissoes_lancamentos_especiais_mes_ano = [];
 
       if (!ehGrupoSolicitacoesDeAlimentacaoUrlParam && !ehGrupoETECUrlParam) {
         const params_matriculados = {
@@ -883,6 +899,73 @@ export default () => {
         setAlteracoesAlimentacaoAutorizadas(
           response_alteracoes_alimentacao_autorizadas
         );
+
+        if (ehPeriodoSimples) {
+          response_permissoes_lancamentos_especiais_mes_ano =
+            await getPermissoesLancamentosEspeciaisMesAnoAsync(
+              escola.uuid,
+              mes,
+              ano,
+              periodo.periodo_escolar.nome
+            );
+          setPermissoesLancamentosEspeciaisPorDia(
+            response_permissoes_lancamentos_especiais_mes_ano.permissoes_por_dia
+          );
+          setAlimentacoesLancamentosEspeciais(
+            response_permissoes_lancamentos_especiais_mes_ano.alimentacoes_lancamentos_especiais?.map(
+              (ali) => ali.name
+            )
+          );
+          setDataInicioPermissoes(
+            response_permissoes_lancamentos_especiais_mes_ano.data_inicio_permissoes
+          );
+
+          const alimentacoesLancamentosEspeciais =
+            response_permissoes_lancamentos_especiais_mes_ano.alimentacoes_lancamentos_especiais;
+          const indexLanche = tiposAlimentacaoFormatadas.findIndex(
+            (ali) => ali.nome === "Lanche"
+          );
+          const indexLanche4h = tiposAlimentacaoFormatadas.findIndex(
+            (ali) => ali.nome === "Lanche 4h"
+          );
+          const cloneAlimentacoesLancamentosEspeciais = deepCopy(
+            alimentacoesLancamentosEspeciais
+          );
+          const lanchesLancamentosEspeciais =
+            cloneAlimentacoesLancamentosEspeciais.filter((alimentacao) =>
+              alimentacao.name.includes("lanche")
+            );
+          const lancamentosEspeciaisSemLanches =
+            cloneAlimentacoesLancamentosEspeciais.filter(
+              (alimentacao) => !alimentacao.name.includes("lanche")
+            );
+          for (
+            let index = 0;
+            index <= lanchesLancamentosEspeciais.length - 1;
+            index++
+          ) {
+            tiposAlimentacaoFormatadas.splice(
+              Math.max(indexLanche, indexLanche4h) + 1 + index,
+              0,
+              lanchesLancamentosEspeciais[index]
+            );
+          }
+          const indexObservacoes = tiposAlimentacaoFormatadas.findIndex(
+            (ali) => ali.nome === "Observações"
+          );
+          for (
+            let index = 0;
+            index <= lancamentosEspeciaisSemLanches.length - 1;
+            index++
+          ) {
+            tiposAlimentacaoFormatadas.splice(
+              indexObservacoes + index,
+              0,
+              lancamentosEspeciaisSemLanches[index]
+            );
+          }
+          setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
+        }
       }
 
       if (ehGrupoSolicitacoesDeAlimentacaoUrlParam) {
@@ -1436,7 +1519,7 @@ export default () => {
           !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
           !ehGrupoETECUrlParam &&
           grupoLocation !== "Programas e Projetos"
-            ? tipoAlimentacao.uuid
+            ? tipoAlimentacao?.uuid || ""
             : "",
       });
     });
@@ -2329,7 +2412,10 @@ export default () => {
                                                           categoriasDeMedicao,
                                                           kitLanchesAutorizadas,
                                                           alteracoesAlimentacaoAutorizadas,
-                                                          diasParaCorrecao
+                                                          diasParaCorrecao,
+                                                          ehPeriodoEscolarSimples,
+                                                          permissoesLancamentosEspeciaisPorDia,
+                                                          alimentacoesLancamentosEspeciais
                                                         )}
                                                         dia={column.dia}
                                                         defaultValue={defaultValue(
@@ -2375,7 +2461,15 @@ export default () => {
                                               <div
                                                 className={`grid-table-tipos-alimentacao body-table-alimentacao`}
                                               >
-                                                <div className="nome-linha">
+                                                <div
+                                                  className={`nome-linha${
+                                                    alimentacoesLancamentosEspeciais?.includes(
+                                                      row.name
+                                                    )
+                                                      ? " input-alimentacao-permissao-lancamento-especial"
+                                                      : ""
+                                                  }`}
+                                                >
                                                   <b className="pl-2">
                                                     {row.nome}
                                                   </b>
@@ -2392,6 +2486,12 @@ export default () => {
                                                           "observacoes"
                                                         ? "input-habilitado-observacoes"
                                                         : "input-habilitado"
+                                                    }${
+                                                      alimentacoesLancamentosEspeciais?.includes(
+                                                        row.name
+                                                      )
+                                                        ? " input-alimentacao-permissao-lancamento-especial"
+                                                        : ""
                                                     }`}
                                                   >
                                                     {row.name ===
@@ -2522,7 +2622,10 @@ export default () => {
                                                             categoriasDeMedicao,
                                                             kitLanchesAutorizadas,
                                                             alteracoesAlimentacaoAutorizadas,
-                                                            diasParaCorrecao
+                                                            diasParaCorrecao,
+                                                            ehPeriodoEscolarSimples,
+                                                            permissoesLancamentosEspeciaisPorDia,
+                                                            alimentacoesLancamentosEspeciais
                                                           )}
                                                           exibeTooltipPadraoRepeticaoDiasSobremesaDoce={exibirTooltipPadraoRepeticaoDiasSobremesaDoce(
                                                             formValuesAtualizados,
@@ -2698,6 +2801,17 @@ export default () => {
                                         }
                                       ))}
                               </article>
+                              {categoria.nome === "ALIMENTAÇÃO" &&
+                                dataInicioPermissoes && (
+                                  <div className="legenda-lancamentos-especiais">
+                                    <div className="legenda-cor" />
+                                    <div>
+                                      Lançamento especial de alimentações
+                                      liberado para unidade em{" "}
+                                      {dataInicioPermissoes} por CODAE
+                                    </div>
+                                  </div>
+                                )}
                             </section>
                           </div>
                         ))}

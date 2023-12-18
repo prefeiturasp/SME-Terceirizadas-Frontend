@@ -1,5 +1,5 @@
 import moment from "moment";
-import React from "react";
+import React, { useContext } from "react";
 import { Form, Field } from "react-final-form";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { InputComData } from "components/Shareable/DatePicker";
@@ -13,6 +13,9 @@ import {
 import "./style.scss";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
 import { montarOptionsStatus } from "./utils";
+import MeusDadosContext from "context/MeusDadosContext";
+import { NavLink } from "react-router-dom";
+import { CADASTRO_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants.js";
 
 const FORM_NAME = "buscaCronogramaDeEntrega";
 
@@ -23,6 +26,22 @@ export default ({
   inicioResultado,
   armazens,
 }) => {
+  const { meusDados } = useContext(MeusDadosContext);
+
+  const podeCadastrar = (item) => {
+    /*
+    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
+    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
+    permissionamento deve se remover os perfis de logistica desta função.
+    */
+    const perfis = [
+      "DILOG_CRONOGRAMA",
+      "COORDENADOR_LOGISTICA",
+      "COORDENADOR_CODAE_DILOG_LOGISTICA",
+    ];
+    return perfis.includes(item);
+  };
+
   const onSubmit = async (values) => {
     const filtros = { ...values };
     if (filtros.status) filtros.status = filtros.status.flat();
@@ -96,7 +115,6 @@ export default ({
                   name="status"
                   multiple
                   nomeDoItemNoPlural="status"
-                  pluralFeminino
                   options={montarOptionsStatus()}
                 />
               </div>
@@ -134,26 +152,40 @@ export default ({
               </div>
             </div>
 
-            <div className="mt-4 mb-4" ref={inicioResultado}>
-              <Botao
-                texto="Filtrar"
-                type={BUTTON_TYPE.SUBMIT}
-                style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
-                disabled={submitting}
-              />
-
-              <Botao
-                texto="Limpar Filtros"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
-                onClick={() => {
-                  form.reset({});
-                  setCronogramas(undefined);
-                  setTotal(undefined);
-                }}
-              />
+            <div className="botoes pt-4" ref={inicioResultado}>
+              <div className="botao-cadastrar">
+                {meusDados &&
+                  podeCadastrar(meusDados.vinculo_atual.perfil.nome) && (
+                    <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}`}>
+                      <Botao
+                        texto="Cadastrar Cronograma"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN}
+                        onClick={() => {}}
+                      />
+                    </NavLink>
+                  )}
+              </div>
+              <div className="botoes-form">
+                <Botao
+                  texto="Limpar Filtros"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  className="ml-3"
+                  onClick={() => {
+                    form.reset({});
+                    setCronogramas(undefined);
+                    setTotal(undefined);
+                  }}
+                />
+                <Botao
+                  texto="Filtrar"
+                  type={BUTTON_TYPE.SUBMIT}
+                  style={BUTTON_STYLE.GREEN}
+                  className="ml-3"
+                  disabled={submitting}
+                />
+              </div>
             </div>
           </form>
         )}

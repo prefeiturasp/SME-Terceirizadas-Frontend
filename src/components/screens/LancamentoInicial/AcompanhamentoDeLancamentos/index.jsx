@@ -143,7 +143,7 @@ export const AcompanhamentoDeLancamentos = () => {
 
   const desabilitaExportarPDF = (dado) => {
     return (
-      usuarioEhDRE() &&
+      (usuarioEhMedicao() || usuarioEhDRE()) &&
       dado.status === "Corrigido para CODAE" &&
       !dado.dre_ciencia_correcao_data
     );
@@ -151,7 +151,7 @@ export const AcompanhamentoDeLancamentos = () => {
 
   const DREPrecisaDarCiencia = (dado) => {
     return (
-      usuarioEhDRE() &&
+      (usuarioEhMedicao() || usuarioEhDRE()) &&
       dado.status === "Corrigido para CODAE" &&
       !dado.dre_ciencia_correcao_data &&
       dado.todas_medicoes_e_ocorrencia_aprovados_por_medicao

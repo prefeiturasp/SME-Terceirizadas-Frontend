@@ -11,12 +11,13 @@ import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { InputComData } from "components/Shareable/DatePicker";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { getEtapas } from "services/cronograma.service";
+import { getFeriadosAnoAtualEProximo } from "../../../services/diasUteis.service";
 import { required } from "helpers/fieldValidators";
 import { deletaValues } from "helpers/formHelper";
 import { formataMilhar } from "helpers/utilities";
 
 import moment from "moment";
-import { usuarioEhCronograma } from "../../../helpers/utilities";
+import { getAmanha, usuarioEhCronograma } from "../../../helpers/utilities";
 import { OnChange } from "react-final-form-listeners";
 
 export default ({
@@ -31,6 +32,7 @@ export default ({
 }) => {
   const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [desabilitar, setDesabilitar] = useState([]);
+  const [feriados, setFeriados] = useState([{}]);
 
   const getEtapasFiltrado = (etapa) => {
     if (etapa) {
@@ -92,13 +94,30 @@ export default ({
     );
   };
 
-  useEffect(() => {
-    const buscaEtapas = async () => {
-      const response = await getEtapas();
-      setEtapasOptions(response.data);
-    };
+  const buscaEtapas = async () => {
+    const response = await getEtapas();
+    setEtapasOptions(response.data);
+  };
 
-    buscaEtapas();
+  const buscaFeriados = async () => {
+    const response = await getFeriadosAnoAtualEProximo();
+    const datas = response.data.results.map((dateString) =>
+      moment(dateString, "YYYY-MM-DD").toDate()
+    );
+    setFeriados(datas);
+  };
+
+  const isWeekday = (date) => {
+    const day = date.getDay();
+    return day !== 0 && day !== 6;
+  };
+
+  const requisicoesPreRender = async () => {
+    await Promise.all([buscaFeriados(), buscaEtapas()]);
+  };
+
+  useEffect(() => {
+    requisicoesPreRender();
   }, []);
 
   useEffect(() => {
@@ -110,7 +129,7 @@ export default ({
             values[`data_programada_${index}`],
             "DD/MM/YYYY"
           ).toDate();
-          if (dataProgramada < new Date().setHours(0, 0, 0, 0)) {
+          if (dataProgramada <= new Date().setHours(0, 0, 0, 0)) {
             array[index] = true;
           }
         });
@@ -227,8 +246,10 @@ export default ({
                   required
                   validate={required}
                   writable={false}
-                  minDate={new Date()}
+                  minDate={getAmanha()}
                   disabled={desabilitar[index]}
+                  filterDate={isWeekday}
+                  excludeDates={feriados}
                 />
               </div>
               <div className="col-4">

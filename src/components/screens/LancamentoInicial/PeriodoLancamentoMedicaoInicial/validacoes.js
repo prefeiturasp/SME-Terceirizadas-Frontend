@@ -788,7 +788,7 @@ export const validacoesTabelasDietas = (
     return "Frequência acima inválida ou não preenchida.";
   } else if (
     inputName.includes("frequencia") &&
-    !location.state.periodo.includes("INTEGRAL") &&
+    !location.state.periodo?.includes("INTEGRAL") &&
     categoria !== idCategoriaAlimentacao &&
     value &&
     totalLanchesDieta &&
@@ -884,6 +884,33 @@ export const exibirTooltipErroQtdMaiorQueAutorizado = (
           `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
         ]
       ) &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ]
+  );
+};
+
+export const exibeTooltipInclusoesAutorizadasComZero = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  inclusoesAutorizadas
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    inclusoesAutorizadas.some(
+      (inclusao) => column.dia === String(inclusao.dia)
+    ) &&
+    categoria.nome === "ALIMENTAÇÃO" &&
+    !row.name.includes("repeticao") &&
+    value &&
+    Number(value) === 0 &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
     !formValuesAtualizados[
       `observacoes__dia_${column.dia}__categoria_${categoria.id}`
     ]
