@@ -66,6 +66,7 @@ export default () => {
     {} as FichaTecnicaDetalhada
   );
   const [initialValues, setInitialValues] = useState<FichaTecnicaPayload>({});
+  const [stepAtual, setStepAtual] = useState(0);
 
   const onSubmit = (): void => {};
 
@@ -276,6 +277,37 @@ export default () => {
     );
   };
 
+  const validaProximo = (values: FichaTecnicaPayload): boolean => {
+    const campoAlergenicosValido =
+      (values.alergenicos === "1" && values.ingredientes_alergenicos) ||
+      values.alergenicos === "0";
+
+    const campoComLactoseValido =
+      (values.lactose === "1" && values.lactose_detalhe) ||
+      values.lactose === "0";
+
+    const campoOrganicoValido =
+      (values.organico === "1" && values.mecanismo_controle) ||
+      values.organico === "0";
+
+    const camposFormPereciveisValidos =
+      values.numero_registro && values.agroecologico && campoOrganicoValido;
+
+    return (
+      !values.produto ||
+      !values.marca ||
+      !values.categoria ||
+      !values.pregao_chamada_publica ||
+      !values.fabricante ||
+      !values.prazo_validade ||
+      !values.componentes_produto ||
+      !values.gluten ||
+      !campoAlergenicosValido ||
+      !campoComLactoseValido ||
+      (values.categoria === "PERECIVEIS" && !camposFormPereciveisValidos)
+    );
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-cadastro-ficha-tecnica">
@@ -289,7 +321,7 @@ export default () => {
                 <div className="steps">
                   <Steps
                     size="small"
-                    current={0}
+                    current={stepAtual}
                     items={[
                       {
                         title: "Identificação do Produto",
@@ -631,6 +663,18 @@ export default () => {
                   </section>
                 </Collapse>
 
+                {stepAtual < 2 && (
+                  <div className="mt-4 mb-4">
+                    <Botao
+                      texto="Próximo"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-right ml-3"
+                      onClick={() => setStepAtual((stepAtual) => stepAtual + 1)}
+                      disabled={validaProximo(values)}
+                    />
+                  </div>
+                )}
                 <div className="mt-4 mb-4">
                   <Botao
                     texto="Salvar Rascunho"
@@ -641,6 +685,17 @@ export default () => {
                     disabled={validaRascunho(values)}
                   />
                 </div>
+                {stepAtual > 0 && (
+                  <div className="mt-4 mb-4">
+                    <Botao
+                      texto="Anterior"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-right ml-3"
+                      onClick={() => setStepAtual((stepAtual) => stepAtual - 1)}
+                    />
+                  </div>
+                )}
               </form>
             )}
           />
