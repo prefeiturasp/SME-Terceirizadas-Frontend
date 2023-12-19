@@ -167,4 +167,8 @@ export interface FichaTecnicaDetalhada {
   gluten: boolean;
   lactose: boolean;
   lactose_detalhe: string;
+  porcao: string;
+  unidade_medida: UnidadeMedidaSimples;
+  valor_unidade_caseira: string;
+  unidade_medida_caseira: string;
 }
