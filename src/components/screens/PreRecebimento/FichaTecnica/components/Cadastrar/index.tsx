@@ -794,7 +794,7 @@ export default () => {
                       texto="Próximo"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-right ml-3"
+                      className="float-end ms-3"
                       onClick={() => setStepAtual((stepAtual) => stepAtual + 1)}
                       disabled={validaProximo(values, errors)}
                     />
@@ -816,7 +816,7 @@ export default () => {
                       texto="Anterior"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-right ml-3"
+                      className="float-end ms-3"
                       onClick={() => setStepAtual((stepAtual) => stepAtual - 1)}
                     />
                   </div>
