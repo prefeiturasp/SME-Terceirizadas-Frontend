@@ -656,7 +656,7 @@ export class SolicitacaoDeKitLanche extends Component {
               <div className="kits-total form-group row mt-2 pt-3">
                 <div className="col-12">
                   <label>{"Número total de kits:"}</label>
-                  <span className="font-weight-bold pl-2">
+                  <span className="fw-bold ps-2">
                     {this.getNumeroTotalDeKits()}
                   </span>
                 </div>
@@ -684,7 +684,7 @@ export class SolicitacaoDeKitLanche extends Component {
                 />
               </div>
               <div className="row mt-5">
-                <div className="col-12 text-right">
+                <div className="col-12 text-end">
                   <Botao
                     texto="Cancelar"
                     onClick={(e) => this.resetForm(e)}
@@ -701,7 +701,7 @@ export class SolicitacaoDeKitLanche extends Component {
                         status: "RASCUNHO",
                       })
                     )}
-                    className="ml-3"
+                    className="ms-3"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                   />
@@ -716,7 +716,7 @@ export class SolicitacaoDeKitLanche extends Component {
                       })
                     )}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </div>
               </div>
@@ -741,7 +741,7 @@ export class SolicitacaoDeKitLanche extends Component {
                         })
                       )}
                       style={BUTTON_STYLE.BLUE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   )}
                   <Botao
@@ -749,7 +749,7 @@ export class SolicitacaoDeKitLanche extends Component {
                     type={BUTTON_TYPE.BUTTON}
                     onClick={this.handleConfirmation}
                     style={BUTTON_STYLE.BLUE_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </Modal.Footer>
               </Modal>

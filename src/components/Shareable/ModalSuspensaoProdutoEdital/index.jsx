@@ -186,9 +186,7 @@ const ModalSuspensaoProdutoEdital = ({
               </div>
               <section className="form-row attachments">
                 <div className="col-9">
-                  <div className="card-title font-weight-bold cinza-escuro">
-                    Anexar
-                  </div>
+                  <div className="card-title fw-bold cinza-escuro">Anexar</div>
                   <div className="text">
                     Anexar fotos, documentos ou relatórios relacionados à
                     reclamação do produto.
@@ -216,12 +214,12 @@ const ModalSuspensaoProdutoEdital = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={closeModalSuspender}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   <Botao
                     texto="Suspender"
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => {
                       const todosEditaisSelecionados =

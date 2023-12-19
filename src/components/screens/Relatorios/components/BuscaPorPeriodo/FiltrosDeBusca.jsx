@@ -220,7 +220,7 @@ class FiltrosDeBusca extends Component {
                     <div className="filtrar">
                       <Botao
                         texto={"Filtrar"}
-                        className={"pr-3 pl-3"}
+                        className={"pe-3 ps-3"}
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN}
                         onClick={handleSubmit((values) =>

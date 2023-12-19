@@ -153,23 +153,23 @@ class Step2 extends Component {
             />
           </div>
         </div>
-        <div className="row card-title font-weight-bold ml-2">
+        <div className="row card-title fw-bold ms-2">
           Necessário o preenchimento das informações nutricionais abaixo
         </div>
         {informacoesAgrupadas &&
           informacoesAgrupadas.map((informacao, key) => {
             return (
               <div className="pb-2" key={key}>
-                <div className="school-container col-md-12 mr-4">
+                <div className="school-container col-md-12 me-4">
                   <div className="row pt-2 pb-2 title">
                     <div className="title col-4">
                       {this.retornaNomesFormatados(informacao)}
                     </div>
-                    <div className="col-8 text-right">
+                    <div className="col-8 text-end">
                       <ToggleExpandir
                         onClick={() => this.activateInformacao(key)}
                         ativo={informacao.active}
-                        className="float-right"
+                        className="float-end"
                       />
                     </div>
                   </div>

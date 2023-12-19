@@ -17,17 +17,17 @@ export class Rascunhos extends Component {
         return (
           <div key={key} className="bg-white border rounded mt-3">
             <div className="mt-2">
-              <label className="bold ml-3">
+              <label className="bold ms-3">
                 {`Alteração do Tipo de Alimentação # ${id_externo}`}
               </label>
               <span
-                className="ml-3 p-1 border rounded"
+                className="ms-3 p-1 border rounded"
                 style={{ background: backgroundColor }}
               >
                 {alteracaoDeCardapio.status}
               </span>
             </div>
-            <div className="icon-draft-card float-right">
+            <div className="icon-draft-card float-end">
               Salvo em: {alteracaoDeCardapio.criado_em}
               <span onClick={() => removerRascunho(id_externo, uuid, form)}>
                 <i className="fas fa-trash" />
@@ -40,7 +40,7 @@ export class Rascunhos extends Component {
                 <i className="fas fa-edit" />
               </span>
             </div>
-            <div className="ml-3">
+            <div className="ms-3">
               <p>
                 {alteracaoDeCardapio.data
                   ? `Dia: ${alteracaoDeCardapio.data}`

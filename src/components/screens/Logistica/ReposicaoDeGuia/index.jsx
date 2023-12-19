@@ -625,7 +625,7 @@ export default () => {
                                 onClick={() =>
                                   toggleBtnAlimentos(alimento.uuid)
                                 }
-                                className="btn btn-link btn-block text-left px-0"
+                                className="btn btn-link btn-block text-start px-0"
                                 type="button"
                                 data-toggle="collapse"
                                 data-target={`#collapse_${alimento.uuid}`}
@@ -945,7 +945,7 @@ export default () => {
                     ref={editarButton}
                   />
 
-                  <span className="float-right tooltip-botao">
+                  <span className="float-end tooltip-botao">
                     <Botao
                       texto="Finalizar reposição"
                       type={BUTTON_TYPE.BUTTON}

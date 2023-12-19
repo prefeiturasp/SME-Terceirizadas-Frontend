@@ -101,7 +101,7 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                 return (
                   <div key={periodo_interno_key} className="row">
                     <div className="col-12">
-                      <div className="container-fluid pr-0">
+                      <div className="container-fluid pe-0">
                         <label
                           style={{
                             background: periodo_interno.periodo.background,
@@ -118,7 +118,7 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                       </div>
                     </div>
                     <div className="col-12 mt-3">
-                      <div className="container-fluid pr-0">
+                      <div className="container-fluid pe-0">
                         <span>
                           Tipos de alimentação no período{" "}
                           {periodo_interno.periodo.nome.toLowerCase()}:{" "}
@@ -129,7 +129,7 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                       </div>
                     </div>
                     <div className="col-12">
-                      <div className="container-fluid pr-0">
+                      <div className="container-fluid pe-0">
                         <TabelaFaixaEtaria
                           key={periodo_interno_key}
                           faixas={periodo_interno.faixas}

@@ -294,7 +294,7 @@ export default () => {
         </div>
         <div className="row periodo-info-ue collapse-adjustments">
           <div className="col-4 periodo-lancamento">
-            <div className="pl-0">
+            <div className="ps-0">
               {objectoPeriodos.length > 0 ? (
                 <Select
                   suffixIcon={

@@ -22,12 +22,12 @@ export const ModalLancheEmergencial = ({
         <Modal.Title>Lanche Emergencial</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <label className="font-weight-bold">
+        <label className="fw-bold">
           O lanche emergencial somente é previsto para os alunos da EMEI da
           CEMEI.
         </label>
         <br />
-        <label className="font-weight-bold">
+        <label className="fw-bold">
           Para realizar a solicitação selecione a opção de alunos EMEI.
         </label>
       </Modal.Body>
@@ -37,7 +37,7 @@ export const ModalLancheEmergencial = ({
           type={BUTTON_TYPE.BUTTON}
           onClick={() => fecharModal()}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="float-right"
+          className="float-end"
         />
       </Modal.Footer>
     </Modal>

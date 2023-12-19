@@ -49,13 +49,13 @@ export default ({
               </div>
             </div>
           </div>
-          <div className="col-2 align-self-center text-right">
+          <div className="col-2 align-self-center text-end">
             <p className="mb-0">{notificacao.criado_em}</p>
           </div>
           <div className="col-1 align-self-center">
             <button
               onClick={() => toggleBtnNotificacoes(notificacao.uuid)}
-              className="btn btn-link btn-block text-left px-0"
+              className="btn btn-link btn-block text-start px-0"
               type="button"
               data-toggle="collapse"
               data-target={`#collapse_${notificacao.uuid}`}

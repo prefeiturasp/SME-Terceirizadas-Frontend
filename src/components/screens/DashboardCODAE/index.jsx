@@ -239,7 +239,7 @@ export const DashboardCODAE = (props) => {
             />
             <div className="card mt-3">
               <div className="card-body">
-                <div className="card-title font-weight-bold dashboard-card-title">
+                <div className="card-title fw-bold dashboard-card-title">
                   <div className="row">
                     <div className="col-3 mt-3 color-black">Pendências</div>
                     <div className="offset-3 col-3 my-auto">

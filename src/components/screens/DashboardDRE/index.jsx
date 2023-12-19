@@ -208,7 +208,7 @@ export const DashboardDRE = (props) => {
             />
             <div className="card mt-3">
               <div className="card-body">
-                <div className="card-title font-weight-bold dashboard-card-title">
+                <div className="card-title fw-bold dashboard-card-title">
                   <div className="row">
                     <div className="col-3 mt-3 color-black">Pendências</div>
                     <div className="offset-6 col-3 my-auto">
@@ -343,7 +343,7 @@ export const DashboardDRE = (props) => {
             </CardBody>
             <div className="card card-shortcut-to-form mt-3">
               <div className="card-body">
-                <div className="card-title font-weight-bold">
+                <div className="card-title fw-bold">
                   Faça uma Solicitação Unificada
                 </div>
                 <p>Acesse o formulário para fazer uma Solicitação Unificada</p>

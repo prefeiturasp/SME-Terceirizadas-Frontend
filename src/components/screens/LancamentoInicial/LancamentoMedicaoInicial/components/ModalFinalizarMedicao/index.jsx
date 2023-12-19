@@ -178,7 +178,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
       <Modal.Body>
         <div className="row">
           <div className="col">
-            <p className="ml-2">
+            <p className="ms-2">
               Neste mês, a direção da Unidade Educacional considera que o
               serviço foi realizado a contento?
             </p>
@@ -203,7 +203,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
             </Radio>
           </Radio.Group>
         </div>
-        <div className="row pl-2">
+        <div className="row ps-2">
           {showButtonAnexarPlanilha && (
             <Form
               onSubmit={() => {}}
@@ -240,14 +240,14 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
               type={BUTTON_TYPE.BUTTON}
               onClick={() => handleHideModal()}
               style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto="Finalizar Medição"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => handleFinalizarMedicao()}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               disabled={disableFinalizarMedicao}
             />
           </div>

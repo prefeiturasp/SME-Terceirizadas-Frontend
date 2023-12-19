@@ -170,7 +170,7 @@ export const InclusaoCEIBody = ({ ...props }) => {
                           {periodoExt !== periodo || periodo === "INTEGRAL" ? (
                             <div className="row">
                               <div className="col-12">
-                                <div className="container-fluid pr-0">
+                                <div className="container-fluid pe-0">
                                   <label className="label-periodo-cei-cemei">
                                     {periodo}
                                   </label>
@@ -180,7 +180,7 @@ export const InclusaoCEIBody = ({ ...props }) => {
                           ) : null}
                           <div className="row mt-3">
                             <div className="col-12">
-                              <div className="container-fluid pr-0">
+                              <div className="container-fluid pe-0">
                                 <p>
                                   Tipos de Inclusão de Alimentação:{" "}
                                   <b>{alimentosFormatados}</b>
@@ -190,7 +190,7 @@ export const InclusaoCEIBody = ({ ...props }) => {
                           </div>
                           <div className="row">
                             <div className="col-12">
-                              <div className="container-fluid pr-0">
+                              <div className="container-fluid pe-0">
                                 <table className="table table-bordered table-items">
                                   <thead>
                                     <tr className="table-head-items">

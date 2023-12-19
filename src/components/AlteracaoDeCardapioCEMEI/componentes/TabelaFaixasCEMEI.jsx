@@ -254,7 +254,7 @@ export const TabelaFaixasCEMEI = ({
                       );
                     })}
                     <tr className="total-faixas-cei">
-                      <td className="col-8 font-weight-bold">Total</td>
+                      <td className="col-8 fw-bold">Total</td>
                       <td className="col-2 text-center">
                         {totalMatriculados(periodo.CEI)}
                       </td>

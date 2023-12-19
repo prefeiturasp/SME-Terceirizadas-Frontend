@@ -38,9 +38,7 @@ class ConfirmarEmailPage extends Component {
         <div className="container pt-3">
           <div className="card text-center">
             <div className="card-body">
-              <div className="card-title font-weight-bold">
-                Confirmação de E-mail
-              </div>
+              <div className="card-title fw-bold">Confirmação de E-mail</div>
               {mensagem}
               <div className="pt-3">
                 <Link to="/login">
@@ -48,7 +46,7 @@ class ConfirmarEmailPage extends Component {
                     texto="Ir para o Login"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </Link>
               </div>

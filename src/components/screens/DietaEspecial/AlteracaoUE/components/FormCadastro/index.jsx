@@ -204,7 +204,7 @@ export default ({
             onSubmit={handleSubmit}
             className="form-cadastro-dieta-alteracao-ue"
           >
-            <span className="card-title font-weight-bold cinza-escuro">
+            <span className="card-title fw-bold cinza-escuro">
               Descrição da Solicitação
             </span>
             <div className="row">
@@ -321,7 +321,7 @@ export default ({
             </div>
             <div className="row mt-2">
               <div className="col">
-                <span className="card-title font-weight-bold cinza-escuro ">
+                <span className="card-title fw-bold cinza-escuro ">
                   Escola onde será realizado o programa
                 </span>
               </div>
@@ -371,14 +371,14 @@ export default ({
             <div className="mt-5">
               <Botao
                 texto="Enviar"
-                className="float-right ml-3"
+                className="float-end ms-3"
                 type={BUTTON_TYPE.SUBMIT}
                 disabled={submitting}
                 style={BUTTON_STYLE.GREEN}
               />
               <Botao
                 texto="Limpar Campos"
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   setDadosIniciais(null);
                   setSolicitacoesVigentes(null);

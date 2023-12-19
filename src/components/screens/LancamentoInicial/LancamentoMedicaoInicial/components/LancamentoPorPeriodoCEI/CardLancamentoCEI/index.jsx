@@ -73,7 +73,7 @@ export const CardLancamentoCEI = ({
         <span style={{ color: cor }}>
           <b>{quantidadeAlimentacao(tipoAlimentacao.nome)}</b>
         </span>
-        <span className="ml-1">- {tipoAlimentacao.nome}</span>
+        <span className="ms-1">- {tipoAlimentacao.nome}</span>
         <br />
       </div>
     ));
@@ -128,7 +128,7 @@ export const CardLancamentoCEI = ({
             </div>
             <div>
               <div
-                className={`float-right status-card-periodo-grupo ${
+                className={`float-end status-card-periodo-grupo ${
                   [
                     "MEDICAO_CORRECAO_SOLICITADA",
                     "MEDICAO_CORRECAO_SOLICITADA_CODAE",
@@ -189,7 +189,7 @@ export const CardLancamentoCEI = ({
                             : 0}
                         </b>
                       </span>
-                      <span className="ml-1">
+                      <span className="ms-1">
                         - alunos atendidos com{" "}
                         {numeroRefeicoesDiarias(textoCabecalho)} refeições
                         diárias
@@ -203,7 +203,7 @@ export const CardLancamentoCEI = ({
             <div>
               <div className="row" style={{ height: "100%" }}>
                 <div className="col-8 d-flex flex-column" />
-                <div className="col-4 pr-0 d-flex flex-column">
+                <div className="col-4 pe-0 d-flex flex-column">
                   <Botao
                     texto={textoBotaoCardLancamento(
                       quantidadeAlimentacoesLancadas,

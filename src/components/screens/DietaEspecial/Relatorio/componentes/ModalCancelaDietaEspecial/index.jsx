@@ -78,14 +78,14 @@ const ModalCancelaDietaEspecial = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={onCloseModal}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                     disabled={submitting}
                   />
                   <Botao
                     texto="Sim"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                     disabled={submitting}
                   />
                 </div>

@@ -98,7 +98,7 @@ const ListagemSolicitacoes = ({
                       solicitacao={solicitacao}
                       updatePage={updatePage}
                     />
-                    <span className="pr-3 pl-3">|</span>
+                    <span className="pe-3 ps-3">|</span>
                     <Alterar
                       className="acoes alterar"
                       solicitacao={solicitacao}

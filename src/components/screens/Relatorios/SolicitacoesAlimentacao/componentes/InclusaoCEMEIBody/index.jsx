@@ -216,14 +216,14 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                     {faixasCEI.length ? (
                       <div className="row">
                         <div className="col-12">
-                          <div className="container-fluid pr-0">
+                          <div className="container-fluid pe-0">
                             <label className="label-periodo-cei-cemei">
                               Alunos CEI
                             </label>
                           </div>
                         </div>
                         <div className="col-12 mt-3">
-                          <div className=" container-fluid pr-0">
+                          <div className=" container-fluid pe-0">
                             <p>
                               Tipos de Inclusão de Alimentação:{" "}
                               <b>{tiposAlimentacaoCEI}</b>
@@ -231,7 +231,7 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                           </div>
                         </div>
                         <div className="col-12">
-                          <div className=" container-fluid pr-0">
+                          <div className=" container-fluid pe-0">
                             <table className="table table-bordered table-items">
                               <thead>
                                 <tr className="table-head-items">
@@ -279,14 +279,14 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                     {faixasEMEI.length ? (
                       <div className="row">
                         <div className="col-12">
-                          <div className="container-fluid pr-0">
+                          <div className="container-fluid pe-0">
                             <label className="label-periodo-cei-cemei">
                               Alunos EMEI
                             </label>
                           </div>
                         </div>
                         <div className="col-12 mt-3">
-                          <div className=" container-fluid pr-0">
+                          <div className=" container-fluid pe-0">
                             <p>
                               Tipos de Inclusão de Alimentação:{" "}
                               <b>{tiposAlimentacaoEMEI}</b>
@@ -294,7 +294,7 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                           </div>
                         </div>
                         <div className="col-12">
-                          <div className=" container-fluid pr-0">
+                          <div className=" container-fluid pe-0">
                             <table className="table table-bordered table-items">
                               <thead>
                                 {faixasEMEI.map((faixa, idxFaixa) => {
@@ -346,14 +346,14 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                     {faixasEMEI.length ? (
                       <div className="row">
                         <div className="col-12">
-                          <div className="container-fluid pr-0">
+                          <div className="container-fluid pe-0">
                             <label className="label-periodo-cei-cemei">
                               Alunos EMEI
                             </label>
                           </div>
                         </div>
                         <div className="col-12 mt-3">
-                          <div className=" container-fluid pr-0">
+                          <div className=" container-fluid pe-0">
                             <p>
                               Tipos de Inclusão de Alimentação:{" "}
                               <b>{tiposAlimentacaoEMEI}</b>
@@ -361,7 +361,7 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                           </div>
                         </div>
                         <div className="col-6">
-                          <div className=" container-fluid pr-0">
+                          <div className=" container-fluid pe-0">
                             <table className="table table-bordered table-items">
                               <thead>
                                 {faixasEMEI.map((faixa, idxFaixa) => {

@@ -47,7 +47,7 @@ export default class RelatorioPage extends Component {
           style={BUTTON_STYLE.GREEN}
           onClick={this.onTerceirizadaTomarCiencia}
           texto="Ciente"
-          className="float-right"
+          className="float-end"
         />
       </div>
     </div>

@@ -212,7 +212,7 @@ export const ContratosFormSet = ({
                       {index === contratos.length - 1 && (
                         <Botao
                           texto="+ Adicionar"
-                          className="mr-3"
+                          className="me-3"
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           onClick={() => adicionaContrato()}

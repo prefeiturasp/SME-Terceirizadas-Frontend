@@ -263,7 +263,7 @@ export default ({
       <Spin tip="Carregando..." spinning={false}>
         <Modal.Body>
           <div className="col-4 mt-0">
-            <label className="font-weight-bold">Data do Lançamento</label>
+            <label className="fw-bold">Data do Lançamento</label>
             <Field
               className="data_lancamento_modal"
               component={InputText}
@@ -273,7 +273,7 @@ export default ({
             />
           </div>
           <div className="col-12 mt-3">
-            <label className="font-weight-bold">Observação</label>
+            <label className="fw-bold">Observação</label>
             <Field
               component={CKEditorField}
               name={`${rowName}__dia_${dia}__categoria_${categoria}`}
@@ -309,7 +309,7 @@ export default ({
             ] &&
               !!values[`observacoes__dia_${dia}__categoria_${categoria}`])) ? (
             <Botao
-              className="ml-3 float-left"
+              className="ms-3 float-start"
               texto="Excluir"
               disabled={
                 location.state &&
@@ -328,14 +328,14 @@ export default ({
           )}
           <div className="botoes-right">
             <Botao
-              className="ml-3"
+              className="ms-3"
               texto="Voltar"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => onClickVoltar()}
               style={BUTTON_STYLE.GREEN_OUTLINE}
             />
             <Botao
-              className="ml-3 mr-3"
+              className="ms-3 me-3"
               texto="Salvar"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}

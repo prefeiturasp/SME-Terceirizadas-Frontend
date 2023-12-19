@@ -78,7 +78,7 @@ export default (props) => {
                     texto="Adicionar E-mails"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     onClick={() => {
                       handleAdicionarEmail();
                     }}
@@ -152,7 +152,7 @@ export default (props) => {
                         resetForm(form);
                       }}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Adicionar"
@@ -161,7 +161,7 @@ export default (props) => {
                         CadastrarEmail(form, values);
                       }}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-2"
+                      className="ms-2"
                     />
                   </Modal.Footer>
                 </Spin>
