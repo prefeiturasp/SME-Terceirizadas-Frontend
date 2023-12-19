@@ -80,9 +80,9 @@ export class CardPendenteAcao extends Component {
               }}
               to={gerarLinkRelatorio(
                 `inclusao-de-alimentacao${
-                  pedido.dias_motivos_da_inclusao_cemei ? "-cemei" : ""
+                  solicitacao.dias_motivos_da_inclusao_cemei ? "-cemei" : ""
                 }`,
-                pedido
+                solicitacao
               )}
             >
               {`#${solicitacao.id_externo}`}

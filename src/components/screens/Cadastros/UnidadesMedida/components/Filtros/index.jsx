@@ -81,7 +81,7 @@ export default ({
               </div>
             </div>
 
-            <div className="pt-4 pb-5">
+            <div className="mt-4 mb-4">
               <NavLink
                 to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_UNIDADE_MEDIDA}`}
               >
