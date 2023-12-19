@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import "./styles.scss";
 import { Field, Form } from "react-final-form";
 import SelectSelecione from "components/Shareable/SelectSelecione";
+import Label from "components/Shareable/Label";
 import {
   getListaCompletaProdutosLogistica,
   getNomesMarcas,
@@ -9,7 +10,13 @@ import {
 } from "services/produto.service";
 import { getEnderecoPorCEP } from "services/cep.service";
 import { getTerceirizadaUUID } from "services/terceirizada.service";
-import { required, email } from "helpers/fieldValidators";
+import { getUnidadesDeMedidaLogistica } from "services/cronograma.service";
+import {
+  required,
+  email,
+  composeValidators,
+  inteiroOuDecimal,
+} from "helpers/fieldValidators";
 import { Spin, Steps } from "antd";
 import {
   CategoriaFichaTecnicaChoices,
@@ -56,6 +63,9 @@ export default () => {
   const [fabricantesOptions, setFabricantesOptions] = useState<
     OptionsGenerico[]
   >([]);
+  const [unidadesMedidaOptions, setUnidadesMedidaOptions] = useState<
+    OptionsGenerico[]
+  >([]);
   const [proponente, setProponente] =
     useState<TerceirizadaComEnderecoInterface>(
       {} as TerceirizadaComEnderecoInterface
@@ -83,6 +93,11 @@ export default () => {
   const carregarFabricantes = async () => {
     const response = await getNomesFabricantes();
     setFabricantesOptions(response.data.results);
+  };
+
+  const carregarUnidadesMedida = async () => {
+    const response = await getUnidadesDeMedidaLogistica();
+    setUnidadesMedidaOptions(response.data.results);
   };
 
   const carregarTerceirizada = async () => {
@@ -148,7 +163,12 @@ export default () => {
       gluten: booleanToString(ficha.gluten),
       lactose: booleanToString(ficha.lactose),
       lactose_detalhe: ficha.lactose_detalhe,
+      porcao: ficha.porcao,
+      unidade_medida: ficha.unidade_medida.uuid,
+      valor_unidade_caseira: ficha.valor_unidade_caseira,
+      unidade_medida_caseira: ficha.unidade_medida_caseira,
     };
+
     setInitialValues(iniciais as FichaTecnicaPayload);
   };
 
@@ -182,6 +202,10 @@ export default () => {
       ingredientes_alergenicos: "",
       lactose_detalhe: "",
       numero_registro: "",
+      porcao: values.porcao || "",
+      unidade_medida: values.unidade_medida || "",
+      valor_unidade_caseira: values.valor_unidade_caseira || "",
+      unidade_medida_caseira: values.unidade_medida_caseira || "",
     };
     if (payload.alergenicos) {
       payload.ingredientes_alergenicos = values.ingredientes_alergenicos || "";
@@ -253,6 +277,7 @@ export default () => {
       await carregarProdutos();
       await carregarMarcas();
       await carregarFabricantes();
+      await carregarUnidadesMedida();
       await carregarDados();
       setCarregando(false);
     })();
@@ -277,7 +302,22 @@ export default () => {
     );
   };
 
-  const validaProximo = (values: FichaTecnicaPayload): boolean => {
+  const validaProximo = (
+    values: FichaTecnicaPayload,
+    errors: Record<string, string>
+  ): boolean => {
+    const validaStepMap = [
+      validaProximoIdentificacaoProduto,
+      validaProximoInformacoesNutricionais,
+    ];
+
+    return validaStepMap[stepAtual](values, errors);
+  };
+
+  const validaProximoIdentificacaoProduto = (
+    values: FichaTecnicaPayload,
+    errors: Record<string, string>
+  ): boolean => {
     const campoAlergenicosValido =
       (values.alergenicos === "1" && values.ingredientes_alergenicos) ||
       values.alergenicos === "0";
@@ -294,6 +334,7 @@ export default () => {
       values.numero_registro && values.agroecologico && campoOrganicoValido;
 
     return (
+      Object.keys(errors).length !== 0 ||
       !values.produto ||
       !values.marca ||
       !values.categoria ||
@@ -308,6 +349,19 @@ export default () => {
     );
   };
 
+  const validaProximoInformacoesNutricionais = (
+    values: FichaTecnicaPayload,
+    errors: Record<string, string>
+  ): boolean => {
+    return (
+      Object.keys(errors).length !== 0 ||
+      !values.porcao ||
+      !values.unidade_medida ||
+      !values.valor_unidade_caseira ||
+      !values.unidade_medida_caseira
+    );
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-cadastro-ficha-tecnica">
@@ -316,7 +370,7 @@ export default () => {
             onSubmit={onSubmit}
             initialValues={initialValues}
             decorators={[cepCalculator]}
-            render={({ form, handleSubmit, values }) => (
+            render={({ form, handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
                 <div className="steps">
                   <Steps
@@ -335,333 +389,404 @@ export default () => {
                     ]}
                   />
                 </div>
+
                 <hr />
 
-                <div className="subtitulo">Identificação do Produto</div>
+                {stepAtual === 0 && (
+                  <>
+                    <div className="subtitulo">Identificação do Produto</div>
 
-                <div className="row">
-                  <div className="col-6">
-                    <Field
-                      component={AutoCompleteSelectField}
-                      options={getListaFiltradaAutoCompleteSelect(
-                        produtosOptions.map((e) => e.nome),
-                        values["produto"],
-                        true
-                      )}
-                      label="Produto"
-                      name={`produto`}
-                      placeholder="Selecione um Produto"
-                      className="input-ficha-tecnica"
-                      required
-                      validate={required}
-                      tooltipText={
-                        "Caso não localize o produto no seletor, faça o cadastro no botão Cadastrar Produto."
-                      }
-                    />
-                    <OnChange name="produto">
-                      {(value) => {
-                        if (form.getState().dirty) {
-                          form.restart({ produto: value });
-                        }
-                      }}
-                    </OnChange>
-                  </div>
-                  <div className="col-6">
-                    <Field
-                      component={SelectSelecione}
-                      naoDesabilitarPrimeiraOpcao
-                      options={CATEGORIA_OPTIONS}
-                      label="Categoria"
-                      name={`categoria`}
-                      placeholder="Selecione uma Categoria"
-                      className="input-ficha-tecnica"
-                      required
-                      validate={required}
-                    />
-                  </div>
-                  <div className="col-6">
-                    <Field
-                      component={SelectSelecione}
-                      naoDesabilitarPrimeiraOpcao
-                      options={marcasOptions}
-                      label="Marca"
-                      name={`marca`}
-                      placeholder="Selecione uma Marca"
-                      className="input-ficha-tecnica"
-                      required
-                      validate={required}
-                      tooltipText={
-                        "Caso não localize a marca no seletor, faça o cadastro no botão Cadastrar Marca."
-                      }
-                    />
-                  </div>
-                  <div className="col-6">
-                    <Field
-                      component={InputText}
-                      label="Nº do Pregão/Chamada Pública"
-                      name={`pregao_chamada_publica`}
-                      placeholder="Nº do Pregão/Chamada Pública"
-                      className="input-ficha-tecnica"
-                      required
-                      validate={required}
-                      tooltipText={
-                        "Pode ser informado o número do Edital do Pregão Eletrônico ou Chamada Pública referente ao Produto."
-                      }
-                    />
-                  </div>
-                </div>
-                <hr />
-
-                <Collapse
-                  collapse={collapse}
-                  setCollapse={setCollapse}
-                  titulos={[
-                    <span key={0}>
-                      Empresa ou Organização{" "}
-                      <span className="verde-escuro">Proponente</span>
-                    </span>,
-                    <span className="font-weight-bold" key={1}>
-                      Empresa ou Organização{" "}
-                      <span className="verde-escuro">Fabricante</span>
-                    </span>,
-                    <span className="font-weight-bold" key={1}>
-                      Detalhes do <span className="verde-escuro">Produto</span>
-                    </span>,
-                  ]}
-                  id="collapseFichaTecnica"
-                >
-                  <section id="formProponente">
-                    <div className="row">
-                      <div className="col-6">
-                        <InputText
-                          label="CNPJ"
-                          valorInicial={proponente.cnpj}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-8">
-                        <InputText
-                          label="Nome da Empresa/Organização"
-                          valorInicial={proponente.nome_fantasia}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-8">
-                        <InputText
-                          label="Endereço"
-                          valorInicial={proponente.endereco}
-                          disabled={true}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <InputText
-                          label="Nº"
-                          valorInicial={proponente.numero}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-4">
-                        <InputText
-                          label="Complemento"
-                          valorInicial={proponente.complemento}
-                          disabled={true}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <InputText
-                          label="Bairro"
-                          valorInicial={proponente.bairro}
-                          disabled={true}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <InputText
-                          label="CEP"
-                          valorInicial={proponente.cep}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-8">
-                        <InputText
-                          label="Cidade"
-                          valorInicial={proponente.cidade}
-                          disabled={true}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <InputText
-                          label="Estado"
-                          valorInicial={proponente.estado}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-8">
-                        <InputText
-                          label="E-mail"
-                          valorInicial={proponente.responsavel_email}
-                          required
-                          disabled={true}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <InputText
-                          label="Telefone"
-                          valorInicial={proponente.responsavel_telefone}
-                          required
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
-                  </section>
-
-                  <section id="formFabricante">
                     <div className="row">
                       <div className="col-6">
                         <Field
                           component={AutoCompleteSelectField}
                           options={getListaFiltradaAutoCompleteSelect(
-                            fabricantesOptions.map((e) => e.nome),
-                            values["fabricante"],
+                            produtosOptions.map((e) => e.nome),
+                            values["produto"],
                             true
                           )}
-                          label="Fabricantes"
-                          name={`fabricante`}
-                          placeholder="Selecione um Fabricante"
+                          label="Produto"
+                          name={`produto`}
+                          placeholder="Selecione um Produto"
+                          className="input-ficha-tecnica"
+                          required
+                          validate={required}
+                          tooltipText={
+                            "Caso não localize o produto no seletor, faça o cadastro no botão Cadastrar Produto."
+                          }
+                        />
+                        <OnChange name="produto">
+                          {(value) => {
+                            if (form.getState().dirty) {
+                              form.restart({ produto: value });
+                            }
+                          }}
+                        </OnChange>
+                      </div>
+                      <div className="col-6">
+                        <Field
+                          component={SelectSelecione}
+                          naoDesabilitarPrimeiraOpcao
+                          options={CATEGORIA_OPTIONS}
+                          label="Categoria"
+                          name={`categoria`}
+                          placeholder="Selecione uma Categoria"
+                          className="input-ficha-tecnica"
+                          required
+                          validate={required}
+                        />
+                      </div>
+                      <div className="col-6">
+                        <Field
+                          component={SelectSelecione}
+                          naoDesabilitarPrimeiraOpcao
+                          options={marcasOptions}
+                          label="Marca"
+                          name={`marca`}
+                          placeholder="Selecione uma Marca"
+                          className="input-ficha-tecnica"
+                          required
+                          validate={required}
+                          tooltipText={
+                            "Caso não localize a marca no seletor, faça o cadastro no botão Cadastrar Marca."
+                          }
+                        />
+                      </div>
+                      <div className="col-6">
+                        <Field
+                          component={InputText}
+                          label="Nº do Pregão/Chamada Pública"
+                          name={`pregao_chamada_publica`}
+                          placeholder="Nº do Pregão/Chamada Pública"
+                          className="input-ficha-tecnica"
+                          required
+                          validate={required}
+                          tooltipText={
+                            "Pode ser informado o número do Edital do Pregão Eletrônico ou Chamada Pública referente ao Produto."
+                          }
+                        />
+                      </div>
+                    </div>
+                    <hr />
+
+                    <Collapse
+                      collapse={collapse}
+                      setCollapse={setCollapse}
+                      titulos={[
+                        <span key={0}>
+                          Empresa ou Organização{" "}
+                          <span className="verde-escuro">Proponente</span>
+                        </span>,
+                        <span className="font-weight-bold" key={1}>
+                          Empresa ou Organização{" "}
+                          <span className="verde-escuro">Fabricante</span>
+                        </span>,
+                        <span className="font-weight-bold" key={1}>
+                          Detalhes do{" "}
+                          <span className="verde-escuro">Produto</span>
+                        </span>,
+                      ]}
+                      id="collapseFichaTecnica"
+                    >
+                      <section id="formProponente">
+                        <div className="row">
+                          <div className="col-6">
+                            <InputText
+                              label="CNPJ"
+                              valorInicial={proponente.cnpj}
+                              disabled={true}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-8">
+                            <InputText
+                              label="Nome da Empresa/Organização"
+                              valorInicial={proponente.nome_fantasia}
+                              disabled={true}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-8">
+                            <InputText
+                              label="Endereço"
+                              valorInicial={proponente.endereco}
+                              disabled={true}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <InputText
+                              label="Nº"
+                              valorInicial={proponente.numero}
+                              disabled={true}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-4">
+                            <InputText
+                              label="Complemento"
+                              valorInicial={proponente.complemento}
+                              disabled={true}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <InputText
+                              label="Bairro"
+                              valorInicial={proponente.bairro}
+                              disabled={true}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <InputText
+                              label="CEP"
+                              valorInicial={proponente.cep}
+                              disabled={true}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-8">
+                            <InputText
+                              label="Cidade"
+                              valorInicial={proponente.cidade}
+                              disabled={true}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <InputText
+                              label="Estado"
+                              valorInicial={proponente.estado}
+                              disabled={true}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-8">
+                            <InputText
+                              label="E-mail"
+                              valorInicial={proponente.responsavel_email}
+                              required
+                              disabled={true}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <InputText
+                              label="Telefone"
+                              valorInicial={proponente.responsavel_telefone}
+                              required
+                              disabled={true}
+                            />
+                          </div>
+                        </div>
+                      </section>
+
+                      <section id="formFabricante">
+                        <div className="row">
+                          <div className="col-6">
+                            <Field
+                              component={AutoCompleteSelectField}
+                              options={getListaFiltradaAutoCompleteSelect(
+                                fabricantesOptions.map((e) => e.nome),
+                                values["fabricante"],
+                                true
+                              )}
+                              label="Fabricantes"
+                              name={`fabricante`}
+                              placeholder="Selecione um Fabricante"
+                              className="input-ficha-tecnica"
+                              required
+                              validate={required}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-6">
+                            <Field
+                              component={MaskedInputText}
+                              mask={cnpjMask}
+                              label="CNPJ"
+                              name={`cnpj_fabricante`}
+                              placeholder="Digite o CNPJ"
+                              className="input-ficha-tecnica"
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-4">
+                            <Field
+                              component={MaskedInputText}
+                              mask={cepMask}
+                              label="CEP"
+                              name={`cep_fabricante`}
+                              placeholder="Digite o CEP"
+                              className="input-ficha-tecnica"
+                            />
+                          </div>
+                          <div className="col-8">
+                            <Field
+                              component={InputText}
+                              label="Endereço"
+                              name={`endereco_fabricante`}
+                              placeholder="Digite o Endereço"
+                              className="input-ficha-tecnica"
+                              disabled={desabilitaEndereco}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-4">
+                            <Field
+                              component={InputText}
+                              label="Número"
+                              name={`numero_fabricante`}
+                              placeholder="Digite o Número"
+                              className="input-ficha-tecnica"
+                            />
+                          </div>
+                          <div className="col-4">
+                            <Field
+                              component={InputText}
+                              label="Complemento"
+                              name={`complemento_fabricante`}
+                              placeholder="Digite o Complemento"
+                              className="input-ficha-tecnica"
+                            />
+                          </div>
+                          <div className="col-4">
+                            <Field
+                              component={InputText}
+                              label="Bairro"
+                              name={`bairro_fabricante`}
+                              placeholder="Digite o Bairro"
+                              className="input-ficha-tecnica"
+                              disabled={desabilitaEndereco}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-8">
+                            <Field
+                              component={InputText}
+                              label="Cidade"
+                              name={`cidade_fabricante`}
+                              placeholder="Digite o Cidade"
+                              className="input-ficha-tecnica"
+                              disabled={desabilitaEndereco}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <Field
+                              component={InputText}
+                              label="Estado"
+                              name={`estado_fabricante`}
+                              placeholder="Digite o Estado"
+                              className="input-ficha-tecnica"
+                              disabled={desabilitaEndereco}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-8">
+                            <Field
+                              component={InputText}
+                              label="E-mail"
+                              name={`email_fabricante`}
+                              placeholder="Digite o E-mail"
+                              className="input-ficha-tecnica"
+                              validate={email}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <Field
+                              component={MaskedInputText}
+                              mask={telefoneMask}
+                              label="Telefone"
+                              name={`telefone_fabricante`}
+                              placeholder="Digite o Telefone"
+                              className="input-ficha-tecnica"
+                            />
+                          </div>
+                        </div>
+                      </section>
+
+                      <section id="formProduto">
+                        {values["categoria"] === "PERECIVEIS" && (
+                          <FormPereciveis values={values} />
+                        )}
+                        {values["categoria"] === "NAO_PERECIVEIS" && (
+                          <FormNaoPereciveis values={values} />
+                        )}
+                      </section>
+                    </Collapse>
+                  </>
+                )}
+
+                {stepAtual === 1 && (
+                  <>
+                    <div className="subtitulo">Informações Nutricionais</div>
+
+                    <div className="row">
+                      <div className="col-6">
+                        <Label content="Porção" required />
+                      </div>
+                      <div className="col-6">
+                        <Label content="Unidade Caseira" required />
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-3">
+                        <Field
+                          component={InputText}
+                          name={`porcao`}
+                          placeholder="Apenas Números"
+                          className="input-ficha-tecnica"
+                          required
+                          validate={composeValidators(
+                            required,
+                            inteiroOuDecimal
+                          )}
+                        />
+                      </div>
+                      <div className="col-3">
+                        <Field
+                          component={SelectSelecione}
+                          naoDesabilitarPrimeiraOpcao
+                          options={unidadesMedidaOptions}
+                          name={`unidade_medida`}
+                          placeholder="Unidade de Medida"
+                          className="input-ficha-tecnica"
+                          validate={required}
+                        />
+                      </div>
+                      <div className="col-3">
+                        <Field
+                          component={InputText}
+                          name={`valor_unidade_caseira`}
+                          placeholder="Apenas Números"
+                          className="input-ficha-tecnica"
+                          required
+                          validate={composeValidators(
+                            required,
+                            inteiroOuDecimal
+                          )}
+                        />
+                      </div>
+                      <div className="col-3">
+                        <Field
+                          component={InputText}
+                          name={`unidade_medida_caseira`}
+                          placeholder="Unidade de Medida"
                           className="input-ficha-tecnica"
                           required
                           validate={required}
                         />
                       </div>
                     </div>
-                    <div className="row">
-                      <div className="col-6">
-                        <Field
-                          component={MaskedInputText}
-                          mask={cnpjMask}
-                          label="CNPJ"
-                          name={`cnpj_fabricante`}
-                          placeholder="Digite o CNPJ"
-                          className="input-ficha-tecnica"
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-4">
-                        <Field
-                          component={MaskedInputText}
-                          mask={cepMask}
-                          label="CEP"
-                          name={`cep_fabricante`}
-                          placeholder="Digite o CEP"
-                          className="input-ficha-tecnica"
-                        />
-                      </div>
-                      <div className="col-8">
-                        <Field
-                          component={InputText}
-                          label="Endereço"
-                          name={`endereco_fabricante`}
-                          placeholder="Digite o Endereço"
-                          className="input-ficha-tecnica"
-                          disabled={desabilitaEndereco}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          label="Número"
-                          name={`numero_fabricante`}
-                          placeholder="Digite o Número"
-                          className="input-ficha-tecnica"
-                        />
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          label="Complemento"
-                          name={`complemento_fabricante`}
-                          placeholder="Digite o Complemento"
-                          className="input-ficha-tecnica"
-                        />
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          label="Bairro"
-                          name={`bairro_fabricante`}
-                          placeholder="Digite o Bairro"
-                          className="input-ficha-tecnica"
-                          disabled={desabilitaEndereco}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-8">
-                        <Field
-                          component={InputText}
-                          label="Cidade"
-                          name={`cidade_fabricante`}
-                          placeholder="Digite o Cidade"
-                          className="input-ficha-tecnica"
-                          disabled={desabilitaEndereco}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          label="Estado"
-                          name={`estado_fabricante`}
-                          placeholder="Digite o Estado"
-                          className="input-ficha-tecnica"
-                          disabled={desabilitaEndereco}
-                        />
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-8">
-                        <Field
-                          component={InputText}
-                          label="E-mail"
-                          name={`email_fabricante`}
-                          placeholder="Digite o E-mail"
-                          className="input-ficha-tecnica"
-                          validate={email}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={MaskedInputText}
-                          mask={telefoneMask}
-                          label="Telefone"
-                          name={`telefone_fabricante`}
-                          placeholder="Digite o Telefone"
-                          className="input-ficha-tecnica"
-                        />
-                      </div>
-                    </div>
-                  </section>
-
-                  <section id="formProduto">
-                    {values["categoria"] === "PERECIVEIS" && (
-                      <FormPereciveis values={values} />
-                    )}
-                    {values["categoria"] === "NAO_PERECIVEIS" && (
-                      <FormNaoPereciveis values={values} />
-                    )}
-                  </section>
-                </Collapse>
+                  </>
+                )}
 
                 {stepAtual < 2 && (
                   <div className="mt-4 mb-4">
@@ -671,7 +796,7 @@ export default () => {
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="float-right ml-3"
                       onClick={() => setStepAtual((stepAtual) => stepAtual + 1)}
-                      disabled={validaProximo(values)}
+                      disabled={validaProximo(values, errors)}
                     />
                   </div>
                 )}
