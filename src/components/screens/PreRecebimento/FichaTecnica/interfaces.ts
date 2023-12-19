@@ -37,6 +37,10 @@ export interface FichaTecnicaPayload {
   gluten?: boolean | string;
   lactose?: boolean | string;
   lactose_detalhe?: string;
+  porcao?: string;
+  unidade_medida?: string;
+  valor_unidade_caseira?: string;
+  unidade_medida_caseira?: string;
 }
 
 export interface FiltrosFichaTecnica {
