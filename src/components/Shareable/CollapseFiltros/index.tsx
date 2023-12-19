@@ -15,7 +15,8 @@ type Props = {
 
 const CollapseFiltros: React.FC<Props> = ({ children, onSubmit, onClear }) => {
   const id = "collapseFiltros";
-  const [collapse, setCollapse] = useState(false);
+  const [collapse, setCollapse] = useState(true);
+
   const toggleCollapse = () => {
     setCollapse(!collapse);
     const element = document.getElementById("heading");
@@ -63,8 +64,6 @@ const CollapseFiltros: React.FC<Props> = ({ children, onSubmit, onClear }) => {
           data-parent={`#${id}`}
         >
           <div className="card-body">
-            {/* {children} */}
-
             <Form
               onSubmit={onSubmit}
               initialValues={{}}
@@ -88,9 +87,6 @@ const CollapseFiltros: React.FC<Props> = ({ children, onSubmit, onClear }) => {
                       onClick={() => {
                         form.reset({});
                         onClear();
-                        //setDocumentos([]);
-                        //setConsultaRealizada(false);
-                        //setFiltros({});
                       }}
                     />
                   </div>
