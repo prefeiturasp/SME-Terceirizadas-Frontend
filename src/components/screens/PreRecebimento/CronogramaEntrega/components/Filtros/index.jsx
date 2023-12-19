@@ -171,7 +171,7 @@ export default ({
                   texto="Limpar Filtros"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="ml-3"
+                  className="ms-3"
                   onClick={() => {
                     form.reset({});
                     setCronogramas(undefined);
@@ -182,7 +182,7 @@ export default ({
                   texto="Filtrar"
                   type={BUTTON_TYPE.SUBMIT}
                   style={BUTTON_STYLE.GREEN}
-                  className="ml-3"
+                  className="ms-3"
                   disabled={submitting}
                 />
               </div>

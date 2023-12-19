@@ -50,7 +50,7 @@ const ListagemSolicitacoes = ({ guias }) => {
       return (
         <>
           <NavLink
-            className="float-left"
+            className="float-start"
             to={`/${LOGISTICA}/${REPOSICAO_GUIA}?uuid=${guia.uuid}`}
           >
             <span className="link-acoes green">Reposição</span>
@@ -66,7 +66,7 @@ const ListagemSolicitacoes = ({ guias }) => {
       return (
         <>
           <NavLink
-            className="float-left"
+            className="float-start"
             to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`}
           >
             <span className="link-acoes green">Conferir entrega</span>
@@ -80,7 +80,7 @@ const ListagemSolicitacoes = ({ guias }) => {
       const editarConferencia = (
         <>
           <NavLink
-            className="float-left"
+            className="float-start"
             to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}&editar=true`}
           >
             <span className="link-acoes green">Editar Conferência</span>
@@ -92,7 +92,7 @@ const ListagemSolicitacoes = ({ guias }) => {
       const editarReposicao = (
         <>
           <NavLink
-            className="float-left"
+            className="float-start"
             to={`/${LOGISTICA}/${REPOSICAO_GUIA}?uuid=${guia.uuid}&editar=true`}
           >
             <span className="link-acoes green">Editar Reposição</span>
@@ -149,7 +149,7 @@ const ListagemSolicitacoes = ({ guias }) => {
                   <div className="opcoes-entregas">
                     <span className="link-acoes px-2">
                       <NavLink
-                        className="float-left"
+                        className="float-start"
                         to={`/${LOGISTICA}/${DETALHAMENTO_GUIA}?uuid=${guia.uuid}`}
                       >
                         <Tooltip title="Detalhar guia">

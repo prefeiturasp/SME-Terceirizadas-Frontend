@@ -100,7 +100,7 @@ export class ModalCancelarSolicitacao extends Component {
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
             style={BUTTON_STYLE.BLUE_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Sim"
@@ -110,7 +110,7 @@ export class ModalCancelarSolicitacao extends Component {
             }}
             style={BUTTON_STYLE.BLUE}
             disabled={justificativa === "" || justificativa === undefined}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>

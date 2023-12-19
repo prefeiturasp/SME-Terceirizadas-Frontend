@@ -52,10 +52,10 @@ export default ({ resultado, changePage }) => {
                         <td>{item.ativo ? "Ativo" : "Inativo"}</td>
                         <td className="acoes">
                           <button
-                            className="botaoExcluir ml-2"
+                            className="botaoExcluir ms-2"
                             onClick={() => openModal(item)}
                           >
-                            <ReloadOutlined className="mr-1" />
+                            <ReloadOutlined className="me-1" />
                             {item.ativo ? "Inativar" : "Ativar"}
                           </button>
                         </td>

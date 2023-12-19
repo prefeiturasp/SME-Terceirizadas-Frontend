@@ -147,7 +147,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
                 current={page}
               />
               <div className="row">
-                <div className="col-12 text-right">
+                <div className="col-12 text-end">
                   <Botao
                     texto="Baixar PDF"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -163,7 +163,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
                     type={BUTTON_TYPE.BUTTON}
                     disabled={submitting}
                     onClick={() => exportarXLSX()}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   {exibirModalCentralDownloads && (
                     <ModalSolicitacaoDownload

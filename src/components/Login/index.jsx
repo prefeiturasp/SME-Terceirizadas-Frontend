@@ -243,7 +243,7 @@ export class Login extends Component {
           </Modal.Body>
         </Modal>
         <form className="login" onSubmit={handleSubmit(this.handleSubmit)}>
-          <p className="como-acessar text-right">
+          <p className="como-acessar text-end">
             <span onClick={() => this.openModal()}>Como Acessar?</span>
           </p>
           <Field
@@ -477,11 +477,11 @@ export class Login extends Component {
                 />
               </div>
             </div>
-            <div className="alinha-direita mt-3 ml-4">
+            <div className="alinha-direita mt-3 ms-4">
               <Botao
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 texto="Cancelar"
-                className="col-md-2 ml-3"
+                className="col-md-2 ms-3"
                 disabled={bloquearBotao}
                 onClick={() =>
                   this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
@@ -491,7 +491,7 @@ export class Login extends Component {
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 texto="Cadastrar"
-                className="col-md-2 ml-3"
+                className="col-md-2 ms-3"
                 disabled={bloquearBotao}
               />
             </div>
@@ -565,19 +565,19 @@ export class Login extends Component {
     return (
       <div className="form">
         <div className="texto-simples mt-3">
-          <span className="texto-simples-verde font-weight-bold">
+          <span className="texto-simples-verde fw-bold">
             Servidor Municipal: &nbsp;
           </span>
           Digite seu <strong>RF</strong>.
         </div>
         <div className="texto-simples mt-3">
-          <span className="texto-simples-verde font-weight-bold">
+          <span className="texto-simples-verde fw-bold">
             Fornecedor ou Distribuidor: &nbsp;
           </span>
           Digite seu <strong>CPF</strong>.
         </div>
         <div className="texto-simples mt-3">
-          <span className="texto-simples-verde font-weight-bold">
+          <span className="texto-simples-verde fw-bold">
             Rede Parceira: &nbsp;
           </span>
           Digite seu <strong>CPF</strong>.
@@ -606,7 +606,7 @@ export class Login extends Component {
 
                 <div className="alinha-direita">
                   <Botao
-                    className="col-md-3 ml-3"
+                    className="col-md-3 ms-3"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     texto="Cancelar"
                     type={BUTTON_TYPE.SUBMIT}
@@ -615,7 +615,7 @@ export class Login extends Component {
                     }
                   />
                   <Botao
-                    className="col-md-3 ml-3"
+                    className="col-md-3 ms-3"
                     style={BUTTON_STYLE.GREEN}
                     texto="Continuar"
                     type={BUTTON_TYPE.SUBMIT}
@@ -663,9 +663,7 @@ export class Login extends Component {
                   Seja bem-vindo(a) ao <strong>SIGPAE</strong>
                 </p>
                 <p>SISTEMA DE GESTÂO DO PROGRAMA DE ALIMENTAÇÂO ESCOLAR!</p>
-                <p className="font-weight-bold">
-                  Atualize sua senha de acesso:
-                </p>
+                <p className="fw-bold">Atualize sua senha de acesso:</p>
                 <div className="row">
                   <div className="col-12">
                     <FieldFF

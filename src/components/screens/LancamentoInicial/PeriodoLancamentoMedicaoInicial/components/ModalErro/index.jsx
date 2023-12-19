@@ -32,7 +32,7 @@ export default ({ showModalErro, setShowModalErro }) => {
           type={BUTTON_TYPE.BUTTON}
           onClick={() => handleModalClose()}
           style={BUTTON_STYLE.GREEN}
-          className="float-right"
+          className="float-end"
         />
       </Modal.Footer>
     </Modal>

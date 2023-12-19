@@ -34,7 +34,7 @@ export const SolicitacoesSimilaresInclusaoCEMEI = ({ ...props }) => {
           {solicitacao.dias_motivos_da_inclusao_cemei &&
             solicitacao.dias_motivos_da_inclusao_cemei.map(
               (inclusao, index) => (
-                <b className="mr-4" key={index}>
+                <b className="me-4" key={index}>
                   {inclusao.data}
                 </b>
               )

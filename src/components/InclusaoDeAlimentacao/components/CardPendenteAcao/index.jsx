@@ -72,7 +72,7 @@ export class CardPendenteAcao extends Component {
     return pedido.solicitacoes_similares.map((solicitacao, index) => {
       return (
         <p className="gatilho-style" key={index}>
-          <i className="fa fa-info-circle mr-1" aria-hidden="true" />
+          <i className="fa fa-info-circle me-1" aria-hidden="true" />
           <b>
             <Link
               style={{
@@ -154,7 +154,7 @@ export class CardPendenteAcao extends Component {
               />
               <i className="fas fa-search inside-input" />
             </div>
-            <table className="orders-table mt-4 ml-3 mr-3">
+            <table className="orders-table mt-4 ms-3 me-3">
               <thead>
                 <tr className="row">
                   <th className="col-2">Código do Pedido</th>

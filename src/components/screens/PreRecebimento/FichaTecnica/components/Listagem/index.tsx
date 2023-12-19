@@ -15,7 +15,7 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
   const renderizarAcoes = (objeto: FichaTecnica): ReactElement => {
     const botaoContinuarCadastro = (
       <NavLink
-        className="float-left"
+        className="float-start"
         to={`/${PRE_RECEBIMENTO}/${CADASTRO_FICHA_TECNICA}?uuid=${objeto.uuid}`}
       >
         <span className="link-acoes px-2">

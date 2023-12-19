@@ -86,7 +86,7 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
                   )}
                   {solicitacao.datas_intervalo.map((dia, key_) => {
                     return (
-                      <label key={key_} className="mr-3">
+                      <label key={key_} className="me-3">
                         <Field
                           name="datas"
                           component="input"
@@ -106,9 +106,10 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
                   })}
                 </>
               )}
-              <div className="row pl-3 pr-3">
-                <span className="required-asterisk">*</span>
-                <label>Justificativa</label>
+              <div className="row ps-3 pe-3">
+                <span className="required-asterisk-2">
+                  <label>Justificativa</label>
+                </span>
                 <Field
                   className="col-12 pb-5"
                   component="textarea"
@@ -124,14 +125,14 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={submitting}
-                className="ml-3"
+                className="ms-3"
               />
             </Modal.Footer>
           </form>

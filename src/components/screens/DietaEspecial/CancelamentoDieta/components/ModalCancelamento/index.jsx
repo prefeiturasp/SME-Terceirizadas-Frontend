@@ -57,7 +57,7 @@ export default ({ dieta, showModal, setShowModal, filtros, setFiltros }) => {
             <Modal.Body>
               <section className="row attachments">
                 <div className="col-9">
-                  <div className="card-title font-weight-bold cinza-escuro mt-4">
+                  <div className="card-title fw-bold cinza-escuro mt-4">
                     <span className="required-asterisk">*</span>Laudo
                   </div>
                   <div className="text">
@@ -114,7 +114,7 @@ export default ({ dieta, showModal, setShowModal, filtros, setFiltros }) => {
                     key={1}
                     type={BUTTON_TYPE.BUTTON}
                     texto="Não"
-                    className="ml-2"
+                    className="ms-2"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     onClick={() => setShowModal(false)}
                   />

@@ -27,12 +27,12 @@ export const Sidebar = ({ ...props }) => {
     <div>
       <div className="mb-5" />
       <ul
-        className={`navbar-nav bg-gradiente-sme sidebar sidebar-dark accordion pl-2 pt-5
+        className={`navbar-nav bg-gradiente-sme sidebar sidebar-dark accordion ps-2 pt-5
         ${toggled && "toggled"}`}
         id="accordionSidebar"
       >
         <div className="sidebar-divider my-0" />
-        <p onClick={() => toggle()} className="text-right c-pointer">
+        <p onClick={() => toggle()} className="text-end c-pointer">
           <i
             className={
               toggled

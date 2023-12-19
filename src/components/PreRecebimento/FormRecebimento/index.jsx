@@ -53,7 +53,7 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
             <div className="col-1 align-self-center">
               <button
                 onClick={() => toggleCollapse()}
-                className="btn btn-link btn-block text-right px-0"
+                className="btn btn-link btn-block text-end px-0"
                 type="button"
                 data-toggle="collapse"
                 data-target={`#collapse_2`}
@@ -91,7 +91,7 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           icon="fas fa-trash"
-                          className="float-right ml-3"
+                          className="float-end ms-3"
                           onClick={() => deletaRecebimento(index)}
                         />
                       </div>

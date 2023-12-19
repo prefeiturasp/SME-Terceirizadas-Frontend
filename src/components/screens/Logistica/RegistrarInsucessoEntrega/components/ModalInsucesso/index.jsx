@@ -50,7 +50,7 @@ export default ({ values, disabled }) => {
         texto="Registrar"
         type={BUTTON_TYPE.SUBMIT}
         style={BUTTON_STYLE.GREEN}
-        className="float-right ml-3"
+        className="float-end ms-3"
         onClick={handleShow}
         disabled={disabled}
       />
@@ -69,13 +69,13 @@ export default ({ values, disabled }) => {
               type={BUTTON_TYPE.BUTTON}
               onClick={handleClose}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto="Sim"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               onClick={handleSim}
             />
           </Modal.Footer>

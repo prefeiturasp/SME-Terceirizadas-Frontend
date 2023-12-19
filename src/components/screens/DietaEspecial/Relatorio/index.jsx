@@ -172,12 +172,12 @@ const Relatorio = ({ visao }) => {
 
   const BotaoAutorizaCancelamento = ({ uuid, onAutorizar, setCarregando }) => {
     return (
-      <div className="form-group row float-right mt-4">
+      <div className="form-group row float-end mt-4">
         <Botao
           texto="Autorizar"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             setCarregando(true);
             escolaCancelaSolicitacao(uuid).then(() => {
@@ -199,7 +199,7 @@ const Relatorio = ({ visao }) => {
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         icon={BUTTON_ICON.PRINT}
-        className="float-right botaoImprimirDieta"
+        className="float-end botaoImprimirDieta"
         onClick={() => gerarRelatorio(uuid)}
       />
     );
@@ -211,7 +211,7 @@ const Relatorio = ({ visao }) => {
         texto="Marcar Conferência"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
-        className="ml-3"
+        className="ms-3"
         onClick={() => {
           setShowModalMarcarConferencia(true);
         }}
@@ -221,13 +221,13 @@ const Relatorio = ({ visao }) => {
 
   const BotaoGerarProtocolo = ({ uuid, eh_importado }) => {
     return (
-      <div className="form-group float-right mt-4">
+      <div className="form-group float-end mt-4">
         <Botao
           texto="Gerar Protocolo"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.PRINT}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             gerarProtocolo(uuid, eh_importado);
           }}
@@ -238,13 +238,13 @@ const Relatorio = ({ visao }) => {
 
   const BotaoEditarDieta = ({ nome }) => {
     return (
-      <div className="form-group float-right mt-4">
+      <div className="form-group float-end mt-4">
         <Botao
           texto={nome}
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.PEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => habilitarEdicao()}
         />
       </div>
@@ -334,8 +334,8 @@ const Relatorio = ({ visao }) => {
                   texto="Histórico"
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={showModalHistorico}
-                  className={`mr-2 ${
-                    exibirUsuariosSimultaneos() ? "float-right" : "float-left"
+                  className={`me-2 ${
+                    exibirUsuariosSimultaneos() ? "float-end" : "float-start"
                   }`}
                 />
               )}
@@ -407,12 +407,12 @@ const Relatorio = ({ visao }) => {
                 }}
                 setCarregando={setCarregando}
               />,
-              <div className="form-group row float-right mt-4 mr-3" key={1}>
+              <div className="form-group row float-end mt-4 me-3" key={1}>
                 <Botao
                   texto="Negar"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.RED}
-                  className="ml-3"
+                  className="ms-3"
                   onClick={() => setShowNaoAprovaModal(true)}
                 />
               </div>,
@@ -422,10 +422,10 @@ const Relatorio = ({ visao }) => {
             (status === statusEnum.CODAE_AUTORIZADO ||
               dietaCancelada ||
               status === statusEnum.CODAE_NEGOU_PEDIDO) && (
-              <div className="form-group float-right mt-4">
+              <div className="form-group float-end mt-4">
                 {dietaEspecial.conferido ? (
-                  <label className="ml-3 conferido">
-                    <i className="fas fa-check mr-2" />
+                  <label className="ms-3 conferido">
+                    <i className="fas fa-check me-2" />
                     Solicitação Conferida
                   </label>
                 ) : (

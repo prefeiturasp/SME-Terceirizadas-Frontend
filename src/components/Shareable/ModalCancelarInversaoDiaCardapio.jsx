@@ -96,7 +96,7 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
             style={BUTTON_STYLE.BLUE_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Sim"
@@ -105,7 +105,7 @@ export class ModalCancelarInversaoDiaCardapio extends Component {
               this.cancelarSolicitacaoDaEscola(uuid);
             }}
             style={BUTTON_STYLE.BLUE}
-            className="ml-3"
+            className="ms-3"
             disabled={justificativa === "" || justificativa === undefined}
           />
         </Modal.Footer>

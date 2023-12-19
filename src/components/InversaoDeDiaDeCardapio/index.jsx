@@ -342,7 +342,7 @@ export class InversaoDeDiaDeCardapio extends Component {
         </div>
         <div className={`col-md-12 col-lg-1 for-span`}>
           <i className="fas fa-arrow-left" />
-          <span className="pl-1 pr-1">para</span>
+          <span className="ps-1 pe-1">para</span>
           <i className="fas fa-arrow-right" />
         </div>
         <div
@@ -430,7 +430,7 @@ export class InversaoDeDiaDeCardapio extends Component {
             <div className="mt-2 page-title">{this.state.title}</div>
             <div className="card inversao-dia-cardapio border rounded mt-2">
               <div className="card-body">
-                <label className="card-title font-weight-bold">
+                <label className="card-title fw-bold">
                   Descrição da Inversão
                 </label>
                 <div className="row">
@@ -496,7 +496,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                     />
                   </div>
                 </div>
-                <div className="row text-right mt-4">
+                <div className="row text-end mt-4">
                   <div className="col-12 mt-2">
                     <Botao
                       texto="Cancelar"
@@ -508,7 +508,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                     <Botao
                       texto={this.state.salvarAtualizarLbl}
                       onClick={handleSubmit((values) => this.onSubmit(values))}
-                      className="ml-3"
+                      className="ms-3"
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       type={BUTTON_TYPE.SUBMIT}
                     />
@@ -522,7 +522,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                       )}
                       style={BUTTON_STYLE.GREEN}
                       type={BUTTON_TYPE.SUBMIT}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

@@ -46,7 +46,7 @@ export const CorpoRelatorio = (props) => {
             style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
             icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
             disabled={imprimindo}
-            className="float-right"
+            className="float-end"
             onClick={() => btnImprimirRelatorio()}
           />
         </p>
@@ -59,7 +59,7 @@ export const CorpoRelatorio = (props) => {
             <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="pl-2 my-auto offset-1 col-5">
+        <div className="ps-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
@@ -121,7 +121,7 @@ export const CorpoRelatorio = (props) => {
         <div className="row">
           <div className="col-12 report-label-value">
             <p>Tipos de Alimentação para inversão:</p>
-            <p className="font-weight-bold">
+            <p className="fw-bold">
               {stringSeparadaPorVirgulas(
                 inversaoDiaCardapio.tipos_alimentacao,
                 "nome"
@@ -138,7 +138,7 @@ export const CorpoRelatorio = (props) => {
         </tr>
         <tr>
           <td />
-          <td className="pr-5">
+          <td className="pe-5">
             {inversaoDiaCardapio.cardapio_de
               ? inversaoDiaCardapio.cardapio_de.data
               : inversaoDiaCardapio.data_de_inversao}
@@ -152,7 +152,7 @@ export const CorpoRelatorio = (props) => {
         {inversaoDiaCardapio.data_de_inversao_2 && (
           <tr>
             <td />
-            <td className="pr-5">{inversaoDiaCardapio.data_de_inversao_2}</td>
+            <td className="pe-5">{inversaoDiaCardapio.data_de_inversao_2}</td>
             <td>{inversaoDiaCardapio.data_para_inversao_2}</td>
           </tr>
         )}
@@ -161,7 +161,7 @@ export const CorpoRelatorio = (props) => {
         <div className="col-12 report-label-value">
           <p>Motivo</p>
           <p
-            className="value font-weight-bold"
+            className="value fw-bold"
             dangerouslySetInnerHTML={{
               __html: inversaoDiaCardapio.motivo,
             }}
@@ -173,7 +173,7 @@ export const CorpoRelatorio = (props) => {
           <div className="col-12 report-label-value">
             <p>Observações</p>
             <p
-              className="font-weight-bold value"
+              className="fw-bold value"
               dangerouslySetInnerHTML={{
                 __html: inversaoDiaCardapio.observacao,
               }}

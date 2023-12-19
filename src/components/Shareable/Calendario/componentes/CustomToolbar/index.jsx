@@ -47,7 +47,7 @@ export const CustomToolbar = (toolbar) => {
         </div>
       </div>
       {toolbar.view === "month" && (
-        <div className="col-6 text-right">
+        <div className="col-6 text-end">
           <div className={"back-next-buttons"}>
             <Botao
               type={BUTTON_TYPE.BUTTON}

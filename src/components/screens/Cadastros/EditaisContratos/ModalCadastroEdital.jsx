@@ -147,7 +147,7 @@ export class ModalCadastroEdital extends Component {
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
             style={BUTTON_STYLE.BLUE_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Sim"
@@ -156,7 +156,7 @@ export class ModalCadastroEdital extends Component {
               this.onSubmit();
             }}
             style={BUTTON_STYLE.BLUE}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>

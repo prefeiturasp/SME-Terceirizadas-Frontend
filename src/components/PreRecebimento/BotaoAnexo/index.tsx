@@ -14,7 +14,7 @@ const BotaoAnexo: React.FC<Props> = ({ urlAnexo }) => {
       className="link-botao-anexo"
     >
       <div className="botao-anexo mb-2">
-        <i className="fas fa-eye green mr-2" />
+        <i className="fas fa-eye green me-2" />
         Visualizar Anexo
       </div>
     </a>

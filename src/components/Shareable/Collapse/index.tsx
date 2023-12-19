@@ -33,15 +33,13 @@ const Collapse: React.FC<Props> = ({
 
                 <div className="flex">
                   <div className="texto-obrigatorio">
-                    <span className="required-asterisk font-weight-bold">
-                      *
-                    </span>
+                    <span className="required-asterisk fw-bold">*</span>
                     Campos de Preenchimento Obrigatório
                   </div>
                   <div className="col-1 align-self-center">
                     <button
                       onClick={() => toggleCollapse(index)}
-                      className="btn btn-link btn-block text-right px-0"
+                      className="btn btn-link btn-block text-end px-0"
                       type="button"
                       data-toggle="collapse"
                       data-target={`#collapse_${index}`}

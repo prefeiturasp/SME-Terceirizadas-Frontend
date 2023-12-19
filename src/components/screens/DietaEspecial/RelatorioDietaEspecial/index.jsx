@@ -145,7 +145,7 @@ export const RelatorioDietaEspecial = () => {
                     {dietasEspeciais && (
                       <>
                         <div className="row">
-                          <div className="total-dietas col-12 text-right">
+                          <div className="total-dietas col-12 text-end">
                             Total de dietas:
                             <div className="numero-total-dietas">
                               {dietasEspeciais.count}
@@ -166,7 +166,7 @@ export const RelatorioDietaEspecial = () => {
                           </div>
                         )}
                         <div className="row">
-                          <div className="col-12 text-right">
+                          <div className="col-12 text-end">
                             <Botao
                               texto="Exportar PDF"
                               style={
@@ -195,7 +195,7 @@ export const RelatorioDietaEspecial = () => {
                                   : BUTTON_ICON.FILE_EXCEL
                               }
                               disabled={imprimindoPdf || imprimindoExcel}
-                              className="ml-3"
+                              className="ms-3"
                               onClick={() => exportarXLSX(values)}
                             />
                             {exibirModalCentralDownloads && (

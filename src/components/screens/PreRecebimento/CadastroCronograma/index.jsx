@@ -366,7 +366,7 @@ export default () => {
                     />
                   </div>
                   {edicao && (
-                    <div className="col-6 text-right">
+                    <div className="col-6 text-end">
                       <p>
                         <b>Nº do Cronograma: </b>
 
@@ -412,7 +412,7 @@ export default () => {
                           <div className="col-1 align-self-center">
                             <button
                               onClick={() => toggleCollapse(1)}
-                              className="btn btn-link btn-block text-right px-0"
+                              className="btn btn-link btn-block text-end px-0"
                               type="button"
                               data-toggle="collapse"
                               data-target={`#collapse_1`}
@@ -549,13 +549,13 @@ export default () => {
                     texto="Assinar e Enviar Cronograma"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                   />
                   <Botao
                     texto="Salvar Rascunho"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     onClick={() => salvarCronograma(values, true)}
                     disabled={validaRascunho(values)}
                   />

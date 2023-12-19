@@ -250,7 +250,7 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
               texto="Exportar"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               onClick={handleDownload}
               disabled={validaCampos()}
             />

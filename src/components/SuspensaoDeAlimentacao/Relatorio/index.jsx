@@ -161,7 +161,7 @@ class RelatorioSuspensaoAlimentacao extends Component {
           texto="Marcar Conferência"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             this.showModalMarcarConferencia();
           }}
@@ -205,7 +205,7 @@ class RelatorioSuspensaoAlimentacao extends Component {
                     <>
                       {" "}
                       <div className="row">
-                        <div className="col-12 text-right">
+                        <div className="col-12 text-end">
                           <Botao
                             texto="Cancelar"
                             onClick={() =>
@@ -228,10 +228,10 @@ class RelatorioSuspensaoAlimentacao extends Component {
                     </>
                   )}
                 {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-                  <div className="form-group float-right mt-4">
+                  <div className="form-group float-end mt-4">
                     {suspensaoAlimentacao.terceirizada_conferiu_gestao ? (
-                      <label className="ml-3 conferido">
-                        <i className="fas fa-check mr-2" />
+                      <label className="ms-3 conferido">
+                        <i className="fas fa-check me-2" />
                         Solicitação Conferida
                       </label>
                     ) : (

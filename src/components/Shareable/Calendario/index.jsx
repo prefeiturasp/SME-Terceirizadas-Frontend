@@ -197,7 +197,7 @@ export class Calendario extends React.Component {
                     }}
                     messages={{
                       showMore: (target) => (
-                        <span className="ml-2" role="presentation">
+                        <span className="ms-2" role="presentation">
                           ...{target} mais
                         </span>
                       ),
