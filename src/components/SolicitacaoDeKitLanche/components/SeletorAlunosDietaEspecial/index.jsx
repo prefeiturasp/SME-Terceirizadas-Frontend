@@ -35,7 +35,7 @@ export default class SeletorAlunosDietaEspecial extends Component {
           <div className="row">
             <div className="col-2">{"Código EOL"}</div>
             <div className="col-8">{"Nome do Aluno"}</div>
-            <div className="pl-5 col-1">
+            <div className="ps-5 col-1">
               <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
                 ativo={!collapsed}

@@ -55,7 +55,7 @@ export const CorpoRelatorio = ({ ...props }) => {
           style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
           icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
           disabled={imprimindo}
-          className="float-right"
+          className="float-end"
           onClick={imprimirRelatorio}
         />
       </p>
@@ -160,7 +160,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                   {data_intervalo.cancelado_justificativa && (
                     <span className="justificativa">
                       justificativa:{" "}
-                      <span className="font-weight-normal">
+                      <span className="fw-normal">
                         {data_intervalo.cancelado_justificativa}
                       </span>
                     </span>
@@ -190,7 +190,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               </label>
             </div>
             <div className="col-12">
-              <div className="container-fluid pr-0">
+              <div className="container-fluid pe-0">
                 {periodo.substituicoesCEI && (
                   <div className="row">
                     <div className="col-12">
@@ -317,8 +317,8 @@ export const CorpoRelatorio = ({ ...props }) => {
                         <thead>
                           <tr>
                             <th className="col-7">
-                              <span className="ml-5">Alunos matriculados</span>
-                              <b className="ml-5">
+                              <span className="ms-5">Alunos matriculados</span>
+                              <b className="ms-5">
                                 {
                                   periodo.substituicoesEMEI
                                     .matriculados_quando_criado
@@ -326,8 +326,8 @@ export const CorpoRelatorio = ({ ...props }) => {
                               </b>
                             </th>
                             <th className="col-5">
-                              <span className="ml-5">Quantidade</span>
-                              <b className="ml-5">
+                              <span className="ms-5">Quantidade</span>
+                              <b className="ms-5">
                                 {periodo.substituicoesEMEI.qtd_alunos}
                               </b>
                             </th>

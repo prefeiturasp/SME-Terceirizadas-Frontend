@@ -22,9 +22,9 @@ export const TabelaResultado = ({ ...props }) => {
             Relação de alunos matriculados
           </p>
         </div>
-        <div className="col-7 text-right">
+        <div className="col-7 text-end">
           <p className="helper-grid-alunos-matriculados">
-            <i className="fa fa-info-circle mr-2" />
+            <i className="fa fa-info-circle me-2" />
             Veja o nome da Unid. Educacional passando o mouse sobre o nome.
           </p>
         </div>

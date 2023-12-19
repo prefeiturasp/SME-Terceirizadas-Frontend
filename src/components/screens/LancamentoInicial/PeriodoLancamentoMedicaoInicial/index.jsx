@@ -2096,7 +2096,7 @@ export default () => {
 
   return (
     <>
-      <div className="text-right botao-voltar-lancamento-medicao">
+      <div className="text-end botao-voltar-lancamento-medicao">
         <Botao
           type={BUTTON_TYPE.BUTTON}
           texto={"Voltar"}
@@ -2279,7 +2279,7 @@ export default () => {
                                               className={`grid-table-tipos-alimentacao body-table-alimentacao`}
                                             >
                                               <div className="nome-linha">
-                                                <b className="pl-2">
+                                                <b className="ps-2">
                                                   {row.nome}
                                                 </b>
                                               </div>
@@ -2470,7 +2470,7 @@ export default () => {
                                                       : ""
                                                   }`}
                                                 >
-                                                  <b className="pl-2">
+                                                  <b className="ps-2">
                                                     {row.nome}
                                                   </b>
                                                 </div>
@@ -2833,7 +2833,7 @@ export default () => {
                       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                     ].includes(location.state.status_solicitacao) ? (
                       <Botao
-                        className="float-right"
+                        className="float-end"
                         texto="Salvar Correções"
                         type={BUTTON_TYPE.BUTTON}
                         style={`${BUTTON_STYLE.GREEN}`}
@@ -2842,7 +2842,7 @@ export default () => {
                       />
                     ) : (
                       <Botao
-                        className="float-right"
+                        className="float-end"
                         texto="Salvar Lançamentos"
                         type={BUTTON_TYPE.BUTTON}
                         style={`${BUTTON_STYLE.GREEN}`}

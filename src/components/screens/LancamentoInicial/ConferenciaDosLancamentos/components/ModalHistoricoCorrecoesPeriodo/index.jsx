@@ -158,13 +158,13 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
                         </span>
                       </div>
                       <div className="col-3 mb-1">
-                        <span className="mb-0 float-right">
+                        <span className="mb-0 float-end">
                           {historico.criado_em
                             .split(" ")[0]
                             .replaceAll("-", "/")}
                           <br />
                         </span>
-                        <span className="mb-0 float-right">
+                        <span className="mb-0 float-end">
                           {historico.criado_em.split(" ")[1]}
                         </span>
                       </div>
@@ -183,7 +183,7 @@ export const ModalHistoricoCorrecoesPeriodo = ({ ...props }) => {
       </Modal.Body>
       <Modal.Footer>
         <Botao
-          className="float-right"
+          className="float-end"
           texto="Fechar"
           type={BUTTON_TYPE.BUTTON}
           onClick={() => closeModal()}

@@ -50,9 +50,7 @@ const ListagemSolicitacoes = ({
                 <div>
                   <Button
                     className={`${
-                      solicitacao.status === "Em análise"
-                        ? "font-weight-bold"
-                        : ""
+                      solicitacao.status === "Em análise" ? "fw-bold" : ""
                     } acoes verde`}
                     variant="link"
                     onClick={() => {

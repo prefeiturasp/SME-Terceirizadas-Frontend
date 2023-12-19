@@ -68,7 +68,7 @@ export const ModalAprovarGenericoSimOpcional = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={closeModal}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   <FormSpy subscription={{ form: true }}>
                     {({ form }) => (
@@ -80,7 +80,7 @@ export const ModalAprovarGenericoSimOpcional = ({
                           autorizarSolicitacao(uuid, values.justificativa);
                         }}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
+                        className="ms-3"
                       />
                     )}
                   </FormSpy>

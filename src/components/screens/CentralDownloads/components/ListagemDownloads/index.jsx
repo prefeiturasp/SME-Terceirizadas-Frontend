@@ -70,7 +70,7 @@ const ListagemDownloads = ({
                 <Tooltip title={retornaTextoTooltipIcone(download)}>
                   <div className="flex-container center">
                     <i className={retornaIconeStatus(download.status)} />
-                    <p className="font-weight-normal ml-2">
+                    <p className="fw-normal ms-2">
                       {download.status === "Em processamento"
                         ? "Aguarde, Processando..."
                         : download.status}

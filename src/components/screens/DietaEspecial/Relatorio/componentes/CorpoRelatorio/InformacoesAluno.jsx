@@ -96,7 +96,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
       <div className="col-12 mb-3 p-0">
         <label className="sectionName">Dados do aluno</label>
       </div>
-      <div className="row col-3 mb-3">
+      <div className="row col-3 mb-3 p-0">
         <Field
           component={InputText}
           name="aluno.codigo_eol"
@@ -140,7 +140,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
             </>
           )}
         </div>
-        <div className="row col-xl-11 col-lg-10 pr-0 pl-5">
+        <div className="row col-xl-11 col-lg-10 pe-0 ps-5">
           <div className="col-8">
             <Field
               component={InputText}
@@ -149,7 +149,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
               disabled={true}
             />
           </div>
-          <div className="col-4 pr-0">
+          <div className="col-4 pe-0">
             <Field
               component={InputText}
               name="aluno.data_nascimento"
@@ -160,8 +160,8 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
           {(usuarioEhEscolaTerceirizadaDiretor() ||
             usuarioEhEscolaTerceirizada()) &&
             solicitacaoEhDoCardAutorizadas(status_solicitacao) && (
-              <div className="row pl-4 mt-2">
-                <span className="input-file">
+              <div className="row ps-4 mt-2">
+                <span className="input-file custom-col-width p-0">
                   <input
                     className="inputfile"
                     name="foto_aluno"
@@ -173,7 +173,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
                 </span>
                 <Botao
                   texto={!atualizandoImagem ? "Atualizar imagem" : "Aguarde..."}
-                  className="mr-3"
+                  className="custom-col-width me-3"
                   onClick={() => inputRef.current.click()}
                   disabled={fotoAlunoSrc || atualizandoImagem}
                   type={BUTTON_TYPE.BUTTON}
@@ -186,6 +186,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
                     deletandoImagem
                   }
                   texto={!deletandoImagem ? "Deletar imagem" : "Aguarde..."}
+                  className="custom-col-width"
                   onClick={() => deletarFoto()}
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.RED}

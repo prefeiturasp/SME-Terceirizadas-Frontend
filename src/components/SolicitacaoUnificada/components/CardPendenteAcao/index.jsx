@@ -103,7 +103,7 @@ export class CardPendenteAcao extends Component {
               />
               <i className="fas fa-search inside-input" />
             </div>
-            <table className="orders-table-unified-solicitation mt-4 mr-3">
+            <table className="orders-table-unified-solicitation mt-4 me-3">
               <thead>
                 <tr className="row">
                   <th className="col-3">Código do Pedido</th>

@@ -322,7 +322,7 @@ class CadastroLote extends Component {
         <form onSubmit={handleSubmit}>
           <div className="card">
             <div className="card-body">
-              <div className="card-title font-weight-bold">Dados do Lote</div>
+              <div className="card-title fw-bold">Dados do Lote</div>
               <div className="row pt-3">
                 {!deactivate && (
                   <div className="col-12">
@@ -356,7 +356,7 @@ class CadastroLote extends Component {
               <div className="row pt-3">
                 {!deactivate && (
                   <div className="col-8">
-                    <label className="label font-weight-normal pb-3">
+                    <label className="label fw-normal pb-3">
                       Subprefeitura
                     </label>
                     {subprefeituras.length ? (
@@ -427,7 +427,7 @@ class CadastroLote extends Component {
               <div className="row pt-3">
                 {!deactivate && (
                   <div className="col-12">
-                    <label className="label font-weight-normal pb-3">
+                    <label className="label fw-normal pb-3">
                       Unidades Específicas do Lote
                     </label>
                     <Field
@@ -471,7 +471,7 @@ class CadastroLote extends Component {
               )}
               <div className="row mt-5">
                 {!deactivate && (
-                  <div className="col-12 text-right">
+                  <div className="col-12 text-end">
                     {!uuid && (
                       <Botao
                         texto="Limpar Campos"
@@ -494,7 +494,7 @@ class CadastroLote extends Component {
                     <Botao
                       texto={"Salvar"}
                       onClick={handleSubmit(() => this.exibirModal())}
-                      className="ml-3"
+                      className="ms-3"
                       type={BUTTON_STYLE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                     />

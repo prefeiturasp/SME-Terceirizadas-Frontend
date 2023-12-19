@@ -31,14 +31,14 @@ export default ({ closeModal, showModal, periodoGrupo, onSubmit }) => {
         <Modal.Footer>
           <div className="col-12">
             <Botao
-              className="float-right"
+              className="float-end"
               texto="Sim"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
               onClick={() => onClickSim()}
             />
             <Botao
-              className="float-right mr-2"
+              className="float-end me-2"
               texto="Não"
               type={BUTTON_TYPE.BUTTON}
               onClick={closeModal}

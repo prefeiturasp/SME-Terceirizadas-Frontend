@@ -111,7 +111,7 @@ export const LegendaDiasNaoLetivos = ({ ...props }) => {
         getListaDiasLabels().map((diaLabel, index) => {
           return (
             <div key={index} className="d-flex">
-              <div key={index} className="mr-1 my-auto" />* {diaLabel.dia} -{" "}
+              <div key={index} className="me-1 my-auto" />* {diaLabel.dia} -{" "}
               {diaLabel.label}
             </div>
           );

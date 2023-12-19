@@ -22,7 +22,7 @@ export class ModalCancelarConfigEmail extends Component {
               type={BUTTON_TYPE.BUTTON}
               onClick={closeModal}
               style={BUTTON_STYLE.BLUE}
-              className="ml-3"
+              className="ms-3"
             />
           </Link>
         </Modal.Footer>

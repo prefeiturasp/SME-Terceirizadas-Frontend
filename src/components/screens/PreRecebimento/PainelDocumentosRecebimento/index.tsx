@@ -147,7 +147,7 @@ export default () => {
                 onSubmit={() => {}}
               >
                 {({ values }) => (
-                  <div className="row text-right">
+                  <div className="row text-end">
                     <div className="col-4">
                       <Field
                         component={InputText}

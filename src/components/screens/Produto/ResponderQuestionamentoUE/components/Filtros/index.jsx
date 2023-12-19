@@ -132,7 +132,7 @@ const Filtros = ({
               />
               <Botao
                 texto="Limpar Filtros"
-                className="mr-3 botoesFiltro"
+                className="me-3 botoesFiltro"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={() => {

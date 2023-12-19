@@ -322,7 +322,7 @@ export default ({ analiseSolicitacao }) => {
           {solicitacaoAlteracaoCronograma && (
             <>
               <div className="row pb-3">
-                <p className="head-green mt-3 ml-3 mb-5">
+                <p className="head-green mt-3 ms-3 mb-5">
                   Status do Cronograma
                 </p>
                 <FluxoDeStatusPreRecebimento
@@ -415,7 +415,7 @@ export default ({ analiseSolicitacao }) => {
                       </>
                     )}
                     <div className="mt-4">
-                      <label className="label font-weight-normal">
+                      <label className="label fw-normal">
                         <span>* </span>Justificativa
                       </label>
                       <Field
@@ -476,7 +476,7 @@ export default ({ analiseSolicitacao }) => {
                               solicitacaoAlteracaoCronograma.status ===
                                 "Reprovado DINUTRE") && (
                               <>
-                                <label className="label font-weight-normal">
+                                <label className="label fw-normal">
                                   <span>* </span>Justificativa
                                 </label>
                                 <Field

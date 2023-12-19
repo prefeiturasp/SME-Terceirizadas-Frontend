@@ -76,7 +76,7 @@ export const ModalCancelarInclusaoContinua = ({ ...props }) => {
               {solicitacao.quantidades_periodo.map(
                 (quantidade_periodo, key) => {
                   return [
-                    <div key={key} className="row font-weight-bold">
+                    <div key={key} className="row fw-bold">
                       <div className="col-1">De</div>
                       <div className="col-1">Até</div>
                       <div className="col-3">Repetir</div>
@@ -145,7 +145,7 @@ export const ModalCancelarInclusaoContinua = ({ ...props }) => {
                   ];
                 }
               )}
-              <div className="row pl-3 pr-3">
+              <div className="row ps-3 pe-3">
                 <span className="required-asterisk">*</span>
                 <label>Justificativa</label>
                 <Field
@@ -163,14 +163,14 @@ export const ModalCancelarInclusaoContinua = ({ ...props }) => {
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={submitting}
-                className="ml-3"
+                className="ms-3"
               />
             </Modal.Footer>
           </form>

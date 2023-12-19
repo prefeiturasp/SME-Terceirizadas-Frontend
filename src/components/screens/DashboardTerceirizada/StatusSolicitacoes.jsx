@@ -428,7 +428,7 @@ export class StatusSolicitacoes extends Component {
           <div className="card-body">
             {!erro ? (
               <Spin tip="Carregando..." spinning={loading}>
-                <div className="pr-3">
+                <div className="pe-3">
                   <InputSearchPendencias
                     voltarLink={`/`}
                     filterList={this.onPesquisarChanged}

@@ -49,13 +49,13 @@ const ModalConfirmarEnvio: React.FC<Props> = ({
             type={BUTTON_TYPE.BUTTON}
             onClick={() => handleClose()}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
-            className="ml-3"
+            className="ms-3"
             onClick={() => handleSim()}
           />
         </Modal.Footer>

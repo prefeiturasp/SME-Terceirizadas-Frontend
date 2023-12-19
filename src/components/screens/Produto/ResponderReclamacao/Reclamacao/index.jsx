@@ -163,13 +163,13 @@ const Reclamacao = ({
           return <LogReclamacao key={index} log={log} />;
         })}
       </div>
-      <div className="text-right">
+      <div className="text-end">
         <Botao
           texto="Responder"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
           onClick={() => setExibirModal(true)}
-          className="ml-3 mr-3"
+          className="ms-3 me-3"
           disabled={responder_deve_aparecer(reclamacao.status)}
         />
       </div>

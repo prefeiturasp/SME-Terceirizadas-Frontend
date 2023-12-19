@@ -426,7 +426,7 @@ class EditaisContratos extends Component {
           <div className="card">
             <div className="card-body p-0">
               <header className="header-form">
-                <div className="card-title font-weight-bold">
+                <div className="card-title fw-bold">
                   Dados do Edital e Contrato
                 </div>
                 <div className="row pt-3">
@@ -446,7 +446,7 @@ class EditaisContratos extends Component {
                 adicionaFieldsFormEdital={this.adicionaFieldsFormEdital}
               />
               <hr />
-              <div className="card-body card-title font-weight-bold pt-0 pb-0">
+              <div className="card-body card-title fw-bold pt-0 pb-0">
                 Contratos Relacionados
               </div>
               {forms.map((formEdital, key) => {
@@ -488,7 +488,7 @@ class EditaisContratos extends Component {
 
               <footer>
                 <div className="card-body row">
-                  <div className="col-12 text-right">
+                  <div className="col-12 text-end">
                     {!uuid ? (
                       <Botao
                         texto="Cancelar"
@@ -511,7 +511,7 @@ class EditaisContratos extends Component {
                       onClick={() => {
                         this.salvaFormulario();
                       }}
-                      className="ml-3"
+                      className="ms-3"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                     />

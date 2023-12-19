@@ -62,7 +62,7 @@ export default ({ ...props }) => {
       <span className="page-title">{`Suspensão de Alimentação - Solicitação # ${
         solicitacaoSuspensao ? solicitacaoSuspensao.id_externo : ""
       }`}</span>
-      <div className="card mt-3 card-relatorio-suspensao pl-3 pr-3">
+      <div className="card mt-3 card-relatorio-suspensao ps-3 pe-3">
         <div className="card-body">
           {solicitacaoSuspensao && (
             <CorpoRelatorio solicitacaoSuspensao={solicitacaoSuspensao} />
@@ -79,7 +79,7 @@ export default ({ ...props }) => {
               <>
                 {" "}
                 <div className="row">
-                  <div className="col-12 text-right">
+                  <div className="col-12 text-end">
                     <Botao
                       texto="Cancelar"
                       onClick={() => setShowModal(true)}
@@ -97,10 +97,10 @@ export default ({ ...props }) => {
               </>
             )}
           {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-            <div className="form-group float-right mt-4">
+            <div className="form-group float-end mt-4">
               {solicitacaoSuspensao.terceirizada_conferiu_gestao ? (
-                <label className="ml-3 conferido">
-                  <i className="fas fa-check mr-2" />
+                <label className="ms-3 conferido">
+                  <i className="fas fa-check me-2" />
                   Solicitação Conferida
                 </label>
               ) : (
@@ -108,7 +108,7 @@ export default ({ ...props }) => {
                   texto="Marcar Conferência"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
-                  className="ml-3"
+                  className="ms-3"
                   onClick={() => {
                     setShowModalMarcarConferencia(true);
                   }}

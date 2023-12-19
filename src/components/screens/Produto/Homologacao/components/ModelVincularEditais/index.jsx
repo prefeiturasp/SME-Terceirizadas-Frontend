@@ -159,13 +159,13 @@ export const ModalVincularEditais = ({ ...props }) => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
                       style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Homologar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       onClick={() => {
                         form.submit();
                       }}

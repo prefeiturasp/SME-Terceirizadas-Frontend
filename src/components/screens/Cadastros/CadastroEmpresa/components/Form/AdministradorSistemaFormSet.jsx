@@ -13,7 +13,7 @@ export const AdministradorSistemaFormSet = ({ ehDistribuidor }) => {
           <hr className="linha-form" />
           <div>
             <div className="card-body">
-              <div className="card-title green font-weight-bold">
+              <div className="card-title green fw-bold">
                 Principal administrador do sistema
               </div>
               <div className="row">

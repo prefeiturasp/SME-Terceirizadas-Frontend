@@ -43,10 +43,10 @@ export default ({ resultado, changePage }) => {
                         <td>{produto.status}</td>
                         <td className="acoes">
                           <button
-                            className="botaoEditar mr-2"
+                            className="botaoEditar me-2"
                             onClick={() => openModal(produto)}
                           >
-                            <FormOutlined className="mr-1" />
+                            <FormOutlined className="me-1" />
                             Editar
                           </button>
                         </td>

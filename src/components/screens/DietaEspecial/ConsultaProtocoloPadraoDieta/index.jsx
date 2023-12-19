@@ -62,7 +62,7 @@ export default () => {
   };
 
   return (
-    <div className="card mt-3 card-cadastro-protocolo-padrao pl-3 pr-3">
+    <div className="card mt-3 card-cadastro-protocolo-padrao ps-3 pe-3">
       {erroAPI && (
         <div>Erro ao carregar dados. Tente novamente mais tarde.</div>
       )}

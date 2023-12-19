@@ -872,7 +872,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
         </p>
         <div className="content-section-acompanhamento-lancamento-right">
           <div
-            className={`acompanhamento-status-lancamento mr-3 ${
+            className={`acompanhamento-status-lancamento me-3 ${
               [
                 "MEDICAO_CORRECAO_SOLICITADA",
                 "MEDICAO_CORRECAO_SOLICITADA_CODAE",
@@ -1039,14 +1039,14 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                 }) ? (
                                   <div className="linha-cei">
                                     <b
-                                      className={`nome-linha-cei pl-2 ${
+                                      className={`nome-linha-cei ps-2 ${
                                         row.name === "observacoes" && "mt-2"
                                       }`}
                                     >
                                       {row.nome}
                                     </b>
                                     {row.name !== "observacoes" && (
-                                      <b className="faixa-etaria pl-2">
+                                      <b className="faixa-etaria ps-2">
                                         {row.faixa_etaria}
                                       </b>
                                     )}
@@ -1061,7 +1061,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                         : ""
                                     }`}
                                   >
-                                    <b className="pl-2">{row.nome}</b>
+                                    <b className="ps-2">{row.nome}</b>
                                   </div>
                                 )}
                                 {weekColumns.map((column) => (
@@ -1404,7 +1404,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                         ].includes(solicitacao.status)
                       ? 12
                       : 8
-                  } pl-0 pr-4`}
+                  } ps-0 pe-4`}
                 >
                   <p className="section-title-conf-lancamentos periodo mb-0">
                     {periodoGrupo.nome_periodo_grupo}
@@ -1415,7 +1415,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                     <Botao
                       texto="Salvar Solicitação de Correção para UE"
                       style={BUTTON_STYLE.GREEN}
-                      className="float-right"
+                      className="float-end"
                       disabled={
                         !values[
                           `descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
@@ -1429,7 +1429,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                     <Botao
                       texto="Cancelar"
                       style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                      className="mr-3 float-right"
+                      className="me-3 float-end"
                       onClick={() => setShowModalCancelarSolicitacao(true)}
                     />
                   </div>
@@ -1439,7 +1439,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                       <Botao
                         texto="Solicitar Correção"
                         style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                        className="col-6 mr-3"
+                        className="col-6 me-3"
                         onClick={() => setModoCorrecao(true)}
                         disabled={
                           statusPermitidosCorrecaoDRE ||
@@ -1496,7 +1496,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               </Modal.Header>
               <Modal.Body>
                 <div className="col-4 mt-0">
-                  <label className="font-weight-bold">Data do Lançamento</label>
+                  <label className="fw-bold">Data do Lançamento</label>
                   <Field
                     className="data_lancamento_modal"
                     component={InputText}
@@ -1505,7 +1505,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   />
                 </div>
                 <div className="col-12 mt-3">
-                  <label className="font-weight-bold">Observação</label>
+                  <label className="fw-bold">Observação</label>
                   <Field
                     component={CKEditorField}
                     name="observacao_modal"
@@ -1516,7 +1516,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               <Modal.Footer>
                 <div className="col-12">
                   <Botao
-                    className="float-right"
+                    className="float-end"
                     texto="Voltar"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => setShowModalObservacaoDiaria(false)}

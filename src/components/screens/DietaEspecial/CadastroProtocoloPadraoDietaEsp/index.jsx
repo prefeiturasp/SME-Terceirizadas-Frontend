@@ -206,7 +206,7 @@ export default ({ uuid }) => {
                     texto="Histórico"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right"
+                    className="float-end"
                     onClick={() => {
                       setHistorico(protocoloPadrao.historico);
                       setVisible(true);
@@ -320,7 +320,7 @@ export default ({ uuid }) => {
                       texto={ehCopia ? "Salvar cópia" : "Salvar"}
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="float-right ml-3"
+                      className="float-end ms-3"
                       disabled={
                         submitting || checaSeEditou(values, getInitialValues())
                       }
@@ -330,7 +330,7 @@ export default ({ uuid }) => {
                         texto={"Cancelar cópia"}
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="float-right ml-3"
+                        className="float-end ms-3"
                         onClick={() => {
                           setShowModalCancelaCopia(true);
                         }}
@@ -342,7 +342,7 @@ export default ({ uuid }) => {
                         }
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="float-right ml-3"
+                        className="float-end ms-3"
                         onClick={() => {
                           resetForm(form);
                         }}

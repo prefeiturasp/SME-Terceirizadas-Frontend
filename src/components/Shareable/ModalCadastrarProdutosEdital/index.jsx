@@ -105,7 +105,7 @@ export default ({ closeModal, showModal, produto, changePage }) => {
                       onChange
                     />
                   </div>
-                  <div className="col-8">
+                  <div className="col-8 ajuste-height">
                     <label className="col-form-label mb-1">
                       <span className="asterisco">* </span>
                       Nome
@@ -133,13 +133,13 @@ export default ({ closeModal, showModal, produto, changePage }) => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Salvar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                     />
                   </div>

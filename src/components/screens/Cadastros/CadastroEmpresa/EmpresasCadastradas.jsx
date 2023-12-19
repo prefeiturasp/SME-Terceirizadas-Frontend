@@ -120,15 +120,15 @@ class EmpresasCadastradas extends Component {
 
                     <td className="btn-action botao-direita">
                       <ToggleExpandir
-                        className={"ml-auto"}
+                        className={"ms-auto"}
                         onClick={() => this.lidarComBurger(empresa)}
                         ativo={empresa.ativo}
                       />
-                      <div className="ml-4">
+                      <div className="ms-4">
                         <Tooltip title="Editar">
                           <span>
                             <NavLink
-                              className="float-left botao-editar"
+                              className="float-start botao-editar"
                               to={`/configuracoes/cadastros/editar-empresa?uuid=${empresa.uuid}`}
                             >
                               <i className="fas fa-edit" />
@@ -401,7 +401,7 @@ class EmpresasCadastradas extends Component {
                                         <span className="valor-desc">
                                           {nutri.nome}
                                           {nutri.super_admin_terceirizadas && (
-                                            <span className="ml-1 badge badge-secondary">
+                                            <span className="ms-1 badge badge-secondary">
                                               Admin
                                             </span>
                                           )}

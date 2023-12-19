@@ -28,7 +28,7 @@ export default ({ showModal, closeModal }) => {
             closeModal();
           }}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="ml-3"
+          className="ms-3"
         />
         <Link
           to={{
@@ -39,7 +39,7 @@ export default ({ showModal, closeModal }) => {
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
-            className="ml-3"
+            className="ms-3"
           />
         </Link>
       </Modal.Footer>
