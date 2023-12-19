@@ -1473,7 +1473,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
   return (
     <>
-      <div className="text-right botao-voltar-lancamento-medicao">
+      <div className="text-end botao-voltar-lancamento-medicao">
         <Botao
           type={BUTTON_TYPE.BUTTON}
           texto={"Voltar"}
@@ -1650,7 +1650,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                         >
                                           <div className="linha-cei">
                                             <b
-                                              className={`nome-linha-cei pl-2 ${
+                                              className={`nome-linha-cei ps-2 ${
                                                 row.name === "observacoes" &&
                                                 "mt-2"
                                               } ${
@@ -1663,7 +1663,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                             </b>
                                             {row.name !== "observacoes" &&
                                               !ehEmeiDaCemeiLocation && (
-                                                <b className="faixa-etaria pl-2">
+                                                <b className="faixa-etaria ps-2">
                                                   {row.faixa_etaria}
                                                 </b>
                                               )}
@@ -2036,7 +2036,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                     ].includes(location.state.status_solicitacao) ? (
                       <Botao
-                        className="float-right"
+                        className="float-end"
                         texto="Salvar Correções"
                         type={BUTTON_TYPE.BUTTON}
                         style={`${BUTTON_STYLE.GREEN}`}
@@ -2045,7 +2045,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                       />
                     ) : (
                       <Botao
-                        className="float-right"
+                        className="float-end"
                         texto="Salvar Lançamentos"
                         type={BUTTON_TYPE.BUTTON}
                         style={`${BUTTON_STYLE.GREEN}`}

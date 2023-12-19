@@ -86,7 +86,7 @@ export const AlteracaoCEIBody = ({ ...props }) => {
                       </label>
                     </div>
                   </div>
-                  <div className="container-fluid pr-0">
+                  <div className="container-fluid pe-0">
                     <div className="row mt-3">
                       <div className="col-4">
                         <p>Alteração de Alimentação De:</p>

@@ -30,14 +30,14 @@ export default ({ showModal, closeModal, mensagem, modalTitle }) => {
               type={BUTTON_TYPE.BUTTON}
               onClick={() => closeModal("Não")}
               style={BUTTON_STYLE.BLUE_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto="Sim"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => closeModal("Sim")}
               style={BUTTON_STYLE.BLUE}
-              className="ml-3"
+              className="ms-3"
             />
           </div>
         </div>

@@ -64,7 +64,7 @@ const InformacaoDeReclamante = ({ reclamacao, questionamento, showTitle }) => {
                     rel="noopener noreferrer"
                     target="_blank"
                     href={anexo.arquivo}
-                    className="link font-weight-bold"
+                    className="link fw-bold"
                   >
                     {`Anexo ${key + 1}`}
                   </a>

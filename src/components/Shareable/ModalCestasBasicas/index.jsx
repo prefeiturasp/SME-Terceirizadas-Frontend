@@ -28,11 +28,11 @@ const ModalCestasBasicas = () => {
               </div>
             </div>
             <div className="col-10">
-              No dia <span className="green font-weight-bold">21/11/2023 </span>
+              No dia <span className="green fw-bold">21/11/2023 </span>
               iniciaremos a entrega de{" "}
-              <span className="font-weight-bold">cestas básicas </span>
+              <span className="fw-bold">cestas básicas </span>
               nas Unidades Escolares destinadas aos estudantes da
-              <span className="font-weight-bold">
+              <span className="fw-bold">
                 {" "}
                 Rede Municipal de Ensino de São Paulo.{" "}
               </span>
@@ -41,18 +41,18 @@ const ModalCestasBasicas = () => {
 
           <div className="row gray-bg">
             <div className="col-12 ">
-              O <span className="font-weight-bold">Cronograma de Entrega </span>
-              e a <span className="font-weight-bold">lista dos alunos </span>
+              O <span className="fw-bold">Cronograma de Entrega </span>e a{" "}
+              <span className="fw-bold">lista dos alunos </span>
               que receberão as cestas serão divulgados pela sua{" "}
-              <span className="font-weight-bold">DRE</span>. Ao receber as
-              cestas, a escola deve fazer a conferência da{" "}
-              <span className="green font-weight-bold">Guia de Remessa!</span>
+              <span className="fw-bold">DRE</span>. Ao receber as cestas, a
+              escola deve fazer a conferência da{" "}
+              <span className="green fw-bold">Guia de Remessa!</span>
             </div>
           </div>
 
           <div className="row">
             <div className="col-12">
-              <span className="font-weight-bold">Você receberá um e-mail </span>
+              <span className="fw-bold">Você receberá um e-mail </span>
               com as datas de entrega e orientações para o recebimento,
               armazenamento e distribuição das cestas para os estudantes.
             </div>
@@ -61,9 +61,9 @@ const ModalCestasBasicas = () => {
           <div className="row gray-bg">
             <div className="col-12">
               Em caso de dúvidas, entre em contato com a{" "}
-              <span className="font-weight-bold">DIAF - DRE </span>
+              <span className="fw-bold">DIAF - DRE </span>
               ou envie e-mail para:{" "}
-              <span className="font-weight-bold">
+              <span className="fw-bold">
                 smecodaecesta@sme.prefeitura.sp.gov.br
               </span>
             </div>

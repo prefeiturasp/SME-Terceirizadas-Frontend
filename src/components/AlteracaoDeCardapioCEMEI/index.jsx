@@ -502,9 +502,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
             </div>
             <div className="card solicitation mt-2">
               <div className="card-body">
-                <div className="card-title font-weight-bold">
-                  Descrição da Alteração
-                </div>
+                <div className="card-title fw-bold">Descrição da Alteração</div>
                 <div className="row">
                   <div className="col-4">
                     <Field
@@ -653,7 +651,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                     />
                   </div>
                 </div>
-                <div className="row float-right mt-4">
+                <div className="row float-end mt-4">
                   <div className="col-12">
                     <Botao
                       texto="Cancelar"
@@ -664,7 +662,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                     />
                     <Botao
                       texto={uuid ? "Atualizar rascunho" : "Salvar rascunho"}
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -678,7 +676,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                         handleSubmit((values) => onSubmit(values, form));
                       }}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

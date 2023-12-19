@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import { tiposAlimentacaoPorPeriodoETipoUnidade } from "components/InclusaoDeAlimentacaoCEMEI/helpers";
 import Botao from "components/Shareable/Botao";
 import {
@@ -18,6 +19,7 @@ import {
   corDaMensagem,
   justificativaAoNegarSolicitacao,
   prazoDoPedidoMensagem,
+  gerarLinkRelatorio,
 } from "helpers/utilities";
 import {
   inclusaoPossuiCEInestePeriodo,
@@ -88,7 +90,7 @@ export const CorpoRelatorio = ({
             style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
             icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
             disabled={imprimindo}
-            className="float-right"
+            className="float-end"
             onClick={imprimirRelatorio}
           />
         </p>
@@ -101,7 +103,7 @@ export const CorpoRelatorio = ({
             <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="pl-2 my-auto offset-1 col-5">
+        <div className="ps-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
@@ -171,7 +173,22 @@ export const CorpoRelatorio = ({
                         <p>
                           Solicitação Similar:
                           <b className="gatilho-style">
-                            {`#${inclusaoDeAlimentacao.id_externo}`}
+                            <Link
+                              style={{
+                                color: "#0c6b45",
+                              }}
+                              to={gerarLinkRelatorio(
+                                `inclusao-de-alimentacao${
+                                  inclusaoDeAlimentacao.dias_motivos_da_inclusao_cemei
+                                    ? "-cemei"
+                                    : ""
+                                }`,
+                                inclusaoDeAlimentacao
+                              )}
+                              target="blank"
+                            >
+                              {`#${inclusaoDeAlimentacao.id_externo}`}
+                            </Link>
                             <ToggleExpandir
                               onClick={() =>
                                 collapseSolicitacaoSimilar(
@@ -274,7 +291,7 @@ export const CorpoRelatorio = ({
         return (
           <div key={key}>
             <div className={`period-quantity number-${key}`}>{periodo}</div>
-            <div className="pl-3 pr-3 pb-3">
+            <div className="ps-3 pe-3 pb-3">
               {inclusaoPossuiCEInestePeriodo(solicitacao, periodo) && (
                 <>
                   <div className="alunos-label mt-3">Alunos CEI</div>
@@ -318,7 +335,7 @@ export const CorpoRelatorio = ({
                           );
                         })}
                       <tr className="row">
-                        <td className="col-8 font-weight-bold">Total</td>
+                        <td className="col-8 fw-bold">Total</td>
                         <td className="col-2 text-center">
                           {solicitacao.quantidade_alunos_cei_da_inclusao_cemei
                             .filter((q) => q.periodo_escolar.nome === periodo)
@@ -366,7 +383,7 @@ export const CorpoRelatorio = ({
                         {!ehMotivoEspecifico && (
                           <th className="col-8 my-auto">
                             Alunos matriculados:{" "}
-                            <span className="font-weight-normal">
+                            <span className="fw-normal">
                               {
                                 solicitacao.quantidade_alunos_emei_da_inclusao_cemei.find(
                                   (q) => q.periodo_escolar.nome === periodo

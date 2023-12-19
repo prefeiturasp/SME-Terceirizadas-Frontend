@@ -290,7 +290,7 @@ export default class ModalReclamacaoProduto extends Component {
                 </div>
                 <section className="form-row attachments">
                   <div className="col-9">
-                    <div className="card-title font-weight-bold cinza-escuro">
+                    <div className="card-title fw-bold cinza-escuro">
                       Anexar
                     </div>
                     <div className="text">
@@ -320,13 +320,13 @@ export default class ModalReclamacaoProduto extends Component {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Enviar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                     />
                   </div>

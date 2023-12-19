@@ -44,7 +44,7 @@ export const SolicitacoesSimilaresInclusaoNormal = ({ ...props }) => {
         <p>Dia(s) de inclusão:</p>
         <p>
           {solicitacao.inclusoes?.map((inclusao, index) => (
-            <b className="mr-4" key={index}>
+            <b className="me-4" key={index}>
               {inclusao.data}
             </b>
           ))}

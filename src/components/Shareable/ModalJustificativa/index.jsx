@@ -151,7 +151,7 @@ const ModalJustificativa = ({
               {comAnexo && (
                 <section className="form-row attachments">
                   <div className="col-9">
-                    <div className="card-title font-weight-bold cinza-escuro">
+                    <div className="card-title fw-bold cinza-escuro">
                       Anexar
                     </div>
                     <div className="text">
@@ -181,7 +181,7 @@ const ModalJustificativa = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={closeModal}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   {state.acao === "responder" ? (
                     <>
@@ -193,7 +193,7 @@ const ModalJustificativa = ({
                           form.submit();
                         }}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
+                        className="ms-3"
                         disabled={submitting}
                       />
                       <Botao
@@ -201,7 +201,7 @@ const ModalJustificativa = ({
                         type={BUTTON_TYPE.BUTTON}
                         onClick={abreModalSuspensao}
                         style={BUTTON_STYLE.RED_OUTLINE}
-                        className="ml-3"
+                        className="ms-3"
                         disabled={submitting}
                       />
                     </>
@@ -210,7 +210,7 @@ const ModalJustificativa = ({
                       texto="Enviar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                     />
                   )}

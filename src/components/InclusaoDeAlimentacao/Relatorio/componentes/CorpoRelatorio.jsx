@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
@@ -6,6 +7,7 @@ import {
   ehInclusaoContinua,
   ehInclusaoCei,
   justificativaAoNegarSolicitacao,
+  gerarLinkRelatorio,
 } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
@@ -220,7 +222,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               )
             }
             disabled={baixandoPDF}
-            className="float-right"
+            className="float-end"
             onClick={async () => {
               setBaixandoPDF(true);
               await getRelatorioInclusaoAlimentacao(
@@ -240,7 +242,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="pl-2 my-auto offset-1 col-5">
+        <div className="ps-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
@@ -312,7 +314,22 @@ export const CorpoRelatorio = ({ ...props }) => {
                       <p>
                         Solicitação Similar:
                         <b className="gatilho-style">
-                          {`#${solicitacao.id_externo}`}
+                          <Link
+                            style={{
+                              color: "#0c6b45",
+                            }}
+                            to={gerarLinkRelatorio(
+                              `inclusao-de-alimentacao${
+                                solicitacao.dias_motivos_da_inclusao_cemei
+                                  ? "-cemei"
+                                  : ""
+                              }`,
+                              solicitacao
+                            )}
+                            target="blank"
+                          >
+                            {`#${solicitacao.id_externo}`}
+                          </Link>
                           <ToggleExpandir
                             onClick={() =>
                               collapseSolicitacaoSimilar(idxSolicitacaoSimilar)
@@ -449,9 +466,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                               inclusaoDeAlimentacao.status ===
                                 "ESCOLA_CANCELOU") && (
                               <p className="justificativa-cancelamento dark-red">
-                                <span className="font-weight-bold">
-                                  justificativa:{" "}
-                                </span>
+                                <span className="fw-bold">justificativa: </span>
                                 {quantidade_por_periodo.cancelado_justificativa ||
                                   inclusaoDeAlimentacao.logs.find(
                                     (log) =>

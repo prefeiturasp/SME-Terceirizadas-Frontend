@@ -96,7 +96,7 @@ export default ({
     let component = [];
     for (let responsavel = 0; responsavel <= 2; responsavel++) {
       component.push(
-        <div className="row col-12 pr-0 mt-2" key={responsavel}>
+        <div className="row col-12 pe-0 mt-2" key={responsavel}>
           <div className="col-8">
             <Input
               className="mt-2"
@@ -108,7 +108,7 @@ export default ({
               disabled={!emEdicao}
             />
           </div>
-          <div className="col-4 pr-0">
+          <div className="col-4 pe-0">
             <Input
               maxLength={7}
               className="mt-2"
@@ -240,7 +240,7 @@ export default ({
   return (
     <div className="row mt-4 info-med-inicial collapse-adjustments">
       <div className="col-12 panel-med-inicial">
-        <div className="pl-0 label-adjustments">
+        <div className="ps-0 label-adjustments">
           <Collapse
             expandIconPosition="end"
             activeKey={isOpen ? ["1"] : []}
@@ -276,14 +276,14 @@ export default ({
                   <p className="value-label">{nomeTerceirizada}</p>
                 </div>
               </div>
-              <div className="row mt-2 mr-0">
+              <div className="row mt-2 me-0">
                 <div className="col-8">
                   <label>
                     Responsáveis por acompanhar a prestação de serviços
                   </label>
                   <label className="asterisk-label">*</label>
                 </div>
-                <div className="col-4 pl-0">
+                <div className="col-4 ps-0">
                   <label>RF</label>
                   <label className="asterisk-label">*</label>
                 </div>
@@ -291,11 +291,11 @@ export default ({
                 {(!location.state ||
                   location.state.status !== "Aprovado pela DRE") &&
                   !location.pathname.includes(DETALHAMENTO_DO_LANCAMENTO) && (
-                    <div className="mt-3 pr-2">
+                    <div className="mt-3 pe-2">
                       <Botao
                         texto="Salvar"
                         style={BUTTON_STYLE.GREEN}
-                        className="float-right ml-3"
+                        className="float-end ms-3"
                         onClick={() => handleClickSalvar()}
                         disabled={!emEdicao}
                       />
@@ -303,7 +303,7 @@ export default ({
                         texto="Editar"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         icon={BUTTON_ICON.PEN}
-                        className="float-right ml-3"
+                        className="float-end ms-3"
                         onClick={() => handleClickEditar()}
                         disabled={emEdicao}
                       />

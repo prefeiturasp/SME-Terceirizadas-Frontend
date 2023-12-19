@@ -34,7 +34,7 @@ export default ({ home, anteriores, atual }) => {
         </ul>
       </div>
       <div
-        className="col-2 text-right contrast"
+        className="col-2 text-end contrast"
         onClick={() => {
           temaContext.mudarTema();
         }}

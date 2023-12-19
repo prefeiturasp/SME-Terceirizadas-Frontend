@@ -18,11 +18,11 @@ export class CardListarSolicitacoes extends Component {
     const { titulo, tipo, solicitacoes, icone } = this.props;
     return (
       <Fragment>
-        <div className={`card card-list-panel card-colored ${tipo} mb-4 mr-4`}>
+        <div className={`card card-list-panel card-colored ${tipo} mb-4 me-4`}>
           <div className="card-title-status">
             <i className={"fas " + icone} />
             {titulo}
-            <span className="float-right pr-4">Data/Hora</span>
+            <span className="float-end pe-4">Data/Hora</span>
           </div>
           <hr />
           <div className="card-body card-body-sme">
@@ -44,7 +44,7 @@ export class CardListarSolicitacoes extends Component {
                             }`
                           }
                         >
-                          <p className={`data ml-4 ${conferida}`}>
+                          <p className={`data ms-4 ${conferida}`}>
                             {[
                               GESTAO_PRODUTO_CARDS.HOMOLOGADOS,
                               GESTAO_PRODUTO_CARDS.PRODUTOS_SUSPENSOS,
@@ -60,9 +60,7 @@ export class CardListarSolicitacoes extends Component {
                           </p>
                         </NavLink>
                       </div>
-                      <span
-                        className={`date-time col-3 text-right ${conferida}`}
-                      >
+                      <span className={`date-time col-3 text-end ${conferida}`}>
                         {value.date}
                       </span>
                     </div>

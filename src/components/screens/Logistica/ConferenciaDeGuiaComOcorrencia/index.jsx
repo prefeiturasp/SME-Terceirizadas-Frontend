@@ -589,7 +589,7 @@ export default () => {
                                 onClick={() =>
                                   toggleBtnAlimentos(alimento.uuid, index)
                                 }
-                                className="btn btn-link btn-block text-left px-0"
+                                className="btn btn-link btn-block text-start px-0"
                                 type="button"
                                 data-toggle="collapse"
                                 data-target={`#collapse_${alimento.uuid}`}
@@ -894,12 +894,12 @@ export default () => {
                     style={{ display: "none" }}
                     ref={editarButton}
                   />
-                  <span className="float-right tooltip-botao">
+                  <span className="float-end tooltip-botao">
                     <Botao
                       texto="Cancelar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="mr-3"
+                      className="me-3"
                       onClick={() => cancelarConferencia(values)}
                     />
                     <Botao

@@ -80,7 +80,7 @@ export default () => {
                         className="input-busca-produto"
                       />
                     </div>
-                    <div className="col-6 pl-0">
+                    <div className="col-6 ps-0">
                       <Botao
                         texto=""
                         icon="fas fa-search"
@@ -162,14 +162,14 @@ export default () => {
                       texto="Salvar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="float-right ml-3"
+                      className="float-end ms-3"
                     />
 
                     <Botao
                       texto="Limpar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-right ml-3"
+                      className="float-end ms-3"
                       onClick={() => {
                         form.restart({});
                         setRfBuscado(false);

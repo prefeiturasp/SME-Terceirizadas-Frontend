@@ -191,14 +191,14 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
                   </Col>
                 </Row>
                 <div className="row row-botoes">
-                  <div className="col-12 text-right col-botoes">
+                  <div className="col-12 text-end col-botoes">
                     <Botao
                       texto="Limpar Filtros"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       disabled={submitting}
                       onClick={form.reset}
-                      className="mr-3"
+                      className="me-3"
                     />
                     <Botao
                       texto="Consultar"
@@ -232,7 +232,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
           </Modal.Title>
         </Modal.Header>
         <section className="m-3">
-          <p className="text-black font-weight-bold mb-1">
+          <p className="text-black fw-bold mb-1">
             {filtros && gerarLabelPorFiltro(filtros)}
           </p>
           <TabelaQuantitativoPorTerceirizada dadosRelatorio={dadosRelatorio} />
@@ -245,7 +245,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
               texto="Imprimir"
               onClick={() => getPdfRelatorioQuantitativo(filtros)}
               type={BUTTON_TYPE.BUTTON}
-              className="float-right"
+              className="float-end"
             />
             <Botao
               texto="voltar"
@@ -254,7 +254,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
               style={BUTTON_STYLE.BLUE_OUTLINE}
               icon={BUTTON_ICON.ARROW_LEFT}
               onClick={handleClose}
-              className="float-right mr-2"
+              className="float-end me-2"
             />
           </section>
         </Modal.Footer>

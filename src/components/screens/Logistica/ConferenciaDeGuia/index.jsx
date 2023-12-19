@@ -328,7 +328,7 @@ export default () => {
                           />
                         </div>
                         <NavLink
-                          className="float-right ml-3"
+                          className="float-end ms-3"
                           to={`/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}?uuid=${
                             guia.uuid
                           }${uuidEdicao ? "&editar=true" : ""}`}

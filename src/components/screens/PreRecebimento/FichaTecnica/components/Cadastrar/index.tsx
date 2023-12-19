@@ -477,11 +477,11 @@ export default () => {
                           Empresa ou Organização{" "}
                           <span className="verde-escuro">Proponente</span>
                         </span>,
-                        <span className="font-weight-bold" key={1}>
+                        <span className="fw-bold" key={1}>
                           Empresa ou Organização{" "}
                           <span className="verde-escuro">Fabricante</span>
                         </span>,
-                        <span className="font-weight-bold" key={1}>
+                        <span className="fw-bold" key={1}>
                           Detalhes do{" "}
                           <span className="verde-escuro">Produto</span>
                         </span>,
@@ -805,7 +805,7 @@ export default () => {
                     texto="Salvar Rascunho"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     onClick={() => salvarRascunho(values)}
                     disabled={validaRascunho(values)}
                   />

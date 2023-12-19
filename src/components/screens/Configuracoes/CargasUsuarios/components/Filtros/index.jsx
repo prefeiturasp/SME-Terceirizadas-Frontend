@@ -56,7 +56,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
           texto="Modelo Planilha Servidores"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="float-right ml-3"
+          className="float-end ms-3"
           icon="fas fa-download"
           onClick={baixarExcelModeloServidor}
         />
@@ -65,7 +65,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
             texto="Modelo Planilha Não Servidores"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="float-right ml-3"
+            className="float-end ms-3"
             icon="fas fa-download"
             onClick={baixarExcelModeloNaoServidor}
           />
@@ -74,7 +74,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
           texto="Modelo Planilha UEs Parceiras"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="float-right ml-3"
+          className="float-end ms-3"
           icon="fas fa-download"
           onClick={baixarExcelModeloUEParceira}
         />
@@ -161,7 +161,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
                 texto="Inserir Carga de Usuários"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
-                className="float-left"
+                className="float-start"
                 icon="fas fa-upload"
                 onClick={() => setShowCadastro(true)}
               />
@@ -170,7 +170,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
                 texto="Filtrar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting || Object.keys(errors).length > 0}
                 onClick={() => inicioResultado.current.scrollIntoView()}
               />
@@ -179,7 +179,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
                 texto="Limpar"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset(initialValues);
                   setFiltros(null);

@@ -56,9 +56,9 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
               Resultados da Pesquisa
             </p>
           </div>
-          <div className="col-7 text-right">
+          <div className="col-7 text-end">
             <p className="helper-grid-alunos-matriculados">
-              <i className="fa fa-info-circle mr-2" />
+              <i className="fa fa-info-circle me-2" />
               Veja a descrição do produto passando o mouse sobre o nome.
             </p>
           </div>
@@ -115,7 +115,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                       {cronograma.status !== "Rascunho" ? (
                         <>
                           <NavLink
-                            className="float-left"
+                            className="float-start"
                             to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${cronograma.uuid}`}
                           >
                             <span className="link-acoes green">Detalhar</span>
@@ -123,9 +123,9 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
 
                           {cronograma.status === "Assinado CODAE" && (
                             <>
-                              <span className="ml-1">| </span>
+                              <span className="ms-1">| </span>
                               <span
-                                className="float-left ml-1 link-acoes green"
+                                className="float-start ms-1 link-acoes green"
                                 onClick={() => baixarPDFCronograma(cronograma)}
                               >
                                 Imprimir
@@ -136,9 +136,9 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                             (usuarioEhEmpresaFornecedor() ||
                               usuarioEhCronograma()) && (
                               <>
-                                <span className="ml-1">|</span>
+                                <span className="ms-1">|</span>
                                 <NavLink
-                                  className="float-left ml-1"
+                                  className="float-start ms-1"
                                   to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${cronograma.uuid}`}
                                 >
                                   <span className="link-acoes green">
@@ -156,7 +156,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                         <>
                           {usuarioEhCronogramaCriacaoEdicao() && (
                             <NavLink
-                              className="float-left"
+                              className="float-start"
                               to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${cronograma.uuid}`}
                             >
                               <span className="link-acoes green">Editar</span>

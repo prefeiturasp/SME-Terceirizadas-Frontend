@@ -121,9 +121,7 @@ export const Filtros = ({ ...props }) => {
               <>
                 <div className="row">
                   <div className="col-4">
-                    <label className="label font-weight-normal pb-2 pt-2">
-                      Lote
-                    </label>
+                    <label className="label fw-normal pb-2 pt-2">Lote</label>
                     <Field
                       component={StatefulMultiSelect}
                       name="lotes"
@@ -158,7 +156,7 @@ export const Filtros = ({ ...props }) => {
                     </OnChange>
                   </div>
                   <div className="col-4">
-                    <label className="label font-weight-normal pb-2 pt-2">
+                    <label className="label fw-normal pb-2 pt-2">
                       Classificação da dieta
                     </label>
                     <Field
@@ -185,7 +183,7 @@ export const Filtros = ({ ...props }) => {
                 <div className="row mt-3">
                   {!usuarioEhEmpresaTerceirizada() && (
                     <div className="col-4">
-                      <label className="label font-weight-normal pb-2 pt-2">
+                      <label className="label fw-normal pb-2 pt-2">
                         Relação por Diagnóstico
                       </label>
                       <Field
@@ -218,7 +216,7 @@ export const Filtros = ({ ...props }) => {
                   )}
                   {usuarioEhEmpresaTerceirizada() && (
                     <div className="col-4">
-                      <label className="label font-weight-normal pb-2 pt-2">
+                      <label className="label fw-normal pb-2 pt-2">
                         Protocolo padrão
                       </label>
                       <Field
@@ -245,7 +243,7 @@ export const Filtros = ({ ...props }) => {
                     </div>
                   )}
                   <div className="col-6">
-                    <label className="label font-weight-normal pb-2 pt-2">
+                    <label className="label fw-normal pb-2 pt-2">
                       Unidades Educacionais
                     </label>
                     <Spin
@@ -283,7 +281,7 @@ export const Filtros = ({ ...props }) => {
                 </div>
 
                 <div className="row mt-3">
-                  <div className="col-12 text-right">
+                  <div className="col-12 text-end">
                     <Botao
                       texto="Limpar Filtros"
                       style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -299,7 +297,7 @@ export const Filtros = ({ ...props }) => {
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                       icon={BUTTON_ICON.FILTER}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

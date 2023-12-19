@@ -692,8 +692,8 @@ export const ConferenciaDosLancamentos = () => {
                             </div>
                             {solicitacao.com_ocorrencias ? (
                               <Fragment>
-                                <div className="col-6 text-right">
-                                  <span className="status-ocorrencia text-center mr-3">
+                                <div className="col-6 text-end">
+                                  <span className="status-ocorrencia text-center me-3">
                                     <b
                                       className={
                                         [
@@ -714,7 +714,7 @@ export const ConferenciaDosLancamentos = () => {
                                   </span>
                                   {ocorrencia && ocorrenciaExpandida ? (
                                     <span
-                                      className="download-ocorrencias mr-0"
+                                      className="download-ocorrencias me-0"
                                       onClick={() => {
                                         medicaoInicialExportarOcorrenciasPDF(
                                           ocorrencia.ultimo_arquivo
@@ -726,7 +726,7 @@ export const ConferenciaDosLancamentos = () => {
                                       }}
                                     >
                                       <i
-                                        className={`${BUTTON_ICON.DOWNLOAD} mr-2`}
+                                        className={`${BUTTON_ICON.DOWNLOAD} me-2`}
                                       />
                                       Download de Ocorrências
                                     </span>
@@ -757,7 +757,7 @@ export const ConferenciaDosLancamentos = () => {
                                     logCorrecaoOcorrenciaCODAE &&
                                     `${textoOcorrencia} ${logCorrecaoOcorrenciaCODAE.criado_em}`}
                                 </div>
-                                <div className="col-7 text-right mt-3">
+                                <div className="col-7 text-end mt-3">
                                   <Botao
                                     texto="Histórico"
                                     type={BUTTON_TYPE.BUTTON}
@@ -812,7 +812,7 @@ export const ConferenciaDosLancamentos = () => {
                         {solicitacao.historico &&
                           solicitacao.historico !== "" && (
                             <Botao
-                              className="float-right"
+                              className="float-end"
                               texto="Histórico de correções"
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                               onClick={() =>
@@ -856,7 +856,7 @@ export const ConferenciaDosLancamentos = () => {
                         })}
                       </div>
                     </div>
-                    <div className="float-right">
+                    <div className="float-end">
                       <Botao
                         texto="Exportar PDF"
                         style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
@@ -881,7 +881,7 @@ export const ConferenciaDosLancamentos = () => {
                           usuarioEhMedicao())) && (
                         <>
                           <Botao
-                            className="ml-3"
+                            className="ms-3"
                             texto="Solicitar Correção"
                             style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
                             onClick={() =>
@@ -890,7 +890,7 @@ export const ConferenciaDosLancamentos = () => {
                             disabled={desabilitarSolicitarCorrecao}
                           />
                           <Botao
-                            className="ml-3"
+                            className="ms-3"
                             texto={
                               usuarioEhMedicao()
                                 ? "Aprovar Medição"
@@ -915,7 +915,7 @@ export const ConferenciaDosLancamentos = () => {
                       )}
                       {usuarioEhDRE() && (
                         <Botao
-                          className="ml-3"
+                          className="ms-3"
                           texto="Ciente das Correções"
                           style={BUTTON_STYLE.GREEN}
                           onClick={async () => {

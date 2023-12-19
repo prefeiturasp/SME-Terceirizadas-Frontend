@@ -59,7 +59,7 @@ export default ({ cronograma }) => {
           texto="Assinar Cronograma"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="float-right ml-3"
+          className="float-end ms-3"
           onClick={() => handleShow()}
         />
       )}
@@ -68,7 +68,7 @@ export default ({ cronograma }) => {
         texto="Voltar"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN_OUTLINE}
-        className="float-right ml-3"
+        className="float-end ms-3"
         onClick={() => handleBack()}
       />
 

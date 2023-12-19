@@ -32,7 +32,7 @@ export const PeriodosCEIeouEMEI = ({
           motivoEspecifico ? (
             <div className="periodos_cei_emei mt-1 mb-3" key={indice}>
               <div
-                className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
+                className={`period-quantity number-${indice} ps-5 pt-2 pb-2`}
               >
                 <label htmlFor="check" className="checkbox-label">
                   <Field
@@ -54,7 +54,7 @@ export const PeriodosCEIeouEMEI = ({
                 </label>
               </div>
               {values.quantidades_periodo[indice][`checked`] && (
-                <div className="ml-5 mr-5">
+                <div className="ms-5 me-5">
                   <div className="alunos-label mt-3">Alunos EMEI</div>
                   <div className="tipos-alimentacao mt-3 mb-3">
                     Tipos de alimentação do período {getPeriodo(indice).nome}:{" "}
@@ -68,7 +68,7 @@ export const PeriodosCEIeouEMEI = ({
                         <th className="col-6 d-flex justify-content-center">
                           <span className="my-auto">Quantidade</span>
                           <Field
-                            className="ml-3"
+                            className="ms-3"
                             component={InputText}
                             type="number"
                             name={`${name}.alunos_emei`}
@@ -87,7 +87,7 @@ export const PeriodosCEIeouEMEI = ({
           ) : (
             <div className="periodos_cei_emei mt-1 mb-3" key={indice}>
               <div
-                className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
+                className={`period-quantity number-${indice} ps-5 pt-2 pb-2`}
               >
                 <label htmlFor="check" className="checkbox-label">
                   <Field
@@ -116,7 +116,7 @@ export const PeriodosCEIeouEMEI = ({
                   ) &&
                     !motivoEspecifico && (
                       <>
-                        <div className="ml-5 mr-5">
+                        <div className="ms-5 me-5">
                           <div className="alunos-label mt-3">Alunos CEI</div>
                           <div className="tipos-alimentacao mt-3 mb-3">
                             Tipos de alimentação do período{" "}
@@ -169,9 +169,7 @@ export const PeriodosCEIeouEMEI = ({
                                 }
                               )}
                               <tr className="row">
-                                <td className="col-8 font-weight-bold">
-                                  Total
-                                </td>
+                                <td className="col-8 fw-bold">Total</td>
                                 <td className="col-2 text-center">
                                   {totalAlunosPorPeriodoCEI(
                                     periodos,
@@ -193,7 +191,7 @@ export const PeriodosCEIeouEMEI = ({
                   {alunosEMEIporPeriodo(getPeriodo(indice).nome, periodos) >
                     0 && (
                     <>
-                      <div className="ml-5 mr-5">
+                      <div className="ms-5 me-5">
                         <div className="alunos-label mt-3">Alunos EMEI</div>
                         <div className="tipos-alimentacao mt-3 mb-3">
                           Tipos de alimentação do período{" "}
@@ -216,7 +214,7 @@ export const PeriodosCEIeouEMEI = ({
                               {!motivoEspecifico && (
                                 <th className="col-8 my-auto">
                                   Alunos matriculados:{" "}
-                                  <span className="font-weight-normal">
+                                  <span className="fw-normal">
                                     {alunosEMEIporPeriodo(
                                       getPeriodo(indice).nome,
                                       periodos
@@ -231,7 +229,7 @@ export const PeriodosCEIeouEMEI = ({
                               >
                                 <span className="my-auto">Quantidade</span>
                                 <Field
-                                  className="ml-3"
+                                  className="ms-3"
                                   component={InputText}
                                   type="number"
                                   name={`${name}.alunos_emei`}

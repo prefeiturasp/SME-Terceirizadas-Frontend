@@ -14,17 +14,17 @@ export class Rascunhos extends Component {
       return (
         <div key={id_externo} className="draft bg-white border rounded mt-3">
           <div className="mt-2">
-            <label className="bold ml-3">
+            <label className="bold ms-3">
               Solicitação Unificada {`# ${id_externo}`}
             </label>
             <span
-              className="ml-3 p-1 border rounded"
+              className="ms-3 p-1 border rounded"
               style={{ background: backgroundColor }}
             >
               RASCUNHO
             </span>
           </div>
-          <div className="icon-draft-card float-right">
+          <div className="icon-draft-card float-end">
             Criado em: {solicitacaoUnificada.solicitacao_kit_lanche.criado_em}
             <span onClick={() => OnDeleteButtonClicked(id_externo, uuid)}>
               <i className="fas fa-trash" />
@@ -36,7 +36,7 @@ export class Rascunhos extends Component {
               <i className="fas fa-edit" />
             </span>
           </div>
-          <div className="ml-3">
+          <div className="ms-3">
             <p>
               {solicitacaoUnificada.lista_kit_lanche_igual
                 ? "Pedido Múltiplo - "

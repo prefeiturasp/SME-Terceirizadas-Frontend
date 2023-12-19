@@ -1,44 +1,41 @@
 import React, { Component } from "react";
-import { ToggleExpandir } from "../../Shareable/ToggleExpandir";
+import { escolaEhCEMEI, pontuarValor } from "helpers/utilities";
 import "./style.scss";
-import { escolaEhCEMEI, pontuarValor } from "../../../helpers/utilities";
 
 export default class CardMatriculados extends Component {
   render() {
-    const { collapsed, numeroAlunos, meusDados } = this.props;
+    const { numeroAlunos, meusDados } = this.props;
 
     return escolaEhCEMEI() ? (
       <div className="card mt-1">
         <div className="card-body card-enrolled">
-          <div className="row title">
-            <div className="p-0">
-              <span>
-                Total de Matriculados
-                <div className="rectangle">
-                  {meusDados &&
-                    pontuarValor(
+          <div className="row">
+            <div className="title-rectangle-wrapper">
+              <span className="title">Total de Matriculados</span>
+              <div className="rectangle">
+                {meusDados &&
+                  pontuarValor(
+                    meusDados.vinculo_atual.instituicao
+                      .quantidade_alunos_cei_da_cemei +
                       meusDados.vinculo_atual.instituicao
-                        .quantidade_alunos_cei_da_cemei +
-                        meusDados.vinculo_atual.instituicao
-                          .quantidade_alunos_emei_da_cemei
-                    )}
-                </div>
-              </span>
+                        .quantidade_alunos_emei_da_cemei
+                  )}
+              </div>
             </div>
-            <div className="p-0 ml-3">
-              <span>
-                Matriculados CEI
-                <div className="rectangle">
-                  {meusDados &&
-                    pontuarValor(
-                      meusDados.vinculo_atual.instituicao
-                        .quantidade_alunos_cei_da_cemei
-                    )}
-                </div>
-              </span>
+
+            <div className="title-rectangle-wrapper">
+              <span className="title">Matriculados CEI</span>
+              <div className="rectangle">
+                {meusDados &&
+                  pontuarValor(
+                    meusDados.vinculo_atual.instituicao
+                      .quantidade_alunos_cei_da_cemei
+                  )}
+              </div>
             </div>
-            <div className="p-0 ml-3">
-              <span>Matriculados EMEI</span>
+
+            <div className="title-rectangle-wrapper">
+              <span className="title">Matriculados EMEI</span>
               <div className="rectangle">
                 {meusDados &&
                   pontuarValor(
@@ -47,7 +44,7 @@ export default class CardMatriculados extends Component {
                   )}
               </div>
             </div>
-            <div className="col-6 beside-text mt-auto ml-2">
+            <div className="col-6 beside-text mt-auto ms-2">
               Informação automática disponibilizada pelo Cadastro da Unidade
               Escolar <br />
             </div>
@@ -58,19 +55,13 @@ export default class CardMatriculados extends Component {
       <div className="card">
         <div className="card-body card-enrolled">
           <div className="row title">
-            <div className="col-5">Nº de Matriculados</div>
-            {collapsed !== undefined && (
-              <div className="offset-6 col-1 my-auto text-right">
-                <ToggleExpandir
-                  onClick={this.props.alterarCollapse}
-                  ativo={!collapsed}
-                />
-              </div>
-            )}
+            <div className="col-5 ps-0 pb-2">Nº de Matriculados</div>
           </div>
           <div className="row">
-            <div className="rectangle">
-              {numeroAlunos && pontuarValor(numeroAlunos)}
+            <div className="col-1 px-0">
+              <div className="rectangle">
+                {numeroAlunos && pontuarValor(numeroAlunos)}
+              </div>
             </div>
             <div className="col-6 beside-text mt-auto">
               Informação automática disponibilizada pelo Cadastro da Unidade

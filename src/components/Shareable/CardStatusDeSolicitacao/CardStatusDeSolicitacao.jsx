@@ -147,7 +147,7 @@ export const CardStatusDeSolicitacao = (props) => {
               ) : (
                 solicitation.text
               )}
-              <span className="float-right">{solicitation.date}</span>
+              <span className="float-end">{solicitation.date}</span>
               {tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
                 qtdDietasAbertas(solicitation) > 0 && (
                   <Tooltip
@@ -160,7 +160,7 @@ export const CardStatusDeSolicitacao = (props) => {
                     title="Usuários visualizando simultaneamente"
                   >
                     <span
-                      className={`mr-3 dietas-abertas float-right ${
+                      className={`me-3 dietas-abertas float-end ${
                         qtdDietasAbertas(solicitation) > 9 && "qtd-dois-digitos"
                       }`}
                     >
@@ -208,7 +208,7 @@ export const CardStatusDeSolicitacao = (props) => {
         {loading && (
           <img src="/assets/image/ajax-loader.gif" alt="ajax-loader" />
         )}
-        <span className="float-right my-auto">Data/Hora</span>
+        <span className="float-end my-auto">Data/Hora</span>
       </div>
       <hr />
       {cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE &&
