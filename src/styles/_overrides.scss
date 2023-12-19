@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 #wrapper {
   .ant-switch-checked {
     background-color: #198459;
@@ -29,4 +31,8 @@
 .text-justify {
   text-align: justify;
   text-justify: inter-word;
+}
+
+hr {
+  color: $grayLight !important;
 }
