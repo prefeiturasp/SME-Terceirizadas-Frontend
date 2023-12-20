@@ -9,7 +9,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { getPermissoesLancamentosEspeciaisMesAno } from "services/medicaoInicial/permissaoLancamentosEspeciais.service";
+import { getPermissoesLancamentosEspeciaisMesAnoPorPeriodo } from "services/medicaoInicial/permissaoLancamentosEspeciais.service";
 import {
   deepCopy,
   ehEscolaTipoCEI,
@@ -635,7 +635,7 @@ export const getSolicitacoesSuspensoesAutorizadasAsync = async (
   }
 };
 
-export const getPermissoesLancamentosEspeciaisMesAnoAsync = async (
+export const getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync = async (
   escolaUuuid,
   mes,
   ano,
@@ -646,10 +646,13 @@ export const getPermissoesLancamentosEspeciaisMesAnoAsync = async (
   params["mes"] = mes;
   params["ano"] = ano;
   params["nome_periodo_escolar"] = nome_periodo_escolar;
-  const responsePermissoesLancamentosEspeciaisMesAno =
-    await getPermissoesLancamentosEspeciaisMesAno(params);
-  if (responsePermissoesLancamentosEspeciaisMesAno.status === HTTP_STATUS.OK) {
-    return responsePermissoesLancamentosEspeciaisMesAno.data.results;
+  const responsePermissoesLancamentosEspeciaisMesAnoPorPeriodo =
+    await getPermissoesLancamentosEspeciaisMesAnoPorPeriodo(params);
+  if (
+    responsePermissoesLancamentosEspeciaisMesAnoPorPeriodo.status ===
+    HTTP_STATUS.OK
+  ) {
+    return responsePermissoesLancamentosEspeciaisMesAnoPorPeriodo.data.results;
   } else {
     toastError("Erro ao carregar Permissões de Lançamentos Especiais");
     return [];
