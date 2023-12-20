@@ -28,31 +28,29 @@ const CollapseFiltros: React.FC<Props> = ({ children, onSubmit, onClear }) => {
       <div className="card mt-3">
         <div className={`card-header card-tipo open`} id={`heading`}>
           <div className="row card-header-content">
-            <div className="titulo">
+            <div className="col-11 titulo my-auto">
               <i className="fas fa-sort-amount-down"></i>
               <span>Filtrar Cadastros</span>
             </div>
 
-            <div className="flex">
-              <div className="col-1 align-self-center">
-                <button
-                  onClick={() => toggleCollapse()}
-                  className="btn btn-link btn-block text-right px-0"
-                  type="button"
-                  data-toggle="collapse"
-                  data-target={`#collapse`}
-                  aria-expanded="true"
-                  aria-controls={`collapse`}
-                >
-                  <span className="span-icone-toogle">
-                    <i
-                      className={
-                        collapse ? "fas fa-chevron-up" : "fas fa-chevron-down"
-                      }
-                    />
-                  </span>
-                </button>
-              </div>
+            <div className="col-1 my-auto">
+              <button
+                onClick={() => toggleCollapse()}
+                className="btn btn-link btn-block text-right px-0"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target={`#collapse`}
+                aria-expanded="true"
+                aria-controls={`collapse`}
+              >
+                <span className="span-icone-toogle">
+                  <i
+                    className={
+                      collapse ? "fas fa-chevron-up" : "fas fa-chevron-down"
+                    }
+                  />
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -61,7 +59,7 @@ const CollapseFiltros: React.FC<Props> = ({ children, onSubmit, onClear }) => {
           id={`collapse`}
           className="collapse show"
           aria-labelledby="headingOne"
-          data-parent={`#${id}`}
+          data-bs-parent={`#${id}`}
         >
           <div className="card-body">
             <Form
