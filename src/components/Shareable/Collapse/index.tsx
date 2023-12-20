@@ -29,20 +29,21 @@ const Collapse: React.FC<Props> = ({
           <div className="card mt-3">
             <div className={`card-header card-tipo`} id={`heading_${index}`}>
               <div className="row card-header-content">
-                <span className="titulo">{titulos[index]}</span>
-
-                <div className="flex">
-                  <div className="texto-obrigatorio">
-                    <span className="required-asterisk fw-bold">*</span>
-                    Campos de Preenchimento Obrigatório
-                  </div>
-                  <div className="col-1 align-self-center">
+                <span className="col-8 titulo">{titulos[index]}</span>
+                <div className="col-3 text-end my-auto">
+                  <span className="texto-obrigatorio required-asterisk fw-bold">
+                    *{" "}
+                  </span>
+                  Campos de Preenchimento Obrigatório
+                </div>
+                <div className="col-1 text-end">
+                  <div className="align-self-center">
                     <button
                       onClick={() => toggleCollapse(index)}
                       className="btn btn-link btn-block text-end px-0"
                       type="button"
-                      data-toggle="collapse"
-                      data-target={`#collapse_${index}`}
+                      data-bs-toggle="collapse"
+                      data-bs-target={`#collapse_${index}`}
                       aria-expanded="true"
                       aria-controls={`collapse_${index}`}
                     >
@@ -65,7 +66,7 @@ const Collapse: React.FC<Props> = ({
               id={`collapse_${index}`}
               className="collapse"
               aria-labelledby="headingOne"
-              data-parent={`#${id}`}
+              data-bs-parent={`#${id}`}
             >
               <div className="card-body">{el}</div>
             </div>

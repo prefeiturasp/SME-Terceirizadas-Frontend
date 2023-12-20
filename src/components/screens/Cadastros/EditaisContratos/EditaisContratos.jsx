@@ -81,6 +81,7 @@ class EditaisContratos extends Component {
       loading: true,
       uuid: null,
       atualizacao: false,
+      submitting: false,
     };
     this.exibirModal = this.exibirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
@@ -179,40 +180,50 @@ class EditaisContratos extends Component {
   }
 
   onSubmit(values) {
+    this.setState({ submitting: true });
+
     if (!this.state.uuid) {
-      criarEditalEContrato(JSON.stringify(values)).then(
-        (response) => {
-          if (response.status === HTTP_STATUS.CREATED) {
-            toastSuccess("Edital salvo com sucesso");
-            this.setRedirect();
-            this.resetForm();
-          } else {
-            toastError(
-              `Houve um erro ao salvar o edital ${getError(response.data)}`
-            );
+      criarEditalEContrato(JSON.stringify(values))
+        .then(
+          (response) => {
+            if (response.status === HTTP_STATUS.CREATED) {
+              toastSuccess("Edital salvo com sucesso");
+              this.setRedirect();
+              this.resetForm();
+            } else {
+              toastError(
+                `Houve um erro ao salvar o edital ${getError(response.data)}`
+              );
+            }
+          },
+          function () {
+            toastError("Houve um erro ao salvar o edital");
           }
-        },
-        function () {
-          toastError("Houve um erro ao salvar o edital");
-        }
-      );
+        )
+        .finally(() => {
+          this.setState({ submitting: false });
+        });
     } else {
-      atualizarEditalEContrato(JSON.stringify(values), this.state.uuid).then(
-        (res) => {
-          if (res.status === HTTP_STATUS.OK) {
-            toastSuccess("Edital atualizado com sucesso");
-            this.setRedirect();
-            this.resetForm();
-          } else {
-            toastError(
-              `Houve um erro ao atualizar o edita ${getError(res.data)}`
-            );
+      atualizarEditalEContrato(JSON.stringify(values), this.state.uuid)
+        .then(
+          (res) => {
+            if (res.status === HTTP_STATUS.OK) {
+              toastSuccess("Edital atualizado com sucesso");
+              this.setRedirect();
+              this.resetForm();
+            } else {
+              toastError(
+                `Houve um erro ao atualizar o edita ${getError(res.data)}`
+              );
+            }
+          },
+          function () {
+            toastError("Houve um erro ao atualizar o edital");
           }
-        },
-        function () {
-          toastError("Houve um erro ao atualizar o edital");
-        }
-      );
+        )
+        .finally(() => {
+          this.setState({ submitting: false });
+        });
     }
   }
 
@@ -416,6 +427,7 @@ class EditaisContratos extends Component {
       atualizacao,
       uuid,
       loading,
+      submitting,
     } = this.state;
 
     return (
@@ -427,8 +439,12 @@ class EditaisContratos extends Component {
             showModal={exibirModal}
             edital_contratos={edital_contratos}
             onSubmit={this.onSubmit}
+            submitting={submitting}
           />
-          <form onSubmit={() => {}} noValidate="novalidate">
+          <form
+            onSubmit={(event) => event.preventDefault()}
+            noValidate="novalidate"
+          >
             <div className="card">
               <div className="card-body p-0">
                 <header className="header-form">
