@@ -1,7 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Form, Field } from "react-final-form";
+import { Field } from "react-final-form";
 import moment from "moment";
-import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -25,8 +24,7 @@ import {
   CronogramaSimples,
   DocumentosRecebimento,
 } from "interfaces/pre_recebimento.interface";
-
-const FORM_NAME = "filtrosDocumentosRecebimento";
+import CollapseFiltros from "components/Shareable/CollapseFiltros";
 
 interface Props {
   setFiltros: Dispatch<SetStateAction<FiltrosDocumentosRecebimento>>;
@@ -71,7 +69,7 @@ const Filtros: React.FC<Props> = ({
     },
   ];
 
-  const onSubmit = async (values: Record<string, any>): Promise<void> => {
+  const onSubmit = (values: Record<string, any>): void => {
     let filtros = { ...values };
     if (values.data_criacao) {
       delete filtros.data_criacao;
@@ -82,6 +80,12 @@ const Filtros: React.FC<Props> = ({
     setFiltros(filtros);
   };
 
+  const onClear = () => {
+    setDocumentos([]);
+    setConsultaRealizada(false);
+    setFiltros({});
+  };
+
   useEffect(() => {
     buscarDadosCronogramas();
     buscarListaProdutos();
@@ -89,100 +93,73 @@ const Filtros: React.FC<Props> = ({
 
   return (
     <div className="filtros-documentos-recebimento">
-      <Form
-        onSubmit={onSubmit}
-        initialValues={{}}
-        render={({ form, handleSubmit, values }) => (
-          <form onSubmit={handleSubmit}>
-            <FinalFormToRedux form={FORM_NAME} />
-            <div className="row">
-              <div className="col-6 mt-2">
-                <Field
-                  component={AutoCompleteSelectField}
-                  options={getListaFiltradaAutoCompleteSelect(
-                    listaProdutos.map((e) => e.nome),
-                    values.nome_produto,
-                    true
-                  )}
-                  label="Filtrar por Nome do Produto"
-                  name="nome_produto"
-                  placeholder="Selecione um Produto"
-                />
-              </div>
-
-              <div className="col-6 mt-2">
-                <Field
-                  component={AutoCompleteSelectField}
-                  options={getListaFiltradaAutoCompleteSelect(
-                    dadosCronogramas.map((e) => e.numero),
-                    values.numero_cronograma
-                  )}
-                  label="Filtrar por Nº do Cronograma"
-                  name="numero_cronograma"
-                  placeholder="Digite o Nº do Cronograma"
-                />
-              </div>
-
-              <div className="col-6 mt-2">
-                <Field
-                  component={MultiSelect}
-                  disableSearch
-                  options={opcoesStatus}
-                  label="Filtrar por Status"
-                  name="status"
-                  nomeDoItemNoPlural="Status"
-                  placeholder="Selecione os Status"
-                />
-              </div>
-
-              <div className="col-6 mt-2">
-                <Field
-                  component={InputComData}
-                  className="input-data"
-                  label="Filtrar por Data da Criação"
-                  name="data_criacao"
-                  placeholder="Selecione a Data de Criação"
-                  writable={false}
-                  minDate={null}
-                  maxDate={null}
-                />
-              </div>
-            </div>
-
-            <div className="pt-4 pb-4">
-              <NavLink
-                to={`/${PRE_RECEBIMENTO}/${CADASTRO_DOCUMENTOS_RECEBIMENTO}`}
-              >
-                <Botao
-                  texto="Cadastrar Documentos"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN}
-                />
-              </NavLink>
-
-              <Botao
-                texto="Filtrar"
-                type={BUTTON_TYPE.SUBMIT}
-                style={BUTTON_STYLE.GREEN}
-                className="float-end ms-3"
-              />
-
-              <Botao
-                texto="Limpar Filtros"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-end ms-3"
-                onClick={() => {
-                  form.reset({});
-                  setDocumentos([]);
-                  setConsultaRealizada(false);
-                  setFiltros({});
-                }}
+      <CollapseFiltros onSubmit={onSubmit} onClear={onClear}>
+        {(values) => (
+          <div className="row">
+            <div className="col-6 mt-2">
+              <Field
+                component={AutoCompleteSelectField}
+                options={getListaFiltradaAutoCompleteSelect(
+                  listaProdutos.map((e) => e.nome),
+                  values.nome_produto,
+                  true
+                )}
+                label="Filtrar por Nome do Produto"
+                name="nome_produto"
+                placeholder="Selecione um Produto"
               />
             </div>
-          </form>
+
+            <div className="col-6 mt-2">
+              <Field
+                component={AutoCompleteSelectField}
+                options={getListaFiltradaAutoCompleteSelect(
+                  dadosCronogramas.map((e) => e.numero),
+                  values.numero_cronograma
+                )}
+                label="Filtrar por Nº do Cronograma"
+                name="numero_cronograma"
+                placeholder="Digite o Nº do Cronograma"
+              />
+            </div>
+
+            <div className="col-6 mt-2">
+              <Field
+                component={MultiSelect}
+                disableSearch
+                options={opcoesStatus}
+                label="Filtrar por Status"
+                name="status"
+                nomeDoItemNoPlural="Status"
+                placeholder="Selecione os Status"
+              />
+            </div>
+
+            <div className="col-6 mt-2">
+              <Field
+                component={InputComData}
+                className="input-data"
+                label="Filtrar por Data da Criação"
+                name="data_criacao"
+                placeholder="Selecione a Data de Criação"
+                writable={false}
+                minDate={null}
+                maxDate={null}
+              />
+            </div>
+          </div>
         )}
-      />
+      </CollapseFiltros>
+
+      <div className="pt-4 pb-4">
+        <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_DOCUMENTOS_RECEBIMENTO}`}>
+          <Botao
+            texto="Cadastrar Documentos"
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN}
+          />
+        </NavLink>
+      </div>
     </div>
   );
 };
