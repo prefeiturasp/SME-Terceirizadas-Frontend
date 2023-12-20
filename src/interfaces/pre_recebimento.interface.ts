@@ -1,3 +1,4 @@
+import { LogSolicitacoesUsuarioSimples } from "./dados_comuns.interface";
 import { TerceirizadaSimplesInterface } from "./terceirizada.interface";
 
 export interface DocumentosRecebimento {
@@ -12,11 +13,8 @@ export interface DocumentosRecebimento {
 export interface DocumentosRecebimentoDetalhado extends DocumentosRecebimento {
   numero_laudo: string;
   correcao_solicitada: string;
-  tipos_de_documentos: Array<TiposDocumentos>;
-  log_mais_recente: {
-    usuario: string;
-    criado_em: string;
-  };
+  tipos_de_documentos: TiposDocumentos[];
+  logs: LogSolicitacoesUsuarioSimples[];
 }
 
 export interface DocumentosRecebimentoParaAnalise
@@ -70,6 +68,7 @@ export type PrazoRecebimentoChoices =
   | "120"
   | "180"
   | "OUTRO";
+
 export interface TiposDocumentos {
   tipo_documento: TiposDocumentoChoices;
   arquivos: Array<Arquivo>;
@@ -108,7 +107,7 @@ export interface OptionsGenerico {
   nome: string;
 }
 
-export type CategoriaChoices = "PERECIVEIS" | "NAO_PERECIVEIS";
+export type CategoriaFichaTecnicaChoices = "PERECIVEIS" | "NAO_PERECIVEIS";
 
 export interface ProdutoSimples {
   uuid: string;
@@ -125,13 +124,24 @@ export interface FabricanteSimples {
   nome: string;
 }
 
+export type MecanismoControleChoices = "CERTIFICACAO" | "OPAC" | "OCS" | "";
+
 export interface FichaTecnica {
+  uuid: string;
+  numero: string;
+  nome_produto: string;
+  pregao_chamada_publica: string;
+  criado_em: string;
+  status: string;
+}
+
+export interface FichaTecnicaDetalhada {
   uuid: string;
   numero: string;
   produto: ProdutoSimples;
   pregao_chamada_publica: string;
   marca: MarcaSimples;
-  categoria: string;
+  categoria: CategoriaFichaTecnicaChoices;
   status: string;
   criado_em: string;
   empresa: TerceirizadaSimplesInterface;
@@ -146,4 +156,15 @@ export interface FichaTecnica {
   estado_fabricante: string;
   email_fabricante: string;
   telefone_fabricante: string;
+  prazo_validade: string;
+  numero_registro: string;
+  agroecologico: boolean;
+  organico: boolean;
+  mecanismo_controle: MecanismoControleChoices;
+  componentes_produto: string;
+  alergenicos: boolean;
+  ingredientes_alergenicos: string;
+  gluten: boolean;
+  lactose: boolean;
+  lactose_detalhe: string;
 }

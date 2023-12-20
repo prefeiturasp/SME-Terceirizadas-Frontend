@@ -15,6 +15,7 @@ import {
   usuarioEhEmpresaDistribuidora,
   usuarioComAcessoTelaEntregasDilog,
   usuarioEscolaEhGestaoDireta,
+  usuarioEscolaEhGestaoParceira,
   usuarioEhMedicao,
   exibirGA,
   usuarioEhDilogQualidadeOuCronograma,
@@ -34,6 +35,7 @@ import {
   usuarioEhOrgaoFiscalizador,
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
+import { ENVIRONMENT } from "constants/config";
 import {
   MenuGestaoDeAlimentacao,
   MenuDietaEspecial,
@@ -70,8 +72,13 @@ export const SidebarContent = () => {
   // Para utilizar esse componente com outros perfis precisa atualizar os
   // criterios de exibicao abaixo
   const exibeMenuValidandoAmbiente = exibirGA();
+
+  const usuarioEscolaEhGestaoDiretaParceira =
+    (usuarioEscolaEhGestaoDireta() || usuarioEscolaEhGestaoParceira()) &&
+    !["production"].includes(ENVIRONMENT);
+
   const exibirPainelInicial =
-    !usuarioEhEscolaAbastecimento() &&
+    (!usuarioEhEscolaAbastecimento() || usuarioEscolaEhGestaoDiretaParceira) &&
     !usuarioEhEscolaAbastecimentoDiretor() &&
     !usuarioComAcessoTelaEntregasDilog() &&
     !usuarioEhLogistica() &&
@@ -95,7 +102,8 @@ export const SidebarContent = () => {
     usuarioEhEscolaTerceirizada() ||
     usuarioEhDRE() ||
     usuarioEhEmpresaTerceirizada() ||
-    usuarioEhMedicao();
+    usuarioEhMedicao() ||
+    usuarioEscolaEhGestaoDiretaParceira;
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||

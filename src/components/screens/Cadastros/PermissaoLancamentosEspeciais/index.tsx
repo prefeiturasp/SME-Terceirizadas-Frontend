@@ -159,7 +159,7 @@ export const PermissaoLancamentosEspeciais = () => {
                     </div>
                   </div>
                   {permissoes.length === 0 && !loading && (
-                    <div>Nenhum resultado encontrado.</div>
+                    <div className="pt-3">Nenhum resultado encontrado.</div>
                   )}
                   {permissoes.length > 0 && (
                     <div className="tabela-permissao-lancamentos-especiais">

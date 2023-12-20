@@ -27,6 +27,7 @@ import {
   formatarLinhasTabelasDietas,
   formatarLinhasTabelaSolicitacoesAlimentacao,
   formatarLinhasTabelaEtecAlimentacao,
+  getPermissoesLancamentosEspeciaisMesAnoAsync,
   getSolicitacoesInclusaoAutorizadasAsync,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
@@ -132,6 +133,11 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     setAlteracoesAlimentacaoAutorizadas,
   ] = useState(null);
   const [suspensoesAutorizadas, setSuspensoesAutorizadas] = useState(null);
+  const [
+    alimentacoesLancamentosEspeciais,
+    setAlimentacoesLancamentosEspeciais,
+  ] = useState(null);
+  const [dataInicioPermissoes, setDataInicioPermissoes] = useState(null);
   const [erroAPI, setErroAPI] = useState("");
 
   const exibirBotoesDRE =
@@ -458,12 +464,37 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   (periodo) => periodo.periodo_escolar.nome === periodoEscolar
                 );
                 const tipos_alimentacao = periodo.tipos_alimentacao;
+                const ehPeriodoSimples = periodosSimples
+                  .map((periodo) => periodo.periodo_escolar.nome)
+                  .includes(periodoGrupo.nome_periodo_grupo);
+                let alimentacoesLancamentosEspeciais = null;
+                if (ehPeriodoSimples) {
+                  const response_permissoes_lancamentos_especiais_mes_ano =
+                    await getPermissoesLancamentosEspeciaisMesAnoAsync(
+                      solicitacao.escola_uuid,
+                      mesSolicitacao,
+                      anoSolicitacao,
+                      periodoGrupo.nome_periodo_grupo
+                    );
+                  alimentacoesLancamentosEspeciais =
+                    response_permissoes_lancamentos_especiais_mes_ano.alimentacoes_lancamentos_especiais;
+                  setAlimentacoesLancamentosEspeciais(
+                    response_permissoes_lancamentos_especiais_mes_ano.alimentacoes_lancamentos_especiais?.map(
+                      (ali) => ali.name
+                    )
+                  );
+                  setDataInicioPermissoes(
+                    response_permissoes_lancamentos_especiais_mes_ano.data_inicio_permissoes
+                  );
+                }
                 const tiposAlimentacaoFormatadas =
                   formatarLinhasTabelaAlimentacao(
                     tipos_alimentacao,
                     periodoGrupo,
                     solicitacao,
-                    periodo.periodo_escolar.eh_periodo_especifico
+                    periodo.periodo_escolar.eh_periodo_especifico,
+                    ehPeriodoSimples,
+                    alimentacoesLancamentosEspeciais
                   );
                 setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
                 const linhasTabelasDietas =
@@ -1021,7 +1052,15 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                     )}
                                   </div>
                                 ) : (
-                                  <div className="nome-linha">
+                                  <div
+                                    className={`nome-linha${
+                                      alimentacoesLancamentosEspeciais?.includes(
+                                        row.name
+                                      )
+                                        ? " input-alimentacao-permissao-lancamento-especial"
+                                        : ""
+                                    }`}
+                                  >
                                     <b className="pl-2">{row.nome}</b>
                                   </div>
                                 )}
@@ -1037,6 +1076,12 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                         : row.name === "observacoes"
                                         ? "input-habilitado-observacoes"
                                         : "input-habilitado"
+                                    }${
+                                      alimentacoesLancamentosEspeciais?.includes(
+                                        row.name
+                                      )
+                                        ? " input-alimentacao-permissao-lancamento-especial"
+                                        : ""
                                     }`}
                                   >
                                     {row.name === "observacoes" ? (
@@ -1244,6 +1289,16 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                           );
                         })}
                       </article>
+                      {categoria.nome === "ALIMENTAÇÃO" &&
+                        dataInicioPermissoes && (
+                          <div className="legenda-lancamentos-especiais">
+                            <div className="legenda-cor" />
+                            <div>
+                              Lançamento especial de alimentações liberado para
+                              unidade em {dataInicioPermissoes} por CODAE
+                            </div>
+                          </div>
+                        )}
                     </section>
                   </div>,
                   idx === 0 && categoriasDeMedicao.length > 1 && (

@@ -17,7 +17,11 @@ import {
   PERIODO_LANCAMENTO_CEI,
 } from "configs/constants";
 import "./styles.scss";
-import { ehEmeiDaCemei } from "../helpers";
+import {
+  ehEmeiDaCemei,
+  numeroRefeicoesDiarias,
+  textoCabecalhoFormatado,
+} from "../helpers";
 
 export const CardLancamentoCEI = ({
   textoCabecalho = null,
@@ -34,21 +38,6 @@ export const CardLancamentoCEI = ({
 
   let alimentacoesFormatadas = [];
 
-  if (
-    ehEscolaTipoCEMEI(escolaInstituicao) &&
-    periodosEscolaCemeiComAlunosEmei.includes(textoCabecalho)
-  ) {
-    alimentacoesFormatadas = tiposAlimentacao.map((tipoAlimentacao, key) => (
-      <div key={key} className="mb-2">
-        <span style={{ color: cor }}>
-          <b>0</b>
-        </span>
-        <span className="ml-1">- {tipoAlimentacao.nome}</span>
-        <br />
-      </div>
-    ));
-  }
-
   const qtdAlimentacaoPeriodoFiltrada = () => {
     return quantidadeAlimentacoesLancadas.filter(
       (qtdAlimentacaoPeriodo) =>
@@ -56,37 +45,39 @@ export const CardLancamentoCEI = ({
     );
   };
 
-  const textoCabecalhoFormatado = (textoCabecalho) => {
-    switch (textoCabecalho) {
-      case "MANHA":
-        return "Infantil Manhã";
-      case "TARDE":
-        return "Infantil Tarde";
-      case "PARCIAL":
-        return "Período Parcial";
-      case "INTEGRAL":
-        return "Período Integral";
-      case "Infantil INTEGRAL":
-        return "Infantil Integral";
-      case "Infantil MANHA":
-        return "Infantil Manhã";
-      case "Infantil TARDE":
-        return "Infantil Tarde";
-      default:
-        return textoCabecalho;
+  const quantidadeAlimentacao = (nomeAlimentacao) => {
+    const alimentacao = nomeAlimentacao
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replaceAll(/ /g, "_");
+    let quantidade = 0;
+    if (qtdAlimentacaoPeriodoFiltrada().length > 0) {
+      const qtdAlimentacaoFiltrada =
+        qtdAlimentacaoPeriodoFiltrada()[0].valores.filter(
+          (v) => v.nome_campo === alimentacao
+        );
+      if (qtdAlimentacaoFiltrada.length > 0) {
+        quantidade = qtdAlimentacaoFiltrada[0].valor;
+      }
     }
+    return quantidade;
   };
 
-  const numeroRefeicoesDiarias = (textoCabecalho) => {
-    switch (textoCabecalho) {
-      case "PARCIAL":
-        return 3;
-      case "INTEGRAL":
-        return 5;
-      default:
-        return 2;
-    }
-  };
+  if (
+    ehEscolaTipoCEMEI(escolaInstituicao) &&
+    periodosEscolaCemeiComAlunosEmei.includes(textoCabecalho)
+  ) {
+    alimentacoesFormatadas = tiposAlimentacao.map((tipoAlimentacao, key) => (
+      <div key={key} className="mb-2">
+        <span style={{ color: cor }}>
+          <b>{quantidadeAlimentacao(tipoAlimentacao.nome)}</b>
+        </span>
+        <span className="ml-1">- {tipoAlimentacao.nome}</span>
+        <br />
+      </div>
+    ));
+  }
 
   const getStatusPeriodo = () => {
     return statusPeriodo(

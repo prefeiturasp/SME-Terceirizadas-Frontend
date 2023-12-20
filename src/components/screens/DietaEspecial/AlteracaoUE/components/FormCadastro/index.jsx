@@ -85,11 +85,6 @@ export default ({
       return;
     }
 
-    if (codigoEol === meusDadosEscola.codigo_eol) {
-      setDadosIniciais({ ...values, nome_escola: undefined });
-      toastError("Escola de destino deve ser diferente da escola de origem.");
-      return;
-    }
     setCarregandoEscola(true);
 
     const params = { codigo_eol: codigoEol };
@@ -102,13 +97,21 @@ export default ({
     }
 
     if (response.results.length) {
-      if (response.results[0].tipo_gestao === "TERC TOTAL") {
+      const tipoGestao = response.results[0].tipo_gestao;
+      const tipoGestaoEhPermitida = [
+        "TERC TOTAL",
+        "DIRETA",
+        "PARCEIRA",
+      ].includes(tipoGestao);
+      if (tipoGestaoEhPermitida) {
         setDadosIniciais({
           ...values,
           nome_escola: response.results[0].nome,
         });
       } else {
-        toastError("Escola não possui gestão Terceirizada Total.");
+        toastError(
+          "Escola não possui gestão Terceirizada Total, Direta ou Parceira."
+        );
       }
     } else {
       toastError("Escola não encontrada no EOL.");

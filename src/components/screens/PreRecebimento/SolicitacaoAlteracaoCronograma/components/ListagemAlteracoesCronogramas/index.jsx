@@ -10,7 +10,7 @@ const ListagemAlteracoesCronogramas = ({
   fornecedor,
 }) => {
   return (
-    <section className="resultado-cronograma-de-entrega">
+    <section className="resultado-solicitacao-alteracao-cronograma-de-entrega">
       <header>Resultados da Pesquisa</header>
       <article className="mt-3">
         <div

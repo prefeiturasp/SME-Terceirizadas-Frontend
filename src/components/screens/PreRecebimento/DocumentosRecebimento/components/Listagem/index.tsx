@@ -7,12 +7,16 @@ import {
   DETALHAR_DOCUMENTO_RECEBIMENTO,
   CORRIGIR_DOCUMENTOS_RECEBIMENTO,
 } from "../../../../../../configs/constants";
+import { downloadArquivoLaudoAssinado } from "services/documentosRecebimento.service";
+import { saveAs } from "file-saver";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 interface Props {
   objetos: Array<DocumentosRecebimento>;
+  setCarregando: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Listagem: React.FC<Props> = ({ objetos }) => {
+const Listagem: React.FC<Props> = ({ objetos, setCarregando }) => {
   const renderizarStatus = (status: string) => {
     const perfilFornecedor =
       JSON.parse(localStorage.getItem("perfil")) === "ADMINISTRADOR_EMPRESA";
@@ -36,6 +40,14 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
       </NavLink>
     );
 
+    const botaoBaixarLaudo = (
+      <span className="link-acoes px-2">
+        <button onClick={() => baixarArquivoLaudo(objeto)}>
+          <i title="Baixar Laudo" className="fas fa-file-download green" />
+        </button>
+      </span>
+    );
+
     const botaoCorrigirLaranja = (
       <NavLink
         className="float-left"
@@ -52,8 +64,21 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
         {["Enviado para Análise", "Aprovado"].includes(objeto.status) &&
           botaoDetalharVerde}
         {objeto.status === "Enviado para Correção" && botaoCorrigirLaranja}
+        {objeto.status === "Aprovado" && botaoBaixarLaudo}
       </>
     );
+  };
+
+  const baixarArquivoLaudo = async (objeto: DocumentosRecebimento) => {
+    setCarregando(true);
+    try {
+      const response = await downloadArquivoLaudoAssinado(objeto.uuid);
+      saveAs(response.data, `laudo_cronograma_${objeto.numero_cronograma}.pdf`);
+    } catch {
+      toastError("Houve um erro ao baixar o arquivo de Laudo.");
+    } finally {
+      setCarregando(false);
+    }
   };
 
   return (
@@ -79,7 +104,7 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
                 <div>{objeto.nome_produto}</div>
                 <div>{objeto.criado_em}</div>
                 <div>{renderizarStatus(objeto.status)}</div>
-                <div>{renderizarAcoes(objeto)}</div>
+                <div className="actions">{renderizarAcoes(objeto)}</div>
               </div>
             </>
           );

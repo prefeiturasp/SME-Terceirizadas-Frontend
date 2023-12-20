@@ -28,3 +28,15 @@ export const getEscolasComPermissoesLancamentosEspeciais = async () => {
     return data;
   }
 };
+
+export const getPermissoesLancamentosEspeciaisMesAno = async (params: any) => {
+  const url =
+    "medicao-inicial/permissao-lancamentos-especiais/permissoes-lancamentos-especiais-mes-ano/";
+  const response: any = await axios
+    .get(url, { params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

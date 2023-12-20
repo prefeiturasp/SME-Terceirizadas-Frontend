@@ -12,7 +12,8 @@ import { getTerceirizadaUUID } from "services/terceirizada.service";
 import { required, email } from "helpers/fieldValidators";
 import { Spin, Steps } from "antd";
 import {
-  FichaTecnica,
+  CategoriaFichaTecnicaChoices,
+  FichaTecnicaDetalhada,
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
 import { CATEGORIA_OPTIONS } from "../../constants";
@@ -42,7 +43,10 @@ import {
 } from "../../../../../Shareable/Toast/dialogs";
 import { getListaFiltradaAutoCompleteSelect } from "../../../../../../helpers/autoCompleteSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
-import { ResponseFichaTecnica } from "interfaces/responses.interface";
+import { ResponseFichaTecnicaDetalhada } from "interfaces/responses.interface";
+import FormPereciveis from "./components/FormPereciveis";
+import FormNaoPereciveis from "./components/FormNaoPereciveis";
+import { OnChange } from "react-final-form-listeners";
 
 export default () => {
   const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
@@ -58,7 +62,9 @@ export default () => {
     );
   const [desabilitaEndereco, setDesabilitaEndereco] = useState(true);
   const [collapse, setCollapse] = useState([]);
-  const [ficha, setFicha] = useState<FichaTecnica>({} as FichaTecnica);
+  const [ficha, setFicha] = useState<FichaTecnicaDetalhada>(
+    {} as FichaTecnicaDetalhada
+  );
   const [initialValues, setInitialValues] = useState<FichaTecnicaPayload>({});
 
   const onSubmit = (): void => {};
@@ -113,13 +119,13 @@ export default () => {
     }
   };
 
-  const geraInitialValues = (ficha: FichaTecnica): void => {
+  const geraInitialValues = (ficha: FichaTecnicaDetalhada): void => {
     let iniciais: FichaTecnicaPayload = {
-      produto: ficha.produto.nome,
+      produto: ficha.produto?.nome,
       marca: ficha.marca.uuid,
-      categoria: ficha.categoria,
+      categoria: ficha.categoria as CategoriaFichaTecnicaChoices,
       pregao_chamada_publica: ficha.pregao_chamada_publica,
-      fabricante: ficha.fabricante.nome,
+      fabricante: ficha.fabricante?.nome,
       cnpj_fabricante: ficha.cnpj_fabricante,
       cep_fabricante: ficha.cep_fabricante,
       endereco_fabricante: ficha.endereco_fabricante,
@@ -130,6 +136,17 @@ export default () => {
       estado_fabricante: ficha.estado_fabricante,
       email_fabricante: ficha.email_fabricante,
       telefone_fabricante: ficha.telefone_fabricante,
+      prazo_validade: ficha.prazo_validade,
+      numero_registro: ficha.numero_registro,
+      agroecologico: booleanToString(ficha.agroecologico),
+      organico: booleanToString(ficha.organico),
+      mecanismo_controle: ficha.mecanismo_controle,
+      componentes_produto: ficha.componentes_produto,
+      alergenicos: booleanToString(ficha.alergenicos),
+      ingredientes_alergenicos: ficha.ingredientes_alergenicos,
+      gluten: booleanToString(ficha.gluten),
+      lactose: booleanToString(ficha.lactose),
+      lactose_detalhe: ficha.lactose_detalhe,
     };
     setInitialValues(iniciais as FichaTecnicaPayload);
   };
@@ -155,17 +172,49 @@ export default () => {
       email_fabricante: values.email_fabricante || "",
       telefone_fabricante:
         removeCaracteresEspeciais(values.telefone_fabricante) || "",
+      prazo_validade: values.prazo_validade || "",
+      componentes_produto: values.componentes_produto || "",
+      alergenicos: stringToBoolean(values.alergenicos as string),
+      gluten: stringToBoolean(values.gluten as string),
+      lactose: stringToBoolean(values.lactose as string),
+      mecanismo_controle: "",
+      ingredientes_alergenicos: "",
+      lactose_detalhe: "",
+      numero_registro: "",
     };
+    if (payload.alergenicos) {
+      payload.ingredientes_alergenicos = values.ingredientes_alergenicos || "";
+    }
+    if (payload.lactose) {
+      payload.lactose_detalhe = values.lactose_detalhe || "";
+    }
+    if (payload.categoria === "PERECIVEIS") {
+      payload = {
+        ...payload,
+        numero_registro: values.numero_registro || "",
+        agroecologico: stringToBoolean(values.agroecologico as string),
+        organico: stringToBoolean(values.organico as string),
+      };
+      if (payload.organico) {
+        payload.mecanismo_controle = values.mecanismo_controle || "";
+      }
+    }
 
     return payload;
   };
+
+  const stringToBoolean = (str: string): boolean =>
+    str === "1" ? true : str === "0" ? false : undefined;
+
+  const booleanToString = (str: boolean): string =>
+    str === true ? "1" : str === false ? "0" : undefined;
 
   const salvarRascunho = async (values: FichaTecnicaPayload) => {
     const payload = formataPayload(values);
 
     try {
       setCarregando(true);
-      let response: ResponseFichaTecnica;
+      let response: ResponseFichaTecnicaDetalhada;
       if (ficha.uuid) {
         response = await editaRascunhoFichaTecnica(payload, ficha.uuid);
       } else {
@@ -235,7 +284,7 @@ export default () => {
             onSubmit={onSubmit}
             initialValues={initialValues}
             decorators={[cepCalculator]}
-            render={({ handleSubmit, values }) => (
+            render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="steps">
                   <Steps
@@ -277,6 +326,13 @@ export default () => {
                         "Caso não localize o produto no seletor, faça o cadastro no botão Cadastrar Produto."
                       }
                     />
+                    <OnChange name="produto">
+                      {(value) => {
+                        if (form.getState().dirty) {
+                          form.restart({ produto: value });
+                        }
+                      }}
+                    </OnChange>
                   </div>
                   <div className="col-6">
                     <Field
@@ -335,6 +391,9 @@ export default () => {
                     <span className="font-weight-bold" key={1}>
                       Empresa ou Organização{" "}
                       <span className="verde-escuro">Fabricante</span>
+                    </span>,
+                    <span className="font-weight-bold" key={1}>
+                      Detalhes do <span className="verde-escuro">Produto</span>
                     </span>,
                   ]}
                   id="collapseFichaTecnica"
@@ -560,6 +619,15 @@ export default () => {
                         />
                       </div>
                     </div>
+                  </section>
+
+                  <section id="formProduto">
+                    {values["categoria"] === "PERECIVEIS" && (
+                      <FormPereciveis values={values} />
+                    )}
+                    {values["categoria"] === "NAO_PERECIVEIS" && (
+                      <FormNaoPereciveis values={values} />
+                    )}
                   </section>
                 </Collapse>
 

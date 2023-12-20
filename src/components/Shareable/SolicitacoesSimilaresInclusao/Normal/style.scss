@@ -1,0 +1,46 @@
+@import "../../../../styles/variables.scss";
+
+.value-black p {
+  font-weight: 600;
+}
+
+.solicitacao-similar-info {
+  background-color: #f9f9f9;
+}
+
+.remove-padding {
+  padding: 0px;
+}
+
+table.periodos-emef {
+  width: 98%;
+  margin-left: 1em;
+
+  thead {
+    tr {
+      background-color: $grayBackground;
+      color: $blackInput;
+
+      th {
+        padding: 1em;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      color: $blackSubtle;
+      border-left: 1px solid #c0c0c0;
+      border-right: 1px solid #c0c0c0;
+
+      td {
+        padding: 0.5em;
+        border-bottom: 1px solid #c0c0c0;
+      }
+    }
+  }
+}
+
+.bg-black {
+  background-color: #333333 !important;
+}

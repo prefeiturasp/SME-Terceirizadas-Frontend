@@ -445,6 +445,10 @@ export const usuarioEscolaEhGestaoDireta = () => {
   return [TIPO_GESTAO.DIRETA].includes(localStorage.getItem("tipo_gestao"));
 };
 
+export const usuarioEscolaEhGestaoParceira = () => {
+  return [TIPO_GESTAO.PARCEIRA].includes(localStorage.getItem("tipo_gestao"));
+};
+
 export const usuarioEhEscolaAbastecimentoDiretor = () => {
   return (
     localStorage.getItem("perfil") === PERFIL.DIRETOR_UE &&
@@ -1133,4 +1137,14 @@ export const getISOLocalDatetimeString = () => {
     date.getTime() - date.getTimezoneOffset() * 60000
   ).toISOString();
   return isoDateTime;
+};
+
+export const getAmanha = () => {
+  const amanha = new Date();
+  amanha.setDate(amanha.getDate() + 1);
+  return amanha;
+};
+
+export const maxEntreDatas = (arrayDeDatas) => {
+  return new Date(Math.max(...arrayDeDatas));
 };
