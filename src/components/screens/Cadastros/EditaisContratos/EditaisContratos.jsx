@@ -27,6 +27,7 @@ import { SectionFormEdital } from "./SectionFormEdital";
 import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
+import { Spin } from "antd";
 import { Redirect } from "react-router-dom";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
@@ -94,50 +95,6 @@ class EditaisContratos extends Component {
       this.excluirContratoRelacionado.bind(this);
   }
 
-  componentDidUpdate(prevState) {
-    if (prevState.uuid !== this.state.uuid) {
-      const { loading } = this.state;
-      if (loading) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const uuid = urlParams.get("uuid");
-        this.setState({ uuid });
-        if (uuid) {
-          obtemEdital(uuid).then((response) => {
-            this.props.reset("cadastroEditaisForm");
-            response.data.contratos.forEach((contrato, indice_contrato) => {
-              if (indice_contrato !== 0) {
-                this.nomeFormAtual();
-                this.adicionaContratosRelacionados();
-              }
-              let contratos_relacionados = montaContratoRelacionado(
-                this.state.contratos_relacionados,
-                contrato,
-                indice_contrato
-              );
-
-              let edital = this.state.edital;
-              edital["tipo_contratacao"] = response.data.tipo_contratacao;
-              edital["numero"] = response.data.numero;
-              edital["numero_processo"] = response.data.processo;
-              edital["resumo"] = response.data.objeto;
-
-              this.setState({ contratos_relacionados, edital });
-            });
-            if (this.state.edital.resumo.length > 0) {
-              this.setState({ atualizacao: true });
-            }
-            this.props.loadEdital(response.data);
-          });
-        } else {
-          this.props.reset("cadastroEditaisForm");
-        }
-        this.setState({
-          loading: false,
-        });
-      }
-    }
-  }
-
   excluirEdital(uuid) {
     if (window.confirm("Tem certeza que deseja excluir o lote?")) {
       excluirEdital(uuid).then(
@@ -160,26 +117,29 @@ class EditaisContratos extends Component {
   }
 
   adicionaContratosRelacionados() {
-    this.setState({
-      contratos_relacionados: this.state.contratos_relacionados.concat([
+    const CONTRATO_VAZIO = {
+      vigencias: [
         {
-          vigencias: [
-            {
-              data_inicial: null,
-              data_final: null,
-            },
-          ],
-          numero_contrato: null,
-          processo_administrativo: null,
-          data_proposta: null,
-          lotes: null,
-          lotes_nomes: null,
-          dres: null,
-          dres_nomes: null,
-          empresas: null,
-          empresas_nomes: null,
+          data_inicial: null,
+          data_final: null,
         },
-      ]),
+      ],
+      numero_contrato: null,
+      processo_administrativo: null,
+      data_proposta: null,
+      lotes: null,
+      lotes_nomes: null,
+      dres: null,
+      dres_nomes: null,
+      empresas: null,
+      empresas_nomes: null,
+    };
+
+    const contratos_relacionados = this.state.contratos_relacionados;
+    contratos_relacionados.push(CONTRATO_VAZIO);
+
+    this.setState({
+      contratos_relacionados,
     });
   }
 
@@ -368,6 +328,54 @@ class EditaisContratos extends Component {
   }
 
   componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+    this.setState({ uuid });
+
+    if (uuid) {
+      obtemEdital(uuid)
+        .then((response) => {
+          response.data.contratos.forEach((contrato, indice_contrato) => {
+            if (indice_contrato !== 0) {
+              this.nomeFormAtual();
+              this.adicionaContratosRelacionados();
+            }
+            let contratos_relacionados = montaContratoRelacionado(
+              this.state.contratos_relacionados,
+              contrato,
+              indice_contrato
+            );
+
+            let edital = this.state.edital;
+            edital["tipo_contratacao"] = response.data.tipo_contratacao;
+            edital["numero"] = response.data.numero;
+            edital["numero_processo"] = response.data.processo;
+            edital["resumo"] = response.data.objeto;
+
+            this.setState({
+              contratos_relacionados,
+              edital,
+            });
+          });
+
+          if (this.state.edital?.resumo?.length > 0) {
+            this.setState({ atualizacao: true });
+          }
+          this.props.loadEdital(response.data);
+        })
+        .finally(() => {
+          this.setState({
+            loading: false,
+          });
+        });
+    } else {
+      this.props.reset("cadastroEditaisForm");
+      this.resetForm();
+      this.setState({
+        loading: false,
+      });
+    }
+
     getLotes().then((response) => {
       this.setState({ lotes: normalizaLabelValueLote(response.results) });
     });
@@ -396,7 +404,6 @@ class EditaisContratos extends Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
     const {
       lotes,
       forms,
@@ -408,120 +415,122 @@ class EditaisContratos extends Component {
       contratos_relacionados,
       atualizacao,
       uuid,
+      loading,
     } = this.state;
+
     return (
-      <section className="cadastro pt-3">
-        {this.renderRedirect()}
-        <ModalCadastroEdital
-          closeModal={this.fecharModal}
-          showModal={exibirModal}
-          edital_contratos={edital_contratos}
-          onSubmit={this.onSubmit}
-        />
-        <form
-          onSubmit={handleSubmit}
-          onKeyPress={this.onKeyPress}
-          noValidate="novalidate"
-        >
-          <div className="card">
-            <div className="card-body p-0">
-              <header className="header-form">
-                <div className="card-title fw-bold">
-                  Dados do Edital e Contrato
-                </div>
-                <div className="row pt-3">
-                  <div className="col-12">
-                    <Link
-                      to={`/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`}
-                    >
-                      <Botao
-                        texto="Consulta de editais e contratos cadastrados"
-                        style={BUTTON_STYLE.BLUE_OUTLINE}
-                      />
-                    </Link>
+      <Spin tip="Carregando..." spinning={loading}>
+        <section className="cadastro pt-3">
+          {this.renderRedirect()}
+          <ModalCadastroEdital
+            closeModal={this.fecharModal}
+            showModal={exibirModal}
+            edital_contratos={edital_contratos}
+            onSubmit={this.onSubmit}
+          />
+          <form onSubmit={() => {}} noValidate="novalidate">
+            <div className="card">
+              <div className="card-body p-0">
+                <header className="header-form">
+                  <div className="card-title fw-bold">
+                    Dados do Edital e Contrato
                   </div>
-                </div>
-              </header>
-              <SectionFormEdital
-                adicionaFieldsFormEdital={this.adicionaFieldsFormEdital}
-              />
-              <hr />
-              <div className="card-body card-title fw-bold pt-0 pb-0">
-                Contratos Relacionados
-              </div>
-              {forms.map((formEdital, key) => {
-                return (
-                  <FormSection
-                    key={key}
-                    component={ContratosRelacionados}
-                    lotes={lotes}
-                    name={`secaoEdital${key}`}
-                    nomeForm={formEdital}
-                    diretoriasRegionais={diretoriasRegionais}
-                    empresas={empresas}
-                    obtemDadosParaSubmit={this.obtemDadosParaSubmit}
-                    obtemLotesDresouEmpresas={this.obtemLotesDresouEmpresas}
-                    indice={key}
-                    adicionaVigenciaContrato={this.adicionaVigenciaContrato}
-                    adicionaNumeroContrato={this.adicionaNumeroContrato}
-                    adicionarNomesListagem={this.adicionarNomesListagem}
-                    excluirContratoRelacionado={this.excluirContratoRelacionado}
-                    reseta={reseta}
-                    setaResetFormChild={this.setaResetFormChild}
-                    contratos_relacionados={contratos_relacionados}
-                    atualizacao={atualizacao}
-                  />
-                );
-              })}
-
-              <article className="card-body dados-editais">
-                <Botao
-                  className="header-button"
-                  texto="+ Adicionar outro contrato relacionado"
-                  style={BUTTON_STYLE.BLUE_OUTLINE}
-                  onClick={() => {
-                    this.nomeFormAtual();
-                    this.adicionaContratosRelacionados();
-                  }}
+                  <div className="row pt-3">
+                    <div className="col-12">
+                      <Link
+                        to={`/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`}
+                      >
+                        <Botao
+                          texto="Consulta de editais e contratos cadastrados"
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                </header>
+                <SectionFormEdital
+                  adicionaFieldsFormEdital={this.adicionaFieldsFormEdital}
                 />
-              </article>
-
-              <footer>
-                <div className="card-body row">
-                  <div className="col-12 text-end">
-                    {!uuid ? (
-                      <Botao
-                        texto="Cancelar"
-                        onClick={() => {
-                          this.resetForm();
-                        }}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                      />
-                    ) : (
-                      <Botao
-                        texto="Excluir"
-                        onClick={() => {
-                          this.excluirEdital(uuid);
-                        }}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                      />
-                    )}
-                    <Botao
-                      texto={"Salvar"}
-                      onClick={() => {
-                        this.salvaFormulario();
-                      }}
-                      className="ms-3"
-                      type={BUTTON_TYPE.SUBMIT}
-                      style={BUTTON_STYLE.GREEN}
-                    />
-                  </div>
+                <hr />
+                <div className="card-body card-title fw-bold pt-0 pb-0">
+                  Contratos Relacionados
                 </div>
-              </footer>
+                {forms.map((formEdital, key) => {
+                  return (
+                    <FormSection
+                      key={key}
+                      component={ContratosRelacionados}
+                      lotes={lotes}
+                      name={`secaoEdital${key}`}
+                      nomeForm={formEdital}
+                      diretoriasRegionais={diretoriasRegionais}
+                      empresas={empresas}
+                      obtemDadosParaSubmit={this.obtemDadosParaSubmit}
+                      obtemLotesDresouEmpresas={this.obtemLotesDresouEmpresas}
+                      indice={key}
+                      adicionaVigenciaContrato={this.adicionaVigenciaContrato}
+                      adicionaNumeroContrato={this.adicionaNumeroContrato}
+                      adicionarNomesListagem={this.adicionarNomesListagem}
+                      excluirContratoRelacionado={
+                        this.excluirContratoRelacionado
+                      }
+                      reseta={reseta}
+                      setaResetFormChild={this.setaResetFormChild}
+                      contratos_relacionados={contratos_relacionados}
+                      atualizacao={atualizacao}
+                    />
+                  );
+                })}
+
+                <article className="card-body dados-editais">
+                  <Botao
+                    className="header-button"
+                    texto="+ Adicionar outro contrato relacionado"
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={() => {
+                      this.nomeFormAtual();
+                      this.adicionaContratosRelacionados();
+                    }}
+                  />
+                </article>
+
+                <footer>
+                  <div className="card-body row">
+                    <div className="col-12 text-end">
+                      {!uuid ? (
+                        <Botao
+                          texto="Cancelar"
+                          onClick={() => {
+                            this.resetForm();
+                          }}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                      ) : (
+                        <Botao
+                          texto="Excluir"
+                          onClick={() => {
+                            this.excluirEdital(uuid);
+                          }}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                      )}
+                      <Botao
+                        texto={"Salvar"}
+                        onClick={() => {
+                          this.salvaFormulario();
+                        }}
+                        className="ms-3"
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN}
+                      />
+                    </div>
+                  </div>
+                </footer>
+              </div>
             </div>
-          </div>
-        </form>
-      </section>
+          </form>
+        </section>
+      </Spin>
     );
   }
 }
