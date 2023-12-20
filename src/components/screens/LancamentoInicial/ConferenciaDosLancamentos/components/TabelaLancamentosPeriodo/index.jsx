@@ -27,7 +27,7 @@ import {
   formatarLinhasTabelasDietas,
   formatarLinhasTabelaSolicitacoesAlimentacao,
   formatarLinhasTabelaEtecAlimentacao,
-  getPermissoesLancamentosEspeciaisMesAnoAsync,
+  getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync,
   getSolicitacoesInclusaoAutorizadasAsync,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
@@ -469,22 +469,22 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   .includes(periodoGrupo.nome_periodo_grupo);
                 let alimentacoesLancamentosEspeciais = null;
                 if (ehPeriodoSimples) {
-                  const response_permissoes_lancamentos_especiais_mes_ano =
-                    await getPermissoesLancamentosEspeciaisMesAnoAsync(
+                  const response_permissoes_lancamentos_especiais_mes_ano_por_periodo =
+                    await getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync(
                       solicitacao.escola_uuid,
                       mesSolicitacao,
                       anoSolicitacao,
                       periodoGrupo.nome_periodo_grupo
                     );
                   alimentacoesLancamentosEspeciais =
-                    response_permissoes_lancamentos_especiais_mes_ano.alimentacoes_lancamentos_especiais;
+                    response_permissoes_lancamentos_especiais_mes_ano_por_periodo.alimentacoes_lancamentos_especiais;
                   setAlimentacoesLancamentosEspeciais(
-                    response_permissoes_lancamentos_especiais_mes_ano.alimentacoes_lancamentos_especiais?.map(
+                    response_permissoes_lancamentos_especiais_mes_ano_por_periodo.alimentacoes_lancamentos_especiais?.map(
                       (ali) => ali.name
                     )
                   );
                   setDataInicioPermissoes(
-                    response_permissoes_lancamentos_especiais_mes_ano.data_inicio_permissoes
+                    response_permissoes_lancamentos_especiais_mes_ano_por_periodo.data_inicio_permissoes
                   );
                 }
                 const tiposAlimentacaoFormatadas =
