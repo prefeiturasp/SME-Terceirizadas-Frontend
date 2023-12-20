@@ -17,6 +17,7 @@ import {
   styleBotaoCardLancamento,
   textoBotaoCardLancamento,
 } from "../helpers";
+import { deepCopy } from "helpers/utilities";
 
 export const CardLancamento = ({
   textoCabecalho = null,
@@ -33,6 +34,7 @@ export const CardLancamento = ({
   periodoEspecifico = null,
   frequenciasDietasCEUGESTAO,
   errosAoSalvar,
+  periodosPermissoesLancamentosEspeciais,
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -89,7 +91,19 @@ export const CardLancamento = ({
       </div>
     ));
   } else {
-    alimentacoesFormatadas = tipos_alimentacao
+    let copy_tipos_alimentacao = deepCopy(tipos_alimentacao);
+    if (
+      periodosPermissoesLancamentosEspeciais
+        ?.find(
+          (periodoPermissao) => periodoPermissao.periodo === textoCabecalho
+        )
+        ?.alimentacoes.includes("Lanche Extra")
+    ) {
+      copy_tipos_alimentacao.push({
+        nome: "Lanche Extra",
+      });
+    }
+    alimentacoesFormatadas = copy_tipos_alimentacao
       .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
       .map((alimentacao, key) => (
         <div key={key} className="mb-2">
