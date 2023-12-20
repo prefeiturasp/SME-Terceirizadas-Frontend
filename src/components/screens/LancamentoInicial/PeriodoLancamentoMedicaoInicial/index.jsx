@@ -77,7 +77,7 @@ import {
   ehDiaParaCorrigir,
   formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
-  getPermissoesLancamentosEspeciaisMesAnoAsync,
+  getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
   getSolicitacoesInclusaoAutorizadasAsync,
   getSolicitacoesInclusoesEtecAutorizadasAsync,
@@ -865,7 +865,7 @@ export default () => {
       let response_kit_lanches_autorizadas = [];
       let response_suspensoes_autorizadas = [];
       let response_alteracoes_alimentacao_autorizadas = [];
-      let response_permissoes_lancamentos_especiais_mes_ano = [];
+      let response_permissoes_lancamentos_especiais_mes_ano_por_periodo = [];
 
       if (!ehGrupoSolicitacoesDeAlimentacaoUrlParam && !ehGrupoETECUrlParam) {
         const params_matriculados = {
@@ -901,27 +901,27 @@ export default () => {
         );
 
         if (ehPeriodoSimples) {
-          response_permissoes_lancamentos_especiais_mes_ano =
-            await getPermissoesLancamentosEspeciaisMesAnoAsync(
+          response_permissoes_lancamentos_especiais_mes_ano_por_periodo =
+            await getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync(
               escola.uuid,
               mes,
               ano,
               periodo.periodo_escolar.nome
             );
           setPermissoesLancamentosEspeciaisPorDia(
-            response_permissoes_lancamentos_especiais_mes_ano.permissoes_por_dia
+            response_permissoes_lancamentos_especiais_mes_ano_por_periodo.permissoes_por_dia
           );
           setAlimentacoesLancamentosEspeciais(
-            response_permissoes_lancamentos_especiais_mes_ano.alimentacoes_lancamentos_especiais?.map(
+            response_permissoes_lancamentos_especiais_mes_ano_por_periodo.alimentacoes_lancamentos_especiais?.map(
               (ali) => ali.name
             )
           );
           setDataInicioPermissoes(
-            response_permissoes_lancamentos_especiais_mes_ano.data_inicio_permissoes
+            response_permissoes_lancamentos_especiais_mes_ano_por_periodo.data_inicio_permissoes
           );
 
           const alimentacoesLancamentosEspeciais =
-            response_permissoes_lancamentos_especiais_mes_ano.alimentacoes_lancamentos_especiais;
+            response_permissoes_lancamentos_especiais_mes_ano_por_periodo.alimentacoes_lancamentos_especiais;
           const indexLanche = tiposAlimentacaoFormatadas.findIndex(
             (ali) => ali.nome === "Lanche"
           );
