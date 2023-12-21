@@ -75,9 +75,11 @@ export const InformacoesMedicaoInicialCEI = ({
   const getAlunos = async () => {
     const response = await getAlunosListagem({
       escola: escolaInstituicao.uuid,
+      periodo_escolar_nome: "INTEGRAL",
+      sem_paginacao: true,
     });
     if (response.status === HTTP_STATUS.OK) {
-      setAlunos(response.data.results);
+      setAlunos(response.data);
       setLoading(false);
     } else {
       toastError("Houve um erro ao buscar alunos desta escola");
