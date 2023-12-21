@@ -406,7 +406,7 @@ export default () => {
                     <div className="card mt-3">
                       <div className={`card-header card-tipo`} id={`heading_1`}>
                         <div className="row card-header-content">
-                          <span className="nome-alimento">
+                          <span className="col-11 nome-alimento">
                             Dados do Produto
                           </span>
                           <div className="col-1 align-self-center">
@@ -414,8 +414,8 @@ export default () => {
                               onClick={() => toggleCollapse(1)}
                               className="btn btn-link btn-block text-end px-0"
                               type="button"
-                              data-toggle="collapse"
-                              data-target={`#collapse_1`}
+                              data-bs-toggle="collapse"
+                              data-bs-target={`#collapse_1`}
                               aria-expanded="true"
                               aria-controls={`collapse_1`}
                             >
@@ -437,7 +437,7 @@ export default () => {
                         id={`collapse_1`}
                         className="collapse"
                         aria-labelledby="headingOne"
-                        data-parent="#accordionCronograma"
+                        data-bs-parent="#accordionCronograma"
                       >
                         <div className="card-body">
                           <div className="row">
