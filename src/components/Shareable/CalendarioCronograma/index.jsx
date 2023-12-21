@@ -25,10 +25,10 @@ export const CalendarioCronograma = ({
 
   useEffect(() => {
     getObjetosAsync();
-  });
+  }, []);
 
   const getObjetosAsync = async (params) => {
-    this.setState({ loadingDiasCalendario: true });
+    setLoadingDiasCalendario(true);
     const response = await getObjetos(
       params ? { mes: params.mes, ano: params.ano } : { mes, ano }
     );
@@ -52,8 +52,8 @@ export const CalendarioCronograma = ({
           {objetos && (
             <>
               <p>
-                Para cadastrar um dia para {nomeObjetoMinusculo}, clique sobre o
-                dia e selecione o tipo de unidade.
+                Para visualizar detalhes dos {nomeObjetoMinusculo}, clique sobre
+                o item no dia programado.
               </p>
               <Spin
                 tip={`Carregando dias de ${nomeObjeto}...`}
@@ -94,8 +94,6 @@ export const CalendarioCronograma = ({
               {showModalCronograma && currentEvent && (
                 <ModalCronograma
                   showModal={showModalCronograma}
-                  nomeObjetoNoCalendario={nomeObjeto}
-                  nomeObjetoNoCalendarioMinusculo={nomeObjetoMinusculo}
                   closeModal={() => setShowModalCronograma(false)}
                   event={currentEvent}
                   setShowModalConfirmarExclusao={() => {}}

@@ -23,8 +23,8 @@ export default () => (
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
     <CalendarioCronograma
       getObjetos={getCalendarioCronogramas}
-      nomeObjeto="Calendario de Cronogramas"
-      nomeObjetoMinusculo="calendario de cronogramas"
+      nomeObjeto="Cronogramas"
+      nomeObjetoMinusculo="cronogramas"
     />
   </Page>
 );

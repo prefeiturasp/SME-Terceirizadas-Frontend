@@ -1,25 +1,23 @@
-export const formataComoEventos = (diasSobremesaDoce) => {
+export const formataComoEventos = (etapas) => {
   const eventos = [];
-  diasSobremesaDoce.forEach((diaSobremesaDoce) => {
+  etapas.forEach((etapa) => {
     eventos.push({
-      title: diaSobremesaDoce.nome_produto,
-      data: diaSobremesaDoce.data_programada,
+      ...etapa,
+      title: etapa.nome_produto,
+      data: etapa.data_programada,
       start: new Date(
-        parseInt(diaSobremesaDoce.data_programada.split("/")[2]),
-        parseInt(diaSobremesaDoce.data_programada.split("/")[1]) - 1,
-        parseInt(diaSobremesaDoce.data_programada.split("/")[0]),
+        parseInt(etapa.data_programada.split("/")[2]),
+        parseInt(etapa.data_programada.split("/")[1]) - 1,
+        parseInt(etapa.data_programada.split("/")[0]),
         0
       ),
       end: new Date(
-        parseInt(diaSobremesaDoce.data_programada.split("/")[2]),
-        parseInt(diaSobremesaDoce.data_programada.split("/")[1]) - 1,
-        parseInt(diaSobremesaDoce.data_programada.split("/")[0]),
+        parseInt(etapa.data_programada.split("/")[2]),
+        parseInt(etapa.data_programada.split("/")[1]) - 1,
+        parseInt(etapa.data_programada.split("/")[0]),
         1
       ),
       allDay: true,
-      // criado_por: diaSobremesaDoce.criado_por,
-      // criado_em: diaSobremesaDoce.criado_em,
-      uuid: diaSobremesaDoce.uuid,
     });
   });
   return eventos;
