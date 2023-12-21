@@ -76,6 +76,7 @@ export const InformacoesMedicaoInicialCEI = ({
     const response = await getAlunosListagem({
       escola: escolaInstituicao.uuid,
       periodo_escolar_nome: "INTEGRAL",
+      inclui_alunos_sem_matricula: true,
       sem_paginacao: true,
     });
     if (response.status === HTTP_STATUS.OK) {
