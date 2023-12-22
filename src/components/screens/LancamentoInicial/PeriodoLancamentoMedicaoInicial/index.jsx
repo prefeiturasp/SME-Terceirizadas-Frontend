@@ -1756,8 +1756,18 @@ export default () => {
     return ehDiaLetivo;
   };
 
-  const classNameFieldTabelaDieta = (row, column, categoria) => {
-    if (
+  const classNameFieldTabelaDieta = (
+    row,
+    column,
+    categoria,
+    inclusoesAutorizadas
+  ) => {
+    const EH_INCLUSAO_SOMENTE_SOBREMESA =
+      inclusoesAutorizadas.length &&
+      inclusoesAutorizadas.every((i) => i.alimentacoes === "sobremesa");
+    if (EH_INCLUSAO_SOMENTE_SOBREMESA) {
+      return "nao-eh-dia-letivo";
+    } else if (
       (Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
         String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
       ) ||
@@ -2017,7 +2027,8 @@ export default () => {
         location,
         valoresPeriodosLancamentos[0]?.medicao_uuid,
         validacaoDiaLetivo,
-        dadosValoresInclusoesAutorizadasState
+        dadosValoresInclusoesAutorizadasState,
+        inclusoesAutorizadas
       );
     };
 
@@ -2386,7 +2397,8 @@ export default () => {
                                                         className={`m-2 ${classNameFieldTabelaDieta(
                                                           row,
                                                           column,
-                                                          categoria
+                                                          categoria,
+                                                          inclusoesAutorizadas
                                                         )}`}
                                                         component={
                                                           InputValueMedicao

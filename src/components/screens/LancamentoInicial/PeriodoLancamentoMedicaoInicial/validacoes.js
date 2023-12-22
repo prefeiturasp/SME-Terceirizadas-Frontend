@@ -708,7 +708,8 @@ export const validacoesTabelasDietas = (
   location,
   medicaoUuid,
   validacaoDiaLetivo,
-  dadosValoresInclusoesAutorizadasState
+  dadosValoresInclusoesAutorizadasState,
+  inclusoesAutorizadas
 ) => {
   const idCategoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
     categoria.nome.includes("ALIMENTAÇÃO")
@@ -741,6 +742,10 @@ export const validacoesTabelasDietas = (
       !String(key).includes("frequencia")
   );
 
+  const EH_INCLUSAO_SOMENTE_SOBREMESA =
+    inclusoesAutorizadas.length &&
+    inclusoesAutorizadas.every((i) => i.alimentacoes === "sobremesa");
+
   if (
     rowName === "frequencia" &&
     Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
@@ -749,7 +754,10 @@ export const validacoesTabelasDietas = (
     !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
     alimentacoesDoDia.some((ali) => allValues[ali])
   ) {
-    if (!value || (value && Number(value) !== 0 && validacaoDiaLetivo(dia))) {
+    if (
+      !EH_INCLUSAO_SOMENTE_SOBREMESA &&
+      (!value || (value && Number(value) !== 0 && validacaoDiaLetivo(dia)))
+    ) {
       return `Foi autorizada inclusão de alimentação ${
         location.state && location.state.grupo ? "contínua" : ""
       } nesta data. Informe a frequência de alunos.`;

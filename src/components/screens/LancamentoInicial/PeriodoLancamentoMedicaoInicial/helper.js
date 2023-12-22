@@ -265,6 +265,12 @@ export const desabilitarField = (
   permissoesLancamentosEspeciaisPorDia,
   alimentacoesLancamentosEspeciais
 ) => {
+  const EH_INCLUSAO_SOMENTE_SOBREMESA =
+    inclusoesAutorizadas.length &&
+    inclusoesAutorizadas.every((i) => i.alimentacoes === "sobremesa");
+  if (nomeCategoria.includes("DIETA") && EH_INCLUSAO_SOMENTE_SOBREMESA) {
+    return true;
+  }
   const valorField = valoresPeriodosLancamentos.some(
     (valor) =>
       String(valor.categoria_medicao) === String(categoria) &&
