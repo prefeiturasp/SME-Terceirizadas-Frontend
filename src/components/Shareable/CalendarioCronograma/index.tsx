@@ -39,14 +39,12 @@ export const CalendarioCronograma: React.FC<Props> = ({
   const [ano, setAno] = useState<number>(moment().year());
 
   useEffect(() => {
-    getObjetosAsync();
-  }, []);
+    getObjetosAsync({ mes, ano });
+  }, [mes, ano]);
 
-  const getObjetosAsync = async (params?: ParametrosCalendario) => {
+  const getObjetosAsync = async (params: ParametrosCalendario) => {
     setLoadingDiasCalendario(true);
-    const response = await getObjetos(
-      params ? { mes: params.mes, ano: params.ano } : { mes, ano }
-    );
+    const response = await getObjetos(params);
     if (response.status === HTTP_STATUS.OK) {
       setObjetos(formataComoEventos(response.data.results));
     }
@@ -98,10 +96,6 @@ export const CalendarioCronograma: React.FC<Props> = ({
                   onNavigate={(date: Date) => {
                     setMes(date.getMonth() + 1);
                     setAno(date.getFullYear());
-                    getObjetosAsync({
-                      mes: date.getMonth() + 1,
-                      ano: date.getFullYear(),
-                    });
                   }}
                   defaultView={Views.MONTH}
                 />

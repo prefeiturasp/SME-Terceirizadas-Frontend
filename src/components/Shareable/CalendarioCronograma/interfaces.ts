@@ -8,6 +8,6 @@ export interface ItemCalendario<T> {
 }
 
 export interface ParametrosCalendario {
-  ano?: number;
-  mes?: number;
+  ano: number;
+  mes: number;
 }
