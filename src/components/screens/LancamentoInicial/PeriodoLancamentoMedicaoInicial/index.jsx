@@ -1196,7 +1196,8 @@ export default () => {
         tiposAlimentacaoFormatadas &&
           tiposAlimentacaoFormatadas.forEach((alimentacao) => {
             if (
-              categoria.nome.includes("ALIMENTAÇÃO") &&
+              (categoria.nome.includes("ALIMENTAÇÃO") ||
+                categoria.nome.includes("DIETA")) &&
               solInclusoesAutorizadas
             ) {
               const inclusoesFiltradas = solInclusoesAutorizadas.filter(
@@ -1753,6 +1754,20 @@ export default () => {
     );
     const ehDiaLetivo = objDia && objDia.dia_letivo;
     return ehDiaLetivo;
+  };
+
+  const classNameFieldTabelaDieta = (row, column, categoria) => {
+    if (
+      (Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+        String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
+      ) ||
+        `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
+          dadosValoresInclusoesAutorizadasState) &&
+      !ehGrupoSolicitacoesDeAlimentacaoUrlParam
+    ) {
+      return "";
+    }
+    return validacaoDiaLetivo(column.dia) ? "" : "nao-eh-dia-letivo";
   };
 
   const openModalObservacaoDiaria = (dia, categoria) => {
@@ -2366,13 +2381,11 @@ export default () => {
                                                   ) : (
                                                     <div className="field-values-input">
                                                       <Field
-                                                        className={`m-2 ${
-                                                          !validacaoDiaLetivo(
-                                                            column.dia
-                                                          )
-                                                            ? "nao-eh-dia-letivo"
-                                                            : ""
-                                                        }`}
+                                                        className={`m-2 ${classNameFieldTabelaDieta(
+                                                          row,
+                                                          column,
+                                                          categoria
+                                                        )}`}
                                                         component={
                                                           InputValueMedicao
                                                         }
