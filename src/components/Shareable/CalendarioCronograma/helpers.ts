@@ -1,8 +1,12 @@
-export const formataComoEventos = (etapas) => {
-  const eventos = [];
-  etapas.forEach((etapa) => {
+import { EtapaCalendario } from "interfaces/pre_recebimento.interface";
+import { ItemCalendario } from "./interfaces";
+
+export const formataComoEventos = (
+  etapas: EtapaCalendario[]
+): ItemCalendario<EtapaCalendario>[] => {
+  const eventos: ItemCalendario<EtapaCalendario>[] = [];
+  etapas.forEach((etapa: EtapaCalendario) => {
     eventos.push({
-      ...etapa,
       title: etapa.nome_produto,
       data: etapa.data_programada,
       start: new Date(
@@ -18,6 +22,7 @@ export const formataComoEventos = (etapas) => {
         1
       ),
       allDay: true,
+      objeto: etapa,
     });
   });
   return eventos;

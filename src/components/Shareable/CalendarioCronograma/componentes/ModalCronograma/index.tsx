@@ -9,9 +9,20 @@ import "./style.scss";
 import { useHistory } from "react-router-dom";
 import { ALTERACAO_CRONOGRAMA } from "../../../../../configs/constants";
 import { usuarioEhCronograma } from "../../../../../helpers/utilities";
+import { ItemCalendario } from "../../interfaces";
+import { EtapaCalendario } from "interfaces/pre_recebimento.interface";
 
-export const ModalCronograma = ({ ...props }) => {
-  const { event, showModal, closeModal } = props;
+interface Props {
+  event: ItemCalendario<EtapaCalendario>;
+  showModal: boolean;
+  closeModal: () => void;
+}
+
+export const ModalCronograma: React.FC<Props> = ({
+  event,
+  showModal,
+  closeModal,
+}) => {
   const history = useHistory();
 
   return (
@@ -27,43 +38,45 @@ export const ModalCronograma = ({ ...props }) => {
         <div className="row">
           <div className="col-12">
             <span className="fw-bold">Nº do Cronograma: </span>
-            <span className="fw-bold green">{event.numero_cronograma}</span>
+            <span className="fw-bold green">
+              {event.objeto.numero_cronograma}
+            </span>
           </div>
         </div>
         <div className="row">
           <div className="col-12">
             <span className="fw-bold">Nome do Produto: </span>
-            <span>{event.nome_produto}</span>
+            <span>{event.objeto.nome_produto}</span>
           </div>
         </div>
         <div className="row">
           <div className="col-12">
             <span className="fw-bold">Nome do Fornecedor: </span>
-            <span>{event.nome_fornecedor}</span>
+            <span>{event.objeto.nome_fornecedor}</span>
           </div>
         </div>
         <div className="row">
           <div className="col-6">
             <span className="fw-bold">Data da Entrega: </span>
-            <span>{event.data_programada}</span>
+            <span>{event.objeto.data_programada}</span>
           </div>
           <div className="col-6">
             <span className="fw-bold">Empenho: </span>
-            <span>{event.numero_empenho}</span>
+            <span>{event.objeto.numero_empenho}</span>
           </div>
         </div>
         <div className="row">
           <div className="col-4">
             <span className="fw-bold">Etapa: </span>
-            <span>{event.etapa}</span>
+            <span>{event.objeto.etapa}</span>
           </div>
           <div className="col-4">
             <span className="fw-bold">Parte: </span>
-            <span>{event.parte}</span>
+            <span>{event.objeto.parte}</span>
           </div>
           <div className="col-4">
             <span className="fw-bold">Quantidade: </span>
-            <span>{event.quantidade}</span>
+            <span>{event.objeto.quantidade}</span>
           </div>
         </div>
       </Modal.Body>
@@ -74,7 +87,7 @@ export const ModalCronograma = ({ ...props }) => {
             type={BUTTON_TYPE.BUTTON}
             onClick={() => {
               history.push(
-                `${ALTERACAO_CRONOGRAMA}?uuid=${event.uuid_cronograma}`
+                `${ALTERACAO_CRONOGRAMA}?uuid=${event.objeto.uuid_cronograma}`
               );
             }}
             style={BUTTON_STYLE.GREEN_OUTLINE}

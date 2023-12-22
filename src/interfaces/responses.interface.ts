@@ -13,6 +13,7 @@ import {
   DocumentosRecebimentoParaAnalise,
   FichaTecnicaDetalhada,
   FichaTecnica,
+  EtapaCalendario,
 } from "./pre_recebimento.interface";
 
 export interface ResponseInterface {
@@ -115,4 +116,8 @@ export interface ResponseFichasTecnicas extends ResponseInterface {
 
 export interface ResponseFichaTecnicaDetalhada extends ResponseInterface {
   data: FichaTecnicaDetalhada;
+}
+
+export interface ResponseCalendarioCronograma extends ResponseInterface {
+  data: ListagemPaginada<EtapaCalendario>;
 }
