@@ -706,7 +706,9 @@ export const validacoesTabelasDietas = (
   value,
   allValues,
   location,
-  medicaoUuid
+  medicaoUuid,
+  validacaoDiaLetivo,
+  dadosValoresInclusoesAutorizadasState
 ) => {
   const idCategoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
     categoria.nome.includes("ALIMENTAÇÃO")
@@ -731,6 +733,28 @@ export const validacoesTabelasDietas = (
   );
   const totalLanchesDieta = lanche_4h_value + lanche_value;
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
+
+  const alimentacoesDoDia = Object.keys(allValues).filter(
+    (key) =>
+      String(key).includes(`dia_${dia}__categoria_${categoria}`) &&
+      !String(key).includes("numero_de_alunos") &&
+      !String(key).includes("frequencia")
+  );
+
+  if (
+    rowName === "frequencia" &&
+    Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+      String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+    ) &&
+    !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
+    alimentacoesDoDia.some((ali) => allValues[ali])
+  ) {
+    if (!value || (value && Number(value) !== 0 && validacaoDiaLetivo(dia))) {
+      return `Foi autorizada inclusão de alimentação ${
+        location.state && location.state.grupo ? "contínua" : ""
+      } nesta data. Informe a frequência de alunos.`;
+    }
+  }
   if (
     value &&
     Number(value) > maxDietasAutorizadas &&

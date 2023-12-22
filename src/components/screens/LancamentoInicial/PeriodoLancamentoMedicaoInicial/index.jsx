@@ -2015,7 +2015,9 @@ export default () => {
         value,
         allValues,
         location,
-        valoresPeriodosLancamentos[0]?.medicao_uuid
+        valoresPeriodosLancamentos[0]?.medicao_uuid,
+        validacaoDiaLetivo,
+        dadosValoresInclusoesAutorizadasState
       );
     };
 
