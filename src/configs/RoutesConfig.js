@@ -281,6 +281,7 @@ import AnalisarDocumentosRecebimentoPage from "../pages/PreRecebimento/AnalisarD
 import CorrigirDocumentosRecebimentoPage from "../pages/PreRecebimento/CorrigirDocumentosRecebimentoPage";
 import FichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/FichaTecnicaPage";
 import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/CadastroFichaTecnicaPage";
+import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 
 const routesConfig = [
   {
@@ -2070,6 +2071,12 @@ const routesConfig = [
     component: CadastroFichaTecnicaPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
+    component: CalendarioCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
   },
 ];
 
