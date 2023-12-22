@@ -168,3 +168,16 @@ export interface FichaTecnicaDetalhada {
   lactose: boolean;
   lactose_detalhe: string;
 }
+
+export interface EtapaCalendario {
+  data_programada: string;
+  etapa: string;
+  nome_fornecedor: string;
+  nome_produto: string;
+  numero_cronograma: string;
+  numero_empenho: string;
+  parte: string;
+  quantidade: number;
+  uuid: string;
+  uuid_cronograma: string;
+}
