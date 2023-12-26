@@ -172,3 +172,12 @@ export const getQuantidadeAlunosEscola = async (uuidEscola) => {
     return data;
   }
 };
+
+export const getGrupoUnidadeEscolar = async () => {
+  const url = `${API_URL}/grupos-unidade-escolar/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
