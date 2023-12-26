@@ -1,0 +1,8 @@
+@import "styles/variables.scss";
+
+.custom-label {
+  .required-asterisk {
+    color: $red;
+    padding-right: 5px;
+  }
+}
