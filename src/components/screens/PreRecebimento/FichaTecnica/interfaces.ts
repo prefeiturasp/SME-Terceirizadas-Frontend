@@ -8,6 +8,13 @@ export interface OptionsCategoria {
   nome: string;
 }
 
+export interface InformacoesNutricionaisFichaTecnicaPayload {
+  informacao_nutricional: string;
+  quantidade_por_100g: string;
+  quantidade_porcao: string;
+  valor_diario: string;
+}
+
 // boolean | string -> tratado como string no form, enviado como boolean pro backend
 export interface FichaTecnicaPayload {
   produto?: string;
@@ -41,6 +48,7 @@ export interface FichaTecnicaPayload {
   unidade_medida?: string;
   valor_unidade_caseira?: string;
   unidade_medida_caseira?: string;
+  informacoes_nutricionais?: InformacoesNutricionaisFichaTecnicaPayload[];
 }
 
 export interface FiltrosFichaTecnica {
