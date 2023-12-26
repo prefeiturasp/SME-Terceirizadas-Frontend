@@ -135,7 +135,7 @@ export default () => {
   });
 
   const buscaCEP = async (cep: string, values: FichaTecnicaPayload) => {
-    if (cep.length === 9) {
+    if (cep?.length === 9) {
       const response = await getEnderecoPorCEP(cep);
       if (response.status === 200 && !response.data.erro) {
         const { data } = response;
@@ -814,6 +814,7 @@ export default () => {
                           placeholder="Apenas Números"
                           className="input-ficha-tecnica"
                           required
+                          proibeLetras
                           validate={composeValidators(
                             required,
                             inteiroOuDecimal
@@ -838,6 +839,7 @@ export default () => {
                           placeholder="Apenas Números"
                           className="input-ficha-tecnica"
                           required
+                          proibeLetras
                           validate={composeValidators(
                             required,
                             inteiroOuDecimal

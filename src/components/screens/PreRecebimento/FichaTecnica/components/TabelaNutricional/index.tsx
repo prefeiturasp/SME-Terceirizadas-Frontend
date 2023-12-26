@@ -115,6 +115,7 @@ const TabelaNutricional: React.FC<Props> = ({
               <div className="table-cell">
                 <Field
                   component={InputText}
+                  proibeLetras
                   name={`quantidade_por_100g_${informacao.uuid}`}
                   className="input-tabela-nutricional"
                   required
@@ -125,6 +126,7 @@ const TabelaNutricional: React.FC<Props> = ({
               <div className="table-cell">
                 <Field
                   component={InputText}
+                  proibeLetras
                   name={`quantidade_porcao_${informacao.uuid}`}
                   className="input-tabela-nutricional"
                   required
@@ -136,6 +138,7 @@ const TabelaNutricional: React.FC<Props> = ({
                     <span>=</span>
                     <Field
                       component={InputText}
+                      proibeLetras
                       name={`quantidade_porcao_kj_${informacao.uuid}`}
                       className="input-tabela-nutricional"
                       valorInicial={converterDeKcalParaKj(
@@ -150,6 +153,7 @@ const TabelaNutricional: React.FC<Props> = ({
               <div className="table-cell">
                 <Field
                   component={InputText}
+                  proibeLetras
                   name={`valor_diario_${informacao.uuid}`}
                   className="input-tabela-nutricional"
                   required
@@ -190,6 +194,7 @@ const TabelaNutricional: React.FC<Props> = ({
                 <div className="table-cell">
                   <Field
                     component={InputText}
+                    proibeLetras
                     name={`quantidade_por_100g_${informacao.uuid}`}
                     className="input-tabela-nutricional"
                     required
@@ -200,6 +205,7 @@ const TabelaNutricional: React.FC<Props> = ({
                 <div className="table-cell">
                   <Field
                     component={InputText}
+                    proibeLetras
                     name={`quantidade_porcao_${informacao.uuid}`}
                     className="input-tabela-nutricional"
                     required
@@ -211,6 +217,7 @@ const TabelaNutricional: React.FC<Props> = ({
                       <span>=</span>
                       <Field
                         component={InputText}
+                        proibeLetras
                         name={`quantidade_porcao_kj_${informacao.uuid}`}
                         className="input-tabela-nutricional"
                         valorInicial={converterDeKcalParaKj(
@@ -225,6 +232,7 @@ const TabelaNutricional: React.FC<Props> = ({
                 <div className="table-cell">
                   <Field
                     component={InputText}
+                    proibeLetras
                     name={`valor_diario_${informacao.uuid}`}
                     className="input-tabela-nutricional"
                     required
