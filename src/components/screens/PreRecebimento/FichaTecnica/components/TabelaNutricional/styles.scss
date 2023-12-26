@@ -1,0 +1,122 @@
+@import "styles/variables.scss";
+
+.tabela-nutricional {
+  .titulo-verde {
+    color: #0c6b45;
+    font-size: 14px;
+    line-height: 16px;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+
+  article {
+    border-radius: 4px 4px 0px 0px;
+    border: 1px solid #e9eaea;
+    box-sizing: border-box;
+    margin: 10px 0 15px 0;
+
+    .grid-table {
+      height: 40px;
+      font-size: 14px;
+      line-height: 16px;
+      display: grid;
+      align-items: center;
+      text-align: center;
+      grid-template-columns: 0.3fr 0.2fr 0.3fr 0.2fr;
+    }
+
+    .header-table {
+      background: #f5f6f8;
+      color: #42474a;
+      font-weight: bold;
+
+      div {
+        display: grid;
+        align-items: center;
+        text-align: left;
+        height: 100%;
+        border-right: 1px solid #e9eaea;
+        padding: 0;
+        padding-left: 8px;
+
+        &:last-child {
+          border-right: 0px solid #e9eaea;
+        }
+      }
+    }
+
+    .body-table {
+      font-weight: 500;
+      color: #686868;
+      height: 100%;
+
+      .table-cell {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: left;
+        height: 100%;
+        border-right: 1px solid #e9eaea;
+        border-bottom: 1px solid #e9eaea;
+        padding: 8px;
+
+        &:last-child {
+          border-right: 0px solid #e9eaea;
+        }
+
+        input {
+          width: 75px;
+          height: 38px;
+        }
+
+        span {
+          padding: 5px;
+        }
+
+        .informacao-recuada {
+          padding-left: 25px;
+        }
+
+        .select {
+          width: 100%;
+        }
+
+        button {
+          background: none;
+          outline: none;
+          border: none;
+          cursor: pointer;
+          color: #0c6b45;
+          font-size: 14px;
+          font-weight: bold;
+          margin: 5px 0;
+        }
+      }
+
+      .botao-remover-informacao {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+
+        i {
+          color: #42474a;
+        }
+      }
+
+      .error-or-warning-message {
+        padding: 0;
+        .error-message {
+          font-size: 9px;
+        }
+      }
+    }
+  }
+
+  .green {
+    color: $green;
+  }
+
+  .obs-tabela-nutricional {
+    font-size: 12px;
+  }
+}
