@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./styles.scss";
 import { Field, Form } from "react-final-form";
 import SelectSelecione from "components/Shareable/SelectSelecione";
@@ -7,6 +7,7 @@ import {
   getListaCompletaProdutosLogistica,
   getNomesMarcas,
   getNomesFabricantes,
+  getInformacoesNutricionaisOrdenadas,
 } from "services/produto.service";
 import { getEnderecoPorCEP } from "services/cep.service";
 import { getTerceirizadaUUID } from "services/terceirizada.service";
@@ -37,7 +38,10 @@ import {
 } from "../../../../../Shareable/Botao/constants";
 import Botao from "../../../../../Shareable/Botao";
 import { cepMask, cnpjMask, telefoneMask } from "constants/shared";
-import { FichaTecnicaPayload } from "../../interfaces";
+import {
+  FichaTecnicaPayload,
+  InformacoesNutricionaisFichaTecnicaPayload,
+} from "../../interfaces";
 import {
   cadastraRascunhoFichaTecnica,
   editaRascunhoFichaTecnica,
@@ -50,10 +54,15 @@ import {
 } from "../../../../../Shareable/Toast/dialogs";
 import { getListaFiltradaAutoCompleteSelect } from "../../../../../../helpers/autoCompleteSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
-import { ResponseFichaTecnicaDetalhada } from "interfaces/responses.interface";
+import {
+  ResponseFichaTecnicaDetalhada,
+  ResponseInformacoesNutricionais,
+} from "interfaces/responses.interface";
 import FormPereciveis from "./components/FormPereciveis";
 import FormNaoPereciveis from "./components/FormNaoPereciveis";
 import { OnChange } from "react-final-form-listeners";
+import TabelaNutricional from "../TabelaNutricional";
+import { InformacaoNutricional } from "interfaces/produto.interface";
 
 export default () => {
   const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
@@ -77,6 +86,12 @@ export default () => {
   );
   const [initialValues, setInitialValues] = useState<FichaTecnicaPayload>({});
   const [stepAtual, setStepAtual] = useState(0);
+  const listaCompletaInformacoesNutricionais = useRef<InformacaoNutricional[]>(
+    []
+  );
+  const listaInformacoesNutricionaisFichaTecnica = useRef<
+    InformacaoNutricional[]
+  >([]);
 
   const onSubmit = (): void => {};
 
@@ -135,8 +150,30 @@ export default () => {
     }
   };
 
-  const geraInitialValues = (ficha: FichaTecnicaDetalhada): void => {
-    let iniciais: FichaTecnicaPayload = {
+  const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
+    const valuesInformacoesNutricionais = {};
+    ficha?.informacoes_nutricionais.forEach((informacao) => {
+      valuesInformacoesNutricionais[
+        `quantidade_por_100g_${informacao.informacao_nutricional.uuid}`
+      ] = informacao.quantidade_por_100g;
+      valuesInformacoesNutricionais[
+        `quantidade_porcao_${informacao.informacao_nutricional.uuid}`
+      ] = informacao.quantidade_porcao;
+      valuesInformacoesNutricionais[
+        `valor_diario_${informacao.informacao_nutricional.uuid}`
+      ] = informacao.valor_diario;
+    });
+
+    const valuesSelect = {};
+    ficha?.informacoes_nutricionais
+      .filter(({ informacao_nutricional }) => !informacao_nutricional.eh_fixo)
+      .forEach((informacao, index) => {
+        valuesSelect[`informacao_adicional_${index}`] =
+          informacao.informacao_nutricional.uuid;
+      });
+
+    return {
+      ...initialValues,
       produto: ficha.produto?.nome,
       marca: ficha.marca.uuid,
       categoria: ficha.categoria as CategoriaFichaTecnicaChoices,
@@ -164,15 +201,15 @@ export default () => {
       lactose: booleanToString(ficha.lactose),
       lactose_detalhe: ficha.lactose_detalhe,
       porcao: ficha.porcao,
-      unidade_medida: ficha.unidade_medida.uuid,
+      unidade_medida: ficha.unidade_medida?.uuid,
       valor_unidade_caseira: ficha.valor_unidade_caseira,
       unidade_medida_caseira: ficha.unidade_medida_caseira,
+      ...valuesInformacoesNutricionais,
+      ...valuesSelect,
     };
-
-    setInitialValues(iniciais as FichaTecnicaPayload);
   };
 
-  const formataPayload = (values: FichaTecnicaPayload): FichaTecnicaPayload => {
+  const formataPayload = (values: Record<string, any>): FichaTecnicaPayload => {
     let payload: FichaTecnicaPayload = {
       produto: produtosOptions.find((p) => p.nome === values.produto)?.uuid,
       marca: values.marca,
@@ -203,9 +240,10 @@ export default () => {
       lactose_detalhe: "",
       numero_registro: "",
       porcao: values.porcao || "",
-      unidade_medida: values.unidade_medida || "",
+      unidade_medida: values.unidade_medida || null,
       valor_unidade_caseira: values.valor_unidade_caseira || "",
       unidade_medida_caseira: values.unidade_medida_caseira || "",
+      informacoes_nutricionais: formataInformacoesNutricionais(values),
     };
     if (payload.alergenicos) {
       payload.ingredientes_alergenicos = values.ingredientes_alergenicos || "";
@@ -234,6 +272,23 @@ export default () => {
   const booleanToString = (str: boolean): string =>
     str === true ? "1" : str === false ? "0" : undefined;
 
+  const formataInformacoesNutricionais = (values: Record<string, any>) => {
+    const uuids_informacoes = Object.keys(values)
+      .filter((key) => key.startsWith("quantidade_por_100g_"))
+      .map((key) => key.split("_").pop());
+
+    const payload = uuids_informacoes.map((uuid) => {
+      return {
+        informacao_nutricional: uuid,
+        quantidade_por_100g: values[`quantidade_por_100g_${uuid}`],
+        quantidade_porcao: values[`quantidade_porcao_${uuid}`],
+        valor_diario: values[`valor_diario_${uuid}`],
+      };
+    });
+
+    return payload as InformacoesNutricionaisFichaTecnicaPayload[];
+  };
+
   const salvarRascunho = async (values: FichaTecnicaPayload) => {
     const payload = formataPayload(values);
 
@@ -260,15 +315,30 @@ export default () => {
   };
 
   const carregarDados = async (): Promise<void> => {
+    const responseInformacoes: ResponseInformacoesNutricionais =
+      await getInformacoesNutricionaisOrdenadas();
+    listaCompletaInformacoesNutricionais.current =
+      responseInformacoes.data.results;
+
+    let initialValues = {};
+
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      const response = await getFichaTecnica(uuid);
+      const responseFicha = await getFichaTecnica(uuid);
+      const fichaTecnica = responseFicha.data;
 
-      const objeto = response.data;
-      setFicha(objeto);
-      geraInitialValues(objeto);
+      listaInformacoesNutricionaisFichaTecnica.current =
+        fichaTecnica.informacoes_nutricionais.map(
+          ({ informacao_nutricional }) => informacao_nutricional
+        );
+
+      setFicha(fichaTecnica);
+
+      initialValues = { ...geraInitialValues(fichaTecnica) };
     }
+
+    setInitialValues(initialValues);
   };
 
   useEffect(() => {
@@ -785,10 +855,22 @@ export default () => {
                         />
                       </div>
                     </div>
+
+                    <TabelaNutricional
+                      values={values}
+                      listaCompletaInformacoesNutricionais={
+                        listaCompletaInformacoesNutricionais.current
+                      }
+                      informacoesNutricionaisFichaTecnica={
+                        listaInformacoesNutricionaisFichaTecnica.current
+                      }
+                    />
                   </>
                 )}
 
-                {stepAtual < 2 && (
+                <hr />
+
+                {stepAtual === 0 && (
                   <div className="mt-4 mb-4">
                     <Botao
                       texto="Próximo"
@@ -800,6 +882,7 @@ export default () => {
                     />
                   </div>
                 )}
+
                 <div className="mt-4 mb-4">
                   <Botao
                     texto="Salvar Rascunho"
@@ -810,7 +893,7 @@ export default () => {
                     disabled={validaRascunho(values)}
                   />
                 </div>
-                {stepAtual > 0 && (
+                {stepAtual === 1 && (
                   <div className="mt-4 mb-4">
                     <Botao
                       texto="Anterior"
