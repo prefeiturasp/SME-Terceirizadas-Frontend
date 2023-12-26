@@ -1,0 +1,42 @@
+@import "styles/variables.scss";
+
+.modal-relatorio-unificado {
+  width: 40vw !important;
+  max-width: 40vw !important;
+  margin-top: 35vh !important;
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: $blackInput;
+  }
+
+  .modal-body {
+    font-size: 15px;
+    padding-left: 1.5rem;
+
+    .ant-radio-group {
+      padding: 0 0 1.5rem 1.5rem;
+      gap: 20px;
+
+      .ant-radio-wrapper {
+        .ant-radio-inner {
+          background-color: #f0f0f0;
+          border-color: #666666;
+        }
+
+        .ant-radio-inner::after {
+          background-color: $green;
+        }
+      }
+
+      .ant-radio-wrapper:hover .ant-radio-inner,
+      .ant-radio:hover .ant-radio-inner,
+      .ant-radio-input:focus + .ant-radio-inner,
+      .ant-radio-inner::after,
+      .ant-radio-checked .ant-radio-inner {
+        border-color: $green;
+      }
+    }
+  }
+}

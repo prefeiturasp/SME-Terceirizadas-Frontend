@@ -20,8 +20,10 @@ const ModalSolicitacaoDownload = ({ show, setShow }) => {
         <Modal.Title>Geração solicitada com sucesso.</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Como este arquivo poderá ser muito grande, acompanhe o seu processamento
-        na Central de Downloads.
+        <p>
+          Como este arquivo poderá ser muito grande, acompanhe o seu
+          processamento na Central de Downloads.
+        </p>
       </Modal.Body>
       <Modal.Footer>
         <Botao
