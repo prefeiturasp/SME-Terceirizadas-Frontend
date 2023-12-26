@@ -29,7 +29,7 @@ export class ModalCadastroEdital extends Component {
   }
 
   render() {
-    const { showModal, closeModal, edital_contratos } = this.props;
+    const { showModal, closeModal, edital_contratos, submitting } = this.props;
     return (
       <Modal dialogClassName=" modal-90w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -152,6 +152,7 @@ export class ModalCadastroEdital extends Component {
           <Botao
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
+            disabled={submitting}
             onClick={() => {
               this.onSubmit();
             }}

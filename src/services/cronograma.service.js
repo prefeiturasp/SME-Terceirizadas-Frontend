@@ -135,3 +135,6 @@ export const imprimirCronograma = async (uuid, numero) => {
 export const getUnidadesDeMedidaLogistica = async () => {
   return await axios.get(`/unidades-medida-logistica/lista-nomes-abreviacoes/`);
 };
+
+export const getCalendarioCronogramas = async (params) =>
+  await axios.get("/calendario-cronogramas/", { params });

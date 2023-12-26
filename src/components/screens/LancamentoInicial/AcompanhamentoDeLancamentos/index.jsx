@@ -52,6 +52,7 @@ import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownl
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import { MEDICAO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import { updateSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import ModalRelatorioUnificado from "./components/ModalRelatorioUnificado";
 
 export const AcompanhamentoDeLancamentos = () => {
   const history = useHistory();
@@ -77,6 +78,8 @@ export const AcompanhamentoDeLancamentos = () => {
   const [loadingComFiltros, setLoadingComFiltros] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
+  const [exibirModalRelatorioUnificado, setExibirModalRelatorioUnificado] =
     useState(false);
 
   const PAGE_SIZE = 10;
@@ -681,9 +684,34 @@ export const AcompanhamentoDeLancamentos = () => {
                                 pageSize={PAGE_SIZE}
                                 current={currentPage}
                               />
+                              {statusSelecionado ===
+                                "MEDICAO_APROVADA_PELA_CODAE" &&
+                              (usuarioEhDRE() || usuarioEhMedicao()) ? (
+                                <div className="col-12 mt-4 text-end">
+                                  <Botao
+                                    type={BUTTON_TYPE.BUTTON}
+                                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                                    icon={BUTTON_ICON.FILE_PDF}
+                                    texto="Relatório Unificado"
+                                    onClick={() =>
+                                      setExibirModalRelatorioUnificado(true)
+                                    }
+                                  />
+                                </div>
+                              ) : null}
                               <ModalSolicitacaoDownload
                                 show={exibirModalCentralDownloads}
                                 setShow={setExibirModalCentralDownloads}
+                              />
+
+                              <ModalRelatorioUnificado
+                                show={exibirModalRelatorioUnificado}
+                                onClose={() =>
+                                  setExibirModalRelatorioUnificado(false)
+                                }
+                                onSubmit={() => {
+                                  setExibirModalCentralDownloads(true);
+                                }}
                               />
                             </>
                           )}

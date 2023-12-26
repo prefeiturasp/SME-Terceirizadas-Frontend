@@ -39,7 +39,7 @@ import {
 } from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
 
-export default ({
+export const LancamentoPorPeriodo = ({
   escolaInstituicao,
   periodosEscolaSimples,
   solicitacaoMedicaoInicial,
@@ -49,6 +49,7 @@ export default ({
   ano,
   objSolicitacaoMIFinalizada,
   setObjSolicitacaoMIFinalizada,
+  periodosPermissoesLancamentosEspeciais,
   setSolicitacaoMedicaoInicial,
   naoPodeFinalizar,
   setFinalizandoMedicao,
@@ -385,6 +386,9 @@ export default ({
                 }
                 frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
                 errosAoSalvar={errosAoSalvar}
+                periodosPermissoesLancamentosEspeciais={
+                  periodosPermissoesLancamentosEspeciais
+                }
               />
             ))}
 
@@ -409,6 +413,9 @@ export default ({
                 }
                 frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
                 errosAoSalvar={errosAoSalvar}
+                periodosPermissoesLancamentosEspeciais={
+                  periodosPermissoesLancamentosEspeciais
+                }
               />
             ))}
           {ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
