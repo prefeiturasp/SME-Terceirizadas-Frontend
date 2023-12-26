@@ -1196,7 +1196,8 @@ export default () => {
         tiposAlimentacaoFormatadas &&
           tiposAlimentacaoFormatadas.forEach((alimentacao) => {
             if (
-              categoria.nome.includes("ALIMENTAÇÃO") &&
+              (categoria.nome.includes("ALIMENTAÇÃO") ||
+                categoria.nome.includes("DIETA")) &&
               solInclusoesAutorizadas
             ) {
               const inclusoesFiltradas = solInclusoesAutorizadas.filter(
@@ -1755,6 +1756,30 @@ export default () => {
     return ehDiaLetivo;
   };
 
+  const classNameFieldTabelaDieta = (
+    row,
+    column,
+    categoria,
+    inclusoesAutorizadas
+  ) => {
+    const EH_INCLUSAO_SOMENTE_SOBREMESA =
+      inclusoesAutorizadas.length &&
+      inclusoesAutorizadas.every((i) => i.alimentacoes === "sobremesa");
+    if (EH_INCLUSAO_SOMENTE_SOBREMESA) {
+      return "nao-eh-dia-letivo";
+    } else if (
+      (Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+        String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
+      ) ||
+        `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
+          dadosValoresInclusoesAutorizadasState) &&
+      !ehGrupoSolicitacoesDeAlimentacaoUrlParam
+    ) {
+      return "";
+    }
+    return validacaoDiaLetivo(column.dia) ? "" : "nao-eh-dia-letivo";
+  };
+
   const openModalObservacaoDiaria = (dia, categoria) => {
     setShowModalObservacaoDiaria(true);
     setDiaObservacaoDiaria(dia);
@@ -2000,7 +2025,10 @@ export default () => {
         value,
         allValues,
         location,
-        valoresPeriodosLancamentos[0]?.medicao_uuid
+        valoresPeriodosLancamentos[0]?.medicao_uuid,
+        validacaoDiaLetivo,
+        dadosValoresInclusoesAutorizadasState,
+        inclusoesAutorizadas
       );
     };
 
@@ -2366,13 +2394,12 @@ export default () => {
                                                   ) : (
                                                     <div className="field-values-input">
                                                       <Field
-                                                        className={`m-2 ${
-                                                          !validacaoDiaLetivo(
-                                                            column.dia
-                                                          )
-                                                            ? "nao-eh-dia-letivo"
-                                                            : ""
-                                                        }`}
+                                                        className={`m-2 ${classNameFieldTabelaDieta(
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          inclusoesAutorizadas
+                                                        )}`}
                                                         component={
                                                           InputValueMedicao
                                                         }
