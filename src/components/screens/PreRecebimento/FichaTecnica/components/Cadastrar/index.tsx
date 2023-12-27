@@ -61,7 +61,7 @@ import {
 import FormPereciveis from "./components/FormPereciveis";
 import FormNaoPereciveis from "./components/FormNaoPereciveis";
 import { OnChange } from "react-final-form-listeners";
-import TabelaNutricional from "../TabelaNutricional";
+import TabelaNutricional from "../../../../../Shareable/TabelaNutricional";
 import { InformacaoNutricional } from "interfaces/produto.interface";
 
 export default () => {
