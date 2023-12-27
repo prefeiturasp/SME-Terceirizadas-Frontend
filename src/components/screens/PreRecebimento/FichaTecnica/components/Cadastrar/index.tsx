@@ -47,6 +47,7 @@ import { ResponseFichaTecnicaDetalhada } from "interfaces/responses.interface";
 import FormPereciveis from "./components/FormPereciveis";
 import FormNaoPereciveis from "./components/FormNaoPereciveis";
 import { OnChange } from "react-final-form-listeners";
+import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
 
 export default () => {
   const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
@@ -66,6 +67,8 @@ export default () => {
     {} as FichaTecnicaDetalhada
   );
   const [initialValues, setInitialValues] = useState<FichaTecnicaPayload>({});
+  const [showModal, setShowModal] = useState(false);
+  const [tipoCadastro, setTipoCadastro] = useState("");
 
   const onSubmit = (): void => {};
 
@@ -82,6 +85,14 @@ export default () => {
   const carregarFabricantes = async () => {
     const response = await getNomesFabricantes();
     setFabricantesOptions(response.data.results);
+  };
+
+  const atualizarDadosCarregados = async () => {
+    setCarregando(true);
+    await carregarProdutos();
+    await carregarMarcas();
+    await carregarFabricantes();
+    setCarregando(false);
   };
 
   const carregarTerceirizada = async () => {
@@ -234,6 +245,11 @@ export default () => {
     }
   };
 
+  const gerenciaModalCadastroExterno = (tipo: string) => {
+    setTipoCadastro(tipo);
+    setShowModal(true);
+  };
+
   const carregarDados = async (): Promise<void> => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
@@ -307,7 +323,7 @@ export default () => {
 
                 <div className="subtitulo">Identificação do Produto</div>
 
-                <div className="row">
+                <div className="row pt-3">
                   <div className="col-6">
                     <Field
                       component={AutoCompleteSelectField}
@@ -334,7 +350,16 @@ export default () => {
                       }}
                     </OnChange>
                   </div>
-                  <div className="col-6">
+                  <div className="col-2 cadastro-externo">
+                    <Botao
+                      texto="Cadastrar Produto"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="botao-cadastro-externo"
+                      onClick={() => gerenciaModalCadastroExterno("PRODUTO")}
+                    />
+                  </div>
+                  <div className="col-4">
                     <Field
                       component={SelectSelecione}
                       naoDesabilitarPrimeiraOpcao
@@ -363,7 +388,16 @@ export default () => {
                       }
                     />
                   </div>
-                  <div className="col-6">
+                  <div className="col-2 cadastro-externo">
+                    <Botao
+                      texto="Cadastrar Marca"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="botao-cadastro-externo"
+                      onClick={() => gerenciaModalCadastroExterno("MARCA")}
+                    />
+                  </div>
+                  <div className="col-4">
                     <Field
                       component={InputText}
                       label="Nº do Pregão/Chamada Pública"
@@ -510,6 +544,17 @@ export default () => {
                           validate={required}
                         />
                       </div>
+                      <div className="col-2 cadastro-externo">
+                        <Botao
+                          texto="Cadastrar Fabricante"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          className="botao-cadastro-externo"
+                          onClick={() =>
+                            gerenciaModalCadastroExterno("FABRICANTE")
+                          }
+                        />
+                      </div>
                     </div>
                     <div className="row">
                       <div className="col-6">
@@ -646,6 +691,15 @@ export default () => {
           />
         </div>
       </div>
+      <ModalCadastrarItemIndividual
+        closeModal={() => setShowModal(false)}
+        showModal={showModal}
+        atualizarDadosCarregados={() => atualizarDadosCarregados()}
+        tipoCadastro={tipoCadastro}
+        tipoCadastroVisualizacao={
+          tipoCadastro[0] + tipoCadastro.slice(1).toLowerCase()
+        }
+      />
     </Spin>
   );
 };

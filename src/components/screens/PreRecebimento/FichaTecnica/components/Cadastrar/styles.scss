@@ -16,6 +16,16 @@
     height: 35px !important;
   }
 
+  .cadastro-externo {
+    padding: 0 !important;
+
+    .botao-cadastro-externo {
+      height: 35px !important;
+      margin-top: 30px;
+      width: 100% !important;
+    }
+  }
+
   .ant-steps .ant-steps-item-process .ant-steps-item-icon {
     background-color: #198459;
     border-color: #198459;
