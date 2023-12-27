@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 .accordionComponent > .card {
   border-radius: 5px !important;
 }
@@ -37,6 +39,11 @@
 
       .titulo {
         margin: auto 0;
+        padding: 0;
+      }
+
+      .text-end {
+        padding: 0;
       }
     }
   }
@@ -47,5 +54,10 @@
 
   .card {
     overflow: visible !important;
+  }
+
+  .required-asterisk {
+    color: $red !important;
+    padding-right: 5px;
   }
 }
