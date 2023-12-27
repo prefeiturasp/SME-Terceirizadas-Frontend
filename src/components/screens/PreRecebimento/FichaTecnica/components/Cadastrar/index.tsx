@@ -863,7 +863,7 @@ export default () => {
                       listaCompletaInformacoesNutricionais={
                         listaCompletaInformacoesNutricionais.current
                       }
-                      informacoesNutricionaisFichaTecnica={
+                      informacoesNutricionaisCarregadas={
                         listaInformacoesNutricionaisFichaTecnica.current
                       }
                     />

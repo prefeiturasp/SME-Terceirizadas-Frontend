@@ -12,24 +12,24 @@ import { OptionsGenerico } from "interfaces/pre_recebimento.interface";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { OnChange } from "react-final-form-listeners";
 
+const TAXA_CONVERSAO_KCAL_KJ = 4.2;
+
 interface Props {
   values: object;
   listaCompletaInformacoesNutricionais: InformacaoNutricional[];
-  informacoesNutricionaisFichaTecnica: InformacaoNutricional[];
+  informacoesNutricionaisCarregadas: InformacaoNutricional[];
 }
-
-const TAXA_CONVERSAO_KCAL_KJ = 4.2;
 
 const TabelaNutricional: React.FC<Props> = ({
   values,
   listaCompletaInformacoesNutricionais,
-  informacoesNutricionaisFichaTecnica,
+  informacoesNutricionaisCarregadas,
 }) => {
   const [
     informacoesNutricionaisAdicionais,
     setInformacoesNutricionaisAdicionais,
   ] = useState<InformacaoNutricional[]>(
-    informacoesNutricionaisFichaTecnica.filter(({ eh_fixo }) => !eh_fixo)
+    informacoesNutricionaisCarregadas.filter(({ eh_fixo }) => !eh_fixo)
   );
 
   const adicionarInformacaoNutricional = () => {
@@ -242,7 +242,7 @@ const TabelaNutricional: React.FC<Props> = ({
                   <span>%</span>
                   <span className="botao-remover-informacao">
                     <button onClick={() => removerInformacaoNutricional(index)}>
-                      <i title="Remover Informação" className="fas fa-times" />
+                      <i title="Remover" className="fas fa-times" />
                     </button>
                   </span>
                 </div>
@@ -254,7 +254,7 @@ const TabelaNutricional: React.FC<Props> = ({
                 <div className="table-cell">
                   <span className="botao-remover-informacao">
                     <button onClick={() => removerInformacaoNutricional(index)}>
-                      <i title="Remover Informação" className="fas fa-times" />
+                      <i title="Remover" className="fas fa-times" />
                     </button>
                   </span>
                 </div>
