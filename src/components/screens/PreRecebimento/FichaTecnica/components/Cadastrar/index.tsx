@@ -482,7 +482,7 @@ export default () => {
                   <>
                     <div className="subtitulo">Identificação do Produto</div>
 
-                    <div className="row">
+                    <div className="row mt-4">
                       <div className="col-6">
                         <Field
                           component={AutoCompleteSelectField}
