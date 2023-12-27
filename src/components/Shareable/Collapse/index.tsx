@@ -30,17 +30,15 @@ const Collapse: React.FC<Props> = ({
             <div className={`card-header card-tipo`} id={`heading_${index}`}>
               <div className="row card-header-content">
                 <span className="col-8 titulo">{titulos[index]}</span>
-                <div className="col-3 text-end my-auto">
-                  <span className="texto-obrigatorio required-asterisk fw-bold">
-                    *{" "}
+                <div className="col-4 text-end my-auto">
+                  <span className="texto-obrigatorio required-asterisk">*</span>
+                  <span className="texto-obrigatorio">
+                    Campos de Preenchimento Obrigatório
                   </span>
-                  Campos de Preenchimento Obrigatório
-                </div>
-                <div className="col-1 text-end">
-                  <div className="align-self-center">
+                  <span>
                     <button
                       onClick={() => toggleCollapse(index)}
-                      className="btn btn-link btn-block text-end px-0"
+                      className="btn btn-link text-end px-0 ms-4"
                       type="button"
                       data-bs-toggle="collapse"
                       data-bs-target={`#collapse_${index}`}
@@ -57,8 +55,9 @@ const Collapse: React.FC<Props> = ({
                         />
                       </span>
                     </button>
-                  </div>
+                  </span>
                 </div>
+                {/* <div className="col-1 text-end"></div> */}
               </div>
             </div>
 

@@ -1,4 +1,5 @@
 import { LogSolicitacoesUsuarioSimples } from "./dados_comuns.interface";
+import { InformacaoNutricional } from "./produto.interface";
 import { TerceirizadaSimplesInterface } from "./terceirizada.interface";
 
 export interface DocumentosRecebimento {
@@ -135,6 +136,14 @@ export interface FichaTecnica {
   status: string;
 }
 
+export interface InformacoesNutricionaisFichaTecnica {
+  uuid: string;
+  informacao_nutricional: InformacaoNutricional;
+  quantidade_por_100g: string;
+  quantidade_porcao: string;
+  valor_diario: string;
+}
+
 export interface FichaTecnicaDetalhada {
   uuid: string;
   numero: string;
@@ -167,6 +176,11 @@ export interface FichaTecnicaDetalhada {
   gluten: boolean;
   lactose: boolean;
   lactose_detalhe: string;
+  porcao: string;
+  unidade_medida: UnidadeMedidaSimples;
+  valor_unidade_caseira: string;
+  unidade_medida_caseira: string;
+  informacoes_nutricionais: InformacoesNutricionaisFichaTecnica[];
 }
 
 export interface EtapaCalendario {

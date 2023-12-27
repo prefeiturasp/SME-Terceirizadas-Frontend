@@ -8,33 +8,67 @@
     margin-bottom: 8px;
   }
 
+  hr {
+    margin: 2rem 0;
+  }
+
+  .cadastro-externo {
+    padding: 0 !important;
+
+    .botao-cadastro-externo {
+      height: 35px !important;
+      margin-top: 30px;
+      width: 100% !important;
+    }
+  }
+
   .steps {
     padding: 8px 0;
+
+    svg {
+      fill: #fff;
+      stroke: #fff;
+      stroke-width: 100;
+    }
+
+    .ant-steps .ant-steps-item-process .ant-steps-item-icon {
+      background-color: #198459;
+      border-color: #198459;
+      font-weight: 900;
+    }
+
+    .ant-steps .ant-steps-item-finish .ant-steps-item-icon {
+      background-color: #90ceb5;
+      border-color: #90ceb5;
+    }
+
+    .ant-steps
+      .ant-steps-item-finish
+      > .ant-steps-item-container
+      > .ant-steps-item-content
+      > .ant-steps-item-title::after {
+      background-color: #a4a4a4;
+    }
+
+    .ant-steps
+      .ant-steps-item-process
+      > .ant-steps-item-container
+      > .ant-steps-item-content
+      > .ant-steps-item-title::after {
+      background-color: #a4a4a4;
+    }
+
+    .ant-steps
+      .ant-steps-item-wait
+      > .ant-steps-item-container
+      > .ant-steps-item-content
+      > .ant-steps-item-title::after {
+      background-color: #a4a4a4;
+    }
   }
 
   .input-ficha-tecnica {
     height: 35px !important;
-  }
-
-  .ant-steps .ant-steps-item-process .ant-steps-item-icon {
-    background-color: #198459;
-    border-color: #198459;
-  }
-
-  .ant-steps
-    .ant-steps-item-process
-    > .ant-steps-item-container
-    > .ant-steps-item-content
-    > .ant-steps-item-title::after {
-    background-color: #a4a4a4;
-  }
-
-  .ant-steps
-    .ant-steps-item-wait
-    > .ant-steps-item-container
-    > .ant-steps-item-content
-    > .ant-steps-item-title::after {
-    background-color: #a4a4a4;
   }
 
   .verde-escuro {
