@@ -12,6 +12,16 @@
     margin: 2rem 0;
   }
 
+  .cadastro-externo {
+    padding: 0 !important;
+
+    .botao-cadastro-externo {
+      height: 35px !important;
+      margin-top: 30px;
+      width: 100% !important;
+    }
+  }
+
   .steps {
     padding: 8px 0;
 
