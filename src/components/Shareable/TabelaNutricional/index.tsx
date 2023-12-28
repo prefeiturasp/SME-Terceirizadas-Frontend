@@ -5,7 +5,7 @@ import { Field } from "react-final-form";
 import {
   required,
   composeValidators,
-  inteiroOuDecimal,
+  inteiroOuDecimalComVirgula,
 } from "helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
 import { OptionsGenerico } from "interfaces/pre_recebimento.interface";
@@ -83,11 +83,15 @@ const TabelaNutricional: React.FC<Props> = ({
     informacao.uuid &&
       options.push({ uuid: informacao.uuid, nome: informacao.nome });
 
+    options.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+
     return options;
   };
 
   const converterDeKcalParaKj = (valor: string) =>
-    ((Number(valor) || 0) * TAXA_CONVERSAO_KCAL_KJ).toFixed(2);
+    ((Number(valor?.replace(",", ".")) || 0) * TAXA_CONVERSAO_KCAL_KJ)
+      .toFixed(2)
+      .replace(".", ",");
 
   return (
     <div className="tabela-nutricional my-5">
@@ -119,7 +123,10 @@ const TabelaNutricional: React.FC<Props> = ({
                   name={`quantidade_por_100g_${informacao.uuid}`}
                   className="input-tabela-nutricional"
                   required
-                  validate={composeValidators(required, inteiroOuDecimal)}
+                  validate={composeValidators(
+                    required,
+                    inteiroOuDecimalComVirgula
+                  )}
                 />
                 <span>{informacao.medida}</span>
               </div>
@@ -130,7 +137,10 @@ const TabelaNutricional: React.FC<Props> = ({
                   name={`quantidade_porcao_${informacao.uuid}`}
                   className="input-tabela-nutricional"
                   required
-                  validate={composeValidators(required, inteiroOuDecimal)}
+                  validate={composeValidators(
+                    required,
+                    inteiroOuDecimalComVirgula
+                  )}
                 />
                 <span>{informacao.medida}</span>
                 {informacao.nome.toUpperCase() === "VALOR ENERGÉTICO" && (
@@ -198,7 +208,10 @@ const TabelaNutricional: React.FC<Props> = ({
                     name={`quantidade_por_100g_${informacao.uuid}`}
                     className="input-tabela-nutricional"
                     required
-                    validate={composeValidators(required, inteiroOuDecimal)}
+                    validate={composeValidators(
+                      required,
+                      inteiroOuDecimalComVirgula
+                    )}
                   />
                   <span>{informacao.medida}</span>
                 </div>
@@ -209,7 +222,10 @@ const TabelaNutricional: React.FC<Props> = ({
                     name={`quantidade_porcao_${informacao.uuid}`}
                     className="input-tabela-nutricional"
                     required
-                    validate={composeValidators(required, inteiroOuDecimal)}
+                    validate={composeValidators(
+                      required,
+                      inteiroOuDecimalComVirgula
+                    )}
                   />
                   <span>{informacao.medida}</span>
                   {informacao.nome.toUpperCase() === "VALOR ENERGÉTICO" && (

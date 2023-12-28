@@ -45,7 +45,7 @@ export interface FichaTecnicaPayload {
   lactose?: boolean | string;
   lactose_detalhe?: string;
   porcao?: string;
-  unidade_medida?: string;
+  unidade_medida_porcao?: string;
   valor_unidade_caseira?: string;
   unidade_medida_caseira?: string;
   informacoes_nutricionais?: InformacoesNutricionaisFichaTecnicaPayload[];

@@ -339,6 +339,12 @@ export const inteiroOuDecimal = (value) => {
     : undefined;
 };
 
+export const inteiroOuDecimalComVirgula = (value) => {
+  return value && !/^[0-9]+([,][0-9]+)?$/g.test(value)
+    ? "Somente números inteiros ou decimais (separados por vírgula)"
+    : undefined;
+};
+
 export const numeroInteiro = (value) =>
   value ? (!/\D/.test(value) ? undefined : "Somente números") : [];
 
