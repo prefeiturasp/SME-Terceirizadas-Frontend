@@ -92,6 +92,26 @@ export const campoLancheEmergencialComZeroOuSemObservacao = (
   );
 };
 
+export const campoLancheEmergencialSemAutorizacaoSemObservacao = (
+  values,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  const value =
+    values[`lanche_emergencial__dia_${column.dia}__categoria_${categoria.id}`];
+
+  return (
+    value &&
+    !values[`observacoes__dia_${column.dia}__categoria_${categoria.id}`] &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === column.dia
+    ).length === 0
+  );
+};
+
 export const campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao = (
   dia,
   categoria,
