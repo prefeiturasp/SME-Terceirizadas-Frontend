@@ -429,7 +429,7 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
 ) => {
   const params = {};
   params["escola_uuid"] = escolaUuuid;
-  params["tipo_solicitacao"] = "Kit Lanche";
+  params["tipo_solicitacao"] = "Kit Lanche Passeio de CEMEI";
   params["mes"] = mes;
   params["ano"] = ano;
   const responseKitLanchesAutorizadas =
@@ -437,7 +437,7 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
   if (responseKitLanchesAutorizadas.status === HTTP_STATUS.OK) {
     return responseKitLanchesAutorizadas.data.results;
   } else {
-    toastError("Erro ao carregar Kit Lanches Autorizadas");
+    toastError("Erro ao carregar Kit Lanches CEMEI Autorizadas");
     return [];
   }
 };
