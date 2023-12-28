@@ -183,6 +183,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const grupoLocation = location && location.state && location.state.grupo;
   const ehEmeiDaCemeiLocation =
     location && location.state && location.state.ehEmeiDaCemei;
+  const ehSolicitacoesAlimentacaoLocation =
+    location &&
+    location.state &&
+    location.state.periodo === "Solicitações de Alimentação";
   const uuidPeriodoEscolarLocation =
     location && location.state && location.state.uuidPeriodoEscolar;
 
@@ -315,14 +319,16 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         setLogQtdDietasAutorizadasCEI(response_log_dietas_autorizadas_cei.data);
       }
 
-      const linhasTabelaAlimentacaoCEI = ehEmeiDaCemeiLocation
-        ? formatarLinhasTabelaAlimentacaoEmeiDaCemei(
-            location.state.tiposAlimentacao
-          )
-        : formatarLinhasTabelaAlimentacaoCEI(
-            response_log_matriculados_por_faixa_etaria_dia,
-            periodoGrupo
-          );
+      const linhasTabelaAlimentacaoCEI =
+        ehEmeiDaCemeiLocation || ehSolicitacoesAlimentacaoLocation
+          ? formatarLinhasTabelaAlimentacaoEmeiDaCemei(
+              location.state.tiposAlimentacao,
+              ehSolicitacoesAlimentacaoLocation
+            )
+          : formatarLinhasTabelaAlimentacaoCEI(
+              response_log_matriculados_por_faixa_etaria_dia,
+              periodoGrupo
+            );
       setTabelaAlimentacaoCEIRows(linhasTabelaAlimentacaoCEI);
 
       let linhasTabelasDietasCEI = ehEmeiDaCemeiLocation
@@ -347,15 +353,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       response_categorias_medicao = categoriasParaExibir(
         ehEmeiDaCemeiLocation,
         response_categorias_medicao,
-        response_log_dietas_autorizadas_cei
+        response_log_dietas_autorizadas_cei,
+        ehSolicitacoesAlimentacaoLocation
       );
       setCategoriasDeMedicao(response_categorias_medicao);
 
       let params = {
         uuid_solicitacao_medicao: uuid,
-        nome_grupo: ehEmeiDaCemeiLocation ? periodo : location.state.grupo,
+        nome_grupo:
+          ehEmeiDaCemeiLocation || ehSolicitacoesAlimentacaoLocation
+            ? periodo
+            : location.state.grupo,
       };
-      if (!ehEmeiDaCemeiLocation) {
+      if (!(ehEmeiDaCemeiLocation || ehSolicitacoesAlimentacaoLocation)) {
         params = {
           ...params,
           nome_periodo_escolar: periodo,
@@ -599,7 +609,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                       });
                   }
                   let nameInputField = null;
-                  if (ehEmeiDaCemeiLocation) {
+                  if (
+                    ehEmeiDaCemeiLocation ||
+                    ehSolicitacoesAlimentacaoLocation
+                  ) {
                     nameInputField = `${row.name}__dia_${dia}__categoria_${categoria.id}`;
                   } else {
                     nameInputField = `${row.name}__faixa_${row.uuid}__dia_${dia}__categoria_${categoria.id}`;
@@ -628,7 +641,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           valoresMedicao.forEach((valor_medicao) => {
             if (
               valor_medicao.nome_campo === "observacoes" ||
-              ehEmeiDaCemeiLocation
+              ehEmeiDaCemeiLocation ||
+              ehSolicitacoesAlimentacaoLocation
             ) {
               dadosValoresMedicoes[
                 `${valor_medicao.nome_campo}__dia_${valor_medicao.dia}__categoria_${valor_medicao.categoria_medicao}`
@@ -885,13 +899,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       const categoria = keySplitted.pop();
       const idCategoria = categoria.match(/\d/g).join("");
       const dia = keySplitted[
-        v[0].includes("observacoes") || ehEmeiDaCemeiLocation ? 1 : 2
+        v[0].includes("observacoes") ||
+        ehEmeiDaCemeiLocation ||
+        ehSolicitacoesAlimentacaoLocation
+          ? 1
+          : 2
       ]
         .match(/\d/g)
         .join("");
       const nome_campo = keySplitted[0];
       const uuid_faixa_etaria =
-        v[0].includes("observacoes") || ehEmeiDaCemeiLocation
+        v[0].includes("observacoes") ||
+        ehEmeiDaCemeiLocation ||
+        ehSolicitacoesAlimentacaoLocation
           ? ""
           : keySplitted[1].replace("faixa_", "");
 
@@ -917,6 +937,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       (ehEmeiDaCemeiLocation &&
         values["periodo_escolar"] &&
         values["periodo_escolar"].includes("Infantil")) ||
+      (values["periodo_escolar"] &&
+        values["periodo_escolar"].includes("Solicitações")) ||
       values["periodo_escolar"] === "ETEC" ||
       values["periodo_escolar"] === "Programas e Projetos"
     ) {
@@ -1011,7 +1033,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       tabelaAlimentacaoCEIRows,
       dadosIniciaisFiltered,
       diasDaSemanaSelecionada,
-      ehEmeiDaCemeiLocation
+      ehEmeiDaCemeiLocation,
+      ehSolicitacoesAlimentacaoLocation
     );
     if (payload.valores_medicao.length === 0)
       return (
@@ -1655,14 +1678,18 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                 "mt-2"
                                               } ${
                                                 row.name !== "observacoes" &&
-                                                ehEmeiDaCemeiLocation &&
+                                                (ehEmeiDaCemeiLocation ||
+                                                  ehSolicitacoesAlimentacaoLocation) &&
                                                 "mt-3"
                                               }`}
                                             >
                                               {row.nome}
                                             </b>
                                             {row.name !== "observacoes" &&
-                                              !ehEmeiDaCemeiLocation && (
+                                              !(
+                                                ehEmeiDaCemeiLocation ||
+                                                ehSolicitacoesAlimentacaoLocation
+                                              ) && (
                                                 <b className="faixa-etaria ps-2">
                                                   {row.faixa_etaria}
                                                 </b>
@@ -1792,7 +1819,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                 )
                                               ) : (
                                                 <div className="field-values-input">
-                                                  {ehEmeiDaCemeiLocation ? (
+                                                  {ehEmeiDaCemeiLocation ||
+                                                  ehSolicitacoesAlimentacaoLocation ? (
                                                     <>
                                                       <Field
                                                         className={`m-2 ${classNameFieldTabelaAlimentacaoEMEI(
@@ -1834,7 +1862,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           feriadosNoMes,
                                                           null,
                                                           diasParaCorrecao,
-                                                          ehEmeiDaCemeiLocation
+                                                          ehEmeiDaCemeiLocation,
+                                                          ehSolicitacoesAlimentacaoLocation
                                                         )}
                                                         defaultValue={defaultValue(
                                                           column,
@@ -1951,7 +1980,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           feriadosNoMes,
                                                           row.uuid,
                                                           diasParaCorrecao,
-                                                          ehEmeiDaCemeiLocation
+                                                          ehEmeiDaCemeiLocation,
+                                                          ehSolicitacoesAlimentacaoLocation
                                                         )}
                                                         defaultValue={defaultValue(
                                                           column,
