@@ -83,6 +83,8 @@ const TabelaNutricional: React.FC<Props> = ({
     informacao.uuid &&
       options.push({ uuid: informacao.uuid, nome: informacao.nome });
 
+    options.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+
     return options;
   };
 
