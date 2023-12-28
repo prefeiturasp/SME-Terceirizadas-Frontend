@@ -449,6 +449,18 @@ export default () => {
     );
   };
 
+  const itensSteps = [
+    {
+      title: "Identificação do Produto",
+    },
+    {
+      title: "Informações Nutricionais",
+    },
+    {
+      title: "Informações de Acondicionamento",
+    },
+  ];
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-cadastro-ficha-tecnica">
@@ -460,21 +472,7 @@ export default () => {
             render={({ form, handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
                 <div className="steps">
-                  <Steps
-                    size="small"
-                    current={stepAtual}
-                    items={[
-                      {
-                        title: "Identificação do Produto",
-                      },
-                      {
-                        title: "Informações Nutricionais",
-                      },
-                      {
-                        title: "Informações de Acondicionamento",
-                      },
-                    ]}
-                  />
+                  <Steps size="small" current={stepAtual} items={itensSteps} />
                 </div>
 
                 <hr />
@@ -921,7 +919,7 @@ export default () => {
 
                 <hr />
 
-                {stepAtual === 0 && (
+                {stepAtual < itensSteps.length - 1 && (
                   <div className="mt-4 mb-4">
                     <Botao
                       texto="Próximo"
@@ -944,7 +942,7 @@ export default () => {
                     disabled={validaRascunho(values)}
                   />
                 </div>
-                {stepAtual === 1 && (
+                {stepAtual > 0 && (
                   <div className="mt-4 mb-4">
                     <Botao
                       texto="Anterior"
