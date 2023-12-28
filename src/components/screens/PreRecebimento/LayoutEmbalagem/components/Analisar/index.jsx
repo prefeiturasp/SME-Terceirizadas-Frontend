@@ -43,12 +43,11 @@ export default () => {
     false,
   ]);
 
-  useEffect(async () => {
-    setCarregando(true);
-
-    await carregarDados();
-
-    setCarregando(false);
+  useEffect(() => {
+    (async () => {
+      await carregarDados();
+      setCarregando(false);
+    })();
   }, []);
 
   const carregarDados = async () => {
