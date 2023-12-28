@@ -177,7 +177,7 @@ export interface FichaTecnicaDetalhada {
   lactose: boolean;
   lactose_detalhe: string;
   porcao: string;
-  unidade_medida: UnidadeMedidaSimples;
+  unidade_medida_porcao: UnidadeMedidaSimples;
   valor_unidade_caseira: string;
   unidade_medida_caseira: string;
   informacoes_nutricionais: InformacoesNutricionaisFichaTecnica[];

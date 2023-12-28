@@ -16,21 +16,14 @@ import {
   required,
   email,
   composeValidators,
-  inteiroOuDecimal,
+  inteiroOuDecimalComVirgula,
 } from "helpers/fieldValidators";
 import { Spin, Steps } from "antd";
-import {
-  CategoriaFichaTecnicaChoices,
-  FichaTecnicaDetalhada,
-  OptionsGenerico,
-} from "interfaces/pre_recebimento.interface";
 import { CATEGORIA_OPTIONS } from "../../constants";
 import InputText from "components/Shareable/Input/InputText";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import Collapse from "components/Shareable/Collapse";
 import MeusDadosContext from "context/MeusDadosContext";
-import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
-import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
 import createDecorator from "final-form-calculate";
 import {
   BUTTON_TYPE,
@@ -38,10 +31,6 @@ import {
 } from "../../../../../Shareable/Botao/constants";
 import Botao from "../../../../../Shareable/Botao";
 import { cepMask, cnpjMask, telefoneMask } from "constants/shared";
-import {
-  FichaTecnicaPayload,
-  InformacoesNutricionaisFichaTecnicaPayload,
-} from "../../interfaces";
 import {
   cadastraRascunhoFichaTecnica,
   editaRascunhoFichaTecnica,
@@ -54,16 +43,28 @@ import {
 } from "../../../../../Shareable/Toast/dialogs";
 import { getListaFiltradaAutoCompleteSelect } from "../../../../../../helpers/autoCompleteSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
+import FormPereciveis from "./components/FormPereciveis";
+import FormNaoPereciveis from "./components/FormNaoPereciveis";
+import { OnChange } from "react-final-form-listeners";
+import TabelaNutricional from "components/Shareable/TabelaNutricional";
+import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
+
+import {
+  CategoriaFichaTecnicaChoices,
+  FichaTecnicaDetalhada,
+  OptionsGenerico,
+} from "interfaces/pre_recebimento.interface";
+import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
+import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
 import {
   ResponseFichaTecnicaDetalhada,
   ResponseInformacoesNutricionais,
 } from "interfaces/responses.interface";
-import FormPereciveis from "./components/FormPereciveis";
-import FormNaoPereciveis from "./components/FormNaoPereciveis";
-import { OnChange } from "react-final-form-listeners";
 import { InformacaoNutricional } from "interfaces/produto.interface";
-import TabelaNutricional from "components/Shareable/TabelaNutricional";
-import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
+import {
+  FichaTecnicaPayload,
+  InformacoesNutricionaisFichaTecnicaPayload,
+} from "../../interfaces";
 
 export default () => {
   const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
@@ -217,7 +218,7 @@ export default () => {
       lactose: booleanToString(ficha.lactose),
       lactose_detalhe: ficha.lactose_detalhe,
       porcao: ficha.porcao,
-      unidade_medida: ficha.unidade_medida?.uuid,
+      unidade_medida_porcao: ficha.unidade_medida_porcao?.uuid,
       valor_unidade_caseira: ficha.valor_unidade_caseira,
       unidade_medida_caseira: ficha.unidade_medida_caseira,
       ...valuesInformacoesNutricionais,
@@ -256,7 +257,7 @@ export default () => {
       lactose_detalhe: "",
       numero_registro: "",
       porcao: values.porcao || "",
-      unidade_medida: values.unidade_medida || null,
+      unidade_medida_porcao: values.unidade_medida_porcao || null,
       valor_unidade_caseira: values.valor_unidade_caseira || "",
       unidade_medida_caseira: values.unidade_medida_caseira || "",
       informacoes_nutricionais: formataInformacoesNutricionais(values),
@@ -442,7 +443,7 @@ export default () => {
     return (
       Object.keys(errors).length !== 0 ||
       !values.porcao ||
-      !values.unidade_medida ||
+      !values.unidade_medida_porcao ||
       !values.valor_unidade_caseira ||
       !values.unidade_medida_caseira
     );
@@ -864,7 +865,7 @@ export default () => {
                           proibeLetras
                           validate={composeValidators(
                             required,
-                            inteiroOuDecimal
+                            inteiroOuDecimalComVirgula
                           )}
                         />
                       </div>
@@ -873,9 +874,10 @@ export default () => {
                           component={SelectSelecione}
                           naoDesabilitarPrimeiraOpcao
                           options={unidadesMedidaOptions}
-                          name={`unidade_medida`}
+                          name={`unidade_medida_porcao`}
                           placeholder="Unidade de Medida"
                           className="input-ficha-tecnica"
+                          required
                           validate={required}
                         />
                       </div>
@@ -889,7 +891,7 @@ export default () => {
                           proibeLetras
                           validate={composeValidators(
                             required,
-                            inteiroOuDecimal
+                            inteiroOuDecimalComVirgula
                           )}
                         />
                       </div>
