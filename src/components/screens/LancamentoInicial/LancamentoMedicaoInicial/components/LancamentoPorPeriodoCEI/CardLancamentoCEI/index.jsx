@@ -65,8 +65,9 @@ export const CardLancamentoCEI = ({
   };
 
   if (
-    ehEscolaTipoCEMEI(escolaInstituicao) &&
-    periodosEscolaCemeiComAlunosEmei.includes(textoCabecalho)
+    (ehEscolaTipoCEMEI(escolaInstituicao) &&
+      periodosEscolaCemeiComAlunosEmei.includes(textoCabecalho)) ||
+    textoCabecalho === "Solicitações de Alimentação"
   ) {
     alimentacoesFormatadas = tiposAlimentacao.map((tipoAlimentacao, key) => (
       <div key={key} className="mb-2">
@@ -165,7 +166,7 @@ export const CardLancamentoCEI = ({
                 escolaInstituicao,
                 periodosEscolaCemeiComAlunosEmei,
                 textoCabecalho
-              ) ? (
+              ) || textoCabecalho === "Solicitações de Alimentação" ? (
                 <div className="row">
                   <div className="col-4">
                     {alimentacoesFormatadas.slice(0, 3)}
