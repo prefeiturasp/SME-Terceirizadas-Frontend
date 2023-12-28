@@ -71,6 +71,7 @@ import {
   getSolicitacoesSuspensoesAutorizadasAsync,
   textoBotaoObservacao,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
+  getSolicitacoesKitLanchesAutorizadasAsync,
 } from "./helper";
 import {
   getCategoriasDeMedicao,
@@ -92,9 +93,17 @@ import "./styles.scss";
 import {
   campoComSuspensaoAutorizadaESemObservacao,
   campoLancheComLPRAutorizadaESemObservacao,
+  campoLancheEmergencialComZeroOuSemObservacao,
+  campoLancheEmergencialSemAutorizacaoSemObservacao,
   campoRefeicaoComRPLAutorizadaESemObservacao,
+  camposKitLancheSolicitacoesAlimentacaoESemObservacao,
   exibeTooltipInclusoesAutorizadasComZero,
+  exibirTooltipKitLancheSolAlimentacoes,
   exibirTooltipLPRAutorizadas,
+  exibirTooltipLancheEmergencialAutorizado,
+  exibirTooltipLancheEmergencialNaoAutorizado,
+  exibirTooltipLancheEmergencialZeroAutorizadoJustificado,
+  exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas,
   exibirTooltipRPLAutorizadas,
   exibirTooltipSuspensoesAutorizadas,
 } from "../PeriodoLancamentoMedicaoInicial/validacoes";
@@ -125,6 +134,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     alteracoesAlimentacaoAutorizadas,
     setAlteracoesAlimentacaoAutorizadas,
   ] = useState(null);
+  const [kitLanchesAutorizadas, setKitLanchesAutorizadas] = useState(null);
   const [exibirTooltipAoSalvar, setExibirTooltipAoSalvar] = useState(false);
   const [inputsInclusaoComErro, setInputsInclusaoComErro] = useState([]);
   const [
@@ -252,6 +262,29 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           periodo
         );
       setSuspensoesAutorizadas(response_suspensoes_autorizadas);
+
+      let response_kit_lanches_autorizadas = [];
+      if (ehSolicitacoesAlimentacaoLocation) {
+        response_kit_lanches_autorizadas =
+          await getSolicitacoesKitLanchesAutorizadasAsync(
+            escola.uuid,
+            mes,
+            ano
+          );
+        setKitLanchesAutorizadas(response_kit_lanches_autorizadas);
+
+        response_alteracoes_alimentacao_autorizadas =
+          await getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync(
+            escola.uuid,
+            mes,
+            ano,
+            periodo,
+            true
+          );
+        setAlteracoesAlimentacaoAutorizadas(
+          response_alteracoes_alimentacao_autorizadas
+        );
+      }
 
       let response_log_matriculados_por_faixa_etaria_dia = [];
       let response_log_dietas_autorizadas_cei = [];
@@ -411,7 +444,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         response_log_matriculados_por_faixa_etaria_dia.data,
         response_log_dietas_autorizadas_cei.data,
         response_matriculados_emei_da_cemei.data,
-        response_log_dietas_autorizadas_emei_da_cemei.data
+        response_log_dietas_autorizadas_emei_da_cemei.data,
+        response_kit_lanches_autorizadas
       );
 
       let items = [];
@@ -446,7 +480,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     matriculadosFaixaEtariaDia,
     logQtdDietasAutorizadasCEI,
     matriculadosEmeiDaCemei,
-    logQtdDietasAutorizadasEmeiDaCemei
+    logQtdDietasAutorizadasEmeiDaCemei,
+    kitLanchesAutorizadas
   ) => {
     let dadosValoresMedicoes = {};
     let dadosValoresMatriculadosFaixaEtariaDia = {};
@@ -455,6 +490,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     let dadosValoresMatriculadosEmeiDaCemei = {};
     let dadosValoresDietasAutorizadasEmeiDaCemei = {};
     let dadosValoresZeroDietasAutorizadasEmeiDaCemei = {};
+    let dadosValoresKitLanchesAutorizadas = {};
     let periodoEscolar = "MANHA";
     let justificativaPeriodo = "";
     if (location.state) {
@@ -564,6 +600,23 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
               (dadosValoresDietasAutorizadasEmeiDaCemei[
                 `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
               ] = `${log.quantidade}`);
+          });
+
+        kitLanchesAutorizadas &&
+          ehSolicitacoesAlimentacaoLocation &&
+          kitLanchesAutorizadas.forEach((kit) => {
+            categoria.nome.includes("SOLICITAÇÕES") &&
+              (dadosValoresKitLanchesAutorizadas[
+                `kit_lanche__dia_${kit.dia}__categoria_${categoria.id}`
+              ] = dadosValoresKitLanchesAutorizadas[
+                `kit_lanche__dia_${kit.dia}__categoria_${categoria.id}`
+              ]
+                ? parseInt(
+                    dadosValoresKitLanchesAutorizadas[
+                      `kit_lanche__dia_${kit.dia}__categoria_${categoria.id}`
+                    ]
+                  ) + kit.numero_alunos
+                : kit.numero_alunos).toString();
           });
 
         tabelaAlimentacaoCEIRows &&
@@ -719,6 +772,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
 
     setDadosIniciais({
       ...dadosMesPeriodo,
+      ...dadosValoresKitLanchesAutorizadas,
       ...dadosValoresMedicoes,
       ...dadosValoresMatriculadosFaixaEtariaDia,
       ...dadosValoresMatriculadosEmeiDaCemei,
@@ -802,7 +856,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         valoresMatriculadosFaixaEtariaDia,
         logQtdDietasAutorizadasCEI,
         valoresMatriculadosEmeiDaCemei,
-        logQtdDietasAutorizadasEmeiDaCemei
+        logQtdDietasAutorizadasEmeiDaCemei,
+        kitLanchesAutorizadas
       );
     };
     semanaSelecionada && formatar();
@@ -1102,7 +1157,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         valoresMatriculadosFaixaEtariaDia,
         logQtdDietasAutorizadasCEI,
         valoresMatriculadosEmeiDaCemei,
-        logQtdDietasAutorizadasEmeiDaCemei
+        logQtdDietasAutorizadasEmeiDaCemei,
+        kitLanchesAutorizadas
       );
     }
     setLoading(false);
@@ -1301,7 +1357,36 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
             column,
             categoria,
             suspensoesAutorizadas
-          ))) &&
+          )) ||
+        (categoria.nome.includes("SOLICITAÇÕES") &&
+          (exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas(
+            formValuesAtualizados,
+            row,
+            column,
+            categoria,
+            kitLanchesAutorizadas
+          ) ||
+            exibirTooltipKitLancheSolAlimentacoes(
+              formValuesAtualizados,
+              row,
+              column,
+              categoria,
+              kitLanchesAutorizadas
+            ) ||
+            exibirTooltipLancheEmergencialAutorizado(
+              formValuesAtualizados,
+              row,
+              column,
+              categoria,
+              alteracoesAlimentacaoAutorizadas
+            ) ||
+            exibirTooltipLancheEmergencialNaoAutorizado(
+              formValuesAtualizados,
+              row,
+              column,
+              categoria,
+              alteracoesAlimentacaoAutorizadas
+            )))) &&
       !formValuesAtualizados[
         `observacoes__dia_${column.dia}__categoria_${categoria.id}`
       ]
@@ -1309,6 +1394,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       setDisableBotaoSalvarLancamentos(true);
       setExibirTooltip(true);
     }
+
     if (
       !ehEmeiDaCemeiLocation &&
       campoDietaComInclusaoAutorizadaSemObservacao(
@@ -1787,7 +1873,26 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           column,
                                                           categoria,
                                                           suspensoesAutorizadas
-                                                        ))
+                                                        )) ||
+                                                      (ehSolicitacoesAlimentacaoLocation &&
+                                                        (campoLancheEmergencialComZeroOuSemObservacao(
+                                                          formValuesAtualizados,
+                                                          column,
+                                                          categoria,
+                                                          alteracoesAlimentacaoAutorizadas
+                                                        ) ||
+                                                          campoLancheEmergencialSemAutorizacaoSemObservacao(
+                                                            formValuesAtualizados,
+                                                            column,
+                                                            categoria,
+                                                            alteracoesAlimentacaoAutorizadas
+                                                          ) ||
+                                                          camposKitLancheSolicitacoesAlimentacaoESemObservacao(
+                                                            formValuesAtualizados,
+                                                            column,
+                                                            categoria,
+                                                            kitLanchesAutorizadas
+                                                          )))
                                                         ? textoBotaoObservacao(
                                                             formValuesAtualizados[
                                                               `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
@@ -1912,6 +2017,42 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           column,
                                                           categoria,
                                                           alteracoesAlimentacaoAutorizadas
+                                                        )}
+                                                        exibeTooltipLancheEmergencialAutorizado={exibirTooltipLancheEmergencialAutorizado(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          alteracoesAlimentacaoAutorizadas
+                                                        )}
+                                                        exibeTooltipLancheEmergencialNaoAutorizado={exibirTooltipLancheEmergencialNaoAutorizado(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          alteracoesAlimentacaoAutorizadas
+                                                        )}
+                                                        exibeTooltipLancheEmergencialZeroAutorizadoJustificado={exibirTooltipLancheEmergencialZeroAutorizadoJustificado(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          alteracoesAlimentacaoAutorizadas,
+                                                          validacaoDiaLetivo
+                                                        )}
+                                                        exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas={exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          kitLanchesAutorizadas
+                                                        )}
+                                                        exibeTooltipKitLancheSolAlimentacoes={exibirTooltipKitLancheSolAlimentacoes(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          kitLanchesAutorizadas
                                                         )}
                                                         validate={fieldValidationsTabelasEmeidaCemei(
                                                           row.name,
