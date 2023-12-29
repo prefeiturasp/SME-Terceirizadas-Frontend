@@ -33,10 +33,18 @@ export const CardLancamentoCEI = ({
   periodosEscolaCemeiComAlunosEmei,
   tiposAlimentacao,
   uuidPeriodoEscolar,
+  errosAoSalvar,
 }) => {
   const history = useHistory();
 
   let alimentacoesFormatadas = [];
+
+  const meusErros =
+    errosAoSalvar &&
+    errosAoSalvar.length > 0 &&
+    errosAoSalvar.filter((obj) =>
+      [textoCabecalho].includes(obj.periodo_escolar)
+    );
 
   const qtdAlimentacaoPeriodoFiltrada = () => {
     return quantidadeAlimentacoesLancadas.filter(
@@ -120,7 +128,9 @@ export const CardLancamentoCEI = ({
       onSubmit={() => {}}
       render={() => (
         <div
-          className="lancamento-por-periodo-card mt-3"
+          className={`lancamento-por-periodo-card mt-3  ${
+            meusErros && meusErros.length ? "border-danger" : ""
+          }`}
           style={{ color: cor }}
         >
           <div className="wraper-periodo-status mb-2">
@@ -203,7 +213,16 @@ export const CardLancamentoCEI = ({
             </div>
             <div>
               <div className="row" style={{ height: "100%" }}>
-                <div className="col-8 d-flex flex-column" />
+                <div className="col-8 d-flex flex-column">
+                  {meusErros &&
+                    meusErros.map((obj, idxErros) => {
+                      return (
+                        <span className="mt-auto mensagem-erro" key={idxErros}>
+                          {obj.erro}
+                        </span>
+                      );
+                    })}
+                </div>
                 <div className="col-4 pe-0 d-flex flex-column">
                   <Botao
                     texto={textoBotaoCardLancamento(
