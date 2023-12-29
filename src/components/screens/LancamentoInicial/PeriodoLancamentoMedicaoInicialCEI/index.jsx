@@ -72,6 +72,7 @@ import {
   textoBotaoObservacao,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
   getSolicitacoesKitLanchesAutorizadasAsync,
+  formataNomeCategoriaSolAlimentacoesInfantil,
 } from "./helper";
 import {
   getCategoriasDeMedicao,
@@ -504,9 +505,16 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       }
     }
     setPeriodoGrupo(periodoEscolar);
+    const formataPeriodoSolAlimentacoesInfantil = (periodoEscolar) => {
+      if (periodoEscolar === "Solicitações de Alimentação") {
+        return "Solicitações de Alimentação - Infantil";
+      } else {
+        return periodoEscolar;
+      }
+    };
     const dadosMesPeriodo = {
       mes_lancamento: mesAnoFormatado,
-      periodo_escolar: periodoEscolar,
+      periodo_escolar: formataPeriodoSolAlimentacoesInfantil(periodoEscolar),
       justificativa_periodo: justificativaPeriodo,
     };
     let dadosValoresInclusoesAutorizadas = {};
@@ -998,6 +1006,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       values["periodo_escolar"] === "Programas e Projetos"
     ) {
       payload["grupo"] = values["periodo_escolar"];
+      if (payload["grupo"] && payload["grupo"].includes("Solicitações")) {
+        payload["grupo"] = "Solicitações de Alimentação";
+      }
       delete values["periodo_escolar"];
     } else {
       payload["periodo_escolar"] = values["periodo_escolar"];
@@ -1713,7 +1724,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                         categoriasDeMedicao.map((categoria) => (
                           <div key={categoria.uuid}>
                             <b className="pb-2 section-title">
-                              {categoria.nome}
+                              {formataNomeCategoriaSolAlimentacoesInfantil(
+                                categoria.nome
+                              )}
                             </b>
                             <section className="tabela-tipos-alimentacao">
                               <article>

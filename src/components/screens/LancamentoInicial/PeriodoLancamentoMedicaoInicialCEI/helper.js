@@ -29,6 +29,9 @@ export const formatarPayloadPeriodoLancamentoCeiCemei = (
     values["periodo_escolar"] === "Programas e Projetos"
   ) {
     values["grupo"] = values["periodo_escolar"];
+    if (values["grupo"] && values["grupo"].includes("Solicitações")) {
+      values["grupo"] = "Solicitações de Alimentação";
+    }
     delete values["periodo_escolar"];
   }
   const valuesAsArray = Object.entries(values);
@@ -967,5 +970,13 @@ export const categoriasParaExibir = (
     return response_categorias_medicao.filter((categoria) => {
       return !categoriasDietasParaDeletar.includes(categoria.nome);
     });
+  }
+};
+
+export const formataNomeCategoriaSolAlimentacoesInfantil = (nomeCategoria) => {
+  if (nomeCategoria.includes("SOLICITAÇÕES")) {
+    return "SOLICITAÇÕES DE ALIMENTAÇÃO - INFANTIL";
+  } else {
+    return nomeCategoria;
   }
 };
