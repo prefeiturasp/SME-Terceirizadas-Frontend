@@ -45,6 +45,7 @@ export const LancamentoPorPeriodoCEI = ({
   setObjSolicitacaoMIFinalizada,
   setSolicitacaoMedicaoInicial,
   setFinalizandoMedicao,
+  naoPodeFinalizar,
 }) => {
   const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
@@ -64,6 +65,7 @@ export const LancamentoPorPeriodoCEI = ({
     setSolicitacoesAlteracaoLancheEmergencialAutorizadas,
   ] = useState(undefined);
   const [erroAPI, setErroAPI] = useState("");
+  const [errosAoSalvar, setErrosAoSalvar] = useState([]);
 
   const gerarPDFMedicaoInicial = async () => {
     const response = await relatorioMedicaoInicialPDF(
@@ -265,6 +267,7 @@ export const LancamentoPorPeriodoCEI = ({
                 }
                 tiposAlimentacao={tiposAlimentacaoPeriodosEmei(nomePeriodo)}
                 uuidPeriodoEscolar={uuidPeriodoEscolar(nomePeriodo)}
+                errosAoSalvar={errosAoSalvar}
               />
             ))}
             {((solicitacoesKitLanchesAutorizadas &&
@@ -287,6 +290,7 @@ export const LancamentoPorPeriodoCEI = ({
                   { nome: "Kit Lanche" },
                   { nome: "Lanche Emergencial" },
                 ]}
+                errosAoSalvar={errosAoSalvar}
               />
             )}
             <div className="mt-4">
@@ -295,7 +299,9 @@ export const LancamentoPorPeriodoCEI = ({
                   texto="Finalizar"
                   style={BUTTON_STYLE.GREEN}
                   className="float-end"
-                  disabled={!usuarioEhEscolaTerceirizadaDiretor()}
+                  disabled={
+                    !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
+                  }
                   onClick={() => setShowModalFinalizarMedicao(true)}
                 />
               ) : (
@@ -325,12 +331,12 @@ export const LancamentoPorPeriodoCEI = ({
             </div>
             <ModalFinalizarMedicao
               showModal={showModalFinalizarMedicao}
+              setErrosAoSalvar={(value) => setErrosAoSalvar(value)}
               closeModal={() => setShowModalFinalizarMedicao(false)}
               setObjSolicitacaoMIFinalizada={setObjSolicitacaoMIFinalizada}
               escolaInstituicao={escolaInstituicao}
               solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
               onClickInfoBasicas={onClickInfoBasicas}
-              setErrosAoSalvar={() => {}}
               setFinalizandoMedicao={setFinalizandoMedicao}
             />
             <ModalSolicitacaoDownload
