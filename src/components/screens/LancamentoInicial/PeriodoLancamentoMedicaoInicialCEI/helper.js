@@ -29,6 +29,9 @@ export const formatarPayloadPeriodoLancamentoCeiCemei = (
     values["periodo_escolar"] === "Programas e Projetos"
   ) {
     values["grupo"] = values["periodo_escolar"];
+    if (values["grupo"] && values["grupo"].includes("Solicitações")) {
+      values["grupo"] = "Solicitações de Alimentação";
+    }
     delete values["periodo_escolar"];
   }
   const valuesAsArray = Object.entries(values);
@@ -429,7 +432,7 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
 ) => {
   const params = {};
   params["escola_uuid"] = escolaUuuid;
-  params["tipo_solicitacao"] = "Kit Lanche";
+  params["tipo_solicitacao"] = "Kit Lanche Passeio de CEMEI";
   params["mes"] = mes;
   params["ano"] = ano;
   const responseKitLanchesAutorizadas =
@@ -437,7 +440,7 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
   if (responseKitLanchesAutorizadas.status === HTTP_STATUS.OK) {
     return responseKitLanchesAutorizadas.data.results;
   } else {
-    toastError("Erro ao carregar Kit Lanches Autorizadas");
+    toastError("Erro ao carregar Kit Lanches CEMEI Autorizadas");
     return [];
   }
 };
@@ -967,5 +970,13 @@ export const categoriasParaExibir = (
     return response_categorias_medicao.filter((categoria) => {
       return !categoriasDietasParaDeletar.includes(categoria.nome);
     });
+  }
+};
+
+export const formataNomeCategoriaSolAlimentacoesInfantil = (nomeCategoria) => {
+  if (nomeCategoria.includes("SOLICITAÇÕES")) {
+    return "SOLICITAÇÕES DE ALIMENTAÇÃO - INFANTIL";
+  } else {
+    return nomeCategoria;
   }
 };
