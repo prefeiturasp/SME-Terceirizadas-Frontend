@@ -165,13 +165,24 @@ export const desabilitarField = (
           (inclusao) =>
             parseInt(dia) === parseInt(inclusao.dia) &&
             rowName === "frequencia" &&
+            !["Mês anterior", "Mês posterior"].includes(
+              values[
+                `${rowName}__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+              ]
+            ) &&
             inclusao.faixas_etarias.includes(uuidFaixaEtaria)
         );
         if (resultado) return false;
       } else {
         const resultado = inclusoesAutorizadas.some(
           (inclusao) =>
-            parseInt(dia) === parseInt(inclusao.dia) && rowName === "frequencia"
+            parseInt(dia) === parseInt(inclusao.dia) &&
+            rowName === "frequencia" &&
+            !["Mês anterior", "Mês posterior"].includes(
+              values[
+                `${rowName}__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+              ]
+            )
         );
         if (resultado) return false;
       }
@@ -180,7 +191,13 @@ export const desabilitarField = (
         !validacaoDiaLetivo(dia) &&
         inclusoesAutorizadas.some(
           (inclusao) =>
-            parseInt(dia) === parseInt(inclusao.dia) && rowName === "frequencia"
+            parseInt(dia) === parseInt(inclusao.dia) &&
+            rowName === "frequencia" &&
+            !["Mês anterior", "Mês posterior"].includes(
+              values[
+                `${rowName}__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+              ]
+            )
         );
       if (resultado)
         return (
