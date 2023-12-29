@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import "./styles.scss";
 import { Field, Form } from "react-final-form";
-import SelectSelecione from "components/Shareable/SelectSelecione";
 import Label from "components/Shareable/Label";
 import {
   getListaCompletaProdutosLogistica,
@@ -48,6 +47,7 @@ import FormPereciveis from "./components/FormPereciveis";
 import FormNaoPereciveis from "./components/FormNaoPereciveis";
 import { OnChange } from "react-final-form-listeners";
 import TabelaNutricional from "components/Shareable/TabelaNutricional";
+import Select from "components/Shareable/Select";
 import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
 
 import {
@@ -552,12 +552,14 @@ export default () => {
                       </div>
                       <div className="col-4">
                         <Field
-                          component={SelectSelecione}
+                          component={Select}
                           naoDesabilitarPrimeiraOpcao
-                          options={CATEGORIA_OPTIONS}
+                          options={[
+                            { nome: "Selecione uma Categoria", uuid: "" },
+                            ...CATEGORIA_OPTIONS,
+                          ]}
                           label="Categoria"
                           name={`categoria`}
-                          placeholder="Selecione uma Categoria"
                           className="input-ficha-tecnica"
                           required
                           validate={required}
@@ -565,12 +567,14 @@ export default () => {
                       </div>
                       <div className="col-6">
                         <Field
-                          component={SelectSelecione}
+                          component={Select}
                           naoDesabilitarPrimeiraOpcao
-                          options={marcasOptions}
+                          options={[
+                            { nome: "Selecione uma Marca", uuid: "" },
+                            ...marcasOptions,
+                          ]}
                           label="Marca"
                           name={`marca`}
-                          placeholder="Selecione uma Marca"
                           className="input-ficha-tecnica"
                           required
                           validate={required}
@@ -900,11 +904,13 @@ export default () => {
                       </div>
                       <div className="col-3">
                         <Field
-                          component={SelectSelecione}
+                          component={Select}
                           naoDesabilitarPrimeiraOpcao
-                          options={unidadesMedidaOptions}
+                          options={[
+                            { nome: "Unidade de Medida", uuid: "" },
+                            ...unidadesMedidaOptions,
+                          ]}
                           name={`unidade_medida_porcao`}
-                          placeholder="Unidade de Medida"
                           className="input-ficha-tecnica"
                           required
                           validate={required}
