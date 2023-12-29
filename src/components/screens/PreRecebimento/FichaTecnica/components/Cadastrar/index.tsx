@@ -22,6 +22,7 @@ import { Spin, Steps } from "antd";
 import { CATEGORIA_OPTIONS } from "../../constants";
 import InputText from "components/Shareable/Input/InputText";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 import Collapse from "components/Shareable/Collapse";
 import MeusDadosContext from "context/MeusDadosContext";
 import createDecorator from "final-form-calculate";
@@ -65,6 +66,7 @@ import {
   FichaTecnicaPayload,
   InformacoesNutricionaisFichaTecnicaPayload,
 } from "../../interfaces";
+import { CollapseConfig } from "components/Shareable/Collapse/interfaces";
 
 const ITENS_STEPS = [
   {
@@ -460,6 +462,35 @@ export default () => {
       !values.unidade_medida_caseira
     );
   };
+
+  const collapseConfigsInfoAcondicionamento: CollapseConfig[] = [
+    {
+      titulo: <span className="verde-escuro">Conservação</span>,
+      camposObrigatorios: true,
+    },
+    {
+      titulo: <span className="verde-escuro">Temperatura e Transporte</span>,
+      camposObrigatorios: true,
+    },
+    {
+      titulo: <span className="verde-escuro">Armazenamento</span>,
+      camposObrigatorios: true,
+    },
+    {
+      titulo: (
+        <span className="verde-escuro">Responsável Técnico e Anexos</span>
+      ),
+      camposObrigatorios: true,
+    },
+    {
+      titulo: <span className="verde-escuro">Modo de Preparo</span>,
+      camposObrigatorios: false,
+    },
+    {
+      titulo: <span className="verde-escuro">Outras Informações</span>,
+      camposObrigatorios: false,
+    },
+  ];
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
@@ -917,6 +948,125 @@ export default () => {
                   </>
                 )}
 
+                {stepAtual === 2 && (
+                  <Collapse
+                    collapse={collapse}
+                    setCollapse={setCollapse}
+                    id="collapseFichaTecnica"
+                    collapseConfigs={collapseConfigsInfoAcondicionamento}
+                  >
+                    <section id="formConservacao">
+                      <div className="row">
+                        <div className="col">
+                          <Field
+                            component={InputText}
+                            label="Prazo de validade após o descongelamento e mantido sob refrigeração:"
+                            name={`prazo_validade_apos_descongelamento`}
+                            placeholder="Digite o prazo de validade"
+                            className="input-ficha-tecnica"
+                            required
+                            validate={required}
+                          />
+                        </div>
+                      </div>
+                      <div className="row mt-3">
+                        <div className="col">
+                          <Field
+                            component={TextArea}
+                            label="Condições de conservação e prazo máximo para consumo após a abertura da embalagem primária:"
+                            name={`condicao_conservacao_prazo_max_consumo`}
+                            placeholder="Descreva as condições de conservação e o prazo máximo de consumo"
+                            className="textarea-ficha-tecnica"
+                            required
+                            validate={required}
+                          />
+                        </div>
+                      </div>
+                    </section>
+                    <section id="formTemperaturaTransporte">
+                      <div className="row">
+                        <div className="col-5">
+                          <Field
+                            component={InputText}
+                            label="Temperatura de congelamento do produto:"
+                            name={`temperatura_congelamento`}
+                            placeholder="Digite a temperatura de congelamento"
+                            className="input-ficha-tecnica"
+                            required
+                            validate={required}
+                          />
+                        </div>
+                        <div className="col-1 label-unidade-medida">
+                          <span>ºC</span>
+                        </div>
+                        <div className="col-5">
+                          <Field
+                            component={TextArea}
+                            label="Temperatura interna do veículo para transporte:"
+                            name={`temperatura_interna_veiculo_transporte`}
+                            placeholder="Digite a temperatura de transporte"
+                            className="input-ficha-tecnica"
+                            required
+                            validate={required}
+                          />
+                        </div>
+                        <div className="col-1 label-unidade-medida">
+                          <span>ºC</span>
+                        </div>
+                      </div>
+                      <div className="row mt-3">
+                        <div className="col">
+                          <Field
+                            component={TextArea}
+                            label="Condições de transporte:"
+                            name={`condicoes_transporte`}
+                            className="textarea-ficha-tecnica"
+                            required
+                            validate={required}
+                          />
+                        </div>
+                      </div>
+                    </section>
+                    <section id="formArmazenamento">
+                      <div className="row">
+                        <div className="col">
+                          Informações que constarão da rotulagem das embalagens
+                          primária e secundária, fechadas.
+                        </div>
+                      </div>
+                      <div className="row mt-3">
+                        <div className="col">
+                          <Field
+                            component={TextArea}
+                            label="Embalagem primária:"
+                            name={`armazenamento_embalagem_primaria`}
+                            className="textarea-ficha-tecnica"
+                            placeholder="Digite as informações de armazenamento para embalagem primária."
+                            required
+                            validate={required}
+                          />
+                        </div>
+                      </div>
+                      <div className="row mt-3">
+                        <div className="col">
+                          <Field
+                            component={TextArea}
+                            label="Embalagem secundária:"
+                            name={`armazenamento_embalagem_secundaria`}
+                            className="textarea-ficha-tecnica"
+                            placeholder="Digite as informações de armazenamento para embalagem secundária."
+                            required
+                            validate={required}
+                          />
+                        </div>
+                      </div>
+                    </section>
+                    <section id="formResponsavelTecnico"></section>
+                    <section id="formModoPreparo"></section>
+                    <section id="formOutrasInfos"></section>
+                  </Collapse>
+                )}
+
                 <hr />
 
                 {stepAtual < ITENS_STEPS.length - 1 && (
@@ -942,6 +1092,7 @@ export default () => {
                     disabled={validaRascunho(values)}
                   />
                 </div>
+
                 {stepAtual > 0 && (
                   <div className="mt-4 mb-4">
                     <Botao
