@@ -45,6 +45,7 @@ export const LancamentoPorPeriodoCEI = ({
   setObjSolicitacaoMIFinalizada,
   setSolicitacaoMedicaoInicial,
   setFinalizandoMedicao,
+  naoPodeFinalizar,
 }) => {
   const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
@@ -298,7 +299,9 @@ export const LancamentoPorPeriodoCEI = ({
                   texto="Finalizar"
                   style={BUTTON_STYLE.GREEN}
                   className="float-end"
-                  disabled={!usuarioEhEscolaTerceirizadaDiretor()}
+                  disabled={
+                    !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
+                  }
                   onClick={() => setShowModalFinalizarMedicao(true)}
                 />
               ) : (
