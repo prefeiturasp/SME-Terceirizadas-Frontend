@@ -80,6 +80,33 @@ const ITENS_STEPS = [
   },
 ];
 
+const COLLAPSE_CONFIG_INFO_ACONDICIONAMENTO: CollapseConfig[] = [
+  {
+    titulo: <span className="verde-escuro">Conservação</span>,
+    camposObrigatorios: true,
+  },
+  {
+    titulo: <span className="verde-escuro">Temperatura e Transporte</span>,
+    camposObrigatorios: true,
+  },
+  {
+    titulo: <span className="verde-escuro">Armazenamento</span>,
+    camposObrigatorios: true,
+  },
+  {
+    titulo: <span className="verde-escuro">Responsável Técnico e Anexos</span>,
+    camposObrigatorios: true,
+  },
+  {
+    titulo: <span className="verde-escuro">Modo de Preparo</span>,
+    camposObrigatorios: false,
+  },
+  {
+    titulo: <span className="verde-escuro">Outras Informações</span>,
+    camposObrigatorios: false,
+  },
+];
+
 export default () => {
   const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
   const [carregando, setCarregando] = useState<boolean>(true);
@@ -462,35 +489,6 @@ export default () => {
       !values.unidade_medida_caseira
     );
   };
-
-  const collapseConfigsInfoAcondicionamento: CollapseConfig[] = [
-    {
-      titulo: <span className="verde-escuro">Conservação</span>,
-      camposObrigatorios: true,
-    },
-    {
-      titulo: <span className="verde-escuro">Temperatura e Transporte</span>,
-      camposObrigatorios: true,
-    },
-    {
-      titulo: <span className="verde-escuro">Armazenamento</span>,
-      camposObrigatorios: true,
-    },
-    {
-      titulo: (
-        <span className="verde-escuro">Responsável Técnico e Anexos</span>
-      ),
-      camposObrigatorios: true,
-    },
-    {
-      titulo: <span className="verde-escuro">Modo de Preparo</span>,
-      camposObrigatorios: false,
-    },
-    {
-      titulo: <span className="verde-escuro">Outras Informações</span>,
-      camposObrigatorios: false,
-    },
-  ];
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
@@ -959,7 +957,7 @@ export default () => {
                     collapse={collapse}
                     setCollapse={setCollapse}
                     id="collapseFichaTecnica"
-                    collapseConfigs={collapseConfigsInfoAcondicionamento}
+                    collapseConfigs={COLLAPSE_CONFIG_INFO_ACONDICIONAMENTO}
                   >
                     <section id="formConservacao">
                       <div className="row">
@@ -1047,7 +1045,7 @@ export default () => {
                             label="Embalagem primária:"
                             name={`armazenamento_embalagem_primaria`}
                             className="textarea-ficha-tecnica"
-                            placeholder="Digite as informações de armazenamento para embalagem primária."
+                            placeholder="Digite as informações de armazenamento para embalagem primária"
                             required
                             validate={required}
                           />
@@ -1060,7 +1058,7 @@ export default () => {
                             label="Embalagem secundária:"
                             name={`armazenamento_embalagem_secundaria`}
                             className="textarea-ficha-tecnica"
-                            placeholder="Digite as informações de armazenamento para embalagem secundária."
+                            placeholder="Digite as informações de armazenamento para embalagem secundária"
                             required
                             validate={required}
                           />
@@ -1068,8 +1066,32 @@ export default () => {
                       </div>
                     </section>
                     <section id="formResponsavelTecnico"></section>
-                    <section id="formModoPreparo"></section>
-                    <section id="formOutrasInfos"></section>
+                    <section id="formModoPreparo">
+                      <div className="row">
+                        <div className="col">
+                          <Field
+                            component={TextArea}
+                            label="Descreva o modo de preparo do produto:"
+                            name={`modo_preparo`}
+                            className="textarea-ficha-tecnica"
+                            placeholder="Insira aqui as informações de modo de preparo"
+                          />
+                        </div>
+                      </div>
+                    </section>
+                    <section id="formOutrasInfos">
+                      <div className="row">
+                        <div className="col">
+                          <Field
+                            component={TextArea}
+                            label="Informações Adicionais:"
+                            name={`outras_infos`}
+                            className="textarea-ficha-tecnica"
+                            placeholder="Insira aqui as informações adicionais sobre o produto"
+                          />
+                        </div>
+                      </div>
+                    </section>
                   </Collapse>
                 )}
 
