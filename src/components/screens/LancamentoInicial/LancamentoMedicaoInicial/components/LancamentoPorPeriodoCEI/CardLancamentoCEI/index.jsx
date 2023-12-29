@@ -41,6 +41,7 @@ export const CardLancamentoCEI = ({
 
   const meusErros =
     errosAoSalvar &&
+    typeof errosAoSalvar === "object" &&
     errosAoSalvar.length > 0 &&
     errosAoSalvar.filter((obj) =>
       [textoCabecalho].includes(obj.periodo_escolar)

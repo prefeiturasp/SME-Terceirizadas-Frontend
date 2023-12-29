@@ -43,6 +43,7 @@ export const CardLancamento = ({
 
   const meusErros =
     errosAoSalvar &&
+    typeof errosAoSalvar === "object" &&
     errosAoSalvar.length > 0 &&
     errosAoSalvar.filter((obj) =>
       [textoCabecalho, grupo].includes(obj.periodo_escolar)
