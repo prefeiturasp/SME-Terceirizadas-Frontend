@@ -1,12 +1,14 @@
 import React, { Dispatch, ReactNode, SetStateAction } from "react";
 import "./styles.scss";
+import { CollapseConfig } from "./interfaces";
 
 type Props = {
   collapse: Object;
   setCollapse: Dispatch<SetStateAction<Object>>;
-  titulos: ReactNode[];
+  titulos?: ReactNode[];
   children: ReactNode[];
   id: string;
+  collapseConfigs?: CollapseConfig[];
 };
 
 const Collapse: React.FC<Props> = ({
@@ -15,12 +17,21 @@ const Collapse: React.FC<Props> = ({
   titulos,
   children,
   id,
+  collapseConfigs,
 }) => {
-  const toggleCollapse = (index) => {
+  const toggleCollapse = (index: number) => {
     setCollapse({
       [index]: !collapse[index],
     });
   };
+
+  const gerarConfigsPadrao = () =>
+    children.map((): CollapseConfig => {
+      return { titulo: "", camposObrigatorios: true };
+    });
+
+  const configs =
+    collapseConfigs?.length > 0 ? collapseConfigs : gerarConfigsPadrao();
 
   return (
     <div className="accordion accordionComponent mt-1" id={id}>
@@ -29,12 +40,20 @@ const Collapse: React.FC<Props> = ({
           <div className="card mt-3">
             <div className={`card-header card-tipo`} id={`heading_${index}`}>
               <div className="row card-header-content">
-                <span className="col-8 titulo">{titulos[index]}</span>
+                <span className="col-8 titulo">
+                  {configs[index].titulo || titulos[index]}
+                </span>
                 <div className="col-4 text-end my-auto">
-                  <span className="texto-obrigatorio required-asterisk">*</span>
-                  <span className="texto-obrigatorio">
-                    Campos de Preenchimento Obrigatório
-                  </span>
+                  {configs[index].camposObrigatorios && (
+                    <>
+                      <span className="texto-obrigatorio required-asterisk">
+                        *
+                      </span>
+                      <span className="texto-obrigatorio">
+                        Campos de Preenchimento Obrigatório
+                      </span>
+                    </>
+                  )}
                   <span>
                     <button
                       onClick={() => toggleCollapse(index)}
@@ -57,7 +76,6 @@ const Collapse: React.FC<Props> = ({
                     </button>
                   </span>
                 </div>
-                {/* <div className="col-1 text-end"></div> */}
               </div>
             </div>
 
