@@ -6,12 +6,11 @@ import InputText from "components/Shareable/Input/InputText";
 import Label from "components/Shareable/Label";
 import InputFile from "components/Shareable/Input/InputFile";
 import Select from "components/Shareable/Select";
+import CheckboxComBorda from "components/Shareable/CheckboxComBorda";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { required } from "helpers/fieldValidators";
 import { CollapseConfig } from "components/Shareable/Collapse/interfaces";
 import { OptionsGenerico } from "interfaces/pre_recebimento.interface";
-
-import CheckboxDestacado from "../CheckboxDestacado";
 
 const COLLAPSE_CONFIG_INFO_ACONDICIONAMENTO: CollapseConfig[] = [
   {
@@ -179,12 +178,18 @@ export default ({
       <section id="formEmbalagemRotulagem">
         <div className="subtitulo">Embalagem</div>
 
-        <CheckboxDestacado
-          name="checkbox_embalagem"
-          label="Declaro que as embalagens primária e secundária em que serão entregues o produto estarão de acordo com as especificações do Anexo I do Edital."
-        />
+        <div className="row mt-3">
+          <div className="col">
+            <Field
+              name={`checkbox_embalagem`}
+              component={CheckboxComBorda}
+              label="Declaro que as embalagens primária e secundária em que serão entregues o
+              produto estarão de acordo com as especificações do Anexo I do Edital."
+            />
+          </div>
+        </div>
 
-        <div className="row">
+        <div className="row mt-3">
           <div className="col">
             <Field
               component={TextArea}
@@ -192,6 +197,8 @@ export default ({
               name={`material_embalagem_primaria`}
               className="textarea-ficha-tecnica"
               placeholder="Digite as informações da embalagem primária"
+              required
+              validate={required}
             />
           </div>
         </div>
@@ -370,6 +377,18 @@ export default ({
         <hr />
 
         <div className="subtitulo">Rotulagem</div>
+
+        <div className="row mt-3">
+          <div className="col">
+            <Field
+              name={`checkbox_rotulagem`}
+              component={CheckboxComBorda}
+              label="Declaro que no rótulo da embalagem primária e, se for o
+              caso, da secundária, constarão, de forma legível e indelével,
+              todas as informações solicitadas do Anexo I do Edital."
+            />
+          </div>
+        </div>
       </section>
 
       <section id="formResponsavelTecnico">
