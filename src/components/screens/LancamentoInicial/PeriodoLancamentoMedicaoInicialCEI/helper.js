@@ -160,31 +160,24 @@ export const desabilitarField = (
 ) => {
   if (!ehEmeiDaCemeiLocation) {
     if (nomeCategoria === "ALIMENTAÇÃO") {
-      if (validacaoDiaLetivo(dia)) {
-        const resultado = inclusoesAutorizadas.some(
-          (inclusao) =>
-            parseInt(dia) === parseInt(inclusao.dia) &&
-            rowName === "frequencia" &&
-            !["Mês anterior", "Mês posterior"].includes(
-              values[
-                `${rowName}__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
-              ]
-            ) &&
-            inclusao.faixas_etarias.includes(uuidFaixaEtaria)
-        );
-        if (resultado) return false;
-      } else {
-        const resultado = inclusoesAutorizadas.some(
-          (inclusao) =>
-            parseInt(dia) === parseInt(inclusao.dia) &&
-            rowName === "frequencia" &&
-            !["Mês anterior", "Mês posterior"].includes(
-              values[
-                `${rowName}__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
-              ]
-            )
-        );
-        if (resultado) return false;
+      const resultado = inclusoesAutorizadas.some(
+        (inclusao) =>
+          parseInt(dia) === parseInt(inclusao.dia) &&
+          rowName === "frequencia" &&
+          !["Mês anterior", "Mês posterior"].includes(
+            values[
+              `${rowName}__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+            ]
+          ) &&
+          inclusao.faixas_etarias.includes(uuidFaixaEtaria)
+      );
+      if (
+        resultado &&
+        values[
+          `matriculados__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+        ]
+      ) {
+        return false;
       }
     } else {
       const resultado =
