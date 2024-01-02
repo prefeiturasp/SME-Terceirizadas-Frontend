@@ -94,13 +94,10 @@ export default () => {
       setNomeTerceirizada(
         respostaEscolaSimples.data.lote.terceirizada.nome_fantasia
       );
-      const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
-        escola.uuid
-      );
+
       setPanoramaGeral(respostaPanorama.data);
       setEscolaInstituicao(escola);
       setLoteEscolaSimples(respostaEscolaSimples.data.lote.nome);
-      setPeriodosEscolaSimples(response_vinculos.data.results);
 
       let solicitacoesLancadas = [];
 
@@ -156,6 +153,11 @@ export default () => {
       let ano = params.get("ano");
       setMes(mes);
       setAno(ano);
+      const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
+        escola.uuid,
+        { ano }
+      );
+      setPeriodosEscolaSimples(response_vinculos.data.results);
       if (location.search) {
         if (mes <= 0 || mes > 12) {
           mes = format(new Date(), "MM");
@@ -260,6 +262,11 @@ export default () => {
     const ano = getYear(new Date(value)).toString();
     setMes(mes);
     setAno(ano);
+    const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
+      escolaInstituicao.uuid,
+      { ano }
+    );
+    setPeriodosEscolaSimples(response_vinculos.data.results);
     await getPeriodosEscolaCemeiComAlunosEmeiAsync(escolaInstituicao, mes, ano);
     setLoadingSolicitacaoMedicaoInicial(false);
     history.replace({

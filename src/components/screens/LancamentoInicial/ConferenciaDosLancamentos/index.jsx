@@ -335,7 +335,8 @@ export const ConferenciaDosLancamentos = () => {
   const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
     const escolaUuid = location.state.escolaUuid;
     const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
-      escolaUuid
+      escolaUuid,
+      { ano: anoSolicitacao }
     );
     if (response_vinculos.status === HTTP_STATUS.OK) {
       setPeriodosSimples(response_vinculos.data.results);
@@ -389,8 +390,9 @@ export const ConferenciaDosLancamentos = () => {
     Promise.all([
       getPeriodosGruposMedicaoAsync(),
       getSolMedInicialAsync(),
-      getVinculosTipoAlimentacaoPorEscolaAsync(),
-    ]).then(() => setLoading(false));
+    ]).then(() => {
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
@@ -532,8 +534,9 @@ export const ConferenciaDosLancamentos = () => {
     Promise.all([
       getPeriodosGruposMedicaoAsync(),
       getSolMedInicialAsync(),
-      getVinculosTipoAlimentacaoPorEscolaAsync(),
-    ]).then(() => setLoading(false));
+    ]).then(() => {
+      setLoading(false);
+    });
   };
 
   const aprovarSolicitacaoMedicao = async () => {
@@ -559,8 +562,9 @@ export const ConferenciaDosLancamentos = () => {
     Promise.all([
       getPeriodosGruposMedicaoAsync(),
       getSolMedInicialAsync(),
-      getVinculosTipoAlimentacaoPorEscolaAsync(),
-    ]).then(() => setLoading(false));
+    ]).then(() => {
+      setLoading(false);
+    });
   };
 
   const solicitarCorrecaoMedicao = async () => {
@@ -581,9 +585,16 @@ export const ConferenciaDosLancamentos = () => {
     Promise.all([
       getPeriodosGruposMedicaoAsync(),
       getSolMedInicialAsync(),
-      getVinculosTipoAlimentacaoPorEscolaAsync(),
-    ]).then(() => setLoading(false));
+    ]).then(() => {
+      setLoading(false);
+    });
   };
+
+  useEffect(() => {
+    if (anoSolicitacao) {
+      getVinculosTipoAlimentacaoPorEscolaAsync();
+    }
+  }, [anoSolicitacao]);
 
   const handleClickDownload = async () => {
     const urlParams = new URLSearchParams(window.location.search);
