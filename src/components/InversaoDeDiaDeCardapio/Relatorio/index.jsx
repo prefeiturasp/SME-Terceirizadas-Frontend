@@ -333,61 +333,63 @@ class Relatorio extends Component {
                   solicitacao={inversaoDiaCardapio}
                 />
                 {visualizaBotoesDoFluxo(inversaoDiaCardapio) && (
-                  <div className="form-group row float-end mt-4">
-                    {EXIBIR_BOTAO_NAO_APROVAR && (
-                      <Botao
-                        texto={textoBotaoNaoAprova}
-                        className="ms-3"
-                        onClick={() => this.showNaoAprovaModal("Não")}
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                      />
-                    )}
-                    {EXIBIR_BOTAO_APROVAR &&
-                      textoBotaoAprova !== "Ciente" &&
-                      (visao === CODAE &&
-                      inversaoDiaCardapio.logs.filter(
-                        (log) =>
-                          log.status_evento_explicacao ===
-                            "Terceirizada respondeu questionamento" &&
-                          !log.resposta_sim_nao
-                      ).length > 0 ? null : (
+                  <div className="row mt-4">
+                    <div className="col-12 text-end">
+                      {EXIBIR_BOTAO_NAO_APROVAR && (
                         <Botao
-                          texto={textoBotaoAprova}
+                          texto={textoBotaoNaoAprova}
                           className="ms-3"
-                          onClick={() => handleClickBotaoAprova()}
+                          onClick={() => this.showNaoAprovaModal("Não")}
                           type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.GREEN}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
                         />
-                      ))}
-                    {EXIBIR_BOTAO_QUESTIONAMENTO && (
-                      <Botao
-                        texto={
-                          tipoPerfil ===
-                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-                            ? "Questionar"
-                            : "Sim"
-                        }
-                        type={BUTTON_TYPE.BUTTON}
-                        onClick={() => this.showQuestionamentoModal("Sim")}
-                        style={BUTTON_STYLE.GREEN}
-                        className="ms-3"
-                      />
-                    )}
-                    {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-                      <div className="form-group float-end mt-4">
-                        {inversaoDiaCardapio.terceirizada_conferiu_gestao ? (
-                          <label className="ms-3 conferido">
-                            <i className="fas fa-check me-2" />
-                            Solicitação Conferida
-                          </label>
-                        ) : (
-                          <BotaoMarcarConferencia
-                            uuid={inversaoDiaCardapio.uuid}
+                      )}
+                      {EXIBIR_BOTAO_APROVAR &&
+                        textoBotaoAprova !== "Ciente" &&
+                        (visao === CODAE &&
+                        inversaoDiaCardapio.logs.filter(
+                          (log) =>
+                            log.status_evento_explicacao ===
+                              "Terceirizada respondeu questionamento" &&
+                            !log.resposta_sim_nao
+                        ).length > 0 ? null : (
+                          <Botao
+                            texto={textoBotaoAprova}
+                            className="ms-3"
+                            onClick={() => handleClickBotaoAprova()}
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN}
                           />
-                        )}
-                      </div>
-                    )}
+                        ))}
+                      {EXIBIR_BOTAO_QUESTIONAMENTO && (
+                        <Botao
+                          texto={
+                            tipoPerfil ===
+                            TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                              ? "Questionar"
+                              : "Sim"
+                          }
+                          type={BUTTON_TYPE.BUTTON}
+                          onClick={() => this.showQuestionamentoModal("Sim")}
+                          style={BUTTON_STYLE.GREEN}
+                          className="ms-3"
+                        />
+                      )}
+                      {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                        <div className="form-group float-end mt-4">
+                          {inversaoDiaCardapio.terceirizada_conferiu_gestao ? (
+                            <label className="ms-3 conferido">
+                              <i className="fas fa-check me-2" />
+                              Solicitação Conferida
+                            </label>
+                          ) : (
+                            <BotaoMarcarConferencia
+                              uuid={inversaoDiaCardapio.uuid}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>

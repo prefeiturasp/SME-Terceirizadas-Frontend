@@ -380,84 +380,88 @@ class Relatorio extends Component {
                   solicitacao={inclusaoDeAlimentacao}
                 />
                 {visualizaBotoesDoFluxo(inclusaoDeAlimentacao) && (
-                  <div className="form-group row float-end mt-4 me-3">
-                    {EXIBIR_BOTAO_NAO_APROVAR && (
-                      <Botao
-                        texto={textoBotaoNaoAprova}
-                        className="ms-3"
-                        onClick={() => this.showNaoAprovaModal("Não")}
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                      />
-                    )}
-                    {EXIBIR_BOTAO_APROVAR &&
-                      textoBotaoAprova !== "Ciente" &&
-                      (visao === CODAE &&
-                      inclusaoDeAlimentacao.logs.filter(
-                        (log) =>
-                          log.status_evento_explicacao ===
-                            "Terceirizada respondeu questionamento" &&
-                          !log.resposta_sim_nao
-                      ).length > 0 ? null : (
+                  <div className="row mt-4 me-3">
+                    <div className="col-12 text-end">
+                      {EXIBIR_BOTAO_NAO_APROVAR && (
                         <Botao
-                          texto={textoBotaoAprova}
-                          type={BUTTON_TYPE.BUTTON}
-                          onClick={() =>
-                            visao === DRE
-                              ? this.handleSubmit()
-                              : EXIBIR_MODAL_AUTORIZACAO_APOS_QUESTIONAMENTO
-                              ? this.showAutorizarModal()
-                              : this.showModalCodaeAutorizar()
-                          }
-                          style={BUTTON_STYLE.GREEN}
+                          texto={textoBotaoNaoAprova}
                           className="ms-3"
+                          onClick={() => this.showNaoAprovaModal("Não")}
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
                         />
-                      ))}
-                    {EXIBIR_BOTAO_QUESTIONAMENTO && (
-                      <>
-                        {inclusaoDeAlimentacao.status ===
-                          statusEnum.CODAE_QUESTIONADO &&
-                        tipoPerfil === TIPO_PERFIL.TERCEIRIZADA ? (
+                      )}
+                      {EXIBIR_BOTAO_APROVAR &&
+                        textoBotaoAprova !== "Ciente" &&
+                        (visao === CODAE &&
+                        inclusaoDeAlimentacao.logs.filter(
+                          (log) =>
+                            log.status_evento_explicacao ===
+                              "Terceirizada respondeu questionamento" &&
+                            !log.resposta_sim_nao
+                        ).length > 0 ? null : (
                           <Botao
-                            key="1"
-                            texto="Não"
+                            texto={textoBotaoAprova}
                             type={BUTTON_TYPE.BUTTON}
-                            onClick={() => this.showQuestionamentoModal("Não")}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            onClick={() =>
+                              visao === DRE
+                                ? this.handleSubmit()
+                                : EXIBIR_MODAL_AUTORIZACAO_APOS_QUESTIONAMENTO
+                                ? this.showAutorizarModal()
+                                : this.showModalCodaeAutorizar()
+                            }
+                            style={BUTTON_STYLE.GREEN}
                             className="ms-3"
                           />
-                        ) : (
-                          <></>
-                        )}
-                        <Botao
-                          key="2"
-                          texto={
-                            tipoPerfil ===
-                            TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-                              ? "Questionar"
-                              : "Sim"
-                          }
-                          type={BUTTON_TYPE.BUTTON}
-                          onClick={() => this.showQuestionamentoModal("Sim")}
-                          style={BUTTON_STYLE.GREEN}
-                          className="ms-3"
-                        />
-                      </>
-                    )}
-                    {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-                      <div className="form-group float-end mt-4">
-                        {inclusaoDeAlimentacao.terceirizada_conferiu_gestao ? (
-                          <label className="ms-3 conferido">
-                            <i className="fas fa-check me-2" />
-                            Solicitação Conferida
-                          </label>
-                        ) : (
-                          <BotaoMarcarConferencia
-                            uuid={inclusaoDeAlimentacao.uuid}
+                        ))}
+                      {EXIBIR_BOTAO_QUESTIONAMENTO && (
+                        <>
+                          {inclusaoDeAlimentacao.status ===
+                            statusEnum.CODAE_QUESTIONADO &&
+                          tipoPerfil === TIPO_PERFIL.TERCEIRIZADA ? (
+                            <Botao
+                              key="1"
+                              texto="Não"
+                              type={BUTTON_TYPE.BUTTON}
+                              onClick={() =>
+                                this.showQuestionamentoModal("Não")
+                              }
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              className="ms-3"
+                            />
+                          ) : (
+                            <></>
+                          )}
+                          <Botao
+                            key="2"
+                            texto={
+                              tipoPerfil ===
+                              TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                                ? "Questionar"
+                                : "Sim"
+                            }
+                            type={BUTTON_TYPE.BUTTON}
+                            onClick={() => this.showQuestionamentoModal("Sim")}
+                            style={BUTTON_STYLE.GREEN}
+                            className="ms-3"
                           />
-                        )}
-                      </div>
-                    )}
+                        </>
+                      )}
+                      {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                        <div className="form-group float-end mt-4">
+                          {inclusaoDeAlimentacao.terceirizada_conferiu_gestao ? (
+                            <label className="ms-3 conferido">
+                              <i className="fas fa-check me-2" />
+                              Solicitação Conferida
+                            </label>
+                          ) : (
+                            <BotaoMarcarConferencia
+                              uuid={inclusaoDeAlimentacao.uuid}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
