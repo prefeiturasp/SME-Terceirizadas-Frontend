@@ -1,0 +1,25 @@
+@import "styles/variables.scss";
+
+.checkbox-com-borda {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 5px;
+
+  &.marcado {
+    border: 1px solid $greenLight;
+  }
+
+  &.desmarcado {
+    border: 1px solid $red;
+  }
+
+  .checkbox-input {
+    cursor: pointer;
+  }
+
+  .checkbox-label {
+    margin-left: 10px;
+    cursor: pointer;
+  }
+}
