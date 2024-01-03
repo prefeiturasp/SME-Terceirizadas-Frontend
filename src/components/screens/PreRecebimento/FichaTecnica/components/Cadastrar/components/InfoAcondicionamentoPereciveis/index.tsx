@@ -84,7 +84,7 @@ export default ({
           <div className="col">
             <Field
               component={InputText}
-              label="Prazo de validade após o descongelamento e mantido sob refrigeração:"
+              label="Prazo de Validade após o descongelamento e mantido sob refrigeração:"
               name={`prazo_validade_descongelamento`}
               placeholder="Digite o prazo de validade"
               className="input-ficha-tecnica"
@@ -97,7 +97,7 @@ export default ({
           <div className="col">
             <Field
               component={TextArea}
-              label="Condições de conservação e prazo máximo para consumo após a abertura da embalagem primária:"
+              label="Condições de conservação e Prazo máximo para consumo após a abertura da embalagem primária:"
               name={`condicoes_de_conservacao`}
               placeholder="Descreva as condições de conservação e o prazo máximo de consumo"
               className="textarea-ficha-tecnica"
@@ -113,7 +113,7 @@ export default ({
           <div className="col-5">
             <Field
               component={InputText}
-              label="Temperatura de congelamento do produto:"
+              label="Temperatura de Congelamento do Produto:"
               name={`temperatura_congelamento`}
               placeholder="Digite a temperatura de congelamento"
               className="input-ficha-tecnica"
@@ -131,7 +131,7 @@ export default ({
           <div className="col-5">
             <Field
               component={InputText}
-              label="Temperatura interna do veículo para transporte:"
+              label="Temperatura Interna do Veículo para Transporte:"
               name={`temperatura_veiculo`}
               placeholder="Digite a temperatura de transporte"
               className="input-ficha-tecnica"
@@ -150,7 +150,7 @@ export default ({
           <div className="col">
             <Field
               component={TextArea}
-              label="Condições de transporte:"
+              label="Condições de Transporte:"
               name={`condicoes_de_transporte`}
               className="textarea-ficha-tecnica"
               required
@@ -171,7 +171,7 @@ export default ({
           <div className="col">
             <Field
               component={TextArea}
-              label="Embalagem primária:"
+              label="Embalagem Primária:"
               name={`embalagem_primaria`}
               className="textarea-ficha-tecnica"
               placeholder="Digite as informações de armazenamento para embalagem primária"
@@ -184,7 +184,7 @@ export default ({
           <div className="col">
             <Field
               component={TextArea}
-              label="Embalagem secundária:"
+              label="Embalagem Secundária:"
               name={`embalagem_secundaria`}
               className="textarea-ficha-tecnica"
               placeholder="Digite as informações de armazenamento para embalagem secundária"
@@ -203,8 +203,9 @@ export default ({
             <Field
               name={`embalagens_de_acordo_com_anexo`}
               component={CheckboxComBorda}
-              label="Declaro que as embalagens primária e secundária em que serão entregues o
-              produto estarão de acordo com as especificações do Anexo I do Edital."
+              label="Declaro que as embalagens primária e secundária em que
+              serão entregues o produto estarão de acordo com as
+              especificações do Anexo I do Edital."
             />
           </div>
         </div>
@@ -227,14 +228,14 @@ export default ({
           <div className="row">
             <div className="col-6">
               <Label
-                content="Peso líquido do produto na embalagem primária:"
+                content="Peso Líquido do Produto na Embalagem Primária:"
                 required
               />
             </div>
 
             <div className="col-6">
               <Label
-                content="Peso líquido do produto na embalagem secundária:"
+                content="Peso Líquido do Produto na Embalagem Secundária:"
                 required
               />
             </div>
@@ -245,7 +246,7 @@ export default ({
               <Field
                 component={InputText}
                 name={`peso_liquido_embalagem_primaria`}
-                placeholder="Digite o peso"
+                placeholder="Digite o Peso"
                 className="input-ficha-tecnica"
                 apenasNumeros
                 required
@@ -272,7 +273,7 @@ export default ({
               <Field
                 component={InputText}
                 name={`peso_liquido_embalagem_secundaria`}
-                placeholder="Digite o peso"
+                placeholder="Digite o Peso"
                 className="input-ficha-tecnica"
                 apenasNumeros
                 required
@@ -300,11 +301,11 @@ export default ({
         <div className="row mt-3">
           <div className="row">
             <div className="col-6">
-              <Label content="Peso da embalagem primária vazia:" required />
+              <Label content="Peso da Embalagem Primária Vazia:" required />
             </div>
 
             <div className="col-6">
-              <Label content="Peso da embalagem secundária vazia:" required />
+              <Label content="Peso da Embalagem Secundária Vazia:" required />
             </div>
           </div>
 
@@ -313,7 +314,7 @@ export default ({
               <Field
                 component={InputText}
                 name={`peso_embalagem_primaria_vazia`}
-                placeholder="Digite o peso"
+                placeholder="Digite o Peso"
                 className="input-ficha-tecnica"
                 apenasNumeros
                 required
@@ -340,7 +341,7 @@ export default ({
               <Field
                 component={InputText}
                 name={`peso_embalagem_secundaria_vazia`}
-                placeholder="Digite o peso"
+                placeholder="Digite o Peso"
                 className="input-ficha-tecnica"
                 apenasNumeros
                 required
@@ -369,7 +370,7 @@ export default ({
           <div className="row">
             <div className="col-6">
               <Label
-                content="Variação porcentual do peso do produto ao descongelar:"
+                content="Variação Porcentual do Peso do Produto ao Descongelar:"
                 required
               />
             </div>
@@ -380,7 +381,7 @@ export default ({
               <Field
                 component={InputText}
                 name={`variacao_percentual`}
-                placeholder="Digite % do peso"
+                placeholder="Digite % do Peso"
                 className="input-ficha-tecnica"
                 required
                 validate={composeValidators(
@@ -400,7 +401,7 @@ export default ({
           <div className="col">
             <Field
               component={TextArea}
-              label="Descrever o sistema de vedação da embalagem secundária:"
+              label="Descrever o Sistema de Vedação da Embalagem Secundária:"
               name={`sistema_vedacao_embalagem_secundaria`}
               className="textarea-ficha-tecnica"
               placeholder="Digite as informações da embalagem secundária"
