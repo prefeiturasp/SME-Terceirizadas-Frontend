@@ -57,8 +57,8 @@ export default ({
               onClick={() => toggleBtnNotificacoes(notificacao.uuid)}
               className="btn btn-link btn-block text-start px-0"
               type="button"
-              data-toggle="collapse"
-              data-target={`#collapse_${notificacao.uuid}`}
+              data-bs-toggle="collapse"
+              data-bs-target={`#collapse_${notificacao.uuid}`}
               aria-expanded="true"
               aria-controls={`collapse_${notificacao.uuid}`}
             >
@@ -80,7 +80,7 @@ export default ({
         id={`collapse_${notificacao.uuid}`}
         className="collapse"
         aria-labelledby="headingOne"
-        data-parent="#accordionNotificacoes"
+        data-bs-parent="#accordionNotificacoes"
       >
         <div className="card-body">
           <div className="row">
