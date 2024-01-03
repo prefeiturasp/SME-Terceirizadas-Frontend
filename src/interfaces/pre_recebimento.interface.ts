@@ -181,6 +181,32 @@ export interface FichaTecnicaDetalhada {
   valor_unidade_caseira: string;
   unidade_medida_caseira: string;
   informacoes_nutricionais: InformacoesNutricionaisFichaTecnica[];
+  prazo_validade_descongelamento: string;
+  condicoes_de_conservacao: string;
+  temperatura_congelamento: string;
+  temperatura_veiculo: string;
+  condicoes_de_transporte: string;
+  embalagem_primaria: string;
+  embalagem_secundaria: string;
+  embalagens_de_acordo_com_anexo?: boolean;
+  material_embalagem_primaria: string;
+  peso_liquido_embalagem_primaria: number;
+  unidade_medida_primaria: UnidadeMedidaSimples;
+  peso_liquido_embalagem_secundaria: number;
+  unidade_medida_secundaria: UnidadeMedidaSimples;
+  peso_embalagem_primaria_vazia: number;
+  unidade_medida_primaria_vazia: UnidadeMedidaSimples;
+  peso_embalagem_secundaria_vazia: number;
+  unidade_medida_secundaria_vazia: UnidadeMedidaSimples;
+  sistema_vedacao_embalagem_secundaria: string;
+  rotulo_legivel?: boolean;
+  variacao_percentual: number;
+  nome_responsavel_tecnico: string;
+  habilitacao: string;
+  numero_registro_orgao: string;
+  arquivo?: Blob;
+  modo_de_preparo: string;
+  informacoes_adicionais: string;
 }
 
 export interface EtapaCalendario {
