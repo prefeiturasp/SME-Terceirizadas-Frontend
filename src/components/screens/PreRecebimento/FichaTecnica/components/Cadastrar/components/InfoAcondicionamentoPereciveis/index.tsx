@@ -11,6 +11,7 @@ import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
   required,
   composeValidators,
+  inteiroOuDecimalComVirgula,
   inteiroOuDecimalPositivoOuNegativo,
 } from "helpers/fieldValidators";
 import { CollapseConfig } from "components/Shareable/Collapse/interfaces";
@@ -116,6 +117,7 @@ export default ({
               name={`temperatura_congelamento`}
               placeholder="Digite a temperatura de congelamento"
               className="input-ficha-tecnica"
+              tooltipText="No processo de fabricação"
               required
               validate={composeValidators(
                 required,
@@ -123,7 +125,7 @@ export default ({
               )}
             />
           </div>
-          <div className="col-1 label-unidade-medida">
+          <div className="col-1 label-unidade-medida label-unidade-medida-bottom">
             <span>ºC</span>
           </div>
           <div className="col-5">
@@ -140,7 +142,7 @@ export default ({
               )}
             />
           </div>
-          <div className="col-1 label-unidade-medida">
+          <div className="col-1 label-unidade-medida label-unidade-medida-bottom">
             <span>ºC</span>
           </div>
         </div>
@@ -378,15 +380,17 @@ export default ({
               <Field
                 component={InputText}
                 name={`variacao_percentual`}
-                placeholder="Digite % do Peso"
+                placeholder="Digite % do peso"
                 className="input-ficha-tecnica"
-                apenasNumeros
                 required
-                validate={required}
+                validate={composeValidators(
+                  required,
+                  inteiroOuDecimalComVirgula
+                )}
               />
             </div>
 
-            <div className="col-1 label-unidade-medida">
+            <div className="col-1 label-unidade-medida label-unidade-medida-top">
               <span>%</span>
             </div>
           </div>

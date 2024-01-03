@@ -272,7 +272,9 @@ export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
     sistema_vedacao_embalagem_secundaria:
       ficha.sistema_vedacao_embalagem_secundaria,
     rotulo_legivel: ficha.rotulo_legivel,
-    variacao_percentual: ficha.variacao_percentual,
+    variacao_percentual: ficha.variacao_percentual
+      ?.toString()
+      .replace(".", ","),
     nome_responsavel_tecnico: ficha.nome_responsavel_tecnico,
     habilitacao: ficha.habilitacao,
     numero_registro_orgao: ficha.numero_registro_orgao,
@@ -358,7 +360,8 @@ export const formataPayload = (
     sistema_vedacao_embalagem_secundaria:
       values.sistema_vedacao_embalagem_secundaria || "",
     rotulo_legivel: values.rotulo_legivel || false,
-    variacao_percentual: values.variacao_percentual || null,
+    variacao_percentual:
+      Number(values.variacao_percentual?.replace(",", ".")) || null,
     nome_responsavel_tecnico: values.nome_responsavel_tecnico || "",
     habilitacao: values.habilitacao || "",
     numero_registro_orgao: values.numero_registro_orgao || "",

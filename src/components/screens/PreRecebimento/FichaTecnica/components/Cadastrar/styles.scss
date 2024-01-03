@@ -79,11 +79,19 @@
     font-size: 20px;
     font-weight: 600;
     display: flex;
-    align-items: flex-end;
     justify-content: flex-start;
-    padding-bottom: 7.5px;
     padding-left: 0;
     color: #42474a;
+  }
+
+  .label-unidade-medida-bottom {
+    align-items: flex-end;
+    padding-bottom: 7.5px;
+  }
+
+  .label-unidade-medida-top {
+    align-items: flex-start;
+    padding-top: 7.5px;
   }
 
   .verde-escuro {
