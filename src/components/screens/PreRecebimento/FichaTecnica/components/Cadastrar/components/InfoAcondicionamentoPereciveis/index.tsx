@@ -8,7 +8,11 @@ import InputFile from "components/Shareable/Input/InputFile";
 import Select from "components/Shareable/Select";
 import CheckboxComBorda from "components/Shareable/CheckboxComBorda";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
-import { required } from "helpers/fieldValidators";
+import {
+  required,
+  composeValidators,
+  inteiroOuDecimalPositivoOuNegativo,
+} from "helpers/fieldValidators";
 import { CollapseConfig } from "components/Shareable/Collapse/interfaces";
 import { OptionsGenerico } from "interfaces/pre_recebimento.interface";
 
@@ -72,7 +76,7 @@ export default ({
             <Field
               component={InputText}
               label="Prazo de validade após o descongelamento e mantido sob refrigeração:"
-              name={`prazo_validade_apos_descongelamento`}
+              name={`prazo_validade_descongelamento`}
               placeholder="Digite o prazo de validade"
               className="input-ficha-tecnica"
               required
@@ -85,7 +89,7 @@ export default ({
             <Field
               component={TextArea}
               label="Condições de conservação e prazo máximo para consumo após a abertura da embalagem primária:"
-              name={`condicao_conservacao_prazo_max_consumo`}
+              name={`condicoes_de_conservacao`}
               placeholder="Descreva as condições de conservação e o prazo máximo de consumo"
               className="textarea-ficha-tecnica"
               required
@@ -105,7 +109,10 @@ export default ({
               placeholder="Digite a temperatura de congelamento"
               className="input-ficha-tecnica"
               required
-              validate={required}
+              validate={composeValidators(
+                required,
+                inteiroOuDecimalPositivoOuNegativo
+              )}
             />
           </div>
           <div className="col-1 label-unidade-medida">
@@ -115,11 +122,14 @@ export default ({
             <Field
               component={InputText}
               label="Temperatura interna do veículo para transporte:"
-              name={`temperatura_interna_veiculo_transporte`}
+              name={`temperatura_veiculo`}
               placeholder="Digite a temperatura de transporte"
               className="input-ficha-tecnica"
               required
-              validate={required}
+              validate={composeValidators(
+                required,
+                inteiroOuDecimalPositivoOuNegativo
+              )}
             />
           </div>
           <div className="col-1 label-unidade-medida">
@@ -131,7 +141,7 @@ export default ({
             <Field
               component={TextArea}
               label="Condições de transporte:"
-              name={`condicoes_transporte`}
+              name={`condicoes_de_transporte`}
               className="textarea-ficha-tecnica"
               required
               validate={required}
@@ -152,7 +162,7 @@ export default ({
             <Field
               component={TextArea}
               label="Embalagem primária:"
-              name={`armazenamento_embalagem_primaria`}
+              name={`embalagem_primaria`}
               className="textarea-ficha-tecnica"
               placeholder="Digite as informações de armazenamento para embalagem primária"
               required
@@ -165,7 +175,7 @@ export default ({
             <Field
               component={TextArea}
               label="Embalagem secundária:"
-              name={`armazenamento_embalagem_secundaria`}
+              name={`embalagem_secundaria`}
               className="textarea-ficha-tecnica"
               placeholder="Digite as informações de armazenamento para embalagem secundária"
               required
@@ -181,7 +191,7 @@ export default ({
         <div className="row mt-3">
           <div className="col">
             <Field
-              name={`checkbox_embalagem`}
+              name={`embalagens_de_acordo_com_anexo`}
               component={CheckboxComBorda}
               label="Declaro que as embalagens primária e secundária em que serão entregues o
               produto estarão de acordo com as especificações do Anexo I do Edital."
@@ -241,7 +251,7 @@ export default ({
                   { nome: "Unidade de Medida", uuid: "" },
                   ...unidadesMedidaOptions,
                 ]}
-                name={`unidade_medida_peso_liquido_embalagem_primaria`}
+                name={`unidade_medida_primaria`}
                 className="input-ficha-tecnica"
                 required
                 validate={required}
@@ -268,7 +278,7 @@ export default ({
                   { nome: "Unidade de Medida", uuid: "" },
                   ...unidadesMedidaOptions,
                 ]}
-                name={`unidade_medida_peso_liquido_embalagem_secundaria`}
+                name={`unidade_medida_secundaria`}
                 className="input-ficha-tecnica"
                 required
                 validate={required}
@@ -309,7 +319,7 @@ export default ({
                   { nome: "Unidade de Medida", uuid: "" },
                   ...unidadesMedidaOptions,
                 ]}
-                name={`unidade_medida_peso_embalagem_primaria_vazia`}
+                name={`unidade_medida_primaria_vazia`}
                 className="input-ficha-tecnica"
                 required
                 validate={required}
@@ -336,7 +346,7 @@ export default ({
                   { nome: "Unidade de Medida", uuid: "" },
                   ...unidadesMedidaOptions,
                 ]}
-                name={`unidade_medida_peso_embalagem_secundaria_vazia`}
+                name={`unidade_medida_secundaria_vazia`}
                 className="input-ficha-tecnica"
                 required
                 validate={required}
@@ -359,7 +369,7 @@ export default ({
             <div className="col-2">
               <Field
                 component={InputText}
-                name={`variacao_porcentual_descongelar`}
+                name={`variacao_percentual`}
                 placeholder="Digite % do Peso"
                 className="input-ficha-tecnica"
                 apenasNumeros
@@ -374,6 +384,20 @@ export default ({
           </div>
         </div>
 
+        <div className="row mt-3">
+          <div className="col">
+            <Field
+              component={TextArea}
+              label="Descrever o sistema de vedação da embalagem secundária:"
+              name={`sistema_vedacao_embalagem_secundaria`}
+              className="textarea-ficha-tecnica"
+              placeholder="Digite as informações da embalagem secundária"
+              required
+              validate={required}
+            />
+          </div>
+        </div>
+
         <hr />
 
         <div className="subtitulo">Rotulagem</div>
@@ -381,7 +405,7 @@ export default ({
         <div className="row mt-3">
           <div className="col">
             <Field
-              name={`checkbox_rotulagem`}
+              name={`rotulo_legivel`}
               component={CheckboxComBorda}
               label="Declaro que no rótulo da embalagem primária e, se for o
               caso, da secundária, constarão, de forma legível e indelével,
@@ -410,7 +434,7 @@ export default ({
             <Field
               component={InputText}
               label="Habilitação:"
-              name={`habilitacao_responsavel_tecnico`}
+              name={`habilitacao`}
               placeholder="Digite a habilitação"
               className="input-ficha-tecnica"
               required
@@ -421,31 +445,7 @@ export default ({
             <Field
               component={InputText}
               label="Nº do Registro em Órgão Competente:"
-              name={`num_registro_responsavel_tecnico`}
-              placeholder="Digite o número do registro"
-              className="input-ficha-tecnica"
-              required
-              validate={required}
-            />
-          </div>
-        </div>
-        <div className="row mt-3">
-          <div className="col-6">
-            <Field
-              component={InputText}
-              label="Habilitação:"
-              name={`habilitacao_responsavel_tecnico`}
-              placeholder="Digite a habilitação"
-              className="input-ficha-tecnica"
-              required
-              validate={required}
-            />
-          </div>
-          <div className="col-6">
-            <Field
-              component={InputText}
-              label="Nº do Registro em Órgão Competente:"
-              name={`num_registro_responsavel_tecnico`}
+              name={`numero_registro_orgao`}
               placeholder="Digite o número do registro"
               className="input-ficha-tecnica"
               required
@@ -459,7 +459,7 @@ export default ({
             // arquivosPreCarregados={arquivosIniciais}
             className="inputfile"
             texto="Anexar Ficha Assinada pelo RT"
-            name={"ficha_assinada_rt"}
+            name={"arquivo"}
             accept="PDF"
             setFiles={inserirArquivoFichaAssinadaRT}
             removeFile={removerArquivoFichaAssinadaRT}
@@ -475,7 +475,7 @@ export default ({
             <Field
               component={TextArea}
               label="Descreva o modo de preparo do produto:"
-              name={`modo_preparo`}
+              name={`modo_de_preparo`}
               className="textarea-ficha-tecnica"
               placeholder="Insira aqui as informações de modo de preparo"
             />
@@ -489,7 +489,7 @@ export default ({
             <Field
               component={TextArea}
               label="Informações Adicionais:"
-              name={`outras_infos`}
+              name={`informacoes_adicionais`}
               className="textarea-ficha-tecnica"
               placeholder="Insira aqui as informações adicionais sobre o produto"
             />
