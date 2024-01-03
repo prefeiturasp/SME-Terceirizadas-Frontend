@@ -85,7 +85,9 @@ const ModalRelatorioUnificado = ({ show, onClose, onSubmit }) => {
           type={BUTTON_TYPE.BUTTON}
           onClick={() => {
             handleCloseModal();
-            onSubmit();
+            onSubmit({
+              grupoSelecionado,
+            });
           }}
           style={BUTTON_STYLE.GREEN}
           disabled={!grupoSelecionado}
