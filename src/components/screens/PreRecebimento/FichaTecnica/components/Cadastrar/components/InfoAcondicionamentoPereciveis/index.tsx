@@ -15,6 +15,7 @@ import {
 } from "helpers/fieldValidators";
 import { CollapseConfig } from "components/Shareable/Collapse/interfaces";
 import { OptionsGenerico } from "interfaces/pre_recebimento.interface";
+import { ArquivoForm } from "components/screens/PreRecebimento/DocumentosRecebimento/interfaces";
 
 const COLLAPSE_CONFIG_INFO_ACONDICIONAMENTO: CollapseConfig[] = [
   {
@@ -51,17 +52,22 @@ interface InfoAcondicionamentoPereciveisProps {
   collapse: CollapseControl;
   setCollapse: Dispatch<React.SetStateAction<CollapseControl>>;
   unidadesMedidaOptions: OptionsGenerico[];
+  setArquivo: Dispatch<React.SetStateAction<ArquivoForm[]>>;
 }
 
 export default ({
   collapse,
   setCollapse,
   unidadesMedidaOptions,
+  setArquivo,
 }: InfoAcondicionamentoPereciveisProps) => {
-  // TODO: implementar funções de adição e remoção de arquivos
-  const inserirArquivoFichaAssinadaRT = () => {};
+  const inserirArquivoFichaAssinadaRT = (files: ArquivoForm[]) => {
+    setArquivo(files);
+  };
 
-  const removerArquivoFichaAssinadaRT = () => {};
+  const removerArquivoFichaAssinadaRT = () => {
+    setArquivo([]);
+  };
 
   return (
     <Collapse

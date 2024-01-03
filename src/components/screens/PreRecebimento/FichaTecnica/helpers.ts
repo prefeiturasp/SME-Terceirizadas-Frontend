@@ -23,6 +23,7 @@ import {
   InformacoesNutricionaisFichaTecnicaPayload,
 } from "./interfaces";
 import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
+import { ArquivoForm } from "../DocumentosRecebimento/interfaces";
 
 export const stringToBoolean = (str: string): boolean =>
   str === "1" ? true : str === "0" ? false : undefined;
@@ -284,7 +285,8 @@ export const formataPayload = (
   values: Record<string, any>,
   proponente: TerceirizadaComEnderecoInterface,
   produtosOptions: OptionsGenerico[],
-  fabricantesOptions: OptionsGenerico[]
+  fabricantesOptions: OptionsGenerico[],
+  arquivo: ArquivoForm[]
 ): FichaTecnicaPayload => {
   let payload: FichaTecnicaPayload = {
     produto: produtosOptions.find((p) => p.nome === values.produto)?.uuid,
@@ -349,7 +351,7 @@ export const formataPayload = (
     nome_responsavel_tecnico: values.nome_responsavel_tecnico || "",
     habilitacao: values.habilitacao || "",
     numero_registro_orgao: values.numero_registro_orgao || "",
-    arquivo: values.arquivo || null,
+    arquivo: arquivo[0]?.base64 || "",
     modo_de_preparo: values.modo_de_preparo || "",
     informacoes_adicionais: values.informacoes_adicionais || "",
   };

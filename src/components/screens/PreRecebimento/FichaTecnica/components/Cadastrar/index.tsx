@@ -66,6 +66,7 @@ import {
   validaProximo,
   validaRascunho,
 } from "../../helpers";
+import { ArquivoForm } from "components/screens/PreRecebimento/DocumentosRecebimento/interfaces";
 
 const ITENS_STEPS = [
   {
@@ -99,9 +100,7 @@ export default () => {
   const [ficha, setFicha] = useState<FichaTecnicaDetalhada>(
     {} as FichaTecnicaDetalhada
   );
-  const [initialValues, setInitialValues] = useState<FichaTecnicaPayload>(
-    {} as FichaTecnicaPayload
-  );
+  const [initialValues, setInitialValues] = useState<Record<string, any>>({});
   const [stepAtual, setStepAtual] = useState(0);
   const listaCompletaInformacoesNutricionais = useRef<InformacaoNutricional[]>(
     []
@@ -111,6 +110,7 @@ export default () => {
   >([]);
   const [showModal, setShowModal] = useState(false);
   const [tipoCadastro, setTipoCadastro] = useState("");
+  const [arquivo, setArquivo] = useState<ArquivoForm[]>([]);
 
   const onSubmit = (): void => {};
 
@@ -132,7 +132,8 @@ export default () => {
       values,
       proponente,
       produtosOptions,
-      fabricantesOptions
+      fabricantesOptions,
+      arquivo
     );
 
     try {
@@ -668,6 +669,7 @@ export default () => {
                     collapse={collapse}
                     setCollapse={setCollapse}
                     unidadesMedidaOptions={unidadesMedidaOptions}
+                    setArquivo={setArquivo}
                   />
                 )}
 

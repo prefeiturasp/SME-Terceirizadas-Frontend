@@ -72,7 +72,7 @@ export interface FichaTecnicaPayload {
   nome_responsavel_tecnico: string;
   habilitacao: string;
   numero_registro_orgao: string;
-  arquivo?: Blob;
+  arquivo?: string;
   modo_de_preparo: string;
   informacoes_adicionais: string;
 }
