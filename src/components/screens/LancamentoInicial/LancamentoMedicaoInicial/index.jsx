@@ -286,6 +286,7 @@ export default () => {
   const handleChangeSelectPeriodo = async (value) => {
     setMes(null);
     setAno(null);
+    setNaoPodeFinalizar(true);
     setLoadingSolicitacaoMedicaoInicial(true);
     setPeriodoSelecionado(value);
     await getSolicitacaoMedInicial(value, escolaInstituicao.uuid);
