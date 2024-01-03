@@ -204,7 +204,7 @@ export interface FichaTecnicaDetalhada {
   nome_responsavel_tecnico: string;
   habilitacao: string;
   numero_registro_orgao: string;
-  arquivo?: Blob;
+  arquivo: string | null;
   modo_de_preparo: string;
   informacoes_adicionais: string;
 }

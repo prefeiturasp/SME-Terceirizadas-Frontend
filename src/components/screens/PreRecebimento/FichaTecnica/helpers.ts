@@ -11,6 +11,7 @@ import { getUnidadesDeMedidaLogistica } from "services/cronograma.service";
 import { getTerceirizadaUUID } from "services/terceirizada.service";
 
 import { removeCaracteresEspeciais } from "helpers/utilities";
+import { downloadAndConvertToBase64 } from "components/Shareable/Input/InputFile/helper";
 
 import {
   CategoriaFichaTecnicaChoices,
@@ -217,7 +218,7 @@ export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
         informacao.informacao_nutricional.uuid;
     });
 
-  return {
+  const initialValues = {
     produto: ficha.produto?.nome,
     marca: ficha.marca.uuid,
     categoria: ficha.categoria as CategoriaFichaTecnicaChoices,
@@ -275,10 +276,20 @@ export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
     nome_responsavel_tecnico: ficha.nome_responsavel_tecnico,
     habilitacao: ficha.habilitacao,
     numero_registro_orgao: ficha.numero_registro_orgao,
-    arquivo: ficha.arquivo,
     modo_de_preparo: ficha.modo_de_preparo,
     informacoes_adicionais: ficha.informacoes_adicionais,
   };
+
+  return initialValues;
+};
+
+export const carregarArquivo = async (urlArquivo: string) => {
+  const arquivo = Array({
+    nome: "ficha-assinada-rt.pdf",
+    base64: await downloadAndConvertToBase64(urlArquivo),
+  });
+
+  return arquivo;
 };
 
 export const formataPayload = (

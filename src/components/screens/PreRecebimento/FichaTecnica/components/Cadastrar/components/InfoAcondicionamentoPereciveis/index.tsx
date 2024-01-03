@@ -52,6 +52,7 @@ interface InfoAcondicionamentoPereciveisProps {
   collapse: CollapseControl;
   setCollapse: Dispatch<React.SetStateAction<CollapseControl>>;
   unidadesMedidaOptions: OptionsGenerico[];
+  arquivo: ArquivoForm[];
   setArquivo: Dispatch<React.SetStateAction<ArquivoForm[]>>;
 }
 
@@ -59,6 +60,7 @@ export default ({
   collapse,
   setCollapse,
   unidadesMedidaOptions,
+  arquivo,
   setArquivo,
 }: InfoAcondicionamentoPereciveisProps) => {
   const inserirArquivoFichaAssinadaRT = (files: ArquivoForm[]) => {
@@ -462,7 +464,7 @@ export default ({
         <div className="row mt-3">
           <Field
             component={InputFile}
-            // arquivosPreCarregados={arquivosIniciais}
+            arquivosPreCarregados={arquivo}
             className="inputfile"
             texto="Anexar Ficha Assinada pelo RT"
             name={"arquivo"}

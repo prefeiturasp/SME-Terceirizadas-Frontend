@@ -55,6 +55,7 @@ import InfoAcondicionamentoPereciveis from "./components/InfoAcondicionamentoPer
 
 import { FichaTecnicaPayload } from "../../interfaces";
 import {
+  carregarArquivo,
   carregarFabricantes,
   carregarMarcas,
   carregarProdutos,
@@ -158,7 +159,7 @@ export default () => {
     }
   };
 
-  const carregarDados = async (): Promise<void> => {
+  const carregarDados = async () => {
     const responseInformacoes: ResponseInformacoesNutricionais =
       await getInformacoesNutricionaisOrdenadas();
     listaCompletaInformacoesNutricionais.current =
@@ -177,6 +178,11 @@ export default () => {
 
       setFicha(fichaTecnica);
       setInitialValues(geraInitialValues(fichaTecnica));
+
+      if (fichaTecnica.arquivo) {
+        const arquivo = await carregarArquivo(fichaTecnica.arquivo);
+        setArquivo(arquivo);
+      }
     }
   };
 
@@ -669,6 +675,7 @@ export default () => {
                     collapse={collapse}
                     setCollapse={setCollapse}
                     unidadesMedidaOptions={unidadesMedidaOptions}
+                    arquivo={arquivo}
                     setArquivo={setArquivo}
                   />
                 )}
