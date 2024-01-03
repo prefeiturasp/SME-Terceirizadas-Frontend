@@ -49,6 +49,32 @@ export interface FichaTecnicaPayload {
   valor_unidade_caseira?: string;
   unidade_medida_caseira?: string;
   informacoes_nutricionais?: InformacoesNutricionaisFichaTecnicaPayload[];
+  prazo_validade_descongelamento: string;
+  condicoes_de_conservacao: string;
+  temperatura_congelamento: string;
+  temperatura_veiculo: string;
+  condicoes_de_transporte: string;
+  embalagem_primaria: string;
+  embalagem_secundaria: string;
+  embalagens_de_acordo_com_anexo?: boolean;
+  material_embalagem_primaria: string;
+  peso_liquido_embalagem_primaria: number;
+  unidade_medida_primaria: string;
+  peso_liquido_embalagem_secundaria: number;
+  unidade_medida_secundaria: string;
+  peso_embalagem_primaria_vazia: number;
+  unidade_medida_primaria_vazia: string;
+  peso_embalagem_secundaria_vazia: number;
+  unidade_medida_secundaria_vazia: string;
+  sistema_vedacao_embalagem_secundaria: string;
+  rotulo_legivel?: boolean;
+  variacao_percentual: number;
+  nome_responsavel_tecnico: string;
+  habilitacao: string;
+  numero_registro_orgao: string;
+  arquivo?: string;
+  modo_de_preparo: string;
+  informacoes_adicionais: string;
 }
 
 export interface FiltrosFichaTecnica {

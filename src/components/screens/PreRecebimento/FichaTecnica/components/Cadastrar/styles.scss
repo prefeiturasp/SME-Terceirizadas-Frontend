@@ -68,7 +68,30 @@
   }
 
   .input-ficha-tecnica {
-    height: 35px !important;
+    height: 35px;
+  }
+
+  .textarea-ficha-tecnica {
+    height: 150px;
+  }
+
+  .label-unidade-medida {
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 0;
+    color: #42474a;
+  }
+
+  .label-unidade-medida-bottom {
+    align-items: flex-end;
+    padding-bottom: 7.5px;
+  }
+
+  .label-unidade-medida-top {
+    align-items: flex-start;
+    padding-top: 7.5px;
   }
 
   .verde-escuro {
