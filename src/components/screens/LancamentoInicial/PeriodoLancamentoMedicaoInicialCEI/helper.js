@@ -546,7 +546,8 @@ export const formatarLinhasTabelaAlimentacaoCEI = (
 
 export const formatarLinhasTabelaAlimentacaoEmeiDaCemei = (
   tiposAlimentacao,
-  ehSolicitacoesAlimentacaoLocation
+  ehSolicitacoesAlimentacaoLocation,
+  alimentacoesLancamentosEspeciais
 ) => {
   const tiposAlimentacaoFormatadas = tiposAlimentacao.map((alimentacao) => {
     return {
@@ -624,6 +625,49 @@ export const formatarLinhasTabelaAlimentacaoEmeiDaCemei = (
     name: "observacoes",
     uuid: null,
   });
+
+  const indexLanche = tiposAlimentacaoFormatadas.findIndex(
+    (ali) => ali.nome === "Lanche"
+  );
+  const indexLanche4h = tiposAlimentacaoFormatadas.findIndex(
+    (ali) => ali.nome === "Lanche 4h"
+  );
+  const cloneAlimentacoesLancamentosEspeciais = deepCopy(
+    alimentacoesLancamentosEspeciais
+  );
+  const lanchesLancamentosEspeciais =
+    cloneAlimentacoesLancamentosEspeciais.filter((alimentacao) =>
+      alimentacao.name.includes("lanche")
+    );
+  const lancamentosEspeciaisSemLanches =
+    cloneAlimentacoesLancamentosEspeciais.filter(
+      (alimentacao) => !alimentacao.name.includes("lanche")
+    );
+  for (
+    let index = 0;
+    index <= lanchesLancamentosEspeciais.length - 1;
+    index++
+  ) {
+    tiposAlimentacaoFormatadas.splice(
+      Math.max(indexLanche, indexLanche4h) + 1 + index,
+      0,
+      lanchesLancamentosEspeciais[index]
+    );
+  }
+  const indexObservacoes = tiposAlimentacaoFormatadas.findIndex(
+    (ali) => ali.nome === "Observações"
+  );
+  for (
+    let index = 0;
+    index <= lancamentosEspeciaisSemLanches.length - 1;
+    index++
+  ) {
+    tiposAlimentacaoFormatadas.splice(
+      indexObservacoes + index,
+      0,
+      lancamentosEspeciaisSemLanches[index]
+    );
+  }
 
   return tiposAlimentacaoFormatadas;
 };

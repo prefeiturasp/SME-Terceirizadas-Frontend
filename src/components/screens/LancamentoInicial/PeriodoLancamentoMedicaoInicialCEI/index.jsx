@@ -108,6 +108,7 @@ import {
   exibirTooltipRPLAutorizadas,
   exibirTooltipSuspensoesAutorizadas,
 } from "../PeriodoLancamentoMedicaoInicial/validacoes";
+import { getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync } from "../PeriodoLancamentoMedicaoInicial/helper";
 
 export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const initialStateWeekColumns = [
@@ -186,6 +187,17 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const [periodoGrupo, setPeriodoGrupo] = useState(null);
   const [tabItems, setTabItems] = useState(null);
   const [diasParaCorrecao, setDiasParaCorrecao] = useState(null);
+  const [
+    ,
+    //permissoesLancamentosEspeciaisPorDia,
+    setPermissoesLancamentosEspeciaisPorDia,
+  ] = useState(null);
+  const [
+    ,
+    //alimentacoesLancamentosEspeciais,
+    setAlimentacoesLancamentosEspeciais,
+  ] = useState(null);
+  const [, /*dataInicioPermissoes,*/ setDataInicioPermissoes] = useState(null);
 
   const history = useHistory();
   const location = useLocation();
@@ -291,10 +303,30 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       let response_log_dietas_autorizadas_cei = [];
       let response_matriculados_emei_da_cemei = [];
       let response_log_dietas_autorizadas_emei_da_cemei = [];
+      let response_permissoes_lancamentos_especiais_mes_ano_por_periodo = [];
 
       let response_categorias_medicao = await getCategoriasDeMedicao();
 
       if (ehEmeiDaCemeiLocation) {
+        response_permissoes_lancamentos_especiais_mes_ano_por_periodo =
+          await getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync(
+            escola.uuid,
+            mes,
+            ano,
+            periodo.split(" ")[1]
+          );
+        setPermissoesLancamentosEspeciaisPorDia(
+          response_permissoes_lancamentos_especiais_mes_ano_por_periodo.permissoes_por_dia
+        );
+        setAlimentacoesLancamentosEspeciais(
+          response_permissoes_lancamentos_especiais_mes_ano_por_periodo.alimentacoes_lancamentos_especiais?.map(
+            (ali) => ali.name
+          )
+        );
+        setDataInicioPermissoes(
+          response_permissoes_lancamentos_especiais_mes_ano_por_periodo.data_inicio_permissoes
+        );
+
         const params_matriculados = {
           escola_uuid: escola.uuid,
           mes: mes,
@@ -357,7 +389,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         ehEmeiDaCemeiLocation || ehSolicitacoesAlimentacaoLocation
           ? formatarLinhasTabelaAlimentacaoEmeiDaCemei(
               location.state.tiposAlimentacao,
-              ehSolicitacoesAlimentacaoLocation
+              ehSolicitacoesAlimentacaoLocation,
+              response_permissoes_lancamentos_especiais_mes_ano_por_periodo.alimentacoes_lancamentos_especiais
             )
           : formatarLinhasTabelaAlimentacaoCEI(
               response_log_matriculados_por_faixa_etaria_dia,
