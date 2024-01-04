@@ -188,15 +188,14 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const [tabItems, setTabItems] = useState(null);
   const [diasParaCorrecao, setDiasParaCorrecao] = useState(null);
   const [
-    ,
-    //permissoesLancamentosEspeciaisPorDia,
+    permissoesLancamentosEspeciaisPorDia,
     setPermissoesLancamentosEspeciaisPorDia,
   ] = useState(null);
   const [
     alimentacoesLancamentosEspeciais,
     setAlimentacoesLancamentosEspeciais,
   ] = useState(null);
-  const [, /*dataInicioPermissoes,*/ setDataInicioPermissoes] = useState(null);
+  const [dataInicioPermissoes, setDataInicioPermissoes] = useState(null);
 
   const history = useHistory();
   const location = useLocation();
@@ -2019,7 +2018,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           null,
                                                           diasParaCorrecao,
                                                           ehEmeiDaCemeiLocation,
-                                                          ehSolicitacoesAlimentacaoLocation
+                                                          ehSolicitacoesAlimentacaoLocation,
+                                                          permissoesLancamentosEspeciaisPorDia,
+                                                          alimentacoesLancamentosEspeciais
                                                         )}
                                                         defaultValue={defaultValue(
                                                           column,
@@ -2173,7 +2174,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           row.uuid,
                                                           diasParaCorrecao,
                                                           ehEmeiDaCemeiLocation,
-                                                          ehSolicitacoesAlimentacaoLocation
+                                                          ehSolicitacoesAlimentacaoLocation,
+                                                          permissoesLancamentosEspeciaisPorDia,
+                                                          alimentacoesLancamentosEspeciais
                                                         )}
                                                         defaultValue={defaultValue(
                                                           column,
@@ -2237,6 +2240,17 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                     );
                                   })}
                               </article>
+                              {categoria.nome === "ALIMENTAÇÃO" &&
+                                dataInicioPermissoes && (
+                                  <div className="legenda-lancamentos-especiais">
+                                    <div className="legenda-cor" />
+                                    <div>
+                                      Lançamento especial de alimentações
+                                      liberado para unidade em{" "}
+                                      {dataInicioPermissoes} por CODAE
+                                    </div>
+                                  </div>
+                                )}
                             </section>
                           </div>
                         ))}

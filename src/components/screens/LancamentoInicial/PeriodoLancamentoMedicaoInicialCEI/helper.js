@@ -156,7 +156,9 @@ export const desabilitarField = (
   uuidFaixaEtaria,
   diasParaCorrecao,
   ehEmeiDaCemeiLocation,
-  ehSolicitacoesAlimentacaoLocation
+  ehSolicitacoesAlimentacaoLocation,
+  permissoesLancamentosEspeciaisPorDia,
+  alimentacoesLancamentosEspeciais
 ) => {
   if (!ehEmeiDaCemeiLocation) {
     if (nomeCategoria === "ALIMENTAÇÃO") {
@@ -205,6 +207,37 @@ export const desabilitarField = (
         );
     }
   } else {
+    let alimentacoesLancamentosEspeciaisDia = [];
+    if (permissoesLancamentosEspeciaisPorDia) {
+      alimentacoesLancamentosEspeciaisDia = [
+        ...new Set(
+          permissoesLancamentosEspeciaisPorDia
+            .filter((permissao) => permissao.dia === dia)
+            .flatMap((permissao) => permissao.alimentacoes)
+        ),
+      ];
+    }
+    if (
+      nomeCategoria === "ALIMENTAÇÃO" &&
+      permissoesLancamentosEspeciaisPorDia &&
+      alimentacoesLancamentosEspeciais.includes(rowName)
+    ) {
+      if (
+        ((alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+          validacaoDiaLetivo(dia)) ||
+          (alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+            !validacaoDiaLetivo(dia) &&
+            inclusoesAutorizadas.filter((inc) => inc.dia === dia).length)) &&
+        !["Mês anterior", "Mês posterior"].includes(
+          values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+        )
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
     const resultado = inclusoesAutorizadas.some(
       (inclusao) =>
         dia === String(inclusao.dia) &&
