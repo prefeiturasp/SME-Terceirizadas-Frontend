@@ -193,8 +193,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     setPermissoesLancamentosEspeciaisPorDia,
   ] = useState(null);
   const [
-    ,
-    //alimentacoesLancamentosEspeciais,
+    alimentacoesLancamentosEspeciais,
     setAlimentacoesLancamentosEspeciais,
   ] = useState(null);
   const [, /*dataInicioPermissoes,*/ setDataInicioPermissoes] = useState(null);
@@ -1801,7 +1800,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                     return (
                                       <Fragment key={index}>
                                         <div
-                                          className={`grid-table-tipos-alimentacao body-table-alimentacao`}
+                                          className={`grid-table-tipos-alimentacao body-table-alimentacao${
+                                            alimentacoesLancamentosEspeciais?.includes(
+                                              row.name
+                                            )
+                                              ? " input-alimentacao-permissao-lancamento-especial"
+                                              : ""
+                                          }`}
                                         >
                                           <div className="linha-cei">
                                             <b
