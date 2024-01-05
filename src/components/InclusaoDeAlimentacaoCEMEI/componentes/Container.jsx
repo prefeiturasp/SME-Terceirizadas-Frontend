@@ -51,22 +51,15 @@ export const Container = () => {
       const vinculos = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
       if (vinculos.status === HTTP_STATUS.OK) {
         if (escolaEhCEMEI()) {
-          periodos_.map((periodo) => {
-            return (periodo.tipos_alimentacao = vinculos.data.results
-              .filter(
-                (periodo) => periodo.tipo_unidade_escolar.iniciais === "EMEI"
-              )
-              .find(
-                (v) => v.periodo_escolar.nome === periodo.nome
-              ).tipos_alimentacao);
-          });
-        } else {
-          periodos_.map((periodo) => {
-            return (periodo.tipos_alimentacao = vinculos.data.results.find(
-              (v) => v.periodo_escolar.nome === periodo.nome
-            ).tipos_alimentacao);
-          });
+          vinculos.data.results = vinculos.data.results.filter(
+            (periodo) => periodo.tipo_unidade_escolar.iniciais === "EMEI"
+          );
         }
+        periodos_.map((periodo) => {
+          return (periodo.tipos_alimentacao = vinculos.data.results.find(
+            (v) => v.periodo_escolar.nome === periodo.nome
+          ).tipos_alimentacao);
+        });
         setPeriodosInclusaoContinua(
           abstraiPeriodosComAlunosMatriculados(
             periodos,
