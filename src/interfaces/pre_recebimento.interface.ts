@@ -54,6 +54,11 @@ export interface Arquivo {
   arquivo: string;
 }
 
+export interface ArquivoForm {
+  nome: string;
+  base64: string;
+}
+
 export type TiposDocumentoChoices =
   | "LAUDO"
   | "DECLARACAO_LEI_1512010"

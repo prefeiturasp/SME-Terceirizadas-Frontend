@@ -15,8 +15,10 @@ import {
   inteiroOuDecimalPositivoOuNegativo,
 } from "helpers/fieldValidators";
 import { CollapseConfig } from "components/Shareable/Collapse/interfaces";
-import { OptionsGenerico } from "interfaces/pre_recebimento.interface";
-import { ArquivoForm } from "components/screens/PreRecebimento/DocumentosRecebimento/interfaces";
+import {
+  ArquivoForm,
+  OptionsGenerico,
+} from "interfaces/pre_recebimento.interface";
 
 const COLLAPSE_CONFIG_INFO_ACONDICIONAMENTO: CollapseConfig[] = [
   {

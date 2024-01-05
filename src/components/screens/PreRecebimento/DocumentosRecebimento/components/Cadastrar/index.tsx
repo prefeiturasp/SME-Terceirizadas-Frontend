@@ -9,7 +9,6 @@ import { required } from "../../../../../../helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
 import { getListaCronogramasPraCadastro } from "../../../../../../services/cronograma.service";
 import {
-  ArquivoForm,
   DocumentosRecebimentoPayload,
   DocumentosState,
   TiposDocumentosPayload,
@@ -31,6 +30,7 @@ import {
 import { cadastraDocumentoRecebimento } from "../../../../../../services/documentosRecebimento.service";
 import {
   Arquivo,
+  ArquivoForm,
   CronogramaSimples,
   TiposDocumentoChoices,
 } from "interfaces/pre_recebimento.interface";
