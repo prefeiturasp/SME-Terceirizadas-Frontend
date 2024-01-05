@@ -14,6 +14,7 @@ import { removeCaracteresEspeciais } from "helpers/utilities";
 import { downloadAndConvertToBase64 } from "components/Shareable/Input/InputFile/helper";
 
 import {
+  ArquivoForm,
   CategoriaFichaTecnicaChoices,
   FichaTecnicaDetalhada,
   OptionsGenerico,
@@ -24,7 +25,6 @@ import {
   InformacoesNutricionaisFichaTecnicaPayload,
 } from "./interfaces";
 import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
-import { ArquivoForm } from "../DocumentosRecebimento/interfaces";
 
 export const stringToBoolean = (str: string): boolean =>
   str === "1" ? true : str === "0" ? false : undefined;
@@ -260,6 +260,8 @@ export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
     embalagem_secundaria: ficha.embalagem_secundaria,
     embalagens_de_acordo_com_anexo: ficha.embalagens_de_acordo_com_anexo,
     material_embalagem_primaria: ficha.material_embalagem_primaria,
+    produto_eh_liquido: booleanToString(ficha.produto_eh_liquido),
+    volume_embalagem_primaria: ficha.volume_embalagem_primaria,
     peso_liquido_embalagem_primaria: ficha.peso_liquido_embalagem_primaria,
     unidade_medida_primaria: ficha.unidade_medida_primaria?.uuid,
     peso_liquido_embalagem_secundaria: ficha.peso_liquido_embalagem_secundaria,
@@ -345,6 +347,8 @@ export const formataPayload = (
     embalagens_de_acordo_com_anexo:
       values.embalagens_de_acordo_com_anexo || false,
     material_embalagem_primaria: values.material_embalagem_primaria || "",
+    volume_embalagem_primaria: null,
+    unidade_medida_volume_primaria: "",
     peso_liquido_embalagem_primaria:
       values.peso_liquido_embalagem_primaria || null,
     unidade_medida_primaria: values.unidade_medida_primaria || "",
@@ -369,12 +373,15 @@ export const formataPayload = (
     modo_de_preparo: values.modo_de_preparo || "",
     informacoes_adicionais: values.informacoes_adicionais || "",
   };
+
   if (payload.alergenicos) {
     payload.ingredientes_alergenicos = values.ingredientes_alergenicos || "";
   }
+
   if (payload.lactose) {
     payload.lactose_detalhe = values.lactose_detalhe || "";
   }
+
   if (payload.categoria === "PERECIVEIS") {
     payload = {
       ...payload,
@@ -382,8 +389,22 @@ export const formataPayload = (
       agroecologico: stringToBoolean(values.agroecologico as string),
       organico: stringToBoolean(values.organico as string),
     };
+
     if (payload.organico) {
       payload.mecanismo_controle = values.mecanismo_controle || "";
+    }
+  }
+
+  if (payload.categoria === "NAO_PERECIVEIS") {
+    payload.produto_eh_liquido = stringToBoolean(
+      values.produto_eh_liquido as string
+    );
+
+    if (payload.produto_eh_liquido) {
+      payload.volume_embalagem_primaria =
+        Number(values.volume_embalagem_primaria?.replace(",", ".")) || null;
+      payload.unidade_medida_primaria_vazia =
+        values.unidade_medida_primaria_vazia || "";
     }
   }
 
