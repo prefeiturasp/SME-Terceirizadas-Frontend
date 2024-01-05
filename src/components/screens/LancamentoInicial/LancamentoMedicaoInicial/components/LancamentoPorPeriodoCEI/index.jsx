@@ -12,6 +12,7 @@ import { CardLancamentoCEI } from "./CardLancamentoCEI";
 import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
 import {
   CORES,
+  removeObjetosDuplicados,
   renderBotaoEnviarCorrecao,
   verificaSeEnviarCorrecaoDisabled,
 } from "../LancamentoPorPeriodo/helpers";
@@ -29,6 +30,7 @@ import {
   getSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
+  getPeriodosInclusaoContinua,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesKitLanchesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
@@ -56,6 +58,8 @@ export const LancamentoPorPeriodoCEI = ({
     useState(undefined);
   const [showModalEnviarCorrecao, setShowModalEnviarCorrecao] = useState(false);
   const [desabilitaSim, setDesabilitaSim] = useState(false);
+  const [periodosInclusaoContinua, setPeriodosInclusaoContinua] =
+    useState(undefined);
   const [
     solicitacoesKitLanchesAutorizadas,
     setSolicitacoesKitLanchesAutorizadas,
@@ -148,6 +152,20 @@ export const LancamentoPorPeriodoCEI = ({
     }
   };
 
+  const getPeriodosInclusaoContinuaAsync = async () => {
+    const response = await getPeriodosInclusaoContinua({
+      mes,
+      ano,
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setPeriodosInclusaoContinua(response.data.periodos);
+    } else {
+      setErroAPI(
+        "Erro ao carregar períodos de inclusão contínua. Tente novamente mais tarde."
+      );
+    }
+  };
+
   const getSolicitacoesKitLanchesAutorizadasAsync = async () => {
     if (ehEscolaTipoCEMEI(escolaInstituicao)) {
       const escola_uuid = escolaInstituicao.uuid;
@@ -192,8 +210,11 @@ export const LancamentoPorPeriodoCEI = ({
     };
 
   useEffect(() => {
-    getSolicitacoesKitLanchesAutorizadasAsync();
-    getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
+    if (ehEscolaTipoCEMEI(escolaInstituicao)) {
+      getPeriodosInclusaoContinuaAsync();
+      getSolicitacoesKitLanchesAutorizadasAsync();
+      getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
+    }
     solicitacaoMedicaoInicial &&
       getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
   }, [periodoSelecionado, solicitacaoMedicaoInicial]);
@@ -241,6 +262,23 @@ export const LancamentoPorPeriodoCEI = ({
     return uuidPeriodo;
   };
 
+  const tiposAlimentacaoProgramasEProjetos = () => {
+    let tiposAlimentacao = [];
+    Object.keys(periodosInclusaoContinua).forEach((periodo) => {
+      const periodoProgramasEProjetos = periodosEscolaSimples.find(
+        (p) => p.periodo_escolar.nome === periodo
+      );
+      if (periodoProgramasEProjetos) {
+        const tipos = periodoProgramasEProjetos.tipos_alimentacao;
+        tiposAlimentacao = [...tiposAlimentacao, ...tipos];
+      }
+    });
+
+    return removeObjetosDuplicados(tiposAlimentacao, "nome").filter(
+      (alimentacao) => alimentacao.nome !== "Lanche Emergencial"
+    );
+  };
+
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
@@ -270,15 +308,41 @@ export const LancamentoPorPeriodoCEI = ({
                 errosAoSalvar={errosAoSalvar}
               />
             ))}
+            {periodosInclusaoContinua && (
+              <CardLancamentoCEI
+                key={periodosComAlunos.length + 1}
+                textoCabecalho={"Programas e Projetos"}
+                cor={CORES[periodosComAlunos.length + 1]}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                escolaInstituicao={escolaInstituicao}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                periodoSelecionado={periodoSelecionado}
+                periodosEscolaCemeiComAlunosEmei={
+                  periodosEscolaCemeiComAlunosEmei
+                }
+                tiposAlimentacao={tiposAlimentacaoProgramasEProjetos()}
+                errosAoSalvar={errosAoSalvar}
+              />
+            )}
             {((solicitacoesKitLanchesAutorizadas &&
               solicitacoesKitLanchesAutorizadas.length > 0) ||
               (solicitacoesAlteracaoLancheEmergencialAutorizadas &&
                 solicitacoesAlteracaoLancheEmergencialAutorizadas.length >
                   0)) && (
               <CardLancamentoCEI
-                key={periodosComAlunos.length + 1}
+                key={
+                  periodosComAlunos.length +
+                  1 +
+                  (periodosInclusaoContinua ? 1 : 0)
+                }
                 textoCabecalho={"Solicitações de Alimentação"}
-                cor={CORES[periodosComAlunos.length + 1]}
+                cor={
+                  CORES[
+                    periodosComAlunos.length +
+                      1 +
+                      (periodosInclusaoContinua ? 1 : 0)
+                  ]
+                }
                 solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
                 escolaInstituicao={escolaInstituicao}
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
