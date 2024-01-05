@@ -160,6 +160,7 @@ export const desabilitarField = (
   permissoesLancamentosEspeciaisPorDia,
   alimentacoesLancamentosEspeciais
 ) => {
+  let alimentacoesLancamentosEspeciaisDia = [];
   if (!ehEmeiDaCemeiLocation) {
     if (nomeCategoria === "ALIMENTAÇÃO") {
       const resultado = inclusoesAutorizadas.some(
@@ -207,7 +208,6 @@ export const desabilitarField = (
         );
     }
   } else {
-    let alimentacoesLancamentosEspeciaisDia = [];
     if (permissoesLancamentosEspeciaisPorDia) {
       alimentacoesLancamentosEspeciaisDia = [
         ...new Set(
@@ -216,26 +216,6 @@ export const desabilitarField = (
             .flatMap((permissao) => permissao.alimentacoes)
         ),
       ];
-    }
-    if (
-      nomeCategoria === "ALIMENTAÇÃO" &&
-      permissoesLancamentosEspeciaisPorDia &&
-      alimentacoesLancamentosEspeciais.includes(rowName)
-    ) {
-      if (
-        ((alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
-          validacaoDiaLetivo(dia)) ||
-          (alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
-            !validacaoDiaLetivo(dia) &&
-            inclusoesAutorizadas.filter((inc) => inc.dia === dia).length)) &&
-        !["Mês anterior", "Mês posterior"].includes(
-          values[`${rowName}__dia_${dia}__categoria_${categoria}`]
-        )
-      ) {
-        return false;
-      } else {
-        return true;
-      }
     }
 
     const resultado = inclusoesAutorizadas.some(
@@ -272,6 +252,12 @@ export const desabilitarField = (
     ].includes(location.state.status_periodo) &&
     !["matriculados", "dietas_autorizadas"].includes(rowName)
   ) {
+    if (
+      alimentacoesLancamentosEspeciais?.includes(rowName) &&
+      !alimentacoesLancamentosEspeciaisDia?.includes(rowName)
+    ) {
+      return true;
+    }
     return false;
   }
 
@@ -290,6 +276,27 @@ export const desabilitarField = (
     ["matriculados", "dietas_autorizadas"].includes(rowName)
   ) {
     return true;
+  }
+
+  if (
+    nomeCategoria === "ALIMENTAÇÃO" &&
+    permissoesLancamentosEspeciaisPorDia &&
+    alimentacoesLancamentosEspeciais.includes(rowName)
+  ) {
+    if (
+      ((alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+        validacaoDiaLetivo(dia)) ||
+        (alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+          !validacaoDiaLetivo(dia) &&
+          inclusoesAutorizadas.filter((inc) => inc.dia === dia).length)) &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+      )
+    ) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
