@@ -410,3 +410,16 @@ export const formataPayload = (
 
   return payload;
 };
+
+export const inserirArquivoFichaAssinadaRT = (
+  files: ArquivoForm[],
+  setArquivo: Dispatch<React.SetStateAction<ArquivoForm[]>>
+) => {
+  setArquivo(files);
+};
+
+export const removerArquivoFichaAssinadaRT = (
+  setArquivo: Dispatch<React.SetStateAction<ArquivoForm[]>>
+) => {
+  setArquivo([]);
+};

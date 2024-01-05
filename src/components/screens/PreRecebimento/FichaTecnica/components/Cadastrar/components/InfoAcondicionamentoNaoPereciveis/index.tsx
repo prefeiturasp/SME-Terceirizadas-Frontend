@@ -18,6 +18,10 @@ import {
   ArquivoForm,
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
+import {
+  inserirArquivoFichaAssinadaRT,
+  removerArquivoFichaAssinadaRT,
+} from "components/screens/PreRecebimento/FichaTecnica/helpers";
 
 const COLLAPSE_CONFIG_INFO_ACONDICIONAMENTO: CollapseConfig[] = [
   {
@@ -63,14 +67,6 @@ export default ({
   setArquivo,
   values,
 }: InfoAcondicionamentoNaoPereciveisProps) => {
-  const inserirArquivoFichaAssinadaRT = (files: ArquivoForm[]) => {
-    setArquivo(files);
-  };
-
-  const removerArquivoFichaAssinadaRT = () => {
-    setArquivo([]);
-  };
-
   return (
     <Collapse
       collapse={collapse}
@@ -455,8 +451,10 @@ export default ({
             texto="Anexar Ficha Assinada pelo RT"
             name={"arquivo"}
             accept="PDF"
-            setFiles={inserirArquivoFichaAssinadaRT}
-            removeFile={removerArquivoFichaAssinadaRT}
+            setFiles={(files: ArquivoForm[]) =>
+              inserirArquivoFichaAssinadaRT(files, setArquivo)
+            }
+            removeFile={() => removerArquivoFichaAssinadaRT(setArquivo)}
             toastSuccess={"Arquivo incluído com sucesso!"}
             alignLeft
           />
