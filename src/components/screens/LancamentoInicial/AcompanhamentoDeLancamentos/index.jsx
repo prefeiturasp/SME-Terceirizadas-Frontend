@@ -49,7 +49,10 @@ import {
 } from "configs/constants";
 import { required } from "helpers/fieldValidators";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
-import { relatorioMedicaoInicialPDF } from "services/relatorios";
+import {
+  relatorioMedicaoInicialPDF,
+  relatorioUnificadoMedicaoInicialPDF,
+} from "services/relatorios";
 import { MEDICAO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import { updateSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import ModalRelatorioUnificado from "./components/ModalRelatorioUnificado";
@@ -323,6 +326,32 @@ export const AcompanhamentoDeLancamentos = () => {
       setExibirModalCentralDownloads(true);
     } else {
       toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
+  };
+
+  const handleSubmitRelatorioUnificado = async (form, grupoSelecionado) => {
+    const dre = usuarioEhDRE()
+      ? meusDados && meusDados.vinculo_atual.instituicao.uuid
+      : diretoriaRegional;
+    const [mes, ano] = form
+      .getFieldState("mes_ano" || undefined)
+      .value.split("_");
+
+    const payload = {
+      dre,
+      status: statusSelecionado,
+      grupo_escolar: grupoSelecionado,
+      mes,
+      ano,
+    };
+
+    const response = await relatorioUnificadoMedicaoInicialPDF(payload);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError(
+        "Erro ao gerar relatório unificado. Tente novamente mais tarde."
+      );
     }
   };
 
@@ -709,9 +738,12 @@ export const AcompanhamentoDeLancamentos = () => {
                                 onClose={() =>
                                   setExibirModalRelatorioUnificado(false)
                                 }
-                                onSubmit={() => {
-                                  setExibirModalCentralDownloads(true);
-                                }}
+                                onSubmit={({ grupoSelecionado }) =>
+                                  handleSubmitRelatorioUnificado(
+                                    form,
+                                    grupoSelecionado
+                                  )
+                                }
                               />
                             </>
                           )}

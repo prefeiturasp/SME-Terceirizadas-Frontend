@@ -22,6 +22,10 @@ const ModalRelatorioUnificado = ({ show, onClose, onSubmit }) => {
     onClose();
   }
 
+  function desabilitaRadioButton(grupo) {
+    return grupo.includes("1") || grupo.includes("2");
+  }
+
   const getGruposUnidades = async () => {
     const response = await getGrupoUnidadeEscolar();
     if (response.status === HTTP_STATUS.OK) {
@@ -64,7 +68,11 @@ const ModalRelatorioUnificado = ({ show, onClose, onSubmit }) => {
               .join(", ")})`;
 
             return (
-              <Radio value={grupo.uuid} key={key}>
+              <Radio
+                value={grupo.uuid}
+                key={key}
+                disabled={desabilitaRadioButton(grupo.nome)}
+              >
                 {label}
               </Radio>
             );
@@ -85,7 +93,9 @@ const ModalRelatorioUnificado = ({ show, onClose, onSubmit }) => {
           type={BUTTON_TYPE.BUTTON}
           onClick={() => {
             handleCloseModal();
-            onSubmit();
+            onSubmit({
+              grupoSelecionado,
+            });
           }}
           style={BUTTON_STYLE.GREEN}
           disabled={!grupoSelecionado}
