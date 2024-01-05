@@ -58,6 +58,9 @@ export interface FichaTecnicaPayload {
   embalagem_secundaria: string;
   embalagens_de_acordo_com_anexo?: boolean;
   material_embalagem_primaria: string;
+  produto_eh_liquido?: boolean | string;
+  volume_embalagem_primaria: number;
+  unidade_medida_volume_primaria: string;
   peso_liquido_embalagem_primaria: number;
   unidade_medida_primaria: string;
   peso_liquido_embalagem_secundaria: number;
