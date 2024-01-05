@@ -221,7 +221,7 @@ export default ({
                       { nome: "Unidade de Medida", uuid: "" },
                       ...unidadesMedidaOptions,
                     ]}
-                    name={`unidade_medida_primaria_vazia`}
+                    name={`unidade_medida_volume_primaria`}
                     className="input-ficha-tecnica"
                     required
                     validate={required}

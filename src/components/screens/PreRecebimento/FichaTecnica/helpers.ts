@@ -261,7 +261,10 @@ export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
     embalagens_de_acordo_com_anexo: ficha.embalagens_de_acordo_com_anexo,
     material_embalagem_primaria: ficha.material_embalagem_primaria,
     produto_eh_liquido: booleanToString(ficha.produto_eh_liquido),
-    volume_embalagem_primaria: ficha.volume_embalagem_primaria,
+    volume_embalagem_primaria: ficha.volume_embalagem_primaria
+      ?.toString()
+      .replace(".", ","),
+    unidade_medida_volume_primaria: ficha.unidade_medida_volume_primaria?.uuid,
     peso_liquido_embalagem_primaria: ficha.peso_liquido_embalagem_primaria,
     unidade_medida_primaria: ficha.unidade_medida_primaria?.uuid,
     peso_liquido_embalagem_secundaria: ficha.peso_liquido_embalagem_secundaria,
@@ -284,7 +287,7 @@ export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
     informacoes_adicionais: ficha.informacoes_adicionais,
   };
 
-  return initialValues;
+  return initialValues as FichaTecnicaPayload;
 };
 
 export const carregarArquivo = async (urlArquivo: string) => {
@@ -402,9 +405,11 @@ export const formataPayload = (
 
     if (payload.produto_eh_liquido) {
       payload.volume_embalagem_primaria =
-        Number(values.volume_embalagem_primaria?.replace(",", ".")) || null;
-      payload.unidade_medida_primaria_vazia =
-        values.unidade_medida_primaria_vazia || "";
+        Number(
+          values.volume_embalagem_primaria?.toString().replace(",", ".")
+        ) || null;
+      payload.unidade_medida_volume_primaria =
+        values.unidade_medida_volume_primaria || "";
     }
   }
 
