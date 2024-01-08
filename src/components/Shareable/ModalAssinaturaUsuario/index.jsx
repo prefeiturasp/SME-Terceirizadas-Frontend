@@ -17,10 +17,9 @@ export const ModalAssinaturaUsuario = ({
   handleClose,
   handleSim,
   loading,
-  titulo = "",
-  texto = "",
+  titulo,
+  texto,
   textoBotao = "Sim, assinar cronograma",
-  exibirModalIntermediario = true,
 }) => {
   const [concordaAssinar, setConcordaAssinar] = useState(false);
 
@@ -36,57 +35,55 @@ export const ModalAssinaturaUsuario = ({
       <Spin tip="Carregando..." spinning={loading}>
         <Modal.Header closeButton>
           <Modal.Title>
-            {" "}
-            {exibirModalIntermediario && !concordaAssinar
-              ? titulo
-              : "Confirme sua senha"}{" "}
+            {!concordaAssinar ? titulo : "Confirme sua senha"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {exibirModalIntermediario && !concordaAssinar ? (
+          {!concordaAssinar ? (
             <b>{texto}</b>
           ) : (
-            <Form
-              onSubmit={() => {}}
-              render={({ handleSubmit, values }) => (
-                <form onSubmit={handleSubmit}>
-                  <div className="row mb-2">
-                    <p>
-                      Confirme sua senha de acesso ao{" "}
-                      <span className="green fw-bold">SIGPAE</span> para assinar
-                      digitalmente o documento:
-                    </p>
+            <>
+              <p>
+                Confirme sua senha de acesso ao{" "}
+                <span className="green fw-bold">SIGPAE</span> para assinar
+                digitalmente o documento:
+              </p>
+              <Form
+                onSubmit={() => {}}
+                render={({ handleSubmit, values }) => (
+                  <form onSubmit={handleSubmit}>
+                    <div className="row mb-2">
+                      <div className="col-8 px-0">
+                        <Field
+                          component={InputPassword}
+                          esconderAsterisco
+                          label="Senha"
+                          name="password"
+                          placeholder={"Digite sua senha"}
+                          required
+                        />
+                      </div>
 
-                    <div className="col-8">
-                      <Field
-                        component={InputPassword}
-                        esconderAsterisco
-                        label="Senha"
-                        name="password"
-                        placeholder={"Digite sua senha"}
-                        required
-                      />
+                      <div className="col-4">
+                        <Botao
+                          texto="Confirmar"
+                          type={BUTTON_TYPE.SUBMIT}
+                          style={BUTTON_STYLE.GREEN}
+                          className="btn-assinar"
+                          icon={BUTTON_ICON.CHECK_NORMAL}
+                          onClick={() => handleSim(values.password)}
+                          disabled={!values.password}
+                        />
+                      </div>
                     </div>
-
-                    <div className="col-4">
-                      <Botao
-                        texto="Confirmar"
-                        type={BUTTON_TYPE.SUBMIT}
-                        style={BUTTON_STYLE.GREEN}
-                        className="btn-assinar"
-                        icon={BUTTON_ICON.CHECK_NORMAL}
-                        onClick={() => handleSim(values.password)}
-                        disabled={!values.password}
-                      />
-                    </div>
-                  </div>
-                </form>
-              )}
-            />
+                  </form>
+                )}
+              />
+            </>
           )}
         </Modal.Body>
 
-        {exibirModalIntermediario && !concordaAssinar && (
+        {!concordaAssinar && (
           <>
             <Modal.Footer>
               <Botao
