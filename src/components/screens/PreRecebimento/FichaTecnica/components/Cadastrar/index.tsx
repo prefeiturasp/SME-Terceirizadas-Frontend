@@ -37,6 +37,7 @@ import { OnChange } from "react-final-form-listeners";
 import TabelaNutricional from "components/Shareable/TabelaNutricional";
 import Select from "components/Shareable/Select";
 import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
+import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 
 import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
 
@@ -114,6 +115,7 @@ export default () => {
   >([]);
   const [showModalCadastro, setShowModalCadastro] = useState(false);
   const [showModalEnviar, setShowModalEnviar] = useState(false);
+  const [showModalAssinatura, setShowModalAssinatura] = useState(false);
   const [tipoCadastro, setTipoCadastro] = useState("");
   const [arquivo, setArquivo] = useState<ArquivoForm[]>([]);
 
@@ -771,7 +773,18 @@ export default () => {
         show={showModalEnviar}
         carregando={carregando}
         handleClose={() => setShowModalEnviar(false)}
+        handleSim={() => {
+          setShowModalEnviar(false);
+          setShowModalAssinatura(true);
+        }}
+      />
+
+      <ModalAssinaturaUsuario
+        show={showModalAssinatura}
+        handleClose={() => setShowModalAssinatura(false)}
         handleSim={() => {}}
+        loading={carregando}
+        exibirModalIntermediario={false}
       />
     </Spin>
   );
