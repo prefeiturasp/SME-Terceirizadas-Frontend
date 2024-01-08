@@ -223,7 +223,7 @@ const FormAutorizaDietaEspecial = ({
         TIPO_SOLICITACAO_DIETA.ALUNO_NAO_MATRICULADO
     ) {
       let data = moment(data_termino, "DD/MM/YYYY");
-      data_termino = moment(data).format("YYYY-MM-DD");
+      values.data_termino = moment(data).format("YYYY-MM-DD");
     }
     const response = editar
       ? await CODAEAtualizaProtocoloDietaEspecial(dietaEspecial.uuid, values)
