@@ -394,7 +394,8 @@ const CorpoRelatorio = ({
             ]}
           <InformacoesAluno
             aluno={dietaEspecial.aluno}
-            status_solicitacao={dietaEspecial.status_solicitacao}
+            statusSolicitacao={dietaEspecial.status_solicitacao}
+            tipoSolicitacao={dietaEspecial.tipo_solicitacao}
           />
           {solicitacaoVigenteAtiva &&
             ["pendentes-aut"].includes(card) &&

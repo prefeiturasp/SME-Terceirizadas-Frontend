@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
 import { InclusaoDeAlimentacaoCEMEI } from "..";
-import { dataParaUTC } from "helpers/utilities";
+import { dataParaUTC, escolaEhCEMEI } from "helpers/utilities";
 import { getDiasUteis } from "services/diasUteis.service";
 import {
   getMotivosInclusaoContinua,
@@ -50,6 +50,11 @@ export const Container = () => {
       );
       const vinculos = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
       if (vinculos.status === HTTP_STATUS.OK) {
+        if (escolaEhCEMEI()) {
+          vinculos.data.results = vinculos.data.results.filter(
+            (periodo) => periodo.tipo_unidade_escolar.iniciais === "EMEI"
+          );
+        }
         periodos_.map((periodo) => {
           return (periodo.tipos_alimentacao = vinculos.data.results.find(
             (v) => v.periodo_escolar.nome === periodo.nome

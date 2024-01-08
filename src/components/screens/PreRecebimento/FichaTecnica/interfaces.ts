@@ -62,13 +62,13 @@ export interface FichaTecnicaPayload {
   produto_eh_liquido?: boolean | string;
   volume_embalagem_primaria: number | string;
   unidade_medida_volume_primaria: string;
-  peso_liquido_embalagem_primaria: number;
+  peso_liquido_embalagem_primaria: number | string;
   unidade_medida_primaria: string;
-  peso_liquido_embalagem_secundaria: number;
+  peso_liquido_embalagem_secundaria: number | string;
   unidade_medida_secundaria: string;
-  peso_embalagem_primaria_vazia: number;
+  peso_embalagem_primaria_vazia: number | string;
   unidade_medida_primaria_vazia: string;
-  peso_embalagem_secundaria_vazia: number;
+  peso_embalagem_secundaria_vazia: number | string;
   unidade_medida_secundaria_vazia: string;
   sistema_vedacao_embalagem_secundaria: string;
   rotulo_legivel?: boolean;

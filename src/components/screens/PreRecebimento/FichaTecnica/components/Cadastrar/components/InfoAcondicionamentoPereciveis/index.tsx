@@ -246,9 +246,11 @@ export default ({
                 name={`peso_liquido_embalagem_primaria`}
                 placeholder="Digite o Peso"
                 className="input-ficha-tecnica"
-                apenasNumeros
                 required
-                validate={required}
+                validate={composeValidators(
+                  required,
+                  inteiroOuDecimalComVirgula
+                )}
               />
             </div>
 
@@ -273,9 +275,11 @@ export default ({
                 name={`peso_liquido_embalagem_secundaria`}
                 placeholder="Digite o Peso"
                 className="input-ficha-tecnica"
-                apenasNumeros
                 required
-                validate={required}
+                validate={composeValidators(
+                  required,
+                  inteiroOuDecimalComVirgula
+                )}
               />
             </div>
 
@@ -314,9 +318,11 @@ export default ({
                 name={`peso_embalagem_primaria_vazia`}
                 placeholder="Digite o Peso"
                 className="input-ficha-tecnica"
-                apenasNumeros
                 required
-                validate={required}
+                validate={composeValidators(
+                  required,
+                  inteiroOuDecimalComVirgula
+                )}
               />
             </div>
 
@@ -341,9 +347,11 @@ export default ({
                 name={`peso_embalagem_secundaria_vazia`}
                 placeholder="Digite o Peso"
                 className="input-ficha-tecnica"
-                apenasNumeros
                 required
-                validate={required}
+                validate={composeValidators(
+                  required,
+                  inteiroOuDecimalComVirgula
+                )}
               />
             </div>
 
