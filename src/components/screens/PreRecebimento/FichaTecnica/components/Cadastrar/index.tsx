@@ -54,6 +54,7 @@ import { InformacaoNutricional } from "interfaces/produto.interface";
 
 import InfoAcondicionamentoPereciveis from "./components/InfoAcondicionamentoPereciveis";
 import InfoAcondicionamentoNaoPereciveis from "./components/InfoAcondicionamentoNaoPereciveis";
+import ModalConfirmarEnvio from "./components/ModalConfirmarEnvio";
 
 import { FichaTecnicaPayload } from "../../interfaces";
 import {
@@ -66,6 +67,7 @@ import {
   cepCalculator,
   formataPayload,
   geraInitialValues,
+  validaAssinarEnviar,
   validaProximo,
   validaRascunho,
 } from "../../helpers";
@@ -110,11 +112,10 @@ export default () => {
   const listaInformacoesNutricionaisFichaTecnica = useRef<
     InformacaoNutricional[]
   >([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showModalCadastro, setShowModalCadastro] = useState(false);
+  const [showModalEnviar, setShowModalEnviar] = useState(false);
   const [tipoCadastro, setTipoCadastro] = useState("");
   const [arquivo, setArquivo] = useState<ArquivoForm[]>([]);
-
-  const onSubmit = (): void => {};
 
   const atualizarDadosCarregados = async () => {
     setCarregando(true);
@@ -126,7 +127,7 @@ export default () => {
 
   const gerenciaModalCadastroExterno = (tipo: string) => {
     setTipoCadastro(tipo);
-    setShowModal(true);
+    setShowModalCadastro(true);
   };
 
   const salvarRascunho = async (values: FichaTecnicaPayload) => {
@@ -214,7 +215,7 @@ export default () => {
       <div className="card mt-3 card-cadastro-ficha-tecnica">
         <div className="card-body cadastro-ficha-tecnica">
           <Form
-            onSubmit={onSubmit}
+            onSubmit={() => setShowModalEnviar(true)}
             initialValues={initialValues}
             decorators={[cepCalculator(setDesabilitaEndereco)]}
             render={({ form, handleSubmit, values, errors }) => (
@@ -693,6 +694,22 @@ export default () => {
 
                 <hr />
 
+                {stepAtual === ITENS_STEPS.length - 1 && (
+                  <div className="mt-4 mb-4">
+                    <Botao
+                      texto="Assinar e Enviar"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-end ms-3"
+                      onClick={() => setShowModalEnviar(true)}
+                      disabled={validaAssinarEnviar(
+                        values as FichaTecnicaPayload,
+                        errors
+                      )}
+                    />
+                  </div>
+                )}
+
                 {stepAtual < ITENS_STEPS.length - 1 && (
                   <div className="mt-4 mb-4">
                     <Botao
@@ -741,13 +758,20 @@ export default () => {
       </div>
 
       <ModalCadastrarItemIndividual
-        closeModal={() => setShowModal(false)}
-        showModal={showModal}
+        closeModal={() => setShowModalCadastro(false)}
+        showModal={showModalCadastro}
         atualizarDadosCarregados={() => atualizarDadosCarregados()}
         tipoCadastro={tipoCadastro}
         tipoCadastroVisualizacao={
           tipoCadastro[0] + tipoCadastro.slice(1).toLowerCase()
         }
+      />
+
+      <ModalConfirmarEnvio
+        show={showModalEnviar}
+        carregando={carregando}
+        handleClose={() => setShowModalEnviar(false)}
+        handleSim={() => {}}
       />
     </Spin>
   );
