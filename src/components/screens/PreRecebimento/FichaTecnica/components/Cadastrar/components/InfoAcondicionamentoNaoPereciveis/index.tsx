@@ -12,7 +12,6 @@ import {
   required,
   composeValidators,
   inteiroOuDecimalComVirgula,
-  inteiroOuDecimalPositivoOuNegativo,
 } from "helpers/fieldValidators";
 import { CollapseConfig } from "components/Shareable/Collapse/interfaces";
 import {
@@ -27,10 +26,6 @@ import {
 const COLLAPSE_CONFIG_INFO_ACONDICIONAMENTO: CollapseConfig[] = [
   {
     titulo: <span className="verde-escuro">Conservação</span>,
-    camposObrigatorios: true,
-  },
-  {
-    titulo: <span className="verde-escuro">Temperatura e Transporte</span>,
     camposObrigatorios: true,
   },
   {
@@ -55,12 +50,13 @@ const COLLAPSE_CONFIG_INFO_ACONDICIONAMENTO: CollapseConfig[] = [
   },
 ];
 
-interface InfoAcondicionamentoPereciveisProps {
+interface InfoAcondicionamentoNaoPereciveisProps {
   collapse: CollapseControl;
   setCollapse: Dispatch<React.SetStateAction<CollapseControl>>;
   unidadesMedidaOptions: OptionsGenerico[];
   arquivo: ArquivoForm[];
   setArquivo: Dispatch<React.SetStateAction<ArquivoForm[]>>;
+  values: Record<string, any>;
 }
 
 export default ({
@@ -69,7 +65,8 @@ export default ({
   unidadesMedidaOptions,
   arquivo,
   setArquivo,
-}: InfoAcondicionamentoPereciveisProps) => {
+  values,
+}: InfoAcondicionamentoNaoPereciveisProps) => {
   return (
     <Collapse
       collapse={collapse}
@@ -78,19 +75,6 @@ export default ({
       collapseConfigs={COLLAPSE_CONFIG_INFO_ACONDICIONAMENTO}
     >
       <section id="formConservacao">
-        <div className="row">
-          <div className="col">
-            <Field
-              component={InputText}
-              label="Prazo de Validade após o descongelamento e mantido sob refrigeração:"
-              name={`prazo_validade_descongelamento`}
-              placeholder="Digite o prazo de validade"
-              className="input-ficha-tecnica"
-              required
-              validate={required}
-            />
-          </div>
-        </div>
         <div className="row mt-3">
           <div className="col">
             <Field
@@ -98,58 +82,6 @@ export default ({
               label="Condições de conservação e Prazo máximo para consumo após a abertura da embalagem primária:"
               name={`condicoes_de_conservacao`}
               placeholder="Descreva as condições de conservação e o prazo máximo de consumo"
-              className="textarea-ficha-tecnica"
-              required
-              validate={required}
-            />
-          </div>
-        </div>
-      </section>
-
-      <section id="formTemperaturaTransporte">
-        <div className="row">
-          <div className="col-5">
-            <Field
-              component={InputText}
-              label="Temperatura de Congelamento do Produto:"
-              name={`temperatura_congelamento`}
-              placeholder="Digite a temperatura de congelamento"
-              className="input-ficha-tecnica"
-              tooltipText="No processo de fabricação"
-              required
-              validate={composeValidators(
-                required,
-                inteiroOuDecimalPositivoOuNegativo
-              )}
-            />
-          </div>
-          <div className="col-1 label-unidade-medida label-unidade-medida-bottom">
-            <span>ºC</span>
-          </div>
-          <div className="col-5">
-            <Field
-              component={InputText}
-              label="Temperatura Interna do Veículo para Transporte:"
-              name={`temperatura_veiculo`}
-              placeholder="Digite a temperatura de transporte"
-              className="input-ficha-tecnica"
-              required
-              validate={composeValidators(
-                required,
-                inteiroOuDecimalPositivoOuNegativo
-              )}
-            />
-          </div>
-          <div className="col-1 label-unidade-medida label-unidade-medida-bottom">
-            <span>ºC</span>
-          </div>
-        </div>
-        <div className="row mt-3">
-          <div className="col">
-            <Field
-              component={TextArea}
-              label="Condições de Transporte:"
-              name={`condicoes_de_transporte`}
               className="textarea-ficha-tecnica"
               required
               validate={required}
@@ -220,6 +152,84 @@ export default ({
               validate={required}
             />
           </div>
+        </div>
+
+        <div className="row mt-3">
+          <div className="col-6 px-0">
+            <div className="row">
+              <Label content="O produto é líquido?" required />
+            </div>
+
+            <div className="row">
+              <div className="col-2">
+                <label className="container-radio">
+                  Não
+                  <Field
+                    component="input"
+                    type="radio"
+                    value="0"
+                    name={`produto_eh_liquido`}
+                    validate={required}
+                  />
+                  <span className="checkmark" />
+                </label>
+              </div>
+              <div className="col-2">
+                <label className="container-radio">
+                  Sim
+                  <Field
+                    component="input"
+                    type="radio"
+                    value="1"
+                    name={`produto_eh_liquido`}
+                    validate={required}
+                  />
+                  <span className="checkmark" />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {values.produto_eh_liquido === "1" && (
+            <div className="col-6 px-0">
+              <div className="row">
+                <Label
+                  content="Volume do Produto na Embalagem Primária:"
+                  required
+                />
+              </div>
+              <div className="row">
+                <div className="col">
+                  <Field
+                    component={InputText}
+                    name={`volume_embalagem_primaria`}
+                    placeholder="Digite o Volume"
+                    className="input-ficha-tecnica"
+                    required
+                    validate={composeValidators(
+                      required,
+                      inteiroOuDecimalComVirgula
+                    )}
+                  />
+                </div>
+
+                <div className="col">
+                  <Field
+                    component={Select}
+                    naoDesabilitarPrimeiraOpcao
+                    options={[
+                      { nome: "Unidade de Medida", uuid: "" },
+                      ...unidadesMedidaOptions,
+                    ]}
+                    name={`unidade_medida_volume_primaria`}
+                    className="input-ficha-tecnica"
+                    required
+                    validate={required}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="row mt-3">
@@ -368,37 +378,6 @@ export default ({
                 required
                 validate={required}
               />
-            </div>
-          </div>
-        </div>
-
-        <div className="row mt-3">
-          <div className="row">
-            <div className="col-6">
-              <Label
-                content="Variação Porcentual do Peso do Produto ao Descongelar:"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-2">
-              <Field
-                component={InputText}
-                name={`variacao_percentual`}
-                placeholder="Digite % do Peso"
-                className="input-ficha-tecnica"
-                required
-                validate={composeValidators(
-                  required,
-                  inteiroOuDecimalComVirgula
-                )}
-              />
-            </div>
-
-            <div className="col-1 label-unidade-medida label-unidade-medida-top">
-              <span>%</span>
             </div>
           </div>
         </div>

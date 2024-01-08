@@ -41,6 +41,7 @@ import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarIte
 import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
 
 import {
+  ArquivoForm,
   FichaTecnicaDetalhada,
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
@@ -52,6 +53,7 @@ import {
 import { InformacaoNutricional } from "interfaces/produto.interface";
 
 import InfoAcondicionamentoPereciveis from "./components/InfoAcondicionamentoPereciveis";
+import InfoAcondicionamentoNaoPereciveis from "./components/InfoAcondicionamentoNaoPereciveis";
 
 import { FichaTecnicaPayload } from "../../interfaces";
 import {
@@ -67,7 +69,6 @@ import {
   validaProximo,
   validaRascunho,
 } from "../../helpers";
-import { ArquivoForm } from "components/screens/PreRecebimento/DocumentosRecebimento/interfaces";
 
 const ITENS_STEPS = [
   {
@@ -670,15 +671,25 @@ export default () => {
                   </>
                 )}
 
-                {stepAtual === 2 && values["categoria"] === "PERECIVEIS" && (
-                  <InfoAcondicionamentoPereciveis
-                    collapse={collapse}
-                    setCollapse={setCollapse}
-                    unidadesMedidaOptions={unidadesMedidaOptions}
-                    arquivo={arquivo}
-                    setArquivo={setArquivo}
-                  />
-                )}
+                {stepAtual === 2 &&
+                  (values["categoria"] === "PERECIVEIS" ? (
+                    <InfoAcondicionamentoPereciveis
+                      collapse={collapse}
+                      setCollapse={setCollapse}
+                      unidadesMedidaOptions={unidadesMedidaOptions}
+                      arquivo={arquivo}
+                      setArquivo={setArquivo}
+                    />
+                  ) : (
+                    <InfoAcondicionamentoNaoPereciveis
+                      collapse={collapse}
+                      setCollapse={setCollapse}
+                      unidadesMedidaOptions={unidadesMedidaOptions}
+                      arquivo={arquivo}
+                      setArquivo={setArquivo}
+                      values={values}
+                    />
+                  ))}
 
                 <hr />
 

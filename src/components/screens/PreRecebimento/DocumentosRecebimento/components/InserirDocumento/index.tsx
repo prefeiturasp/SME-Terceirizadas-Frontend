@@ -2,10 +2,10 @@ import React from "react";
 import { Field } from "react-final-form";
 import InputFile from "components/Shareable/Input/InputFile";
 import { DEZ_MB } from "../../../../../../constants/shared";
-import { ArquivoForm } from "../../interfaces";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { textAreaRequired } from "helpers/fieldValidators";
 import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
+import { ArquivoForm } from "interfaces/pre_recebimento.interface";
 
 interface Props {
   setFiles(_files: Array<ArquivoForm>): void;
