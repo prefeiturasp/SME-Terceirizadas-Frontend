@@ -52,6 +52,7 @@ import {
 } from "../../constants";
 import {
   ehEscolaTipoCEI,
+  ehEscolaTipoCEMEI,
   deepCopy,
   usuarioEhDRE,
   usuarioEhMedicao,
@@ -615,7 +616,15 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
 
   const onClickVisualizarFechar = async (periodoGrupo) => {
     setShowTabelaLancamentosPeriodo(!showTabelaLancamentosPeriodo);
-    setPeriodoEscolar(periodoGrupo.periodo_escolar);
+    if (ehEscolaTipoCEMEI({ nome: solicitacao.escola })) {
+      setPeriodoEscolar(
+        periodoGrupo.nome_periodo_grupo.includes(" ")
+          ? periodoGrupo.nome_periodo_grupo.split(" ")[1]
+          : periodoGrupo.nome_periodo_grupo
+      );
+    } else {
+      setPeriodoEscolar(periodoGrupo.periodo_escolar);
+    }
     if (!showTabelaLancamentosPeriodo) {
       setLoading(true);
       setOcorrenciaExpandida();

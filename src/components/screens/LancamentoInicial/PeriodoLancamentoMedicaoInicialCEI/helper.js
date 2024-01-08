@@ -161,8 +161,11 @@ export const desabilitarField = (
   uuidFaixaEtaria,
   diasParaCorrecao,
   ehEmeiDaCemeiLocation,
-  ehSolicitacoesAlimentacaoLocation
+  ehSolicitacoesAlimentacaoLocation,
+  permissoesLancamentosEspeciaisPorDia,
+  alimentacoesLancamentosEspeciais
 ) => {
+  let alimentacoesLancamentosEspeciaisDia = [];
   if (!ehEmeiDaCemeiLocation) {
     if (nomeCategoria === "ALIMENTAÇÃO") {
       const resultado = inclusoesAutorizadas.some(
@@ -210,6 +213,16 @@ export const desabilitarField = (
         );
     }
   } else {
+    if (permissoesLancamentosEspeciaisPorDia) {
+      alimentacoesLancamentosEspeciaisDia = [
+        ...new Set(
+          permissoesLancamentosEspeciaisPorDia
+            .filter((permissao) => permissao.dia === dia)
+            .flatMap((permissao) => permissao.alimentacoes)
+        ),
+      ];
+    }
+
     const resultado = inclusoesAutorizadas.some(
       (inclusao) =>
         dia === String(inclusao.dia) &&
@@ -244,6 +257,12 @@ export const desabilitarField = (
     ].includes(location.state.status_periodo) &&
     !["matriculados", "dietas_autorizadas"].includes(rowName)
   ) {
+    if (
+      alimentacoesLancamentosEspeciais?.includes(rowName) &&
+      !alimentacoesLancamentosEspeciaisDia?.includes(rowName)
+    ) {
+      return true;
+    }
     return false;
   }
 
@@ -262,6 +281,27 @@ export const desabilitarField = (
     ["matriculados", "dietas_autorizadas"].includes(rowName)
   ) {
     return true;
+  }
+
+  if (
+    nomeCategoria === "ALIMENTAÇÃO" &&
+    permissoesLancamentosEspeciaisPorDia &&
+    alimentacoesLancamentosEspeciais.includes(rowName)
+  ) {
+    if (
+      ((alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+        validacaoDiaLetivo(dia)) ||
+        (alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+          !validacaoDiaLetivo(dia) &&
+          inclusoesAutorizadas.filter((inc) => inc.dia === dia).length)) &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+      )
+    ) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
@@ -551,7 +591,8 @@ export const formatarLinhasTabelaAlimentacaoCEI = (
 
 export const formatarLinhasTabelaAlimentacaoEmeiDaCemei = (
   tiposAlimentacao,
-  ehSolicitacoesAlimentacaoLocation
+  ehSolicitacoesAlimentacaoLocation,
+  alimentacoesLancamentosEspeciais
 ) => {
   const tiposAlimentacaoFormatadas = tiposAlimentacao.map((alimentacao) => {
     return {
@@ -629,6 +670,49 @@ export const formatarLinhasTabelaAlimentacaoEmeiDaCemei = (
     name: "observacoes",
     uuid: null,
   });
+
+  const indexLanche = tiposAlimentacaoFormatadas.findIndex(
+    (ali) => ali.nome === "Lanche"
+  );
+  const indexLanche4h = tiposAlimentacaoFormatadas.findIndex(
+    (ali) => ali.nome === "Lanche 4h"
+  );
+  const cloneAlimentacoesLancamentosEspeciais = deepCopy(
+    alimentacoesLancamentosEspeciais
+  );
+  const lanchesLancamentosEspeciais =
+    cloneAlimentacoesLancamentosEspeciais.filter((alimentacao) =>
+      alimentacao.name.includes("lanche")
+    );
+  const lancamentosEspeciaisSemLanches =
+    cloneAlimentacoesLancamentosEspeciais.filter(
+      (alimentacao) => !alimentacao.name.includes("lanche")
+    );
+  for (
+    let index = 0;
+    index <= lanchesLancamentosEspeciais.length - 1;
+    index++
+  ) {
+    tiposAlimentacaoFormatadas.splice(
+      Math.max(indexLanche, indexLanche4h) + 1 + index,
+      0,
+      lanchesLancamentosEspeciais[index]
+    );
+  }
+  const indexObservacoes = tiposAlimentacaoFormatadas.findIndex(
+    (ali) => ali.nome === "Observações"
+  );
+  for (
+    let index = 0;
+    index <= lancamentosEspeciaisSemLanches.length - 1;
+    index++
+  ) {
+    tiposAlimentacaoFormatadas.splice(
+      indexObservacoes + index,
+      0,
+      lancamentosEspeciaisSemLanches[index]
+    );
+  }
 
   return tiposAlimentacaoFormatadas;
 };
