@@ -129,3 +129,7 @@ export const solicitacaoEhDoCardAutorizadas = (status) => {
     statusEnum.TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO,
   ].includes(status);
 };
+
+export const ehAlunoNaoMatriculado = (tipoSolicitacao) => {
+  return tipoSolicitacao === "ALUNO_NAO_MATRICULADO";
+};
