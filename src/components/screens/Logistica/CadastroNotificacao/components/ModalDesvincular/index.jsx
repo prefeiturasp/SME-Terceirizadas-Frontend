@@ -20,13 +20,13 @@ export default ({ guia, handleClose, handleSim }) => {
           type={BUTTON_TYPE.BUTTON}
           onClick={() => handleClose()}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="ml-3"
+          className="ms-3"
         />
         <Botao
           texto="Excluir Vínculo"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => handleSim(guia)}
         />
       </Modal.Footer>

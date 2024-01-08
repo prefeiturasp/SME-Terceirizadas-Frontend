@@ -68,7 +68,7 @@ export default ({
     let textoPadrao = (
       <div>
         Faltam
-        <span className="font-weight-bold">
+        <span className="fw-bold">
           &nbsp;
           {formataMilhar(qtdFaltante)}
           &nbsp;
@@ -156,7 +156,7 @@ export default ({
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       icon="fas fa-trash"
-                      className="float-right ml-3"
+                      className="float-end ms-3"
                       onClick={() => deletaEtapa(index)}
                       tooltipExterno="Remover Etapa"
                     />

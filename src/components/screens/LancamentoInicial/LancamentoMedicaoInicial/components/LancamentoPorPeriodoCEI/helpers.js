@@ -27,6 +27,8 @@ export const textoCabecalhoFormatado = (textoCabecalho) => {
       return "Infantil Manhã";
     case "Infantil TARDE":
       return "Infantil Tarde";
+    case "Solicitações de Alimentação":
+      return "Solicitações de Alimentação - Infantil";
     default:
       return textoCabecalho;
   }

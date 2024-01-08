@@ -110,7 +110,7 @@ const FormBuscaProduto = ({
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
             <Botao
@@ -124,7 +124,7 @@ const FormBuscaProduto = ({
                   nome_produto: undefined,
                 })
               }
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
           </div>

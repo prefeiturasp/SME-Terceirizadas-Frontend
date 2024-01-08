@@ -49,9 +49,13 @@ import {
 } from "configs/constants";
 import { required } from "helpers/fieldValidators";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
-import { relatorioMedicaoInicialPDF } from "services/relatorios";
+import {
+  relatorioMedicaoInicialPDF,
+  relatorioUnificadoMedicaoInicialPDF,
+} from "services/relatorios";
 import { MEDICAO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import { updateSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import ModalRelatorioUnificado from "./components/ModalRelatorioUnificado";
 
 export const AcompanhamentoDeLancamentos = () => {
   const history = useHistory();
@@ -77,6 +81,8 @@ export const AcompanhamentoDeLancamentos = () => {
   const [loadingComFiltros, setLoadingComFiltros] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
+  const [exibirModalRelatorioUnificado, setExibirModalRelatorioUnificado] =
     useState(false);
 
   const PAGE_SIZE = 10;
@@ -323,6 +329,32 @@ export const AcompanhamentoDeLancamentos = () => {
     }
   };
 
+  const handleSubmitRelatorioUnificado = async (form, grupoSelecionado) => {
+    const dre = usuarioEhDRE()
+      ? meusDados && meusDados.vinculo_atual.instituicao.uuid
+      : diretoriaRegional;
+    const [mes, ano] = form
+      .getFieldState("mes_ano" || undefined)
+      .value.split("_");
+
+    const payload = {
+      dre,
+      status: statusSelecionado,
+      grupo_escolar: grupoSelecionado,
+      mes,
+      ano,
+    };
+
+    const response = await relatorioUnificadoMedicaoInicialPDF(payload);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError(
+        "Erro ao gerar relatório unificado. Tente novamente mais tarde."
+      );
+    }
+  };
+
   const exibirDashboard = () => {
     if (usuarioEhMedicao() && loadingComFiltros) {
       return !mudancaDre;
@@ -522,13 +554,13 @@ export const AcompanhamentoDeLancamentos = () => {
                                 className="input-busca-nome-item"
                               />
                             </div>
-                            <div className="col-4 mt-auto text-right">
+                            <div className="col-4 mt-auto text-end">
                               <Botao
                                 type={BUTTON_TYPE.BUTTON}
                                 onClick={() => resetForm(form)}
                                 style={BUTTON_STYLE.GREEN_OUTLINE}
                                 texto="Limpar"
-                                className="mr-3"
+                                className="me-3"
                               />
                               <Botao
                                 type={BUTTON_TYPE.SUBMIT}
@@ -553,7 +585,7 @@ export const AcompanhamentoDeLancamentos = () => {
                               <table className="resultados">
                                 <thead>
                                   <tr className="row">
-                                    <th className="col-5 pl-2">
+                                    <th className="col-5 ps-2">
                                       {usuarioEhEscolaTerceirizadaQualquerPerfil()
                                         ? "Período do Lançamento"
                                         : "Nome da UE"}
@@ -584,7 +616,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                   {resultados.dados.map((dado, key) => {
                                     return (
                                       <tr key={key} className="row">
-                                        <td className="col-5 pl-2 pt-3">
+                                        <td className="col-5 ps-2 pt-3">
                                           {usuarioEhEscolaTerceirizadaQualquerPerfil()
                                             ? dado.mes_ano
                                             : dado.escola}
@@ -681,9 +713,37 @@ export const AcompanhamentoDeLancamentos = () => {
                                 pageSize={PAGE_SIZE}
                                 current={currentPage}
                               />
+                              {statusSelecionado ===
+                                "MEDICAO_APROVADA_PELA_CODAE" &&
+                              (usuarioEhDRE() || usuarioEhMedicao()) ? (
+                                <div className="col-12 mt-4 text-end">
+                                  <Botao
+                                    type={BUTTON_TYPE.BUTTON}
+                                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                                    icon={BUTTON_ICON.FILE_PDF}
+                                    texto="Relatório Unificado"
+                                    onClick={() =>
+                                      setExibirModalRelatorioUnificado(true)
+                                    }
+                                  />
+                                </div>
+                              ) : null}
                               <ModalSolicitacaoDownload
                                 show={exibirModalCentralDownloads}
                                 setShow={setExibirModalCentralDownloads}
+                              />
+
+                              <ModalRelatorioUnificado
+                                show={exibirModalRelatorioUnificado}
+                                onClose={() =>
+                                  setExibirModalRelatorioUnificado(false)
+                                }
+                                onSubmit={({ grupoSelecionado }) =>
+                                  handleSubmitRelatorioUnificado(
+                                    form,
+                                    grupoSelecionado
+                                  )
+                                }
                               />
                             </>
                           )}

@@ -9,6 +9,7 @@ import {
   getListaAbreviacoesTiposEmbalagens,
 } from "services/qualidade.service";
 import { Paginacao } from "components/Shareable/Paginacao";
+import "./styles.scss";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -59,8 +60,8 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-embalagens">
-        <div className="card-body embalagens">
+      <div className="card mt-3 card-tipos-embalagens">
+        <div className="card-body tipos-embalagens">
           <Filtros
             setFiltros={setFiltros}
             nomesEmbalagens={nomesEmbalagens}

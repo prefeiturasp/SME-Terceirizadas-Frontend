@@ -222,7 +222,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               )
             }
             disabled={baixandoPDF}
-            className="float-right"
+            className="float-end"
             onClick={async () => {
               setBaixandoPDF(true);
               await getRelatorioInclusaoAlimentacao(
@@ -242,7 +242,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="pl-2 my-auto offset-1 col-5">
+        <div className="ps-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
@@ -466,9 +466,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                               inclusaoDeAlimentacao.status ===
                                 "ESCOLA_CANCELOU") && (
                               <p className="justificativa-cancelamento dark-red">
-                                <span className="font-weight-bold">
-                                  justificativa:{" "}
-                                </span>
+                                <span className="fw-bold">justificativa: </span>
                                 {quantidade_por_periodo.cancelado_justificativa ||
                                   inclusaoDeAlimentacao.logs.find(
                                     (log) =>

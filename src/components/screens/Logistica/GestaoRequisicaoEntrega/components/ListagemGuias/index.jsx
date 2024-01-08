@@ -93,7 +93,7 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
                     <br />
                     {guiaAtual.codigo_unidade}
                   </div>
-                  <div className="col border-left">
+                  <div className="col border-start">
                     <b>Nome Unidade Educacional</b>
                     <br />
                     {guiaAtual.nome_unidade}
@@ -116,7 +116,7 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
                     <br />
                     {guiaAtual.contato_unidade}
                   </div>
-                  <div className="col border-left">
+                  <div className="col border-start">
                     <b>Telefone</b>
                     <br />
                     {guiaAtual.telefone_unidade}
@@ -163,7 +163,7 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
               setShowModalGuia(false);
             }}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>
@@ -194,7 +194,7 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
                 );
               }}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               disabled={carregandoModal}
             />
             <Botao
@@ -204,7 +204,7 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
                 setShowModal(false);
               }}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
           </Modal.Footer>
         </Spin>

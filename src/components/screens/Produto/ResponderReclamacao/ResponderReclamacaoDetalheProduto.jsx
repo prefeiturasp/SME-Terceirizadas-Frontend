@@ -59,9 +59,9 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
         <div className="card">
           <div className="card-body">
             <div className="row">
-              <div className="col-12 text-right">
+              <div className="col-12 text-end">
                 <Botao
-                  className="mr-3"
+                  className="me-3"
                   style={BUTTON_STYLE.BLUE}
                   texto="Voltar"
                   icon={BUTTON_ICON.ARROW_LEFT}
@@ -78,9 +78,9 @@ const ResponderReclamacaoDetalheProduto = ({ history }) => {
                   questionamento={getQuestionamentoCodae(produto.logOrdenado)}
                 />
                 <div className="row">
-                  <div className="col-12 text-right">
+                  <div className="col-12 text-end">
                     <Botao
-                      className="mr-3"
+                      className="me-3"
                       style={BUTTON_STYLE.BLUE}
                       texto="Voltar"
                       icon={BUTTON_ICON.ARROW_LEFT}

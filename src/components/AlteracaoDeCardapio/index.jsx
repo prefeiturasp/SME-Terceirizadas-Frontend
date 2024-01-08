@@ -1011,7 +1011,7 @@ class AlteracaoCardapio extends Component {
             <section className="card  mt-3">
               <div className="card-body">
                 <div
-                  className="card-title font-weight-bold descricao"
+                  className="card-title fw-bold descricao"
                   style={this.fontHeader}
                 >
                   Descrição da Alteração

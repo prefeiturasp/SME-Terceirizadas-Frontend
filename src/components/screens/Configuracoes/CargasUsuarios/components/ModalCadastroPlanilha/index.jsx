@@ -105,14 +105,14 @@ const ModalCadastroVinculo = ({ show, setShow, onSubmit, servidores }) => {
                   }}
                   disabled={!arquivo[0] || !tipoPlanilha}
                   style={BUTTON_STYLE.GREEN}
-                  className="ml-3 float-right"
+                  className="ms-3 float-end"
                 />
                 <Botao
                   texto="Cancelar"
                   type={BUTTON_TYPE.BUTTON}
                   onClick={handleClose}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="ml-3 float-right"
+                  className="ms-3 float-end"
                 />
               </div>
             </Modal.Footer>

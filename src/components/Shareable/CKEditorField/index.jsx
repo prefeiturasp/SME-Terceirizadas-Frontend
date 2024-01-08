@@ -41,7 +41,7 @@ const CKEditorField = (props) => {
     <div className="select">
       {label && [
         required && (
-          <span key={1} className="required-asterisk float-left">
+          <span key={1} className="required-asterisk">
             *
           </span>
         ),

@@ -129,7 +129,7 @@ const RelatorioProdutosHomologados = () => {
                     <p className="totalHomologadosValor">
                       Total de produtos homologados:{" "}
                       <b>{quantidadeHomologados}</b>
-                      <span className="ml-5">
+                      <span className="ms-5">
                         Total de marcas homologadas: <b>{quantidadeMarcas}</b>{" "}
                       </span>
                     </p>
@@ -148,7 +148,7 @@ const RelatorioProdutosHomologados = () => {
                   />
                   <hr />
                   <div className="row">
-                    <div className="col-12 text-right">
+                    <div className="col-12 text-end">
                       <Botao
                         texto="Exportar Excel"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -158,7 +158,7 @@ const RelatorioProdutosHomologados = () => {
                         onClick={() => {
                           exportarXLSX(formataParams(filtros));
                         }}
-                        className="mr-3"
+                        className="me-3"
                       />
                       {exibirModalCentralDownloads && (
                         <ModalSolicitacaoDownload

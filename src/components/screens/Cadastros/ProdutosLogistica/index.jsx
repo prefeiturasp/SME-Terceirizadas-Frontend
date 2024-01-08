@@ -50,8 +50,8 @@ export default () => {
   };
 
   return (
-    <div className="card mt-3 card-cadastro-geral">
-      <div className="card-body">
+    <div className="card mt-3 card-produtos-logistica">
+      <div className="card-body produtos-logistica">
         <Spin tip="Carregando..." spinning={carregando}>
           <Filtros
             setResultado={setResultado}

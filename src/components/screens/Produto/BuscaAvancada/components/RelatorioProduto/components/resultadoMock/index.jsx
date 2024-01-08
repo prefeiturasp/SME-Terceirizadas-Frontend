@@ -52,7 +52,7 @@ export default class ResultadoMock extends Component {
             type={BUTTON_TYPE.BUTTON}
             texto="historico"
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="mr-2"
+            className="me-2"
             onClick={this.showModal}
           />
           <Botao

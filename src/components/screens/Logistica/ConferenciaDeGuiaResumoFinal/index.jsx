@@ -189,7 +189,7 @@ export default ({ reposicao }) => {
         {!conferenciaInvalida && (
           <div className="card-body conferencia-guia-resumo-final">
             <span className="subtitulo">{subtitulo}</span>
-            <span className="numero-guia float-right">
+            <span className="numero-guia float-end">
               Guia número: <strong>{parseInt(guia.numero_guia)}</strong>
             </span>
             <hr />
@@ -363,10 +363,10 @@ export default ({ reposicao }) => {
               </div>
             )}
             <div>
-              <span className="float-right">
+              <span className="float-end">
                 <Botao
                   texto="Cancelar"
-                  className="mr-3"
+                  className="me-3"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={() => {

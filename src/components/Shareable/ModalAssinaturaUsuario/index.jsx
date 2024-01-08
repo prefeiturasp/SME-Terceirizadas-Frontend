@@ -46,8 +46,8 @@ export const ModalAssinaturaUsuario = ({
             <div>
               <p>
                 Confirme sua senha de acesso ao{" "}
-                <span className="green font-weight-bold">SIGPAE</span> para
-                assinar digitalmente o documento:
+                <span className="green fw-bold">SIGPAE</span> para assinar
+                digitalmente o documento:
               </p>
               <div>
                 <Form
@@ -95,13 +95,13 @@ export const ModalAssinaturaUsuario = ({
                   setConcordaAssinar(false);
                 }}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto={textoBotao}
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
-                className="ml-3"
+                className="ms-3"
                 onClick={() => {
                   setConcordaAssinar(true);
                 }}

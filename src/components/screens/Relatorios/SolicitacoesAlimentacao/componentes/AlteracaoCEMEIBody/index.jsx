@@ -119,7 +119,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                         return acc + (v.matriculados_quando_criado || 0);
                       }, 0);
                     return (
-                      <div className="container-fluid pr-0" key={idxCEI}>
+                      <div className="container-fluid pe-0" key={idxCEI}>
                         <div className="row mt-3">
                           <div className="col-12">
                             <label className="label-periodo-cei-cemei">
@@ -198,7 +198,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                   })}
                   {substituicoesEMEI.map((substituicaoEMEI, idxEMEI) => {
                     return (
-                      <div className="container-fluid pr-0" key={idxEMEI}>
+                      <div className="container-fluid pe-0" key={idxEMEI}>
                         <div className="row mt-3">
                           <div className="col-12">
                             <label className="label-periodo-cei-cemei">

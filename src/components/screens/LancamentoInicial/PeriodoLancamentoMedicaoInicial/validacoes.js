@@ -92,6 +92,26 @@ export const campoLancheEmergencialComZeroOuSemObservacao = (
   );
 };
 
+export const campoLancheEmergencialSemAutorizacaoSemObservacao = (
+  values,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  const value =
+    values[`lanche_emergencial__dia_${column.dia}__categoria_${categoria.id}`];
+
+  return (
+    value &&
+    !values[`observacoes__dia_${column.dia}__categoria_${categoria.id}`] &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      (alteracao) => alteracao.dia === column.dia
+    ).length === 0
+  );
+};
+
 export const campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao = (
   dia,
   categoria,
@@ -706,7 +726,10 @@ export const validacoesTabelasDietas = (
   value,
   allValues,
   location,
-  medicaoUuid
+  medicaoUuid,
+  validacaoDiaLetivo,
+  dadosValoresInclusoesAutorizadasState,
+  inclusoesAutorizadas
 ) => {
   const idCategoriaAlimentacao = categoriasDeMedicao.find((categoria) =>
     categoria.nome.includes("ALIMENTAÇÃO")
@@ -731,6 +754,35 @@ export const validacoesTabelasDietas = (
   );
   const totalLanchesDieta = lanche_4h_value + lanche_value;
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
+
+  const alimentacoesDoDia = Object.keys(allValues).filter(
+    (key) =>
+      String(key).includes(`dia_${dia}__categoria_${categoria}`) &&
+      !String(key).includes("numero_de_alunos") &&
+      !String(key).includes("frequencia")
+  );
+
+  const EH_INCLUSAO_SOMENTE_SOBREMESA =
+    inclusoesAutorizadas.length &&
+    inclusoesAutorizadas.every((i) => i.alimentacoes === "sobremesa");
+
+  if (
+    rowName === "frequencia" &&
+    Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+      String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+    ) &&
+    !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
+    alimentacoesDoDia.some((ali) => allValues[ali])
+  ) {
+    if (
+      !EH_INCLUSAO_SOMENTE_SOBREMESA &&
+      (!value || (value && Number(value) !== 0 && validacaoDiaLetivo(dia)))
+    ) {
+      return `Foi autorizada inclusão de alimentação ${
+        location.state && location.state.grupo ? "contínua" : ""
+      } nesta data. Informe a frequência de alunos.`;
+    }
+  }
   if (
     value &&
     Number(value) > maxDietasAutorizadas &&

@@ -77,7 +77,7 @@ import {
   ehDiaParaCorrigir,
   formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
-  getPermissoesLancamentosEspeciaisMesAnoAsync,
+  getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
   getSolicitacoesInclusaoAutorizadasAsync,
   getSolicitacoesInclusoesEtecAutorizadasAsync,
@@ -865,7 +865,7 @@ export default () => {
       let response_kit_lanches_autorizadas = [];
       let response_suspensoes_autorizadas = [];
       let response_alteracoes_alimentacao_autorizadas = [];
-      let response_permissoes_lancamentos_especiais_mes_ano = [];
+      let response_permissoes_lancamentos_especiais_mes_ano_por_periodo = [];
 
       if (!ehGrupoSolicitacoesDeAlimentacaoUrlParam && !ehGrupoETECUrlParam) {
         const params_matriculados = {
@@ -901,27 +901,27 @@ export default () => {
         );
 
         if (ehPeriodoSimples) {
-          response_permissoes_lancamentos_especiais_mes_ano =
-            await getPermissoesLancamentosEspeciaisMesAnoAsync(
+          response_permissoes_lancamentos_especiais_mes_ano_por_periodo =
+            await getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync(
               escola.uuid,
               mes,
               ano,
               periodo.periodo_escolar.nome
             );
           setPermissoesLancamentosEspeciaisPorDia(
-            response_permissoes_lancamentos_especiais_mes_ano.permissoes_por_dia
+            response_permissoes_lancamentos_especiais_mes_ano_por_periodo.permissoes_por_dia
           );
           setAlimentacoesLancamentosEspeciais(
-            response_permissoes_lancamentos_especiais_mes_ano.alimentacoes_lancamentos_especiais?.map(
+            response_permissoes_lancamentos_especiais_mes_ano_por_periodo.alimentacoes_lancamentos_especiais?.map(
               (ali) => ali.name
             )
           );
           setDataInicioPermissoes(
-            response_permissoes_lancamentos_especiais_mes_ano.data_inicio_permissoes
+            response_permissoes_lancamentos_especiais_mes_ano_por_periodo.data_inicio_permissoes
           );
 
           const alimentacoesLancamentosEspeciais =
-            response_permissoes_lancamentos_especiais_mes_ano.alimentacoes_lancamentos_especiais;
+            response_permissoes_lancamentos_especiais_mes_ano_por_periodo.alimentacoes_lancamentos_especiais;
           const indexLanche = tiposAlimentacaoFormatadas.findIndex(
             (ali) => ali.nome === "Lanche"
           );
@@ -1196,7 +1196,8 @@ export default () => {
         tiposAlimentacaoFormatadas &&
           tiposAlimentacaoFormatadas.forEach((alimentacao) => {
             if (
-              categoria.nome.includes("ALIMENTAÇÃO") &&
+              (categoria.nome.includes("ALIMENTAÇÃO") ||
+                categoria.nome.includes("DIETA")) &&
               solInclusoesAutorizadas
             ) {
               const inclusoesFiltradas = solInclusoesAutorizadas.filter(
@@ -1755,6 +1756,30 @@ export default () => {
     return ehDiaLetivo;
   };
 
+  const classNameFieldTabelaDieta = (
+    row,
+    column,
+    categoria,
+    inclusoesAutorizadas
+  ) => {
+    const EH_INCLUSAO_SOMENTE_SOBREMESA =
+      inclusoesAutorizadas.length &&
+      inclusoesAutorizadas.every((i) => i.alimentacoes === "sobremesa");
+    if (EH_INCLUSAO_SOMENTE_SOBREMESA) {
+      return "nao-eh-dia-letivo";
+    } else if (
+      (Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+        String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
+      ) ||
+        `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
+          dadosValoresInclusoesAutorizadasState) &&
+      !ehGrupoSolicitacoesDeAlimentacaoUrlParam
+    ) {
+      return "";
+    }
+    return validacaoDiaLetivo(column.dia) ? "" : "nao-eh-dia-letivo";
+  };
+
   const openModalObservacaoDiaria = (dia, categoria) => {
     setShowModalObservacaoDiaria(true);
     setDiaObservacaoDiaria(dia);
@@ -2000,7 +2025,10 @@ export default () => {
         value,
         allValues,
         location,
-        valoresPeriodosLancamentos[0]?.medicao_uuid
+        valoresPeriodosLancamentos[0]?.medicao_uuid,
+        validacaoDiaLetivo,
+        dadosValoresInclusoesAutorizadasState,
+        inclusoesAutorizadas
       );
     };
 
@@ -2096,7 +2124,7 @@ export default () => {
 
   return (
     <>
-      <div className="text-right botao-voltar-lancamento-medicao">
+      <div className="text-end botao-voltar-lancamento-medicao">
         <Botao
           type={BUTTON_TYPE.BUTTON}
           texto={"Voltar"}
@@ -2279,7 +2307,7 @@ export default () => {
                                               className={`grid-table-tipos-alimentacao body-table-alimentacao`}
                                             >
                                               <div className="nome-linha">
-                                                <b className="pl-2">
+                                                <b className="ps-2">
                                                   {row.nome}
                                                 </b>
                                               </div>
@@ -2366,13 +2394,12 @@ export default () => {
                                                   ) : (
                                                     <div className="field-values-input">
                                                       <Field
-                                                        className={`m-2 ${
-                                                          !validacaoDiaLetivo(
-                                                            column.dia
-                                                          )
-                                                            ? "nao-eh-dia-letivo"
-                                                            : ""
-                                                        }`}
+                                                        className={`m-2 ${classNameFieldTabelaDieta(
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          inclusoesAutorizadas
+                                                        )}`}
                                                         component={
                                                           InputValueMedicao
                                                         }
@@ -2470,7 +2497,7 @@ export default () => {
                                                       : ""
                                                   }`}
                                                 >
-                                                  <b className="pl-2">
+                                                  <b className="ps-2">
                                                     {row.nome}
                                                   </b>
                                                 </div>
@@ -2833,7 +2860,7 @@ export default () => {
                       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                     ].includes(location.state.status_solicitacao) ? (
                       <Botao
-                        className="float-right"
+                        className="float-end"
                         texto="Salvar Correções"
                         type={BUTTON_TYPE.BUTTON}
                         style={`${BUTTON_STYLE.GREEN}`}
@@ -2842,7 +2869,7 @@ export default () => {
                       />
                     ) : (
                       <Botao
-                        className="float-right"
+                        className="float-end"
                         texto="Salvar Lançamentos"
                         type={BUTTON_TYPE.BUTTON}
                         style={`${BUTTON_STYLE.GREEN}`}

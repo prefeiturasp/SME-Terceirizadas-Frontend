@@ -33,10 +33,19 @@ export const CardLancamentoCEI = ({
   periodosEscolaCemeiComAlunosEmei,
   tiposAlimentacao,
   uuidPeriodoEscolar,
+  errosAoSalvar,
 }) => {
   const history = useHistory();
 
   let alimentacoesFormatadas = [];
+
+  const meusErros =
+    errosAoSalvar &&
+    typeof errosAoSalvar === "object" &&
+    errosAoSalvar.length > 0 &&
+    errosAoSalvar.filter((obj) =>
+      [textoCabecalho].includes(obj.periodo_escolar)
+    );
 
   const qtdAlimentacaoPeriodoFiltrada = () => {
     return quantidadeAlimentacoesLancadas.filter(
@@ -65,15 +74,16 @@ export const CardLancamentoCEI = ({
   };
 
   if (
-    ehEscolaTipoCEMEI(escolaInstituicao) &&
-    periodosEscolaCemeiComAlunosEmei.includes(textoCabecalho)
+    (ehEscolaTipoCEMEI(escolaInstituicao) &&
+      periodosEscolaCemeiComAlunosEmei.includes(textoCabecalho)) ||
+    textoCabecalho === "Solicitações de Alimentação"
   ) {
     alimentacoesFormatadas = tiposAlimentacao.map((tipoAlimentacao, key) => (
       <div key={key} className="mb-2">
         <span style={{ color: cor }}>
           <b>{quantidadeAlimentacao(tipoAlimentacao.nome)}</b>
         </span>
-        <span className="ml-1">- {tipoAlimentacao.nome}</span>
+        <span className="ms-1">- {tipoAlimentacao.nome}</span>
         <br />
       </div>
     ));
@@ -119,7 +129,9 @@ export const CardLancamentoCEI = ({
       onSubmit={() => {}}
       render={() => (
         <div
-          className="lancamento-por-periodo-card mt-3"
+          className={`lancamento-por-periodo-card mt-3  ${
+            meusErros && meusErros.length ? "border-danger" : ""
+          }`}
           style={{ color: cor }}
         >
           <div className="wraper-periodo-status mb-2">
@@ -128,7 +140,7 @@ export const CardLancamentoCEI = ({
             </div>
             <div>
               <div
-                className={`float-right status-card-periodo-grupo ${
+                className={`float-end status-card-periodo-grupo ${
                   [
                     "MEDICAO_CORRECAO_SOLICITADA",
                     "MEDICAO_CORRECAO_SOLICITADA_CODAE",
@@ -165,7 +177,7 @@ export const CardLancamentoCEI = ({
                 escolaInstituicao,
                 periodosEscolaCemeiComAlunosEmei,
                 textoCabecalho
-              ) ? (
+              ) || textoCabecalho === "Solicitações de Alimentação" ? (
                 <div className="row">
                   <div className="col-4">
                     {alimentacoesFormatadas.slice(0, 3)}
@@ -189,7 +201,7 @@ export const CardLancamentoCEI = ({
                             : 0}
                         </b>
                       </span>
-                      <span className="ml-1">
+                      <span className="ms-1">
                         - alunos atendidos com{" "}
                         {numeroRefeicoesDiarias(textoCabecalho)} refeições
                         diárias
@@ -202,8 +214,17 @@ export const CardLancamentoCEI = ({
             </div>
             <div>
               <div className="row" style={{ height: "100%" }}>
-                <div className="col-8 d-flex flex-column" />
-                <div className="col-4 pr-0 d-flex flex-column">
+                <div className="col-8 d-flex flex-column">
+                  {meusErros &&
+                    meusErros.map((obj, idxErros) => {
+                      return (
+                        <span className="mt-auto mensagem-erro" key={idxErros}>
+                          {obj.erro}
+                        </span>
+                      );
+                    })}
+                </div>
+                <div className="col-4 pe-0 d-flex flex-column">
                   <Botao
                     texto={textoBotaoCardLancamento(
                       quantidadeAlimentacoesLancadas,

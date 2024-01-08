@@ -1,5 +1,12 @@
+@import "styles/variables.scss";
+
 .busca-produtos-formulario-shared {
   display: grid;
+
+  span.required-asterisk {
+    color: $red;
+    padding-right: 5px;
+  }
 
   .header-busca-produto {
     font-style: normal;

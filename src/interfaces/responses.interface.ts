@@ -13,7 +13,9 @@ import {
   DocumentosRecebimentoParaAnalise,
   FichaTecnicaDetalhada,
   FichaTecnica,
+  EtapaCalendario,
 } from "./pre_recebimento.interface";
+import { InformacaoNutricional } from "./produto.interface";
 
 export interface ResponseInterface {
   data: Object;
@@ -115,4 +117,12 @@ export interface ResponseFichasTecnicas extends ResponseInterface {
 
 export interface ResponseFichaTecnicaDetalhada extends ResponseInterface {
   data: FichaTecnicaDetalhada;
+}
+
+export interface ResponseInformacoesNutricionais extends ResponseInterface {
+  data: ListagemNaoPaginada<InformacaoNutricional>;
+}
+
+export interface ResponseCalendarioCronograma extends ResponseInterface {
+  data: ListagemPaginada<EtapaCalendario>;
 }

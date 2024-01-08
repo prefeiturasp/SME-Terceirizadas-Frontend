@@ -4,8 +4,7 @@ import strip_tags from "locutus/php/strings/strip_tags";
 import { ALT_CARDAPIO } from "components/screens/helper";
 import { TIPO_PERFIL } from "constants/shared";
 
-export const required = (value) =>
-  value !== undefined ? undefined : "Campo obrigatório";
+export const required = (value) => (!value ? "Campo obrigatório" : undefined);
 
 export const ehDiaUtil = (values, motivos, feriadosAno) => (value) => {
   const ehLPRouRPL = () => {
@@ -336,6 +335,18 @@ export const numeroDecimal = (value) => {
 export const inteiroOuDecimal = (value) => {
   return value && !/^[0-9]+([,.][0-9]+)?$/g.test(value)
     ? "Somente números inteiros ou decimais"
+    : undefined;
+};
+
+export const inteiroOuDecimalComVirgula = (value) => {
+  return value && !/^[0-9]+([,][0-9]+)?$/g.test(value)
+    ? "Somente números inteiros ou decimais (separados por vírgula)"
+    : undefined;
+};
+
+export const inteiroOuDecimalPositivoOuNegativo = (value) => {
+  return value && !/^(-)?[0-9]+([,][0-9]+)?$/g.test(value)
+    ? "Somente números inteiros ou decimais positivos ou negativos"
     : undefined;
 };
 

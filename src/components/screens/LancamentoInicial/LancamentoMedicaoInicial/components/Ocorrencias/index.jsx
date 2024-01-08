@@ -52,8 +52,8 @@ export default ({
                   </p>
                 </div>
                 {solicitacaoMedicaoInicial.ocorrencia ? (
-                  <div className="col-8 text-right">
-                    <span className="status-ocorrencia text-center mr-3">
+                  <div className="col-8 text-end">
+                    <span className="status-ocorrencia text-center me-3">
                       <b
                         className={
                           [
@@ -75,14 +75,14 @@ export default ({
                       </b>
                     </span>
                     <span
-                      className="download-ocorrencias mr-0"
+                      className="download-ocorrencias me-0"
                       onClick={() =>
                         medicaoInicialExportarOcorrenciasPDF(
                           solicitacaoMedicaoInicial.ocorrencia.ultimo_arquivo
                         )
                       }
                     >
-                      <i className={`${BUTTON_ICON.DOWNLOAD} mr-2`} />
+                      <i className={`${BUTTON_ICON.DOWNLOAD} me-2`} />
                       Formulário de Ocorrências
                     </span>
                   </div>
@@ -111,12 +111,12 @@ export default ({
                     )}
 
                     <div className="col-12 mt-4">
-                      <div className="float-right">
+                      <div className="float-end">
                         <Botao
                           texto="Histórico"
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
-                          className="ml-3"
+                          className="ms-3"
                           onClick={visualizarModalHistorico}
                         />
                         {[
@@ -127,7 +127,7 @@ export default ({
                           solicitacaoMedicaoInicial.ocorrencia.status
                         ) && (
                           <Botao
-                            className="float-right ml-3"
+                            className="float-end ms-3"
                             texto="Atualizar Formulário de Ocorrências"
                             style={BUTTON_STYLE.GREEN}
                             onClick={() => setShowModal(true)}

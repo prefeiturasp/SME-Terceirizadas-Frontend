@@ -50,7 +50,7 @@ const CardBody = (props) => {
   return (
     <div className="card mt-3">
       <div className="card-body dash-terc">
-        <div className="card-title font-weight-bold dashboard-card-title">
+        <div className="card-title fw-bold dashboard-card-title">
           <Form
             onSubmit={() => {}}
             initialValues={{}}
@@ -62,7 +62,7 @@ const CardBody = (props) => {
                       ehTerceirizada && props.listaStatus && props.listaLotes
                         ? "col-3"
                         : ehDashboardGestaoProduto
-                        ? "col-12 text-right"
+                        ? "col-12 text-end"
                         : exibirFiltrosDataEventoETipoSolicitacao
                         ? "col-3 px-0"
                         : "col-6"
@@ -154,7 +154,7 @@ const CardBody = (props) => {
                   </div>
                   {exibirFiltrosDataEventoETipoSolicitacao && (
                     <>
-                      <div className={"col-3 pl-0"}>
+                      <div className={"col-3 ps-0"}>
                         <Field
                           component={Select}
                           name="tipo_solicitacao"
@@ -170,7 +170,7 @@ const CardBody = (props) => {
                           props.onChange(values);
                         }}
                       </OnChange>
-                      <div className="col-3 pl-0">
+                      <div className="col-3 ps-0">
                         <Field
                           name="data_evento"
                           minDate={null}

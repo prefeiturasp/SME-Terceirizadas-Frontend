@@ -126,7 +126,7 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
                           required
                           validate={required}
                           value={kit.uuid}
-                          className="float-right"
+                          className="float-end"
                           name={name}
                           disabled={CARD_DISABLED}
                         />
@@ -166,7 +166,7 @@ export const QuantidadeAlunosEMEI = ({ meusDados }) => {
               name="solicitacao_emei.matriculados_quando_criado"
             />
             Alunos matriculados:{" "}
-            <span className="font-weight-normal">
+            <span className="fw-normal">
               {
                 meusDados.vinculo_atual.instituicao
                   .quantidade_alunos_emei_da_cemei
@@ -176,7 +176,7 @@ export const QuantidadeAlunosEMEI = ({ meusDados }) => {
           <th className="col-4 d-flex justify-content-center">
             <span className="my-auto">Quantidade</span>
             <Field
-              className="ml-3"
+              className="ms-3"
               component={InputText}
               type="number"
               name="solicitacao_emei.quantidade_alunos"
@@ -216,7 +216,7 @@ export const AlunosDietaEspecial = ({
           <div className="row">
             <div className="col-2">{"Código EOL"}</div>
             <div className="col-8">{"Nome do Aluno"}</div>
-            <div className="pl-5 col-1 toggle-right">
+            <div className="ps-5 col-1 toggle-right">
               <ToggleExpandir
                 onClick={() => setCollapseAlunos(!collapseAlunos)}
                 ativo={collapseAlunos}
@@ -290,7 +290,7 @@ export const TabelaFaixasEtariasCEI = ({ faixasEtariasCEI, values }) => {
           );
         })}
         <tr className="row">
-          <td className="col-8 font-weight-bold">Total</td>
+          <td className="col-8 fw-bold">Total</td>
           <td className="col-2 text-center">
             {faixasEtariasCEI
               .filter((faixa) => faixa.faixa_etaria.inicio > 11)

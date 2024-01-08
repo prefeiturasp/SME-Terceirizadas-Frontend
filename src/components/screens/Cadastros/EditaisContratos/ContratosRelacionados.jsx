@@ -393,7 +393,7 @@ class ContratosRelacionados extends Component {
                   })}
                 </section>
                 <aside>
-                  <div className={`col-1 mt-auto mb-1 mr-1`}>
+                  <div className={`col-1 mt-auto mb-1 me-1`}>
                     <Botao
                       texto="+"
                       type={BUTTON_TYPE.BUTTON}
@@ -411,7 +411,7 @@ class ContratosRelacionados extends Component {
                   <div className="inputs-select-lote-dre">
                     {lotes.length ? (
                       <div>
-                        <label className="label font-weight-normal">
+                        <label className="label fw-normal">
                           <span>* </span>Lote
                         </label>
                         <Field
@@ -442,7 +442,7 @@ class ContratosRelacionados extends Component {
 
                     {diretoriasRegionais.length ? (
                       <div>
-                        <label className="label font-weight-normal">
+                        <label className="label fw-normal">
                           <span>* </span>DRE
                         </label>
                         <Field
@@ -521,7 +521,7 @@ class ContratosRelacionados extends Component {
                 <div>
                   {empresas.length ? (
                     <div>
-                      <label className="label font-weight-normal">
+                      <label className="label fw-normal">
                         <span>* </span>Empresa
                       </label>
                       <Field

@@ -77,7 +77,7 @@ class PainelPedidos extends Component {
                   <div className="col-3 font-10 my-auto">
                     Data: {dataAtualDDMMYYYY()}
                   </div>
-                  <div className="offset-6 col-3 text-right">
+                  <div className="offset-6 col-3 text-end">
                     <Field
                       component={Select}
                       name="visao_por"

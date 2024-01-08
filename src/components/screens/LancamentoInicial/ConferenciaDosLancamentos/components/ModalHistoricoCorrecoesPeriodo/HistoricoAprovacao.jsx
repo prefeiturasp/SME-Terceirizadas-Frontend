@@ -15,13 +15,13 @@ export const HistoricoAprovacao = ({ ...props }) => {
     <Fragment>
       <div className="row mt-3">
         <div className="col-8">
-          <label className="iniciais-usuario align-middle text-center mr-3">
+          <label className="iniciais-usuario align-middle text-center me-3">
             {retornaIniciais(historico.usuario.email)}
           </label>
           <label className="cor-texo-detalhes">{historico.usuario.nome}</label>
         </div>
         <div className="col-4">
-          <label className="text-right float-right cor-texo-detalhes">
+          <label className="text-end float-end cor-texo-detalhes">
             {historico.criado_em.split(" ")[0].replaceAll("-", "/")}
             <br />
             {historico.criado_em.split(" ")[1]}
@@ -53,7 +53,7 @@ export const HistoricoAprovacao = ({ ...props }) => {
             {historico &&
               historico.alteracoes.map((alteracao, alteracaoIdx) => {
                 return (
-                  <li className="ml-3 cor-texo-detalhes" key={alteracaoIdx}>
+                  <li className="ms-3 cor-texo-detalhes" key={alteracaoIdx}>
                     <b>{alteracao.periodo_escolar}</b>
                   </li>
                 );

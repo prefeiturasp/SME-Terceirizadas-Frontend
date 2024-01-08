@@ -300,7 +300,7 @@ const ModalCadastroVinculo = ({
                             validate={required}
                           />
                         </div>
-                        <div className="col-1 pl-0">
+                        <div className="col-1 ps-0">
                           <Botao
                             texto=""
                             icon="fas fa-search"
@@ -543,7 +543,7 @@ const ModalCadastroVinculo = ({
                             validate={composeValidators(required, validaCPF)}
                           />
                         </div>
-                        <div className="col-6 pl-0">
+                        <div className="col-6 ps-0">
                           <Botao
                             texto=""
                             icon="fas fa-search"
@@ -658,11 +658,11 @@ const ModalCadastroVinculo = ({
                       onClick={() => abreDeletar()}
                       style={BUTTON_STYLE.RED_OUTLINE}
                       icon="fas fa-trash"
-                      className="float-left"
+                      className="float-start"
                     />
                   )}
                   {tipoUsuario === "SERVIDOR" && (
-                    <div className="float-left texto-rodape">
+                    <div className="float-start texto-rodape">
                       Para adicionar o acesso do usuário, é necessário que todas
                       as informações acima estejam preenchidas. Caso faltem
                       informações, entre em contato com o administrador da sua
@@ -681,14 +681,14 @@ const ModalCadastroVinculo = ({
                     }}
                     disabled={Object.keys(errors).length > 0}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3 float-right"
+                    className="ms-3 float-end"
                   />
                   <Botao
                     texto="Cancelar"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={handleClose}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3 float-right"
+                    className="ms-3 float-end"
                   />
                 </div>
               </Modal.Footer>

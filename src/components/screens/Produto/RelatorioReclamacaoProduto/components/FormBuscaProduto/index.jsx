@@ -164,7 +164,7 @@ const FormBuscaProduto = ({ setFiltros, setPage }) => {
 
             <div className="col-12 col-md-4 col-xl-4">
               <div className="row">
-                <label className="ml-3">Data da reclamação</label>
+                <label className="ms-3">Data da reclamação</label>
               </div>
               <div className="row">
                 <div className="col mt-1">
@@ -206,14 +206,14 @@ const FormBuscaProduto = ({ setFiltros, setPage }) => {
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
             <Botao
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
               onClick={() => {
                 form.reset({ status_reclamacao: state.statusReclamacaoPadrao });

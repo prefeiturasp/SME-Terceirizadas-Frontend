@@ -482,7 +482,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
             </div>
             <div className="card solicitation mt-2">
               <div className="card-body">
-                <div className="card-title font-weight-bold">
+                <div className="card-title fw-bold">
                   Descrição da Inclusão de Alimentação
                 </div>
                 <FieldArray name="inclusoes">
@@ -619,7 +619,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                     )}
                   </>
                 )}
-                <div className="row float-right mt-4">
+                <div className="row float-end mt-4">
                   <div className="col-12">
                     <Botao
                       texto="Cancelar"
@@ -632,7 +632,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                       texto={
                         values.uuid ? "Atualizar rascunho" : "Salvar rascunho"
                       }
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -646,7 +646,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                         handleSubmit((values) => onSubmit(values, form));
                       }}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

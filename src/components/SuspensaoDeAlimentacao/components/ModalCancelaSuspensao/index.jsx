@@ -55,7 +55,7 @@ export const ModalCancelaSuspensao = ({ ...props }) => {
                   </p>
                 </div>
               </div>
-              <div className="row pl-3 pr-3">
+              <div className="row ps-3 pe-3">
                 <label>* Justificativa</label>
                 <Field
                   className="col-12 pb-5"
@@ -72,14 +72,14 @@ export const ModalCancelaSuspensao = ({ ...props }) => {
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={submitting}
-                className="ml-3"
+                className="ms-3"
               />
             </Modal.Footer>
           </form>

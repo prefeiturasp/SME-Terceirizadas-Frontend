@@ -219,7 +219,7 @@ export const DisponibilizacaoDeSolicitacoes = (props) => {
                                   <br />
                                   {guia.codigo_unidade}
                                 </div>
-                                <div className="col border-left">
+                                <div className="col border-start">
                                   <b>Nome Unidade Educacional</b>
                                   <br />
                                   {guia.nome_unidade}
@@ -243,7 +243,7 @@ export const DisponibilizacaoDeSolicitacoes = (props) => {
                                   <br />
                                   {guia.contato_unidade}
                                 </div>
-                                <div className="col border-left">
+                                <div className="col border-start">
                                   <b>Telefone</b>
                                   <br />
                                   {guia.telefone_unidade}
@@ -287,7 +287,7 @@ export const DisponibilizacaoDeSolicitacoes = (props) => {
 
                                       {alimento.embalagens.length > 1 && (
                                         <>
-                                          <div className={"col-2 border-left"}>
+                                          <div className={"col-2 border-start"}>
                                             <b>Quantidade</b>
                                             <br />
                                             {alimento.embalagens[1].qtd_volume}
@@ -357,7 +357,7 @@ export const DisponibilizacaoDeSolicitacoes = (props) => {
                     setLoading(true);
                   }}
                   style={BUTTON_STYLE.BLUE}
-                  className="ml-3"
+                  className="ms-3"
                   disabled={loading}
                 />
                 <Botao
@@ -369,14 +369,14 @@ export const DisponibilizacaoDeSolicitacoes = (props) => {
                     setSolicitacaoUuid(null);
                   }}
                   style={BUTTON_STYLE.BLUE}
-                  className="ml-3"
+                  className="ms-3"
                 />
               </Modal.Footer>
             </Spin>
           </Modal>
         </article>
         <div className="row mb-3">
-          <div className="col-12 text-right pt-3">
+          <div className="col-12 text-end pt-3">
             <Botao
               style={BUTTON_STYLE.GREEN_OUTLINE}
               texto="Enviar todos"

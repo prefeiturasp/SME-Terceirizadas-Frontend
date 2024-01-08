@@ -273,7 +273,7 @@ export default class BuscaProduto extends Component {
             <div className="botoes-busca">
               <Botao
                 texto={"Limpar Filtros"}
-                className="mr-3"
+                className="me-3"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={() => {

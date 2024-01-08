@@ -98,7 +98,7 @@ export class Cards extends Component {
           >
             <div className="card-header" style={headerStyle}>
               {label}
-              <div className="form-check float-right">
+              <div className="form-check float-end">
                 <input
                   className="compare_items form-check-input"
                   type="checkbox"

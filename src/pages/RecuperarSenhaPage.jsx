@@ -67,7 +67,7 @@ class RecuperarSenhaPage extends Component {
           <div className="card">
             <div className="card-body alinha-centro">
               <div className="">
-                <div className="card-title font-weight-bold">Alterar Senha</div>
+                <div className="card-title fw-bold">Alterar Senha</div>
                 <Field
                   component={InputPassword}
                   className="input-login"
