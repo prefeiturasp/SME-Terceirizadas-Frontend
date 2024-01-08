@@ -17,7 +17,8 @@ export const formatarPayloadPeriodoLancamentoCeiCemei = (
   dadosIniciaisFiltered,
   diasDaSemanaSelecionada,
   ehEmeiDaCemeiLocation,
-  ehSolicitacoesAlimentacaoLocation
+  ehSolicitacoesAlimentacaoLocation,
+  ehProgramasEProjetosLocation
 ) => {
   if (
     (ehEmeiDaCemeiLocation &&
@@ -58,7 +59,11 @@ export const formatarPayloadPeriodoLancamentoCeiCemei = (
       let dia = null;
       const nome_campo = keySplitted[0];
 
-      if (ehEmeiDaCemeiLocation || ehSolicitacoesAlimentacaoLocation) {
+      if (
+        ehEmeiDaCemeiLocation ||
+        ehSolicitacoesAlimentacaoLocation ||
+        ehProgramasEProjetosLocation
+      ) {
         dia = keySplitted[1].match(/\d/g).join("");
         return valoresMedicao.push({
           dia: dia,

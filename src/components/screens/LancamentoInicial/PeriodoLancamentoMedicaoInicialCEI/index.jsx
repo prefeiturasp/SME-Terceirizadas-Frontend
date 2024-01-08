@@ -198,6 +198,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     location &&
     location.state &&
     location.state.periodo === "Solicitações de Alimentação";
+  const ehProgramasEProjetosLocation =
+    location &&
+    location.state &&
+    location.state.periodo === "Programas e Projetos";
   const uuidPeriodoEscolarLocation =
     location && location.state && location.state.uuidPeriodoEscolar;
 
@@ -354,7 +358,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       }
 
       const linhasTabelaAlimentacaoCEI =
-        ehEmeiDaCemeiLocation || ehSolicitacoesAlimentacaoLocation
+        ehEmeiDaCemeiLocation ||
+        ehSolicitacoesAlimentacaoLocation ||
+        ehProgramasEProjetosLocation
           ? formatarLinhasTabelaAlimentacaoEmeiDaCemei(
               location.state.tiposAlimentacao,
               ehSolicitacoesAlimentacaoLocation
@@ -395,11 +401,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       let params = {
         uuid_solicitacao_medicao: uuid,
         nome_grupo:
-          ehEmeiDaCemeiLocation || ehSolicitacoesAlimentacaoLocation
+          ehEmeiDaCemeiLocation ||
+          ehSolicitacoesAlimentacaoLocation ||
+          ehProgramasEProjetosLocation
             ? periodo
             : location.state.grupo,
       };
-      if (!(ehEmeiDaCemeiLocation || ehSolicitacoesAlimentacaoLocation)) {
+      if (
+        !(
+          ehEmeiDaCemeiLocation ||
+          ehSolicitacoesAlimentacaoLocation ||
+          ehProgramasEProjetosLocation
+        )
+      ) {
         params = {
           ...params,
           nome_periodo_escolar: periodo,
@@ -672,7 +686,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                   let nameInputField = null;
                   if (
                     ehEmeiDaCemeiLocation ||
-                    ehSolicitacoesAlimentacaoLocation
+                    ehSolicitacoesAlimentacaoLocation ||
+                    ehProgramasEProjetosLocation
                   ) {
                     nameInputField = `${row.name}__dia_${dia}__categoria_${categoria.id}`;
                   } else {
@@ -703,7 +718,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
             if (
               valor_medicao.nome_campo === "observacoes" ||
               ehEmeiDaCemeiLocation ||
-              ehSolicitacoesAlimentacaoLocation
+              ehSolicitacoesAlimentacaoLocation ||
+              ehProgramasEProjetosLocation
             ) {
               dadosValoresMedicoes[
                 `${valor_medicao.nome_campo}__dia_${valor_medicao.dia}__categoria_${valor_medicao.categoria_medicao}`
@@ -964,7 +980,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       const dia = keySplitted[
         v[0].includes("observacoes") ||
         ehEmeiDaCemeiLocation ||
-        ehSolicitacoesAlimentacaoLocation
+        ehSolicitacoesAlimentacaoLocation ||
+        ehProgramasEProjetosLocation
           ? 1
           : 2
       ]
@@ -974,7 +991,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       const uuid_faixa_etaria =
         v[0].includes("observacoes") ||
         ehEmeiDaCemeiLocation ||
-        ehSolicitacoesAlimentacaoLocation
+        ehSolicitacoesAlimentacaoLocation ||
+        ehProgramasEProjetosLocation
           ? ""
           : keySplitted[1].replace("faixa_", "");
 
@@ -1100,7 +1118,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       dadosIniciaisFiltered,
       diasDaSemanaSelecionada,
       ehEmeiDaCemeiLocation,
-      ehSolicitacoesAlimentacaoLocation
+      ehSolicitacoesAlimentacaoLocation,
+      ehProgramasEProjetosLocation
     );
     if (payload.valores_medicao.length === 0)
       return (
@@ -1778,7 +1797,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                               } ${
                                                 row.name !== "observacoes" &&
                                                 (ehEmeiDaCemeiLocation ||
-                                                  ehSolicitacoesAlimentacaoLocation) &&
+                                                  ehSolicitacoesAlimentacaoLocation ||
+                                                  ehProgramasEProjetosLocation) &&
                                                 "mt-3"
                                               }`}
                                             >
@@ -1787,7 +1807,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                             {row.name !== "observacoes" &&
                                               !(
                                                 ehEmeiDaCemeiLocation ||
-                                                ehSolicitacoesAlimentacaoLocation
+                                                ehSolicitacoesAlimentacaoLocation ||
+                                                ehProgramasEProjetosLocation
                                               ) && (
                                                 <b className="faixa-etaria ps-2">
                                                   {row.faixa_etaria}
@@ -1938,7 +1959,8 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                               ) : (
                                                 <div className="field-values-input">
                                                   {ehEmeiDaCemeiLocation ||
-                                                  ehSolicitacoesAlimentacaoLocation ? (
+                                                  ehSolicitacoesAlimentacaoLocation ||
+                                                  ehProgramasEProjetosLocation ? (
                                                     <>
                                                       <Field
                                                         className={`m-2 ${classNameFieldTabelaAlimentacaoEMEI(
