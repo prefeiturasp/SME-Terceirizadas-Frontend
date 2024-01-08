@@ -196,6 +196,17 @@ export const validaProximoInformacoesNutricionais = (
   );
 };
 
+export const validaAssinarEnviar = (
+  values: FichaTecnicaPayload,
+  errors: Record<string, string>
+): boolean => {
+  return (
+    Object.keys(errors).length !== 0 ||
+    !values.embalagens_de_acordo_com_anexo ||
+    !values.rotulo_legivel
+  );
+};
+
 export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
   const valuesInformacoesNutricionais = {};
   ficha?.informacoes_nutricionais.forEach((informacao) => {
