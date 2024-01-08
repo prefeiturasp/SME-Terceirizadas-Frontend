@@ -54,6 +54,11 @@ export interface Arquivo {
   arquivo: string;
 }
 
+export interface ArquivoForm {
+  nome: string;
+  base64: string;
+}
+
 export type TiposDocumentoChoices =
   | "LAUDO"
   | "DECLARACAO_LEI_1512010"
@@ -190,6 +195,9 @@ export interface FichaTecnicaDetalhada {
   embalagem_secundaria: string;
   embalagens_de_acordo_com_anexo?: boolean;
   material_embalagem_primaria: string;
+  produto_eh_liquido: boolean;
+  volume_embalagem_primaria: number;
+  unidade_medida_volume_primaria: UnidadeMedidaSimples;
   peso_liquido_embalagem_primaria: number;
   unidade_medida_primaria: UnidadeMedidaSimples;
   peso_liquido_embalagem_secundaria: number;
