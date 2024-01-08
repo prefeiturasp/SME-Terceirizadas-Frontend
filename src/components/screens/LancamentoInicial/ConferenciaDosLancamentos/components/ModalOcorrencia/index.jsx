@@ -118,13 +118,13 @@ export const ModalOcorrencia = ({ ...props }) => {
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => setShowModal(false)}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   <Botao
                     texto={tituloBotoes[1]}
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                     disabled={
                       ehCorrecao
                         ? submitting ||

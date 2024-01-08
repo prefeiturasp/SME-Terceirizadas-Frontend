@@ -79,7 +79,7 @@ export const DadosEmpresa = ({ ehDistribuidor }) => {
       <div className="card-body">
         <div className="card-title green">Dados da Empresa</div>
         <div className="row pt-3">
-          <div className="col-12 text-right">
+          <div className="col-12 text-end">
             <Link to="/configuracoes/cadastros/empresas-cadastradas">
               <Botao
                 texto="Empresas Cadastradas"

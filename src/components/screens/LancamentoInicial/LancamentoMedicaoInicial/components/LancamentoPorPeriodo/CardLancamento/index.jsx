@@ -17,6 +17,7 @@ import {
   styleBotaoCardLancamento,
   textoBotaoCardLancamento,
 } from "../helpers";
+import { deepCopy } from "helpers/utilities";
 
 export const CardLancamento = ({
   textoCabecalho = null,
@@ -33,6 +34,7 @@ export const CardLancamento = ({
   periodoEspecifico = null,
   frequenciasDietasCEUGESTAO,
   errosAoSalvar,
+  periodosPermissoesLancamentosEspeciais,
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -41,6 +43,7 @@ export const CardLancamento = ({
 
   const meusErros =
     errosAoSalvar &&
+    typeof errosAoSalvar === "object" &&
     errosAoSalvar.length > 0 &&
     errosAoSalvar.filter((obj) =>
       [textoCabecalho, grupo].includes(obj.periodo_escolar)
@@ -84,19 +87,31 @@ export const CardLancamento = ({
         <span style={{ color: cor }}>
           <b>{quantidadeAlimentacao(alimentacao)}</b>
         </span>
-        <span className="ml-1">- {alimentacao}</span>
+        <span className="ms-1">- {alimentacao}</span>
         <br />
       </div>
     ));
   } else {
-    alimentacoesFormatadas = tipos_alimentacao
+    let copy_tipos_alimentacao = deepCopy(tipos_alimentacao);
+    if (
+      periodosPermissoesLancamentosEspeciais
+        ?.find(
+          (periodoPermissao) => periodoPermissao.periodo === textoCabecalho
+        )
+        ?.alimentacoes.includes("Lanche Extra")
+    ) {
+      copy_tipos_alimentacao.push({
+        nome: "Lanche Extra",
+      });
+    }
+    alimentacoesFormatadas = copy_tipos_alimentacao
       .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
       .map((alimentacao, key) => (
         <div key={key} className="mb-2">
           <span style={{ color: cor }}>
             <b>{quantidadeAlimentacao(alimentacao.nome)}</b>
           </span>
-          <span className="ml-1">- {alimentacao.nome}</span>
+          <span className="ms-1">- {alimentacao.nome}</span>
           <br />
         </div>
       ));
@@ -153,7 +168,7 @@ export const CardLancamento = ({
             </div>
             <div>
               <div
-                className={`float-right status-card-periodo-grupo ${
+                className={`float-end status-card-periodo-grupo ${
                   [
                     "MEDICAO_CORRECAO_SOLICITADA",
                     "MEDICAO_CORRECAO_SOLICITADA_CODAE",
@@ -210,7 +225,7 @@ export const CardLancamento = ({
                       );
                     })}
                 </div>
-                <div className="col-4 pr-0 d-flex flex-column">
+                <div className="col-4 pe-0 d-flex flex-column">
                   <Botao
                     texto={textoBotaoCardLancamento(
                       quantidadeAlimentacoesLancadas,

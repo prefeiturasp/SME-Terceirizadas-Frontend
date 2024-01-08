@@ -49,14 +49,14 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
       <div className="card mt-3 form-recebimento">
         <div className={`card-header card-tipo`} id={`heading_2`}>
           <div className="row card-header-content">
-            <span className="nome-alimento">Dados do Recebimento</span>
+            <span className="col-11 nome-alimento">Dados do Recebimento</span>
             <div className="col-1 align-self-center">
               <button
                 onClick={() => toggleCollapse()}
-                className="btn btn-link btn-block text-right px-0"
+                className="btn btn-link btn-block text-end px-0"
                 type="button"
-                data-toggle="collapse"
-                data-target={`#collapse_2`}
+                data-bs-toggle="collapse"
+                data-bs-target={`#collapse_2`}
                 aria-expanded="true"
                 aria-controls={`collapse_2`}
               >
@@ -76,7 +76,7 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
           id={`collapse_2`}
           className="collapse"
           aria-labelledby="headingOne"
-          data-parent="#accordionCronograma"
+          data-bs-parent="#accordionCronograma"
         >
           <div className="card-body">
             {recebimentos.map((recebimento, index) => (
@@ -91,7 +91,7 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           icon="fas fa-trash"
-                          className="float-right ml-3"
+                          className="float-end ms-3"
                           onClick={() => deletaRecebimento(index)}
                         />
                       </div>

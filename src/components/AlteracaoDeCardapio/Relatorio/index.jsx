@@ -246,7 +246,7 @@ class Relatorio extends Component {
           texto="Marcar Conferência"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             this.showModalMarcarConferencia();
           }}
@@ -329,11 +329,11 @@ class Relatorio extends Component {
                   solicitacao={alteracaoDeCardapio}
                 />
                 {visualizaBotoesDoFluxo(alteracaoDeCardapio) && (
-                  <div className="form-group row float-right mt-4">
+                  <div className="form-group d-flex justify-content-end mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
                         texto={textoBotaoNaoAprova}
-                        className="ml-3"
+                        className="ms-3"
                         onClick={() => this.showNaoAprovaModal("Não")}
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -348,7 +348,7 @@ class Relatorio extends Component {
                             type={BUTTON_TYPE.BUTTON}
                             onClick={() => this.showModalConfirm()}
                             style={BUTTON_STYLE.GREEN}
-                            className="ml-3"
+                            className="ms-3"
                           />
                         ) : (
                           <Botao
@@ -363,7 +363,7 @@ class Relatorio extends Component {
                                 : this.handleSubmit()
                             }
                             style={BUTTON_STYLE.GREEN}
-                            className="ml-3"
+                            className="ms-3"
                           />
                         )
                       ) : visao === CODAE &&
@@ -385,7 +385,7 @@ class Relatorio extends Component {
                               : this.handleSubmit()
                           }
                           style={BUTTON_STYLE.GREEN}
-                          className="ml-3"
+                          className="ms-3"
                         />
                       ))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO &&
@@ -401,7 +401,7 @@ class Relatorio extends Component {
                           type={BUTTON_TYPE.BUTTON}
                           onClick={() => this.showQuestionamentoModal("Sim")}
                           style={BUTTON_STYLE.GREEN}
-                          className="ml-3"
+                          className="ms-3"
                         />
                       ) : (
                         <Botao
@@ -417,14 +417,14 @@ class Relatorio extends Component {
                               : this.handleSubmit();
                           }}
                           style={BUTTON_STYLE.GREEN}
-                          className="ml-3"
+                          className="ms-3"
                         />
                       ))}
                     {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-                      <div className="form-group float-right mt-4">
+                      <div className="form-group float-end mt-4">
                         {alteracaoDeCardapio.terceirizada_conferiu_gestao ? (
-                          <label className="ml-3 conferido">
-                            <i className="fas fa-check mr-2" />
+                          <label className="ms-3 conferido">
+                            <i className="fas fa-check me-2" />
                             Solicitação Conferida
                           </label>
                         ) : (

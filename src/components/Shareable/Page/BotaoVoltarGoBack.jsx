@@ -11,7 +11,7 @@ const BotaoVoltar = ({ history }) => (
     type={BUTTON_TYPE.BUTTON}
     style={BUTTON_STYLE.GREEN_OUTLINE}
     icon={BUTTON_ICON.ARROW_LEFT}
-    className="float-right"
+    className="float-end"
     onClick={() =>
       history.location.key ? history.goBack() : history.push("/")
     }

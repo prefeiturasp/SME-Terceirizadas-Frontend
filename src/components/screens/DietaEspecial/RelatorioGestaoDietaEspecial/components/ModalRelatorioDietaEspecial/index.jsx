@@ -97,7 +97,7 @@ const ModalRelatorioDietaEspecial = ({
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.ARROW_LEFT}
-          className="mr-2"
+          className="me-2"
           onClick={closeModal}
         />,
         <Botao
@@ -154,7 +154,7 @@ const ModalRelatorioDietaEspecial = ({
 
                       <div className="row mt-3">
                         <div className="col-md-3">
-                          <div className="ml-3">
+                          <div className="ms-3">
                             <label>Solicitação #{dieta.id_externo}</label>
                           </div>
                         </div>
@@ -172,7 +172,7 @@ const ModalRelatorioDietaEspecial = ({
 
                       <div className="row mt-3">
                         <div className="col-md-3">
-                          <div className="ml-3">
+                          <div className="ms-3">
                             <label>Código EOL do aluno</label>
                             <br />
                             <b>{dieta.aluno.codigo_eol}</b>
@@ -202,7 +202,7 @@ const ModalRelatorioDietaEspecial = ({
 
                       <div className="row mt-3 mb-3">
                         <div className="col-md-3">
-                          <div className="ml-3">
+                          <div className="ms-3">
                             <label>Diagnóstico</label>
                             <br />
                             {dieta.alergias_intolerancias.map((alergia) => {
@@ -232,7 +232,7 @@ const ModalRelatorioDietaEspecial = ({
 
                       <div className="row mt-3 mb-3">
                         <div className="col-md-3">
-                          <div className="ml-3">
+                          <div className="ms-3">
                             <label>Motivo da Negação</label>
                             <br />
                             <b
@@ -266,7 +266,7 @@ const ModalRelatorioDietaEspecial = ({
 
                       <div className="row mt-3 mb-3">
                         <div className="col-md-6">
-                          <div className="ml-3">
+                          <div className="ms-3">
                             <label>Nome do usuário</label>
                             <br />
                             <b>{usuario ? usuario.nome : ""}</b>
@@ -281,7 +281,7 @@ const ModalRelatorioDietaEspecial = ({
 
                       <div className="row mt-3 mb-3">
                         <div className="col-md-6">
-                          <div className="ml-3">
+                          <div className="ms-3">
                             <label>Observação da Dieta</label>
                             <br />
                             <b

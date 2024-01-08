@@ -11,7 +11,7 @@ import "./styles.scss";
 const ListagemUnidadesMedida = ({ unidadesMedida }) => {
   return (
     <div className="container-listagem-resultados">
-      <div className="titulo-verde mt-5 mb-3">Unidades Cadastradas</div>
+      <div className="titulo-verde mb-3">Unidades Cadastradas</div>
       <article>
         <div className="grid-table header-table">
           <div>Nome da Unidade de Medida</div>

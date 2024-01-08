@@ -380,3 +380,16 @@ export const relatorioMedicaoInicialPDF = async (uuid) => {
     return data;
   }
 };
+
+export const relatorioUnificadoMedicaoInicialPDF = async (payload) => {
+  const url =
+    "medicao-inicial/solicitacao-medicao-inicial/relatorio-unificado/";
+  const response = await axios
+    .get(url, { params: payload })
+    .catch(ErrorHandlerFunction);
+
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

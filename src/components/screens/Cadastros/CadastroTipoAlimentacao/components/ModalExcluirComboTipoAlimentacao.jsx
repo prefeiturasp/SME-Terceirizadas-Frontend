@@ -36,7 +36,7 @@ export default class ModalExcluirComboTipoAlimentacao extends Component {
             />
             <Botao
               texto={"Confirmar"}
-              className="ml-3"
+              className="ms-3"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
               onClick={() => {

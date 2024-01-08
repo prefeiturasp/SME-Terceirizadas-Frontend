@@ -56,7 +56,7 @@ export const ModalVincularProtocolos = ({
     <Modal dialogClassName="modal-50w" show={showModal} backdrop={"static"}>
       <Modal.Header>
         <Modal.Title>
-          <h5 className="font-weight-bold text-dark">
+          <h5 className="fw-bold text-dark">
             Selecionar protocolos padrão aos editais
           </h5>
         </Modal.Title>
@@ -163,13 +163,13 @@ export const ModalVincularProtocolos = ({
                 type={BUTTON_TYPE.BUTTON}
                 onClick={() => closeModal(false)}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right mr-3"
+                className="float-end me-3"
               />
               <Botao
                 texto="Vincular"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right"
+                className="float-end"
                 disabled={
                   submitting ||
                   !values.editais_destino ||

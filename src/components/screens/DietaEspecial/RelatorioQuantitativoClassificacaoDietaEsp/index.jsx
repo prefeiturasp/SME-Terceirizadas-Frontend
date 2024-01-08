@@ -66,7 +66,7 @@ export default () => {
           )}
           {!loading && dadosRelatorio && dadosRelatorio.length !== 0 && (
             <>
-              <div className="row ml-1">
+              <div className="row ms-1">
                 {getCabecalhoPorFiltros(formValues)}
               </div>
               <TabelaRelatorio
@@ -85,7 +85,7 @@ export default () => {
                   texto="Imprimir"
                   style={BUTTON_STYLE.BLUE}
                   icon={BUTTON_ICON.PRINT}
-                  className="float-right"
+                  className="float-end"
                   onClick={imprimeRelatorio}
                 />
               </div>

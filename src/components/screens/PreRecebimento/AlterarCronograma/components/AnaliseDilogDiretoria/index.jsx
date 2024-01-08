@@ -27,7 +27,7 @@ export default ({ aprovacaoDilog, setAprovacaoDilog }) => {
       {aprovacaoDilog === false && (
         <div className="mt-4">
           <>
-            <label className="label font-weight-normal">
+            <label className="label fw-normal">
               <span>* </span>Justificativa
             </label>
             <Field

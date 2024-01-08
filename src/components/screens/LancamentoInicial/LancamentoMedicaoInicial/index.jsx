@@ -8,7 +8,7 @@ import { CaretDownOutlined } from "@ant-design/icons";
 
 import InformacoesEscola from "./components/InformacoesEscola";
 import InformacoesMedicaoInicial from "./components/InformacoesMedicaoInicial";
-import LancamentoPorPeriodo from "./components/LancamentoPorPeriodo";
+import { LancamentoPorPeriodo } from "./components/LancamentoPorPeriodo";
 import Ocorrencias from "./components/Ocorrencias";
 import { FluxoDeStatusMedicaoInicial } from "./components/FluxoDeStatusMedicaoInicial";
 import { InformacoesMedicaoInicialCEI } from "./components/InformacoesMedicaoInicialCEI";
@@ -29,6 +29,7 @@ import {
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getDiasCalendario } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import { getPeriodosPermissoesLancamentosEspeciaisMesAno } from "services/medicaoInicial/permissaoLancamentosEspeciais.service";
 import {
   ehEscolaTipoCEI,
   ehEscolaTipoCEMEI,
@@ -48,6 +49,10 @@ export default () => {
   const [
     periodosEscolaCemeiComAlunosEmei,
     setPeriodosEscolaCemeiComAlunosEmei,
+  ] = useState(null);
+  const [
+    periodosPermissoesLancamentosEspeciais,
+    setPeriodosPermissoesLancamentosEspeciais,
   ] = useState(null);
   const [solicitacaoMedicaoInicial, setSolicitacaoMedicaoInicial] =
     useState(null);
@@ -81,6 +86,27 @@ export default () => {
       } else {
         toastError("Erro ao obter períodos com alunos EMEI");
       }
+    }
+  };
+
+  const getPeriodosPermissoesLancamentosEspeciaisMesAnoAsync = async (
+    escola_uuid,
+    mes,
+    ano
+  ) => {
+    const payload = {
+      escola_uuid,
+      mes,
+      ano,
+    };
+
+    const response = await getPeriodosPermissoesLancamentosEspeciaisMesAno(
+      payload
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setPeriodosPermissoesLancamentosEspeciais(response.data.results);
+    } else {
+      toastError("Erro ao obter períodos com Permissões de Lançamentos");
     }
   };
 
@@ -193,6 +219,11 @@ export default () => {
       }
 
       await getPeriodosEscolaCemeiComAlunosEmeiAsync(escola, mes, ano);
+      await getPeriodosPermissoesLancamentosEspeciaisMesAnoAsync(
+        escola.uuid,
+        mes,
+        ano
+      );
 
       const periodoInicialSelecionado = !location.search
         ? periodos[0].dataBRT.toString()
@@ -255,6 +286,7 @@ export default () => {
   const handleChangeSelectPeriodo = async (value) => {
     setMes(null);
     setAno(null);
+    setNaoPodeFinalizar(true);
     setLoadingSolicitacaoMedicaoInicial(true);
     setPeriodoSelecionado(value);
     await getSolicitacaoMedInicial(value, escolaInstituicao.uuid);
@@ -268,6 +300,11 @@ export default () => {
     );
     setPeriodosEscolaSimples(response_vinculos.data.results);
     await getPeriodosEscolaCemeiComAlunosEmeiAsync(escolaInstituicao, mes, ano);
+    await getPeriodosPermissoesLancamentosEspeciaisMesAnoAsync(
+      escolaInstituicao.uuid,
+      mes,
+      ano
+    );
     setLoadingSolicitacaoMedicaoInicial(false);
     history.replace({
       pathname: location.pathname,
@@ -301,7 +338,7 @@ export default () => {
         </div>
         <div className="row periodo-info-ue collapse-adjustments">
           <div className="col-4 periodo-lancamento">
-            <div className="pl-0">
+            <div className="ps-0">
               {objectoPeriodos.length > 0 ? (
                 <Select
                   suffixIcon={
@@ -422,6 +459,9 @@ export default () => {
                 objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
                 setObjSolicitacaoMIFinalizada={(value) =>
                   setObjSolicitacaoMIFinalizada(value)
+                }
+                periodosPermissoesLancamentosEspeciais={
+                  periodosPermissoesLancamentosEspeciais
                 }
                 setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
                 naoPodeFinalizar={naoPodeFinalizar}

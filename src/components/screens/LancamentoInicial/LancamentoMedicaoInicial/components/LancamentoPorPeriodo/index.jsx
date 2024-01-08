@@ -39,7 +39,7 @@ import {
 } from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
 
-export default ({
+export const LancamentoPorPeriodo = ({
   escolaInstituicao,
   periodosEscolaSimples,
   solicitacaoMedicaoInicial,
@@ -49,6 +49,7 @@ export default ({
   ano,
   objSolicitacaoMIFinalizada,
   setObjSolicitacaoMIFinalizada,
+  periodosPermissoesLancamentosEspeciais,
   setSolicitacaoMedicaoInicial,
   naoPodeFinalizar,
   setFinalizandoMedicao,
@@ -385,6 +386,9 @@ export default ({
                 }
                 frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
                 errosAoSalvar={errosAoSalvar}
+                periodosPermissoesLancamentosEspeciais={
+                  periodosPermissoesLancamentosEspeciais
+                }
               />
             ))}
 
@@ -409,6 +413,9 @@ export default ({
                 }
                 frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
                 errosAoSalvar={errosAoSalvar}
+                periodosPermissoesLancamentosEspeciais={
+                  periodosPermissoesLancamentosEspeciais
+                }
               />
             ))}
           {ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
@@ -479,7 +486,7 @@ export default ({
               <Botao
                 texto="Finalizar"
                 style={BUTTON_STYLE.GREEN}
-                className="float-right"
+                className="float-end"
                 disabled={
                   !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
                 }
@@ -487,13 +494,13 @@ export default ({
               />
             ) : (
               <div className="row">
-                <div className="col-12 text-right">
+                <div className="col-12 text-end">
                   {renderBotaoExportarPlanilha() && (
                     <a href={getPathPlanilhaOcorr()}>
                       <Botao
                         texto="Exportar Planilha de Ocorrências"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="mr-3"
+                        className="me-3"
                       />
                     </a>
                   )}
@@ -509,7 +516,7 @@ export default ({
                       texto="Enviar Correção"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       onClick={() => setShowModalEnviarCorrecao(true)}
                       disabled={verificaSeEnviarCorrecaoDisabled(
                         quantidadeAlimentacoesLancadas,

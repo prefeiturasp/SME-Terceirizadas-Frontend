@@ -356,7 +356,7 @@ export const Filtros = ({ ...props }) => {
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-12 text-right">
+                <div className="col-12 text-end">
                   <Botao
                     texto="Limpar Filtros"
                     type={BUTTON_TYPE.BUTTON}
@@ -374,7 +374,7 @@ export const Filtros = ({ ...props }) => {
                     texto="Consultar"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </div>
               </div>

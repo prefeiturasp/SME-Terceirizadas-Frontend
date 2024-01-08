@@ -44,7 +44,7 @@ export const BotoesRodape = ({ homologacao, ehCardSuspensos }) => {
           onClick={() =>
             imprimeFichaIdentificacaoProduto(homologacao.uuid, params)
           }
-          className="float-right"
+          className="float-end"
         />
         {usuarioEhCODAEGestaoProduto() &&
           homologacao.status === "CODAE_PEDIU_ANALISE_SENSORIAL" && (
@@ -54,7 +54,7 @@ export const BotoesRodape = ({ homologacao, ehCardSuspensos }) => {
               texto="Cancelar Análise Sensorial"
               icon={BUTTON_ICON.TIMES_CIRCLE}
               onClick={() => setShowModal(true)}
-              className="mr-2 float-right"
+              className="me-2 float-end"
             />
           )}
 
@@ -64,7 +64,7 @@ export const BotoesRodape = ({ homologacao, ehCardSuspensos }) => {
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.ARROW_LEFT}
           onClick={() => history.goBack()}
-          className="mr-2 float-right"
+          className="me-2 float-end"
         />
       </div>
     </div>

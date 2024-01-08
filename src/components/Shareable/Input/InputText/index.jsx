@@ -76,7 +76,7 @@ export const InputText = (props) => {
         title={title}
         pattern={pattern}
         maxLength={maxlength}
-        value={valorInicial || input.value}
+        value={input.value || valorInicial}
         onInput={(e) => {
           e.target.value = toUppercaseActive
             ? e.target.value.toUpperCase()

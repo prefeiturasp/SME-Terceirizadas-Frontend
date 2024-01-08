@@ -144,10 +144,10 @@ export default class CorpoRelatorio extends Component {
         )}
         <article className="flex-botoes-relatorio">
           <div className="row col-12">
-            <div className="row col-10 ml-0">
+            <div className="row col-10 ms-0">
               {logAnaliseSensorial && (
                 <>
-                  <div className="col-6 pl-0">
+                  <div className="col-6 ps-0">
                     <p className="text-muted">
                       Solicitação de análise sensorial
                     </p>
@@ -164,7 +164,7 @@ export default class CorpoRelatorio extends Component {
               )}
 
               {logAnaliseSensorial && (
-                <section className="texto-wysiwyg row col-12 ml-0">
+                <section className="texto-wysiwyg row col-12 ms-0">
                   <div className="col-12">
                     <p
                       dangerouslySetInnerHTML={{
@@ -184,7 +184,7 @@ export default class CorpoRelatorio extends Component {
                 onClick={() => {
                   getRelatorioProduto(produto);
                 }}
-                className="mr-2"
+                className="me-2"
               />
               <Botao
                 type={BUTTON_TYPE.BUTTON}

@@ -24,7 +24,7 @@ const FaixasEtariasExibir = ({ faixasEtarias, onRedefinir }) => (
     </table>
     <Botao
       texto="Redefinir"
-      className="float-right"
+      className="float-end"
       type={BUTTON_TYPE.BUTTON}
       style={BUTTON_STYLE.GREEN_OUTLINE}
       onClick={onRedefinir}

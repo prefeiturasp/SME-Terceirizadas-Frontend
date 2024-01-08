@@ -300,7 +300,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
             </div>
             <main className="card">
               <article className="card-body">
-                <header className="card-title font-weight-bold">
+                <header className="card-title fw-bold">
                   Descrição da Suspensão
                 </header>
                 <section className="section-motivo-data">
@@ -390,7 +390,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                         status: null,
                       })
                     )}
-                    className="ml-3"
+                    className="ms-3"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                   />
@@ -404,7 +404,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                       })
                     )}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </section>
               </article>

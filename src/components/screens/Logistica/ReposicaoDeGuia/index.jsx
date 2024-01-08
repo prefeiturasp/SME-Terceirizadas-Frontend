@@ -619,16 +619,16 @@ export default () => {
                           id={`heading_${alimento.uuid}`}
                         >
                           <div className="row card-header-content">
-                            <span className="nome-alimento">{`${alimento.nome_alimento}`}</span>
+                            <span className="col-11 nome-alimento">{`${alimento.nome_alimento}`}</span>
                             <div className="col-1 align-self-center">
                               <button
                                 onClick={() =>
                                   toggleBtnAlimentos(alimento.uuid)
                                 }
-                                className="btn btn-link btn-block text-left px-0"
+                                className="btn btn-link btn-block text-start px-0"
                                 type="button"
-                                data-toggle="collapse"
-                                data-target={`#collapse_${alimento.uuid}`}
+                                data-bs-toggle="collapse"
+                                data-bs-target={`#collapse_${alimento.uuid}`}
                                 aria-expanded="true"
                                 aria-controls={`collapse_${alimento.uuid}`}
                               >
@@ -650,7 +650,7 @@ export default () => {
                           id={`collapse_${alimento.uuid}`}
                           className="collapse"
                           aria-labelledby="headingOne"
-                          data-parent="#accordionAlimentos"
+                          data-bs-parent="#accordionAlimentos"
                         >
                           <div className="card-body">
                             <div className="row">
@@ -945,7 +945,7 @@ export default () => {
                     ref={editarButton}
                   />
 
-                  <span className="float-right tooltip-botao">
+                  <span className="float-end tooltip-botao">
                     <Botao
                       texto="Finalizar reposição"
                       type={BUTTON_TYPE.BUTTON}

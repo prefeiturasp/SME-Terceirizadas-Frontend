@@ -103,11 +103,11 @@ export const LotesFormSet = (props) => {
             <div className="card-body">
               <div className="row pt-3">
                 <div className="col-12">
-                  <label className="label font-weight-normal pb-3">
+                  <label className="label fw-normal pb-3">
                     Lotes de atendimento
                     <span
                       onClick={() => setAtualizarLotes(!atualizarLotes)}
-                      className="link editar-lotes ml-3"
+                      className="link editar-lotes ms-3"
                     >
                       editar lotes
                     </span>

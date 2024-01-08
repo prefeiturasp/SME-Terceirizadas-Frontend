@@ -404,7 +404,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                   <div className="card-body">
                     <Field component="input" type="hidden" name="uuid" />
                     <Field component="input" type="hidden" name="escola" />
-                    <div className="card-title font-weight-bold descricao">
+                    <div className="card-title fw-bold descricao">
                       Descrição da Alteração do Tipo de Alimentação
                     </div>
                     <div className="row">
@@ -480,7 +480,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                 <div className="row">
                                   <div className="col-4">
                                     <div
-                                      className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
+                                      className={`period-quantity number-${indice} ps-5 pt-2 pb-2`}
                                     >
                                       <label
                                         htmlFor="check"
@@ -677,7 +677,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                             );
                                           })}
                                         <tr className="row">
-                                          <td className="col-8 font-weight-bold">
+                                          <td className="col-8 fw-bold">
                                             Total
                                           </td>
                                           <td className="col-2 text-center">
@@ -715,7 +715,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                         )}
                       />
                     </div>
-                    <div className="row float-right mt-4">
+                    <div className="row float-end mt-4">
                       <div className="col-12">
                         <Botao
                           texto="Cancelar"
@@ -730,7 +730,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                               ? "Atualizar rascunho"
                               : "Salvar rascunho"
                           }
-                          className="ml-3"
+                          className="ms-3"
                           disabled={submitting}
                           type={BUTTON_TYPE.SUBMIT}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -744,7 +744,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                             handleSubmit((values) => onSubmit(values, form));
                           }}
                           style={BUTTON_STYLE.GREEN}
-                          className="ml-3"
+                          className="ms-3"
                         />
                       </div>
                     </div>

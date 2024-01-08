@@ -368,12 +368,12 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                           <div className="ocorrencia" key={index}>
                             <div className="titulo-verde">
                               {labelOcorrencia(ocorrencia)}
-                              <div className="row float-right">
+                              <div className="row float-end">
                                 {fiscal && !aprovacoes[index] && (
                                   <div className="col-12">
                                     <Botao
                                       texto="Solicitar Alteração"
-                                      className="ml-3 botao-menor"
+                                      className="ms-3 botao-menor"
                                       onClick={() => {
                                         setModalAlteracao(index);
                                       }}
@@ -387,7 +387,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                                         aprovaPrevisao(index);
                                       }}
                                       style={BUTTON_STYLE.GREEN}
-                                      className="ml-3 botao-menor"
+                                      className="ms-3 botao-menor"
                                       icon="fas fa-check"
                                     />
                                   </div>
@@ -398,7 +398,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                                   aprovacoes[index].aprovado && (
                                     <div className="col-12">
                                       <div className="texto-aprovacao">
-                                        <i className="fas fa-check mr-2" />
+                                        <i className="fas fa-check me-2" />
                                         {
                                           aprovacoes[index]
                                             .justificativa_alteracao
@@ -456,7 +456,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                     }
                   )}
 
-                <div className="row float-right mt-4">
+                <div className="row float-end mt-4">
                   {botaoVoltar && <BotaoVoltar onClick={handleClickVoltar} />}
                   {naoEditavel === false && (
                     <div className="col-12">
@@ -467,11 +467,11 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                           setModalCancelar(true);
                         }}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="ml-3"
+                        className="ms-3"
                       />
                       <Botao
                         texto="Salvar Notificação"
-                        className="ml-3"
+                        className="ms-3"
                         onClick={() => {
                           salvarNotificacao(values);
                         }}
@@ -486,7 +486,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                         }}
                         disabled={validaForm(values)}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
+                        className="ms-3"
                       />
                     </div>
                   )}
@@ -500,7 +500,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                         }}
                         disabled={!confereAprovacoes() || confereAssinar()}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
+                        className="ms-3"
                       />
 
                       <Botao
@@ -511,7 +511,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                         }}
                         disabled={!confereAprovacoes() || !confereAssinar()}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
+                        className="ms-3"
                       />
                     </>
                   )}

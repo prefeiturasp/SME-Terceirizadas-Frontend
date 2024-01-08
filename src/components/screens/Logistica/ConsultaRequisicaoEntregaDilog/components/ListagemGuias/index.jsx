@@ -101,7 +101,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
               );
             })}
             <div className="button-row mt-3">
-              <span className="float-right tooltip-botao ">
+              <span className="float-end tooltip-botao ">
                 <Botao
                   texto={textoBotao}
                   type={BUTTON_TYPE.BUTTON}
@@ -144,7 +144,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                     <br />
                     {guiaAtual.codigo_unidade}
                   </div>
-                  <div className="col border-left">
+                  <div className="col border-start">
                     <b>Nome Unidade Educacional</b>
                     <br />
                     {guiaAtual.nome_unidade}
@@ -167,7 +167,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                     <br />
                     {guiaAtual.contato_unidade}
                   </div>
-                  <div className="col border-left">
+                  <div className="col border-start">
                     <b>Telefone</b>
                     <br />
                     {guiaAtual.telefone_unidade}
@@ -214,7 +214,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
               setShowModalGuia(false);
             }}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>
@@ -248,7 +248,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                 );
               }}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               disabled={carregandoModal}
             />
             <Botao
@@ -258,7 +258,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                 setShowModal(false);
               }}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
           </Modal.Footer>
         </Spin>

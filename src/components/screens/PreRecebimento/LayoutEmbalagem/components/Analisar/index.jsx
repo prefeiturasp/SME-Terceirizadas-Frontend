@@ -43,12 +43,11 @@ export default () => {
     false,
   ]);
 
-  useEffect(async () => {
-    setCarregando(true);
-
-    await carregarDados();
-
-    setCarregando(false);
+  useEffect(() => {
+    (async () => {
+      await carregarDados();
+      setCarregando(false);
+    })();
   }, []);
 
   const carregarDados = async () => {
@@ -151,7 +150,7 @@ export default () => {
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon="fas fa-times"
-          className="ml-4"
+          className="ms-4"
           onClick={() => {
             atualizaAprovacoes(index, false);
             form.change(`justificativa_${index}`, "");
@@ -169,9 +168,9 @@ export default () => {
 
       return (
         <div className="col-7">
-          <div className="subtitulo row ml-5">
+          <div className="subtitulo row ms-5">
             <div className="w-5">
-              <i className="fas fa-check mr-2" />
+              <i className="fas fa-check me-2" />
             </div>
             <div className="w-95">
               <div>{dataHoraAprovacao}</div>
@@ -197,7 +196,7 @@ export default () => {
               texto="Cancelar"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-right ml-3"
+              className="float-end ms-3"
               onClick={() => {
                 atualizaModalCancelarCorrecao(index, true);
               }}
@@ -361,9 +360,9 @@ export default () => {
 
           <hr />
           <p>Empresa:</p>
-          <p className="font-weight-bold">{layoutDeEmbalagem.nome_empresa}</p>
+          <p className="fw-bold">{layoutDeEmbalagem.nome_empresa}</p>
           <p>Produto:</p>
-          <p className="font-weight-bold">{layoutDeEmbalagem.nome_produto}</p>
+          <p className="fw-bold">{layoutDeEmbalagem.nome_produto}</p>
 
           {layoutDeEmbalagem.observacoes && (
             <>
@@ -488,7 +487,7 @@ export default () => {
                     texto="Enviar para o Fornecedor"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     disabled={
                       !validaAprovacoes || Object.keys(errors).length > 0
                     }
@@ -502,7 +501,7 @@ export default () => {
                     texto="Cancelar"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     onClick={() => setModalCancelarAnalise(true)}
                   />
                 </form>

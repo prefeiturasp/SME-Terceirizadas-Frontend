@@ -181,12 +181,12 @@ class Step3 extends Component {
                             rel="noopener noreferrer"
                             target="_blank"
                             href={anexo.arquivo}
-                            className="link ml-1 mr-5"
+                            className="link ms-1 me-5"
                           >
                             {anexo.nome}
                           </a>
                           <span
-                            className="float-right"
+                            className="float-end"
                             onClick={() =>
                               this.props.removerAnexo(anexo.uuid, key)
                             }

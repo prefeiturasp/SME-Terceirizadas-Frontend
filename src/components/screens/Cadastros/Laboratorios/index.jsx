@@ -8,6 +8,7 @@ import {
   getListaLaboratorios,
 } from "services/laboratorio.service";
 import { Paginacao } from "components/Shareable/Paginacao";
+import "./styles.scss";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -60,7 +61,7 @@ export default () => {
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-laboratorios">
-        <div className="card-body">
+        <div className="card-body laboratorios">
           <Filtros
             setFiltros={setFiltros}
             nomesLaboratorios={nomesLaboratorios}

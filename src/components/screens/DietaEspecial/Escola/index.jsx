@@ -360,14 +360,14 @@ class solicitacaoDietaEspecial extends Component {
                   });
                 }}
               />
-              <div className="ml-3">
+              <div className="ms-3">
                 Dieta Especial Destina-se à Aluno Não Matriculado na Rede
                 Municipal de Ensino
               </div>
             </div>
           </div>
           <hr />
-          <span className="card-title font-weight-bold cinza-escuro">
+          <span className="card-title fw-bold cinza-escuro">
             Descrição da Solicitação
           </span>
           {!this.state.aluno_nao_matriculado && (
@@ -473,7 +473,7 @@ class solicitacaoDietaEspecial extends Component {
                       texto={
                         !atualizandoImagem ? "Atualizar imagem" : "Aguarde..."
                       }
-                      className="mr-3"
+                      className="me-3"
                       onClick={() => this.inputRef.click()}
                       disabled={
                         fotoAlunoSrc ||

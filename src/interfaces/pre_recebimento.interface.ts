@@ -1,4 +1,5 @@
 import { LogSolicitacoesUsuarioSimples } from "./dados_comuns.interface";
+import { InformacaoNutricional } from "./produto.interface";
 import { TerceirizadaSimplesInterface } from "./terceirizada.interface";
 
 export interface DocumentosRecebimento {
@@ -135,6 +136,14 @@ export interface FichaTecnica {
   status: string;
 }
 
+export interface InformacoesNutricionaisFichaTecnica {
+  uuid: string;
+  informacao_nutricional: InformacaoNutricional;
+  quantidade_por_100g: string;
+  quantidade_porcao: string;
+  valor_diario: string;
+}
+
 export interface FichaTecnicaDetalhada {
   uuid: string;
   numero: string;
@@ -167,4 +176,48 @@ export interface FichaTecnicaDetalhada {
   gluten: boolean;
   lactose: boolean;
   lactose_detalhe: string;
+  porcao: string;
+  unidade_medida_porcao: UnidadeMedidaSimples;
+  valor_unidade_caseira: string;
+  unidade_medida_caseira: string;
+  informacoes_nutricionais: InformacoesNutricionaisFichaTecnica[];
+  prazo_validade_descongelamento: string;
+  condicoes_de_conservacao: string;
+  temperatura_congelamento: string;
+  temperatura_veiculo: string;
+  condicoes_de_transporte: string;
+  embalagem_primaria: string;
+  embalagem_secundaria: string;
+  embalagens_de_acordo_com_anexo?: boolean;
+  material_embalagem_primaria: string;
+  peso_liquido_embalagem_primaria: number;
+  unidade_medida_primaria: UnidadeMedidaSimples;
+  peso_liquido_embalagem_secundaria: number;
+  unidade_medida_secundaria: UnidadeMedidaSimples;
+  peso_embalagem_primaria_vazia: number;
+  unidade_medida_primaria_vazia: UnidadeMedidaSimples;
+  peso_embalagem_secundaria_vazia: number;
+  unidade_medida_secundaria_vazia: UnidadeMedidaSimples;
+  sistema_vedacao_embalagem_secundaria: string;
+  rotulo_legivel?: boolean;
+  variacao_percentual: number;
+  nome_responsavel_tecnico: string;
+  habilitacao: string;
+  numero_registro_orgao: string;
+  arquivo: string | null;
+  modo_de_preparo: string;
+  informacoes_adicionais: string;
+}
+
+export interface EtapaCalendario {
+  data_programada: string;
+  etapa: string;
+  nome_fornecedor: string;
+  nome_produto: string;
+  numero_cronograma: string;
+  numero_empenho: string;
+  parte: string;
+  quantidade: number;
+  uuid: string;
+  uuid_cronograma: string;
 }

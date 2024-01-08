@@ -51,7 +51,7 @@ export const Header = ({ toggled }) => {
           </button>
 
           <div className="collapse navbar-collapse" id="navbarResponsive">
-            <ul className="navbar-nav ml-auto">
+            <ul className="navbar-nav ms-auto">
               <li className="nav-item">
                 <Link
                   to={{

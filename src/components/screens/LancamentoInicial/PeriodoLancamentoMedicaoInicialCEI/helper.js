@@ -16,16 +16,22 @@ export const formatarPayloadPeriodoLancamentoCeiCemei = (
   tabelaAlimentacaoCEIRows,
   dadosIniciaisFiltered,
   diasDaSemanaSelecionada,
-  ehEmeiDaCemeiLocation
+  ehEmeiDaCemeiLocation,
+  ehSolicitacoesAlimentacaoLocation
 ) => {
   if (
-    ehEmeiDaCemeiLocation &&
-    ((values["periodo_escolar"] &&
+    (ehEmeiDaCemeiLocation &&
+      values["periodo_escolar"] &&
       values["periodo_escolar"].includes("Infantil")) ||
-      values["periodo_escolar"] === "ETEC" ||
-      values["periodo_escolar"] === "Programas e Projetos")
+    (values["periodo_escolar"] &&
+      values["periodo_escolar"].includes("Solicitações")) ||
+    values["periodo_escolar"] === "ETEC" ||
+    values["periodo_escolar"] === "Programas e Projetos"
   ) {
     values["grupo"] = values["periodo_escolar"];
+    if (values["grupo"] && values["grupo"].includes("Solicitações")) {
+      values["grupo"] = "Solicitações de Alimentação";
+    }
     delete values["periodo_escolar"];
   }
   const valuesAsArray = Object.entries(values);
@@ -52,7 +58,7 @@ export const formatarPayloadPeriodoLancamentoCeiCemei = (
       let dia = null;
       const nome_campo = keySplitted[0];
 
-      if (ehEmeiDaCemeiLocation) {
+      if (ehEmeiDaCemeiLocation || ehSolicitacoesAlimentacaoLocation) {
         dia = keySplitted[1].match(/\d/g).join("");
         return valoresMedicao.push({
           dia: dia,
@@ -149,31 +155,42 @@ export const desabilitarField = (
   feriadosNoMes,
   uuidFaixaEtaria,
   diasParaCorrecao,
-  ehEmeiDaCemeiLocation
+  ehEmeiDaCemeiLocation,
+  ehSolicitacoesAlimentacaoLocation
 ) => {
   if (!ehEmeiDaCemeiLocation) {
     if (nomeCategoria === "ALIMENTAÇÃO") {
-      if (validacaoDiaLetivo(dia)) {
-        const resultado = inclusoesAutorizadas.some(
-          (inclusao) =>
-            parseInt(dia) === parseInt(inclusao.dia) &&
-            rowName === "frequencia" &&
-            inclusao.faixas_etarias.includes(uuidFaixaEtaria)
-        );
-        if (resultado) return false;
-      } else {
-        const resultado = inclusoesAutorizadas.some(
-          (inclusao) =>
-            parseInt(dia) === parseInt(inclusao.dia) && rowName === "frequencia"
-        );
-        if (resultado) return false;
+      const resultado = inclusoesAutorizadas.some(
+        (inclusao) =>
+          parseInt(dia) === parseInt(inclusao.dia) &&
+          rowName === "frequencia" &&
+          !["Mês anterior", "Mês posterior"].includes(
+            values[
+              `${rowName}__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+            ]
+          ) &&
+          inclusao.faixas_etarias.includes(uuidFaixaEtaria)
+      );
+      if (
+        resultado &&
+        values[
+          `matriculados__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+        ]
+      ) {
+        return false;
       }
     } else {
       const resultado =
         !validacaoDiaLetivo(dia) &&
         inclusoesAutorizadas.some(
           (inclusao) =>
-            parseInt(dia) === parseInt(inclusao.dia) && rowName === "frequencia"
+            parseInt(dia) === parseInt(inclusao.dia) &&
+            rowName === "frequencia" &&
+            !["Mês anterior", "Mês posterior"].includes(
+              values[
+                `${rowName}__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+              ]
+            )
         );
       if (resultado)
         return (
@@ -249,7 +266,10 @@ export const desabilitarField = (
     locale: ptBR,
   }).toString();
 
-  if (location && location.state && location.state.ehEmeiDaCemei) {
+  if (
+    (location && location.state && location.state.ehEmeiDaCemei) ||
+    ehSolicitacoesAlimentacaoLocation
+  ) {
     if (
       ["Mês anterior", "Mês posterior"].includes(
         values[`${rowName}__dia_${dia}__categoria_${categoria}`]
@@ -422,7 +442,7 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
 ) => {
   const params = {};
   params["escola_uuid"] = escolaUuuid;
-  params["tipo_solicitacao"] = "Kit Lanche";
+  params["tipo_solicitacao"] = "Kit Lanche Passeio de CEMEI";
   params["mes"] = mes;
   params["ano"] = ano;
   const responseKitLanchesAutorizadas =
@@ -430,7 +450,7 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
   if (responseKitLanchesAutorizadas.status === HTTP_STATUS.OK) {
     return responseKitLanchesAutorizadas.data.results;
   } else {
-    toastError("Erro ao carregar Kit Lanches Autorizadas");
+    toastError("Erro ao carregar Kit Lanches CEMEI Autorizadas");
     return [];
   }
 };
@@ -525,7 +545,8 @@ export const formatarLinhasTabelaAlimentacaoCEI = (
 };
 
 export const formatarLinhasTabelaAlimentacaoEmeiDaCemei = (
-  tiposAlimentacao
+  tiposAlimentacao,
+  ehSolicitacoesAlimentacaoLocation
 ) => {
   const tiposAlimentacaoFormatadas = tiposAlimentacao.map((alimentacao) => {
     return {
@@ -537,6 +558,30 @@ export const formatarLinhasTabelaAlimentacaoEmeiDaCemei = (
         .replaceAll(/ /g, "_"),
     };
   });
+
+  if (ehSolicitacoesAlimentacaoLocation) {
+    const rowsSolicitacoesAlimentacao = [];
+    rowsSolicitacoesAlimentacao.push(
+      {
+        nome: "Lanche Emergencial",
+        name: "lanche_emergencial",
+        uuid: null,
+      },
+      {
+        nome: "Kit Lanche",
+        name: "kit_lanche",
+        uuid: null,
+      },
+      {
+        nome: "Observações",
+        name: "observacoes",
+        uuid: null,
+      }
+    );
+
+    return rowsSolicitacoesAlimentacao;
+  }
+
   const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
     (ali) => ali.nome === "Refeição"
   );
@@ -873,12 +918,20 @@ export const desabilitarBotaoColunaObservacoes = (
 export const categoriasParaExibir = (
   ehEmeiDaCemeiLocation,
   response_categorias_medicao,
-  response_log_dietas_autorizadas_cei
+  response_log_dietas_autorizadas_cei,
+  ehSolicitacoesAlimentacaoLocation
 ) => {
   if (ehEmeiDaCemeiLocation) {
     response_categorias_medicao = response_categorias_medicao.data.filter(
       (categoria) => {
         return !categoria.nome.includes("SOLICITAÇÕES");
+      }
+    );
+    return response_categorias_medicao;
+  } else if (ehSolicitacoesAlimentacaoLocation) {
+    response_categorias_medicao = response_categorias_medicao.data.filter(
+      (categoria) => {
+        return categoria.nome.includes("SOLICITAÇÕES");
       }
     );
     return response_categorias_medicao;
@@ -927,5 +980,13 @@ export const categoriasParaExibir = (
     return response_categorias_medicao.filter((categoria) => {
       return !categoriasDietasParaDeletar.includes(categoria.nome);
     });
+  }
+};
+
+export const formataNomeCategoriaSolAlimentacoesInfantil = (nomeCategoria) => {
+  if (nomeCategoria.includes("SOLICITAÇÕES")) {
+    return "SOLICITAÇÕES DE ALIMENTAÇÃO - INFANTIL";
+  } else {
+    return nomeCategoria;
   }
 };

@@ -104,7 +104,7 @@ const DetalheDoProduto = ({
       <div className="mb-4 mt-4">
         <hr />
       </div>
-      <div className="report-label-value pl-0">
+      <div className="report-label-value ps-0">
         <p>
           {status === "suspenso" || suspenso
             ? "Produto Suspenso nos Editais"
@@ -209,10 +209,10 @@ const DetalheDoProduto = ({
         infoNutri.map((informacao, index) => {
           return (
             <div className="pb-2" key={index}>
-              <div className="school-container col-md-12 mr-4">
+              <div className="school-container col-md-12 me-4">
                 <div className="row pt-2 pb-2 title">
                   <div className="title col-4">{informacao.nome}</div>
-                  <div className="col-8 text-right">
+                  <div className="col-8 text-end">
                     <ToggleExpandir
                       onClick={() => {
                         ativos.includes(index)
@@ -220,7 +220,7 @@ const DetalheDoProduto = ({
                           : setAtivos([...ativos, index]);
                       }}
                       ativo={ativos.includes(index)}
-                      className="float-right"
+                      className="float-end"
                     />
                   </div>
                 </div>

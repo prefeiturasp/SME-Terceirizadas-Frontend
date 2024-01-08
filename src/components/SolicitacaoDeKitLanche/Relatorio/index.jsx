@@ -214,7 +214,7 @@ const Relatorio = (props) => {
         texto="Marcar Conferência"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
-        className="ml-3"
+        className="ms-3"
         onClick={() => {
           showModalMarcarConferencia();
         }}
@@ -303,69 +303,71 @@ const Relatorio = (props) => {
                       solicitacao={solicitacaoKitLanche}
                     />
                     {visualizaBotoesDoFluxo(solicitacaoKitLanche) && (
-                      <div className="form-group row float-right mt-4">
-                        {EXIBIR_BOTAO_NAO_APROVAR && (
-                          <Botao
-                            texto={textoBotaoNaoAprova}
-                            className="ml-3"
-                            onClick={() => showNaoAprovaModal("Não")}
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                          />
-                        )}
-
-                        {EXIBIR_BOTAO_APROVAR &&
-                          textoBotaoAprova !== "Ciente" &&
-                          (visao === CODAE &&
-                          solicitacaoKitLanche.logs.filter(
-                            (log) =>
-                              log.status_evento_explicacao ===
-                                "Terceirizada respondeu questionamento" &&
-                              !log.resposta_sim_nao
-                          ).length > 0 ? null : (
+                      <div className="row mt-4 me-2">
+                        <div className="col-12 text-end">
+                          {EXIBIR_BOTAO_NAO_APROVAR && (
                             <Botao
-                              texto={textoBotaoAprova}
+                              texto={textoBotaoNaoAprova}
+                              className="custom-col-width ms-3"
+                              onClick={() => showNaoAprovaModal("Não")}
                               type={BUTTON_TYPE.BUTTON}
-                              onClick={() =>
-                                EXIBIR_MODAL_AUTORIZACAO
-                                  ? showAutorizarModal()
-                                  : tipoPerfil ===
-                                    TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-                                  ? showModalObservacaoCodae()
-                                  : handleSubmit()
-                              }
-                              style={BUTTON_STYLE.GREEN}
-                              className="ml-3"
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
                             />
-                          ))}
-                        {EXIBIR_BOTAO_QUESTIONAMENTO && (
-                          <Botao
-                            texto={
-                              tipoPerfil ===
-                              TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-                                ? "Questionar"
-                                : "Sim"
-                            }
-                            type={BUTTON_TYPE.BUTTON}
-                            onClick={() => showQuestionamentoModal("Sim")}
-                            style={BUTTON_STYLE.GREEN}
-                            className="ml-3"
-                          />
-                        )}
-                        {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-                          <div className="form-group float-right mt-4">
-                            {solicitacaoKitLanche.terceirizada_conferiu_gestao ? (
-                              <label className="ml-3 conferido">
-                                <i className="fas fa-check mr-2" />
-                                Solicitação Conferida
-                              </label>
-                            ) : (
-                              <BotaoMarcarConferencia
-                                uuid={solicitacaoKitLanche.uuid}
+                          )}
+
+                          {EXIBIR_BOTAO_APROVAR &&
+                            textoBotaoAprova !== "Ciente" &&
+                            (visao === CODAE &&
+                            solicitacaoKitLanche.logs.filter(
+                              (log) =>
+                                log.status_evento_explicacao ===
+                                  "Terceirizada respondeu questionamento" &&
+                                !log.resposta_sim_nao
+                            ).length > 0 ? null : (
+                              <Botao
+                                texto={textoBotaoAprova}
+                                type={BUTTON_TYPE.BUTTON}
+                                onClick={() =>
+                                  EXIBIR_MODAL_AUTORIZACAO
+                                    ? showAutorizarModal()
+                                    : tipoPerfil ===
+                                      TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                                    ? showModalObservacaoCodae()
+                                    : handleSubmit()
+                                }
+                                style={BUTTON_STYLE.GREEN}
+                                className="custom-col-width ms-3"
                               />
-                            )}
-                          </div>
-                        )}
+                            ))}
+                          {EXIBIR_BOTAO_QUESTIONAMENTO && (
+                            <Botao
+                              texto={
+                                tipoPerfil ===
+                                TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                                  ? "Questionar"
+                                  : "Sim"
+                              }
+                              type={BUTTON_TYPE.BUTTON}
+                              onClick={() => showQuestionamentoModal("Sim")}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ms-3"
+                            />
+                          )}
+                          {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                            <div className="form-group float-end mt-4">
+                              {solicitacaoKitLanche.terceirizada_conferiu_gestao ? (
+                                <label className="ms-3 conferido">
+                                  <i className="fas fa-check me-2" />
+                                  Solicitação Conferida
+                                </label>
+                              ) : (
+                                <BotaoMarcarConferencia
+                                  uuid={solicitacaoKitLanche.uuid}
+                                />
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>

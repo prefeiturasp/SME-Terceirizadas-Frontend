@@ -631,9 +631,7 @@ class FoodSuspensionEditor extends Component {
             <div className="mt-2 page-title">{title}</div>
             <div className="card solicitation mt-3">
               <div className="card-body">
-                <div className="card-title font-weight-bold">
-                  Descrição da Suspensão
-                </div>
+                <div className="card-title fw-bold">Descrição da Suspensão</div>
                 {dias_razoes.map((dia_motivo, key) => {
                   return (
                     <FormSection
@@ -733,7 +731,7 @@ class FoodSuspensionEditor extends Component {
                         <Field component={"input"} type="hidden" name="value" />
                         <div className={`col-${escolaEhCEMEI() ? "3" : "4"}`}>
                           <div
-                            className={`period-quantity number-${key} pl-5 pt-2 pb-2`}
+                            className={`period-quantity number-${key} ps-5 pt-2 pb-2`}
                           >
                             <label htmlFor="check" className="checkbox-label">
                               <Field
@@ -848,7 +846,7 @@ class FoodSuspensionEditor extends Component {
                     name="observacao"
                   />
                 </div>
-                <div className="form-group row float-right mt-4">
+                <div className="form-group row float-end mt-4">
                   <div className="col-12">
                     <Botao
                       texto="Cancelar"
@@ -862,7 +860,7 @@ class FoodSuspensionEditor extends Component {
                           ...values,
                         })
                       )}
-                      className="ml-3"
+                      className="ms-3"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
@@ -876,7 +874,7 @@ class FoodSuspensionEditor extends Component {
                         })
                       )}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

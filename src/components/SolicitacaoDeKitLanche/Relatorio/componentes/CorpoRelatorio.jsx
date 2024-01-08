@@ -60,7 +60,7 @@ export const CorpoRelatorio = (props) => {
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
-            className="float-right"
+            className="float-end"
             onClick={() => {
               getDetalheKitLancheAvulso(
                 solicitacaoKitLanche.uuid,
@@ -78,7 +78,7 @@ export const CorpoRelatorio = (props) => {
             <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="pl-2 my-auto offset-1 col-5">
+        <div className="ps-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">

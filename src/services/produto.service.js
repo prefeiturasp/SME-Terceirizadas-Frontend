@@ -52,6 +52,10 @@ export const getInformacoesGrupo = async () => {
   return await axios.get(`/informacoes-nutricionais/agrupadas/`);
 };
 
+export const getInformacoesNutricionaisOrdenadas = async () => {
+  return await axios.get(`/informacoes-nutricionais/ordenadas/`);
+};
+
 export const getNomesProdutos = async (queryparams) => {
   let url = `/produtos/lista-nomes/`;
   if (queryparams) url += queryparams + "/";

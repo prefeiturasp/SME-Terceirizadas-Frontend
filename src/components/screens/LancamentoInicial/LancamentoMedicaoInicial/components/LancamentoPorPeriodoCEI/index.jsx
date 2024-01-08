@@ -28,6 +28,10 @@ import {
   getQuantidadeAlimentacoesLancadasPeriodoGrupo,
   getSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import {
+  getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
+  getSolicitacoesKitLanchesAutorizadasEscola,
+} from "services/medicaoInicial/periodoLancamentoMedicao.service";
 
 export const LancamentoPorPeriodoCEI = ({
   mes,
@@ -41,6 +45,7 @@ export const LancamentoPorPeriodoCEI = ({
   setObjSolicitacaoMIFinalizada,
   setSolicitacaoMedicaoInicial,
   setFinalizandoMedicao,
+  naoPodeFinalizar,
 }) => {
   const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
@@ -51,6 +56,16 @@ export const LancamentoPorPeriodoCEI = ({
     useState(undefined);
   const [showModalEnviarCorrecao, setShowModalEnviarCorrecao] = useState(false);
   const [desabilitaSim, setDesabilitaSim] = useState(false);
+  const [
+    solicitacoesKitLanchesAutorizadas,
+    setSolicitacoesKitLanchesAutorizadas,
+  ] = useState(undefined);
+  const [
+    solicitacoesAlteracaoLancheEmergencialAutorizadas,
+    setSolicitacoesAlteracaoLancheEmergencialAutorizadas,
+  ] = useState(undefined);
+  const [erroAPI, setErroAPI] = useState("");
+  const [errosAoSalvar, setErrosAoSalvar] = useState([]);
 
   const gerarPDFMedicaoInicial = async () => {
     const response = await relatorioMedicaoInicialPDF(
@@ -133,7 +148,52 @@ export const LancamentoPorPeriodoCEI = ({
     }
   };
 
+  const getSolicitacoesKitLanchesAutorizadasAsync = async () => {
+    if (ehEscolaTipoCEMEI(escolaInstituicao)) {
+      const escola_uuid = escolaInstituicao.uuid;
+      const tipo_solicitacao = "Kit Lanche Passeio de CEMEI";
+      const response = await getSolicitacoesKitLanchesAutorizadasEscola({
+        escola_uuid,
+        mes,
+        ano,
+        tipo_solicitacao,
+      });
+      if (response.status === HTTP_STATUS.OK) {
+        setSolicitacoesKitLanchesAutorizadas(response.data.results);
+      } else {
+        setErroAPI(
+          "Erro ao carregar Kit Lanches CEMEI Autorizadas. Tente novamente mais tarde."
+        );
+      }
+    }
+  };
+
+  const getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync =
+    async () => {
+      if (ehEscolaTipoCEMEI(escolaInstituicao)) {
+        const params = {};
+        params["escola_uuid"] = escolaInstituicao.uuid;
+        params["tipo_solicitacao"] = "Alteração";
+        params["mes"] = mes;
+        params["ano"] = ano;
+        params["eh_lanche_emergencial"] = true;
+        const response =
+          await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(params);
+        if (response.status === HTTP_STATUS.OK) {
+          setSolicitacoesAlteracaoLancheEmergencialAutorizadas(
+            response.data.results
+          );
+        } else {
+          setErroAPI(
+            "Erro ao carregar Alteração de Lanche Emergencial CEMEI Autorizadas. Tente novamente mais tarde."
+          );
+        }
+      }
+    };
+
   useEffect(() => {
+    getSolicitacoesKitLanchesAutorizadasAsync();
+    getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
     solicitacaoMedicaoInicial &&
       getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
   }, [periodoSelecionado, solicitacaoMedicaoInicial]);
@@ -183,102 +243,130 @@ export const LancamentoPorPeriodoCEI = ({
 
   return (
     <div>
-      {solicitacaoMedicaoInicial && quantidadeAlimentacoesLancadas && (
-        <>
-          <div className="row pb-2">
-            <div className="col">
-              <b className="section-title">Períodos</b>
-            </div>
-          </div>
-
-          {periodosComAlunos.map((nomePeriodo, index) => (
-            <CardLancamentoCEI
-              key={index}
-              textoCabecalho={nomePeriodo}
-              cor={CORES[index % CORES.length]}
-              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-              escolaInstituicao={escolaInstituicao}
-              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
-              periodoSelecionado={periodoSelecionado}
-              periodosEscolaCemeiComAlunosEmei={
-                periodosEscolaCemeiComAlunosEmei
-              }
-              tiposAlimentacao={tiposAlimentacaoPeriodosEmei(nomePeriodo)}
-              uuidPeriodoEscolar={uuidPeriodoEscolar(nomePeriodo)}
-            />
-          ))}
-          <div className="mt-4">
-            {renderBotaoFinalizar() ? (
-              <Botao
-                texto="Finalizar"
-                style={BUTTON_STYLE.GREEN}
-                className="float-right"
-                disabled={!usuarioEhEscolaTerceirizadaDiretor()}
-                onClick={() => setShowModalFinalizarMedicao(true)}
-              />
-            ) : (
-              <div className="row">
-                <div className="col-12 text-right">
-                  <Botao
-                    texto="Exportar PDF"
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    onClick={() => gerarPDFMedicaoInicial()}
-                  />
-                  {renderBotaoEnviarCorrecao(solicitacaoMedicaoInicial) && (
-                    <Botao
-                      texto="Enviar Correção"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                      onClick={() => setShowModalEnviarCorrecao(true)}
-                      disabled={verificaSeEnviarCorrecaoDisabled(
-                        quantidadeAlimentacoesLancadas,
-                        solicitacaoMedicaoInicial
-                      )}
-                    />
-                  )}
-                </div>
+      {erroAPI && <div>{erroAPI}</div>}
+      {solicitacaoMedicaoInicial &&
+        !erroAPI &&
+        quantidadeAlimentacoesLancadas && (
+          <>
+            <div className="row pb-2">
+              <div className="col">
+                <b className="section-title">Períodos</b>
               </div>
+            </div>
+            {periodosComAlunos.map((nomePeriodo, index) => (
+              <CardLancamentoCEI
+                key={index}
+                textoCabecalho={nomePeriodo}
+                cor={CORES[index % CORES.length]}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                escolaInstituicao={escolaInstituicao}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                periodoSelecionado={periodoSelecionado}
+                periodosEscolaCemeiComAlunosEmei={
+                  periodosEscolaCemeiComAlunosEmei
+                }
+                tiposAlimentacao={tiposAlimentacaoPeriodosEmei(nomePeriodo)}
+                uuidPeriodoEscolar={uuidPeriodoEscolar(nomePeriodo)}
+                errosAoSalvar={errosAoSalvar}
+              />
+            ))}
+            {((solicitacoesKitLanchesAutorizadas &&
+              solicitacoesKitLanchesAutorizadas.length > 0) ||
+              (solicitacoesAlteracaoLancheEmergencialAutorizadas &&
+                solicitacoesAlteracaoLancheEmergencialAutorizadas.length >
+                  0)) && (
+              <CardLancamentoCEI
+                key={periodosComAlunos.length + 1}
+                textoCabecalho={"Solicitações de Alimentação"}
+                cor={CORES[periodosComAlunos.length + 1]}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                escolaInstituicao={escolaInstituicao}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                periodoSelecionado={periodoSelecionado}
+                periodosEscolaCemeiComAlunosEmei={
+                  periodosEscolaCemeiComAlunosEmei
+                }
+                tiposAlimentacao={[
+                  { nome: "Kit Lanche" },
+                  { nome: "Lanche Emergencial" },
+                ]}
+                errosAoSalvar={errosAoSalvar}
+              />
             )}
-          </div>
-          <ModalFinalizarMedicao
-            showModal={showModalFinalizarMedicao}
-            closeModal={() => setShowModalFinalizarMedicao(false)}
-            setObjSolicitacaoMIFinalizada={setObjSolicitacaoMIFinalizada}
-            escolaInstituicao={escolaInstituicao}
-            solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-            onClickInfoBasicas={onClickInfoBasicas}
-            setErrosAoSalvar={() => {}}
-            setFinalizandoMedicao={setFinalizandoMedicao}
-          />
-          <ModalSolicitacaoDownload
-            show={exibirModalCentralDownloads}
-            setShow={setExibirModalCentralDownloads}
-          />
-          <ModalPadraoSimNao
-            showModal={showModalEnviarCorrecao}
-            closeModal={() => setShowModalEnviarCorrecao(false)}
-            tituloModal={`Enviar Correção para ${
-              solicitacaoMedicaoInicial.status ===
-              "MEDICAO_CORRECAO_SOLICITADA_CODAE"
-                ? "CODAE"
-                : "DRE"
-            }`}
-            descricaoModal={
-              <p className="col-12 my-3 p-0">
-                Deseja enviar a correção para{" "}
-                {solicitacaoMedicaoInicial.status ===
+            <div className="mt-4">
+              {renderBotaoFinalizar() ? (
+                <Botao
+                  texto="Finalizar"
+                  style={BUTTON_STYLE.GREEN}
+                  className="float-end"
+                  disabled={
+                    !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
+                  }
+                  onClick={() => setShowModalFinalizarMedicao(true)}
+                />
+              ) : (
+                <div className="row">
+                  <div className="col-12 text-end">
+                    <Botao
+                      texto="Exportar PDF"
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      onClick={() => gerarPDFMedicaoInicial()}
+                    />
+                    {renderBotaoEnviarCorrecao(solicitacaoMedicaoInicial) && (
+                      <Botao
+                        texto="Enviar Correção"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ms-3"
+                        onClick={() => setShowModalEnviarCorrecao(true)}
+                        disabled={verificaSeEnviarCorrecaoDisabled(
+                          quantidadeAlimentacoesLancadas,
+                          solicitacaoMedicaoInicial
+                        )}
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+            <ModalFinalizarMedicao
+              showModal={showModalFinalizarMedicao}
+              setErrosAoSalvar={(value) => setErrosAoSalvar(value)}
+              closeModal={() => setShowModalFinalizarMedicao(false)}
+              setObjSolicitacaoMIFinalizada={setObjSolicitacaoMIFinalizada}
+              escolaInstituicao={escolaInstituicao}
+              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+              onClickInfoBasicas={onClickInfoBasicas}
+              setFinalizandoMedicao={setFinalizandoMedicao}
+            />
+            <ModalSolicitacaoDownload
+              show={exibirModalCentralDownloads}
+              setShow={setExibirModalCentralDownloads}
+            />
+            <ModalPadraoSimNao
+              showModal={showModalEnviarCorrecao}
+              closeModal={() => setShowModalEnviarCorrecao(false)}
+              tituloModal={`Enviar Correção para ${
+                solicitacaoMedicaoInicial.status ===
                 "MEDICAO_CORRECAO_SOLICITADA_CODAE"
                   ? "CODAE"
-                  : "DRE"}
-                ?
-              </p>
-            }
-            funcaoSim={escolaEnviaCorrecaoDreCodae}
-            desabilitaSim={desabilitaSim}
-          />
-        </>
-      )}
+                  : "DRE"
+              }`}
+              descricaoModal={
+                <p className="col-12 my-3 p-0">
+                  Deseja enviar a correção para{" "}
+                  {solicitacaoMedicaoInicial.status ===
+                  "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                    ? "CODAE"
+                    : "DRE"}
+                  ?
+                </p>
+              }
+              funcaoSim={escolaEnviaCorrecaoDreCodae}
+              desabilitaSim={desabilitaSim}
+            />
+          </>
+        )}
     </div>
   );
 };
