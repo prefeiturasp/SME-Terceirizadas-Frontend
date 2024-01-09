@@ -181,9 +181,9 @@ export interface FichaTecnicaDetalhada {
   gluten: boolean;
   lactose: boolean;
   lactose_detalhe: string;
-  porcao: string;
+  porcao: number;
   unidade_medida_porcao: UnidadeMedidaSimples;
-  valor_unidade_caseira: string;
+  valor_unidade_caseira: number;
   unidade_medida_caseira: string;
   informacoes_nutricionais: InformacoesNutricionaisFichaTecnica[];
   prazo_validade_descongelamento: string;

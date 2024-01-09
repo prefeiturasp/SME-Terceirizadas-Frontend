@@ -45,9 +45,9 @@ export interface FichaTecnicaPayload {
   gluten?: boolean | string;
   lactose?: boolean | string;
   lactose_detalhe?: string;
-  porcao?: string;
+  porcao?: number | string;
   unidade_medida_porcao?: string;
-  valor_unidade_caseira?: string;
+  valor_unidade_caseira?: number | string;
   unidade_medida_caseira?: string;
   informacoes_nutricionais?: InformacoesNutricionaisFichaTecnicaPayload[];
   prazo_validade_descongelamento: string;
