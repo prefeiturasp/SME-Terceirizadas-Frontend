@@ -48,6 +48,7 @@ export const LancamentoPorPeriodoCEI = ({
   setSolicitacaoMedicaoInicial,
   setFinalizandoMedicao,
   naoPodeFinalizar,
+  periodosPermissoesLancamentosEspeciais,
 }) => {
   const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
@@ -237,6 +238,16 @@ export const LancamentoPorPeriodoCEI = ({
       tiposAlimentacao = periodo?.tipos_alimentacao.filter(
         (alimentacao) => alimentacao.nome !== "Lanche Emergencial"
       );
+      const periodoPermissoes = periodosPermissoesLancamentosEspeciais.find(
+        (p) => p.periodo === periodo.periodo_escolar.nome
+      );
+      if (periodoPermissoes) {
+        tiposAlimentacao = tiposAlimentacao.concat(
+          periodoPermissoes.alimentacoes.map((alimentacao) => ({
+            nome: alimentacao,
+          }))
+        );
+      }
     }
 
     return tiposAlimentacao;
