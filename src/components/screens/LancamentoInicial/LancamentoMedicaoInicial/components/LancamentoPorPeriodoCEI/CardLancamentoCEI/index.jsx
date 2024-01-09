@@ -34,6 +34,7 @@ export const CardLancamentoCEI = ({
   tiposAlimentacao,
   uuidPeriodoEscolar,
   errosAoSalvar,
+  periodosInclusaoContinua,
 }) => {
   const history = useHistory();
 
@@ -129,6 +130,7 @@ export const CardLancamentoCEI = ({
         ),
         uuidPeriodoEscolar: uuidPeriodoEscolar,
         tiposAlimentacao: tiposAlimentacao,
+        periodosInclusaoContinua: periodosInclusaoContinua,
         ...location.state,
       },
     });
