@@ -247,7 +247,7 @@ const FormAutorizaDietaEspecial = ({
       cancelar();
       onAutorizarOuNegar(true);
     } else {
-      onAutorizarOuNegar();
+      onAutorizarOuNegar(false);
     }
   };
 
