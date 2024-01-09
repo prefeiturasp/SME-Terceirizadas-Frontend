@@ -188,8 +188,8 @@ export interface FichaTecnicaDetalhada {
   informacoes_nutricionais: InformacoesNutricionaisFichaTecnica[];
   prazo_validade_descongelamento: string;
   condicoes_de_conservacao: string;
-  temperatura_congelamento: string;
-  temperatura_veiculo: string;
+  temperatura_congelamento: number;
+  temperatura_veiculo: number;
   condicoes_de_transporte: string;
   embalagem_primaria: string;
   embalagem_secundaria: string;

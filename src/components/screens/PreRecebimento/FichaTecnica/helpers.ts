@@ -270,8 +270,10 @@ export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
     ...valuesSelect,
     prazo_validade_descongelamento: ficha.prazo_validade_descongelamento,
     condicoes_de_conservacao: ficha.condicoes_de_conservacao,
-    temperatura_congelamento: ficha.temperatura_congelamento,
-    temperatura_veiculo: ficha.temperatura_veiculo,
+    temperatura_congelamento: numberToStringDecimal(
+      ficha.temperatura_congelamento
+    ),
+    temperatura_veiculo: numberToStringDecimal(ficha.temperatura_veiculo),
     condicoes_de_transporte: ficha.condicoes_de_transporte,
     embalagem_primaria: ficha.embalagem_primaria,
     embalagem_secundaria: ficha.embalagem_secundaria,
@@ -365,8 +367,10 @@ export const formataPayload = (
     informacoes_nutricionais: formataInformacoesNutricionais(values),
     prazo_validade_descongelamento: values.prazo_validade_descongelamento || "",
     condicoes_de_conservacao: values.condicoes_de_conservacao || "",
-    temperatura_congelamento: values.temperatura_congelamento || "",
-    temperatura_veiculo: values.temperatura_veiculo || "",
+    temperatura_congelamento: stringDecimalToNumber(
+      values.temperatura_congelamento
+    ),
+    temperatura_veiculo: stringDecimalToNumber(values.temperatura_veiculo),
     condicoes_de_transporte: values.condicoes_de_transporte || "",
     embalagem_primaria: values.embalagem_primaria || "",
     embalagem_secundaria: values.embalagem_secundaria || "",
