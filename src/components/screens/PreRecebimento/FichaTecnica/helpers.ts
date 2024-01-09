@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import { Dispatch, SetStateAction } from "react";
 import createDecorator from "final-form-calculate";
 
 import { getEnderecoPorCEP } from "services/cep.service";
@@ -56,7 +56,7 @@ export const formataInformacoesNutricionais = (values: Record<string, any>) => {
 };
 
 export const cepCalculator = (
-  setDesabilitaEndereco: Dispatch<React.SetStateAction<boolean>>
+  setDesabilitaEndereco: Dispatch<SetStateAction<boolean>>
 ) =>
   createDecorator({
     field: "cep_fabricante",
@@ -69,7 +69,7 @@ export const cepCalculator = (
 export const buscaCEP = async (
   cep: string,
   values: FichaTecnicaPayload,
-  setDesabilitaEndereco: Dispatch<React.SetStateAction<boolean>>
+  setDesabilitaEndereco: Dispatch<SetStateAction<boolean>>
 ) => {
   if (cep?.length === 9) {
     const response = await getEnderecoPorCEP(cep);
@@ -87,28 +87,28 @@ export const buscaCEP = async (
 };
 
 export const carregarProdutos = async (
-  setProdutosOptions: Dispatch<React.SetStateAction<OptionsGenerico[]>>
+  setProdutosOptions: Dispatch<SetStateAction<OptionsGenerico[]>>
 ) => {
   const response = await getListaCompletaProdutosLogistica();
   setProdutosOptions(response.data.results);
 };
 
 export const carregarMarcas = async (
-  setMarcasOptions: Dispatch<React.SetStateAction<OptionsGenerico[]>>
+  setMarcasOptions: Dispatch<SetStateAction<OptionsGenerico[]>>
 ) => {
   const response = await getNomesMarcas();
   setMarcasOptions(response.data.results);
 };
 
 export const carregarFabricantes = async (
-  setFabricantesOptions: Dispatch<React.SetStateAction<OptionsGenerico[]>>
+  setFabricantesOptions: Dispatch<SetStateAction<OptionsGenerico[]>>
 ) => {
   const response = await getNomesFabricantes();
   setFabricantesOptions(response.data.results);
 };
 
 export const carregarUnidadesMedida = async (
-  setUnidadesMedidaOptions: Dispatch<React.SetStateAction<OptionsGenerico[]>>
+  setUnidadesMedidaOptions: Dispatch<SetStateAction<OptionsGenerico[]>>
 ) => {
   const response = await getUnidadesDeMedidaLogistica();
   setUnidadesMedidaOptions(response.data.results);
@@ -117,9 +117,7 @@ export const carregarUnidadesMedida = async (
 export const carregarTerceirizada = async (
   ficha: FichaTecnicaDetalhada,
   meusDados: Record<string, any>,
-  setProponente: Dispatch<
-    React.SetStateAction<TerceirizadaComEnderecoInterface>
-  >
+  setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>
 ) => {
   if (ficha.empresa?.uuid) {
     const response = await getTerceirizadaUUID(ficha.empresa.uuid);
@@ -448,13 +446,13 @@ export const formataPayload = (
 
 export const inserirArquivoFichaAssinadaRT = (
   files: ArquivoForm[],
-  setArquivo: Dispatch<React.SetStateAction<ArquivoForm[]>>
+  setArquivo: Dispatch<SetStateAction<ArquivoForm[]>>
 ) => {
   setArquivo(files);
 };
 
 export const removerArquivoFichaAssinadaRT = (
-  setArquivo: Dispatch<React.SetStateAction<ArquivoForm[]>>
+  setArquivo: Dispatch<SetStateAction<ArquivoForm[]>>
 ) => {
   setArquivo([]);
 };
