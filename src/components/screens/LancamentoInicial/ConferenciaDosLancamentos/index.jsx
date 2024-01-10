@@ -855,6 +855,7 @@ export const ConferenciaDosLancamentos = () => {
                               getPeriodosGruposMedicaoAsync={() =>
                                 getPeriodosGruposMedicaoAsync()
                               }
+                              periodosGruposMedicao={periodosGruposMedicao}
                               setOcorrenciaExpandida={() =>
                                 setOcorrenciaExpandida(false)
                               }
