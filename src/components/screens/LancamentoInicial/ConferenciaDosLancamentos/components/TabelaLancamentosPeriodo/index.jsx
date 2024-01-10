@@ -110,6 +110,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const [tabelaAlimentacaoRows, setTabelaAlimentacaoRows] = useState(null);
   const [tabelaDietaRows, setTabelaDietaRows] = useState(null);
   const [tabelaDietaEnteralRows, setTabelaDietaEnteralRows] = useState(null);
+  const [periodoGrupoSelecionado, setPeriodoGrupoSelecionado] = useState(null);
   const [
     tabelaSolicitacoesAlimentacaoRows,
     setTabelaSolicitacoesAlimentacaoRows,
@@ -308,17 +309,19 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const ehEMEIdaCEMEI = () => {
     return (
       ehEscolaTipoCEMEI({ nome: solicitacao.escola }) &&
+      periodoGrupoSelecionado &&
       periodosGruposMedicao
         .find(
           (periodoGrupo_) =>
-            periodoGrupo_.uuid === periodoEscolar.uuid_medicao_periodo_grupo
+            periodoGrupo_.uuid_medicao_periodo_grupo ===
+            periodoGrupoSelecionado.uuid_medicao_periodo_grupo
         )
         .nome_periodo_grupo.includes("Infantil")
     );
   };
 
   useEffect(() => {
-    if (showTabelaLancamentosPeriodo) {
+    if (showTabelaLancamentosPeriodo && periodoGrupoSelecionado) {
       const formatarTabelasAsync = async () => {
         try {
           setLoading(true);
@@ -569,7 +572,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               );
             setSuspensoesAutorizadas(response_suspensoes_autorizadas);
           }
-
+          setPeriodoGrupoSelecionado(null);
           setLoading(false);
           setErroAPI("");
         } catch (error) {
@@ -637,6 +640,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
           ? periodoGrupo.nome_periodo_grupo.split(" ")[1]
           : periodoGrupo.nome_periodo_grupo
       );
+      setPeriodoGrupoSelecionado(periodoGrupo);
     } else {
       setPeriodoEscolar(periodoGrupo.periodo_escolar);
     }
