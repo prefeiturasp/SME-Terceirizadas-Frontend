@@ -9,6 +9,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
 import { deepCopy } from "../../../../helpers/utilities";
 
 export const formatarPayloadPeriodoLancamentoCeiCemei = (
@@ -163,10 +164,12 @@ export const desabilitarField = (
   ehEmeiDaCemeiLocation,
   ehSolicitacoesAlimentacaoLocation,
   permissoesLancamentosEspeciaisPorDia,
-  alimentacoesLancamentosEspeciais
+  alimentacoesLancamentosEspeciais,
+  ehProgramasEProjetosLocation,
+  dadosValoresInclusoesAutorizadasState
 ) => {
   let alimentacoesLancamentosEspeciaisDia = [];
-  if (!ehEmeiDaCemeiLocation) {
+  if (!ehEmeiDaCemeiLocation && !ehProgramasEProjetosLocation) {
     if (nomeCategoria === "ALIMENTAÇÃO") {
       const resultado = inclusoesAutorizadas.some(
         (inclusao) =>
@@ -255,7 +258,9 @@ export const desabilitarField = (
       "MEDICAO_CORRIGIDA_PELA_UE",
       "MEDICAO_CORRIGIDA_PARA_CODAE",
     ].includes(location.state.status_periodo) &&
-    !["matriculados", "dietas_autorizadas"].includes(rowName)
+    !["matriculados", "numero_de_alunos", "dietas_autorizadas"].includes(
+      rowName
+    )
   ) {
     if (
       alimentacoesLancamentosEspeciais?.includes(rowName) &&
@@ -278,7 +283,7 @@ export const desabilitarField = (
           "MEDICAO_CORRIGIDA_PARA_CODAE",
         ].includes(location.state.status_periodo) &&
           !ehDiaParaCorrigir(dia, categoria, diasParaCorrecao)))) ||
-    ["matriculados", "dietas_autorizadas"].includes(rowName)
+    ["matriculados", "numero_de_alunos", "dietas_autorizadas"].includes(rowName)
   ) {
     return true;
   }
@@ -340,6 +345,42 @@ export const desabilitarField = (
     } else if (rowName === "frequencia") {
       return false;
     }
+  } else if (ehProgramasEProjetosLocation) {
+    if (nomeCategoria === "ALIMENTAÇÃO") {
+      if (rowName === "numero_de_alunos") {
+        return true;
+      } else if (validacaoSemana(dia)) {
+        return true;
+      } else if (
+        !Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+          key.includes(`__dia_${dia}`)
+        )
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (rowName === "dietas_autorizadas") {
+        return true;
+      } else if (validacaoSemana(dia)) {
+        return true;
+      } else if (
+        !Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+          key.includes(`__dia_${dia}`)
+        )
+      ) {
+        return true;
+      } else if (
+        values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`] ===
+          null ||
+        !values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   } else {
     if (
       ["Mês anterior", "Mês posterior"].includes(
@@ -386,7 +427,7 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   mes,
   ano,
   periodos_escolares,
-  location
+  location = null
 ) => {
   const params = {};
   params["escola_uuid"] = escolaUuuid;
@@ -395,6 +436,7 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   params["ano"] = ano;
   params["periodos_escolares"] = periodos_escolares;
   if (
+    location &&
     location.state.grupo &&
     location.state.grupo.includes("Programas e Projetos")
   ) {
@@ -592,7 +634,8 @@ export const formatarLinhasTabelaAlimentacaoCEI = (
 export const formatarLinhasTabelaAlimentacaoEmeiDaCemei = (
   tiposAlimentacao,
   ehSolicitacoesAlimentacaoLocation,
-  alimentacoesLancamentosEspeciais
+  alimentacoesLancamentosEspeciais,
+  ehProgramasEProjetosLocation
 ) => {
   const tiposAlimentacaoFormatadas = tiposAlimentacao.map((alimentacao) => {
     return {
@@ -652,18 +695,25 @@ export const formatarLinhasTabelaAlimentacaoEmeiDaCemei = (
     });
   }
 
-  tiposAlimentacaoFormatadas.unshift(
-    {
-      nome: "Matriculados",
-      name: "matriculados",
-      uuid: null,
-    },
-    {
-      nome: "Frequência",
-      name: "frequencia",
-      uuid: null,
-    }
-  );
+  const matriculadosOuNumeroDeAlunos = () => {
+    return ehProgramasEProjetosLocation
+      ? {
+          nome: "Número de Alunos",
+          name: "numero_de_alunos",
+          uuid: null,
+        }
+      : {
+          nome: "Matriculados",
+          name: "matriculados",
+          uuid: null,
+        };
+  };
+
+  tiposAlimentacaoFormatadas.unshift(matriculadosOuNumeroDeAlunos(), {
+    nome: "Frequência",
+    name: "frequencia",
+    uuid: null,
+  });
 
   tiposAlimentacaoFormatadas.push({
     nome: "Observações",
@@ -1006,11 +1056,12 @@ export const desabilitarBotaoColunaObservacoes = (
 
 export const categoriasParaExibir = (
   ehEmeiDaCemeiLocation,
+  ehProgramasEProjetosLocation,
   response_categorias_medicao,
   response_log_dietas_autorizadas_cei,
   ehSolicitacoesAlimentacaoLocation
 ) => {
-  if (ehEmeiDaCemeiLocation) {
+  if (ehEmeiDaCemeiLocation || ehProgramasEProjetosLocation) {
     response_categorias_medicao = response_categorias_medicao.data.filter(
       (categoria) => {
         return !categoria.nome.includes("SOLICITAÇÕES");
@@ -1077,5 +1128,61 @@ export const formataNomeCategoriaSolAlimentacoesInfantil = (nomeCategoria) => {
     return "SOLICITAÇÕES DE ALIMENTAÇÃO - INFANTIL";
   } else {
     return nomeCategoria;
+  }
+};
+
+export const valorZeroFrequenciaCEI = (
+  value,
+  rowName,
+  categoria,
+  dia,
+  form,
+  tabelaAlimentacaoCEIRows,
+  tabelaDietaCEIRows,
+  tabelaDietaEnteralRows,
+  formValuesAtualizados
+) => {
+  if (rowName === "frequencia" && value && Number(value) === 0) {
+    let linhasDaTabela = null;
+    if (categoria.nome.includes("ENTERAL")) {
+      linhasDaTabela = tabelaDietaEnteralRows;
+    } else if (categoria.nome.includes("DIETA")) {
+      linhasDaTabela = tabelaDietaCEIRows;
+    } else {
+      linhasDaTabela = tabelaAlimentacaoCEIRows;
+    }
+
+    linhasDaTabela.forEach((linha) => {
+      ![
+        "matriculados",
+        "frequencia",
+        "observacoes",
+        "dietas_autorizadas",
+        "numero_de_alunos",
+      ].includes(linha.name) &&
+        form.change(
+          `${linha.name}__dia_${dia}__categoria_${categoria.id}`,
+          "0"
+        );
+    });
+  }
+
+  const frequenciaValue =
+    formValuesAtualizados[`frequencia__dia_${dia}__categoria_${categoria.id}`];
+  return frequenciaValue && Number(frequenciaValue) === 0;
+};
+
+export const getListaDiasSobremesaDoceAsync = async (escola_uuid, mes, ano) => {
+  const params = {
+    mes,
+    ano,
+    escola_uuid,
+  };
+  const response = await getListaDiasSobremesaDoce(params);
+  if (response.status === HTTP_STATUS.OK) {
+    return response.data;
+  } else {
+    toastError("Erro ao carregar dias de sobremesa doce");
+    return [];
   }
 };

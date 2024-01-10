@@ -575,21 +575,13 @@ export const validacoesTabelaAlimentacao = (
     allValues[`numero_de_alunos__dia_${dia}__categoria_${categoria}`]
   );
 
-  const alimentacoesDoDia = Object.keys(allValues).filter(
-    (key) =>
-      String(key).includes(`dia_${dia}__categoria_${categoria}`) &&
-      !String(key).includes("numero_de_alunos") &&
-      !String(key).includes("frequencia")
-  );
-
   if (
     `${rowName}__dia_${dia}__categoria_${categoria}` ===
       `frequencia__dia_${dia}__categoria_${categoria}` &&
     Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
       String(key).includes(`__dia_${dia}__categoria_${categoria}`)
     ) &&
-    !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
-    alimentacoesDoDia.some((ali) => allValues[ali])
+    !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0)
   ) {
     if (!value || (value && Number(value) !== 0 && validacaoDiaLetivo(dia))) {
       return `Foi autorizada inclusão de alimentação ${
@@ -947,7 +939,8 @@ export const exibeTooltipInclusoesAutorizadasComZero = (
   row,
   column,
   categoria,
-  inclusoesAutorizadas
+  inclusoesAutorizadas,
+  ehProgramasEProjetosLocation = false
 ) => {
   const value =
     formValuesAtualizados[
@@ -955,6 +948,7 @@ export const exibeTooltipInclusoesAutorizadasComZero = (
     ];
 
   return (
+    !ehProgramasEProjetosLocation &&
     inclusoesAutorizadas.some(
       (inclusao) => column.dia === String(inclusao.dia)
     ) &&

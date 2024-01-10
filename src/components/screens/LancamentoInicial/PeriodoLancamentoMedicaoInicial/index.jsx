@@ -43,7 +43,6 @@ import {
   tiposAlimentacaoETEC,
 } from "helpers/utilities";
 import {
-  botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
   botaoAdicionarObrigatorio,
   botaoAdicionarObrigatorioTabelaAlimentacao,
   campoFrequenciaValor0ESemObservacao,
@@ -1856,18 +1855,6 @@ export default () => {
       }
     }
 
-    if (
-      categoria.nome.includes("ALIMENTAÇÃO") &&
-      botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada(
-        values,
-        dia,
-        categoria,
-        dadosValoresInclusoesAutorizadasState,
-        validacaoDiaLetivo
-      )
-    ) {
-      setDisableBotaoSalvarLancamentos(true);
-    }
     if (Object.keys(errors).length > 0) {
       setDisableBotaoSalvarLancamentos(true);
       setExibirTooltip(true);

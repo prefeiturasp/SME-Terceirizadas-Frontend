@@ -326,6 +326,7 @@ export const LancamentoPorPeriodoCEI = ({
                 }
                 tiposAlimentacao={tiposAlimentacaoProgramasEProjetos()}
                 errosAoSalvar={errosAoSalvar}
+                periodosInclusaoContinua={periodosInclusaoContinua}
               />
             )}
             {((solicitacoesKitLanchesAutorizadas &&
