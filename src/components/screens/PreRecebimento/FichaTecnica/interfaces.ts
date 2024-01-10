@@ -16,6 +16,7 @@ export interface InformacoesNutricionaisFichaTecnicaPayload {
 }
 
 // boolean | string -> tratado como string no form, enviado como boolean pro backend
+// number | string -> tratado como string no form, enviado como number pro backend
 export interface FichaTecnicaPayload {
   produto?: string;
   marca?: string;
@@ -58,17 +59,20 @@ export interface FichaTecnicaPayload {
   embalagem_secundaria: string;
   embalagens_de_acordo_com_anexo?: boolean;
   material_embalagem_primaria: string;
-  peso_liquido_embalagem_primaria: number;
+  produto_eh_liquido?: boolean | string;
+  volume_embalagem_primaria: number | string;
+  unidade_medida_volume_primaria: string;
+  peso_liquido_embalagem_primaria: number | string;
   unidade_medida_primaria: string;
-  peso_liquido_embalagem_secundaria: number;
+  peso_liquido_embalagem_secundaria: number | string;
   unidade_medida_secundaria: string;
-  peso_embalagem_primaria_vazia: number;
+  peso_embalagem_primaria_vazia: number | string;
   unidade_medida_primaria_vazia: string;
-  peso_embalagem_secundaria_vazia: number;
+  peso_embalagem_secundaria_vazia: number | string;
   unidade_medida_secundaria_vazia: string;
   sistema_vedacao_embalagem_secundaria: string;
   rotulo_legivel?: boolean;
-  variacao_percentual: number;
+  variacao_percentual: number | string;
   nome_responsavel_tecnico: string;
   habilitacao: string;
   numero_registro_orgao: string;

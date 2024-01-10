@@ -105,8 +105,11 @@ const Relatorio = ({ visao }) => {
     content && setDietasAbertas(content.message);
   };
 
-  const loadSolicitacao = async (uuid) => {
+  const loadSolicitacao = async (uuid, setDietaNull = false) => {
     setCarregando(true);
+    if (setDietaNull) {
+      setDietaEspecial(null);
+    }
     const responseDietaEspecial = await getDietaEspecial(uuid);
     if (responseDietaEspecial.status === HTTP_STATUS.OK) {
       setDietaEspecial(responseDietaEspecial.data);
@@ -382,7 +385,9 @@ const Relatorio = ({ visao }) => {
             visao === CODAE && (
               <FormAutorizaDietaEspecial
                 dietaEspecial={dietaEspecial}
-                onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
+                onAutorizarOuNegar={(setDietaNull = false) =>
+                  loadSolicitacao(dietaEspecial.uuid, setDietaNull)
+                }
                 visao={visao}
                 setTemSolicitacaoCadastroProduto={() =>
                   setDietaEspecial({
