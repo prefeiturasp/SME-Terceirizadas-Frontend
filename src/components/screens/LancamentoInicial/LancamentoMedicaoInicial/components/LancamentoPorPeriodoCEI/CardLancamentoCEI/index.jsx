@@ -34,8 +34,13 @@ export const CardLancamentoCEI = ({
   tiposAlimentacao,
   uuidPeriodoEscolar,
   errosAoSalvar,
+  periodosPermissoesLancamentosEspeciais,
 }) => {
   const history = useHistory();
+
+  const periodoPermissoes = periodosPermissoesLancamentosEspeciais?.find((p) =>
+    textoCabecalho.includes(p.periodo)
+  );
 
   const ALIMENTACOES_TOTAL = [
     "Refeição",
@@ -89,6 +94,13 @@ export const CardLancamentoCEI = ({
     )
   ) {
     let copyTiposAlimentacao = deepCopy(tiposAlimentacao);
+    if (periodoPermissoes) {
+      copyTiposAlimentacao = copyTiposAlimentacao.concat(
+        periodoPermissoes.alimentacoes.map((alimentacao) => ({
+          nome: alimentacao,
+        }))
+      );
+    }
     if (textoCabecalho !== "Solicitações de Alimentação") {
       copyTiposAlimentacao = copyTiposAlimentacao.filter((alimentacao) =>
         ALIMENTACOES_TOTAL.includes(alimentacao.nome)
