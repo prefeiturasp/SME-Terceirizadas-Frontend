@@ -129,10 +129,12 @@ export const campoComInclusaoAutorizadaValorZeroESemObservacao = (
   formValuesAtualizados,
   column,
   categoria,
-  inclusoesAutorizadas
+  inclusoesAutorizadas,
+  ehProgramasEProjetosLocation
 ) => {
   let erro = false;
   if (
+    !ehProgramasEProjetosLocation &&
     categoria.nome === "ALIMENTAÇÃO" &&
     inclusoesAutorizadas &&
     inclusoesAutorizadas.some(
@@ -141,31 +143,46 @@ export const campoComInclusaoAutorizadaValorZeroESemObservacao = (
     !formValuesAtualizados[
       `observacoes__dia_${column.dia}__categoria_${categoria.id}`
     ] &&
-    (Number(
-      formValuesAtualizados[
-        `frequencia__dia_${column.dia}__categoria_${categoria.id}`
-      ]
-    ) === 0 ||
+    ((formValuesAtualizados[
+      `frequencia__dia_${column.dia}__categoria_${categoria.id}`
+    ] !== null &&
       Number(
         formValuesAtualizados[
-          `lanche__dia_${column.dia}__categoria_${categoria.id}`
+          `frequencia__dia_${column.dia}__categoria_${categoria.id}`
         ]
-      ) === 0 ||
-      Number(
-        formValuesAtualizados[
-          `lanche_4h__dia_${column.dia}__categoria_${categoria.id}`
-        ]
-      ) === 0 ||
-      Number(
-        formValuesAtualizados[
-          `refeicao__dia_${column.dia}__categoria_${categoria.id}`
-        ]
-      ) === 0 ||
-      Number(
-        formValuesAtualizados[
-          `sobremesa__dia_${column.dia}__categoria_${categoria.id}`
-        ]
-      ) === 0)
+      ) === 0) ||
+      (formValuesAtualizados[
+        `lanche__dia_${column.dia}__categoria_${categoria.id}`
+      ] !== null &&
+        Number(
+          formValuesAtualizados[
+            `lanche__dia_${column.dia}__categoria_${categoria.id}`
+          ]
+        ) === 0) ||
+      (formValuesAtualizados[
+        `lanche_4h__dia_${column.dia}__categoria_${categoria.id}`
+      ] !== null &&
+        Number(
+          formValuesAtualizados[
+            `lanche_4h__dia_${column.dia}__categoria_${categoria.id}`
+          ]
+        ) === 0) ||
+      (formValuesAtualizados[
+        `refeicao__dia_${column.dia}__categoria_${categoria.id}`
+      ] !== null &&
+        Number(
+          formValuesAtualizados[
+            `refeicao__dia_${column.dia}__categoria_${categoria.id}`
+          ]
+        ) === 0) ||
+      (formValuesAtualizados[
+        `sobremesa__dia_${column.dia}__categoria_${categoria.id}`
+      ] !== null &&
+        Number(
+          formValuesAtualizados[
+            `sobremesa__dia_${column.dia}__categoria_${categoria.id}`
+          ]
+        ) === 0))
   ) {
     erro = true;
   }
@@ -177,9 +194,11 @@ export const exibirTooltipErroQtdMaiorQueAutorizado = (
   row,
   column,
   categoria,
-  inclusoesAutorizadas
+  inclusoesAutorizadas,
+  ehProgramasEProjetosLocation = false
 ) => {
   return (
+    !ehProgramasEProjetosLocation &&
     row.name !== "matriculados" &&
     inclusoesAutorizadas &&
     inclusoesAutorizadas.some(
@@ -312,7 +331,8 @@ export const validacoesTabelaAlimentacaoEmeidaCemei = (
   value,
   alteracoesAlimentacaoAutorizadas,
   inclusoesAutorizadas,
-  validacaoDiaLetivo
+  validacaoDiaLetivo,
+  ehProgramasEProjetosLocation
 ) => {
   const maxFrequencia = Number(
     allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
@@ -320,13 +340,17 @@ export const validacoesTabelaAlimentacaoEmeidaCemei = (
   const maxMatriculados = Number(
     allValues[`matriculados__dia_${dia}__categoria_${categoria}`]
   );
+  const maxNumeroDeAlunos = Number(
+    allValues[`numero_de_alunos__dia_${dia}__categoria_${categoria}`]
+  );
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
 
   if (
     rowName === "frequencia" &&
     !allValues[`frequencia__dia_${dia}__categoria_${categoria}`] &&
     !validacaoDiaLetivo(dia) &&
-    inclusoesAutorizadas.some((inclusao) => dia === String(inclusao.dia))
+    inclusoesAutorizadas.some((inclusao) => dia === String(inclusao.dia)) &&
+    !ehProgramasEProjetosLocation
   ) {
     return "Há solicitação de alimentação autorizada para esta data. Insira o número de frequentes.";
   }
@@ -343,9 +367,30 @@ export const validacoesTabelaAlimentacaoEmeidaCemei = (
       (alteracao) => alteracao.dia === dia && alteracao.motivo.includes("LPR")
     ).length > 0;
 
-  if (
+  if (ehProgramasEProjetosLocation) {
+    if (
+      rowName === "frequencia" &&
+      !allValues[`frequencia__dia_${dia}__categoria_${categoria}`] &&
+      inclusoesAutorizadas.some((inclusao) => dia === String(inclusao.dia)) &&
+      ehProgramasEProjetosLocation
+    ) {
+      return "Foi autorizada inclusão de alimentação contínua nesta data. Informe a frequência de alunos.";
+    } else if (
+      value &&
+      Number(value) > maxNumeroDeAlunos &&
+      inputName.includes("frequencia")
+    ) {
+      return "A quantidade de alunos frequentes não pode ser maior do que a quantidade em Número de Alunos.";
+    } else if (
+      !inputName.includes("numero_de_alunos") &&
+      Number(allValues[inputName]) > Number(maxFrequencia)
+    ) {
+      return `Número apontado de alimentação é maior que número de alunos frequentes. Ajuste o apontamento. `;
+    }
+  } else if (
     rowName === "frequencia" &&
-    Number(allValues[inputName]) > Number(maxMatriculados)
+    Number(allValues[inputName]) > Number(maxMatriculados) &&
+    !ehProgramasEProjetosLocation
   ) {
     return "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos matriculados no período.";
   } else if (
@@ -354,7 +399,9 @@ export const validacoesTabelaAlimentacaoEmeidaCemei = (
     inputName.includes("lanche") &&
     !inputName.includes("emergencial") &&
     (!allValues[`refeicao__dia_${dia}__categoria_${categoria}`] ||
-      Number(allValues[`refeicao__dia_${dia}__categoria_${categoria}`]) === 0)
+      Number(allValues[`refeicao__dia_${dia}__categoria_${categoria}`]) ===
+        0) &&
+    !ehProgramasEProjetosLocation
   ) {
     if (Number(value) > 2 * maxFrequencia) {
       return "Lançamento maior que 2x a frequência de alunos no dia.";
@@ -369,7 +416,9 @@ export const validacoesTabelaAlimentacaoEmeidaCemei = (
     (!allValues[`lanche__dia_${dia}__categoria_${categoria}`] ||
       Number(allValues[`lanche__dia_${dia}__categoria_${categoria}`]) === 0) &&
     (!allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`] ||
-      Number(allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`]) === 0)
+      Number(allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`]) ===
+        0) &&
+    !ehProgramasEProjetosLocation
   ) {
     if (Number(value) > 2 * maxFrequencia) {
       return "Lançamento maior que 2x a frequência de alunos no dia.";
