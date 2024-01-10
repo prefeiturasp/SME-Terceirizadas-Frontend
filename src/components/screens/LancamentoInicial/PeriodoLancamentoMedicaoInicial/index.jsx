@@ -2109,6 +2109,16 @@ export default () => {
     return undefined;
   };
 
+  const exibeBotaoAdicionarObservacao = (dia) => {
+    const temInclusaoAutorizadaNoDia = inclusoesAutorizadas.some(
+      (inclusao) => inclusao.dia === dia
+    );
+    return (
+      !validacaoSemana(dia) &&
+      (validacaoDiaLetivo(dia) || temInclusaoAutorizadaNoDia)
+    );
+  };
+
   return (
     <>
       <div className="text-end botao-voltar-lancamento-medicao">
@@ -2312,7 +2322,7 @@ export default () => {
                                                 >
                                                   {row.name ===
                                                   "observacoes" ? (
-                                                    !validacaoSemana(
+                                                    exibeBotaoAdicionarObservacao(
                                                       column.dia
                                                     ) && (
                                                       <Botao
@@ -2510,7 +2520,7 @@ export default () => {
                                                   >
                                                     {row.name ===
                                                     "observacoes" ? (
-                                                      !validacaoSemana(
+                                                      exibeBotaoAdicionarObservacao(
                                                         column.dia
                                                       ) && (
                                                         <Botao
