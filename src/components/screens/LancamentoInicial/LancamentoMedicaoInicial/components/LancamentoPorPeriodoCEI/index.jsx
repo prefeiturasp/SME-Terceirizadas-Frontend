@@ -48,6 +48,7 @@ export const LancamentoPorPeriodoCEI = ({
   setSolicitacaoMedicaoInicial,
   setFinalizandoMedicao,
   naoPodeFinalizar,
+  periodosPermissoesLancamentosEspeciais,
 }) => {
   const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
@@ -306,6 +307,9 @@ export const LancamentoPorPeriodoCEI = ({
                 tiposAlimentacao={tiposAlimentacaoPeriodosEmei(nomePeriodo)}
                 uuidPeriodoEscolar={uuidPeriodoEscolar(nomePeriodo)}
                 errosAoSalvar={errosAoSalvar}
+                periodosPermissoesLancamentosEspeciais={
+                  periodosPermissoesLancamentosEspeciais
+                }
               />
             ))}
             {periodosInclusaoContinua && (

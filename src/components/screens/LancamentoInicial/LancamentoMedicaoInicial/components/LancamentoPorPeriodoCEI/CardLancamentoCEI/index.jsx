@@ -35,8 +35,21 @@ export const CardLancamentoCEI = ({
   uuidPeriodoEscolar,
   errosAoSalvar,
   periodosInclusaoContinua,
+  periodosPermissoesLancamentosEspeciais,
 }) => {
   const history = useHistory();
+
+  const periodoPermissoes = periodosPermissoesLancamentosEspeciais?.find((p) =>
+    textoCabecalho.includes(p.periodo)
+  );
+
+  const ALIMENTACOES_TOTAL = [
+    "Refeição",
+    "Sobremesa",
+    "Lanche",
+    "Lanche 4h",
+    "Lanche Extra",
+  ];
 
   let alimentacoesFormatadas = [];
 
@@ -82,13 +95,21 @@ export const CardLancamentoCEI = ({
     )
   ) {
     let copyTiposAlimentacao = deepCopy(tiposAlimentacao);
-    if (textoCabecalho !== "Solicitações de Alimentação") {
-      copyTiposAlimentacao = copyTiposAlimentacao.filter(
-        (alimentacao) => alimentacao.nome !== "Lanche Emergencial"
+    if (periodoPermissoes) {
+      copyTiposAlimentacao = copyTiposAlimentacao.concat(
+        periodoPermissoes.alimentacoes.map((alimentacao) => ({
+          nome: alimentacao,
+        }))
       );
     }
-    alimentacoesFormatadas = copyTiposAlimentacao.map(
-      (tipoAlimentacao, key) => (
+    if (textoCabecalho !== "Solicitações de Alimentação") {
+      copyTiposAlimentacao = copyTiposAlimentacao.filter((alimentacao) =>
+        ALIMENTACOES_TOTAL.includes(alimentacao.nome)
+      );
+    }
+    alimentacoesFormatadas = copyTiposAlimentacao
+      .sort((a, b) => a.nome > b.nome)
+      .map((tipoAlimentacao, key) => (
         <div key={key} className="mb-2">
           <span style={{ color: cor }}>
             <b>{quantidadeAlimentacao(tipoAlimentacao.nome)}</b>
@@ -96,8 +117,7 @@ export const CardLancamentoCEI = ({
           <span className="ms-1">- {tipoAlimentacao.nome}</span>
           <br />
         </div>
-      )
-    );
+      ));
   }
 
   const getStatusPeriodo = () => {
