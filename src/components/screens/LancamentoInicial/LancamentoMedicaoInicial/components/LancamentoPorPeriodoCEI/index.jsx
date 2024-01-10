@@ -267,7 +267,9 @@ export const LancamentoPorPeriodoCEI = ({
     let tiposAlimentacao = [];
     Object.keys(periodosInclusaoContinua).forEach((periodo) => {
       const periodoProgramasEProjetos = periodosEscolaSimples.find(
-        (p) => p.periodo_escolar.nome === periodo
+        (p) =>
+          p.periodo_escolar.nome === periodo &&
+          p.tipo_unidade_escolar.iniciais === "EMEI"
       );
       if (periodoProgramasEProjetos) {
         const tipos = periodoProgramasEProjetos.tipos_alimentacao;
