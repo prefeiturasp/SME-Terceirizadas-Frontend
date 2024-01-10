@@ -96,6 +96,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     feriadosNoMes,
     diasCalendario,
     diasSobremesaDoce,
+    periodosGruposMedicao,
   } = props;
 
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
@@ -304,6 +305,18 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     );
   };
 
+  const ehEMEIdaCEMEI = () => {
+    return (
+      ehEscolaTipoCEMEI({ nome: solicitacao.escola }) &&
+      periodosGruposMedicao
+        .find(
+          (periodoGrupo_) =>
+            periodoGrupo_.uuid === periodoEscolar.uuid_medicao_periodo_grupo
+        )
+        .nome_periodo_grupo.includes("Infantil")
+    );
+  };
+
   useEffect(() => {
     if (showTabelaLancamentosPeriodo) {
       const formatarTabelasAsync = async () => {
@@ -469,13 +482,15 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   .map((periodo) => periodo.periodo_escolar.nome)
                   .includes(periodoGrupo.nome_periodo_grupo);
                 let alimentacoesLancamentosEspeciais = null;
-                if (ehPeriodoSimples) {
+                if (ehPeriodoSimples || ehEMEIdaCEMEI()) {
                   const response_permissoes_lancamentos_especiais_mes_ano_por_periodo =
                     await getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync(
                       solicitacao.escola_uuid,
                       mesSolicitacao,
                       anoSolicitacao,
-                      periodoGrupo.nome_periodo_grupo
+                      periodoGrupo.nome_periodo_grupo.includes(" ")
+                        ? periodoGrupo.nome_periodo_grupo.split(" ")[1]
+                        : periodoGrupo.nome_periodo_grupo
                     );
                   alimentacoesLancamentosEspeciais =
                     response_permissoes_lancamentos_especiais_mes_ano_por_periodo.alimentacoes_lancamentos_especiais;
@@ -494,7 +509,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                     periodoGrupo,
                     solicitacao,
                     periodo.periodo_escolar.eh_periodo_especifico,
-                    ehPeriodoSimples,
+                    ehPeriodoSimples || ehEMEIdaCEMEI(),
                     alimentacoesLancamentosEspeciais
                   );
                 setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
