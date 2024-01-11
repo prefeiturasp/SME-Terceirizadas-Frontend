@@ -34,6 +34,7 @@ import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
+import { getListaTiposEmbalagens } from "../../../../services/qualidade.service";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -41,6 +42,7 @@ export default () => {
   const [collapse, setCollapse] = useState([]);
   const [produtosOptions, setProdutosOptions] = useState([{}]);
   const [unidadesMedidaOptions, setUnidadesMedidaOptions] = useState([{}]);
+  const [tiposEmbalagemOptions, setTiposEmbalagemOptions] = useState([{}]);
   const [empresaSelecionada, setEmpresaSelecionada] = useState(undefined);
   const [contratoSelecionado, setContratoSelecionado] = useState(undefined);
   const [unidadeSelecionada, setUnidadeSelecionada] = useState({});
@@ -198,7 +200,7 @@ export default () => {
           crono.armazem ? crono.armazem.uuid : undefined
         );
         cronogramaValues["tipo_embalagem"] = lengthOrUnderfined(
-          crono.tipo_embalagem
+          crono.tipo_embalagem?.uuid
         );
         cronogramaValues["numero"] = crono.numero ? crono.numero : undefined;
         setCronograma(cronogramaValues);
@@ -313,10 +315,16 @@ export default () => {
       setUnidadesMedidaOptions(response.data.results);
     };
 
+    const buscaTiposEmbalagem = async () => {
+      const response = await getListaTiposEmbalagens();
+      setTiposEmbalagemOptions(response.data.results);
+    };
+
     buscaArmazens();
     buscaFornecedores();
     buscaProdutos();
     buscaUnidadesMedida();
+    buscaTiposEmbalagem();
     getRascunhosAsync();
   }, [valoresIniciais]);
 
@@ -494,20 +502,7 @@ export default () => {
                               <Field
                                 component={SelectSelecione}
                                 naoDesabilitarPrimeiraOpcao
-                                options={[
-                                  {
-                                    uuid: "CAIXA",
-                                    nome: "Caixa",
-                                  },
-                                  {
-                                    uuid: "FARDO",
-                                    nome: "Fardo",
-                                  },
-                                  {
-                                    uuid: "TUBET",
-                                    nome: "Tubet",
-                                  },
-                                ]}
+                                options={tiposEmbalagemOptions}
                                 label="Tipo de Embalagem"
                                 name="tipo_embalagem"
                                 required
