@@ -122,7 +122,7 @@ export default ({
             <div className="col-4 mt-3">
               <p>Tipo de Embalagem:</p>
               <p>
-                <b>{cronograma.tipo_embalagem}</b>
+                <b>{cronograma.tipo_embalagem?.nome}</b>
               </p>
             </div>
           </div>
