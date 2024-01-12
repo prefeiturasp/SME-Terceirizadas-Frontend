@@ -8,33 +8,30 @@ import RecuperarSenhaPage from "./pages/RecuperarSenhaPage";
 import SemPermissaoPage from "./pages/SemPermissaoPage";
 import authService from "./services/auth";
 
-const PrivateRouter = (
-  { component: Component, tipoUsuario: tipoUsuario, ...rest } // eslint-disable-line
-) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      authService.isLoggedIn() ? (
-        tipoUsuario ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{ pathname: "/403", state: { from: props.location } }} // eslint-disable-line
-          />
-        )
+const PrivateRouter = ({
+  component: Component,
+  tipoUsuario: tipoUsuario,
+  ...rest
+}) => (
+  <Route {...rest}>
+    {authService.isLoggedIn() ? (
+      tipoUsuario ? (
+        <Component />
       ) : (
-        <Redirect
-          to={{ pathname: "/login", state: { from: props.location } }} // eslint-disable-line
-        />
+        <Redirect to={{ pathname: "/403" }} />
       )
-    }
-  />
+    ) : (
+      <Redirect to={{ pathname: "/login" }} />
+    )}
+  </Route>
 );
 
 const Routes = () => (
   <BrowserRouter>
     <Switch>
-      <Route path="/login" component={Login} />
+      <Route path="/login">
+        <Login />
+      </Route>
       {RoutesConfig.map((value, key) => {
         return (
           <PrivateRouter
@@ -46,10 +43,18 @@ const Routes = () => (
           />
         );
       })}
-      <Route path="/confirmar-email" component={ConfirmarEmailPage} />
-      <Route path="/recuperar-senha" component={RecuperarSenhaPage} />
-      <Route path="/403" component={SemPermissaoPage} />
-      <Route path="*" component={NotFoundPage} />
+      <Route path="/confirmar-email">
+        <ConfirmarEmailPage />
+      </Route>
+      <Route path="/recuperar-senha">
+        <RecuperarSenhaPage />
+      </Route>
+      <Route path="/403">
+        <SemPermissaoPage />
+      </Route>
+      <Route path="*">
+        <NotFoundPage />
+      </Route>
     </Switch>
   </BrowserRouter>
 );
