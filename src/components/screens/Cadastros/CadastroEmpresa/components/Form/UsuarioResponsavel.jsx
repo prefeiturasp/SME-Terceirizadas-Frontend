@@ -13,7 +13,7 @@ export const UsuarioResponsavel = ({ ehDistribuidor }) => {
           <hr className="linha-form" />
           <div className="card-body">
             <div className="card-title green">
-              Dados do Responsável pelo acesso ao Sistema
+              Dados do Representante do Contrato
             </div>
             <div className="row">
               <div className="col-4">
