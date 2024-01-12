@@ -1758,6 +1758,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   };
 
   const exibeBotaoAdicionarObservacao = (dia) => {
+    if (ehSolicitacoesAlimentacaoLocation || ehProgramasEProjetosLocation) {
+      return !validacaoSemana(dia);
+    }
     const temInclusaoAutorizadaNoDia = inclusoesAutorizadas.some(
       (inclusao) => Number(inclusao.dia) === Number(dia)
     );
