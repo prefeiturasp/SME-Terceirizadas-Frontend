@@ -15,12 +15,12 @@ import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { exibeError } from "helpers/utilities";
 import { LAYOUT_EMBALAGEM, PRE_RECEBIMENTO } from "configs/constants";
 import ModalConfirmar from "./components/ModalConfirmar";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ModalCancelar from "./components/ModalCancelar";
 import InserirArquivo from "../LayoutEmbalagem/components/InserirArquivo";
 
 export default () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [carregando, setCarregando] = useState(true);
   const [cronogramas, setCronogramas] = useState([]);
   const [primaria, setPrimaria] = useState([]);
@@ -144,7 +144,7 @@ export default () => {
   };
 
   const voltarPagina = () =>
-    history.push(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
+    navigate(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
 
   const getCronogramasFiltrado = (numero_cronograma) => {
     if (numero_cronograma) {

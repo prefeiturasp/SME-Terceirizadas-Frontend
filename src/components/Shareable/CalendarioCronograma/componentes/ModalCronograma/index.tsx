@@ -6,7 +6,7 @@ import {
 import React from "react";
 import { Modal } from "react-bootstrap";
 import "./style.scss";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ALTERACAO_CRONOGRAMA } from "../../../../../configs/constants";
 import { usuarioEhCronograma } from "../../../../../helpers/utilities";
 import { ItemCalendario } from "../../interfaces";
@@ -23,7 +23,7 @@ export const ModalCronograma: React.FC<Props> = ({
   showModal,
   closeModal,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <Modal
@@ -86,7 +86,7 @@ export const ModalCronograma: React.FC<Props> = ({
             texto="Alterar"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => {
-              history.push(
+              navigate(
                 `${ALTERACAO_CRONOGRAMA}?uuid=${event.objeto.uuid_cronograma}`
               );
             }}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Botao from "components/Shareable/Botao";
 import ModalHistoricoProtocoloPadrao from "components/Shareable/ModalHistoricoProtocoloPadrao";
 import {
@@ -8,7 +8,7 @@ import {
 } from "components/Shareable/Botao/constants";
 
 export default ({ protocoloPadrao, idx, selecionado }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const [historico, setHistorico] = useState([]);
 
@@ -115,7 +115,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
             style={BUTTON_STYLE.GREEN}
             className="float-end mt-3 mb-3 ms-3"
             onClick={() => {
-              history.push(
+              navigate(
                 `/dieta-especial/protocolo-padrao/${protocoloPadrao.uuid}/criar-copia`
               );
             }}
@@ -126,7 +126,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
             style={BUTTON_STYLE.GREEN}
             className="float-end mt-3 mb-3 ms-3"
             onClick={() => {
-              history.push(
+              navigate(
                 `/dieta-especial/protocolo-padrao/${protocoloPadrao.uuid}/editar`
               );
             }}
