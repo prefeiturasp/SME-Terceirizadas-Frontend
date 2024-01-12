@@ -432,6 +432,7 @@ export const LancamentoPorPeriodo = ({
                 objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
                 frequenciasDietasCEUGESTAO={frequenciasDietasCEUGESTAO}
+                errosAoSalvar={errosAoSalvar}
               />
             ))}
           {periodosInclusaoContinua &&
