@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import RoutesConfig from "./configs/RoutesConfig";
 import ConfirmarEmailPage from "./pages/ConfirmarEmailPage";
@@ -13,10 +13,10 @@ const PrivateRoute = ({ component: Component, tipoUsuario: tipoUsuario }) => {
     tipoUsuario ? (
       <Component />
     ) : (
-      <Redirect to={{ pathname: "/403" }} />
+      <Navigate to={{ pathname: "/403" }} />
     )
   ) : (
-    <Redirect to={{ pathname: "/login" }} />
+    <Navigate to={{ pathname: "/login" }} />
   );
 };
 
