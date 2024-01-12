@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import RoutesConfig from "./configs/RoutesConfig";
 import ConfirmarEmailPage from "./pages/ConfirmarEmailPage";
@@ -20,9 +20,9 @@ const PrivateRoute = ({ component: Component, tipoUsuario: tipoUsuario }) => {
   );
 };
 
-const Routes = () => (
+const AppRoutes = () => (
   <BrowserRouter>
-    <Switch>
+    <Routes>
       <Route path="/login">
         <Login />
       </Route>
@@ -32,12 +32,12 @@ const Routes = () => (
             key={key}
             path={value.path}
             exact={value.exact}
-            render={() => (
+            element={
               <PrivateRoute
                 component={value.component}
                 tipoUsuario={value.tipoUsuario}
               />
-            )}
+            }
           />
         );
       })}
@@ -53,8 +53,8 @@ const Routes = () => (
       <Route path="*">
         <NotFoundPage />
       </Route>
-    </Switch>
+    </Routes>
   </BrowserRouter>
 );
 
-export default Routes;
+export default AppRoutes;
