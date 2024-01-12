@@ -1757,6 +1757,19 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     return undefined;
   };
 
+  const exibeBotaoAdicionarObservacao = (dia) => {
+    if (ehSolicitacoesAlimentacaoLocation || ehProgramasEProjetosLocation) {
+      return !validacaoSemana(dia);
+    }
+    const temInclusaoAutorizadaNoDia = inclusoesAutorizadas.some(
+      (inclusao) => Number(inclusao.dia) === Number(dia)
+    );
+    return (
+      !validacaoSemana(dia) &&
+      (validacaoDiaLetivo(dia) || temInclusaoAutorizadaNoDia)
+    );
+  };
+
   return (
     <>
       <div className="text-end botao-voltar-lancamento-medicao">
@@ -1980,7 +1993,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                               }`}
                                             >
                                               {row.name === "observacoes" ? (
-                                                !validacaoSemana(
+                                                exibeBotaoAdicionarObservacao(
                                                   column.dia
                                                 ) && (
                                                   <Botao
