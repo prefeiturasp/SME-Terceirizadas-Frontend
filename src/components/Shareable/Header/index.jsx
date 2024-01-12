@@ -54,11 +54,9 @@ export const Header = ({ toggled }) => {
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
                 <Link
-                  to={{
-                    pathname: `/ajuda`,
-                    state: {
-                      prevPath: window.location.pathname,
-                    },
+                  to="/ajuda"
+                  state={{
+                    prevPath: window.location.pathname,
                   }}
                   className="nav-link"
                 >
@@ -69,11 +67,7 @@ export const Header = ({ toggled }) => {
               {!usuarioEhEscolaAbastecimento() &&
                 !usuarioEhEscolaAbastecimentoDiretor() && (
                   <li className="nav-item">
-                    <Link
-                      to={{
-                        pathname: `/${CENTRAL_DOWNLOADS}`,
-                      }}
-                    >
+                    <Link to={`/${CENTRAL_DOWNLOADS}`}>
                       <DownloadsNavbar />
                     </Link>
                   </li>
