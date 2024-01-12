@@ -561,15 +561,21 @@ export default () => {
         (indexLanche !== -1 &&
           !(urlParams.get("ehPeriodoEspecifico") === "true"))
       ) {
-        rowsDietas.push({
-          nome: "Lanche",
-          name: "Lanche"
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase()
-            .replaceAll(/ /g, "_"),
-          uuid: cloneTiposAlimentacao[indexLanche].uuid,
-        });
+        if (
+          !ehEscolaTipoCEUGESTAO(
+            location.state.solicitacaoMedicaoInicial.escola
+          )
+        ) {
+          rowsDietas.push({
+            nome: "Lanche",
+            name: "Lanche"
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replaceAll(/ /g, "_"),
+            uuid: cloneTiposAlimentacao[indexLanche].uuid,
+          });
+        }
       }
 
       if (
@@ -586,8 +592,9 @@ export default () => {
               .replace(/[\u0300-\u036f]/g, "")
               .toLowerCase()
               .replaceAll(/ /g, "_"),
-            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO[indexLanche]
-              .uuid,
+            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find(
+              (tp) => tp.nome === "Lanche"
+            ).uuid,
           });
         }
       }

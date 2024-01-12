@@ -704,7 +704,10 @@ const validaFrequenciaDietasCEUGESTAO = (
     .reduce(function (total, cf) {
       return total + Number(cf.valor);
     }, 0);
-  if (Number(value) + totalFrequencia > maxDietasAutorizadas) {
+  if (
+    maxDietasAutorizadas !== 0 &&
+    Number(value) + totalFrequencia > maxDietasAutorizadas
+  ) {
     return "Quantidade de dietas especiais autorizadas foi excedida";
   }
   return false;
@@ -768,7 +771,8 @@ export const validacoesTabelasDietas = (
   ) {
     if (
       !EH_INCLUSAO_SOMENTE_SOBREMESA &&
-      (!value || (value && Number(value) !== 0 && validacaoDiaLetivo(dia)))
+      ((maxDietasAutorizadas !== 0 && !value) ||
+        (value && Number(value) !== 0 && validacaoDiaLetivo(dia)))
     ) {
       return `Foi autorizada inclusão de alimentação ${
         location.state && location.state.grupo ? "contínua" : ""
