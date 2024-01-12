@@ -8,23 +8,17 @@ import RecuperarSenhaPage from "./pages/RecuperarSenhaPage";
 import SemPermissaoPage from "./pages/SemPermissaoPage";
 import authService from "./services/auth";
 
-const PrivateRouter = ({
-  component: Component,
-  tipoUsuario: tipoUsuario,
-  ...rest
-}) => (
-  <Route {...rest}>
-    {authService.isLoggedIn() ? (
-      tipoUsuario ? (
-        <Component />
-      ) : (
-        <Redirect to={{ pathname: "/403" }} />
-      )
+const PrivateRoute = ({ component: Component, tipoUsuario: tipoUsuario }) => {
+  return authService.isLoggedIn() ? (
+    tipoUsuario ? (
+      <Component />
     ) : (
-      <Redirect to={{ pathname: "/login" }} />
-    )}
-  </Route>
-);
+      <Redirect to={{ pathname: "/403" }} />
+    )
+  ) : (
+    <Redirect to={{ pathname: "/login" }} />
+  );
+};
 
 const Routes = () => (
   <BrowserRouter>
@@ -34,12 +28,16 @@ const Routes = () => (
       </Route>
       {RoutesConfig.map((value, key) => {
         return (
-          <PrivateRouter
+          <Route
             key={key}
             path={value.path}
             exact={value.exact}
-            component={value.component}
-            tipoUsuario={value.tipoUsuario}
+            render={() => (
+              <PrivateRoute
+                component={value.component}
+                tipoUsuario={value.tipoUsuario}
+              />
+            )}
           />
         );
       })}
