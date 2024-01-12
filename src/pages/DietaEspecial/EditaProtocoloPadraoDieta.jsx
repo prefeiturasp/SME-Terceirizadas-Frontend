@@ -1,4 +1,5 @@
 import React from "react";
+import { useMatch } from "react-router-dom";
 
 import { HOME } from "constants/config";
 
@@ -11,7 +12,8 @@ import {
   CONSULTA_PROTOCOLO_PADRAO_DIETA,
 } from "configs/constants";
 
-export default ({ match }) => {
+export default () => {
+  const match = useMatch();
   const uuid = match.params.uuid;
   const atual = {
     href: `/${DIETA_ESPECIAL}/protocolo-padrao/${uuid}/editar`,
