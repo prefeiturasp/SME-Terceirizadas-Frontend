@@ -9,7 +9,7 @@ import {
   BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import {
   getAvaliarReclamacaoNomesProdutos,
@@ -54,7 +54,7 @@ export const FormBuscaProduto = ({
   exibirBotaoVoltar,
   naoExibirLimparFiltros,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
     const endpoints = [
@@ -151,7 +151,7 @@ export const FormBuscaProduto = ({
                   className="me-3"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.ARROW_LEFT}
-                  onClick={() => history.goBack()}
+                  onClick={() => navigate(-1)}
                 />
               )}
               {!naoExibirLimparFiltros && (

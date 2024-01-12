@@ -6,17 +6,17 @@ import {
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { CONFERENCIA_GUIA, LOGISTICA } from "configs/constants";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default ({ uuid }) => {
   const [show, setShow] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleSim = () => {
-    history.push(`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${uuid}&editar=true`);
+    navigate(`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${uuid}&editar=true`);
   };
 
   return (

@@ -1,18 +1,12 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Botao } from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 
 const ModalVoltar = ({ modalVoltar, setModalVoltar, textoModalVoltar }) => {
-  const history = useHistory();
-
-  const handleBack = () => {
-    history.goBack();
-    window.scrollTo(0, 0);
-  };
-
+  const navigate = useNavigate();
   return (
     <Modal
       className="modal-botao-voltar"
@@ -42,7 +36,10 @@ const ModalVoltar = ({ modalVoltar, setModalVoltar, textoModalVoltar }) => {
         <Botao
           texto="Voltar sem Salvar"
           type={BUTTON_TYPE.BUTTON}
-          onClick={handleBack}
+          onClick={() => {
+            navigate(-1);
+            window.scrollTo(0, 0);
+          }}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           className="ms-3"
         />

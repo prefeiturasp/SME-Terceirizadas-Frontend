@@ -10,14 +10,14 @@ import {
   usuarioEhEmpresaDistribuidora,
   usuarioEhEscola,
 } from "helpers/utilities";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import MeusDadosContext from "context/MeusDadosContext";
 import ModalVoltar from "./ModalVoltar";
 import ModalCestasBasicas from "../ModalCestasBasicas";
 
 export const Page = ({ ...props }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const {
     children,
@@ -69,7 +69,7 @@ export const Page = ({ ...props }) => {
     if (temModalVoltar) {
       setModalVoltar(true);
     } else {
-      voltarPara ? history.push(voltarPara) : history.goBack();
+      voltarPara ? navigate(voltarPara) : navigate(-1);
     }
   };
 

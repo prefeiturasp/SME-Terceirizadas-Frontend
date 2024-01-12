@@ -23,7 +23,7 @@ import {
   BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   getNomesUnicosProdutos,
   getNomesUnicosMarcas,
@@ -96,7 +96,7 @@ export const FormBuscaProduto = ({
   valoresIniciais,
   setErroAPI,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, initialState);
   const [editaisDRE, setEditaisDRE] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -407,7 +407,7 @@ export const FormBuscaProduto = ({
                   className="me-3"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.ARROW_LEFT}
-                  onClick={() => history.goBack()}
+                  onClick={() => navigate(-1)}
                 />
               )}
               {!naoExibirLimparFiltros && (
