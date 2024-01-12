@@ -94,8 +94,10 @@ export const CadastroEmpresa = () => {
     {
       numero_processo: null,
       numero_contrato: null,
+      modalidade: null,
       numero_ata: null,
-      numero_pregao_chamada_publica: null,
+      numero_pregao: null,
+      numero_chamada_publica: null,
       vigencia_de: null,
       vigencia_ate: null,
     },
@@ -269,9 +271,11 @@ export const CadastroEmpresa = () => {
     data.contratos.forEach((contrato, indice) => {
       data[`numero_contrato_${indice}`] = contrato.numero;
       data[`numero_processo_${indice}`] = contrato.processo;
+      data[`modalidade_${indice}`] = contrato.modalidade;
       data[`numero_ata_${indice}`] = contrato.ata;
-      data[`numero_pregao_chamada_publica_${indice}`] =
-        contrato.pregao_chamada_publica;
+      data[`numero_pregao_${indice}`] = contrato.numero_pregao;
+      data[`numero_chamada_publica_${indice}`] =
+        contrato.numero_chamada_publica;
       data[`vigencia_de_${indice}`] = contrato.vigencias[0].data_inicial;
       data[`vigencia_ate_${indice}`] = contrato.vigencias[0].data_final;
     });
@@ -423,6 +427,7 @@ export const CadastroEmpresa = () => {
                       numerosContratosCadastrados={
                         numerosContratosCadastrados.current
                       }
+                      form={form}
                     />
                     <LotesFormSet
                       ehDistribuidor={ehDistribuidor}
