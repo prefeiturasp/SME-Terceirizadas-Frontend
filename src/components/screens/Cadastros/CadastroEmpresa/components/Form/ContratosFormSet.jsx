@@ -201,18 +201,12 @@ export const ContratosFormSet = ({
                           options={optionsModalidade}
                         />
                         <OnChange name={`modalidade_${index}`}>
-                          {
-                            (value) => {
-                              form.change(`numero_pregao_${index}`, "");
-                              form.change(`numero_ata_${index}`, "");
-                              form.change(
-                                `numero_chamada_publica_${index}`,
-                                ""
-                              );
-                              form.change(`modalidade_${index}`, value);
-                            }
-                            // handleModalidadeChange(index, value, form)
-                          }
+                          {(value) => {
+                            form.change(`numero_pregao_${index}`, "");
+                            form.change(`numero_ata_${index}`, "");
+                            form.change(`numero_chamada_publica_${index}`, "");
+                            form.change(`modalidade_${index}`, value);
+                          }}
                         </OnChange>
                       </div>
                       {values[`modalidade_${index}`] ===
