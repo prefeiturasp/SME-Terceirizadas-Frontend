@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import createDecorator from "final-form-calculate";
+import { History } from "history";
 
 import { getEnderecoPorCEP } from "services/cep.service";
 import {
@@ -9,9 +10,17 @@ import {
 } from "services/produto.service";
 import { getUnidadesDeMedidaLogistica } from "services/cronograma.service";
 import { getTerceirizadaUUID } from "services/terceirizada.service";
+import {
+  cadastraRascunhoFichaTecnica,
+  cadastrarFichaTecnicaDoRascunho,
+  cadastrarFichaTecnica,
+  editaRascunhoFichaTecnica,
+} from "services/fichaTecnica.service";
 
-import { removeCaracteresEspeciais } from "helpers/utilities";
+import { removeCaracteresEspeciais, exibeError } from "helpers/utilities";
 import { downloadAndConvertToBase64 } from "components/Shareable/Input/InputFile/helper";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { FICHA_TECNICA, PRE_RECEBIMENTO } from "configs/constants";
 
 import {
   ArquivoForm,
@@ -19,12 +28,12 @@ import {
   FichaTecnicaDetalhada,
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
+import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
 
 import {
   FichaTecnicaPayload,
   InformacoesNutricionaisFichaTecnicaPayload,
 } from "./interfaces";
-import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
 
 export const stringToBoolean = (str: string): boolean =>
   str === "1" ? true : str === "0" ? false : undefined;
@@ -453,4 +462,56 @@ export const removerArquivoFichaAssinadaRT = (
   setArquivo: Dispatch<SetStateAction<ArquivoForm[]>>
 ) => {
   setArquivo([]);
+};
+
+export const salvarRascunho = async (
+  payload: FichaTecnicaPayload,
+  ficha: FichaTecnicaDetalhada,
+  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhada>>,
+  setCarregando: Dispatch<SetStateAction<boolean>>
+) => {
+  try {
+    setCarregando(true);
+
+    const response = ficha.uuid
+      ? await editaRascunhoFichaTecnica(payload, ficha.uuid)
+      : await cadastraRascunhoFichaTecnica(payload);
+
+    if (response.status === 201 || response.status === 200) {
+      toastSuccess("Rascunho salvo com sucesso!");
+      setFicha(response.data);
+    } else {
+      toastError("Ocorreu um erro ao salvar a Ficha Técnica");
+    }
+  } catch (error) {
+    exibeError(error, "Ocorreu um erro ao salvar a Ficha Técnica");
+  } finally {
+    setCarregando(false);
+  }
+};
+
+export const assinarEnviarFichaTecnica = async (
+  payload: FichaTecnicaPayload,
+  ficha: FichaTecnicaDetalhada,
+  setCarregando: Dispatch<SetStateAction<boolean>>,
+  history: History
+) => {
+  try {
+    setCarregando(true);
+
+    const response = ficha.uuid
+      ? await cadastrarFichaTecnicaDoRascunho(payload, ficha.uuid)
+      : await cadastrarFichaTecnica(payload);
+
+    if (response.status === 201 || response.status === 200) {
+      toastSuccess("Ficha Técnica Assinada e Enviada com sucesso!");
+      history.push(`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`);
+    } else {
+      toastError("Ocorreu um erro ao assinar e enviar a Ficha Técnica");
+    }
+  } catch (error) {
+    exibeError(error, "Ocorreu um erro ao assinar e enviar a Ficha Técnica");
+  } finally {
+    setCarregando(false);
+  }
 };
