@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import createDecorator from "final-form-calculate";
 import { History } from "history";
 
@@ -7,6 +7,7 @@ import {
   getListaCompletaProdutosLogistica,
   getNomesMarcas,
   getNomesFabricantes,
+  getInformacoesNutricionaisOrdenadas,
 } from "services/produto.service";
 import { getUnidadesDeMedidaLogistica } from "services/cronograma.service";
 import { getTerceirizadaUUID } from "services/terceirizada.service";
@@ -15,6 +16,7 @@ import {
   cadastrarFichaTecnicaDoRascunho,
   cadastrarFichaTecnica,
   editaRascunhoFichaTecnica,
+  getFichaTecnica,
 } from "services/fichaTecnica.service";
 
 import { removeCaracteresEspeciais, exibeError } from "helpers/utilities";
@@ -34,6 +36,9 @@ import {
   FichaTecnicaPayload,
   InformacoesNutricionaisFichaTecnicaPayload,
 } from "./interfaces";
+import { ResponseInformacoesNutricionais } from "interfaces/responses.interface";
+import { InformacaoNutricional } from "interfaces/produto.interface";
+import { MeusDadosInterface } from "context/MeusDadosContext/interfaces";
 
 export const stringToBoolean = (str: string): boolean =>
   str === "1" ? true : str === "0" ? false : undefined;
@@ -137,6 +142,58 @@ export const carregarTerceirizada = async (
     );
     setProponente(response.data);
   }
+};
+
+export const carregarDados = async (
+  listaCompletaInformacoesNutricionais: MutableRefObject<
+    InformacaoNutricional[]
+  >,
+  listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
+    InformacaoNutricional[]
+  >,
+  meusDados: MeusDadosInterface,
+  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhada>>,
+  setInitialValues: Dispatch<SetStateAction<Record<string, any>>>,
+  setArquivo: Dispatch<SetStateAction<ArquivoForm[]>>,
+  setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>,
+  setCarregando: Dispatch<SetStateAction<boolean>>
+) => {
+  setCarregando(true);
+
+  const responseInformacoes: ResponseInformacoesNutricionais =
+    await getInformacoesNutricionaisOrdenadas();
+  listaCompletaInformacoesNutricionais.current =
+    responseInformacoes.data.results;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const uuid = urlParams.get("uuid");
+  if (uuid) {
+    const responseFicha = await getFichaTecnica(uuid);
+    const fichaTecnica = responseFicha.data;
+
+    listaInformacoesNutricionaisFichaTecnica.current =
+      fichaTecnica.informacoes_nutricionais.map(
+        ({ informacao_nutricional }) => informacao_nutricional
+      );
+
+    setFicha(fichaTecnica);
+    setInitialValues(geraInitialValues(fichaTecnica));
+
+    if (fichaTecnica.arquivo) {
+      const arquivo = await carregarArquivo(fichaTecnica.arquivo);
+      setArquivo(arquivo);
+    }
+
+    const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
+    setProponente(response.data);
+  } else if (meusDados) {
+    const response = await getTerceirizadaUUID(
+      meusDados.vinculo_atual.instituicao.uuid
+    );
+    setProponente(response.data);
+  }
+
+  setCarregando(false);
 };
 
 export const validaRascunho = (values: FichaTecnicaPayload): boolean => {

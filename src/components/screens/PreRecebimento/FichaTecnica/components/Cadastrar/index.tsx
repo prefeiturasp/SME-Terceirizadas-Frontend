@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import Label from "components/Shareable/Label";
-import { getInformacoesNutricionaisOrdenadas } from "services/produto.service";
+
 import {
   required,
   email,
@@ -22,7 +22,6 @@ import {
 } from "../../../../../Shareable/Botao/constants";
 import Botao from "../../../../../Shareable/Botao";
 import { cepMask, cnpjMask, telefoneMask } from "constants/shared";
-import { getFichaTecnica } from "services/fichaTecnica.service";
 import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 import FormPereciveis from "./components/FormPereciveis";
@@ -41,7 +40,6 @@ import {
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
 import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
-import { ResponseInformacoesNutricionais } from "interfaces/responses.interface";
 import { InformacaoNutricional } from "interfaces/produto.interface";
 
 import InfoAcondicionamentoPereciveis from "./components/InfoAcondicionamentoPereciveis";
@@ -50,15 +48,13 @@ import InfoAcondicionamentoNaoPereciveis from "./components/InfoAcondicionamento
 import { FichaTecnicaPayload } from "../../interfaces";
 import {
   assinarEnviarFichaTecnica,
-  carregarArquivo,
+  carregarDados,
   carregarFabricantes,
   carregarMarcas,
   carregarProdutos,
-  carregarTerceirizada,
   carregarUnidadesMedida,
   cepCalculator,
   formataPayload,
-  geraInitialValues,
   salvarRascunho,
   validaAssinarEnviar,
   validaProximo,
@@ -127,54 +123,24 @@ export default () => {
     setShowModalCadastro(true);
   };
 
-  const carregarDados = async () => {
-    const responseInformacoes: ResponseInformacoesNutricionais =
-      await getInformacoesNutricionaisOrdenadas();
-    listaCompletaInformacoesNutricionais.current =
-      responseInformacoes.data.results;
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
-    if (uuid) {
-      const responseFicha = await getFichaTecnica(uuid);
-      const fichaTecnica = responseFicha.data;
-
-      listaInformacoesNutricionaisFichaTecnica.current =
-        fichaTecnica.informacoes_nutricionais.map(
-          ({ informacao_nutricional }) => informacao_nutricional
-        );
-
-      setFicha(fichaTecnica);
-      setInitialValues(geraInitialValues(fichaTecnica));
-
-      if (fichaTecnica.arquivo) {
-        const arquivo = await carregarArquivo(fichaTecnica.arquivo);
-        setArquivo(arquivo);
-      }
-    }
-  };
-
   useEffect(() => {
     (async () => {
-      setCarregando(true);
       await carregarProdutos(setProdutosOptions);
       await carregarMarcas(setMarcasOptions);
       await carregarFabricantes(setFabricantesOptions);
       await carregarUnidadesMedida(setUnidadesMedidaOptions);
-      await carregarDados();
-      setCarregando(false);
+      await carregarDados(
+        listaCompletaInformacoesNutricionais,
+        listaInformacoesNutricionaisFichaTecnica,
+        meusDados,
+        setFicha,
+        setInitialValues,
+        setArquivo,
+        setProponente,
+        setCarregando
+      );
     })();
   }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (!proponente.uuid) {
-        setCarregando(true);
-        await carregarTerceirizada(ficha, meusDados, setProponente);
-        setCarregando(false);
-      }
-    })();
-  }, [meusDados, ficha]);
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
