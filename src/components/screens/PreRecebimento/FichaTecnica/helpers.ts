@@ -356,29 +356,17 @@ export const formataPayload = (
     alergenicos: stringToBoolean(values.alergenicos as string),
     gluten: stringToBoolean(values.gluten as string),
     lactose: stringToBoolean(values.lactose as string),
-    mecanismo_controle: "",
-    ingredientes_alergenicos: "",
-    lactose_detalhe: "",
-    numero_registro: "",
     porcao: stringDecimalToNumber(values.porcao),
     unidade_medida_porcao: values.unidade_medida_porcao || null,
     valor_unidade_caseira: stringDecimalToNumber(values.valor_unidade_caseira),
     unidade_medida_caseira: values.unidade_medida_caseira || "",
     informacoes_nutricionais: formataInformacoesNutricionais(values),
-    prazo_validade_descongelamento: values.prazo_validade_descongelamento || "",
     condicoes_de_conservacao: values.condicoes_de_conservacao || "",
-    temperatura_congelamento: stringDecimalToNumber(
-      values.temperatura_congelamento
-    ),
-    temperatura_veiculo: stringDecimalToNumber(values.temperatura_veiculo),
-    condicoes_de_transporte: values.condicoes_de_transporte || "",
     embalagem_primaria: values.embalagem_primaria || "",
     embalagem_secundaria: values.embalagem_secundaria || "",
     embalagens_de_acordo_com_anexo:
       values.embalagens_de_acordo_com_anexo || false,
     material_embalagem_primaria: values.material_embalagem_primaria || "",
-    volume_embalagem_primaria: null,
-    unidade_medida_volume_primaria: "",
     peso_liquido_embalagem_primaria: stringDecimalToNumber(
       values.peso_liquido_embalagem_primaria
     ),
@@ -399,7 +387,6 @@ export const formataPayload = (
     sistema_vedacao_embalagem_secundaria:
       values.sistema_vedacao_embalagem_secundaria || "",
     rotulo_legivel: values.rotulo_legivel || false,
-    variacao_percentual: stringDecimalToNumber(values.variacao_percentual),
     nome_responsavel_tecnico: values.nome_responsavel_tecnico || "",
     habilitacao: values.habilitacao || "",
     numero_registro_orgao: values.numero_registro_orgao || "",
@@ -417,15 +404,24 @@ export const formataPayload = (
   }
 
   if (payload.categoria === "PERECIVEIS") {
-    payload = {
-      ...payload,
-      numero_registro: values.numero_registro || "",
-      agroecologico: stringToBoolean(values.agroecologico as string),
-      organico: stringToBoolean(values.organico as string),
-    };
+    payload.numero_registro = values.numero_registro;
+    payload.agroecologico = stringToBoolean(values.agroecologico as string);
+    payload.organico = stringToBoolean(values.organico as string);
+    payload.prazo_validade_descongelamento =
+      values.prazo_validade_descongelamento;
+    payload.temperatura_congelamento = stringDecimalToNumber(
+      values.temperatura_congelamento
+    );
+    payload.temperatura_veiculo = stringDecimalToNumber(
+      values.temperatura_veiculo
+    );
+    payload.condicoes_de_transporte = values.condicoes_de_transporte;
+    payload.variacao_percentual = stringDecimalToNumber(
+      values.variacao_percentual
+    );
 
     if (payload.organico) {
-      payload.mecanismo_controle = values.mecanismo_controle || "";
+      payload.mecanismo_controle = values.mecanismo_controle;
     }
   }
 
