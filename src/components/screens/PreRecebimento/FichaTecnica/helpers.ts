@@ -572,3 +572,12 @@ export const assinarEnviarFichaTecnica = async (
     setCarregando(false);
   }
 };
+
+export const gerenciaModalCadastroExterno = (
+  tipo: string,
+  setTipoCadastro: Dispatch<SetStateAction<string>>,
+  setShowModalCadastro: Dispatch<SetStateAction<boolean>>
+) => {
+  setTipoCadastro(tipo);
+  setShowModalCadastro(true);
+};

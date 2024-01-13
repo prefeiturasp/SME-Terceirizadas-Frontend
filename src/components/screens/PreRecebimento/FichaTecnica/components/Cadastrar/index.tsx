@@ -55,6 +55,7 @@ import {
   carregarUnidadesMedida,
   cepCalculator,
   formataPayload,
+  gerenciaModalCadastroExterno,
   salvarRascunho,
   validaAssinarEnviar,
   validaProximo,
@@ -116,11 +117,6 @@ export default () => {
     await carregarMarcas(setMarcasOptions);
     await carregarFabricantes(setFabricantesOptions);
     setCarregando(false);
-  };
-
-  const gerenciaModalCadastroExterno = (tipo: string) => {
-    setTipoCadastro(tipo);
-    setShowModalCadastro(true);
   };
 
   useEffect(() => {
@@ -196,7 +192,11 @@ export default () => {
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           className="botao-cadastro-externo"
                           onClick={() =>
-                            gerenciaModalCadastroExterno("PRODUTO")
+                            gerenciaModalCadastroExterno(
+                              "PRODUTO",
+                              setTipoCadastro,
+                              setShowModalCadastro
+                            )
                           }
                         />
                       </div>
@@ -239,7 +239,13 @@ export default () => {
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           className="botao-cadastro-externo"
-                          onClick={() => gerenciaModalCadastroExterno("MARCA")}
+                          onClick={() =>
+                            gerenciaModalCadastroExterno(
+                              "MARCA",
+                              setTipoCadastro,
+                              setShowModalCadastro
+                            )
+                          }
                         />
                       </div>
                       <div className="col-4">
@@ -397,7 +403,11 @@ export default () => {
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                               className="botao-cadastro-externo"
                               onClick={() =>
-                                gerenciaModalCadastroExterno("FABRICANTE")
+                                gerenciaModalCadastroExterno(
+                                  "FABRICANTE",
+                                  setTipoCadastro,
+                                  setShowModalCadastro
+                                )
                               }
                             />
                           </div>
