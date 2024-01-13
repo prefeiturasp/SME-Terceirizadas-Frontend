@@ -36,7 +36,7 @@ export const numberToStringDecimal = (num: number) =>
   num?.toString().replace(".", ",");
 
 export const stringDecimalToNumber = (str: string) =>
-  Number(str?.replace(",", ".")) || null;
+  str === "0" ? Number(str) : Number(str?.replace(",", ".")) || null;
 
 export const formataInformacoesNutricionais = (values: Record<string, any>) => {
   const uuids_informacoes = Object.keys(values)
