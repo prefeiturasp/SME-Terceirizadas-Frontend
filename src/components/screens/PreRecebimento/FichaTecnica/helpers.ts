@@ -202,12 +202,14 @@ export const validaProximoInformacoesNutricionais = (
 
 export const validaAssinarEnviar = (
   values: FichaTecnicaPayload,
-  errors: Record<string, string>
+  errors: Record<string, string>,
+  arquivo: ArquivoForm[]
 ): boolean => {
   return (
     Object.keys(errors).length !== 0 ||
     !values.embalagens_de_acordo_com_anexo ||
-    !values.rotulo_legivel
+    !values.rotulo_legivel ||
+    !arquivo.length
   );
 };
 
