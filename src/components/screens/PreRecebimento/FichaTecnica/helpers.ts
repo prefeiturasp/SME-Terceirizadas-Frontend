@@ -395,7 +395,8 @@ export const formataPayload = (
   proponente: TerceirizadaComEnderecoInterface,
   produtosOptions: OptionsGenerico[],
   fabricantesOptions: OptionsGenerico[],
-  arquivo: ArquivoForm[]
+  arquivo: ArquivoForm[],
+  password: string = ""
 ): FichaTecnicaPayload => {
   let payload: FichaTecnicaPayload = {
     produto: produtosOptions.find((p) => p.nome === values.produto)?.uuid,
@@ -504,6 +505,8 @@ export const formataPayload = (
         values.unidade_medida_volume_primaria || "";
     }
   }
+
+  payload.password = password;
 
   return payload;
 };

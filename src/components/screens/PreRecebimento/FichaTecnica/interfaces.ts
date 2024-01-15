@@ -79,6 +79,7 @@ export interface FichaTecnicaPayload {
   arquivo?: string;
   modo_de_preparo: string;
   informacoes_adicionais: string;
+  password?: string;
 }
 
 export interface FiltrosFichaTecnica {

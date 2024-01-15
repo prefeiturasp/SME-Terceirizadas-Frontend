@@ -715,13 +715,14 @@ export default () => {
                 <ModalAssinaturaUsuario
                   show={showModalAssinatura}
                   handleClose={() => setShowModalAssinatura(false)}
-                  handleSim={() => {
+                  handleSim={(password: string) => {
                     const payload = formataPayload(
                       values,
                       proponente,
                       produtosOptions,
                       fabricantesOptions,
-                      arquivo
+                      arquivo,
+                      password
                     );
 
                     assinarEnviarFichaTecnica(
