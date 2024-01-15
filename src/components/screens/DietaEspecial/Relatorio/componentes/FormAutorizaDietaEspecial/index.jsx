@@ -217,8 +217,11 @@ const FormAutorizaDietaEspecial = ({
     let { nome_protocolo, data_termino } = values;
     if (nome_protocolo)
       if (nome_protocolo[0] === "") nome_protocolo.splice(0, 1);
-    if (
+    if (!data_termino) {
+      delete values.data_termino;
+    } else if (
       data_termino &&
+      data_termino.includes("/") &&
       dietaEspecial.tipo_solicitacao ===
         TIPO_SOLICITACAO_DIETA.ALUNO_NAO_MATRICULADO
     ) {
@@ -242,11 +245,14 @@ const FormAutorizaDietaEspecial = ({
     }
     if (editar) {
       cancelar();
+      onAutorizarOuNegar(true);
+    } else {
+      onAutorizarOuNegar(false);
     }
-    onAutorizarOuNegar();
   };
 
   const getInitialValues = () => {
+    if (!dietaEspecial) return {};
     const substituicoes = formataSubstituicoes(dietaEspecial);
     let data_termino_formatada = undefined;
     if (
@@ -388,7 +394,7 @@ const FormAutorizaDietaEspecial = ({
                   visao === ESCOLA &&
                   tipoUsuario === '"dieta_especial"' && (
                     <EscolaCancelaDietaEspecial
-                      uuid={dietaEspecial.uuid}
+                      uuid={dietaEspecial?.uuid}
                       onCancelar={() => onAutorizarOuNegar()}
                     />
                   )}
@@ -461,7 +467,7 @@ const FormAutorizaDietaEspecial = ({
         showModal={showModalNegaDieta}
         closeModal={() => setShowModalNegaDieta(false)}
         onNegar={onAutorizarOuNegar}
-        uuid={dietaEspecial.uuid}
+        uuid={dietaEspecial?.uuid}
         getMotivos={() => getMotivosNegacaoDietaEspecial()}
         submitModal={(uuid, values) => CODAENegaDietaEspecial(uuid, values)}
         fieldJustificativa={"justificativa_negacao"}

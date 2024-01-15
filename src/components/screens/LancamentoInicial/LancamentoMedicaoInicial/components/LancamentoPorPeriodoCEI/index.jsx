@@ -48,6 +48,7 @@ export const LancamentoPorPeriodoCEI = ({
   setSolicitacaoMedicaoInicial,
   setFinalizandoMedicao,
   naoPodeFinalizar,
+  periodosPermissoesLancamentosEspeciais,
 }) => {
   const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
@@ -266,7 +267,9 @@ export const LancamentoPorPeriodoCEI = ({
     let tiposAlimentacao = [];
     Object.keys(periodosInclusaoContinua).forEach((periodo) => {
       const periodoProgramasEProjetos = periodosEscolaSimples.find(
-        (p) => p.periodo_escolar.nome === periodo
+        (p) =>
+          p.periodo_escolar.nome === periodo &&
+          p.tipo_unidade_escolar.iniciais === "EMEI"
       );
       if (periodoProgramasEProjetos) {
         const tipos = periodoProgramasEProjetos.tipos_alimentacao;
@@ -306,6 +309,9 @@ export const LancamentoPorPeriodoCEI = ({
                 tiposAlimentacao={tiposAlimentacaoPeriodosEmei(nomePeriodo)}
                 uuidPeriodoEscolar={uuidPeriodoEscolar(nomePeriodo)}
                 errosAoSalvar={errosAoSalvar}
+                periodosPermissoesLancamentosEspeciais={
+                  periodosPermissoesLancamentosEspeciais
+                }
               />
             ))}
             {periodosInclusaoContinua && (
@@ -322,6 +328,7 @@ export const LancamentoPorPeriodoCEI = ({
                 }
                 tiposAlimentacao={tiposAlimentacaoProgramasEProjetos()}
                 errosAoSalvar={errosAoSalvar}
+                periodosInclusaoContinua={periodosInclusaoContinua}
               />
             )}
             {((solicitacoesKitLanchesAutorizadas &&

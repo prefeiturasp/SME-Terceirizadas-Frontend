@@ -1,7 +1,6 @@
 import React from "react";
 import { Field } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
-import { required } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -74,8 +73,6 @@ export const ContatoFormSet = ({
                             name={`nome_contato_${indiceEmpresa}`}
                             component={InputText}
                             label="Nome"
-                            validate={required}
-                            required
                             maxlength="140"
                           />
                           <OnChange name={`nome_contato_${indiceEmpresa}`}>
@@ -98,7 +95,6 @@ export const ContatoFormSet = ({
                             id={`telefone_contato_${indiceEmpresa}`}
                             indice={indiceEmpresa}
                             cenario="contatoEmpresa"
-                            required
                             maxlength="140"
                           />
                           <OnChange name={`telefone_contato_${indiceEmpresa}`}>
@@ -118,8 +114,6 @@ export const ContatoFormSet = ({
                             component={InputText}
                             label="E-mail"
                             maxlength="140"
-                            validate={required}
-                            required
                           />
                           <OnChange name={`email_contato_${indiceEmpresa}`}>
                             {(value) => {

@@ -582,8 +582,10 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   params["periodos_escolares"] = periodos_escolares;
   if (
     location &&
-    location.state.grupo &&
-    location.state.grupo.includes("Programas e Projetos")
+    ((location.state.grupo &&
+      location.state.grupo.includes("Programas e Projetos")) ||
+      (location.state.periodo &&
+        location.state.periodo.includes("Programas e Projetos")))
   ) {
     params["tipo_doc"] = "INC_ALIMENTA_CONTINUA";
   } else {

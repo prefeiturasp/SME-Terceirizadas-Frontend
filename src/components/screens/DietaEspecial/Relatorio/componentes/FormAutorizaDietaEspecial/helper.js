@@ -21,7 +21,7 @@ export const formataOpcoesClassificacaoDieta = (classificacoesDieta) => {
 };
 
 export const formataSubstituicoes = (dietaEspecial) => {
-  if (dietaEspecial.substituicoes.length) {
+  if (dietaEspecial?.substituicoes.length) {
     const substituicoes = dietaEspecial.substituicoes.map((substituicao) => {
       const alimentos_substitutos = substituicao.alimentos_substitutos.map(
         (alimento) => alimento.uuid

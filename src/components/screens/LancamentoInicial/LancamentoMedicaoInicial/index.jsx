@@ -442,6 +442,9 @@ export default () => {
                 setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
                 naoPodeFinalizar={naoPodeFinalizar}
                 setFinalizandoMedicao={setFinalizandoMedicao}
+                periodosPermissoesLancamentosEspeciais={
+                  periodosPermissoesLancamentosEspeciais
+                }
               />
             ) : (
               <LancamentoPorPeriodo

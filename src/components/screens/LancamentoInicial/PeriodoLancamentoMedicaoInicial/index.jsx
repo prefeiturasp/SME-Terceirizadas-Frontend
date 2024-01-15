@@ -43,7 +43,6 @@ import {
   tiposAlimentacaoETEC,
 } from "helpers/utilities";
 import {
-  botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
   botaoAdicionarObrigatorio,
   botaoAdicionarObrigatorioTabelaAlimentacao,
   campoFrequenciaValor0ESemObservacao,
@@ -562,15 +561,21 @@ export default () => {
         (indexLanche !== -1 &&
           !(urlParams.get("ehPeriodoEspecifico") === "true"))
       ) {
-        rowsDietas.push({
-          nome: "Lanche",
-          name: "Lanche"
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase()
-            .replaceAll(/ /g, "_"),
-          uuid: cloneTiposAlimentacao[indexLanche].uuid,
-        });
+        if (
+          !ehEscolaTipoCEUGESTAO(
+            location.state.solicitacaoMedicaoInicial.escola
+          )
+        ) {
+          rowsDietas.push({
+            nome: "Lanche",
+            name: "Lanche"
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replaceAll(/ /g, "_"),
+            uuid: cloneTiposAlimentacao[indexLanche].uuid,
+          });
+        }
       }
 
       if (
@@ -587,8 +592,9 @@ export default () => {
               .replace(/[\u0300-\u036f]/g, "")
               .toLowerCase()
               .replaceAll(/ /g, "_"),
-            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO[indexLanche]
-              .uuid,
+            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find(
+              (tp) => tp.nome === "Lanche"
+            ).uuid,
           });
         }
       }
@@ -1856,18 +1862,6 @@ export default () => {
       }
     }
 
-    if (
-      categoria.nome.includes("ALIMENTAÇÃO") &&
-      botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada(
-        values,
-        dia,
-        categoria,
-        dadosValoresInclusoesAutorizadasState,
-        validacaoDiaLetivo
-      )
-    ) {
-      setDisableBotaoSalvarLancamentos(true);
-    }
     if (Object.keys(errors).length > 0) {
       setDisableBotaoSalvarLancamentos(true);
       setExibirTooltip(true);
@@ -2122,6 +2116,16 @@ export default () => {
     return undefined;
   };
 
+  const exibeBotaoAdicionarObservacao = (dia) => {
+    const temInclusaoAutorizadaNoDia = inclusoesAutorizadas.some(
+      (inclusao) => inclusao.dia === dia
+    );
+    return (
+      !validacaoSemana(dia) &&
+      (validacaoDiaLetivo(dia) || temInclusaoAutorizadaNoDia)
+    );
+  };
+
   return (
     <>
       <div className="text-end botao-voltar-lancamento-medicao">
@@ -2325,7 +2329,7 @@ export default () => {
                                                 >
                                                   {row.name ===
                                                   "observacoes" ? (
-                                                    !validacaoSemana(
+                                                    exibeBotaoAdicionarObservacao(
                                                       column.dia
                                                     ) && (
                                                       <Botao
@@ -2523,7 +2527,7 @@ export default () => {
                                                   >
                                                     {row.name ===
                                                     "observacoes" ? (
-                                                      !validacaoSemana(
+                                                      exibeBotaoAdicionarObservacao(
                                                         column.dia
                                                       ) && (
                                                         <Botao
