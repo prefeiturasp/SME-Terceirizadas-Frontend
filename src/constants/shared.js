@@ -585,3 +585,25 @@ export const PERIODOS_OPTIONS = [
   { nome: "Últimos 12 meses", uuid: "365" },
   { nome: "Todos", uuid: "" },
 ];
+
+export const numeroChamadaPublicamMask = [
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "/",
+  "S",
+  "M",
+  "E",
+  "/",
+  "C",
+  "O",
+  "D",
+  "A",
+  "E",
+  "/",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+];
