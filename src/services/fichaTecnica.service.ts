@@ -25,3 +25,14 @@ export const listarFichastecnicas = async (
   params: URLSearchParams
 ): Promise<ResponseFichasTecnicas> =>
   await axios.get("/ficha-tecnica/", { params });
+
+export const cadastrarFichaTecnica = async (
+  payload: FichaTecnicaPayload
+): Promise<ResponseFichaTecnicaDetalhada> =>
+  await axios.post("/ficha-tecnica/", payload);
+
+export const cadastrarFichaTecnicaDoRascunho = async (
+  payload: FichaTecnicaPayload,
+  uuid: string
+): Promise<ResponseFichaTecnicaDetalhada> =>
+  await axios.put(`/ficha-tecnica/${uuid}/`, payload);
