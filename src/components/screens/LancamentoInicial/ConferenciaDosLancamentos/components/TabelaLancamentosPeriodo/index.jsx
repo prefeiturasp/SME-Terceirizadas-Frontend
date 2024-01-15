@@ -642,6 +642,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       );
       setPeriodoGrupoSelecionado(periodoGrupo);
     } else {
+      setPeriodoGrupoSelecionado(periodoGrupo.periodo_escolar);
       setPeriodoEscolar(periodoGrupo.periodo_escolar);
     }
     if (!showTabelaLancamentosPeriodo) {
