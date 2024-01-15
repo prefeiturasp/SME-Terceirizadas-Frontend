@@ -139,7 +139,7 @@ export const ContratosFormSet = ({
                           name={`numero_processo_${index}`}
                           component={MaskedInputText}
                           mask={numeroProcessoContratoSEIMask}
-                          label="Nº do Processo Administrativo do Contrato (SEI)"
+                          label="Nº do Processo Administrativo (SEI)"
                           required
                           validate={required}
                           apenasNumeros
@@ -197,6 +197,7 @@ export const ContratosFormSet = ({
                           component={Select}
                           label="Modalidade"
                           required
+                          validate={required}
                           naoDesabilitarPrimeiraOpcao
                           options={optionsModalidade}
                         />
