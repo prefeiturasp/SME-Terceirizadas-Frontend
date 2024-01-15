@@ -23,15 +23,12 @@ const PrivateRoute = ({ component: Component, tipoUsuario: tipoUsuario }) => {
 const AppRoutes = () => (
   <BrowserRouter>
     <Routes>
-      <Route path="/login">
-        <Login />
-      </Route>
+      <Route path="/login" element={<Login />} />
       {RoutesConfig.map((value, key) => {
         return (
           <Route
             key={key}
             path={value.path}
-            exact={value.exact}
             element={
               <PrivateRoute
                 component={value.component}
@@ -41,18 +38,10 @@ const AppRoutes = () => (
           />
         );
       })}
-      <Route path="/confirmar-email">
-        <ConfirmarEmailPage />
-      </Route>
-      <Route path="/recuperar-senha">
-        <RecuperarSenhaPage />
-      </Route>
-      <Route path="/403">
-        <SemPermissaoPage />
-      </Route>
-      <Route path="*">
-        <NotFoundPage />
-      </Route>
+      <Route path="/confirmar-email" element={<ConfirmarEmailPage />} />
+      <Route path="/recuperar-senha" element={<RecuperarSenhaPage />} />
+      <Route path="/403" element={<SemPermissaoPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   </BrowserRouter>
 );
