@@ -118,7 +118,6 @@ table.cadastro {
     font-size: 14px;
     color: #707683;
     padding: 15px 0;
-    border-bottom: 1px solid #ebeff2;
     i {
       position: absolute;
       padding-left: 10%;
@@ -165,9 +164,6 @@ table.cadastro {
       }
       &:first-child {
         padding-left: 20px;
-      }
-      &.last-item {
-        padding-bottom: 30px;
       }
     }
   }
@@ -232,6 +228,7 @@ table.cadastro-empresa {
     color: #707683;
     padding: 15px 0;
     border-bottom: 1px solid #ebeff2;
+    height: 75px !important;
     &:first-child {
       padding-left: 20px;
       font-weight: bold;
@@ -245,7 +242,7 @@ table.cadastro-empresa {
     &:nth-child(6) {
       display: flex;
       justify-content: center;
-      padding-right: 20%;
+      align-items: center;
     }
   }
 

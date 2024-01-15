@@ -1,17 +1,28 @@
-import React, { Dispatch } from "react";
+import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import createDecorator from "final-form-calculate";
+import { History } from "history";
 
 import { getEnderecoPorCEP } from "services/cep.service";
 import {
   getListaCompletaProdutosLogistica,
   getNomesMarcas,
   getNomesFabricantes,
+  getInformacoesNutricionaisOrdenadas,
 } from "services/produto.service";
 import { getUnidadesDeMedidaLogistica } from "services/cronograma.service";
 import { getTerceirizadaUUID } from "services/terceirizada.service";
+import {
+  cadastraRascunhoFichaTecnica,
+  cadastrarFichaTecnicaDoRascunho,
+  cadastrarFichaTecnica,
+  editaRascunhoFichaTecnica,
+  getFichaTecnica,
+} from "services/fichaTecnica.service";
 
-import { removeCaracteresEspeciais } from "helpers/utilities";
+import { removeCaracteresEspeciais, exibeError } from "helpers/utilities";
 import { downloadAndConvertToBase64 } from "components/Shareable/Input/InputFile/helper";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { FICHA_TECNICA, PRE_RECEBIMENTO } from "configs/constants";
 
 import {
   ArquivoForm,
@@ -19,12 +30,15 @@ import {
   FichaTecnicaDetalhada,
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
+import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
 
 import {
   FichaTecnicaPayload,
   InformacoesNutricionaisFichaTecnicaPayload,
 } from "./interfaces";
-import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
+import { ResponseInformacoesNutricionais } from "interfaces/responses.interface";
+import { InformacaoNutricional } from "interfaces/produto.interface";
+import { MeusDadosInterface } from "context/MeusDadosContext/interfaces";
 
 export const stringToBoolean = (str: string): boolean =>
   str === "1" ? true : str === "0" ? false : undefined;
@@ -36,7 +50,7 @@ export const numberToStringDecimal = (num: number) =>
   num?.toString().replace(".", ",");
 
 export const stringDecimalToNumber = (str: string) =>
-  Number(str?.replace(",", ".")) || null;
+  str === "0" ? Number(str) : Number(str?.replace(",", ".")) || null;
 
 export const formataInformacoesNutricionais = (values: Record<string, any>) => {
   const uuids_informacoes = Object.keys(values)
@@ -56,7 +70,7 @@ export const formataInformacoesNutricionais = (values: Record<string, any>) => {
 };
 
 export const cepCalculator = (
-  setDesabilitaEndereco: Dispatch<React.SetStateAction<boolean>>
+  setDesabilitaEndereco: Dispatch<SetStateAction<boolean>>
 ) =>
   createDecorator({
     field: "cep_fabricante",
@@ -69,7 +83,7 @@ export const cepCalculator = (
 export const buscaCEP = async (
   cep: string,
   values: FichaTecnicaPayload,
-  setDesabilitaEndereco: Dispatch<React.SetStateAction<boolean>>
+  setDesabilitaEndereco: Dispatch<SetStateAction<boolean>>
 ) => {
   if (cep?.length === 9) {
     const response = await getEnderecoPorCEP(cep);
@@ -87,28 +101,28 @@ export const buscaCEP = async (
 };
 
 export const carregarProdutos = async (
-  setProdutosOptions: Dispatch<React.SetStateAction<OptionsGenerico[]>>
+  setProdutosOptions: Dispatch<SetStateAction<OptionsGenerico[]>>
 ) => {
   const response = await getListaCompletaProdutosLogistica();
   setProdutosOptions(response.data.results);
 };
 
 export const carregarMarcas = async (
-  setMarcasOptions: Dispatch<React.SetStateAction<OptionsGenerico[]>>
+  setMarcasOptions: Dispatch<SetStateAction<OptionsGenerico[]>>
 ) => {
   const response = await getNomesMarcas();
   setMarcasOptions(response.data.results);
 };
 
 export const carregarFabricantes = async (
-  setFabricantesOptions: Dispatch<React.SetStateAction<OptionsGenerico[]>>
+  setFabricantesOptions: Dispatch<SetStateAction<OptionsGenerico[]>>
 ) => {
   const response = await getNomesFabricantes();
   setFabricantesOptions(response.data.results);
 };
 
 export const carregarUnidadesMedida = async (
-  setUnidadesMedidaOptions: Dispatch<React.SetStateAction<OptionsGenerico[]>>
+  setUnidadesMedidaOptions: Dispatch<SetStateAction<OptionsGenerico[]>>
 ) => {
   const response = await getUnidadesDeMedidaLogistica();
   setUnidadesMedidaOptions(response.data.results);
@@ -117,9 +131,7 @@ export const carregarUnidadesMedida = async (
 export const carregarTerceirizada = async (
   ficha: FichaTecnicaDetalhada,
   meusDados: Record<string, any>,
-  setProponente: Dispatch<
-    React.SetStateAction<TerceirizadaComEnderecoInterface>
-  >
+  setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>
 ) => {
   if (ficha.empresa?.uuid) {
     const response = await getTerceirizadaUUID(ficha.empresa.uuid);
@@ -130,6 +142,58 @@ export const carregarTerceirizada = async (
     );
     setProponente(response.data);
   }
+};
+
+export const carregarDados = async (
+  listaCompletaInformacoesNutricionais: MutableRefObject<
+    InformacaoNutricional[]
+  >,
+  listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
+    InformacaoNutricional[]
+  >,
+  meusDados: MeusDadosInterface,
+  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhada>>,
+  setInitialValues: Dispatch<SetStateAction<Record<string, any>>>,
+  setArquivo: Dispatch<SetStateAction<ArquivoForm[]>>,
+  setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>,
+  setCarregando: Dispatch<SetStateAction<boolean>>
+) => {
+  setCarregando(true);
+
+  const responseInformacoes: ResponseInformacoesNutricionais =
+    await getInformacoesNutricionaisOrdenadas();
+  listaCompletaInformacoesNutricionais.current =
+    responseInformacoes.data.results;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const uuid = urlParams.get("uuid");
+  if (uuid) {
+    const responseFicha = await getFichaTecnica(uuid);
+    const fichaTecnica = responseFicha.data;
+
+    listaInformacoesNutricionaisFichaTecnica.current =
+      fichaTecnica.informacoes_nutricionais.map(
+        ({ informacao_nutricional }) => informacao_nutricional
+      );
+
+    setFicha(fichaTecnica);
+    setInitialValues(geraInitialValues(fichaTecnica));
+
+    if (fichaTecnica.arquivo) {
+      const arquivo = await carregarArquivo(fichaTecnica.arquivo);
+      setArquivo(arquivo);
+    }
+
+    const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
+    setProponente(response.data);
+  } else if (meusDados) {
+    const response = await getTerceirizadaUUID(
+      meusDados.vinculo_atual.instituicao.uuid
+    );
+    setProponente(response.data);
+  }
+
+  setCarregando(false);
 };
 
 export const validaRascunho = (values: FichaTecnicaPayload): boolean => {
@@ -202,6 +266,19 @@ export const validaProximoInformacoesNutricionais = (
   );
 };
 
+export const validaAssinarEnviar = (
+  values: FichaTecnicaPayload,
+  errors: Record<string, string>,
+  arquivo: ArquivoForm[]
+): boolean => {
+  return (
+    Object.keys(errors).length !== 0 ||
+    !values.embalagens_de_acordo_com_anexo ||
+    !values.rotulo_legivel ||
+    !arquivo.length
+  );
+};
+
 export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
   const valuesInformacoesNutricionais = {};
   ficha?.informacoes_nutricionais.forEach((informacao) => {
@@ -251,16 +328,18 @@ export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
     gluten: booleanToString(ficha.gluten),
     lactose: booleanToString(ficha.lactose),
     lactose_detalhe: ficha.lactose_detalhe,
-    porcao: ficha.porcao,
+    porcao: numberToStringDecimal(ficha.porcao),
     unidade_medida_porcao: ficha.unidade_medida_porcao?.uuid,
-    valor_unidade_caseira: ficha.valor_unidade_caseira,
+    valor_unidade_caseira: numberToStringDecimal(ficha.valor_unidade_caseira),
     unidade_medida_caseira: ficha.unidade_medida_caseira,
     ...valuesInformacoesNutricionais,
     ...valuesSelect,
     prazo_validade_descongelamento: ficha.prazo_validade_descongelamento,
     condicoes_de_conservacao: ficha.condicoes_de_conservacao,
-    temperatura_congelamento: ficha.temperatura_congelamento,
-    temperatura_veiculo: ficha.temperatura_veiculo,
+    temperatura_congelamento: numberToStringDecimal(
+      ficha.temperatura_congelamento
+    ),
+    temperatura_veiculo: numberToStringDecimal(ficha.temperatura_veiculo),
     condicoes_de_transporte: ficha.condicoes_de_transporte,
     embalagem_primaria: ficha.embalagem_primaria,
     embalagem_secundaria: ficha.embalagem_secundaria,
@@ -316,7 +395,8 @@ export const formataPayload = (
   proponente: TerceirizadaComEnderecoInterface,
   produtosOptions: OptionsGenerico[],
   fabricantesOptions: OptionsGenerico[],
-  arquivo: ArquivoForm[]
+  arquivo: ArquivoForm[],
+  password: string = ""
 ): FichaTecnicaPayload => {
   let payload: FichaTecnicaPayload = {
     produto: produtosOptions.find((p) => p.nome === values.produto)?.uuid,
@@ -343,27 +423,17 @@ export const formataPayload = (
     alergenicos: stringToBoolean(values.alergenicos as string),
     gluten: stringToBoolean(values.gluten as string),
     lactose: stringToBoolean(values.lactose as string),
-    mecanismo_controle: "",
-    ingredientes_alergenicos: "",
-    lactose_detalhe: "",
-    numero_registro: "",
-    porcao: values.porcao || "",
+    porcao: stringDecimalToNumber(values.porcao),
     unidade_medida_porcao: values.unidade_medida_porcao || null,
-    valor_unidade_caseira: values.valor_unidade_caseira || "",
+    valor_unidade_caseira: stringDecimalToNumber(values.valor_unidade_caseira),
     unidade_medida_caseira: values.unidade_medida_caseira || "",
     informacoes_nutricionais: formataInformacoesNutricionais(values),
-    prazo_validade_descongelamento: values.prazo_validade_descongelamento || "",
     condicoes_de_conservacao: values.condicoes_de_conservacao || "",
-    temperatura_congelamento: values.temperatura_congelamento || "",
-    temperatura_veiculo: values.temperatura_veiculo || "",
-    condicoes_de_transporte: values.condicoes_de_transporte || "",
     embalagem_primaria: values.embalagem_primaria || "",
     embalagem_secundaria: values.embalagem_secundaria || "",
     embalagens_de_acordo_com_anexo:
       values.embalagens_de_acordo_com_anexo || false,
     material_embalagem_primaria: values.material_embalagem_primaria || "",
-    volume_embalagem_primaria: null,
-    unidade_medida_volume_primaria: "",
     peso_liquido_embalagem_primaria: stringDecimalToNumber(
       values.peso_liquido_embalagem_primaria
     ),
@@ -384,7 +454,6 @@ export const formataPayload = (
     sistema_vedacao_embalagem_secundaria:
       values.sistema_vedacao_embalagem_secundaria || "",
     rotulo_legivel: values.rotulo_legivel || false,
-    variacao_percentual: stringDecimalToNumber(values.variacao_percentual),
     nome_responsavel_tecnico: values.nome_responsavel_tecnico || "",
     habilitacao: values.habilitacao || "",
     numero_registro_orgao: values.numero_registro_orgao || "",
@@ -402,15 +471,24 @@ export const formataPayload = (
   }
 
   if (payload.categoria === "PERECIVEIS") {
-    payload = {
-      ...payload,
-      numero_registro: values.numero_registro || "",
-      agroecologico: stringToBoolean(values.agroecologico as string),
-      organico: stringToBoolean(values.organico as string),
-    };
+    payload.numero_registro = values.numero_registro;
+    payload.agroecologico = stringToBoolean(values.agroecologico as string);
+    payload.organico = stringToBoolean(values.organico as string);
+    payload.prazo_validade_descongelamento =
+      values.prazo_validade_descongelamento;
+    payload.temperatura_congelamento = stringDecimalToNumber(
+      values.temperatura_congelamento
+    );
+    payload.temperatura_veiculo = stringDecimalToNumber(
+      values.temperatura_veiculo
+    );
+    payload.condicoes_de_transporte = values.condicoes_de_transporte;
+    payload.variacao_percentual = stringDecimalToNumber(
+      values.variacao_percentual
+    );
 
     if (payload.organico) {
-      payload.mecanismo_controle = values.mecanismo_controle || "";
+      payload.mecanismo_controle = values.mecanismo_controle;
     }
   }
 
@@ -428,18 +506,81 @@ export const formataPayload = (
     }
   }
 
+  payload.password = password;
+
   return payload;
 };
 
 export const inserirArquivoFichaAssinadaRT = (
   files: ArquivoForm[],
-  setArquivo: Dispatch<React.SetStateAction<ArquivoForm[]>>
+  setArquivo: Dispatch<SetStateAction<ArquivoForm[]>>
 ) => {
   setArquivo(files);
 };
 
 export const removerArquivoFichaAssinadaRT = (
-  setArquivo: Dispatch<React.SetStateAction<ArquivoForm[]>>
+  setArquivo: Dispatch<SetStateAction<ArquivoForm[]>>
 ) => {
   setArquivo([]);
+};
+
+export const salvarRascunho = async (
+  payload: FichaTecnicaPayload,
+  ficha: FichaTecnicaDetalhada,
+  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhada>>,
+  setCarregando: Dispatch<SetStateAction<boolean>>
+) => {
+  try {
+    setCarregando(true);
+
+    const response = ficha.uuid
+      ? await editaRascunhoFichaTecnica(payload, ficha.uuid)
+      : await cadastraRascunhoFichaTecnica(payload);
+
+    if (response.status === 201 || response.status === 200) {
+      toastSuccess("Rascunho salvo com sucesso!");
+      setFicha(response.data);
+    } else {
+      toastError("Ocorreu um erro ao salvar a Ficha Técnica");
+    }
+  } catch (error) {
+    exibeError(error, "Ocorreu um erro ao salvar a Ficha Técnica");
+  } finally {
+    setCarregando(false);
+  }
+};
+
+export const assinarEnviarFichaTecnica = async (
+  payload: FichaTecnicaPayload,
+  ficha: FichaTecnicaDetalhada,
+  setCarregando: Dispatch<SetStateAction<boolean>>,
+  history: History
+) => {
+  try {
+    setCarregando(true);
+
+    const response = ficha.uuid
+      ? await cadastrarFichaTecnicaDoRascunho(payload, ficha.uuid)
+      : await cadastrarFichaTecnica(payload);
+
+    if (response.status === 201 || response.status === 200) {
+      toastSuccess("Ficha Técnica Assinada e Enviada com sucesso!");
+      history.push(`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`);
+    } else {
+      toastError("Ocorreu um erro ao assinar e enviar a Ficha Técnica");
+    }
+  } catch (error) {
+    exibeError(error, "Ocorreu um erro ao assinar e enviar a Ficha Técnica");
+  } finally {
+    setCarregando(false);
+  }
+};
+
+export const gerenciaModalCadastroExterno = (
+  tipo: string,
+  setTipoCadastro: Dispatch<SetStateAction<string>>,
+  setShowModalCadastro: Dispatch<SetStateAction<boolean>>
+) => {
+  setTipoCadastro(tipo);
+  setShowModalCadastro(true);
 };

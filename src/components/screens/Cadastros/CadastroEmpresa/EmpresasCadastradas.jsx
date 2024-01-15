@@ -120,9 +120,8 @@ class EmpresasCadastradas extends Component {
                     <td className="text-center">{empresa.tipo_servico}</td>
                     <td className="text-center">{empresa.status}</td>
 
-                    <td className="btn-action botao-direita">
+                    <td>
                       <ToggleExpandir
-                        className={"ms-auto"}
                         onClick={() => this.lidarComBurger(empresa)}
                         ativo={empresa.ativo}
                       />
