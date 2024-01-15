@@ -1,6 +1,5 @@
 import moment from "moment";
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import {
@@ -138,4 +137,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(withRouter(componentNameForm));
+export default connect(mapStateToProps)(componentNameForm);
