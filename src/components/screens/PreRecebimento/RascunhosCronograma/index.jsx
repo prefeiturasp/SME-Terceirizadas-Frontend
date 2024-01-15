@@ -40,7 +40,7 @@ export default ({ listaRascunhos }) => {
                           to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${rascunho.uuid}`}
                         >
                           <span className="icon-editar-rascunho">
-                            <i className="fas fa-edit" />
+                            <i title="Editar" className="fas fa-edit" />
                           </span>
                         </NavLink>
                       </div>
