@@ -309,7 +309,7 @@ export default () => {
       ano
     );
     setLoadingSolicitacaoMedicaoInicial(false);
-    history.replace({
+    navigate({
       pathname: location.pathname,
       search: `?mes=${format(new Date(value), "MM").toString()}&ano=${getYear(
         new Date(value)
