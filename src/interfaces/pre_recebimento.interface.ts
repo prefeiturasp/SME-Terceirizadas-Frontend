@@ -108,6 +108,24 @@ export interface FiltrosDashboardDocumentos {
   limit?: number;
 }
 
+export interface FichaTecnicaDashboard {
+  log_mais_recente: string;
+  nome_empresa: string;
+  nome_produto: string;
+  numero_ficha: string;
+  status: string;
+  uuid: string;
+}
+
+export interface FiltrosDashboardFichasTecnicas {
+  nome_produto?: string;
+  numero_ficha?: string;
+  nome_fornecedor?: string;
+  status?: string[];
+  offset?: number;
+  limit?: number;
+}
+
 export interface OptionsGenerico {
   uuid: string;
   nome: string;
@@ -228,4 +246,22 @@ export interface EtapaCalendario {
   quantidade: number;
   uuid: string;
   uuid_cronograma: string;
+}
+
+export interface CardItem {
+  text: string;
+  date: string;
+  link: string;
+  status: string;
+  fullText?: string;
+}
+
+export interface CardConfig<T> {
+  id: string;
+  titulo: string;
+  icon: string;
+  style: string;
+  incluir_status: string[];
+  href: string;
+  items?: T[];
 }
