@@ -2569,7 +2569,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
       <ModalVoltarPeriodoLancamento
         closeModal={() => setShowModalVoltarPeriodoLancamento(false)}
         showModal={showModalVoltarPeriodoLancamento}
-        history={history}
+        navigate={navigate}
       />
     </>
   );
