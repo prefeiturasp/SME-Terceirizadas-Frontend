@@ -268,6 +268,7 @@ export interface CardConfig<T> {
 
 export interface VerMaisItem {
   texto: string;
+  textoCompleto?: string;
   data: string;
   link: string;
 }
