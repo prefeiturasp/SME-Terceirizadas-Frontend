@@ -38,8 +38,9 @@ const ListagemAlteracoesCronogramas = ({
                 {!fornecedor && <div>{alteracaoCronograma.fornecedor}</div>}
                 <div
                   className={`${
-                    alteracaoCronograma.status ===
-                      "Alteração Enviada ao Fornecedor" && "orange"
+                    ["Alteração Enviada ao Fornecedor", "Em análise"].includes(
+                      alteracaoCronograma.status
+                    ) && "orange"
                   }`}
                 >
                   {fornecedor
@@ -54,13 +55,19 @@ const ListagemAlteracoesCronogramas = ({
                   >
                     <span
                       className={`link-acoes ${
-                        alteracaoCronograma.status ===
-                        "Alteração Enviada ao Fornecedor"
+                        [
+                          "Alteração Enviada ao Fornecedor",
+                          "Em análise",
+                        ].includes(alteracaoCronograma.status)
                           ? "orange"
                           : "green"
                       }`}
                     >
-                      Detalhar
+                      {alteracaoCronograma.status === "Em análise" ? (
+                        <i className="fas fa-edit" title="Analisar" />
+                      ) : (
+                        "Detalhar"
+                      )}
                     </span>
                   </NavLink>
                 </div>
