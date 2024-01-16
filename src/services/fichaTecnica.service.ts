@@ -3,7 +3,10 @@ import axios from "./_base";
 import {
   ResponseFichaTecnicaDetalhada,
   ResponseFichasTecnicas,
+  ResponseFichasTecnicasDashboard,
+  ResponseFichasTecnicasPorStatusDashboard,
 } from "interfaces/responses.interface";
+import { FiltrosDashboardFichasTecnicas } from "interfaces/pre_recebimento.interface";
 
 export const cadastraRascunhoFichaTecnica = async (
   payload: FichaTecnicaPayload
@@ -36,3 +39,15 @@ export const cadastrarFichaTecnicaDoRascunho = async (
   uuid: string
 ): Promise<ResponseFichaTecnicaDetalhada> =>
   await axios.put(`/ficha-tecnica/${uuid}/`, payload);
+
+// Service retorna vários status diferente dentro dos resultados, filtros são apenas strings
+export const getDashboardFichasTecnicas = async (
+  params: FiltrosDashboardFichasTecnicas = null
+): Promise<ResponseFichasTecnicasDashboard> =>
+  await axios.get(`/ficha-tecnica/dashboard/`, { params });
+
+// Service retorna apenas um status nos resultados, filtros em formatos de array são transformados em parametros de URL
+export const getDashboardFichasTecnicasPorStatus = async (
+  params: URLSearchParams = null
+): Promise<ResponseFichasTecnicasPorStatusDashboard> =>
+  await axios.get(`/ficha-tecnica/dashboard/`, { params });

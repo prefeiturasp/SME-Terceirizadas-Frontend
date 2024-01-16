@@ -14,6 +14,7 @@ import {
   FichaTecnicaDetalhada,
   FichaTecnica,
   EtapaCalendario,
+  FichaTecnicaDashboard,
 } from "./pre_recebimento.interface";
 import { InformacaoNutricional } from "./produto.interface";
 
@@ -96,6 +97,26 @@ export interface ResponseDocumentosPorStatusDashboard
     results: {
       status: string;
       dados: Array<DocumentosRecebimentoDashboard>;
+      total: number;
+    };
+  };
+}
+
+export interface ResponseFichasTecnicasDashboard extends ResponseInterface {
+  data: {
+    results: Array<{
+      status: string;
+      dados: Array<FichaTecnicaDashboard>;
+    }>;
+  };
+}
+
+export interface ResponseFichasTecnicasPorStatusDashboard
+  extends ResponseInterface {
+  data: {
+    results: {
+      status: string;
+      dados: Array<FichaTecnicaDashboard>;
       total: number;
     };
   };

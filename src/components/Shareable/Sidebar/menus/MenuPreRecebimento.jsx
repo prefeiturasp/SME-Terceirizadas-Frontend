@@ -11,6 +11,8 @@ import {
   PAINEL_DOCUMENTOS_RECEBIMENTO,
   PAINEL_LAYOUT_EMBALAGEM,
   FICHA_TECNICA,
+  CALENDARIO_CRONOGRAMA,
+  PAINEL_FICHAS_TECNICAS,
 } from "configs/constants";
 import {
   usuarioEhCronograma,
@@ -21,8 +23,8 @@ import {
   usuarioComAcessoAoPainelAprovacoes,
   usuarioComAcessoAoPainelDocumentos,
   usuarioComAcessoAoPainelEmbalagens,
+  usuarioComAcessoAoPainelFichasTecnicas,
 } from "helpers/utilities";
-import { CALENDARIO_CRONOGRAMA } from "../../../../configs/constants";
 import { usuarioEhDilogQualidadeOuCronograma } from "../../../../helpers/utilities";
 
 const MenuPreRecebimento = () => {
@@ -82,6 +84,11 @@ const MenuPreRecebimento = () => {
       {usuarioEhEmpresaFornecedor() && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`}>
           Ficha Técnica do Produto
+        </LeafItem>
+      )}
+      {usuarioComAcessoAoPainelFichasTecnicas() && (
+        <LeafItem to={`/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}`}>
+          Fichas Técnicas
         </LeafItem>
       )}
     </Menu>
