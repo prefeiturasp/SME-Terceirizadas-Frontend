@@ -10,7 +10,7 @@ import {
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { Modal } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
   noSpaceStartOrEnd,
@@ -44,7 +44,7 @@ export default () => {
   const [edicao, setEdicao] = useState(false);
   const [uuid, setUuid] = useState(null);
   const [initialValues, setInitialValues] = useState({});
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const onSubmit = () => {
     setShowModalSalvar(true);
@@ -64,7 +64,7 @@ export default () => {
         form.restart(initialValues);
         setCarregando(false);
       } else if (response.status === HTTP_STATUS.OK) {
-        history.push(`/${CONFIGURACOES}/${CADASTROS}/${TIPOS_EMBALAGENS}`);
+        navigate(`/${CONFIGURACOES}/${CADASTROS}/${TIPOS_EMBALAGENS}`);
         toastSuccess("Edição do cadastro realizado com sucesso!");
         setCarregando(false);
         setShowModalSalvar(false);
@@ -236,7 +236,7 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
                         setShowModalCancelar(false);
-                        history.push(
+                        navigate(
                           `/${CONFIGURACOES}/${CADASTROS}/${TIPOS_EMBALAGENS}`
                         );
                       }}

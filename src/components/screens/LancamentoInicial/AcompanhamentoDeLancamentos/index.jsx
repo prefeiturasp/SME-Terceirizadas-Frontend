@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import HTTP_STATUS from "http-status-codes";
@@ -58,7 +58,7 @@ import { updateSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicit
 import ModalRelatorioUnificado from "./components/ModalRelatorioUnificado";
 
 export const AcompanhamentoDeLancamentos = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { meusDados } = useContext(MeusDadosContext);
   const DEFAULT_STATE = usuarioEhEscolaTerceirizadaQualquerPerfil() ? [] : null;
 
@@ -299,24 +299,32 @@ export const AcompanhamentoDeLancamentos = () => {
     status
   ) => {
     if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
-      history.push({
-        pathname: `/${MEDICAO_INICIAL}/${DETALHAMENTO_DO_LANCAMENTO}`,
-        search: `mes=${mes}&ano=${ano}`,
-        state: {
-          veioDoAcompanhamentoDeLancamentos: true,
-          status,
+      navigate(
+        {
+          pathname: `/${MEDICAO_INICIAL}/${DETALHAMENTO_DO_LANCAMENTO}`,
+          search: `mes=${mes}&ano=${ano}`,
         },
-      });
+        {
+          state: {
+            veioDoAcompanhamentoDeLancamentos: true,
+            status,
+          },
+        }
+      );
     } else {
-      history.push({
-        pathname: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
-        search: `uuid=${uuidSolicitacaoMedicao}`,
-        state: {
-          escolaUuid: escolaUuid,
-          mes: mes,
-          ano: ano,
+      navigate(
+        {
+          pathname: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
+          search: `uuid=${uuidSolicitacaoMedicao}`,
         },
-      });
+        {
+          state: {
+            escolaUuid: escolaUuid,
+            mes: mes,
+            ano: ano,
+          },
+        }
+      );
     }
   };
 

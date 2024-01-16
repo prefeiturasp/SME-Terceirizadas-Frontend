@@ -12,7 +12,7 @@ import { textAreaRequiredAndAtLeastOneCharacter } from "../../../helpers/fieldVa
 import "./style.scss";
 import InputText from "../Input/InputText";
 import { PAINEL_GESTAO_PRODUTO } from "configs/constants";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const ModalPadrao = ({ ...props }) => {
   const {
@@ -35,8 +35,8 @@ export const ModalPadrao = ({ ...props }) => {
     ...textAreaProps
   } = props;
 
-  const history = useHistory();
-  const painelProdutos = (history) => history.push(`/${PAINEL_GESTAO_PRODUTO}`);
+  const navigate = useNavigate();
+  const painelProdutos = () => navigate(`/${PAINEL_GESTAO_PRODUTO}`);
 
   const enviarJustificativa = async (formValues) => {
     const { justificativa } = formValues;
@@ -54,7 +54,7 @@ export const ModalPadrao = ({ ...props }) => {
       if (loadSolicitacao) {
         loadSolicitacao(uuid);
       } else {
-        painelProdutos(history);
+        painelProdutos();
       }
       toastSuccess(toastSuccessMessage);
     } else {
