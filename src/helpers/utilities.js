@@ -518,6 +518,13 @@ export const usuarioComAcessoAoPainelDocumentos = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioComAcessoAoPainelFichasTecnicas = () => {
+  return [
+    PERFIL.COORDENADOR_GESTAO_PRODUTO,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhLogistica = () => {
   return [
     PERFIL.COORDENADOR_LOGISTICA,
@@ -1147,4 +1154,11 @@ export const getAmanha = () => {
 
 export const maxEntreDatas = (arrayDeDatas) => {
   return new Date(Math.max(...arrayDeDatas));
+};
+
+export const ordenarPorLogMaisRecente = (itemA, itemB) => {
+  let dataA = parseDataHoraBrToMoment(itemA.log_mais_recente);
+  let dataB = parseDataHoraBrToMoment(itemB.log_mais_recente);
+
+  return comparaObjetosMoment(dataB, dataA);
 };

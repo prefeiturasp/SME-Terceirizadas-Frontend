@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Spin } from "antd";
 import {
@@ -25,6 +25,7 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
+import { usuarioEhCodaeDilog } from "../../../../../../helpers/utilities";
 
 export default () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -32,7 +33,7 @@ export default () => {
   const [cronograma, setCronograma] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const esconderLogFornecedor = (logs) => {
     return logs.filter(
@@ -89,7 +90,7 @@ export default () => {
 
   const handleBack = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    history.goBack();
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -175,6 +176,9 @@ export default () => {
                   <AcoesDetalharDilogDiretoria cronograma={cronograma} />
                   {botaoImprimir}
                 </>
+              )}
+              {usuarioEhCodaeDilog() && (
+                <div className="mt-4 mb-4">{botaoImprimir}</div>
               )}
             </>
           )}

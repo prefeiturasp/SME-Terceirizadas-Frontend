@@ -18,8 +18,9 @@ import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 import { useCallback } from "react";
 import { getDashboardDocumentosRecebimento } from "services/documentosRecebimento.service";
-import { CardConfig, CardItem } from "./interfaces";
 import {
+  CardConfig,
+  CardItem,
   DocumentosRecebimentoDashboard,
   FiltrosDashboardDocumentos,
 } from "interfaces/pre_recebimento.interface";
@@ -30,7 +31,7 @@ export default () => {
   const [filtrado, setFiltrado] = useState<boolean>(false);
 
   const [cardsAprovacaoDocumento, setCardsAprovacaoDocumento] =
-    useState<CardConfig[]>(cardsPainel);
+    useState<CardConfig<DocumentosRecebimentoDashboard>[]>(cardsPainel);
 
   const ordenarPorLogMaisRecente = (
     a: DocumentosRecebimentoDashboard,
@@ -70,10 +71,10 @@ export default () => {
   };
 
   const agruparCardsPorStatus = (
-    cardsIniciais: CardConfig[],
+    cardsIniciais: CardConfig<DocumentosRecebimentoDashboard>[],
     dadosDashboard: ResponseDocumentosRecebimentoDashboard
-  ): CardConfig[] => {
-    const cardsAgrupados: CardConfig[] = [];
+  ) => {
+    const cardsAgrupados: CardConfig<DocumentosRecebimentoDashboard>[] = [];
 
     cardsIniciais.forEach((card) => {
       card.items = [];
@@ -188,7 +189,7 @@ export default () => {
           </div>
 
           <div className="row mt-4">
-            {cardsAprovacaoDocumento.map((card: CardConfig, index) => (
+            {cardsAprovacaoDocumento.map((card, index) => (
               <div className="col-6 mb-4" key={index}>
                 <CardCronograma
                   cardTitle={card.titulo}

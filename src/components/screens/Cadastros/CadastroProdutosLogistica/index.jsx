@@ -21,14 +21,14 @@ import {
 import { composeValidators, statusProdutos } from "helpers/utilities";
 import "./style.scss";
 import { CADASTROS, CONFIGURACOES, PRODUTOS } from "configs/constants";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
 export default () => {
   const [produto, setProduto] = useState();
   const [carregando, setCarregando] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -38,9 +38,7 @@ export default () => {
   }, [location]);
 
   const voltarParaProdutos = () =>
-    history.push({
-      pathname: `/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`,
-    });
+    navigate(`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`);
 
   const onSubmit = async (formValues) => {
     setCarregando(true);

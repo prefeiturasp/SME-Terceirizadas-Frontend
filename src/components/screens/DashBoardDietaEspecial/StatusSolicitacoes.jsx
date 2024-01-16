@@ -204,11 +204,11 @@ function StatusSolicitacoes(props) {
       params
     );
     updateSolicitacoesState(
-      response.data,
+      response,
       "autorizado",
       "Autorizadas Temporariamente"
     );
-    updateSolicitacoesSemFiltro(response.data, "autorizadas-temp");
+    updateSolicitacoesSemFiltro(response, "autorizadas-temp");
   };
 
   const getSolicitacoesAguardandoInicioVigencia = async (offset) => {
@@ -219,11 +219,11 @@ function StatusSolicitacoes(props) {
       params
     );
     updateSolicitacoesState(
-      response.data,
+      response,
       "aguardando_analise_reclamacao",
       "Aguardando início da vigência"
     );
-    updateSolicitacoesSemFiltro(response.data, "aguardando-inicio-vigencia");
+    updateSolicitacoesSemFiltro(response, "aguardando-inicio-vigencia");
   };
 
   const getSolicitacoesInativasTemporariamente = async (offset) => {
@@ -234,11 +234,11 @@ function StatusSolicitacoes(props) {
       params
     );
     updateSolicitacoesState(
-      response.data,
+      response,
       "aguardando_analise_reclamacao",
       "Inativas Temporariamente"
     );
-    updateSolicitacoesSemFiltro(response.data, "inativas-temp");
+    updateSolicitacoesSemFiltro(response, "inativas-temp");
   };
 
   const getSolicitacoesInativas = async (offset) => {

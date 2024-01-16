@@ -1,10 +1,15 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "./style.scss";
+import { Tooltip } from "antd";
 
-export default (props) => {
-  const { tipo, icone, titulo, solicitacoes } = props;
-
+export default ({
+  tipo,
+  icone,
+  titulo,
+  solicitacoes,
+  exibirTooltip = false,
+}) => {
   return (
     <>
       <div className={`card card-list-panel card-colored ${tipo} mb-4 me-4`}>
@@ -21,9 +26,17 @@ export default (props) => {
                 return (
                   <div key={key} className="row">
                     <div className="col-9">
-                      <NavLink key={key} to={value.link}>
-                        <p className={`data ms-4`}>{`${value.texto}`}</p>
-                      </NavLink>
+                      {exibirTooltip ? (
+                        <Tooltip key={key} title={value.textoCompleto}>
+                          <NavLink key={key} to={value.link}>
+                            <p className={`data ms-4`}>{`${value.texto}`}</p>
+                          </NavLink>
+                        </Tooltip>
+                      ) : (
+                        <NavLink key={key} to={value.link}>
+                          <p className={`data ms-4`}>{`${value.texto}`}</p>
+                        </NavLink>
+                      )}
                     </div>
                     <span className={`date-time col-3 text-end`}>
                       {value.data}
