@@ -276,9 +276,8 @@ export default () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
 
-    if (uuid && valoresIniciais) {
+    if (uuid) {
       setUuidCronograma(uuid);
-      setCarregando(true);
       setEdicao(true);
     } else {
       setCarregando(false);
@@ -320,12 +319,20 @@ export default () => {
       setTiposEmbalagemOptions(response.data.results);
     };
 
-    buscaArmazens();
-    buscaFornecedores();
-    buscaProdutos();
-    buscaUnidadesMedida();
-    buscaTiposEmbalagem();
-    getRascunhosAsync();
+    const carregaPagina = async () => {
+      setCarregando(true);
+      await Promise.all([
+        buscaArmazens(),
+        buscaFornecedores(),
+        buscaProdutos(),
+        buscaUnidadesMedida(),
+        buscaTiposEmbalagem(),
+        getRascunhosAsync(),
+      ]);
+      setCarregando(false);
+    };
+
+    carregaPagina();
   }, [valoresIniciais]);
 
   if (valoresIniciais && edicao) {
@@ -342,238 +349,245 @@ export default () => {
     onChangeEtapas(changes, etapas, setRestante, setDuplicados);
   };
   return (
-    <Spin tip="Carregando..." spinning={carregando}>
+    <>
       {!edicao && <Rascunhos listaRascunhos={listaRascunhos} />}
-      <div className="card mt-3 card-cadastro-cronograma">
-        <div className="card-body cadastro-cronograma">
-          <Form
-            onSubmit={onSubmit}
-            initialValues={{
-              ...cronograma,
-              ...etapasValues,
-              ...recebimentosValues,
-            }}
-            validate={() => {}}
-            render={({ form, handleSubmit, values }) => (
-              <form onSubmit={handleSubmit}>
-                <FormSpy
-                  subscription={{ values: true, active: true, valid: true }}
-                  onChange={(changes) => onChangeFormSpy(changes)}
-                />
-                <div className="row">
-                  <div className="col-5">
-                    <Field
-                      component={AutoCompleteField}
-                      options={getEmpresaFiltrado(values.empresa)}
-                      label="Pesquisar Empresa"
-                      name="empresa"
-                      required
-                      validate={required}
-                      placeholder={"Selecione uma Empresa Cadastrada"}
-                      esconderIcone
-                    />
-                  </div>
-                  {edicao && (
-                    <div className="col-6 text-end">
-                      <p>
-                        <b>Nº do Cronograma: </b>
+      <Spin tip="Carregando..." spinning={carregando}>
+        <div className="card mt-3 card-cadastro-cronograma">
+          <div className="card-body cadastro-cronograma">
+            <Form
+              onSubmit={onSubmit}
+              initialValues={{
+                ...cronograma,
+                ...etapasValues,
+                ...recebimentosValues,
+              }}
+              validate={() => {}}
+              render={({ form, handleSubmit, values }) => (
+                <form onSubmit={handleSubmit}>
+                  <FormSpy
+                    subscription={{ values: true, active: true, valid: true }}
+                    onChange={(changes) => onChangeFormSpy(changes)}
+                  />
+                  <div className="row">
+                    <div className="col-5">
+                      <Field
+                        component={AutoCompleteField}
+                        options={getEmpresaFiltrado(values.empresa)}
+                        label="Pesquisar Empresa"
+                        name="empresa"
+                        required
+                        validate={required}
+                        placeholder={"Selecione uma Empresa Cadastrada"}
+                        esconderIcone
+                      />
+                    </div>
+                    {edicao && (
+                      <div className="col-6 text-end">
+                        <p>
+                          <b>Nº do Cronograma: </b>
 
-                        <span className="head-green">{cronograma.numero}</span>
-                      </p>
+                          <span className="head-green">
+                            {cronograma.numero}
+                          </span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="row">
+                    <div className="col-8">
+                      <Field
+                        component={SelectSelecione}
+                        naoDesabilitarPrimeiraOpcao
+                        options={getOpcoesContrato()}
+                        label="Nº do Contrato"
+                        name="contrato"
+                        required
+                        validate={required}
+                        placeholder={"Selecione um Contrato"}
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        label="Nº do Processo SEI - Contratos"
+                        name="numero_processo"
+                        className="input-busca-produto"
+                        validate={required}
+                        disabled={true}
+                      />
+                    </div>
+                  </div>
+
+                  {values.empresa && values.contrato && (
+                    <div className="accordion mt-1" id="accordionCronograma">
+                      <div className="card mt-3">
+                        <div
+                          className={`card-header card-tipo`}
+                          id={`heading_1`}
+                        >
+                          <div className="row card-header-content">
+                            <span className="col-11 nome-alimento">
+                              Dados do Produto
+                            </span>
+                            <div className="col-1 align-self-center">
+                              <button
+                                onClick={() => toggleCollapse(1)}
+                                className="btn btn-link btn-block text-end px-0"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target={`#collapse_1`}
+                                aria-expanded="true"
+                                aria-controls={`collapse_1`}
+                              >
+                                <span className="span-icone-toogle">
+                                  <i
+                                    className={
+                                      collapse[1]
+                                        ? "fas fa-chevron-up"
+                                        : "fas fa-chevron-down"
+                                    }
+                                  />
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div
+                          id={`collapse_1`}
+                          className="collapse"
+                          aria-labelledby="headingOne"
+                          data-bs-parent="#accordionCronograma"
+                        >
+                          <div className="card-body">
+                            <div className="row">
+                              <div className="col-6">
+                                <Field
+                                  component={SelectSelecione}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={produtosOptions}
+                                  label="Produto"
+                                  name="produto"
+                                  placeholder={"Selecione um Produto"}
+                                  required
+                                />
+                              </div>
+                              <div className="col-3">
+                                <Field
+                                  component={InputText}
+                                  label="Quantidade Total Programada"
+                                  name="quantidade_total"
+                                  className="input-busca-produto"
+                                  disabled={false}
+                                  agrupadorMilhar
+                                  required
+                                  placeholder="Informe a Quantidade Total"
+                                />
+                              </div>
+                              <div className="col-3">
+                                <Field
+                                  component={SelectSelecione}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={unidadesMedidaOptions}
+                                  label="Unidade de Medida"
+                                  name="unidade_medida"
+                                  required
+                                  validate={required}
+                                  placeholder={"Selecione a Unidade"}
+                                />
+                              </div>
+                            </div>
+                            <div className="row">
+                              <div className="col-6">
+                                <Field
+                                  component={SelectSelecione}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={armazens}
+                                  label="Armazém"
+                                  name="armazem"
+                                  required
+                                  validate={required}
+                                  placeholder={"Selecione o Armazém"}
+                                />
+                              </div>
+                              <div className="col-3">
+                                <Field
+                                  component={SelectSelecione}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={tiposEmbalagemOptions}
+                                  label="Tipo de Embalagem"
+                                  name="tipo_embalagem"
+                                  required
+                                  validate={required}
+                                  placeholder={"Selecione a Embalagem"}
+                                />
+                              </div>
+                            </div>
+                            <div className="subtitulo">
+                              Cronograma das Entregas
+                            </div>
+                            <hr className="linha-verde" />
+                            <FormEtapa
+                              etapas={etapas}
+                              setEtapas={setEtapas}
+                              values={values}
+                              duplicados={duplicados}
+                              restante={restante}
+                              unidadeMedida={unidadeSelecionada}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <FormRecebimento
+                        values={values}
+                        form={form}
+                        etapas={etapas}
+                        recebimentos={recebimentos}
+                        setRecebimentos={setRecebimentos}
+                      />
                     </div>
                   )}
-                </div>
 
-                <div className="row">
-                  <div className="col-8">
-                    <Field
-                      component={SelectSelecione}
-                      naoDesabilitarPrimeiraOpcao
-                      options={getOpcoesContrato()}
-                      label="Nº do Contrato"
-                      name="contrato"
-                      required
-                      validate={required}
-                      placeholder={"Selecione um Contrato"}
+                  <hr />
+
+                  <div className="mt-4 mb-4">
+                    <Botao
+                      texto="Assinar e Enviar Cronograma"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      className="float-end ms-3"
+                    />
+                    <Botao
+                      texto="Salvar Rascunho"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-end ms-3"
+                      onClick={() => salvarCronograma(values, true)}
+                      disabled={validaRascunho(values)}
                     />
                   </div>
-                  <div className="col-4">
-                    <Field
-                      component={InputText}
-                      label="Nº do Processo SEI - Contratos"
-                      name="numero_processo"
-                      className="input-busca-produto"
-                      validate={required}
-                      disabled={true}
-                    />
-                  </div>
-                </div>
-
-                {values.empresa && values.contrato && (
-                  <div className="accordion mt-1" id="accordionCronograma">
-                    <div className="card mt-3">
-                      <div className={`card-header card-tipo`} id={`heading_1`}>
-                        <div className="row card-header-content">
-                          <span className="col-11 nome-alimento">
-                            Dados do Produto
-                          </span>
-                          <div className="col-1 align-self-center">
-                            <button
-                              onClick={() => toggleCollapse(1)}
-                              className="btn btn-link btn-block text-end px-0"
-                              type="button"
-                              data-bs-toggle="collapse"
-                              data-bs-target={`#collapse_1`}
-                              aria-expanded="true"
-                              aria-controls={`collapse_1`}
-                            >
-                              <span className="span-icone-toogle">
-                                <i
-                                  className={
-                                    collapse[1]
-                                      ? "fas fa-chevron-up"
-                                      : "fas fa-chevron-down"
-                                  }
-                                />
-                              </span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div
-                        id={`collapse_1`}
-                        className="collapse"
-                        aria-labelledby="headingOne"
-                        data-bs-parent="#accordionCronograma"
-                      >
-                        <div className="card-body">
-                          <div className="row">
-                            <div className="col-6">
-                              <Field
-                                component={SelectSelecione}
-                                naoDesabilitarPrimeiraOpcao
-                                options={produtosOptions}
-                                label="Produto"
-                                name="produto"
-                                placeholder={"Selecione um Produto"}
-                                required
-                              />
-                            </div>
-                            <div className="col-3">
-                              <Field
-                                component={InputText}
-                                label="Quantidade Total Programada"
-                                name="quantidade_total"
-                                className="input-busca-produto"
-                                disabled={false}
-                                agrupadorMilhar
-                                required
-                                placeholder="Informe a Quantidade Total"
-                              />
-                            </div>
-                            <div className="col-3">
-                              <Field
-                                component={SelectSelecione}
-                                naoDesabilitarPrimeiraOpcao
-                                options={unidadesMedidaOptions}
-                                label="Unidade de Medida"
-                                name="unidade_medida"
-                                required
-                                validate={required}
-                                placeholder={"Selecione a Unidade"}
-                              />
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-6">
-                              <Field
-                                component={SelectSelecione}
-                                naoDesabilitarPrimeiraOpcao
-                                options={armazens}
-                                label="Armazém"
-                                name="armazem"
-                                required
-                                validate={required}
-                                placeholder={"Selecione o Armazém"}
-                              />
-                            </div>
-                            <div className="col-3">
-                              <Field
-                                component={SelectSelecione}
-                                naoDesabilitarPrimeiraOpcao
-                                options={tiposEmbalagemOptions}
-                                label="Tipo de Embalagem"
-                                name="tipo_embalagem"
-                                required
-                                validate={required}
-                                placeholder={"Selecione a Embalagem"}
-                              />
-                            </div>
-                          </div>
-                          <div className="subtitulo">
-                            Cronograma das Entregas
-                          </div>
-                          <hr className="linha-verde" />
-                          <FormEtapa
-                            etapas={etapas}
-                            setEtapas={setEtapas}
-                            values={values}
-                            duplicados={duplicados}
-                            restante={restante}
-                            unidadeMedida={unidadeSelecionada}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <FormRecebimento
-                      values={values}
-                      form={form}
-                      etapas={etapas}
-                      recebimentos={recebimentos}
-                      setRecebimentos={setRecebimentos}
-                    />
-                  </div>
-                )}
-
-                <hr />
-
-                <div className="mt-4 mb-4">
-                  <Botao
-                    texto="Assinar e Enviar Cronograma"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    className="float-end ms-3"
+                  <ModalAssinaturaUsuario
+                    titulo="Assinar Cronograma"
+                    texto="Você confirma a assinatura digital deste cronograma de entrega"
+                    show={showModal}
+                    loading={carregando}
+                    handleClose={() => {
+                      setShowModal(false);
+                      setCarregando(false);
+                    }}
+                    handleSim={(password) => {
+                      values["password"] = password;
+                      salvarCronograma(values, false);
+                    }}
                   />
-                  <Botao
-                    texto="Salvar Rascunho"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-end ms-3"
-                    onClick={() => salvarCronograma(values, true)}
-                    disabled={validaRascunho(values)}
-                  />
-                </div>
-                <ModalAssinaturaUsuario
-                  titulo="Assinar Cronograma"
-                  texto="Você confirma a assinatura digital deste cronograma de entrega"
-                  show={showModal}
-                  loading={carregando}
-                  handleClose={() => {
-                    setShowModal(false);
-                    setCarregando(false);
-                  }}
-                  handleSim={(password) => {
-                    values["password"] = password;
-                    salvarCronograma(values, false);
-                  }}
-                />
-              </form>
-            )}
-          />
+                </form>
+              )}
+            />
+          </div>
         </div>
-      </div>
-    </Spin>
+      </Spin>
+    </>
   );
 };
