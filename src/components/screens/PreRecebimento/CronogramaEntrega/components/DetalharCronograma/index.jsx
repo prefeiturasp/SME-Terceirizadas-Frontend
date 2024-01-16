@@ -25,6 +25,7 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
+import { usuarioEhCodaeDilog } from "../../../../../../helpers/utilities";
 
 export default () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -175,6 +176,9 @@ export default () => {
                   <AcoesDetalharDilogDiretoria cronograma={cronograma} />
                   {botaoImprimir}
                 </>
+              )}
+              {usuarioEhCodaeDilog() && (
+                <div className="mt-4 mb-4">{botaoImprimir}</div>
               )}
             </>
           )}
