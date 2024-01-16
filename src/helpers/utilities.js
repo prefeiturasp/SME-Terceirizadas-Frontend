@@ -518,6 +518,13 @@ export const usuarioComAcessoAoPainelDocumentos = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioComAcessoAoPainelFichasTecnicas = () => {
+  return [
+    PERFIL.COORDENADOR_GESTAO_PRODUTO,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhLogistica = () => {
   return [
     PERFIL.COORDENADOR_LOGISTICA,
