@@ -192,13 +192,7 @@ export const DashboardCODAE = (props) => {
     let url =
       visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO ? `/${CODAE}/${link}` : "/";
 
-    return {
-      pathname: url,
-      state: {
-        prevPath: window.location.pathname,
-        filtros: filtros,
-      },
-    };
+    return url;
   };
 
   const prepararParametros = (values) => {
@@ -289,7 +283,13 @@ export const DashboardCODAE = (props) => {
                   {cards.map((card, key) => {
                     return resumo[card.titulo] ? (
                       <div key={key} className="col-6 pb-3">
-                        <Link to={linkTo(card.link)}>
+                        <Link
+                          to={linkTo(card.link)}
+                          state={{
+                            prevPath: window.location.pathname,
+                            filtros: filtros,
+                          }}
+                        >
                           <CardPendencia
                             cardTitle={card.titulo}
                             totalOfOrders={resumo[card.titulo]["TOTAL"] || 0}
@@ -304,7 +304,13 @@ export const DashboardCODAE = (props) => {
                       </div>
                     ) : (
                       <div key={key} className="col-6 pb-3">
-                        <Link to={linkTo(card.link)}>
+                        <Link
+                          to={linkTo(card.link)}
+                          state={{
+                            prevPath: window.location.pathname,
+                            filtros: filtros,
+                          }}
+                        >
                           <CardPendencia
                             cardTitle={card.titulo}
                             totalOfOrders={0}

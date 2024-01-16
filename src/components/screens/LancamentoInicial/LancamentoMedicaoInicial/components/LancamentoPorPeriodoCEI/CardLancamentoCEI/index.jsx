@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Form } from "react-final-form";
 import { Botao } from "components/Shareable/Botao";
 import { PERIODO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
@@ -37,7 +37,7 @@ export const CardLancamentoCEI = ({
   periodosInclusaoContinua,
   periodosPermissoesLancamentosEspeciais,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const periodoPermissoes = periodosPermissoesLancamentosEspeciais?.find((p) =>
     textoCabecalho.includes(p.periodo)
@@ -130,30 +130,34 @@ export const CardLancamentoCEI = ({
   };
 
   const handleClickEditar = () => {
-    history.push({
-      pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO_CEI}`,
-      search: `uuid=${solicitacaoMedicaoInicial.uuid}`,
-      state: {
-        periodo: textoCabecalho,
-        mesAnoSelecionado: periodoSelecionado,
-        status_periodo: getStatusPeriodo(),
-        status_solicitacao: solicitacaoMedicaoInicial.status,
-        justificativa_periodo: justificativaPeriodo(
-          quantidadeAlimentacoesLancadas,
-          null,
-          textoCabecalho
-        ),
-        ehEmeiDaCemei: ehEmeiDaCemei(
-          escolaInstituicao,
-          periodosEscolaCemeiComAlunosEmei,
-          textoCabecalho
-        ),
-        uuidPeriodoEscolar: uuidPeriodoEscolar,
-        tiposAlimentacao: tiposAlimentacao,
-        periodosInclusaoContinua: periodosInclusaoContinua,
-        ...location.state,
+    navigate(
+      {
+        pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO_CEI}`,
+        search: `uuid=${solicitacaoMedicaoInicial.uuid}`,
       },
-    });
+      {
+        state: {
+          periodo: textoCabecalho,
+          mesAnoSelecionado: periodoSelecionado,
+          status_periodo: getStatusPeriodo(),
+          status_solicitacao: solicitacaoMedicaoInicial.status,
+          justificativa_periodo: justificativaPeriodo(
+            quantidadeAlimentacoesLancadas,
+            null,
+            textoCabecalho
+          ),
+          ehEmeiDaCemei: ehEmeiDaCemei(
+            escolaInstituicao,
+            periodosEscolaCemeiComAlunosEmei,
+            textoCabecalho
+          ),
+          uuidPeriodoEscolar: uuidPeriodoEscolar,
+          tiposAlimentacao: tiposAlimentacao,
+          periodosInclusaoContinua: periodosInclusaoContinua,
+          ...location.state,
+        },
+      }
+    );
   };
 
   return (

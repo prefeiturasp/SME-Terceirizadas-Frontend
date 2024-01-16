@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Form } from "react-final-form";
 import { Botao } from "components/Shareable/Botao";
 import { PERIODO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
@@ -36,7 +36,7 @@ export const CardLancamento = ({
   errosAoSalvar,
   periodosPermissoesLancamentosEspeciais,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   let alimentacoesFormatadas = [];
@@ -127,28 +127,32 @@ export const CardLancamento = ({
   };
 
   const handleClickEditar = () => {
-    history.push({
-      pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`,
-      search: `uuid=${solicitacaoMedicaoInicial.uuid}&ehGrupoSolicitacoesDeAlimentacao=${ehGrupoSolicitacoesDeAlimentacao}&ehGrupoETEC=${ehGrupoETEC}&ehPeriodoEspecifico=${ehPeriodoEspecifico}`,
-      state: {
-        periodo: textoCabecalho,
-        grupo,
-        mesAnoSelecionado: periodoSelecionado,
-        tipos_alimentacao: tipos_alimentacao,
-        status_periodo: getStatusPeriodo(),
-        status_solicitacao: solicitacaoMedicaoInicial.status,
-        justificativa_periodo: justificativaPeriodo(
-          quantidadeAlimentacoesLancadas,
-          grupo,
-          textoCabecalho
-        ),
-        periodosInclusaoContinua: periodosInclusaoContinua,
-        solicitacaoMedicaoInicial: solicitacaoMedicaoInicial,
-        frequenciasDietasCEUGESTAO: frequenciasDietasCEUGESTAO,
-        periodoEspecifico: periodoEspecifico,
-        ...location.state,
+    navigate(
+      {
+        pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`,
+        search: `uuid=${solicitacaoMedicaoInicial.uuid}&ehGrupoSolicitacoesDeAlimentacao=${ehGrupoSolicitacoesDeAlimentacao}&ehGrupoETEC=${ehGrupoETEC}&ehPeriodoEspecifico=${ehPeriodoEspecifico}`,
       },
-    });
+      {
+        state: {
+          periodo: textoCabecalho,
+          grupo,
+          mesAnoSelecionado: periodoSelecionado,
+          tipos_alimentacao: tipos_alimentacao,
+          status_periodo: getStatusPeriodo(),
+          status_solicitacao: solicitacaoMedicaoInicial.status,
+          justificativa_periodo: justificativaPeriodo(
+            quantidadeAlimentacoesLancadas,
+            grupo,
+            textoCabecalho
+          ),
+          periodosInclusaoContinua: periodosInclusaoContinua,
+          solicitacaoMedicaoInicial: solicitacaoMedicaoInicial,
+          frequenciasDietasCEUGESTAO: frequenciasDietasCEUGESTAO,
+          periodoEspecifico: periodoEspecifico,
+          ...location.state,
+        },
+      }
+    );
   };
 
   return (

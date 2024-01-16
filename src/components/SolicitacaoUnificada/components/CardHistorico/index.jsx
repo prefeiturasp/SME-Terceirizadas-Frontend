@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import {
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   RELATORIO,
@@ -56,7 +56,7 @@ export class CardHistorico extends Component {
   redirectTo(pedido) {
     if (this.state.redirect) {
       return (
-        <Redirect
+        <Navigate
           to={`/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/${RELATORIO}?uuid=${pedido.uuid}`}
         />
       );

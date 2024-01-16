@@ -15,7 +15,7 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { InputComData } from "components/Shareable/DatePicker";
 
 import "./styles.scss";
@@ -31,7 +31,7 @@ export const ModalResponderAnaliseSensorial = ({ ...props }) => {
 
   const { homologacao, closeModal, onSend, showModal } = props;
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const removeFile = (index) => {
     arquivos.splice(index, 1);
@@ -68,9 +68,7 @@ export const ModalResponderAnaliseSensorial = ({ ...props }) => {
       const response = await respostaAnaliseSensorial(values_);
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Resposta para análise sensorial enviada com sucesso.");
-        history.push(
-          "/pesquisa-desenvolvimento/busca-produto-analise-sensorial"
-        );
+        navigate("/pesquisa-desenvolvimento/busca-produto-analise-sensorial");
         resetForm(form);
       } else {
         toastError(getError(response.data));
