@@ -2,11 +2,6 @@ import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
 import { cardsPainel } from "./constants";
-import {
-  parseDataHoraBrToMoment,
-  comparaObjetosMoment,
-  truncarString,
-} from "helpers/utilities";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
@@ -14,12 +9,12 @@ import { debounce } from "lodash";
 import { useCallback } from "react";
 import {
   CardConfig,
-  CardItem,
   FichaTecnicaDashboard,
   FiltrosDashboardFichasTecnicas,
 } from "interfaces/pre_recebimento.interface";
 import { ResponseFichasTecnicasDashboard } from "interfaces/responses.interface";
 import { getDashboardFichasTecnicas } from "services/fichaTecnica.service";
+import { formatarCards } from "./helpers";
 
 export default () => {
   const [carregando, setCarregando] = useState<boolean>(false);
@@ -27,38 +22,6 @@ export default () => {
 
   const [cards, setCards] =
     useState<CardConfig<FichaTecnicaDashboard>[]>(cardsPainel);
-
-  const formatarCards = (items: FichaTecnicaDashboard[]): CardItem[] => {
-    return items.sort(ordenarPorLogMaisRecente).map((item) => ({
-      text: gerarTextoCard(item),
-      date: item.log_mais_recente.slice(0, 10),
-      link: "#",
-      status: item.status,
-      fullText: gerarTextoCompletoCard(item),
-    }));
-  };
-
-  const ordenarPorLogMaisRecente = (
-    a: FichaTecnicaDashboard,
-    b: FichaTecnicaDashboard
-  ) => {
-    let data_a = parseDataHoraBrToMoment(a.log_mais_recente);
-    let data_b = parseDataHoraBrToMoment(b.log_mais_recente);
-    return comparaObjetosMoment(data_b, data_a);
-  };
-
-  const gerarTextoCard = (item: FichaTecnicaDashboard) => {
-    const TAMANHO_MAXIMO = 20;
-
-    return `${item.numero_ficha} - ${truncarString(
-      item.nome_produto,
-      TAMANHO_MAXIMO
-    )} - ${truncarString(item.nome_empresa, TAMANHO_MAXIMO)}`;
-  };
-
-  const gerarTextoCompletoCard = (item: FichaTecnicaDashboard) => {
-    return `${item.numero_ficha} - ${item.nome_produto} - ${item.nome_empresa}`;
-  };
 
   const filtrarItens = debounce((values: FiltrosDashboardFichasTecnicas) => {
     const { nome_produto, numero_ficha, nome_empresa } = values;

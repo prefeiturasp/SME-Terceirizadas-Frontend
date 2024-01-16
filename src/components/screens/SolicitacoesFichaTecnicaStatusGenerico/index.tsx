@@ -12,11 +12,11 @@ import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
-  FichaTecnicaDashboard,
   FiltrosDashboardFichasTecnicas,
   VerMaisItem,
 } from "interfaces/pre_recebimento.interface";
 import { ResponseFichasTecnicasPorStatusDashboard } from "interfaces/responses.interface";
+import { formataItensVerMais } from "../PreRecebimento/PainelFichasTecnicas/helpers";
 
 interface Props {
   getSolicitacoes: (
@@ -48,14 +48,6 @@ export const SolicitacoesFichaTecnicaStatusGenerico: React.FC<Props> = ({
 
   const PAGE_SIZE = limit || 10;
 
-  const formataCard = (itens: FichaTecnicaDashboard[]): VerMaisItem[] => {
-    return itens.map((item) => ({
-      texto: `${item.numero_ficha} - ${item.nome_produto} - ${item.nome_empresa}`,
-      data: item.log_mais_recente.slice(0, 10),
-      link: `${urlBaseItem}?uuid=${item.uuid}`,
-    }));
-  };
-
   const getSolicitacoesAsync = async (
     params: FiltrosDashboardFichasTecnicas
   ): Promise<void> => {
@@ -63,7 +55,10 @@ export const SolicitacoesFichaTecnicaStatusGenerico: React.FC<Props> = ({
     let response = await getSolicitacoes(parametros);
 
     if (response.status === HTTP_STATUS.OK) {
-      let solicitacoesFormatadas = formataCard(response.data.results.dados);
+      let solicitacoesFormatadas = formataItensVerMais(
+        response.data.results.dados,
+        urlBaseItem
+      );
       setSolicitacoes(solicitacoesFormatadas);
       setCount(response.data.results.total);
     } else {
@@ -158,6 +153,7 @@ export const SolicitacoesFichaTecnicaStatusGenerico: React.FC<Props> = ({
             icone={icone}
             tipo={cardType}
             solicitacoes={solicitacoes}
+            exibirTooltip
           />
           <Paginacao
             onChange={(page: number) => onPageChanged(page)}
