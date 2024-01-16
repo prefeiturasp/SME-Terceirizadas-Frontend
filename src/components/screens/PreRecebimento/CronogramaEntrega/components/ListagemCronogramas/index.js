@@ -20,6 +20,10 @@ import { Tooltip } from "antd";
 import { formataNome } from "./helpers";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { imprimirCronograma } from "services/cronograma.service";
+import {
+  usuarioEhDilogDiretoria,
+  usuarioEhDinutreDiretoria,
+} from "../../../../../../helpers/utilities";
 
 const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
   const statusValue = (status) => {
@@ -45,6 +49,16 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
         error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
+  };
+
+  const getAssinarEnviar = (cronograma) => {
+    return (
+      (usuarioEhEmpresaFornecedor() &&
+        cronograma.status === "Assinado e Enviado ao Fornecedor") ||
+      (usuarioEhDinutreDiretoria() &&
+        cronograma.status === "Assinado Fornecedor") ||
+      (usuarioEhDilogDiretoria() && cronograma.status === "Assinado DINUTRE")
+    );
   };
 
   return (
@@ -118,7 +132,11 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                             className="float-start"
                             to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${cronograma.uuid}`}
                           >
-                            <span className="link-acoes green">Detalhar</span>
+                            <span className="link-acoes green">
+                              {getAssinarEnviar(cronograma)
+                                ? "Assinar e Enviar"
+                                : "Detalhar"}
+                            </span>
                           </NavLink>
 
                           {cronograma.status === "Assinado CODAE" && (

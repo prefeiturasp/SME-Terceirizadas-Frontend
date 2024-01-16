@@ -81,7 +81,7 @@ export const ModalCronograma: React.FC<Props> = ({
         </div>
       </Modal.Body>
       <Modal.Footer>
-        {usuarioEhCronograma() && (
+        {usuarioEhCronograma() && event.objeto.status === "Assinado CODAE" && (
           <Botao
             texto="Alterar"
             type={BUTTON_TYPE.BUTTON}

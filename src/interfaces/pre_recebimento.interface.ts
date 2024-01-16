@@ -228,4 +228,5 @@ export interface EtapaCalendario {
   quantidade: number;
   uuid: string;
   uuid_cronograma: string;
+  status: string;
 }
