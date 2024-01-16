@@ -57,7 +57,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
         cronograma.status === "Assinado e Enviado ao Fornecedor") ||
       (usuarioEhDinutreDiretoria() &&
         cronograma.status === "Assinado Fornecedor") ||
-      (usuarioEhDilogDiretoria() && cronograma.status === "Assinado DINUTRE")
+      (usuarioEhDilogDiretoria() && cronograma.status === "Assinado Dinutre")
     );
   };
 
