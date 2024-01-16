@@ -314,7 +314,7 @@ export const CadastroEmpresa = () => {
     service(dados).then((response) => {
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Empresa cadastrada com sucesso!");
-        history.push("/configuracoes/cadastros/empresas-cadastradas");
+        navigate("/configuracoes/cadastros/empresas-cadastradas");
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
         toastError(`Erro ao cadastrar empresa: ${getError(response.data)}.`);
       } else {
