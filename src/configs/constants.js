@@ -252,6 +252,7 @@ export const CORRIGIR_DOCUMENTOS_RECEBIMENTO =
 
 export const FICHA_TECNICA = "ficha-tecnica";
 export const CADASTRO_FICHA_TECNICA = "cadastro-ficha-tecnica";
+export const PAINEL_FICHAS_TECNICAS = "painel-fichas-tecnicas";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";
