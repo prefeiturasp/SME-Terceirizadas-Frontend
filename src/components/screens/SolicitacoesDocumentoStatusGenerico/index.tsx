@@ -14,9 +14,9 @@ import { gerarParametrosConsulta } from "../../../helpers/utilities";
 import {
   DocumentosRecebimentoDashboard,
   FiltrosDashboardDocumentos,
+  VerMaisItem,
 } from "interfaces/pre_recebimento.interface";
 import { ResponseDocumentosPorStatusDashboard } from "interfaces/responses.interface";
-import { DocumentoDashboardVerMais } from "./interfaces";
 
 interface Props {
   getSolicitacoes: (
@@ -39,8 +39,7 @@ export const SolicitacoesDocumentoStatusGenerico: React.FC<Props> = ({
   cardType,
   urlBaseItem,
 }) => {
-  const [solicitacoes, setSolicitacoes] =
-    useState<DocumentoDashboardVerMais[]>(null);
+  const [solicitacoes, setSolicitacoes] = useState<VerMaisItem[]>(null);
   const [filtrado, setFiltrado] = useState<boolean>(false);
   const [count, setCount] = useState<number>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -51,7 +50,7 @@ export const SolicitacoesDocumentoStatusGenerico: React.FC<Props> = ({
 
   const formataCardDocumento = (
     itens: DocumentosRecebimentoDashboard[]
-  ): DocumentoDashboardVerMais[] => {
+  ): VerMaisItem[] => {
     return itens.map((item) => ({
       texto: `${item.numero_cronograma} - ${item.nome_produto} - ${item.nome_empresa}`,
       data: item.log_mais_recente.slice(0, 10),

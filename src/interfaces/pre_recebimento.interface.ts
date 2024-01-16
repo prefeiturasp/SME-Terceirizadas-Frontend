@@ -265,3 +265,9 @@ export interface CardConfig<T> {
   href: string;
   items?: T[];
 }
+
+export interface VerMaisItem {
+  texto: string;
+  data: string;
+  link: string;
+}
