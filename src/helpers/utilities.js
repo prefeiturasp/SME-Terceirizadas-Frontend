@@ -1155,3 +1155,10 @@ export const getAmanha = () => {
 export const maxEntreDatas = (arrayDeDatas) => {
   return new Date(Math.max(...arrayDeDatas));
 };
+
+export const ordenarPorLogMaisRecente = (itemA, itemB) => {
+  let dataA = parseDataHoraBrToMoment(itemA.log_mais_recente);
+  let dataB = parseDataHoraBrToMoment(itemB.log_mais_recente);
+
+  return comparaObjetosMoment(dataB, dataA);
+};
