@@ -21,8 +21,8 @@ export default ({ listaRascunhos }) => {
   };
   return (
     <>
-      <Spin tip="Carregando..." spinning={!listaRascunhos}>
-        {listaRascunhos && listaRascunhos.length > 0 && (
+      {listaRascunhos && listaRascunhos.length > 0 && (
+        <Spin tip="Carregando..." spinning={!listaRascunhos}>
           <div className="card mt-3">
             <div className="card-body body-rascunho">
               <span className="titulo-rascunho">Rascunhos</span>
@@ -50,8 +50,8 @@ export default ({ listaRascunhos }) => {
               </div>
             </div>
           </div>
-        )}
-      </Spin>
+        </Spin>
+      )}
     </>
   );
 };
