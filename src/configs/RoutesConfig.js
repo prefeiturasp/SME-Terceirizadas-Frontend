@@ -140,6 +140,7 @@ import {
   usuarioComAcessoAoPainelEmbalagens,
   usuarioEhOrgaoFiscalizador,
   usuarioComAcessoAoPainelDocumentos,
+  usuarioComAcessoAoPainelFichasTecnicas,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -281,7 +282,9 @@ import AnalisarDocumentosRecebimentoPage from "../pages/PreRecebimento/AnalisarD
 import CorrigirDocumentosRecebimentoPage from "../pages/PreRecebimento/CorrigirDocumentosRecebimentoPage";
 import FichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/FichaTecnicaPage";
 import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/CadastroFichaTecnicaPage";
+import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
+import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
 
 const routesConfig = [
   {
@@ -2071,6 +2074,18 @@ const routesConfig = [
     component: CadastroFichaTecnicaPage,
     exact: true,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_FICHAS_TECNICAS}`,
+    component: PainelFichasTecnicasPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_FICHAS_TECNICAS}/${constants.PENDENTES_APROVACAO}/`,
+    component: StatusFichasTecnicasPendenteAprovacao,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
