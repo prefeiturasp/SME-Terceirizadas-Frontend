@@ -6,6 +6,7 @@ import {
 import {
   PAINEL_FICHAS_TECNICAS,
   PENDENTES_APROVACAO,
+  PRE_RECEBIMENTO,
 } from "../../../../configs/constants";
 
 export const CARD_PENDENTES_APROVACAO: CardConfig<FichaTecnicaDashboard> = {
@@ -14,7 +15,7 @@ export const CARD_PENDENTES_APROVACAO: CardConfig<FichaTecnicaDashboard> = {
   icon: "fa-exclamation-triangle",
   style: "card-pendente-assinatura",
   incluir_status: ["ENVIADA_PARA_ANALISE"],
-  href: `${PAINEL_FICHAS_TECNICAS}/${PENDENTES_APROVACAO}`,
+  href: `/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}/${PENDENTES_APROVACAO}`,
 };
 
 export const cardsPainel = [CARD_PENDENTES_APROVACAO];
