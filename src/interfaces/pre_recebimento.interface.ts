@@ -120,7 +120,7 @@ export interface FichaTecnicaDashboard {
 export interface FiltrosDashboardFichasTecnicas {
   nome_produto?: string;
   numero_ficha?: string;
-  nome_fornecedor?: string;
+  nome_empresa?: string;
   status?: string[];
   offset?: number;
   limit?: number;

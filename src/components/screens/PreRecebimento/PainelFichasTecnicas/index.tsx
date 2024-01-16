@@ -61,9 +61,9 @@ export default () => {
   };
 
   const filtrarItens = debounce((values: FiltrosDashboardFichasTecnicas) => {
-    const { nome_produto, numero_ficha, nome_fornecedor } = values;
+    const { nome_produto, numero_ficha, nome_empresa } = values;
 
-    const podeFiltrar = [nome_produto, numero_ficha, nome_fornecedor].some(
+    const podeFiltrar = [nome_produto, numero_ficha, nome_empresa].some(
       (value) => value && value.length > 2
     );
 
@@ -126,9 +126,9 @@ export default () => {
             <div className="col">
               <Form
                 initialValues={{
-                  numero_cronograma: "",
+                  numero_ficha: "",
                   nome_produto: "",
-                  nome_fornecedor: "",
+                  nome_empresa: "",
                 }}
                 onSubmit={() => {}}
               >
@@ -137,11 +137,11 @@ export default () => {
                     <div className="col-4">
                       <Field
                         component={InputText}
-                        name="numero_cronograma"
+                        name="numero_ficha"
                         placeholder="Filtrar por Nº da Ficha Técnica"
                       />
 
-                      <OnChange name="numero_cronograma">
+                      <OnChange name="numero_ficha">
                         {() => filtrarItens(values)}
                       </OnChange>
                     </div>
@@ -159,11 +159,11 @@ export default () => {
                     <div className="col-4">
                       <Field
                         component={InputText}
-                        name="nome_fornecedor"
+                        name="nome_empresa"
                         placeholder="Filtrar por Nome do Fornecedor"
                       />
 
-                      <OnChange name="nome_fornecedor">
+                      <OnChange name="nome_empresa">
                         {() => filtrarItens(values)}
                       </OnChange>
                     </div>
