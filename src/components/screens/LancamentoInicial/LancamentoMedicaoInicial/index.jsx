@@ -309,15 +309,12 @@ export default () => {
       ano
     );
     setLoadingSolicitacaoMedicaoInicial(false);
-    navigate(
-      {
-        pathname: location.pathname,
-        search: `?mes=${format(new Date(value), "MM").toString()}&ano=${getYear(
-          new Date(value)
-        ).toString()}`,
-      },
-      { replace: true }
-    );
+    history.replace({
+      pathname: location.pathname,
+      search: `?mes=${format(new Date(value), "MM").toString()}&ano=${getYear(
+        new Date(value)
+      ).toString()}`,
+    });
   };
 
   const onClickInfoBasicas = async () => {
