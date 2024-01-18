@@ -444,3 +444,31 @@ export const vincularProtocolosEditais = async (payload) => {
     payload
   );
 };
+
+export const getDadosAlunoNaoMatriculadoDetalhesDieta = async (
+  codigo_eol_escola,
+  nome_aluno
+) => {
+  const url = `/alunos/dados-aluno-nao-matriculado-detalhes-dieta/`;
+  const response = await axios
+    .get(url, { params: { codigo_eol_escola, nome_aluno } })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getDietasEspeciaisVigentesDeUmAlunoNaoMatriculado = async (
+  codigo_eol_escola,
+  nome_aluno
+) => {
+  const url = `${URL_DIETA_ESPECIAL}/solicitacoes-aluno-nao-matriculado/`;
+  const response = await axios
+    .get(url, { params: { codigo_eol_escola, nome_aluno } })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

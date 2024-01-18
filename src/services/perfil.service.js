@@ -175,23 +175,13 @@ export const obtemDadosAlunoPeloEOL = async (codEOL) => {
   }
 };
 
-export const dadosDoAluno = (codigoEol) => {
+export const dadosDoAluno = async (codigoEol) => {
   const url = `${API_URL}/alunos/${codigoEol}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "GET",
-    headers: authToken,
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getAlunosListagem = async (params) =>
