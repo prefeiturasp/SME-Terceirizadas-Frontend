@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import CollapseFiltros from "components/Shareable/CollapseFiltros";
 import Botao from "components/Shareable/Botao";
@@ -11,9 +11,25 @@ import {
 import FormFiltro from "./components/FormFiltro";
 import CardResultado from "./components/CardResultado";
 
+import { buscaTotaisRelatorioGerencialDietas } from "services/dietaEspecial.service";
+
+type Totais = {
+  total_solicitacoes: number;
+  total_autorizadas: number;
+  total_negadas: number;
+  total_canceladas: number;
+};
+
 export default () => {
-  const filtrar = () => {};
+  const [totais, setTotais] = useState<Totais | Record<string, number>>({});
+
+  const filtrar = async () => {
+    const data = await buscaTotaisRelatorioGerencialDietas();
+    setTotais(data);
+  };
+
   const limparFiltro = () => {};
+
   const exportarPDF = () => {};
 
   return (
@@ -30,15 +46,23 @@ export default () => {
           <CardResultado
             titulo="Total de Solicitações"
             classeCor="azul-escuro"
-            total={1253}
+            total={totais.total_solicitacoes ?? 0}
           />
           <CardResultado
             titulo="Autorizadas"
             classeCor="verde-claro"
-            total={1000}
+            total={totais.total_autorizadas ?? 0}
           />
-          <CardResultado titulo="Negadas" classeCor="laranja" total={53} />
-          <CardResultado titulo="Canceladas" classeCor="vermelho" total={100} />
+          <CardResultado
+            titulo="Negadas"
+            classeCor="laranja"
+            total={totais.total_negadas ?? 0}
+          />
+          <CardResultado
+            titulo="Canceladas"
+            classeCor="vermelho"
+            total={totais.total_canceladas ?? 0}
+          />
         </div>
         <div className="d-flex justify-content-end mt-5">
           <Botao

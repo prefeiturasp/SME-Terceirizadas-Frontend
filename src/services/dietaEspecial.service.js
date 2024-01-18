@@ -448,3 +448,12 @@ export const vincularProtocolosEditais = async (payload) => {
 export const buscaAnosComDietas = async () => {
   return Promise.resolve([2024, 2023, 2022]);
 };
+
+export const buscaTotaisRelatorioGerencialDietas = async () => {
+  return Promise.resolve({
+    total_solicitacoes: 1253,
+    total_autorizadas: 1000,
+    total_negadas: 53,
+    total_canceladas: 100,
+  });
+};
