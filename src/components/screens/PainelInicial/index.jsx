@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Row, Col } from "antd";
 import CardLogo from "components/Shareable/CardLogo/CardLogo";
 import IconeGestaoDeAlimentacao from "components/Shareable/Icones/IconeGestaoDeAlimentacao";
@@ -29,9 +29,7 @@ import {
 import { ACOMPANHAMENTO_DE_LANCAMENTOS } from "configs/constants";
 import { ENVIRONMENT } from "constants/config";
 
-const PainelInicial = () => {
-  const navigate = useNavigate();
-
+const PainelInicial = ({ history }) => {
   const exibeMenuValidandoAmbiente = exibirGA();
 
   const usuarioEscolaEhGestaoDiretaParceira =
@@ -52,7 +50,7 @@ const PainelInicial = () => {
           <Col xs={24} sm={24} md={24} lg={8} xl={8}>
             <CardLogo
               titulo={"Gestão de Alimentação"}
-              onClick={() => navigate("/painel-gestao-alimentacao")}
+              onClick={() => history.push("/painel-gestao-alimentacao")}
             >
               <IconeGestaoDeAlimentacao />
             </CardLogo>
@@ -71,7 +69,7 @@ const PainelInicial = () => {
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Dieta Especial"}
-            onClick={() => navigate("/painel-dieta-especial")}
+            onClick={() => history.push("/painel-dieta-especial")}
           >
             <IconeDietaEspecial />
           </CardLogo>
@@ -88,7 +86,7 @@ const PainelInicial = () => {
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Gestão de Produto"}
-            onClick={() => navigate("/painel-gestao-produto")}
+            onClick={() => history.push("/painel-gestao-produto")}
           >
             <IconeGestaoDeProduto />
           </CardLogo>
@@ -101,12 +99,14 @@ const PainelInicial = () => {
             onClick={() => {
               (usuarioEhEscolaTerceirizada() ||
                 usuarioEhEscolaTerceirizadaDiretor()) &&
-                navigate("/lancamento-inicial/lancamento-medicao-inicial");
+                history.push("/lancamento-inicial/lancamento-medicao-inicial");
               (usuarioEhDRE() ||
                 usuarioEhMedicao() ||
                 usuarioEhCODAEGestaoAlimentacao() ||
                 usuarioEhCODAENutriManifestacao()) &&
-                navigate(`/medicao-inicial/${ACOMPANHAMENTO_DE_LANCAMENTOS}`);
+                history.push(
+                  `/medicao-inicial/${ACOMPANHAMENTO_DE_LANCAMENTOS}`
+                );
             }}
           >
             <IconeMedicaoInicial />
@@ -117,7 +117,7 @@ const PainelInicial = () => {
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Abastecimento"}
-            onClick={() => navigate("/logistica/entregas-dre")}
+            onClick={() => history.push("/logistica/entregas-dre")}
           >
             <IconeAbastecimento />
           </CardLogo>
@@ -128,7 +128,7 @@ const PainelInicial = () => {
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Abastecimento"}
-            onClick={() => navigate("/logistica/conferir-entrega")}
+            onClick={() => history.push("/logistica/conferir-entrega")}
           >
             <IconeAbastecimento />
           </CardLogo>
@@ -138,4 +138,4 @@ const PainelInicial = () => {
   );
 };
 
-export default PainelInicial;
+export default withRouter(PainelInicial);

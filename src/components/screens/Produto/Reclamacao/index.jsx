@@ -1,6 +1,7 @@
 import { Spin } from "antd";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 
 import FormBuscaProduto from "./components/FormBuscaProduto";
@@ -18,7 +19,6 @@ import { getProdutosPorParametros } from "services/produto.service";
 
 import "./style.scss";
 import { Paginacao } from "components/Shareable/Paginacao";
-import withNavigationType from "components/Shareable/withNavigationType";
 
 class ReclamacaoProduto extends Component {
   constructor(props) {
@@ -31,8 +31,8 @@ class ReclamacaoProduto extends Component {
     this.TAMANHO_PAGINA = 10;
   }
   UNSAFE_componentWillMount() {
-    const { navigationType, reset } = this.props;
-    if (navigationType === "PUSH") {
+    const { history, reset } = this.props;
+    if (history && history.action === "PUSH") {
       reset();
     }
 
@@ -165,6 +165,6 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-export default withNavigationType(
+export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(ReclamacaoProduto)
 );

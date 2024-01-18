@@ -1,14 +1,15 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import "./style.scss";
 import { CADASTROS, CONFIGURACOES, EDICAO_PRODUTOS } from "configs/constants";
 
 const Tabela = ({ produtos }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const editarProduto = (produto) =>
-    navigate(`/${CONFIGURACOES}/${CADASTROS}/${EDICAO_PRODUTOS}`, {
+    history.push({
+      pathname: `/${CONFIGURACOES}/${CADASTROS}/${EDICAO_PRODUTOS}`,
       state: {
         produto: produto,
       },

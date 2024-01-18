@@ -28,7 +28,7 @@ import {
   PRE_RECEBIMENTO,
   SOLICITACAO_ALTERACAO_CRONOGRAMA,
 } from "configs/constants";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   usuarioEhCronograma,
   usuarioEhDilogDiretoria,
@@ -60,7 +60,7 @@ export default ({ analiseSolicitacao }) => {
     useState(null);
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [carregando, setCarregando] = useState(false);
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const solicitacaoCodae =
     solicitacaoAlteracaoCronograma &&
@@ -172,7 +172,7 @@ export default ({ analiseSolicitacao }) => {
           ? "Solicitação de alteração salva com sucesso!"
           : "Alteração enviada com sucesso!";
         toastSuccess(msg);
-        navigate(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+        history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
       })
       .catch(() => {
         toastError("Ocorreu um erro ao salvar o Cronograma");
@@ -191,7 +191,7 @@ export default ({ analiseSolicitacao }) => {
     await analiseDilogSolicitacaoAlteracaoCronograma(uuid, payload)
       .then(() => {
         toastSuccess("Análise da alteração enviada com sucesso!");
-        navigate(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
+        history.push(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
       })
       .catch(() => {
         toastError("Ocorreu um erro ao salvar o Cronograma");
@@ -210,7 +210,7 @@ export default ({ analiseSolicitacao }) => {
     await analiseDinutreSolicitacaoAlteracaoCronograma(uuid, payload)
       .then(() => {
         toastSuccess("Análise da alteração enviada com sucesso!");
-        navigate(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
+        history.push(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
       })
       .catch(() => {
         toastError("Ocorreu um erro ao salvar o Cronograma");
@@ -232,7 +232,7 @@ export default ({ analiseSolicitacao }) => {
     await fornecedorCienteAlteracaoCodae(uuid)
       .then(() => {
         toastSuccess("Ciência da alteração gravada com sucesso!");
-        navigate(
+        history.push(
           `/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR}`
         );
       })
@@ -270,7 +270,7 @@ export default ({ analiseSolicitacao }) => {
     await dilogCienteSolicitacaoAlteracaoCronograma(uuid, payload)
       .then(() => {
         toastSuccess("Análise da alteração enviada com sucesso!");
-        navigate(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
+        history.push(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
       })
       .catch(() => {
         toastError("Ocorreu um erro ao salvar o Cronograma");

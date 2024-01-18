@@ -4,11 +4,11 @@ import { Modal } from "react-bootstrap";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import Botao from "../Botao";
 import { CENTRAL_DOWNLOADS } from "configs/constants";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import "./styles.scss";
 
 const ModalSolicitacaoDownload = ({ show, setShow }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const handleClose = () => {
     setShow(false);
@@ -37,7 +37,7 @@ const ModalSolicitacaoDownload = ({ show, setShow }) => {
           texto="Ir para a Central de Downloads"
           type={BUTTON_TYPE.BUTTON}
           onClick={() => {
-            navigate(`/${CENTRAL_DOWNLOADS}`);
+            history.push(`/${CENTRAL_DOWNLOADS}`);
           }}
           style={BUTTON_STYLE.GREEN}
           className="ms-3"

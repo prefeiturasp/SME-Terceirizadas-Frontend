@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { Navigate } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
@@ -49,7 +49,7 @@ class RelatorioSuspensaoAlimentacao extends Component {
 
   renderizarRedirecionamentoParaSuspensoesDeAlimentacao = () => {
     if (this.state.redirect) {
-      return <Navigate to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`} />;
+      return <Redirect to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`} />;
     }
   };
 

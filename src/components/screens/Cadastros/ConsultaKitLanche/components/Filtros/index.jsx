@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Field } from "react-final-form";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
@@ -15,7 +15,7 @@ import "./style.scss";
 const FORM_NAME = "buscaKitsLanche";
 
 export default ({ setFiltros, setKits }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [initialValues] = useState();
   const [editais, setEditais] = useState();
 
@@ -88,7 +88,7 @@ export default ({ setFiltros, setKits }) => {
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
                 className="float-start"
-                onClick={() => navigate("/codae/cadastros/kits")}
+                onClick={() => history.push(`/codae/cadastros/kits`)}
               />
 
               <Botao

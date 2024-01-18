@@ -6,7 +6,7 @@ import { bindActionCreators } from "redux";
 import { loadLote } from "../../../../reducers/lote.reducer";
 import { Select } from "../../../Shareable/Select";
 import { InputText } from "../../../Shareable/Input/InputText";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { ModalCadastroLote } from "./components/ModalCadastroLote";
@@ -147,7 +147,7 @@ class CadastroLote extends Component {
   renderRedirect = () => {
     if (this.state.redirect) {
       return (
-        <Navigate to={`/${CONFIGURACOES}/${CADASTROS}/${LOTES_CADASTRADOS}`} />
+        <Redirect to={`/${CONFIGURACOES}/${CADASTROS}/${LOTES_CADASTRADOS}`} />
       );
     }
   };

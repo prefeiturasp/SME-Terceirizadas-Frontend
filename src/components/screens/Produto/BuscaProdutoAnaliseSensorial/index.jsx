@@ -1,7 +1,7 @@
 import { Spin } from "antd";
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 
 import {
@@ -10,7 +10,6 @@ import {
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import { Paginacao } from "components/Shareable/Paginacao";
-import withNavigationType from "components/Shareable/withNavigationType";
 
 import {
   reset,
@@ -41,9 +40,9 @@ class BuscaProdutoAnaliseSensorial extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    const { navigationType, reset, homologacoes } = this.props;
-    if (navigationType === "PUSH") reset();
-    if (homologacoes === undefined || navigationType === "PUSH") this.refresh();
+    const { history, reset, homologacoes } = this.props;
+    if (history && history.action === "PUSH") reset();
+    if (homologacoes === undefined || history.action === "PUSH") this.refresh();
   }
 
   pdfGerado = async ({ uuid }) => {
@@ -235,6 +234,6 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-export default withNavigationType(
+export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(BuscaProdutoAnaliseSensorial)
 );

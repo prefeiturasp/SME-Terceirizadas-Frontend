@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Spin } from "antd";
-import { useNavigate } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -12,12 +12,10 @@ import { getHomologacaoProduto } from "../../../../services/produto.service";
 import ModalResponderReclamacao from "./ModalResponderReclamacao";
 import { ordenaLogs, getQuestionamentoCodae } from "./helpers";
 
-const ResponderReclamacaoDetalheProduto = () => {
+const ResponderReclamacaoDetalheProduto = ({ history }) => {
   const [produto, setProduto] = useState(null);
   const [exibirModal, setExibirModal] = useState();
   const [uuid, setUuid] = useState();
-
-  const navigate = useNavigate();
 
   const carregaHomologacao = useCallback(
     (_uuid) => {
@@ -67,7 +65,7 @@ const ResponderReclamacaoDetalheProduto = () => {
                   style={BUTTON_STYLE.BLUE}
                   texto="Voltar"
                   icon={BUTTON_ICON.ARROW_LEFT}
-                  onClick={() => navigate(-1)}
+                  onClick={() => history.goBack()}
                   type={BUTTON_TYPE.BUTTON}
                 />
               </div>
@@ -86,7 +84,7 @@ const ResponderReclamacaoDetalheProduto = () => {
                       style={BUTTON_STYLE.BLUE}
                       texto="Voltar"
                       icon={BUTTON_ICON.ARROW_LEFT}
-                      onClick={() => navigate(-1)}
+                      onClick={() => history.goBack()}
                       type={BUTTON_TYPE.BUTTON}
                     />
                   </div>
@@ -99,4 +97,4 @@ const ResponderReclamacaoDetalheProduto = () => {
     </Spin>
   );
 };
-export default ResponderReclamacaoDetalheProduto;
+export default withRouter(ResponderReclamacaoDetalheProduto);

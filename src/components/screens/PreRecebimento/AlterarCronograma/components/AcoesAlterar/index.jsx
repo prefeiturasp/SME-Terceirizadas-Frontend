@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -30,7 +30,7 @@ export default ({
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -49,7 +49,7 @@ export default ({
 
   const handleBack = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    navigate(-1);
+    history.goBack();
   };
 
   return (

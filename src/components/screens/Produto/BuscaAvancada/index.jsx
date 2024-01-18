@@ -1,7 +1,7 @@
 import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { useNavigationType } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
@@ -35,12 +35,11 @@ const BuscaAvancada = ({
   setAtivos,
   filtros,
   setFiltros,
+  history,
   reset,
 }) => {
   const [carregando, setCarregando] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
-
-  const navigationType = useNavigationType();
 
   const PAGE_SIZE = 10;
 
@@ -59,7 +58,7 @@ const BuscaAvancada = ({
 
   useEffect(() => {
     if (firstLoad) {
-      if (navigationType === "PUSH") reset();
+      if (history && history.action === "PUSH") reset();
       setFirstLoad(false);
     } else if (filtros) fetchData();
   }, [filtros, page]);
@@ -130,4 +129,6 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(BuscaAvancada);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(BuscaAvancada)
+);

@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Login from "./components/Login";
 import RoutesConfig from "./configs/RoutesConfig";
 import ConfirmarEmailPage from "./pages/ConfirmarEmailPage";
@@ -8,42 +8,50 @@ import RecuperarSenhaPage from "./pages/RecuperarSenhaPage";
 import SemPermissaoPage from "./pages/SemPermissaoPage";
 import authService from "./services/auth";
 
-const PrivateRoute = ({ component: Component, tipoUsuario: tipoUsuario }) => {
-  return authService.isLoggedIn() ? (
-    tipoUsuario ? (
-      <Component />
-    ) : (
-      <Navigate to={{ pathname: "/403" }} />
-    )
-  ) : (
-    <Navigate to={{ pathname: "/login" }} />
-  );
-};
+const PrivateRouter = (
+  { component: Component, tipoUsuario: tipoUsuario, ...rest } // eslint-disable-line
+) => (
+  <Route
+    {...rest}
+    render={(props) =>
+      authService.isLoggedIn() ? (
+        tipoUsuario ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{ pathname: "/403", state: { from: props.location } }} // eslint-disable-line
+          />
+        )
+      ) : (
+        <Redirect
+          to={{ pathname: "/login", state: { from: props.location } }} // eslint-disable-line
+        />
+      )
+    }
+  />
+);
 
-const AppRoutes = () => (
+const Routes = () => (
   <BrowserRouter>
-    <Routes>
-      <Route path="/login" element={<Login />} />
+    <Switch>
+      <Route path="/login" component={Login} />
       {RoutesConfig.map((value, key) => {
         return (
-          <Route
+          <PrivateRouter
             key={key}
             path={value.path}
-            element={
-              <PrivateRoute
-                component={value.component}
-                tipoUsuario={value.tipoUsuario}
-              />
-            }
+            exact={value.exact}
+            component={value.component}
+            tipoUsuario={value.tipoUsuario}
           />
         );
       })}
-      <Route path="/confirmar-email" element={<ConfirmarEmailPage />} />
-      <Route path="/recuperar-senha" element={<RecuperarSenhaPage />} />
-      <Route path="/403" element={<SemPermissaoPage />} />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+      <Route path="/confirmar-email" component={ConfirmarEmailPage} />
+      <Route path="/recuperar-senha" component={RecuperarSenhaPage} />
+      <Route path="/403" component={SemPermissaoPage} />
+      <Route path="*" component={NotFoundPage} />
+    </Switch>
   </BrowserRouter>
 );
 
-export default AppRoutes;
+export default Routes;

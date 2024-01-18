@@ -4,7 +4,7 @@ import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import withNavigationType from "components/Shareable/withNavigationType";
+import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import {
@@ -91,8 +91,8 @@ class solicitacaoDietaEspecial extends Component {
         codigo_eol_escola: meusDados.vinculo_atual.instituicao.codigo_eol,
       });
     });
-    const { navigationType, loadSolicitacoesVigentes, reset } = this.props;
-    if (navigationType === "PUSH") {
+    const { history, loadSolicitacoesVigentes, reset } = this.props;
+    if (history && history.action === "PUSH") {
       loadSolicitacoesVigentes(null);
       reset();
     }
@@ -660,7 +660,7 @@ const componentNameForm = reduxForm({
   form: "solicitacaoDietaEspecial",
   keepDirtyOnReinitialize: true,
   destroyOnUnmount: false,
-})(withNavigationType(solicitacaoDietaEspecial));
+})(solicitacaoDietaEspecial);
 
 const selector = formValueSelector("solicitacaoDietaEspecial");
 const mapStateToProps = (state) => {
@@ -679,4 +679,6 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(componentNameForm);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(componentNameForm)
+);

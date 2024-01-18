@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { getNumerosEditais } from "services/edital.service";
 import {
@@ -28,7 +28,7 @@ import { Spin } from "antd";
 import "./style.scss";
 
 export default ({ uuid }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [carregando, setCarregando] = useState(true);
   const [editais, setEditais] = useState([]);
   const [opcaoStatus] = useState([
@@ -57,7 +57,7 @@ export default ({ uuid }) => {
       : await createKitLanche(payload);
     if ([HTTP_STATUS.CREATED, HTTP_STATUS.OK].includes(response.status)) {
       toastSuccess("Cadastro salvo com sucesso");
-      navigate("/codae/cadastros/consulta-kits");
+      history.push(`/codae/cadastros/consulta-kits`);
     } else {
       toastError("Houve um erro ao tentar criar o Kit Lanche");
     }
