@@ -100,10 +100,12 @@ class LotesCadastrados extends Component {
                           (lote.terceirizada !== null ||
                             lote.escolas.length > 0) && (
                             <NavLink
-                              to="/configuracoes/cadastros/lote"
-                              state={{
-                                prevPath: window.location.pathname,
-                                uuid: lote.uuid,
+                              to={{
+                                pathname: `/configuracoes/cadastros/lote`,
+                                state: {
+                                  prevPath: window.location.pathname,
+                                  uuid: lote.uuid,
+                                },
                               }}
                             >
                               <i className="fas fa-pen" />

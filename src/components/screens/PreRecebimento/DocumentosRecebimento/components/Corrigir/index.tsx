@@ -19,7 +19,7 @@ import {
   BUTTON_STYLE,
 } from "../../../../../Shareable/Botao/constants";
 import Botao from "../../../../../Shareable/Botao";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { DOCUMENTOS_RECEBIMENTO, PRE_RECEBIMENTO } from "configs/constants";
 import ModalConfirmarEnvio from "../ModalConfirmarEnvio";
 import { exibeError } from "helpers/utilities";
@@ -50,7 +50,7 @@ interface ValoresIniciaisForm {
 }
 
 export default () => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const [carregando, setCarregando] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -234,7 +234,7 @@ export default () => {
   };
 
   const voltarPagina = () =>
-    navigate(`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`);
+    history.push(`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`);
 
   const obterInitialValues = (documentos) => {
     const tiposDocumentos = documentos?.map(

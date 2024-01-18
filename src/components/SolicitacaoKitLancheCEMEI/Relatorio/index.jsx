@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
 import { CorpoRelatorio } from "./components/CorpoRelatorio";
@@ -15,7 +15,7 @@ import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
 import { deepCopy } from "helpers/utilities";
 
 export const Relatorio = ({ ...props }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(false);
   const [solicitacoesSimilares, setSolicitacoesSimilares] = useState([]);
@@ -74,7 +74,7 @@ export const Relatorio = ({ ...props }) => {
                 texto="Voltar"
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 icon={BUTTON_ICON.ARROW_LEFT}
-                onClick={() => navigate("/painel-gestao-alimentacao")}
+                onClick={() => history.push("/painel-gestao-alimentacao")}
                 className="float-end"
               />
             </div>

@@ -16,7 +16,7 @@ import {
   REPOSICAO_GUIA,
 } from "configs/constants";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ConfirmacaoEdicao from "./components/confirmacaoEdicao";
@@ -29,7 +29,7 @@ export default ({ reposicao }) => {
   const [loading, setLoading] = useState(false);
   const [reposicaoInvalida, setReposicaoInvalida] = useState(false);
   const [edicao, setEdicao] = useState(false);
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const chaveValores = reposicao ? "valoresReposicao" : "valoresConferencia";
   const chaveGuia = reposicao ? "guiaReposicao" : "guiaConferencia";
@@ -112,7 +112,7 @@ export default ({ reposicao }) => {
   };
 
   const goToConferir = () => {
-    navigate(`/${LOGISTICA}/${CONFERIR_ENTREGA}`);
+    history.push(`/${LOGISTICA}/${CONFERIR_ENTREGA}`);
   };
 
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
@@ -138,7 +138,7 @@ export default ({ reposicao }) => {
 
   const cancelarConferencia = () => {
     let uuid = guia.uuid;
-    navigate(
+    history.push(
       `/${LOGISTICA}/${
         reposicao ? REPOSICAO_GUIA : CONFERENCIA_GUIA_COM_OCORRENCIA
       }/?uuid=${uuid}&autofill=true`

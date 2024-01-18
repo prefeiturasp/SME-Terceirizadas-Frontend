@@ -8,7 +8,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import { InputHorario } from "components/Shareable/Input/InputHorario";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import InputFile from "components/Shareable/Input/InputFile";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { INSUCESSO_ENTREGA, LOGISTICA } from "configs/constants";
 import {
   required,
@@ -40,7 +40,7 @@ export default () => {
   const [HoraRecebimentoAlterada, setHoraRecebimentoAlterada] = useState(false);
   const [initialValues, setInitialValues] = useState({});
   const [arquivo, setArquivo] = useState([]);
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const carregarGuia = async (uuid) => {
     let response;
@@ -96,7 +96,7 @@ export default () => {
   };
 
   const goToInsucesso = () => {
-    navigate(`/${LOGISTICA}/${INSUCESSO_ENTREGA}`);
+    history.push(`/${LOGISTICA}/${INSUCESSO_ENTREGA}`);
   };
 
   useEffect(() => {

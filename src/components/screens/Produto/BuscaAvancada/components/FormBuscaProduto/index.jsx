@@ -2,7 +2,7 @@ import moment from "moment";
 import React, { useEffect, useReducer, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
-import { useNavigationType } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import CheckboxField from "components/Shareable/Checkbox/Field";
@@ -54,14 +54,12 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ setFiltros, setPage, initialValues }) => {
+const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [status, setStatus] = useState({
     opcoesStatus: getOpecoesStatus(),
     statusSelecionados: [],
   });
-
-  const navigationType = useNavigationType();
 
   useEffect(() => {
     async function fetchData() {
@@ -142,7 +140,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues }) => {
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={navigationType === "POP" && initialValues}
+      initialValues={history.action === "POP" && initialValues}
       render={({ form, handleSubmit, submitting, values }) => (
         <form onSubmit={handleSubmit} className="busca-produtos">
           <FinalFormToRedux form={FORM_NAME} />
@@ -339,4 +337,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(FormBuscaProduto);
+export default withRouter(connect(mapStateToProps)(FormBuscaProduto));

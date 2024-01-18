@@ -5,7 +5,7 @@ import { Spin } from "antd";
 import { useState } from "react";
 import { Field, Form } from "react-final-form";
 import Select from "components/Shareable/Select";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Botao } from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import { DadosEmpresa } from "./components/Form/DadosEmpresa";
@@ -46,7 +46,7 @@ const verificarUsuarioEhDistribuidor = () => {
 };
 
 export const CadastroEmpresa = () => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [lotesSelecionados, setLotesSelecionados] = useState([]);
   const [initialValuesForm, setInitialValuesForm] = useState({
     data_cadastro: moment().format("DD/MM/YYYY"),
@@ -297,7 +297,7 @@ export const CadastroEmpresa = () => {
     service(uuid, dados).then((response) => {
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Empresa atualizada com sucesso!");
-        navigate("/configuracoes/cadastros/empresas-cadastradas");
+        history.push("/configuracoes/cadastros/empresas-cadastradas");
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
         toastError(
           `Erro ao atualizar cadastro de empresa: ${getError(response.data)}.`
@@ -314,7 +314,7 @@ export const CadastroEmpresa = () => {
     service(dados).then((response) => {
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Empresa cadastrada com sucesso!");
-        navigate("/configuracoes/cadastros/empresas-cadastradas");
+        history.push("/configuracoes/cadastros/empresas-cadastradas");
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
         toastError(`Erro ao cadastrar empresa: ${getError(response.data)}.`);
       } else {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import arrayMutators from "final-form-arrays";
 import { InputText } from "components/Shareable/Input/InputText";
@@ -45,7 +45,7 @@ export default ({ uuid }) => {
   const [editais, setEditais] = useState(undefined);
   const [erroAPI, setErroAPI] = useState(false);
 
-  const navigate = useNavigate();
+  const history = useHistory();
   const location = useLocation();
   const ehCopia = location.pathname.includes("criar-copia");
 
@@ -137,7 +137,7 @@ export default ({ uuid }) => {
             toastSuccess(
               "Cópia do protocolo padrão da dieta especial salvo com sucesso"
             );
-            navigate("/dieta-especial/consultar-protocolo-padrao-dieta");
+            history.push("/dieta-especial/consultar-protocolo-padrao-dieta");
           } else {
             toastError(
               "Houve um erro ao cadastrar cópia do protocolo de dieta especial"
@@ -160,7 +160,7 @@ export default ({ uuid }) => {
             toastSuccess(
               "Protocolo Padrão de dieta especial salvo com sucesso"
             );
-            navigate("/dieta-especial/consultar-protocolo-padrao-dieta");
+            history.push("/dieta-especial/consultar-protocolo-padrao-dieta");
           } else {
             toastError("Houve um erro ao editar protocolo de dieta especial");
           }
@@ -177,7 +177,7 @@ export default ({ uuid }) => {
         const response = await cadastraProtocoloPadraoDietaEspecial(values);
         if (response.status === HTTP_STATUS.CREATED) {
           toastSuccess("Protocolo Padrão de dieta especial criado com sucesso");
-          navigate("/dieta-especial/consultar-protocolo-padrao-dieta");
+          history.push("/dieta-especial/consultar-protocolo-padrao-dieta");
         } else {
           toastError("Houve um erro ao cadastrar protocolo de dieta especial");
         }

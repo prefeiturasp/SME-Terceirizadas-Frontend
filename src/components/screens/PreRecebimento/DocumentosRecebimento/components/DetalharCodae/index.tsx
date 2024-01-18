@@ -5,7 +5,7 @@ import {
   PAINEL_DOCUMENTOS_RECEBIMENTO,
   PRE_RECEBIMENTO,
 } from "configs/constants";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 import { detalharDocumentoParaAnalise } from "services/documentosRecebimento.service";
@@ -19,7 +19,7 @@ import ArquivosTipoRecebimento from "../ArquivosTipoDocumento";
 import OutrosDocumentos from "../OutrosDocumentos";
 
 export default () => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const [carregando, setCarregando] = useState(true);
   const [objeto, setObjeto] = useState<DocumentosRecebimentoParaAnalise>(
@@ -29,7 +29,7 @@ export default () => {
   const [laudo, setLaudo] = useState<TiposDocumentos>();
 
   const voltarPaginaPainel = () =>
-    navigate(`/${PRE_RECEBIMENTO}/${PAINEL_DOCUMENTOS_RECEBIMENTO}`);
+    history.push(`/${PRE_RECEBIMENTO}/${PAINEL_DOCUMENTOS_RECEBIMENTO}`);
 
   const carregarDados = async (): Promise<void> => {
     const urlParams = new URLSearchParams(window.location.search);

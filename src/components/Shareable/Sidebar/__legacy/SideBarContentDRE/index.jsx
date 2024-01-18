@@ -57,11 +57,16 @@ export class SidebarContentDRE extends Component {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
-            <NavLink className="collapse-item" to="/painel-gestao-alimentacao">
+            <NavLink
+              activeClassName="active"
+              className="collapse-item"
+              to="/painel-gestao-alimentacao"
+            >
               Painel de Solicitações
             </NavLink>
             <NavLink
               onClick={() => this.onSubmenuClick("novas-solicitacoes")}
+              activeClassName="active"
               className="collapse-item"
               to="#"
             >
@@ -71,6 +76,7 @@ export class SidebarContentDRE extends Component {
             {subMenu === "novas-solicitacoes" && (
               <div className="submenu">
                 <NavLink
+                  activeClassName="active"
                   className="collapse-item"
                   to={`/${DRE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`}
                 >
@@ -80,6 +86,7 @@ export class SidebarContentDRE extends Component {
             )}
             <NavLink
               onClick={() => this.onSubmenuClick("consulta-solicitacoes")}
+              activeClassName="active"
               className="collapse-item"
               to="#"
             >
@@ -89,24 +96,28 @@ export class SidebarContentDRE extends Component {
             {subMenu === "consulta-solicitacoes" && (
               <div className="submenu">
                 <NavLink
+                  activeClassName="active"
                   className="collapse-item"
                   to={`/${DRE}/${SOLICITACOES_PENDENTES}`}
                 >
                   Aguardando autorização
                 </NavLink>
                 <NavLink
+                  activeClassName="active"
                   className="collapse-item"
                   to={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
                 >
                   Autorizadas
                 </NavLink>
                 <NavLink
+                  activeClassName="active"
                   className="collapse-item"
                   to={`/${DRE}/${SOLICITACOES_NEGADAS}`}
                 >
                   Negadas
                 </NavLink>
                 <NavLink
+                  activeClassName="active"
                   className="collapse-item"
                   to={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
                 >
@@ -137,6 +148,7 @@ export class SidebarContentDRE extends Component {
         >
           <div className="bg-white py-2 collapse-inner rounded">
             <NavLink
+              activeClassName="active"
               className="collapse-item"
               to={`/dieta-especial/ativas-inativas`}
             >

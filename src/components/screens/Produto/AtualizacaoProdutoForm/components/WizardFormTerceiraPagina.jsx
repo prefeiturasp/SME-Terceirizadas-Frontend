@@ -20,7 +20,7 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
-import withNavigate from "components/Shareable/withNavigate";
+import { withRouter } from "react-router-dom";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import ModalConfirmacaoSimNao from "components/Shareable/ModalConfirmacaoSimNao";
 import {
@@ -182,12 +182,12 @@ class WizardFormTerceiraPagina extends Component {
       if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO)
         toastSuccess("Correção efetuada com sucesso.");
       else toastSuccess("Nova homologação solicitada.");
-      this.props.navigate("/painel-gestao-produto");
+      this.props.history.push("/painel-gestao-produto");
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
       toastError(getError(response.data));
     } else {
       toastError(`Erro ao atualizar homologação`);
-      this.props.navigate("/painel-gestao-produto");
+      this.props.history.push("/painel-gestao-produto");
     }
   };
 
@@ -362,4 +362,4 @@ export default reduxForm({
   form: "atualizacaoProduto",
   destroyOnUnmount: false,
   forceUnregisterOnUnmount: true,
-})(withNavigate(WizardFormTerceiraPagina));
+})(withRouter(WizardFormTerceiraPagina));

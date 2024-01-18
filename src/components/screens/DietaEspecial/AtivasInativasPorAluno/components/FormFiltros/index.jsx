@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { connect } from "react-redux";
-import { useNavigationType } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
@@ -37,10 +37,9 @@ const FormFiltros = ({
   setLoading,
   setFiltros,
   initialValues,
+  history,
   setDadosUsuario,
 }) => {
-  const navigationType = useNavigationType();
-
   const [carregandoAluno, setCarregandoAluno] = useState(false);
   const [dadosIniciais, setDadosIniciais] = useState({});
   const [diretoriasRegionais, setDiretoriasRegionais] = useState([]);
@@ -67,7 +66,7 @@ const FormFiltros = ({
 
       getAlunos(dadosIniciais);
 
-      if (navigationType === "POP" && initialValues)
+      if (history.action === "POP" && initialValues)
         setDadosIniciais({ ...initialValues, ...dadosIniciais });
       else setDadosIniciais(dadosIniciais);
       setLoading(false);
@@ -283,4 +282,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(FormFiltros);
+export default withRouter(connect(mapStateToProps)(FormFiltros));

@@ -30,7 +30,7 @@ import {
 } from "configs/constants";
 import { composeValidators } from "../../../../helpers/utilities";
 import { toastError } from "components/Shareable/Toast/dialogs";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import moment from "moment";
 import "./styles.scss";
 
@@ -58,7 +58,7 @@ export default () => {
   const inputFile = useRef([]);
   const autoFillButton = useRef(null);
   const editarButton = useRef(null);
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const [flagAtraso, setFlagAtraso] = useState(false);
   const [flagAlimento, setFlagAlimento] = useState([]);
@@ -126,7 +126,9 @@ export default () => {
     }
     localStorage.setItem("valoresConferencia", JSON.stringify(valoresForm));
     localStorage.setItem("guiaConferencia", JSON.stringify(guia));
-    navigate(`/${LOGISTICA}/${CONFERENCIA_GUIA_RESUMO_FINAL}?editar=${edicao}`);
+    history.push(
+      `/${LOGISTICA}/${CONFERENCIA_GUIA_RESUMO_FINAL}?editar=${edicao}`
+    );
   };
 
   const validaDataEntrega = (value) => {
@@ -423,7 +425,7 @@ export default () => {
   };
 
   const cancelarConferencia = () => {
-    navigate(`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`);
+    history.push(`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`);
   };
 
   useEffect(() => {

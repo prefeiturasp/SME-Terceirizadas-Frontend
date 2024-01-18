@@ -10,7 +10,7 @@ import {
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { Modal } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
   noSpaceStartOrEnd,
@@ -43,7 +43,7 @@ export default () => {
   const [uuid, setUuid] = useState(null);
   const [initialValues, setInitialValues] = useState({});
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const onSubmit = () => {
     setShowModalSalvar(true);
@@ -64,7 +64,7 @@ export default () => {
         form.restart(initialValues);
         setCarregando(false);
       } else if (response.status === HTTP_STATUS.OK) {
-        navigate(`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`);
+        history.push(`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`);
         toastSuccess("Unidade de Medida atualizada com sucesso!");
         setCarregando(false);
         setShowModalSalvar(false);
@@ -238,7 +238,7 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
                         setShowModalCancelar(false);
-                        navigate(
+                        history.push(
                           `/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`
                         );
                       }}

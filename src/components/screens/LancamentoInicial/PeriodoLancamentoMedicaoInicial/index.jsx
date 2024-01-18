@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Field, Form, FormSpy } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import arrayMutators from "final-form-arrays";
@@ -195,7 +195,7 @@ export default () => {
   const [diasParaCorrecao, setDiasParaCorrecao] = useState();
   const [ehPeriodoEscolarSimples, setEhPeriodoEscolarSimples] = useState(null);
 
-  const navigate = useNavigate();
+  const history = useHistory();
   const location = useLocation();
   let mesAnoDefault = new Date();
 
@@ -1658,7 +1658,7 @@ export default () => {
         let mes = new Date(location.state.mesAnoSelecionado).getMonth() + 1;
         const ano = new Date(location.state.mesAnoSelecionado).getFullYear();
         mes = String(mes).length === 1 ? "0" + String(mes) : String(mes);
-        navigate(
+        history.push(
           `/${MEDICAO_INICIAL}/${DETALHAMENTO_DO_LANCAMENTO}?mes=${mes}&ano=${ano}`
         );
         return toastSuccess("Correções salvas com sucesso!");
@@ -2093,7 +2093,7 @@ export default () => {
 
   const onClickBotaoVoltar = () => {
     disableBotaoSalvarLancamentos
-      ? navigate(-1)
+      ? history.goBack()
       : setShowModalVoltarPeriodoLancamento(true);
   };
 
@@ -2962,7 +2962,7 @@ export default () => {
       <ModalVoltarPeriodoLancamento
         closeModal={() => setShowModalVoltarPeriodoLancamento(false)}
         showModal={showModalVoltarPeriodoLancamento}
-        navigate={navigate}
+        history={history}
       />
     </>
   );

@@ -30,7 +30,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { composeValidators } from "../../../../helpers/utilities";
 import { toastError } from "components/Shareable/Toast/dialogs";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import moment from "moment";
 import "./styles.scss";
 
@@ -60,7 +60,7 @@ export default () => {
   const inputFile = useRef([]);
   const autoFillButton = useRef(null);
   const editarButton = useRef(null);
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const [flagAtraso, setFlagAtraso] = useState(false);
   const [flagAlimento, setFlagAlimento] = useState([]);
@@ -241,7 +241,7 @@ export default () => {
 
     localStorage.setItem("valoresReposicao", JSON.stringify(valoresForm));
     localStorage.setItem("guiaReposicao", JSON.stringify(guia));
-    navigate(`/${LOGISTICA}/${REPOSICAO_RESUMO_FINAL}?editar=${edicao}`);
+    history.push(`/${LOGISTICA}/${REPOSICAO_RESUMO_FINAL}?editar=${edicao}`);
   };
 
   const comparaDataEntrega = (value) => {

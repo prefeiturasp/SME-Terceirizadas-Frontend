@@ -28,7 +28,7 @@ import ContratosRelacionados from "./ContratosRelacionados";
 import "../style.scss";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { Spin } from "antd";
-import { Navigate } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import {
@@ -159,7 +159,7 @@ class EditaisContratos extends Component {
 
   renderRedirect = () => {
     if (this.state.redirect) {
-      return <Navigate to="/configuracoes/cadastros/editais-cadastrados" />;
+      return <Redirect to="/configuracoes/cadastros/editais-cadastrados" />;
     }
   };
 

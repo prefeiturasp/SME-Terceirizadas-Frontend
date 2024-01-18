@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
 import {
   INVERSAO_CARDAPIO,
@@ -59,7 +59,7 @@ class Relatorio extends Component {
 
   renderizarRedirecionamentoParaInversoesDeCardapio = () => {
     if (this.state.redirect) {
-      return <Navigate to={`/${this.props.VISAO}/${INVERSAO_CARDAPIO}`} />;
+      return <Redirect to={`/${this.props.VISAO}/${INVERSAO_CARDAPIO}`} />;
     }
   };
 

@@ -9,7 +9,7 @@ import {
   BUTTON_TYPE,
   BUTTON_ICON,
 } from "../../../../../Shareable/Botao/constants";
-import withNavigate from "components/Shareable/withNavigate";
+import { withRouter } from "react-router-dom";
 import {
   toastSuccess,
   toastError,
@@ -219,7 +219,7 @@ export class SolicitacaoVigente extends Component {
                               <Botao
                                 tabindex="-1"
                                 onClick={() =>
-                                  this.props.navigate(
+                                  this.props.history.push(
                                     `/dieta-especial/relatorio?uuid=${solicitacaoVigente.uuid}`
                                   )
                                 }
@@ -248,6 +248,6 @@ export class SolicitacaoVigente extends Component {
 const InativarDietaForm = reduxForm({
   form: "inativaDietaForm",
   enableReinitialize: true,
-})(withNavigate(SolicitacaoVigente));
+})(SolicitacaoVigente);
 
-export default InativarDietaForm;
+export default withRouter(InativarDietaForm);

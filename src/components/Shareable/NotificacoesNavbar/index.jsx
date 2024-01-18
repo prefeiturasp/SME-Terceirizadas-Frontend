@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Dropdown } from "antd";
 import Botao from "../Botao";
 import { BUTTON_STYLE } from "../Botao/constants";
@@ -11,8 +11,7 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 export default () => {
   const [notificacoes, setNotificacoes] = useState([]);
   const [quantidade, setQuantidade] = useState([]);
-  const navigate = useNavigate();
-  const location = useLocation();
+  const history = useHistory();
 
   const buscarNotificacoes = async () => {
     const params = gerarParametrosConsulta({ page_size: 4 });
@@ -26,11 +25,11 @@ export default () => {
     let path = `/${NOTIFICACOES}/${
       notificacao ? `?uuid=${notificacao.uuid}` : ""
     }`;
-    if (location.pathname.includes(`/${NOTIFICACOES}/`)) {
-      navigate("/");
-      setTimeout(() => navigate(path), 10);
+    if (history.location.pathname.includes(`/${NOTIFICACOES}/`)) {
+      history.push("/");
+      setTimeout(() => history.push(path), 10);
     } else {
-      navigate(path);
+      history.push(path);
     }
   };
 

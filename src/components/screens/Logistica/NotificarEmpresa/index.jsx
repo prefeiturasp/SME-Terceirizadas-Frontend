@@ -26,7 +26,7 @@ import {
   GUIAS_NOTIFICACAO_FISCAL,
   LOGISTICA,
 } from "configs/constants";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import ModalCancelarEnvio from "./components/ModalCancelarEnvio";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
 import ModalSolicitaAlteracao from "./components/ModalSolicitaAlteracao";
@@ -35,7 +35,7 @@ import moment from "moment";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 
 export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [carregando, setCarregando] = useState(false);
   const [aprovacoes, setAprovacoes] = useState([]);
   const [notificacao, setNotificacao] = useState({});
@@ -170,10 +170,10 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
     }
   };
 
-  const voltarPagina = () => navigate(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
+  const voltarPagina = () => history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
 
   const voltarPaginaFiscal = () =>
-    navigate(`/${LOGISTICA}/${GUIAS_NOTIFICACAO_FISCAL}`);
+    history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO_FISCAL}`);
 
   const salvarEnviarNotificacao = async (values) => {
     setCarregando(true);
@@ -226,7 +226,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
     aprovacoes.filter((x) => x.aprovado !== true).length === 0;
 
   const handleClickVoltar = () => {
-    voltarPara ? navigate(voltarPara) : navigate(-1);
+    voltarPara ? history.push(voltarPara) : history.goBack();
   };
 
   const assinarNotificacao = async (password) => {

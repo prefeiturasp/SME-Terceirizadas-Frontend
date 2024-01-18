@@ -162,7 +162,13 @@ export const DashboardDRE = (props) => {
     let url =
       visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO ? `/${DRE}/${link}` : "/";
 
-    return url;
+    return {
+      pathname: url,
+      state: {
+        prevPath: window.location.pathname,
+        filtros: filtros,
+      },
+    };
   };
 
   const prepararParametros = (values) => {
@@ -232,13 +238,7 @@ export const DashboardDRE = (props) => {
                   {cards.map((card, key) => {
                     return resumo[card.titulo] ? (
                       <div key={key} className="col-6 pb-3">
-                        <Link
-                          to={linkTo(card.link)}
-                          state={{
-                            prevPath: window.location.pathname,
-                            filtros: filtros,
-                          }}
-                        >
+                        <Link to={linkTo(card.link)}>
                           <CardPendencia
                             cardTitle={card.titulo}
                             totalOfOrders={resumo[card.titulo]["TOTAL"] || 0}
@@ -253,13 +253,7 @@ export const DashboardDRE = (props) => {
                       </div>
                     ) : (
                       <div key={key} className="col-6 pb-3">
-                        <Link
-                          to={linkTo(card.link)}
-                          state={{
-                            prevPath: window.location.pathname,
-                            filtros: filtros,
-                          }}
-                        >
+                        <Link to={linkTo(card.link)}>
                           <CardPendencia
                             cardTitle={card.titulo}
                             totalOfOrders={0}

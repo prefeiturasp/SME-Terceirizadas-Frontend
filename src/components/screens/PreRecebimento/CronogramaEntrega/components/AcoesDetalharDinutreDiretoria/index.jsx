@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -18,7 +18,7 @@ export default ({ cronograma }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -31,8 +31,8 @@ export default ({ cronograma }) => {
           window.scrollTo({ top: 0, behavior: "smooth" });
           setShow(false);
           setLoading(false);
-          if (!navigate(-1)) {
-            navigate(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+          if (!history.goBack()) {
+            history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
           }
           toastSuccess("Cronograma assinado com sucesso!");
         }
@@ -49,7 +49,7 @@ export default ({ cronograma }) => {
 
   const handleBack = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    navigate(-1);
+    history.goBack();
   };
 
   return (

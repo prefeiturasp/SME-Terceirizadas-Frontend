@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
-import { Navigate } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import {
   stringSeparadaPorVirgulas,
   gerarLinkRelatorio,
@@ -58,7 +58,7 @@ export class CardHistorico extends Component {
   redirectTo(pedido) {
     if (this.state.redirect) {
       return (
-        <Navigate to={gerarLinkRelatorio("inclusao-de-alimentacao", pedido)} />
+        <Redirect to={gerarLinkRelatorio("inclusao-de-alimentacao", pedido)} />
       );
     }
   }

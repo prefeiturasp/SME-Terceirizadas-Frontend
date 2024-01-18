@@ -11,7 +11,7 @@ import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { Modal } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
   cep,
@@ -54,7 +54,7 @@ export default ({ naoEditavel = false }) => {
   const [laboratorio, setLaboratorio] = useState({});
   const [contatosValues, setContatosValues] = useState({});
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const getDadosLaboratorio = async () => {
     try {
@@ -308,10 +308,10 @@ export default ({ naoEditavel = false }) => {
               onClick={() => {
                 setShowModalCancelar(false);
                 edicao
-                  ? navigate(
+                  ? history.push(
                       "/configuracoes/cadastros/laboratorios-cadastrados"
                     )
-                  : navigate("/");
+                  : history.push("/");
               }}
               style={BUTTON_STYLE.GREEN}
               className="ms-3"
