@@ -10,7 +10,7 @@ import {
   styleBotaoCardLancamento,
   textoBotaoCardLancamento,
 } from "../../LancamentoPorPeriodo/helpers";
-import { ehEscolaTipoCEMEI } from "../../../../../../../helpers/utilities";
+import { deepCopy, ehEscolaTipoCEMEI } from "helpers/utilities";
 import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
@@ -34,8 +34,22 @@ export const CardLancamentoCEI = ({
   tiposAlimentacao,
   uuidPeriodoEscolar,
   errosAoSalvar,
+  periodosInclusaoContinua,
+  periodosPermissoesLancamentosEspeciais,
 }) => {
   const history = useHistory();
+
+  const periodoPermissoes = periodosPermissoesLancamentosEspeciais?.find((p) =>
+    textoCabecalho.includes(p.periodo)
+  );
+
+  const ALIMENTACOES_TOTAL = [
+    "Refeição",
+    "Sobremesa",
+    "Lanche",
+    "Lanche 4h",
+    "Lanche Extra",
+  ];
 
   let alimentacoesFormatadas = [];
 
@@ -76,17 +90,34 @@ export const CardLancamentoCEI = ({
   if (
     (ehEscolaTipoCEMEI(escolaInstituicao) &&
       periodosEscolaCemeiComAlunosEmei.includes(textoCabecalho)) ||
-    textoCabecalho === "Solicitações de Alimentação"
+    ["Programas e Projetos", "Solicitações de Alimentação"].includes(
+      textoCabecalho
+    )
   ) {
-    alimentacoesFormatadas = tiposAlimentacao.map((tipoAlimentacao, key) => (
-      <div key={key} className="mb-2">
-        <span style={{ color: cor }}>
-          <b>{quantidadeAlimentacao(tipoAlimentacao.nome)}</b>
-        </span>
-        <span className="ms-1">- {tipoAlimentacao.nome}</span>
-        <br />
-      </div>
-    ));
+    let copyTiposAlimentacao = deepCopy(tiposAlimentacao);
+    if (periodoPermissoes) {
+      copyTiposAlimentacao = copyTiposAlimentacao.concat(
+        periodoPermissoes.alimentacoes.map((alimentacao) => ({
+          nome: alimentacao,
+        }))
+      );
+    }
+    if (textoCabecalho !== "Solicitações de Alimentação") {
+      copyTiposAlimentacao = copyTiposAlimentacao.filter((alimentacao) =>
+        ALIMENTACOES_TOTAL.includes(alimentacao.nome)
+      );
+    }
+    alimentacoesFormatadas = copyTiposAlimentacao
+      .sort((a, b) => a.nome > b.nome)
+      .map((tipoAlimentacao, key) => (
+        <div key={key} className="mb-2">
+          <span style={{ color: cor }}>
+            <b>{quantidadeAlimentacao(tipoAlimentacao.nome)}</b>
+          </span>
+          <span className="ms-1">- {tipoAlimentacao.nome}</span>
+          <br />
+        </div>
+      ));
   }
 
   const getStatusPeriodo = () => {
@@ -119,6 +150,7 @@ export const CardLancamentoCEI = ({
         ),
         uuidPeriodoEscolar: uuidPeriodoEscolar,
         tiposAlimentacao: tiposAlimentacao,
+        periodosInclusaoContinua: periodosInclusaoContinua,
         ...location.state,
       },
     });
@@ -177,7 +209,10 @@ export const CardLancamentoCEI = ({
                 escolaInstituicao,
                 periodosEscolaCemeiComAlunosEmei,
                 textoCabecalho
-              ) || textoCabecalho === "Solicitações de Alimentação" ? (
+              ) ||
+              ["Programas e Projetos", "Solicitações de Alimentação"].includes(
+                textoCabecalho
+              ) ? (
                 <div className="row">
                   <div className="col-4">
                     {alimentacoesFormatadas.slice(0, 3)}

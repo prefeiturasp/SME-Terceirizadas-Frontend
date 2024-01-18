@@ -10,7 +10,6 @@ import InputText from "components/Shareable/Input/InputText";
 import { downloadAndConvertToBase64 } from "../../../../../Shareable/Input/InputFile/helper";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
-  ArquivoForm,
   CorrecaoDocumentoPayload,
   TiposDocumentosPayload,
 } from "../../interfaces";
@@ -34,6 +33,7 @@ import {
 } from "../../../../../../services/documentosRecebimento.service";
 import {
   Arquivo,
+  ArquivoForm,
   DocumentosRecebimentoDetalhado,
   TiposDocumentoChoices,
 } from "interfaces/pre_recebimento.interface";

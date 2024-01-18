@@ -1,9 +1,10 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Field } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { required } from "helpers/fieldValidators";
 import { InputComData } from "components/Shareable/DatePicker";
 import { Tooltip } from "antd";
+import Select from "components/Shareable/Select";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -18,15 +19,34 @@ import { numeroProcessoContratoSEIMask } from "constants/shared";
 import { dateDelta, getDataObj } from "helpers/utilities";
 import { composeValidators } from "../../../../../../helpers/fieldValidators";
 import { deletaValues } from "../../../../../../helpers/formHelper";
+import { numeroChamadaPublicamMask } from "constants/shared";
+import { OnChange } from "react-final-form-listeners";
 
 const contratosEstadoInicial = {
   numero_processo: null,
   numero_contrato: null,
+  modalidade: null,
   numero_ata: null,
-  numero_pregao_chamada_publica: null,
+  numero_pregao: null,
+  numero_chamada_publica: null,
   vigencia_de: null,
   vigencia_ate: null,
 };
+
+const optionsModalidade = [
+  {
+    nome: "Selecione...",
+    uuid: "",
+  },
+  {
+    nome: "Pregão Eletrônico",
+    uuid: "PREGAO_ELETRONICO",
+  },
+  {
+    nome: "Chamada Pública",
+    uuid: "CHAMADA_PUBLICA",
+  },
+];
 
 export const ContratosFormSet = ({
   ehDistribuidor,
@@ -35,6 +55,7 @@ export const ContratosFormSet = ({
   terceirizada,
   values,
   numerosContratosCadastrados,
+  form,
 }) => {
   const [contratoARemover, setContratoARemover] = useState({});
   const [exibirModalRemoverContrato, setExibirModalRemoverContrato] =
@@ -49,8 +70,10 @@ export const ContratosFormSet = ({
     const camposParaDeletar = [
       "numero_processo",
       "numero_contrato",
+      "modalidade",
       "numero_ata",
-      "numero_pregao_chamada_publica",
+      "numero_pregao",
+      "numero_chamada_publica",
       "vigencia_de",
       "vigencia_ate",
     ];
@@ -116,7 +139,7 @@ export const ContratosFormSet = ({
                           name={`numero_processo_${index}`}
                           component={MaskedInputText}
                           mask={numeroProcessoContratoSEIMask}
-                          label="Nº do Processo Administrativo do Contrato (SEI)"
+                          label="Nº do Processo Administrativo (SEI)"
                           required
                           validate={required}
                           apenasNumeros
@@ -135,24 +158,6 @@ export const ContratosFormSet = ({
                               : () => {}
                           )}
                           disabled={!!contratos[index].uuid}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          name={`numero_pregao_chamada_publica_${index}`}
-                          component={InputText}
-                          label="Nº da Pregão Eletrônico/Chamada Pública"
-                          required
-                          validate={required}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          name={`numero_ata_${index}`}
-                          component={InputText}
-                          label="Nº da Ata"
-                          required
-                          validate={required}
                         />
                       </div>
                       <div className="col-2">
@@ -186,9 +191,63 @@ export const ContratosFormSet = ({
                           maxDate={null}
                         />
                       </div>
+                      <div className="col-4">
+                        <Field
+                          name={`modalidade_${index}`}
+                          component={Select}
+                          label="Modalidade"
+                          required
+                          validate={required}
+                          naoDesabilitarPrimeiraOpcao
+                          options={optionsModalidade}
+                        />
+                        <OnChange name={`modalidade_${index}`}>
+                          {(value) => {
+                            form.change(`numero_pregao_${index}`, "");
+                            form.change(`numero_ata_${index}`, "");
+                            form.change(`numero_chamada_publica_${index}`, "");
+                            form.change(`modalidade_${index}`, value);
+                          }}
+                        </OnChange>
+                      </div>
+                      {values[`modalidade_${index}`] ===
+                        "PREGAO_ELETRONICO" && (
+                        <Fragment>
+                          <div className="col-4">
+                            <Field
+                              name={`numero_pregao_${index}`}
+                              component={InputText}
+                              label="Nº do Pregão Eletrônico"
+                              required
+                              validate={required}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <Field
+                              name={`numero_ata_${index}`}
+                              component={InputText}
+                              label="Nº da Ata"
+                              required
+                              validate={required}
+                            />
+                          </div>
+                        </Fragment>
+                      )}
+                      {values[`modalidade_${index}`] === "CHAMADA_PUBLICA" && (
+                        <div className="col-4">
+                          <Field
+                            name={`numero_chamada_publica_${index}`}
+                            component={MaskedInputText}
+                            mask={numeroChamadaPublicamMask}
+                            label="Nº da Chamada Pública"
+                            required
+                            validate={required}
+                          />
+                        </div>
+                      )}
                       {terceirizada &&
                         (contrato.encerrado ? (
-                          <div className="col-12">
+                          <div className="col-12 mb-2">
                             <div className="aviso-encerramento">
                               <strong>Aviso:</strong> Contrato encerrado em{" "}
                               {contrato.data_hora_encerramento}
@@ -196,18 +255,23 @@ export const ContratosFormSet = ({
                           </div>
                         ) : (
                           contrato.numero_contrato !== null && (
-                            <div className="col-2">
-                              <Botao
-                                className="btn-encerrar-contrato"
-                                texto="Encerrar Vigência"
-                                onClick={() => abrirModalRemoverContrato(index)}
-                                type={BUTTON_TYPE.BUTTON}
-                                style={BUTTON_STYLE.RED_OUTLINE}
-                              />
+                            <div className="row justify-content-end mb-2">
+                              <div className="col-2">
+                                <Botao
+                                  className="btn-encerrar-contrato"
+                                  texto="Encerrar Vigência"
+                                  onClick={() =>
+                                    abrirModalRemoverContrato(index)
+                                  }
+                                  type={BUTTON_TYPE.BUTTON}
+                                  style={BUTTON_STYLE.RED_OUTLINE}
+                                />
+                              </div>
                             </div>
                           )
                         ))}
                     </div>
+                    <hr />
                     <div className="flex-center my-3">
                       {index === contratos.length - 1 && (
                         <Botao

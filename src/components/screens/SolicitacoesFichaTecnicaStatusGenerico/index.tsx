@@ -10,19 +10,19 @@ import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
-import { gerarParametrosConsulta } from "../../../helpers/utilities";
+import { gerarParametrosConsulta } from "helpers/utilities";
 import {
-  DocumentosRecebimentoDashboard,
-  FiltrosDashboardDocumentos,
+  FiltrosDashboardFichasTecnicas,
   VerMaisItem,
 } from "interfaces/pre_recebimento.interface";
-import { ResponseDocumentosPorStatusDashboard } from "interfaces/responses.interface";
+import { ResponseFichasTecnicasPorStatusDashboard } from "interfaces/responses.interface";
+import { formataItensVerMais } from "../PreRecebimento/PainelFichasTecnicas/helpers";
 
 interface Props {
   getSolicitacoes: (
     _params?: URLSearchParams
-  ) => Promise<ResponseDocumentosPorStatusDashboard>;
-  params: FiltrosDashboardDocumentos;
+  ) => Promise<ResponseFichasTecnicasPorStatusDashboard>;
+  params: FiltrosDashboardFichasTecnicas;
   limit: number;
   titulo: string;
   icone: string;
@@ -30,7 +30,7 @@ interface Props {
   urlBaseItem: string;
 }
 
-export const SolicitacoesDocumentoStatusGenerico: React.FC<Props> = ({
+export const SolicitacoesFichaTecnicaStatusGenerico: React.FC<Props> = ({
   getSolicitacoes,
   params,
   limit,
@@ -48,48 +48,44 @@ export const SolicitacoesDocumentoStatusGenerico: React.FC<Props> = ({
 
   const PAGE_SIZE = limit || 10;
 
-  const formataCardDocumento = (
-    itens: DocumentosRecebimentoDashboard[]
-  ): VerMaisItem[] => {
-    return itens.map((item) => ({
-      texto: `${item.numero_cronograma} - ${item.nome_produto} - ${item.nome_empresa}`,
-      data: item.log_mais_recente.slice(0, 10),
-      link: `${urlBaseItem}?uuid=${item.uuid}`,
-    }));
-  };
-
   const getSolicitacoesAsync = async (
-    params: FiltrosDashboardDocumentos
+    params: FiltrosDashboardFichasTecnicas
   ): Promise<void> => {
     let parametros = gerarParametrosConsulta(params);
     let response = await getSolicitacoes(parametros);
 
     if (response.status === HTTP_STATUS.OK) {
-      let solicitacoes_new = formataCardDocumento(response.data.results.dados);
-      setSolicitacoes(solicitacoes_new);
+      let solicitacoesFormatadas = formataItensVerMais(
+        response.data.results.dados,
+        urlBaseItem
+      );
+      setSolicitacoes(solicitacoesFormatadas);
       setCount(response.data.results.total);
     } else {
-      toastError("Ocorreu um erro ao carregar o dashboard!");
+      toastError("Ocorreu um erro ao carregar o dashboard");
     }
     setLoading(false);
   };
 
-  const filtrarRequisicao = debounce((values: FiltrosDashboardDocumentos) => {
-    const { nome_fornecedor, nome_produto, numero_cronograma } = values;
-    const podeFiltrar = [nome_fornecedor, nome_produto, numero_cronograma].some(
-      (value) => value && value.length > 2
-    );
-    if (podeFiltrar) {
-      setLoading(true);
-      let newParams = Object.assign({}, params, { ...values });
-      setFiltrado(true);
-      getSolicitacoesAsync(newParams);
-    } else if (filtrado) {
-      setLoading(true);
-      setFiltrado(false);
-      getSolicitacoesAsync(params);
-    }
-  }, 500);
+  const filtrarRequisicao = debounce(
+    (values: FiltrosDashboardFichasTecnicas) => {
+      const { nome_empresa, nome_produto, numero_ficha } = values;
+      const podeFiltrar = [nome_empresa, nome_produto, numero_ficha].some(
+        (value) => value && value.length > 2
+      );
+      if (podeFiltrar) {
+        setLoading(true);
+        let newParams = Object.assign({}, params, { ...values });
+        setFiltrado(true);
+        getSolicitacoesAsync(newParams);
+      } else if (filtrado) {
+        setLoading(true);
+        setFiltrado(false);
+        getSolicitacoesAsync(params);
+      }
+    },
+    500
+  );
 
   useEffect(() => {
     setCurrentPage(1);
@@ -109,7 +105,7 @@ export const SolicitacoesDocumentoStatusGenerico: React.FC<Props> = ({
         <Spin tip="Carregando..." spinning={loading}>
           <Form
             initialValues={{
-              nome_fornecedor: "",
+              nome_empresa: "",
               numero_cronograma: "",
               nome_produto: "",
             }}
@@ -120,11 +116,11 @@ export const SolicitacoesDocumentoStatusGenerico: React.FC<Props> = ({
                 <div className="col-4">
                   <Field
                     component={InputText}
-                    name="numero_cronograma"
-                    placeholder="Filtrar por Nº do Cronograma"
+                    name="numero_ficha"
+                    placeholder="Filtrar por Nº da Ficha Técnica"
                   />
 
-                  <OnChange name="numero_cronograma">
+                  <OnChange name="numero_ficha">
                     {() => filtrarRequisicao(values)}
                   </OnChange>
                 </div>
@@ -142,10 +138,10 @@ export const SolicitacoesDocumentoStatusGenerico: React.FC<Props> = ({
                 <div className="col-4">
                   <Field
                     component={InputText}
-                    name="nome_fornecedor"
+                    name="nome_empresa"
                     placeholder="Filtrar por Nome do Fornecedor"
                   />
-                  <OnChange name="nome_fornecedor">
+                  <OnChange name="nome_empresa">
                     {() => filtrarRequisicao(values)}
                   </OnChange>
                 </div>
@@ -157,6 +153,7 @@ export const SolicitacoesDocumentoStatusGenerico: React.FC<Props> = ({
             icone={icone}
             tipo={cardType}
             solicitacoes={solicitacoes}
+            exibirTooltip
           />
           <Paginacao
             onChange={(page: number) => onPageChanged(page)}

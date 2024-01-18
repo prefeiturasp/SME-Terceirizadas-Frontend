@@ -145,9 +145,10 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       const payloadContrato = {
         uuid: contrato.uuid,
         processo: valoresForm[`numero_processo_${index}`],
+        modalidade: valoresForm[`modalidade_${index}`],
         ata: valoresForm[`numero_ata_${index}`],
-        pregao_chamada_publica:
-          valoresForm[`numero_pregao_chamada_publica_${index}`],
+        numero_chamada_publica: valoresForm[`numero_chamada_publica_${index}`],
+        numero_pregao: valoresForm[`numero_pregao_${index}`],
         vigencias: [
           {
             data_inicial: valoresForm[`vigencia_de_${index}`],

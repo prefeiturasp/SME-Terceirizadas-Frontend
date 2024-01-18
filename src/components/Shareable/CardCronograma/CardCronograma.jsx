@@ -1,21 +1,37 @@
 import React from "react";
 import "./style.scss";
 import { NavLink } from "react-router-dom";
+import { Tooltip } from "antd";
 
-export const CardCronograma = (props) => {
-  const { cardTitle, cardType, solicitations, icon, loading, href } = props;
-
-  const renderSolicitations = (solicitations) => {
-    return solicitations.slice(0, 5).map((solicitation, key) => {
-      return (
-        <NavLink key={key} to={solicitation.link}>
-          <p key={key} className={`data`}>
-            {solicitation.text}
-            <span className="float-end">{solicitation.date}</span>
-          </p>
-        </NavLink>
-      );
-    });
+export const CardCronograma = ({
+  cardTitle,
+  cardType,
+  solicitations,
+  icon,
+  loading,
+  href,
+  exibirTooltip = false,
+}) => {
+  const renderSolicitations = (solicitations, exibirTooltip) => {
+    return exibirTooltip
+      ? solicitations.slice(0, 5).map((solicitation, key) => (
+          <Tooltip key={key} title={solicitation.fullText}>
+            <NavLink key={key} to={solicitation.link}>
+              <p key={key} className={`data`}>
+                {solicitation.text}
+                <span className="float-end">{solicitation.date}</span>
+              </p>
+            </NavLink>
+          </Tooltip>
+        ))
+      : solicitations.slice(0, 5).map((solicitation, key) => (
+          <NavLink key={key} to={solicitation.link}>
+            <p key={key} className={`data`}>
+              {solicitation.text}
+              <span className="float-end">{solicitation.date}</span>
+            </p>
+          </NavLink>
+        ));
   };
 
   const renderVerMais = (solicitations) => {
@@ -45,7 +61,7 @@ export const CardCronograma = (props) => {
         <span className="float-end my-auto">Data</span>
       </div>
       <hr />
-      {renderSolicitations(solicitations)}
+      {renderSolicitations(solicitations, exibirTooltip)}
       {renderVerMais(solicitations)}
     </div>
   );
