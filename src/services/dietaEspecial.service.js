@@ -444,3 +444,7 @@ export const vincularProtocolosEditais = async (payload) => {
     payload
   );
 };
+
+export const buscaAnosComDietas = async () => {
+  return Promise.resolve([2024, 2023, 2022]);
+};

@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
+
 import { FormApi } from "final-form";
 
 import { MESES } from "constants/shared";
+
+import { buscaAnosComDietas } from "services/dietaEspecial.service";
 
 type Args = {
   values: Record<string, any>;
@@ -22,6 +26,19 @@ const MES_OPCOES: Array<MultiSelectOption> = MESES.map(
 const getAnoVigente = () => new Date().getFullYear();
 
 export default ({ values, form }: Args) => {
+  const [anoOpcoes, setAnoOpcoes] = useState([]);
+
+  useEffect(() => {
+    buscaAnosComDietas().then((data: Array<number>) => {
+      setAnoOpcoes(
+        data.map((a) => ({
+          label: a,
+          value: a,
+        }))
+      );
+    });
+  }, []);
+
   const getDataMinimaMaxima = () => {
     let dataMinima: Date, dataMaxima: Date;
     if (
@@ -48,13 +65,6 @@ export default ({ values, form }: Args) => {
   const selecionouMaisDeUmMes = values.mes?.length > 1;
   const selecionouAno = values.ano?.length > 0;
   const selecionouMes = values.mes?.length > 0;
-
-  const anoOpcoes: Array<MultiSelectOption> = ["2024", "2023", "2022"].map(
-    (a: string) => ({
-      label: a,
-      value: Number(a),
-    })
-  );
 
   if (!values.ano) {
     form.change("ano", [anoVigente]);
