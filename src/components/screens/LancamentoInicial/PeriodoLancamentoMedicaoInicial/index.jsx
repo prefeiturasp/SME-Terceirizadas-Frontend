@@ -2962,7 +2962,7 @@ export default () => {
       <ModalVoltarPeriodoLancamento
         closeModal={() => setShowModalVoltarPeriodoLancamento(false)}
         showModal={showModalVoltarPeriodoLancamento}
-        navigate={navigate}
+        history={history}
       />
     </>
   );
