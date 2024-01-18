@@ -17,10 +17,12 @@ export const TabelaHistoricoLotes = (props) => {
               <tr key={key}>
                 <td>
                   <Link
-                    to="/configuracoes/cadastros/lote"
-                    state={{
-                      prevPath: window.location.pathname,
-                      uuid: lote.uuid,
+                    to={{
+                      pathname: `/configuracoes/cadastros/lote`,
+                      state: {
+                        prevPath: window.location.pathname,
+                        uuid: lote.uuid,
+                      },
                     }}
                   >
                     {lote.nome}

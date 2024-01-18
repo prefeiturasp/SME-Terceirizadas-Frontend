@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import FormFiltros from "./components/FormFiltros";
 import TabelaResultados from "./components/TabelaResultados";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 
 import { getDietasAtivasInativasPorAluno } from "../../../../services/dietaEspecial.service";
@@ -21,7 +22,6 @@ import {
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { TIPO_PERFIL } from "constants/shared";
 import { Paginacao } from "components/Shareable/Paginacao";
-import { useNavigationType } from "react-router-dom";
 
 const AtivasInativasPorAluno = ({
   dadosResultados,
@@ -37,15 +37,14 @@ const AtivasInativasPorAluno = ({
   meusDados,
   setMeusDados,
   reset,
+  history,
 }) => {
-  const navigationType = useNavigationType();
-
   const [loading, setLoading] = useState(true);
   const [firstLoad, setFirstLoad] = useState(true);
 
   useEffect(() => {
     if (firstLoad) {
-      if (navigationType === "PUSH") reset();
+      if (history && history.action === "PUSH") reset();
       setFirstLoad(false);
     } else if (filtros) fetchData({ ...filtros, page: 1 });
   }, [filtros]);
@@ -148,7 +147,6 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AtivasInativasPorAluno);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AtivasInativasPorAluno)
+);

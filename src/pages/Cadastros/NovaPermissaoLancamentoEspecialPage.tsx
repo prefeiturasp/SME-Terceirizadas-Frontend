@@ -10,12 +10,12 @@ import {
   TIPOS_ALIMENTACAO,
   PERMISSAO_LANCAMENTOS_ESPECIAIS,
 } from "../../configs/constants";
-import { useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 export default () => {
   const breadcrumbURL = () => {
-    const location = useLocation();
-    if (location.pathname.includes("editar")) {
+    const history = useHistory();
+    if (history.location.pathname.includes("editar")) {
       return EDITAR_PERMISSAO_LANCAMENTO_ESPECIAL;
     } else {
       return NOVA_PERMISSAO_LANCAMENTO_ESPECIAL;
@@ -23,8 +23,8 @@ export default () => {
   };
 
   const breadcrumbTitle = () => {
-    const location = useLocation();
-    if (location.pathname.includes("editar")) {
+    const history = useHistory();
+    if (history.location.pathname.includes("editar")) {
       return "Editar Permissão de Lançamento Especial";
     } else {
       return "Nova Permissão de Lançamento Especial";

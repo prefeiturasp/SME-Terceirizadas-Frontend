@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Spin } from "antd";
 import "./styles.scss";
 import { PRE_RECEBIMENTO } from "configs/constants";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { detalharLayoutEmabalagem } from "services/layoutEmbalagem.service";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
@@ -27,7 +27,7 @@ import {
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 
 export default () => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const { meusDados } = useContext(MeusDadosContext);
 
@@ -306,7 +306,7 @@ export default () => {
   };
 
   const voltarPaginaPainel = () =>
-    navigate(`/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`);
+    history.push(`/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`);
 
   const validaAprovacoes =
     aprovacoes[0] !== undefined &&

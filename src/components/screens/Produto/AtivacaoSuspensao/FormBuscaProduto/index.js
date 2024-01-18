@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer } from "react";
+import { withRouter } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import { Row, Col } from "antd";
 import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
@@ -152,4 +153,4 @@ const FormBuscaProduto = ({
   );
 };
 
-export default FormBuscaProduto;
+export default withRouter(FormBuscaProduto);

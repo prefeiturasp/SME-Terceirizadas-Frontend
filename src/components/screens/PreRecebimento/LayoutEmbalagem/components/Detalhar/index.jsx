@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Spin } from "antd";
 import "./styles.scss";
 import { LAYOUT_EMBALAGEM, PRE_RECEBIMENTO } from "configs/constants";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
 import { detalharLayoutEmabalagem } from "services/layoutEmbalagem.service";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
@@ -29,7 +29,7 @@ import { usuarioComAcessoAoPainelEmbalagens } from "../../../../../../helpers/ut
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 
 export default ({ analise }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const { meusDados } = useContext(MeusDadosContext);
 
@@ -46,10 +46,10 @@ export default ({ analise }) => {
   const [visaoCODAE, setVisaoCODAE] = useState(null);
 
   const voltarPaginaGrid = () =>
-    navigate(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
+    history.push(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
 
   const voltarPaginaPainel = () =>
-    navigate(`/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`);
+    history.push(`/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`);
 
   const carregarDados = async () => {
     setCarregando(true);

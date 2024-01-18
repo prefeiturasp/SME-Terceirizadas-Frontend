@@ -3,7 +3,7 @@ import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Form, Field } from "react-final-form";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import Botao from "components/Shareable/Botao";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { DIETA_ESPECIAL, PROTOCOLO_PADRAO_DIETA } from "configs/constants";
 import {
   BUTTON_STYLE,
@@ -26,7 +26,7 @@ export default ({
   editais,
   onChangePage,
 }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [showModal, setShowModal] = useState(false);
 
   const getNomesProtocolosFiltrado = (nomeProtocolo) => {
@@ -133,7 +133,7 @@ export default ({
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
                 onClick={() =>
-                  navigate(`/${DIETA_ESPECIAL}/${PROTOCOLO_PADRAO_DIETA}`)
+                  history.push(`/${DIETA_ESPECIAL}/${PROTOCOLO_PADRAO_DIETA}`)
                 }
               />
               <Botao

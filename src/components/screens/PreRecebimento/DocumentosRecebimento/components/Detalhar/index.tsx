@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import "./styles.scss";
 import { DOCUMENTOS_RECEBIMENTO, PRE_RECEBIMENTO } from "configs/constants";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 import { detalharDocumentoRecebimento } from "services/documentosRecebimento.service";
@@ -15,7 +15,7 @@ import ArquivosTipoRecebimento from "../ArquivosTipoDocumento";
 import OutrosDocumentos from "../OutrosDocumentos";
 
 export default () => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const [carregando, setCarregando] = useState(true);
   const [objeto, setObjeto] = useState<DocumentosRecebimentoDetalhado>(
@@ -24,7 +24,7 @@ export default () => {
   const [laudo, setLaudo] = useState<TiposDocumentos>();
 
   const voltarPaginaGrid = () =>
-    navigate(`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`);
+    history.push(`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`);
 
   const carregarDados = async (): Promise<void> => {
     const urlParams = new URLSearchParams(window.location.search);

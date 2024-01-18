@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
-import { Navigate } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import "./style.scss";
 import { INVERSAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
 import Botao from "../../../Shareable/Botao";
@@ -54,7 +54,7 @@ export class CardHistorico extends Component {
   redirectTo(pedido) {
     if (this.state.redirect) {
       return (
-        <Navigate
+        <Redirect
           to={`/${INVERSAO_CARDAPIO}/${RELATORIO}?uuid=${pedido.uuid}`}
         />
       );

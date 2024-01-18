@@ -2,7 +2,7 @@ import { Row, Col } from "antd";
 import React, { useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
-import { useNavigationType } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import SelectSelecione from "components/Shareable/SelectSelecione";
@@ -44,10 +44,13 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit, exibirStatus = true, initialValues }) => {
+const FormBuscaProduto = ({
+  onSubmit,
+  exibirStatus = true,
+  initialValues,
+  history,
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  const navigationType = useNavigationType();
 
   useEffect(() => {
     async function fetchData() {
@@ -74,7 +77,7 @@ const FormBuscaProduto = ({ onSubmit, exibirStatus = true, initialValues }) => {
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={navigationType === "POP" && initialValues}
+      initialValues={history.action === "POP" && initialValues}
       render={({ form, handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-ativacao">
           <FinalFormToRedux form={FORM_NAME} />
@@ -163,4 +166,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(FormBuscaProduto);
+export default withRouter(connect(mapStateToProps)(FormBuscaProduto));

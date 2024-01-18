@@ -19,13 +19,13 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { GUIAS_NOTIFICACAO, LOGISTICA } from "configs/constants";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import "./styles.scss";
 import ModalDetalharGuia from "./components/ModalDetalharGuia";
 import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [carregando, setCarregando] = useState(false);
   const [guias, setGuias] = useState();
   const [filtros, setFiltros] = useState();
@@ -123,7 +123,7 @@ export default () => {
       const response = await criarNotificacao(payload);
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Notificação criada com sucesso");
-        navigate(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
+        history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
       }
     }
   };

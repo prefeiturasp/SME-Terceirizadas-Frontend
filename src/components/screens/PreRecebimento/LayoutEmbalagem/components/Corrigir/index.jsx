@@ -19,7 +19,7 @@ import {
   LAYOUT_EMBALAGEM,
   PRE_RECEBIMENTO,
 } from "../../../../../../configs/constants";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import ModalConfirmar from "./components/ModalConfirmar";
 import {
   toastError,
@@ -40,7 +40,7 @@ const TITULOS_SECOES_TIPOS_EMBALAGENS = {
 const FORMATOS_IMAGEM = "PDF, PNG, JPG ou JPEG";
 
 export default ({ atualizar }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [carregando, setCarregando] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [objeto, setObjeto] = useState({});
@@ -326,7 +326,7 @@ export default ({ atualizar }) => {
   };
 
   const voltarPagina = () =>
-    navigate(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
+    history.push(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
 
   const onSubmit = () => {
     setShowModal(true);

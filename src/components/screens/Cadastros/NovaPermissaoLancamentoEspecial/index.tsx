@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import HTTP_STATUS from "http-status-codes";
@@ -41,8 +41,7 @@ import { NovaPermissaoInterface } from "./interfaces";
 
 export const NovaPermissaoLancamentoEspecial: React.FC = () => {
   const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
-  const navigate = useNavigate();
-  const location = useLocation();
+  const history = useHistory();
 
   const [erroAPI, setErroAPI] = useState("");
   const [dataInicio, setDataInicio] = useState(new Date());
@@ -178,9 +177,9 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
       alimentacoes_lancamento_especial: [],
     };
 
-    if (location.state && location.state.permissao) {
+    if (history.location.state && history.location.state.permissao) {
       const permissao: PermissaoLancamentosEspeciaisInterface =
-        location.state.permissao;
+        history.location.state.permissao;
       await getEscolasTercTotalAsync(permissao.diretoria_regional.uuid);
       const escolaLabel = `${permissao.escola.codigo_eol} - ${permissao.escola.nome}`;
       await getEscolaSimplesAsync(escolaLabel);
@@ -383,7 +382,7 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
     }
     if ([HTTP_STATUS.CREATED, HTTP_STATUS.OK].includes(response.status)) {
       toastSuccess("Permissão de Lançamento Especial salva com sucesso!");
-      navigate(
+      history.push(
         "/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais"
       );
     } else {

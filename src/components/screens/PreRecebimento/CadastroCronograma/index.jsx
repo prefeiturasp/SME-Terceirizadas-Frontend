@@ -21,7 +21,7 @@ import {
   getUnidadesDeMedidaLogistica,
 } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
@@ -50,7 +50,7 @@ export default () => {
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
   const [fornecedores, setFornecedores] = useState([{}]);
-  const navigate = useNavigate();
+  const history = useHistory();
   const [listaRascunhos, setListaRascunhos] = useState(null);
   const [duplicados, setDuplicados] = useState([]);
   const [restante, setRestante] = useState(undefined);
@@ -143,7 +143,7 @@ export default () => {
             "Cadastro de Cronograma salvo e enviado para aprovação!"
           );
           setShowModal(false);
-          navigate(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+          history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
         }
       } else {
         toastError("Ocorreu um erro ao salvar o Cronograma");

@@ -5,7 +5,7 @@ import {
   NOTIFICAR_EMPRESA,
 } from "configs/constants";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
 import "./styles.scss";
@@ -13,23 +13,19 @@ import { EDITAR_NOTIFICACAO } from "configs/constants";
 import { usuarioComAcessoTelaDetalharNotificacaoOcorrencia } from "helpers/utilities";
 
 const ListagemNotificacoes = ({ notificacoes, fiscal }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const renderizarBotoesDeAcoes = (notificacao) => {
     const botaoRascunho = (
       <span
         className="link-acoes px-2"
         onClick={() =>
-          navigate(
-            {
-              pathname: `/${LOGISTICA}/${EDITAR_NOTIFICACAO}`,
+          history.push({
+            pathname: `/${LOGISTICA}/${EDITAR_NOTIFICACAO}`,
+            state: {
+              guia: notificacao,
             },
-            {
-              state: {
-                guia: notificacao,
-              },
-            }
-          )
+          })
         }
       >
         <i title="Editar Rascunho" className="verde fas fa-edit" />

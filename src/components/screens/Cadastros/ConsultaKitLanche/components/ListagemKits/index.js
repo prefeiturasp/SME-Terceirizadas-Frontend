@@ -1,10 +1,10 @@
 import React from "react";
 
 import "./styles.scss";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const ListagemKits = ({ kits }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   return (
     <section className="resultado-consulta-kit">
@@ -28,7 +28,7 @@ const ListagemKits = ({ kits }) => {
                   <button
                     className="botaoEditar"
                     onClick={() =>
-                      navigate(`/codae/cadastros/kits/${kit.uuid}/editar`)
+                      history.push(`/codae/cadastros/kits/${kit.uuid}/editar`)
                     }
                   >
                     Editar

@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
-import { useNavigationType } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import Botao from "components/Shareable/Botao";
@@ -40,13 +40,12 @@ function reducer(state, { type: actionType, payload }) {
 
 const FormBuscaProduto = ({
   onSubmit,
+  history,
   initialValues,
   formName,
   novaReclamacao,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  const navigationType = useNavigationType();
 
   useEffect(() => {
     async function fetchData() {
@@ -81,7 +80,7 @@ const FormBuscaProduto = ({
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={navigationType === "POP" && initialValues}
+      initialValues={history.action === "POP" && initialValues}
       render={({ form, handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-formulario">
           <FinalFormToRedux form={formName} />
@@ -141,4 +140,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps)(FormBuscaProduto);
+export default withRouter(connect(mapStateToProps)(FormBuscaProduto));

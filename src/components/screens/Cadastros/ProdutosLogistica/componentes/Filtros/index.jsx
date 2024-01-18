@@ -9,14 +9,16 @@ import {
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { statusProdutos } from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { CADASTROS, CADASTRO_PRODUTOS, CONFIGURACOES } from "configs/constants";
 
 export default ({ setResultado, nomes, setFiltros }) => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const cadastrarProduto = () =>
-    navigate(`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_PRODUTOS}`);
+    history.push({
+      pathname: `/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_PRODUTOS}`,
+    });
 
   const getNomesProdutosFiltrado = (nomeItem) => {
     if (nomeItem) {

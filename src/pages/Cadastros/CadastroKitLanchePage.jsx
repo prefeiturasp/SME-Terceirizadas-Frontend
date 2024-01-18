@@ -1,12 +1,10 @@
 import React from "react";
-import { useMatch } from "react-router-dom";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import { CADASTROS, CODAE, EDITAR, KITS } from "../../configs/constants";
 import CadastroKitLanche from "../../components/screens/Cadastros/CadastroKitLanche";
 
-export default () => {
-  const match = useMatch();
+export default ({ match }) => {
   const uuid = match.params.uuid;
 
   const defineAtual = () => {
