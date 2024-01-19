@@ -76,6 +76,7 @@ class solicitacaoDietaEspecial extends Component {
       criadoRf: null,
       deletandoImagem: false,
       atualizandoImagem: false,
+      nome_escola: "",
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -89,6 +90,7 @@ class solicitacaoDietaEspecial extends Component {
       this.setState({
         quantidadeAlunos: meusDados.vinculo_atual.instituicao.quantidade_alunos,
         codigo_eol_escola: meusDados.vinculo_atual.instituicao.codigo_eol,
+        nome_escola: meusDados.vinculo_atual.instituicao.nome,
       });
     });
     const { history, loadSolicitacoesVigentes, reset } = this.props;
@@ -325,6 +327,13 @@ class solicitacaoDietaEspecial extends Component {
     this.props.reset("solicitacaoDietaEspecial");
   }
 
+  atualizaCamposAlunoNaoMatriculado() {
+    const { change } = this.props;
+    const { codigo_eol_escola, nome_escola } = this.state;
+    change("aluno_nao_matriculado_data.codigo_eol_escola", codigo_eol_escola);
+    change("aluno_nao_matriculado_data.nome_escola", nome_escola);
+  }
+
   render() {
     const {
       quantidadeAlunos,
@@ -352,12 +361,15 @@ class solicitacaoDietaEspecial extends Component {
                 component={CheckboxField}
                 name="aluno_nao_matriculado"
                 type="checkbox"
-                onChange={() => {
+                onChange={(ehAlunoNaoMatriculado) => {
                   this.props.loadSolicitacoesVigentes(null);
                   this.props.reset();
                   this.setState({
-                    aluno_nao_matriculado: !this.state.aluno_nao_matriculado,
+                    aluno_nao_matriculado: ehAlunoNaoMatriculado,
                   });
+                  if (ehAlunoNaoMatriculado) {
+                    this.atualizaCamposAlunoNaoMatriculado();
+                  }
                 }}
               />
               <div className="ms-3">
@@ -531,6 +543,7 @@ class solicitacaoDietaEspecial extends Component {
                       className="form-control"
                       type="number"
                       required
+                      disabled
                       validate={[required, length(6)]}
                       onBlur={this.getEscolaPorEOL}
                     />
