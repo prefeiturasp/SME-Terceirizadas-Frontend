@@ -444,12 +444,3 @@ export const vincularProtocolosEditais = async (payload) => {
     payload
   );
 };
-
-export const buscaTotaisRelatorioGerencialDietas = async () => {
-  return Promise.resolve({
-    total_solicitacoes: 1253,
-    total_autorizadas: 1000,
-    total_negadas: 53,
-    total_canceladas: 100,
-  });
-};

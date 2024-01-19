@@ -11,7 +11,7 @@ import {
 import FormFiltro from "./components/FormFiltro";
 import CardResultado from "./components/CardResultado";
 
-import { buscaTotaisRelatorioGerencialDietas } from "services/dietaEspecial.service";
+import { buscaTotaisRelatorioGerencialDietas } from "services/painelNutricionista.service";
 
 type Totais = {
   total_solicitacoes: number;

@@ -173,3 +173,11 @@ export const buscaAnosComDietas = async () => {
     return response.data;
   }
 };
+
+export const buscaTotaisRelatorioGerencialDietas = async () => {
+  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.TOTAIS_GERENCIAL_DIETAS}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    return response.data;
+  }
+};
