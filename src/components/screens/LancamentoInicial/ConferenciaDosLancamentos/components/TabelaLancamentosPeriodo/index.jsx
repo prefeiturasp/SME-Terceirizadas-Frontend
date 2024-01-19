@@ -52,6 +52,7 @@ import {
 } from "../../constants";
 import {
   ehEscolaTipoCEI,
+  ehEscolaTipoCEMEI,
   deepCopy,
   usuarioEhDRE,
   usuarioEhMedicao,
@@ -95,6 +96,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     feriadosNoMes,
     diasCalendario,
     diasSobremesaDoce,
+    periodosGruposMedicao,
   } = props;
 
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
@@ -108,6 +110,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const [tabelaAlimentacaoRows, setTabelaAlimentacaoRows] = useState(null);
   const [tabelaDietaRows, setTabelaDietaRows] = useState(null);
   const [tabelaDietaEnteralRows, setTabelaDietaEnteralRows] = useState(null);
+  const [periodoGrupoSelecionado, setPeriodoGrupoSelecionado] = useState(null);
   const [
     tabelaSolicitacoesAlimentacaoRows,
     setTabelaSolicitacoesAlimentacaoRows,
@@ -303,8 +306,22 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     );
   };
 
+  const ehEMEIdaCEMEI = () => {
+    return (
+      ehEscolaTipoCEMEI({ nome: solicitacao.escola }) &&
+      periodoGrupoSelecionado &&
+      periodosGruposMedicao
+        .find(
+          (periodoGrupo_) =>
+            periodoGrupo_.uuid_medicao_periodo_grupo ===
+            periodoGrupoSelecionado.uuid_medicao_periodo_grupo
+        )
+        .nome_periodo_grupo.includes("Infantil")
+    );
+  };
+
   useEffect(() => {
-    if (showTabelaLancamentosPeriodo) {
+    if (showTabelaLancamentosPeriodo && periodoGrupoSelecionado) {
       const formatarTabelasAsync = async () => {
         try {
           setLoading(true);
@@ -468,13 +485,15 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   .map((periodo) => periodo.periodo_escolar.nome)
                   .includes(periodoGrupo.nome_periodo_grupo);
                 let alimentacoesLancamentosEspeciais = null;
-                if (ehPeriodoSimples) {
+                if (ehPeriodoSimples || ehEMEIdaCEMEI()) {
                   const response_permissoes_lancamentos_especiais_mes_ano_por_periodo =
                     await getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync(
                       solicitacao.escola_uuid,
                       mesSolicitacao,
                       anoSolicitacao,
-                      periodoGrupo.nome_periodo_grupo
+                      periodoGrupo.nome_periodo_grupo.includes(" ")
+                        ? periodoGrupo.nome_periodo_grupo.split(" ")[1]
+                        : periodoGrupo.nome_periodo_grupo
                     );
                   alimentacoesLancamentosEspeciais =
                     response_permissoes_lancamentos_especiais_mes_ano_por_periodo.alimentacoes_lancamentos_especiais;
@@ -493,7 +512,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                     periodoGrupo,
                     solicitacao,
                     periodo.periodo_escolar.eh_periodo_especifico,
-                    ehPeriodoSimples,
+                    ehPeriodoSimples || ehEMEIdaCEMEI(),
                     alimentacoesLancamentosEspeciais
                   );
                 setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
@@ -553,7 +572,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               );
             setSuspensoesAutorizadas(response_suspensoes_autorizadas);
           }
-
+          setPeriodoGrupoSelecionado(null);
           setLoading(false);
           setErroAPI("");
         } catch (error) {
@@ -615,7 +634,17 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
 
   const onClickVisualizarFechar = async (periodoGrupo) => {
     setShowTabelaLancamentosPeriodo(!showTabelaLancamentosPeriodo);
-    setPeriodoEscolar(periodoGrupo.periodo_escolar);
+    if (ehEscolaTipoCEMEI({ nome: solicitacao.escola })) {
+      setPeriodoEscolar(
+        periodoGrupo.nome_periodo_grupo.includes(" ")
+          ? periodoGrupo.nome_periodo_grupo.split(" ")[1]
+          : periodoGrupo.nome_periodo_grupo
+      );
+      setPeriodoGrupoSelecionado(periodoGrupo);
+    } else {
+      setPeriodoGrupoSelecionado(periodoGrupo.periodo_escolar);
+      setPeriodoEscolar(periodoGrupo.periodo_escolar);
+    }
     if (!showTabelaLancamentosPeriodo) {
       setLoading(true);
       setOcorrenciaExpandida();

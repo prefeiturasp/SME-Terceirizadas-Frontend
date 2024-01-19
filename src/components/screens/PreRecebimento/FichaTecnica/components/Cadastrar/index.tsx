@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import "./styles.scss";
+import { useHistory } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import Label from "components/Shareable/Label";
-import { getInformacoesNutricionaisOrdenadas } from "services/produto.service";
+
 import {
   required,
   email,
@@ -22,13 +22,6 @@ import {
 } from "../../../../../Shareable/Botao/constants";
 import Botao from "../../../../../Shareable/Botao";
 import { cepMask, cnpjMask, telefoneMask } from "constants/shared";
-import {
-  cadastraRascunhoFichaTecnica,
-  editaRascunhoFichaTecnica,
-  getFichaTecnica,
-} from "services/fichaTecnica.service";
-import { exibeError } from "helpers/utilities";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 import FormPereciveis from "./components/FormPereciveis";
@@ -37,37 +30,39 @@ import { OnChange } from "react-final-form-listeners";
 import TabelaNutricional from "components/Shareable/TabelaNutricional";
 import Select from "components/Shareable/Select";
 import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
+import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 
 import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
 
 import {
+  ArquivoForm,
   FichaTecnicaDetalhada,
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
 import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
-import {
-  ResponseFichaTecnicaDetalhada,
-  ResponseInformacoesNutricionais,
-} from "interfaces/responses.interface";
 import { InformacaoNutricional } from "interfaces/produto.interface";
 
 import InfoAcondicionamentoPereciveis from "./components/InfoAcondicionamentoPereciveis";
+import InfoAcondicionamentoNaoPereciveis from "./components/InfoAcondicionamentoNaoPereciveis";
 
 import { FichaTecnicaPayload } from "../../interfaces";
 import {
-  carregarArquivo,
+  assinarEnviarFichaTecnica,
+  carregarDados,
   carregarFabricantes,
   carregarMarcas,
   carregarProdutos,
-  carregarTerceirizada,
   carregarUnidadesMedida,
   cepCalculator,
   formataPayload,
-  geraInitialValues,
+  gerenciaModalCadastroExterno,
+  salvarRascunho,
+  validaAssinarEnviar,
   validaProximo,
   validaRascunho,
 } from "../../helpers";
-import { ArquivoForm } from "components/screens/PreRecebimento/DocumentosRecebimento/interfaces";
+
+import "./styles.scss";
 
 const ITENS_STEPS = [
   {
@@ -109,11 +104,12 @@ export default () => {
   const listaInformacoesNutricionaisFichaTecnica = useRef<
     InformacaoNutricional[]
   >([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showModalCadastro, setShowModalCadastro] = useState(false);
+  const [showModalAssinatura, setShowModalAssinatura] = useState(false);
   const [tipoCadastro, setTipoCadastro] = useState("");
   const [arquivo, setArquivo] = useState<ArquivoForm[]>([]);
 
-  const onSubmit = (): void => {};
+  const history = useHistory();
 
   const atualizarDadosCarregados = async () => {
     setCarregando(true);
@@ -123,97 +119,31 @@ export default () => {
     setCarregando(false);
   };
 
-  const gerenciaModalCadastroExterno = (tipo: string) => {
-    setTipoCadastro(tipo);
-    setShowModal(true);
-  };
-
-  const salvarRascunho = async (values: FichaTecnicaPayload) => {
-    const payload = formataPayload(
-      values,
-      proponente,
-      produtosOptions,
-      fabricantesOptions,
-      arquivo
-    );
-
-    try {
-      setCarregando(true);
-      let response: ResponseFichaTecnicaDetalhada;
-      if (ficha.uuid) {
-        response = await editaRascunhoFichaTecnica(payload, ficha.uuid);
-      } else {
-        response = await cadastraRascunhoFichaTecnica(payload);
-      }
-
-      if (response.status === 201 || response.status === 200) {
-        toastSuccess("Rascunho salvo com sucesso!");
-        setFicha(response.data);
-      } else {
-        toastError("Ocorreu um erro ao salvar a Ficha Técnica");
-      }
-    } catch (error) {
-      exibeError(error, "Ocorreu um erro ao salvar a Ficha Técnica");
-    } finally {
-      setCarregando(false);
-    }
-  };
-
-  const carregarDados = async () => {
-    const responseInformacoes: ResponseInformacoesNutricionais =
-      await getInformacoesNutricionaisOrdenadas();
-    listaCompletaInformacoesNutricionais.current =
-      responseInformacoes.data.results;
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
-    if (uuid) {
-      const responseFicha = await getFichaTecnica(uuid);
-      const fichaTecnica = responseFicha.data;
-
-      listaInformacoesNutricionaisFichaTecnica.current =
-        fichaTecnica.informacoes_nutricionais.map(
-          ({ informacao_nutricional }) => informacao_nutricional
-        );
-
-      setFicha(fichaTecnica);
-      setInitialValues(geraInitialValues(fichaTecnica));
-
-      if (fichaTecnica.arquivo) {
-        const arquivo = await carregarArquivo(fichaTecnica.arquivo);
-        setArquivo(arquivo);
-      }
-    }
-  };
-
   useEffect(() => {
     (async () => {
-      setCarregando(true);
       await carregarProdutos(setProdutosOptions);
       await carregarMarcas(setMarcasOptions);
       await carregarFabricantes(setFabricantesOptions);
       await carregarUnidadesMedida(setUnidadesMedidaOptions);
-      await carregarDados();
-      setCarregando(false);
+      await carregarDados(
+        listaCompletaInformacoesNutricionais,
+        listaInformacoesNutricionaisFichaTecnica,
+        meusDados,
+        setFicha,
+        setInitialValues,
+        setArquivo,
+        setProponente,
+        setCarregando
+      );
     })();
   }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (!proponente.uuid) {
-        setCarregando(true);
-        await carregarTerceirizada(ficha, meusDados, setProponente);
-        setCarregando(false);
-      }
-    })();
-  }, [meusDados, ficha]);
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-cadastro-ficha-tecnica">
         <div className="card-body cadastro-ficha-tecnica">
           <Form
-            onSubmit={onSubmit}
+            onSubmit={() => {}}
             initialValues={initialValues}
             decorators={[cepCalculator(setDesabilitaEndereco)]}
             render={({ form, handleSubmit, values, errors }) => (
@@ -262,7 +192,11 @@ export default () => {
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           className="botao-cadastro-externo"
                           onClick={() =>
-                            gerenciaModalCadastroExterno("PRODUTO")
+                            gerenciaModalCadastroExterno(
+                              "PRODUTO",
+                              setTipoCadastro,
+                              setShowModalCadastro
+                            )
                           }
                         />
                       </div>
@@ -305,7 +239,13 @@ export default () => {
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           className="botao-cadastro-externo"
-                          onClick={() => gerenciaModalCadastroExterno("MARCA")}
+                          onClick={() =>
+                            gerenciaModalCadastroExterno(
+                              "MARCA",
+                              setTipoCadastro,
+                              setShowModalCadastro
+                            )
+                          }
                         />
                       </div>
                       <div className="col-4">
@@ -463,7 +403,11 @@ export default () => {
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                               className="botao-cadastro-externo"
                               onClick={() =>
-                                gerenciaModalCadastroExterno("FABRICANTE")
+                                gerenciaModalCadastroExterno(
+                                  "FABRICANTE",
+                                  setTipoCadastro,
+                                  setShowModalCadastro
+                                )
                               }
                             />
                           </div>
@@ -670,17 +614,44 @@ export default () => {
                   </>
                 )}
 
-                {stepAtual === 2 && values["categoria"] === "PERECIVEIS" && (
-                  <InfoAcondicionamentoPereciveis
-                    collapse={collapse}
-                    setCollapse={setCollapse}
-                    unidadesMedidaOptions={unidadesMedidaOptions}
-                    arquivo={arquivo}
-                    setArquivo={setArquivo}
-                  />
-                )}
+                {stepAtual === 2 &&
+                  (values["categoria"] === "PERECIVEIS" ? (
+                    <InfoAcondicionamentoPereciveis
+                      collapse={collapse}
+                      setCollapse={setCollapse}
+                      unidadesMedidaOptions={unidadesMedidaOptions}
+                      arquivo={arquivo}
+                      setArquivo={setArquivo}
+                    />
+                  ) : (
+                    <InfoAcondicionamentoNaoPereciveis
+                      collapse={collapse}
+                      setCollapse={setCollapse}
+                      unidadesMedidaOptions={unidadesMedidaOptions}
+                      arquivo={arquivo}
+                      setArquivo={setArquivo}
+                      values={values}
+                    />
+                  ))}
 
                 <hr />
+
+                {stepAtual === ITENS_STEPS.length - 1 && (
+                  <div className="mt-4 mb-4">
+                    <Botao
+                      texto="Assinar e Enviar"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-end ms-3"
+                      onClick={() => setShowModalAssinatura(true)}
+                      disabled={validaAssinarEnviar(
+                        values as FichaTecnicaPayload,
+                        errors,
+                        arquivo
+                      )}
+                    />
+                  </div>
+                )}
 
                 {stepAtual < ITENS_STEPS.length - 1 && (
                   <div className="mt-4 mb-4">
@@ -705,9 +676,17 @@ export default () => {
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     className="float-end ms-3"
-                    onClick={() =>
-                      salvarRascunho(values as FichaTecnicaPayload)
-                    }
+                    onClick={() => {
+                      const payload = formataPayload(
+                        values,
+                        proponente,
+                        produtosOptions,
+                        fabricantesOptions,
+                        arquivo
+                      );
+
+                      salvarRascunho(payload, ficha, setFicha, setCarregando);
+                    }}
                     disabled={validaRascunho(values as FichaTecnicaPayload)}
                   />
                 </div>
@@ -723,21 +702,47 @@ export default () => {
                     />
                   </div>
                 )}
+                <ModalCadastrarItemIndividual
+                  closeModal={() => setShowModalCadastro(false)}
+                  showModal={showModalCadastro}
+                  atualizarDadosCarregados={() => atualizarDadosCarregados()}
+                  tipoCadastro={tipoCadastro}
+                  tipoCadastroVisualizacao={
+                    tipoCadastro[0] + tipoCadastro.slice(1).toLowerCase()
+                  }
+                />
+
+                <ModalAssinaturaUsuario
+                  show={showModalAssinatura}
+                  handleClose={() => setShowModalAssinatura(false)}
+                  handleSim={(password: string) => {
+                    const payload = formataPayload(
+                      values,
+                      proponente,
+                      produtosOptions,
+                      fabricantesOptions,
+                      arquivo,
+                      password
+                    );
+
+                    assinarEnviarFichaTecnica(
+                      payload,
+                      ficha,
+                      setCarregando,
+                      history
+                    );
+                  }}
+                  loading={carregando}
+                  titulo="Assinar Ficha Técnica"
+                  texto="Você confirma o preenchimento correto de todas as
+                  informações solicitadas na ficha técnica?"
+                  textoBotao="Sim, Assinar Ficha"
+                />
               </form>
             )}
           />
         </div>
       </div>
-
-      <ModalCadastrarItemIndividual
-        closeModal={() => setShowModal(false)}
-        showModal={showModal}
-        atualizarDadosCarregados={() => atualizarDadosCarregados()}
-        tipoCadastro={tipoCadastro}
-        tipoCadastroVisualizacao={
-          tipoCadastro[0] + tipoCadastro.slice(1).toLowerCase()
-        }
-      />
     </Spin>
   );
 };

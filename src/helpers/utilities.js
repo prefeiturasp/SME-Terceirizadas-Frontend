@@ -232,8 +232,8 @@ export const formataCPFCensurado = (cpf) => {
 };
 
 export const formataMilhar = (value) => {
-  const valor = value.toString().replace(/\D/g, "");
-  return valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const valor = value?.toString().replace(/\D/g, "");
+  return valor?.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
 export const truncarString = (str, numeroMaximoChars) => {
@@ -514,6 +514,13 @@ export const usuarioComAcessoAoPainelEmbalagens = () => {
 export const usuarioComAcessoAoPainelDocumentos = () => {
   return [
     PERFIL.DILOG_QUALIDADE,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioComAcessoAoPainelFichasTecnicas = () => {
+  return [
+    PERFIL.COORDENADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
   ].includes(localStorage.getItem("perfil"));
 };
@@ -1147,4 +1154,11 @@ export const getAmanha = () => {
 
 export const maxEntreDatas = (arrayDeDatas) => {
   return new Date(Math.max(...arrayDeDatas));
+};
+
+export const ordenarPorLogMaisRecente = (itemA, itemB) => {
+  let dataA = parseDataHoraBrToMoment(itemA.log_mais_recente);
+  let dataB = parseDataHoraBrToMoment(itemB.log_mais_recente);
+
+  return comparaObjetosMoment(dataB, dataA);
 };

@@ -6,6 +6,9 @@ export const getListaNomesTiposEmbalagens = async () =>
 export const getListaAbreviacoesTiposEmbalagens = async () =>
   await axios.get("/tipos-embalagens/lista-abreviacoes-tipos-embalagens/");
 
+export const getListaTiposEmbalagens = async () =>
+  await axios.get("/tipos-embalagens/lista-tipos-embalagens/");
+
 export const getTiposEmbalagens = async (params) => {
   const url = `/tipos-embalagens/`;
   return await axios.get(url, { params });

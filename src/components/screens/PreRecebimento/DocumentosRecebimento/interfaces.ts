@@ -5,11 +5,6 @@ import {
   DatasFabricacaoPrazos,
 } from "interfaces/pre_recebimento.interface";
 
-export interface ArquivoForm {
-  nome: string;
-  base64: string;
-}
-
 export interface OptionsTipoDocumento {
   value: TiposDocumentoChoices;
   label: string;

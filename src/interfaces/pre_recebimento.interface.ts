@@ -54,6 +54,11 @@ export interface Arquivo {
   arquivo: string;
 }
 
+export interface ArquivoForm {
+  nome: string;
+  base64: string;
+}
+
 export type TiposDocumentoChoices =
   | "LAUDO"
   | "DECLARACAO_LEI_1512010"
@@ -98,6 +103,24 @@ export interface FiltrosDashboardDocumentos {
   nome_produto?: string;
   numero_cronograma?: string;
   nome_fornecedor?: string;
+  status?: string[];
+  offset?: number;
+  limit?: number;
+}
+
+export interface FichaTecnicaDashboard {
+  log_mais_recente: string;
+  nome_empresa: string;
+  nome_produto: string;
+  numero_ficha: string;
+  status: string;
+  uuid: string;
+}
+
+export interface FiltrosDashboardFichasTecnicas {
+  nome_produto?: string;
+  numero_ficha?: string;
+  nome_empresa?: string;
   status?: string[];
   offset?: number;
   limit?: number;
@@ -176,20 +199,23 @@ export interface FichaTecnicaDetalhada {
   gluten: boolean;
   lactose: boolean;
   lactose_detalhe: string;
-  porcao: string;
+  porcao: number;
   unidade_medida_porcao: UnidadeMedidaSimples;
-  valor_unidade_caseira: string;
+  valor_unidade_caseira: number;
   unidade_medida_caseira: string;
   informacoes_nutricionais: InformacoesNutricionaisFichaTecnica[];
   prazo_validade_descongelamento: string;
   condicoes_de_conservacao: string;
-  temperatura_congelamento: string;
-  temperatura_veiculo: string;
+  temperatura_congelamento: number;
+  temperatura_veiculo: number;
   condicoes_de_transporte: string;
   embalagem_primaria: string;
   embalagem_secundaria: string;
   embalagens_de_acordo_com_anexo?: boolean;
   material_embalagem_primaria: string;
+  produto_eh_liquido: boolean;
+  volume_embalagem_primaria: number;
+  unidade_medida_volume_primaria: UnidadeMedidaSimples;
   peso_liquido_embalagem_primaria: number;
   unidade_medida_primaria: UnidadeMedidaSimples;
   peso_liquido_embalagem_secundaria: number;
@@ -220,4 +246,30 @@ export interface EtapaCalendario {
   quantidade: number;
   uuid: string;
   uuid_cronograma: string;
+  status: string;
+}
+
+export interface CardItem {
+  text: string;
+  date: string;
+  link: string;
+  status: string;
+  fullText?: string;
+}
+
+export interface CardConfig<T> {
+  id: string;
+  titulo: string;
+  icon: string;
+  style: string;
+  incluir_status: string[];
+  href: string;
+  items?: T[];
+}
+
+export interface VerMaisItem {
+  texto: string;
+  textoCompleto?: string;
+  data: string;
+  link: string;
 }
