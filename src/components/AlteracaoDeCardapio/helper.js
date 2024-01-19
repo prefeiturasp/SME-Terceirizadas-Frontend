@@ -81,7 +81,7 @@ const getDaysArray = (start, end) => {
   return arr;
 };
 
-export const formataValues = (values) => {
+export const formataValues = (values, ehRPL = false) => {
   if (values.data_inicial && values.data_final) {
     values.datas_intervalo = getDaysArray(
       values.data_inicial.split("/").reverse().join("-"),
@@ -93,7 +93,7 @@ export const formataValues = (values) => {
       values.alterar_dia.split("/").reverse().join("-")
     ).map((data) => ({ data: data }));
   }
-  if (!escolaEhCEMEI) {
+  if (!escolaEhCEMEI || ehRPL) {
     values.substituicoes.forEach((subs) => {
       if (typeof subs.tipos_alimentacao_para === "string") {
         subs.tipos_alimentacao_para = [subs.tipos_alimentacao_para];
