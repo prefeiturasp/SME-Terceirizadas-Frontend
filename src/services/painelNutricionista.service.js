@@ -174,9 +174,9 @@ export const buscaAnosComDietas = async () => {
   }
 };
 
-export const buscaTotaisRelatorioGerencialDietas = async () => {
+export const buscaTotaisRelatorioGerencialDietas = async (params) => {
   const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.TOTAIS_GERENCIAL_DIETAS}/`;
-  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     return response.data;
   }

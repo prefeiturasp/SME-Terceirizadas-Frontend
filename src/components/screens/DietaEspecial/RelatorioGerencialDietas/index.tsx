@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { isDate } from "moment";
+
 import CollapseFiltros from "components/Shareable/CollapseFiltros";
 import Botao from "components/Shareable/Botao";
 import {
@@ -23,8 +25,13 @@ type Totais = {
 export default () => {
   const [totais, setTotais] = useState<Totais | Record<string, number>>({});
 
-  const filtrar = async () => {
-    const data = await buscaTotaisRelatorioGerencialDietas();
+  const filtrar = async (values: Record<string, any>) => {
+    const params = {
+      ano: Array.isArray(values.ano) ? values.ano.join() : null,
+      mes: Array.isArray(values.mes) ? values.mes.join() : null,
+      dia: isDate(values.dia) ? values.dia.getDate() : null,
+    };
+    const data = await buscaTotaisRelatorioGerencialDietas(params);
     setTotais(data);
   };
 
