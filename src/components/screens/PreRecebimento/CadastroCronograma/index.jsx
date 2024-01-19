@@ -56,8 +56,6 @@ export default () => {
   const [restante, setRestante] = useState(undefined);
   const [edicao, setEdicao] = useState(false);
   const [cronograma, setCronograma] = useState({});
-  const [valoresIniciais, setValoresIniciais] = useState(true);
-  const [uuidCronograma, setUuidCronograma] = useState(null);
   const [etapasValues, setEtapasValues] = useState({});
   const [recebimentosValues, setRecebimentosValues] = useState({});
 
@@ -130,7 +128,7 @@ export default () => {
     }
     try {
       let response = edicao
-        ? await editaCronograma(payload, uuidCronograma)
+        ? await editaCronograma(payload, cronograma.uuid)
         : await cadastraCronograma(payload);
       if (response.status === 201 || response.status === 200) {
         if (rascunho) {
@@ -167,9 +165,9 @@ export default () => {
     return valor && valor.length > 0 ? valor : undefined;
   };
 
-  const getDadosCronograma = async () => {
+  const getDadosCronograma = async (uuid) => {
     try {
-      const responseCronograma = await getCronograma(uuidCronograma);
+      const responseCronograma = await getCronograma(uuid);
       if (responseCronograma.status === HTTP_STATUS.OK) {
         const programacoes_de_recebimento =
           responseCronograma.data.programacoes_de_recebimento.reverse();
@@ -203,6 +201,7 @@ export default () => {
           crono.tipo_embalagem?.uuid
         );
         cronogramaValues["numero"] = crono.numero ? crono.numero : undefined;
+        cronogramaValues["uuid"] = crono.uuid;
         setCronograma(cronogramaValues);
 
         const etapaValues = {};
@@ -277,10 +276,7 @@ export default () => {
     const uuid = urlParams.get("uuid");
 
     if (uuid) {
-      setUuidCronograma(uuid);
       setEdicao(true);
-    } else {
-      setCarregando(false);
     }
 
     const buscaArmazens = async () => {
@@ -329,16 +325,14 @@ export default () => {
         buscaTiposEmbalagem(),
         getRascunhosAsync(),
       ]);
+      if (uuid) {
+        await getDadosCronograma(uuid);
+      }
       setCarregando(false);
     };
 
     carregaPagina();
-  }, [valoresIniciais]);
-
-  if (valoresIniciais && edicao) {
-    getDadosCronograma();
-    setValoresIniciais(false);
-  }
+  }, []);
 
   const onChangeFormSpy = async (changes) => {
     if (changes.values.empresa) selecionaEmpresa(changes.values.empresa);
