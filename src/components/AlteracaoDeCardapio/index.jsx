@@ -474,7 +474,7 @@ class AlteracaoCardapio extends Component {
     delete values_.status;
     const erros = validateSubmit(values_, this.props.meusDados);
     if (!erros) {
-      values_ = formataValues(values_);
+      values_ = formataValues(values_, this.state.motivo.nome.includes("RPL"));
       if (!values_.uuid) {
         const response = await escolaCriarSolicitacaoDeAlteracaoCardapio(
           values_,
