@@ -37,6 +37,8 @@ export default ({ values, form }: Args) => {
         }))
       );
     });
+
+    form.submit();
   }, []);
 
   const getDataMinimaMaxima = () => {
