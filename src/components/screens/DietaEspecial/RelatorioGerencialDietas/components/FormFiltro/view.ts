@@ -4,7 +4,7 @@ import { FormApi } from "final-form";
 
 import { MESES } from "constants/shared";
 
-import { buscaAnosComDietas } from "services/dietaEspecial.service";
+import { buscaAnosComDietas } from "services/painelNutricionista.service";
 
 type Args = {
   values: Record<string, any>;

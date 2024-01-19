@@ -445,10 +445,6 @@ export const vincularProtocolosEditais = async (payload) => {
   );
 };
 
-export const buscaAnosComDietas = async () => {
-  return Promise.resolve([2024, 2023, 2022]);
-};
-
 export const buscaTotaisRelatorioGerencialDietas = async () => {
   return Promise.resolve({
     total_solicitacoes: 1253,

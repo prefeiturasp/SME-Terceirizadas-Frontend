@@ -165,3 +165,11 @@ export const getSolicitacoesNegadasNutrimanifestacao = async (params) => {
     return data;
   }
 };
+
+export const buscaAnosComDietas = async () => {
+  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.ANOS_COM_DIETAS}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    return response.data;
+  }
+};
