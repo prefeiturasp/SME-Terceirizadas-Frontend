@@ -5,6 +5,7 @@ import {
   ResponseFichasTecnicas,
   ResponseFichasTecnicasDashboard,
   ResponseFichasTecnicasPorStatusDashboard,
+  ResponseFichasTecnicasSimples,
 } from "interfaces/responses.interface";
 import { FiltrosDashboardFichasTecnicas } from "interfaces/pre_recebimento.interface";
 
@@ -51,3 +52,7 @@ export const getDashboardFichasTecnicasPorStatus = async (
   params: URLSearchParams = null
 ): Promise<ResponseFichasTecnicasPorStatusDashboard> =>
   await axios.get(`/ficha-tecnica/dashboard/`, { params });
+
+export const getListaSimplesSemCronograma =
+  async (): Promise<ResponseFichasTecnicasSimples> =>
+    await axios.get(`/ficha-tecnica/lista-simples-sem-cronograma/`);
