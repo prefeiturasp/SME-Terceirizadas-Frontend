@@ -12,7 +12,7 @@ import { Field, Form, FormSpy } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { getNomesDistribuidores } from "services/logistica.service";
-import SelectSelecione from "components/Shareable/SelectSelecione";
+import Select from "components/Shareable/Select";
 import {
   cadastraCronograma,
   editaCronograma,
@@ -396,14 +396,16 @@ export default () => {
                     </div>
                     <div className="col-4">
                       <Field
-                        component={SelectSelecione}
+                        component={Select}
                         naoDesabilitarPrimeiraOpcao
-                        options={getOpcoesContrato()}
+                        options={[
+                          { nome: "Selecione um Contrato", uuid: "" },
+                          ...getOpcoesContrato(),
+                        ]}
                         label="Nº do Contrato"
                         name="contrato"
                         required
                         validate={required}
-                        placeholder={"Selecione um Contrato"}
                         disabled={!values.empresa}
                       />
                     </div>
@@ -487,12 +489,14 @@ export default () => {
                             <div className="row">
                               <div className="col-6">
                                 <Field
-                                  component={SelectSelecione}
+                                  component={Select}
                                   naoDesabilitarPrimeiraOpcao
-                                  options={produtosOptions}
-                                  label="Produto"
-                                  name="produto"
-                                  placeholder={"Selecione um Produto"}
+                                  options={[
+                                    { nome: "Selecione um Produto", uuid: "" },
+                                    ...produtosOptions,
+                                  ]}
+                                  label="Ficha Técnica e Produto"
+                                  name="ficha_tecnica"
                                   required
                                 />
                               </div>
@@ -510,40 +514,46 @@ export default () => {
                               </div>
                               <div className="col-3">
                                 <Field
-                                  component={SelectSelecione}
+                                  component={Select}
                                   naoDesabilitarPrimeiraOpcao
-                                  options={unidadesMedidaOptions}
+                                  options={[
+                                    { nome: "Selecione a Unidade", uuid: "" },
+                                    ...unidadesMedidaOptions,
+                                  ]}
                                   label="Unidade de Medida"
                                   name="unidade_medida"
                                   required
                                   validate={required}
-                                  placeholder={"Selecione a Unidade"}
                                 />
                               </div>
                             </div>
                             <div className="row">
                               <div className="col-6">
                                 <Field
-                                  component={SelectSelecione}
+                                  component={Select}
                                   naoDesabilitarPrimeiraOpcao
-                                  options={armazens}
+                                  options={[
+                                    { nome: "Selecione o Armazém", uuid: "" },
+                                    ...armazens,
+                                  ]}
                                   label="Armazém"
                                   name="armazem"
                                   required
                                   validate={required}
-                                  placeholder={"Selecione o Armazém"}
                                 />
                               </div>
                               <div className="col-3">
                                 <Field
-                                  component={SelectSelecione}
+                                  component={Select}
                                   naoDesabilitarPrimeiraOpcao
-                                  options={tiposEmbalagemOptions}
+                                  options={[
+                                    { nome: "Selecione a Embalagem", uuid: "" },
+                                    ...tiposEmbalagemOptions,
+                                  ]}
                                   label="Tipo de Embalagem"
                                   name="tipo_embalagem"
                                   required
                                   validate={required}
-                                  placeholder={"Selecione a Embalagem"}
                                 />
                               </div>
                             </div>
