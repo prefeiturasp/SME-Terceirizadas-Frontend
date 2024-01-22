@@ -15,6 +15,7 @@ import {
   FichaTecnica,
   EtapaCalendario,
   FichaTecnicaDashboard,
+  FichaTecnicaSimples,
 } from "./pre_recebimento.interface";
 import { InformacaoNutricional } from "./produto.interface";
 
@@ -120,6 +121,10 @@ export interface ResponseFichasTecnicasPorStatusDashboard
       total: number;
     };
   };
+}
+
+export interface ResponseFichasTecnicasSimples extends ResponseInterface {
+  data: ListagemNaoPaginada<FichaTecnicaSimples>;
 }
 
 export interface ResponseDocumentosRecebimentoParaAnalise

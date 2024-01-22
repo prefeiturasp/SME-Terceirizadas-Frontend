@@ -235,6 +235,12 @@ export interface FichaTecnicaDetalhada {
   informacoes_adicionais: string;
 }
 
+export interface FichaTecnicaSimples {
+  uuid: string;
+  numero_e_produto: string;
+  uuid_empresa: string;
+}
+
 export interface EtapaCalendario {
   data_programada: string;
   etapa: string;
