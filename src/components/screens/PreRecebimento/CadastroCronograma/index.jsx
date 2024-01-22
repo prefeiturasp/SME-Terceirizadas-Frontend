@@ -259,7 +259,12 @@ export default () => {
       let contrato = empresaSelecionada.contratos.find(
         (c) => c.uuid === uuid_contrato
       );
+
       values.numero_processo = contrato.processo;
+      values.numero_pregao_chamada_publica =
+        contrato.numero_pregao || contrato.numero_chamada_publica;
+      values.ata = contrato.ata;
+
       setContratoSelecionado(contrato);
     }
   };
@@ -363,20 +368,8 @@ export default () => {
                     onChange={(changes) => onChangeFormSpy(changes)}
                   />
                   <div className="row">
-                    <div className="col-5">
-                      <Field
-                        component={AutoCompleteField}
-                        options={getEmpresaFiltrado(values.empresa)}
-                        label="Pesquisar Empresa"
-                        name="empresa"
-                        required
-                        validate={required}
-                        placeholder={"Selecione uma Empresa Cadastrada"}
-                        esconderIcone
-                      />
-                    </div>
                     {edicao && (
-                      <div className="col-6 text-end">
+                      <div className="col text-end">
                         <p>
                           <b>Nº do Cronograma: </b>
 
@@ -391,6 +384,18 @@ export default () => {
                   <div className="row">
                     <div className="col-8">
                       <Field
+                        component={AutoCompleteField}
+                        options={getEmpresaFiltrado(values.empresa)}
+                        label="Pesquisar Empresa"
+                        name="empresa"
+                        required
+                        validate={required}
+                        placeholder={"Selecione uma Empresa Cadastrada"}
+                        esconderIcone
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
                         component={SelectSelecione}
                         naoDesabilitarPrimeiraOpcao
                         options={getOpcoesContrato()}
@@ -399,6 +404,30 @@ export default () => {
                         required
                         validate={required}
                         placeholder={"Selecione um Contrato"}
+                        disabled={!values.empresa}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        label="Nº do Pregão Eletrônico/Chamada Pública"
+                        name="numero_pregao_chamada_publica"
+                        className="input-busca-produto"
+                        validate={required}
+                        disabled={true}
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        label="Nº ATA"
+                        name="ata"
+                        className="input-busca-produto"
+                        validate={required}
+                        disabled={true}
                       />
                     </div>
                     <div className="col-4">
