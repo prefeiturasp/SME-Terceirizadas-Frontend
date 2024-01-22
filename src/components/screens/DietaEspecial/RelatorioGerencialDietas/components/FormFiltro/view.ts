@@ -26,6 +26,7 @@ const MES_OPCOES: Array<MultiSelectOption> = MESES.map(
 const getAnoVigente = () => new Date().getFullYear();
 
 export default ({ values, form }: Args) => {
+  const [loadingAnoOpcoes, setLoadingAnoOpcoes] = useState(true);
   const [anoOpcoes, setAnoOpcoes] = useState([]);
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default ({ values, form }: Args) => {
           value: a,
         }))
       );
+      setLoadingAnoOpcoes(false);
     });
 
     form.submit();
@@ -84,6 +86,7 @@ export default ({ values, form }: Args) => {
   const [dataMinima, dataMaxima] = getDataMinimaMaxima();
 
   return {
+    loadingAnoOpcoes,
     anoOpcoes,
     MES_OPCOES,
     selecionouMaisDeUmAno,

@@ -3,6 +3,8 @@ import React from "react";
 import { Field } from "react-final-form";
 import { FormApi } from "final-form";
 
+import { Skeleton } from "antd";
+
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { InputComData } from "components/Shareable/DatePicker";
 
@@ -21,16 +23,20 @@ export default (props: Props) => {
   return (
     <div className="row">
       <div className="col-4">
-        <Field
-          component={MultiSelect}
-          disableSearch
-          label="Ano"
-          name="ano"
-          nomeDoItemNoPlural="anos"
-          placeholder="Selecione o ano"
-          tooltipText="Serão contabilizadas todas as dietas referente ao(s) ano(s) selecionado(s)."
-          options={view.anoOpcoes}
-        />
+        {view.loadingAnoOpcoes ? (
+          <Skeleton paragraph={false} active />
+        ) : (
+          <Field
+            component={MultiSelect}
+            disableSearch
+            label="Ano"
+            name="ano"
+            nomeDoItemNoPlural="anos"
+            placeholder="Selecione o ano"
+            tooltipText="Serão contabilizadas todas as dietas referente ao(s) ano(s) selecionado(s)."
+            options={view.anoOpcoes}
+          />
+        )}
       </div>
 
       <div className="col-4">
