@@ -9,6 +9,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
+import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
 
 import FormFiltro from "./components/FormFiltro";
 import CardResultado from "./components/CardResultado";
@@ -23,9 +24,11 @@ type Totais = {
 };
 
 export default () => {
+  const [loading, setLoading] = useState(true);
   const [totais, setTotais] = useState<Totais | Record<string, number>>({});
 
   const filtrar = async (values: Record<string, any>) => {
+    setLoading(true);
     const params = {
       ano: Array.isArray(values.ano) ? values.ano.join() : null,
       mes: Array.isArray(values.mes) ? values.mes.join() : null,
@@ -33,6 +36,7 @@ export default () => {
     };
     const data = await buscaTotaisRelatorioGerencialDietas(params);
     setTotais(data);
+    setLoading(false);
   };
 
   const limparFiltro = () => {};
@@ -49,28 +53,34 @@ export default () => {
         >
           {(values, form) => <FormFiltro values={values} form={form} />}
         </CollapseFiltros>
-        <div className="d-flex gap-2 mt-4">
-          <CardResultado
-            titulo="Total de Solicitações"
-            classeCor="azul-escuro"
-            total={totais.total_solicitacoes ?? 0}
-          />
-          <CardResultado
-            titulo="Autorizadas"
-            classeCor="verde-claro"
-            total={totais.total_autorizadas ?? 0}
-          />
-          <CardResultado
-            titulo="Negadas"
-            classeCor="laranja"
-            total={totais.total_negadas ?? 0}
-          />
-          <CardResultado
-            titulo="Canceladas"
-            classeCor="vermelho"
-            total={totais.total_canceladas ?? 0}
-          />
-        </div>
+
+        {loading ? (
+          <SigpaeLogoLoader />
+        ) : (
+          <div className="d-flex gap-2 mt-4">
+            <CardResultado
+              titulo="Total de Solicitações"
+              classeCor="azul-escuro"
+              total={totais.total_solicitacoes ?? 0}
+            />
+            <CardResultado
+              titulo="Autorizadas"
+              classeCor="verde-claro"
+              total={totais.total_autorizadas ?? 0}
+            />
+            <CardResultado
+              titulo="Negadas"
+              classeCor="laranja"
+              total={totais.total_negadas ?? 0}
+            />
+            <CardResultado
+              titulo="Canceladas"
+              classeCor="vermelho"
+              total={totais.total_canceladas ?? 0}
+            />
+          </div>
+        )}
+
         <div className="d-flex justify-content-end mt-5">
           <Botao
             texto="Baixar PDF"
