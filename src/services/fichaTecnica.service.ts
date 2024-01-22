@@ -53,6 +53,6 @@ export const getDashboardFichasTecnicasPorStatus = async (
 ): Promise<ResponseFichasTecnicasPorStatusDashboard> =>
   await axios.get(`/ficha-tecnica/dashboard/`, { params });
 
-export const getListaSimplesSemCronograma =
+export const getListaFichasTecnicasSimplesSemCronograma =
   async (): Promise<ResponseFichasTecnicasSimples> =>
     await axios.get(`/ficha-tecnica/lista-simples-sem-cronograma/`);
