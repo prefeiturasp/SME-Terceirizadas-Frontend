@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -18,6 +17,7 @@ import ModalAnaliseDinutre from "../Modals/ModalAnaliseDinutre";
 import ModalAnaliseDilog from "../Modals/ModalAnaliseDilog";
 import ModalEnviarAlteracao from "../Modals/ModalEnviarAlteracao";
 import ModalCienciaAlteracao from "../Modals/ModalCienciaAlteracao";
+import ModalVoltar from "../../../../../Shareable/Page/ModalVoltar";
 
 export default ({
   handleSubmit,
@@ -29,8 +29,6 @@ export default ({
 }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const history = useHistory();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -45,11 +43,6 @@ export default ({
     setLoading(true);
     handleSubmit();
     setLoading(false);
-  };
-
-  const handleBack = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    history.goBack();
   };
 
   return (
@@ -194,8 +187,9 @@ export default ({
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN_OUTLINE}
         className="float-end ms-3"
-        onClick={() => handleBack()}
+        onClick={() => handleShow()}
       />
+      <ModalVoltar modalVoltar={show} setModalVoltar={handleClose} />
     </>
   );
 };
