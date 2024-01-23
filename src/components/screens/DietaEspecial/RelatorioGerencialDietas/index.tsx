@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-import { isDate } from "moment";
-
 import CollapseFiltros from "components/Shareable/CollapseFiltros";
 import Botao from "components/Shareable/Botao";
 import {
@@ -32,7 +30,7 @@ export default () => {
     const params = {
       ano: Array.isArray(values.ano) ? values.ano.join() : null,
       mes: Array.isArray(values.mes) ? values.mes.join() : null,
-      dia: isDate(values.dia) ? values.dia.getDate() : null,
+      dia: values.dia || null,
     };
     const data = await buscaTotaisRelatorioGerencialDietas(params);
     setTotais(data);
