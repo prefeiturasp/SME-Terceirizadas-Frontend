@@ -19,7 +19,7 @@ type MultiSelectOption = {
 const MES_OPCOES: Array<MultiSelectOption> = MESES.map(
   (m: string, k: number) => ({
     label: m.toUpperCase(),
-    value: k,
+    value: k + 1,
   })
 );
 
