@@ -7,6 +7,12 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 
 const ModalVoltar = ({ modalVoltar, setModalVoltar, textoModalVoltar }) => {
   const history = useHistory();
+
+  const handleBack = () => {
+    history.goBack();
+    window.scrollTo(0, 0);
+  };
+
   return (
     <Modal
       className="modal-botao-voltar"
@@ -36,9 +42,7 @@ const ModalVoltar = ({ modalVoltar, setModalVoltar, textoModalVoltar }) => {
         <Botao
           texto="Voltar sem Salvar"
           type={BUTTON_TYPE.BUTTON}
-          onClick={() => {
-            history.goBack();
-          }}
+          onClick={handleBack}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           className="ms-3"
         />
