@@ -13,6 +13,7 @@ import InputText from "components/Shareable/Input/InputText";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { getNomesDistribuidores } from "services/logistica.service";
 import Select from "components/Shareable/Select";
+import Label from "components/Shareable/Label";
 import {
   cadastraCronograma,
   editaCronograma,
@@ -25,32 +26,38 @@ import { useHistory } from "react-router-dom";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
-import { required } from "helpers/fieldValidators";
+import {
+  required,
+  composeValidators,
+  inteiroOuDecimalComVirgula,
+} from "helpers/fieldValidators";
 import { exibeError, formataMilhar } from "helpers/utilities";
 import { getEmpresasCronograma } from "services/terceirizada.service";
-import { getListaCompletaProdutosLogistica } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
-import { getListaTiposEmbalagens } from "../../../../services/qualidade.service";
+import {
+  getListaFichasTecnicasSimplesSemCronograma,
+  getDadosCronogramaFichaTecnica,
+} from "services/fichaTecnica.service";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [collapse, setCollapse] = useState([]);
-  const [produtosOptions, setProdutosOptions] = useState([{}]);
+
+  const [fichasTecnicas, setFichasTecnicas] = useState([{}]);
   const [unidadesMedidaOptions, setUnidadesMedidaOptions] = useState([{}]);
-  const [tiposEmbalagemOptions, setTiposEmbalagemOptions] = useState([{}]);
   const [empresaSelecionada, setEmpresaSelecionada] = useState(undefined);
   const [contratoSelecionado, setContratoSelecionado] = useState(undefined);
   const [unidadeSelecionada, setUnidadeSelecionada] = useState({});
+  const [fichaTecnicaSelecionada, setFichaTecnicaSelecionada] = useState();
   const [etapas, setEtapas] = useState([{}]);
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
   const [fornecedores, setFornecedores] = useState([{}]);
-  const history = useHistory();
   const [listaRascunhos, setListaRascunhos] = useState(null);
   const [duplicados, setDuplicados] = useState([]);
   const [restante, setRestante] = useState(undefined);
@@ -59,14 +66,15 @@ export default () => {
   const [etapasValues, setEtapasValues] = useState({});
   const [recebimentosValues, setRecebimentosValues] = useState({});
 
-  const getRascunhosAsync = async () => {
+  const history = useHistory();
+
+  const buscaRascunhos = async () => {
     try {
       const response = await getRascunhos();
       if (response.status === HTTP_STATUS.OK) {
         setListaRascunhos(response.data.results);
       }
     } catch (erro) {
-      setListaRascunhos();
       toastError("Ocorreu um erro ao tentar carregar a lista de rascunhos.");
     }
   };
@@ -133,7 +141,7 @@ export default () => {
       if (response.status === 201 || response.status === 200) {
         if (rascunho) {
           toastSuccess("Rascunho salvo com sucesso!");
-          getRascunhosAsync();
+          buscaRascunhos();
           setCarregando(false);
         } else {
           setCarregando(false);
@@ -160,6 +168,7 @@ export default () => {
   const validaRascunho = (values) => {
     return !values.contrato;
   };
+
   const lengthOrUnderfined = (value) => {
     let valor = value ? value.toString() : undefined;
     return valor && valor.length > 0 ? valor : undefined;
@@ -246,36 +255,6 @@ export default () => {
     }));
   };
 
-  const selecionaEmpresa = (uuid_empresa) => {
-    if (!empresaSelecionada || empresaSelecionada.uuid !== uuid_empresa) {
-      let fornecedor = fornecedores.find((f) => f.value === uuid_empresa);
-      setEmpresaSelecionada(fornecedor);
-    }
-  };
-
-  const selecionaContrato = (values) => {
-    let uuid_contrato = values.contrato;
-    if (!contratoSelecionado || contratoSelecionado.uuid !== uuid_contrato) {
-      let contrato = empresaSelecionada.contratos.find(
-        (c) => c.uuid === uuid_contrato
-      );
-
-      values.numero_processo = contrato.processo;
-      values.numero_pregao_chamada_publica =
-        contrato.numero_pregao || contrato.numero_chamada_publica;
-      values.ata = contrato.ata;
-
-      setContratoSelecionado(contrato);
-    }
-  };
-
-  const selecionaUnidade = (uuid_unidade) => {
-    if (!unidadeSelecionada || unidadeSelecionada.uuid !== uuid_unidade) {
-      let unidade = unidadesMedidaOptions.find((u) => u.uuid === uuid_unidade);
-      setUnidadeSelecionada(unidade);
-    }
-  };
-
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
@@ -297,17 +276,17 @@ export default () => {
     const buscaFornecedores = async () => {
       const response = await getEmpresasCronograma();
       setFornecedores(
-        response.data.results.map((forn) => ({
-          uuid: forn.uuid,
-          value: forn.nome_fantasia,
-          contratos: forn.contratos,
+        response.data.results.map((fornecedor) => ({
+          uuid: fornecedor.uuid,
+          value: fornecedor.nome_fantasia,
+          contratos: fornecedor.contratos,
         }))
       );
     };
 
-    const buscaProdutos = async () => {
-      const response = await getListaCompletaProdutosLogistica();
-      setProdutosOptions(response.data.results);
+    const buscaFichasTecnicas = async () => {
+      const response = await getListaFichasTecnicasSimplesSemCronograma();
+      setFichasTecnicas(response.data.results);
     };
 
     const buscaUnidadesMedida = async () => {
@@ -315,20 +294,14 @@ export default () => {
       setUnidadesMedidaOptions(response.data.results);
     };
 
-    const buscaTiposEmbalagem = async () => {
-      const response = await getListaTiposEmbalagens();
-      setTiposEmbalagemOptions(response.data.results);
-    };
-
     const carregaPagina = async () => {
       setCarregando(true);
       await Promise.all([
         buscaArmazens(),
         buscaFornecedores(),
-        buscaProdutos(),
+        buscaFichasTecnicas(),
         buscaUnidadesMedida(),
-        buscaTiposEmbalagem(),
-        getRascunhosAsync(),
+        buscaRascunhos(),
       ]);
       if (uuid) {
         await getDadosCronograma(uuid);
@@ -344,9 +317,84 @@ export default () => {
     if (changes.values.contrato) selecionaContrato(changes.values);
     if (changes.values.unidade_medida)
       selecionaUnidade(changes.values.unidade_medida);
+    if (changes.values.ficha_tecnica)
+      await selecionaFichaTecnica(changes.values);
 
     onChangeEtapas(changes, etapas, setRestante, setDuplicados);
   };
+
+  const selecionaEmpresa = (uuidEmpresa) => {
+    if (!empresaSelecionada || empresaSelecionada.uuid !== uuidEmpresa) {
+      let fornecedor = fornecedores.find((f) => f.value === uuidEmpresa);
+      setEmpresaSelecionada(fornecedor);
+    }
+  };
+
+  const selecionaContrato = (values) => {
+    let uuidContrato = values.contrato;
+    if (!contratoSelecionado || contratoSelecionado.uuid !== uuidContrato) {
+      let contrato = empresaSelecionada.contratos.find(
+        (c) => c.uuid === uuidContrato
+      );
+
+      values.numero_processo = contrato.processo;
+      values.numero_pregao_chamada_publica =
+        contrato.numero_pregao || contrato.numero_chamada_publica;
+      values.ata = contrato.ata;
+
+      setContratoSelecionado(contrato);
+    }
+  };
+
+  const selecionaUnidade = (uuidUnidade) => {
+    if (!unidadeSelecionada || unidadeSelecionada.uuid !== uuidUnidade) {
+      let unidade = unidadesMedidaOptions.find((u) => u.uuid === uuidUnidade);
+      setUnidadeSelecionada(unidade);
+    }
+  };
+
+  const selecionaFichaTecnica = async (values) => {
+    const uuidFicha = values.ficha_tecnica;
+    if (
+      !fichaTecnicaSelecionada ||
+      fichaTecnicaSelecionada.uuid !== uuidFicha
+    ) {
+      setCarregando(true);
+
+      const response = await getDadosCronogramaFichaTecnica(uuidFicha);
+      const fichaTecnicaSelecionada = response.data;
+
+      values.marca = fichaTecnicaSelecionada.marca.nome;
+      values.peso_liquido_embalagem_primaria =
+        fichaTecnicaSelecionada.peso_liquido_embalagem_primaria;
+      values.unidade_medida_primaria =
+        fichaTecnicaSelecionada.unidade_medida_primaria.uuid;
+      values.peso_liquido_embalagem_secundaria =
+        fichaTecnicaSelecionada.peso_liquido_embalagem_secundaria;
+      values.unidade_medida_secundaria =
+        fichaTecnicaSelecionada.unidade_medida_secundaria.uuid;
+      if (fichaTecnicaSelecionada.volume_embalagem_primaria) {
+        values.volume_embalagem_primaria =
+          fichaTecnicaSelecionada.volume_embalagem_primaria;
+        values.unidade_medida_volume_primaria =
+          fichaTecnicaSelecionada.unidade_medida_volume_primaria.uuid;
+      }
+
+      setFichaTecnicaSelecionada(fichaTecnicaSelecionada);
+      setCarregando(false);
+    }
+  };
+
+  const geraOptionsFichasTecnicas = (fichasTecnicas, empresaSelecionada) =>
+    fichasTecnicas
+      .filter((ficha) => ficha.uuid_empresa === empresaSelecionada?.uuid)
+      .map((ficha) => {
+        return {
+          nome: ficha.numero_e_produto,
+          uuid: ficha.uuid,
+        };
+      });
+
   return (
     <>
       {!edicao && <Rascunhos listaRascunhos={listaRascunhos} />}
@@ -384,6 +432,7 @@ export default () => {
                   <div className="row">
                     <div className="col-8">
                       <Field
+                        className="input-cronograma"
                         component={AutoCompleteField}
                         options={getEmpresaFiltrado(values.empresa)}
                         label="Pesquisar Empresa"
@@ -396,6 +445,7 @@ export default () => {
                     </div>
                     <div className="col-4">
                       <Field
+                        className="input-cronograma"
                         component={Select}
                         naoDesabilitarPrimeiraOpcao
                         options={[
@@ -414,30 +464,30 @@ export default () => {
                   <div className="row">
                     <div className="col-4">
                       <Field
+                        className="input-cronograma"
                         component={InputText}
                         label="Nº do Pregão Eletrônico/Chamada Pública"
                         name="numero_pregao_chamada_publica"
-                        className="input-busca-produto"
                         validate={required}
                         disabled={true}
                       />
                     </div>
                     <div className="col-4">
                       <Field
+                        className="input-cronograma"
                         component={InputText}
                         label="Nº ATA"
                         name="ata"
-                        className="input-busca-produto"
                         validate={required}
                         disabled={true}
                       />
                     </div>
                     <div className="col-4">
                       <Field
+                        className="input-cronograma"
                         component={InputText}
                         label="Nº do Processo SEI - Contratos"
                         name="numero_processo"
-                        className="input-busca-produto"
                         validate={required}
                         disabled={true}
                       />
@@ -489,23 +539,119 @@ export default () => {
                             <div className="row">
                               <div className="col-6">
                                 <Field
+                                  className="input-cronograma"
                                   component={Select}
                                   naoDesabilitarPrimeiraOpcao
                                   options={[
-                                    { nome: "Selecione um Produto", uuid: "" },
-                                    ...produtosOptions,
+                                    {
+                                      nome: "Selecione uma Ficha Técnica de Produto",
+                                      uuid: "",
+                                    },
+                                    ...geraOptionsFichasTecnicas(
+                                      fichasTecnicas,
+                                      empresaSelecionada
+                                    ),
                                   ]}
                                   label="Ficha Técnica e Produto"
                                   name="ficha_tecnica"
                                   required
                                 />
                               </div>
+                              <div className="col-6">
+                                <Field
+                                  className="input-cronograma"
+                                  component={InputText}
+                                  label="Marca"
+                                  name="marca"
+                                  required
+                                  disabled
+                                />
+                              </div>
+
+                              <div className="row mt-3">
+                                <div className="row">
+                                  <div className="col-6">
+                                    <Label
+                                      content="Peso da Embalagem Primária"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="col-6">
+                                    <Label
+                                      content="Peso da Embalagem Secundária"
+                                      required
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="row">
+                                  <div className="col-3">
+                                    <Field
+                                      className="input-cronograma"
+                                      component={InputText}
+                                      name={`peso_liquido_embalagem_primaria`}
+                                      required
+                                      disabled
+                                    />
+                                  </div>
+
+                                  <div className="col-3">
+                                    <Field
+                                      className="input-cronograma"
+                                      component={Select}
+                                      options={unidadesMedidaOptions}
+                                      name={`unidade_medida_primaria`}
+                                      required
+                                      disabled
+                                    />
+                                  </div>
+
+                                  <div className="col-3">
+                                    <Field
+                                      className="input-cronograma"
+                                      component={InputText}
+                                      name={`peso_liquido_embalagem_secundaria`}
+                                      required
+                                      disabled
+                                    />
+                                  </div>
+
+                                  <div className="col-3">
+                                    <Field
+                                      className="input-cronograma"
+                                      component={Select}
+                                      options={unidadesMedidaOptions}
+                                      name={`unidade_medida_secundaria`}
+                                      required
+                                      disabled
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="col-6">
+                                <Field
+                                  className="input-cronograma"
+                                  component={Select}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={[
+                                    { nome: "Selecione o Armazém", uuid: "" },
+                                    ...armazens,
+                                  ]}
+                                  label="Armazém"
+                                  name="armazem"
+                                  required
+                                  validate={required}
+                                />
+                              </div>
+
                               <div className="col-3">
                                 <Field
+                                  className="input-cronograma"
                                   component={InputText}
                                   label="Quantidade Total Programada"
                                   name="quantidade_total"
-                                  className="input-busca-produto"
                                   disabled={false}
                                   agrupadorMilhar
                                   required
@@ -514,6 +660,7 @@ export default () => {
                               </div>
                               <div className="col-3">
                                 <Field
+                                  className="input-cronograma"
                                   component={Select}
                                   naoDesabilitarPrimeiraOpcao
                                   options={[
@@ -527,40 +674,63 @@ export default () => {
                                 />
                               </div>
                             </div>
-                            <div className="row">
-                              <div className="col-6">
+
+                            <div className="row mt-3">
+                              <div className="col-4">
                                 <Field
-                                  component={Select}
-                                  naoDesabilitarPrimeiraOpcao
-                                  options={[
-                                    { nome: "Selecione o Armazém", uuid: "" },
-                                    ...armazens,
-                                  ]}
-                                  label="Armazém"
-                                  name="armazem"
+                                  className="input-cronograma"
+                                  component={InputText}
+                                  name={`custo_unitario`}
+                                  label="Custo Unitário do Produto"
+                                  placeholder="Digite o Custo Unitário do Produto"
                                   required
-                                  validate={required}
+                                  validate={composeValidators(
+                                    required,
+                                    inteiroOuDecimalComVirgula
+                                  )}
                                 />
                               </div>
-                              <div className="col-3">
-                                <Field
-                                  component={Select}
-                                  naoDesabilitarPrimeiraOpcao
-                                  options={[
-                                    { nome: "Selecione a Embalagem", uuid: "" },
-                                    ...tiposEmbalagemOptions,
-                                  ]}
-                                  label="Tipo de Embalagem"
-                                  name="tipo_embalagem"
-                                  required
-                                  validate={required}
-                                />
+                              <div className="col-8">
+                                <div className="row">
+                                  <div className="col">
+                                    <Label
+                                      content="Volume da Embalagem Primária"
+                                      required
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="row">
+                                  <div className="col">
+                                    <Field
+                                      className="input-cronograma"
+                                      component={InputText}
+                                      name={`volume_embalagem_primaria`}
+                                      required
+                                      disabled
+                                    />
+                                  </div>
+
+                                  <div className="col">
+                                    <Field
+                                      className="input-cronograma"
+                                      component={Select}
+                                      options={unidadesMedidaOptions}
+                                      name={`unidade_medida_volume_primaria`}
+                                      required
+                                      disabled
+                                    />
+                                  </div>
+                                </div>
                               </div>
                             </div>
+
                             <div className="subtitulo">
                               Cronograma das Entregas
                             </div>
+
                             <hr className="linha-verde" />
+
                             <FormEtapa
                               etapas={etapas}
                               setEtapas={setEtapas}
