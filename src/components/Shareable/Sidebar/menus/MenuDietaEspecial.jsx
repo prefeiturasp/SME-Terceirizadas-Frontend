@@ -115,9 +115,12 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
           <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_DIETA_ESPECIAL}`}>
             Relatório de Dietas Especiais
           </LeafItem>
-          <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_GERENCIAL_DIETAS}`}>
-            Relatório Gerencial de Dietas
-          </LeafItem>
+          {(usuarioEhAdministradorNutriCODAE() ||
+            usuarioEhCoordenadorNutriCODAE()) && (
+            <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_GERENCIAL_DIETAS}`}>
+              Relatório Gerencial de Dietas
+            </LeafItem>
+          )}
         </SubMenu>
       )}
     </Menu>
