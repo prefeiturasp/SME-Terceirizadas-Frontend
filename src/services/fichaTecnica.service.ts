@@ -1,6 +1,7 @@
 import { FichaTecnicaPayload } from "components/screens/PreRecebimento/FichaTecnica/interfaces";
 import axios from "./_base";
 import {
+  ResponseDadosCronogramaFichaTecnica,
   ResponseFichaTecnicaDetalhada,
   ResponseFichasTecnicas,
   ResponseFichasTecnicasDashboard,
@@ -56,3 +57,8 @@ export const getDashboardFichasTecnicasPorStatus = async (
 export const getListaFichasTecnicasSimplesSemCronograma =
   async (): Promise<ResponseFichasTecnicasSimples> =>
     await axios.get(`/ficha-tecnica/lista-simples-sem-cronograma/`);
+
+export const getDadosCronogramaFichaTecnica = async (
+  uuid: string
+): Promise<ResponseDadosCronogramaFichaTecnica> =>
+  await axios.get(`/ficha-tecnica/${uuid}/dados-cronograma/`);
