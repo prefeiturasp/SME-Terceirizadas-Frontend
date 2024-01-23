@@ -1,14 +1,44 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import "./styles.scss";
 import { NavLink } from "react-router-dom";
 import * as constants from "configs/constants";
 import { deParaStatusAltCronograma } from "components/screens/helper";
+import MeusDadosContext from "context/MeusDadosContext";
 
 const ListagemAlteracoesCronogramas = ({
   alteracoesCronogramas,
   fornecedor,
 }) => {
+  const { meusDados } = useContext(MeusDadosContext);
+
+  const STATUS_PRIORITARIO = {
+    ADMINISTRADOR_EMPRESA: ["Alteração Enviada ao Fornecedor"],
+    USUARIO_EMPRESA: ["Alteração Enviada ao Fornecedor"],
+    DILOG_CRONOGRAMA: ["Em análise"],
+    DILOG_DIRETORIA: ["Aprovado DINUTRE", "Reprovado DINUTRE"],
+    DINUTRE_DIRETORIA: ["Cronograma ciente"],
+  };
+
+  const ehStatusPrioritario = (status) =>
+    STATUS_PRIORITARIO[meusDados.vinculo_atual.perfil.nome].includes(status);
+
+  const getBotaoAcao = (status) => {
+    if (ehStatusPrioritario(status)) {
+      return (
+        <span className={`link-acoes orange px-2`}>
+          <i className="fas fa-edit" title="Analisar" />
+        </span>
+      );
+    } else {
+      return (
+        <span className={`link-acoes green px-2`}>
+          <i className="fas fa-eye" title="Analisar" />
+        </span>
+      );
+    }
+  };
+
   return (
     <section className="resultado-solicitacao-alteracao-cronograma-de-entrega">
       <header>Resultados da Pesquisa</header>
@@ -38,9 +68,7 @@ const ListagemAlteracoesCronogramas = ({
                 {!fornecedor && <div>{alteracaoCronograma.fornecedor}</div>}
                 <div
                   className={`${
-                    ["Alteração Enviada ao Fornecedor", "Em análise"].includes(
-                      alteracaoCronograma.status
-                    ) && "orange"
+                    ehStatusPrioritario(alteracaoCronograma.status) && "orange"
                   }`}
                 >
                   {fornecedor
@@ -53,22 +81,7 @@ const ListagemAlteracoesCronogramas = ({
                     className="float-start"
                     to={`/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${alteracaoCronograma.uuid}`}
                   >
-                    <span
-                      className={`link-acoes ${
-                        [
-                          "Alteração Enviada ao Fornecedor",
-                          "Em análise",
-                        ].includes(alteracaoCronograma.status)
-                          ? "orange"
-                          : "green"
-                      }`}
-                    >
-                      {alteracaoCronograma.status === "Em análise" ? (
-                        <i className="fas fa-edit" title="Analisar" />
-                      ) : (
-                        "Detalhar"
-                      )}
-                    </span>
+                    {getBotaoAcao(alteracaoCronograma.status)}
                   </NavLink>
                 </div>
               </div>
