@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from "react";
 import "./styles.scss";
 import { Form } from "react-final-form";
+import { FormApi } from "final-form";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -8,12 +9,18 @@ import {
 } from "components/Shareable/Botao/constants";
 
 type Props = {
-  children: (_values: any) => ReactNode;
+  titulo: string;
+  children: (_values: any, _form: FormApi) => ReactNode;
   onSubmit: (_values: Record<string, any>) => void;
   onClear: () => void;
 };
 
-const CollapseFiltros: React.FC<Props> = ({ children, onSubmit, onClear }) => {
+const CollapseFiltros: React.FC<Props> = ({
+  titulo,
+  children,
+  onSubmit,
+  onClear,
+}) => {
   const id = "collapseFiltros";
   const [collapse, setCollapse] = useState(true);
 
@@ -30,7 +37,7 @@ const CollapseFiltros: React.FC<Props> = ({ children, onSubmit, onClear }) => {
           <div className="row card-header-content">
             <div className="col-11 titulo my-auto">
               <i className="fas fa-sort-amount-down"></i>
-              <span>Filtrar Cadastros</span>
+              <span>{titulo}</span>
             </div>
 
             <div className="col-1 my-auto">
@@ -67,7 +74,7 @@ const CollapseFiltros: React.FC<Props> = ({ children, onSubmit, onClear }) => {
               initialValues={{}}
               render={({ form, handleSubmit, values }) => (
                 <form onSubmit={handleSubmit}>
-                  <div>{children(values)}</div>
+                  <div>{children(values, form)}</div>
 
                   <div className="pt-4 pb-4 mb-2">
                     <Botao

@@ -1,0 +1,38 @@
+@import "styles/variables.scss";
+
+div.card-medicao-por-status {
+  height: 150px;
+  width: 300px;
+  border: 1px solid black;
+  border-left: 7px solid black;
+  border-radius: 4px;
+
+  hr {
+    margin: 0;
+  }
+
+  div.total {
+    font-weight: 700;
+    font-size: 48px;
+  }
+
+  &.laranja {
+    color: $orange;
+    border-color: $orange;
+  }
+
+  &.azul-escuro {
+    color: $blue;
+    border-color: $blue;
+  }
+
+  &.verde-claro {
+    color: $green;
+    border-color: $green;
+  }
+
+  &.vermelho {
+    color: $redMI;
+    border-color: $redMI;
+  }
+}
