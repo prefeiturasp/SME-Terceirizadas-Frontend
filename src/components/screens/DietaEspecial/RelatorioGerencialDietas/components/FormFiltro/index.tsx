@@ -30,7 +30,7 @@ export default (props: Props) => {
             component={MultiSelect}
             disableSearch
             label="Ano"
-            name="ano"
+            name="anos"
             nomeDoItemNoPlural="anos"
             placeholder="Selecione o ano"
             tooltipText="Serão contabilizadas todas as dietas referente ao(s) ano(s) selecionado(s)."
@@ -44,7 +44,7 @@ export default (props: Props) => {
           component={MultiSelect}
           disableSearch
           label="Mês"
-          name="mes"
+          name="meses"
           nomeDoItemNoPlural="meses"
           placeholder="Selecione o mês"
           tooltipText="Serão contabilizadas todas as dietas referente ao(s) mes(s) selecionado(s)."

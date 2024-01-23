@@ -28,8 +28,8 @@ export default () => {
   const filtrar = async (values: Record<string, any>) => {
     setLoading(true);
     const params = {
-      ano: Array.isArray(values.ano) ? values.ano.join() : null,
-      mes: Array.isArray(values.mes) ? values.mes.join() : null,
+      anos: Array.isArray(values.anos) ? values.anos.join() : null,
+      meses: Array.isArray(values.meses) ? values.meses.join() : null,
       dia: values.dia || null,
     };
     const data = await buscaTotaisRelatorioGerencialDietas(params);

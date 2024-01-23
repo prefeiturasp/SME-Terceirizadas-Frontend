@@ -51,31 +51,31 @@ export default ({ values, form }: Args) => {
       selecionouMes &&
       !selecionouMaisDeUmMes
     ) {
-      dataMinima = new Date(values.ano[0], values.mes[0], 1);
-      dataMaxima = new Date(values.ano[0], values.mes[0] + 1, 0);
+      dataMinima = new Date(values.anos[0], values.meses[0] - 1, 1);
+      dataMaxima = new Date(values.anos[0], values.meses[0], 0);
     } else if (selecionouAno && !selecionouMaisDeUmAno) {
-      dataMinima = new Date(values.ano[0], 0, 1);
-      dataMaxima = new Date(values.ano[0], 12, 0);
+      dataMinima = new Date(values.anos[0], 0, 1);
+      dataMaxima = new Date(values.anos[0], 12, 0);
     } else if (selecionouMes && !selecionouMaisDeUmMes) {
-      dataMinima = new Date(anoVigente, values.mes[0], 1);
-      dataMaxima = new Date(anoVigente, values.mes[0] + 1, 0);
+      dataMinima = new Date(anoVigente, values.meses[0] - 1, 1);
+      dataMaxima = new Date(anoVigente, values.meses[0], 0);
     }
     return [dataMinima, dataMaxima];
   };
 
   const anoVigente = getAnoVigente();
 
-  const selecionouMaisDeUmAno = values.ano?.length > 1;
-  const selecionouMaisDeUmMes = values.mes?.length > 1;
-  const selecionouAno = values.ano?.length > 0;
-  const selecionouMes = values.mes?.length > 0;
+  const selecionouMaisDeUmAno = values.anos?.length > 1;
+  const selecionouMaisDeUmMes = values.meses?.length > 1;
+  const selecionouAno = values.anos?.length > 0;
+  const selecionouMes = values.meses?.length > 0;
 
-  if (!values.ano) {
-    form.change("ano", [anoVigente]);
+  if (!values.anos) {
+    form.change("anos", [anoVigente]);
   }
 
   if (selecionouMaisDeUmAno) {
-    form.change("mes", null);
+    form.change("meses", null);
     form.change("dia", null);
   }
 
