@@ -10,8 +10,12 @@ export const getOpcoesContrato = (empresaSelecionada) => {
   }));
 };
 
-export const geraOptionsFichasTecnicas = (fichasTecnicas, empresaSelecionada) =>
-  fichasTecnicas
+export const geraOptionsFichasTecnicas = (
+  fichasTecnicas,
+  empresaSelecionada,
+  fichaTecnicaSelecionada
+) => {
+  const options = fichasTecnicas
     .filter((ficha) => ficha.uuid_empresa === empresaSelecionada?.uuid)
     .map((ficha) => {
       return {
@@ -19,6 +23,15 @@ export const geraOptionsFichasTecnicas = (fichasTecnicas, empresaSelecionada) =>
         uuid: ficha.uuid,
       };
     });
+
+  fichaTecnicaSelecionada &&
+    options.unshift({
+      nome: `${fichaTecnicaSelecionada.numero} - ${fichaTecnicaSelecionada?.produto.nome}`,
+      uuid: fichaTecnicaSelecionada?.uuid,
+    });
+
+  return options;
+};
 
 export const getEmpresaFiltrado = (fornecedores, empresa) => {
   if (empresa) {
