@@ -125,11 +125,11 @@ export default ({
   const desativaAdicionarEtapa = (index) => {
     const camposObrigatorios = [
       `empenho_${index - 1}`,
+      `qtd_total_empenho_${index - 1}`,
       `etapa_${index - 1}`,
       `parte_${index - 1}`,
       `data_programada_${index - 1}`,
       `quantidade_${index - 1}`,
-      `total_embalagens_${index - 1}`,
     ];
 
     return camposObrigatorios.some((campo) => Boolean(errors[campo]));
@@ -159,6 +159,22 @@ export default ({
 
     desativaCampos();
   }, [values]);
+
+  const calculaTotalEmbalagens = (values, index) => {
+    if (values) {
+      const pesoEmbalagemSecundaria =
+        values[`peso_liquido_embalagem_secundaria`];
+      const quantidade = Number(values[`quantidade_${index}`]);
+
+      const totalEmbalagens = pesoEmbalagemSecundaria
+        ? Math.ceil(quantidade / pesoEmbalagemSecundaria)
+        : undefined;
+
+      values[`total_embalagens_${index}`] = totalEmbalagens;
+
+      return totalEmbalagens;
+    }
+  };
 
   return (
     <>
@@ -306,11 +322,9 @@ export default ({
                   component={InputText}
                   label="Total de Embalagens"
                   name={`total_embalagens_${index}`}
-                  placeholder="Digite a Quantidade"
                   required
-                  validate={required}
-                  apenasNumeros
-                  disabled={desabilitar[index]}
+                  disabled
+                  valorInicial={calculaTotalEmbalagens(values, index)}
                 />
               </div>
             </div>
