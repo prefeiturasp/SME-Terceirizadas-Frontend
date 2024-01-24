@@ -93,11 +93,7 @@ const Filtros: React.FC<Props> = ({
 
   return (
     <div className="filtros-documentos-recebimento">
-      <CollapseFiltros
-        onSubmit={onSubmit}
-        onClear={onClear}
-        titulo="Filtrar Cadastros"
-      >
+      <CollapseFiltros onSubmit={onSubmit} onClear={onClear}>
         {(values) => (
           <div className="row">
             <div className="col-6 mt-2">
