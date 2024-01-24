@@ -355,7 +355,7 @@ export default () => {
                 ...recebimentosValues,
               }}
               validate={() => {}}
-              render={({ form, handleSubmit, values }) => (
+              render={({ form, handleSubmit, values, errors }) => (
                 <form onSubmit={handleSubmit}>
                   <FormSpy
                     subscription={{ values: true, active: true, valid: true }}
@@ -684,6 +684,7 @@ export default () => {
                               etapas={etapas}
                               setEtapas={setEtapas}
                               values={values}
+                              errors={errors}
                               duplicados={duplicados}
                               restante={restante}
                               unidadeMedida={unidadeSelecionada}

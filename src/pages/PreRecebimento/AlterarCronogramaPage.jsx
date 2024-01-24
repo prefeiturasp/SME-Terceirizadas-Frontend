@@ -28,6 +28,7 @@ const anteriores = [
 export default () => (
   <Page
     botaoVoltar
+    temModalVoltar
     voltarPara="/pre-recebimento/cronograma-entrega"
     titulo={atual.titulo}
   >

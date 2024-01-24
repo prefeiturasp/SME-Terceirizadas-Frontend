@@ -321,7 +321,11 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   };
 
   useEffect(() => {
-    if (showTabelaLancamentosPeriodo && periodoGrupoSelecionado) {
+    if (
+      ehEscolaTipoCEMEI({ nome: solicitacao.escola })
+        ? showTabelaLancamentosPeriodo && periodoGrupoSelecionado
+        : showTabelaLancamentosPeriodo
+    ) {
       const formatarTabelasAsync = async () => {
         try {
           setLoading(true);

@@ -36,6 +36,8 @@ import {
   getISOLocalDatetimeString,
   usuarioEhDRE,
   usuarioEhMedicao,
+  usuarioEhCODAENutriManifestacao,
+  usuarioEhQualquerCODAE,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
@@ -102,19 +104,33 @@ export const AcompanhamentoDeLancamentos = () => {
     const response = await getDashboardMedicaoInicial(params);
     if (response.status === HTTP_STATUS.OK) {
       const dashboardResults = response.data.results;
-      if (!usuarioEhMedicao() || diretoriaRegional) {
+      if (
+        (!usuarioEhMedicao() &&
+          !usuarioEhCODAENutriManifestacao() &&
+          !usuarioEhQualquerCODAE()) ||
+        diretoriaRegional
+      ) {
         let NovoDashboardResults = [...dashboardResults];
-        if (usuarioEhMedicao()) {
+
+        if (
+          usuarioEhMedicao() ||
+          usuarioEhCODAENutriManifestacao() ||
+          usuarioEhQualquerCODAE()
+        ) {
           NovoDashboardResults = NovoDashboardResults.filter(
             (medicoes) => !STATUS_RELACAO_DRE_UE.includes(medicoes.status)
           );
         }
-        if (usuarioEhEscolaTerceirizadaQualquerPerfil())
+
+        if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
           NovoDashboardResults = NovoDashboardResults.filter(
             (medicoes) => medicoes.status !== "TODOS_OS_LANCAMENTOS"
           );
-        if (!dadosDashboard || (diretoriaRegional && !params.mes_ano))
+        }
+
+        if (!dadosDashboard || (diretoriaRegional && !params.mes_ano)) {
           setDadosDashboard(NovoDashboardResults);
+        }
       }
       if (statusSelecionado) {
         setResultados(
@@ -356,7 +372,12 @@ export const AcompanhamentoDeLancamentos = () => {
   };
 
   const exibirDashboard = () => {
-    if (usuarioEhMedicao() && loadingComFiltros) {
+    if (
+      (usuarioEhMedicao() ||
+        usuarioEhCODAENutriManifestacao() ||
+        usuarioEhQualquerCODAE()) &&
+      loadingComFiltros
+    ) {
       return !mudancaDre;
     }
     return true;
@@ -391,7 +412,9 @@ export const AcompanhamentoDeLancamentos = () => {
             {({ handleSubmit, form, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card mt-3">
-                  {usuarioEhMedicao() && (
+                  {usuarioEhMedicao() ||
+                  usuarioEhCODAENutriManifestacao() ||
+                  usuarioEhQualquerCODAE() ? (
                     <div className="col-5">
                       <Field
                         component={ASelect}
@@ -417,7 +440,7 @@ export const AcompanhamentoDeLancamentos = () => {
                         {diretoriasRegionais}
                       </Field>
                     </div>
-                  )}
+                  ) : null}
                   <div className="card-body">
                     <div className="d-flex row row-cols-1">
                       {exibirDashboard() &&

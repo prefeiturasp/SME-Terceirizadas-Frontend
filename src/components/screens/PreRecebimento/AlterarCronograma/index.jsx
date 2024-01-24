@@ -407,6 +407,7 @@ export default ({ analiseSolicitacao }) => {
                           etapas={etapas}
                           setEtapas={setEtapas}
                           values={values}
+                          errors={errors}
                           duplicados={duplicados}
                           restante={restante}
                           unidadeMedida={values.unidade_medida}
