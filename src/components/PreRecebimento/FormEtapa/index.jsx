@@ -24,6 +24,7 @@ export default ({
   etapas,
   setEtapas,
   values,
+  errors,
   duplicados,
   restante,
   unidadeMedida,
@@ -114,6 +115,20 @@ export default ({
 
   const requisicoesPreRender = async () => {
     await Promise.all([buscaFeriados(), buscaEtapas()]);
+  };
+
+  const desativaAdicionarEtapa = () => {
+    let index = etapas.length - 1;
+    const camposObrigatorios = [
+      `empenho_${index}`,
+      `etapa_${index}`,
+      `parte_${index}`,
+      `data_programada_${index}`,
+      `quantidade_${index}`,
+      `total_embalagens_${index}`,
+    ];
+
+    return camposObrigatorios.some((campo) => Boolean(errors[campo]));
   };
 
   useEffect(() => {
@@ -258,12 +273,7 @@ export default ({
                   label="Quantidade"
                   name={`quantidade_${index}`}
                   placeholder="Digite a Quantidade"
-                  validate={() =>
-                    restante !== 0 &&
-                    `quantidade total é diferente de ${
-                      values.quantidade_total || 0
-                    }`
-                  }
+                  validate={required}
                   required
                   apenasNumeros
                   agrupadorMilhar
@@ -295,6 +305,12 @@ export default ({
           style={BUTTON_STYLE.GREEN_OUTLINE}
           className=""
           onClick={() => adicionaEtapa()}
+          disabled={desativaAdicionarEtapa()}
+          tooltipExterno={
+            desativaAdicionarEtapa()
+              ? "É necessário preencher todos os campos obrigatórios para adicionar uma nova Etapa"
+              : ""
+          }
         />
       </div>
     </>
