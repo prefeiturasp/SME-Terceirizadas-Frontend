@@ -15,7 +15,20 @@ const atual = {
 
 export default () => (
   <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
-    <Breadcrumb home={HOME} atual={atual} />
+    <Breadcrumb
+      home={HOME}
+      atual={atual}
+      anteriores={[
+        {
+          href: "#",
+          titulo: "Dieta Especial",
+        },
+        {
+          href: "#",
+          titulo: "Relatórios",
+        },
+      ]}
+    />
     <RelatorioGerencialDietas />
   </Page>
 );
