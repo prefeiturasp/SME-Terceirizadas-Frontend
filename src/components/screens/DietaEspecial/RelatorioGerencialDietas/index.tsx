@@ -21,6 +21,8 @@ type Totais = {
   total_canceladas: number;
 };
 
+const getAnoVigente = () => new Date().getFullYear();
+
 export default () => {
   const [loading, setLoading] = useState(true);
   const [totais, setTotais] = useState<Totais | Record<string, number>>({});
@@ -37,7 +39,11 @@ export default () => {
     setLoading(false);
   };
 
-  const limparFiltro = () => {};
+  const limparFiltro = () => {
+    filtrar({
+      anos: [getAnoVigente()],
+    });
+  };
 
   const exportarPDF = () => {};
 
@@ -49,7 +55,13 @@ export default () => {
           onClear={limparFiltro}
           titulo="Filtrar Resultados"
         >
-          {(values, form) => <FormFiltro values={values} form={form} />}
+          {(values, form) => (
+            <FormFiltro
+              values={values}
+              form={form}
+              anoVigente={getAnoVigente()}
+            />
+          )}
         </CollapseFiltros>
 
         {loading ? (

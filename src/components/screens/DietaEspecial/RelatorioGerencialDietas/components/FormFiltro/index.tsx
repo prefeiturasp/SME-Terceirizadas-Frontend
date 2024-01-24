@@ -13,12 +13,13 @@ import useView from "./view";
 type Props = {
   values: Record<string, any>;
   form: FormApi;
+  anoVigente: number;
 };
 
 export default (props: Props) => {
-  const { values, form } = props;
+  const { values, form, anoVigente } = props;
 
-  const view = useView({ values, form });
+  const view = useView({ values, form, anoVigente });
 
   return (
     <div className="row">

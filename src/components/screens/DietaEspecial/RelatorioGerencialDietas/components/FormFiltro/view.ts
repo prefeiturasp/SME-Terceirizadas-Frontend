@@ -9,6 +9,7 @@ import { buscaAnosComDietas } from "services/painelNutricionista.service";
 type Args = {
   values: Record<string, any>;
   form: FormApi;
+  anoVigente: number;
 };
 
 type MultiSelectOption = {
@@ -23,9 +24,7 @@ const MES_OPCOES: Array<MultiSelectOption> = MESES.map(
   })
 );
 
-const getAnoVigente = () => new Date().getFullYear();
-
-export default ({ values, form }: Args) => {
+export default ({ values, form, anoVigente }: Args) => {
   const [loadingAnoOpcoes, setLoadingAnoOpcoes] = useState(true);
   const [anoOpcoes, setAnoOpcoes] = useState([]);
 
@@ -62,8 +61,6 @@ export default ({ values, form }: Args) => {
     }
     return [dataMinima, dataMaxima];
   };
-
-  const anoVigente = getAnoVigente();
 
   const selecionouMaisDeUmAno = values.anos?.length > 1;
   const selecionouMaisDeUmMes = values.meses?.length > 1;
