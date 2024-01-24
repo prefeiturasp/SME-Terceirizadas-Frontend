@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from "react";
-import "./styles.scss";
+import { Field } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
+import moment from "moment";
+
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { Field } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { InputComData } from "components/Shareable/DatePicker";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { getEtapas } from "services/cronograma.service";
-import { getFeriadosAnoAtualEProximo } from "../../../services/diasUteis.service";
-import { required } from "helpers/fieldValidators";
+import { getFeriadosAnoAtualEProximo } from "services/diasUteis.service";
 import { deletaValues } from "helpers/formHelper";
 import { formataMilhar } from "helpers/utilities";
+import {
+  required,
+  composeValidators,
+  inteiroOuDecimalComVirgula,
+} from "helpers/fieldValidators";
 
-import moment from "moment";
 import { getAmanha, usuarioEhCronograma } from "../../../helpers/utilities";
-import { OnChange } from "react-final-form-listeners";
+import "./styles.scss";
 
 export default ({
   etapas,
@@ -180,8 +185,8 @@ export default ({
             )}
             <div className="row">
               {usuarioEhCronograma() && (
-                <div className="col-4">
-                  {
+                <>
+                  <div className="col">
                     <Field
                       component={InputText}
                       label="Nº do Empenho"
@@ -192,10 +197,25 @@ export default ({
                       proibeLetras
                       disabled={desabilitar[index]}
                     />
-                  }
-                </div>
+                  </div>
+                  <div className="col">
+                    <Field
+                      component={InputText}
+                      label="Qtde. Total do Empenho"
+                      name={`qtd_total_empenho_${index}`}
+                      placeholder="Informe a quantidade"
+                      required
+                      validate={composeValidators(
+                        required,
+                        inteiroOuDecimalComVirgula
+                      )}
+                      proibeLetras
+                      disabled={desabilitar[index]}
+                    />
+                  </div>
+                </>
               )}
-              <div className="col-4">
+              <div className="col">
                 <Field
                   component={AutoCompleteField}
                   options={getEtapasFiltrado(values[`etapa_${index}`])}
@@ -215,7 +235,7 @@ export default ({
                   }}
                 </OnChange>
               </div>
-              <div className="col-4">
+              <div className="col">
                 <Field
                   component={SelectSelecione}
                   naoDesabilitarPrimeiraOpcao
@@ -251,7 +271,9 @@ export default ({
                   disabled={desabilitar[index]}
                 />
               </div>
-              <div className="col-4">
+            </div>
+            <div className="row">
+              <div className="col">
                 <Field
                   component={InputComData}
                   label="Data Programada"
@@ -266,7 +288,7 @@ export default ({
                   excludeDates={feriados}
                 />
               </div>
-              <div className="col-4">
+              <div className="col">
                 <Field
                   component={InputText}
                   label="Quantidade"
@@ -279,7 +301,7 @@ export default ({
                   disabled={desabilitar[index]}
                 />
               </div>
-              <div className="col-4">
+              <div className="col">
                 <Field
                   component={InputText}
                   label="Total de Embalagens"
