@@ -28,7 +28,7 @@ import "../CronogramaEntrega/styles.scss";
 import {
   required,
   composeValidators,
-  inteiroOuDecimalComVirgula,
+  decimalMonetario,
 } from "helpers/fieldValidators";
 import { exibeError, formataMilhar } from "helpers/utilities";
 import { getEmpresasCronograma } from "services/terceirizada.service";
@@ -221,7 +221,25 @@ export default () => {
         cronogramaValues["unidade_medida"] = crono.unidade_medida?.uuid;
         cronogramaValues["produto"] = crono.produto?.uuid;
         cronogramaValues["armazem"] = crono.armazem?.uuid;
+
+        setFichaTecnicaSelecionada(crono.ficha_tecnica);
         cronogramaValues["ficha_tecnica"] = crono.ficha_tecnica?.uuid;
+        cronogramaValues["marca"] = crono.ficha_tecnica?.marca.nome;
+        cronogramaValues["peso_liquido_embalagem_primaria"] =
+          crono.ficha_tecnica?.peso_liquido_embalagem_primaria;
+        cronogramaValues["unidade_medida_primaria"] =
+          crono.ficha_tecnica?.unidade_medida_primaria.uuid;
+        cronogramaValues["peso_liquido_embalagem_secundaria"] =
+          crono.ficha_tecnica?.peso_liquido_embalagem_secundaria;
+        cronogramaValues["unidade_medida_secundaria"] =
+          crono.ficha_tecnica?.unidade_medida_secundaria.uuid;
+        if (crono.ficha_tecnica?.volume_embalagem_primaria) {
+          cronogramaValues["volume_embalagem_primaria"] =
+            crono.ficha_tecnica?.volume_embalagem_primaria;
+          cronogramaValues["unidade_medida_volume_primaria"] =
+            crono.ficha_tecnica?.unidade_medida_volume_primaria.uuid;
+        }
+
         cronogramaValues["custo_unitario_produto"] = numberToStringDecimal(
           crono.custo_unitario_produto
         );
@@ -319,25 +337,25 @@ export default () => {
       setCarregando(true);
 
       const response = await getDadosCronogramaFichaTecnica(uuidFicha);
-      const fichaTecnicaSelecionada = response.data;
+      const fichaTecnica = response.data;
 
-      values.marca = fichaTecnicaSelecionada.marca.nome;
+      values.marca = fichaTecnica.marca.nome;
       values.peso_liquido_embalagem_primaria =
-        fichaTecnicaSelecionada.peso_liquido_embalagem_primaria;
+        fichaTecnica.peso_liquido_embalagem_primaria;
       values.unidade_medida_primaria =
-        fichaTecnicaSelecionada.unidade_medida_primaria.uuid;
+        fichaTecnica.unidade_medida_primaria.uuid;
       values.peso_liquido_embalagem_secundaria =
-        fichaTecnicaSelecionada.peso_liquido_embalagem_secundaria;
+        fichaTecnica.peso_liquido_embalagem_secundaria;
       values.unidade_medida_secundaria =
-        fichaTecnicaSelecionada.unidade_medida_secundaria.uuid;
-      if (fichaTecnicaSelecionada.volume_embalagem_primaria) {
+        fichaTecnica.unidade_medida_secundaria.uuid;
+      if (fichaTecnica.volume_embalagem_primaria) {
         values.volume_embalagem_primaria =
-          fichaTecnicaSelecionada.volume_embalagem_primaria;
+          fichaTecnica.volume_embalagem_primaria;
         values.unidade_medida_volume_primaria =
-          fichaTecnicaSelecionada.unidade_medida_volume_primaria.uuid;
+          fichaTecnica.unidade_medida_volume_primaria.uuid;
       }
 
-      setFichaTecnicaSelecionada(fichaTecnicaSelecionada);
+      setFichaTecnicaSelecionada(fichaTecnica);
       setCarregando(false);
     }
   };
@@ -499,7 +517,8 @@ export default () => {
                                     },
                                     ...geraOptionsFichasTecnicas(
                                       fichasTecnicas,
-                                      empresaSelecionada
+                                      empresaSelecionada,
+                                      fichaTecnicaSelecionada
                                     ),
                                   ]}
                                   label="Ficha Técnica e Produto"
@@ -634,9 +653,10 @@ export default () => {
                                   label="Custo Unitário do Produto"
                                   placeholder="Digite o Custo Unitário do Produto"
                                   required
+                                  proibeLetras
                                   validate={composeValidators(
                                     required,
-                                    inteiroOuDecimalComVirgula
+                                    decimalMonetario
                                   )}
                                 />
                               </div>
