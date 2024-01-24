@@ -547,6 +547,7 @@ export const numeroProcessoContratoSEIMask = [
   /\d/,
   /\d/,
   /\d/,
+  /\d/,
   ".",
   /\d/,
   /\d/,
