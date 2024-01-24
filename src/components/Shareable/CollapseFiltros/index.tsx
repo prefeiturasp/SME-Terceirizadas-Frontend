@@ -9,14 +9,14 @@ import {
 } from "components/Shareable/Botao/constants";
 
 type Props = {
-  titulo: string;
+  titulo?: string;
   children: (_values: any, _form: FormApi) => ReactNode;
   onSubmit: (_values: Record<string, any>) => void;
   onClear: () => void;
 };
 
 const CollapseFiltros: React.FC<Props> = ({
-  titulo,
+  titulo = "Filtrar Cadastros",
   children,
   onSubmit,
   onClear,
@@ -43,7 +43,7 @@ const CollapseFiltros: React.FC<Props> = ({
             <div className="col-1 my-auto">
               <button
                 onClick={() => toggleCollapse()}
-                className="btn btn-link btn-block text-right px-0"
+                className="btn btn-link btn-block text-end px-0"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target={`#collapse`}
