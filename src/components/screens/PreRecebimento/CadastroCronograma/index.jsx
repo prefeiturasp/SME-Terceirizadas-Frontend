@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
-import moment from "moment";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -42,6 +41,17 @@ import {
   getListaFichasTecnicasSimplesSemCronograma,
   getDadosCronogramaFichaTecnica,
 } from "services/fichaTecnica.service";
+import {
+  stringNaoVaziaOuUndefined,
+  numberToStringDecimal,
+} from "helpers/parsers";
+import {
+  formataPayload,
+  geraOptionsFichasTecnicas,
+  getEmpresaFiltrado,
+  getOpcoesContrato,
+  validaRascunho,
+} from "./helpers";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -62,34 +72,11 @@ export default () => {
   const [duplicados, setDuplicados] = useState([]);
   const [restante, setRestante] = useState(undefined);
   const [edicao, setEdicao] = useState(false);
-  const [cronograma, setCronograma] = useState({});
+  const [cronogramaValues, setCronogramaValues] = useState({});
   const [etapasValues, setEtapasValues] = useState({});
   const [recebimentosValues, setRecebimentosValues] = useState({});
 
   const history = useHistory();
-
-  const buscaRascunhos = async () => {
-    try {
-      const response = await getRascunhos();
-      if (response.status === HTTP_STATUS.OK) {
-        setListaRascunhos(response.data.results);
-      }
-    } catch (erro) {
-      toastError("Ocorreu um erro ao tentar carregar a lista de rascunhos.");
-    }
-  };
-
-  const onSubmit = () => {
-    setShowModal(true);
-  };
-
-  const getEmpresaFiltrado = (empresa) => {
-    if (empresa) {
-      const reg = new RegExp(empresa, "iu");
-      return fornecedores.filter((a) => reg.test(a.value));
-    }
-    return fornecedores;
-  };
 
   const toggleCollapse = (index) => {
     setCollapse({
@@ -97,54 +84,30 @@ export default () => {
     });
   };
 
-  const formataPayload = (values, rascunho) => {
-    let payload = {};
-    payload.cadastro_finalizado = !rascunho;
-    payload.contrato = values.contrato;
-    payload.empresa = empresaSelecionada.uuid;
-    payload.produto = values.produto;
-    payload.qtd_total_programada = values.quantidade_total?.replaceAll(".", "");
-    payload.unidade_medida = values.unidade_medida;
-    payload.armazem = values.armazem;
-    payload.tipo_embalagem = values.tipo_embalagem;
-
-    payload.etapas = etapas.map((etapa, index) => ({
-      numero_empenho: values[`empenho_${index}`],
-      etapa: values[`etapa_${index}`],
-      parte: values[`parte_${index}`],
-      data_programada: values[`data_programada_${index}`]
-        ? moment(values[`data_programada_${index}`], "DD/MM/YYYY").format(
-            "YYYY-MM-DD"
-          )
-        : undefined,
-      quantidade: values[`quantidade_${index}`]?.replaceAll(".", ""),
-      total_embalagens: values[`total_embalagens_${index}`],
-    }));
-
-    payload.programacoes_de_recebimento = recebimentos.map((etapa, index) => ({
-      data_programada: values[`data_recebimento_${index}`],
-      tipo_carga: values[`tipo_recebimento_${index}`],
-    }));
-    return payload;
-  };
-
   const salvarCronograma = async (values, rascunho) => {
     setCarregando(true);
-    let payload = formataPayload(values, rascunho);
+
+    let payload = formataPayload(
+      values,
+      rascunho,
+      empresaSelecionada,
+      etapas,
+      recebimentos
+    );
+
     if (!rascunho) {
       payload["password"] = values["password"];
     }
+
     try {
       let response = edicao
-        ? await editaCronograma(payload, cronograma.uuid)
+        ? await editaCronograma(payload, cronogramaValues.uuid)
         : await cadastraCronograma(payload);
       if (response.status === 201 || response.status === 200) {
         if (rascunho) {
           toastSuccess("Rascunho salvo com sucesso!");
           buscaRascunhos();
-          setCarregando(false);
         } else {
-          setCarregando(false);
           toastSuccess(
             "Cadastro de Cronograma salvo e enviado para aprovação!"
           );
@@ -153,106 +116,16 @@ export default () => {
         }
       } else {
         toastError("Ocorreu um erro ao salvar o Cronograma");
-        setCarregando(false);
       }
     } catch (error) {
       if (error.response.status === 401) {
         toastError(MSG_SENHA_INVALIDA);
-        setCarregando(false);
       } else {
         exibeError(error, "Ocorreu um erro ao salvar o Cronograma");
       }
+    } finally {
+      setCarregando(false);
     }
-  };
-
-  const validaRascunho = (values) => {
-    return !values.contrato;
-  };
-
-  const lengthOrUnderfined = (value) => {
-    let valor = value ? value.toString() : undefined;
-    return valor && valor.length > 0 ? valor : undefined;
-  };
-
-  const getDadosCronograma = async (uuid) => {
-    try {
-      const responseCronograma = await getCronograma(uuid);
-      if (responseCronograma.status === HTTP_STATUS.OK) {
-        const programacoes_de_recebimento =
-          responseCronograma.data.programacoes_de_recebimento.reverse();
-        setEtapas(responseCronograma.data.etapas);
-        setRecebimentos(programacoes_de_recebimento);
-
-        const cronogramaValues = {};
-        const crono = responseCronograma.data;
-        setEmpresaSelecionada(crono.empresa);
-        cronogramaValues["empresa"] = lengthOrUnderfined(
-          crono.empresa.nome_fantasia
-        );
-        setContratoSelecionado(crono.contrato);
-        cronogramaValues["contrato"] = lengthOrUnderfined(crono.contrato.uuid);
-        cronogramaValues["numero_processo"] = lengthOrUnderfined(
-          crono.contrato.processo
-        );
-        cronogramaValues["quantidade_total"] = lengthOrUnderfined(
-          formataMilhar(crono.qtd_total_programada)
-        );
-        cronogramaValues["unidade_medida"] = lengthOrUnderfined(
-          crono.unidade_medida ? crono.unidade_medida.uuid : undefined
-        );
-        cronogramaValues["produto"] = lengthOrUnderfined(
-          crono.produto ? crono.produto.uuid : undefined
-        );
-        cronogramaValues["armazem"] = lengthOrUnderfined(
-          crono.armazem ? crono.armazem.uuid : undefined
-        );
-        cronogramaValues["tipo_embalagem"] = lengthOrUnderfined(
-          crono.tipo_embalagem?.uuid
-        );
-        cronogramaValues["numero"] = crono.numero ? crono.numero : undefined;
-        cronogramaValues["uuid"] = crono.uuid;
-        setCronograma(cronogramaValues);
-
-        const etapaValues = {};
-        responseCronograma.data.etapas.forEach((etapa, i) => {
-          etapaValues[`empenho_${i}`] = lengthOrUnderfined(
-            etapa.numero_empenho
-          );
-          etapaValues[`etapa_${i}`] = lengthOrUnderfined(etapa.etapa);
-          etapaValues[`parte_${i}`] = lengthOrUnderfined(etapa.parte);
-          etapaValues[`data_programada_${i}`] = lengthOrUnderfined(
-            etapa.data_programada
-          );
-          etapaValues[`quantidade_${i}`] = lengthOrUnderfined(etapa.quantidade);
-          etapaValues[`total_embalagens_${i}`] = lengthOrUnderfined(
-            etapa.total_embalagens
-          );
-        });
-        setEtapasValues(etapaValues);
-
-        const recebimentoValues = {};
-        programacoes_de_recebimento.forEach((recebimento, i) => {
-          recebimentoValues[`data_recebimento_${i}`] = lengthOrUnderfined(
-            recebimento.data_programada
-          );
-          recebimentoValues[`tipo_recebimento_${i}`] = lengthOrUnderfined(
-            recebimento.tipo_carga
-          );
-        });
-        setRecebimentosValues(recebimentoValues);
-        setCarregando(false);
-      }
-    } catch (e) {
-      toastError("Ocorreu um erro ao carregar o Cronograma");
-    }
-  };
-
-  const getOpcoesContrato = () => {
-    if (!empresaSelecionada) return [];
-    return empresaSelecionada.contratos.map((contrato) => ({
-      nome: contrato.numero,
-      uuid: contrato.uuid,
-    }));
   };
 
   useEffect(() => {
@@ -263,39 +136,9 @@ export default () => {
       setEdicao(true);
     }
 
-    const buscaArmazens = async () => {
-      const response = await getNomesDistribuidores();
-      setArmazens(
-        response.data.results.map((armazem) => ({
-          nome: armazem.nome_fantasia,
-          uuid: armazem.uuid,
-        }))
-      );
-    };
-
-    const buscaFornecedores = async () => {
-      const response = await getEmpresasCronograma();
-      setFornecedores(
-        response.data.results.map((fornecedor) => ({
-          uuid: fornecedor.uuid,
-          value: fornecedor.nome_fantasia,
-          contratos: fornecedor.contratos,
-        }))
-      );
-    };
-
-    const buscaFichasTecnicas = async () => {
-      const response = await getListaFichasTecnicasSimplesSemCronograma();
-      setFichasTecnicas(response.data.results);
-    };
-
-    const buscaUnidadesMedida = async () => {
-      const response = await getUnidadesDeMedidaLogistica();
-      setUnidadesMedidaOptions(response.data.results);
-    };
-
     const carregaPagina = async () => {
       setCarregando(true);
+
       await Promise.all([
         buscaArmazens(),
         buscaFornecedores(),
@@ -303,14 +146,127 @@ export default () => {
         buscaUnidadesMedida(),
         buscaRascunhos(),
       ]);
+
       if (uuid) {
         await getDadosCronograma(uuid);
       }
+
       setCarregando(false);
     };
 
     carregaPagina();
   }, []);
+
+  const buscaArmazens = async () => {
+    const response = await getNomesDistribuidores();
+    setArmazens(
+      response.data.results.map((armazem) => ({
+        nome: armazem.nome_fantasia,
+        uuid: armazem.uuid,
+      }))
+    );
+  };
+
+  const buscaFornecedores = async () => {
+    const response = await getEmpresasCronograma();
+    setFornecedores(
+      response.data.results.map((fornecedor) => ({
+        uuid: fornecedor.uuid,
+        value: fornecedor.nome_fantasia,
+        contratos: fornecedor.contratos,
+      }))
+    );
+  };
+
+  const buscaFichasTecnicas = async () => {
+    const response = await getListaFichasTecnicasSimplesSemCronograma();
+    setFichasTecnicas(response.data.results);
+  };
+
+  const buscaUnidadesMedida = async () => {
+    const response = await getUnidadesDeMedidaLogistica();
+    setUnidadesMedidaOptions(response.data.results);
+  };
+
+  const buscaRascunhos = async () => {
+    try {
+      const response = await getRascunhos();
+      if (response.status === HTTP_STATUS.OK) {
+        setListaRascunhos(response.data.results);
+      }
+    } catch {
+      toastError("Ocorreu um erro ao tentar carregar a lista de rascunhos.");
+    }
+  };
+
+  const getDadosCronograma = async (uuid) => {
+    try {
+      const responseCronograma = await getCronograma(uuid);
+      if (responseCronograma.status === HTTP_STATUS.OK) {
+        const programacoesDeRecebimento =
+          responseCronograma.data.programacoes_de_recebimento.reverse();
+        setEtapas(responseCronograma.data.etapas);
+        setRecebimentos(programacoesDeRecebimento);
+
+        const cronogramaValues = {};
+        const crono = responseCronograma.data;
+        setEmpresaSelecionada(crono.empresa);
+        cronogramaValues["empresa"] = crono.empresa?.nome_fantasia;
+        setContratoSelecionado(crono.contrato);
+        cronogramaValues["contrato"] = crono.contrato?.uuid;
+        cronogramaValues["numero_processo"] = crono.contrato?.processo;
+        cronogramaValues["quantidade_total"] = formataMilhar(
+          crono.qtd_total_programada
+        );
+        cronogramaValues["unidade_medida"] = crono.unidade_medida?.uuid;
+        cronogramaValues["produto"] = crono.produto?.uuid;
+        cronogramaValues["armazem"] = crono.armazem?.uuid;
+        cronogramaValues["ficha_tecnica"] = crono.ficha_tecnica?.uuid;
+        cronogramaValues["custo_unitario_produto"] = numberToStringDecimal(
+          crono.custo_unitario_produto
+        );
+        cronogramaValues["numero"] = crono.numero;
+        cronogramaValues["uuid"] = crono.uuid;
+        setCronogramaValues(cronogramaValues);
+
+        const etapaValues = {};
+        responseCronograma.data.etapas.forEach((etapa, i) => {
+          etapaValues[`empenho_${i}`] = stringNaoVaziaOuUndefined(
+            etapa.numero_empenho
+          );
+          etapaValues[`qtd_total_empenho_${i}`] =
+            etapa.qtd_total_empenho || undefined;
+          etapaValues[`etapa_${i}`] = stringNaoVaziaOuUndefined(etapa.etapa);
+          etapaValues[`parte_${i}`] = stringNaoVaziaOuUndefined(etapa.parte);
+          etapaValues[`data_programada_${i}`] = stringNaoVaziaOuUndefined(
+            etapa.data_programada
+          );
+          etapaValues[`quantidade_${i}`] = stringNaoVaziaOuUndefined(
+            etapa.quantidade
+          );
+          etapaValues[`total_embalagens_${i}`] = stringNaoVaziaOuUndefined(
+            etapa.total_embalagens
+          );
+        });
+        setEtapasValues(etapaValues);
+
+        const recebimentoValues = {};
+        programacoesDeRecebimento.forEach((recebimento, i) => {
+          recebimentoValues[`data_recebimento_${i}`] =
+            stringNaoVaziaOuUndefined(recebimento.data_programada);
+          recebimentoValues[`tipo_recebimento_${i}`] =
+            stringNaoVaziaOuUndefined(recebimento.tipo_carga);
+        });
+        setRecebimentosValues(recebimentoValues);
+      } else {
+        toastError("Ocorreu um erro ao carregar o Cronograma");
+      }
+    } catch (error) {
+      exibeError(error, "Ocorreu um erro ao carregar o Cronograma");
+    } finally {
+      setCarregando(false);
+    }
+  };
 
   const onChangeFormSpy = async (changes) => {
     if (changes.values.empresa) selecionaEmpresa(changes.values.empresa);
@@ -385,16 +341,6 @@ export default () => {
     }
   };
 
-  const geraOptionsFichasTecnicas = (fichasTecnicas, empresaSelecionada) =>
-    fichasTecnicas
-      .filter((ficha) => ficha.uuid_empresa === empresaSelecionada?.uuid)
-      .map((ficha) => {
-        return {
-          nome: ficha.numero_e_produto,
-          uuid: ficha.uuid,
-        };
-      });
-
   return (
     <>
       {!edicao && <Rascunhos listaRascunhos={listaRascunhos} />}
@@ -402,9 +348,9 @@ export default () => {
         <div className="card mt-3 card-cadastro-cronograma">
           <div className="card-body cadastro-cronograma">
             <Form
-              onSubmit={onSubmit}
+              onSubmit={() => setShowModal(true)}
               initialValues={{
-                ...cronograma,
+                ...cronogramaValues,
                 ...etapasValues,
                 ...recebimentosValues,
               }}
@@ -422,7 +368,7 @@ export default () => {
                           <b>Nº do Cronograma: </b>
 
                           <span className="head-green">
-                            {cronograma.numero}
+                            {cronogramaValues.numero}
                           </span>
                         </p>
                       </div>
@@ -434,7 +380,10 @@ export default () => {
                       <Field
                         className="input-cronograma"
                         component={AutoCompleteField}
-                        options={getEmpresaFiltrado(values.empresa)}
+                        options={getEmpresaFiltrado(
+                          fornecedores,
+                          values.empresa
+                        )}
                         label="Pesquisar Empresa"
                         name="empresa"
                         required
@@ -450,7 +399,7 @@ export default () => {
                         naoDesabilitarPrimeiraOpcao
                         options={[
                           { nome: "Selecione um Contrato", uuid: "" },
-                          ...getOpcoesContrato(),
+                          ...getOpcoesContrato(empresaSelecionada),
                         ]}
                         label="Nº do Contrato"
                         name="contrato"
@@ -680,7 +629,7 @@ export default () => {
                                 <Field
                                   className="input-cronograma"
                                   component={InputText}
-                                  name={`custo_unitario`}
+                                  name={`custo_unitario_produto`}
                                   label="Custo Unitário do Produto"
                                   placeholder="Digite o Custo Unitário do Produto"
                                   required
