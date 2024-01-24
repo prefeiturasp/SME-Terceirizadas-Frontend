@@ -117,14 +117,15 @@ export default ({
     await Promise.all([buscaFeriados(), buscaEtapas()]);
   };
 
-  const desativaAdicionarEtapa = (index) => {
+  const desativaAdicionarEtapa = () => {
+    let index = etapas.length - 1;
     const camposObrigatorios = [
-      `empenho_${index - 1}`,
-      `etapa_${index - 1}`,
-      `parte_${index - 1}`,
-      `data_programada_${index - 1}`,
-      `quantidade_${index - 1}`,
-      `total_embalagens_${index - 1}`,
+      `empenho_${index}`,
+      `etapa_${index}`,
+      `parte_${index}`,
+      `data_programada_${index}`,
+      `quantidade_${index}`,
+      `total_embalagens_${index}`,
     ];
 
     return camposObrigatorios.some((campo) => Boolean(errors[campo]));
@@ -304,9 +305,9 @@ export default ({
           style={BUTTON_STYLE.GREEN_OUTLINE}
           className=""
           onClick={() => adicionaEtapa()}
-          disabled={desativaAdicionarEtapa(etapas.length)}
+          disabled={desativaAdicionarEtapa()}
           tooltipExterno={
-            desativaAdicionarEtapa(etapas.length)
+            desativaAdicionarEtapa()
               ? "É necessário preencher todos os campos obrigatórios para adicionar uma nova Etapa"
               : ""
           }
