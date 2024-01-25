@@ -15,15 +15,19 @@ import SelectSelecione from "components/Shareable/SelectSelecione";
 import { getEtapas } from "services/cronograma.service";
 import { getFeriadosAnoAtualEProximo } from "services/diasUteis.service";
 import { deletaValues } from "helpers/formHelper";
-import { formataMilhar } from "helpers/utilities";
+import {
+  formataMilhar,
+  getAmanha,
+  usuarioEhCronograma,
+} from "helpers/utilities";
 import {
   required,
   composeValidators,
   inteiroOuDecimalComVirgula,
 } from "helpers/fieldValidators";
 
-import { getAmanha, usuarioEhCronograma } from "../../../helpers/utilities";
 import "./styles.scss";
+import { calculaTotalEmbalagens } from "./helper";
 
 export default ({
   etapas,
@@ -160,22 +164,6 @@ export default ({
     desativaCampos();
   }, [values]);
 
-  const calculaTotalEmbalagens = (values, index) => {
-    if (values) {
-      const pesoEmbalagemSecundaria =
-        values[`peso_liquido_embalagem_secundaria`];
-      const quantidade = Number(values[`quantidade_${index}`]);
-
-      const totalEmbalagens = pesoEmbalagemSecundaria
-        ? Math.ceil(quantidade / pesoEmbalagemSecundaria)
-        : undefined;
-
-      values[`total_embalagens_${index}`] = totalEmbalagens;
-
-      return totalEmbalagens;
-    }
-  };
-
   return (
     <>
       {etapas &&
@@ -289,7 +277,7 @@ export default ({
               </div>
             </div>
             <div className="row">
-              <div className="col">
+              <div className="col-4">
                 <Field
                   component={InputComData}
                   label="Data Programada"
@@ -304,7 +292,7 @@ export default ({
                   excludeDates={feriados}
                 />
               </div>
-              <div className="col">
+              <div className="col-4">
                 <Field
                   component={InputText}
                   label="Quantidade"
@@ -317,14 +305,23 @@ export default ({
                   disabled={desabilitar[index]}
                 />
               </div>
-              <div className="col">
+              <OnChange name={`quantidade_${index}`}>
+                {(value) => {
+                  const totalEmbalagens = calculaTotalEmbalagens(
+                    Number(value.replace(".", "")),
+                    values.peso_liquido_embalagem_secundaria
+                  );
+
+                  form.change(`total_embalagens_${index}`, totalEmbalagens);
+                }}
+              </OnChange>
+              <div className="col-4">
                 <Field
                   component={InputText}
                   label="Total de Embalagens"
                   name={`total_embalagens_${index}`}
                   required
                   disabled
-                  valorInicial={calculaTotalEmbalagens(values, index)}
                 />
               </div>
             </div>
