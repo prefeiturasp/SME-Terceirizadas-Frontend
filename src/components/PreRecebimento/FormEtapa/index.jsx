@@ -327,6 +327,7 @@ export default ({
                   name={`total_embalagens_${index}`}
                   required
                   disabled
+                  valorInicial={""}
                 />
               </div>
             </div>
