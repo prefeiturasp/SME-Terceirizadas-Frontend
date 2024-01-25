@@ -215,6 +215,10 @@ export default () => {
         setContratoSelecionado(crono.contrato);
         cronogramaValues["contrato"] = crono.contrato?.uuid;
         cronogramaValues["numero_processo"] = crono.contrato?.processo;
+        cronogramaValues["numero_pregao_chamada_publica"] =
+          crono.contrato?.numero_pregao ||
+          crono.contrato?.numero_chamada_publica;
+        cronogramaValues["ata"] = crono.contrato?.ata;
         cronogramaValues["quantidade_total"] = formataMilhar(
           crono.qtd_total_programada
         );
@@ -454,7 +458,6 @@ export default () => {
                         component={InputText}
                         label="Nº ATA"
                         name="ata"
-                        validate={required}
                         disabled={true}
                       />
                     </div>
