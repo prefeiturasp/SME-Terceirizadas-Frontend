@@ -234,7 +234,7 @@ export default ({
                 />
                 <OnChange name={`etapa_${index}`}>
                   {() => {
-                    if (form)
+                    ehAlteracao &&
                       form.mutators.setFieldTouched(`parte_${index}`, true);
                   }}
                 </OnChange>
