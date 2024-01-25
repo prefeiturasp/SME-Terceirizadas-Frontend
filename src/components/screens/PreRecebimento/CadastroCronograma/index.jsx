@@ -226,16 +226,21 @@ export default () => {
         cronogramaValues["ficha_tecnica"] = crono.ficha_tecnica?.uuid;
         cronogramaValues["marca"] = crono.ficha_tecnica?.marca.nome;
         cronogramaValues["peso_liquido_embalagem_primaria"] =
-          crono.ficha_tecnica?.peso_liquido_embalagem_primaria;
+          numberToStringDecimal(
+            crono.ficha_tecnica?.peso_liquido_embalagem_primaria
+          );
         cronogramaValues["unidade_medida_primaria"] =
           crono.ficha_tecnica?.unidade_medida_primaria.uuid;
         cronogramaValues["peso_liquido_embalagem_secundaria"] =
-          crono.ficha_tecnica?.peso_liquido_embalagem_secundaria;
+          numberToStringDecimal(
+            crono.ficha_tecnica?.peso_liquido_embalagem_secundaria
+          );
         cronogramaValues["unidade_medida_secundaria"] =
           crono.ficha_tecnica?.unidade_medida_secundaria.uuid;
         if (crono.ficha_tecnica?.volume_embalagem_primaria) {
-          cronogramaValues["volume_embalagem_primaria"] =
-            crono.ficha_tecnica?.volume_embalagem_primaria;
+          cronogramaValues["volume_embalagem_primaria"] = numberToStringDecimal(
+            crono.ficha_tecnica?.volume_embalagem_primaria
+          );
           cronogramaValues["unidade_medida_volume_primaria"] =
             crono.ficha_tecnica?.unidade_medida_volume_primaria.uuid;
         }
@@ -340,19 +345,22 @@ export default () => {
       const fichaTecnica = response.data;
 
       values.marca = fichaTecnica.marca.nome;
-      values.peso_liquido_embalagem_primaria =
-        fichaTecnica.peso_liquido_embalagem_primaria;
+      values.peso_liquido_embalagem_primaria = numberToStringDecimal(
+        fichaTecnica.peso_liquido_embalagem_primaria
+      );
       values.unidade_medida_primaria =
         fichaTecnica.unidade_medida_primaria.uuid;
-      values.peso_liquido_embalagem_secundaria =
-        fichaTecnica.peso_liquido_embalagem_secundaria;
+      values.peso_liquido_embalagem_secundaria = numberToStringDecimal(
+        fichaTecnica.peso_liquido_embalagem_secundaria
+      );
       values.unidade_medida_secundaria =
         fichaTecnica.unidade_medida_secundaria.uuid;
       if (fichaTecnica.volume_embalagem_primaria) {
         values.volume_embalagem_primaria =
           fichaTecnica.volume_embalagem_primaria;
-        values.unidade_medida_volume_primaria =
-          fichaTecnica.unidade_medida_volume_primaria.uuid;
+        values.unidade_medida_volume_primaria = numberToStringDecimal(
+          fichaTecnica.unidade_medida_volume_primaria.uuid
+        );
       }
 
       setFichaTecnicaSelecionada(fichaTecnica);
@@ -660,39 +668,41 @@ export default () => {
                                   )}
                                 />
                               </div>
-                              <div className="col-8">
-                                <div className="row">
-                                  <div className="col">
-                                    <Label
-                                      content="Volume da Embalagem Primária"
-                                      required
-                                    />
-                                  </div>
-                                </div>
-
-                                <div className="row">
-                                  <div className="col">
-                                    <Field
-                                      className="input-cronograma"
-                                      component={InputText}
-                                      name={`volume_embalagem_primaria`}
-                                      required
-                                      disabled
-                                    />
+                              {values.volume_embalagem_primaria && (
+                                <div className="col-8">
+                                  <div className="row">
+                                    <div className="col">
+                                      <Label
+                                        content="Volume da Embalagem Primária"
+                                        required
+                                      />
+                                    </div>
                                   </div>
 
-                                  <div className="col">
-                                    <Field
-                                      className="input-cronograma"
-                                      component={Select}
-                                      options={unidadesMedidaOptions}
-                                      name={`unidade_medida_volume_primaria`}
-                                      required
-                                      disabled
-                                    />
+                                  <div className="row">
+                                    <div className="col">
+                                      <Field
+                                        className="input-cronograma"
+                                        component={InputText}
+                                        name={`volume_embalagem_primaria`}
+                                        required
+                                        disabled
+                                      />
+                                    </div>
+
+                                    <div className="col">
+                                      <Field
+                                        className="input-cronograma"
+                                        component={Select}
+                                        options={unidadesMedidaOptions}
+                                        name={`unidade_medida_volume_primaria`}
+                                        required
+                                        disabled
+                                      />
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
+                              )}
                             </div>
 
                             <div className="subtitulo">

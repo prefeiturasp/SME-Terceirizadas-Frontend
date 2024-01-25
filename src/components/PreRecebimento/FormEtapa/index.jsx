@@ -309,7 +309,12 @@ export default ({
                 {(value) => {
                   const totalEmbalagens = calculaTotalEmbalagens(
                     Number(value.replace(".", "")),
-                    values.peso_liquido_embalagem_secundaria
+                    Number(
+                      values.peso_liquido_embalagem_secundaria?.replace(
+                        ",",
+                        "."
+                      )
+                    )
                   );
 
                   form.change(`total_embalagens_${index}`, totalEmbalagens);
