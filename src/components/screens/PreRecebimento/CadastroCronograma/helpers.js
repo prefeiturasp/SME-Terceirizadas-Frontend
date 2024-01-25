@@ -26,8 +26,8 @@ export const geraOptionsFichasTecnicas = (
 
   fichaTecnicaSelecionada &&
     options.unshift({
-      nome: `${fichaTecnicaSelecionada.numero} - ${fichaTecnicaSelecionada?.produto.nome}`,
-      uuid: fichaTecnicaSelecionada?.uuid,
+      nome: fichaTecnicaSelecionada.numero_e_produto,
+      uuid: fichaTecnicaSelecionada.uuid,
     });
 
   return options;
