@@ -50,7 +50,11 @@ export const criaDietaEspecial = async (payload) => {
     const json = await response.json();
     return { data: json, status: status };
   } catch (error) {
-    console.log(error);
+    if (error.status === 400) {
+      const json = await error.json();
+      return { data: json[0], status: error.status };
+    }
+    return { data: error.statusText, status: error.status };
   }
 };
 
