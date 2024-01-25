@@ -704,6 +704,7 @@ export default () => {
                             <FormEtapa
                               etapas={etapas}
                               setEtapas={setEtapas}
+                              form={form}
                               values={values}
                               errors={errors}
                               duplicados={duplicados}
