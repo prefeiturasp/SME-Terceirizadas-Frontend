@@ -359,13 +359,11 @@ export default () => {
       );
       values.unidade_medida_secundaria =
         fichaTecnica.unidade_medida_secundaria.uuid;
-      if (fichaTecnica.volume_embalagem_primaria) {
-        values.volume_embalagem_primaria =
-          fichaTecnica.volume_embalagem_primaria;
-        values.unidade_medida_volume_primaria = numberToStringDecimal(
-          fichaTecnica.unidade_medida_volume_primaria.uuid
-        );
-      }
+      values.volume_embalagem_primaria = numberToStringDecimal(
+        fichaTecnica.volume_embalagem_primaria
+      );
+      values.unidade_medida_volume_primaria =
+        fichaTecnica.unidade_medida_volume_primaria?.uuid;
 
       setFichaTecnicaSelecionada(fichaTecnica);
       setCarregando(false);
@@ -385,7 +383,6 @@ export default () => {
                 ...etapasValues,
                 ...recebimentosValues,
               }}
-              validate={() => {}}
               render={({ form, handleSubmit, values, errors }) => (
                 <form onSubmit={handleSubmit}>
                   <FormSpy
