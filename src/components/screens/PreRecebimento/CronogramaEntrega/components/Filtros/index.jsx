@@ -1,23 +1,23 @@
-import moment from "moment";
 import React, { useContext } from "react";
-import { Form, Field } from "react-final-form";
-import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
-import { InputComData } from "components/Shareable/DatePicker";
-import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
-import { InputText } from "components/Shareable/Input/InputText";
-import Botao from "components/Shareable/Botao";
+import moment from "moment";
+import { Field } from "react-final-form";
+import { NavLink } from "react-router-dom";
+
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
-import "./style.scss";
+import Botao from "components/Shareable/Botao";
+import { InputComData } from "components/Shareable/DatePicker";
+import CollapseFiltros from "components/Shareable/CollapseFiltros";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import { InputText } from "components/Shareable/Input/InputText";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
-import { montarOptionsStatus } from "./utils";
 import MeusDadosContext from "context/MeusDadosContext";
-import { NavLink } from "react-router-dom";
 import { CADASTRO_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants.js";
 
-const FORM_NAME = "buscaCronogramaDeEntrega";
+import { montarOptionsStatus } from "./utils";
+import "./style.scss";
 
 export default ({
   setFiltros,
@@ -51,18 +51,21 @@ export default ({
     setFiltros({ ...filtros });
   };
 
+  const onClear = () => {
+    setCronogramas(undefined);
+    setTotal(undefined);
+  };
+
   return (
     <div className="filtros-cronograma-de-entrega">
-      <Form
-        onSubmit={onSubmit}
-        render={({ form, handleSubmit, submitting, values }) => (
-          <form onSubmit={handleSubmit}>
-            <FinalFormToRedux form={FORM_NAME} />
+      <CollapseFiltros onSubmit={onSubmit} onClear={onClear}>
+        {(values) => (
+          <>
             <div className="row">
               <div className="col-6">
                 <Field
                   component={InputText}
-                  label="Produto"
+                  label="Filtrar por Nome do Produto"
                   name="nome_produto"
                   placeholder="Digite o produto"
                   className="input-busca-cronograma"
@@ -71,8 +74,8 @@ export default ({
               {usuarioEhEmpresaFornecedor() ? (
                 <div className="col-6">
                   <Field
-                    label="Armazém"
                     component={MultiSelect}
+                    label="Armazém"
                     disableSearch
                     name="armazem"
                     multiple
@@ -85,7 +88,7 @@ export default ({
                 <div className="col-6">
                   <Field
                     component={InputText}
-                    label="Empresa"
+                    label="Filtrar por Nome da Empresa"
                     name="nome_empresa"
                     placeholder="Digite o nome da empresa"
                     className="input-busca-cronograma"
@@ -98,7 +101,7 @@ export default ({
                 <div className="col-3">
                   <Field
                     component={InputText}
-                    label="N° do Cronograma"
+                    label="Filtrar por N° do Cronograma"
                     name="numero"
                     placeholder="Digite o n° do Cronograma"
                     className="input-busca-cronograma"
@@ -109,8 +112,8 @@ export default ({
                 className={`col-${usuarioEhEmpresaFornecedor() ? "6" : "3"}`}
               >
                 <Field
-                  label="Status"
                   component={MultiSelect}
+                  label="Filtrar por Status"
                   disableSearch
                   name="status"
                   multiple
@@ -122,7 +125,7 @@ export default ({
               <div className="col-3">
                 <Field
                   component={InputComData}
-                  label="Período de Recebimento"
+                  label="Filtrar por Período de Recebimento"
                   name="data_inicial"
                   className="data-field-cronograma"
                   placeholder="De"
@@ -151,45 +154,22 @@ export default ({
                 />
               </div>
             </div>
-
-            <div className="botoes pt-4" ref={inicioResultado}>
-              <div className="botao-cadastrar">
-                {meusDados &&
-                  podeCadastrar(meusDados.vinculo_atual.perfil.nome) && (
-                    <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}`}>
-                      <Botao
-                        texto="Cadastrar Cronograma"
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.GREEN}
-                        onClick={() => {}}
-                      />
-                    </NavLink>
-                  )}
-              </div>
-              <div className="botoes-form">
-                <Botao
-                  texto="Limpar Filtros"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="ms-3"
-                  onClick={() => {
-                    form.reset({});
-                    setCronogramas(undefined);
-                    setTotal(undefined);
-                  }}
-                />
-                <Botao
-                  texto="Filtrar"
-                  type={BUTTON_TYPE.SUBMIT}
-                  style={BUTTON_STYLE.GREEN}
-                  className="ms-3"
-                  disabled={submitting}
-                />
-              </div>
-            </div>
-          </form>
+          </>
         )}
-      />
+      </CollapseFiltros>
+
+      <div className="botoes pt-4" ref={inicioResultado}>
+        {meusDados && podeCadastrar(meusDados.vinculo_atual.perfil.nome) && (
+          <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}`}>
+            <Botao
+              texto="Cadastrar Cronograma"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              onClick={() => {}}
+            />
+          </NavLink>
+        )}
+      </div>
     </div>
   );
 };
