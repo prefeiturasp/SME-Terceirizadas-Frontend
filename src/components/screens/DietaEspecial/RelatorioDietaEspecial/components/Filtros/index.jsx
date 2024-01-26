@@ -95,9 +95,11 @@ export const Filtros = ({ ...props }) => {
               <Field
                 component={InputComData}
                 label="Período de:"
-                name="data_inicial"
+                name="data_cancelamento_inicial"
                 placeholder="Selecione"
-                maxDate={moment(values.data_final, "DD/MM/YYYY")._d}
+                maxDate={
+                  moment(values.data_cancelamento_final, "DD/MM/YYYY")._d
+                }
                 minDate={null}
               />
             </div>
@@ -105,9 +107,11 @@ export const Filtros = ({ ...props }) => {
               <Field
                 component={InputComData}
                 label="Até:"
-                name="data_final"
+                name="data_cancelamento_final"
                 placeholder="Selecione"
-                minDate={moment(values.data_inicial, "DD/MM/YYYY")._d}
+                minDate={
+                  moment(values.data_cancelamento_inicial, "DD/MM/YYYY")._d
+                }
                 maxDate={new Date()}
               />
             </div>

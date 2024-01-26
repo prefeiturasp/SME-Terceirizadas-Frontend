@@ -4,6 +4,8 @@ import React from "react";
 import { InputErroMensagem } from "components/Shareable/Input/InputErroMensagem";
 import { HelpText } from "components/Shareable/HelpText";
 
+import TooltipIcone from "components/Shareable/TooltipIcone";
+
 import "./styles.scss";
 
 export default ({
@@ -54,6 +56,9 @@ export default ({
         >
           {label}
         </label>,
+        props.tooltipText && (
+          <TooltipIcone key={2} tooltipText={props.tooltipText} />
+        ),
       ]}
       {!props.disabled && (
         <MultiSelect

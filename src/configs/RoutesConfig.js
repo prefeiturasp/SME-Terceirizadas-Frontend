@@ -285,6 +285,7 @@ import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/Cadas
 import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
+import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
 
 const routesConfig = [
   {
@@ -1493,6 +1494,12 @@ const routesConfig = [
       usuarioEhAdministradorNutriCODAE() ||
       usuarioEhCoordenadorNutriCODAE() ||
       usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GERENCIAL_DIETAS}`,
+    component: RelatorioGerencialDietas,
+    tipoUsuario:
+      usuarioEhAdministradorNutriCODAE() || usuarioEhCoordenadorNutriCODAE(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GESTAO_DIETA_ESPECIAL}`,

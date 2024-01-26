@@ -126,7 +126,8 @@ export default ({
     await Promise.all([buscaFeriados(), buscaEtapas()]);
   };
 
-  const desativaAdicionarEtapa = (index) => {
+  const desativaAdicionarEtapa = () => {
+    let index = etapas.length - 1;
     const camposObrigatorios = [
       `empenho_${index - 1}`,
       `qtd_total_empenho_${index - 1}`,
@@ -343,9 +344,9 @@ export default ({
           style={BUTTON_STYLE.GREEN_OUTLINE}
           className=""
           onClick={() => adicionaEtapa()}
-          disabled={desativaAdicionarEtapa(etapas.length)}
+          disabled={desativaAdicionarEtapa()}
           tooltipExterno={
-            desativaAdicionarEtapa(etapas.length)
+            desativaAdicionarEtapa()
               ? "É necessário preencher todos os campos obrigatórios para adicionar uma nova Etapa"
               : ""
           }
