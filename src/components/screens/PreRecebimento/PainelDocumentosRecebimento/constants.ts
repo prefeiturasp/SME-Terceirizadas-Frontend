@@ -4,7 +4,6 @@ import {
 } from "interfaces/pre_recebimento.interface";
 
 import {
-  PAINEL_DOCUMENTOS_RECEBIMENTO,
   PENDENTES_APROVACAO,
   APROVADOS,
   ENVIADOS_PARA_CORRECAO,
@@ -17,7 +16,7 @@ export const CARD_PENDENTES_APROVACAO: CardConfig<DocumentosRecebimentoDashboard
     icon: "fa-exclamation-triangle",
     style: "card-pendente-assinatura",
     incluir_status: ["ENVIADO_PARA_ANALISE"],
-    href: `${PAINEL_DOCUMENTOS_RECEBIMENTO}/${PENDENTES_APROVACAO}`,
+    href: `${PENDENTES_APROVACAO}`,
   };
 
 export const CARD_APROVADOS: CardConfig<DocumentosRecebimentoDashboard> = {
@@ -26,7 +25,7 @@ export const CARD_APROVADOS: CardConfig<DocumentosRecebimentoDashboard> = {
   icon: "fa-check",
   style: "card-cronogramas-assinados",
   incluir_status: ["APROVADO"],
-  href: `${PAINEL_DOCUMENTOS_RECEBIMENTO}/${APROVADOS}`,
+  href: `${APROVADOS}`,
 };
 
 export const CARD_ENVIADOS_PARA_CORRECAO: CardConfig<DocumentosRecebimentoDashboard> =
@@ -36,7 +35,7 @@ export const CARD_ENVIADOS_PARA_CORRECAO: CardConfig<DocumentosRecebimentoDashbo
     icon: "fa-pencil-alt",
     style: "card-solicitacoes-reprovadas",
     incluir_status: ["ENVIADO_PARA_CORRECAO"],
-    href: `${PAINEL_DOCUMENTOS_RECEBIMENTO}/${ENVIADOS_PARA_CORRECAO}`,
+    href: `${ENVIADOS_PARA_CORRECAO}`,
   };
 
 export const cardsPainel = [

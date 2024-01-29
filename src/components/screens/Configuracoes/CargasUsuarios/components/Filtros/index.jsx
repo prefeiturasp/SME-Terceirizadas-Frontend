@@ -56,7 +56,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
           texto="Modelo Planilha Servidores"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="float-end ms-3"
+          className="col-3"
           icon="fas fa-download"
           onClick={baixarExcelModeloServidor}
         />
@@ -65,7 +65,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
             texto="Modelo Planilha Não Servidores"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="float-end ms-3"
+            className="col-3 ms-3"
             icon="fas fa-download"
             onClick={baixarExcelModeloNaoServidor}
           />
@@ -74,7 +74,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
           texto="Modelo Planilha UEs Parceiras"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="float-end ms-3"
+          className="col-3 ms-3"
           icon="fas fa-download"
           onClick={baixarExcelModeloUEParceira}
         />

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import Label from "components/Shareable/Label";
 
@@ -109,7 +109,7 @@ export default () => {
   const [tipoCadastro, setTipoCadastro] = useState("");
   const [arquivo, setArquivo] = useState<ArquivoForm[]>([]);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const atualizarDadosCarregados = async () => {
     setCarregando(true);
@@ -729,7 +729,7 @@ export default () => {
                       payload,
                       ficha,
                       setCarregando,
-                      history
+                      navigate
                     );
                   }}
                   loading={carregando}

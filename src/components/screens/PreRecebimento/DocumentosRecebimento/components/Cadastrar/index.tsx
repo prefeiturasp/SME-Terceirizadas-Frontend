@@ -19,7 +19,7 @@ import {
   BUTTON_STYLE,
 } from "../../../../../Shareable/Botao/constants";
 import Botao from "../../../../../Shareable/Botao";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DOCUMENTOS_RECEBIMENTO, PRE_RECEBIMENTO } from "configs/constants";
 import ModalConfirmarEnvio from "../ModalConfirmarEnvio";
 import { exibeError } from "helpers/utilities";
@@ -37,7 +37,7 @@ import {
 import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
 
 export default () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [carregando, setCarregando] = useState<boolean>(true);
   const [cronogramas, setCronogramas] = useState<Array<CronogramaSimples>>([]);
   const [laudo, setLaudo] = useState<Array<Arquivo>>([]);
@@ -150,7 +150,7 @@ export default () => {
   };
 
   const voltarPagina = () =>
-    history.push(`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`);
+    navigate(`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`);
 
   useEffect(() => {
     setCarregando(true);
