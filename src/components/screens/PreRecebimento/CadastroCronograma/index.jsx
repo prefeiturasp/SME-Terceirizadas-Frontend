@@ -35,6 +35,7 @@ import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
 import { getListaTiposEmbalagens } from "../../../../services/qualidade.service";
+import { CADASTRO_CRONOGRAMA, EDITAR } from "../../../../configs/constants";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -133,14 +134,13 @@ export default () => {
       if (response.status === 201 || response.status === 200) {
         if (rascunho) {
           toastSuccess("Rascunho salvo com sucesso!");
-          getRascunhosAsync();
-          setCarregando(false);
+          history.push(
+            `/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}/?uuid=${response.data.uuid}`
+          );
         } else {
-          setCarregando(false);
           toastSuccess(
             "Cadastro de Cronograma salvo e enviado para aprovação!"
           );
-          setShowModal(false);
           history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
         }
       } else {
