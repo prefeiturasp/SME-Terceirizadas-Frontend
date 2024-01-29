@@ -129,12 +129,12 @@ export default ({
   const desativaAdicionarEtapa = () => {
     let index = etapas.length - 1;
     const camposObrigatorios = [
-      `empenho_${index - 1}`,
-      `qtd_total_empenho_${index - 1}`,
-      `etapa_${index - 1}`,
-      `parte_${index - 1}`,
-      `data_programada_${index - 1}`,
-      `quantidade_${index - 1}`,
+      `empenho_${index}`,
+      `qtd_total_empenho_${index}`,
+      `etapa_${index}`,
+      `parte_${index}`,
+      `data_programada_${index}`,
+      `quantidade_${index}`,
     ];
 
     return camposObrigatorios.some((campo) => Boolean(errors[campo]));
