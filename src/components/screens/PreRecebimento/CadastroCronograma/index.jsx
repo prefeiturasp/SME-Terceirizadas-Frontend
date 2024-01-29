@@ -21,7 +21,7 @@ import {
   getUnidadesDeMedidaLogistica,
 } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
@@ -35,6 +35,7 @@ import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
 import { getListaTiposEmbalagens } from "../../../../services/qualidade.service";
+import { CADASTRO_CRONOGRAMA, EDITAR } from "../../../../configs/constants";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -50,7 +51,7 @@ export default () => {
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
   const [fornecedores, setFornecedores] = useState([{}]);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [listaRascunhos, setListaRascunhos] = useState(null);
   const [duplicados, setDuplicados] = useState([]);
   const [restante, setRestante] = useState(undefined);
@@ -133,15 +134,15 @@ export default () => {
       if (response.status === 201 || response.status === 200) {
         if (rascunho) {
           toastSuccess("Rascunho salvo com sucesso!");
-          getRascunhosAsync();
-          setCarregando(false);
+          navigate(
+            `/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}/?uuid=${response.data.uuid}`
+          );
         } else {
-          setCarregando(false);
           toastSuccess(
             "Cadastro de Cronograma salvo e enviado para aprovação!"
           );
           setShowModal(false);
-          history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+          navigate(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
         }
       } else {
         toastError("Ocorreu um erro ao salvar o Cronograma");

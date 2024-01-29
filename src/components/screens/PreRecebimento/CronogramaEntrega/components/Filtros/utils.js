@@ -8,6 +8,10 @@ export const montarOptionsStatus = () => {
 
 export const options_status = [
   {
+    value: "RASCUNHO",
+    label: "Rascunho",
+  },
+  {
     value: "ASSINADO_E_ENVIADO_AO_FORNECEDOR",
     label: "Assinado e Enviado ao Fornecedor",
   },
@@ -27,6 +31,10 @@ export const options_status = [
     value: "ALTERACAO_CODAE",
     label: "Alteração CODAE",
   },
+  {
+    value: "SOLICITADO_ALTERACAO",
+    label: "Solicitado Alteração",
+  },
 ];
 
 export const options_status_fornecedor = [
@@ -45,6 +53,10 @@ export const options_status_fornecedor = [
   {
     value: "ALTERACAO_CODAE",
     label: "Alteração CODAE",
+  },
+  {
+    value: "SOLICITADO_ALTERACAO",
+    label: "Solicitado Alteração",
   },
 ];
 

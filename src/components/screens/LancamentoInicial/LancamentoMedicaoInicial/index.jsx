@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import HTTP_STATUS from "http-status-codes";
 import { addMonths, getYear, format, getMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -67,7 +67,7 @@ export default () => {
   const [naoPodeFinalizar, setNaoPodeFinalizar] = useState(true);
   const [finalizandoMedicao, setFinalizandoMedicao] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const proximosDozeMeses = 12;
@@ -154,12 +154,15 @@ export default () => {
                 getYear(dataBRT).toString(),
             });
             if (!location.search && periodos.length === 1) {
-              history.replace({
-                pathname: location.pathname,
-                search: `?mes=${(getMonth(dataBRT) + 1)
-                  .toString()
-                  .padStart(2, "0")}&ano=${getYear(dataBRT).toString()}`,
-              });
+              navigate(
+                {
+                  pathname: location.pathname,
+                  search: `mes=${(getMonth(dataBRT) + 1)
+                    .toString()
+                    .padStart(2, "0")}&ano=${getYear(dataBRT).toString()}`,
+                },
+                { replace: true }
+              );
             }
           }
         } else {
@@ -306,12 +309,15 @@ export default () => {
       ano
     );
     setLoadingSolicitacaoMedicaoInicial(false);
-    history.replace({
-      pathname: location.pathname,
-      search: `?mes=${format(new Date(value), "MM").toString()}&ano=${getYear(
-        new Date(value)
-      ).toString()}`,
-    });
+    navigate(
+      {
+        pathname: location.pathname,
+        search: `?mes=${format(new Date(value), "MM").toString()}&ano=${getYear(
+          new Date(value)
+        ).toString()}`,
+      },
+      { replace: true }
+    );
   };
 
   const onClickInfoBasicas = async () => {

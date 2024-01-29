@@ -3,7 +3,7 @@ import {
   PRE_RECEBIMENTO,
 } from "configs/constants";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { tipoDeStatusClasse } from "./helper";
 import { validate } from "uuid";
 import "./style.scss";
@@ -18,7 +18,7 @@ export const FluxoDeStatusPreRecebimento = ({
   listaDeStatus,
   itensClicaveisCronograma,
 }: FluxoDeStatusPreRecebimentoProps) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   let ultimoStatus = listaDeStatus.slice(-1)[0];
 
@@ -56,7 +56,7 @@ export const FluxoDeStatusPreRecebimento = ({
         onClick={() => {
           itensClicaveisCronograma &&
             uuidValido &&
-            history.push(
+            navigate(
               `/${PRE_RECEBIMENTO}/${DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${status.justificativa}`
             );
         }}

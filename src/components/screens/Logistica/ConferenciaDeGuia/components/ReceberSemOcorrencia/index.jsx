@@ -13,13 +13,13 @@ import {
 } from "services/logistica.service";
 import { Spin } from "antd";
 import moment from "moment";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 export default ({ values, disabled, uuidEdicao }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -65,7 +65,7 @@ export default ({ values, disabled, uuidEdicao }) => {
   };
 
   const goToConferir = () => {
-    history.push(`/${LOGISTICA}/${CONFERIR_ENTREGA}`);
+    navigate(`/${LOGISTICA}/${CONFERIR_ENTREGA}`);
   };
 
   return (

@@ -7,7 +7,7 @@ import {
 } from "components/Shareable/Botao/constants";
 
 export const ModalVoltarPeriodoLancamento = ({ ...props }) => {
-  const { showModal, closeModal, history } = props;
+  const { showModal, closeModal, navigate } = props;
 
   return (
     <Modal dialogClassName="modal-50w" show={showModal} onHide={closeModal}>
@@ -25,7 +25,7 @@ export const ModalVoltarPeriodoLancamento = ({ ...props }) => {
             className="float-end"
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
-            onClick={() => history.goBack()}
+            onClick={() => navigate(-1)}
             style={BUTTON_STYLE.GREEN}
           />
           <Botao

@@ -1,5 +1,4 @@
 import {
-  PAINEL_LAYOUT_EMBALAGEM,
   PENDENTES_APROVACAO,
   APROVADOS,
   ENVIADOS_PARA_CORRECAO,
@@ -11,7 +10,7 @@ export const CARD_PENDENTES_APROVACAO = {
   icon: "fa-exclamation-triangle",
   style: "card-pendente-assinatura",
   incluir_status: ["ENVIADO_PARA_ANALISE"],
-  href: `${PAINEL_LAYOUT_EMBALAGEM}/${PENDENTES_APROVACAO}`,
+  href: `${PENDENTES_APROVACAO}`,
 };
 
 export const CARD_APROVADOS = {
@@ -20,7 +19,7 @@ export const CARD_APROVADOS = {
   icon: "fa-check",
   style: "card-cronogramas-assinados",
   incluir_status: ["APROVADO"],
-  href: `${PAINEL_LAYOUT_EMBALAGEM}/${APROVADOS}`,
+  href: `${APROVADOS}`,
 };
 
 export const CARD_ENVIADOS_PARA_CORRECAO = {
@@ -29,7 +28,7 @@ export const CARD_ENVIADOS_PARA_CORRECAO = {
   icon: "fa-pencil-alt",
   style: "card-solicitacoes-reprovadas",
   incluir_status: ["SOLICITADO_CORRECAO"],
-  href: `${PAINEL_LAYOUT_EMBALAGEM}/${ENVIADOS_PARA_CORRECAO}`,
+  href: `${ENVIADOS_PARA_CORRECAO}`,
 };
 
 export const cardsAprovacao = [CARD_PENDENTES_APROVACAO, CARD_APROVADOS];

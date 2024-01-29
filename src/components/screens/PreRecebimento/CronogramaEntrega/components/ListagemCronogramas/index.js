@@ -133,41 +133,36 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                             to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${cronograma.uuid}`}
                           >
                             <span className="link-acoes green">
-                              {getAssinarEnviar(cronograma)
-                                ? "Assinar e Enviar"
-                                : "Detalhar"}
+                              {getAssinarEnviar(cronograma) ? (
+                                <i
+                                  className="fas fa-file-signature"
+                                  title="Assinar"
+                                />
+                              ) : (
+                                <i className="fas fa-eye" title="Detalhar" />
+                              )}
                             </span>
                           </NavLink>
 
                           {cronograma.status === "Assinado CODAE" && (
-                            <>
-                              <span className="ms-1">| </span>
-                              <span
-                                className="float-start ms-1 link-acoes green"
-                                onClick={() => baixarPDFCronograma(cronograma)}
-                              >
-                                Imprimir
-                              </span>
-                            </>
+                            <span
+                              className="float-start ms-1 link-acoes green"
+                              onClick={() => baixarPDFCronograma(cronograma)}
+                            >
+                              <i className="fas fa-print" title="Imprimir" />
+                            </span>
                           )}
                           {cronograma.status === "Assinado CODAE" &&
                             (usuarioEhEmpresaFornecedor() ||
                               usuarioEhCronograma()) && (
-                              <>
-                                <span className="ms-1">|</span>
-                                <NavLink
-                                  className="float-start ms-1"
-                                  to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${cronograma.uuid}`}
-                                >
-                                  <span className="link-acoes green">
-                                    {`${
-                                      usuarioEhEmpresaFornecedor()
-                                        ? "Solicitar Alteração"
-                                        : "Alterar Cronograma"
-                                    }`}
-                                  </span>
-                                </NavLink>
-                              </>
+                              <NavLink
+                                className="float-start ms-1"
+                                to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${cronograma.uuid}`}
+                              >
+                                <span className="link-acoes laranja">
+                                  <i className="fas fa-edit" title="Alterar" />
+                                </span>
+                              </NavLink>
                             )}
                         </>
                       ) : (
@@ -177,7 +172,9 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                               className="float-start"
                               to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${cronograma.uuid}`}
                             >
-                              <span className="link-acoes green">Editar</span>
+                              <span className="link-acoes green">
+                                <i className="fas fa-edit" title="Editar" />
+                              </span>
                             </NavLink>
                           )}
                         </>

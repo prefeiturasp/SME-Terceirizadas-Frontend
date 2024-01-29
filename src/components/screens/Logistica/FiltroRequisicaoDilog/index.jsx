@@ -2,7 +2,7 @@ import moment from "moment";
 import React, { useEffect, useReducer, useState, Fragment } from "react";
 import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useNavigationType } from "react-router-dom";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { InputComData } from "components/Shareable/DatePicker";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
@@ -53,10 +53,12 @@ const formatDate = (date) => {
   return moment(date, "DD/MM/YYYY").format("YYYY-MM-DD");
 };
 
-const FiltroRequisicaoDilog = ({ initialValues, history }) => {
+const FiltroRequisicaoDilog = ({ initialValues }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [filtrado, setFiltrado] = useState(false);
   const [requisicoesFiltro, setRequisicoesFiltro] = useState([]);
+
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     async function fetchData() {
@@ -118,7 +120,7 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
         <div className="card-body">
           <Form
             onSubmit={onSubmit}
-            initialValues={history.action === "POP" && initialValues}
+            initialValues={navigationType === "POP" && initialValues}
             render={({ form, handleSubmit, submitting, values }) => (
               <form onSubmit={handleSubmit}>
                 <FinalFormToRedux form={FORM_NAME} />
@@ -232,4 +234,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps)(FiltroRequisicaoDilog));
+export default connect(mapStateToProps)(FiltroRequisicaoDilog);
