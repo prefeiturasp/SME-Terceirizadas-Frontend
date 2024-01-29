@@ -24,7 +24,7 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.5fr 0.6fr 0.3fr 0.7fr 0.7fr 0.75fr;
+      grid-template-columns: 0.5fr 0.6fr 0.3fr 0.7fr 0.7fr 0.4fr;
     }
 
     .header-table {
@@ -69,15 +69,11 @@
         font-weight: 900;
         font-size: 16px;
         line-height: 18px;
-        display: flex;
+        padding-right: 4px;
+        padding-left: 4px;
         align-items: center;
         text-align: center;
         letter-spacing: 0.01em;
-        font-size: 12px !important;
-
-        /* $neutral/dark */
-
-        color: #42474a;
       }
 
       div {
@@ -104,6 +100,10 @@
 
     .verde {
       color: $green;
+    }
+
+    .laranja {
+      color: $orange;
     }
   }
 }

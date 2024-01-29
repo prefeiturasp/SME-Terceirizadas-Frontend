@@ -22,7 +22,12 @@ import {
 } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { useHistory } from "react-router-dom";
-import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
+import {
+  CRONOGRAMA_ENTREGA,
+  PRE_RECEBIMENTO,
+  CADASTRO_CRONOGRAMA,
+  EDITAR,
+} from "configs/constants";
 import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
 import {
@@ -106,12 +111,13 @@ export default () => {
       if (response.status === 201 || response.status === 200) {
         if (rascunho) {
           toastSuccess("Rascunho salvo com sucesso!");
-          buscaRascunhos();
+          history.push(
+            `/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}/?uuid=${response.data.uuid}`
+          );
         } else {
           toastSuccess(
             "Cadastro de Cronograma salvo e enviado para aprovação!"
           );
-          setShowModal(false);
           history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
         }
       } else {
