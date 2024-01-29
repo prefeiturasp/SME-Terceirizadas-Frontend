@@ -49,6 +49,7 @@ import {
 import {
   stringNaoVaziaOuUndefined,
   numberToStringDecimal,
+  numberToStringDecimalMonetario,
 } from "helpers/parsers";
 import {
   formataPayload,
@@ -255,9 +256,8 @@ export default () => {
             crono.ficha_tecnica?.unidade_medida_volume_primaria.uuid;
         }
 
-        cronogramaValues["custo_unitario_produto"] = numberToStringDecimal(
-          crono.custo_unitario_produto
-        );
+        cronogramaValues["custo_unitario_produto"] =
+          numberToStringDecimalMonetario(crono.custo_unitario_produto);
         cronogramaValues["numero"] = crono.numero;
         cronogramaValues["uuid"] = crono.uuid;
         setCronogramaValues(cronogramaValues);
