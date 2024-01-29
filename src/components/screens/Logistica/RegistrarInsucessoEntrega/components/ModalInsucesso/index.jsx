@@ -8,13 +8,13 @@ import {
 import { INSUCESSO_ENTREGA, LOGISTICA } from "configs/constants";
 import { registraInsucessoDeEntrega } from "services/logistica.service";
 import { Spin } from "antd";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 export default ({ values, disabled }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -41,7 +41,7 @@ export default ({ values, disabled }) => {
   };
 
   const goToInsucesso = () => {
-    history.push(`/${LOGISTICA}/${INSUCESSO_ENTREGA}`);
+    navigate(`/${LOGISTICA}/${INSUCESSO_ENTREGA}`);
   };
 
   return (

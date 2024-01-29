@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Spin } from "antd";
-import { withRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -19,13 +19,15 @@ const checaStatus = (obj) =>
   obj.status === CODAE_HOMOLOGADO.toUpperCase() ||
   obj.status === ESCOLA_OU_NUTRICIONISTA_RECLAMOU.toUpperCase();
 
-const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
+const AtivacaoSuspensaoDetalheProduto = () => {
   const [produto, setProduto] = useState(null);
   const [ativo, setAtivo] = useState(false);
   const [acao, setAcao] = useState();
   const [uuid, setUuid] = useState();
   const [status, setStatus] = useState(null);
   const [suspenso, setEhSuspenso] = useState(false);
+
+  const navigate = useNavigate();
 
   const carregaHomologacao = (uuid, suspenso = false) => {
     async function fetchData() {
@@ -71,7 +73,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
                   style={BUTTON_STYLE.GREEN}
                   texto="Voltar"
                   icon={BUTTON_ICON.ARROW_LEFT}
-                  onClick={() => history.goBack()}
+                  onClick={() => navigate(-1)}
                   type={BUTTON_TYPE.BUTTON}
                 />
                 <Botao
@@ -107,7 +109,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
                       style={BUTTON_STYLE.GREEN}
                       texto="Voltar"
                       icon={BUTTON_ICON.ARROW_LEFT}
-                      onClick={() => history.goBack()}
+                      onClick={() => navigate(-1)}
                       type={BUTTON_TYPE.BUTTON}
                     />
                     <Botao
@@ -136,4 +138,4 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
     </Spin>
   );
 };
-export default withRouter(AtivacaoSuspensaoDetalheProduto);
+export default AtivacaoSuspensaoDetalheProduto;

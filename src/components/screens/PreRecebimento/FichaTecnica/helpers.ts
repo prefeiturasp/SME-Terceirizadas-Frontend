@@ -1,7 +1,5 @@
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import createDecorator from "final-form-calculate";
-import { History } from "history";
-
 import { getEnderecoPorCEP } from "services/cep.service";
 import {
   getListaCompletaProdutosLogistica,
@@ -45,6 +43,7 @@ import {
   stringDecimalToNumber,
   stringToBoolean,
 } from "helpers/parsers";
+import { NavigateFunction } from "react-router-dom";
 
 export const formataInformacoesNutricionais = (values: Record<string, any>) => {
   const uuids_informacoes = Object.keys(values)
@@ -548,7 +547,7 @@ export const assinarEnviarFichaTecnica = async (
   payload: FichaTecnicaPayload,
   ficha: FichaTecnicaDetalhada,
   setCarregando: Dispatch<SetStateAction<boolean>>,
-  history: History
+  navigate: NavigateFunction
 ) => {
   try {
     setCarregando(true);
@@ -559,7 +558,7 @@ export const assinarEnviarFichaTecnica = async (
 
     if (response.status === 201 || response.status === 200) {
       toastSuccess("Ficha Técnica Assinada e Enviada com sucesso!");
-      history.push(`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`);
+      navigate(`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`);
     } else {
       toastError("Ocorreu um erro ao assinar e enviar a Ficha Técnica");
     }

@@ -6,7 +6,7 @@ import {
   PAINEL_DOCUMENTOS_RECEBIMENTO,
   PRE_RECEBIMENTO,
 } from "configs/constants";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -46,7 +46,7 @@ import ArquivosTipoRecebimento from "../ArquivosTipoDocumento";
 import OutrosDocumentos from "../OutrosDocumentos";
 
 export default () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [carregando, setCarregando] = useState(true);
   const [objeto, setObjeto] = useState<DocumentosRecebimentoParaAnalise>(
@@ -65,7 +65,7 @@ export default () => {
   );
 
   const voltarPagina = () =>
-    history.push(`/${PRE_RECEBIMENTO}/${PAINEL_DOCUMENTOS_RECEBIMENTO}`);
+    navigate(`/${PRE_RECEBIMENTO}/${PAINEL_DOCUMENTOS_RECEBIMENTO}`);
 
   const carregarDados = async (): Promise<void> => {
     const urlParams = new URLSearchParams(window.location.search);

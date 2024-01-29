@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Spin } from "antd";
 import {
@@ -33,7 +33,7 @@ export default () => {
   const [cronograma, setCronograma] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const esconderLogFornecedor = (logs) => {
     return logs.filter(
@@ -90,7 +90,7 @@ export default () => {
 
   const handleBack = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    history.goBack();
+    navigate(-1);
   };
 
   useEffect(() => {

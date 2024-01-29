@@ -21,7 +21,7 @@ import {
   getUnidadesDeMedidaLogistica,
 } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   CRONOGRAMA_ENTREGA,
   PRE_RECEBIMENTO,
@@ -74,6 +74,7 @@ export default () => {
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
   const [fornecedores, setFornecedores] = useState([{}]);
+  const navigate = useNavigate();
   const [listaRascunhos, setListaRascunhos] = useState(null);
   const [duplicados, setDuplicados] = useState([]);
   const [restante, setRestante] = useState(undefined);
@@ -81,8 +82,6 @@ export default () => {
   const [cronograma, setCronograma] = useState({});
 
   const [initialValues, setInitialValues] = useState();
-
-  const history = useHistory();
 
   const toggleCollapse = (index) => {
     setCollapse({
@@ -112,14 +111,15 @@ export default () => {
       if (response.status === 201 || response.status === 200) {
         if (rascunho) {
           toastSuccess("Rascunho salvo com sucesso!");
-          history.push(
+          navigate(
             `/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}/?uuid=${response.data.uuid}`
           );
         } else {
           toastSuccess(
             "Cadastro de Cronograma salvo e enviado para aprovação!"
           );
-          history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+          setShowModal(false);
+          navigate(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
         }
       } else {
         toastError("Ocorreu um erro ao salvar o Cronograma");

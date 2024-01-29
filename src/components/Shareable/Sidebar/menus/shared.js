@@ -34,7 +34,7 @@ export const SubMenu = ({
 );
 
 export const LeafItem = ({ to, children }) => (
-  <NavLink activeClassName="active" className="collapse-item" to={to}>
+  <NavLink className="collapse-item" to={to}>
     {" "}
     {children}
   </NavLink>
