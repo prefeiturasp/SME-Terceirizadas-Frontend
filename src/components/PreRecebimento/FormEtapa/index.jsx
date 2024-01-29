@@ -157,7 +157,6 @@ export default ({
             array[index] = true;
           }
         });
-        array[0] = true;
         setDesabilitar(array);
       }
     };
