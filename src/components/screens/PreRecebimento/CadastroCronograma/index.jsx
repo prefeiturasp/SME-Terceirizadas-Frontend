@@ -78,9 +78,9 @@ export default () => {
   const [duplicados, setDuplicados] = useState([]);
   const [restante, setRestante] = useState(undefined);
   const [edicao, setEdicao] = useState(false);
-  const [cronogramaValues, setCronogramaValues] = useState({});
-  const [etapasValues, setEtapasValues] = useState({});
-  const [recebimentosValues, setRecebimentosValues] = useState({});
+  const [cronograma, setCronograma] = useState({});
+
+  const [initialValues, setInitialValues] = useState();
 
   const history = useHistory();
 
@@ -107,7 +107,7 @@ export default () => {
 
     try {
       let response = edicao
-        ? await editaCronograma(payload, cronogramaValues.uuid)
+        ? await editaCronograma(payload, cronograma.uuid)
         : await cadastraCronograma(payload);
       if (response.status === 201 || response.status === 200) {
         if (rascunho) {
@@ -143,9 +143,12 @@ export default () => {
       setEdicao(true);
     }
 
-    const carregaPagina = async () => {
-      setCarregando(true);
+    carregaPagina(uuid);
+  }, []);
 
+  const carregaPagina = async (uuid) => {
+    try {
+      setCarregando(true);
       await Promise.all([
         buscaArmazens(),
         buscaFornecedores(),
@@ -153,16 +156,16 @@ export default () => {
         buscaUnidadesMedida(),
         buscaRascunhos(),
       ]);
-
       if (uuid) {
-        await getDadosCronograma(uuid);
+        const responseCronograma = await getCronograma(uuid);
+        setInitialValues(geraInitialValues(responseCronograma.data));
       }
-
+    } catch (error) {
+      exibeError(error, "Ocorreu um erro ao carregar o Cronograma");
+    } finally {
       setCarregando(false);
-    };
-
-    carregaPagina();
-  }, []);
+    }
+  };
 
   const buscaArmazens = async () => {
     const response = await getNomesDistribuidores();
@@ -206,109 +209,100 @@ export default () => {
     }
   };
 
-  const getDadosCronograma = async (uuid) => {
-    try {
-      const responseCronograma = await getCronograma(uuid);
-      if (responseCronograma.status === HTTP_STATUS.OK) {
-        const programacoesDeRecebimento =
-          responseCronograma.data.programacoes_de_recebimento.reverse();
-        setEtapas(responseCronograma.data.etapas);
-        setRecebimentos(programacoesDeRecebimento);
+  const geraInitialValues = (cronograma) => {
+    const programacoesDeRecebimento =
+      cronograma.programacoes_de_recebimento.reverse();
+    setEtapas(cronograma.etapas);
+    setRecebimentos(programacoesDeRecebimento);
+    setEmpresaSelecionada(cronograma.empresa);
+    setContratoSelecionado(cronograma.contrato);
+    setFichaTecnicaSelecionada(cronograma.ficha_tecnica);
 
-        const cronogramaValues = {};
-        const crono = responseCronograma.data;
-        setEmpresaSelecionada(crono.empresa);
-        cronogramaValues["empresa"] = crono.empresa?.nome_fantasia;
-        setContratoSelecionado(crono.contrato);
-        cronogramaValues["contrato"] = crono.contrato?.uuid;
-        cronogramaValues["numero_processo"] = crono.contrato?.processo;
-        cronogramaValues["numero_pregao_chamada_publica"] =
-          crono.contrato?.numero_pregao ||
-          crono.contrato?.numero_chamada_publica;
-        cronogramaValues["ata"] = crono.contrato?.ata;
-        cronogramaValues["quantidade_total"] = formataMilhar(
-          crono.qtd_total_programada
-        );
-        cronogramaValues["unidade_medida"] = crono.unidade_medida?.uuid;
-        cronogramaValues["produto"] = crono.produto?.uuid;
-        cronogramaValues["armazem"] = crono.armazem?.uuid;
+    const cronogramaValues = {};
+    cronogramaValues["empresa"] = cronograma.empresa?.nome_fantasia;
+    cronogramaValues["contrato"] = cronograma.contrato?.uuid;
+    cronogramaValues["numero_processo"] = cronograma.contrato?.processo;
+    cronogramaValues["numero_pregao_chamada_publica"] =
+      cronograma.contrato?.numero_pregao ||
+      cronograma.contrato?.numero_chamada_publica;
+    cronogramaValues["ata"] = cronograma.contrato?.ata;
+    cronogramaValues["quantidade_total"] = formataMilhar(
+      cronograma.qtd_total_programada
+    );
+    cronogramaValues["unidade_medida"] = cronograma.unidade_medida?.uuid;
+    cronogramaValues["produto"] = cronograma.produto?.uuid;
+    cronogramaValues["armazem"] = cronograma.armazem?.uuid;
+    cronogramaValues["ficha_tecnica"] = cronograma.ficha_tecnica?.uuid;
+    cronogramaValues["marca"] = cronograma.ficha_tecnica?.marca.nome;
+    cronogramaValues["peso_liquido_embalagem_primaria"] = numberToStringDecimal(
+      cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria
+    );
+    cronogramaValues["unidade_medida_primaria"] =
+      cronograma.ficha_tecnica?.unidade_medida_primaria.uuid;
+    cronogramaValues["peso_liquido_embalagem_secundaria"] =
+      numberToStringDecimal(
+        cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria
+      );
+    cronogramaValues["unidade_medida_secundaria"] =
+      cronograma.ficha_tecnica?.unidade_medida_secundaria.uuid;
+    cronogramaValues["volume_embalagem_primaria"] = numberToStringDecimal(
+      cronograma.ficha_tecnica?.volume_embalagem_primaria
+    );
+    cronogramaValues["unidade_medida_volume_primaria"] =
+      cronograma.ficha_tecnica?.unidade_medida_volume_primaria?.uuid;
+    cronogramaValues["custo_unitario_produto"] = numberToStringDecimalMonetario(
+      cronograma.custo_unitario_produto
+    );
+    cronogramaValues["numero"] = cronograma.numero;
+    cronogramaValues["uuid"] = cronograma.uuid;
 
-        setFichaTecnicaSelecionada(crono.ficha_tecnica);
-        cronogramaValues["ficha_tecnica"] = crono.ficha_tecnica?.uuid;
-        cronogramaValues["marca"] = crono.ficha_tecnica?.marca.nome;
-        cronogramaValues["peso_liquido_embalagem_primaria"] =
-          numberToStringDecimal(
-            crono.ficha_tecnica?.peso_liquido_embalagem_primaria
-          );
-        cronogramaValues["unidade_medida_primaria"] =
-          crono.ficha_tecnica?.unidade_medida_primaria.uuid;
-        cronogramaValues["peso_liquido_embalagem_secundaria"] =
-          numberToStringDecimal(
-            crono.ficha_tecnica?.peso_liquido_embalagem_secundaria
-          );
-        cronogramaValues["unidade_medida_secundaria"] =
-          crono.ficha_tecnica?.unidade_medida_secundaria.uuid;
-        if (crono.ficha_tecnica?.volume_embalagem_primaria) {
-          cronogramaValues["volume_embalagem_primaria"] = numberToStringDecimal(
-            crono.ficha_tecnica?.volume_embalagem_primaria
-          );
-          cronogramaValues["unidade_medida_volume_primaria"] =
-            crono.ficha_tecnica?.unidade_medida_volume_primaria.uuid;
-        }
+    const etapaValues = {};
+    cronograma.etapas.forEach((etapa, i) => {
+      etapaValues[`empenho_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.numero_empenho
+      );
+      etapaValues[`qtd_total_empenho_${i}`] = numberToStringDecimal(
+        etapa.qtd_total_empenho
+      );
+      etapaValues[`etapa_${i}`] = stringNaoVaziaOuUndefined(etapa.etapa);
+      etapaValues[`parte_${i}`] = stringNaoVaziaOuUndefined(etapa.parte);
+      etapaValues[`data_programada_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.data_programada
+      );
+      etapaValues[`quantidade_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.quantidade
+      );
+      etapaValues[`total_embalagens_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.total_embalagens
+      );
+    });
 
-        cronogramaValues["custo_unitario_produto"] =
-          numberToStringDecimalMonetario(crono.custo_unitario_produto);
-        cronogramaValues["numero"] = crono.numero;
-        cronogramaValues["uuid"] = crono.uuid;
-        setCronogramaValues(cronogramaValues);
+    const recebimentoValues = {};
+    programacoesDeRecebimento.forEach((recebimento, i) => {
+      recebimentoValues[`data_recebimento_${i}`] = stringNaoVaziaOuUndefined(
+        recebimento.data_programada
+      );
+      recebimentoValues[`tipo_recebimento_${i}`] = stringNaoVaziaOuUndefined(
+        recebimento.tipo_carga
+      );
+    });
 
-        const etapaValues = {};
-        responseCronograma.data.etapas.forEach((etapa, i) => {
-          etapaValues[`empenho_${i}`] = stringNaoVaziaOuUndefined(
-            etapa.numero_empenho
-          );
-          etapaValues[`qtd_total_empenho_${i}`] = numberToStringDecimal(
-            etapa.qtd_total_empenho
-          );
-          etapaValues[`etapa_${i}`] = stringNaoVaziaOuUndefined(etapa.etapa);
-          etapaValues[`parte_${i}`] = stringNaoVaziaOuUndefined(etapa.parte);
-          etapaValues[`data_programada_${i}`] = stringNaoVaziaOuUndefined(
-            etapa.data_programada
-          );
-          etapaValues[`quantidade_${i}`] = stringNaoVaziaOuUndefined(
-            etapa.quantidade
-          );
-          etapaValues[`total_embalagens_${i}`] = stringNaoVaziaOuUndefined(
-            etapa.total_embalagens
-          );
-        });
-        setEtapasValues(etapaValues);
+    setCronograma(cronogramaValues);
 
-        const recebimentoValues = {};
-        programacoesDeRecebimento.forEach((recebimento, i) => {
-          recebimentoValues[`data_recebimento_${i}`] =
-            stringNaoVaziaOuUndefined(recebimento.data_programada);
-          recebimentoValues[`tipo_recebimento_${i}`] =
-            stringNaoVaziaOuUndefined(recebimento.tipo_carga);
-        });
-        setRecebimentosValues(recebimentoValues);
-      } else {
-        toastError("Ocorreu um erro ao carregar o Cronograma");
-      }
-    } catch (error) {
-      exibeError(error, "Ocorreu um erro ao carregar o Cronograma");
-    } finally {
-      setCarregando(false);
-    }
+    return {
+      ...cronogramaValues,
+      ...etapaValues,
+      ...recebimentoValues,
+    };
   };
 
-  const onChangeFormSpy = async (changes) => {
+  const onChangeFormSpy = async (changes, form) => {
     if (changes.values.empresa) selecionaEmpresa(changes.values.empresa);
     if (changes.values.contrato) selecionaContrato(changes.values);
     if (changes.values.unidade_medida)
       selecionaUnidade(changes.values.unidade_medida);
     if (changes.values.ficha_tecnica)
-      await selecionaFichaTecnica(changes.values);
+      await selecionaFichaTecnica(changes.values, form);
 
     onChangeEtapas(changes, etapas, setRestante, setDuplicados);
   };
@@ -343,7 +337,7 @@ export default () => {
     }
   };
 
-  const selecionaFichaTecnica = async (values) => {
+  const selecionaFichaTecnica = async (values, form) => {
     const uuidFicha = values.ficha_tecnica;
     if (
       !fichaTecnicaSelecionada ||
@@ -354,22 +348,31 @@ export default () => {
       const response = await getDadosCronogramaFichaTecnica(uuidFicha);
       const fichaTecnica = response.data;
 
-      values.marca = fichaTecnica.marca.nome;
-      values.peso_liquido_embalagem_primaria = numberToStringDecimal(
-        fichaTecnica.peso_liquido_embalagem_primaria
+      form.change("marca", fichaTecnica.marca.nome);
+      form.change(
+        "peso_liquido_embalagem_primaria",
+        numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_primaria)
       );
-      values.unidade_medida_primaria =
-        fichaTecnica.unidade_medida_primaria.uuid;
-      values.peso_liquido_embalagem_secundaria = numberToStringDecimal(
-        fichaTecnica.peso_liquido_embalagem_secundaria
+      form.change(
+        "unidade_medida_primaria",
+        fichaTecnica.unidade_medida_primaria.uuid
       );
-      values.unidade_medida_secundaria =
-        fichaTecnica.unidade_medida_secundaria.uuid;
-      values.volume_embalagem_primaria = numberToStringDecimal(
-        fichaTecnica.volume_embalagem_primaria
+      form.change(
+        "peso_liquido_embalagem_secundaria",
+        numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_secundaria)
       );
-      values.unidade_medida_volume_primaria =
-        fichaTecnica.unidade_medida_volume_primaria?.uuid;
+      form.change(
+        "unidade_medida_secundaria",
+        fichaTecnica.unidade_medida_secundaria.uuid
+      );
+      form.change(
+        "volume_embalagem_primaria",
+        numberToStringDecimal(fichaTecnica.volume_embalagem_primaria)
+      );
+      form.change(
+        "unidade_medida_volume_primaria",
+        fichaTecnica.unidade_medida_volume_primaria?.uuid
+      );
 
       setFichaTecnicaSelecionada(fichaTecnica);
       setCarregando(false);
@@ -384,16 +387,12 @@ export default () => {
           <div className="card-body cadastro-cronograma">
             <Form
               onSubmit={() => setShowModal(true)}
-              initialValues={{
-                ...cronogramaValues,
-                ...etapasValues,
-                ...recebimentosValues,
-              }}
+              initialValues={initialValues}
               render={({ form, handleSubmit, values, errors }) => (
                 <form onSubmit={handleSubmit}>
                   <FormSpy
                     subscription={{ values: true, active: true, valid: true }}
-                    onChange={(changes) => onChangeFormSpy(changes)}
+                    onChange={(changes) => onChangeFormSpy(changes, form)}
                   />
                   <div className="row">
                     {edicao && (
@@ -402,7 +401,7 @@ export default () => {
                           <b>Nº do Cronograma: </b>
 
                           <span className="head-green">
-                            {cronogramaValues.numero}
+                            {cronograma.numero}
                           </span>
                         </p>
                       </div>
@@ -718,9 +717,9 @@ export default () => {
                             <hr className="linha-verde" />
 
                             <FormEtapa
+                              form={form}
                               etapas={etapas}
                               setEtapas={setEtapas}
-                              form={form}
                               values={values}
                               errors={errors}
                               duplicados={duplicados}
