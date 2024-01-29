@@ -659,7 +659,7 @@ export default () => {
                                   component={InputText}
                                   name={`custo_unitario_produto`}
                                   label="Custo Unitário do Produto"
-                                  placeholder="Digite o Custo Unitário do Produto"
+                                  placeholder="Informe o Custo Unitário"
                                   required
                                   proibeLetras
                                   validate={composeValidators(
