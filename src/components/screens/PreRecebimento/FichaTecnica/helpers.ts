@@ -37,19 +37,13 @@ import {
 import { ResponseInformacoesNutricionais } from "interfaces/responses.interface";
 import { InformacaoNutricional } from "interfaces/produto.interface";
 import { MeusDadosInterface } from "context/MeusDadosContext/interfaces";
+import {
+  booleanToString,
+  numberToStringDecimal,
+  stringDecimalToNumber,
+  stringToBoolean,
+} from "helpers/parsers";
 import { NavigateFunction } from "react-router-dom";
-
-export const stringToBoolean = (str: string): boolean =>
-  str === "1" ? true : str === "0" ? false : undefined;
-
-export const booleanToString = (str: boolean): string =>
-  str === true ? "1" : str === false ? "0" : undefined;
-
-export const numberToStringDecimal = (num: number) =>
-  num?.toString().replace(".", ",");
-
-export const stringDecimalToNumber = (str: string) =>
-  str === "0" ? Number(str) : Number(str?.replace(",", ".")) || null;
 
 export const formataInformacoesNutricionais = (values: Record<string, any>) => {
   const uuids_informacoes = Object.keys(values)
