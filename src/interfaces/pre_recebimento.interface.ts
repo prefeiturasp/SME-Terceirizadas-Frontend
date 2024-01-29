@@ -235,6 +235,23 @@ export interface FichaTecnicaDetalhada {
   informacoes_adicionais: string;
 }
 
+export interface FichaTecnicaSimples {
+  uuid: string;
+  numero_e_produto: string;
+  uuid_empresa: string;
+}
+
+export interface DadosCronogramaFichaTecnica {
+  uuid: string;
+  marca: MarcaSimples;
+  volume_embalagem_primaria: number;
+  unidade_medida_volume_primaria: UnidadeMedidaSimples;
+  peso_liquido_embalagem_primaria: number;
+  unidade_medida_primaria: UnidadeMedidaSimples;
+  peso_liquido_embalagem_secundaria: number;
+  unidade_medida_secundaria: UnidadeMedidaSimples;
+}
+
 export interface EtapaCalendario {
   data_programada: string;
   etapa: string;
