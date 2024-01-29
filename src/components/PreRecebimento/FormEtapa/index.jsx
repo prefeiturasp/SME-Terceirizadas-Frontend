@@ -11,7 +11,7 @@ import {
 import InputText from "components/Shareable/Input/InputText";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { InputComData } from "components/Shareable/DatePicker";
-import SelectSelecione from "components/Shareable/SelectSelecione";
+import Select from "components/Shareable/Select";
 import { getEtapas } from "services/cronograma.service";
 import { getFeriadosAnoAtualEProximo } from "services/diasUteis.service";
 import { deletaValues } from "helpers/formHelper";
@@ -242,9 +242,13 @@ export default ({
               </div>
               <div className="col">
                 <Field
-                  component={SelectSelecione}
+                  component={Select}
                   naoDesabilitarPrimeiraOpcao
                   options={[
+                    {
+                      uuid: "",
+                      nome: "Selecione a Parte",
+                    },
                     {
                       uuid: "Parte 1",
                       nome: "Parte 1",
@@ -268,7 +272,6 @@ export default ({
                   ]}
                   label="Parte"
                   name={`parte_${index}`}
-                  placeholder={"Selecione a Parte"}
                   validate={() =>
                     duplicados.includes(index) && "Parte já selecionada"
                   }
