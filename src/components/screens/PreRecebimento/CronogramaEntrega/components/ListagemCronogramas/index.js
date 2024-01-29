@@ -62,7 +62,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
   };
 
   return (
-    <section className="resultado-cronograma-de-entrega">
+    <section className="resultado-cronograma-de-entrega mt-5">
       <header>
         <div className="row">
           <div className="col-5">

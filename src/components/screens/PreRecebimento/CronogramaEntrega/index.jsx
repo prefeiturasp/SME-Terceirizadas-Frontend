@@ -88,7 +88,6 @@ export default () => {
 
           {cronogramas && (
             <>
-              <hr />
               <ListagemCronogramas
                 cronogramas={cronogramas}
                 ativos={ativos}
