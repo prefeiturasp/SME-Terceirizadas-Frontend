@@ -900,11 +900,14 @@ export const formatarLinhasTabelaDietaEnteral = (
   const indexRefeicaoDieta = tipos_alimentacao.findIndex(
     (ali) => ali.nome === "Refeição"
   );
-  linhasTabelasDietas.splice(linhasTabelasDietas.length - 1, 0, {
-    nome: "Refeição",
-    name: "refeicao",
-    uuid: tipos_alimentacao[indexRefeicaoDieta].uuid,
-  });
+
+  if (indexRefeicaoDieta >= 0) {
+    linhasTabelasDietas.splice(linhasTabelasDietas.length - 1, 0, {
+      nome: "Refeição",
+      name: "refeicao",
+      uuid: tipos_alimentacao[indexRefeicaoDieta].uuid,
+    });
+  }
 
   return linhasTabelasDietas;
 };
