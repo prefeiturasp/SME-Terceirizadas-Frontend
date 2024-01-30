@@ -141,6 +141,7 @@ export const CardLancamentoCEI = ({
           mesAnoSelecionado: periodoSelecionado,
           status_periodo: getStatusPeriodo(),
           status_solicitacao: solicitacaoMedicaoInicial.status,
+          escola: solicitacaoMedicaoInicial.escola,
           justificativa_periodo: justificativaPeriodo(
             quantidadeAlimentacoesLancadas,
             null,

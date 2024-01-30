@@ -208,7 +208,6 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
   const location = useLocation();
   let mesAnoDefault = new Date();
 
-  const grupoLocation = location && location.state && location.state.grupo;
   const ehEmeiDaCemeiLocation =
     location && location.state && location.state.ehEmeiDaCemei;
   const ehSolicitacoesAlimentacaoLocation =
@@ -2179,7 +2178,6 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           validacaoDiaLetivo,
                                                           validacaoSemana,
                                                           location,
-                                                          grupoLocation,
                                                           valoresPeriodosLancamentos,
                                                           feriadosNoMes,
                                                           null,
@@ -2371,7 +2369,6 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           validacaoDiaLetivo,
                                                           validacaoSemana,
                                                           location,
-                                                          grupoLocation,
                                                           valoresPeriodosLancamentos,
                                                           feriadosNoMes,
                                                           row.uuid,
