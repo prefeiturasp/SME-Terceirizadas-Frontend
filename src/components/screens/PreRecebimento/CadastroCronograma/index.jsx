@@ -638,6 +638,7 @@ export default () => {
                                   agrupadorMilhar
                                   required
                                   placeholder="Informe a Quantidade Total"
+                                  validate={required}
                                 />
                               </div>
                               <div className="col-3">
