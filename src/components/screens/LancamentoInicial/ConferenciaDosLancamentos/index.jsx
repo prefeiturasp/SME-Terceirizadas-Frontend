@@ -922,7 +922,7 @@ export const ConferenciaDosLancamentos = () => {
                             }
                             disabled={
                               desabilitarEnviarParaCodaeECodaeAprovar ||
-                              (usuarioEhMedicao() &&
+                              ((usuarioEhMedicao() || usuarioEhDRE()) &&
                                 desabilitaBotaoExportarPDF())
                             }
                             tooltipExterno={
