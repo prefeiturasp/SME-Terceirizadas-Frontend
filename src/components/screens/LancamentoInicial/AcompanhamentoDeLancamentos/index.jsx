@@ -683,7 +683,10 @@ export const AcompanhamentoDeLancamentos = () => {
                                                 dado.status
                                               )
                                             }
-                                            disabled={desabilitaAcoes(dado)}
+                                            disabled={
+                                              desabilitaAcoes(dado) &&
+                                              !usuarioEhDRE()
+                                            }
                                             tooltipExterno={getTooltipAcoes(
                                               dado
                                             )}
