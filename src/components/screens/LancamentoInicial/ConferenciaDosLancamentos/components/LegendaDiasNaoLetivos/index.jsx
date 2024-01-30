@@ -1,5 +1,6 @@
 import React from "react";
 import { ehFimDeSemana } from "helpers/utilities";
+import { validacaoSemana } from "../../../PeriodoLancamentoMedicaoInicial/helper";
 
 import "./style.scss";
 
@@ -13,6 +14,7 @@ export const LegendaDiasNaoLetivos = ({ ...props }) => {
     values,
     categoria,
     periodoGrupo,
+    semanaSelecionada,
   } = props;
 
   const getListaDiasLabels = () => {
@@ -46,10 +48,11 @@ export const LegendaDiasNaoLetivos = ({ ...props }) => {
         );
       })
       .forEach((diaFeriado) => {
-        listaDiasLabels.push({
-          dia: diaFeriado.dia,
-          label: `Feriado: ${diaFeriado.feriado}`,
-        });
+        !validacaoSemana(diaFeriado.dia, semanaSelecionada) &&
+          listaDiasLabels.push({
+            dia: diaFeriado.dia,
+            label: `Feriado: ${diaFeriado.feriado}`,
+          });
       });
 
     diasCalendario
@@ -96,6 +99,7 @@ export const LegendaDiasNaoLetivos = ({ ...props }) => {
             .padStart(2, "0")}`
         );
         !ehFimDeSemana(dateObj) &&
+          !validacaoSemana(diaCalendario.dia, semanaSelecionada) &&
           listaDiasLabels.push({
             dia: diaCalendario.dia,
             label: "Dia não letivo",
