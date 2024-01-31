@@ -433,7 +433,8 @@ export default ({ analiseSolicitacao }) => {
                       />
                     </div>
                     {((usuarioEhDinutreDiretoria() &&
-                      solicitacaoAlteracaoCronograma.status !== "Em análise") ||
+                      solicitacaoAlteracaoCronograma.status !== "Em análise" &&
+                      values.justificativa_cronograma) ||
                       (usuarioEhDilogDiretoria() &&
                         analisadoPelaDinutre())) && (
                       <>
@@ -448,25 +449,31 @@ export default ({ analiseSolicitacao }) => {
                           />
                         </div>
                         <hr />
-                        <p className="head-green">Análise DINUTRE</p>
+
                         {usuarioEhDinutreDiretoria() &&
                           solicitacaoAlteracaoCronograma.status ===
                             "Cronograma ciente" && (
-                            <Radio.Group
-                              size="large"
-                              onChange={onChangeCampos}
-                              value={aprovacaoDinutre}
-                            >
-                              <Radio className="radio-entrega-sim" value={true}>
-                                Analise Aprovada
-                              </Radio>
-                              <Radio
-                                className="radio-entrega-nao"
-                                value={false}
+                            <>
+                              <p className="head-green">Análise DINUTRE</p>
+                              <Radio.Group
+                                size="large"
+                                onChange={onChangeCampos}
+                                value={aprovacaoDinutre}
                               >
-                                Analise Reprovada
-                              </Radio>
-                            </Radio.Group>
+                                <Radio
+                                  className="radio-entrega-sim"
+                                  value={true}
+                                >
+                                  Analise Aprovada
+                                </Radio>
+                                <Radio
+                                  className="radio-entrega-nao"
+                                  value={false}
+                                >
+                                  Analise Reprovada
+                                </Radio>
+                              </Radio.Group>
+                            </>
                           )}
                         {exibirJustificativaDinutre() && (
                           <div className="mt-4">
