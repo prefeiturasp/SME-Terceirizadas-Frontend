@@ -237,11 +237,11 @@ export const formataMilhar = (value) => {
 };
 
 export const truncarString = (str, numeroMaximoChars) => {
-  if (str.length > numeroMaximoChars) {
-    return str.slice(0, numeroMaximoChars) + "...";
-  } else {
-    return str;
-  }
+  if (!str) return "";
+
+  return str.length > numeroMaximoChars
+    ? str.slice(0, numeroMaximoChars) + "..."
+    : str;
 };
 
 export const deepCopy = (obj) => {
