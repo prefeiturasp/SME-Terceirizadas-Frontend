@@ -17,7 +17,7 @@ export const EditaisContratosRefatorado = () => {
     <div className="form-editais-contratos">
       <div className="card mt-3">
         <div className="card-body">
-          <div className="row">
+          <div className="row mt-3 mb-3">
             <div className="col-6">
               <div className="title">Novo Cadastro de Editais e Contratos</div>
             </div>
@@ -38,6 +38,7 @@ export const EditaisContratosRefatorado = () => {
                       component={InputText}
                       label="Tipo de contratação"
                       name="tipo_contratacao"
+                      placeholder="Digite o tipo de contratação"
                       required
                       validate={required}
                       max={50}
@@ -49,6 +50,7 @@ export const EditaisContratosRefatorado = () => {
                       className="form-control"
                       label="N° do Edital"
                       name="edital_numero"
+                      placeholder="Digite o número do edital"
                       required
                       validate={required}
                       max={50}
@@ -59,6 +61,7 @@ export const EditaisContratosRefatorado = () => {
                       component={InputText}
                       label="Nº do processo administrativo"
                       name="processo_administrativo"
+                      placeholder="Digite o número do processo"
                       required
                       validate={required}
                       max={50}
@@ -75,6 +78,13 @@ export const EditaisContratosRefatorado = () => {
                       validate={required}
                       height="120"
                     />
+                  </div>
+                </div>
+                <div className="row mt-3 mb-3">
+                  <div className="col-12">
+                    <div className="title">
+                      <span>Contratos Relacionados</span>
+                    </div>
                   </div>
                 </div>
               </form>

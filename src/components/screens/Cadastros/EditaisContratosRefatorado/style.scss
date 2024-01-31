@@ -1,9 +1,21 @@
 @import "styles/variables.scss";
 
 div.form-editais-contratos {
-  .title {
+  div.title {
     color: $green;
     font-size: 16px;
     font-weight: bold;
+    overflow: hidden;
+
+    span::after {
+      content: "";
+      display: inline-block;
+      height: 0.5em;
+      vertical-align: bottom;
+      width: 100%;
+      margin-right: -100%;
+      margin-left: 10px;
+      border-top: 1px solid $grayDisabled;
+    }
   }
 }
