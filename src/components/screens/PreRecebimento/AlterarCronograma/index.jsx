@@ -147,7 +147,7 @@ export default ({ analiseSolicitacao }) => {
     });
     values.quantidade_total = formataMilhar(cronograma.qtd_total_programada);
     values.unidade_medida = cronograma.unidade_medida;
-    values.peso_liquido_embalagem_secundaria = cronograma.ficha_tecnica.peso_liquido_embalagem_secundaria.toString();
+    values.peso_liquido_embalagem_secundaria = cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria?.toString();
     setInitialValues(values);
   };
 
