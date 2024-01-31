@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 
 import CollapseFiltros from "components/Shareable/CollapseFiltros";
-import Botao from "components/Shareable/Botao";
-import {
-  BUTTON_ICON,
-  BUTTON_STYLE,
-  BUTTON_TYPE,
-} from "components/Shareable/Botao/constants";
 import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
 
 import FormFiltro from "./components/FormFiltro";
@@ -44,8 +38,6 @@ export default () => {
       anos: [getAnoVigente()],
     });
   };
-
-  const exportarPDF = () => {};
 
   return (
     <div className="card mt-3">
@@ -90,16 +82,6 @@ export default () => {
             />
           </div>
         )}
-
-        <div className="d-flex justify-content-end mt-5">
-          <Botao
-            texto="Baixar PDF"
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            icon={BUTTON_ICON.FILE_PDF}
-            type={BUTTON_TYPE.BUTTON}
-            onClick={() => exportarPDF()}
-          />
-        </div>
       </div>
     </div>
   );
