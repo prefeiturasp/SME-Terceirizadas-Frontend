@@ -27,6 +27,11 @@ import {
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 import { usuarioEhCodaeDilog } from "../../../../../../helpers/utilities";
 
+const TIPO_CARGA_MAP = {
+  PALETIZADA: "Paletizada",
+  ESTIVADA_BATIDA: "Estivada/Batida",
+};
+
 export default () => {
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
@@ -52,14 +57,6 @@ export default () => {
         }
         setCronograma(responseCronograma.data);
       }
-    }
-  };
-
-  const converte_tipo_carga = (tipo) => {
-    if (tipo === "PALETIZADA") {
-      return "Paletizada";
-    } else if (tipo === "ESTIVADA_BATIDA") {
-      return "Estivada/Batida";
     }
   };
 
@@ -99,16 +96,14 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={!cronograma || carregando}>
-      <div className="card mt-3">
+      <div className="card mt-3 card-detalhar-cronograma">
         <div className="card-body">
           {cronograma && (
             <>
               {cronograma.logs && (
                 <>
                   <div className="row pb-3">
-                    <p className="head-green mt-3 ms-3 mb-5">
-                      Status do Cronograma
-                    </p>
+                    <p className="head-green mt-3 mb-5">Status do Cronograma</p>
                     <FluxoDeStatusPreRecebimento
                       listaDeStatus={cronograma.logs}
                       itensClicaveisCronograma
@@ -117,33 +112,36 @@ export default () => {
                   <hr className="hr-detalhar" />
                 </>
               )}
+
               <DadosCronograma cronograma={cronograma} />
+
               <hr className="hr-detalhar" />
-              <p className="head-green mt-3">Dados do Recebimento</p>
-              <br />
+
+              <div className="row mt-3">
+                <div className="col">
+                  <p className="head-green">Dados do Recebimento</p>
+                </div>
+              </div>
+
               {cronograma.programacoes_de_recebimento.length > 0 &&
                 cronograma.programacoes_de_recebimento
                   .reverse()
                   .map((programacao, key) => {
                     return (
-                      <>
-                        <div key={key} className="row mb-3">
-                          <div className="col-3">
-                            <p>Data Programada:</p>
-                            <p>
-                              <b>{programacao.data_programada}</b>
-                            </p>
-                          </div>
-                          <div className="col-3">
-                            <p>Tipo de Carga:</p>
-                            <p>
-                              <b>
-                                {converte_tipo_carga(programacao.tipo_carga)}
-                              </b>
-                            </p>
-                          </div>
+                      <div key={key} className="row mb-3">
+                        <div className="col-3">
+                          <p>Data Programada:</p>
+                          <p>
+                            <b>{programacao.data_programada}</b>
+                          </p>
                         </div>
-                      </>
+                        <div className="col-3">
+                          <p>Tipo de Carga:</p>
+                          <p>
+                            <b>{TIPO_CARGA_MAP[programacao.tipo_carga]}</b>
+                          </p>
+                        </div>
+                      </div>
                     );
                   })}
               <br />
