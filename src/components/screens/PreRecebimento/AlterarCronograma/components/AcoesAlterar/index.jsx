@@ -28,10 +28,12 @@ export default ({
   disabledDilog,
 }) => {
   const [show, setShow] = useState(false);
+  const [showVoltar, setShowVoltar] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleShowVoltar = () => setShowVoltar(true);
 
   const enviaAnaliseCronograma = async (values) => {
     setLoading(true);
@@ -187,9 +189,9 @@ export default ({
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN_OUTLINE}
         className="float-end ms-3"
-        onClick={() => handleShow()}
+        onClick={() => handleShowVoltar()}
       />
-      <ModalVoltar modalVoltar={show} setModalVoltar={handleClose} />
+      <ModalVoltar modalVoltar={showVoltar} setModalVoltar={handleClose} />
     </>
   );
 };
