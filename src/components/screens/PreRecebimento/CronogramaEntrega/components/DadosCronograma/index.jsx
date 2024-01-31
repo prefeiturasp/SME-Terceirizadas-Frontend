@@ -153,7 +153,7 @@ export default ({
               <p>
                 <b>
                   {cronograma.custo_unitario_produto
-                    .toFixed(2)
+                    ?.toFixed(2)
                     .replace(".", ",")}
                 </b>
               </p>
