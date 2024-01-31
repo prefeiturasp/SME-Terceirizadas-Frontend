@@ -18,6 +18,7 @@ export const TextArea = (props) => {
     maxLength,
     contador,
     valorInicial,
+    height,
   } = props;
   return (
     <div className="textarea">
@@ -32,6 +33,7 @@ export const TextArea = (props) => {
         </label>,
       ]}
       <textarea
+        style={height && { height: height + "px" }}
         {...input}
         className={`form-control ${className} ${
           meta.touched && meta.error && "invalid-field"
