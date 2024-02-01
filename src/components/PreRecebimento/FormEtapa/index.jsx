@@ -182,6 +182,7 @@ export default ({
                       className="float-end ms-3"
                       onClick={() => deletaEtapa(index)}
                       tooltipExterno="Remover Etapa"
+                      disabled={desabilitar[index]}
                     />
                   </div>
                 </div>

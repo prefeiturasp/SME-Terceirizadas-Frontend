@@ -30,6 +30,7 @@ import { atualizacaoLayoutEmbalagem } from "../../../../../../services/layoutEmb
 import ModalAtualizar from "./components/ModalAtualizar";
 import InserirArquivo from "../InserirArquivo";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
+import { getMensagemDeErro } from "../../../../../../helpers/statusErrors";
 
 const TITULOS_SECOES_TIPOS_EMBALAGENS = {
   PRIMARIA: "Embalagem Primária",
@@ -339,16 +340,17 @@ export default ({ atualizar }) => {
     const uuid = urlParams.get("uuid");
     const payload = formataPayload(values);
     const response = await corrigirLayoutEmbalagem(uuid, payload);
-
-    if (response.status === 200) {
-      toastSuccess("Correção Enviada com sucesso!");
-      setShowModal(false);
-      voltarPagina();
-    } else {
-      toastError("Ocorreu um erro ao salvar o Layout da Embalagem");
+    try {
+      if (response.status === 200) {
+        toastSuccess("Correção Enviada com sucesso!");
+        setShowModal(false);
+        voltarPagina();
+      }
+    } catch (error) {
+      toastError(getMensagemDeErro(error.response.status));
+    } finally {
+      setCarregando(false);
     }
-
-    setCarregando(false);
   };
 
   const atualizarLayoutEmbalagem = async (values) => {

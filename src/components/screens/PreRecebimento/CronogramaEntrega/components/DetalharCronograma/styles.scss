@@ -1,17 +1,28 @@
 @import "styles/variables.scss";
 
+.card-detalhar-cronograma {
+  min-height: 65vh;
+
+  .card-body {
+    height: 100%;
+  }
+}
+
 .head-green {
   color: $green;
   font-size: 18px;
   font-weight: bold;
 }
+
 .borda-crono {
   border: solid 1px rgba(241, 241, 241, 0.932) !important;
 }
+
 .head-crono {
   background-color: rgba(241, 241, 241, 0.932);
   color: rgba(0, 0, 0, 0.562);
 }
+
 .hr-detalhar {
   margin-top: 25px;
   margin-bottom: 25px;
