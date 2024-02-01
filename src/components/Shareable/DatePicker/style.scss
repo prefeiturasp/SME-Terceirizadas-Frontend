@@ -1,17 +1,20 @@
-@import "../../../styles/variables.scss";
+@import "styles/variables.scss";
 
 div.datepicker {
   span.required-asterisk {
     color: $red;
     padding-right: 5px;
   }
+
   .react-datepicker__day--selected,
   .react-datepicker__day--keyboard-selected {
     background-color: $green;
   }
+
   .react-datepicker__close-icon {
     display: none;
   }
+
   .fa-calendar-alt {
     z-index: 0;
     cursor: text;
@@ -19,28 +22,38 @@ div.datepicker {
     color: $green;
     position: relative;
   }
+
   div.react-datepicker-wrapper {
     width: 100%;
     margin-right: -30px;
+
     .react-datepicker__input-container {
       input {
         height: 38px;
         font-size: 14px;
         color: $blackInput;
+
         &.invalid-field:not(:focus) {
           box-shadow: none;
           border-color: $red;
         }
+
+        &::placeholder {
+          font-weight: normal;
+        }
       }
     }
   }
+
   .input-group {
     &.calendar {
+      display: -webkit-inline-box;
+
       input {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
       }
-      display: -webkit-inline-box;
+
       .input-group-prepend {
         align-items: flex-end;
         .input-group-text {
@@ -50,20 +63,25 @@ div.datepicker {
         }
       }
     }
+
     &.active-calendar {
       display: -webkit-inline-box;
+
       i {
         color: #2881bb;
       }
+
       input {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
         border: none;
       }
+
       .input-group-prepend {
         @media only screen and (max-width: 1650px) {
           margin-top: 1px;
         }
+
         .input-group-text {
           display: block;
           min-width: 140px;
@@ -73,18 +91,21 @@ div.datepicker {
           color: #2881bb;
         }
       }
+
       .react-datepicker__input-container {
         background: #e4f1ff;
         border: 1px solid #2881bb;
         color: #2881bb;
         border-top-right-radius: 6px;
         border-bottom-right-radius: 6px;
+
         .form-control {
           color: #2881bb;
         }
       }
     }
   }
+
   .col-form-label {
     font-size: 14px;
   }

@@ -1,14 +1,17 @@
-import React from "react";
 import { Botao } from "components/Shareable/Botao";
-import { InputText } from "components/Shareable/Input/InputText";
-import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import "./style.scss";
-import { Field, Form } from "react-final-form";
+import { InputComData } from "components/Shareable/DatePicker";
+import { InputText } from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { required } from "helpers/fieldValidators";
+import React from "react";
+import { Field, Form } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
+import arrayMutators from "final-form-arrays";
+import "./style.scss";
 
 const onSubmit = () => {};
 
@@ -29,8 +32,35 @@ export const EditaisContratosRefatorado = () => {
               />
             </div>
           </div>
-          <Form onSubmit={onSubmit}>
-            {({ handleSubmit }) => (
+          <Form
+            mutators={{
+              ...arrayMutators,
+            }}
+            initialValues={{
+              contratos: [
+                {
+                  processo_administrativo: undefined,
+                  data_proposta: undefined,
+                  vigencias: [
+                    {
+                      numero_contrato: undefined,
+                      data_inicial: undefined,
+                      data_final: undefined,
+                    },
+                  ],
+                },
+              ],
+            }}
+            onSubmit={onSubmit}
+          >
+            {({
+              handleSubmit,
+              form,
+              form: {
+                mutators: { push },
+              },
+              values,
+            }) => (
               <form onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="col-4">
@@ -87,6 +117,112 @@ export const EditaisContratosRefatorado = () => {
                     </div>
                   </div>
                 </div>
+                <FieldArray name="contratos">
+                  {({ fields }) =>
+                    fields.map((name_contratos, index_contratos) => (
+                      <div key={name_contratos}>
+                        <div className="row">
+                          <div className="col-8">
+                            <Field
+                              name={`${name_contratos}.processo_administrativo`}
+                              label="Processo administrativo do contrato"
+                              placeholder="Digite o processo administrativo"
+                              component={InputText}
+                              required
+                              validate={required}
+                              max={50}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <Field
+                              name={`${name_contratos}.data_proposta`}
+                              label="Data da proposta"
+                              placeholder="Selecione a data da proposta"
+                              component={InputComData}
+                              validate={required}
+                              minDate={null}
+                              required
+                            />
+                          </div>
+                        </div>
+                        <FieldArray name={`${name_contratos}.vigencias`}>
+                          {({ fields }) =>
+                            fields.map((name_vigencias, index) => (
+                              <div key={name_vigencias}>
+                                <div className="row">
+                                  {index === 0 && (
+                                    <div className="col-4">
+                                      <Field
+                                        name={`${name_contratos}.${name_vigencias}.numero_contrato`}
+                                        component={InputText}
+                                        label="Nº do Contrato"
+                                        placeholder="Digite o número do contrato"
+                                        required
+                                        validate={required}
+                                      />
+                                    </div>
+                                  )}
+                                  <div className="col-4">
+                                    <Field
+                                      component={InputComData}
+                                      label="Vigência"
+                                      name={`${name_contratos}.${name_vigencias}.data_inicial`}
+                                      placeholder="DE"
+                                      writable={false}
+                                      minDate={null}
+                                      required
+                                    />
+                                  </div>
+                                  <div className="col-4">
+                                    <Field
+                                      component={InputComData}
+                                      label="&nbsp;"
+                                      name={`${name_contratos}.${name_vigencias}.data_final`}
+                                      placeholder="ATÉ"
+                                      writable={false}
+                                      maxDate={null}
+                                    />
+                                  </div>
+                                  {index > 0 && (
+                                    <div className="col-2 mt-auto mb-2">
+                                      <Botao
+                                        texto="Remover"
+                                        type={BUTTON_TYPE.BUTTON}
+                                        onClick={() => {
+                                          form.change(
+                                            `contratos[${index_contratos}].vigencias`,
+                                            values.contratos[
+                                              index_contratos
+                                            ].vigencias.filter(
+                                              (_, i) => i !== index
+                                            )
+                                          );
+                                        }}
+                                        style={BUTTON_STYLE.RED_OUTLINE}
+                                      />
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ))
+                          }
+                        </FieldArray>
+                        <div className="row mt-3">
+                          <div className="col-12">
+                            <Botao
+                              texto="Adicionar Vigência"
+                              onClick={() =>
+                                push(`${name_contratos}.vigencias`)
+                              }
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              type={BUTTON_TYPE.BUTTON}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </FieldArray>
               </form>
             )}
           </Form>
