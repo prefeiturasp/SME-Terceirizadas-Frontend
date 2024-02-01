@@ -58,7 +58,7 @@ export const EditaisContratosRefatorado = () => {
               form,
               submitting,
               form: {
-                mutators: { pop, push },
+                mutators: { push },
               },
               values,
             }) => (
@@ -146,7 +146,7 @@ export const EditaisContratosRefatorado = () => {
                             />
                           </div>
                         </div>
-                        <FieldArray name={`vigencias`}>
+                        <FieldArray name={`${name_contratos}.vigencias`}>
                           {({ fields }) =>
                             fields.map((name_vigencias, index) => (
                               <div key={name_vigencias}>
@@ -154,7 +154,7 @@ export const EditaisContratosRefatorado = () => {
                                   {index === 0 && (
                                     <div className="col-4">
                                       <Field
-                                        name={`${name_contratos}.${name_vigencias}.numero_contrato`}
+                                        name={`${name_vigencias}.numero_contrato`}
                                         component={InputText}
                                         label="Nº do Contrato"
                                         placeholder="Digite o número do contrato"
@@ -167,7 +167,7 @@ export const EditaisContratosRefatorado = () => {
                                     <Field
                                       component={InputComData}
                                       label="Vigência"
-                                      name={`${name_contratos}.${name_vigencias}.data_inicial`}
+                                      name={`${name_vigencias}.data_inicial`}
                                       placeholder="DE"
                                       writable={false}
                                       minDate={null}
@@ -178,7 +178,7 @@ export const EditaisContratosRefatorado = () => {
                                     <Field
                                       component={InputComData}
                                       label="&nbsp;"
-                                      name={`${name_contratos}.${name_vigencias}.data_final`}
+                                      name={`${name_vigencias}.data_final`}
                                       placeholder="ATÉ"
                                       writable={false}
                                       maxDate={null}
@@ -198,7 +198,6 @@ export const EditaisContratosRefatorado = () => {
                                               (_, i) => i !== index
                                             )
                                           );
-                                          pop(`vigencias`);
                                         }}
                                         style={BUTTON_STYLE.RED_OUTLINE}
                                       />
@@ -213,7 +212,9 @@ export const EditaisContratosRefatorado = () => {
                           <div className="col-12">
                             <Botao
                               texto="Adicionar Vigência"
-                              onClick={() => push(`vigencias`)}
+                              onClick={() =>
+                                push(`${name_contratos}.vigencias`)
+                              }
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                               type={BUTTON_TYPE.BUTTON}
                             />
