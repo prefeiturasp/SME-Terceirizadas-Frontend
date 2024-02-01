@@ -33,7 +33,7 @@ const ListagemAlteracoesCronogramas = ({
     } else {
       return (
         <span className={`link-acoes green px-2`}>
-          <i className="fas fa-eye" title="Visualizar" />
+          <i className="fas fa-eye" title="Detalhar" />
         </span>
       );
     }
