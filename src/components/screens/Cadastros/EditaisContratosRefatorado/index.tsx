@@ -56,8 +56,9 @@ export const EditaisContratosRefatorado = () => {
             {({
               handleSubmit,
               form,
+              submitting,
               form: {
-                mutators: { push },
+                mutators: { pop, push },
               },
               values,
             }) => (
@@ -145,7 +146,7 @@ export const EditaisContratosRefatorado = () => {
                             />
                           </div>
                         </div>
-                        <FieldArray name={`${name_contratos}.vigencias`}>
+                        <FieldArray name={`vigencias`}>
                           {({ fields }) =>
                             fields.map((name_vigencias, index) => (
                               <div key={name_vigencias}>
@@ -197,6 +198,7 @@ export const EditaisContratosRefatorado = () => {
                                               (_, i) => i !== index
                                             )
                                           );
+                                          pop(`vigencias`);
                                         }}
                                         style={BUTTON_STYLE.RED_OUTLINE}
                                       />
@@ -211,9 +213,7 @@ export const EditaisContratosRefatorado = () => {
                           <div className="col-12">
                             <Botao
                               texto="Adicionar Vigência"
-                              onClick={() =>
-                                push(`${name_contratos}.vigencias`)
-                              }
+                              onClick={() => push(`vigencias`)}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                               type={BUTTON_TYPE.BUTTON}
                             />
@@ -223,6 +223,16 @@ export const EditaisContratosRefatorado = () => {
                     ))
                   }
                 </FieldArray>
+                <div className="row">
+                  <div className="col-12 text-end">
+                    <Botao
+                      texto="Salvar"
+                      disabled={submitting}
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                    />
+                  </div>
+                </div>
               </form>
             )}
           </Form>
