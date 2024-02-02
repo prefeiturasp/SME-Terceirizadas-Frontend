@@ -7,15 +7,33 @@ div.form-editais-contratos {
     font-weight: bold;
     overflow: hidden;
 
-    span::after {
-      content: "";
-      display: inline-block;
-      height: 0.5em;
-      vertical-align: bottom;
-      width: 100%;
-      margin-right: -100%;
-      margin-left: 10px;
-      border-top: 1px solid $grayDisabled;
+    span.com-linha {
+      &.w-100::after {
+        content: "";
+        display: inline-block;
+        height: 0.5em;
+        vertical-align: bottom;
+        width: 100%;
+        margin-right: -100%;
+        margin-left: 10px;
+        border-top: 1px solid $grayDisabled;
+      }
+
+      &.w-78::after {
+        content: "";
+        display: inline-block;
+        height: 0.5em;
+        vertical-align: bottom;
+        width: 78%;
+        margin-right: -100%;
+        margin-left: 10px;
+        border-top: 1px solid $grayDisabled;
+      }
+    }
+
+    span.remover {
+      color: $red;
+      cursor: pointer;
     }
   }
 

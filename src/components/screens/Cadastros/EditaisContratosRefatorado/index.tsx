@@ -102,13 +102,15 @@ export const EditaisContratosRefatorado = () => {
 
   const onSubmit = () => {};
 
+  const REQUISICOES_FINALIZADAS = !loading && lotes && DREs && empresas;
+
   return (
-    <Spin tip="Carregando..." spinning={loading}>
+    <Spin tip="Carregando..." spinning={!REQUISICOES_FINALIZADAS}>
       <div className="form-editais-contratos">
         <div className="card mt-3">
           <div className="card-body">
             {erro && <div className="mt-3">{erro}</div>}
-            {!erro && !loading && (
+            {!erro && REQUISICOES_FINALIZADAS && (
               <>
                 <div className="row mt-3 mb-3">
                   <div className="col-6">
@@ -201,17 +203,39 @@ export const EditaisContratosRefatorado = () => {
                           />
                         </div>
                       </div>
-                      <div className="row mt-3 mb-3">
-                        <div className="col-12">
-                          <div className="title">
-                            <span>Contratos Relacionados</span>
-                          </div>
-                        </div>
-                      </div>
                       <FieldArray name="contratos">
                         {({ fields }) =>
                           fields.map((name_contratos, index_contratos) => (
                             <div key={name_contratos}>
+                              <div className="row mt-3 mb-3">
+                                <div className="col-12">
+                                  <div className="title">
+                                    <span
+                                      className={`com-linha ${
+                                        index_contratos === 0 ? "w-100" : "w-78"
+                                      }`}
+                                    >
+                                      Contratos Relacionados
+                                    </span>
+                                    {index_contratos > 0 && (
+                                      <span
+                                        onClick={() => {
+                                          form.change(
+                                            `contratos`,
+                                            values.contratos.filter(
+                                              (_, i) => i !== index_contratos
+                                            )
+                                          );
+                                        }}
+                                        className="remover float-end"
+                                      >
+                                        <i className="fas fa-trash" /> Remover
+                                        contrato
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
                               <div className="row">
                                 <div className="col-8">
                                   <Field
@@ -322,13 +346,19 @@ export const EditaisContratosRefatorado = () => {
                                   <Field
                                     component={StatefulMultiSelect}
                                     name={`${name_contratos}.lotes`}
-                                    selected={values.lotes || []}
+                                    selected={
+                                      values.contratos[index_contratos]
+                                        ?.lotes || []
+                                    }
                                     options={lotes.map((lote) => ({
                                       label: lote.nome,
                                       value: lote.uuid,
                                     }))}
                                     onSelectedChanged={(values_) => {
-                                      form.change(`lotes`, values_);
+                                      form.change(
+                                        `contratos[${index_contratos}].lotes`,
+                                        values_
+                                      );
                                     }}
                                     overrideStrings={{
                                       search: "Busca",
@@ -340,14 +370,17 @@ export const EditaisContratosRefatorado = () => {
                                     valueRenderer={renderizarLabelLote}
                                     validate={required}
                                   />
-                                  {values.lotes?.length > 0 && (
+                                  {values.contratos[index_contratos]?.lotes
+                                    ?.length > 0 && (
                                     <div className="lotes-selecionados pt-3">
                                       <div className="mb-3">
                                         Lotes selecionados:
                                       </div>
                                       {lotes
                                         .filter((lote) =>
-                                          values.lotes.includes(lote.uuid)
+                                          values.contratos[
+                                            index_contratos
+                                          ].lotes.includes(lote.uuid)
                                         )
                                         .map((lote, indice) => {
                                           return (
@@ -372,14 +405,17 @@ export const EditaisContratosRefatorado = () => {
                                   <Field
                                     component={StatefulMultiSelect}
                                     name={`${name_contratos}.diretorias_regionais`}
-                                    selected={values.diretorias_regionais || []}
+                                    selected={
+                                      values.contratos[index_contratos]
+                                        ?.diretorias_regionais || []
+                                    }
                                     options={DREs.map((dre) => ({
                                       label: dre.nome,
                                       value: dre.uuid,
                                     }))}
                                     onSelectedChanged={(values_) => {
                                       form.change(
-                                        `diretorias_regionais`,
+                                        `contratos[${index_contratos}].diretorias_regionais`,
                                         values_
                                       );
                                     }}
@@ -393,13 +429,16 @@ export const EditaisContratosRefatorado = () => {
                                     valueRenderer={renderizarDiretoriaRegional}
                                     validate={required}
                                   />
-                                  {values.diretorias_regionais?.length > 0 && (
+                                  {values.contratos[index_contratos]
+                                    ?.diretorias_regionais?.length > 0 && (
                                     <div className="lotes-selecionados pt-3">
                                       <div className="mb-3">
                                         DREs selecionadas:
                                       </div>
                                       {DREs.filter((dre) =>
-                                        values.diretorias_regionais.includes(
+                                        values.contratos[
+                                          index_contratos
+                                        ]?.diretorias_regionais.includes(
                                           dre.uuid
                                         )
                                       ).map((dre, indice) => {
@@ -450,6 +489,16 @@ export const EditaisContratosRefatorado = () => {
                           ))
                         }
                       </FieldArray>
+                      <div className="row mt-3">
+                        <div className="col-12 text-center">
+                          <Botao
+                            texto="+ Adicionar outro contrato relacionado"
+                            onClick={() => push("contratos")}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            type={BUTTON_TYPE.BUTTON}
+                          />
+                        </div>
+                      </div>
                       <div className="row">
                         <div className="col-12 text-end">
                           <Botao
