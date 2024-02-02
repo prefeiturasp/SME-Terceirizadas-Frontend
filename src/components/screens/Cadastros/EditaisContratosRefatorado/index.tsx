@@ -502,6 +502,14 @@ export const EditaisContratosRefatorado = () => {
                       <div className="row">
                         <div className="col-12 text-end">
                           <Botao
+                            onClick={() => form.reset()}
+                            texto="Cancelar"
+                            className="me-3"
+                            disabled={submitting}
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                          />
+                          <Botao
                             texto="Salvar"
                             disabled={submitting}
                             type={BUTTON_TYPE.SUBMIT}
