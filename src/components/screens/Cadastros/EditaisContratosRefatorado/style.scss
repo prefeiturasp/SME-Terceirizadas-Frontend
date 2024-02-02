@@ -22,4 +22,12 @@ div.form-editais-contratos {
   span.required-asterisk {
     color: $red;
   }
+
+  div.lotes-selecionados {
+    font-size: 14px;
+
+    span {
+      font-weight: bold;
+    }
+  }
 }
