@@ -6,6 +6,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import { InputText } from "components/Shareable/Input/InputText";
+import { Select } from "components/Shareable/Select";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { required } from "helpers/fieldValidators";
 import React, { useEffect, useState } from "react";
@@ -14,6 +15,7 @@ import { FieldArray } from "react-final-form-arrays";
 import arrayMutators from "final-form-arrays";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { getLotesSimples } from "services/lote.service";
+import { getNomesTerceirizadas } from "services/produto.service.js";
 import { Spin } from "antd";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 
@@ -22,6 +24,7 @@ import "./style.scss";
 export const EditaisContratosRefatorado = () => {
   const [lotes, setLotes] = useState(undefined);
   const [DREs, setDREs] = useState(undefined);
+  const [empresas, setEmpresas] = useState(undefined);
 
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(true);
@@ -46,6 +49,17 @@ export const EditaisContratosRefatorado = () => {
     }
   };
 
+  const getNomesTerceirizadasAsync = async () => {
+    const response = await getNomesTerceirizadas({
+      tipo_empresa: "Terceirizada",
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setEmpresas(response.data.results);
+    } else {
+      setErro("Erro ao carregar empresas. Tente novamente mais tarde.");
+    }
+  };
+
   useEffect(() => {
     requisicoesPreRender();
   }, []);
@@ -54,6 +68,7 @@ export const EditaisContratosRefatorado = () => {
     await Promise.all([
       getLotesSimplesAsync(),
       getDiretoriareginalSimplissimaAsync(),
+      getNomesTerceirizadasAsync(),
     ]).then(() => {
       setLoading(false);
     });
@@ -116,8 +131,6 @@ export const EditaisContratosRefatorado = () => {
                   initialValues={{
                     contratos: [
                       {
-                        processo_administrativo: undefined,
-                        data_proposta: undefined,
                         vigencias: [
                           {
                             numero_contrato: undefined,
@@ -401,6 +414,36 @@ export const EditaisContratosRefatorado = () => {
                                       })}
                                     </div>
                                   )}
+                                </div>
+                              </div>
+                              <div className="row mt-3">
+                                <div className="col-12">
+                                  <label className="label fw-normal">
+                                    <span className="required-asterisk">
+                                      *{" "}
+                                    </span>
+                                    Empresa
+                                  </label>
+                                  <Field
+                                    component={Select}
+                                    name={`${name_contratos}.terceirizada`}
+                                    options={[
+                                      {
+                                        nome: "Selecione uma empresa",
+                                        uuid: "",
+                                      },
+                                    ].concat(
+                                      empresas.map((empresa) => {
+                                        return {
+                                          nome: empresa.nome_fantasia,
+                                          uuid: empresa.uuid,
+                                        };
+                                      })
+                                    )}
+                                    required
+                                    validate={required}
+                                    naoDesabilitarPrimeiraOpcao
+                                  />
                                 </div>
                               </div>
                             </div>
