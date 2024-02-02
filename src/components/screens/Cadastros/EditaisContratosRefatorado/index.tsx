@@ -15,10 +15,13 @@ import arrayMutators from "final-form-arrays";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { getLotesSimples } from "services/lote.service";
 import { Spin } from "antd";
+import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
+
 import "./style.scss";
 
 export const EditaisContratosRefatorado = () => {
   const [lotes, setLotes] = useState(undefined);
+  const [DREs, setDREs] = useState(undefined);
 
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(true);
@@ -32,12 +35,26 @@ export const EditaisContratosRefatorado = () => {
     }
   };
 
+  const getDiretoriareginalSimplissimaAsync = async () => {
+    const response = await getDiretoriaregionalSimplissima();
+    if (response.status === HTTP_STATUS.OK) {
+      setDREs(response.data.results);
+    } else {
+      setErro(
+        "Erro ao carregar diretorias regionais. Tente novamente mais tarde."
+      );
+    }
+  };
+
   useEffect(() => {
     requisicoesPreRender();
   }, []);
 
   const requisicoesPreRender = async () => {
-    await Promise.all([getLotesSimplesAsync()]).then(() => {
+    await Promise.all([
+      getLotesSimplesAsync(),
+      getDiretoriareginalSimplissimaAsync(),
+    ]).then(() => {
       setLoading(false);
     });
   };
@@ -53,6 +70,19 @@ export const EditaisContratosRefatorado = () => {
       return `${selected.length} lote selecionado`;
     }
     return `${selected.length} lotes selecionados`;
+  };
+
+  const renderizarDiretoriaRegional = (selected, options) => {
+    if (selected.length === 0) {
+      return "Selecione uma ou mais diretorias...";
+    }
+    if (selected.length === options.length) {
+      return "Todas as diretorias foram selecionadas";
+    }
+    if (selected.length === 1) {
+      return `${selected.length} diretoria selecionada`;
+    }
+    return `${selected.length} diretorias selecionadas`;
   };
 
   const onSubmit = () => {};
@@ -219,6 +249,7 @@ export const EditaisContratosRefatorado = () => {
                                             writable={false}
                                             minDate={null}
                                             required
+                                            validate={required}
                                           />
                                         </div>
                                         <div className="col-4">
@@ -290,7 +321,7 @@ export const EditaisContratosRefatorado = () => {
                                       search: "Busca",
                                       selectSomeItems: "Selecione",
                                       allItemsAreSelected:
-                                        "Todos os itens estão selecionados",
+                                        "Todos os lotes estão selecionados",
                                       selectAll: "Todos",
                                     }}
                                     valueRenderer={renderizarLabelLote}
@@ -315,6 +346,59 @@ export const EditaisContratosRefatorado = () => {
                                             </span>
                                           );
                                         })}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="col-6">
+                                  <label className="label fw-normal">
+                                    <span className="required-asterisk">
+                                      *{" "}
+                                    </span>
+                                    DRE
+                                  </label>
+                                  <Field
+                                    component={StatefulMultiSelect}
+                                    name={`${name_contratos}.diretorias_regionais`}
+                                    selected={values.diretorias_regionais || []}
+                                    options={DREs.map((dre) => ({
+                                      label: dre.nome,
+                                      value: dre.uuid,
+                                    }))}
+                                    onSelectedChanged={(values_) => {
+                                      form.change(
+                                        `diretorias_regionais`,
+                                        values_
+                                      );
+                                    }}
+                                    overrideStrings={{
+                                      search: "Busca",
+                                      selectSomeItems: "Selecione",
+                                      allItemsAreSelected:
+                                        "Todos as diretorias regionais estão selecionadas",
+                                      selectAll: "Todos",
+                                    }}
+                                    valueRenderer={renderizarDiretoriaRegional}
+                                    validate={required}
+                                  />
+                                  {values.diretorias_regionais?.length > 0 && (
+                                    <div className="lotes-selecionados pt-3">
+                                      <div className="mb-3">
+                                        DREs selecionadas:
+                                      </div>
+                                      {DREs.filter((dre) =>
+                                        values.diretorias_regionais.includes(
+                                          dre.uuid
+                                        )
+                                      ).map((dre, indice) => {
+                                        return (
+                                          <div
+                                            className="value-selected-unities"
+                                            key={indice}
+                                          >
+                                            {dre.nome}
+                                          </div>
+                                        );
+                                      })}
                                     </div>
                                   )}
                                 </div>

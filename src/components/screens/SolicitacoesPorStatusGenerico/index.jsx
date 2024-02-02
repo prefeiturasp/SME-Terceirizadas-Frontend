@@ -20,7 +20,7 @@ import { connect } from "react-redux";
 import { PERIODOS_OPTIONS, TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
 import { InputComData } from "components/Shareable/DatePicker";
 import { resetCamposAlimentacao } from "reducers/filtersAlimentacaoReducer";
-import { getDiretoriaregionalSimplissimaAxios } from "services/diretoriaRegional.service";
+import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getLotesSimples } from "services/lote.service";
 import "./style.scss";
 
@@ -121,7 +121,7 @@ function SolicitacoesPorStatusGenerico(props) {
   };
 
   const getDiretoriasRegionaisAsync = async () => {
-    const response = await getDiretoriaregionalSimplissimaAxios();
+    const response = await getDiretoriaregionalSimplissima();
     if (response.status === HTTP_STATUS.OK) {
       let resultados_dre = response.data.results;
       const opcoesDRE = resultados_dre.slice();

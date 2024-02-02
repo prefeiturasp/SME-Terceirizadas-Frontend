@@ -1,6 +1,7 @@
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 import axios from "./_base";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -20,62 +21,29 @@ export const getLotes = async () => {
   });
 };
 
-export const getDiretoriaregional = () => {
+export const getDiretoriaregional = async (params) => {
   const url = `${API_URL}/diretorias-regionais/`;
-  let status = 0;
-  return fetch(url, {
-    headers: authToken,
-    method: "GET",
-  })
-    .then((response) => {
-      status = response.status;
-      return response.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getDiretoriaregionalDetalhe = (uuid) => {
+export const getDiretoriaregionalDetalhe = async (uuid) => {
   const url = `${API_URL}/diretorias-regionais/${uuid}/`;
-  let status = 0;
-  return fetch(url, {
-    headers: authToken,
-    method: "GET",
-  })
-    .then((response) => {
-      status = response.status;
-      return response.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getDiretoriaregionalSimplissima = () => {
+export const getDiretoriaregionalSimplissima = async (params) => {
   const url = `${API_URL}/diretorias-regionais-simplissima/`;
-  let status = 0;
-  return fetch(url, {
-    headers: authToken,
-    method: "GET",
-  })
-    .then((response) => {
-      status = response.status;
-      return response.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
-
-export const getDiretoriaregionalSimplissimaAxios = async () =>
-  axios.get("diretorias-regionais-simplissima/");
