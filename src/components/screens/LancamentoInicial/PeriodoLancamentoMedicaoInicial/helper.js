@@ -16,6 +16,7 @@ import {
   ehEscolaTipoCEUGESTAO,
   tiposAlimentacaoETEC,
 } from "helpers/utilities";
+import { ehEscolaTipoCEMEI } from "../../../../helpers/utilities";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
@@ -900,11 +901,14 @@ export const formatarLinhasTabelaDietaEnteral = (
   const indexRefeicaoDieta = tipos_alimentacao.findIndex(
     (ali) => ali.nome === "Refeição"
   );
-  linhasTabelasDietas.splice(linhasTabelasDietas.length - 1, 0, {
-    nome: "Refeição",
-    name: "refeicao",
-    uuid: tipos_alimentacao[indexRefeicaoDieta].uuid,
-  });
+
+  if (indexRefeicaoDieta >= 0) {
+    linhasTabelasDietas.splice(linhasTabelasDietas.length - 1, 0, {
+      nome: "Refeição",
+      name: "refeicao",
+      uuid: tipos_alimentacao[indexRefeicaoDieta].uuid,
+    });
+  }
 
   return linhasTabelasDietas;
 };
@@ -1016,7 +1020,12 @@ export const defaultValue = (
   let result = null;
   let valorLancamento = null;
 
-  if (solicitacao && ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+  if (
+    solicitacao &&
+    (ehEscolaTipoCEI({ nome: solicitacao.escola }) ||
+      (ehEscolaTipoCEMEI({ nome: solicitacao.escola }) &&
+        ["INTEGRAL", "PARCIAL"].includes(periodoGrupo.nome_periodo_grupo)))
+  ) {
     valorLancamento = valoresLancamentos.find(
       (valor) =>
         Number(valor.categoria_medicao) === Number(categoria.id) &&
@@ -1047,7 +1056,12 @@ export const defaultValue = (
   }
 
   if (form && periodoGrupo) {
-    if (solicitacao && ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+    if (
+      solicitacao &&
+      (ehEscolaTipoCEI({ nome: solicitacao.escola }) ||
+        (ehEscolaTipoCEMEI({ nome: solicitacao.escola }) &&
+          ["INTEGRAL", "PARCIAL"].includes(periodoGrupo.nome_periodo_grupo)))
+    ) {
       form.change(
         `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${
           categoria.id

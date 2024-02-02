@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import "./style.scss";
 import { conferidaClass } from "helpers/terceirizadas";
 import { GESTAO_PRODUTO_CARDS, TERCEIRIZADA } from "configs/constants";
@@ -44,7 +44,7 @@ export const CardStatusDeSolicitacao = (props) => {
   const nomeUsuario = localStorage.getItem("nome");
   const tipoPerfil = localStorage.getItem("tipo_perfil");
 
-  let history = useHistory();
+  let navigate = useNavigate();
 
   const initSocket = () => {
     return new Websocket(
@@ -199,7 +199,7 @@ export const CardStatusDeSolicitacao = (props) => {
         className={`card-title-status ajuste-icones ${
           hrefCard ? "card-com-href" : undefined
         }`}
-        onClick={() => hrefCard && history.push(hrefCard)}
+        onClick={() => hrefCard && navigate(hrefCard)}
       >
         <div>
           <i className={"fas " + icon} />

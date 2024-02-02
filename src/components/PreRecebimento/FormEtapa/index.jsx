@@ -1,29 +1,39 @@
 import React, { useEffect, useState } from "react";
-import "./styles.scss";
+import { Field } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
+import moment from "moment";
+
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { Field } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { InputComData } from "components/Shareable/DatePicker";
-import SelectSelecione from "components/Shareable/SelectSelecione";
+import Select from "components/Shareable/Select";
 import { getEtapas } from "services/cronograma.service";
-import { getFeriadosAnoAtualEProximo } from "../../../services/diasUteis.service";
-import { required } from "helpers/fieldValidators";
+import { getFeriadosAnoAtualEProximo } from "services/diasUteis.service";
 import { deletaValues } from "helpers/formHelper";
-import { formataMilhar } from "helpers/utilities";
+import {
+  formataMilhar,
+  getAmanha,
+  usuarioEhCronograma,
+} from "helpers/utilities";
+import {
+  required,
+  composeValidators,
+  inteiroOuDecimalComVirgula,
+} from "helpers/fieldValidators";
 
-import moment from "moment";
-import { getAmanha, usuarioEhCronograma } from "../../../helpers/utilities";
-import { OnChange } from "react-final-form-listeners";
+import "./styles.scss";
+import { calculaTotalEmbalagens } from "./helper";
 
 export default ({
   etapas,
   setEtapas,
   values,
+  errors,
   duplicados,
   restante,
   unidadeMedida,
@@ -116,6 +126,20 @@ export default ({
     await Promise.all([buscaFeriados(), buscaEtapas()]);
   };
 
+  const desativaAdicionarEtapa = () => {
+    let index = etapas.length - 1;
+    const camposObrigatorios = [
+      `empenho_${index}`,
+      `qtd_total_empenho_${index}`,
+      `etapa_${index}`,
+      `parte_${index}`,
+      `data_programada_${index}`,
+      `quantidade_${index}`,
+    ];
+
+    return camposObrigatorios.some((campo) => Boolean(errors[campo]));
+  };
+
   useEffect(() => {
     requisicoesPreRender();
   }, []);
@@ -133,7 +157,6 @@ export default ({
             array[index] = true;
           }
         });
-        array[0] = true;
         setDesabilitar(array);
       }
     };
@@ -159,6 +182,7 @@ export default ({
                       className="float-end ms-3"
                       onClick={() => deletaEtapa(index)}
                       tooltipExterno="Remover Etapa"
+                      disabled={desabilitar[index]}
                     />
                   </div>
                 </div>
@@ -166,8 +190,8 @@ export default ({
             )}
             <div className="row">
               {usuarioEhCronograma() && (
-                <div className="col-4">
-                  {
+                <>
+                  <div className="col">
                     <Field
                       component={InputText}
                       label="Nº do Empenho"
@@ -178,10 +202,25 @@ export default ({
                       proibeLetras
                       disabled={desabilitar[index]}
                     />
-                  }
-                </div>
+                  </div>
+                  <div className="col">
+                    <Field
+                      component={InputText}
+                      label="Qtde. Total do Empenho"
+                      name={`qtd_total_empenho_${index}`}
+                      placeholder="Informe a quantidade"
+                      required
+                      validate={composeValidators(
+                        required,
+                        inteiroOuDecimalComVirgula
+                      )}
+                      proibeLetras
+                      disabled={desabilitar[index]}
+                    />
+                  </div>
+                </>
               )}
-              <div className="col-4">
+              <div className="col">
                 <Field
                   component={AutoCompleteField}
                   options={getEtapasFiltrado(values[`etapa_${index}`])}
@@ -196,16 +235,20 @@ export default ({
                 />
                 <OnChange name={`etapa_${index}`}>
                   {() => {
-                    if (form)
+                    ehAlteracao &&
                       form.mutators.setFieldTouched(`parte_${index}`, true);
                   }}
                 </OnChange>
               </div>
-              <div className="col-4">
+              <div className="col">
                 <Field
-                  component={SelectSelecione}
+                  component={Select}
                   naoDesabilitarPrimeiraOpcao
                   options={[
+                    {
+                      uuid: "",
+                      nome: "Selecione a Parte",
+                    },
                     {
                       uuid: "Parte 1",
                       nome: "Parte 1",
@@ -229,7 +272,6 @@ export default ({
                   ]}
                   label="Parte"
                   name={`parte_${index}`}
-                  placeholder={"Selecione a Parte"}
                   validate={() =>
                     duplicados.includes(index) && "Parte já selecionada"
                   }
@@ -237,6 +279,8 @@ export default ({
                   disabled={desabilitar[index]}
                 />
               </div>
+            </div>
+            <div className="row">
               <div className="col-4">
                 <Field
                   component={InputComData}
@@ -258,28 +302,36 @@ export default ({
                   label="Quantidade"
                   name={`quantidade_${index}`}
                   placeholder="Digite a Quantidade"
-                  validate={() =>
-                    restante !== 0 &&
-                    `quantidade total é diferente de ${
-                      values.quantidade_total || 0
-                    }`
-                  }
+                  validate={required}
                   required
                   apenasNumeros
                   agrupadorMilhar
                   disabled={desabilitar[index]}
                 />
               </div>
+              <OnChange name={`quantidade_${index}`}>
+                {(value) => {
+                  const totalEmbalagens = calculaTotalEmbalagens(
+                    Number(value.replace(".", "")),
+                    Number(
+                      values.peso_liquido_embalagem_secundaria?.replace(
+                        ",",
+                        "."
+                      )
+                    )
+                  );
+
+                  form.change(`total_embalagens_${index}`, totalEmbalagens);
+                }}
+              </OnChange>
               <div className="col-4">
                 <Field
                   component={InputText}
                   label="Total de Embalagens"
                   name={`total_embalagens_${index}`}
-                  placeholder="Digite a Quantidade"
                   required
-                  validate={required}
-                  apenasNumeros
-                  disabled={desabilitar[index]}
+                  disabled
+                  valorInicial={""}
                 />
               </div>
             </div>
@@ -295,6 +347,12 @@ export default ({
           style={BUTTON_STYLE.GREEN_OUTLINE}
           className=""
           onClick={() => adicionaEtapa()}
+          disabled={desativaAdicionarEtapa()}
+          tooltipExterno={
+            desativaAdicionarEtapa()
+              ? "É necessário preencher todos os campos obrigatórios para adicionar uma nova Etapa"
+              : ""
+          }
         />
       </div>
     </>

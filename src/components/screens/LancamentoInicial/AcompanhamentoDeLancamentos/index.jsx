@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import HTTP_STATUS from "http-status-codes";
@@ -36,6 +36,8 @@ import {
   getISOLocalDatetimeString,
   usuarioEhDRE,
   usuarioEhMedicao,
+  usuarioEhCODAENutriManifestacao,
+  usuarioEhQualquerCODAE,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
@@ -58,7 +60,7 @@ import { updateSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicit
 import ModalRelatorioUnificado from "./components/ModalRelatorioUnificado";
 
 export const AcompanhamentoDeLancamentos = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { meusDados } = useContext(MeusDadosContext);
   const DEFAULT_STATE = usuarioEhEscolaTerceirizadaQualquerPerfil() ? [] : null;
 
@@ -102,19 +104,33 @@ export const AcompanhamentoDeLancamentos = () => {
     const response = await getDashboardMedicaoInicial(params);
     if (response.status === HTTP_STATUS.OK) {
       const dashboardResults = response.data.results;
-      if (!usuarioEhMedicao() || diretoriaRegional) {
+      if (
+        (!usuarioEhMedicao() &&
+          !usuarioEhCODAENutriManifestacao() &&
+          !usuarioEhQualquerCODAE()) ||
+        diretoriaRegional
+      ) {
         let NovoDashboardResults = [...dashboardResults];
-        if (usuarioEhMedicao()) {
+
+        if (
+          usuarioEhMedicao() ||
+          usuarioEhCODAENutriManifestacao() ||
+          usuarioEhQualquerCODAE()
+        ) {
           NovoDashboardResults = NovoDashboardResults.filter(
             (medicoes) => !STATUS_RELACAO_DRE_UE.includes(medicoes.status)
           );
         }
-        if (usuarioEhEscolaTerceirizadaQualquerPerfil())
+
+        if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
           NovoDashboardResults = NovoDashboardResults.filter(
             (medicoes) => medicoes.status !== "TODOS_OS_LANCAMENTOS"
           );
-        if (!dadosDashboard || (diretoriaRegional && !params.mes_ano))
+        }
+
+        if (!dadosDashboard || (diretoriaRegional && !params.mes_ano)) {
           setDadosDashboard(NovoDashboardResults);
+        }
       }
       if (statusSelecionado) {
         setResultados(
@@ -299,24 +315,32 @@ export const AcompanhamentoDeLancamentos = () => {
     status
   ) => {
     if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
-      history.push({
-        pathname: `/${MEDICAO_INICIAL}/${DETALHAMENTO_DO_LANCAMENTO}`,
-        search: `mes=${mes}&ano=${ano}`,
-        state: {
-          veioDoAcompanhamentoDeLancamentos: true,
-          status,
+      navigate(
+        {
+          pathname: `/${MEDICAO_INICIAL}/${DETALHAMENTO_DO_LANCAMENTO}`,
+          search: `mes=${mes}&ano=${ano}`,
         },
-      });
+        {
+          state: {
+            veioDoAcompanhamentoDeLancamentos: true,
+            status,
+          },
+        }
+      );
     } else {
-      history.push({
-        pathname: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
-        search: `uuid=${uuidSolicitacaoMedicao}`,
-        state: {
-          escolaUuid: escolaUuid,
-          mes: mes,
-          ano: ano,
+      navigate(
+        {
+          pathname: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
+          search: `uuid=${uuidSolicitacaoMedicao}`,
         },
-      });
+        {
+          state: {
+            escolaUuid: escolaUuid,
+            mes: mes,
+            ano: ano,
+          },
+        }
+      );
     }
   };
 
@@ -356,7 +380,12 @@ export const AcompanhamentoDeLancamentos = () => {
   };
 
   const exibirDashboard = () => {
-    if (usuarioEhMedicao() && loadingComFiltros) {
+    if (
+      (usuarioEhMedicao() ||
+        usuarioEhCODAENutriManifestacao() ||
+        usuarioEhQualquerCODAE()) &&
+      loadingComFiltros
+    ) {
       return !mudancaDre;
     }
     return true;
@@ -391,7 +420,9 @@ export const AcompanhamentoDeLancamentos = () => {
             {({ handleSubmit, form, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card mt-3">
-                  {usuarioEhMedicao() && (
+                  {usuarioEhMedicao() ||
+                  usuarioEhCODAENutriManifestacao() ||
+                  usuarioEhQualquerCODAE() ? (
                     <div className="col-5">
                       <Field
                         component={ASelect}
@@ -417,7 +448,7 @@ export const AcompanhamentoDeLancamentos = () => {
                         {diretoriasRegionais}
                       </Field>
                     </div>
-                  )}
+                  ) : null}
                   <div className="card-body">
                     <div className="d-flex row row-cols-1">
                       {exibirDashboard() &&
@@ -652,7 +683,10 @@ export const AcompanhamentoDeLancamentos = () => {
                                                 dado.status
                                               )
                                             }
-                                            disabled={desabilitaAcoes(dado)}
+                                            disabled={
+                                              desabilitaAcoes(dado) &&
+                                              !usuarioEhDRE()
+                                            }
                                             tooltipExterno={getTooltipAcoes(
                                               dado
                                             )}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import HTTP_STATUS from "http-status-codes";
 import { FormApi } from "final-form";
@@ -28,7 +28,7 @@ import "./style.scss";
 
 export const PermissaoLancamentosEspeciais = () => {
   const [erroAPI, setErroAPI] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
   const [permissoes, setPermissoes] = useState<
     PermissaoLancamentosEspeciaisInterface[]
   >([]);
@@ -92,12 +92,16 @@ export const PermissaoLancamentosEspeciais = () => {
   const handleClickEditar = (
     permissao: PermissaoLancamentosEspeciaisInterface
   ) => {
-    history.push({
-      pathname:
-        "/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais/editar-permissao-lancamento-especial",
-      search: `uuid=${permissao.uuid}`,
-      state: { permissao: permissao },
-    });
+    navigate(
+      {
+        pathname:
+          "/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais/editar-permissao-lancamento-especial",
+        search: `uuid=${permissao.uuid}`,
+      },
+      {
+        state: { permissao: permissao },
+      }
+    );
   };
 
   useEffect(() => {

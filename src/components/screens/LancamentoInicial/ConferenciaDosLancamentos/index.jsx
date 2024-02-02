@@ -208,6 +208,14 @@ export const ConferenciaDosLancamentos = () => {
     ].includes(solicitacao.ocorrencia.status);
 
   const desabilitaBotaoExportarPDF = () => {
+    if (
+      usuarioEhDRE() &&
+      solicitacao &&
+      solicitacao.status === "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE"
+    ) {
+      return true;
+    }
+
     return (
       (usuarioEhDRE() || usuarioEhMedicao()) &&
       solicitacao &&
@@ -914,7 +922,7 @@ export const ConferenciaDosLancamentos = () => {
                             }
                             disabled={
                               desabilitarEnviarParaCodaeECodaeAprovar ||
-                              (usuarioEhMedicao() &&
+                              ((usuarioEhMedicao() || usuarioEhDRE()) &&
                                 desabilitaBotaoExportarPDF())
                             }
                             tooltipExterno={

@@ -50,7 +50,11 @@ export const criaDietaEspecial = async (payload) => {
     const json = await response.json();
     return { data: json, status: status };
   } catch (error) {
-    console.log(error);
+    if (error.status === 400) {
+      const json = await error.json();
+      return { data: json[0], status: error.status };
+    }
+    return { data: error.statusText, status: error.status };
   }
 };
 
@@ -443,4 +447,32 @@ export const vincularProtocolosEditais = async (payload) => {
     `/protocolo-padrao-dieta-especial/atualizar-editais/`,
     payload
   );
+};
+
+export const getDadosAlunoNaoMatriculadoDetalhesDieta = async (
+  codigo_eol_escola,
+  nome_aluno
+) => {
+  const url = `/alunos/dados-aluno-nao-matriculado-detalhes-dieta/`;
+  const response = await axios
+    .get(url, { params: { codigo_eol_escola, nome_aluno } })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getDietasEspeciaisVigentesDeUmAlunoNaoMatriculado = async (
+  codigo_eol_escola,
+  nome_aluno
+) => {
+  const url = `${URL_DIETA_ESPECIAL}/solicitacoes-aluno-nao-matriculado/`;
+  const response = await axios
+    .get(url, { params: { codigo_eol_escola, nome_aluno } })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

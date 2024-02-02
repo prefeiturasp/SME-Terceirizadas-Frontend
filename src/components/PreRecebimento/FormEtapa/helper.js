@@ -39,3 +39,8 @@ export const onChangeEtapas = (changes, etapas, setRestante, setDuplicados) => {
   });
   setDuplicados(duplicados);
 };
+
+export const calculaTotalEmbalagens = (quantidade, pesoEmbalagemSecundaria) =>
+  quantidade && pesoEmbalagemSecundaria
+    ? Math.ceil(quantidade / pesoEmbalagemSecundaria)
+    : undefined;

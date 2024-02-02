@@ -1,9 +1,12 @@
 import moment from "moment";
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
-import { getDietasEspeciaisVigentesDeUmAluno } from "../../../../services/dietaEspecial.service";
+import {
+  getDadosAlunoNaoMatriculadoDetalhesDieta,
+  getDietasEspeciaisVigentesDeUmAluno,
+  getDietasEspeciaisVigentesDeUmAlunoNaoMatriculado,
+} from "../../../../services/dietaEspecial.service";
 import { dadosDoAluno } from "../../../../services/perfil.service";
 import "./style.scss";
 import { formatarSolicitacoesVigentes } from "../Escola/helper";
@@ -20,22 +23,50 @@ class solicitacaoDietaEspecial extends Component {
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const codigo_eol = urlParams.get("codigo_eol");
-    dadosDoAluno(codigo_eol).then((dadosAluno) => {
-      const dados = dadosAluno.data;
-      this.setState({
-        nomeAluno: dados.nome,
-        eolAluno: dados.codigo_eol,
-        escolaAtual: dados.nome_escola,
-        dreAtual: dados.nome_dre,
+    const eh_aluno_nao_matriculado = urlParams.get("eh_aluno_nao_matriculado");
+    const codigo_eol_escola = urlParams.get("codigo_eol_escola");
+    const nome_aluno = urlParams.get("nome_aluno");
+    if (eh_aluno_nao_matriculado && codigo_eol_escola && nome_aluno) {
+      getDadosAlunoNaoMatriculadoDetalhesDieta(
+        codigo_eol_escola,
+        nome_aluno
+      ).then((dadosAluno) => {
+        const dados = dadosAluno.data;
+        this.setState({
+          nomeAluno: dados.nome,
+          eolAluno: dados.codigo_eol,
+          escolaAtual: dados.nome_escola,
+          dreAtual: dados.nome_dre,
+        });
       });
-    });
-    getDietasEspeciaisVigentesDeUmAluno(codigo_eol).then((response) => {
-      this.setState({
-        solicitacoesVigentes: formatarSolicitacoesVigentes(
-          response.data.results
-        ),
+      getDietasEspeciaisVigentesDeUmAlunoNaoMatriculado(
+        codigo_eol_escola,
+        nome_aluno
+      ).then((response) => {
+        this.setState({
+          solicitacoesVigentes: formatarSolicitacoesVigentes(
+            response.data.results
+          ),
+        });
       });
-    });
+    } else {
+      dadosDoAluno(codigo_eol).then((dadosAluno) => {
+        const dados = dadosAluno.data;
+        this.setState({
+          nomeAluno: dados.nome,
+          eolAluno: dados.codigo_eol,
+          escolaAtual: dados.nome_escola,
+          dreAtual: dados.nome_dre,
+        });
+      });
+      getDietasEspeciaisVigentesDeUmAluno(codigo_eol).then((response) => {
+        this.setState({
+          solicitacoesVigentes: formatarSolicitacoesVigentes(
+            response.data.results
+          ),
+        });
+      });
+    }
   }
 
   // async onSubmit(payload) {
@@ -106,4 +137,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(withRouter(componentNameForm));
+export default connect(mapStateToProps)(componentNameForm);

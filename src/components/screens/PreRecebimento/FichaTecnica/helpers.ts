@@ -1,7 +1,5 @@
 import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import createDecorator from "final-form-calculate";
-import { History } from "history";
-
 import { getEnderecoPorCEP } from "services/cep.service";
 import {
   getListaCompletaProdutosLogistica,
@@ -39,18 +37,13 @@ import {
 import { ResponseInformacoesNutricionais } from "interfaces/responses.interface";
 import { InformacaoNutricional } from "interfaces/produto.interface";
 import { MeusDadosInterface } from "context/MeusDadosContext/interfaces";
-
-export const stringToBoolean = (str: string): boolean =>
-  str === "1" ? true : str === "0" ? false : undefined;
-
-export const booleanToString = (str: boolean): string =>
-  str === true ? "1" : str === false ? "0" : undefined;
-
-export const numberToStringDecimal = (num: number) =>
-  num?.toString().replace(".", ",");
-
-export const stringDecimalToNumber = (str: string) =>
-  str === "0" ? Number(str) : Number(str?.replace(",", ".")) || null;
+import {
+  booleanToString,
+  numberToStringDecimal,
+  stringDecimalToNumber,
+  stringToBoolean,
+} from "helpers/parsers";
+import { NavigateFunction } from "react-router-dom";
 
 export const formataInformacoesNutricionais = (values: Record<string, any>) => {
   const uuids_informacoes = Object.keys(values)
@@ -554,7 +547,7 @@ export const assinarEnviarFichaTecnica = async (
   payload: FichaTecnicaPayload,
   ficha: FichaTecnicaDetalhada,
   setCarregando: Dispatch<SetStateAction<boolean>>,
-  history: History
+  navigate: NavigateFunction
 ) => {
   try {
     setCarregando(true);
@@ -565,7 +558,7 @@ export const assinarEnviarFichaTecnica = async (
 
     if (response.status === 201 || response.status === 200) {
       toastSuccess("Ficha Técnica Assinada e Enviada com sucesso!");
-      history.push(`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`);
+      navigate(`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`);
     } else {
       toastError("Ocorreu um erro ao assinar e enviar a Ficha Técnica");
     }

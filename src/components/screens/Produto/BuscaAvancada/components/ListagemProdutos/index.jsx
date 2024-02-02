@@ -96,7 +96,6 @@ const ListagemProdutos = ({ produtos, ativos, setAtivos }) => {
                   </div>
                   <div className="grid-do-produto botao-produto-visualizar">
                     <NavLink
-                      activeClassName="active"
                       className="botao-visualizar-produto"
                       to={urlDetalhes}
                     >

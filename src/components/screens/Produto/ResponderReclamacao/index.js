@@ -1,7 +1,7 @@
 import { Spin } from "antd";
 import React, { useEffect, useState, Fragment } from "react";
 import { connect } from "react-redux";
-import { withRouter, Link } from "react-router-dom";
+import { Link, useNavigationType } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import {
   gerarParametrosConsulta,
@@ -150,7 +150,6 @@ const TabelaProdutos = ({
 };
 
 const ResponderReclamacaoProduto = ({
-  history,
   produtos,
   setProdutos,
   ativos,
@@ -168,8 +167,10 @@ const ResponderReclamacaoProduto = ({
   const uuid = urlParams.get("uuid");
   const PAGE_SIZE = 10;
 
+  const navigationType = useNavigationType();
+
   useEffect(() => {
-    if (history && history.action === "PUSH") {
+    if (navigationType === "PUSH") {
       reset();
     }
     if (!filtros && !uuid) return;
@@ -232,7 +233,6 @@ const ResponderReclamacaoProduto = ({
             <>
               <TabelaProdutos
                 produtos={produtos}
-                history={history}
                 filtros={filtros}
                 setProdutos={setProdutos}
                 setCarregando={setCarregando}
@@ -278,6 +278,7 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ResponderReclamacaoProduto)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ResponderReclamacaoProduto);

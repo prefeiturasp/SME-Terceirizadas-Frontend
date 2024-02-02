@@ -10,7 +10,7 @@ import {
   getSolicitacoesSuspensoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
-import { deepCopy } from "../../../../helpers/utilities";
+import { deepCopy, ehEscolaTipoCEMEI } from "../../../../helpers/utilities";
 
 export const formatarPayloadPeriodoLancamentoCeiCemei = (
   values,
@@ -156,7 +156,6 @@ export const desabilitarField = (
   validacaoDiaLetivo,
   validacaoSemana,
   location,
-  grupoLocation,
   valoresPeriodosLancamentos,
   feriadosNoMes,
   uuidFaixaEtaria,
@@ -169,6 +168,32 @@ export const desabilitarField = (
   dadosValoresInclusoesAutorizadasState
 ) => {
   let alimentacoesLancamentosEspeciaisDia = [];
+
+  const statusDeBloqueio = () => {
+    return (
+      location.state &&
+      (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
+        location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
+        location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE")
+    );
+  };
+
+  if (statusDeBloqueio()) {
+    return true;
+  }
+
+  const statusDeCorrecao = () => {
+    return (
+      location.state &&
+      [
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+        "MEDICAO_CORRIGIDA_PELA_UE",
+        "MEDICAO_CORRIGIDA_PARA_CODAE",
+      ].includes(location.state.status_periodo)
+    );
+  };
+
   if (!ehEmeiDaCemeiLocation && !ehProgramasEProjetosLocation) {
     if (nomeCategoria === "ALIMENTAÇÃO") {
       const resultado = inclusoesAutorizadas.some(
@@ -188,6 +213,9 @@ export const desabilitarField = (
           `matriculados__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
         ]
       ) {
+        if (statusDeCorrecao()) {
+          return !ehDiaParaCorrigir(dia, categoria, diasParaCorrecao);
+        }
         return false;
       }
     } else {
@@ -203,7 +231,7 @@ export const desabilitarField = (
               ]
             )
         );
-      if (resultado)
+      if (resultado) {
         return (
           !values[
             `dietas_autorizadas__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
@@ -214,6 +242,7 @@ export const desabilitarField = (
             ]
           ) === 0
         );
+      }
     }
   } else {
     if (permissoesLancamentosEspeciaisPorDia) {
@@ -235,14 +264,27 @@ export const desabilitarField = (
           rowName === "frequencia")
     );
     if (nomeCategoria !== "ALIMENTAÇÃO") {
-      if (resultado)
-        return (
-          Number(
-            values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
-          ) === 0
-        );
+      if (resultado) {
+        const valueDietasAutorizadasEhZero = () => {
+          return (
+            Number(
+              values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+            ) === 0
+          );
+        };
+        if (statusDeCorrecao()) {
+          return !ehDiaParaCorrigir(dia, categoria, diasParaCorrecao);
+        }
+        return valueDietasAutorizadasEhZero();
+      }
     } else {
-      if (resultado) return false;
+      if (resultado) {
+        if (statusDeCorrecao()) {
+          return !ehDiaParaCorrigir(dia, categoria, diasParaCorrecao);
+        } else {
+          return false;
+        }
+      }
     }
   }
 
@@ -262,6 +304,22 @@ export const desabilitarField = (
       rowName
     )
   ) {
+    if (location.state && ehEscolaTipoCEMEI({ nome: location.state.escola })) {
+      if (
+        ["INTEGRAL", "PARCIAL"].includes(location.state.periodo) &&
+        rowName === "frequencia" &&
+        ((nomeCategoria === "ALIMENTAÇÃO" &&
+          !values[
+            `matriculados__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+          ]) ||
+          (nomeCategoria.includes("DIETA") &&
+            !values[
+              `dietas_autorizadas__faixa_${uuidFaixaEtaria}__dia_${dia}__categoria_${categoria}`
+            ]))
+      ) {
+        return true;
+      }
+    }
     if (
       alimentacoesLancamentosEspeciais?.includes(rowName) &&
       !alimentacoesLancamentosEspeciaisDia?.includes(rowName)
@@ -272,17 +330,14 @@ export const desabilitarField = (
   }
 
   if (
-    (location.state &&
-      (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
-        location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
-        location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
-        ([
-          "MEDICAO_CORRECAO_SOLICITADA",
-          "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-          "MEDICAO_CORRIGIDA_PELA_UE",
-          "MEDICAO_CORRIGIDA_PARA_CODAE",
-        ].includes(location.state.status_periodo) &&
-          !ehDiaParaCorrigir(dia, categoria, diasParaCorrecao)))) ||
+    statusDeBloqueio() ||
+    ([
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_CORRIGIDA_PELA_UE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE",
+    ].includes(location.state.status_periodo) &&
+      !ehDiaParaCorrigir(dia, categoria, diasParaCorrecao)) ||
     ["matriculados", "numero_de_alunos", "dietas_autorizadas"].includes(rowName)
   ) {
     return true;
