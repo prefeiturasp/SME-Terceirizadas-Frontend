@@ -18,7 +18,7 @@ export async function readerFile(file) {
 
 export async function downloadAndConvertToBase64(fileUrl) {
   let finalFileUrl = fileUrl;
-  if (ENVIRONMENT === "homolog" || ENVIRONMENT === "production")
+  if (["production", "homolog", "treinamento"].includes(ENVIRONMENT))
     finalFileUrl = finalFileUrl.replace("http://", "https://");
 
   const response = await axios.get(finalFileUrl, {
