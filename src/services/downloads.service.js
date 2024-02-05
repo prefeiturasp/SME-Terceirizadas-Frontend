@@ -17,7 +17,7 @@ export const deletarDownload = async (uuid) =>
 export const baixarArquivoCentral = async (download) => {
   let status = 0;
   let url = download.arquivo;
-  if (ENVIRONMENT === "homolog" || ENVIRONMENT === "production")
+  if (["production", "homolog", "treinamento"].includes(ENVIRONMENT))
     url = url.replace("http://", "https://");
   return fetch(url, {
     method: "GET",
