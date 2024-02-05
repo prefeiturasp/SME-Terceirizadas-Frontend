@@ -4,6 +4,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
+import moment from "moment";
 import { InputComData } from "components/Shareable/DatePicker";
 import { InputText } from "components/Shareable/Input/InputText";
 import { Select } from "components/Shareable/Select";
@@ -296,7 +297,17 @@ export const EditaisContratosRefatorado = () => {
                                             name={`${name_vigencias}.data_inicial`}
                                             placeholder="DE"
                                             writable={false}
-                                            minDate={null}
+                                            minDate={
+                                              index === 0
+                                                ? null
+                                                : moment(
+                                                    values.contratos[
+                                                      index_contratos
+                                                    ].vigencias[index - 1]
+                                                      .data_final,
+                                                    "DD/MM/YYYY"
+                                                  ).toDate()
+                                            }
                                             required
                                             validate={required}
                                           />
@@ -308,6 +319,23 @@ export const EditaisContratosRefatorado = () => {
                                             name={`${name_vigencias}.data_final`}
                                             placeholder="ATÉ"
                                             writable={false}
+                                            minDate={
+                                              index === 0
+                                                ? moment(
+                                                    values.contratos[
+                                                      index_contratos
+                                                    ].vigencias[index]
+                                                      .data_inicial,
+                                                    "DD/MM/YYYY"
+                                                  ).toDate()
+                                                : moment(
+                                                    values.contratos[
+                                                      index_contratos
+                                                    ].vigencias[index - 1]
+                                                      .data_final,
+                                                    "DD/MM/YYYY"
+                                                  ).toDate()
+                                            }
                                             maxDate={null}
                                           />
                                         </div>
