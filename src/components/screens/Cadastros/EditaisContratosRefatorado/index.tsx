@@ -18,8 +18,10 @@ import { getLotesSimples } from "services/lote.service";
 import { getNomesTerceirizadas } from "services/produto.service.js";
 import { Spin } from "antd";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
-
+import { criarEditalEContrato } from "services/edital.service";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import "./style.scss";
+import { useNavigate } from "react-router-dom";
 
 export const EditaisContratosRefatorado = () => {
   const [lotes, setLotes] = useState(undefined);
@@ -28,6 +30,8 @@ export const EditaisContratosRefatorado = () => {
 
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   const getLotesSimplesAsync = async () => {
     const response = await getLotesSimples();
@@ -100,7 +104,15 @@ export const EditaisContratosRefatorado = () => {
     return `${selected.length} diretorias selecionadas`;
   };
 
-  const onSubmit = () => {};
+  const onSubmit = async (values) => {
+    const response = await criarEditalEContrato(values);
+    if (response.status === HTTP_STATUS.CREATED) {
+      toastSuccess("Edital salvo com sucesso");
+      navigate("/configuracoes/cadastros/editais-cadastrados");
+    } else {
+      toastError("Houve um erro ao salvar o edital");
+    }
+  };
 
   const REQUISICOES_FINALIZADAS = !loading && lotes && DREs && empresas;
 
@@ -172,7 +184,7 @@ export const EditaisContratosRefatorado = () => {
                             component={InputText}
                             className="form-control"
                             label="N° do Edital"
-                            name="edital_numero"
+                            name="numero"
                             placeholder="Digite o número do edital"
                             required
                             validate={required}
@@ -183,7 +195,7 @@ export const EditaisContratosRefatorado = () => {
                           <Field
                             component={InputText}
                             label="Nº do processo administrativo"
-                            name="processo_administrativo"
+                            name="processo"
                             placeholder="Digite o número do processo"
                             required
                             validate={required}
@@ -196,7 +208,7 @@ export const EditaisContratosRefatorado = () => {
                           <Field
                             component={TextArea}
                             label="Objeto resumido"
-                            name="resumo_objeto"
+                            name="objeto"
                             required
                             validate={required}
                             height="120"
@@ -239,7 +251,7 @@ export const EditaisContratosRefatorado = () => {
                               <div className="row">
                                 <div className="col-8">
                                   <Field
-                                    name={`${name_contratos}.processo_administrativo`}
+                                    name={`${name_contratos}.processo`}
                                     label="Processo administrativo do contrato"
                                     placeholder="Digite o processo administrativo"
                                     component={InputText}
@@ -260,23 +272,23 @@ export const EditaisContratosRefatorado = () => {
                                   />
                                 </div>
                               </div>
-                              <FieldArray name={`${name_contratos}.vigencias`}>
-                                {({ fields }) =>
-                                  fields.map((name_vigencias, index) => (
-                                    <div key={name_vigencias}>
-                                      <div className="row">
-                                        {index === 0 && (
-                                          <div className="col-4">
-                                            <Field
-                                              name={`${name_vigencias}.numero_contrato`}
-                                              component={InputText}
-                                              label="Nº do Contrato"
-                                              placeholder="Digite o número do contrato"
-                                              required
-                                              validate={required}
-                                            />
-                                          </div>
-                                        )}
+                              <div className="row">
+                                <div className="col-4">
+                                  <Field
+                                    name={`${name_contratos}.numero`}
+                                    component={InputText}
+                                    label="Nº do Contrato"
+                                    placeholder="Digite o número do contrato"
+                                    required
+                                    validate={required}
+                                  />
+                                </div>
+                                <FieldArray
+                                  name={`${name_contratos}.vigencias`}
+                                >
+                                  {({ fields }) =>
+                                    fields.map((name_vigencias, index) => (
+                                      <>
                                         <div className="col-4">
                                           <Field
                                             component={InputComData}
@@ -318,11 +330,12 @@ export const EditaisContratosRefatorado = () => {
                                             />
                                           </div>
                                         )}
-                                      </div>
-                                    </div>
-                                  ))
-                                }
-                              </FieldArray>
+                                      </>
+                                    ))
+                                  }
+                                </FieldArray>
+                              </div>
+
                               <div className="row mt-3">
                                 <div className="col-12">
                                   <Botao
@@ -493,7 +506,17 @@ export const EditaisContratosRefatorado = () => {
                         <div className="col-12 text-center">
                           <Botao
                             texto="+ Adicionar outro contrato relacionado"
-                            onClick={() => push("contratos")}
+                            onClick={() =>
+                              push("contratos", {
+                                vigencias: [
+                                  {
+                                    numero_contrato: undefined,
+                                    data_inicial: undefined,
+                                    data_final: undefined,
+                                  },
+                                ],
+                              })
+                            }
                             style={BUTTON_STYLE.GREEN_OUTLINE}
                             type={BUTTON_TYPE.BUTTON}
                           />
