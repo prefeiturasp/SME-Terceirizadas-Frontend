@@ -1,32 +1,32 @@
+import { Spin } from "antd";
 import { Botao } from "components/Shareable/Botao";
-import HTTP_STATUS from "http-status-codes";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { InputText } from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
-import { required } from "helpers/fieldValidators";
-import React, { useEffect, useState } from "react";
-import { Field, Form } from "react-final-form";
-import arrayMutators from "final-form-arrays";
-import { getLotesSimples } from "services/lote.service";
-import { getNomesTerceirizadas } from "services/produto.service.js";
-import { Spin } from "antd";
-import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
-import { criarEditalEContrato } from "services/edital.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import "./style.scss";
-import { NavigateFunction, useNavigate } from "react-router-dom";
-import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
+import arrayMutators from "final-form-arrays";
+import { required } from "helpers/fieldValidators";
+import HTTP_STATUS from "http-status-codes";
 import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
-import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
+import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
 import {
   ResponseDiretoriasRegionaisSimplissimaInterface,
   ResponseLotesSimplesInterface,
   ResponseTerceirizadaListaNomesInterface,
 } from "interfaces/responses.interface";
-import { FormCadastroEditaisContratosInterface } from "./interfaces";
+import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
+import React, { useEffect, useState } from "react";
+import { Field, Form } from "react-final-form";
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
+import { criarEditalEContrato } from "services/edital.service";
+import { getLotesSimples } from "services/lote.service";
+import { getNomesTerceirizadas } from "services/produto.service.js";
+import { FormCadastroEditaisContratosInterface } from "../interfaces";
+import "../style.scss";
 import { FieldArrayContratos } from "./components";
 
 export const EditaisContratosRefatorado = () => {

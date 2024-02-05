@@ -1,6 +1,6 @@
 import React from "react";
 import Breadcrumb from "components/Shareable/Breadcrumb";
-import { EditaisContratosRefatorado } from "components/screens/Cadastros/EditaisContratosRefatorado";
+import { EditaisContratosRefatorado } from "components/screens/Cadastros/EditaisContratosRefatorado/Cadastro";
 import Page from "components/Shareable/Page/Page";
 import {
   CONFIGURACOES,

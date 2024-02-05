@@ -1,3 +1,18 @@
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { Botao } from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "components/Shareable/Botao/constants";
+import { InputComData } from "components/Shareable/DatePicker";
+import { InputText } from "components/Shareable/Input/InputText";
+import { Select } from "components/Shareable/Select";
+import { FormApi } from "final-form";
+import { required } from "helpers/fieldValidators";
+import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
+import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
+import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
+import moment from "moment";
 import React from "react";
 import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
@@ -5,27 +20,12 @@ import {
   FormCadastroEditaisContratosContratoInterface,
   FormCadastroEditaisContratosInterface,
   FormCadastroEditaisContratosVigenciaInterface,
-} from "./interfaces";
-import { InputText } from "components/Shareable/Input/InputText";
-import { required } from "helpers/fieldValidators";
-import { InputComData } from "components/Shareable/DatePicker";
-import { FormApi } from "final-form";
-import moment from "moment";
-import { Botao } from "components/Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_TYPE,
-} from "components/Shareable/Botao/constants";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
-import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
-import { Select } from "components/Shareable/Select";
-import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
+} from "../interfaces";
 
 interface FieldArrayContratosInterface {
   form: FormApi<any, Partial<any>>;
   values: FormCadastroEditaisContratosInterface;
-  push;
+  push: (_field: string) => void;
   lotes: Array<LoteRascunhosInterface>;
   DREs: Array<DiretoriaRegionalInterface>;
   empresas: Array<TerceirizadaInterface>;
