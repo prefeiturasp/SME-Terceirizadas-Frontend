@@ -1,4 +1,5 @@
 import {
+  DiretoriaRegionalInterface,
   QuantidadeAlunosEscolaInterface,
   VinculoTipoAlimentacaoPorEscolaInterface,
 } from "interfaces/escola.interface";
@@ -19,6 +20,8 @@ import {
   DadosCronogramaFichaTecnica,
 } from "./pre_recebimento.interface";
 import { InformacaoNutricional } from "./produto.interface";
+import { LoteRascunhosInterface } from "./rascunhos.interface";
+import { TerceirizadaInterface } from "./terceirizada.interface";
 
 export interface ResponseInterface {
   data: Object;
@@ -156,4 +159,30 @@ export interface ResponseInformacoesNutricionais extends ResponseInterface {
 
 export interface ResponseCalendarioCronograma extends ResponseInterface {
   data: ListagemPaginada<EtapaCalendario>;
+}
+
+export interface ResponseLotesSimplesInterface extends ResponseInterface {
+  data: {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Array<LoteRascunhosInterface>;
+  };
+}
+
+export interface ResponseDiretoriasRegionaisSimplissimaInterface
+  extends ResponseInterface {
+  data: {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Array<DiretoriaRegionalInterface>;
+  };
+}
+
+export interface ResponseTerceirizadaListaNomesInterface
+  extends ResponseInterface {
+  data: {
+    results: Array<TerceirizadaInterface>;
+  };
 }

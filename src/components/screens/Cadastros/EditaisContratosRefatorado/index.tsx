@@ -22,10 +22,16 @@ import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.serv
 import { criarEditalEContrato } from "services/edital.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import "./style.scss";
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
 import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
 import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
+import {
+  ResponseDiretoriasRegionaisSimplissimaInterface,
+  ResponseLotesSimplesInterface,
+  ResponseTerceirizadaListaNomesInterface,
+} from "interfaces/responses.interface";
+import { FormCadastroEditaisContratosInterface } from "./interfaces";
 
 export const EditaisContratosRefatorado = () => {
   const [lotes, setLotes] = useState<Array<LoteRascunhosInterface>>(undefined);
@@ -37,10 +43,10 @@ export const EditaisContratosRefatorado = () => {
   const [erro, setErro] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
-  const navigate = useNavigate();
+  const navigate: NavigateFunction = useNavigate();
 
-  const getLotesSimplesAsync = async () => {
-    const response = await getLotesSimples();
+  const getLotesSimplesAsync = async (): Promise<void> => {
+    const response: ResponseLotesSimplesInterface = await getLotesSimples();
     if (response.status === HTTP_STATUS.OK) {
       setLotes(response.data.results);
     } else {
@@ -48,8 +54,9 @@ export const EditaisContratosRefatorado = () => {
     }
   };
 
-  const getDiretoriareginalSimplissimaAsync = async () => {
-    const response = await getDiretoriaregionalSimplissima();
+  const getDiretoriareginalSimplissimaAsync = async (): Promise<void> => {
+    const response: ResponseDiretoriasRegionaisSimplissimaInterface =
+      await getDiretoriaregionalSimplissima();
     if (response.status === HTTP_STATUS.OK) {
       setDREs(response.data.results);
     } else {
@@ -59,10 +66,11 @@ export const EditaisContratosRefatorado = () => {
     }
   };
 
-  const getNomesTerceirizadasAsync = async () => {
-    const response = await getNomesTerceirizadas({
-      tipo_empresa: "Terceirizada",
-    });
+  const getNomesTerceirizadasAsync = async (): Promise<void> => {
+    const response: ResponseTerceirizadaListaNomesInterface =
+      await getNomesTerceirizadas({
+        tipo_empresa: "Terceirizada",
+      });
     if (response.status === HTTP_STATUS.OK) {
       setEmpresas(response.data.results);
     } else {
@@ -74,7 +82,7 @@ export const EditaisContratosRefatorado = () => {
     requisicoesPreRender();
   }, []);
 
-  const requisicoesPreRender = async () => {
+  const requisicoesPreRender = async (): Promise<void> => {
     await Promise.all([
       getLotesSimplesAsync(),
       getDiretoriareginalSimplissimaAsync(),
@@ -84,7 +92,10 @@ export const EditaisContratosRefatorado = () => {
     });
   };
 
-  const renderizarLabelLote = (selected, options) => {
+  const renderizarLabelLote = (
+    selected: Array<string>,
+    options: Array<string>
+  ): string => {
     if (selected.length === 0) {
       return "Selecione um ou mais lotes...";
     }
@@ -97,7 +108,10 @@ export const EditaisContratosRefatorado = () => {
     return `${selected.length} lotes selecionados`;
   };
 
-  const renderizarDiretoriaRegional = (selected, options) => {
+  const renderizarDiretoriaRegional = (
+    selected: Array<string>,
+    options: Array<string>
+  ): string => {
     if (selected.length === 0) {
       return "Selecione uma ou mais diretorias...";
     }
@@ -110,7 +124,9 @@ export const EditaisContratosRefatorado = () => {
     return `${selected.length} diretorias selecionadas`;
   };
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (
+    values: FormCadastroEditaisContratosInterface
+  ): Promise<void> => {
     const response = await criarEditalEContrato(values);
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Edital salvo com sucesso");
@@ -241,7 +257,8 @@ export const EditaisContratosRefatorado = () => {
                                           form.change(
                                             `contratos`,
                                             values.contratos.filter(
-                                              (_, i) => i !== index_contratos
+                                              (_: string, i: number) =>
+                                                i !== index_contratos
                                             )
                                           );
                                         }}
@@ -355,7 +372,8 @@ export const EditaisContratosRefatorado = () => {
                                                   values.contratos[
                                                     index_contratos
                                                   ].vigencias.filter(
-                                                    (_, i) => i !== index
+                                                    (_: string, i: number) =>
+                                                      i !== index
                                                   )
                                                 );
                                               }}
@@ -400,7 +418,9 @@ export const EditaisContratosRefatorado = () => {
                                       label: lote.nome,
                                       value: lote.uuid,
                                     }))}
-                                    onSelectedChanged={(values_) => {
+                                    onSelectedChanged={(
+                                      values_: Array<string>
+                                    ) => {
                                       form.change(
                                         `contratos[${index_contratos}].lotes`,
                                         values_
@@ -459,7 +479,9 @@ export const EditaisContratosRefatorado = () => {
                                       label: dre.nome,
                                       value: dre.uuid,
                                     }))}
-                                    onSelectedChanged={(values_) => {
+                                    onSelectedChanged={(
+                                      values_: Array<string>
+                                    ) => {
                                       form.change(
                                         `contratos[${index_contratos}].diretorias_regionais`,
                                         values_
