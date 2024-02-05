@@ -89,6 +89,7 @@ class CadastroLote extends Component {
       }
     }
     const urlParams = new URLSearchParams(window.location.search);
+
     const uuid =
       this.props.location && this.props.location.state
         ? this.props.location.state.uuid
@@ -128,8 +129,7 @@ class CadastroLote extends Component {
     }
 
     if (
-      location &&
-      location.state &&
+      ((location && location.state) || uuid) &&
       diretoria_regional &&
       !escolasParaEdicaoCarregadas
     ) {
