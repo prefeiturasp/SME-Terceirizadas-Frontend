@@ -8,6 +8,9 @@ export interface FormCadastroEditaisContratosContratoInterface {
   data_proposta: string;
   numero: string;
   vigencias: Array<FormCadastroEditaisContratosVigenciaInterface>;
+  lotes: Array<string>;
+  diretorias_regionais: Array<string>;
+  empresa: string;
 }
 
 export interface FormCadastroEditaisContratosInterface {
@@ -16,7 +19,4 @@ export interface FormCadastroEditaisContratosInterface {
   processo: string;
   objeto: string;
   contratos: Array<FormCadastroEditaisContratosContratoInterface>;
-  lotes: Array<string>;
-  diretorias_regionais: Array<string>;
-  empresa: string;
 }
