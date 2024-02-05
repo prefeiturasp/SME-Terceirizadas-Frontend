@@ -1,30 +1,20 @@
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 import axios from "services/_base";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
   "Content-Type": "application/json",
 };
 
-export const criarEditalEContrato = (payload) => {
+export const criarEditalEContrato = async (payload) => {
   const url = `${API_URL}/editais-contratos/`;
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    body: payload,
-    headers: authToken,
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const atualizarEditalEContrato = (payload, uuid) => {

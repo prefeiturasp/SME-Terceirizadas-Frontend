@@ -12,7 +12,7 @@ import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
 import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
 import CadastroKitLanchePage from "../pages/Cadastros/CadastroKitLanchePage";
 import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
-import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
+import EditaisContratosRefatoradoPage from "../pages/Cadastros/EditaisContratosRefatoradoPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
 import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 import PainelPedidosAlteracaoDeCardapioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/PainelPedidosPage";
@@ -683,7 +683,7 @@ const routesConfig = [
   },
   {
     path: `/configuracoes/cadastros/editais-contratos`,
-    component: EditaisContratosPage,
+    component: EditaisContratosRefatoradoPage,
     tipoUsuario: usuarioEhQualquerCODAE(),
   },
   {
