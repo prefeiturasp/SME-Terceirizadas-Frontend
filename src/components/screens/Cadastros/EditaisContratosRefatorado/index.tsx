@@ -23,14 +23,19 @@ import { criarEditalEContrato } from "services/edital.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
+import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
+import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
+import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
 
 export const EditaisContratosRefatorado = () => {
-  const [lotes, setLotes] = useState(undefined);
-  const [DREs, setDREs] = useState(undefined);
-  const [empresas, setEmpresas] = useState(undefined);
+  const [lotes, setLotes] = useState<Array<LoteRascunhosInterface>>(undefined);
+  const [DREs, setDREs] =
+    useState<Array<DiretoriaRegionalInterface>>(undefined);
+  const [empresas, setEmpresas] =
+    useState<Array<TerceirizadaInterface>>(undefined);
 
-  const [erro, setErro] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   const navigate = useNavigate();
 
