@@ -19,7 +19,7 @@ import {
   LAYOUT_EMBALAGEM,
   PRE_RECEBIMENTO,
 } from "../../../../../../configs/constants";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ModalConfirmar from "./components/ModalConfirmar";
 import {
   toastError,
@@ -30,6 +30,7 @@ import { atualizacaoLayoutEmbalagem } from "../../../../../../services/layoutEmb
 import ModalAtualizar from "./components/ModalAtualizar";
 import InserirArquivo from "../InserirArquivo";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
+import { getMensagemDeErro } from "../../../../../../helpers/statusErrors";
 
 const TITULOS_SECOES_TIPOS_EMBALAGENS = {
   PRIMARIA: "Embalagem Primária",
@@ -40,7 +41,7 @@ const TITULOS_SECOES_TIPOS_EMBALAGENS = {
 const FORMATOS_IMAGEM = "PDF, PNG, JPG ou JPEG";
 
 export default ({ atualizar }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [carregando, setCarregando] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [objeto, setObjeto] = useState({});
@@ -326,7 +327,7 @@ export default ({ atualizar }) => {
   };
 
   const voltarPagina = () =>
-    history.push(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
+    navigate(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
 
   const onSubmit = () => {
     setShowModal(true);
@@ -339,16 +340,17 @@ export default ({ atualizar }) => {
     const uuid = urlParams.get("uuid");
     const payload = formataPayload(values);
     const response = await corrigirLayoutEmbalagem(uuid, payload);
-
-    if (response.status === 200) {
-      toastSuccess("Correção Enviada com sucesso!");
-      setShowModal(false);
-      voltarPagina();
-    } else {
-      toastError("Ocorreu um erro ao salvar o Layout da Embalagem");
+    try {
+      if (response.status === 200) {
+        toastSuccess("Correção Enviada com sucesso!");
+        setShowModal(false);
+        voltarPagina();
+      }
+    } catch (error) {
+      toastError(getMensagemDeErro(error.response.status));
+    } finally {
+      setCarregando(false);
     }
-
-    setCarregando(false);
   };
 
   const atualizarLayoutEmbalagem = async (values) => {

@@ -1,11 +1,13 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Header } from "../Header";
 import Breadcrumb from "../Breadcrumb";
 import BotaoVoltar from "./BotaoVoltar";
 import "./style.scss";
 
-const PageNoSidebar = ({ voltarPara, children, history }) => {
+const PageNoSidebar = ({ voltarPara, children }) => {
+  const location = useLocation();
+
   return (
     <div id="wrapper">
       <Header toggled={false} />
@@ -14,7 +16,7 @@ const PageNoSidebar = ({ voltarPara, children, history }) => {
           <Breadcrumb home={"/"} />
           <div className="card p-3 page-no-sidebar-card">
             <div>
-              <BotaoVoltar location={history.location} to={voltarPara} />
+              <BotaoVoltar location={location} to={voltarPara} />
             </div>
             {children}
           </div>
@@ -24,4 +26,4 @@ const PageNoSidebar = ({ voltarPara, children, history }) => {
   );
 };
 
-export default withRouter(PageNoSidebar);
+export default PageNoSidebar;

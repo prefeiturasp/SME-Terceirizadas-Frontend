@@ -9,13 +9,13 @@ import {
   CODAECancelaAnaliseSensorialProduto,
   imprimeFichaIdentificacaoProduto,
 } from "services/produto.service";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { usuarioEhCODAEGestaoProduto } from "helpers/utilities";
 import { ModalPadrao } from "components/Shareable/ModalPadrao";
 import { PAINEL_GESTAO_PRODUTO } from "configs/constants";
 
 export const BotoesRodape = ({ homologacao, ehCardSuspensos }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
   const params = {
@@ -33,7 +33,7 @@ export const BotoesRodape = ({ homologacao, ehCardSuspensos }) => {
         uuid={homologacao.uuid}
         cancelaAnaliseSensorial={homologacao}
         endpoint={CODAECancelaAnaliseSensorialProduto}
-        loadSolicitacao={() => history.push(`/${PAINEL_GESTAO_PRODUTO}`)}
+        loadSolicitacao={() => navigate(`/${PAINEL_GESTAO_PRODUTO}`)}
       />
       <div className="col-12">
         <Botao
@@ -63,7 +63,7 @@ export const BotoesRodape = ({ homologacao, ehCardSuspensos }) => {
           texto="Voltar"
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.ARROW_LEFT}
-          onClick={() => history.goBack()}
+          onClick={() => navigate(-1)}
           className="me-2 float-end"
         />
       </div>

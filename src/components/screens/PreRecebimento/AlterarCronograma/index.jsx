@@ -28,7 +28,7 @@ import {
   PRE_RECEBIMENTO,
   SOLICITACAO_ALTERACAO_CRONOGRAMA,
 } from "configs/constants";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   usuarioEhCronograma,
   usuarioEhDilogDiretoria,
@@ -60,7 +60,7 @@ export default ({ analiseSolicitacao }) => {
     useState(null);
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [carregando, setCarregando] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const solicitacaoCodae =
     solicitacaoAlteracaoCronograma &&
@@ -143,9 +143,11 @@ export default ({ analiseSolicitacao }) => {
       values[`data_programada_${index}`] = etapa.data_programada;
       values[`quantidade_${index}`] = formataMilhar(etapa.quantidade);
       values[`total_embalagens_${index}`] = etapa.total_embalagens;
+      values[`qtd_total_empenho_${index}`] = etapa.qtd_total_empenho;
     });
     values.quantidade_total = formataMilhar(cronograma.qtd_total_programada);
     values.unidade_medida = cronograma.unidade_medida;
+    values.peso_liquido_embalagem_secundaria = cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria?.toString();
     setInitialValues(values);
   };
 
@@ -172,7 +174,7 @@ export default ({ analiseSolicitacao }) => {
           ? "Solicitação de alteração salva com sucesso!"
           : "Alteração enviada com sucesso!";
         toastSuccess(msg);
-        history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+        navigate(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
       })
       .catch(() => {
         toastError("Ocorreu um erro ao salvar o Cronograma");
@@ -191,7 +193,7 @@ export default ({ analiseSolicitacao }) => {
     await analiseDilogSolicitacaoAlteracaoCronograma(uuid, payload)
       .then(() => {
         toastSuccess("Análise da alteração enviada com sucesso!");
-        history.push(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
+        navigate(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
       })
       .catch(() => {
         toastError("Ocorreu um erro ao salvar o Cronograma");
@@ -210,7 +212,7 @@ export default ({ analiseSolicitacao }) => {
     await analiseDinutreSolicitacaoAlteracaoCronograma(uuid, payload)
       .then(() => {
         toastSuccess("Análise da alteração enviada com sucesso!");
-        history.push(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
+        navigate(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
       })
       .catch(() => {
         toastError("Ocorreu um erro ao salvar o Cronograma");
@@ -232,7 +234,7 @@ export default ({ analiseSolicitacao }) => {
     await fornecedorCienteAlteracaoCodae(uuid)
       .then(() => {
         toastSuccess("Ciência da alteração gravada com sucesso!");
-        history.push(
+        navigate(
           `/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR}`
         );
       })
@@ -270,7 +272,7 @@ export default ({ analiseSolicitacao }) => {
     await dilogCienteSolicitacaoAlteracaoCronograma(uuid, payload)
       .then(() => {
         toastSuccess("Análise da alteração enviada com sucesso!");
-        history.push(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
+        navigate(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
       })
       .catch(() => {
         toastError("Ocorreu um erro ao salvar o Cronograma");
@@ -407,6 +409,7 @@ export default ({ analiseSolicitacao }) => {
                           etapas={etapas}
                           setEtapas={setEtapas}
                           values={values}
+                          errors={errors}
                           duplicados={duplicados}
                           restante={restante}
                           unidadeMedida={values.unidade_medida}
@@ -432,7 +435,8 @@ export default ({ analiseSolicitacao }) => {
                       />
                     </div>
                     {((usuarioEhDinutreDiretoria() &&
-                      solicitacaoAlteracaoCronograma.status !== "Em análise") ||
+                      solicitacaoAlteracaoCronograma.status !== "Em análise" &&
+                      values.justificativa_cronograma) ||
                       (usuarioEhDilogDiretoria() &&
                         analisadoPelaDinutre())) && (
                       <>
@@ -447,25 +451,31 @@ export default ({ analiseSolicitacao }) => {
                           />
                         </div>
                         <hr />
-                        <p className="head-green">Análise DINUTRE</p>
+
                         {usuarioEhDinutreDiretoria() &&
                           solicitacaoAlteracaoCronograma.status ===
                             "Cronograma ciente" && (
-                            <Radio.Group
-                              size="large"
-                              onChange={onChangeCampos}
-                              value={aprovacaoDinutre}
-                            >
-                              <Radio className="radio-entrega-sim" value={true}>
-                                Analise Aprovada
-                              </Radio>
-                              <Radio
-                                className="radio-entrega-nao"
-                                value={false}
+                            <>
+                              <p className="head-green">Análise DINUTRE</p>
+                              <Radio.Group
+                                size="large"
+                                onChange={onChangeCampos}
+                                value={aprovacaoDinutre}
                               >
-                                Analise Reprovada
-                              </Radio>
-                            </Radio.Group>
+                                <Radio
+                                  className="radio-entrega-sim"
+                                  value={true}
+                                >
+                                  Analise Aprovada
+                                </Radio>
+                                <Radio
+                                  className="radio-entrega-nao"
+                                  value={false}
+                                >
+                                  Analise Reprovada
+                                </Radio>
+                              </Radio.Group>
+                            </>
                           )}
                         {exibirJustificativaDinutre() && (
                           <div className="mt-4">

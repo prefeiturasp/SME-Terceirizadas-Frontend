@@ -146,10 +146,7 @@ const TabelaNutricional: React.FC<Props> = ({
                 {informacao.nome.toUpperCase() === "VALOR ENERGÉTICO" && (
                   <>
                     <span>=</span>
-                    <Field
-                      component={InputText}
-                      proibeLetras
-                      name={`quantidade_porcao_kj_${informacao.uuid}`}
+                    <InputText
                       className="input-tabela-nutricional"
                       valorInicial={converterDeKcalParaKj(
                         values[`quantidade_porcao_${informacao.uuid}`]

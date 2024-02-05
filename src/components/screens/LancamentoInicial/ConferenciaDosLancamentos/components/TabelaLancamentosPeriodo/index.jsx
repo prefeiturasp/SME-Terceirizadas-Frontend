@@ -276,7 +276,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
           )}`
         ]
       ) &&
-      (diaEhFeriado(column.dia) || diaEhNaoLetivoEDeSemana(column.dia))
+      (diaEhFeriado(column.dia) || diaEhNaoLetivoEDeSemana(column.dia)) &&
+      !validacaoSemana(column.dia, semanaSelecionada)
     );
   };
 
@@ -302,7 +303,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
           )}`
         ]
       ) &&
-      (diaEhFeriadoByIndex(index) || diaEhNaoLetivoEDeSemanaByIndex(index))
+      (diaEhFeriadoByIndex(index) || diaEhNaoLetivoEDeSemanaByIndex(index)) &&
+      !validacaoSemana(weekColumns[index].dia, semanaSelecionada)
     );
   };
 
@@ -417,13 +419,19 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   (valor) => valor.categoria_medicao === categoria.id
                 ) && categoriasParaDeletar.push(categoria.id)
             );
-            categoriasMedicao = categoriasMedicao.filter((categoria) => {
+            categoriasMedicao = (
+              categoriasMedicao || categoriasDeMedicao
+            ).filter((categoria) => {
               return !categoriasParaDeletar.includes(categoria.id);
             });
             setCategoriasDeMedicao(categoriasMedicao);
           };
 
-          if (ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+          if (
+            ehEscolaTipoCEI({ nome: solicitacao.escola }) ||
+            (ehEscolaTipoCEMEI({ nome: solicitacao.escola }) &&
+              ["INTEGRAL", "PARCIAL"].includes(periodoGrupo.nome_periodo_grupo))
+          ) {
             await formatarLinhasTabelasCEI();
           } else {
             if (periodoGrupo.nome_periodo_grupo === "ETEC") {
@@ -451,9 +459,18 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                     periodos = periodosSimples[0];
                   }
                   Object.keys(periodos).forEach((periodo) => {
-                    const tipos = periodosSimples.find(
-                      (p) => p.periodo_escolar.nome === periodo
-                    ).tipos_alimentacao;
+                    let tipos;
+                    if (ehEscolaTipoCEMEI({ nome: solicitacao.escola })) {
+                      tipos = periodosSimples.find(
+                        (p) =>
+                          p.periodo_escolar.nome === periodo &&
+                          p.tipo_unidade_escolar.iniciais === "EMEI"
+                      ).tipos_alimentacao;
+                    } else {
+                      tipos = periodosSimples.find(
+                        (p) => p.periodo_escolar.nome === periodo
+                      ).tipos_alimentacao;
+                    }
                     tiposAlimentacao = [...tiposAlimentacao, ...tipos];
                   });
                   const tipos_alimentacao = removeObjetosDuplicados(
@@ -481,9 +498,19 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 };
                 getPeriodosInclusaoContinuaAsync();
               } else {
-                const periodo = periodosSimples.find(
-                  (periodo) => periodo.periodo_escolar.nome === periodoEscolar
-                );
+                let periodo;
+                if (periodoGrupo.nome_periodo_grupo.includes("Infantil")) {
+                  periodo = periodosSimples.find(
+                    (periodo) =>
+                      `Infantil ${periodo.periodo_escolar.nome}` ===
+                        periodoGrupo.nome_periodo_grupo &&
+                      periodo.tipo_unidade_escolar.iniciais === "EMEI"
+                  );
+                } else {
+                  periodo = periodosSimples.find(
+                    (periodo) => periodo.periodo_escolar.nome === periodoEscolar
+                  );
+                }
                 const tipos_alimentacao = periodo.tipos_alimentacao;
                 const ehPeriodoSimples = periodosSimples
                   .map((periodo) => periodo.periodo_escolar.nome)
@@ -590,7 +617,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     }
 
     setData(new Date(`${mesSolicitacao}/01/${anoSolicitacao}`));
-  }, [showTabelaLancamentosPeriodo]);
+  }, [showTabelaLancamentosPeriodo]); //
 
   useEffect(() => {
     let diasSemana = [];
@@ -742,7 +769,10 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
 
   const salvarCorrecao = async (uuidMedicaoPeriodoGrupo) => {
     let uuidsValoresMedicaoParaCorrecao = [];
-    if (!ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+    if (
+      !ehEscolaTipoCEI({ nome: solicitacao.escola }) &&
+      !ehEscolaTipoCEMEI({ nome: solicitacao.escola })
+    ) {
       Object.keys(valoresParaCorrecao).forEach((key) => {
         const keySplitted = key.split("__");
         const nome_campo = keySplitted[0];
@@ -758,7 +788,11 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
         const uuidValorMedicao = lancamento.uuid;
         uuidsValoresMedicaoParaCorrecao.push(uuidValorMedicao);
       });
-    } else if (ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+    } else if (
+      ehEscolaTipoCEI({ nome: solicitacao.escola }) ||
+      (ehEscolaTipoCEMEI({ nome: solicitacao.escola }) &&
+        ["INTEGRAL", "PARCIAL"].includes(periodoGrupo.nome_periodo_grupo))
+    ) {
       Object.keys(valoresParaCorrecao).forEach((key) => {
         const keySplitted = key.split("__");
         const nome_campo = keySplitted[0];
@@ -880,7 +914,11 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   };
 
   const getNameFieldInputValueMedicao = (row, column, categoria) => {
-    if (ehEscolaTipoCEI({ nome: solicitacao.escola })) {
+    if (
+      ehEscolaTipoCEI({ nome: solicitacao.escola }) ||
+      (ehEscolaTipoCEMEI({ nome: solicitacao.escola }) &&
+        ["INTEGRAL", "PARCIAL"].includes(periodoGrupo.nome_periodo_grupo))
+    ) {
       return `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${
         categoria.id
       }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
@@ -941,7 +979,11 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
         ((tabelaAlimentacaoRows && tabelaDietaRows && tabelaDietaEnteralRows) ||
           tabelaSolicitacoesAlimentacaoRows ||
           tabelaEtecAlimentacaoRows ||
-          (ehEscolaTipoCEI({ nome: solicitacao.escola }) &&
+          ((ehEscolaTipoCEI({ nome: solicitacao.escola }) ||
+            (ehEscolaTipoCEMEI({ nome: solicitacao.escola }) &&
+              ["INTEGRAL", "PARCIAL"].includes(
+                periodoGrupo.nome_periodo_grupo
+              ))) &&
             tabelaAlimentacaoRows)) &&
         valoresLancamentos && (
           <>
@@ -1069,7 +1111,13 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                               >
                                 {ehEscolaTipoCEI({
                                   nome: solicitacao.escola,
-                                }) ? (
+                                }) ||
+                                (ehEscolaTipoCEMEI({
+                                  nome: solicitacao.escola,
+                                }) &&
+                                  ["INTEGRAL", "PARCIAL"].includes(
+                                    periodoGrupo.nome_periodo_grupo
+                                  )) ? (
                                   <div className="linha-cei">
                                     <b
                                       className={`nome-linha-cei ps-2 ${
@@ -1344,6 +1392,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                       values={values}
                       categoria={categoria}
                       periodoGrupo={periodoGrupo}
+                      semanaSelecionada={semanaSelecionada}
                     />
                   ),
                 ])}
@@ -1356,6 +1405,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 values={values}
                 categoria={categoriasDeMedicao[0]}
                 periodoGrupo={periodoGrupo}
+                semanaSelecionada={semanaSelecionada}
               />
               {usuarioEhDRE() && logPeriodoAprovado && (
                 <div className="row">

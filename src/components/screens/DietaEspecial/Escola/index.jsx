@@ -4,7 +4,7 @@ import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import withNavigationType from "components/Shareable/withNavigationType";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import {
@@ -76,6 +76,7 @@ class solicitacaoDietaEspecial extends Component {
       criadoRf: null,
       deletandoImagem: false,
       atualizandoImagem: false,
+      nome_escola: "",
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -89,10 +90,11 @@ class solicitacaoDietaEspecial extends Component {
       this.setState({
         quantidadeAlunos: meusDados.vinculo_atual.instituicao.quantidade_alunos,
         codigo_eol_escola: meusDados.vinculo_atual.instituicao.codigo_eol,
+        nome_escola: meusDados.vinculo_atual.instituicao.nome,
       });
     });
-    const { history, loadSolicitacoesVigentes, reset } = this.props;
-    if (history && history.action === "PUSH") {
+    const { navigationType, loadSolicitacoesVigentes, reset } = this.props;
+    if (navigationType === "PUSH") {
       loadSolicitacoesVigentes(null);
       reset();
     }
@@ -313,16 +315,21 @@ class solicitacaoDietaEspecial extends Component {
       });
       this.resetForm();
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-      toastError(getError(response.data));
+      toastError(response.data);
     } else {
-      toastError(
-        `Erro ao solicitar dieta especial: ${getError(response.data)}`
-      );
+      toastError(`Erro ao solicitar dieta especial: ${response.data}`);
     }
   }
 
   resetForm() {
     this.props.reset("solicitacaoDietaEspecial");
+  }
+
+  atualizaCamposAlunoNaoMatriculado() {
+    const { change } = this.props;
+    const { codigo_eol_escola, nome_escola } = this.state;
+    change("aluno_nao_matriculado_data.codigo_eol_escola", codigo_eol_escola);
+    change("aluno_nao_matriculado_data.nome_escola", nome_escola);
   }
 
   render() {
@@ -352,12 +359,15 @@ class solicitacaoDietaEspecial extends Component {
                 component={CheckboxField}
                 name="aluno_nao_matriculado"
                 type="checkbox"
-                onChange={() => {
+                onChange={(ehAlunoNaoMatriculado) => {
                   this.props.loadSolicitacoesVigentes(null);
                   this.props.reset();
                   this.setState({
-                    aluno_nao_matriculado: !this.state.aluno_nao_matriculado,
+                    aluno_nao_matriculado: ehAlunoNaoMatriculado,
                   });
+                  if (ehAlunoNaoMatriculado) {
+                    this.atualizaCamposAlunoNaoMatriculado();
+                  }
                 }}
               />
               <div className="ms-3">
@@ -531,6 +541,7 @@ class solicitacaoDietaEspecial extends Component {
                       className="form-control"
                       type="number"
                       required
+                      disabled
                       validate={[required, length(6)]}
                       onBlur={this.getEscolaPorEOL}
                     />
@@ -660,7 +671,7 @@ const componentNameForm = reduxForm({
   form: "solicitacaoDietaEspecial",
   keepDirtyOnReinitialize: true,
   destroyOnUnmount: false,
-})(solicitacaoDietaEspecial);
+})(withNavigationType(solicitacaoDietaEspecial));
 
 const selector = formValueSelector("solicitacaoDietaEspecial");
 const mapStateToProps = (state) => {
@@ -679,6 +690,4 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(componentNameForm)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(componentNameForm);

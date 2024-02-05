@@ -1,7 +1,7 @@
 import { Spin } from "antd";
 import React, { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useNavigationType } from "react-router-dom";
 import { bindActionCreators } from "redux";
 
 import FormBuscaProduto from "components/screens/Produto/Reclamacao/components/FormBuscaProduto";
@@ -28,7 +28,6 @@ import { Paginacao } from "components/Shareable/Paginacao";
 
 export const AvaliarReclamacaoProduto = ({
   setPropsPageProduto,
-  history,
   reset,
   produtos,
   setProdutos,
@@ -44,6 +43,8 @@ export const AvaliarReclamacaoProduto = ({
   const [formValues, setFormValues] = useState(null);
   const [terceirizadas, setTerceirizadas] = useState(null);
   const PAGE_SIZE = 10;
+
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     if (formValues) {
@@ -67,7 +68,7 @@ export const AvaliarReclamacaoProduto = ({
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
 
-    if (history && history.action === "PUSH") {
+    if (navigationType === "PUSH") {
       reset();
     }
     if (uuid) {
@@ -170,6 +171,7 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(AvaliarReclamacaoProduto)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AvaliarReclamacaoProduto);

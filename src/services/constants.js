@@ -32,6 +32,8 @@ export const SOLICITACOES = {
   CANCELADOS: "cancelados",
   PENDENTES_VALIDACAO_DRE: "pendentes-validacao",
   QUESTIONAMENTOS: "questionamentos",
+  ANOS_COM_DIETAS: "anos-com-dietas",
+  TOTAIS_GERENCIAL_DIETAS: "totais-gerencial-dietas",
 };
 
 export const TIPO_MOTIVO = {

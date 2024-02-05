@@ -350,6 +350,12 @@ export const inteiroOuDecimalPositivoOuNegativo = (value) => {
     : undefined;
 };
 
+export const decimalMonetario = (value) => {
+  return value && !/^[0-9]+([,][0-9]{2})$/g.test(value)
+    ? "Somente números com duas casas decimais (ex: 00,00)"
+    : undefined;
+};
+
 export const numeroInteiro = (value) =>
   value ? (!/\D/.test(value) ? undefined : "Somente números") : [];
 

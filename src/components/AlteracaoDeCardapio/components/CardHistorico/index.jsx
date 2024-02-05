@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import "./style.scss";
 import {
@@ -58,7 +58,7 @@ export class CardHistorico extends Component {
   redirectTo(pedido) {
     if (this.state.redirect) {
       return (
-        <Redirect
+        <Navigate
           to={`/${ALTERACAO_TIPO_ALIMENTACAO}/${RELATORIO}?uuid=${pedido.uuid}`}
         />
       );

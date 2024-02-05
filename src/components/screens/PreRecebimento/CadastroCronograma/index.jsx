@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
-import moment from "moment";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -12,7 +11,8 @@ import { Field, Form, FormSpy } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { getNomesDistribuidores } from "services/logistica.service";
-import SelectSelecione from "components/Shareable/SelectSelecione";
+import Select from "components/Shareable/Select";
+import Label from "components/Shareable/Label";
 import {
   cadastraCronograma,
   editaCronograma,
@@ -21,69 +21,67 @@ import {
   getUnidadesDeMedidaLogistica,
 } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { useHistory } from "react-router-dom";
-import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
+import { useNavigate } from "react-router-dom";
+import {
+  CRONOGRAMA_ENTREGA,
+  PRE_RECEBIMENTO,
+  CADASTRO_CRONOGRAMA,
+  EDITAR,
+} from "configs/constants";
 import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
-import { required } from "helpers/fieldValidators";
+import {
+  required,
+  composeValidators,
+  decimalMonetario,
+} from "helpers/fieldValidators";
 import { exibeError, formataMilhar } from "helpers/utilities";
 import { getEmpresasCronograma } from "services/terceirizada.service";
-import { getListaCompletaProdutosLogistica } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
-import { getListaTiposEmbalagens } from "../../../../services/qualidade.service";
+import {
+  getListaFichasTecnicasSimplesSemCronograma,
+  getDadosCronogramaFichaTecnica,
+} from "services/fichaTecnica.service";
+import {
+  stringNaoVaziaOuUndefined,
+  numberToStringDecimal,
+  numberToStringDecimalMonetario,
+} from "helpers/parsers";
+import {
+  formataPayload,
+  geraOptionsFichasTecnicas,
+  getEmpresaFiltrado,
+  getOpcoesContrato,
+  validaRascunho,
+} from "./helpers";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [collapse, setCollapse] = useState([]);
-  const [produtosOptions, setProdutosOptions] = useState([{}]);
+
+  const [fichasTecnicas, setFichasTecnicas] = useState([{}]);
   const [unidadesMedidaOptions, setUnidadesMedidaOptions] = useState([{}]);
-  const [tiposEmbalagemOptions, setTiposEmbalagemOptions] = useState([{}]);
   const [empresaSelecionada, setEmpresaSelecionada] = useState(undefined);
   const [contratoSelecionado, setContratoSelecionado] = useState(undefined);
   const [unidadeSelecionada, setUnidadeSelecionada] = useState({});
+  const [fichaTecnicaSelecionada, setFichaTecnicaSelecionada] = useState();
   const [etapas, setEtapas] = useState([{}]);
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
   const [fornecedores, setFornecedores] = useState([{}]);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [listaRascunhos, setListaRascunhos] = useState(null);
   const [duplicados, setDuplicados] = useState([]);
   const [restante, setRestante] = useState(undefined);
   const [edicao, setEdicao] = useState(false);
   const [cronograma, setCronograma] = useState({});
-  const [valoresIniciais, setValoresIniciais] = useState(true);
-  const [uuidCronograma, setUuidCronograma] = useState(null);
-  const [etapasValues, setEtapasValues] = useState({});
-  const [recebimentosValues, setRecebimentosValues] = useState({});
 
-  const getRascunhosAsync = async () => {
-    try {
-      const response = await getRascunhos();
-      if (response.status === HTTP_STATUS.OK) {
-        setListaRascunhos(response.data.results);
-      }
-    } catch (erro) {
-      setListaRascunhos();
-      toastError("Ocorreu um erro ao tentar carregar a lista de rascunhos.");
-    }
-  };
-
-  const onSubmit = () => {
-    setShowModal(true);
-  };
-
-  const getEmpresaFiltrado = (empresa) => {
-    if (empresa) {
-      const reg = new RegExp(empresa, "iu");
-      return fornecedores.filter((a) => reg.test(a.value));
-    }
-    return fornecedores;
-  };
+  const [initialValues, setInitialValues] = useState();
 
   const toggleCollapse = (index) => {
     setCollapse({
@@ -91,184 +89,49 @@ export default () => {
     });
   };
 
-  const formataPayload = (values, rascunho) => {
-    let payload = {};
-    payload.cadastro_finalizado = !rascunho;
-    payload.contrato = values.contrato;
-    payload.empresa = empresaSelecionada.uuid;
-    payload.produto = values.produto;
-    payload.qtd_total_programada = values.quantidade_total?.replaceAll(".", "");
-    payload.unidade_medida = values.unidade_medida;
-    payload.armazem = values.armazem;
-    payload.tipo_embalagem = values.tipo_embalagem;
-
-    payload.etapas = etapas.map((etapa, index) => ({
-      numero_empenho: values[`empenho_${index}`],
-      etapa: values[`etapa_${index}`],
-      parte: values[`parte_${index}`],
-      data_programada: values[`data_programada_${index}`]
-        ? moment(values[`data_programada_${index}`], "DD/MM/YYYY").format(
-            "YYYY-MM-DD"
-          )
-        : undefined,
-      quantidade: values[`quantidade_${index}`]?.replaceAll(".", ""),
-      total_embalagens: values[`total_embalagens_${index}`],
-    }));
-
-    payload.programacoes_de_recebimento = recebimentos.map((etapa, index) => ({
-      data_programada: values[`data_recebimento_${index}`],
-      tipo_carga: values[`tipo_recebimento_${index}`],
-    }));
-    return payload;
-  };
-
   const salvarCronograma = async (values, rascunho) => {
     setCarregando(true);
-    let payload = formataPayload(values, rascunho);
+
+    let payload = formataPayload(
+      values,
+      rascunho,
+      empresaSelecionada,
+      etapas,
+      recebimentos
+    );
+
     if (!rascunho) {
       payload["password"] = values["password"];
     }
+
     try {
       let response = edicao
-        ? await editaCronograma(payload, uuidCronograma)
+        ? await editaCronograma(payload, cronograma.uuid)
         : await cadastraCronograma(payload);
       if (response.status === 201 || response.status === 200) {
         if (rascunho) {
           toastSuccess("Rascunho salvo com sucesso!");
-          getRascunhosAsync();
-          setCarregando(false);
+          navigate(
+            `/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}/?uuid=${response.data.uuid}`
+          );
         } else {
-          setCarregando(false);
           toastSuccess(
             "Cadastro de Cronograma salvo e enviado para aprovação!"
           );
           setShowModal(false);
-          history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+          navigate(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
         }
       } else {
         toastError("Ocorreu um erro ao salvar o Cronograma");
-        setCarregando(false);
       }
     } catch (error) {
       if (error.response.status === 401) {
         toastError(MSG_SENHA_INVALIDA);
-        setCarregando(false);
       } else {
         exibeError(error, "Ocorreu um erro ao salvar o Cronograma");
       }
-    }
-  };
-
-  const validaRascunho = (values) => {
-    return !values.contrato;
-  };
-  const lengthOrUnderfined = (value) => {
-    let valor = value ? value.toString() : undefined;
-    return valor && valor.length > 0 ? valor : undefined;
-  };
-
-  const getDadosCronograma = async () => {
-    try {
-      const responseCronograma = await getCronograma(uuidCronograma);
-      if (responseCronograma.status === HTTP_STATUS.OK) {
-        const programacoes_de_recebimento =
-          responseCronograma.data.programacoes_de_recebimento.reverse();
-        setEtapas(responseCronograma.data.etapas);
-        setRecebimentos(programacoes_de_recebimento);
-
-        const cronogramaValues = {};
-        const crono = responseCronograma.data;
-        setEmpresaSelecionada(crono.empresa);
-        cronogramaValues["empresa"] = lengthOrUnderfined(
-          crono.empresa.nome_fantasia
-        );
-        setContratoSelecionado(crono.contrato);
-        cronogramaValues["contrato"] = lengthOrUnderfined(crono.contrato.uuid);
-        cronogramaValues["numero_processo"] = lengthOrUnderfined(
-          crono.contrato.processo
-        );
-        cronogramaValues["quantidade_total"] = lengthOrUnderfined(
-          formataMilhar(crono.qtd_total_programada)
-        );
-        cronogramaValues["unidade_medida"] = lengthOrUnderfined(
-          crono.unidade_medida ? crono.unidade_medida.uuid : undefined
-        );
-        cronogramaValues["produto"] = lengthOrUnderfined(
-          crono.produto ? crono.produto.uuid : undefined
-        );
-        cronogramaValues["armazem"] = lengthOrUnderfined(
-          crono.armazem ? crono.armazem.uuid : undefined
-        );
-        cronogramaValues["tipo_embalagem"] = lengthOrUnderfined(
-          crono.tipo_embalagem?.uuid
-        );
-        cronogramaValues["numero"] = crono.numero ? crono.numero : undefined;
-        setCronograma(cronogramaValues);
-
-        const etapaValues = {};
-        responseCronograma.data.etapas.forEach((etapa, i) => {
-          etapaValues[`empenho_${i}`] = lengthOrUnderfined(
-            etapa.numero_empenho
-          );
-          etapaValues[`etapa_${i}`] = lengthOrUnderfined(etapa.etapa);
-          etapaValues[`parte_${i}`] = lengthOrUnderfined(etapa.parte);
-          etapaValues[`data_programada_${i}`] = lengthOrUnderfined(
-            etapa.data_programada
-          );
-          etapaValues[`quantidade_${i}`] = lengthOrUnderfined(etapa.quantidade);
-          etapaValues[`total_embalagens_${i}`] = lengthOrUnderfined(
-            etapa.total_embalagens
-          );
-        });
-        setEtapasValues(etapaValues);
-
-        const recebimentoValues = {};
-        programacoes_de_recebimento.forEach((recebimento, i) => {
-          recebimentoValues[`data_recebimento_${i}`] = lengthOrUnderfined(
-            recebimento.data_programada
-          );
-          recebimentoValues[`tipo_recebimento_${i}`] = lengthOrUnderfined(
-            recebimento.tipo_carga
-          );
-        });
-        setRecebimentosValues(recebimentoValues);
-        setCarregando(false);
-      }
-    } catch (e) {
-      toastError("Ocorreu um erro ao carregar o Cronograma");
-    }
-  };
-
-  const getOpcoesContrato = () => {
-    if (!empresaSelecionada) return [];
-    return empresaSelecionada.contratos.map((contrato) => ({
-      nome: contrato.numero,
-      uuid: contrato.uuid,
-    }));
-  };
-
-  const selecionaEmpresa = (uuid_empresa) => {
-    if (!empresaSelecionada || empresaSelecionada.uuid !== uuid_empresa) {
-      let fornecedor = fornecedores.find((f) => f.value === uuid_empresa);
-      setEmpresaSelecionada(fornecedor);
-    }
-  };
-
-  const selecionaContrato = (values) => {
-    let uuid_contrato = values.contrato;
-    if (!contratoSelecionado || contratoSelecionado.uuid !== uuid_contrato) {
-      let contrato = empresaSelecionada.contratos.find(
-        (c) => c.uuid === uuid_contrato
-      );
-      values.numero_processo = contrato.processo;
-      setContratoSelecionado(contrato);
-    }
-  };
-
-  const selecionaUnidade = (uuid_unidade) => {
-    if (!unidadeSelecionada || unidadeSelecionada.uuid !== uuid_unidade) {
-      let unidade = unidadesMedidaOptions.find((u) => u.uuid === uuid_unidade);
-      setUnidadeSelecionada(unidade);
+    } finally {
+      setCarregando(false);
     }
   };
 
@@ -277,77 +140,245 @@ export default () => {
     const uuid = urlParams.get("uuid");
 
     if (uuid) {
-      setUuidCronograma(uuid);
       setEdicao(true);
-    } else {
-      setCarregando(false);
     }
 
-    const buscaArmazens = async () => {
-      const response = await getNomesDistribuidores();
-      setArmazens(
-        response.data.results.map((armazem) => ({
-          nome: armazem.nome_fantasia,
-          uuid: armazem.uuid,
-        }))
-      );
-    };
+    carregaPagina(uuid);
+  }, []);
 
-    const buscaFornecedores = async () => {
-      const response = await getEmpresasCronograma();
-      setFornecedores(
-        response.data.results.map((forn) => ({
-          uuid: forn.uuid,
-          value: forn.nome_fantasia,
-          contratos: forn.contratos,
-        }))
-      );
-    };
-
-    const buscaProdutos = async () => {
-      const response = await getListaCompletaProdutosLogistica();
-      setProdutosOptions(response.data.results);
-    };
-
-    const buscaUnidadesMedida = async () => {
-      const response = await getUnidadesDeMedidaLogistica();
-      setUnidadesMedidaOptions(response.data.results);
-    };
-
-    const buscaTiposEmbalagem = async () => {
-      const response = await getListaTiposEmbalagens();
-      setTiposEmbalagemOptions(response.data.results);
-    };
-
-    const carregaPagina = async () => {
+  const carregaPagina = async (uuid) => {
+    try {
       setCarregando(true);
       await Promise.all([
         buscaArmazens(),
         buscaFornecedores(),
-        buscaProdutos(),
+        buscaFichasTecnicas(),
         buscaUnidadesMedida(),
-        buscaTiposEmbalagem(),
-        getRascunhosAsync(),
+        buscaRascunhos(),
       ]);
+      if (uuid) {
+        const responseCronograma = await getCronograma(uuid);
+        setInitialValues(geraInitialValues(responseCronograma.data));
+      }
+    } catch (error) {
+      exibeError(error, "Ocorreu um erro ao carregar o Cronograma");
+    } finally {
       setCarregando(false);
+    }
+  };
+
+  const buscaArmazens = async () => {
+    const response = await getNomesDistribuidores();
+    setArmazens(
+      response.data.results.map((armazem) => ({
+        nome: armazem.nome_fantasia,
+        uuid: armazem.uuid,
+      }))
+    );
+  };
+
+  const buscaFornecedores = async () => {
+    const response = await getEmpresasCronograma();
+    setFornecedores(
+      response.data.results.map((fornecedor) => ({
+        uuid: fornecedor.uuid,
+        value: fornecedor.nome_fantasia,
+        contratos: fornecedor.contratos,
+      }))
+    );
+  };
+
+  const buscaFichasTecnicas = async () => {
+    const response = await getListaFichasTecnicasSimplesSemCronograma();
+    setFichasTecnicas(response.data.results);
+  };
+
+  const buscaUnidadesMedida = async () => {
+    const response = await getUnidadesDeMedidaLogistica();
+    setUnidadesMedidaOptions(response.data.results);
+  };
+
+  const buscaRascunhos = async () => {
+    try {
+      const response = await getRascunhos();
+      if (response.status === HTTP_STATUS.OK) {
+        setListaRascunhos(response.data.results);
+      }
+    } catch {
+      toastError("Ocorreu um erro ao tentar carregar a lista de rascunhos.");
+    }
+  };
+
+  const geraInitialValues = (cronograma) => {
+    const programacoesDeRecebimento =
+      cronograma.programacoes_de_recebimento.reverse();
+    setEtapas(cronograma.etapas);
+    setRecebimentos(programacoesDeRecebimento);
+    setEmpresaSelecionada(cronograma.empresa);
+    setContratoSelecionado(cronograma.contrato);
+    setFichaTecnicaSelecionada(cronograma.ficha_tecnica);
+
+    const cronogramaValues = {};
+    cronogramaValues["empresa"] = cronograma.empresa?.nome_fantasia;
+    cronogramaValues["contrato"] = cronograma.contrato?.uuid;
+    cronogramaValues["numero_processo"] = cronograma.contrato?.processo;
+    cronogramaValues["numero_pregao_chamada_publica"] =
+      cronograma.contrato?.numero_pregao ||
+      cronograma.contrato?.numero_chamada_publica;
+    cronogramaValues["ata"] = cronograma.contrato?.ata;
+    cronogramaValues["quantidade_total"] = formataMilhar(
+      cronograma.qtd_total_programada
+    );
+    cronogramaValues["unidade_medida"] = cronograma.unidade_medida?.uuid;
+    cronogramaValues["produto"] = cronograma.produto?.uuid;
+    cronogramaValues["armazem"] = cronograma.armazem?.uuid;
+    cronogramaValues["ficha_tecnica"] = cronograma.ficha_tecnica?.uuid;
+    cronogramaValues["marca"] = cronograma.ficha_tecnica?.marca.nome;
+    cronogramaValues["peso_liquido_embalagem_primaria"] = numberToStringDecimal(
+      cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria
+    );
+    cronogramaValues["unidade_medida_primaria"] =
+      cronograma.ficha_tecnica?.unidade_medida_primaria.uuid;
+    cronogramaValues["peso_liquido_embalagem_secundaria"] =
+      numberToStringDecimal(
+        cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria
+      );
+    cronogramaValues["unidade_medida_secundaria"] =
+      cronograma.ficha_tecnica?.unidade_medida_secundaria.uuid;
+    cronogramaValues["volume_embalagem_primaria"] = numberToStringDecimal(
+      cronograma.ficha_tecnica?.volume_embalagem_primaria
+    );
+    cronogramaValues["unidade_medida_volume_primaria"] =
+      cronograma.ficha_tecnica?.unidade_medida_volume_primaria?.uuid;
+    cronogramaValues["custo_unitario_produto"] = numberToStringDecimalMonetario(
+      cronograma.custo_unitario_produto
+    );
+    cronogramaValues["numero"] = cronograma.numero;
+    cronogramaValues["uuid"] = cronograma.uuid;
+
+    const etapaValues = {};
+    cronograma.etapas.forEach((etapa, i) => {
+      etapaValues[`empenho_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.numero_empenho
+      );
+      etapaValues[`qtd_total_empenho_${i}`] = numberToStringDecimal(
+        etapa.qtd_total_empenho
+      );
+      etapaValues[`etapa_${i}`] = stringNaoVaziaOuUndefined(etapa.etapa);
+      etapaValues[`parte_${i}`] = stringNaoVaziaOuUndefined(etapa.parte);
+      etapaValues[`data_programada_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.data_programada
+      );
+      etapaValues[`quantidade_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.quantidade
+      );
+      etapaValues[`total_embalagens_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.total_embalagens
+      );
+    });
+
+    const recebimentoValues = {};
+    programacoesDeRecebimento.forEach((recebimento, i) => {
+      recebimentoValues[`data_recebimento_${i}`] = stringNaoVaziaOuUndefined(
+        recebimento.data_programada
+      );
+      recebimentoValues[`tipo_recebimento_${i}`] = stringNaoVaziaOuUndefined(
+        recebimento.tipo_carga
+      );
+    });
+
+    setCronograma(cronogramaValues);
+
+    return {
+      ...cronogramaValues,
+      ...etapaValues,
+      ...recebimentoValues,
     };
+  };
 
-    carregaPagina();
-  }, [valoresIniciais]);
-
-  if (valoresIniciais && edicao) {
-    getDadosCronograma();
-    setValoresIniciais(false);
-  }
-
-  const onChangeFormSpy = async (changes) => {
+  const onChangeFormSpy = async (changes, form) => {
     if (changes.values.empresa) selecionaEmpresa(changes.values.empresa);
     if (changes.values.contrato) selecionaContrato(changes.values);
     if (changes.values.unidade_medida)
       selecionaUnidade(changes.values.unidade_medida);
+    if (changes.values.ficha_tecnica)
+      await selecionaFichaTecnica(changes.values, form);
 
     onChangeEtapas(changes, etapas, setRestante, setDuplicados);
   };
+
+  const selecionaEmpresa = (uuidEmpresa) => {
+    if (!empresaSelecionada || empresaSelecionada.uuid !== uuidEmpresa) {
+      let fornecedor = fornecedores.find((f) => f.value === uuidEmpresa);
+      setEmpresaSelecionada(fornecedor);
+    }
+  };
+
+  const selecionaContrato = (values) => {
+    let uuidContrato = values.contrato;
+    if (!contratoSelecionado || contratoSelecionado.uuid !== uuidContrato) {
+      let contrato = empresaSelecionada.contratos.find(
+        (c) => c.uuid === uuidContrato
+      );
+
+      values.numero_processo = contrato.processo;
+      values.numero_pregao_chamada_publica =
+        contrato.numero_pregao || contrato.numero_chamada_publica;
+      values.ata = contrato.ata;
+
+      setContratoSelecionado(contrato);
+    }
+  };
+
+  const selecionaUnidade = (uuidUnidade) => {
+    if (!unidadeSelecionada || unidadeSelecionada.uuid !== uuidUnidade) {
+      let unidade = unidadesMedidaOptions.find((u) => u.uuid === uuidUnidade);
+      setUnidadeSelecionada(unidade);
+    }
+  };
+
+  const selecionaFichaTecnica = async (values, form) => {
+    const uuidFicha = values.ficha_tecnica;
+    if (
+      !fichaTecnicaSelecionada ||
+      fichaTecnicaSelecionada.uuid !== uuidFicha
+    ) {
+      setCarregando(true);
+
+      const response = await getDadosCronogramaFichaTecnica(uuidFicha);
+      const fichaTecnica = response.data;
+
+      form.change("marca", fichaTecnica.marca.nome);
+      form.change(
+        "peso_liquido_embalagem_primaria",
+        numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_primaria)
+      );
+      form.change(
+        "unidade_medida_primaria",
+        fichaTecnica.unidade_medida_primaria.uuid
+      );
+      form.change(
+        "peso_liquido_embalagem_secundaria",
+        numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_secundaria)
+      );
+      form.change(
+        "unidade_medida_secundaria",
+        fichaTecnica.unidade_medida_secundaria.uuid
+      );
+      form.change(
+        "volume_embalagem_primaria",
+        numberToStringDecimal(fichaTecnica.volume_embalagem_primaria)
+      );
+      form.change(
+        "unidade_medida_volume_primaria",
+        fichaTecnica.unidade_medida_volume_primaria?.uuid
+      );
+
+      setFichaTecnicaSelecionada(fichaTecnica);
+      setCarregando(false);
+    }
+  };
+
   return (
     <>
       {!edicao && <Rascunhos listaRascunhos={listaRascunhos} />}
@@ -355,34 +386,17 @@ export default () => {
         <div className="card mt-3 card-cadastro-cronograma">
           <div className="card-body cadastro-cronograma">
             <Form
-              onSubmit={onSubmit}
-              initialValues={{
-                ...cronograma,
-                ...etapasValues,
-                ...recebimentosValues,
-              }}
-              validate={() => {}}
-              render={({ form, handleSubmit, values }) => (
+              onSubmit={() => setShowModal(true)}
+              initialValues={initialValues}
+              render={({ form, handleSubmit, values, errors }) => (
                 <form onSubmit={handleSubmit}>
                   <FormSpy
                     subscription={{ values: true, active: true, valid: true }}
-                    onChange={(changes) => onChangeFormSpy(changes)}
+                    onChange={(changes) => onChangeFormSpy(changes, form)}
                   />
                   <div className="row">
-                    <div className="col-5">
-                      <Field
-                        component={AutoCompleteField}
-                        options={getEmpresaFiltrado(values.empresa)}
-                        label="Pesquisar Empresa"
-                        name="empresa"
-                        required
-                        validate={required}
-                        placeholder={"Selecione uma Empresa Cadastrada"}
-                        esconderIcone
-                      />
-                    </div>
                     {edicao && (
-                      <div className="col-6 text-end">
+                      <div className="col text-end">
                         <p>
                           <b>Nº do Cronograma: </b>
 
@@ -397,22 +411,64 @@ export default () => {
                   <div className="row">
                     <div className="col-8">
                       <Field
-                        component={SelectSelecione}
-                        naoDesabilitarPrimeiraOpcao
-                        options={getOpcoesContrato()}
-                        label="Nº do Contrato"
-                        name="contrato"
+                        className="input-cronograma"
+                        component={AutoCompleteField}
+                        options={getEmpresaFiltrado(
+                          fornecedores,
+                          values.empresa
+                        )}
+                        label="Pesquisar Empresa"
+                        name="empresa"
                         required
                         validate={required}
-                        placeholder={"Selecione um Contrato"}
+                        placeholder={"Selecione uma Empresa Cadastrada"}
+                        esconderIcone
                       />
                     </div>
                     <div className="col-4">
                       <Field
+                        className="input-cronograma"
+                        component={Select}
+                        naoDesabilitarPrimeiraOpcao
+                        options={[
+                          { nome: "Selecione um Contrato", uuid: "" },
+                          ...getOpcoesContrato(empresaSelecionada),
+                        ]}
+                        label="Nº do Contrato"
+                        name="contrato"
+                        required
+                        validate={required}
+                        disabled={!values.empresa}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-4">
+                      <Field
+                        className="input-cronograma"
+                        component={InputText}
+                        label="Nº do Pregão Eletrônico/Chamada Pública"
+                        name="numero_pregao_chamada_publica"
+                        validate={required}
+                        disabled={true}
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        className="input-cronograma"
+                        component={InputText}
+                        label="Nº ATA"
+                        name="ata"
+                        disabled={true}
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        className="input-cronograma"
                         component={InputText}
                         label="Nº do Processo SEI - Contratos"
                         name="numero_processo"
-                        className="input-busca-produto"
                         validate={required}
                         disabled={true}
                       />
@@ -464,74 +520,209 @@ export default () => {
                             <div className="row">
                               <div className="col-6">
                                 <Field
-                                  component={SelectSelecione}
+                                  className="input-cronograma"
+                                  component={Select}
                                   naoDesabilitarPrimeiraOpcao
-                                  options={produtosOptions}
-                                  label="Produto"
-                                  name="produto"
-                                  placeholder={"Selecione um Produto"}
+                                  options={[
+                                    {
+                                      nome: "Selecione uma Ficha Técnica de Produto",
+                                      uuid: "",
+                                    },
+                                    ...geraOptionsFichasTecnicas(
+                                      fichasTecnicas,
+                                      empresaSelecionada,
+                                      fichaTecnicaSelecionada
+                                    ),
+                                  ]}
+                                  label="Ficha Técnica e Produto"
+                                  name="ficha_tecnica"
                                   required
                                 />
                               </div>
-                              <div className="col-3">
-                                <Field
-                                  component={InputText}
-                                  label="Quantidade Total Programada"
-                                  name="quantidade_total"
-                                  className="input-busca-produto"
-                                  disabled={false}
-                                  agrupadorMilhar
-                                  required
-                                  placeholder="Informe a Quantidade Total"
-                                />
-                              </div>
-                              <div className="col-3">
-                                <Field
-                                  component={SelectSelecione}
-                                  naoDesabilitarPrimeiraOpcao
-                                  options={unidadesMedidaOptions}
-                                  label="Unidade de Medida"
-                                  name="unidade_medida"
-                                  required
-                                  validate={required}
-                                  placeholder={"Selecione a Unidade"}
-                                />
-                              </div>
-                            </div>
-                            <div className="row">
                               <div className="col-6">
                                 <Field
-                                  component={SelectSelecione}
+                                  className="input-cronograma"
+                                  component={InputText}
+                                  label="Marca"
+                                  name="marca"
+                                  required
+                                  disabled
+                                />
+                              </div>
+
+                              <div className="row mt-3">
+                                <div className="row">
+                                  <div className="col-6">
+                                    <Label
+                                      content="Peso da Embalagem Primária"
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="col-6">
+                                    <Label
+                                      content="Peso da Embalagem Secundária"
+                                      required
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="row">
+                                  <div className="col-3">
+                                    <Field
+                                      className="input-cronograma"
+                                      component={InputText}
+                                      name={`peso_liquido_embalagem_primaria`}
+                                      required
+                                      disabled
+                                    />
+                                  </div>
+
+                                  <div className="col-3">
+                                    <Field
+                                      className="input-cronograma"
+                                      component={Select}
+                                      options={unidadesMedidaOptions}
+                                      name={`unidade_medida_primaria`}
+                                      required
+                                      disabled
+                                    />
+                                  </div>
+
+                                  <div className="col-3">
+                                    <Field
+                                      className="input-cronograma"
+                                      component={InputText}
+                                      name={`peso_liquido_embalagem_secundaria`}
+                                      required
+                                      disabled
+                                    />
+                                  </div>
+
+                                  <div className="col-3">
+                                    <Field
+                                      className="input-cronograma"
+                                      component={Select}
+                                      options={unidadesMedidaOptions}
+                                      name={`unidade_medida_secundaria`}
+                                      required
+                                      disabled
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="col-6">
+                                <Field
+                                  className="input-cronograma"
+                                  component={Select}
                                   naoDesabilitarPrimeiraOpcao
-                                  options={armazens}
+                                  options={[
+                                    { nome: "Selecione o Armazém", uuid: "" },
+                                    ...armazens,
+                                  ]}
                                   label="Armazém"
                                   name="armazem"
                                   required
                                   validate={required}
-                                  placeholder={"Selecione o Armazém"}
+                                />
+                              </div>
+
+                              <div className="col-3">
+                                <Field
+                                  className="input-cronograma"
+                                  component={InputText}
+                                  label="Quantidade Total Programada"
+                                  name="quantidade_total"
+                                  disabled={false}
+                                  agrupadorMilhar
+                                  required
+                                  placeholder="Informe a Quantidade Total"
+                                  validate={required}
                                 />
                               </div>
                               <div className="col-3">
                                 <Field
-                                  component={SelectSelecione}
+                                  className="input-cronograma"
+                                  component={Select}
                                   naoDesabilitarPrimeiraOpcao
-                                  options={tiposEmbalagemOptions}
-                                  label="Tipo de Embalagem"
-                                  name="tipo_embalagem"
+                                  options={[
+                                    { nome: "Selecione a Unidade", uuid: "" },
+                                    ...unidadesMedidaOptions,
+                                  ]}
+                                  label="Unidade de Medida"
+                                  name="unidade_medida"
                                   required
                                   validate={required}
-                                  placeholder={"Selecione a Embalagem"}
                                 />
                               </div>
                             </div>
+
+                            <div className="row mt-3">
+                              <div className="col-4">
+                                <Field
+                                  className="input-cronograma"
+                                  component={InputText}
+                                  name={`custo_unitario_produto`}
+                                  label="Custo Unitário do Produto"
+                                  placeholder="Informe o Custo Unitário"
+                                  required
+                                  proibeLetras
+                                  validate={composeValidators(
+                                    required,
+                                    decimalMonetario
+                                  )}
+                                />
+                              </div>
+                              {values.volume_embalagem_primaria && (
+                                <div className="col-8">
+                                  <div className="row">
+                                    <div className="col">
+                                      <Label
+                                        content="Volume da Embalagem Primária"
+                                        required
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="row">
+                                    <div className="col">
+                                      <Field
+                                        className="input-cronograma"
+                                        component={InputText}
+                                        name={`volume_embalagem_primaria`}
+                                        required
+                                        disabled
+                                      />
+                                    </div>
+
+                                    <div className="col">
+                                      <Field
+                                        className="input-cronograma"
+                                        component={Select}
+                                        options={unidadesMedidaOptions}
+                                        name={`unidade_medida_volume_primaria`}
+                                        required
+                                        disabled
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+
                             <div className="subtitulo">
                               Cronograma das Entregas
                             </div>
+
                             <hr className="linha-verde" />
+
                             <FormEtapa
+                              form={form}
                               etapas={etapas}
                               setEtapas={setEtapas}
                               values={values}
+                              errors={errors}
                               duplicados={duplicados}
                               restante={restante}
                               unidadeMedida={unidadeSelecionada}

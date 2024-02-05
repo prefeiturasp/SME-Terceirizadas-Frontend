@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useNavigationType } from "react-router-dom";
 
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
@@ -18,9 +18,11 @@ import { getNomesProdutosSolicitacaoInclusao } from "services/produto.service";
 
 const FORM_NAME = "buscaAvaliarSolicCadProd";
 
-const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
+const FormBuscaSolicitacao = ({ initialValues, onSubmit }) => {
   const [nomesProdutosFiltrado, setNomesProdutosFiltrado] = useState([]);
   const [nomesProdutos, setNomesProdutos] = useState([]);
+
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +43,7 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={history.action === "POP" && initialValues}
+      initialValues={navigationType === "POP" && initialValues}
       render={({ form, handleSubmit, submitting, values }) => (
         <form onSubmit={handleSubmit} className="busca-produtos">
           <FinalFormToRedux form={FORM_NAME} />
@@ -148,4 +150,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps)(FormBuscaSolicitacao));
+export default connect(mapStateToProps)(FormBuscaSolicitacao);
