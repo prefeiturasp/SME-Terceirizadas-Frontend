@@ -28,6 +28,7 @@ import { getNomesTerceirizadas } from "services/produto.service.js";
 import { FormCadastroEditaisContratosInterface } from "../interfaces";
 import "../style.scss";
 import { FieldArrayContratos } from "./components";
+import { ModalCadastroEdital } from "./ModalCadastroEdital";
 
 export const EditaisContratosRefatorado = () => {
   const [lotes, setLotes] = useState<Array<LoteRascunhosInterface>>(undefined);
@@ -38,6 +39,7 @@ export const EditaisContratosRefatorado = () => {
 
   const [erro, setErro] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const navigate: NavigateFunction = useNavigate();
 
@@ -91,6 +93,10 @@ export const EditaisContratosRefatorado = () => {
   const onSubmit = async (
     values: FormCadastroEditaisContratosInterface
   ): Promise<void> => {
+    if (!showModal) {
+      setShowModal(true);
+      return;
+    }
     const response = await criarEditalEContrato(values);
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Edital salvo com sucesso");
@@ -125,6 +131,7 @@ export const EditaisContratosRefatorado = () => {
                   </div>
                 </div>
                 <Form
+                  keepDirtyOnReinitialize
                   mutators={{
                     ...arrayMutators,
                   }}
@@ -247,6 +254,16 @@ export const EditaisContratosRefatorado = () => {
                           />
                         </div>
                       </div>
+                      <ModalCadastroEdital
+                        showModal={showModal}
+                        closeModal={() => setShowModal(false)}
+                        values={values}
+                        submitting={submitting}
+                        onSubmit={onSubmit}
+                        lotes={lotes}
+                        DREs={DREs}
+                        empresas={empresas}
+                      />
                     </form>
                   )}
                 </Form>

@@ -10,7 +10,7 @@ export interface FormCadastroEditaisContratosContratoInterface {
   vigencias: Array<FormCadastroEditaisContratosVigenciaInterface>;
   lotes: Array<string>;
   diretorias_regionais: Array<string>;
-  empresa: string;
+  terceirizada: string;
 }
 
 export interface FormCadastroEditaisContratosInterface {
