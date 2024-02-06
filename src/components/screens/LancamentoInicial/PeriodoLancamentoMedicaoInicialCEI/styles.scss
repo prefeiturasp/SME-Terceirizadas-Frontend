@@ -16,6 +16,9 @@
       color: $green !important;
     }
   }
+  .ant-tabs-tab:hover {
+    color: #000000e0 !important;
+  }
 }
 
 .default-color-first-semana:first-child {
@@ -248,7 +251,7 @@
   border: 2px solid $grayDisabled;
   border-radius: 5px;
   position: absolute;
-  right: 12px;
+  right: 0px;
   padding: 10px 16px 0px 16px;
 
   i {
