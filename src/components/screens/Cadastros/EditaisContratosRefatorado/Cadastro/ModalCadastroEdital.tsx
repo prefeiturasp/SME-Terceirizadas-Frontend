@@ -74,11 +74,11 @@ export const ModalCadastroEdital = ({
                       <div className="vigencias">
                         <span>Vigência: </span>
                         <div className="iteracao-elementos">
-                          {contrato.vigencias.map((vigencia, key) => {
+                          {contrato.vigencias?.map((vigencia, key) => {
                             return (
                               <div key={key} className="elementos">
-                                De {vigencia.data_inicial} até{" "}
-                                {vigencia.data_final};
+                                De {vigencia?.data_inicial} até{" "}
+                                {vigencia?.data_final};
                               </div>
                             );
                           })}
