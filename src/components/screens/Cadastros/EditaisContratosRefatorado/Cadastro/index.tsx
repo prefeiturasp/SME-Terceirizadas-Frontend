@@ -29,6 +29,11 @@ import { FormCadastroEditaisContratosInterface } from "../interfaces";
 import "../style.scss";
 import { FieldArrayContratos } from "./components";
 import { ModalCadastroEdital } from "./ModalCadastroEdital";
+import {
+  CADASTROS,
+  CONFIGURACOES,
+  EDITAIS_CADASTRADOS,
+} from "configs/constants";
 
 export const EditaisContratosRefatorado = () => {
   const [lotes, setLotes] = useState<Array<LoteRascunhosInterface>>(undefined);
@@ -108,6 +113,16 @@ export const EditaisContratosRefatorado = () => {
 
   const REQUISICOES_FINALIZADAS = !loading && lotes && DREs && empresas;
 
+  const DEFAULT_CONTRATOS = {
+    vigencias: [
+      {
+        numero_contrato: undefined,
+        data_inicial: undefined,
+        data_final: undefined,
+      },
+    ],
+  };
+
   return (
     <Spin tip="Carregando..." spinning={!REQUISICOES_FINALIZADAS}>
       <div className="form-editais-contratos">
@@ -125,7 +140,12 @@ export const EditaisContratosRefatorado = () => {
                   <div className="col-6 text-end">
                     <Botao
                       texto="Editais e Contratos Cadastrados"
-                      type={BUTTON_TYPE.SUBMIT}
+                      onClick={() =>
+                        navigate(
+                          `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`
+                        )
+                      }
+                      type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
                   </div>
@@ -136,17 +156,7 @@ export const EditaisContratosRefatorado = () => {
                     ...arrayMutators,
                   }}
                   initialValues={{
-                    contratos: [
-                      {
-                        vigencias: [
-                          {
-                            numero_contrato: undefined,
-                            data_inicial: undefined,
-                            data_final: undefined,
-                          },
-                        ],
-                      },
-                    ],
+                    contratos: [DEFAULT_CONTRATOS],
                   }}
                   onSubmit={onSubmit}
                 >
@@ -220,17 +230,7 @@ export const EditaisContratosRefatorado = () => {
                         <div className="col-12 text-center">
                           <Botao
                             texto="+ Adicionar outro contrato relacionado"
-                            onClick={() =>
-                              push("contratos", {
-                                vigencias: [
-                                  {
-                                    numero_contrato: undefined,
-                                    data_inicial: undefined,
-                                    data_final: undefined,
-                                  },
-                                ],
-                              })
-                            }
+                            onClick={() => push("contratos", DEFAULT_CONTRATOS)}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
                             type={BUTTON_TYPE.BUTTON}
                           />
@@ -239,7 +239,13 @@ export const EditaisContratosRefatorado = () => {
                       <div className="row">
                         <div className="col-12 text-end">
                           <Botao
-                            onClick={() => form.reset()}
+                            onClick={() => {
+                              form.change("tipo_contratacao", undefined);
+                              form.change("numero", undefined);
+                              form.change("processo", undefined);
+                              form.change("objeto", undefined);
+                              form.change("contratos", [DEFAULT_CONTRATOS]);
+                            }}
                             texto="Cancelar"
                             className="me-3"
                             disabled={submitting}
