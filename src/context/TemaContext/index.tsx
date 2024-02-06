@@ -6,8 +6,8 @@ export const temas = {
 };
 
 export const TemaContext = createContext({
-  theme: temas.dark,
-  changeTheme: () => {},
+  tema: temas.dark,
+  mudarTema: () => {},
 });
 
 export const TemaContextProvider = ({ children }) => {
@@ -33,7 +33,7 @@ export const TemaContextProvider = ({ children }) => {
   }, [tema]);
 
   return (
-    <TemaContext.Provider value={{ tema: tema, mudarTema: mudarTema }}>
+    <TemaContext.Provider value={{ tema, mudarTema }}>
       {children}
     </TemaContext.Provider>
   );

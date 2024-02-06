@@ -51,6 +51,7 @@ import {
 export const SidebarContent = () => {
   const [activeMenu, setActiveMenu] = useState("");
   const [activeMenuCadastros, setActiveMenuCadastros] = useState("");
+  const [activeSubmenu, setActiveSubMenu] = useState("");
 
   const onSubmenuClick = useCallback(
     (clickedMenu) => {
@@ -66,6 +67,13 @@ export const SidebarContent = () => {
       );
     },
     [activeMenuCadastros]
+  );
+
+  const onSubmenuLancamentoClick = useCallback(
+    (clickedMenu) => {
+      setActiveSubMenu(clickedMenu === activeSubmenu ? "" : clickedMenu);
+    },
+    [activeSubmenu]
   );
 
   // NOTE: essas condicoes consideram apenas codae e terceirizada.
@@ -168,6 +176,8 @@ export const SidebarContent = () => {
     onSubmenuClick: onSubmenuClick,
     activeMenuCadastros,
     onSubmenuCadastroClick: onSubmenuCadastroClick,
+    activeSubmenu,
+    onSubmenuLancamentoClick: onSubmenuLancamentoClick,
   };
 
   return [
@@ -180,7 +190,9 @@ export const SidebarContent = () => {
     exibirDietaEspecial && <MenuDietaEspecial key={2} {..._props} />,
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
     exibirCadastros && <MenuCadastros key={5} />,
-    exibirModuloMedicaoInicial() && <MenuLancamentoInicial key={6} />,
+    exibirModuloMedicaoInicial() && (
+      <MenuLancamentoInicial key={6} {..._props} />
+    ),
     exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
     exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />,

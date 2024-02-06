@@ -1,6 +1,14 @@
 /* eslint-disable react/no-children-prop */
 import React, { useState } from "react";
-import { Form, Select, AutoComplete, TimePicker, DatePicker } from "antd";
+import {
+  Form,
+  Select,
+  AutoComplete,
+  TimePicker,
+  DatePicker,
+  Input,
+  InputNumber,
+} from "antd";
 
 import "./styles.scss";
 
@@ -54,5 +62,7 @@ export const makeField =
 
 export const ASelect = makeField(Select);
 export const AAutoComplete = makeField(AutoComplete);
+export const AInput = makeField(Input);
+export const AInputNumber = makeField(InputNumber);
 export const ATimePicker = makeField(MyPicker);
 export const ADatePicker = makeField(DatePicker);
