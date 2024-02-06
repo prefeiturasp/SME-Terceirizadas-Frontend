@@ -618,6 +618,10 @@ export const escolaEhCEMEI = () => {
   return localStorage.getItem("eh_cemei") === "true";
 };
 
+export const escolaEhEMEBS = () => {
+  return localStorage.getItem("eh_emebs") === "true";
+};
+
 export const nomeInstituicao = () => {
   return localStorage.getItem("nome_instituicao");
 };
