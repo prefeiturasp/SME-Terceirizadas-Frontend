@@ -1,5 +1,5 @@
 import React from "react";
-import { useMatch } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { HOME } from "constants/config";
 
@@ -13,8 +13,8 @@ import {
 } from "configs/constants";
 
 export default () => {
-  const match = useMatch();
-  const uuid = match.params.uuid;
+  const location = useLocation();
+  const uuid = location.pathname.split("/")[3];
   const atual = {
     href: `/${DIETA_ESPECIAL}/protocolo-padrao/${uuid}/editar`,
     titulo: "Atualização de Protocolo Padrão de Dieta Especial",
