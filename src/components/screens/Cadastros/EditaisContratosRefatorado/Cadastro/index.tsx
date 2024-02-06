@@ -26,7 +26,7 @@ import { criarEditalEContrato } from "services/edital.service";
 import { getLotesSimples } from "services/lote.service";
 import { getNomesTerceirizadas } from "services/produto.service.js";
 import { FormCadastroEditaisContratosInterface } from "../interfaces";
-import "../style.scss";
+import "./style.scss";
 import { FieldArrayContratos } from "./components";
 import { ModalCadastroEdital } from "./ModalCadastroEdital";
 import {
