@@ -1,7 +1,8 @@
 import React from "react";
-import { Menu, LeafItem } from "./shared";
+import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   ACOMPANHAMENTO_DE_LANCAMENTOS,
+  EMPENHOS,
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
   MEDICAO_INICIAL,
@@ -16,7 +17,9 @@ import {
   usuarioEhCODAENutriManifestacao,
 } from "helpers/utilities";
 
-export default () => {
+const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
+  const exibeCadastros = usuarioEhMedicao();
+
   return (
     exibirModuloMedicaoInicial() && (
       <Menu
@@ -39,7 +42,19 @@ export default () => {
             Acompanhamento de Lançamentos
           </LeafItem>
         )}
+        {exibeCadastros && (
+          <SubMenu
+            icon="fa-chevron-down"
+            onClick={onSubmenuLancamentoClick}
+            title="Cadastros"
+            activeMenu={activeSubmenu}
+          >
+            <LeafItem to={`/${MEDICAO_INICIAL}/${EMPENHOS}`}>Empenhos</LeafItem>
+          </SubMenu>
+        )}
       </Menu>
     )
   );
 };
+
+export default MenuLancamentoInicial;

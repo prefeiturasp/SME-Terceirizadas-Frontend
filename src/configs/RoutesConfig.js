@@ -251,6 +251,8 @@ import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
 import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
 import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
+import EmpenhosPage from "pages/LancamentoMedicaoInicial/EmpenhosPage";
+import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
@@ -1427,6 +1429,16 @@ const routesConfig = [
     path: `/${constants.MEDICAO_INICIAL}/${constants.DETALHAMENTO_DO_LANCAMENTO}`,
     component: DetalhamentoDoLancamentoPage,
     tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}`,
+    component: EmpenhosPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}/${constants.CADASTRO_DE_EMPENHO}`,
+    component: CadastroDeEmpenhoPage,
+    tipoUsuario: usuarioEhMedicao(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,
