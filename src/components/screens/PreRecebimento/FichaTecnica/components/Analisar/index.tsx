@@ -17,6 +17,10 @@ import FormProponente from "../Cadastrar/components/FormProponente";
 import TabelaNutricional from "components/Shareable/TabelaNutricional";
 import CheckboxComBorda from "components/Shareable/CheckboxComBorda";
 import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
+import FormAprovacao from "./components/FormAprovacao";
+import BotaoConferir from "./components/BotaoConferir";
+
+const idCollapse = "collapseAnalisarFichaTecnica";
 
 export default () => {
   const [carregando, setCarregando] = useState<boolean>(true);
@@ -25,6 +29,8 @@ export default () => {
     {} as FichaTecnicaDetalhada
   );
   const [initialValues, setInitialValues] = useState<Record<string, any>>({});
+  //TODO: tentar tirar esse record any
+  const [conferidos, setConferidos] = useState<Record<string, any>>({});
   const listaCompletaInformacoesNutricionais = useRef<InformacaoNutricional[]>(
     []
   );
@@ -49,11 +55,38 @@ export default () => {
     })();
   }, []);
 
+  const fechaCollapses = () => {
+    const otherElements = document.querySelectorAll(`#${idCollapse} .show`);
+    otherElements.forEach((element) => {
+      element.classList.remove("show");
+    });
+    setCollapse({});
+  };
+
+  const aprovaCollapse = (name: string) => {
+    fechaCollapses();
+    setConferidos({
+      [name]: true,
+    });
+  };
+
+  const reprovaCollapse = (name: string) => {
+    fechaCollapses();
+    setConferidos({
+      [name]: false,
+    });
+  };
+
+  const cancelaCollapse = (name: string) => {
+    setConferidos({
+      [name]: null,
+    });
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      {/* TODO: renomear css e deletar classes inuteis */}
-      <div className="card mt-3 card-cadastro-ficha-tecnica">
-        <div className="card-body cadastro-ficha-tecnica">
+      <div className="card mt-3 card-analise-ficha-tecnica">
+        <div className="card-body analise-ficha-tecnica">
           <Form
             onSubmit={() => {}}
             initialValues={initialValues}
@@ -78,7 +111,7 @@ export default () => {
                       <Field
                         component={InputText}
                         label="Categoria"
-                        name={`categoria`}
+                        name={`categoria_display`}
                         className="input-ficha-tecnica"
                         disabled
                       />
@@ -109,38 +142,6 @@ export default () => {
                   <Collapse
                     collapse={collapse}
                     setCollapse={setCollapse}
-                    // titulos={[
-                    //   <span className="verde-escuro" key={0}>
-                    //     Proponente e Fabricante
-                    //   </span>,
-                    //   <span className="verde-escuro" key={1}>
-                    //     Detalhes do Produto
-                    //   </span>,
-                    //   <span className="verde-escuro" key={2}>
-                    //     Informações Nutricionais
-                    //   </span>,
-                    //   <span className="verde-escuro" key={3}>
-                    //     Conservação
-                    //   </span>,
-                    //   <span className="verde-escuro" key={4}>
-                    //     Temperatura e Transporte
-                    //   </span>,
-                    //   <span className="verde-escuro" key={5}>
-                    //     Armazenamento
-                    //   </span>,
-                    //   <span className="verde-escuro" key={6}>
-                    //     Embalagem e Rotulagem
-                    //   </span>,
-                    //   <span className="verde-escuro" key={7}>
-                    //     Responsável Técnico e Anexos
-                    //   </span>,
-                    //   <span className="verde-escuro" key={8}>
-                    //     Modo de Preparo
-                    //   </span>,
-                    //   <span className="verde-escuro" key={9}>
-                    //     Outras Informações
-                    //   </span>,
-                    // ]}
                     collapseConfigs={[
                       {
                         titulo: (
@@ -221,7 +222,8 @@ export default () => {
                         camposObrigatorios: false,
                       },
                     ]}
-                    id="collapseAnalisarFichaTecnica"
+                    id={idCollapse}
+                    state={conferidos}
                   >
                     <section id="proponenteFabricante">
                       <FormProponente proponente={proponente} />
@@ -339,16 +341,23 @@ export default () => {
                       </div>
                     </section>
 
-                    <section id="detalhesProduto">
+                    <section id="detalhes_produto">
                       {ehPerecivel && (
                         <FormPereciveis values={values} desabilitar={true} />
                       )}
                       {ehNaoPerecivel && (
                         <FormNaoPereciveis values={values} desabilitar={true} />
                       )}
+                      <FormAprovacao
+                        name={"detalhes_produto"}
+                        aprovaCollapse={aprovaCollapse}
+                        values={values}
+                        reprovaCollapse={reprovaCollapse}
+                        cancelaCollapse={cancelaCollapse}
+                      />
                     </section>
 
-                    <section id="informacoesNutricionais">
+                    <section id="informacoes_nutricionais">
                       <div className="row">
                         <div className="col-6">
                           <Label content="Porção" required />
@@ -402,6 +411,13 @@ export default () => {
                         }
                         desabilitar={true}
                       />
+                      <FormAprovacao
+                        name={"informacoes_nutricionais"}
+                        aprovaCollapse={aprovaCollapse}
+                        values={values}
+                        reprovaCollapse={reprovaCollapse}
+                        cancelaCollapse={cancelaCollapse}
+                      />
                     </section>
 
                     <section id="conservacao">
@@ -429,10 +445,17 @@ export default () => {
                           />
                         </div>
                       </div>
+                      <FormAprovacao
+                        name={"conservacao"}
+                        aprovaCollapse={aprovaCollapse}
+                        values={values}
+                        reprovaCollapse={reprovaCollapse}
+                        cancelaCollapse={cancelaCollapse}
+                      />
                     </section>
 
                     {ehPerecivel && (
-                      <section id="temperaturaTransporte">
+                      <section id="temperatura_e_transporte">
                         <div className="row">
                           <div className="col-5">
                             <Field
@@ -470,6 +493,13 @@ export default () => {
                             />
                           </div>
                         </div>
+                        <FormAprovacao
+                          name={"temperatura_e_transporte"}
+                          aprovaCollapse={aprovaCollapse}
+                          values={values}
+                          reprovaCollapse={reprovaCollapse}
+                          cancelaCollapse={cancelaCollapse}
+                        />
                       </section>
                     )}
 
@@ -502,9 +532,16 @@ export default () => {
                           />
                         </div>
                       </div>
+                      <FormAprovacao
+                        name={"armazenamento"}
+                        aprovaCollapse={aprovaCollapse}
+                        values={values}
+                        reprovaCollapse={reprovaCollapse}
+                        cancelaCollapse={cancelaCollapse}
+                      />
                     </section>
 
-                    <section id="embalagemRotulagem">
+                    <section id="embalagem_e_rotulagem">
                       <div className="subtitulo">Embalagem</div>
 
                       <div className="row mt-3">
@@ -755,9 +792,16 @@ export default () => {
                           />
                         </div>
                       </div>
+                      <FormAprovacao
+                        name={"embalagem_e_rotulagem"}
+                        aprovaCollapse={aprovaCollapse}
+                        values={values}
+                        reprovaCollapse={reprovaCollapse}
+                        cancelaCollapse={cancelaCollapse}
+                      />
                     </section>
 
-                    <section id="responsavelTecnico">
+                    <section id="responsavel_tecnico">
                       <div className="row">
                         <div className="col">
                           <Field
@@ -794,9 +838,13 @@ export default () => {
                           <BotaoAnexo urlAnexo={ficha.arquivo} />
                         </div>
                       </div>
+                      <BotaoConferir
+                        name={"responsavel_tecnico"}
+                        aprovaCollapse={aprovaCollapse}
+                      />
                     </section>
 
-                    <section id="modoPreparo">
+                    <section id="modo_preparo">
                       <div className="row">
                         <div className="col">
                           <Field
@@ -808,9 +856,13 @@ export default () => {
                           />
                         </div>
                       </div>
+                      <BotaoConferir
+                        name={"modo_preparo"}
+                        aprovaCollapse={aprovaCollapse}
+                      />
                     </section>
 
-                    <section id="outrasInformacoes">
+                    <section id="outras_informacoes">
                       <div className="row">
                         <div className="col">
                           <Field
@@ -822,6 +874,10 @@ export default () => {
                           />
                         </div>
                       </div>
+                      <BotaoConferir
+                        name={"outras_informacoes"}
+                        aprovaCollapse={aprovaCollapse}
+                      />
                     </section>
                   </Collapse>
                 </form>

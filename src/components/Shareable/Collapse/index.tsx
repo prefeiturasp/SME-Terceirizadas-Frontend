@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactNode, SetStateAction } from "react";
+import React, { Dispatch, ReactElement, SetStateAction } from "react";
 import "./styles.scss";
 import { CollapseConfig } from "./interfaces";
 
@@ -9,10 +9,11 @@ export interface CollapseControl {
 type Props = {
   collapse: CollapseControl;
   setCollapse: Dispatch<SetStateAction<CollapseControl>>;
-  titulos?: ReactNode[];
-  children: ReactNode[];
+  titulos?: ReactElement[];
+  children: ReactElement[];
   id: string;
   collapseConfigs?: CollapseConfig[];
+  state?: Record<string, any>;
 };
 
 const Collapse: React.FC<Props> = ({
@@ -22,6 +23,7 @@ const Collapse: React.FC<Props> = ({
   children,
   id,
   collapseConfigs,
+  state,
 }) => {
   const toggleCollapse = (index: number) => {
     setCollapse({
@@ -58,6 +60,15 @@ const Collapse: React.FC<Props> = ({
                           Campos de Preenchimento Obrigatório
                         </span>
                       </>
+                    )}
+                    {state && (
+                      <div className="batata">
+                        {state[el.props.id] === false
+                          ? "false"
+                          : state[el.props.id] === true
+                          ? "true"
+                          : "null"}
+                      </div>
                     )}
                     <span>
                       <button

@@ -174,6 +174,7 @@ export interface FichaTecnicaDetalhada {
   pregao_chamada_publica: string;
   marca: MarcaSimples;
   categoria: CategoriaFichaTecnicaChoices;
+  categoria_display: string;
   status: string;
   criado_em: string;
   empresa: TerceirizadaSimplesInterface;

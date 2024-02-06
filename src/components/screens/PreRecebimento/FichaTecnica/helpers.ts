@@ -159,13 +159,13 @@ export const carregarDadosAnalise = async (
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
   if (uuid) {
-    await carregaFicha(
+    const fichaTecnica = await carregaFicha(
       uuid,
       setFicha,
-      setInitialValues,
       listaInformacoesNutricionaisFichaTecnica,
       setProponente
     );
+    setInitialValues(geraInitialValues(fichaTecnica, true));
   }
 
   setCarregando(false);
@@ -174,7 +174,6 @@ export const carregarDadosAnalise = async (
 export const carregaFicha = async (
   uuid: string,
   setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhada>>,
-  setInitialValues: Dispatch<SetStateAction<Record<string, any>>>,
   listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
     InformacaoNutricional[]
   >,
@@ -184,7 +183,6 @@ export const carregaFicha = async (
   const fichaTecnica = responseFicha.data;
 
   setFicha(fichaTecnica);
-  setInitialValues(geraInitialValues(fichaTecnica));
 
   listaInformacoesNutricionaisFichaTecnica.current =
     fichaTecnica.informacoes_nutricionais.map(
@@ -224,10 +222,11 @@ export const carregarDados = async (
     const fichaTecnica = await carregaFicha(
       uuid,
       setFicha,
-      setInitialValues,
       listaInformacoesNutricionaisFichaTecnica,
       setProponente
     );
+
+    setInitialValues(geraInitialValues(fichaTecnica));
 
     if (fichaTecnica.arquivo) {
       const arquivo = await carregarArquivo(fichaTecnica.arquivo);
@@ -326,7 +325,10 @@ export const validaAssinarEnviar = (
   );
 };
 
-export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
+export const geraInitialValues = (
+  ficha: FichaTecnicaDetalhada,
+  ehAnalise: boolean = false
+) => {
   const valuesInformacoesNutricionais = {};
   ficha?.informacoes_nutricionais.forEach((informacao) => {
     valuesInformacoesNutricionais[
@@ -425,7 +427,20 @@ export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
     informacoes_adicionais: ficha.informacoes_adicionais,
   };
 
-  //console.log(initialValues)
+  if (ehAnalise) {
+    initialValues["categoria_display"] = ficha.categoria_display;
+    initialValues.marca = ficha.marca?.nome;
+    initialValues.unidade_medida_porcao = ficha.unidade_medida_porcao?.nome;
+    initialValues.unidade_medida_volume_primaria =
+      ficha.unidade_medida_volume_primaria?.nome;
+    initialValues.unidade_medida_primaria = ficha.unidade_medida_primaria?.nome;
+    initialValues.unidade_medida_secundaria =
+      ficha.unidade_medida_secundaria?.nome;
+    initialValues.unidade_medida_primaria_vazia =
+      ficha.unidade_medida_primaria_vazia?.nome;
+    initialValues.unidade_medida_secundaria_vazia =
+      ficha.unidade_medida_secundaria_vazia?.nome;
+  }
 
   return initialValues as FichaTecnicaPayload;
 };
