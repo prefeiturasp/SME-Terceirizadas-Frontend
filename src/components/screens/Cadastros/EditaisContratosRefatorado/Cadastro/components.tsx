@@ -159,7 +159,7 @@ export const FieldArrayContratos = ({
                               : moment(
                                   values.contratos[index_contratos].vigencias[
                                     index - 1
-                                  ].data_final,
+                                  ]?.data_final,
                                   "DD/MM/YYYY"
                                 ).toDate()
                           }
@@ -185,7 +185,7 @@ export const FieldArrayContratos = ({
                               : moment(
                                   values.contratos[index_contratos].vigencias[
                                     index - 1
-                                  ].data_final,
+                                  ]?.data_final,
                                   "DD/MM/YYYY"
                                 ).toDate()
                           }
