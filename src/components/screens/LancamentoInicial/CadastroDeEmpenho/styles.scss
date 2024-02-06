@@ -1,0 +1,34 @@
+@import "styles/variables.scss";
+
+.cadastro-de-empenhos {
+  span.required-asterisk {
+    color: $red;
+    padding-right: 5px;
+    margin-top: 0.5rem;
+  }
+
+  .ant-form-item {
+    flex: 1;
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+
+      .ant-form-item-label {
+        display: flex;
+
+        label {
+          justify-self: flex-start;
+        }
+      }
+
+      .ant-input-number,
+      .ant-input {
+        height: 37px;
+        width: 100%;
+        line-height: 37px;
+        margin-top: 0.4em;
+      }
+    }
+  }
+}
