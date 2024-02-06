@@ -149,7 +149,7 @@ export const FieldArrayContratos = ({
                       <div className="col-4">
                         <Field
                           component={InputComData}
-                          label="Vigência"
+                          label={`${index > 0 ? "Nova " : ""}Vigência`}
                           name={`${name_vigencias}.data_inicial`}
                           placeholder="DE"
                           writable={false}
