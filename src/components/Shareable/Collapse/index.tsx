@@ -40,13 +40,13 @@ const Collapse: React.FC<Props> = ({
   return (
     collapse && (
       <div className="accordion accordionComponent mt-1" id={id}>
-        {children.map((el, index) => (
+        {children.filter(Boolean).map((el, index) => (
           <>
             <div className="card mt-3">
               <div className={`card-header card-tipo`} id={`heading_${index}`}>
                 <div className="row card-header-content">
                   <span className="col-8 titulo">
-                    {configs[index].titulo || titulos[index]}
+                    {configs[index]?.titulo || titulos[index]}
                   </span>
                   <div className="col-4 text-end my-auto">
                     {configs[index].camposObrigatorios && (

@@ -137,6 +137,66 @@ export const carregarTerceirizada = async (
   }
 };
 
+export const carregarDadosAnalise = async (
+  listaCompletaInformacoesNutricionais: MutableRefObject<
+    InformacaoNutricional[]
+  >,
+  listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
+    InformacaoNutricional[]
+  >,
+  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhada>>,
+  setInitialValues: Dispatch<SetStateAction<Record<string, any>>>,
+  setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>,
+  setCarregando: Dispatch<SetStateAction<boolean>>
+) => {
+  setCarregando(true);
+
+  const responseInformacoes: ResponseInformacoesNutricionais =
+    await getInformacoesNutricionaisOrdenadas();
+  listaCompletaInformacoesNutricionais.current =
+    responseInformacoes.data.results;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const uuid = urlParams.get("uuid");
+  if (uuid) {
+    await carregaFicha(
+      uuid,
+      setFicha,
+      setInitialValues,
+      listaInformacoesNutricionaisFichaTecnica,
+      setProponente
+    );
+  }
+
+  setCarregando(false);
+};
+
+export const carregaFicha = async (
+  uuid: string,
+  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhada>>,
+  setInitialValues: Dispatch<SetStateAction<Record<string, any>>>,
+  listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
+    InformacaoNutricional[]
+  >,
+  setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>
+) => {
+  const responseFicha = await getFichaTecnica(uuid);
+  const fichaTecnica = responseFicha.data;
+
+  setFicha(fichaTecnica);
+  setInitialValues(geraInitialValues(fichaTecnica));
+
+  listaInformacoesNutricionaisFichaTecnica.current =
+    fichaTecnica.informacoes_nutricionais.map(
+      ({ informacao_nutricional }) => informacao_nutricional
+    );
+
+  const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
+  setProponente(response.data);
+
+  return fichaTecnica;
+};
+
 export const carregarDados = async (
   listaCompletaInformacoesNutricionais: MutableRefObject<
     InformacaoNutricional[]
@@ -161,24 +221,18 @@ export const carregarDados = async (
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
   if (uuid) {
-    const responseFicha = await getFichaTecnica(uuid);
-    const fichaTecnica = responseFicha.data;
-
-    listaInformacoesNutricionaisFichaTecnica.current =
-      fichaTecnica.informacoes_nutricionais.map(
-        ({ informacao_nutricional }) => informacao_nutricional
-      );
-
-    setFicha(fichaTecnica);
-    setInitialValues(geraInitialValues(fichaTecnica));
+    const fichaTecnica = await carregaFicha(
+      uuid,
+      setFicha,
+      setInitialValues,
+      listaInformacoesNutricionaisFichaTecnica,
+      setProponente
+    );
 
     if (fichaTecnica.arquivo) {
       const arquivo = await carregarArquivo(fichaTecnica.arquivo);
       setArquivo(arquivo);
     }
-
-    const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
-    setProponente(response.data);
   } else if (meusDados) {
     const response = await getTerceirizadaUUID(
       meusDados.vinculo_atual.instituicao.uuid
@@ -370,6 +424,8 @@ export const geraInitialValues = (ficha: FichaTecnicaDetalhada) => {
     modo_de_preparo: ficha.modo_de_preparo,
     informacoes_adicionais: ficha.informacoes_adicionais,
   };
+
+  //console.log(initialValues)
 
   return initialValues as FichaTecnicaPayload;
 };
