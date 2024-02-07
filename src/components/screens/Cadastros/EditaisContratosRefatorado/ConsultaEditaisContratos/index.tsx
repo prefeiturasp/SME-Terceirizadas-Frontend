@@ -1,24 +1,26 @@
 import { Spin } from "antd";
-import React, { useEffect, useState } from "react";
-import HTTP_STATUS from "http-status-codes";
-import { getEditaisContratos } from "services/edital.service.js";
-import "./style.scss";
-import { EditalContratoListadoInterface } from "../interfaces";
-import { Collapse } from "react-collapse";
-import { ToggleExpandir } from "components/Shareable/ToggleExpandir";
-import { ResponseEditalCotratoInterface } from "interfaces/responses.interface";
-import { deepCopy } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
+import { ToggleExpandir } from "components/Shareable/ToggleExpandir";
+import { deepCopy } from "helpers/utilities";
+import HTTP_STATUS from "http-status-codes";
+import { ResponseEditalCotratoInterface } from "interfaces/responses.interface";
+import React, { useEffect, useState } from "react";
+import { Collapse } from "react-collapse";
+import { getEditaisContratos } from "services/edital.service.js";
+import { EditalContratoListadoInterface } from "../interfaces";
+import { Paginacao } from "components/Shareable/Paginacao";
+import "./style.scss";
 
 export const ConsultaEditaisContratos = () => {
   const [editaisContratos, setEditaisContratos] =
     useState<Array<EditalContratoListadoInterface>>(undefined);
-  //const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(1);
+  const [count, setCount] = useState<number>(0);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [erro, setErro] = useState<string>("");
@@ -36,6 +38,7 @@ export const ConsultaEditaisContratos = () => {
           };
         })
       );
+      setCount(response.data.count);
     } else {
       setErro(
         "Erro ao carregar editais e contratos. Tente novamente mais tarde."
@@ -59,13 +62,20 @@ export const ConsultaEditaisContratos = () => {
     setEditaisContratos(editaisContratos_);
   };
 
+  const nextPage = async (page: number): Promise<void> => {
+    setPage(page);
+    setLoading(true);
+    await getEditaisContratosAsync({ page });
+    setLoading(false);
+  };
+
   const REQUISICOES_FINALIZADAS = !loading && editaisContratos;
 
   return (
     <div className="consulta-editais-contratos mt-3">
       <Spin tip="Carregando..." spinning={!REQUISICOES_FINALIZADAS}>
         {erro && <div className="mt-3">{erro}</div>}
-        {!erro && REQUISICOES_FINALIZADAS && (
+        {!erro && editaisContratos && (
           <>
             <div className="card">
               <div className="row p-2 pt-3">
@@ -77,7 +87,7 @@ export const ConsultaEditaisContratos = () => {
               <hr className="header" />
               {editaisContratos.map((editalContrato, index) => {
                 return (
-                  <div key={index} className="p-2">
+                  <div key={index} className="p-1">
                     <div className="row">
                       <div className="col-3 title">
                         {editalContrato.tipo_contratacao}
@@ -198,6 +208,16 @@ export const ConsultaEditaisContratos = () => {
                   </div>
                 );
               })}
+              <Paginacao
+                className="mt-3 mb-3"
+                current={page}
+                total={count}
+                showSizeChanger={false}
+                onChange={(page: number) => {
+                  nextPage(page);
+                }}
+                pageSize={10}
+              />
             </div>
           </>
         )}
