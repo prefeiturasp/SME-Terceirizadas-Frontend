@@ -40,6 +40,7 @@ import {
   deepCopy,
   deepEqual,
   ehEscolaTipoCEUGESTAO,
+  escolaEhEMEBS,
   tiposAlimentacaoETEC,
 } from "helpers/utilities";
 import {
@@ -85,6 +86,7 @@ import {
   textoBotaoObservacao,
   valorZeroFrequencia,
 } from "./helper";
+import { ALUNOS_EMEBS, FUNDAMENTAL_EMEBS, INFANTIL_EMEBS } from "../constants";
 import {
   getCategoriasDeMedicao,
   getDiasCalendario,
@@ -194,12 +196,15 @@ export default () => {
   const [periodoGrupo, setPeriodoGrupo] = useState(null);
   const [diasParaCorrecao, setDiasParaCorrecao] = useState();
   const [ehPeriodoEscolarSimples, setEhPeriodoEscolarSimples] = useState(null);
+  const [tabItemsSemanas, setTabItemsSemanas] = useState(null);
+  const [tabItemsAlunosEmebs, setTabItemsAlunosEmebs] = useState(null);
+  const [alunosTabSelecionada, setAlunosTabSelecionada] = useState(
+    FUNDAMENTAL_EMEBS.key
+  );
 
   const navigate = useNavigate();
   const location = useLocation();
   let mesAnoDefault = new Date();
-
-  const { TabPane } = Tabs;
 
   const urlParams = new URLSearchParams(window.location.search);
   const ehGrupoSolicitacoesDeAlimentacaoUrlParam =
@@ -505,223 +510,226 @@ export default () => {
       );
 
       const rowsDietas = [];
-      rowsDietas.push(
-        {
-          nome: "Dietas Autorizadas",
-          name: "dietas_autorizadas",
-          uuid: null,
-        },
-        {
-          nome: "Frequência",
-          name: "frequencia",
-          uuid: null,
-        }
-      );
-
-      if (
-        ehEscolaTipoCEUGESTAO(
-          location.state.solicitacaoMedicaoInicial.escola
-        ) ||
-        urlParams.get("ehPeriodoEspecifico") === "true"
-      ) {
-        if (tiposAlimentacaoCEUGESTAO.includes("lanche_4h")) {
-          rowsDietas.push({
-            nome: "Lanche 4h",
-            name: "lanche_4h",
-            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find((tp) =>
-              tp.nome.includes("4h")
-            ).uuid,
-          });
-        }
-      } else {
-        const indexLanche4h = cloneTiposAlimentacao.findIndex((ali) =>
-          ali.nome.includes("4h")
+      const tiposAlimentacaoEtecFormatadas = [];
+      const rowsSolicitacoesAlimentacao = [];
+      if (!escolaEhEMEBS()) {
+        rowsDietas.push(
+          {
+            nome: "Dietas Autorizadas",
+            name: "dietas_autorizadas",
+            uuid: null,
+          },
+          {
+            nome: "Frequência",
+            name: "frequencia",
+            uuid: null,
+          }
         );
-        if (indexLanche4h !== -1) {
-          rowsDietas.push({
-            nome: cloneTiposAlimentacao[indexLanche4h].nome,
-            name: cloneTiposAlimentacao[indexLanche4h].nome
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .toLowerCase()
-              .replaceAll(/ /g, "_"),
-            uuid: cloneTiposAlimentacao[indexLanche4h].uuid,
-          });
-        }
-      }
 
-      const indexLanche = cloneTiposAlimentacao.findIndex(
-        (ali) => ali.nome === "Lanche"
-      );
-      if (
-        (indexLanche !== -1 &&
-          !ehEscolaTipoCEUGESTAO(
-            location.state.solicitacaoMedicaoInicial.escola
-          )) ||
-        (indexLanche !== -1 &&
-          !(urlParams.get("ehPeriodoEspecifico") === "true"))
-      ) {
         if (
-          !ehEscolaTipoCEUGESTAO(
-            location.state.solicitacaoMedicaoInicial.escola
-          )
-        ) {
-          rowsDietas.push({
-            nome: "Lanche",
-            name: "Lanche"
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .toLowerCase()
-              .replaceAll(/ /g, "_"),
-            uuid: cloneTiposAlimentacao[indexLanche].uuid,
-          });
-        }
-      }
-
-      if (
-        ehEscolaTipoCEUGESTAO(
-          location.state.solicitacaoMedicaoInicial.escola
-        ) ||
-        urlParams.get("ehPeriodoEspecifico") === "true"
-      ) {
-        if (tiposAlimentacaoCEUGESTAO.includes("lanche")) {
-          rowsDietas.push({
-            nome: "Lanche",
-            name: "Lanche"
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .toLowerCase()
-              .replaceAll(/ /g, "_"),
-            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find(
-              (tp) => tp.nome === "Lanche"
-            ).uuid,
-          });
-        }
-      }
-
-      rowsDietas.push({
-        nome: "Observações",
-        name: "observacoes",
-        uuid: null,
-      });
-
-      setTabelaDietaRows(rowsDietas);
-
-      const cloneRowsDietas = deepCopy(rowsDietas);
-      const indexRefeicaoDieta = cloneTiposAlimentacao.findIndex(
-        (ali) => ali.nome === "Refeição"
-      );
-      if (
-        (indexRefeicaoDieta !== -1 &&
-          (!ehEscolaTipoCEUGESTAO(
+          ehEscolaTipoCEUGESTAO(
             location.state.solicitacaoMedicaoInicial.escola
           ) ||
-            tiposAlimentacaoCEUGESTAO.includes("refeicao"))) ||
-        (indexRefeicaoDieta !== -1 &&
-          (!(urlParams.get("ehPeriodoEspecifico") === "true") ||
-            tiposAlimentacaoCEUGESTAO.includes("refeicao")))
-      ) {
-        cloneRowsDietas.splice(cloneRowsDietas.length - 1, 0, {
-          nome: "Refeição",
-          name: "refeicao",
-          uuid: cloneTiposAlimentacao[indexRefeicaoDieta].uuid,
-        });
-      }
+          urlParams.get("ehPeriodoEspecifico") === "true"
+        ) {
+          if (tiposAlimentacaoCEUGESTAO.includes("lanche_4h")) {
+            rowsDietas.push({
+              nome: "Lanche 4h",
+              name: "lanche_4h",
+              uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find((tp) =>
+                tp.nome.includes("4h")
+              ).uuid,
+            });
+          }
+        } else {
+          const indexLanche4h = cloneTiposAlimentacao.findIndex((ali) =>
+            ali.nome.includes("4h")
+          );
+          if (indexLanche4h !== -1) {
+            rowsDietas.push({
+              nome: cloneTiposAlimentacao[indexLanche4h].nome,
+              name: cloneTiposAlimentacao[indexLanche4h].nome
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replaceAll(/ /g, "_"),
+              uuid: cloneTiposAlimentacao[indexLanche4h].uuid,
+            });
+          }
+        }
 
-      setTabelaDietaEnteralRows(cloneRowsDietas);
+        const indexLanche = cloneTiposAlimentacao.findIndex(
+          (ali) => ali.nome === "Lanche"
+        );
+        if (
+          (indexLanche !== -1 &&
+            !ehEscolaTipoCEUGESTAO(
+              location.state.solicitacaoMedicaoInicial.escola
+            )) ||
+          (indexLanche !== -1 &&
+            !(urlParams.get("ehPeriodoEspecifico") === "true"))
+        ) {
+          if (
+            !ehEscolaTipoCEUGESTAO(
+              location.state.solicitacaoMedicaoInicial.escola
+            )
+          ) {
+            rowsDietas.push({
+              nome: "Lanche",
+              name: "Lanche"
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replaceAll(/ /g, "_"),
+              uuid: cloneTiposAlimentacao[indexLanche].uuid,
+            });
+          }
+        }
 
-      const rowsSolicitacoesAlimentacao = [];
-      rowsSolicitacoesAlimentacao.push(
-        {
-          nome: "Lanche Emergencial",
-          name: "lanche_emergencial",
-          uuid: null,
-        },
-        {
-          nome: "Kit Lanche",
-          name: "kit_lanche",
-          uuid: null,
-        },
-        {
+        if (
+          ehEscolaTipoCEUGESTAO(
+            location.state.solicitacaoMedicaoInicial.escola
+          ) ||
+          urlParams.get("ehPeriodoEspecifico") === "true"
+        ) {
+          if (tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+            rowsDietas.push({
+              nome: "Lanche",
+              name: "Lanche"
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replaceAll(/ /g, "_"),
+              uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find(
+                (tp) => tp.nome === "Lanche"
+              ).uuid,
+            });
+          }
+        }
+
+        rowsDietas.push({
           nome: "Observações",
           name: "observacoes",
           uuid: null,
-        }
-      );
-
-      setTabelaSolicitacoesAlimentacaoRows(rowsSolicitacoesAlimentacao);
-
-      const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
-      const cloneTiposAlimentacaoEtec = deepCopy(tiposAlimentacaoEtec);
-      const tiposAlimentacaoEtecFormatadas = cloneTiposAlimentacaoEtec
-        .filter((alimentacao) => alimentacao !== "Lanche Emergencial")
-        .map((alimentacao) => {
-          return {
-            nome: alimentacao,
-            name: alimentacao
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .toLowerCase()
-              .replaceAll(/ /g, "_"),
-            uuid: null,
-          };
         });
 
-      const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
-        (ali) => ali.nome === "Refeição"
-      );
-      if (indexRefeicaoEtec !== -1) {
-        tiposAlimentacaoEtecFormatadas[indexRefeicaoEtec].nome =
-          "Refeição 1ª Oferta";
-        tiposAlimentacaoEtecFormatadas.splice(indexRefeicaoEtec + 1, 0, {
-          nome: "Repetição Refeição",
-          name: "repeticao_refeicao",
-          uuid: null,
-        });
-      }
+        setTabelaDietaRows(rowsDietas);
 
-      const indexSobremesaEtec = tiposAlimentacaoEtecFormatadas.findIndex(
-        (ali) => ali.nome === "Sobremesa"
-      );
-      if (indexSobremesaEtec !== -1) {
-        tiposAlimentacaoEtecFormatadas[indexSobremesaEtec].nome =
-          "Sobremesa 1º Oferta";
-        tiposAlimentacaoEtecFormatadas.splice(indexSobremesaEtec + 1, 0, {
-          nome: "Repetição Sobremesa",
-          name: "repeticao_sobremesa",
-          uuid: null,
-        });
-      }
-
-      const indexLancheEmergencialEtec =
-        tiposAlimentacaoEtecFormatadas.findIndex(
-          (ali) => ali.nome === "Lanche Emergencial"
+        const cloneRowsDietas = deepCopy(rowsDietas);
+        const indexRefeicaoDieta = cloneTiposAlimentacao.findIndex(
+          (ali) => ali.nome === "Refeição"
         );
-      if (indexLancheEmergencialEtec !== -1) {
-        tiposAlimentacaoEtecFormatadas[indexLancheEmergencialEtec].nome =
-          "Lanche Emergencial";
-      }
-
-      tiposAlimentacaoEtecFormatadas.unshift(
-        {
-          nome: "Número de Alunos",
-          name: "numero_de_alunos",
-          uuid: null,
-        },
-        {
-          nome: "Frequência",
-          name: "frequencia",
-          uuid: null,
+        if (
+          (indexRefeicaoDieta !== -1 &&
+            (!ehEscolaTipoCEUGESTAO(
+              location.state.solicitacaoMedicaoInicial.escola
+            ) ||
+              tiposAlimentacaoCEUGESTAO.includes("refeicao"))) ||
+          (indexRefeicaoDieta !== -1 &&
+            (!(urlParams.get("ehPeriodoEspecifico") === "true") ||
+              tiposAlimentacaoCEUGESTAO.includes("refeicao")))
+        ) {
+          cloneRowsDietas.splice(cloneRowsDietas.length - 1, 0, {
+            nome: "Refeição",
+            name: "refeicao",
+            uuid: cloneTiposAlimentacao[indexRefeicaoDieta].uuid,
+          });
         }
-      );
 
-      tiposAlimentacaoEtecFormatadas.push({
-        nome: "Observações",
-        name: "observacoes",
-        uuid: null,
-      });
+        setTabelaDietaEnteralRows(cloneRowsDietas);
 
-      setTabelaEtecAlimentacaoRows(tiposAlimentacaoEtecFormatadas);
+        rowsSolicitacoesAlimentacao.push(
+          {
+            nome: "Lanche Emergencial",
+            name: "lanche_emergencial",
+            uuid: null,
+          },
+          {
+            nome: "Kit Lanche",
+            name: "kit_lanche",
+            uuid: null,
+          },
+          {
+            nome: "Observações",
+            name: "observacoes",
+            uuid: null,
+          }
+        );
+
+        setTabelaSolicitacoesAlimentacaoRows(rowsSolicitacoesAlimentacao);
+
+        const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
+        const cloneTiposAlimentacaoEtec = deepCopy(tiposAlimentacaoEtec);
+        let tiposAlimentacaoEtecFormatadas = cloneTiposAlimentacaoEtec
+          .filter((alimentacao) => alimentacao !== "Lanche Emergencial")
+          .map((alimentacao) => {
+            return {
+              nome: alimentacao,
+              name: alimentacao
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .replaceAll(/ /g, "_"),
+              uuid: null,
+            };
+          });
+
+        const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+          (ali) => ali.nome === "Refeição"
+        );
+        if (indexRefeicaoEtec !== -1) {
+          tiposAlimentacaoEtecFormatadas[indexRefeicaoEtec].nome =
+            "Refeição 1ª Oferta";
+          tiposAlimentacaoEtecFormatadas.splice(indexRefeicaoEtec + 1, 0, {
+            nome: "Repetição Refeição",
+            name: "repeticao_refeicao",
+            uuid: null,
+          });
+        }
+
+        const indexSobremesaEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+          (ali) => ali.nome === "Sobremesa"
+        );
+        if (indexSobremesaEtec !== -1) {
+          tiposAlimentacaoEtecFormatadas[indexSobremesaEtec].nome =
+            "Sobremesa 1º Oferta";
+          tiposAlimentacaoEtecFormatadas.splice(indexSobremesaEtec + 1, 0, {
+            nome: "Repetição Sobremesa",
+            name: "repeticao_sobremesa",
+            uuid: null,
+          });
+        }
+
+        const indexLancheEmergencialEtec =
+          tiposAlimentacaoEtecFormatadas.findIndex(
+            (ali) => ali.nome === "Lanche Emergencial"
+          );
+        if (indexLancheEmergencialEtec !== -1) {
+          tiposAlimentacaoEtecFormatadas[indexLancheEmergencialEtec].nome =
+            "Lanche Emergencial";
+        }
+
+        tiposAlimentacaoEtecFormatadas.unshift(
+          {
+            nome: "Número de Alunos",
+            name: "numero_de_alunos",
+            uuid: null,
+          },
+          {
+            nome: "Frequência",
+            name: "frequencia",
+            uuid: null,
+          }
+        );
+
+        tiposAlimentacaoEtecFormatadas.push({
+          nome: "Observações",
+          name: "observacoes",
+          uuid: null,
+        });
+
+        setTabelaEtecAlimentacaoRows(tiposAlimentacaoEtecFormatadas);
+      }
 
       let response_log_dietas_autorizadas = [];
 
@@ -757,7 +765,7 @@ export default () => {
           }
         );
         setCategoriasDeMedicao(response_categorias_medicao);
-      } else if (ehGrupoETECUrlParam) {
+      } else if (ehGrupoETECUrlParam || escolaEhEMEBS()) {
         response_categorias_medicao = response_categorias_medicao.data.filter(
           (categoria) => {
             return categoria.nome === "ALIMENTAÇÃO";
@@ -1041,6 +1049,46 @@ export default () => {
         response_inclusoes_etec_autorizadas,
         tiposAlimentacaoEtecFormatadas
       );
+
+      let itemsSemanas = [];
+      Array.apply(null, {
+        length: isSunday(lastDayOfMonth(mesAnoSelecionado))
+          ? getWeeksInMonth(mesAnoSelecionado) - 1
+          : getDay(startOfMonth(mesAnoSelecionado)) === 0
+          ? getWeeksInMonth(mesAnoSelecionado) + 1
+          : getWeeksInMonth(mesAnoSelecionado),
+      }).map((e, i) =>
+        itemsSemanas.push({
+          key: `${i + 1}`,
+          label: `Semana ${i + 1}`,
+        })
+      );
+      setTabItemsSemanas(itemsSemanas);
+
+      if (escolaEhEMEBS()) {
+        let itemsAlunosEmebs = [];
+        if (
+          response_matriculados.data &&
+          response_matriculados.data
+            .filter(
+              (matriculado) =>
+                matriculado.infantil_ou_fundamental === "INFANTIL"
+            )
+            .some((matriculado) => matriculado.quantidade_alunos !== 0)
+        ) {
+          itemsAlunosEmebs.push({
+            key: INFANTIL_EMEBS.key,
+            label: INFANTIL_EMEBS.label,
+          });
+          setAlunosTabSelecionada(INFANTIL_EMEBS.key);
+        }
+        itemsAlunosEmebs.push({
+          key: FUNDAMENTAL_EMEBS.key,
+          label: FUNDAMENTAL_EMEBS.label,
+        });
+        setTabItemsAlunosEmebs(itemsAlunosEmebs);
+      }
+
       setLoading(false);
       setLoadingLancamentos(false);
     };
@@ -1093,15 +1141,31 @@ export default () => {
 
     categoriasMedicao &&
       categoriasMedicao.forEach((categoria) => {
-        matriculados &&
-          !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
-          !ehGrupoETECUrlParam &&
-          grupoLocation !== "Programas e Projetos" &&
-          matriculados.forEach((obj) => {
-            dadosValoresMatriculados[
-              `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
-            ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : null;
-          });
+        if (escolaEhEMEBS()) {
+          matriculados &&
+            matriculados
+              .filter(
+                (obj) =>
+                  obj.infantil_ou_fundamental !== "N/A" &&
+                  ALUNOS_EMEBS[obj.infantil_ou_fundamental].key ===
+                    alunosTabSelecionada
+              )
+              .forEach((obj) => {
+                dadosValoresMatriculados[
+                  `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
+                ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : null;
+              });
+        } else {
+          matriculados &&
+            !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+            !ehGrupoETECUrlParam &&
+            grupoLocation !== "Programas e Projetos" &&
+            matriculados.forEach((obj) => {
+              dadosValoresMatriculados[
+                `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
+              ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : null;
+            });
+        }
 
         categoria.nome.includes("ENTERAL") &&
           logQtdDietasAutorizadas &&
@@ -1320,12 +1384,28 @@ export default () => {
               })
           );
 
-        valoresMedicao &&
-          valoresMedicao.forEach((valor_medicao) => {
-            dadosValoresMedicoes[
-              `${valor_medicao.nome_campo}__dia_${valor_medicao.dia}__categoria_${valor_medicao.categoria_medicao}`
-            ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
-          });
+        if (escolaEhEMEBS()) {
+          valoresMedicao &&
+            valoresMedicao
+              .filter(
+                (valor_medicao) =>
+                  valor_medicao.infantil_ou_fundamental !== "N/A" &&
+                  ALUNOS_EMEBS[valor_medicao.infantil_ou_fundamental].key ===
+                    alunosTabSelecionada
+              )
+              .forEach((valor_medicao) => {
+                dadosValoresMedicoes[
+                  `${valor_medicao.nome_campo}__dia_${valor_medicao.dia}__categoria_${valor_medicao.categoria_medicao}`
+                ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
+              });
+        } else {
+          valoresMedicao &&
+            valoresMedicao.forEach((valor_medicao) => {
+              dadosValoresMedicoes[
+                `${valor_medicao.nome_campo}__dia_${valor_medicao.dia}__categoria_${valor_medicao.categoria_medicao}`
+              ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
+            });
+        }
       });
 
     valoresMedicao &&
@@ -1435,6 +1515,7 @@ export default () => {
     categoriasDeMedicao,
     tabelaAlimentacaoRows,
     valoresPeriodosLancamentos,
+    alunosTabSelecionada,
   ]);
 
   useEffect(() => {
@@ -1558,6 +1639,11 @@ export default () => {
     } else {
       payload["periodo_escolar"] = values["periodo_escolar"];
     }
+    if (escolaEhEMEBS()) {
+      payload["infantil_ou_fundamental"] = Object.entries(ALUNOS_EMEBS).filter(
+        ([, value]) => value.key === alunosTabSelecionada
+      )[0][0];
+    }
     let valores_medicao_response = [];
     if (valoresPeriodosLancamentos.length) {
       const response = await updateValoresPeriodosLancamentos(
@@ -1648,6 +1734,12 @@ export default () => {
         !ehSalvamentoAutomatico && toastWarn("Não há valores para serem salvos")
       );
 
+    if (escolaEhEMEBS()) {
+      payload["infantil_ou_fundamental"] = Object.entries(ALUNOS_EMEBS).filter(
+        ([, value]) => value.key === alunosTabSelecionada
+      )[0][0];
+    }
+
     if (ehCorrecao) {
       const payloadParaCorrecao = formatarPayloadParaCorrecao(payload);
       const response = await escolaCorrigeMedicao(
@@ -1732,6 +1824,22 @@ export default () => {
         false
       );
       return (values["week"] = Number(key));
+    }
+  };
+
+  const onChangeTabAlunos = async (key) => {
+    if (exibirTooltip) {
+      setShowModalErro(true);
+    } else {
+      setSemanaSelecionada(1);
+      setAlunosTabSelecionada(key);
+      onSubmit(
+        formValuesAtualizados,
+        dadosValoresInclusoesAutorizadasState,
+        true,
+        false,
+        false
+      );
     }
   };
 
@@ -2166,7 +2274,7 @@ export default () => {
                 <div className="card mt-3">
                   <div className="card-body">
                     <div className="row pb-2">
-                      <div className="col-3">
+                      <div className="col-3 mes-lancamento">
                         <b className="pb-2 mb-2">Mês do Lançamento</b>
                         <Field
                           component={InputText}
@@ -2237,7 +2345,7 @@ export default () => {
                         ) && "mt-legenda"
                       }`}
                     >
-                      <div className="col">
+                      <div className="col semanas">
                         <b className="section-title">
                           Semanas do Período para Lançamento da Medição Inicial
                         </b>
@@ -2257,18 +2365,24 @@ export default () => {
                             ? "default-color-first-semana"
                             : ""
                         }`}
-                      >
-                        {Array.apply(null, {
-                          length: isSunday(lastDayOfMonth(mesAnoConsiderado))
-                            ? getWeeksInMonth(mesAnoConsiderado) - 1
-                            : getDay(startOfMonth(mesAnoConsiderado)) === 0
-                            ? getWeeksInMonth(mesAnoConsiderado) + 1
-                            : getWeeksInMonth(mesAnoConsiderado),
-                        }).map((e, i) => (
-                          <TabPane tab={`Semana ${i + 1}`} key={`${i + 1}`} />
-                        ))}
-                      </Tabs>
+                        items={tabItemsSemanas}
+                      />
                     </div>
+                    {escolaEhEMEBS() ? (
+                      <div className="alunos-tabs mb-2">
+                        <Tabs
+                          activeKey={alunosTabSelecionada}
+                          onChange={(key) => onChangeTabAlunos(key)}
+                          type="card"
+                          className={`${
+                            alunosTabSelecionada === 1
+                              ? "default-color-first-aluno"
+                              : ""
+                          }`}
+                          items={tabItemsAlunosEmebs}
+                        />
+                      </div>
+                    ) : null}
                     <Spin tip="Carregando..." spinning={loadingLancamentos}>
                       {categoriasDeMedicao.length > 0 &&
                         !loading &&
@@ -2544,7 +2658,10 @@ export default () => {
                                                             ],
                                                             valoresObservacoes,
                                                             column.dia,
-                                                            categoria.id
+                                                            categoria.id,
+                                                            escolaEhEMEBS(),
+                                                            alunosTabSelecionada,
+                                                            formValuesAtualizados
                                                           )}
                                                           disabled={desabilitarBotaoColunaObservacoes(
                                                             location,
@@ -2584,7 +2701,10 @@ export default () => {
                                                                   ],
                                                                   valoresObservacoes,
                                                                   column.dia,
-                                                                  categoria.id
+                                                                  categoria.id,
+                                                                  escolaEhEMEBS(),
+                                                                  alunosTabSelecionada,
+                                                                  formValuesAtualizados
                                                                 ) ===
                                                                 "Visualizar"
                                                                 ? BUTTON_STYLE.RED
@@ -2595,7 +2715,10 @@ export default () => {
                                                                   ],
                                                                   valoresObservacoes,
                                                                   column.dia,
-                                                                  categoria.id
+                                                                  categoria.id,
+                                                                  escolaEhEMEBS(),
+                                                                  alunosTabSelecionada,
+                                                                  formValuesAtualizados
                                                                 ) ===
                                                                 "Visualizar"
                                                               ? BUTTON_STYLE.GREEN
@@ -2933,6 +3056,8 @@ export default () => {
                       valoresObservacoes={valoresObservacoes}
                       setFormValuesAtualizados={setFormValuesAtualizados}
                       setValoresObservacoes={setValoresObservacoes}
+                      alunosTabSelecionada={alunosTabSelecionada}
+                      escolaEhEMEBS={escolaEhEMEBS()}
                     />
                   )}
                   <ModalErro
