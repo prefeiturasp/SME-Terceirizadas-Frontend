@@ -1,9 +1,31 @@
 @import "styles/variables.scss";
 
 div.consulta-editais-contratos {
-  div.title {
+  .title {
     color: $blackInput;
     font-size: 14px;
     font-weight: bold;
+  }
+
+  hr.header {
+    border-top: 3px solid $gray;
+  }
+
+  div.label {
+    color: $green;
+    font-size: 16px;
+    font-weight: bold;
+    overflow: hidden;
+
+    span.com-linha::after {
+      content: "";
+      display: inline-block;
+      height: 0.5em;
+      vertical-align: bottom;
+      width: 100%;
+      margin-right: -100%;
+      margin-left: 10px;
+      border-top: 1px solid $grayDisabled;
+    }
   }
 }
