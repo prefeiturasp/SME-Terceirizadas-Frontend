@@ -1802,7 +1802,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                 <div className="card mt-3">
                   <div className="card-body">
                     <div className="row pb-2">
-                      <div className="col-3">
+                      <div className="col-3 mes-lancamento">
                         <b className="pb-2 mb-2">Mês do Lançamento</b>
                         <Field
                           component={InputText}
@@ -1873,7 +1873,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                         ) && "mt-legenda"
                       }`}
                     >
-                      <div className="col">
+                      <div className="col semanas">
                         <b className="section-title">
                           Semanas do Período para Lançamento da Medição Inicial
                         </b>

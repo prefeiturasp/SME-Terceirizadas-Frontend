@@ -17,6 +17,7 @@ import {
   tiposAlimentacaoETEC,
 } from "helpers/utilities";
 import { ehEscolaTipoCEMEI } from "../../../../helpers/utilities";
+import { ALUNOS_EMEBS } from "../constants";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
@@ -1114,20 +1115,46 @@ export const textoBotaoObservacao = (
   value,
   valoresObservacoes,
   dia,
-  categoria
+  categoria,
+  escolaEhEMEBS = false,
+  alunosTabSelecionada = null,
+  values = null
 ) => {
   let text = "Adicionar";
-  if (value && !["<p></p>", "<p></p>\n", null, "", undefined].includes(value)) {
-    text = "Visualizar";
-  } else if (
+  const valorObs =
     valoresObservacoes &&
     valoresObservacoes.find(
       (valor) =>
         String(valor.dia) === String(dia) &&
         String(valor.categoria_medicao) === String(categoria)
-    )
-  ) {
-    text = "Visualizar";
+    );
+  if (value && !["<p></p>", "<p></p>\n", null, "", undefined].includes(value)) {
+    if (
+      escolaEhEMEBS &&
+      valorObs &&
+      ALUNOS_EMEBS[valorObs.infantil_ou_fundamental].key !==
+        alunosTabSelecionada
+    ) {
+      text = "Adicionar";
+    } else {
+      text = "Visualizar";
+    }
+    if (
+      escolaEhEMEBS &&
+      values[`observacoes__dia_${dia}__categoria_${categoria}`] === value
+    ) {
+      text = "Visualizar";
+    }
+  } else if (valorObs) {
+    if (
+      escolaEhEMEBS &&
+      ALUNOS_EMEBS[valorObs.infantil_ou_fundamental].key !==
+        alunosTabSelecionada
+    ) {
+      text = "Adicionar";
+    } else {
+      text = "Visualizar";
+    }
   }
   return text;
 };
