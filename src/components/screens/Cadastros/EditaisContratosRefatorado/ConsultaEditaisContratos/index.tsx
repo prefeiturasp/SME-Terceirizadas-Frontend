@@ -8,6 +8,12 @@ import { Collapse } from "react-collapse";
 import { ToggleExpandir } from "components/Shareable/ToggleExpandir";
 import { ResponseEditalCotratoInterface } from "interfaces/responses.interface";
 import { deepCopy } from "helpers/utilities";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "components/Shareable/Botao/constants";
 
 export const ConsultaEditaisContratos = () => {
   const [editaisContratos, setEditaisContratos] =
@@ -80,11 +86,19 @@ export const ConsultaEditaisContratos = () => {
                       <div className="col-3 title">
                         {editalContrato.processo}
                       </div>
-                      <div className="col-3 title">
-                        {" "}
+                      <div className="col-3 d-flex my-auto">
+                        <div className="icon me-4">
+                          <span className="fas fa-exclamation" />
+                        </div>
                         <ToggleExpandir
                           onClick={() => ativaContratoEdital(index)}
                           ativo={editalContrato.ativo}
+                          className="me-3"
+                        />
+                        <Botao
+                          type={BUTTON_TYPE.BUTTON}
+                          style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
+                          icon={BUTTON_ICON.EDIT}
                         />
                       </div>
                     </div>
@@ -107,7 +121,7 @@ export const ConsultaEditaisContratos = () => {
                                   </div>
                                 </div>
                               </div>
-                              <div className="row pt-3">
+                              <div className="row pt-2">
                                 <div className="col-6 d-flex">
                                   <div className="title pe-2">Contrato nº:</div>
                                   {contrato.numero}
@@ -138,7 +152,7 @@ export const ConsultaEditaisContratos = () => {
                                   )}
                                 </div>
                               </div>
-                              <div className="row pt-3">
+                              <div className="row pt-2">
                                 <div className="col-6 d-flex">
                                   <div className="title pe-2">
                                     Processo administrativo do contrato:
@@ -150,6 +164,30 @@ export const ConsultaEditaisContratos = () => {
                                     Data da proposta:
                                   </div>
                                   {contrato.data_proposta}
+                                </div>
+                              </div>
+                              <div className="row pt-2">
+                                <div className="col-6">
+                                  <div className="title">Lotes:</div>
+                                  {contrato.lotes
+                                    .map((lote) => lote.nome)
+                                    .join(" | ")}
+                                </div>
+                                <div className="col-6">
+                                  <div className="title">DREs:</div>
+                                  {contrato.diretorias_regionais.map(
+                                    (dre, indexDRE) => {
+                                      return (
+                                        <div key={indexDRE}>{dre.nome}</div>
+                                      );
+                                    }
+                                  )}
+                                </div>
+                              </div>
+                              <div className="row pt-2">
+                                <div className="col-12">
+                                  <div className="title">Empresa:</div>
+                                  {contrato.terceirizada.nome_fantasia}
                                 </div>
                               </div>
                             </div>

@@ -28,4 +28,17 @@ div.consulta-editais-contratos {
       border-top: 1px solid $grayDisabled;
     }
   }
+
+  div.icon {
+    background-color: $green;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+
+    span.fas {
+      color: white;
+      padding-top: 5px;
+      padding-left: 10px;
+    }
+  }
 }
