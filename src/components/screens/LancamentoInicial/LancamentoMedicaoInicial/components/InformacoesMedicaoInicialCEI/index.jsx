@@ -76,6 +76,7 @@ export const InformacoesMedicaoInicialCEI = ({
     const response = await getAlunosListagem({
       escola: escolaInstituicao.uuid,
       sem_paginacao: true,
+      inclui_alunos_egressos: true,
     });
     if (response.status === HTTP_STATUS.OK) {
       setAlunos(response.data);
