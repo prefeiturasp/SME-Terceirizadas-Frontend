@@ -22,12 +22,16 @@
         }
       }
 
-      .ant-input-number,
+      .ant-input-number-affix-wrapper.input-make-field,
       .ant-input {
         height: 37px;
         width: 100%;
         line-height: 37px;
         margin-top: 0.4em;
+      }
+
+      .ant-input-number-input-wrap {
+        line-height: 37px;
       }
     }
   }
