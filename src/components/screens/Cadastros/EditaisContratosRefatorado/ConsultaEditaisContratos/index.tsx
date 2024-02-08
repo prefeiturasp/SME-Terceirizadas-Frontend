@@ -96,7 +96,7 @@ export const ConsultaEditaisContratos = () => {
         {!erro && editaisContratos && (
           <>
             <div className="card">
-              <div className="row p-2 pt-3">
+              <div className={`row p-2 pt-3`}>
                 <div className="col-3 title">Tipos de contratação</div>
                 <div className="col-3 title">Nº do edital</div>
                 <div className="col-3 title">Nº do processo administrativo</div>
@@ -106,7 +106,19 @@ export const ConsultaEditaisContratos = () => {
               {editaisContratos.map((editalContrato, index) => {
                 return (
                   <div key={index} className="p-1">
-                    <div className="row">
+                    <div
+                      className={`row ${
+                        getStatusContrato(editalContrato) ===
+                        VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO
+                          ? VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO
+                          : ""
+                      }${
+                        getStatusContrato(editalContrato) ===
+                        VIGENCIA_STATUS.VENCIDO
+                          ? VIGENCIA_STATUS.VENCIDO
+                          : ""
+                      }`}
+                    >
                       <div className="col-3">
                         {editalContrato.tipo_contratacao}
                       </div>
@@ -184,6 +196,12 @@ export const ConsultaEditaisContratos = () => {
                                             </span>
                                           )}
                                           <span
+                                            className={`${
+                                              indexVigencia ===
+                                              contrato.vigencias.length - 1
+                                                ? vigencia.status
+                                                : ""
+                                            }`}
                                             style={{
                                               paddingLeft: `${
                                                 indexVigencia > 0 ? "4.7em" : 0

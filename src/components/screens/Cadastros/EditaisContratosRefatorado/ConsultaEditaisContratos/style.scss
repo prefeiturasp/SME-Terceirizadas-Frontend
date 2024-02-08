@@ -11,6 +11,30 @@ div.consulta-editais-contratos {
     border-top: 3px solid $gray;
   }
 
+  div.row {
+    &.vencido {
+      div {
+        font-weight: bold;
+        color: $orange;
+      }
+    }
+
+    &.proximo_ao_vencimento {
+      font-weight: bold;
+      color: $green;
+    }
+  }
+
+  span.vencido {
+    font-weight: bold;
+    color: $orange;
+  }
+
+  span.proximo_ao_vencimento {
+    font-weight: bold;
+    color: $green;
+  }
+
   div.label {
     color: $green;
     font-size: 16px;
