@@ -89,13 +89,11 @@ export const ConsultaEditaisContratos = () => {
                 return (
                   <div key={index} className="p-1">
                     <div className="row">
-                      <div className="col-3 title">
+                      <div className="col-3">
                         {editalContrato.tipo_contratacao}
                       </div>
-                      <div className="col-3 title">{editalContrato.numero}</div>
-                      <div className="col-3 title">
-                        {editalContrato.processo}
-                      </div>
+                      <div className="col-3">{editalContrato.numero}</div>
+                      <div className="col-3">{editalContrato.processo}</div>
                       <div className="col-3 d-flex my-auto">
                         <div className="icon me-4">
                           <span className="fas fa-exclamation" />
