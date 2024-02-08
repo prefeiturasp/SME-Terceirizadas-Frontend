@@ -232,6 +232,11 @@ export const FieldArrayContratos = ({
                   onClick={() => push(`${name_contratos}.vigencias`)}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   type={BUTTON_TYPE.BUTTON}
+                  disabled={
+                    !values.contratos[index_contratos]?.vigencias[
+                      values.contratos[index_contratos].vigencias.length - 1
+                    ]?.data_final
+                  }
                 />
               </div>
             </div>
