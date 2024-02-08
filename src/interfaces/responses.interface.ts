@@ -22,6 +22,7 @@ import {
 import { InformacaoNutricional } from "./produto.interface";
 import { LoteRascunhosInterface } from "./rascunhos.interface";
 import { TerceirizadaInterface } from "./terceirizada.interface";
+import { EditalContratoInterface } from "components/screens/Cadastros/EditaisContratosRefatorado/interfaces";
 
 export interface ResponseInterface {
   data: Object;
@@ -184,5 +185,14 @@ export interface ResponseTerceirizadaListaNomesInterface
   extends ResponseInterface {
   data: {
     results: Array<TerceirizadaInterface>;
+  };
+}
+
+export interface ResponseEditalCotratoInterface extends ResponseInterface {
+  data: {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Array<EditalContratoInterface>;
   };
 }
