@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
 import { Collapse, Checkbox, Modal } from "antd";
@@ -71,12 +71,15 @@ export const InformacoesMedicaoInicialCEI = ({
   const { Panel } = Collapse;
 
   const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   const getAlunos = async () => {
     const response = await getAlunosListagem({
       escola: escolaInstituicao.uuid,
       sem_paginacao: true,
       inclui_alunos_egressos: true,
+      mes: searchParams.get("mes"),
+      ano: searchParams.get("ano"),
     });
     if (response.status === HTTP_STATUS.OK) {
       setAlunos(response.data);
