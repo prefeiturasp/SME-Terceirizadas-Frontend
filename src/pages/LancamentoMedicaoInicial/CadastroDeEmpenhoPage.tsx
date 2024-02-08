@@ -5,7 +5,6 @@ import {
   EMPENHOS,
   CADASTRO_DE_EMPENHO,
   MEDICAO_INICIAL,
-  ACOMPANHAMENTO_DE_LANCAMENTOS,
 } from "configs/constants";
 import { CadastroDeEmpenho } from "components/screens/LancamentoInicial/CadastroDeEmpenho";
 
@@ -16,7 +15,7 @@ const atual = {
 
 const anterior = [
   {
-    href: `/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`,
+    href: "#",
     titulo: "Medição Inicial",
   },
   {

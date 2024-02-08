@@ -77,14 +77,14 @@ export function CadastroDeEmpenho() {
   }, []);
 
   const formataValor = (value: string) => {
-    if (!value) return 0;
+    if (!value) return "";
     return `${value}`
       .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
       .replace(/\.(?=\d{0,2}$)/g, ",");
   };
 
   const parserValor = (value: string) => {
-    if (!value) return 0;
+    if (!value) return "";
     return Number.parseFloat(
       value.replace(/\$\s?|(\.*)/g, "").replace(/(,{1})/g, ".")
     ).toFixed(2);
@@ -139,6 +139,8 @@ export function CadastroDeEmpenho() {
 
                   const selecionaTipoEmpenho = (value: string) => {
                     form.change("tipo_empenho", value);
+                    form.change("valor_total", null);
+                    form.change("status", null);
 
                     if (value === "PRINCIPAL")
                       form.change("tipo_reajuste", null);
@@ -259,11 +261,13 @@ export function CadastroDeEmpenho() {
                             name="valor_total"
                             label="Valor Total do Empenho"
                             placeholder="Digite o valor do empenho"
+                            prefix="R$"
                             component={AInputNumber}
                             min={0}
                             formatter={(value: string) => formataValor(value)}
                             parser={(value: string) => parserValor(value)}
                             validate={required}
+                            style={{ width: "100%" }}
                           />
                         </div>
 

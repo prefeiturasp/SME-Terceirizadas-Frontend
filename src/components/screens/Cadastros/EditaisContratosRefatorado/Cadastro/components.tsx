@@ -112,7 +112,7 @@ export const FieldArrayContratos = ({
                 <Field
                   name={`${name_contratos}.processo`}
                   label="Processo administrativo do contrato"
-                  placeholder="Digite o processo administrativo"
+                  placeholder="Digite o número do processo administrativo"
                   component={InputText}
                   required
                   validate={required}
@@ -163,6 +163,11 @@ export const FieldArrayContratos = ({
                                   "DD/MM/YYYY"
                                 ).toDate()
                           }
+                          maxDate={moment(
+                            values.contratos[index_contratos].vigencias[index]
+                              ?.data_final,
+                            "DD/MM/YYYY"
+                          ).toDate()}
                           required
                           validate={required}
                         />
@@ -227,6 +232,11 @@ export const FieldArrayContratos = ({
                   onClick={() => push(`${name_contratos}.vigencias`)}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   type={BUTTON_TYPE.BUTTON}
+                  disabled={
+                    !values.contratos[index_contratos]?.vigencias[
+                      values.contratos[index_contratos].vigencias.length - 1
+                    ]?.data_final
+                  }
                 />
               </div>
             </div>
