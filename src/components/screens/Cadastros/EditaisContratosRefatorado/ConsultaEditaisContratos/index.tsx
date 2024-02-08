@@ -20,6 +20,9 @@ import { Paginacao } from "components/Shareable/Paginacao";
 import "./style.scss";
 import { Tooltip } from "antd";
 import { VIGENCIA_STATUS } from "./constants";
+import InputText from "components/Shareable/Input/InputText";
+import { Field, Form } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
 
 export const ConsultaEditaisContratos = () => {
   const [editaisContratos, setEditaisContratos] =
@@ -29,6 +32,10 @@ export const ConsultaEditaisContratos = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [erro, setErro] = useState<string>("");
+
+  const PARAMS = { page };
+
+  let typingTimeout = null;
 
   const getEditaisContratosAsync = async (params = null): Promise<void> => {
     const response = await getEditaisContratos<ResponseEditalCotratoInterface>(
@@ -87,6 +94,8 @@ export const ConsultaEditaisContratos = () => {
     return status;
   };
 
+  const onSubmit = () => {};
+
   const REQUISICOES_FINALIZADAS = !loading && editaisContratos;
 
   return (
@@ -94,187 +103,221 @@ export const ConsultaEditaisContratos = () => {
       <Spin tip="Carregando..." spinning={!REQUISICOES_FINALIZADAS}>
         {erro && <div className="mt-3">{erro}</div>}
         {!erro && editaisContratos && (
-          <>
-            <div className="card">
-              <div className={`row p-2 pt-3`}>
-                <div className="col-3 title">Tipos de contratação</div>
-                <div className="col-3 title">Nº do edital</div>
-                <div className="col-3 title">Nº do processo administrativo</div>
-                <div className="col-3 title">Pesquisar</div>
-              </div>
-              <hr className="header" />
-              {editaisContratos.map((editalContrato, index) => {
-                return (
-                  <div key={index} className="p-1">
-                    <div
-                      className={`row ${
-                        getStatusContrato(editalContrato) ===
-                        VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO
-                          ? VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO
-                          : ""
-                      }${
-                        getStatusContrato(editalContrato) ===
-                        VIGENCIA_STATUS.VENCIDO
-                          ? VIGENCIA_STATUS.VENCIDO
-                          : ""
-                      }`}
-                    >
-                      <div className="col-3">
-                        {editalContrato.tipo_contratacao}
-                      </div>
-                      <div className="col-3">{editalContrato.numero}</div>
-                      <div className="col-3">{editalContrato.processo}</div>
-                      <div className="col-3 d-flex my-auto">
-                        {getStatusContrato(editalContrato) ===
-                          VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO && (
-                          <Tooltip
-                            title={
-                              "Data de vigência do contrato próxima ao vencimento, verifique se o contrato permanece ativo e adie a vigência"
-                            }
-                          >
-                            <div className="icon me-4 mt-1">
-                              <span className="fas fa-exclamation" />
-                            </div>
-                          </Tooltip>
-                        )}
-                        {getStatusContrato(editalContrato) ===
-                          VIGENCIA_STATUS.VENCIDO && (
-                          <Tooltip
-                            title={
-                              "Data de vigência do contrato expirada, verifique se o contrato permanece ativo e adie a vigência"
-                            }
-                          >
-                            <div className="icon orange me-4 mt-1">
-                              <span className="fas fa-exclamation" />
-                            </div>
-                          </Tooltip>
-                        )}
-                        <ToggleExpandir
-                          onClick={() => ativaContratoEdital(index)}
-                          ativo={editalContrato.ativo}
-                          className="me-3"
-                        />
-                        <Botao
-                          type={BUTTON_TYPE.BUTTON}
-                          style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
-                          icon={BUTTON_ICON.EDIT}
-                        />
-                      </div>
+          <Form keepDirtyOnReinitialize onSubmit={onSubmit}>
+            {({ handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
+                <div className="card">
+                  <div className={`row p-2 pt-3`}>
+                    <div className="col-3 title">Tipos de contratação</div>
+                    <div className="col-3 title">Nº do edital</div>
+                    <div className="col-3 title">
+                      Nº do processo administrativo
                     </div>
-                    <hr />
-                    <Collapse isOpened={editalContrato.ativo}>
-                      <div className="row">
-                        <div className="col-2 title">Objeto resumido:</div>
-                        <div className="col-10">{editalContrato.objeto}</div>
-                      </div>
-                      {editalContrato.contratos.map(
-                        (contrato, indexContrato) => {
-                          return (
-                            <div key={indexContrato}>
-                              <div className="row pt-3">
-                                <div className="col-12">
-                                  <div className="label">
-                                    <span className="com-linha">
-                                      Contratos Relacionados
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="row pt-2">
-                                <div className="col-6 d-flex">
-                                  <div className="title pe-2">Contrato nº:</div>
-                                  {contrato.numero}
-                                </div>
-                                <div className="col-6">
-                                  {contrato.vigencias.map(
-                                    (vigencia, indexVigencia) => {
-                                      return (
-                                        <div key={indexVigencia}>
-                                          {indexVigencia === 0 && (
-                                            <span className="title pe-2">
-                                              Vigência:
-                                            </span>
-                                          )}
-                                          <span
-                                            className={`${
-                                              indexVigencia ===
-                                              contrato.vigencias.length - 1
-                                                ? vigencia.status
-                                                : ""
-                                            }`}
-                                            style={{
-                                              paddingLeft: `${
-                                                indexVigencia > 0 ? "4.7em" : 0
-                                              }`,
-                                            }}
-                                          >
-                                            {vigencia.data_inicial} até{" "}
-                                            {vigencia.data_final}
-                                          </span>
-                                        </div>
-                                      );
-                                    }
-                                  )}
-                                </div>
-                              </div>
-                              <div className="row pt-2">
-                                <div className="col-6 d-flex">
-                                  <div className="title pe-2">
-                                    Processo administrativo do contrato:
-                                  </div>
-                                  {contrato.processo}
-                                </div>
-                                <div className="col-6 d-flex">
-                                  <div className="title pe-2">
-                                    Data da proposta:
-                                  </div>
-                                  {contrato.data_proposta}
-                                </div>
-                              </div>
-                              <div className="row pt-2">
-                                <div className="col-6">
-                                  <div className="title">Lotes:</div>
-                                  {contrato.lotes
-                                    .map((lote) => lote.nome)
-                                    .join(" | ")}
-                                </div>
-                                <div className="col-6">
-                                  <div className="title">DREs:</div>
-                                  {contrato.diretorias_regionais.map(
-                                    (dre, indexDRE) => {
-                                      return (
-                                        <div key={indexDRE}>{dre.nome}</div>
-                                      );
-                                    }
-                                  )}
-                                </div>
-                              </div>
-                              <div className="row pt-2">
-                                <div className="col-12">
-                                  <div className="title">Empresa:</div>
-                                  {contrato.terceirizada.nome_fantasia}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        }
-                      )}
-                    </Collapse>
+                    <div className="col-3 title">
+                      <Field
+                        component={InputText}
+                        name="buscar"
+                        placeholder="Pesquisar"
+                        className={`${BUTTON_STYLE.GRAY}`}
+                        icone={`${BUTTON_ICON.SEARCH} fa-lg`}
+                      />
+                      <OnChange name="buscar">
+                        {async (value) => {
+                          clearTimeout(typingTimeout);
+                          typingTimeout = setTimeout(async () => {
+                            setLoading(true);
+                            await getEditaisContratosAsync({
+                              busca: value,
+                              ...PARAMS,
+                            });
+                            setLoading(false);
+                            setPage(1);
+                          }, 1000);
+                        }}
+                      </OnChange>
+                    </div>
                   </div>
-                );
-              })}
-              <Paginacao
-                className="mt-3 mb-3"
-                current={page}
-                total={count}
-                showSizeChanger={false}
-                onChange={(page: number) => {
-                  nextPage(page);
-                }}
-                pageSize={10}
-              />
-            </div>
-          </>
+                  <hr className="header" />
+                  {editaisContratos.map((editalContrato, index) => {
+                    return (
+                      <div key={index} className="p-1">
+                        <div
+                          className={`row ${
+                            getStatusContrato(editalContrato) ===
+                            VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO
+                              ? VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO
+                              : ""
+                          }${
+                            getStatusContrato(editalContrato) ===
+                            VIGENCIA_STATUS.VENCIDO
+                              ? VIGENCIA_STATUS.VENCIDO
+                              : ""
+                          }`}
+                        >
+                          <div className="col-3">
+                            {editalContrato.tipo_contratacao}
+                          </div>
+                          <div className="col-3">{editalContrato.numero}</div>
+                          <div className="col-3">{editalContrato.processo}</div>
+                          <div className="col-3 d-flex my-auto">
+                            {getStatusContrato(editalContrato) ===
+                              VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO && (
+                              <Tooltip
+                                title={
+                                  "Data de vigência do contrato próxima ao vencimento, verifique se o contrato permanece ativo e adie a vigência"
+                                }
+                              >
+                                <div className="icon me-4 mt-1">
+                                  <span className="fas fa-exclamation" />
+                                </div>
+                              </Tooltip>
+                            )}
+                            {getStatusContrato(editalContrato) ===
+                              VIGENCIA_STATUS.VENCIDO && (
+                              <Tooltip
+                                title={
+                                  "Data de vigência do contrato expirada, verifique se o contrato permanece ativo e adie a vigência"
+                                }
+                              >
+                                <div className="icon orange me-4 mt-1">
+                                  <span className="fas fa-exclamation" />
+                                </div>
+                              </Tooltip>
+                            )}
+                            <ToggleExpandir
+                              onClick={() => ativaContratoEdital(index)}
+                              ativo={editalContrato.ativo}
+                              className="me-3"
+                            />
+                            <Botao
+                              type={BUTTON_TYPE.BUTTON}
+                              style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
+                              icon={BUTTON_ICON.EDIT}
+                            />
+                          </div>
+                        </div>
+                        <hr />
+                        <Collapse isOpened={editalContrato.ativo}>
+                          <div className="row">
+                            <div className="col-2 title">Objeto resumido:</div>
+                            <div className="col-10">
+                              {editalContrato.objeto}
+                            </div>
+                          </div>
+                          {editalContrato.contratos.map(
+                            (contrato, indexContrato) => {
+                              return (
+                                <div key={indexContrato}>
+                                  <div className="row pt-3">
+                                    <div className="col-12">
+                                      <div className="label">
+                                        <span className="com-linha">
+                                          Contratos Relacionados
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="row pt-2">
+                                    <div className="col-6 d-flex">
+                                      <div className="title pe-2">
+                                        Contrato nº:
+                                      </div>
+                                      {contrato.numero}
+                                    </div>
+                                    <div className="col-6">
+                                      {contrato.vigencias.map(
+                                        (vigencia, indexVigencia) => {
+                                          return (
+                                            <div key={indexVigencia}>
+                                              {indexVigencia === 0 && (
+                                                <span className="title pe-2">
+                                                  Vigência:
+                                                </span>
+                                              )}
+                                              <span
+                                                className={`${
+                                                  indexVigencia ===
+                                                  contrato.vigencias.length - 1
+                                                    ? vigencia.status
+                                                    : ""
+                                                }`}
+                                                style={{
+                                                  paddingLeft: `${
+                                                    indexVigencia > 0
+                                                      ? "4.7em"
+                                                      : 0
+                                                  }`,
+                                                }}
+                                              >
+                                                {vigencia.data_inicial} até{" "}
+                                                {vigencia.data_final}
+                                              </span>
+                                            </div>
+                                          );
+                                        }
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="row pt-2">
+                                    <div className="col-6 d-flex">
+                                      <div className="title pe-2">
+                                        Processo administrativo do contrato:
+                                      </div>
+                                      {contrato.processo}
+                                    </div>
+                                    <div className="col-6 d-flex">
+                                      <div className="title pe-2">
+                                        Data da proposta:
+                                      </div>
+                                      {contrato.data_proposta}
+                                    </div>
+                                  </div>
+                                  <div className="row pt-2">
+                                    <div className="col-6">
+                                      <div className="title">Lotes:</div>
+                                      {contrato.lotes
+                                        .map((lote) => lote.nome)
+                                        .join(" | ")}
+                                    </div>
+                                    <div className="col-6">
+                                      <div className="title">DREs:</div>
+                                      {contrato.diretorias_regionais.map(
+                                        (dre, indexDRE) => {
+                                          return (
+                                            <div key={indexDRE}>{dre.nome}</div>
+                                          );
+                                        }
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="row pt-2">
+                                    <div className="col-12">
+                                      <div className="title">Empresa:</div>
+                                      {contrato.terceirizada.nome_fantasia}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            }
+                          )}
+                        </Collapse>
+                      </div>
+                    );
+                  })}
+                  <Paginacao
+                    className="mt-3 mb-3"
+                    current={page}
+                    total={count}
+                    showSizeChanger={false}
+                    onChange={(page: number) => {
+                      nextPage(page);
+                    }}
+                    pageSize={10}
+                  />
+                </div>
+              </form>
+            )}
+          </Form>
         )}
       </Spin>
     </div>

@@ -74,4 +74,19 @@ div.consulta-editais-contratos {
   span.toggle-expandir {
     font-size: 25px !important;
   }
+
+  div.input.icon {
+    input {
+      border: none;
+
+      &::placeholder {
+        color: $blackInput;
+        font-size: 14px;
+      }
+    }
+
+    i {
+      color: $gray;
+    }
+  }
 }
