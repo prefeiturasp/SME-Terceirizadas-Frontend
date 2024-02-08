@@ -15,6 +15,7 @@ import {
   cadastrarFichaTecnica,
   editaRascunhoFichaTecnica,
   getFichaTecnica,
+  getFichaTecnicaPraAnalise,
 } from "services/fichaTecnica.service";
 
 import { removeCaracteresEspeciais, exibeError } from "helpers/utilities";
@@ -26,6 +27,7 @@ import {
   ArquivoForm,
   CategoriaFichaTecnicaChoices,
   FichaTecnicaDetalhada,
+  FichaTecnicaPraAnalise,
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
 import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
@@ -33,6 +35,7 @@ import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interf
 import {
   FichaTecnicaPayload,
   InformacoesNutricionaisFichaTecnicaPayload,
+  StateConferidosAnalise,
 } from "./interfaces";
 import { ResponseInformacoesNutricionais } from "interfaces/responses.interface";
 import { InformacaoNutricional } from "interfaces/produto.interface";
@@ -144,7 +147,8 @@ export const carregarDadosAnalise = async (
   listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
     InformacaoNutricional[]
   >,
-  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhada>>,
+  setFicha: Dispatch<SetStateAction<FichaTecnicaPraAnalise>>,
+  setConferidos: Dispatch<SetStateAction<StateConferidosAnalise>>,
   setInitialValues: Dispatch<SetStateAction<Record<string, any>>>,
   setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>,
   setCarregando: Dispatch<SetStateAction<boolean>>
@@ -159,40 +163,23 @@ export const carregarDadosAnalise = async (
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
   if (uuid) {
-    const fichaTecnica = await carregaFicha(
-      uuid,
-      setFicha,
-      listaInformacoesNutricionaisFichaTecnica,
-      setProponente
-    );
-    setInitialValues(geraInitialValues(fichaTecnica, true));
+    const responseFicha = await getFichaTecnicaPraAnalise(uuid);
+    const fichaTecnica = responseFicha.data;
+
+    setFicha(fichaTecnica);
+
+    listaInformacoesNutricionaisFichaTecnica.current =
+      fichaTecnica.informacoes_nutricionais.map(
+        ({ informacao_nutricional }) => informacao_nutricional
+      );
+
+    const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
+    setProponente(response.data);
+
+    setInitialValues(geraInitialValuesAnalise(fichaTecnica, setConferidos));
   }
 
   setCarregando(false);
-};
-
-export const carregaFicha = async (
-  uuid: string,
-  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhada>>,
-  listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
-    InformacaoNutricional[]
-  >,
-  setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>
-) => {
-  const responseFicha = await getFichaTecnica(uuid);
-  const fichaTecnica = responseFicha.data;
-
-  setFicha(fichaTecnica);
-
-  listaInformacoesNutricionaisFichaTecnica.current =
-    fichaTecnica.informacoes_nutricionais.map(
-      ({ informacao_nutricional }) => informacao_nutricional
-    );
-
-  const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
-  setProponente(response.data);
-
-  return fichaTecnica;
 };
 
 export const carregarDados = async (
@@ -219,19 +206,24 @@ export const carregarDados = async (
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
   if (uuid) {
-    const fichaTecnica = await carregaFicha(
-      uuid,
-      setFicha,
-      listaInformacoesNutricionaisFichaTecnica,
-      setProponente
-    );
+    const responseFicha = await getFichaTecnica(uuid);
+    const fichaTecnica = responseFicha.data;
 
-    setInitialValues(geraInitialValues(fichaTecnica));
+    listaInformacoesNutricionaisFichaTecnica.current =
+      fichaTecnica.informacoes_nutricionais.map(
+        ({ informacao_nutricional }) => informacao_nutricional
+      );
+
+    setFicha(fichaTecnica);
+    setInitialValues(geraInitialValuesDetalhe(fichaTecnica));
 
     if (fichaTecnica.arquivo) {
       const arquivo = await carregarArquivo(fichaTecnica.arquivo);
       setArquivo(arquivo);
     }
+
+    const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
+    setProponente(response.data);
   } else if (meusDados) {
     const response = await getTerceirizadaUUID(
       meusDados.vinculo_atual.instituicao.uuid
@@ -325,9 +317,10 @@ export const validaAssinarEnviar = (
   );
 };
 
-export const geraInitialValues = (
-  ficha: FichaTecnicaDetalhada,
-  ehAnalise: boolean = false
+export const geraInitialValues = <
+  Ficha extends FichaTecnicaDetalhada | FichaTecnicaPraAnalise
+>(
+  ficha: Ficha
 ) => {
   const valuesInformacoesNutricionais = {};
   ficha?.informacoes_nutricionais.forEach((informacao) => {
@@ -351,11 +344,7 @@ export const geraInitialValues = (
     });
 
   const initialValues = {
-    produto: ficha.produto?.nome,
-    marca: ficha.marca.uuid,
-    categoria: ficha.categoria as CategoriaFichaTecnicaChoices,
     pregao_chamada_publica: ficha.pregao_chamada_publica,
-    fabricante: ficha.fabricante?.nome,
     cnpj_fabricante: ficha.cnpj_fabricante,
     cep_fabricante: ficha.cep_fabricante,
     endereco_fabricante: ficha.endereco_fabricante,
@@ -378,7 +367,6 @@ export const geraInitialValues = (
     lactose: booleanToString(ficha.lactose),
     lactose_detalhe: ficha.lactose_detalhe,
     porcao: numberToStringDecimal(ficha.porcao),
-    unidade_medida_porcao: ficha.unidade_medida_porcao?.uuid,
     valor_unidade_caseira: numberToStringDecimal(ficha.valor_unidade_caseira),
     unidade_medida_caseira: ficha.unidade_medida_caseira,
     ...valuesInformacoesNutricionais,
@@ -398,24 +386,18 @@ export const geraInitialValues = (
     volume_embalagem_primaria: numberToStringDecimal(
       ficha.volume_embalagem_primaria
     ),
-    unidade_medida_volume_primaria: ficha.unidade_medida_volume_primaria?.uuid,
     peso_liquido_embalagem_primaria: numberToStringDecimal(
       ficha.peso_liquido_embalagem_primaria
     ),
-    unidade_medida_primaria: ficha.unidade_medida_primaria?.uuid,
     peso_liquido_embalagem_secundaria: numberToStringDecimal(
       ficha.peso_liquido_embalagem_secundaria
     ),
-    unidade_medida_secundaria: ficha.unidade_medida_secundaria?.uuid,
     peso_embalagem_primaria_vazia: numberToStringDecimal(
       ficha.peso_embalagem_primaria_vazia
     ),
-    unidade_medida_primaria_vazia: ficha.unidade_medida_primaria_vazia?.uuid,
     peso_embalagem_secundaria_vazia: numberToStringDecimal(
       ficha.peso_embalagem_secundaria_vazia
     ),
-    unidade_medida_secundaria_vazia:
-      ficha.unidade_medida_secundaria_vazia?.uuid,
     sistema_vedacao_embalagem_secundaria:
       ficha.sistema_vedacao_embalagem_secundaria,
     rotulo_legivel: ficha.rotulo_legivel,
@@ -427,20 +409,73 @@ export const geraInitialValues = (
     informacoes_adicionais: ficha.informacoes_adicionais,
   };
 
-  if (ehAnalise) {
-    initialValues["categoria_display"] = ficha.categoria_display;
-    initialValues.marca = ficha.marca?.nome;
-    initialValues.unidade_medida_porcao = ficha.unidade_medida_porcao?.nome;
-    initialValues.unidade_medida_volume_primaria =
-      ficha.unidade_medida_volume_primaria?.nome;
-    initialValues.unidade_medida_primaria = ficha.unidade_medida_primaria?.nome;
-    initialValues.unidade_medida_secundaria =
-      ficha.unidade_medida_secundaria?.nome;
-    initialValues.unidade_medida_primaria_vazia =
-      ficha.unidade_medida_primaria_vazia?.nome;
-    initialValues.unidade_medida_secundaria_vazia =
-      ficha.unidade_medida_secundaria_vazia?.nome;
-  }
+  return initialValues as FichaTecnicaPayload;
+};
+
+export const geraInitialValuesDetalhe = (ficha: FichaTecnicaDetalhada) => {
+  const initialValues = {
+    marca: ficha.marca.uuid,
+    produto: ficha.produto?.nome,
+    fabricante: ficha.fabricante?.nome,
+    categoria: ficha.categoria as CategoriaFichaTecnicaChoices,
+    unidade_medida_porcao: ficha.unidade_medida_porcao?.uuid,
+
+    unidade_medida_volume_primaria: ficha.unidade_medida_volume_primaria?.uuid,
+    unidade_medida_primaria: ficha.unidade_medida_primaria?.uuid,
+
+    unidade_medida_secundaria: ficha.unidade_medida_secundaria?.uuid,
+
+    unidade_medida_primaria_vazia: ficha.unidade_medida_primaria_vazia?.uuid,
+
+    unidade_medida_secundaria_vazia:
+      ficha.unidade_medida_secundaria_vazia?.uuid,
+    ...geraInitialValues(ficha),
+  };
+
+  return initialValues as FichaTecnicaPayload;
+};
+
+export const geraInitialValuesAnalise = (
+  ficha: FichaTecnicaPraAnalise,
+  setConferidos: Dispatch<SetStateAction<StateConferidosAnalise>>
+) => {
+  const initialValues = {
+    marca: ficha.marca,
+    categoria: ficha.categoria,
+    produto: ficha.produto,
+    fabricante: ficha.fabricante,
+    unidade_medida_porcao: ficha.unidade_medida_porcao,
+    unidade_medida_volume_primaria: ficha.unidade_medida_volume_primaria,
+    unidade_medida_primaria: ficha.unidade_medida_primaria,
+    unidade_medida_secundaria: ficha.unidade_medida_secundaria,
+    unidade_medida_primaria_vazia: ficha.unidade_medida_primaria_vazia,
+    unidade_medida_secundaria_vazia: ficha.unidade_medida_secundaria_vazia,
+    armazenamento_correcoes: ficha.analise.armazenamento_correcoes,
+    conservacao_correcoes: ficha.analise.conservacao_correcoes,
+    detalhes_produto_correcoes: ficha.analise.detalhes_produto_correcoes,
+    embalagem_e_rotulagem_correcoes:
+      ficha.analise.embalagem_e_rotulagem_correcoes,
+    informacoes_nutricionais_correcoes:
+      ficha.analise.informacoes_nutricionais_correcoes,
+    temperatura_e_transporte_correcoes:
+      ficha.analise.temperatura_e_transporte_correcoes,
+
+    ...geraInitialValues(ficha),
+  };
+
+  const stateConferidos: StateConferidosAnalise = {
+    armazenamento: ficha.analise.armazenamento_conferido,
+    conservacao: ficha.analise.conservacao_conferido,
+    detalhes_produto: ficha.analise.detalhes_produto_conferido,
+    embalagem_e_rotulagem: ficha.analise.embalagem_e_rotulagem_conferido,
+    informacoes_nutricionais: ficha.analise.informacoes_nutricionais_conferido,
+    modo_preparo: ficha.analise.modo_preparo_conferido,
+    outras_informacoes: ficha.analise.outras_informacoes_conferido,
+    responsavel_tecnico: ficha.analise.responsavel_tecnico_conferido,
+    temperatura_e_transporte: ficha.analise.temperatura_e_transporte_conferido,
+  };
+
+  setConferidos(stateConferidos);
 
   return initialValues as FichaTecnicaPayload;
 };

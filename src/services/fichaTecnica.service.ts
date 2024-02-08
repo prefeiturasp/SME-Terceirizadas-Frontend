@@ -1,8 +1,12 @@
-import { FichaTecnicaPayload } from "components/screens/PreRecebimento/FichaTecnica/interfaces";
+import {
+  AnaliseFichaTecnicaPayload,
+  FichaTecnicaPayload,
+} from "components/screens/PreRecebimento/FichaTecnica/interfaces";
 import axios from "./_base";
 import {
   ResponseDadosCronogramaFichaTecnica,
   ResponseFichaTecnicaDetalhada,
+  ResponseFichaTecnicaPraAnalise,
   ResponseFichasTecnicas,
   ResponseFichasTecnicasDashboard,
   ResponseFichasTecnicasPorStatusDashboard,
@@ -25,6 +29,11 @@ export const getFichaTecnica = async (
   uuid: string
 ): Promise<ResponseFichaTecnicaDetalhada> =>
   await axios.get(`/ficha-tecnica/${uuid}/`);
+
+export const getFichaTecnicaPraAnalise = async (
+  uuid: string
+): Promise<ResponseFichaTecnicaPraAnalise> =>
+  await axios.get(`/ficha-tecnica/${uuid}/detalhar-com-analise/`);
 
 export const listarFichastecnicas = async (
   params: URLSearchParams
@@ -62,3 +71,15 @@ export const getDadosCronogramaFichaTecnica = async (
   uuid: string
 ): Promise<ResponseDadosCronogramaFichaTecnica> =>
   await axios.get(`/ficha-tecnica/${uuid}/dados-cronograma/`);
+
+export const cadastraRascunhoAnaliseFichaTecnica = async (
+  payload: AnaliseFichaTecnicaPayload,
+  uuid: string
+): Promise<ResponseFichaTecnicaPraAnalise> =>
+  await axios.post(`/ficha-tecnica/${uuid}/rascunho-analise-gpcodae/`, payload);
+
+export const editaRascunhoAnaliseFichaTecnica = async (
+  payload: AnaliseFichaTecnicaPayload,
+  uuid: string
+): Promise<ResponseFichaTecnicaPraAnalise> =>
+  await axios.put(`/ficha-tecnica/${uuid}/rascunho-analise-gpcodae/`, payload);

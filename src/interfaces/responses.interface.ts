@@ -17,6 +17,7 @@ import {
   FichaTecnicaDashboard,
   FichaTecnicaSimples,
   DadosCronogramaFichaTecnica,
+  FichaTecnicaPraAnalise,
 } from "./pre_recebimento.interface";
 import { InformacaoNutricional } from "./produto.interface";
 
@@ -148,6 +149,10 @@ export interface ResponseFichasTecnicas extends ResponseInterface {
 
 export interface ResponseFichaTecnicaDetalhada extends ResponseInterface {
   data: FichaTecnicaDetalhada;
+}
+
+export interface ResponseFichaTecnicaPraAnalise extends ResponseInterface {
+  data: FichaTecnicaPraAnalise;
 }
 
 export interface ResponseInformacoesNutricionais extends ResponseInterface {

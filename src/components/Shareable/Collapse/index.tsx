@@ -1,6 +1,7 @@
 import React, { Dispatch, ReactElement, SetStateAction } from "react";
 import "./styles.scss";
 import { CollapseConfig } from "./interfaces";
+import { StateConferidosAnalise } from "components/screens/PreRecebimento/FichaTecnica/interfaces";
 
 export interface CollapseControl {
   [index: number]: boolean;
@@ -13,7 +14,7 @@ type Props = {
   children: ReactElement[];
   id: string;
   collapseConfigs?: CollapseConfig[];
-  state?: Record<string, any>;
+  state?: StateConferidosAnalise;
 };
 
 const Collapse: React.FC<Props> = ({
@@ -50,7 +51,7 @@ const Collapse: React.FC<Props> = ({
                   <span className="col-8 titulo">
                     {configs[index]?.titulo || titulos[index]}
                   </span>
-                  <div className="col-4 text-end my-auto">
+                  <div className="col-4 my-auto flex-end">
                     {configs[index].camposObrigatorios && (
                       <>
                         <span className="texto-obrigatorio required-asterisk">
@@ -62,13 +63,24 @@ const Collapse: React.FC<Props> = ({
                       </>
                     )}
                     {state && (
-                      <div className="batata">
-                        {state[el.props.id] === false
-                          ? "false"
-                          : state[el.props.id] === true
-                          ? "true"
-                          : "null"}
-                      </div>
+                      <span className="tags">
+                        {configs[index].tag === true &&
+                          (state[el.props.id] === false ? (
+                            <div className="tag correcao">
+                              <i className="fas fa-exclamation-circle" />
+                              Indicação de Correção
+                            </div>
+                          ) : state[el.props.id] === true ? (
+                            <div className="tag collapse-conferido">
+                              <i className="fas fa-check-circle" />
+                              Conferido
+                            </div>
+                          ) : (
+                            <div className="tag pendente">
+                              Pendente de Análise
+                            </div>
+                          ))}
+                      </span>
                     )}
                     <span>
                       <button

@@ -5,8 +5,12 @@ import { Spin } from "antd";
 import InputText from "components/Shareable/Input/InputText";
 import Collapse, { CollapseControl } from "components/Shareable/Collapse";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
-import { FichaTecnicaDetalhada } from "interfaces/pre_recebimento.interface";
-
+import { FichaTecnicaPraAnalise } from "interfaces/pre_recebimento.interface";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+} from "../../../../../Shareable/Botao/constants";
+import Botao from "../../../../../Shareable/Botao";
 import { carregarDadosAnalise } from "../../helpers";
 import "./styles.scss";
 import FormPereciveis from "../Cadastrar/components/FormPereciveis";
@@ -19,18 +23,27 @@ import CheckboxComBorda from "components/Shareable/CheckboxComBorda";
 import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
 import FormAprovacao from "./components/FormAprovacao";
 import BotaoConferir from "./components/BotaoConferir";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import {
+  AnaliseFichaTecnicaPayload,
+  StateConferidosAnalise,
+} from "../../interfaces";
+import {
+  cadastraRascunhoAnaliseFichaTecnica,
+  editaRascunhoAnaliseFichaTecnica,
+} from "services/fichaTecnica.service";
+import { exibeError } from "helpers/utilities";
 
 const idCollapse = "collapseAnalisarFichaTecnica";
 
 export default () => {
   const [carregando, setCarregando] = useState<boolean>(true);
   const [collapse, setCollapse] = useState<CollapseControl>({});
-  const [ficha, setFicha] = useState<FichaTecnicaDetalhada>(
-    {} as FichaTecnicaDetalhada
+  const [ficha, setFicha] = useState<FichaTecnicaPraAnalise>(
+    {} as FichaTecnicaPraAnalise
   );
   const [initialValues, setInitialValues] = useState<Record<string, any>>({});
-  //TODO: tentar tirar esse record any
-  const [conferidos, setConferidos] = useState<Record<string, any>>({});
+  const [conferidos, setConferidos] = useState<StateConferidosAnalise>({});
   const listaCompletaInformacoesNutricionais = useRef<InformacaoNutricional[]>(
     []
   );
@@ -48,6 +61,7 @@ export default () => {
         listaCompletaInformacoesNutricionais,
         listaInformacoesNutricionaisFichaTecnica,
         setFicha,
+        setConferidos,
         setInitialValues,
         setProponente,
         setCarregando
@@ -66,6 +80,7 @@ export default () => {
   const aprovaCollapse = (name: string) => {
     fechaCollapses();
     setConferidos({
+      ...conferidos,
       [name]: true,
     });
   };
@@ -73,14 +88,63 @@ export default () => {
   const reprovaCollapse = (name: string) => {
     fechaCollapses();
     setConferidos({
+      ...conferidos,
       [name]: false,
     });
   };
 
   const cancelaCollapse = (name: string) => {
     setConferidos({
+      ...conferidos,
       [name]: null,
     });
+  };
+
+  const montarPayloadAnalise = (values: Record<string, any>) => {
+    const payload: AnaliseFichaTecnicaPayload = {
+      detalhes_produto_conferido: conferidos.detalhes_produto,
+      informacoes_nutricionais_conferido: conferidos.informacoes_nutricionais,
+      conservacao_conferido: conferidos.conservacao,
+      temperatura_e_transporte_conferido: conferidos.temperatura_e_transporte,
+      armazenamento_conferido: conferidos.armazenamento,
+      embalagem_e_rotulagem_conferido: conferidos.embalagem_e_rotulagem,
+      responsavel_tecnico_conferido: conferidos.responsavel_tecnico,
+      modo_preparo_conferido: conferidos.modo_preparo,
+      outras_informacoes_conferido: conferidos.outras_informacoes,
+      detalhes_produto_correcoes: values.detalhes_produto_correcoes,
+      informacoes_nutricionais_correcoes:
+        values.informacoes_nutricionais_correcoes,
+      conservacao_correcoes: values.conservacao_correcoes,
+      temperatura_e_transporte_correcoes:
+        values.temperatura_e_transporte_correcoes,
+      armazenamento_correcoes: values.armazenamento_correcoes,
+      embalagem_e_rotulagem_correcoes: values.embalagem_e_rotulagem_correcoes,
+    };
+
+    return payload;
+  };
+
+  const salvarRascunho = async (values: Record<string, any>) => {
+    try {
+      setCarregando(true);
+
+      const payload = montarPayloadAnalise(values);
+
+      const response = ficha.analise
+        ? await editaRascunhoAnaliseFichaTecnica(payload, ficha.uuid)
+        : await cadastraRascunhoAnaliseFichaTecnica(payload, ficha.uuid);
+
+      if (response.status === 201 || response.status === 200) {
+        toastSuccess("Rascunho salvo com sucesso!");
+        setFicha(response.data);
+      } else {
+        toastError("Ocorreu um erro ao salvar a Ficha Técnica");
+      }
+    } catch (error) {
+      exibeError(error, "Ocorreu um erro ao salvar a Ficha Técnica");
+    } finally {
+      setCarregando(false);
+    }
   };
 
   return (
@@ -91,8 +155,8 @@ export default () => {
             onSubmit={() => {}}
             initialValues={initialValues}
             render={({ handleSubmit, values }) => {
-              const ehPerecivel = values["categoria"] === "PERECIVEIS";
-              const ehNaoPerecivel = values["categoria"] === "NAO_PERECIVEIS";
+              const ehPerecivel = values["categoria"] === "Perecíveis";
+              const ehNaoPerecivel = values["categoria"] === "Não Perecíveis";
               return (
                 <form onSubmit={handleSubmit}>
                   <div className="subtitulo">Identificação do Produto</div>
@@ -111,7 +175,7 @@ export default () => {
                       <Field
                         component={InputText}
                         label="Categoria"
-                        name={`categoria_display`}
+                        name={`categoria`}
                         className="input-ficha-tecnica"
                         disabled
                       />
@@ -149,7 +213,6 @@ export default () => {
                             Proponente e Fabricante
                           </span>
                         ),
-                        camposObrigatorios: false,
                       },
                       {
                         titulo: (
@@ -157,7 +220,7 @@ export default () => {
                             Detalhes do Produto
                           </span>
                         ),
-                        camposObrigatorios: false,
+                        tag: true,
                       },
                       {
                         titulo: (
@@ -165,13 +228,13 @@ export default () => {
                             Informações Nutricionais
                           </span>
                         ),
-                        camposObrigatorios: false,
+                        tag: true,
                       },
                       {
                         titulo: (
                           <span className="verde-escuro">Conservação</span>
                         ),
-                        camposObrigatorios: false,
+                        tag: true,
                       },
                       ...(ehPerecivel
                         ? [
@@ -181,7 +244,7 @@ export default () => {
                                   Temperatura e Transporte
                                 </span>
                               ),
-                              camposObrigatorios: false,
+                              tag: true,
                             },
                           ]
                         : []),
@@ -189,7 +252,7 @@ export default () => {
                         titulo: (
                           <span className="verde-escuro">Armazenamento</span>
                         ),
-                        camposObrigatorios: false,
+                        tag: true,
                       },
                       {
                         titulo: (
@@ -197,7 +260,7 @@ export default () => {
                             Embalagem e Rotulagem
                           </span>
                         ),
-                        camposObrigatorios: false,
+                        tag: true,
                       },
                       {
                         titulo: (
@@ -205,13 +268,13 @@ export default () => {
                             Responsável Técnico e Anexos
                           </span>
                         ),
-                        camposObrigatorios: false,
+                        tag: true,
                       },
                       {
                         titulo: (
                           <span className="verde-escuro">Modo de Preparo</span>
                         ),
-                        camposObrigatorios: false,
+                        tag: true,
                       },
                       {
                         titulo: (
@@ -219,7 +282,7 @@ export default () => {
                             Outras Informações
                           </span>
                         ),
-                        camposObrigatorios: false,
+                        tag: true,
                       },
                     ]}
                     id={idCollapse}
@@ -880,6 +943,23 @@ export default () => {
                       />
                     </section>
                   </Collapse>
+
+                  <div className="mt-4 mb-4">
+                    <Botao
+                      texto="Salvar Rascunho"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-end ms-3"
+                      onClick={() => salvarRascunho(values)}
+                    />
+                    <Botao
+                      texto="Cancelar"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-end ms-3"
+                      onClick={() => {}}
+                    />
+                  </div>
                 </form>
               );
             }}
