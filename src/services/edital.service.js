@@ -37,23 +37,13 @@ export const atualizarEditalEContrato = (payload, uuid) => {
     });
 };
 
-export const obterEditaisEContratos = () => {
+export const getEditaisContratos = async (params) => {
   const url = `${API_URL}/editais-contratos/`;
-  let status = 0;
-  return fetch(url, {
-    method: "GET",
-    headers: authToken,
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const obtemEdital = (uuid) => {
