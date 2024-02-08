@@ -132,7 +132,7 @@ export const ConsultaEditaisContratos = () => {
                               "Data de vigência do contrato próxima ao vencimento, verifique se o contrato permanece ativo e adie a vigência"
                             }
                           >
-                            <div className="icon me-4">
+                            <div className="icon me-4 mt-1">
                               <span className="fas fa-exclamation" />
                             </div>
                           </Tooltip>
@@ -144,7 +144,7 @@ export const ConsultaEditaisContratos = () => {
                               "Data de vigência do contrato expirada, verifique se o contrato permanece ativo e adie a vigência"
                             }
                           >
-                            <div className="icon orange me-4">
+                            <div className="icon orange me-4 mt-1">
                               <span className="fas fa-exclamation" />
                             </div>
                           </Tooltip>
