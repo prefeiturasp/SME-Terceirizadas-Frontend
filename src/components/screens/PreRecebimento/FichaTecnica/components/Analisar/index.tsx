@@ -33,11 +33,16 @@ import {
   editaRascunhoAnaliseFichaTecnica,
 } from "services/fichaTecnica.service";
 import { exibeError } from "helpers/utilities";
+import ModalGenerico from "components/Shareable/ModalGenerico";
+import { PRE_RECEBIMENTO, PAINEL_FICHAS_TECNICAS } from "configs/constants";
+import { useNavigate } from "react-router-dom";
 
 const idCollapse = "collapseAnalisarFichaTecnica";
 
 export default () => {
+  const navigate = useNavigate();
   const [carregando, setCarregando] = useState<boolean>(true);
+  const [showModalCancelar, setShowModalCancelar] = useState<boolean>(false);
   const [collapse, setCollapse] = useState<CollapseControl>({});
   const [ficha, setFicha] = useState<FichaTecnicaPraAnalise>(
     {} as FichaTecnicaPraAnalise
@@ -957,9 +962,24 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="float-end ms-3"
-                      onClick={() => {}}
+                      onClick={() => {
+                        setShowModalCancelar(true);
+                      }}
                     />
                   </div>
+
+                  <ModalGenerico
+                    show={showModalCancelar}
+                    handleSim={() => {
+                      navigate(`/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}`);
+                    }}
+                    handleClose={() => {
+                      setShowModalCancelar(false);
+                    }}
+                    loading={carregando}
+                    titulo={<>Cancelar Análise da Ficha Técnica</>}
+                    texto={<>Deseja cancelar a Análise da Ficha Técnica?</>}
+                  />
                 </form>
               );
             }}

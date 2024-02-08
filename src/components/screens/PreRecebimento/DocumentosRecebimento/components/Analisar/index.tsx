@@ -33,7 +33,7 @@ import { deletaValues } from "helpers/formHelper";
 import { PRAZO_RECEBIMENTO_OPTIONS } from "../../constants";
 import { Field, Form } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
-import ModalGenerico from "./components/ModalGenerico";
+import ModalGenerico from "../../../../../Shareable/ModalGenerico";
 import ModalCorrecao from "./components/ModalCorrecao";
 import { AnaliseDocumentoPayload } from "../../interfaces";
 import createDecorator from "final-form-calculate";

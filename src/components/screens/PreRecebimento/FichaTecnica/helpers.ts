@@ -450,29 +450,29 @@ export const geraInitialValuesAnalise = (
     unidade_medida_secundaria: ficha.unidade_medida_secundaria,
     unidade_medida_primaria_vazia: ficha.unidade_medida_primaria_vazia,
     unidade_medida_secundaria_vazia: ficha.unidade_medida_secundaria_vazia,
-    armazenamento_correcoes: ficha.analise.armazenamento_correcoes,
-    conservacao_correcoes: ficha.analise.conservacao_correcoes,
-    detalhes_produto_correcoes: ficha.analise.detalhes_produto_correcoes,
+    armazenamento_correcoes: ficha.analise?.armazenamento_correcoes,
+    conservacao_correcoes: ficha.analise?.conservacao_correcoes,
+    detalhes_produto_correcoes: ficha.analise?.detalhes_produto_correcoes,
     embalagem_e_rotulagem_correcoes:
-      ficha.analise.embalagem_e_rotulagem_correcoes,
+      ficha.analise?.embalagem_e_rotulagem_correcoes,
     informacoes_nutricionais_correcoes:
-      ficha.analise.informacoes_nutricionais_correcoes,
+      ficha.analise?.informacoes_nutricionais_correcoes,
     temperatura_e_transporte_correcoes:
-      ficha.analise.temperatura_e_transporte_correcoes,
+      ficha.analise?.temperatura_e_transporte_correcoes,
 
     ...geraInitialValues(ficha),
   };
 
   const stateConferidos: StateConferidosAnalise = {
-    armazenamento: ficha.analise.armazenamento_conferido,
-    conservacao: ficha.analise.conservacao_conferido,
-    detalhes_produto: ficha.analise.detalhes_produto_conferido,
-    embalagem_e_rotulagem: ficha.analise.embalagem_e_rotulagem_conferido,
-    informacoes_nutricionais: ficha.analise.informacoes_nutricionais_conferido,
-    modo_preparo: ficha.analise.modo_preparo_conferido,
-    outras_informacoes: ficha.analise.outras_informacoes_conferido,
-    responsavel_tecnico: ficha.analise.responsavel_tecnico_conferido,
-    temperatura_e_transporte: ficha.analise.temperatura_e_transporte_conferido,
+    armazenamento: ficha.analise?.armazenamento_conferido,
+    conservacao: ficha.analise?.conservacao_conferido,
+    detalhes_produto: ficha.analise?.detalhes_produto_conferido,
+    embalagem_e_rotulagem: ficha.analise?.embalagem_e_rotulagem_conferido,
+    informacoes_nutricionais: ficha.analise?.informacoes_nutricionais_conferido,
+    modo_preparo: ficha.analise?.modo_preparo_conferido,
+    outras_informacoes: ficha.analise?.outras_informacoes_conferido,
+    responsavel_tecnico: ficha.analise?.responsavel_tecnico_conferido,
+    temperatura_e_transporte: ficha.analise?.temperatura_e_transporte_conferido,
   };
 
   setConferidos(stateConferidos);
