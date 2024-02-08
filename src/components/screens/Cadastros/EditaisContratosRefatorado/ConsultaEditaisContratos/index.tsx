@@ -74,10 +74,16 @@ export const ConsultaEditaisContratos = () => {
     setEditaisContratos(editaisContratos_);
   };
 
-  const nextPage = async (page: number): Promise<void> => {
+  const nextPage = async ({
+    page,
+    values,
+  }: {
+    page: number;
+    values: { buscar?: string };
+  }): Promise<void> => {
     setPage(page);
     setLoading(true);
-    await getEditaisContratosAsync({ page });
+    await getEditaisContratosAsync({ page: page, buscar: values.buscar });
     setLoading(false);
   };
 
@@ -104,7 +110,7 @@ export const ConsultaEditaisContratos = () => {
         {erro && <div className="mt-3">{erro}</div>}
         {!erro && editaisContratos && (
           <Form keepDirtyOnReinitialize onSubmit={onSubmit}>
-            {({ handleSubmit }) => (
+            {({ handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card">
                   <div className={`row p-2 pt-3`}>
@@ -310,7 +316,7 @@ export const ConsultaEditaisContratos = () => {
                     total={count}
                     showSizeChanger={false}
                     onChange={(page: number) => {
-                      nextPage(page);
+                      nextPage({ page, values });
                     }}
                     pageSize={10}
                   />
