@@ -1,11 +1,7 @@
 import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
-import {
-  EMPENHOS,
-  MEDICAO_INICIAL,
-  ACOMPANHAMENTO_DE_LANCAMENTOS,
-} from "../../configs/constants";
+import { EMPENHOS, MEDICAO_INICIAL } from "../../configs/constants";
 import { Empenhos } from "components/screens/LancamentoInicial/Empenhos";
 
 const atual = {
@@ -15,7 +11,7 @@ const atual = {
 
 const anterior = [
   {
-    href: `/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`,
+    href: "#",
     titulo: "Medição Inicial",
   },
   {
