@@ -26,6 +26,7 @@ export interface FormCadastroEditaisContratosInterface {
 export interface VigenciaInterface
   extends FormCadastroEditaisContratosVigenciaInterface {
   uuid: string;
+  status: string;
 }
 
 export interface ContratoInterface {

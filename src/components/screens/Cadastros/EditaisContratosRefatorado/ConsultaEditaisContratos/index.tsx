@@ -12,9 +12,14 @@ import { ResponseEditalCotratoInterface } from "interfaces/responses.interface";
 import React, { useEffect, useState } from "react";
 import { Collapse } from "react-collapse";
 import { getEditaisContratos } from "services/edital.service.js";
-import { EditalContratoListadoInterface } from "../interfaces";
+import {
+  EditalContratoInterface,
+  EditalContratoListadoInterface,
+} from "../interfaces";
 import { Paginacao } from "components/Shareable/Paginacao";
 import "./style.scss";
+import { Tooltip } from "antd";
+import { VIGENCIA_STATUS } from "./constants";
 
 export const ConsultaEditaisContratos = () => {
   const [editaisContratos, setEditaisContratos] =
@@ -69,6 +74,19 @@ export const ConsultaEditaisContratos = () => {
     setLoading(false);
   };
 
+  const getStatusContrato = (
+    editalContrato: EditalContratoInterface
+  ): string => {
+    let status = "";
+    editalContrato.contratos.forEach((contrato) => {
+      const vigencia = contrato.vigencias[contrato.vigencias.length - 1];
+      if (vigencia.status === VIGENCIA_STATUS.VENCIDO) status = vigencia.status;
+      if (status !== "vencido" && vigencia.status === "proximo_ao_vencimento")
+        status = vigencia.status;
+    });
+    return status;
+  };
+
   const REQUISICOES_FINALIZADAS = !loading && editaisContratos;
 
   return (
@@ -95,9 +113,30 @@ export const ConsultaEditaisContratos = () => {
                       <div className="col-3">{editalContrato.numero}</div>
                       <div className="col-3">{editalContrato.processo}</div>
                       <div className="col-3 d-flex my-auto">
-                        <div className="icon me-4">
-                          <span className="fas fa-exclamation" />
-                        </div>
+                        {getStatusContrato(editalContrato) ===
+                          VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO && (
+                          <Tooltip
+                            title={
+                              "Data de vigência do contrato próxima ao vencimento, verifique se o contrato permanece ativo e adie a vigência"
+                            }
+                          >
+                            <div className="icon me-4">
+                              <span className="fas fa-exclamation" />
+                            </div>
+                          </Tooltip>
+                        )}
+                        {getStatusContrato(editalContrato) ===
+                          VIGENCIA_STATUS.VENCIDO && (
+                          <Tooltip
+                            title={
+                              "Data de vigência do contrato expirada, verifique se o contrato permanece ativo e adie a vigência"
+                            }
+                          >
+                            <div className="icon orange me-4">
+                              <span className="fas fa-exclamation" />
+                            </div>
+                          </Tooltip>
+                        )}
                         <ToggleExpandir
                           onClick={() => ativaContratoEdital(index)}
                           ativo={editalContrato.ativo}

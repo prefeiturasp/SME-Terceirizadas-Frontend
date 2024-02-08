@@ -35,6 +35,10 @@ div.consulta-editais-contratos {
     height: 25px;
     border-radius: 50%;
 
+    &.orange {
+      background-color: $orange;
+    }
+
     span.fas {
       color: white;
       padding-top: 5px;
