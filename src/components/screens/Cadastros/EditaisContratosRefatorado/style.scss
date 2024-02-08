@@ -49,3 +49,27 @@ div.form-editais-contratos {
     }
   }
 }
+
+@media only screen and (min-width: 1024px) and (max-width: 1400px) {
+  div.form-editais-contratos {
+    div.title {
+      span.com-linha {
+        &.w-78::after {
+          width: 66%;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1401px) and (max-width: 1700px) {
+  div.form-editais-contratos {
+    div.title {
+      span.com-linha {
+        &.w-78::after {
+          width: 70%;
+        }
+      }
+    }
+  }
+}
