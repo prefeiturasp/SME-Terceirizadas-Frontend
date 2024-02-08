@@ -8,11 +8,9 @@ import { Collapse } from "react-collapse";
 import { Form } from "react-final-form";
 import { getEditaisContratos } from "services/edital.service.js";
 import { EditalContratoListadoInterface } from "../interfaces";
-import {
-  CamposEditalContrato,
-  Header,
-  LinhaEditalContrato,
-} from "./components";
+import { CamposEditalContrato } from "./components/CamposEditalContrato";
+import { Header } from "./components/Header";
+import { LinhaEditalContrato } from "./components/ListaContratoEdital";
 import "./style.scss";
 
 export const ConsultaEditaisContratos = () => {
