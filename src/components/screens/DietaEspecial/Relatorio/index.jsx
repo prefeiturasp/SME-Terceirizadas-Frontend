@@ -372,6 +372,7 @@ const Relatorio = ({ visao }) => {
                   TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
                   TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
                   TIPO_PERFIL.MEDICAO,
+                  TIPO_PERFIL.CODAE_GABINETE,
                 ].includes(tipoPerfil) && (
                   <EscolaCancelaDietaEspecial
                     uuid={dietaEspecial.uuid}

@@ -697,6 +697,10 @@ export const usuarioEhOrgaoFiscalizador = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ORGAO_FISCALIZADOR;
 };
 
+export const usuarioEhCODAEGabinete = () => {
+  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_CODAE_GABINETE;
+};
+
 export const acessoModuloMedicaoInicialEscola = () => {
   return (
     localStorage.getItem("acesso_modulo_medicao_inicial") === "true" ||
@@ -714,7 +718,9 @@ export const acessoModuloMedicaoInicialDRE = () => {
 export const acessoModuloMedicaoInicialCODAE = () => {
   return (
     localStorage.getItem("acesso_modulo_medicao_inicial") === "true" &&
-    (usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAENutriManifestacao())
+    (usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhCODAEGabinete())
   );
 };
 
@@ -996,7 +1002,8 @@ export const exibirModuloMedicaoInicial = () => {
         !usuarioEscolaEhGestaoDireta()) ||
       usuarioEhMedicao() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao()
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhCODAEGabinete()
     );
 
   switch (localStorage.getItem("tipo_perfil")) {
@@ -1008,6 +1015,7 @@ export const exibirModuloMedicaoInicial = () => {
       return true;
     case `"nutricao_manifestacao"`:
     case `"gestao_alimentacao_terceirizada"`:
+    case `"codae_gabinete"`:
       return acessoModuloMedicaoInicialCODAE();
     default:
       return false;
