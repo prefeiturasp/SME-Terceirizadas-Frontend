@@ -21,6 +21,7 @@ export interface FormCadastroEditaisContratosInterface {
   processo: string;
   objeto: string;
   contratos: Array<FormCadastroEditaisContratosContratoInterface>;
+  uuid?: string;
 }
 
 export interface VigenciaInterface

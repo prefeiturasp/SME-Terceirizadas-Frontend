@@ -20,12 +20,18 @@ import {
 import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
 import React, { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
-import { criarEditalEContrato } from "services/edital.service";
+import {
+  criarEditalEContrato,
+  getEditalContrato,
+} from "services/edital.service";
 import { getLotesSimples } from "services/lote.service";
 import { getNomesTerceirizadas } from "services/produto.service.js";
-import { FormCadastroEditaisContratosInterface } from "../interfaces";
+import {
+  EditalContratoListadoInterface,
+  FormCadastroEditaisContratosInterface,
+} from "../interfaces";
 import "./style.scss";
 import { FieldArrayContratos } from "./components/FieldArrayContratos";
 import { ModalCadastroEdital } from "./ModalCadastroEdital";
@@ -34,8 +40,11 @@ import {
   CONFIGURACOES,
   EDITAIS_CADASTRADOS,
 } from "configs/constants";
+import { formataEditalContratoParaForm } from "./helper";
 
 export const EditaisContratosRefatorado = () => {
+  const [objEditalContrato, setObjEditalContrato] =
+    useState<EditalContratoListadoInterface>(undefined);
   const [lotes, setLotes] = useState<Array<LoteRascunhosInterface>>(undefined);
   const [DREs, setDREs] =
     useState<Array<DiretoriaRegionalInterface>>(undefined);
@@ -46,7 +55,17 @@ export const EditaisContratosRefatorado = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);
 
+  const location = useLocation();
   const navigate: NavigateFunction = useNavigate();
+
+  const getEditalContratoAsync = async (uuid: string): Promise<void> => {
+    const response = await getEditalContrato(uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      setObjEditalContrato(formataEditalContratoParaForm(response.data));
+    } else {
+      setErro("Erro ao carregar edital ");
+    }
+  };
 
   const getLotesSimplesAsync = async (): Promise<void> => {
     const response: ResponseLotesSimplesInterface = await getLotesSimples();
@@ -90,6 +109,7 @@ export const EditaisContratosRefatorado = () => {
       getLotesSimplesAsync(),
       getDiretoriareginalSimplissimaAsync(),
       getNomesTerceirizadasAsync(),
+      location?.state?.uuid && getEditalContratoAsync(location.state.uuid),
     ]).then(() => {
       setLoading(false);
     });
@@ -111,7 +131,12 @@ export const EditaisContratosRefatorado = () => {
     }
   };
 
-  const REQUISICOES_FINALIZADAS = !loading && lotes && DREs && empresas;
+  const REQUISICOES_FINALIZADAS =
+    !loading &&
+    lotes &&
+    DREs &&
+    empresas &&
+    (location?.state?.uuid ? objEditalContrato : true);
 
   const DEFAULT_CONTRATOS = {
     vigencias: [
@@ -155,9 +180,11 @@ export const EditaisContratosRefatorado = () => {
                   mutators={{
                     ...arrayMutators,
                   }}
-                  initialValues={{
-                    contratos: [DEFAULT_CONTRATOS],
-                  }}
+                  initialValues={
+                    objEditalContrato || {
+                      contratos: [DEFAULT_CONTRATOS],
+                    }
+                  }
                   onSubmit={onSubmit}
                 >
                   {({
