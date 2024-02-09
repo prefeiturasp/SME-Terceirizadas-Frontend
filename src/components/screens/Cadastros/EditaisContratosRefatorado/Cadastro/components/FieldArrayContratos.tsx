@@ -71,6 +71,16 @@ export const FieldArrayContratos = ({
     return `${selected.length} diretorias selecionadas`;
   };
 
+  const removeContrato = (index_contratos: number): void => {
+    form.change(
+      `contratos`,
+      values.contratos.filter(
+        (_: FormCadastroEditaisContratosContratoInterface, i: number) =>
+          i !== index_contratos
+      )
+    );
+  };
+
   return (
     <FieldArray name="contratos">
       {({ fields }) =>
@@ -89,15 +99,7 @@ export const FieldArrayContratos = ({
                   {index_contratos > 0 && (
                     <span
                       onClick={() => {
-                        form.change(
-                          `contratos`,
-                          values.contratos.filter(
-                            (
-                              _: FormCadastroEditaisContratosContratoInterface,
-                              i: number
-                            ) => i !== index_contratos
-                          )
-                        );
+                        removeContrato(index_contratos);
                       }}
                       className="remover float-end"
                     >
