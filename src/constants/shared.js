@@ -68,6 +68,7 @@ export const TIPO_PERFIL = {
   PRE_RECEBIMENTO: `"pre_recebimento"`,
   MEDICAO: `"medicao"`,
   ORGAO_FISCALIZADOR: `"orgao_fiscalizador"`,
+  CODAE_GABINETE: `"codae_gabinete"`,
 };
 
 export const TIPO_USUARIO = {

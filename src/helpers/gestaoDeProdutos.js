@@ -202,6 +202,7 @@ export const listarCardsPermitidos = () => {
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
       TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
       TIPO_PERFIL.ORGAO_FISCALIZADOR,
+      TIPO_PERFIL.CODAE_GABINETE,
     ].includes(perfil)
   ) {
     const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);

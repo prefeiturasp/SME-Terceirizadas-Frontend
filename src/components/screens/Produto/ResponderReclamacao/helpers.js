@@ -1,6 +1,7 @@
 import moment from "moment";
 import * as R from "ramda";
 import {
+  usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhOrgaoFiscalizador,
@@ -40,7 +41,8 @@ export const getStatus = (values) => {
   if (
     usuarioEhOrgaoFiscalizador() ||
     usuarioEhCoordenadorNutriSupervisao() ||
-    usuarioEhCODAEGestaoAlimentacao()
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAEGabinete()
   ) {
     status.push("ESCOLA_OU_NUTRICIONISTA_RECLAMOU");
     status.push("CODAE_QUESTIONOU_UE");

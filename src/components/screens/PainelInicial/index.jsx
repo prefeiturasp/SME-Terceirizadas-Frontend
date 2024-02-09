@@ -25,6 +25,7 @@ import {
   usuarioEhOrgaoFiscalizador,
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoParceira,
+  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 import { ACOMPANHAMENTO_DE_LANCAMENTOS } from "configs/constants";
 import { ENVIRONMENT } from "constants/config";
@@ -48,7 +49,8 @@ const PainelInicial = () => {
           usuarioEhMedicao() ||
           usuarioEhNutricionistaSupervisao() ||
           usuarioEhEscolaTerceirizadaDiretor() ||
-          usuarioEhEscolaTerceirizada()) && (
+          usuarioEhEscolaTerceirizada() ||
+          usuarioEhCODAEGabinete()) && (
           <Col xs={24} sm={24} md={24} lg={8} xl={8}>
             <CardLogo
               titulo={"Gestão de Alimentação"}
@@ -67,6 +69,7 @@ const PainelInicial = () => {
         usuarioEhDRE() ||
         usuarioEhEscolaTerceirizadaDiretor() ||
         usuarioEhEscolaTerceirizada() ||
+        usuarioEhCODAEGabinete() ||
         usuarioEscolaEhGestaoDiretaParceira) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
@@ -84,7 +87,8 @@ const PainelInicial = () => {
         usuarioEhDRE() ||
         usuarioEhEscolaTerceirizadaDiretor() ||
         usuarioEhEscolaTerceirizada() ||
-        usuarioEhOrgaoFiscalizador()) && (
+        usuarioEhOrgaoFiscalizador() ||
+        usuarioEhCODAEGabinete()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Gestão de Produto"}
@@ -105,7 +109,8 @@ const PainelInicial = () => {
               (usuarioEhDRE() ||
                 usuarioEhMedicao() ||
                 usuarioEhCODAEGestaoAlimentacao() ||
-                usuarioEhCODAENutriManifestacao()) &&
+                usuarioEhCODAENutriManifestacao() ||
+                usuarioEhCODAEGabinete()) &&
                 navigate(`/medicao-inicial/${ACOMPANHAMENTO_DE_LANCAMENTOS}`);
             }}
           >
