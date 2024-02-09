@@ -62,6 +62,8 @@ const Collapse: React.FC<Props> = ({
                         </span>
                       </>
                     )}
+                    {/* TODO: Transformar isso em parametro(componentes separados) 
+                              quando for necessário incluir mais opções de tags */}
                     {state && (
                       <span className="tags">
                         {configs[index].tag === true &&
