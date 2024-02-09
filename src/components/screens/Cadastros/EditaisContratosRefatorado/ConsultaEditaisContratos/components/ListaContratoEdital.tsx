@@ -50,12 +50,21 @@ export const LinhaEditalContrato = ({
         }`;
   };
 
+  const getClasseEstiloPaddingIcones = (): string => {
+    return ![
+      VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO,
+      VIGENCIA_STATUS.VENCIDO,
+    ].includes(getStatusContrato(editalContrato))
+      ? "pe-48px"
+      : "";
+  };
+
   return (
     <div className={`row ${getClasseEstiloContrato()}`}>
       <div className="col-3">{editalContrato.tipo_contratacao}</div>
       <div className="col-3">{editalContrato.numero}</div>
       <div className="col-3">{editalContrato.processo}</div>
-      <div className="col-3 d-flex my-auto">
+      <div className={`col-3 d-flex my-auto`}>
         {getStatusContrato(editalContrato) ===
           VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO && (
           <Tooltip
@@ -79,11 +88,13 @@ export const LinhaEditalContrato = ({
             </div>
           </Tooltip>
         )}
-        <ToggleExpandir
-          onClick={() => ativaContratoEdital(index)}
-          ativo={editalContrato.ativo}
-          className="me-3"
-        />
+        <span className={getClasseEstiloPaddingIcones()}>
+          <ToggleExpandir
+            onClick={() => ativaContratoEdital(index)}
+            ativo={editalContrato.ativo}
+            className="me-3"
+          />
+        </span>
         <Botao
           type={BUTTON_TYPE.BUTTON}
           style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
