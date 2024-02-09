@@ -1,6 +1,7 @@
-import React, { Dispatch, ReactNode, SetStateAction } from "react";
+import React, { Dispatch, ReactElement, SetStateAction } from "react";
 import "./styles.scss";
 import { CollapseConfig } from "./interfaces";
+import { StateConferidosAnalise } from "components/screens/PreRecebimento/FichaTecnica/interfaces";
 
 export interface CollapseControl {
   [index: number]: boolean;
@@ -9,10 +10,11 @@ export interface CollapseControl {
 type Props = {
   collapse: CollapseControl;
   setCollapse: Dispatch<SetStateAction<CollapseControl>>;
-  titulos?: ReactNode[];
-  children: ReactNode[];
+  titulos?: ReactElement[];
+  children: ReactElement[];
   id: string;
   collapseConfigs?: CollapseConfig[];
+  state?: StateConferidosAnalise;
 };
 
 const Collapse: React.FC<Props> = ({
@@ -22,6 +24,7 @@ const Collapse: React.FC<Props> = ({
   children,
   id,
   collapseConfigs,
+  state,
 }) => {
   const toggleCollapse = (index: number) => {
     setCollapse({
@@ -40,15 +43,15 @@ const Collapse: React.FC<Props> = ({
   return (
     collapse && (
       <div className="accordion accordionComponent mt-1" id={id}>
-        {children.map((el, index) => (
+        {children.filter(Boolean).map((el, index) => (
           <>
             <div className="card mt-3">
               <div className={`card-header card-tipo`} id={`heading_${index}`}>
                 <div className="row card-header-content">
                   <span className="col-8 titulo">
-                    {configs[index].titulo || titulos[index]}
+                    {configs[index]?.titulo || titulos[index]}
                   </span>
-                  <div className="col-4 text-end my-auto">
+                  <div className="col-4 my-auto flex-end">
                     {configs[index].camposObrigatorios && (
                       <>
                         <span className="texto-obrigatorio required-asterisk">
@@ -58,6 +61,28 @@ const Collapse: React.FC<Props> = ({
                           Campos de Preenchimento Obrigatório
                         </span>
                       </>
+                    )}
+                    {/* TODO: Transformar isso em parametro(componentes separados) 
+                              quando for necessário incluir mais opções de tags */}
+                    {state && (
+                      <span className="tags">
+                        {configs[index].tag === true &&
+                          (state[el.props.id] === false ? (
+                            <div className="tag correcao">
+                              <i className="fas fa-exclamation-circle" />
+                              Indicação de Correção
+                            </div>
+                          ) : state[el.props.id] === true ? (
+                            <div className="tag collapse-conferido">
+                              <i className="fas fa-check-circle" />
+                              Conferido
+                            </div>
+                          ) : (
+                            <div className="tag pendente">
+                              Pendente de Análise
+                            </div>
+                          ))}
+                      </span>
                     )}
                     <span>
                       <button

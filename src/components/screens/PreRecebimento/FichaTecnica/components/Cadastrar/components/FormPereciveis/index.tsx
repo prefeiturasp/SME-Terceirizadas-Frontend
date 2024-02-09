@@ -5,9 +5,10 @@ import InputText from "components/Shareable/Input/InputText";
 
 interface Props {
   values: Record<string, any>;
+  desabilitar?: boolean;
 }
 
-const FormPereciveis: React.FC<Props> = ({ values }) => {
+const FormPereciveis: React.FC<Props> = ({ values, desabilitar = false }) => {
   return (
     <div>
       <div className="row">
@@ -23,6 +24,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
             tooltipText={
               "Deve ser declarado do prazo real em dias, meses ou anos a partir da data de fabricação."
             }
+            disabled={desabilitar}
           />
         </div>
         <div className="col-8">
@@ -34,6 +36,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
             className="input-ficha-tecnica"
             required
             validate={required}
+            disabled={desabilitar}
           />
         </div>
       </div>
@@ -51,6 +54,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               value="0"
               name={`agroecologico`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -62,6 +66,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               value="1"
               name={`agroecologico`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -78,6 +83,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               value="0"
               name={`organico`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -89,6 +95,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               value="1"
               name={`organico`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -108,6 +115,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
                 value="CERTIFICACAO"
                 name={`mecanismo_controle`}
                 validate={required}
+                disabled={desabilitar}
               />
               <span className="checkmark" />
             </label>
@@ -119,6 +127,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
                 value="OPAC"
                 name={`mecanismo_controle`}
                 validate={required}
+                disabled={desabilitar}
               />
               <span className="checkmark" />
             </label>
@@ -130,6 +139,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
                 value="OCS"
                 name={`mecanismo_controle`}
                 validate={required}
+                disabled={desabilitar}
               />
               <span className="checkmark" />
             </label>
@@ -149,6 +159,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
             tooltipText={
               "Caso utilizado aditivos alimentares, deverá ser declarada a função principal, nome completo e número INS de todos."
             }
+            disabled={desabilitar}
           />
         </div>
       </div>
@@ -166,6 +177,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               value="0"
               name={`alergenicos`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -177,6 +189,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               value="1"
               name={`alergenicos`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -192,6 +205,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               className="input-ficha-tecnica"
               required
               validate={required}
+              disabled={desabilitar}
             />
           </div>
         </div>
@@ -210,6 +224,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               value="0"
               name={`gluten`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -221,6 +236,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               value="1"
               name={`gluten`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -240,6 +256,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               value="0"
               name={`lactose`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -251,6 +268,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               value="1"
               name={`lactose`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -266,6 +284,7 @@ const FormPereciveis: React.FC<Props> = ({ values }) => {
               className="input-ficha-tecnica"
               required
               validate={required}
+              disabled={desabilitar}
             />
           </div>
         </div>
