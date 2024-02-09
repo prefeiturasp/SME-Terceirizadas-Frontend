@@ -179,7 +179,7 @@ export default class CorpoRelatorio extends Component {
             <div className="col-2 d-flex" style={{ alignItems: "flex-end" }}>
               <Botao
                 type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE}
+                style={BUTTON_STYLE.GREEN}
                 icon={BUTTON_ICON.PRINT}
                 onClick={() => {
                   getRelatorioProduto(produto);

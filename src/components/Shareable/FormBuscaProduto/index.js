@@ -8,6 +8,7 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import { Select as SelectAntd } from "antd";
 import {
   usuarioEhEmpresaTerceirizada,
+  usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhCODAENutriManifestacao,
@@ -63,7 +64,8 @@ const exibirFiltroNomeTerceirizada =
   !usuarioEhEmpresaTerceirizada() &&
   !usuarioEhCODAEGestaoAlimentacao() &&
   !usuarioEhNutricionistaSupervisao() &&
-  !usuarioEhCODAENutriManifestacao();
+  !usuarioEhCODAENutriManifestacao() &&
+  !usuarioEhCODAEGabinete();
 
 function reducer(state, { type: actionType, payload }) {
   switch (actionType) {
