@@ -2,6 +2,7 @@ import React from "react";
 import { Menu, LeafItem } from "./shared";
 import {
   usuarioEhCODAEDietaEspecial,
+  usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoProduto,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
@@ -25,7 +26,8 @@ const MenuRelatorios = () => {
     usuarioEhEmpresaTerceirizada() ||
     usuarioEhCODAENutriManifestacao() ||
     usuarioEhDRE() ||
-    usuarioEhOrgaoFiscalizador();
+    usuarioEhOrgaoFiscalizador() ||
+    usuarioEhCODAEGabinete();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
   const exibirRelatorioAnaliseSensorial =
@@ -41,7 +43,8 @@ const MenuRelatorios = () => {
     usuarioEhCODAENutriManifestacao() ||
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhDRE() ||
-    usuarioEhOrgaoFiscalizador();
+    usuarioEhOrgaoFiscalizador() ||
+    usuarioEhCODAEGabinete();
 
   const exibirProdutosSuspensos =
     usuarioEhCODAEGestaoProduto() ||
@@ -53,7 +56,8 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAENutriManifestacao() ||
     usuarioEhCODAEGestaoAlimentacao() ||
-    usuarioEhOrgaoFiscalizador();
+    usuarioEhOrgaoFiscalizador() ||
+    usuarioEhCODAEGabinete();
 
   const exibirRelatorioQuantitativoSolicDietaEsp =
     usuarioEhCODAEDietaEspecial() ||

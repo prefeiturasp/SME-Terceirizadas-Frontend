@@ -49,6 +49,7 @@ const ModalRelatorioReclamacao = ({
       title="Relatório de acompanhamento de reclamação de produto"
       onCancel={closeModal}
       width={"95%"}
+      className="modal-acompanhamento-reclamacao-produto"
       footer={[
         <Paginacao
           className="mt-3 mb-3"
@@ -65,7 +66,7 @@ const ModalRelatorioReclamacao = ({
           key={1}
           texto="Voltar"
           type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.BLUE_OUTLINE}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.ARROW_LEFT}
           onClick={closeModal}
         />,
@@ -73,7 +74,7 @@ const ModalRelatorioReclamacao = ({
           key={2}
           type={BUTTON_TYPE.BUTTON}
           texto="Imprimir"
-          style={BUTTON_STYLE.BLUE}
+          style={BUTTON_STYLE.GREEN}
           icon={BUTTON_ICON.PRINT}
           onClick={() => {
             const params = gerarParametrosConsulta({

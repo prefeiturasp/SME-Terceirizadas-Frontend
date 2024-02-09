@@ -22,6 +22,7 @@ import {
   usuarioEhCoordenadorNutriCODAE,
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoParceira,
+  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
@@ -37,7 +38,8 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhEmpresaTerceirizada() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEscolaEhGestaoDireta() ||
-    usuarioEscolaEhGestaoParceira();
+    usuarioEscolaEhGestaoParceira() ||
+    usuarioEhCODAEGabinete();
   const exibeNovaSolicitacao =
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhEscolaTerceirizada() ||
@@ -55,7 +57,8 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE() ||
     usuarioEscolaEhGestaoDireta() ||
-    usuarioEscolaEhGestaoParceira();
+    usuarioEscolaEhGestaoParceira() ||
+    usuarioEhCODAEGabinete();
   const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
   const exibeRelatorioDietasEspeciais =
     usuarioEhEmpresaTerceirizada() ||
@@ -67,7 +70,8 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCoordenadorNutriSupervisao() ||
     usuarioEhAdministradorNutriCODAE() ||
     usuarioEhCoordenadorNutriCODAE() ||
-    usuarioEhMedicao();
+    usuarioEhMedicao() ||
+    usuarioEhCODAEGabinete();
 
   return (
     <Menu id="DietaEspecial" icon="fa-apple-alt" title={"Dieta Especial"}>

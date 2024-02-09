@@ -32,6 +32,7 @@ import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhMedicao,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
+  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
@@ -47,7 +48,9 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       ? DRE
       : usuarioEhCODAEGestaoAlimentacao()
       ? CODAE
-      : usuarioEhCODAENutriManifestacao() || usuarioEhMedicao()
+      : usuarioEhCODAENutriManifestacao() ||
+        usuarioEhMedicao() ||
+        usuarioEhCODAEGabinete()
       ? NUTRIMANIFESTACAO
       : usuarioEhNutricionistaSupervisao()
       ? NUTRISUPERVISAO
@@ -115,7 +118,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           ) : (
             !usuarioEhCODAENutriManifestacao() &&
             !usuarioEscolaEhGestaoDireta() &&
-            !usuarioEhMedicao() && (
+            !usuarioEhMedicao() &&
+            !usuarioEhCODAEGabinete() && (
               <LeafItem to={`/${PERFIL}/${SOLICITACOES_PENDENTES}`}>
                 Aguardando autorização
               </LeafItem>
@@ -167,7 +171,7 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhEscolaTerceirizada() ||
         usuarioEhEscolaTerceirizadaDiretor() ||
-        usuarioEhCODAENutriManifestacao()) && (
+        usuarioEhCODAEGabinete()) && (
         <SubMenu
           icon="fa-chevron-down"
           path="relatorios"
