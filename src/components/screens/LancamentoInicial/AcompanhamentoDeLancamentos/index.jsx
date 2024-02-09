@@ -36,6 +36,7 @@ import {
   getISOLocalDatetimeString,
   usuarioEhDRE,
   usuarioEhMedicao,
+  usuarioEhCODAEGabinete,
   usuarioEhCODAENutriManifestacao,
   usuarioEhQualquerCODAE,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
@@ -107,7 +108,8 @@ export const AcompanhamentoDeLancamentos = () => {
       if (
         (!usuarioEhMedicao() &&
           !usuarioEhCODAENutriManifestacao() &&
-          !usuarioEhQualquerCODAE()) ||
+          !usuarioEhQualquerCODAE() &&
+          !usuarioEhCODAEGabinete()) ||
         diretoriaRegional
       ) {
         let NovoDashboardResults = [...dashboardResults];
@@ -115,7 +117,8 @@ export const AcompanhamentoDeLancamentos = () => {
         if (
           usuarioEhMedicao() ||
           usuarioEhCODAENutriManifestacao() ||
-          usuarioEhQualquerCODAE()
+          usuarioEhQualquerCODAE() ||
+          usuarioEhCODAEGabinete()
         ) {
           NovoDashboardResults = NovoDashboardResults.filter(
             (medicoes) => !STATUS_RELACAO_DRE_UE.includes(medicoes.status)
@@ -383,7 +386,8 @@ export const AcompanhamentoDeLancamentos = () => {
     if (
       (usuarioEhMedicao() ||
         usuarioEhCODAENutriManifestacao() ||
-        usuarioEhQualquerCODAE()) &&
+        usuarioEhQualquerCODAE() ||
+        usuarioEhCODAEGabinete()) &&
       loadingComFiltros
     ) {
       return !mudancaDre;
@@ -422,7 +426,8 @@ export const AcompanhamentoDeLancamentos = () => {
                 <div className="card mt-3">
                   {usuarioEhMedicao() ||
                   usuarioEhCODAENutriManifestacao() ||
-                  usuarioEhQualquerCODAE() ? (
+                  usuarioEhQualquerCODAE() ||
+                  usuarioEhCODAEGabinete() ? (
                     <div className="col-5">
                       <Field
                         component={ASelect}

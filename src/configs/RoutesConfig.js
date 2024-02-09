@@ -141,6 +141,7 @@ import {
   usuarioEhOrgaoFiscalizador,
   usuarioComAcessoAoPainelDocumentos,
   usuarioComAcessoAoPainelFichasTecnicas,
+  usuarioEhCODAEGabinete,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -309,7 +310,8 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEmpresaTerceirizada() ||
-      usuarioEhMedicao(),
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: "/login",
@@ -529,17 +531,26 @@ const routesConfig = [
   {
     path: `/${constants.NUTRIMANIFESTACAO}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasNutriManifestacaoPage,
-    tipoUsuario: usuarioEhCODAENutriManifestacao() || usuarioEhMedicao(),
+    tipoUsuario:
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.NUTRIMANIFESTACAO}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasNutriManifestacaoPage,
-    tipoUsuario: usuarioEhCODAENutriManifestacao() || usuarioEhMedicao(),
+    tipoUsuario:
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.NUTRIMANIFESTACAO}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasNutriManifestacaoPage,
-    tipoUsuario: usuarioEhCODAENutriManifestacao() || usuarioEhMedicao(),
+    tipoUsuario:
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}`,
@@ -932,7 +943,8 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhMedicao() ||
       usuarioEscolaEhGestaoDireta() ||
-      usuarioEscolaEhGestaoParceira(),
+      usuarioEscolaEhGestaoParceira() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_PENDENTES}`,
@@ -945,7 +957,8 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEmpresaTerceirizada(),
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_NEGADAS}`,
@@ -958,7 +971,8 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEmpresaTerceirizada(),
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_AUTORIZADAS}`,
@@ -971,7 +985,8 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEmpresaTerceirizada(),
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_CANCELADAS}`,
@@ -1058,7 +1073,8 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhDRE() ||
       usuarioEhCODAENutriManifestacao() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
@@ -1089,7 +1105,8 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RECLAMACAO_DE_PRODUTO}`,
@@ -1116,7 +1133,8 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.CORRECAO_DE_PRODUTO}`,
@@ -1136,7 +1154,8 @@ const routesConfig = [
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RESPONDER_QUESTIONAMENTOS_DA_CODAE}`,
@@ -1148,7 +1167,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao(),
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.AGUARDANDO_ANALISE_SENSORIAL}`,
@@ -1175,7 +1195,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_NAO_HOMOLOGADAS}`,
@@ -1190,7 +1211,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: "/painel-gestao-produto",
@@ -1205,7 +1227,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhDRE() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
@@ -1229,7 +1252,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ATIVACAO_DE_PRODUTO}/consulta`,
@@ -1252,7 +1276,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
@@ -1262,7 +1287,8 @@ const routesConfig = [
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
-      usuarioEhOrgaoFiscalizador(),
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
@@ -1376,7 +1402,8 @@ const routesConfig = [
       usuarioEhMedicao() ||
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
@@ -1387,7 +1414,8 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhMedicao(),
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}`,
@@ -1412,7 +1440,8 @@ const routesConfig = [
       usuarioEhMedicao() ||
       usuarioEhEscolaTerceirizadaQualquerPerfil() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao(),
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.CONFERENCIA_DOS_LANCAMENTOS}`,
@@ -1421,7 +1450,8 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhMedicao() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao(),
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.DETALHAMENTO_DO_LANCAMENTO}`,

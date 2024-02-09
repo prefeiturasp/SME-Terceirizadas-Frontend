@@ -50,15 +50,15 @@ export default class ResultadoMock extends Component {
         <article className="flex-botoes-relatorio">
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            texto="historico"
+            texto="Histórico"
             style={BUTTON_STYLE.GREEN_OUTLINE}
             className="me-2"
             onClick={this.showModal}
           />
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            texto="imprimir"
-            style={BUTTON_STYLE.BLUE}
+            texto="Imprimir"
+            style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
           />
         </article>
