@@ -3,13 +3,14 @@ import {
   FichaTecnicaDashboard,
   VerMaisItem,
 } from "interfaces/pre_recebimento.interface";
+import { ANALISE_FICHA_TECNICA, PRE_RECEBIMENTO } from "configs/constants";
 import { ordenarPorLogMaisRecente, truncarString } from "helpers/utilities";
 
 export const formatarCards = (items: FichaTecnicaDashboard[]): CardItem[] => {
   return items.sort(ordenarPorLogMaisRecente).map((item) => ({
     text: gerarTextoTruncado(item, 20),
     date: item.log_mais_recente.slice(0, 10),
-    link: "#",
+    link: `/${PRE_RECEBIMENTO}/${ANALISE_FICHA_TECNICA}?uuid=${item.uuid}`,
     status: item.status,
     fullText: gerarTextoCompleto(item),
   }));
