@@ -50,6 +50,15 @@ export const LinhaEditalContrato = ({
         }`;
   };
 
+  const getClasseEstiloPaddingIcones = (): string => {
+    return ![
+      VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO,
+      VIGENCIA_STATUS.VENCIDO,
+    ].includes(getStatusContrato(editalContrato))
+      ? "pe-48px"
+      : "";
+  };
+
   return (
     <div className={`row ${getClasseEstiloContrato()}`}>
       <div className="col-3">{editalContrato.tipo_contratacao}</div>
@@ -79,16 +88,7 @@ export const LinhaEditalContrato = ({
             </div>
           </Tooltip>
         )}
-        <span
-          className={`${
-            ![
-              VIGENCIA_STATUS.PROXIMO_AO_VENCIMENTO,
-              VIGENCIA_STATUS.VENCIDO,
-            ].includes(getStatusContrato(editalContrato))
-              ? "pe-48px"
-              : ""
-          }`}
-        >
+        <span className={getClasseEstiloPaddingIcones()}>
           <ToggleExpandir
             onClick={() => ativaContratoEdital(index)}
             ativo={editalContrato.ativo}
