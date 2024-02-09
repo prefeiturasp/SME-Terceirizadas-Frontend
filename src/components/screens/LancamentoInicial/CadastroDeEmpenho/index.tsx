@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
-import { ContratoInterface } from "interfaces/empenhos.interface";
+import {
+  ContratoInterface,
+  EmpenhoInterface,
+  EmpenhoPayload,
+} from "interfaces/empenhos.interface";
 import {
   getContratosVigentes,
   cadastraEmpenho,
+  getEmpenho,
+  editaEmpenho,
 } from "services/medicaoInicial/empenhos.service";
 import { MEDICAO_INICIAL, EMPENHOS } from "configs/constants";
 import {
@@ -33,7 +39,7 @@ type Edital = {
   numero: string;
 };
 
-const VALORES_INICIAIS: NovoEmpenho = {
+const VALORES_INICIAIS: EmpenhoInterface = {
   numero: null,
   contrato: null,
   edital: null,
@@ -56,6 +62,9 @@ export function CadastroDeEmpenho() {
   const [carregando, setCarregando] = useState(false);
   const [erroAPI, setErroAPI] = useState("");
   const [editais, setEditais] = useState<Edital[]>([]);
+  const [valoresIniciais, setValoresInicias] =
+    useState<EmpenhoInterface>(VALORES_INICIAIS);
+  const [uuidEmpenho, setUuidEmpenho] = useState("");
 
   const getContratos = async () => {
     setCarregando(true);
@@ -72,7 +81,29 @@ export function CadastroDeEmpenho() {
     }
   };
 
+  const getEmpenhoAsync = async (uuid: string) => {
+    setCarregando(true);
+    try {
+      const { data } = await getEmpenho(uuid);
+
+      setValoresInicias(data);
+    } catch (error) {
+      setErroAPI(
+        "Erro ao carregar dados do empenho. Tente novamente mais tarde."
+      );
+    } finally {
+      setCarregando(false);
+    }
+  };
+
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    if (uuid) {
+      setUuidEmpenho(uuid);
+      getEmpenhoAsync(uuid);
+    }
     getContratos();
   }, []);
 
@@ -111,6 +142,35 @@ export function CadastroDeEmpenho() {
     }
   };
 
+  const editarEmpenho = async (uuid: string, values: EmpenhoPayload) => {
+    setCarregando(true);
+    try {
+      const payload = {
+        tipo_empenho: values.tipo_empenho,
+        tipo_reajuste: values.tipo_reajuste,
+        status: values.status,
+        valor_total: values.valor_total,
+      };
+
+      const response = await editaEmpenho(uuid, payload);
+
+      if (response.status === 200) {
+        toastSuccess("Empenho editado com sucesso!");
+        voltarPagina();
+      } else {
+        toastError(
+          "Ocorreu um erro ao editar o empenho. Tente novamente mais tarde."
+        );
+      }
+    } catch (error) {
+      toastError(
+        "Ocorreu um erro ao editar o empenho. Tente novamente mais tarde."
+      );
+    } finally {
+      setCarregando(false);
+    }
+  };
+
   const voltarPagina = () => navigate(`/${MEDICAO_INICIAL}/${EMPENHOS}`);
 
   return (
@@ -122,8 +182,12 @@ export function CadastroDeEmpenho() {
           <div className="card mt-3">
             <div className="card-body">
               <Form
-                onSubmit={(values: NovoEmpenho) => cadastrarEmpenho(values)}
-                initialValues={VALORES_INICIAIS}
+                onSubmit={(values: NovoEmpenho) =>
+                  uuidEmpenho
+                    ? editarEmpenho(uuidEmpenho, values)
+                    : cadastrarEmpenho(values)
+                }
+                initialValues={valoresIniciais}
                 render={({ submitting, handleSubmit, form, values }) => {
                   const selecionaEdital = (value: string) => {
                     form.change("contrato", value);
@@ -158,6 +222,7 @@ export function CadastroDeEmpenho() {
                             autoComplete="off"
                             component={AInput}
                             validate={required}
+                            disabled={uuidEmpenho}
                           />
                         </div>
 
@@ -176,6 +241,7 @@ export function CadastroDeEmpenho() {
                                 .toLowerCase()
                                 .includes(inputValue.toLowerCase())
                             }
+                            disabled={uuidEmpenho}
                           >
                             <SelectAntd.Option value="">
                               Selecione um contrato

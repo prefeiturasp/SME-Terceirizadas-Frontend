@@ -60,6 +60,10 @@
             padding: 0.5em;
             border-left: 1px solid $grayDisabled;
             border-bottom: 1px solid $grayDisabled;
+            i.verde {
+              cursor: pointer;
+              color: $green;
+            }
             &:last-child {
               border-right: 1px solid $grayDisabled;
             }
