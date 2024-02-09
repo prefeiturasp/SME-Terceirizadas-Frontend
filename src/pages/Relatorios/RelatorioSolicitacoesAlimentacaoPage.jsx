@@ -8,6 +8,7 @@ import {
   usuarioEhDRE,
   usuarioEhMedicao,
   usuarioEhEmpresaTerceirizada,
+  usuarioEhCODAEGabinete,
   usuarioEhCODAENutriManifestacao,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
@@ -49,7 +50,8 @@ const endpointPorPerfil = () => {
   } else if (
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhMedicao() ||
-    usuarioEhCODAENutriManifestacao()
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhCODAEGabinete()
   ) {
     return filtrarSolicitacoesAlimentacaoCODAE;
   } else if (
@@ -75,7 +77,8 @@ const endpointGerarExcel = () => {
   } else if (
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhMedicao() ||
-    usuarioEhCODAENutriManifestacao()
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhCODAEGabinete()
   ) {
     return gerarExcelRelatorioSolicitacoesAlimentacaoCODAE;
   } else if (usuarioEhEmpresaTerceirizada()) {
@@ -96,7 +99,8 @@ const endpointGerarPDF = () => {
   } else if (
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhMedicao() ||
-    usuarioEhCODAENutriManifestacao()
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhCODAEGabinete()
   ) {
     return gerarPDFRelatorioSolicitacoesAlimentacaoCODAE;
   } else if (usuarioEhEmpresaTerceirizada()) {
