@@ -3,6 +3,7 @@ import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
 export interface FormCadastroEditaisContratosVigenciaInterface {
   data_inicial: string;
   data_final: string;
+  status?: string;
 }
 
 export interface FormCadastroEditaisContratosContratoInterface {

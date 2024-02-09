@@ -21,6 +21,7 @@ import {
   FormCadastroEditaisContratosInterface,
   FormCadastroEditaisContratosVigenciaInterface,
 } from "../../interfaces";
+import { VIGENCIA_STATUS } from "../../ConsultaEditaisContratos/constants";
 
 interface FieldArrayContratosInterface {
   form: FormApi<any, Partial<any>>;
@@ -146,28 +147,29 @@ export const FieldArrayContratos = ({
               </div>
               <FieldArray name={`${name_contratos}.vigencias`}>
                 {({ fields }) =>
-                  fields.map((name_vigencias, index) => (
+                  fields.map((name_vigencias, indexVigencia) => (
                     <>
                       <div className="col-4">
                         <Field
                           component={InputComData}
-                          label={`${index > 0 ? "Nova " : ""}Vigência`}
+                          label={`${indexVigencia > 0 ? "Nova " : ""}Vigência`}
                           name={`${name_vigencias}.data_inicial`}
                           placeholder="DE"
                           writable={false}
                           minDate={
-                            index === 0
+                            indexVigencia === 0
                               ? null
                               : moment(
                                   values.contratos[index_contratos].vigencias[
-                                    index - 1
+                                    indexVigencia - 1
                                   ]?.data_final,
                                   "DD/MM/YYYY"
                                 ).toDate()
                           }
                           maxDate={moment(
-                            values.contratos[index_contratos].vigencias[index]
-                              ?.data_final,
+                            values.contratos[index_contratos].vigencias[
+                              indexVigencia
+                            ]?.data_final,
                             "DD/MM/YYYY"
                           ).toDate()}
                           required
@@ -182,16 +184,16 @@ export const FieldArrayContratos = ({
                           placeholder="ATÉ"
                           writable={false}
                           minDate={
-                            index === 0
+                            indexVigencia === 0
                               ? moment(
                                   values.contratos[index_contratos].vigencias[
-                                    index
+                                    indexVigencia
                                   ].data_inicial,
                                   "DD/MM/YYYY"
                                 ).toDate()
                               : moment(
                                   values.contratos[index_contratos].vigencias[
-                                    index - 1
+                                    indexVigencia - 1
                                   ]?.data_final,
                                   "DD/MM/YYYY"
                                 ).toDate()
@@ -199,7 +201,7 @@ export const FieldArrayContratos = ({
                           maxDate={null}
                         />
                       </div>
-                      {index > 0 && (
+                      {indexVigencia > 0 && (
                         <div className="col-2 mt-auto mb-2">
                           <Botao
                             texto="Remover"
@@ -213,12 +215,24 @@ export const FieldArrayContratos = ({
                                   (
                                     _: FormCadastroEditaisContratosVigenciaInterface,
                                     i: number
-                                  ) => i !== index
+                                  ) => i !== indexVigencia
                                 )
                               );
                             }}
                             style={BUTTON_STYLE.RED_OUTLINE}
                           />
+                        </div>
+                      )}
+                      {values.contratos[index_contratos]?.vigencias[
+                        indexVigencia
+                      ]?.status === VIGENCIA_STATUS.VENCIDO && (
+                        <div
+                          className="pt-3 pb-3"
+                          style={{ paddingLeft: "12px", paddingRight: "12px" }}
+                        >
+                          <div className="aviso vencido">
+                            <b>Aviso:</b> contrato fora do prazo de vigência.
+                          </div>
                         </div>
                       )}
                     </>
