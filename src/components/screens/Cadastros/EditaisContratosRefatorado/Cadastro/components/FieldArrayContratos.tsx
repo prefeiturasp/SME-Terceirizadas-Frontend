@@ -20,7 +20,7 @@ import {
   FormCadastroEditaisContratosContratoInterface,
   FormCadastroEditaisContratosInterface,
   FormCadastroEditaisContratosVigenciaInterface,
-} from "../interfaces";
+} from "../../interfaces";
 
 interface FieldArrayContratosInterface {
   form: FormApi<any, Partial<any>>;
