@@ -1,7 +1,11 @@
 import React from "react";
 import Page from "components/Shareable/Page/Page";
 import Breadcrumb from "components/Shareable/Breadcrumb";
-import { PAINEL_FICHAS_TECNICAS, PRE_RECEBIMENTO } from "configs/constants";
+import {
+  PAINEL_FICHAS_TECNICAS,
+  PRE_RECEBIMENTO,
+  ANALISE_FICHA_TECNICA,
+} from "configs/constants";
 import { CARD_PENDENTES_APROVACAO } from "components/screens/PreRecebimento/PainelFichasTecnicas/constants";
 import { getDashboardFichasTecnicasPorStatus } from "services/fichaTecnica.service";
 import { SolicitacoesFichaTecnicaStatusGenerico } from "components/screens/SolicitacoesFichaTecnicaStatusGenerico";
@@ -45,7 +49,7 @@ export default () => {
         getSolicitacoes={getDashboardFichasTecnicasPorStatus}
         params={paramsDefault}
         limit={limit}
-        urlBaseItem="#"
+        urlBaseItem={`/${PRE_RECEBIMENTO}/${ANALISE_FICHA_TECNICA}`}
       />
     </Page>
   );

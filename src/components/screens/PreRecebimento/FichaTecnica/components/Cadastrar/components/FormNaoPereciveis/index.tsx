@@ -5,9 +5,13 @@ import InputText from "components/Shareable/Input/InputText";
 
 interface Props {
   values: Record<string, any>;
+  desabilitar?: boolean;
 }
 
-const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
+const FormNaoPereciveis: React.FC<Props> = ({
+  values,
+  desabilitar = false,
+}) => {
   return (
     <div>
       <div className="row">
@@ -23,6 +27,7 @@ const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
             tooltipText={
               "Deve ser declarado do prazo real em dias, meses ou anos a partir da data de fabricação."
             }
+            disabled={desabilitar}
           />
         </div>
         <div className="col-8">
@@ -37,6 +42,7 @@ const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
             tooltipText={
               "Caso utilizado aditivos alimentares, deverá ser declarada a função principal, nome completo e número INS de todos."
             }
+            disabled={desabilitar}
           />
         </div>
       </div>
@@ -54,6 +60,7 @@ const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
               value="0"
               name={`alergenicos`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -65,6 +72,7 @@ const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
               value="1"
               name={`alergenicos`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -80,6 +88,7 @@ const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
               className="input-ficha-tecnica"
               required
               validate={required}
+              disabled={desabilitar}
             />
           </div>
         </div>
@@ -98,6 +107,7 @@ const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
               value="0"
               name={`gluten`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -109,6 +119,7 @@ const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
               value="1"
               name={`gluten`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -128,6 +139,7 @@ const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
               value="0"
               name={`lactose`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -139,6 +151,7 @@ const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
               value="1"
               name={`lactose`}
               validate={required}
+              disabled={desabilitar}
             />
             <span className="checkmark" />
           </label>
@@ -154,6 +167,7 @@ const FormNaoPereciveis: React.FC<Props> = ({ values }) => {
               className="input-ficha-tecnica"
               required
               validate={required}
+              disabled={desabilitar}
             />
           </div>
         </div>

@@ -285,6 +285,7 @@ import CorrigirDocumentosRecebimentoPage from "../pages/PreRecebimento/CorrigirD
 import FichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/FichaTecnicaPage";
 import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/CadastroFichaTecnicaPage";
 import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
+import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
 import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
@@ -1860,6 +1861,12 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
     component: CalendarioCronogramaPage,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_FICHA_TECNICA}`,
+    component: AnalisarFichaTecnicaPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
   },
 ];
 

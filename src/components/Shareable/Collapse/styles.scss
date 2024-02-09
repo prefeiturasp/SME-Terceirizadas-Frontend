@@ -30,6 +30,11 @@
         display: flex;
       }
 
+      .flex-end {
+        display: flex;
+        justify-content: flex-end;
+      }
+
       .texto-obrigatorio {
         font-size: 12px;
         margin: auto 0;
@@ -59,5 +64,37 @@
   .required-asterisk {
     color: $red !important;
     padding-right: 5px;
+  }
+
+  .tags {
+    .tag {
+      border: 1px solid;
+      border-radius: 16px;
+      text-align: center;
+      padding: 4px 12px;
+
+      i {
+        padding-right: 6px;
+      }
+    }
+
+    .pendente {
+      color: $grayPlaceholder;
+      border-color: $grayPlaceholder;
+      font-size: 13px;
+    }
+
+    .correcao {
+      color: $orange;
+      border-color: $orange;
+      font-size: 13px;
+    }
+
+    .collapse-conferido {
+      color: $white;
+      border-color: $greenDark;
+      background-color: $greenDark;
+      font-size: 13px;
+    }
   }
 }
