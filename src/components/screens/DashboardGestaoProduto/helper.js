@@ -8,6 +8,7 @@ import {
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhCogestorDRE,
+  usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
   usuarioEhOrgaoFiscalizador,
@@ -53,7 +54,8 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
     (usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
-      usuarioEhOrgaoFiscalizador()) &&
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete()) &&
     [
       CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo,
       CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo,

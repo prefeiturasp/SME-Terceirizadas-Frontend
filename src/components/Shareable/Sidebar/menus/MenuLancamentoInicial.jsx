@@ -13,6 +13,7 @@ import {
   usuarioEhDRE,
   usuarioEhEscolaTerceirizada,
   usuarioEhMedicao,
+  usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
 } from "helpers/utilities";
@@ -37,7 +38,8 @@ const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
           usuarioEhMedicao() ||
           usuarioEhEscolaTerceirizadaQualquerPerfil() ||
           usuarioEhCODAEGestaoAlimentacao() ||
-          usuarioEhCODAENutriManifestacao()) && (
+          usuarioEhCODAENutriManifestacao() ||
+          usuarioEhCODAEGabinete) && (
           <LeafItem to={`/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`}>
             Acompanhamento de Lançamentos
           </LeafItem>

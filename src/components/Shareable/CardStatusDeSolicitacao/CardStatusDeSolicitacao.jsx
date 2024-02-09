@@ -216,6 +216,7 @@ export const CardStatusDeSolicitacao = (props) => {
         TIPO_PERFIL.DIRETORIA_REGIONAL,
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
         TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
+        TIPO_PERFIL.CODAE_GABINETE,
       ].includes(tipoPerfil)
         ? renderSolicitations(filteredSolicitations)
         : renderSolicitations(solicitations)}
@@ -224,6 +225,7 @@ export const CardStatusDeSolicitacao = (props) => {
         TIPO_PERFIL.DIRETORIA_REGIONAL,
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
         TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
+        TIPO_PERFIL.CODAE_GABINETE,
       ].includes(tipoPerfil)
         ? renderVerMais(filteredSolicitations)
         : renderVerMais(solicitations)}

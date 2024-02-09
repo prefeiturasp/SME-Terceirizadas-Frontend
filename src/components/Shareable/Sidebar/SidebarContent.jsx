@@ -33,7 +33,8 @@ import {
   usuarioEhDilogQualidade,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhOrgaoFiscalizador,
-} from "helpers/utilities";
+  usuarioEhCODAEGabinete,
+} from "../../../helpers/utilities";
 import { ListItem } from "./menus/shared";
 import { ENVIRONMENT } from "constants/config";
 import {
@@ -88,7 +89,7 @@ export const SidebarContent = () => {
   const exibirPainelInicial =
     (!usuarioEhEscolaAbastecimento() || usuarioEscolaEhGestaoDiretaParceira) &&
     !usuarioEhEscolaAbastecimentoDiretor() &&
-    !usuarioComAcessoTelaEntregasDilog() &&
+    (!usuarioComAcessoTelaEntregasDilog() || usuarioEhCODAEGabinete()) &&
     !usuarioEhLogistica() &&
     !usuarioEhEmpresaDistribuidora();
   const exibirGestaoAlimentacao =
@@ -100,7 +101,8 @@ export const SidebarContent = () => {
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEmpresaTerceirizada() ||
-      usuarioEhNutricionistaSupervisao());
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhCODAEGabinete());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -111,6 +113,7 @@ export const SidebarContent = () => {
     usuarioEhDRE() ||
     usuarioEhEmpresaTerceirizada() ||
     usuarioEhMedicao() ||
+    usuarioEhCODAEGabinete() ||
     usuarioEscolaEhGestaoDiretaParceira;
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
@@ -122,7 +125,8 @@ export const SidebarContent = () => {
     usuarioEhEscolaTerceirizada() ||
     usuarioEhDRE() ||
     usuarioEhEmpresaTerceirizada() ||
-    usuarioEhOrgaoFiscalizador();
+    usuarioEhOrgaoFiscalizador() ||
+    usuarioEhCODAEGabinete();
   const exibirCadastros =
     usuarioEhCodaeDilog() ||
     usuarioEhMedicao() ||
@@ -137,7 +141,7 @@ export const SidebarContent = () => {
     !usuarioEhEscolaAbastecimento() &&
     !usuarioEhEscolaAbastecimentoDiretor() &&
     !usuarioEhEscolaAbastecimentoDiretor() &&
-    !usuarioComAcessoTelaEntregasDilog() &&
+    !(usuarioComAcessoTelaEntregasDilog() && !usuarioEhCODAEGabinete()) &&
     !usuarioEhLogistica() &&
     !usuarioEhEmpresaDistribuidora() &&
     !usuarioEhEmpresaFornecedor() &&
