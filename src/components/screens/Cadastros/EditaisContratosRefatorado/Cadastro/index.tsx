@@ -25,6 +25,7 @@ import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.serv
 import {
   criarEditalEContrato,
   getEditalContrato,
+  updateEditalContrato,
 } from "services/edital.service";
 import { getLotesSimples } from "services/lote.service";
 import { getNomesTerceirizadas } from "services/produto.service.js";
@@ -122,12 +123,22 @@ export const EditaisContratosRefatorado = () => {
       setShowModal(true);
       return;
     }
-    const response = await criarEditalEContrato(values);
-    if (response.status === HTTP_STATUS.CREATED) {
-      toastSuccess("Edital salvo com sucesso");
-      navigate("/configuracoes/cadastros/editais-cadastrados");
+    if (!values.uuid) {
+      const response = await criarEditalEContrato(values);
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess("Edital salvo com sucesso");
+        navigate("/configuracoes/cadastros/editais-cadastrados");
+      } else {
+        toastError("Houve um erro ao salvar o edital");
+      }
     } else {
-      toastError("Houve um erro ao salvar o edital");
+      const response = await updateEditalContrato(values, values.uuid);
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Edição salva com sucesso!");
+        navigate("/configuracoes/cadastros/editais-cadastrados");
+      } else {
+        toastError("Houve um erro ao atualizar o edital");
+      }
     }
   };
 
@@ -162,18 +173,20 @@ export const EditaisContratosRefatorado = () => {
                       Novo Cadastro de Editais e Contratos
                     </div>
                   </div>
-                  <div className="col-6 text-end">
-                    <Botao
-                      texto="Editais e Contratos Cadastrados"
-                      onClick={() =>
-                        navigate(
-                          `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`
-                        )
-                      }
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                  </div>
+                  {!location?.state?.uuid && (
+                    <div className="col-6 text-end">
+                      <Botao
+                        texto="Editais e Contratos Cadastrados"
+                        onClick={() =>
+                          navigate(
+                            `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`
+                          )
+                        }
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                    </div>
+                  )}
                 </div>
                 <Form
                   keepDirtyOnReinitialize

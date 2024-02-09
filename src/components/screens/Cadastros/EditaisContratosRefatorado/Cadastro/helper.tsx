@@ -11,6 +11,7 @@ export const formataEditalContratoParaForm = (
       (dre) => dre.uuid
     );
     contrato.lotes = contrato.lotes.map((lote) => lote.uuid);
+    delete contrato.edital;
   });
   return editalContratoFormatado;
 };

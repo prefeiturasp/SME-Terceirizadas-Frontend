@@ -102,7 +102,7 @@ export const LinhaEditalContrato = ({
           type={BUTTON_TYPE.BUTTON}
           style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
           onClick={() =>
-            navigate("/configuracoes/cadastros/editais-contratos", {
+            navigate("/configuracoes/cadastros/editais-contratos/editar", {
               state: { uuid: editalContrato.uuid },
             })
           }
