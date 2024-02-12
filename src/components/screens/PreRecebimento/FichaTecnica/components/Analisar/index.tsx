@@ -29,13 +29,14 @@ import {
   StateConferidosAnalise,
 } from "../../interfaces";
 import {
+  cadastraAnaliseFichaTecnica,
   cadastraRascunhoAnaliseFichaTecnica,
   editaRascunhoAnaliseFichaTecnica,
 } from "services/fichaTecnica.service";
-import { exibeError } from "helpers/utilities";
 import ModalGenerico from "components/Shareable/ModalGenerico";
 import { PRE_RECEBIMENTO, PAINEL_FICHAS_TECNICAS } from "configs/constants";
 import { useNavigate } from "react-router-dom";
+import { getMensagemDeErro } from "../../../../../../helpers/statusErrors";
 
 const idCollapse = "collapseAnalisarFichaTecnica";
 
@@ -142,14 +143,42 @@ export default () => {
       if (response.status === 201 || response.status === 200) {
         toastSuccess("Rascunho salvo com sucesso!");
         setFicha(response.data);
-      } else {
-        toastError("Ocorreu um erro ao salvar a Ficha Técnica");
       }
     } catch (error) {
-      exibeError(error, "Ocorreu um erro ao salvar a Ficha Técnica");
+      toastError(getMensagemDeErro(error.response.status));
     } finally {
       setCarregando(false);
     }
+  };
+
+  const salvarAnalise = async (values: Record<string, any>) => {
+    try {
+      setCarregando(true);
+
+      const payload = montarPayloadAnalise(values);
+
+      const response = await cadastraAnaliseFichaTecnica(payload, ficha.uuid);
+
+      if (response.status === 201 || response.status === 200) {
+        toastSuccess("Análise da Ficha Técnica enviada com sucesso!");
+        setFicha(response.data);
+      }
+    } catch (error) {
+      toastError(getMensagemDeErro(error.response.status));
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const validaForm = (ehNaoPerecivel: boolean) => {
+    let conferidosFiltrados = conferidos;
+    if (ehNaoPerecivel) {
+      delete conferidos.temperatura_e_transporte;
+    }
+
+    return Object.values(conferidosFiltrados).some(
+      (conf) => conf !== true && conf !== false
+    );
   };
 
   return (
@@ -950,6 +979,14 @@ export default () => {
                   </Collapse>
 
                   <div className="mt-4 mb-4">
+                    <Botao
+                      texto="Enviar Análise"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN}
+                      className="float-end ms-3"
+                      onClick={() => salvarAnalise(values)}
+                      disabled={validaForm(ehNaoPerecivel)}
+                    />
                     <Botao
                       texto="Salvar Rascunho"
                       type={BUTTON_TYPE.BUTTON}
