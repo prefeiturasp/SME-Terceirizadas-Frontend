@@ -49,6 +49,8 @@ export const FieldArrayContratos = ({
 }: FieldArrayContratosInterface) => {
   const [showModalEncerrarContrato, setShowModalEncerrarContrato] =
     useState<boolean>(false);
+  const [contratoAEncerrar, setContratoAEncerrar] =
+    useState<FormCadastroEditaisContratosContratoInterface>(undefined);
 
   const renderizarLabelLote = (
     selected: Array<string>,
@@ -376,7 +378,10 @@ export const FieldArrayContratos = ({
                   <Botao
                     texto="Encerrar contrato"
                     className="ms-3"
-                    onClick={() => setShowModalEncerrarContrato(true)}
+                    onClick={() => {
+                      setContratoAEncerrar(values.contratos[index_contratos]);
+                      setShowModalEncerrarContrato(true);
+                    }}
                     style={BUTTON_STYLE.RED_OUTLINE}
                     type={BUTTON_TYPE.BUTTON}
                     disabled={
@@ -385,6 +390,16 @@ export const FieldArrayContratos = ({
                       ]?.data_final
                     }
                   />
+                  {contratoAEncerrar && (
+                    <ModalEncerrarContrato
+                      showModal={showModalEncerrarContrato}
+                      closeModal={() => setShowModalEncerrarContrato(false)}
+                      contrato={contratoAEncerrar}
+                      encerrarContrato={async (contrato) =>
+                        await encerrarContrato(contrato)
+                      }
+                    />
+                  )}
                 </div>
               </div>
             )}
@@ -512,14 +527,6 @@ export const FieldArrayContratos = ({
                 />
               </div>
             </div>
-            <ModalEncerrarContrato
-              showModal={showModalEncerrarContrato}
-              closeModal={() => setShowModalEncerrarContrato(false)}
-              contrato={values.contratos[index_contratos]}
-              encerrarContrato={async (contrato) =>
-                await encerrarContrato(contrato)
-              }
-            />
           </div>
         ))
       }
