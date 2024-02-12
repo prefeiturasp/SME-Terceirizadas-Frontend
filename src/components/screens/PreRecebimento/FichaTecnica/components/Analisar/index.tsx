@@ -22,7 +22,7 @@ import TabelaNutricional from "components/Shareable/TabelaNutricional";
 import CheckboxComBorda from "components/Shareable/CheckboxComBorda";
 import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
 import FormAprovacao from "./components/FormAprovacao";
-import BotaoConferir from "./components/BotaoConferir";
+import BotaoCiente from "./components/BotaoCiente";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   AnaliseFichaTecnicaPayload,
@@ -906,7 +906,7 @@ export default () => {
                           <BotaoAnexo urlAnexo={ficha.arquivo} />
                         </div>
                       </div>
-                      <BotaoConferir
+                      <BotaoCiente
                         name={"responsavel_tecnico"}
                         aprovaCollapse={aprovaCollapse}
                       />
@@ -924,7 +924,7 @@ export default () => {
                           />
                         </div>
                       </div>
-                      <BotaoConferir
+                      <BotaoCiente
                         name={"modo_preparo"}
                         aprovaCollapse={aprovaCollapse}
                       />
@@ -942,7 +942,7 @@ export default () => {
                           />
                         </div>
                       </div>
-                      <BotaoConferir
+                      <BotaoCiente
                         name={"outras_informacoes"}
                         aprovaCollapse={aprovaCollapse}
                       />
