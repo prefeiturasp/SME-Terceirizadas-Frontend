@@ -161,7 +161,7 @@ export default () => {
 
       if (response.status === 201 || response.status === 200) {
         toastSuccess("Análise da Ficha Técnica enviada com sucesso!");
-        setFicha(response.data);
+        voltarPagina();
       }
     } catch (error) {
       toastError(getMensagemDeErro(error.response.status));
@@ -169,6 +169,9 @@ export default () => {
       setCarregando(false);
     }
   };
+
+  const voltarPagina = () =>
+    navigate(`/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}`);
 
   const validaForm = (ehNaoPerecivel: boolean) => {
     let conferidosFiltrados = conferidos;
