@@ -1,5 +1,7 @@
 import axios from "./_base";
 import { saveAs } from "file-saver";
+import { getMensagemDeErro } from "../helpers/statusErrors";
+import { toastError } from "../components/Shareable/Toast/dialogs";
 
 export const getEtapas = async () =>
   await axios.get("/cronogramas/opcoes-etapas/");
@@ -136,5 +138,10 @@ export const getUnidadesDeMedidaLogistica = async () => {
   return await axios.get(`/unidades-medida-logistica/lista-nomes-abreviacoes/`);
 };
 
-export const getCalendarioCronogramas = async (params) =>
-  await axios.get("/calendario-cronogramas/", { params });
+export const getCalendarioCronogramas = async (params) => {
+  try {
+    return await axios.get("/calendario-cronogramas/", { params });
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
