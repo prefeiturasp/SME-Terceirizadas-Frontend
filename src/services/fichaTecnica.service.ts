@@ -83,3 +83,9 @@ export const editaRascunhoAnaliseFichaTecnica = async (
   uuid: string
 ): Promise<ResponseFichaTecnicaPraAnalise> =>
   await axios.put(`/ficha-tecnica/${uuid}/rascunho-analise-gpcodae/`, payload);
+
+export const cadastraAnaliseFichaTecnica = async (
+  payload: AnaliseFichaTecnicaPayload,
+  uuid: string
+): Promise<ResponseFichaTecnicaPraAnalise> =>
+  await axios.post(`/ficha-tecnica/${uuid}/analise-gpcodae/`, payload);
