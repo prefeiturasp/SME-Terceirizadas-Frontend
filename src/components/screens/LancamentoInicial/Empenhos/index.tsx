@@ -21,6 +21,7 @@ import {
   MEDICAO_INICIAL,
   EMPENHOS,
   CADASTRO_DE_EMPENHO,
+  EDITAR_EMPENHO,
 } from "configs/constants";
 import "./styles.scss";
 import { Filtros } from "./components/Filtros";
@@ -149,9 +150,10 @@ export function Empenhos() {
                           <th className="col-2">Nº do Empenho</th>
                           <th className="col-2">Nº do Contrato</th>
                           <th className="col-3">Edital</th>
-                          <th className="col-2">Tipo</th>
+                          <th className="col-1">Tipo</th>
                           <th className="col-2">Valor do Empenho</th>
                           <th className="col-1">Status</th>
+                          <th className="col-1">Ações</th>
                         </tr>
                       </thead>
 
@@ -161,7 +163,7 @@ export function Empenhos() {
                             <td className="col-2">{empenho.numero}</td>
                             <td className="col-2">{empenho.contrato}</td>
                             <td className="col-3">{empenho.edital}</td>
-                            <td className="col-2">
+                            <td className="col-1">
                               {capitalize(empenho.tipo_empenho)}
                             </td>
                             <td className="col-2">
@@ -169,6 +171,18 @@ export function Empenhos() {
                             </td>
                             <td className="col-1">
                               {capitalize(empenho.status)}
+                            </td>
+                            <td className="col-1 d-flex justify-content-center align-item-center">
+                              <Link
+                                to={`/${MEDICAO_INICIAL}/${EMPENHOS}/${EDITAR_EMPENHO}/?uuid=${empenho.uuid}`}
+                              >
+                                <span className="px-2">
+                                  <i
+                                    title="Editar Empenho"
+                                    className="verde fas fa-edit"
+                                  />
+                                </span>
+                              </Link>
                             </td>
                           </tr>
                         ))}

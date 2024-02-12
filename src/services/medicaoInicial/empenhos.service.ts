@@ -3,6 +3,7 @@ import {
   EmpenhoInterface,
   FiltrosInterface,
   ResponseEmpenhosInterface,
+  EmpenhoPayload,
 } from "interfaces/empenhos.interface";
 import axios from "../_base";
 
@@ -21,4 +22,14 @@ export const getEmpenhos = async (page: number, filtros: FiltrosInterface) => {
   const params = { page, ...filtros };
 
   return await axios.get<ResponseEmpenhosInterface>(url, { params });
+};
+
+export const getEmpenho = async (uuid: string) => {
+  return await axios.get<EmpenhoInterface>(
+    `/medicao-inicial/empenhos/${uuid}/`
+  );
+};
+
+export const editaEmpenho = async (uuid: string, payload: EmpenhoPayload) => {
+  return await axios.patch(`/medicao-inicial/empenhos/${uuid}/`, payload);
 };
