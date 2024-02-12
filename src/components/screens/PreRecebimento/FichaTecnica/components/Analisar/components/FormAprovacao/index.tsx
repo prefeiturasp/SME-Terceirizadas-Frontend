@@ -67,6 +67,7 @@ const FormAprovacao: React.FC<Props> = ({
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
               className="float-end ms-3"
+              disabled={!values[`${name}_correcoes`]}
               onClick={() => {
                 reprovaCollapse(name);
               }}

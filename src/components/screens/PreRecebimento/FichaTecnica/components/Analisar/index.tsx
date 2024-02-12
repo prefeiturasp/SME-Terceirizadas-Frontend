@@ -22,7 +22,7 @@ import TabelaNutricional from "components/Shareable/TabelaNutricional";
 import CheckboxComBorda from "components/Shareable/CheckboxComBorda";
 import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
 import FormAprovacao from "./components/FormAprovacao";
-import BotaoConferir from "./components/BotaoConferir";
+import BotaoCiente from "./components/BotaoCiente";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   AnaliseFichaTecnicaPayload,
@@ -326,13 +326,21 @@ export default () => {
                     state={conferidos}
                   >
                     <section id="proponenteFabricante">
+                      <div className="row">
+                        <div className="subtitulo">Proponente</div>
+                      </div>
                       <FormProponente proponente={proponente} />
+
                       <hr />
+
+                      <div className="row">
+                        <div className="subtitulo">Fabricante</div>
+                      </div>
                       <div className="row">
                         <div className="col-8">
                           <Field
                             component={InputText}
-                            label="Fabricantes"
+                            label="Nome da Empresa/Organização"
                             name={`fabricante`}
                             className="input-ficha-tecnica"
                             disabled
@@ -938,7 +946,7 @@ export default () => {
                           <BotaoAnexo urlAnexo={ficha.arquivo} />
                         </div>
                       </div>
-                      <BotaoConferir
+                      <BotaoCiente
                         name={"responsavel_tecnico"}
                         aprovaCollapse={aprovaCollapse}
                       />
@@ -956,7 +964,7 @@ export default () => {
                           />
                         </div>
                       </div>
-                      <BotaoConferir
+                      <BotaoCiente
                         name={"modo_preparo"}
                         aprovaCollapse={aprovaCollapse}
                       />
@@ -974,7 +982,7 @@ export default () => {
                           />
                         </div>
                       </div>
-                      <BotaoConferir
+                      <BotaoCiente
                         name={"outras_informacoes"}
                         aprovaCollapse={aprovaCollapse}
                       />
