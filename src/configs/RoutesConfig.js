@@ -289,6 +289,7 @@ import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnic
 import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
+import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
 import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
 
 const routesConfig = [
@@ -1884,6 +1885,12 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_FICHAS_TECNICAS}/${constants.PENDENTES_APROVACAO}/`,
     component: StatusFichasTecnicasPendenteAprovacao,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_FICHAS_TECNICAS}/${constants.ENVIADOS_PARA_CORRECAO}/`,
+    component: StatusFichasTecnicasEnviadosParaCorrecao,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
   },
