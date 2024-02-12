@@ -13,7 +13,7 @@ import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
 import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
 import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import {
@@ -22,6 +22,11 @@ import {
   FormCadastroEditaisContratosVigenciaInterface,
 } from "../../interfaces";
 import { VIGENCIA_STATUS } from "../../ConsultaEditaisContratos/constants";
+import { encerraContratoTerceirizada } from "services/terceirizada.service";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import HTTP_STATUS from "http-status-codes";
+import { ModalEncerrarContrato } from "./ModalEncerrarContrato.tsx";
+import { getError } from "helpers/utilities";
 
 interface FieldArrayContratosInterface {
   form: FormApi<any, Partial<any>>;
@@ -30,6 +35,7 @@ interface FieldArrayContratosInterface {
   lotes: Array<LoteRascunhosInterface>;
   DREs: Array<DiretoriaRegionalInterface>;
   empresas: Array<TerceirizadaInterface>;
+  getEditalContratoAsync: (_uuid: string) => Promise<void>;
 }
 
 export const FieldArrayContratos = ({
@@ -39,7 +45,11 @@ export const FieldArrayContratos = ({
   lotes,
   DREs,
   empresas,
+  getEditalContratoAsync,
 }: FieldArrayContratosInterface) => {
+  const [showModalEncerrarContrato, setShowModalEncerrarContrato] =
+    useState<boolean>(false);
+
   const renderizarLabelLote = (
     selected: Array<string>,
     options: Array<string>
@@ -119,6 +129,19 @@ export const FieldArrayContratos = ({
         values.contratos[index_contratos]?.vigencias.length - 1 &&
       values.contratos[index_contratos].encerrado
     );
+  };
+
+  const encerrarContrato = async (
+    contrato: FormCadastroEditaisContratosContratoInterface
+  ): Promise<void> => {
+    const response = await encerraContratoTerceirizada(contrato.uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Contrato encerrado com sucesso!");
+      setShowModalEncerrarContrato(false);
+      getEditalContratoAsync(values.uuid);
+    } else {
+      toastError(getError(response.data));
+    }
   };
 
   return (
@@ -350,6 +373,18 @@ export const FieldArrayContratos = ({
                       ]?.data_final
                     }
                   />
+                  <Botao
+                    texto="Encerrar contrato"
+                    className="ms-3"
+                    onClick={() => setShowModalEncerrarContrato(true)}
+                    style={BUTTON_STYLE.RED_OUTLINE}
+                    type={BUTTON_TYPE.BUTTON}
+                    disabled={
+                      !values.contratos[index_contratos]?.vigencias[
+                        values.contratos[index_contratos].vigencias.length - 1
+                      ]?.data_final
+                    }
+                  />
                 </div>
               </div>
             )}
@@ -477,6 +512,14 @@ export const FieldArrayContratos = ({
                 />
               </div>
             </div>
+            <ModalEncerrarContrato
+              showModal={showModalEncerrarContrato}
+              closeModal={() => setShowModalEncerrarContrato(false)}
+              contrato={values.contratos[index_contratos]}
+              encerrarContrato={async (contrato) =>
+                await encerrarContrato(contrato)
+              }
+            />
           </div>
         ))
       }

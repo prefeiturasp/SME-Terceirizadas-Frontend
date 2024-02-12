@@ -17,6 +17,7 @@ export interface FormCadastroEditaisContratosContratoInterface {
   terceirizada: string;
   encerrado?: boolean;
   data_hora_encerramento?: string | null;
+  uuid?: string;
 }
 
 export interface FormCadastroEditaisContratosInterface {

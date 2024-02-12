@@ -265,6 +265,7 @@ export const EditaisContratosRefatorado = () => {
                         lotes={lotes}
                         DREs={DREs}
                         empresas={empresas}
+                        getEditalContratoAsync={getEditalContratoAsync}
                       />
                       <div className="row mt-3">
                         <div className="col-12 text-center">
