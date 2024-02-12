@@ -82,6 +82,45 @@ export const FieldArrayContratos = ({
     );
   };
 
+  const exibeBotaoRemoverVigencia = (
+    indexVigencia: number,
+    index_contratos: number
+  ): boolean => {
+    return (
+      indexVigencia > 0 &&
+      !values.contratos[index_contratos].encerrado &&
+      (!values.contratos[index_contratos].vigencias[indexVigencia]?.uuid ||
+        moment(
+          values.contratos[index_contratos].vigencias[indexVigencia]
+            ?.data_final,
+          "DD/MM/YYYY"
+        ).toDate() > new Date())
+    );
+  };
+
+  const exibeAvisoVigenciaVencida = (
+    indexVigencia: number,
+    index_contratos: number
+  ): boolean => {
+    return (
+      indexVigencia ===
+        values.contratos[index_contratos]?.vigencias.length - 1 &&
+      values.contratos[index_contratos]?.vigencias[indexVigencia]?.status ===
+        VIGENCIA_STATUS.VENCIDO
+    );
+  };
+
+  const exibeAvisoContratoEncerrado = (
+    indexVigencia: number,
+    index_contratos: number
+  ): boolean => {
+    return (
+      indexVigencia ===
+        values.contratos[index_contratos]?.vigencias.length - 1 &&
+      values.contratos[index_contratos].encerrado
+    );
+  };
+
   return (
     <FieldArray name="contratos">
       {({ fields }) =>
@@ -149,7 +188,7 @@ export const FieldArrayContratos = ({
                 {({ fields }) =>
                   fields.map((name_vigencias, indexVigencia) => (
                     <>
-                      <div className="col-4">
+                      <div className={`col-4`}>
                         <Field
                           component={InputComData}
                           label={`${indexVigencia > 0 ? "Nova " : ""}Vigência`}
@@ -174,9 +213,21 @@ export const FieldArrayContratos = ({
                           ).toDate()}
                           required
                           validate={required}
+                          disabled={
+                            values.contratos[index_contratos].encerrado ||
+                            (values.contratos[index_contratos].vigencias[
+                              indexVigencia
+                            ]?.uuid &&
+                              moment(
+                                values.contratos[index_contratos].vigencias[
+                                  indexVigencia
+                                ]?.data_inicial,
+                                "DD/MM/YYYY"
+                              ).toDate() <= new Date())
+                          }
                         />
                       </div>
-                      <div className="col-4">
+                      <div className={`col-4`}>
                         <Field
                           component={InputComData}
                           label="&nbsp;"
@@ -199,9 +250,29 @@ export const FieldArrayContratos = ({
                                 ).toDate()
                           }
                           maxDate={null}
+                          disabled={
+                            values.contratos[index_contratos].encerrado ||
+                            (values.contratos[index_contratos].vigencias[
+                              indexVigencia
+                            ]?.uuid &&
+                              moment(
+                                values.contratos[index_contratos].vigencias[
+                                  indexVigencia
+                                ]?.data_final,
+                                "DD/MM/YYYY"
+                              ).toDate() <= new Date())
+                          }
                         />
                       </div>
-                      {indexVigencia > 0 && (
+                      {indexVigencia > 0 &&
+                        !exibeBotaoRemoverVigencia(
+                          indexVigencia,
+                          index_contratos
+                        ) && <div className="col-2" />}
+                      {exibeBotaoRemoverVigencia(
+                        indexVigencia,
+                        index_contratos
+                      ) && (
                         <div className="col-2 mt-auto mb-2">
                           <Botao
                             texto="Remover"
@@ -223,15 +294,39 @@ export const FieldArrayContratos = ({
                           />
                         </div>
                       )}
-                      {values.contratos[index_contratos]?.vigencias[
-                        indexVigencia
-                      ]?.status === VIGENCIA_STATUS.VENCIDO && (
+                      {exibeAvisoVigenciaVencida(
+                        indexVigencia,
+                        index_contratos
+                      ) && (
                         <div
                           className="pt-3 pb-3"
-                          style={{ paddingLeft: "12px", paddingRight: "12px" }}
+                          style={{
+                            paddingLeft: "12px",
+                            paddingRight: "12px",
+                          }}
                         >
                           <div className="aviso vencido">
                             <b>Aviso:</b> contrato fora do prazo de vigência.
+                          </div>
+                        </div>
+                      )}
+                      {exibeAvisoContratoEncerrado(
+                        indexVigencia,
+                        index_contratos
+                      ) && (
+                        <div
+                          className="pt-3 pb-3"
+                          style={{
+                            paddingLeft: "12px",
+                            paddingRight: "12px",
+                          }}
+                        >
+                          <div className="aviso encerrado">
+                            <b>Aviso:</b> contrato encerrado em{" "}
+                            {
+                              values.contratos[index_contratos]
+                                .data_hora_encerramento
+                            }
                           </div>
                         </div>
                       )}
@@ -241,21 +336,23 @@ export const FieldArrayContratos = ({
               </FieldArray>
             </div>
 
-            <div className="row mt-3">
-              <div className="col-12">
-                <Botao
-                  texto="Adicionar Vigência"
-                  onClick={() => push(`${name_contratos}.vigencias`)}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  type={BUTTON_TYPE.BUTTON}
-                  disabled={
-                    !values.contratos[index_contratos]?.vigencias[
-                      values.contratos[index_contratos].vigencias.length - 1
-                    ]?.data_final
-                  }
-                />
+            {!values.contratos[index_contratos].encerrado && (
+              <div className="row mt-3">
+                <div className="col-12">
+                  <Botao
+                    texto="Adicionar Vigência"
+                    onClick={() => push(`${name_contratos}.vigencias`)}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    type={BUTTON_TYPE.BUTTON}
+                    disabled={
+                      !values.contratos[index_contratos]?.vigencias[
+                        values.contratos[index_contratos].vigencias.length - 1
+                      ]?.data_final
+                    }
+                  />
+                </div>
               </div>
-            </div>
+            )}
             <div className="row mt-3">
               <div className="col-6">
                 <label className="label fw-normal">

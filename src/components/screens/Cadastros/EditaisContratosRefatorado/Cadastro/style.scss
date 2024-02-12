@@ -51,9 +51,17 @@ div.form-editais-contratos {
 
   div.aviso {
     padding: 1em;
-    border: 1px solid $orange;
-    color: $orange;
     border-radius: 4px;
+
+    &.vencido {
+      border: 1px solid $orange;
+      color: $orange;
+    }
+
+    &.encerrado {
+      border: 1px solid $red;
+      color: $red;
+    }
   }
 }
 
