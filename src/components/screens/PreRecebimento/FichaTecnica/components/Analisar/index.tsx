@@ -294,13 +294,21 @@ export default () => {
                     state={conferidos}
                   >
                     <section id="proponenteFabricante">
+                      <div className="row">
+                        <div className="subtitulo">Proponente</div>
+                      </div>
                       <FormProponente proponente={proponente} />
+
                       <hr />
+
+                      <div className="row">
+                        <div className="subtitulo">Fabricante</div>
+                      </div>
                       <div className="row">
                         <div className="col-8">
                           <Field
                             component={InputText}
-                            label="Fabricantes"
+                            label="Nome da Empresa/Organização"
                             name={`fabricante`}
                             className="input-ficha-tecnica"
                             disabled
