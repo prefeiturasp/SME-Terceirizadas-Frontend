@@ -142,6 +142,7 @@ import {
   usuarioComAcessoAoPainelDocumentos,
   usuarioComAcessoAoPainelFichasTecnicas,
   usuarioEhCODAEGabinete,
+  usuarioComAcessoAoCalendarioCronograma,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1890,7 +1891,7 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
     component: CalendarioCronogramaPage,
-    tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
+    tipoUsuario: usuarioComAcessoAoCalendarioCronograma(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_FICHA_TECNICA}`,
