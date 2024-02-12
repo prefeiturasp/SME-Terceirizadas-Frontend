@@ -255,6 +255,7 @@ import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 import EmpenhosPage from "pages/LancamentoMedicaoInicial/EmpenhosPage";
 import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
+import EditarEmpenhoPage from "pages/LancamentoMedicaoInicial/EditarEmpenhoPage";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
@@ -1470,6 +1471,11 @@ const routesConfig = [
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}/${constants.CADASTRO_DE_EMPENHO}`,
     component: CadastroDeEmpenhoPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}/${constants.EDITAR_EMPENHO}`,
+    component: EditarEmpenhoPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {

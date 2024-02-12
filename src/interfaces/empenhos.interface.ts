@@ -12,6 +12,7 @@ export interface ResponseContratosVigentesInterface {
 }
 
 export interface EmpenhoInterface {
+  uuid?: string;
   numero: string;
   contrato: string;
   edital: string;
@@ -33,4 +34,11 @@ export interface FiltrosInterface {
   numero?: string;
   contrato?: string;
   edital?: string;
+}
+
+export interface EmpenhoPayload {
+  tipo_empenho?: string;
+  tipo_reajuste?: string;
+  status?: string;
+  valor_total?: number;
 }

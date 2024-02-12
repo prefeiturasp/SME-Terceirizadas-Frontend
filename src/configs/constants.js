@@ -204,6 +204,7 @@ export const ACOMPANHAMENTO_DE_LANCAMENTOS = "acompanhamento-de-lancamentos";
 export const CONFERENCIA_DOS_LANCAMENTOS = "conferencia-dos-lancamentos";
 export const DETALHAMENTO_DO_LANCAMENTO = "detalhamento-do-lancamento";
 export const CADASTRO_DE_EMPENHO = "cadastro-de-empenho";
+export const EDITAR_EMPENHO = "editar-empenho";
 export const EMPENHOS = "empenhos";
 
 export const NOTIFICACOES = "notificacoes";
