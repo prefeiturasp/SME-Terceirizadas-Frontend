@@ -7,6 +7,7 @@ import {
   PAINEL_FICHAS_TECNICAS,
   PENDENTES_APROVACAO,
   PRE_RECEBIMENTO,
+  ENVIADOS_PARA_CORRECAO,
 } from "../../../../configs/constants";
 
 export const CARD_PENDENTES_APROVACAO: CardConfig<FichaTecnicaDashboard> = {
@@ -18,4 +19,16 @@ export const CARD_PENDENTES_APROVACAO: CardConfig<FichaTecnicaDashboard> = {
   href: `/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}/${PENDENTES_APROVACAO}`,
 };
 
-export const cardsPainel = [CARD_PENDENTES_APROVACAO];
+export const CARD_ENVIADOS_PARA_CORRECAO: CardConfig<FichaTecnicaDashboard> = {
+  id: "Enviados para Correção",
+  titulo: "Enviados para Correção",
+  icon: "fa-pencil-alt",
+  style: "card-solicitacoes-reprovadas",
+  incluir_status: ["ENVIADA_PARA_CORRECAO"],
+  href: `/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}/${ENVIADOS_PARA_CORRECAO}`,
+};
+
+export const cardsPainel = [
+  CARD_PENDENTES_APROVACAO,
+  CARD_ENVIADOS_PARA_CORRECAO,
+];
