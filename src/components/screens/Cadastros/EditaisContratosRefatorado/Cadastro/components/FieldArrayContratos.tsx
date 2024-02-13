@@ -386,21 +386,23 @@ export const FieldArrayContratos = ({
                       ]?.data_final
                     }
                   />
-                  <Botao
-                    texto="Encerrar contrato"
-                    className="ms-3"
-                    onClick={() => {
-                      setContratoAEncerrar(values.contratos[index_contratos]);
-                      setShowModalEncerrarContrato(true);
-                    }}
-                    style={BUTTON_STYLE.RED_OUTLINE}
-                    type={BUTTON_TYPE.BUTTON}
-                    disabled={
-                      !values.contratos[index_contratos]?.vigencias[
-                        values.contratos[index_contratos].vigencias.length - 1
-                      ]?.data_final
-                    }
-                  />
+                  {values.uuid && (
+                    <Botao
+                      texto="Encerrar contrato"
+                      className="ms-3"
+                      onClick={() => {
+                        setContratoAEncerrar(values.contratos[index_contratos]);
+                        setShowModalEncerrarContrato(true);
+                      }}
+                      style={BUTTON_STYLE.RED_OUTLINE}
+                      type={BUTTON_TYPE.BUTTON}
+                      disabled={
+                        !values.contratos[index_contratos]?.vigencias[
+                          values.contratos[index_contratos].vigencias.length - 1
+                        ]?.data_final
+                      }
+                    />
+                  )}
                   {contratoAEncerrar && (
                     <ModalEncerrarContrato
                       showModal={showModalEncerrarContrato}
