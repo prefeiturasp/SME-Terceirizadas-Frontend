@@ -510,226 +510,223 @@ export default () => {
       );
 
       const rowsDietas = [];
-      const tiposAlimentacaoEtecFormatadas = [];
       const rowsSolicitacoesAlimentacao = [];
-      if (!escolaEhEMEBS()) {
-        rowsDietas.push(
-          {
-            nome: "Dietas Autorizadas",
-            name: "dietas_autorizadas",
-            uuid: null,
-          },
-          {
-            nome: "Frequência",
-            name: "frequencia",
-            uuid: null,
-          }
-        );
-
-        if (
-          ehEscolaTipoCEUGESTAO(
-            location.state.solicitacaoMedicaoInicial.escola
-          ) ||
-          urlParams.get("ehPeriodoEspecifico") === "true"
-        ) {
-          if (tiposAlimentacaoCEUGESTAO.includes("lanche_4h")) {
-            rowsDietas.push({
-              nome: "Lanche 4h",
-              name: "lanche_4h",
-              uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find((tp) =>
-                tp.nome.includes("4h")
-              ).uuid,
-            });
-          }
-        } else {
-          const indexLanche4h = cloneTiposAlimentacao.findIndex((ali) =>
-            ali.nome.includes("4h")
-          );
-          if (indexLanche4h !== -1) {
-            rowsDietas.push({
-              nome: cloneTiposAlimentacao[indexLanche4h].nome,
-              name: cloneTiposAlimentacao[indexLanche4h].nome
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase()
-                .replaceAll(/ /g, "_"),
-              uuid: cloneTiposAlimentacao[indexLanche4h].uuid,
-            });
-          }
-        }
-
-        const indexLanche = cloneTiposAlimentacao.findIndex(
-          (ali) => ali.nome === "Lanche"
-        );
-        if (
-          (indexLanche !== -1 &&
-            !ehEscolaTipoCEUGESTAO(
-              location.state.solicitacaoMedicaoInicial.escola
-            )) ||
-          (indexLanche !== -1 &&
-            !(urlParams.get("ehPeriodoEspecifico") === "true"))
-        ) {
-          if (
-            !ehEscolaTipoCEUGESTAO(
-              location.state.solicitacaoMedicaoInicial.escola
-            )
-          ) {
-            rowsDietas.push({
-              nome: "Lanche",
-              name: "Lanche"
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase()
-                .replaceAll(/ /g, "_"),
-              uuid: cloneTiposAlimentacao[indexLanche].uuid,
-            });
-          }
-        }
-
-        if (
-          ehEscolaTipoCEUGESTAO(
-            location.state.solicitacaoMedicaoInicial.escola
-          ) ||
-          urlParams.get("ehPeriodoEspecifico") === "true"
-        ) {
-          if (tiposAlimentacaoCEUGESTAO.includes("lanche")) {
-            rowsDietas.push({
-              nome: "Lanche",
-              name: "Lanche"
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase()
-                .replaceAll(/ /g, "_"),
-              uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find(
-                (tp) => tp.nome === "Lanche"
-              ).uuid,
-            });
-          }
-        }
-
-        rowsDietas.push({
-          nome: "Observações",
-          name: "observacoes",
+      rowsDietas.push(
+        {
+          nome: "Dietas Autorizadas",
+          name: "dietas_autorizadas",
           uuid: null,
-        });
-
-        setTabelaDietaRows(rowsDietas);
-
-        const cloneRowsDietas = deepCopy(rowsDietas);
-        const indexRefeicaoDieta = cloneTiposAlimentacao.findIndex(
-          (ali) => ali.nome === "Refeição"
-        );
-        if (
-          (indexRefeicaoDieta !== -1 &&
-            (!ehEscolaTipoCEUGESTAO(
-              location.state.solicitacaoMedicaoInicial.escola
-            ) ||
-              tiposAlimentacaoCEUGESTAO.includes("refeicao"))) ||
-          (indexRefeicaoDieta !== -1 &&
-            (!(urlParams.get("ehPeriodoEspecifico") === "true") ||
-              tiposAlimentacaoCEUGESTAO.includes("refeicao")))
-        ) {
-          cloneRowsDietas.splice(cloneRowsDietas.length - 1, 0, {
-            nome: "Refeição",
-            name: "refeicao",
-            uuid: cloneTiposAlimentacao[indexRefeicaoDieta].uuid,
-          });
-        }
-
-        setTabelaDietaEnteralRows(cloneRowsDietas);
-
-        rowsSolicitacoesAlimentacao.push(
-          {
-            nome: "Lanche Emergencial",
-            name: "lanche_emergencial",
-            uuid: null,
-          },
-          {
-            nome: "Kit Lanche",
-            name: "kit_lanche",
-            uuid: null,
-          },
-          {
-            nome: "Observações",
-            name: "observacoes",
-            uuid: null,
-          }
-        );
-
-        setTabelaSolicitacoesAlimentacaoRows(rowsSolicitacoesAlimentacao);
-
-        const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
-        const cloneTiposAlimentacaoEtec = deepCopy(tiposAlimentacaoEtec);
-        let tiposAlimentacaoEtecFormatadas = cloneTiposAlimentacaoEtec
-          .filter((alimentacao) => alimentacao !== "Lanche Emergencial")
-          .map((alimentacao) => {
-            return {
-              nome: alimentacao,
-              name: alimentacao
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .toLowerCase()
-                .replaceAll(/ /g, "_"),
-              uuid: null,
-            };
-          });
-
-        const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
-          (ali) => ali.nome === "Refeição"
-        );
-        if (indexRefeicaoEtec !== -1) {
-          tiposAlimentacaoEtecFormatadas[indexRefeicaoEtec].nome =
-            "Refeição 1ª Oferta";
-          tiposAlimentacaoEtecFormatadas.splice(indexRefeicaoEtec + 1, 0, {
-            nome: "Repetição Refeição",
-            name: "repeticao_refeicao",
-            uuid: null,
-          });
-        }
-
-        const indexSobremesaEtec = tiposAlimentacaoEtecFormatadas.findIndex(
-          (ali) => ali.nome === "Sobremesa"
-        );
-        if (indexSobremesaEtec !== -1) {
-          tiposAlimentacaoEtecFormatadas[indexSobremesaEtec].nome =
-            "Sobremesa 1º Oferta";
-          tiposAlimentacaoEtecFormatadas.splice(indexSobremesaEtec + 1, 0, {
-            nome: "Repetição Sobremesa",
-            name: "repeticao_sobremesa",
-            uuid: null,
-          });
-        }
-
-        const indexLancheEmergencialEtec =
-          tiposAlimentacaoEtecFormatadas.findIndex(
-            (ali) => ali.nome === "Lanche Emergencial"
-          );
-        if (indexLancheEmergencialEtec !== -1) {
-          tiposAlimentacaoEtecFormatadas[indexLancheEmergencialEtec].nome =
-            "Lanche Emergencial";
-        }
-
-        tiposAlimentacaoEtecFormatadas.unshift(
-          {
-            nome: "Número de Alunos",
-            name: "numero_de_alunos",
-            uuid: null,
-          },
-          {
-            nome: "Frequência",
-            name: "frequencia",
-            uuid: null,
-          }
-        );
-
-        tiposAlimentacaoEtecFormatadas.push({
-          nome: "Observações",
-          name: "observacoes",
+        },
+        {
+          nome: "Frequência",
+          name: "frequencia",
           uuid: null,
-        });
+        }
+      );
 
-        setTabelaEtecAlimentacaoRows(tiposAlimentacaoEtecFormatadas);
+      if (
+        ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) ||
+        urlParams.get("ehPeriodoEspecifico") === "true"
+      ) {
+        if (tiposAlimentacaoCEUGESTAO.includes("lanche_4h")) {
+          rowsDietas.push({
+            nome: "Lanche 4h",
+            name: "lanche_4h",
+            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find((tp) =>
+              tp.nome.includes("4h")
+            ).uuid,
+          });
+        }
+      } else {
+        const indexLanche4h = cloneTiposAlimentacao.findIndex((ali) =>
+          ali.nome.includes("4h")
+        );
+        if (indexLanche4h !== -1) {
+          rowsDietas.push({
+            nome: cloneTiposAlimentacao[indexLanche4h].nome,
+            name: cloneTiposAlimentacao[indexLanche4h].nome
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replaceAll(/ /g, "_"),
+            uuid: cloneTiposAlimentacao[indexLanche4h].uuid,
+          });
+        }
       }
+
+      const indexLanche = cloneTiposAlimentacao.findIndex(
+        (ali) => ali.nome === "Lanche"
+      );
+      if (
+        (indexLanche !== -1 &&
+          !ehEscolaTipoCEUGESTAO(
+            location.state.solicitacaoMedicaoInicial.escola
+          )) ||
+        (indexLanche !== -1 &&
+          !(urlParams.get("ehPeriodoEspecifico") === "true"))
+      ) {
+        if (
+          !ehEscolaTipoCEUGESTAO(
+            location.state.solicitacaoMedicaoInicial.escola
+          )
+        ) {
+          rowsDietas.push({
+            nome: "Lanche",
+            name: "Lanche"
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replaceAll(/ /g, "_"),
+            uuid: cloneTiposAlimentacao[indexLanche].uuid,
+          });
+        }
+      }
+
+      if (
+        ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) ||
+        urlParams.get("ehPeriodoEspecifico") === "true"
+      ) {
+        if (tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+          rowsDietas.push({
+            nome: "Lanche",
+            name: "Lanche"
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replaceAll(/ /g, "_"),
+            uuid: tiposAlimentacaoProgramasProjetosOuCEUGESTAO.find(
+              (tp) => tp.nome === "Lanche"
+            ).uuid,
+          });
+        }
+      }
+
+      rowsDietas.push({
+        nome: "Observações",
+        name: "observacoes",
+        uuid: null,
+      });
+
+      setTabelaDietaRows(rowsDietas);
+
+      const cloneRowsDietas = deepCopy(rowsDietas);
+      const indexRefeicaoDieta = cloneTiposAlimentacao.findIndex(
+        (ali) => ali.nome === "Refeição"
+      );
+      if (
+        (indexRefeicaoDieta !== -1 &&
+          (!ehEscolaTipoCEUGESTAO(
+            location.state.solicitacaoMedicaoInicial.escola
+          ) ||
+            tiposAlimentacaoCEUGESTAO.includes("refeicao"))) ||
+        (indexRefeicaoDieta !== -1 &&
+          (!(urlParams.get("ehPeriodoEspecifico") === "true") ||
+            tiposAlimentacaoCEUGESTAO.includes("refeicao")))
+      ) {
+        cloneRowsDietas.splice(cloneRowsDietas.length - 1, 0, {
+          nome: "Refeição",
+          name: "refeicao",
+          uuid: cloneTiposAlimentacao[indexRefeicaoDieta].uuid,
+        });
+      }
+
+      setTabelaDietaEnteralRows(cloneRowsDietas);
+
+      rowsSolicitacoesAlimentacao.push(
+        {
+          nome: "Lanche Emergencial",
+          name: "lanche_emergencial",
+          uuid: null,
+        },
+        {
+          nome: "Kit Lanche",
+          name: "kit_lanche",
+          uuid: null,
+        },
+        {
+          nome: "Observações",
+          name: "observacoes",
+          uuid: null,
+        }
+      );
+
+      setTabelaSolicitacoesAlimentacaoRows(rowsSolicitacoesAlimentacao);
+
+      const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
+      const cloneTiposAlimentacaoEtec = deepCopy(tiposAlimentacaoEtec);
+      let tiposAlimentacaoEtecFormatadas = cloneTiposAlimentacaoEtec
+        .filter((alimentacao) => alimentacao !== "Lanche Emergencial")
+        .map((alimentacao) => {
+          return {
+            nome: alimentacao,
+            name: alimentacao
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replaceAll(/ /g, "_"),
+            uuid: null,
+          };
+        });
+
+      const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+        (ali) => ali.nome === "Refeição"
+      );
+      if (indexRefeicaoEtec !== -1) {
+        tiposAlimentacaoEtecFormatadas[indexRefeicaoEtec].nome =
+          "Refeição 1ª Oferta";
+        tiposAlimentacaoEtecFormatadas.splice(indexRefeicaoEtec + 1, 0, {
+          nome: "Repetição Refeição",
+          name: "repeticao_refeicao",
+          uuid: null,
+        });
+      }
+
+      const indexSobremesaEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+        (ali) => ali.nome === "Sobremesa"
+      );
+      if (indexSobremesaEtec !== -1) {
+        tiposAlimentacaoEtecFormatadas[indexSobremesaEtec].nome =
+          "Sobremesa 1º Oferta";
+        tiposAlimentacaoEtecFormatadas.splice(indexSobremesaEtec + 1, 0, {
+          nome: "Repetição Sobremesa",
+          name: "repeticao_sobremesa",
+          uuid: null,
+        });
+      }
+
+      const indexLancheEmergencialEtec =
+        tiposAlimentacaoEtecFormatadas.findIndex(
+          (ali) => ali.nome === "Lanche Emergencial"
+        );
+      if (indexLancheEmergencialEtec !== -1) {
+        tiposAlimentacaoEtecFormatadas[indexLancheEmergencialEtec].nome =
+          "Lanche Emergencial";
+      }
+
+      tiposAlimentacaoEtecFormatadas.unshift(
+        {
+          nome: "Número de Alunos",
+          name: "numero_de_alunos",
+          uuid: null,
+        },
+        {
+          nome: "Frequência",
+          name: "frequencia",
+          uuid: null,
+        }
+      );
+
+      tiposAlimentacaoEtecFormatadas.push({
+        nome: "Observações",
+        name: "observacoes",
+        uuid: null,
+      });
+
+      setTabelaEtecAlimentacaoRows(tiposAlimentacaoEtecFormatadas);
 
       let response_log_dietas_autorizadas = [];
 
@@ -765,7 +762,7 @@ export default () => {
           }
         );
         setCategoriasDeMedicao(response_categorias_medicao);
-      } else if (ehGrupoETECUrlParam || escolaEhEMEBS()) {
+      } else if (ehGrupoETECUrlParam) {
         response_categorias_medicao = response_categorias_medicao.data.filter(
           (categoria) => {
             return categoria.nome === "ALIMENTAÇÃO";
@@ -1068,13 +1065,21 @@ export default () => {
       if (escolaEhEMEBS()) {
         let itemsAlunosEmebs = [];
         if (
-          response_matriculados.data &&
-          response_matriculados.data
-            .filter(
-              (matriculado) =>
-                matriculado.infantil_ou_fundamental === "INFANTIL"
-            )
-            .some((matriculado) => matriculado.quantidade_alunos !== 0)
+          (response_matriculados.data &&
+            response_matriculados.data
+              .filter(
+                (matriculado) =>
+                  matriculado.infantil_ou_fundamental === "INFANTIL"
+              )
+              .some((matriculado) => matriculado.quantidade_alunos !== 0)) ||
+          (response_log_dietas_autorizadas.data &&
+            response_log_dietas_autorizadas.data
+              .filter(
+                (log) =>
+                  log.infantil_ou_fundamental === "INFANTIL" &&
+                  log.classificacao.toUpperCase() !== "TIPO C"
+              )
+              .some((log) => log.quantidade !== 0))
         ) {
           itemsAlunosEmebs.push({
             key: INFANTIL_EMEBS.key,
@@ -1167,41 +1172,97 @@ export default () => {
             });
         }
 
-        categoria.nome.includes("ENTERAL") &&
-          logQtdDietasAutorizadas &&
-          logQtdDietasAutorizadas
-            .filter((logDieta) =>
-              logDieta.classificacao.toUpperCase().includes("ENTERAL")
-            )
-            .forEach(
-              (logFiltrado) =>
-                (dadosValoresDietasAutorizadas[
-                  `dietas_autorizadas__dia_${logFiltrado.dia}__categoria_${categoria.id}`
-                ] = `${
-                  logFiltrado.quantidade +
-                  (logQtdDietasAutorizadas.find(
-                    (log) =>
-                      logFiltrado.dia === log.dia &&
-                      log.classificacao.toUpperCase().includes("AMINOÁCIDOS")
-                  )?.quantidade || 0)
-                }`)
-            );
+        if (escolaEhEMEBS()) {
+          categoria.nome.includes("ENTERAL") &&
+            logQtdDietasAutorizadas &&
+            logQtdDietasAutorizadas
+              .filter(
+                (logDieta) =>
+                  logDieta.classificacao.toUpperCase().includes("ENTERAL") &&
+                  logDieta.infantil_ou_fundamental !== "N/A" &&
+                  ALUNOS_EMEBS[logDieta.infantil_ou_fundamental].key ===
+                    alunosTabSelecionada
+              )
+              .forEach(
+                (logFiltrado) =>
+                  (dadosValoresDietasAutorizadas[
+                    `dietas_autorizadas__dia_${logFiltrado.dia}__categoria_${categoria.id}`
+                  ] = `${
+                    logFiltrado.quantidade +
+                    (logQtdDietasAutorizadas
+                      .filter(
+                        (log) =>
+                          log.infantil_ou_fundamental !== "N/A" &&
+                          ALUNOS_EMEBS[log.infantil_ou_fundamental].key ===
+                            alunosTabSelecionada
+                      )
+                      .find(
+                        (log) =>
+                          logFiltrado.dia === log.dia &&
+                          log.classificacao
+                            .toUpperCase()
+                            .includes("AMINOÁCIDOS")
+                      )?.quantidade || 0)
+                  }`)
+              );
 
-        logQtdDietasAutorizadas &&
-          !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
-          !ehGrupoETECUrlParam &&
-          logQtdDietasAutorizadas.forEach((log) => {
-            categoria.nome === "DIETA ESPECIAL - TIPO A" &&
-              log.classificacao.toUpperCase() === "TIPO A" &&
-              (dadosValoresDietasAutorizadas[
-                `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
-              ] = `${log.quantidade}`);
-            categoria.nome.includes("TIPO B") &&
-              log.classificacao.toUpperCase().includes("TIPO B") &&
-              (dadosValoresDietasAutorizadas[
-                `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
-              ] = `${log.quantidade}`);
-          });
+          logQtdDietasAutorizadas &&
+            logQtdDietasAutorizadas
+              .filter(
+                (log) =>
+                  log.infantil_ou_fundamental !== "N/A" &&
+                  ALUNOS_EMEBS[log.infantil_ou_fundamental].key ===
+                    alunosTabSelecionada
+              )
+              .forEach((log) => {
+                categoria.nome === "DIETA ESPECIAL - TIPO A" &&
+                  log.classificacao.toUpperCase() === "TIPO A" &&
+                  (dadosValoresDietasAutorizadas[
+                    `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
+                  ] = `${log.quantidade}`);
+                categoria.nome.includes("TIPO B") &&
+                  log.classificacao.toUpperCase().includes("TIPO B") &&
+                  (dadosValoresDietasAutorizadas[
+                    `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
+                  ] = `${log.quantidade}`);
+              });
+        } else {
+          categoria.nome.includes("ENTERAL") &&
+            logQtdDietasAutorizadas &&
+            logQtdDietasAutorizadas
+              .filter((logDieta) =>
+                logDieta.classificacao.toUpperCase().includes("ENTERAL")
+              )
+              .forEach(
+                (logFiltrado) =>
+                  (dadosValoresDietasAutorizadas[
+                    `dietas_autorizadas__dia_${logFiltrado.dia}__categoria_${categoria.id}`
+                  ] = `${
+                    logFiltrado.quantidade +
+                    (logQtdDietasAutorizadas.find(
+                      (log) =>
+                        logFiltrado.dia === log.dia &&
+                        log.classificacao.toUpperCase().includes("AMINOÁCIDOS")
+                    )?.quantidade || 0)
+                  }`)
+              );
+
+          logQtdDietasAutorizadas &&
+            !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+            !ehGrupoETECUrlParam &&
+            logQtdDietasAutorizadas.forEach((log) => {
+              categoria.nome === "DIETA ESPECIAL - TIPO A" &&
+                log.classificacao.toUpperCase() === "TIPO A" &&
+                (dadosValoresDietasAutorizadas[
+                  `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
+                ] = `${log.quantidade}`);
+              categoria.nome.includes("TIPO B") &&
+                log.classificacao.toUpperCase().includes("TIPO B") &&
+                (dadosValoresDietasAutorizadas[
+                  `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
+                ] = `${log.quantidade}`);
+            });
+        }
 
         kitLanchesAutorizadas &&
           ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
@@ -1833,13 +1894,6 @@ export default () => {
     } else {
       setSemanaSelecionada(1);
       setAlunosTabSelecionada(key);
-      onSubmit(
-        formValuesAtualizados,
-        dadosValoresInclusoesAutorizadasState,
-        true,
-        false,
-        false
-      );
     }
   };
 
