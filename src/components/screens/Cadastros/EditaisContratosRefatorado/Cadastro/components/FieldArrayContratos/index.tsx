@@ -7,8 +7,11 @@ import {
 import { InputComData } from "components/Shareable/DatePicker";
 import { InputText } from "components/Shareable/Input/InputText";
 import { Select } from "components/Shareable/Select";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { FormApi } from "final-form";
 import { required } from "helpers/fieldValidators";
+import { getError } from "helpers/utilities";
+import HTTP_STATUS from "http-status-codes";
 import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
 import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
 import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
@@ -16,17 +19,14 @@ import moment from "moment";
 import React, { useState } from "react";
 import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
+import { encerraContratoTerceirizada } from "services/terceirizada.service";
+import { VIGENCIA_STATUS } from "../../../ConsultaEditaisContratos/constants";
 import {
   FormCadastroEditaisContratosContratoInterface,
   FormCadastroEditaisContratosInterface,
   FormCadastroEditaisContratosVigenciaInterface,
-} from "../../interfaces";
-import { VIGENCIA_STATUS } from "../../ConsultaEditaisContratos/constants";
-import { encerraContratoTerceirizada } from "services/terceirizada.service";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import HTTP_STATUS from "http-status-codes";
-import { ModalEncerrarContrato } from "./ModalEncerrarContrato.tsx";
-import { getError } from "helpers/utilities";
+} from "../../../interfaces";
+import { ModalEncerrarContrato } from "../ModalEncerrarContrato.tsx";
 
 interface FieldArrayContratosInterface {
   form: FormApi<any, Partial<any>>;
