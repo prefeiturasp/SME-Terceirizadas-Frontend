@@ -5,8 +5,8 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import "./style.scss";
-import { FormCadastroEditaisContratosInterface } from "../interfaces";
+import "../../style.scss";
+import { FormCadastroEditaisContratosInterface } from "../../../interfaces";
 import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
 import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
 import { TerceirizadaInterface } from "interfaces/terceirizada.interface";

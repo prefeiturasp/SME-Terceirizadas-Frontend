@@ -6,17 +6,27 @@ import {
   CONFIGURACOES,
   CADASTROS,
   EDITAIS_CADASTRADOS,
+  EDITAIS_CONTRATOS,
+  EDITAR,
 } from "configs/constants";
 
 const atual = {
-  href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`,
-  titulo: "Editais e Contratos",
+  href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}/${EDITAR}`,
+  titulo: "Editais e Contratos - Edição",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
     titulo: "Cadastros",
+  },
+  {
+    href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CONTRATOS}`,
+    titulo: "Cadastros Editais e Contratos",
+  },
+  {
+    href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`,
+    titulo: "Editais e Contratos Cadastrados",
   },
 ];
 

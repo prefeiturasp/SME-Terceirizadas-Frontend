@@ -12,7 +12,7 @@ import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
 import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
 import CadastroKitLanchePage from "../pages/Cadastros/CadastroKitLanchePage";
 import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
-import EditaisContratosRefatoradoPage from "../pages/Cadastros/EditaisContratosRefatoradoPage";
+import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
 import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 import PainelPedidosAlteracaoDeCardapioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/PainelPedidosPage";
@@ -292,6 +292,7 @@ import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/Anali
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
 import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
+import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
 
 const routesConfig = [
   {
@@ -699,7 +700,12 @@ const routesConfig = [
   },
   {
     path: `/configuracoes/cadastros/editais-contratos`,
-    component: EditaisContratosRefatoradoPage,
+    component: EditaisContratosPage,
+    tipoUsuario: usuarioEhQualquerCODAE(),
+  },
+  {
+    path: `/configuracoes/cadastros/editais-contratos/editar`,
+    component: EditaisContratosEditarPage,
     tipoUsuario: usuarioEhQualquerCODAE(),
   },
   {

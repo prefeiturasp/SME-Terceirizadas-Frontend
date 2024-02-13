@@ -17,24 +17,13 @@ export const criarEditalEContrato = async (payload) => {
   }
 };
 
-export const atualizarEditalEContrato = (payload, uuid) => {
+export const updateEditalContrato = async (payload, uuid) => {
   const url = `${API_URL}/editais-contratos/${uuid}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PUT",
-    body: payload,
-    headers: authToken,
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
+  const response = await axios.put(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getEditaisContratos = async (params) => {
@@ -46,23 +35,13 @@ export const getEditaisContratos = async (params) => {
   }
 };
 
-export const obtemEdital = (uuid) => {
+export const getEditalContrato = async (uuid) => {
   const url = `${API_URL}/editais-contratos/${uuid}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "GET",
-    headers: authToken,
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const excluirEdital = async (uuid) => {

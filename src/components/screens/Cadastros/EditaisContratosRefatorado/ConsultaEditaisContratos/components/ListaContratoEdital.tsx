@@ -10,6 +10,7 @@ import { Tooltip } from "antd";
 import { deepCopy } from "helpers/utilities";
 import { EditalContratoInterface } from "../../interfaces";
 import { VIGENCIA_STATUS } from "../constants";
+import { useNavigate } from "react-router-dom";
 
 export const LinhaEditalContrato = ({
   editalContrato,
@@ -17,6 +18,8 @@ export const LinhaEditalContrato = ({
   editaisContratos,
   index,
 }) => {
+  const navigate = useNavigate();
+
   const getStatusContrato = (
     editalContrato: EditalContratoInterface
   ): string => {
@@ -98,7 +101,13 @@ export const LinhaEditalContrato = ({
         <Botao
           type={BUTTON_TYPE.BUTTON}
           style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
+          onClick={() =>
+            navigate("/configuracoes/cadastros/editais-contratos/editar", {
+              state: { uuid: editalContrato.uuid },
+            })
+          }
           icon={BUTTON_ICON.EDIT}
+          tooltipExterno="Editar"
         />
       </div>
     </div>

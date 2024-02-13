@@ -1,12 +1,12 @@
 import React from "react";
-import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import EditaisContratos from "../../components/screens/Cadastros/EditaisContratos/EditaisContratos";
-import Page from "../../components/Shareable/Page/Page";
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import { EditaisContratosRefatorado } from "components/screens/Cadastros/EditaisContratosRefatorado/Cadastro";
+import Page from "components/Shareable/Page/Page";
 import {
   CONFIGURACOES,
   CADASTROS,
   EDITAIS_CADASTRADOS,
-} from "../../configs/constants";
+} from "configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`,
@@ -27,6 +27,6 @@ export default () => (
     voltarPara={`/${CONFIGURACOES}/${CADASTROS}`}
   >
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
-    <EditaisContratos />
+    <EditaisContratosRefatorado />
   </Page>
 );
