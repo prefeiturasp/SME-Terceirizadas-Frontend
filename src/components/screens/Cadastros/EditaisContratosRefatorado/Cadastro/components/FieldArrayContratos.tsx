@@ -110,6 +110,19 @@ export const FieldArrayContratos = ({
     );
   };
 
+  const removeVigencia = (
+    index_contratos: number,
+    indexVigencia: number
+  ): void => {
+    form.change(
+      `contratos[${index_contratos}].vigencias`,
+      values.contratos[index_contratos].vigencias.filter(
+        (_: FormCadastroEditaisContratosVigenciaInterface, i: number) =>
+          i !== indexVigencia
+      )
+    );
+  };
+
   const exibeAvisoVigenciaVencida = (
     indexVigencia: number,
     index_contratos: number
@@ -154,6 +167,66 @@ export const FieldArrayContratos = ({
           values.contratos[index_contratos]?.vigencias[0]?.data_inicial,
           "DD/MM/YYYY"
         ).toDate() > new Date())
+    );
+  };
+
+  const getMinDateDataInicial = (
+    index_contratos: number,
+    indexVigencia: number
+  ): Date | null => {
+    return indexVigencia === 0
+      ? null
+      : moment(
+          values.contratos[index_contratos].vigencias[indexVigencia - 1]
+            ?.data_final,
+          "DD/MM/YYYY"
+        ).toDate();
+  };
+
+  const getMinDateDataFinal = (
+    index_contratos: number,
+    indexVigencia: number
+  ): Date => {
+    return indexVigencia === 0
+      ? moment(
+          values.contratos[index_contratos].vigencias[indexVigencia]
+            .data_inicial,
+          "DD/MM/YYYY"
+        ).toDate()
+      : moment(
+          values.contratos[index_contratos].vigencias[indexVigencia - 1]
+            ?.data_final,
+          "DD/MM/YYYY"
+        ).toDate();
+  };
+
+  const getDataInicialDisabled = (
+    index_contratos: number,
+    indexVigencia: number
+  ): boolean => {
+    return (
+      values.contratos[index_contratos].encerrado ||
+      (values.contratos[index_contratos].vigencias[indexVigencia]?.uuid &&
+        moment(
+          values.contratos[index_contratos].vigencias[indexVigencia]
+            ?.data_inicial,
+          "DD/MM/YYYY"
+        ).toDate() <= new Date())
+    );
+  };
+
+  const getDataFinalDisabled = (
+    index_contratos: number,
+    indexVigencia: number
+  ): boolean => {
+    return (
+      values.contratos[index_contratos].encerrado ||
+      (values.contratos[index_contratos].vigencias[indexVigencia]?.uuid &&
+        moment(
+          values.contratos[index_contratos].vigencias[indexVigencia]
+            ?.data_final,
+          "DD/MM/YYYY"
+        ).toDate() <= new Date())
     );
   };
 
@@ -231,16 +304,10 @@ export const FieldArrayContratos = ({
                           name={`${name_vigencias}.data_inicial`}
                           placeholder="DE"
                           writable={false}
-                          minDate={
-                            indexVigencia === 0
-                              ? null
-                              : moment(
-                                  values.contratos[index_contratos].vigencias[
-                                    indexVigencia - 1
-                                  ]?.data_final,
-                                  "DD/MM/YYYY"
-                                ).toDate()
-                          }
+                          minDate={getMinDateDataInicial(
+                            index_contratos,
+                            indexVigencia
+                          )}
                           maxDate={moment(
                             values.contratos[index_contratos].vigencias[
                               indexVigencia
@@ -249,18 +316,10 @@ export const FieldArrayContratos = ({
                           ).toDate()}
                           required
                           validate={required}
-                          disabled={
-                            values.contratos[index_contratos].encerrado ||
-                            (values.contratos[index_contratos].vigencias[
-                              indexVigencia
-                            ]?.uuid &&
-                              moment(
-                                values.contratos[index_contratos].vigencias[
-                                  indexVigencia
-                                ]?.data_inicial,
-                                "DD/MM/YYYY"
-                              ).toDate() <= new Date())
-                          }
+                          disabled={getDataInicialDisabled(
+                            index_contratos,
+                            indexVigencia
+                          )}
                         />
                       </div>
                       <div className={`col-4`}>
@@ -270,34 +329,15 @@ export const FieldArrayContratos = ({
                           name={`${name_vigencias}.data_final`}
                           placeholder="ATÉ"
                           writable={false}
-                          minDate={
-                            indexVigencia === 0
-                              ? moment(
-                                  values.contratos[index_contratos].vigencias[
-                                    indexVigencia
-                                  ].data_inicial,
-                                  "DD/MM/YYYY"
-                                ).toDate()
-                              : moment(
-                                  values.contratos[index_contratos].vigencias[
-                                    indexVigencia - 1
-                                  ]?.data_final,
-                                  "DD/MM/YYYY"
-                                ).toDate()
-                          }
+                          minDate={getMinDateDataFinal(
+                            index_contratos,
+                            indexVigencia
+                          )}
                           maxDate={null}
-                          disabled={
-                            values.contratos[index_contratos].encerrado ||
-                            (values.contratos[index_contratos].vigencias[
-                              indexVigencia
-                            ]?.uuid &&
-                              moment(
-                                values.contratos[index_contratos].vigencias[
-                                  indexVigencia
-                                ]?.data_final,
-                                "DD/MM/YYYY"
-                              ).toDate() <= new Date())
-                          }
+                          disabled={getDataFinalDisabled(
+                            index_contratos,
+                            indexVigencia
+                          )}
                         />
                       </div>
                       {indexVigencia > 0 &&
@@ -313,19 +353,9 @@ export const FieldArrayContratos = ({
                           <Botao
                             texto="Remover"
                             type={BUTTON_TYPE.BUTTON}
-                            onClick={() => {
-                              form.change(
-                                `contratos[${index_contratos}].vigencias`,
-                                values.contratos[
-                                  index_contratos
-                                ].vigencias.filter(
-                                  (
-                                    _: FormCadastroEditaisContratosVigenciaInterface,
-                                    i: number
-                                  ) => i !== indexVigencia
-                                )
-                              );
-                            }}
+                            onClick={() =>
+                              removeVigencia(index_contratos, indexVigencia)
+                            }
                             style={BUTTON_STYLE.RED_OUTLINE}
                           />
                         </div>
