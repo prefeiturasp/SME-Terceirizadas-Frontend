@@ -51,7 +51,7 @@ const DadosEscolaSolicitante = () => {
       <div className="col-3">
         <Field
           component={InputText}
-          name="escola.lote.tipo_gestao"
+          name="escola.tipo_gestao.nome"
           label="Tipo de Gestão"
           disabled={true}
         />
