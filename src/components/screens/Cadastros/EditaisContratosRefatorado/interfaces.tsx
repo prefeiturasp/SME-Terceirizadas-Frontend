@@ -3,6 +3,8 @@ import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
 export interface FormCadastroEditaisContratosVigenciaInterface {
   data_inicial: string;
   data_final: string;
+  uuid?: string;
+  status?: string;
 }
 
 export interface FormCadastroEditaisContratosContratoInterface {
@@ -13,6 +15,9 @@ export interface FormCadastroEditaisContratosContratoInterface {
   lotes: Array<string>;
   diretorias_regionais: Array<string>;
   terceirizada: string;
+  encerrado?: boolean;
+  data_hora_encerramento?: string | null;
+  uuid?: string;
 }
 
 export interface FormCadastroEditaisContratosInterface {
@@ -21,6 +26,7 @@ export interface FormCadastroEditaisContratosInterface {
   processo: string;
   objeto: string;
   contratos: Array<FormCadastroEditaisContratosContratoInterface>;
+  uuid?: string;
 }
 
 export interface VigenciaInterface

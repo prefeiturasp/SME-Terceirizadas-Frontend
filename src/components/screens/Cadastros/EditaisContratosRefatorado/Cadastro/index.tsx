@@ -7,6 +7,12 @@ import {
 import { InputText } from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import {
+  CADASTROS,
+  CONFIGURACOES,
+  EDITAIS_CADASTRADOS,
+} from "configs/constants";
+import { FormApi } from "final-form";
 import arrayMutators from "final-form-arrays";
 import { required } from "helpers/fieldValidators";
 import HTTP_STATUS from "http-status-codes";
@@ -14,28 +20,34 @@ import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
 import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
 import {
   ResponseDiretoriasRegionaisSimplissimaInterface,
+  ResponseGetEditalCotratoInterface,
   ResponseLotesSimplesInterface,
   ResponseTerceirizadaListaNomesInterface,
 } from "interfaces/responses.interface";
 import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
 import React, { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
-import { criarEditalEContrato } from "services/edital.service";
+import {
+  criarEditalEContrato,
+  getEditalContrato,
+  updateEditalContrato,
+} from "services/edital.service";
 import { getLotesSimples } from "services/lote.service";
 import { getNomesTerceirizadas } from "services/produto.service.js";
-import { FormCadastroEditaisContratosInterface } from "../interfaces";
-import "./style.scss";
-import { FieldArrayContratos } from "./components";
-import { ModalCadastroEdital } from "./ModalCadastroEdital";
 import {
-  CADASTROS,
-  CONFIGURACOES,
-  EDITAIS_CADASTRADOS,
-} from "configs/constants";
+  EditalContratoListadoInterface,
+  FormCadastroEditaisContratosInterface,
+} from "../interfaces";
+import { FieldArrayContratos } from "./components/FieldArrayContratos";
+import { ModalCadastroEdital } from "./components/ModalCadastroEdital";
+import { formataEditalContratoParaForm } from "./helper";
+import "./style.scss";
 
 export const EditaisContratosRefatorado = () => {
+  const [objEditalContrato, setObjEditalContrato] =
+    useState<EditalContratoListadoInterface>(undefined);
   const [lotes, setLotes] = useState<Array<LoteRascunhosInterface>>(undefined);
   const [DREs, setDREs] =
     useState<Array<DiretoriaRegionalInterface>>(undefined);
@@ -46,7 +58,19 @@ export const EditaisContratosRefatorado = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);
 
+  const location = useLocation();
   const navigate: NavigateFunction = useNavigate();
+
+  const getEditalContratoAsync = async (uuid: string): Promise<void> => {
+    const response = await getEditalContrato<ResponseGetEditalCotratoInterface>(
+      uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setObjEditalContrato(formataEditalContratoParaForm(response.data));
+    } else {
+      setErro("Erro ao carregar edital ");
+    }
+  };
 
   const getLotesSimplesAsync = async (): Promise<void> => {
     const response: ResponseLotesSimplesInterface = await getLotesSimples();
@@ -90,6 +114,7 @@ export const EditaisContratosRefatorado = () => {
       getLotesSimplesAsync(),
       getDiretoriareginalSimplissimaAsync(),
       getNomesTerceirizadasAsync(),
+      location?.state?.uuid && getEditalContratoAsync(location.state.uuid),
     ]).then(() => {
       setLoading(false);
     });
@@ -98,20 +123,47 @@ export const EditaisContratosRefatorado = () => {
   const onSubmit = async (
     values: FormCadastroEditaisContratosInterface
   ): Promise<void> => {
-    if (!showModal) {
+    if (!showModal && !location?.state?.uuid) {
       setShowModal(true);
       return;
     }
-    const response = await criarEditalEContrato(values);
-    if (response.status === HTTP_STATUS.CREATED) {
-      toastSuccess("Edital salvo com sucesso");
-      navigate("/configuracoes/cadastros/editais-cadastrados");
+    if (!values.uuid) {
+      const response = await criarEditalEContrato(values);
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess("Edital salvo com sucesso");
+        navigate("/configuracoes/cadastros/editais-cadastrados");
+      } else {
+        toastError("Houve um erro ao salvar o edital");
+      }
     } else {
-      toastError("Houve um erro ao salvar o edital");
+      const response = await updateEditalContrato(values, values.uuid);
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Edição salva com sucesso!");
+        navigate("/configuracoes/cadastros/editais-cadastrados");
+      } else {
+        toastError("Houve um erro ao atualizar o edital");
+      }
     }
   };
 
-  const REQUISICOES_FINALIZADAS = !loading && lotes && DREs && empresas;
+  const cancelarForm = (form: FormApi<any, Partial<any>>): void => {
+    if (location?.state?.uuid) {
+      navigate(-1);
+    } else {
+      form.change("tipo_contratacao", undefined);
+      form.change("numero", undefined);
+      form.change("processo", undefined);
+      form.change("objeto", undefined);
+      form.change("contratos", [DEFAULT_CONTRATOS]);
+    }
+  };
+
+  const REQUISICOES_FINALIZADAS =
+    !loading &&
+    lotes &&
+    DREs &&
+    empresas &&
+    (location?.state?.uuid ? objEditalContrato : true);
 
   const DEFAULT_CONTRATOS = {
     vigencias: [
@@ -137,27 +189,31 @@ export const EditaisContratosRefatorado = () => {
                       Novo Cadastro de Editais e Contratos
                     </div>
                   </div>
-                  <div className="col-6 text-end">
-                    <Botao
-                      texto="Editais e Contratos Cadastrados"
-                      onClick={() =>
-                        navigate(
-                          `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`
-                        )
-                      }
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                  </div>
+                  {!location?.state?.uuid && (
+                    <div className="col-6 text-end">
+                      <Botao
+                        texto="Editais e Contratos Cadastrados"
+                        onClick={() =>
+                          navigate(
+                            `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`
+                          )
+                        }
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                    </div>
+                  )}
                 </div>
                 <Form
                   keepDirtyOnReinitialize
                   mutators={{
                     ...arrayMutators,
                   }}
-                  initialValues={{
-                    contratos: [DEFAULT_CONTRATOS],
-                  }}
+                  initialValues={
+                    objEditalContrato || {
+                      contratos: [DEFAULT_CONTRATOS],
+                    }
+                  }
                   onSubmit={onSubmit}
                 >
                   {({
@@ -225,6 +281,7 @@ export const EditaisContratosRefatorado = () => {
                         lotes={lotes}
                         DREs={DREs}
                         empresas={empresas}
+                        getEditalContratoAsync={getEditalContratoAsync}
                       />
                       <div className="row mt-3">
                         <div className="col-12 text-center">
@@ -239,13 +296,7 @@ export const EditaisContratosRefatorado = () => {
                       <div className="row">
                         <div className="col-12 text-end">
                           <Botao
-                            onClick={() => {
-                              form.change("tipo_contratacao", undefined);
-                              form.change("numero", undefined);
-                              form.change("processo", undefined);
-                              form.change("objeto", undefined);
-                              form.change("contratos", [DEFAULT_CONTRATOS]);
-                            }}
+                            onClick={() => cancelarForm(form)}
                             texto="Cancelar"
                             className="me-3"
                             disabled={submitting}

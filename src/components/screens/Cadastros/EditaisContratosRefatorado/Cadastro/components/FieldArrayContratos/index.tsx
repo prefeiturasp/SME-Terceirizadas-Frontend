@@ -7,20 +7,26 @@ import {
 import { InputComData } from "components/Shareable/DatePicker";
 import { InputText } from "components/Shareable/Input/InputText";
 import { Select } from "components/Shareable/Select";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { FormApi } from "final-form";
 import { required } from "helpers/fieldValidators";
+import { getError } from "helpers/utilities";
+import HTTP_STATUS from "http-status-codes";
 import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
 import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
 import { TerceirizadaInterface } from "interfaces/terceirizada.interface";
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
+import { encerraContratoTerceirizada } from "services/terceirizada.service";
+import { VIGENCIA_STATUS } from "../../../ConsultaEditaisContratos/constants";
 import {
   FormCadastroEditaisContratosContratoInterface,
   FormCadastroEditaisContratosInterface,
   FormCadastroEditaisContratosVigenciaInterface,
-} from "../interfaces";
+} from "../../../interfaces";
+import { ModalEncerrarContrato } from "../ModalEncerrarContrato.tsx";
 
 interface FieldArrayContratosInterface {
   form: FormApi<any, Partial<any>>;
@@ -29,6 +35,7 @@ interface FieldArrayContratosInterface {
   lotes: Array<LoteRascunhosInterface>;
   DREs: Array<DiretoriaRegionalInterface>;
   empresas: Array<TerceirizadaInterface>;
+  getEditalContratoAsync: (_uuid: string) => Promise<void>;
 }
 
 export const FieldArrayContratos = ({
@@ -38,7 +45,13 @@ export const FieldArrayContratos = ({
   lotes,
   DREs,
   empresas,
+  getEditalContratoAsync,
 }: FieldArrayContratosInterface) => {
+  const [showModalEncerrarContrato, setShowModalEncerrarContrato] =
+    useState<boolean>(false);
+  const [contratoAEncerrar, setContratoAEncerrar] =
+    useState<FormCadastroEditaisContratosContratoInterface>(undefined);
+
   const renderizarLabelLote = (
     selected: Array<string>,
     options: Array<string>
@@ -71,6 +84,152 @@ export const FieldArrayContratos = ({
     return `${selected.length} diretorias selecionadas`;
   };
 
+  const removeContrato = (index_contratos: number): void => {
+    form.change(
+      `contratos`,
+      values.contratos.filter(
+        (_: FormCadastroEditaisContratosContratoInterface, i: number) =>
+          i !== index_contratos
+      )
+    );
+  };
+
+  const exibeBotaoRemoverVigencia = (
+    indexVigencia: number,
+    index_contratos: number
+  ): boolean => {
+    return (
+      indexVigencia > 0 &&
+      !values.contratos[index_contratos].encerrado &&
+      (!values.contratos[index_contratos].vigencias[indexVigencia]?.uuid ||
+        moment(
+          values.contratos[index_contratos].vigencias[indexVigencia]
+            ?.data_final,
+          "DD/MM/YYYY"
+        ).toDate() > new Date())
+    );
+  };
+
+  const removeVigencia = (
+    index_contratos: number,
+    indexVigencia: number
+  ): void => {
+    form.change(
+      `contratos[${index_contratos}].vigencias`,
+      values.contratos[index_contratos].vigencias.filter(
+        (_: FormCadastroEditaisContratosVigenciaInterface, i: number) =>
+          i !== indexVigencia
+      )
+    );
+  };
+
+  const exibeAvisoVigenciaVencida = (
+    indexVigencia: number,
+    index_contratos: number
+  ): boolean => {
+    return (
+      indexVigencia ===
+        values.contratos[index_contratos]?.vigencias.length - 1 &&
+      values.contratos[index_contratos]?.vigencias[indexVigencia]?.status ===
+        VIGENCIA_STATUS.VENCIDO
+    );
+  };
+
+  const exibeAvisoContratoEncerrado = (
+    indexVigencia: number,
+    index_contratos: number
+  ): boolean => {
+    return (
+      indexVigencia ===
+        values.contratos[index_contratos]?.vigencias.length - 1 &&
+      values.contratos[index_contratos].encerrado
+    );
+  };
+
+  const encerrarContrato = async (
+    contrato: FormCadastroEditaisContratosContratoInterface
+  ): Promise<void> => {
+    const response = await encerraContratoTerceirizada(contrato.uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Contrato encerrado com sucesso!");
+      setShowModalEncerrarContrato(false);
+      getEditalContratoAsync(values.uuid);
+    } else {
+      toastError(getError(response.data));
+    }
+  };
+
+  const exibeRemoverContrato = (index_contratos: number): boolean => {
+    return (
+      index_contratos > 0 &&
+      (!values.contratos[index_contratos]?.uuid ||
+        moment(
+          values.contratos[index_contratos]?.vigencias[0]?.data_inicial,
+          "DD/MM/YYYY"
+        ).toDate() > new Date())
+    );
+  };
+
+  const getMinDateDataInicial = (
+    index_contratos: number,
+    indexVigencia: number
+  ): Date | null => {
+    return indexVigencia === 0
+      ? null
+      : moment(
+          values.contratos[index_contratos].vigencias[indexVigencia - 1]
+            ?.data_final,
+          "DD/MM/YYYY"
+        ).toDate();
+  };
+
+  const getMinDateDataFinal = (
+    index_contratos: number,
+    indexVigencia: number
+  ): Date => {
+    return indexVigencia === 0
+      ? moment(
+          values.contratos[index_contratos].vigencias[indexVigencia]
+            .data_inicial,
+          "DD/MM/YYYY"
+        ).toDate()
+      : moment(
+          values.contratos[index_contratos].vigencias[indexVigencia - 1]
+            ?.data_final,
+          "DD/MM/YYYY"
+        ).toDate();
+  };
+
+  const getDataInicialDisabled = (
+    index_contratos: number,
+    indexVigencia: number
+  ): boolean => {
+    return (
+      values.contratos[index_contratos].encerrado ||
+      (values.contratos[index_contratos].vigencias[indexVigencia]?.uuid &&
+        moment(
+          values.contratos[index_contratos].vigencias[indexVigencia]
+            ?.data_inicial,
+          "DD/MM/YYYY"
+        ).toDate() <= new Date())
+    );
+  };
+
+  const getDataFinalDisabled = (
+    index_contratos: number,
+    indexVigencia: number
+  ): boolean => {
+    return (
+      values.contratos[index_contratos].encerrado ||
+      (values.contratos[index_contratos].vigencias[indexVigencia]?.uuid &&
+        moment(
+          values.contratos[index_contratos].vigencias[indexVigencia]
+            ?.data_final,
+          "DD/MM/YYYY"
+        ).toDate() <= new Date())
+    );
+  };
+
   return (
     <FieldArray name="contratos">
       {({ fields }) =>
@@ -81,23 +240,15 @@ export const FieldArrayContratos = ({
                 <div className="title">
                   <span
                     className={`com-linha ${
-                      index_contratos === 0 ? "w-100" : "w-78"
+                      exibeRemoverContrato(index_contratos) ? "w-78" : "w-100"
                     }`}
                   >
                     Contratos Relacionados
                   </span>
-                  {index_contratos > 0 && (
+                  {exibeRemoverContrato(index_contratos) && (
                     <span
                       onClick={() => {
-                        form.change(
-                          `contratos`,
-                          values.contratos.filter(
-                            (
-                              _: FormCadastroEditaisContratosContratoInterface,
-                              i: number
-                            ) => i !== index_contratos
-                          )
-                        );
+                        removeContrato(index_contratos);
                       }}
                       className="remover float-end"
                     >
@@ -144,79 +295,105 @@ export const FieldArrayContratos = ({
               </div>
               <FieldArray name={`${name_contratos}.vigencias`}>
                 {({ fields }) =>
-                  fields.map((name_vigencias, index) => (
+                  fields.map((name_vigencias, indexVigencia) => (
                     <>
-                      <div className="col-4">
+                      <div className={`col-4`}>
                         <Field
                           component={InputComData}
-                          label={`${index > 0 ? "Nova " : ""}Vigência`}
+                          label={`${indexVigencia > 0 ? "Nova " : ""}Vigência`}
                           name={`${name_vigencias}.data_inicial`}
                           placeholder="DE"
                           writable={false}
-                          minDate={
-                            index === 0
-                              ? null
-                              : moment(
-                                  values.contratos[index_contratos].vigencias[
-                                    index - 1
-                                  ]?.data_final,
-                                  "DD/MM/YYYY"
-                                ).toDate()
-                          }
+                          minDate={getMinDateDataInicial(
+                            index_contratos,
+                            indexVigencia
+                          )}
                           maxDate={moment(
-                            values.contratos[index_contratos].vigencias[index]
-                              ?.data_final,
+                            values.contratos[index_contratos].vigencias[
+                              indexVigencia
+                            ]?.data_final,
                             "DD/MM/YYYY"
                           ).toDate()}
                           required
                           validate={required}
+                          disabled={getDataInicialDisabled(
+                            index_contratos,
+                            indexVigencia
+                          )}
                         />
                       </div>
-                      <div className="col-4">
+                      <div className={`col-4`}>
                         <Field
                           component={InputComData}
                           label="&nbsp;"
                           name={`${name_vigencias}.data_final`}
                           placeholder="ATÉ"
                           writable={false}
-                          minDate={
-                            index === 0
-                              ? moment(
-                                  values.contratos[index_contratos].vigencias[
-                                    index
-                                  ].data_inicial,
-                                  "DD/MM/YYYY"
-                                ).toDate()
-                              : moment(
-                                  values.contratos[index_contratos].vigencias[
-                                    index - 1
-                                  ]?.data_final,
-                                  "DD/MM/YYYY"
-                                ).toDate()
-                          }
+                          minDate={getMinDateDataFinal(
+                            index_contratos,
+                            indexVigencia
+                          )}
                           maxDate={null}
+                          disabled={getDataFinalDisabled(
+                            index_contratos,
+                            indexVigencia
+                          )}
                         />
                       </div>
-                      {index > 0 && (
+                      {indexVigencia > 0 &&
+                        !exibeBotaoRemoverVigencia(
+                          indexVigencia,
+                          index_contratos
+                        ) && <div className="col-2" />}
+                      {exibeBotaoRemoverVigencia(
+                        indexVigencia,
+                        index_contratos
+                      ) && (
                         <div className="col-2 mt-auto mb-2">
                           <Botao
                             texto="Remover"
                             type={BUTTON_TYPE.BUTTON}
-                            onClick={() => {
-                              form.change(
-                                `contratos[${index_contratos}].vigencias`,
-                                values.contratos[
-                                  index_contratos
-                                ].vigencias.filter(
-                                  (
-                                    _: FormCadastroEditaisContratosVigenciaInterface,
-                                    i: number
-                                  ) => i !== index
-                                )
-                              );
-                            }}
+                            onClick={() =>
+                              removeVigencia(index_contratos, indexVigencia)
+                            }
                             style={BUTTON_STYLE.RED_OUTLINE}
                           />
+                        </div>
+                      )}
+                      {exibeAvisoVigenciaVencida(
+                        indexVigencia,
+                        index_contratos
+                      ) && (
+                        <div
+                          className="pt-3 pb-3"
+                          style={{
+                            paddingLeft: "12px",
+                            paddingRight: "12px",
+                          }}
+                        >
+                          <div className="aviso vencido">
+                            <b>Aviso:</b> contrato fora do prazo de vigência.
+                          </div>
+                        </div>
+                      )}
+                      {exibeAvisoContratoEncerrado(
+                        indexVigencia,
+                        index_contratos
+                      ) && (
+                        <div
+                          className="pt-3 pb-3"
+                          style={{
+                            paddingLeft: "12px",
+                            paddingRight: "12px",
+                          }}
+                        >
+                          <div className="aviso encerrado">
+                            <b>Aviso:</b> contrato encerrado em{" "}
+                            {
+                              values.contratos[index_contratos]
+                                .data_hora_encerramento
+                            }
+                          </div>
                         </div>
                       )}
                     </>
@@ -225,21 +402,50 @@ export const FieldArrayContratos = ({
               </FieldArray>
             </div>
 
-            <div className="row mt-3">
-              <div className="col-12">
-                <Botao
-                  texto="Adicionar Vigência"
-                  onClick={() => push(`${name_contratos}.vigencias`)}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  type={BUTTON_TYPE.BUTTON}
-                  disabled={
-                    !values.contratos[index_contratos]?.vigencias[
-                      values.contratos[index_contratos].vigencias.length - 1
-                    ]?.data_final
-                  }
-                />
+            {!values.contratos[index_contratos].encerrado && (
+              <div className="row mt-3">
+                <div className="col-12">
+                  <Botao
+                    texto="Adicionar Vigência"
+                    onClick={() => push(`${name_contratos}.vigencias`)}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    type={BUTTON_TYPE.BUTTON}
+                    disabled={
+                      !values.contratos[index_contratos]?.vigencias[
+                        values.contratos[index_contratos].vigencias.length - 1
+                      ]?.data_final
+                    }
+                  />
+                  {values.uuid && (
+                    <Botao
+                      texto="Encerrar contrato"
+                      className="ms-3"
+                      onClick={() => {
+                        setContratoAEncerrar(values.contratos[index_contratos]);
+                        setShowModalEncerrarContrato(true);
+                      }}
+                      style={BUTTON_STYLE.RED_OUTLINE}
+                      type={BUTTON_TYPE.BUTTON}
+                      disabled={
+                        !values.contratos[index_contratos]?.vigencias[
+                          values.contratos[index_contratos].vigencias.length - 1
+                        ]?.data_final
+                      }
+                    />
+                  )}
+                  {contratoAEncerrar && (
+                    <ModalEncerrarContrato
+                      showModal={showModalEncerrarContrato}
+                      closeModal={() => setShowModalEncerrarContrato(false)}
+                      contrato={contratoAEncerrar}
+                      encerrarContrato={async (contrato) =>
+                        await encerrarContrato(contrato)
+                      }
+                    />
+                  )}
+                </div>
               </div>
-            </div>
+            )}
             <div className="row mt-3">
               <div className="col-6">
                 <label className="label fw-normal">

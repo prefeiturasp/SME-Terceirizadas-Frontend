@@ -201,3 +201,7 @@ export interface ResponseEditalCotratoInterface extends ResponseInterface {
     results: Array<EditalContratoInterface>;
   };
 }
+
+export interface ResponseGetEditalCotratoInterface extends ResponseInterface {
+  data: EditalContratoInterface;
+}

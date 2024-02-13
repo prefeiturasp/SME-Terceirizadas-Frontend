@@ -752,6 +752,7 @@ export const getKey = (obj) => {
 };
 
 export const getError = (obj) => {
+  if (typeof obj === "string") return obj;
   let result = "Erro";
   if (!obj[getKey(obj)]) {
     return "Erro";
