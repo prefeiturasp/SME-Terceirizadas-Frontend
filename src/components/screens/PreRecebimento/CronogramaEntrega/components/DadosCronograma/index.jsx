@@ -222,7 +222,7 @@ export default ({
                             {formataMilhar(etapa.quantidade)}
                           </td>
                           <td className="borda-crono">
-                            {etapa.total_embalagens}
+                            {formataMilhar(etapa.total_embalagens)}
                           </td>
                         </tr>
                       );
