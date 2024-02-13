@@ -42,6 +42,7 @@ import {
   EDITAIS_CADASTRADOS,
 } from "configs/constants";
 import { formataEditalContratoParaForm } from "./helper";
+import { FormApi } from "final-form";
 
 export const EditaisContratosRefatorado = () => {
   const [objEditalContrato, setObjEditalContrato] =
@@ -119,7 +120,7 @@ export const EditaisContratosRefatorado = () => {
   const onSubmit = async (
     values: FormCadastroEditaisContratosInterface
   ): Promise<void> => {
-    if (!showModal) {
+    if (!showModal && !location?.state?.uuid) {
       setShowModal(true);
       return;
     }
@@ -139,6 +140,18 @@ export const EditaisContratosRefatorado = () => {
       } else {
         toastError("Houve um erro ao atualizar o edital");
       }
+    }
+  };
+
+  const cancelarForm = (form: FormApi<any, Partial<any>>): void => {
+    if (location?.state?.uuid) {
+      navigate(-1);
+    } else {
+      form.change("tipo_contratacao", undefined);
+      form.change("numero", undefined);
+      form.change("processo", undefined);
+      form.change("objeto", undefined);
+      form.change("contratos", [DEFAULT_CONTRATOS]);
     }
   };
 
@@ -280,13 +293,7 @@ export const EditaisContratosRefatorado = () => {
                       <div className="row">
                         <div className="col-12 text-end">
                           <Botao
-                            onClick={() => {
-                              form.change("tipo_contratacao", undefined);
-                              form.change("numero", undefined);
-                              form.change("processo", undefined);
-                              form.change("objeto", undefined);
-                              form.change("contratos", [DEFAULT_CONTRATOS]);
-                            }}
+                            onClick={() => cancelarForm(form)}
                             texto="Cancelar"
                             className="me-3"
                             disabled={submitting}

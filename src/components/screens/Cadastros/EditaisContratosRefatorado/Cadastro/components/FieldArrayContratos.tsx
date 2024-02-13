@@ -146,6 +146,17 @@ export const FieldArrayContratos = ({
     }
   };
 
+  const exibeRemoverContrato = (index_contratos: number): boolean => {
+    return (
+      index_contratos > 0 &&
+      (!values.contratos[index_contratos]?.uuid ||
+        moment(
+          values.contratos[index_contratos]?.vigencias[0]?.data_inicial,
+          "DD/MM/YYYY"
+        ).toDate() > new Date())
+    );
+  };
+
   return (
     <FieldArray name="contratos">
       {({ fields }) =>
@@ -156,12 +167,12 @@ export const FieldArrayContratos = ({
                 <div className="title">
                   <span
                     className={`com-linha ${
-                      index_contratos === 0 ? "w-100" : "w-78"
+                      exibeRemoverContrato(index_contratos) ? "w-78" : "w-100"
                     }`}
                   >
                     Contratos Relacionados
                   </span>
-                  {index_contratos > 0 && (
+                  {exibeRemoverContrato(index_contratos) && (
                     <span
                       onClick={() => {
                         removeContrato(index_contratos);

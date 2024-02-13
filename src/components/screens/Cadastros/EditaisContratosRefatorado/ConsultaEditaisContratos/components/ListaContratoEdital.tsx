@@ -107,6 +107,7 @@ export const LinhaEditalContrato = ({
             })
           }
           icon={BUTTON_ICON.EDIT}
+          tooltipExterno="Editar"
         />
       </div>
     </div>
