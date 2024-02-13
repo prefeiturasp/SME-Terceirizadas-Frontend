@@ -35,7 +35,7 @@ import {
 } from "../interfaces";
 import "./style.scss";
 import { FieldArrayContratos } from "./components/FieldArrayContratos";
-import { ModalCadastroEdital } from "./ModalCadastroEdital";
+import { ModalCadastroEdital } from "./components/ModalCadastroEdital";
 import {
   CADASTROS,
   CONFIGURACOES,
