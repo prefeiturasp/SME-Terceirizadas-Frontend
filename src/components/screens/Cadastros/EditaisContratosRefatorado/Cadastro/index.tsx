@@ -7,6 +7,12 @@ import {
 import { InputText } from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import {
+  CADASTROS,
+  CONFIGURACOES,
+  EDITAIS_CADASTRADOS,
+} from "configs/constants";
+import { FormApi } from "final-form";
 import arrayMutators from "final-form-arrays";
 import { required } from "helpers/fieldValidators";
 import HTTP_STATUS from "http-status-codes";
@@ -14,6 +20,7 @@ import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
 import { LoteRascunhosInterface } from "interfaces/rascunhos.interface";
 import {
   ResponseDiretoriasRegionaisSimplissimaInterface,
+  ResponseGetEditalCotratoInterface,
   ResponseLotesSimplesInterface,
   ResponseTerceirizadaListaNomesInterface,
 } from "interfaces/responses.interface";
@@ -33,16 +40,10 @@ import {
   EditalContratoListadoInterface,
   FormCadastroEditaisContratosInterface,
 } from "../interfaces";
-import "./style.scss";
 import { FieldArrayContratos } from "./components/FieldArrayContratos";
 import { ModalCadastroEdital } from "./components/ModalCadastroEdital";
-import {
-  CADASTROS,
-  CONFIGURACOES,
-  EDITAIS_CADASTRADOS,
-} from "configs/constants";
 import { formataEditalContratoParaForm } from "./helper";
-import { FormApi } from "final-form";
+import "./style.scss";
 
 export const EditaisContratosRefatorado = () => {
   const [objEditalContrato, setObjEditalContrato] =
@@ -61,7 +62,9 @@ export const EditaisContratosRefatorado = () => {
   const navigate: NavigateFunction = useNavigate();
 
   const getEditalContratoAsync = async (uuid: string): Promise<void> => {
-    const response = await getEditalContrato(uuid);
+    const response = await getEditalContrato<ResponseGetEditalCotratoInterface>(
+      uuid
+    );
     if (response.status === HTTP_STATUS.OK) {
       setObjEditalContrato(formataEditalContratoParaForm(response.data));
     } else {
