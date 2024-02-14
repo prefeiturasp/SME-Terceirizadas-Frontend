@@ -22,7 +22,7 @@ const anteriores = [
   },
   {
     href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CONTRATOS}`,
-    titulo: "Cadastros Editais e Contratos",
+    titulo: "Editais e Contratos",
   },
   {
     href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAIS_CADASTRADOS}`,
@@ -31,11 +31,7 @@ const anteriores = [
 ];
 
 export default () => (
-  <Page
-    titulo={atual.titulo}
-    botaoVoltar
-    voltarPara={`/${CONFIGURACOES}/${CADASTROS}`}
-  >
+  <Page titulo={atual.titulo} botaoVoltar>
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
     <EditaisContratosRefatorado />
   </Page>

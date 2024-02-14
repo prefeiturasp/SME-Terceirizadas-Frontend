@@ -372,7 +372,7 @@ export const FieldArrayContratos = ({
                           }}
                         >
                           <div className="aviso vencido">
-                            <b>Aviso:</b> contrato fora do prazo de vigência.
+                            <b>Aviso:</b> Contrato fora do prazo de vigência.
                           </div>
                         </div>
                       )}
@@ -388,7 +388,7 @@ export const FieldArrayContratos = ({
                           }}
                         >
                           <div className="aviso encerrado">
-                            <b>Aviso:</b> contrato encerrado em{" "}
+                            <b>Aviso:</b> Contrato encerrado em{" "}
                             {
                               values.contratos[index_contratos]
                                 .data_hora_encerramento
