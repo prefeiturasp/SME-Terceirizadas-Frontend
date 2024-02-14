@@ -13,6 +13,8 @@ import {
   ResponseFichasTecnicasSimples,
 } from "interfaces/responses.interface";
 import { FiltrosDashboardFichasTecnicas } from "interfaces/pre_recebimento.interface";
+import { getMensagemDeErro } from "../helpers/statusErrors";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 export const cadastraRascunhoFichaTecnica = async (
   payload: FichaTecnicaPayload
@@ -60,8 +62,13 @@ export const getDashboardFichasTecnicas = async (
 // Service retorna apenas um status nos resultados, filtros em formatos de array são transformados em parametros de URL
 export const getDashboardFichasTecnicasPorStatus = async (
   params: URLSearchParams = null
-): Promise<ResponseFichasTecnicasPorStatusDashboard> =>
-  await axios.get(`/ficha-tecnica/dashboard/`, { params });
+): Promise<ResponseFichasTecnicasPorStatusDashboard> => {
+  try {
+    return await axios.get(`/ficha-tecnica/dashboard/`, { params });
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
 
 export const getListaFichasTecnicasSimplesSemCronograma =
   async (): Promise<ResponseFichasTecnicasSimples> =>
