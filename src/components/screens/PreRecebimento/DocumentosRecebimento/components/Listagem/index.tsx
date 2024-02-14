@@ -88,6 +88,7 @@ const Listagem: React.FC<Props> = ({ objetos, setCarregando }) => {
       <article>
         <div className="grid-table header-table">
           <div>Nº do Cronograma</div>
+          <div>Nº do Laudo</div>
           <div>Nº do Pregão/Chamada Pública</div>
           <div>Nome do Produto</div>
           <div>Data de Cadastro</div>
@@ -100,6 +101,7 @@ const Listagem: React.FC<Props> = ({ objetos, setCarregando }) => {
             <>
               <div key={objeto.uuid} className="grid-table body-table">
                 <div>{objeto.numero_cronograma}</div>
+                <div>{objeto.numero_laudo}</div>
                 <div>{objeto.pregao_chamada_publica}</div>
                 <div>{objeto.nome_produto}</div>
                 <div>{objeto.criado_em}</div>
