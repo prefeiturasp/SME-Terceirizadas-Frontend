@@ -22,20 +22,22 @@ export default () => {
   );
 
   const buscarResultados = async (pageNumber: number) => {
-    setCarregando(true);
+    try {
+      setCarregando(true);
 
-    const params: URLSearchParams = gerarParametrosConsulta({
-      page: pageNumber,
-      ...filtros,
-    });
-    const response: ResponseDocumentosRecebimento =
-      await listarDocumentosRecebimento(params);
+      const params: URLSearchParams = gerarParametrosConsulta({
+        page: pageNumber,
+        ...filtros,
+      });
+      const response: ResponseDocumentosRecebimento =
+        await listarDocumentosRecebimento(params);
 
-    setDocumentos(response.data.results);
-    setTotalResultados(response.data.count);
-    setConsultaRealizada(true);
-
-    setCarregando(false);
+      setDocumentos(response.data.results);
+      setTotalResultados(response.data.count);
+      setConsultaRealizada(true);
+    } finally {
+      setCarregando(false);
+    }
   };
 
   const nextPage = (page: number) => {
