@@ -25,7 +25,7 @@ export const CARD_APROVADOS: CardConfig<FichaTecnicaDashboard> = {
   titulo: "Aprovados",
   icon: "fa-check",
   style: "card-cronogramas-assinados",
-  incluir_status: ["APROVADAS"],
+  incluir_status: ["APROVADA"],
   href: `/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}/${APROVADOS}`,
 };
 
