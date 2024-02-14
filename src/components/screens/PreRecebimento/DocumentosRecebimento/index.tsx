@@ -32,9 +32,11 @@ export default () => {
       const response: ResponseDocumentosRecebimento =
         await listarDocumentosRecebimento(params);
 
-      setDocumentos(response.data.results);
-      setTotalResultados(response.data.count);
-      setConsultaRealizada(true);
+      if (response?.status === 200) {
+        setDocumentos(response.data.results);
+        setTotalResultados(response.data.count);
+        setConsultaRealizada(true);
+      }
     } finally {
       setCarregando(false);
     }
