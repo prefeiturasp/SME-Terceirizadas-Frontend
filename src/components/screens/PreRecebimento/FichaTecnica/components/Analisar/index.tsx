@@ -949,6 +949,7 @@ export default () => {
                       <BotaoCiente
                         name={"responsavel_tecnico"}
                         aprovaCollapse={aprovaCollapse}
+                        desabilitar={conferidos.responsavel_tecnico}
                       />
                     </section>
 
@@ -967,6 +968,7 @@ export default () => {
                       <BotaoCiente
                         name={"modo_preparo"}
                         aprovaCollapse={aprovaCollapse}
+                        desabilitar={conferidos.modo_preparo}
                       />
                     </section>
 
@@ -985,6 +987,7 @@ export default () => {
                       <BotaoCiente
                         name={"outras_informacoes"}
                         aprovaCollapse={aprovaCollapse}
+                        desabilitar={conferidos.outras_informacoes}
                       />
                     </section>
                   </Collapse>

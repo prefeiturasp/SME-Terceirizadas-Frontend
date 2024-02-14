@@ -9,9 +9,14 @@ import "./styles.scss";
 interface Props {
   name: string;
   aprovaCollapse: (_name: string) => void;
+  desabilitar?: boolean;
 }
 
-const BotaoCiente: React.FC<Props> = ({ name, aprovaCollapse }) => {
+const BotaoCiente: React.FC<Props> = ({
+  name,
+  aprovaCollapse,
+  desabilitar = false,
+}) => {
   return (
     <div className="botao-ciente">
       <div className="mt-4">
@@ -23,6 +28,7 @@ const BotaoCiente: React.FC<Props> = ({ name, aprovaCollapse }) => {
           onClick={() => {
             aprovaCollapse(name);
           }}
+          disabled={desabilitar}
         />
       </div>
     </div>
