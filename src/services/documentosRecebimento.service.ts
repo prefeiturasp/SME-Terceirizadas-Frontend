@@ -13,6 +13,8 @@ import {
   ResponseDownloadArquivoLaudoAssinado,
 } from "interfaces/responses.interface";
 import { FiltrosDashboardDocumentos } from "interfaces/pre_recebimento.interface";
+import { getMensagemDeErro } from "../helpers/statusErrors";
+import { toastError } from "../components/Shareable/Toast/dialogs";
 
 export const cadastraDocumentoRecebimento = async (
   payload: DocumentosRecebimentoPayload
@@ -30,8 +32,13 @@ export const detalharDocumentoParaAnalise = async (
 
 export const listarDocumentosRecebimento = async (
   params: URLSearchParams
-): Promise<ResponseDocumentosRecebimento> =>
-  await axios.get("/documentos-de-recebimento/", { params });
+): Promise<ResponseDocumentosRecebimento> => {
+  try {
+    return await axios.get("/documentos-de-recebimento/", { params });
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
 
 // Service retorna vários status diferente dentro dos resultados, filtros são apenas strings
 export const getDashboardDocumentosRecebimento = async (

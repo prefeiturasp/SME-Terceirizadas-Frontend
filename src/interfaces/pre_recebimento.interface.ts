@@ -8,6 +8,7 @@ export interface DocumentosRecebimento {
   criado_em: string;
   nome_produto: string;
   numero_cronograma: string;
+  numero_laudo: string;
   pregao_chamada_publica: string;
   status: string;
   uuid: string;
