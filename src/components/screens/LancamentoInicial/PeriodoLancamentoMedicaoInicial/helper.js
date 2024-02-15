@@ -494,7 +494,8 @@ export const desabilitarField = (
           inclusoesAutorizadas.filter((inc) => inc.dia === dia).length)) &&
       !["Mês anterior", "Mês posterior"].includes(
         values[`${rowName}__dia_${dia}__categoria_${categoria}`]
-      )
+      ) &&
+      values[`matriculados__dia_${dia}__categoria_${categoria}`]
     ) {
       return false;
     } else {
