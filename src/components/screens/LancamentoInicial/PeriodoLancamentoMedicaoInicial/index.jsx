@@ -2173,7 +2173,10 @@ export default () => {
           alteracoesAlimentacaoAutorizadas,
           validacaoDiaLetivo,
           location,
-          feriadosNoMes
+          feriadosNoMes,
+          valoresPeriodosLancamentos,
+          escolaEhEMEBS(),
+          alunosTabSelecionada
         );
       }
     };
