@@ -83,10 +83,11 @@ import {
   getSolicitacoesInclusoesEtecAutorizadasAsync,
   getSolicitacoesKitLanchesAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
+  tabAlunosEmebs,
   textoBotaoObservacao,
   valorZeroFrequencia,
 } from "./helper";
-import { ALUNOS_EMEBS, FUNDAMENTAL_EMEBS, INFANTIL_EMEBS } from "../constants";
+import { ALUNOS_EMEBS, FUNDAMENTAL_EMEBS } from "../constants";
 import {
   getCategoriasDeMedicao,
   getDiasCalendario,
@@ -1062,37 +1063,13 @@ export default () => {
       );
       setTabItemsSemanas(itemsSemanas);
 
-      if (escolaEhEMEBS()) {
-        let itemsAlunosEmebs = [];
-        if (
-          (response_matriculados.data &&
-            response_matriculados.data
-              .filter(
-                (matriculado) =>
-                  matriculado.infantil_ou_fundamental === "INFANTIL"
-              )
-              .some((matriculado) => matriculado.quantidade_alunos !== 0)) ||
-          (response_log_dietas_autorizadas.data &&
-            response_log_dietas_autorizadas.data
-              .filter(
-                (log) =>
-                  log.infantil_ou_fundamental === "INFANTIL" &&
-                  log.classificacao.toUpperCase() !== "TIPO C"
-              )
-              .some((log) => log.quantidade !== 0))
-        ) {
-          itemsAlunosEmebs.push({
-            key: INFANTIL_EMEBS.key,
-            label: INFANTIL_EMEBS.label,
-          });
-          setAlunosTabSelecionada(INFANTIL_EMEBS.key);
-        }
-        itemsAlunosEmebs.push({
-          key: FUNDAMENTAL_EMEBS.key,
-          label: FUNDAMENTAL_EMEBS.label,
-        });
-        setTabItemsAlunosEmebs(itemsAlunosEmebs);
-      }
+      tabAlunosEmebs(
+        escolaEhEMEBS(),
+        response_matriculados,
+        response_log_dietas_autorizadas,
+        setAlunosTabSelecionada,
+        setTabItemsAlunosEmebs
+      );
 
       setLoading(false);
       setLoadingLancamentos(false);
@@ -1894,6 +1871,13 @@ export default () => {
     } else {
       setSemanaSelecionada(1);
       setAlunosTabSelecionada(key);
+      onSubmit(
+        formValuesAtualizados,
+        dadosValoresInclusoesAutorizadasState,
+        true,
+        false,
+        false
+      );
     }
   };
 
