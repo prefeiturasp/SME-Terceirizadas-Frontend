@@ -17,7 +17,7 @@ import {
   tiposAlimentacaoETEC,
 } from "helpers/utilities";
 import { ehEscolaTipoCEMEI } from "../../../../helpers/utilities";
-import { ALUNOS_EMEBS } from "../constants";
+import { ALUNOS_EMEBS, FUNDAMENTAL_EMEBS, INFANTIL_EMEBS } from "../constants";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
@@ -1222,4 +1222,43 @@ export const desabilitarBotaoColunaObservacoes = (
           diasParaCorrecao
         )))
   );
+};
+
+export const tabAlunosEmebs = (
+  escolaEhEMEBS,
+  response_matriculados,
+  response_log_dietas_autorizadas,
+  setAlunosTabSelecionada,
+  setTabItemsAlunosEmebs
+) => {
+  if (escolaEhEMEBS) {
+    let itemsAlunosEmebs = [];
+    if (
+      (response_matriculados.data &&
+        response_matriculados.data
+          .filter(
+            (matriculado) => matriculado.infantil_ou_fundamental === "INFANTIL"
+          )
+          .some((matriculado) => matriculado.quantidade_alunos !== 0)) ||
+      (response_log_dietas_autorizadas.data &&
+        response_log_dietas_autorizadas.data
+          .filter(
+            (log) =>
+              log.infantil_ou_fundamental === "INFANTIL" &&
+              log.classificacao.toUpperCase() !== "TIPO C"
+          )
+          .some((log) => log.quantidade !== 0))
+    ) {
+      itemsAlunosEmebs.push({
+        key: INFANTIL_EMEBS.key,
+        label: INFANTIL_EMEBS.label,
+      });
+      setAlunosTabSelecionada(INFANTIL_EMEBS.key);
+    }
+    itemsAlunosEmebs.push({
+      key: FUNDAMENTAL_EMEBS.key,
+      label: FUNDAMENTAL_EMEBS.label,
+    });
+    setTabItemsAlunosEmebs(itemsAlunosEmebs);
+  }
 };
