@@ -1,0 +1,847 @@
+[
+  {
+    "id": 1,
+    "nome": "Butanta",
+    "escolas": [
+      {
+        "id": 1,
+        "nome": "EMEF ALIPIO CORREA NETO, PROF.",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 100
+      },
+      {
+        "id": 4,
+        "nome": "CCI LOREM IPSUM",
+        "tipo_unidade": {
+          "id": 2,
+          "iniciais": "CCI"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 25
+      },
+      {
+        "id": 5,
+        "nome": "CEMEI LABOR SIUT",
+        "tipo_unidade": {
+          "id": 9,
+          "iniciais": "CEMEI"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 50
+      },
+      {
+        "id": 6,
+        "nome": "CEI LOREM SIUT",
+        "tipo_unidade": {
+          "id": 5,
+          "iniciais": "CEI"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 50
+      },
+      {
+        "id": 8,
+        "nome": "LOREM IPSUM AMET",
+        "tipo_unidade": {
+          "id": 3,
+          "iniciais": "CCI/CIPS"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 25
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "nome": "Campo Limpo",
+    "escolas": [
+      {
+        "id": 2,
+        "nome": "CEI JARDIM ELIANA",
+        "tipo_unidade": {
+          "id": 5,
+          "iniciais": "CEI"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 200
+      },
+      {
+        "id": 3,
+        "nome": "CEMEI CAPAO REDONDO",
+        "tipo_unidade": {
+          "id": 9,
+          "iniciais": "CEMEI"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 100
+      },
+      {
+        "id": 9,
+        "nome": "CEMEI SIUT SIT",
+        "tipo_unidade": {
+          "id": 9,
+          "iniciais": "CEMEI"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 100
+      },
+      {
+        "id": 10,
+        "nome": "CEI LOREM LOUR",
+        "tipo_unidade": {
+          "id": 5,
+          "iniciais": "CEI"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 50
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "nome": "Capela do Socorro",
+    "escolas": [
+      {
+        "id": 11,
+        "nome": "CEI CEU JARDIM FLORES",
+        "tipo_unidade": {
+          "id": 6,
+          "iniciais": "CEI CEU"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 12
+      },
+      {
+        "id": 12,
+        "nome": "CEMEI CAPAO REDONDO",
+        "tipo_unidade": {
+          "id": 7,
+          "iniciais": "CEI DIRET"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 85
+      },
+      {
+        "id": 13,
+        "nome": "CEU AT COMPL SIUT SIT",
+        "tipo_unidade": {
+          "id": 11,
+          "iniciais": "CEU AT COMPL"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 55
+      },
+      {
+        "id": 14,
+        "nome": "EMEF SIUT SITI",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 2
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "nome": "Freguesia/Brasilândia",
+    "escolas": [
+      {
+        "id": 15,
+        "nome": "EMEF PLINIO RIBEIRO",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 32
+      },
+      {
+        "id": 16,
+        "nome": "CEU CEMEI CORETO TAIPAS",
+        "tipo_unidade": {
+          "id": 13,
+          "iniciais": "CEU CEMEI"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 25
+      },
+      {
+        "id": 17,
+        "nome": "CIEJA JOAZINHO",
+        "tipo_unidade": {
+          "id": 17,
+          "iniciais": "CIEJA"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 75
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "nome": "Guaianases",
+    "escolas": [
+      {
+        "id": 18,
+        "nome": "EMEF MARIA ROSA",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 45
+      },
+      {
+        "id": 19,
+        "nome": "CMCT GUANABARA",
+        "tipo_unidade": {
+          "id": 18,
+          "iniciais": "CMCT"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 25
+      },
+      {
+        "id": 20,
+        "nome": "CEU GESTAO FEIJAO VERDE",
+        "tipo_unidade": {
+          "id": 16,
+          "iniciais": "CEU GESTAO"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 75
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "nome": "Ipiranga",
+    "escolas": [
+      {
+        "id": 21,
+        "nome": "EMEF SALTO ALTO",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 68
+      },
+      {
+        "id": 22,
+        "nome": "CR.P.CONV BOM JESUS",
+        "tipo_unidade": {
+          "id": 19,
+          "iniciais": "CR.P.CONV"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 2
+      },
+      {
+        "id": 23,
+        "nome": "EMEBS TALITA LOPES",
+        "tipo_unidade": {
+          "id": 20,
+          "iniciais": "EMEBS"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 100
+      },
+      {
+        "id": 24,
+        "nome": "EMEFM VALINHOS",
+        "tipo_unidade": {
+          "id": 22,
+          "iniciais": "EMEFM"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 43
+      },
+      {
+        "id": 25,
+        "nome": "EMEF P FOM VALE VERDE",
+        "tipo_unidade": {
+          "id": 23,
+          "iniciais": "EMEF P FOM"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 3
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "nome": "Itaquera",
+    "escolas": [
+      {
+        "id": 26,
+        "nome": "EMEF CIRANDA",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 78
+      },
+      {
+        "id": 27,
+        "nome": "EMEI BORBOLETINHA",
+        "tipo_unidade": {
+          "id": 24,
+          "iniciais": "EMEI"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 10
+      },
+      {
+        "id": 28,
+        "nome": "EMEBS TALITA LOPES",
+        "tipo_unidade": {
+          "id": 25,
+          "iniciais": "EMEI P FOM"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 102
+      },
+      {
+        "id": 29,
+        "nome": "ESC.PART. PORTO VELHO",
+        "tipo_unidade": {
+          "id": 26,
+          "iniciais": "ESC.PART."
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 43
+      },
+      {
+        "id": 30,
+        "nome": "ESP CONV BOM PASTOR",
+        "tipo_unidade": {
+          "id": 27,
+          "iniciais": "ESP CONV"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 3
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "nome": "Jaçanã/Tremenbé",
+    "escolas": [
+      {
+        "id": 31,
+        "nome": "EMEF CIRANDINHA",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 60
+      },
+      {
+        "id": 32,
+        "nome": "E TEC BARBA AZUL",
+        "tipo_unidade": {
+          "id": 28,
+          "iniciais": "E TEC"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 10
+      },
+      {
+        "id": 33,
+        "nome": "MOVA ANA LUZ",
+        "tipo_unidade": {
+          "id": 29,
+          "iniciais": "MOVA"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 120
+      },
+      {
+        "id": 34,
+        "nome": "CEI BALAO MAGICO",
+        "tipo_unidade": {
+          "id": 5,
+          "iniciais": "CEI"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 92
+      },
+      {
+        "id": 35,
+        "nome": "CEI CARLOS JUNNIOR",
+        "tipo_unidade": {
+          "id": 5,
+          "iniciais": "CEI"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 3
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "nome": "Penha",
+    "escolas": [
+      {
+        "id": 36,
+        "nome": "EMEF CRIANCA FELIZ",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 100
+      },
+      {
+        "id": 37,
+        "nome": "CEI MAR AZUL",
+        "tipo_unidade": {
+          "id": 5,
+          "iniciais": "CEI"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 24
+      },
+      {
+        "id": 38,
+        "nome": "CEMEI BRILHA MAR",
+        "tipo_unidade": {
+          "id": 9,
+          "iniciais": "CEMEI"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 8
+      },
+      {
+        "id": 39,
+        "nome": "CEU CEMEI BALAO MAGICO",
+        "tipo_unidade": {
+          "id": 13,
+          "iniciais": "CEU CEMEI"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 12
+      },
+      {
+        "id": 40,
+        "nome": "CIEJA CARLINHOS",
+        "tipo_unidade": {
+          "id": 17,
+          "iniciais": "CIEJA"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 3
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "nome": "Pirituba/Jaraguá",
+    "escolas": [
+      {
+        "id": 41,
+        "nome": "EMEF BRINCAR",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 88
+      },
+      {
+        "id": 42,
+        "nome": "CEI MARINHEIRINHO",
+        "tipo_unidade": {
+          "id": 5,
+          "iniciais": "CEI"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 32
+      },
+      {
+        "id": 43,
+        "nome": "CEMEI BOLA AZUL",
+        "tipo_unidade": {
+          "id": 9,
+          "iniciais": "CEMEI"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 18
+      },
+      {
+        "id": 44,
+        "nome": "EMEBS BALAO MAGICO",
+        "tipo_unidade": {
+          "id": 20,
+          "iniciais": "EMEBS"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 12
+      },
+      {
+        "id": 45,
+        "nome": "CEMEI JOANINHA",
+        "tipo_unidade": {
+          "id": 9,
+          "iniciais": "CEMEI"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 3
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "nome": "Santo Amaro",
+    "escolas": [
+      {
+        "id": 46,
+        "nome": "EMEF MARESIAS",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 90
+      },
+      {
+        "id": 47,
+        "nome": "CEI BOA VIAGEM",
+        "tipo_unidade": {
+          "id": 5,
+          "iniciais": "CEI"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 10
+      },
+      {
+        "id": 48,
+        "nome": "CEMEI NEVE AZUL",
+        "tipo_unidade": {
+          "id": 9,
+          "iniciais": "CEMEI"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 22
+      },
+      {
+        "id": 49,
+        "nome": "EMEBS MAGICO DE OZ",
+        "tipo_unidade": {
+          "id": 20,
+          "iniciais": "EMEBS"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 30
+      },
+      {
+        "id": 50,
+        "nome": "EMEFM DONA BARATINHA",
+        "tipo_unidade": {
+          "id": 22,
+          "iniciais": "EMEFM"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 5
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "nome": "São Matheus",
+    "escolas": [
+      {
+        "id": 51,
+        "nome": "EMEF BARQUINHO DE PAPEL",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 100
+      },
+      {
+        "id": 52,
+        "nome": "CEI ALEGRIA",
+        "tipo_unidade": {
+          "id": 5,
+          "iniciais": "CEI"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 80
+      },
+      {
+        "id": 53,
+        "nome": "CEMEI DOCE BRINCAR",
+        "tipo_unidade": {
+          "id": 9,
+          "iniciais": "CEMEI"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 62
+      },
+      {
+        "id": 54,
+        "nome": "EMEBS CIRANDA CIRANDINHA",
+        "tipo_unidade": {
+          "id": 20,
+          "iniciais": "EMEBS"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 4
+      },
+      {
+        "id": 55,
+        "nome": "MOVA DONA BENTA",
+        "tipo_unidade": {
+          "id": 29,
+          "iniciais": "MOVA"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 15
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "nome": "São Miguel",
+    "escolas": [
+      {
+        "id": 56,
+        "nome": "EMEF AVIAOZINHO",
+        "tipo_unidade": {
+          "id": 21,
+          "iniciais": "EMEF"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 99
+      },
+      {
+        "id": 57,
+        "nome": "CEI CONFETES",
+        "tipo_unidade": {
+          "id": 5,
+          "iniciais": "CEI"
+        },
+        "tipo_gestao": {
+          "id": 3,
+          "nome": "MISTA"
+        },
+        "total_dietas": 1
+      },
+      {
+        "id": 58,
+        "nome": "CEMEI DOCE AMOR",
+        "tipo_unidade": {
+          "id": 9,
+          "iniciais": "CEMEI"
+        },
+        "tipo_gestao": {
+          "id": 4,
+          "nome": "TERC TOTAL"
+        },
+        "total_dietas": 102
+      },
+      {
+        "id": 59,
+        "nome": "EMEBS LOREM ABOR",
+        "tipo_unidade": {
+          "id": 20,
+          "iniciais": "EMEBS"
+        },
+        "tipo_gestao": {
+          "id": 2,
+          "nome": "DIRETA"
+        },
+        "total_dietas": 44
+      },
+      {
+        "id": 60,
+        "nome": "MOVA DONA BENTA",
+        "tipo_unidade": {
+          "id": 10,
+          "iniciais": "CEU"
+        },
+        "tipo_gestao": {
+          "id": 1,
+          "nome": "PARCEIRA"
+        },
+        "total_dietas": 200
+      }
+    ]
+  }
+]

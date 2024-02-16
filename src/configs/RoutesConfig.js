@@ -294,6 +294,8 @@ import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/Cards
 import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
 import StatusFichasTecnicasAprovadas from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasAprovadas";
 import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
+import RelatorioDietasAutorizadas from "../pages/DietaEspecial/RelatorioDietasAutorizadas.tsx";
+
 import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
 
 const routesConfig = [
@@ -1372,6 +1374,12 @@ const routesConfig = [
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GERENCIAL_DIETAS}`,
     component: RelatorioGerencialDietas,
+    tipoUsuario:
+      usuarioEhAdministradorNutriCODAE() || usuarioEhCoordenadorNutriCODAE(),
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETAS_AUTORIZADAS}`,
+    component: RelatorioDietasAutorizadas,
     tipoUsuario:
       usuarioEhAdministradorNutriCODAE() || usuarioEhCoordenadorNutriCODAE(),
   },
