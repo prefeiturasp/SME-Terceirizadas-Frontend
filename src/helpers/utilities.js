@@ -527,6 +527,7 @@ export const usuarioComAcessoAoPainelDocumentos = () => {
   return [
     PERFIL.DILOG_QUALIDADE,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.DILOG_CRONOGRAMA,
   ].includes(localStorage.getItem("perfil"));
 };
 
