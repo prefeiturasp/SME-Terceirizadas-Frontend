@@ -1865,7 +1865,7 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_DOCUMENTO_RECEBIMENTO}`,
     component: DetalharDocumentosRecebimentoPage,
     tipoUsuario:
-      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelEmbalagens(),
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelDocumentos(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_DOCUMENTOS_RECEBIMENTO}`,
