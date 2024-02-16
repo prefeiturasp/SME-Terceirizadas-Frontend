@@ -692,6 +692,14 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
           ehSolicitacoesAlimentacaoLocation &&
           kitLanchesAutorizadas.forEach((kit) => {
             categoria.nome.includes("SOLICITAÇÕES") &&
+              ((!ultimaAtualizacaoMedicao &&
+                !valoresMedicao[0]?.medicao_alterado_em) ||
+                valoresMedicao.filter(
+                  (valor) =>
+                    valor.nome_campo === "observacoes" &&
+                    valor.categoria_medicao === categoria.id &&
+                    valor.dia === kit.dia
+                ).length === 0) &&
               (dadosValoresKitLanchesAutorizadas[
                 `kit_lanche__dia_${kit.dia}__categoria_${categoria.id}`
               ] = dadosValoresKitLanchesAutorizadas[
