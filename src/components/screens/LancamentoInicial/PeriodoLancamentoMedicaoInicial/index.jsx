@@ -202,6 +202,7 @@ export default () => {
   const [alunosTabSelecionada, setAlunosTabSelecionada] = useState(
     FUNDAMENTAL_EMEBS.key
   );
+  const [msgModalErro, setMsgModalErro] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -1851,6 +1852,7 @@ export default () => {
 
   const onChangeSemana = async (values, key) => {
     if (exibirTooltip) {
+      setMsgModalErro(null);
       setShowModalErro(true);
     } else {
       setSemanaSelecionada(key);
@@ -1867,6 +1869,9 @@ export default () => {
 
   const onChangeTabAlunos = async (key) => {
     if (exibirTooltip) {
+      setMsgModalErro(
+        "Existem campos a serem corrigidos. Realize as correções para prosseguir para a próxima turma."
+      );
       setShowModalErro(true);
     } else {
       setSemanaSelecionada(1);
@@ -2501,7 +2506,10 @@ export default () => {
                                                           ],
                                                           valoresObservacoes,
                                                           column.dia,
-                                                          categoria.id
+                                                          categoria.id,
+                                                          escolaEhEMEBS(),
+                                                          alunosTabSelecionada,
+                                                          formValuesAtualizados
                                                         )}
                                                         disabled={desabilitarBotaoColunaObservacoes(
                                                           location,
@@ -2534,7 +2542,10 @@ export default () => {
                                                                 ],
                                                                 valoresObservacoes,
                                                                 column.dia,
-                                                                categoria.id
+                                                                categoria.id,
+                                                                escolaEhEMEBS(),
+                                                                alunosTabSelecionada,
+                                                                formValuesAtualizados
                                                               ) === "Visualizar"
                                                               ? BUTTON_STYLE.RED
                                                               : BUTTON_STYLE.RED_OUTLINE
@@ -2544,7 +2555,10 @@ export default () => {
                                                                 ],
                                                                 valoresObservacoes,
                                                                 column.dia,
-                                                                categoria.id
+                                                                categoria.id,
+                                                                escolaEhEMEBS(),
+                                                                alunosTabSelecionada,
+                                                                formValuesAtualizados
                                                               ) === "Visualizar"
                                                             ? BUTTON_STYLE.GREEN
                                                             : BUTTON_STYLE.GREEN_OUTLINE_WHITE
@@ -3104,6 +3118,7 @@ export default () => {
                   <ModalErro
                     showModalErro={showModalErro}
                     setShowModalErro={setShowModalErro}
+                    msgModalErro={msgModalErro}
                   />
                   <ModalSalvarCorrecoes
                     closeModal={() => setShowModalSalvarCorrecoes(false)}
