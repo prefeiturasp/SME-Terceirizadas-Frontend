@@ -109,27 +109,36 @@ export function RelatorioDietasAutorizadas() {
 
     let dataLength = 0;
 
-    const datasets = data
-      .map((dre, index) => {
-        if (dataLength < dre.datasets.length) {
-          dataLength = dre.datasets.length;
-        }
+    const datasets = data.map((dre, index) => {
+      if (dataLength < dre.datasets.length) {
+        dataLength = dre.datasets.length;
+      }
 
-        return {
-          label: dre.titulo,
-          data: dre.datasets.map((item) => item.total_dietas),
-          maxBarThickness: 80,
-          backgroundColor: CORES[index],
-        };
-      })
-      .map((dre) => ({
-        ...dre,
-        data: Array.from({ length: dataLength }, (_, i) => dre.data[i] ?? 0),
-      }));
+      return {
+        label: dre.titulo,
+        data: dre.datasets.map((item) => item.total_dietas),
+        maxBarThickness: 80,
+        backgroundColor: CORES[index],
+      };
+    });
 
-    const labels = data.map((data) => data.datasets.map((item) => item.dre));
+    const [labels] = data.map((data) => data.datasets.map((item) => item.dre));
 
-    setChartData({ labels: [...new Set(labels.flat())], datasets });
+    const labelsGreatherThanZero = labels.filter((_, index) => {
+      return datasets.some((dataset) => dataset.data[index] > 0);
+    });
+
+    const datasetsGreatherThanZero = datasets.map((dataset) => {
+      return {
+        ...dataset,
+        data: dataset.data.filter((value) => value > 0),
+      };
+    });
+
+    setChartData({
+      labels: labelsGreatherThanZero,
+      datasets: datasetsGreatherThanZero,
+    });
   };
 
   useEffect(() => {

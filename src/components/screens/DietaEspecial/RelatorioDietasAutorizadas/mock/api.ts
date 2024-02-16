@@ -1,5 +1,6 @@
 import db from "./db.json";
 import { DBData, ResponseAPI } from "./types";
+import tiposUnidadeAPI from "./filtros/tipos_unidade.json";
 
 const database = db as DBData;
 
@@ -12,6 +13,8 @@ type Filtros = {
 
 export async function api(params: Filtros): Promise<ResponseAPI> {
   const { dre, tipo_gestao, tipo_unidade, unidade_educacional } = params;
+
+  const tiposUnidade = tiposUnidadeAPI.results;
 
   const dres = database
     .filter((data) => (dre ? data.id === Number(dre) : true))
@@ -58,13 +61,9 @@ export async function api(params: Filtros): Promise<ResponseAPI> {
         .reduce((acc, item) => acc + item.total_dietas, 0),
     }));
 
-    const [nome_unidade] = filteredDres
-      .map((dre) =>
-        dre.escolas
-          .filter((escola) => escola.tipo_unidade.id === Number(unidade))
-          .map((escola) => escola.tipo_unidade.iniciais)
-      )
-      .flat();
+    const nome_unidade = tiposUnidade
+      .filter((item) => item.id === unidade)
+      .map((data) => data.tipo_unidade);
 
     return {
       titulo: `Total de Dietas Especiais - Unidade ${nome_unidade}`,

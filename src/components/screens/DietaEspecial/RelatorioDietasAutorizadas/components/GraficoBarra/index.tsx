@@ -28,9 +28,7 @@ export const GraficoBarra = ({ chartData, plugins }) => {
               font: {
                 size: 14,
               },
-              formatter: function (value) {
-                return value || null;
-              },
+              formatter: Math.round,
               anchor: "end",
               offset: -20,
               align: "start",
