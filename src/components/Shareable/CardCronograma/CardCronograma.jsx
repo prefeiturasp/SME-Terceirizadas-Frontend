@@ -15,7 +15,7 @@ export const CardCronograma = ({
   const renderSolicitations = (solicitations, exibirTooltip) => {
     return exibirTooltip
       ? solicitations.slice(0, 5).map((solicitation, key) => (
-          <Tooltip key={key} title={solicitation.fullText}>
+          <Tooltip placement="topLeft" key={key} title={solicitation.fullText}>
             <NavLink key={key} to={solicitation.link}>
               <p key={key} className={`data`}>
                 {solicitation.text}
