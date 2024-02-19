@@ -255,3 +255,5 @@ export const CADASTROS = usuarioEhCODAEGestaoProduto()
       VINCULAR_PRODUTOS_EDITAIS,
     ])
   : [CADASTRO_GERAL];
+
+export const EDITAIS_INVALIDOS = ["78/SME/2016", "41/SME/2017"];
