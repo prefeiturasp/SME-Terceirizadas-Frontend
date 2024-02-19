@@ -19,6 +19,7 @@ import {
   usuarioEhCODAEGestaoProduto,
   usuarioEhEmpresaTerceirizada,
 } from "helpers/utilities";
+import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
 import "./style.scss";
 
 export const Homologacao = ({
@@ -42,7 +43,11 @@ export const Homologacao = ({
         return vinculo.edital.uuid;
       });
     }
-    return result;
+    let resultadoFiltrado = result.filter(
+      (editalUuid) =>
+        !EDITAIS_INVALIDOS.find((item) => item.uuid === editalUuid)
+    );
+    return resultadoFiltrado;
   };
 
   const logAnaliseSensorial = homologacao.logs.filter(
