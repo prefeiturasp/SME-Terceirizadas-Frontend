@@ -9,6 +9,7 @@ import {
 import { getNumerosEditais } from "services/edital.service";
 import { Homologacao } from "../index";
 import { formataEditais, formataValoresBooleanos } from "../helper";
+import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
 
 export const Container = () => {
   const [erro, setErro] = useState(false);
@@ -32,7 +33,10 @@ export const Container = () => {
   const getNumerosEditaisAsync = async () => {
     const response = await getNumerosEditais();
     if (response.status === HTTP_STATUS.OK) {
-      setEditaisOptions(response.data.results);
+      let editais = response.data.results.filter(
+        (edital) => !EDITAIS_INVALIDOS.find((item) => item.uuid === edital.uuid)
+      );
+      setEditaisOptions(editais);
     } else {
       toastError("Erro ao carregar editais");
       setErro(true);
