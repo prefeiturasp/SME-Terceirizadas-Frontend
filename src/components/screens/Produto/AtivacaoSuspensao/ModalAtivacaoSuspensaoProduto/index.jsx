@@ -109,7 +109,7 @@ const ModalAtivacaoSuspensaoProduto = ({
         options = vinculos_produto_edital
           .filter(
             ({ edital }) =>
-              !EDITAIS_INVALIDOS.find((item) => item.uuid === edital.uuid)
+              !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
           )
           .map((vinculo) => ({
             value: vinculo.edital.uuid,
@@ -119,8 +119,7 @@ const ModalAtivacaoSuspensaoProduto = ({
       if (acao === "ativação" && editais?.length > 0) {
         options = editais
           .filter(
-            (edital) =>
-              !EDITAIS_INVALIDOS.find((item) => item.uuid === edital.uuid)
+            (edital) => !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
           )
           .map((edital) => ({
             label: edital.numero,

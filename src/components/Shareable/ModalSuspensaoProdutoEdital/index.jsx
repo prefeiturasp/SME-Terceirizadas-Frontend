@@ -73,7 +73,7 @@ const ModalSuspensaoProdutoEdital = ({
       vinculos_produto_edital = vinculos_produto_edital.filter(
         (vinculo) =>
           !vinculo.suspenso &&
-          !EDITAIS_INVALIDOS.find((item) => item.uuid === vinculo.edital.uuid)
+          !EDITAIS_INVALIDOS.includes(vinculo.edital.numero.toUpperCase())
       );
 
       return vinculos_produto_edital.map((vinculo) => ({
