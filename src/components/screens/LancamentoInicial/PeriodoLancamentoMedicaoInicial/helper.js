@@ -17,6 +17,7 @@ import {
   tiposAlimentacaoETEC,
 } from "helpers/utilities";
 import { ehEscolaTipoCEMEI } from "../../../../helpers/utilities";
+import { ALUNOS_EMEBS, FUNDAMENTAL_EMEBS, INFANTIL_EMEBS } from "../constants";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
@@ -493,7 +494,8 @@ export const desabilitarField = (
           inclusoesAutorizadas.filter((inc) => inc.dia === dia).length)) &&
       !["Mês anterior", "Mês posterior"].includes(
         values[`${rowName}__dia_${dia}__categoria_${categoria}`]
-      )
+      ) &&
+      values[`matriculados__dia_${dia}__categoria_${categoria}`]
     ) {
       return false;
     } else {
@@ -1114,20 +1116,46 @@ export const textoBotaoObservacao = (
   value,
   valoresObservacoes,
   dia,
-  categoria
+  categoria,
+  escolaEhEMEBS = false,
+  alunosTabSelecionada = null,
+  values = null
 ) => {
   let text = "Adicionar";
-  if (value && !["<p></p>", "<p></p>\n", null, "", undefined].includes(value)) {
-    text = "Visualizar";
-  } else if (
+  const valorObs =
     valoresObservacoes &&
     valoresObservacoes.find(
       (valor) =>
         String(valor.dia) === String(dia) &&
         String(valor.categoria_medicao) === String(categoria)
-    )
-  ) {
-    text = "Visualizar";
+    );
+  if (value && !["<p></p>", "<p></p>\n", null, "", undefined].includes(value)) {
+    if (
+      escolaEhEMEBS &&
+      valorObs &&
+      ALUNOS_EMEBS[valorObs.infantil_ou_fundamental].key !==
+        alunosTabSelecionada
+    ) {
+      text = "Adicionar";
+    } else {
+      text = "Visualizar";
+    }
+    if (
+      escolaEhEMEBS &&
+      values[`observacoes__dia_${dia}__categoria_${categoria}`] === value
+    ) {
+      text = "Visualizar";
+    }
+  } else if (valorObs) {
+    if (
+      escolaEhEMEBS &&
+      ALUNOS_EMEBS[valorObs.infantil_ou_fundamental].key !==
+        alunosTabSelecionada
+    ) {
+      text = "Adicionar";
+    } else {
+      text = "Visualizar";
+    }
   }
   return text;
 };
@@ -1194,4 +1222,43 @@ export const desabilitarBotaoColunaObservacoes = (
           diasParaCorrecao
         )))
   );
+};
+
+export const tabAlunosEmebs = (
+  escolaEhEMEBS,
+  response_matriculados,
+  response_log_dietas_autorizadas,
+  setAlunosTabSelecionada,
+  setTabItemsAlunosEmebs
+) => {
+  if (escolaEhEMEBS) {
+    let itemsAlunosEmebs = [];
+    if (
+      (response_matriculados.data &&
+        response_matriculados.data
+          .filter(
+            (matriculado) => matriculado.infantil_ou_fundamental === "INFANTIL"
+          )
+          .some((matriculado) => matriculado.quantidade_alunos !== 0)) ||
+      (response_log_dietas_autorizadas.data &&
+        response_log_dietas_autorizadas.data
+          .filter(
+            (log) =>
+              log.infantil_ou_fundamental === "INFANTIL" &&
+              log.classificacao.toUpperCase() !== "TIPO C"
+          )
+          .some((log) => log.quantidade !== 0))
+    ) {
+      itemsAlunosEmebs.push({
+        key: INFANTIL_EMEBS.key,
+        label: INFANTIL_EMEBS.label,
+      });
+      setAlunosTabSelecionada(INFANTIL_EMEBS.key);
+    }
+    itemsAlunosEmebs.push({
+      key: FUNDAMENTAL_EMEBS.key,
+      label: FUNDAMENTAL_EMEBS.label,
+    });
+    setTabItemsAlunosEmebs(itemsAlunosEmebs);
+  }
 };

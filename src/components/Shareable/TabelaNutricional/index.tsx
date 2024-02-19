@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.scss";
 import { InformacaoNutricional } from "interfaces/produto.interface";
 import { Field } from "react-final-form";
@@ -18,12 +18,14 @@ interface Props {
   values: object;
   listaCompletaInformacoesNutricionais: InformacaoNutricional[];
   informacoesNutricionaisCarregadas: InformacaoNutricional[];
+  desabilitar?: boolean;
 }
 
 const TabelaNutricional: React.FC<Props> = ({
   values,
   listaCompletaInformacoesNutricionais,
   informacoesNutricionaisCarregadas,
+  desabilitar,
 }) => {
   const [
     informacoesNutricionaisAdicionais,
@@ -31,6 +33,12 @@ const TabelaNutricional: React.FC<Props> = ({
   ] = useState<InformacaoNutricional[]>(
     informacoesNutricionaisCarregadas.filter(({ eh_fixo }) => !eh_fixo)
   );
+
+  useEffect(() => {
+    setInformacoesNutricionaisAdicionais(
+      informacoesNutricionaisCarregadas.filter(({ eh_fixo }) => !eh_fixo)
+    );
+  }, [informacoesNutricionaisCarregadas]);
 
   const adicionarInformacaoNutricional = () => {
     const informacoesAtualizadas = [...informacoesNutricionaisAdicionais];
@@ -127,6 +135,7 @@ const TabelaNutricional: React.FC<Props> = ({
                     required,
                     inteiroOuDecimalComVirgula
                   )}
+                  disabled={desabilitar}
                 />
                 <span>{informacao.medida}</span>
               </div>
@@ -141,6 +150,7 @@ const TabelaNutricional: React.FC<Props> = ({
                     required,
                     inteiroOuDecimalComVirgula
                   )}
+                  disabled={desabilitar}
                 />
                 <span>{informacao.medida}</span>
                 {informacao.nome.toUpperCase() === "VALOR ENERGÉTICO" && (
@@ -166,6 +176,7 @@ const TabelaNutricional: React.FC<Props> = ({
                   required
                   validate={required}
                   apenasNumeros
+                  disabled={desabilitar}
                 />
                 <span>%</span>
               </div>
@@ -181,6 +192,7 @@ const TabelaNutricional: React.FC<Props> = ({
                 name={`informacao_adicional_${index}`}
                 placeholder="Selecione uma informação"
                 className="input-tabela-nutricional"
+                disabled={desabilitar}
               />
               <OnChange name={`informacao_adicional_${index}`}>
                 {(value) => {
@@ -209,6 +221,7 @@ const TabelaNutricional: React.FC<Props> = ({
                       required,
                       inteiroOuDecimalComVirgula
                     )}
+                    disabled={desabilitar}
                   />
                   <span>{informacao.medida}</span>
                 </div>
@@ -223,6 +236,7 @@ const TabelaNutricional: React.FC<Props> = ({
                       required,
                       inteiroOuDecimalComVirgula
                     )}
+                    disabled={desabilitar}
                   />
                   <span>{informacao.medida}</span>
                   {informacao.nome.toUpperCase() === "VALOR ENERGÉTICO" && (
@@ -251,13 +265,18 @@ const TabelaNutricional: React.FC<Props> = ({
                     required
                     validate={required}
                     apenasNumeros
+                    disabled={desabilitar}
                   />
                   <span>%</span>
-                  <span className="botao-remover-informacao">
-                    <button onClick={() => removerInformacaoNutricional(index)}>
-                      <i title="Remover" className="fas fa-times" />
-                    </button>
-                  </span>
+                  {!desabilitar && (
+                    <span className="botao-remover-informacao">
+                      <button
+                        onClick={() => removerInformacaoNutricional(index)}
+                      >
+                        <i title="Remover" className="fas fa-times" />
+                      </button>
+                    </span>
+                  )}
                 </div>
               </>
             ) : (
@@ -276,13 +295,15 @@ const TabelaNutricional: React.FC<Props> = ({
           </div>
         ))}
 
-        <div className="grid-table body-table">
-          <div className="table-cell">
-            <button onClick={adicionarInformacaoNutricional}>
-              + Adicionar Outra Informação Nutricional
-            </button>
+        {!desabilitar && (
+          <div className="grid-table body-table">
+            <div className="table-cell">
+              <button onClick={adicionarInformacaoNutricional}>
+                + Adicionar Outra Informação Nutricional
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </article>
 
       <p className="obs-tabela-nutricional">

@@ -203,6 +203,9 @@ export const PERIODO_LANCAMENTO_CEI = "periodo-lancamento-cei";
 export const ACOMPANHAMENTO_DE_LANCAMENTOS = "acompanhamento-de-lancamentos";
 export const CONFERENCIA_DOS_LANCAMENTOS = "conferencia-dos-lancamentos";
 export const DETALHAMENTO_DO_LANCAMENTO = "detalhamento-do-lancamento";
+export const CADASTRO_DE_EMPENHO = "cadastro-de-empenho";
+export const EDITAR_EMPENHO = "editar-empenho";
+export const EMPENHOS = "empenhos";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
@@ -254,6 +257,7 @@ export const CORRIGIR_DOCUMENTOS_RECEBIMENTO =
 export const FICHA_TECNICA = "ficha-tecnica";
 export const CADASTRO_FICHA_TECNICA = "cadastro-ficha-tecnica";
 export const PAINEL_FICHAS_TECNICAS = "painel-fichas-tecnicas";
+export const ANALISE_FICHA_TECNICA = "analise-ficha-tecnica";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";

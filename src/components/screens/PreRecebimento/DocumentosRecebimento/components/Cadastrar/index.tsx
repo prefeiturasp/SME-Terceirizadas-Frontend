@@ -175,7 +175,7 @@ export default () => {
           <Form
             onSubmit={onSubmit}
             initialValues={{}}
-            render={({ handleSubmit, values, errors }) => (
+            render={({ handleSubmit, values, errors, form }) => (
               <form onSubmit={handleSubmit}>
                 <ModalConfirmarEnvio
                   show={showModal}
@@ -202,10 +202,14 @@ export default () => {
                         let cronograma = cronogramas.find(
                           (c) => c.numero === value
                         );
+
                         if (cronograma) {
                           values.cronograma_uuid = cronograma.uuid;
-                          values.pregao = cronograma.pregao_chamada_publica;
-                          values.nome_produto = cronograma.nome_produto;
+                          form.change(
+                            "pregao",
+                            cronograma.pregao_chamada_publica
+                          );
+                          form.change("nome_produto", cronograma.nome_produto);
                         }
                       }}
                     </OnChange>

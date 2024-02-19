@@ -89,3 +89,33 @@ export interface FiltrosFichaTecnica {
   status?: string;
   data_cadastro?: string;
 }
+
+export interface StateConferidosAnalise {
+  detalhes_produto?: boolean;
+  informacoes_nutricionais?: boolean;
+  conservacao?: boolean;
+  temperatura_e_transporte?: boolean;
+  armazenamento?: boolean;
+  embalagem_e_rotulagem?: boolean;
+  responsavel_tecnico?: boolean;
+  modo_preparo?: boolean;
+  outras_informacoes?: boolean;
+}
+
+export interface AnaliseFichaTecnicaPayload {
+  detalhes_produto_conferido: boolean;
+  informacoes_nutricionais_conferido: boolean;
+  conservacao_conferido: boolean;
+  temperatura_e_transporte_conferido: boolean;
+  armazenamento_conferido: boolean;
+  embalagem_e_rotulagem_conferido: boolean;
+  responsavel_tecnico_conferido: boolean;
+  modo_preparo_conferido: boolean;
+  outras_informacoes_conferido: boolean;
+  detalhes_produto_correcoes: string;
+  informacoes_nutricionais_correcoes: string;
+  conservacao_correcoes: string;
+  temperatura_e_transporte_correcoes: string;
+  armazenamento_correcoes: string;
+  embalagem_e_rotulagem_correcoes: string;
+}

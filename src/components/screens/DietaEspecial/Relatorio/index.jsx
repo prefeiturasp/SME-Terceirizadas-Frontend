@@ -441,7 +441,7 @@ const Relatorio = ({ visao }) => {
             )}
           {dietaEspecial &&
             status === statusEnum.CODAE_AUTORIZADO &&
-            card !== "inativas-temp" && (
+            !["inativas", "inativas-temp"].includes(card) && (
               <>
                 {!editar && (
                   <BotaoGerarProtocolo

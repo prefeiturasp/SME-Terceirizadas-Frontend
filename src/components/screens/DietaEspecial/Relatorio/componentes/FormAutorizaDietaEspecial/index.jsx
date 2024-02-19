@@ -111,16 +111,14 @@ const FormAutorizaDietaEspecial = ({
       toastError("Houve um erro ao carregar Nomes dos Protocolos da Dieta");
     }
 
-    const respAlimentos = await getAlimentos({
-      tipo: dietaEspecial.escola.tipo_gestao.nome === "TERC TOTAL" ? "E" : "P",
-    });
+    const respAlimentos = await getAlimentos();
     if (respAlimentos.status === HTTP_STATUS.OK) {
       setAlimentos(respAlimentos.data);
     } else {
       toastError("Houve um erro ao carregar Alimentos");
     }
 
-    if (dietaEspecial.escola.tipo_gestao.nome === "TERC TOTAL") {
+    if (!respAlimentos) {
       const respSubstitutos = await getSubstitutos();
       if (respSubstitutos.status === HTTP_STATUS.OK) {
         setProdutos(respSubstitutos.data.results);

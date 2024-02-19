@@ -1,4 +1,5 @@
 import { deepCopy, ehEscolaTipoCEUGESTAO } from "helpers/utilities";
+import { ALUNOS_EMEBS } from "../constants";
 
 export const repeticaoSobremesaDoceComValorESemObservacao = (
   values,
@@ -525,7 +526,10 @@ export const validacoesTabelaAlimentacao = (
   alteracoesAlimentacaoAutorizadas,
   validacaoDiaLetivo,
   location,
-  feriadosNoMes
+  feriadosNoMes,
+  valoresPeriodosLancamentos,
+  escolaEhEMEBS,
+  alunosTabSelecionada
 ) => {
   const maxFrequencia = Number(
     allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
@@ -680,6 +684,32 @@ export const validacoesTabelaAlimentacao = (
         ? "em Número de Alunos"
         : "de alunos matriculados";
     return `A quantidade de alunos frequentes não pode ser maior do que a quantidade ${complemento}.`;
+  } else if (
+    escolaEhEMEBS &&
+    maxNumeroDeAlunos &&
+    value &&
+    inputName.includes("frequencia") &&
+    !["Mês anterior", "Mês posterior"].includes(value)
+  ) {
+    const tabSelecionada = Object.entries(ALUNOS_EMEBS).filter(
+      ([, v]) => v.key === alunosTabSelecionada
+    )[0][0];
+    const infantilOuFundamentalParaFiltrar =
+      tabSelecionada === "INFANTIL" ? "FUNDAMENTAL" : "INFANTIL";
+    const objValorFrequenciaDaOutraTab = valoresPeriodosLancamentos.filter(
+      (valor) =>
+        valor.nome_campo === "frequencia" &&
+        String(valor.dia) === String(dia) &&
+        String(valor.categoria_medicao) === String(categoria) &&
+        valor.infantil_ou_fundamental === infantilOuFundamentalParaFiltrar
+    )[0];
+    if (
+      objValorFrequenciaDaOutraTab &&
+      Number(objValorFrequenciaDaOutraTab.valor) + Number(value) >
+        maxNumeroDeAlunos
+    ) {
+      return "A quantidade somada de alunos frequentes no infantil e fundamental é maior que a quantidade de Número de Alunos.";
+    }
   }
   return undefined;
 };
@@ -747,6 +777,11 @@ export const validacoesTabelasDietas = (
   const lanche_value = Number(
     allValues[`lanche__dia_${dia}__categoria_${categoria}`]
   );
+  const maxNumeroDeAlunos = Number(
+    allValues[
+      `numero_de_alunos__dia_${dia}__categoria_${idCategoriaAlimentacao}`
+    ]
+  );
   const totalLanchesDieta = lanche_4h_value + lanche_value;
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
 
@@ -791,7 +826,9 @@ export const validacoesTabelasDietas = (
       Number(
         allValues[`frequencia__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
       ) >
-      maxMatriculados &&
+      (location.state && location.state.grupo === "Programas e Projetos"
+        ? maxNumeroDeAlunos
+        : maxMatriculados) &&
     inputName.includes("frequencia")
   ) {
     return "O apontamento informado ultrapassou o número de frequentes informados no dia. É preciso subtrair o aluno com Dieta Especial Autorizada do lançamento na planilha de Alimentação.";

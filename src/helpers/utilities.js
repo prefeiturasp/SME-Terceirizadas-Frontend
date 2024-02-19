@@ -494,6 +494,16 @@ export const usuarioComAcessoTelaDetalharNotificacaoOcorrencia = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioComAcessoAoCalendarioCronograma = () => {
+  return [
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.DILOG_QUALIDADE,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.DINUTRE_DIRETORIA,
+    PERFIL.DILOG_DIRETORIA,
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioComAcessoAoPainelAprovacoes = () => {
   return [
     PERFIL.DILOG_DIRETORIA,
@@ -618,6 +628,10 @@ export const escolaEhCEMEI = () => {
   return localStorage.getItem("eh_cemei") === "true";
 };
 
+export const escolaEhEMEBS = () => {
+  return localStorage.getItem("eh_emebs") === "true";
+};
+
 export const nomeInstituicao = () => {
   return localStorage.getItem("nome_instituicao");
 };
@@ -738,6 +752,7 @@ export const getKey = (obj) => {
 };
 
 export const getError = (obj) => {
+  if (typeof obj === "string") return obj;
   let result = "Erro";
   if (!obj[getKey(obj)]) {
     return "Erro";

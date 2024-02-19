@@ -24,8 +24,8 @@ import {
   usuarioComAcessoAoPainelDocumentos,
   usuarioComAcessoAoPainelEmbalagens,
   usuarioComAcessoAoPainelFichasTecnicas,
+  usuarioComAcessoAoCalendarioCronograma,
 } from "helpers/utilities";
-import { usuarioEhDilogQualidadeOuCronograma } from "../../../../helpers/utilities";
 
 const MenuPreRecebimento = () => {
   return (
@@ -56,7 +56,7 @@ const MenuPreRecebimento = () => {
           Alteração de Cronograma
         </LeafItem>
       )}
-      {usuarioEhDilogQualidadeOuCronograma() && (
+      {usuarioComAcessoAoCalendarioCronograma() && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${CALENDARIO_CRONOGRAMA}`}>
           Calendário de Cronogramas
         </LeafItem>

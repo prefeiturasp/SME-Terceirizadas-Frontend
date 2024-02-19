@@ -312,7 +312,7 @@ export default ({
               <OnChange name={`quantidade_${index}`}>
                 {(value) => {
                   const totalEmbalagens = calculaTotalEmbalagens(
-                    Number(value.replace(".", "")),
+                    Number(value.replaceAll(".", "")),
                     Number(
                       values.peso_liquido_embalagem_secundaria?.replace(
                         ",",
@@ -321,7 +321,10 @@ export default ({
                     )
                   );
 
-                  form.change(`total_embalagens_${index}`, totalEmbalagens);
+                  form.change(
+                    `total_embalagens_${index}`,
+                    formataMilhar(totalEmbalagens)
+                  );
                 }}
               </OnChange>
               <div className="col-4">
