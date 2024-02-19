@@ -173,7 +173,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
         .filter(
           (edital) =>
             !changes.values["edital_origem"].includes(edital.uuid) &&
-            !EDITAIS_INVALIDOS.find((item) => item.uuid === edital.uuid)
+            !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
         )
         .map((edital) => {
           return { nome: edital.numero, uuid: edital.uuid };

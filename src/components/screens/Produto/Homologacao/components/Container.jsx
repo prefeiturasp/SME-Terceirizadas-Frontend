@@ -34,7 +34,7 @@ export const Container = () => {
     const response = await getNumerosEditais();
     if (response.status === HTTP_STATUS.OK) {
       let editais = response.data.results.filter(
-        (edital) => !EDITAIS_INVALIDOS.find((item) => item.uuid === edital.uuid)
+        (edital) => !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
       );
       setEditaisOptions(editais);
     } else {

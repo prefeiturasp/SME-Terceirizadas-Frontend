@@ -34,20 +34,26 @@ export const Homologacao = ({
   const setDefaultEditaisVinculados = () => {
     let result = [];
     if (homologacao.eh_para_alunos_com_dieta) {
-      result = homologacao.rastro_terceirizada.contratos.map((contrato) => {
-        return contrato.edital.uuid;
-      });
+      result = homologacao.rastro_terceirizada.contratos
+        .filter(
+          ({ edital }) =>
+            !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
+        )
+        .map((contrato) => {
+          return contrato.edital.uuid;
+        });
     }
     if (homologacao.produto.vinculos_produto_edital.length) {
-      result = homologacao.produto.vinculos_produto_edital.map((vinculo) => {
-        return vinculo.edital.uuid;
-      });
+      result = homologacao.produto.vinculos_produto_edital
+        .filter(
+          ({ edital }) =>
+            !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
+        )
+        .map((vinculo) => {
+          return vinculo.edital.uuid;
+        });
     }
-    let resultadoFiltrado = result.filter(
-      (editalUuid) =>
-        !EDITAIS_INVALIDOS.find((item) => item.uuid === editalUuid)
-    );
-    return resultadoFiltrado;
+    return result;
   };
 
   const logAnaliseSensorial = homologacao.logs.filter(

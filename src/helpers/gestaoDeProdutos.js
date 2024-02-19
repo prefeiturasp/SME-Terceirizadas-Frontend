@@ -256,7 +256,4 @@ export const CADASTROS = usuarioEhCODAEGestaoProduto()
     ])
   : [CADASTRO_GERAL];
 
-export const EDITAIS_INVALIDOS = [
-  { numero: "78/SME/2016", uuid: "b7b6a0a7-b230-4783-94b6-8d3d22041ab3" },
-  { numero: "41/SME/2017", uuid: "60f5a64e-8652-422d-a6e9-0a36717829c9" },
-];
+export const EDITAIS_INVALIDOS = ["78/SME/2016", "41/SME/2017"];
