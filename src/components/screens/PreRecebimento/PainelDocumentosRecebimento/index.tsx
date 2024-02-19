@@ -25,6 +25,7 @@ import {
   FiltrosDashboardDocumentos,
 } from "interfaces/pre_recebimento.interface";
 import { ResponseDocumentosRecebimentoDashboard } from "interfaces/responses.interface";
+import { PERFIL } from "constants/shared";
 
 export default () => {
   const [carregando, setCarregando] = useState<boolean>(false);
@@ -63,11 +64,12 @@ export default () => {
   };
 
   const gerarLinkDocumento = (item: DocumentosRecebimentoDashboard): string => {
-    return ["Aprovado", "Enviado para Correção"].includes(item.status)
-      ? `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
-      : item.status === "Enviado para Análise"
+    const perfilLogado = localStorage.getItem("perfil");
+
+    return item.status === "Enviado para Análise" &&
+      perfilLogado === PERFIL.DILOG_QUALIDADE
       ? `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
-      : ``;
+      : `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
   };
 
   const agruparCardsPorStatus = (
