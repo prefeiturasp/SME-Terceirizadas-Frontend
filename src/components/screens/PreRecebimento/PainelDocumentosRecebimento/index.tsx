@@ -66,13 +66,10 @@ export default () => {
   const gerarLinkDocumento = (item: DocumentosRecebimentoDashboard): string => {
     const perfilLogado = localStorage.getItem("perfil");
 
-    if (item.status === "Enviado para Análise") {
-      return perfilLogado === PERFIL.DILOG_QUALIDADE
-        ? `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
-        : `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
-    }
-
-    return `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
+    return item.status === "Enviado para Análise" &&
+      perfilLogado === PERFIL.DILOG_QUALIDADE
+      ? `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
+      : `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
   };
 
   const agruparCardsPorStatus = (
