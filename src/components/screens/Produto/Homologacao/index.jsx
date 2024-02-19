@@ -19,6 +19,7 @@ import {
   usuarioEhCODAEGestaoProduto,
   usuarioEhEmpresaTerceirizada,
 } from "helpers/utilities";
+import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
 import "./style.scss";
 
 export const Homologacao = ({
@@ -33,14 +34,24 @@ export const Homologacao = ({
   const setDefaultEditaisVinculados = () => {
     let result = [];
     if (homologacao.eh_para_alunos_com_dieta) {
-      result = homologacao.rastro_terceirizada.contratos.map((contrato) => {
-        return contrato.edital.uuid;
-      });
+      result = homologacao.rastro_terceirizada.contratos
+        .filter(
+          ({ edital }) =>
+            !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
+        )
+        .map((contrato) => {
+          return contrato.edital.uuid;
+        });
     }
     if (homologacao.produto.vinculos_produto_edital.length) {
-      result = homologacao.produto.vinculos_produto_edital.map((vinculo) => {
-        return vinculo.edital.uuid;
-      });
+      result = homologacao.produto.vinculos_produto_edital
+        .filter(
+          ({ edital }) =>
+            !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
+        )
+        .map((vinculo) => {
+          return vinculo.edital.uuid;
+        });
     }
     return result;
   };

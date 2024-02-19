@@ -21,6 +21,8 @@ import {
 import HTTP_STATUS from "http-status-codes";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { formatarOpcoes, validatePayload } from "./helper";
+import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
+
 import "./style.scss";
 
 export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
@@ -169,7 +171,9 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
       setTipoProdEditalOrigem(changes.values["tipo_produto_edital_origem"]);
       let opcoesDestino = listaEditais
         .filter(
-          (edital) => !changes.values["edital_origem"].includes(edital.uuid)
+          (edital) =>
+            !changes.values["edital_origem"].includes(edital.uuid) &&
+            !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
         )
         .map((edital) => {
           return { nome: edital.numero, uuid: edital.uuid };
