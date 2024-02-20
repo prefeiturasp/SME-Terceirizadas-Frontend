@@ -22,6 +22,7 @@ export const Select = (props) => {
     required,
     width,
     usarDirty,
+    onChangeEffect,
   } = props;
   return (
     <div className="select">
@@ -51,7 +52,12 @@ export const Select = (props) => {
         disabled={disabled}
         data-cy={label}
         required={required}
-        onChange={input ? input.onChange : onChange}
+        onChange={(e) => {
+          if (input) input.onChange(e);
+          else onChange(e);
+
+          if (onChangeEffect) onChangeEffect(e);
+        }}
         name={name}
         style={width && { width: width - 12 }}
       >
