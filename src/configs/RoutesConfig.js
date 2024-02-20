@@ -1499,7 +1499,7 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.ENVIO_REQUISICOES_ENTREGA_AVANCADO}`,
     component: ConsultaRequisicaoEntregaDilog,
-    tipoUsuario: usuarioEhLogistica(),
+    tipoUsuario: usuarioEhLogistica() || usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_REQUISICAO_ENTREGA}`,

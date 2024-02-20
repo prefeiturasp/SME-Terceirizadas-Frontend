@@ -28,12 +28,13 @@ import {
   usuarioEhDilogJuridico,
   usuarioEhDilogQualidade,
   usuarioEhDilog,
+  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 
 const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
   return (
     <Menu id="Logistica" icon="fa-truck" title="Abastecimento">
-      {usuarioEhLogistica() && (
+      {(usuarioEhLogistica() || usuarioEhCODAEGabinete()) && (
         <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`}>
           Requisição de Entrega
         </LeafItem>

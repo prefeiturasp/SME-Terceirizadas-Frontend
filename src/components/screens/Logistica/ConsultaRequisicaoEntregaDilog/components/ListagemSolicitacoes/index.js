@@ -21,6 +21,7 @@ export default ({
   setSelecionados,
   arquivaDesarquivaGuias,
   setShowDownload,
+  somenteLeitura,
 }) => {
   const [allChecked, setAllChecked] = useState(false);
   const [carregando, setCarregando] = useState(false);
@@ -190,11 +191,13 @@ export default ({
                       arquivaDesarquivaGuias={arquivaDesarquivaGuias}
                       solicitacao={solicitacao}
                       situacao={"ATIVA"}
+                      somenteLeitura={somenteLeitura}
                     />
                     <ListagemGuias
                       arquivaDesarquivaGuias={arquivaDesarquivaGuias}
                       solicitacao={solicitacao}
                       situacao={"ARQUIVADA"}
+                      somenteLeitura={somenteLeitura}
                     />
                   </>
                 )}
