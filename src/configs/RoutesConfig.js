@@ -142,6 +142,7 @@ import {
   usuarioComAcessoAoPainelDocumentos,
   usuarioComAcessoAoPainelFichasTecnicas,
   usuarioEhCODAEGabinete,
+  usuarioComAcessoAoCalendarioCronograma,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -252,6 +253,9 @@ import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
 import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
 import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
+import EmpenhosPage from "pages/LancamentoMedicaoInicial/EmpenhosPage";
+import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
+import EditarEmpenhoPage from "pages/LancamentoMedicaoInicial/EditarEmpenhoPage";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
@@ -284,9 +288,13 @@ import CorrigirDocumentosRecebimentoPage from "../pages/PreRecebimento/CorrigirD
 import FichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/FichaTecnicaPage";
 import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/CadastroFichaTecnicaPage";
 import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
+import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
+import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
+import StatusFichasTecnicasAprovadas from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasAprovadas";
 import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
+import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
 
 const routesConfig = [
   {
@@ -695,6 +703,11 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/editais-contratos`,
     component: EditaisContratosPage,
+    tipoUsuario: usuarioEhQualquerCODAE(),
+  },
+  {
+    path: `/configuracoes/cadastros/editais-contratos/editar`,
+    component: EditaisContratosEditarPage,
     tipoUsuario: usuarioEhQualquerCODAE(),
   },
   {
@@ -1459,6 +1472,21 @@ const routesConfig = [
     tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}`,
+    component: EmpenhosPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}/${constants.CADASTRO_DE_EMPENHO}`,
+    component: CadastroDeEmpenhoPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}/${constants.EDITAR_EMPENHO}`,
+    component: EditarEmpenhoPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,
     component: DisponibilizacaoDeSolicitacoesPage,
     tipoUsuario: usuarioEhLogistica(),
@@ -1875,9 +1903,27 @@ const routesConfig = [
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
   },
   {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_FICHAS_TECNICAS}/${constants.APROVADOS}/`,
+    component: StatusFichasTecnicasAprovadas,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_FICHAS_TECNICAS}/${constants.ENVIADOS_PARA_CORRECAO}/`,
+    component: StatusFichasTecnicasEnviadosParaCorrecao,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
     component: CalendarioCronogramaPage,
-    tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
+    tipoUsuario: usuarioComAcessoAoCalendarioCronograma(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_FICHA_TECNICA}`,
+    component: AnalisarFichaTecnicaPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
   },
 ];
 

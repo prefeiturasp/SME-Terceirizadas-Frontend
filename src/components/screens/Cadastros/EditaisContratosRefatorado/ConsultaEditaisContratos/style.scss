@@ -1,0 +1,96 @@
+@import "styles/variables.scss";
+
+div.consulta-editais-contratos {
+  .title {
+    color: $blackInput;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  hr.header {
+    border-top: 3px solid $gray;
+  }
+
+  div.row {
+    &.vencido {
+      div {
+        font-weight: bold;
+        color: $orange;
+      }
+    }
+
+    &.proximo_ao_vencimento {
+      font-weight: bold;
+      color: $green;
+    }
+  }
+
+  span.vencido {
+    font-weight: bold;
+    color: $orange;
+  }
+
+  span.proximo_ao_vencimento {
+    font-weight: bold;
+    color: $green;
+  }
+
+  div.label {
+    color: $green;
+    font-size: 16px;
+    font-weight: bold;
+    overflow: hidden;
+
+    span.com-linha::after {
+      content: "";
+      display: inline-block;
+      height: 0.5em;
+      vertical-align: bottom;
+      width: 100%;
+      margin-right: -100%;
+      margin-left: 10px;
+      border-top: 1px solid $grayDisabled;
+    }
+  }
+
+  div.icon {
+    background-color: $green;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+
+    &.orange {
+      background-color: $orange;
+    }
+
+    span.fas {
+      color: white;
+      padding-top: 5px;
+      padding-left: 10px;
+    }
+  }
+
+  button.general-button,
+  span.toggle-expandir {
+    font-size: 25px !important;
+  }
+
+  div.input.icon {
+    input {
+      border: none;
+
+      &::placeholder {
+        color: $blackInput;
+        font-size: 14px;
+      }
+    }
+
+    i {
+      color: $gray;
+    }
+  }
+
+  .pe-48px {
+    padding-left: 48px;
+  }
+}

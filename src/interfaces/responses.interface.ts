@@ -1,4 +1,5 @@
 import {
+  DiretoriaRegionalInterface,
   QuantidadeAlunosEscolaInterface,
   VinculoTipoAlimentacaoPorEscolaInterface,
 } from "interfaces/escola.interface";
@@ -17,8 +18,12 @@ import {
   FichaTecnicaDashboard,
   FichaTecnicaSimples,
   DadosCronogramaFichaTecnica,
+  FichaTecnicaPraAnalise,
 } from "./pre_recebimento.interface";
 import { InformacaoNutricional } from "./produto.interface";
+import { LoteRascunhosInterface } from "./rascunhos.interface";
+import { TerceirizadaInterface } from "./terceirizada.interface";
+import { EditalContratoInterface } from "components/screens/Cadastros/EditaisContratosRefatorado/interfaces";
 
 export interface ResponseInterface {
   data: Object;
@@ -150,10 +155,53 @@ export interface ResponseFichaTecnicaDetalhada extends ResponseInterface {
   data: FichaTecnicaDetalhada;
 }
 
+export interface ResponseFichaTecnicaPraAnalise extends ResponseInterface {
+  data: FichaTecnicaPraAnalise;
+}
+
 export interface ResponseInformacoesNutricionais extends ResponseInterface {
   data: ListagemNaoPaginada<InformacaoNutricional>;
 }
 
 export interface ResponseCalendarioCronograma extends ResponseInterface {
   data: ListagemPaginada<EtapaCalendario>;
+}
+
+export interface ResponseLotesSimplesInterface extends ResponseInterface {
+  data: {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Array<LoteRascunhosInterface>;
+  };
+}
+
+export interface ResponseDiretoriasRegionaisSimplissimaInterface
+  extends ResponseInterface {
+  data: {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Array<DiretoriaRegionalInterface>;
+  };
+}
+
+export interface ResponseTerceirizadaListaNomesInterface
+  extends ResponseInterface {
+  data: {
+    results: Array<TerceirizadaInterface>;
+  };
+}
+
+export interface ResponseEditalCotratoInterface extends ResponseInterface {
+  data: {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Array<EditalContratoInterface>;
+  };
+}
+
+export interface ResponseGetEditalCotratoInterface extends ResponseInterface {
+  data: EditalContratoInterface;
 }

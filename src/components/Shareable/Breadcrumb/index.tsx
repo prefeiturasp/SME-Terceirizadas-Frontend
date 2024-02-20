@@ -3,8 +3,25 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import "./style.scss";
 
-export default ({ home, anteriores, atual }) => {
+type BreadcrumbProps = {
+  home: string;
+  anteriores?: {
+    href: string;
+    titulo: string;
+  }[];
+  atual: {
+    href: string;
+    titulo: string;
+  };
+};
+
+export default function Breadcrumb({
+  home,
+  anteriores,
+  atual,
+}: BreadcrumbProps) {
   const temaContext = useContext(TemaContext);
+
   return (
     <div className="breadcrumb-row row">
       <div className="col-10">
@@ -43,4 +60,4 @@ export default ({ home, anteriores, atual }) => {
       </div>
     </div>
   );
-};
+}

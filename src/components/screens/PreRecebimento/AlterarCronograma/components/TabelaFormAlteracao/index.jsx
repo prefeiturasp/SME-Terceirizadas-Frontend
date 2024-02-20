@@ -81,13 +81,14 @@ export default ({ solicitacao, somenteLeitura }) => {
                     )}`}
                   >
                     {somenteLeitura ? (
-                      <>{etapa.total_embalagens}</>
+                      <>{formataMilhar(etapa.total_embalagens)}</>
                     ) : (
                       <Field
                         component={InputText}
                         name={`total_embalagens_${index}`}
                         validate={required}
                         apenasNumeros
+                        agrupadorMilhar
                       />
                     )}
                   </td>

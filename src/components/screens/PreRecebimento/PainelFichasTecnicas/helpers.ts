@@ -3,16 +3,25 @@ import {
   FichaTecnicaDashboard,
   VerMaisItem,
 } from "interfaces/pre_recebimento.interface";
+import { ANALISE_FICHA_TECNICA, PRE_RECEBIMENTO } from "configs/constants";
 import { ordenarPorLogMaisRecente, truncarString } from "helpers/utilities";
 
 export const formatarCards = (items: FichaTecnicaDashboard[]): CardItem[] => {
   return items.sort(ordenarPorLogMaisRecente).map((item) => ({
     text: gerarTextoTruncado(item, 20),
     date: item.log_mais_recente.slice(0, 10),
-    link: "#",
+    link: gerarLinkItem(item),
     status: item.status,
     fullText: gerarTextoCompleto(item),
   }));
+};
+
+const gerarLinkItem = (item: FichaTecnicaDashboard): string => {
+  return ["Aprovada", "Enviada para Correção"].includes(item.status)
+    ? `#`
+    : item.status === "Enviada para Análise"
+    ? `/${PRE_RECEBIMENTO}/${ANALISE_FICHA_TECNICA}?uuid=${item.uuid}`
+    : ``;
 };
 
 export const formataItensVerMais = (

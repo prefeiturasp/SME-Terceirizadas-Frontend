@@ -104,8 +104,14 @@ export const updateTerceirizada = (uuid, payload) => {
 export const updateNaoTerceirizada = async (uuid, payload) =>
   await axios.patch(`/empresas-nao-terceirizadas/${uuid}/`, payload);
 
-export const encerraContratoTerceirizada = async (uuid) =>
-  await axios.patch(`/contratos/${uuid}/encerrar-contrato/`);
+export const encerraContratoTerceirizada = async (uuid) => {
+  const url = `/contratos/${uuid}/encerrar-contrato/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
 
 export const obterNumeroContratosCadastrados = async () =>
   await axios.get("/contratos/numeros-contratos-cadastrados/");

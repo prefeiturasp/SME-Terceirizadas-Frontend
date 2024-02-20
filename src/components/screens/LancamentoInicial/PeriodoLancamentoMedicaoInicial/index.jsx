@@ -40,6 +40,7 @@ import {
   deepCopy,
   deepEqual,
   ehEscolaTipoCEUGESTAO,
+  escolaEhEMEBS,
   tiposAlimentacaoETEC,
 } from "helpers/utilities";
 import {
@@ -82,9 +83,11 @@ import {
   getSolicitacoesInclusoesEtecAutorizadasAsync,
   getSolicitacoesKitLanchesAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
+  tabAlunosEmebs,
   textoBotaoObservacao,
   valorZeroFrequencia,
 } from "./helper";
+import { ALUNOS_EMEBS, FUNDAMENTAL_EMEBS } from "../constants";
 import {
   getCategoriasDeMedicao,
   getDiasCalendario,
@@ -194,12 +197,16 @@ export default () => {
   const [periodoGrupo, setPeriodoGrupo] = useState(null);
   const [diasParaCorrecao, setDiasParaCorrecao] = useState();
   const [ehPeriodoEscolarSimples, setEhPeriodoEscolarSimples] = useState(null);
+  const [tabItemsSemanas, setTabItemsSemanas] = useState(null);
+  const [tabItemsAlunosEmebs, setTabItemsAlunosEmebs] = useState(null);
+  const [alunosTabSelecionada, setAlunosTabSelecionada] = useState(
+    FUNDAMENTAL_EMEBS.key
+  );
+  const [msgModalErro, setMsgModalErro] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
   let mesAnoDefault = new Date();
-
-  const { TabPane } = Tabs;
 
   const urlParams = new URLSearchParams(window.location.search);
   const ehGrupoSolicitacoesDeAlimentacaoUrlParam =
@@ -505,6 +512,7 @@ export default () => {
       );
 
       const rowsDietas = [];
+      const rowsSolicitacoesAlimentacao = [];
       rowsDietas.push(
         {
           nome: "Dietas Autorizadas",
@@ -630,7 +638,6 @@ export default () => {
 
       setTabelaDietaEnteralRows(cloneRowsDietas);
 
-      const rowsSolicitacoesAlimentacao = [];
       rowsSolicitacoesAlimentacao.push(
         {
           nome: "Lanche Emergencial",
@@ -653,7 +660,7 @@ export default () => {
 
       const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
       const cloneTiposAlimentacaoEtec = deepCopy(tiposAlimentacaoEtec);
-      const tiposAlimentacaoEtecFormatadas = cloneTiposAlimentacaoEtec
+      let tiposAlimentacaoEtecFormatadas = cloneTiposAlimentacaoEtec
         .filter((alimentacao) => alimentacao !== "Lanche Emergencial")
         .map((alimentacao) => {
           return {
@@ -1041,6 +1048,30 @@ export default () => {
         response_inclusoes_etec_autorizadas,
         tiposAlimentacaoEtecFormatadas
       );
+
+      let itemsSemanas = [];
+      Array.apply(null, {
+        length: isSunday(lastDayOfMonth(mesAnoSelecionado))
+          ? getWeeksInMonth(mesAnoSelecionado) - 1
+          : getDay(startOfMonth(mesAnoSelecionado)) === 0
+          ? getWeeksInMonth(mesAnoSelecionado) + 1
+          : getWeeksInMonth(mesAnoSelecionado),
+      }).map((e, i) =>
+        itemsSemanas.push({
+          key: `${i + 1}`,
+          label: `Semana ${i + 1}`,
+        })
+      );
+      setTabItemsSemanas(itemsSemanas);
+
+      tabAlunosEmebs(
+        escolaEhEMEBS(),
+        response_matriculados,
+        response_log_dietas_autorizadas,
+        setAlunosTabSelecionada,
+        setTabItemsAlunosEmebs
+      );
+
       setLoading(false);
       setLoadingLancamentos(false);
     };
@@ -1093,51 +1124,123 @@ export default () => {
 
     categoriasMedicao &&
       categoriasMedicao.forEach((categoria) => {
-        matriculados &&
-          !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
-          !ehGrupoETECUrlParam &&
-          grupoLocation !== "Programas e Projetos" &&
-          matriculados.forEach((obj) => {
-            dadosValoresMatriculados[
-              `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
-            ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : null;
-          });
+        if (escolaEhEMEBS()) {
+          matriculados &&
+            matriculados
+              .filter(
+                (obj) =>
+                  obj.infantil_ou_fundamental !== "N/A" &&
+                  ALUNOS_EMEBS[obj.infantil_ou_fundamental].key ===
+                    alunosTabSelecionada
+              )
+              .forEach((obj) => {
+                dadosValoresMatriculados[
+                  `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
+                ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : null;
+              });
+        } else {
+          matriculados &&
+            !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+            !ehGrupoETECUrlParam &&
+            grupoLocation !== "Programas e Projetos" &&
+            matriculados.forEach((obj) => {
+              dadosValoresMatriculados[
+                `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
+              ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : null;
+            });
+        }
 
-        categoria.nome.includes("ENTERAL") &&
+        if (escolaEhEMEBS()) {
+          categoria.nome.includes("ENTERAL") &&
+            logQtdDietasAutorizadas &&
+            logQtdDietasAutorizadas
+              .filter(
+                (logDieta) =>
+                  logDieta.classificacao.toUpperCase().includes("ENTERAL") &&
+                  logDieta.infantil_ou_fundamental !== "N/A" &&
+                  ALUNOS_EMEBS[logDieta.infantil_ou_fundamental].key ===
+                    alunosTabSelecionada
+              )
+              .forEach(
+                (logFiltrado) =>
+                  (dadosValoresDietasAutorizadas[
+                    `dietas_autorizadas__dia_${logFiltrado.dia}__categoria_${categoria.id}`
+                  ] = `${
+                    logFiltrado.quantidade +
+                    (logQtdDietasAutorizadas
+                      .filter(
+                        (log) =>
+                          log.infantil_ou_fundamental !== "N/A" &&
+                          ALUNOS_EMEBS[log.infantil_ou_fundamental].key ===
+                            alunosTabSelecionada
+                      )
+                      .find(
+                        (log) =>
+                          logFiltrado.dia === log.dia &&
+                          log.classificacao
+                            .toUpperCase()
+                            .includes("AMINOÁCIDOS")
+                      )?.quantidade || 0)
+                  }`)
+              );
+
           logQtdDietasAutorizadas &&
-          logQtdDietasAutorizadas
-            .filter((logDieta) =>
-              logDieta.classificacao.toUpperCase().includes("ENTERAL")
-            )
-            .forEach(
-              (logFiltrado) =>
-                (dadosValoresDietasAutorizadas[
-                  `dietas_autorizadas__dia_${logFiltrado.dia}__categoria_${categoria.id}`
-                ] = `${
-                  logFiltrado.quantidade +
-                  (logQtdDietasAutorizadas.find(
-                    (log) =>
-                      logFiltrado.dia === log.dia &&
-                      log.classificacao.toUpperCase().includes("AMINOÁCIDOS")
-                  )?.quantidade || 0)
-                }`)
-            );
+            logQtdDietasAutorizadas
+              .filter(
+                (log) =>
+                  log.infantil_ou_fundamental !== "N/A" &&
+                  ALUNOS_EMEBS[log.infantil_ou_fundamental].key ===
+                    alunosTabSelecionada
+              )
+              .forEach((log) => {
+                categoria.nome === "DIETA ESPECIAL - TIPO A" &&
+                  log.classificacao.toUpperCase() === "TIPO A" &&
+                  (dadosValoresDietasAutorizadas[
+                    `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
+                  ] = `${log.quantidade}`);
+                categoria.nome.includes("TIPO B") &&
+                  log.classificacao.toUpperCase().includes("TIPO B") &&
+                  (dadosValoresDietasAutorizadas[
+                    `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
+                  ] = `${log.quantidade}`);
+              });
+        } else {
+          categoria.nome.includes("ENTERAL") &&
+            logQtdDietasAutorizadas &&
+            logQtdDietasAutorizadas
+              .filter((logDieta) =>
+                logDieta.classificacao.toUpperCase().includes("ENTERAL")
+              )
+              .forEach(
+                (logFiltrado) =>
+                  (dadosValoresDietasAutorizadas[
+                    `dietas_autorizadas__dia_${logFiltrado.dia}__categoria_${categoria.id}`
+                  ] = `${
+                    logFiltrado.quantidade +
+                    (logQtdDietasAutorizadas.find(
+                      (log) =>
+                        logFiltrado.dia === log.dia &&
+                        log.classificacao.toUpperCase().includes("AMINOÁCIDOS")
+                    )?.quantidade || 0)
+                  }`)
+              );
 
-        logQtdDietasAutorizadas &&
-          !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
-          !ehGrupoETECUrlParam &&
-          logQtdDietasAutorizadas.forEach((log) => {
-            categoria.nome === "DIETA ESPECIAL - TIPO A" &&
-              log.classificacao.toUpperCase() === "TIPO A" &&
-              (dadosValoresDietasAutorizadas[
-                `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
-              ] = `${log.quantidade}`);
-            categoria.nome.includes("TIPO B") &&
-              log.classificacao.toUpperCase().includes("TIPO B") &&
-              (dadosValoresDietasAutorizadas[
-                `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
-              ] = `${log.quantidade}`);
-          });
+          logQtdDietasAutorizadas &&
+            !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+            !ehGrupoETECUrlParam &&
+            logQtdDietasAutorizadas.forEach((log) => {
+              categoria.nome === "DIETA ESPECIAL - TIPO A" &&
+                log.classificacao.toUpperCase() === "TIPO A" &&
+                (dadosValoresDietasAutorizadas[
+                  `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
+                ] = `${log.quantidade}`);
+              categoria.nome.includes("TIPO B") &&
+                log.classificacao.toUpperCase().includes("TIPO B") &&
+                (dadosValoresDietasAutorizadas[
+                  `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
+                ] = `${log.quantidade}`);
+            });
+        }
 
         kitLanchesAutorizadas &&
           ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
@@ -1320,12 +1423,28 @@ export default () => {
               })
           );
 
-        valoresMedicao &&
-          valoresMedicao.forEach((valor_medicao) => {
-            dadosValoresMedicoes[
-              `${valor_medicao.nome_campo}__dia_${valor_medicao.dia}__categoria_${valor_medicao.categoria_medicao}`
-            ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
-          });
+        if (escolaEhEMEBS()) {
+          valoresMedicao &&
+            valoresMedicao
+              .filter(
+                (valor_medicao) =>
+                  valor_medicao.infantil_ou_fundamental !== "N/A" &&
+                  ALUNOS_EMEBS[valor_medicao.infantil_ou_fundamental].key ===
+                    alunosTabSelecionada
+              )
+              .forEach((valor_medicao) => {
+                dadosValoresMedicoes[
+                  `${valor_medicao.nome_campo}__dia_${valor_medicao.dia}__categoria_${valor_medicao.categoria_medicao}`
+                ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
+              });
+        } else {
+          valoresMedicao &&
+            valoresMedicao.forEach((valor_medicao) => {
+              dadosValoresMedicoes[
+                `${valor_medicao.nome_campo}__dia_${valor_medicao.dia}__categoria_${valor_medicao.categoria_medicao}`
+              ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
+            });
+        }
       });
 
     valoresMedicao &&
@@ -1435,6 +1554,7 @@ export default () => {
     categoriasDeMedicao,
     tabelaAlimentacaoRows,
     valoresPeriodosLancamentos,
+    alunosTabSelecionada,
   ]);
 
   useEffect(() => {
@@ -1558,6 +1678,11 @@ export default () => {
     } else {
       payload["periodo_escolar"] = values["periodo_escolar"];
     }
+    if (escolaEhEMEBS()) {
+      payload["infantil_ou_fundamental"] = Object.entries(ALUNOS_EMEBS).filter(
+        ([, value]) => value.key === alunosTabSelecionada
+      )[0][0];
+    }
     let valores_medicao_response = [];
     if (valoresPeriodosLancamentos.length) {
       const response = await updateValoresPeriodosLancamentos(
@@ -1648,6 +1773,12 @@ export default () => {
         !ehSalvamentoAutomatico && toastWarn("Não há valores para serem salvos")
       );
 
+    if (escolaEhEMEBS()) {
+      payload["infantil_ou_fundamental"] = Object.entries(ALUNOS_EMEBS).filter(
+        ([, value]) => value.key === alunosTabSelecionada
+      )[0][0];
+    }
+
     if (ehCorrecao) {
       const payloadParaCorrecao = formatarPayloadParaCorrecao(payload);
       const response = await escolaCorrigeMedicao(
@@ -1721,6 +1852,7 @@ export default () => {
 
   const onChangeSemana = async (values, key) => {
     if (exibirTooltip) {
+      setMsgModalErro(null);
       setShowModalErro(true);
     } else {
       setSemanaSelecionada(key);
@@ -1732,6 +1864,25 @@ export default () => {
         false
       );
       return (values["week"] = Number(key));
+    }
+  };
+
+  const onChangeTabAlunos = async (key) => {
+    if (exibirTooltip) {
+      setMsgModalErro(
+        "Existem campos a serem corrigidos. Realize as correções para prosseguir para a próxima turma."
+      );
+      setShowModalErro(true);
+    } else {
+      setSemanaSelecionada(1);
+      setAlunosTabSelecionada(key);
+      onSubmit(
+        formValuesAtualizados,
+        dadosValoresInclusoesAutorizadasState,
+        true,
+        false,
+        false
+      );
     }
   };
 
@@ -2011,7 +2162,10 @@ export default () => {
           alteracoesAlimentacaoAutorizadas,
           validacaoDiaLetivo,
           location,
-          feriadosNoMes
+          feriadosNoMes,
+          valoresPeriodosLancamentos,
+          escolaEhEMEBS(),
+          alunosTabSelecionada
         );
       }
     };
@@ -2166,7 +2320,7 @@ export default () => {
                 <div className="card mt-3">
                   <div className="card-body">
                     <div className="row pb-2">
-                      <div className="col-3">
+                      <div className="col-3 mes-lancamento">
                         <b className="pb-2 mb-2">Mês do Lançamento</b>
                         <Field
                           component={InputText}
@@ -2237,7 +2391,7 @@ export default () => {
                         ) && "mt-legenda"
                       }`}
                     >
-                      <div className="col">
+                      <div className="col semanas">
                         <b className="section-title">
                           Semanas do Período para Lançamento da Medição Inicial
                         </b>
@@ -2257,18 +2411,24 @@ export default () => {
                             ? "default-color-first-semana"
                             : ""
                         }`}
-                      >
-                        {Array.apply(null, {
-                          length: isSunday(lastDayOfMonth(mesAnoConsiderado))
-                            ? getWeeksInMonth(mesAnoConsiderado) - 1
-                            : getDay(startOfMonth(mesAnoConsiderado)) === 0
-                            ? getWeeksInMonth(mesAnoConsiderado) + 1
-                            : getWeeksInMonth(mesAnoConsiderado),
-                        }).map((e, i) => (
-                          <TabPane tab={`Semana ${i + 1}`} key={`${i + 1}`} />
-                        ))}
-                      </Tabs>
+                        items={tabItemsSemanas}
+                      />
                     </div>
+                    {escolaEhEMEBS() ? (
+                      <div className="alunos-tabs mb-2">
+                        <Tabs
+                          activeKey={alunosTabSelecionada}
+                          onChange={(key) => onChangeTabAlunos(key)}
+                          type="card"
+                          className={`${
+                            alunosTabSelecionada === 1
+                              ? "default-color-first-aluno"
+                              : ""
+                          }`}
+                          items={tabItemsAlunosEmebs}
+                        />
+                      </div>
+                    ) : null}
                     <Spin tip="Carregando..." spinning={loadingLancamentos}>
                       {categoriasDeMedicao.length > 0 &&
                         !loading &&
@@ -2346,7 +2506,10 @@ export default () => {
                                                           ],
                                                           valoresObservacoes,
                                                           column.dia,
-                                                          categoria.id
+                                                          categoria.id,
+                                                          escolaEhEMEBS(),
+                                                          alunosTabSelecionada,
+                                                          formValuesAtualizados
                                                         )}
                                                         disabled={desabilitarBotaoColunaObservacoes(
                                                           location,
@@ -2379,7 +2542,10 @@ export default () => {
                                                                 ],
                                                                 valoresObservacoes,
                                                                 column.dia,
-                                                                categoria.id
+                                                                categoria.id,
+                                                                escolaEhEMEBS(),
+                                                                alunosTabSelecionada,
+                                                                formValuesAtualizados
                                                               ) === "Visualizar"
                                                               ? BUTTON_STYLE.RED
                                                               : BUTTON_STYLE.RED_OUTLINE
@@ -2389,7 +2555,10 @@ export default () => {
                                                                 ],
                                                                 valoresObservacoes,
                                                                 column.dia,
-                                                                categoria.id
+                                                                categoria.id,
+                                                                escolaEhEMEBS(),
+                                                                alunosTabSelecionada,
+                                                                formValuesAtualizados
                                                               ) === "Visualizar"
                                                             ? BUTTON_STYLE.GREEN
                                                             : BUTTON_STYLE.GREEN_OUTLINE_WHITE
@@ -2544,7 +2713,10 @@ export default () => {
                                                             ],
                                                             valoresObservacoes,
                                                             column.dia,
-                                                            categoria.id
+                                                            categoria.id,
+                                                            escolaEhEMEBS(),
+                                                            alunosTabSelecionada,
+                                                            formValuesAtualizados
                                                           )}
                                                           disabled={desabilitarBotaoColunaObservacoes(
                                                             location,
@@ -2584,7 +2756,10 @@ export default () => {
                                                                   ],
                                                                   valoresObservacoes,
                                                                   column.dia,
-                                                                  categoria.id
+                                                                  categoria.id,
+                                                                  escolaEhEMEBS(),
+                                                                  alunosTabSelecionada,
+                                                                  formValuesAtualizados
                                                                 ) ===
                                                                 "Visualizar"
                                                                 ? BUTTON_STYLE.RED
@@ -2595,7 +2770,10 @@ export default () => {
                                                                   ],
                                                                   valoresObservacoes,
                                                                   column.dia,
-                                                                  categoria.id
+                                                                  categoria.id,
+                                                                  escolaEhEMEBS(),
+                                                                  alunosTabSelecionada,
+                                                                  formValuesAtualizados
                                                                 ) ===
                                                                 "Visualizar"
                                                               ? BUTTON_STYLE.GREEN
@@ -2933,11 +3111,14 @@ export default () => {
                       valoresObservacoes={valoresObservacoes}
                       setFormValuesAtualizados={setFormValuesAtualizados}
                       setValoresObservacoes={setValoresObservacoes}
+                      alunosTabSelecionada={alunosTabSelecionada}
+                      escolaEhEMEBS={escolaEhEMEBS()}
                     />
                   )}
                   <ModalErro
                     showModalErro={showModalErro}
                     setShowModalErro={setShowModalErro}
+                    msgModalErro={msgModalErro}
                   />
                   <ModalSalvarCorrecoes
                     closeModal={() => setShowModalSalvarCorrecoes(false)}

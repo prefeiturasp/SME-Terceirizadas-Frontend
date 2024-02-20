@@ -7,10 +7,7 @@ import {
   getEscolasSimplissimaPorDiretoriaRegional,
   getEscolasTercTotal,
 } from "services/escola.service";
-import {
-  getDiretoriaregionalSimplissima,
-  getDiretoriaregionalSimplissimaAxios,
-} from "services/diretoriaRegional.service";
+import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 
 import { usuarioEhCODAEDietaEspecial } from "./utilities";
 
@@ -92,7 +89,7 @@ export const formFiltrosObtemDreEEscolasNovo = async (
       setEscolas(formataUuidNomeParaMultiSelect(resposta2));
       setDiretoriasRegionais([{ value: uuid, label: nome }]);
     } else {
-      const respostaDre = await getDiretoriaregionalSimplissimaAxios();
+      const respostaDre = await getDiretoriaregionalSimplissima();
       const respostaEscola = await getEscolasSimplissimaComDREUnpaginated();
       setDiretoriasRegionais(
         formataUuidNomeParaMultiSelect(respostaDre.data.results)
@@ -130,7 +127,7 @@ export const formFiltrosObtemDreEEscolasDietas = async (
       setNomeEscolas(formataNomeComCodEol(resposta2.data));
       setEscolas(formataUuidNomeComCodEol(resposta2.data));
     } else {
-      const respostaDre = await getDiretoriaregionalSimplissimaAxios();
+      const respostaDre = await getDiretoriaregionalSimplissima();
       const respostaEscola = await getEscolasTercTotal();
       setDiretoriasRegionais(
         formataUuidNomeComCodEol(respostaDre.data.results)
