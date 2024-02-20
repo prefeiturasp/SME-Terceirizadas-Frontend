@@ -27,7 +27,8 @@ import { Modal } from "react-bootstrap";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads/index.js";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload/index.jsx";
 import { Paginacao } from "components/Shareable/Paginacao/index.jsx";
-import { TIPO_PERFIL } from "constants/shared";
+import useSomenteLeitura from "hooks/useSomenteLeitura.js";
+import { PERFIL } from "../../../../constants/shared.js";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -42,12 +43,13 @@ export default () => {
   const [showModal, setShowModal] = useState(false);
   const [showDownload, setShowDownload] = useState(false);
   const [initialValues, setInitialValues] = useState({});
-  const [somenteLeitura, setSomenteLeitura] = useState(false);
 
   const centralDownloadContext = useContext(CentralDeDownloadContext);
 
   const inicioResultado = useRef();
-  const tipoPerfil = localStorage.getItem("tipo_perfil");
+  const somenteLeitura = useSomenteLeitura([
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+  ]);
 
   const buscarSolicitacoes = async (page) => {
     setCarregando(true);
@@ -169,7 +171,6 @@ export default () => {
   };
 
   useEffect(() => {
-    setSomenteLeitura([TIPO_PERFIL.CODAE_GABINETE].includes(tipoPerfil));
     const queryString = window.location.search;
 
     if (queryString) {
