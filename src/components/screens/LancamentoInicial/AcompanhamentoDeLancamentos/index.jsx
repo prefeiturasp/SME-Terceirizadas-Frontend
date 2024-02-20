@@ -418,6 +418,17 @@ export const AcompanhamentoDeLancamentos = () => {
     return "";
   };
 
+  const adicionaFiltroNaURL = (nome, valor) => {
+    setSearchParams((prev) => {
+      if (valor) {
+        prev.set(nome, valor);
+      } else {
+        prev.delete(nome);
+      }
+      return prev;
+    });
+  };
+
   return (
     <div className="acompanhamento-de-lancamentos">
       {erroAPI && <div>{erroAPI}</div>}
@@ -453,10 +464,7 @@ export const AcompanhamentoDeLancamentos = () => {
                           setStatusSelecionado(null);
                           setResultados(null);
                           setMudancaDre(true);
-                          setSearchParams((prev) => {
-                            prev.set("diretoria_regional", value);
-                            return prev;
-                          });
+                          adicionaFiltroNaURL("diretoria_regional", value);
                         }}
                         name="diretoria_regional"
                         filterOption={(inputValue, option) =>
@@ -488,10 +496,7 @@ export const AcompanhamentoDeLancamentos = () => {
                               setResultados={setResultados}
                               setStatusSelecionado={(status) => {
                                 setStatusSelecionado(status);
-                                setSearchParams((prev) => {
-                                  prev.set("status", status);
-                                  return prev;
-                                });
+                                adicionaFiltroNaURL("status", status);
                               }}
                               statusSelecionado={statusSelecionado}
                               total={dadosPorStatus.total}
@@ -559,10 +564,10 @@ export const AcompanhamentoDeLancamentos = () => {
                                 validate={required}
                                 required
                                 onChangeEffect={(e) => {
-                                  setSearchParams((prev) => {
-                                    prev.set("mes_ano", e.target.value);
-                                    return prev;
-                                  });
+                                  adicionaFiltroNaURL(
+                                    "mes_ano",
+                                    e.target.value
+                                  );
                                 }}
                               />
                             </div>
@@ -578,10 +583,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                 }))}
                                 onSelectedChanged={(values_) => {
                                   form.change(`lotes_selecionados`, values_);
-                                  setSearchParams((prev) => {
-                                    prev.set("lotes", values_.join());
-                                    return prev;
-                                  });
+                                  adicionaFiltroNaURL("lotes", values_.join());
                                 }}
                                 disableSearch={true}
                                 overrideStrings={{
@@ -607,10 +609,10 @@ export const AcompanhamentoDeLancamentos = () => {
                                 )}
                                 naoDesabilitarPrimeiraOpcao
                                 onChangeEffect={(e) => {
-                                  setSearchParams((prev) => {
-                                    prev.set("tipo_unidade", e.target.value);
-                                    return prev;
-                                  });
+                                  adicionaFiltroNaURL(
+                                    "tipo_unidade",
+                                    e.target.value
+                                  );
                                 }}
                               />
                             </div>
@@ -629,10 +631,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                 placeholder={"Digite um nome"}
                                 className="input-busca-nome-item"
                                 onSelect={(value) => {
-                                  setSearchParams((prev) => {
-                                    prev.set("escola", value);
-                                    return prev;
-                                  });
+                                  adicionaFiltroNaURL("escola", value);
                                 }}
                               />
                             </div>
