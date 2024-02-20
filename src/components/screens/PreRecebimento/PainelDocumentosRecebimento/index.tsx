@@ -4,7 +4,8 @@ import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
 import { cardsPainel } from "./constants";
 import {
   ANALISAR_DOCUMENTO_RECEBIMENTO,
-  DETALHAR_DOCUMENTO_RECEBIMENTO,
+  DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO,
+  DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO,
   PRE_RECEBIMENTO,
 } from "configs/constants";
 import {
@@ -66,10 +67,15 @@ export default () => {
   const gerarLinkDocumento = (item: DocumentosRecebimentoDashboard): string => {
     const perfilLogado = localStorage.getItem("perfil");
 
-    return item.status === "Enviado para Análise" &&
-      perfilLogado === PERFIL.DILOG_QUALIDADE
-      ? `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
-      : `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
+    if (item.status === "Enviado para Análise") {
+      if (perfilLogado === PERFIL.DILOG_QUALIDADE) {
+        return `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
+      }
+
+      return `/${PRE_RECEBIMENTO}/${DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
+    }
+
+    return `/${PRE_RECEBIMENTO}/${DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
   };
 
   const agruparCardsPorStatus = (
