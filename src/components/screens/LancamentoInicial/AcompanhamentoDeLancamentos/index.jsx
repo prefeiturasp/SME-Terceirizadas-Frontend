@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import HTTP_STATUS from "http-status-codes";
@@ -62,6 +62,8 @@ import ModalRelatorioUnificado from "./components/ModalRelatorioUnificado";
 
 export const AcompanhamentoDeLancamentos = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { meusDados } = useContext(MeusDadosContext);
   const DEFAULT_STATE = usuarioEhEscolaTerceirizadaQualquerPerfil() ? [] : null;
 
@@ -69,14 +71,18 @@ export const AcompanhamentoDeLancamentos = () => {
   const [carreandoLotes, setCarregandoLotes] = useState(false);
 
   const [dadosDashboard, setDadosDashboard] = useState(null);
-  const [statusSelecionado, setStatusSelecionado] = useState(null);
+  const [statusSelecionado, setStatusSelecionado] = useState(
+    searchParams.get("status")
+  );
   const [resultados, setResultados] = useState(null);
   const [mesesAnos, setMesesAnos] = useState(null);
   const [lotes, setLotes] = useState([]);
   const [tiposUnidades, setTiposUnidades] = useState(DEFAULT_STATE);
   const [nomesEscolas, setNomesEscolas] = useState(DEFAULT_STATE);
   const [diretoriasRegionais, setDiretoriasRegionais] = useState(null);
-  const [diretoriaRegional, setDiretoriaRegional] = useState(null);
+  const [diretoriaRegional, setDiretoriaRegional] = useState(
+    searchParams.get("diretoria_regional")
+  );
   const [mudancaDre, setMudancaDre] = useState(false);
 
   const [erroAPI, setErroAPI] = useState("");
@@ -419,7 +425,15 @@ export const AcompanhamentoDeLancamentos = () => {
         {!erroAPI && !LOADING && (
           <Form
             onSubmit={onSubmit}
-            initialValues={{ diretoria_regional: diretoriaRegional }}
+            initialValues={{
+              diretoria_regional: diretoriaRegional,
+              mes_ano: searchParams.get("mes_ano"),
+              lotes_selecionados: searchParams.get("lotes")
+                ? searchParams.get("lotes").split(",")
+                : null,
+              tipo_unidade: searchParams.get("tipo_unidade"),
+              escola: searchParams.get("escola"),
+            }}
           >
             {({ handleSubmit, form, values }) => (
               <form onSubmit={handleSubmit}>
@@ -439,6 +453,10 @@ export const AcompanhamentoDeLancamentos = () => {
                           setStatusSelecionado(null);
                           setResultados(null);
                           setMudancaDre(true);
+                          setSearchParams((prev) => {
+                            prev.set("diretoria_regional", value);
+                            return prev;
+                          });
                         }}
                         name="diretoria_regional"
                         filterOption={(inputValue, option) =>
@@ -468,7 +486,13 @@ export const AcompanhamentoDeLancamentos = () => {
                               page={currentPage}
                               onPageChanged={onPageChanged}
                               setResultados={setResultados}
-                              setStatusSelecionado={setStatusSelecionado}
+                              setStatusSelecionado={(status) => {
+                                setStatusSelecionado(status);
+                                setSearchParams((prev) => {
+                                  prev.set("status", status);
+                                  return prev;
+                                });
+                              }}
                               statusSelecionado={statusSelecionado}
                               total={dadosPorStatus.total}
                               classeCor={
@@ -534,6 +558,12 @@ export const AcompanhamentoDeLancamentos = () => {
                                 naoDesabilitarPrimeiraOpcao
                                 validate={required}
                                 required
+                                onChangeEffect={(e) => {
+                                  setSearchParams((prev) => {
+                                    prev.set("mes_ano", e.target.value);
+                                    return prev;
+                                  });
+                                }}
                               />
                             </div>
                             <div className="col-4">
@@ -548,6 +578,10 @@ export const AcompanhamentoDeLancamentos = () => {
                                 }))}
                                 onSelectedChanged={(values_) => {
                                   form.change(`lotes_selecionados`, values_);
+                                  setSearchParams((prev) => {
+                                    prev.set("lotes", values_.join());
+                                    return prev;
+                                  });
                                 }}
                                 disableSearch={true}
                                 overrideStrings={{
@@ -572,6 +606,12 @@ export const AcompanhamentoDeLancamentos = () => {
                                   }))
                                 )}
                                 naoDesabilitarPrimeiraOpcao
+                                onChangeEffect={(e) => {
+                                  setSearchParams((prev) => {
+                                    prev.set("tipo_unidade", e.target.value);
+                                    return prev;
+                                  });
+                                }}
                               />
                             </div>
                           </div>
@@ -588,6 +628,12 @@ export const AcompanhamentoDeLancamentos = () => {
                                 label="Unidade Educacional"
                                 placeholder={"Digite um nome"}
                                 className="input-busca-nome-item"
+                                onSelect={(value) => {
+                                  setSearchParams((prev) => {
+                                    prev.set("escola", value);
+                                    return prev;
+                                  });
+                                }}
                               />
                             </div>
                             <div className="col-4 mt-auto text-end">
