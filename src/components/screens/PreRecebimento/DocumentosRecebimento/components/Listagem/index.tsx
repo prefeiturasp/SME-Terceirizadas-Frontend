@@ -4,7 +4,7 @@ import "./styles.scss";
 import { DocumentosRecebimento } from "interfaces/pre_recebimento.interface";
 import {
   PRE_RECEBIMENTO,
-  DETALHAR_DOCUMENTO_RECEBIMENTO,
+  DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO,
   CORRIGIR_DOCUMENTOS_RECEBIMENTO,
 } from "../../../../../../configs/constants";
 import { downloadArquivoLaudoAssinado } from "services/documentosRecebimento.service";
@@ -32,7 +32,7 @@ const Listagem: React.FC<Props> = ({ objetos, setCarregando }) => {
     const botaoDetalharVerde = (
       <NavLink
         className="float-start"
-        to={`/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${objeto.uuid}`}
+        to={`/${PRE_RECEBIMENTO}/${DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO}?uuid=${objeto.uuid}`}
       >
         <span className="link-acoes px-2">
           <i title="Detalhar" className="fas fa-eye green" />
