@@ -12,7 +12,7 @@ import "./styles.scss";
 import { EDITAR_NOTIFICACAO } from "configs/constants";
 import { usuarioComAcessoTelaDetalharNotificacaoOcorrencia } from "helpers/utilities";
 
-const ListagemNotificacoes = ({ notificacoes, fiscal }) => {
+const ListagemNotificacoes = ({ notificacoes, fiscal, somenteLeitura }) => {
   const navigate = useNavigate();
 
   const renderizarBotoesDeAcoes = (notificacao) => {
@@ -77,23 +77,34 @@ const ListagemNotificacoes = ({ notificacoes, fiscal }) => {
 
     const status = notificacao.status.toUpperCase();
 
-    return fiscal ? (
-      <>{status === "NOTIFICAÇÃO ENVIADA FISCAL" && botaoAssinarEnviarFiscal}</>
-    ) : (
-      <>
-        {status === "RASCUNHO" && botaoRascunho}
-        {status === "NOTIFICAÇÃO ENVIADA FISCAL" ? (
-          <>
-            {usuarioComAcessoTelaDetalharNotificacaoOcorrencia() &&
-              botaoVisualizarNotificacao}
-            {botaoNotificarEmpresaDesabilitado}
-          </>
-        ) : (
-          ["RASCUNHO", "NOTIFICAÇÃO CRIADA"].includes(status) &&
-          botaoNotificarEmpresaHabilitado
-        )}
-      </>
-    );
+    if (somenteLeitura) {
+      if (
+        status === "NOTIFICAÇÃO ENVIADA FISCAL" &&
+        usuarioComAcessoTelaDetalharNotificacaoOcorrencia()
+      ) {
+        return botaoVisualizarNotificacao;
+      }
+    } else {
+      return fiscal ? (
+        <>
+          {status === "NOTIFICAÇÃO ENVIADA FISCAL" && botaoAssinarEnviarFiscal}
+        </>
+      ) : (
+        <>
+          {status === "RASCUNHO" && botaoRascunho}
+          {status === "NOTIFICAÇÃO ENVIADA FISCAL" ? (
+            <>
+              {usuarioComAcessoTelaDetalharNotificacaoOcorrencia() &&
+                botaoVisualizarNotificacao}
+              {botaoNotificarEmpresaDesabilitado}
+            </>
+          ) : (
+            ["RASCUNHO", "NOTIFICAÇÃO CRIADA"].includes(status) &&
+            botaoNotificarEmpresaHabilitado
+          )}
+        </>
+      );
+    }
   };
 
   return (

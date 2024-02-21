@@ -5,6 +5,8 @@ import ListagemNotificacoes from "./components/ListagemNotificacoes";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { getNotificacoesOcorrencia } from "services/logistica.service";
 import { Paginacao } from "components/Shareable/Paginacao";
+import { PERFIL } from "../../../../constants/shared";
+import useSomenteLeitura from "../../../../hooks/useSomenteLeitura";
 
 export default ({ fiscal = false }) => {
   const [carregando, setCarregando] = useState(false);
@@ -12,6 +14,10 @@ export default ({ fiscal = false }) => {
   const [filtros, setFiltros] = useState();
   const [page, setPage] = useState();
   const [total, setTotal] = useState();
+
+  const somenteLeitura = useSomenteLeitura([
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+  ]);
 
   useEffect(() => {
     if (filtros) {
@@ -49,6 +55,7 @@ export default ({ fiscal = false }) => {
             setFiltros={setFiltros}
             setNotificacoes={setNotificacoes}
             fiscal={fiscal}
+            somenteLeitura={somenteLeitura}
           />
 
           {notificacoes && (
@@ -57,6 +64,7 @@ export default ({ fiscal = false }) => {
               <ListagemNotificacoes
                 notificacoes={notificacoes}
                 fiscal={fiscal}
+                somenteLeitura={somenteLeitura}
               />
               <div className="row">
                 <div className="col">

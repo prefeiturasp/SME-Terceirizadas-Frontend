@@ -491,6 +491,7 @@ export const usuarioComAcessoTelaDetalharNotificacaoOcorrencia = () => {
   return [
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -1040,11 +1041,12 @@ export const exibirModuloMedicaoInicial = () => {
 
 export const exibirModuloOcorrencias = () => {
   return (
-    !["production"].includes(ENVIRONMENT) &&
-    (usuarioEhCodaeDilog() ||
-      usuarioEhDilogJuridico() ||
-      usuarioEhDilogQualidade() ||
-      usuarioEhDilog())
+    (!["production"].includes(ENVIRONMENT) &&
+      (usuarioEhCodaeDilog() ||
+        usuarioEhDilogJuridico() ||
+        usuarioEhDilogQualidade() ||
+        usuarioEhDilog())) ||
+    usuarioEhCODAEGabinete()
   );
 };
 

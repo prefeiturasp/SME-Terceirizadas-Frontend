@@ -99,7 +99,9 @@ const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
           title="Ocorrências"
           activeMenu={activeMenu}
         >
-          {(usuarioEhCodaeDilog() || usuarioEhDilogJuridico()) && (
+          {(usuarioEhCodaeDilog() ||
+            usuarioEhDilogJuridico() ||
+            usuarioEhCODAEGabinete()) && (
             <LeafItem to={`/${LOGISTICA}/${GUIAS_NOTIFICACAO}/`}>
               Guias com Notificações
             </LeafItem>
