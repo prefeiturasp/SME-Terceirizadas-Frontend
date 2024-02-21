@@ -42,7 +42,7 @@ export default () => {
     <div className="menu-notificacoes">
       <table className="table mb-0">
         <tbody>
-          {notificacoes.map((notificacao, index) => {
+          {notificacoes?.map((notificacao, index) => {
             return (
               <tr
                 onClick={() => goToNotificacoes(notificacao)}
