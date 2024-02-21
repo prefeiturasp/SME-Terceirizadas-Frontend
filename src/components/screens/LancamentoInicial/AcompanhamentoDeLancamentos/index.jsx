@@ -323,6 +323,7 @@ export const AcompanhamentoDeLancamentos = () => {
       "diretoria_regional" || undefined
     );
     form.reset();
+    resetURL(["mes_ano", "lotes", "tipo_unidade", "escola"]);
     setResultados(undefined);
     diretoria_regional &&
       form.change("diretoria_regional", diretoria_regional.value);
@@ -428,6 +429,15 @@ export const AcompanhamentoDeLancamentos = () => {
       return "Aguardando envio pela unidade";
     }
     return "";
+  };
+
+  const resetURL = (nomes) => {
+    setSearchParams((prev) => {
+      nomes.forEach((nome) => {
+        prev.delete(nome);
+      });
+      return prev;
+    });
   };
 
   const adicionaFiltroNaURL = (nome, valor) => {
