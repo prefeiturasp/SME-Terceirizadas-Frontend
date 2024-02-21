@@ -432,7 +432,10 @@ export const AcompanhamentoDeLancamentos = () => {
 
   const adicionaFiltroNaURL = (nome, valor) => {
     setSearchParams((prev) => {
-      if (valor) {
+      if (
+        (typeof valor !== "object" && valor) ||
+        (Array.isArray(valor) && valor.length > 0)
+      ) {
         prev.set(nome, valor);
       } else {
         prev.delete(nome);
