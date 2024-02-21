@@ -290,6 +290,7 @@ import FichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/FichaTecnicaP
 import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/CadastroFichaTecnicaPage";
 import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
 import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
+import DetalharFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/DetalharFichaTecnicaPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
 import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
@@ -1939,15 +1940,21 @@ const routesConfig = [
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
-    component: CalendarioCronogramaPage,
-    tipoUsuario: usuarioComAcessoAoCalendarioCronograma(),
-  },
-  {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_FICHA_TECNICA}`,
     component: AnalisarFichaTecnicaPage,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_FICHA_TECNICA}/`,
+    component: DetalharFichaTecnicaPage,
+    tipoUsuario:
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
+    component: CalendarioCronogramaPage,
+    tipoUsuario: usuarioComAcessoAoCalendarioCronograma(),
   },
 ];
 
