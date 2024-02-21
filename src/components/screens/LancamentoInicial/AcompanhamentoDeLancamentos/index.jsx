@@ -94,6 +94,16 @@ export const AcompanhamentoDeLancamentos = () => {
   const [exibirModalRelatorioUnificado, setExibirModalRelatorioUnificado] =
     useState(false);
 
+  const [initialValues] = useState({
+    diretoria_regional: diretoriaRegional,
+    mes_ano: searchParams.get("mes_ano"),
+    lotes_selecionados: searchParams.get("lotes")
+      ? searchParams.get("lotes").split(",")
+      : null,
+    tipo_unidade: searchParams.get("tipo_unidade"),
+    escola: searchParams.get("escola"),
+  });
+
   const PAGE_SIZE = 10;
   const LOADING =
     carreandoLotes ||
@@ -104,6 +114,10 @@ export const AcompanhamentoDeLancamentos = () => {
     loading;
 
   const getDashboardMedicaoInicialAsync = async (params = {}) => {
+    if (Object.keys(params).length === 0) {
+      params = initialValues;
+    }
+
     setLoadingComFiltros(true);
     if (diretoriaRegional) {
       params = { ...params, dre: diretoriaRegional };
@@ -434,18 +448,7 @@ export const AcompanhamentoDeLancamentos = () => {
       {erroAPI && <div>{erroAPI}</div>}
       <Spin tip="Carregando..." spinning={LOADING}>
         {!erroAPI && !LOADING && (
-          <Form
-            onSubmit={onSubmit}
-            initialValues={{
-              diretoria_regional: diretoriaRegional,
-              mes_ano: searchParams.get("mes_ano"),
-              lotes_selecionados: searchParams.get("lotes")
-                ? searchParams.get("lotes").split(",")
-                : null,
-              tipo_unidade: searchParams.get("tipo_unidade"),
-              escola: searchParams.get("escola"),
-            }}
-          >
+          <Form onSubmit={onSubmit} initialValues={initialValues}>
             {({ handleSubmit, form, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card mt-3">
@@ -583,7 +586,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                 }))}
                                 onSelectedChanged={(values_) => {
                                   form.change(`lotes_selecionados`, values_);
-                                  adicionaFiltroNaURL("lotes", values_.join());
+                                  adicionaFiltroNaURL("lotes", values_);
                                 }}
                                 disableSearch={true}
                                 overrideStrings={{
