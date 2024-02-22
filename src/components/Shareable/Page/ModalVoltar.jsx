@@ -5,8 +5,17 @@ import { useNavigate } from "react-router-dom";
 import { Botao } from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 
-const ModalVoltar = ({ modalVoltar, setModalVoltar, textoModalVoltar }) => {
+const ModalVoltar = ({
+  modalVoltar,
+  voltarPara,
+  setModalVoltar,
+  textoModalVoltar,
+}) => {
   const navigate = useNavigate();
+
+  const voltarPagina = () =>
+    window.history.length > 1 ? navigate(-1) : navigate(voltarPara);
+
   return (
     <Modal
       className="modal-botao-voltar"
@@ -37,7 +46,7 @@ const ModalVoltar = ({ modalVoltar, setModalVoltar, textoModalVoltar }) => {
           texto="Voltar sem Salvar"
           type={BUTTON_TYPE.BUTTON}
           onClick={() => {
-            navigate(-1);
+            voltarPagina();
             window.scrollTo(0, 0);
           }}
           style={BUTTON_STYLE.GREEN_OUTLINE}

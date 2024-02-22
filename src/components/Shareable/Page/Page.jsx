@@ -125,6 +125,7 @@ export const Page = ({ ...props }) => {
       </div>
       <ModalVoltar
         modalVoltar={modalVoltar}
+        voltarPara={voltarPara}
         setModalVoltar={setModalVoltar}
         textoModalVoltar={textoModalVoltar}
       />
