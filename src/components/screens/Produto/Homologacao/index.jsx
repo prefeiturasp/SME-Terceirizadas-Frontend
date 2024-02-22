@@ -101,8 +101,12 @@ export const Homologacao = ({
               {homologacao.logs.filter(
                 (log) => log.status_evento_explicacao === "CODAE homologou"
               ).length > 0 && [
-                <EditaisVinculados key={0} />,
-                <EditaisSuspensos key={1} />,
+                formValues.produto.editais_homologados && (
+                  <EditaisVinculados key={0} />
+                ),
+                formValues.produto.editais_suspensos && (
+                  <EditaisSuspensos key={1} />
+                ),
               ]}
               <IdentificacaoProduto homologacao={homologacao} />
               <InformacoesNutricionais homologacao={homologacao} />
