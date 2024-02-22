@@ -38,7 +38,8 @@ export default (props: Props) => {
           label="DRE"
           name="dre"
           placeholder="Selecione uma DRE"
-          options={[]}
+          options={view.diretoriasRegionaisOptions}
+          naoDesabilitarPrimeiraOpcao
         />
       </div>
 
