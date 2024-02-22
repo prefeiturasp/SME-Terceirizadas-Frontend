@@ -25,6 +25,7 @@ import {
   usuarioComAcessoAoPainelEmbalagens,
   usuarioComAcessoAoPainelFichasTecnicas,
   usuarioComAcessoAoCalendarioCronograma,
+  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 
 const MenuPreRecebimento = () => {
@@ -35,7 +36,9 @@ const MenuPreRecebimento = () => {
           Painel de Aprovações
         </LeafItem>
       )}
-      {(usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()) && (
+      {(usuarioEhPreRecebimento() ||
+        usuarioEhEmpresaFornecedor() ||
+        usuarioEhCODAEGabinete()) && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`}>
           Cronograma de Entrega
         </LeafItem>
