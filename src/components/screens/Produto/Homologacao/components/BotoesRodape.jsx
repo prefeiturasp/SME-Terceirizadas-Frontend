@@ -14,13 +14,9 @@ import { usuarioEhCODAEGestaoProduto } from "helpers/utilities";
 import { ModalPadrao } from "components/Shareable/ModalPadrao";
 import { PAINEL_GESTAO_PRODUTO } from "configs/constants";
 
-export const BotoesRodape = ({ homologacao, ehCardSuspensos }) => {
+export const BotoesRodape = ({ homologacao }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-
-  const params = {
-    eh_card_suspensos: ehCardSuspensos,
-  };
 
   return (
     <div className="row">
@@ -41,9 +37,7 @@ export const BotoesRodape = ({ homologacao, ehCardSuspensos }) => {
           style={BUTTON_STYLE.GREEN}
           texto="Imprimir"
           icon={BUTTON_ICON.PRINT}
-          onClick={() =>
-            imprimeFichaIdentificacaoProduto(homologacao.uuid, params)
-          }
+          onClick={() => imprimeFichaIdentificacaoProduto(homologacao.uuid)}
           className="float-end"
         />
         {usuarioEhCODAEGestaoProduto() &&
