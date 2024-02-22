@@ -8,7 +8,7 @@ import {
 } from "services/produto.service";
 import { getNumerosEditais } from "services/edital.service";
 import { Homologacao } from "../index";
-import { formataEditais, formataValoresBooleanos } from "../helper";
+import { formataValoresBooleanos } from "../helper";
 import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
 
 export const Container = () => {
@@ -53,15 +53,19 @@ export const Container = () => {
     }
   };
 
-  const setInitialValuesForm = (data, card_suspensos) => {
+  const setInitialValuesForm = (data) => {
     let values = {
       ...data,
       produto: {
         ...data.produto,
-        editais: formataEditais(
-          data.produto.vinculos_produto_edital,
-          card_suspensos
-        ),
+        editais_homologados: data.produto.vinculos_produto_edital
+          .filter((vinculo) => !vinculo.suspenso)
+          .map((vinculo) => vinculo.edital.numero)
+          .join(", "),
+        editais_suspensos: data.produto.vinculos_produto_edital
+          .filter((vinculo) => vinculo.suspenso)
+          .map((vinculo) => vinculo.edital.numero)
+          .join(", "),
         dieta_especial: formataValoresBooleanos(
           data.produto.eh_para_alunos_com_dieta
         ),
