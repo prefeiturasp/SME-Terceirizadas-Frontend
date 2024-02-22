@@ -186,7 +186,7 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
       ? `/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`
       : `/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}`;
 
-    window.history.length > 1 ? navigate(-1) : navigate(link);
+    navigate(link);
   };
 
   const validaForm = (ehNaoPerecivel: boolean) => {
@@ -201,30 +201,28 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
   };
 
   const renderizarTag = () => {
-    if (!ficha.analise) {
-      return (
+    const tagMap = {
+      "Enviada para Análise": (
         <div className="status analise">
           <i className="fas fa-exclamation-triangle" />
           Enviada para Análise em {ficha.log_mais_recente}
         </div>
-      );
-    }
-
-    if (ficha.analise.aprovada) {
-      return (
+      ),
+      Aprovada: (
         <div className="status aprovado">
           <i className="fas fa-check-circle" />
           Aprovada em {ficha.log_mais_recente}
         </div>
-      );
-    }
+      ),
+      "Enviada para Correção": (
+        <div className="status correcao">
+          <i className="fas fa-exclamation-triangle" />
+          Solicitada correção em {ficha.log_mais_recente}
+        </div>
+      ),
+    };
 
-    return (
-      <div className="status correcao">
-        <i className="fas fa-exclamation-triangle" />
-        Solicitada correção em {ficha.log_mais_recente}
-      </div>
-    );
+    return tagMap[ficha.status];
   };
 
   return (
