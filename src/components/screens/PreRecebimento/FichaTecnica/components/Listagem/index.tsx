@@ -5,7 +5,8 @@ import { FichaTecnica } from "interfaces/pre_recebimento.interface";
 import {
   PRE_RECEBIMENTO,
   CADASTRO_FICHA_TECNICA,
-} from "../../../../../../configs/constants";
+  DETALHAR_FICHA_TECNICA,
+} from "configs/constants";
 
 interface Props {
   objetos: Array<FichaTecnica>;
@@ -24,7 +25,23 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
       </NavLink>
     );
 
-    return <>{objeto.status === "Rascunho" && botaoContinuarCadastro}</>;
+    const botaoDetalhar = (
+      <NavLink
+        className="float-start"
+        to={`/${PRE_RECEBIMENTO}/${DETALHAR_FICHA_TECNICA}?uuid=${objeto.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i title="Detalhar" className="fas fa-eye green" />
+        </span>
+      </NavLink>
+    );
+
+    return (
+      <>
+        {objeto.status === "Rascunho" && botaoContinuarCadastro}
+        {["Enviada para Análise"].includes(objeto.status) && botaoDetalhar}
+      </>
+    );
   };
 
   return (

@@ -242,6 +242,7 @@ export interface AnaliseFichaTecnica extends AnaliseFichaTecnicaPayload {
   criado_por: string;
   alterado_em: string;
   uuid: string;
+  aprovada: boolean;
 }
 
 export interface FichaTecnicaPraAnalise
@@ -261,6 +262,7 @@ export interface FichaTecnicaPraAnalise
     }
   > {
   analise: AnaliseFichaTecnica;
+  log_mais_recente: string;
 }
 
 export interface FichaTecnicaSimples {
