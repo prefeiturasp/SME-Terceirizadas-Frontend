@@ -43,10 +43,6 @@ export const BotoesCabecalho = ({
     return homologacao.logs;
   };
 
-  const params = {
-    eh_card_suspensos: ehCardSuspensos,
-  };
-
   return (
     <>
       <div className="row">
@@ -96,9 +92,7 @@ export const BotoesCabecalho = ({
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
-            onClick={() =>
-              imprimeFichaIdentificacaoProduto(homologacao.uuid, params)
-            }
+            onClick={() => imprimeFichaIdentificacaoProduto(homologacao.uuid)}
             className="float-end"
           />
           <Botao
