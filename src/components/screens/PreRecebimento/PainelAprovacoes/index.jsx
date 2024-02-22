@@ -49,6 +49,10 @@ const obterCardsParaPerfilLogado = () => {
       cronograma: cards_visao_cronograma,
       alteracoes: cards_alteracao_visao_cronograma,
     },
+    ADMINISTRADOR_CODAE_GABINETE: {
+      cronograma: cards_visao_cronograma,
+      alteracoes: cards_alteracao_visao_cronograma,
+    },
   };
 
   const perfilLogado = JSON.parse(localStorage.getItem("perfil"));

@@ -168,12 +168,14 @@ export const SidebarContent = () => {
     usuarioEhEscolaAbastecimento() ||
     usuarioEhEscolaAbastecimentoDiretor() ||
     usuarioComAcessoTelaEntregasDilog() ||
-    usuarioEhDilogQualidade();
+    usuarioEhDilogQualidade() ||
+    usuarioEhCODAEGabinete();
 
   const exibirMenuPreRecebimento =
     usuarioEhPreRecebimento() ||
     usuarioEhEmpresaFornecedor() ||
-    usuarioEhCoordenadorGpCODAE();
+    usuarioEhCoordenadorGpCODAE() ||
+    usuarioEhCODAEGabinete();
 
   const _props = {
     activeMenu,
@@ -197,8 +199,8 @@ export const SidebarContent = () => {
     exibirModuloMedicaoInicial() && (
       <MenuLancamentoInicial key={6} {..._props} />
     ),
-    exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
+    exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
     exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />,
     exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
   ];

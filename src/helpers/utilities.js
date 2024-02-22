@@ -511,6 +511,7 @@ export const usuarioComAcessoAoPainelAprovacoes = () => {
     PERFIL.DINUTRE_DIRETORIA,
     PERFIL.DILOG_CRONOGRAMA,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 
