@@ -1639,7 +1639,10 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
     component: CronogramaEntregaPage,
-    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor(),
+    tipoUsuario:
+      usuarioEhPreRecebimento() ||
+      usuarioEhEmpresaFornecedor() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.SOLICITACAO_ALTERACAO_CRONOGRAMA}`,
