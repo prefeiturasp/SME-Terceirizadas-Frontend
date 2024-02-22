@@ -5,14 +5,14 @@ import { Spin } from "antd";
 import InputText from "components/Shareable/Input/InputText";
 import Collapse, { CollapseControl } from "components/Shareable/Collapse";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
+import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
 import { FichaTecnicaPraAnalise } from "interfaces/pre_recebimento.interface";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-} from "../../../../../Shareable/Botao/constants";
-import Botao from "../../../../../Shareable/Botao";
+} from "components/Shareable/Botao/constants";
+import Botao from "components/Shareable/Botao";
 import { carregarDadosAnalise } from "../../helpers";
-import "./styles.scss";
 import FormPereciveis from "../Cadastrar/components/FormPereciveis";
 import FormNaoPereciveis from "../Cadastrar/components/FormNaoPereciveis";
 import { InformacaoNutricional } from "interfaces/produto.interface";
@@ -34,13 +34,24 @@ import {
   editaRascunhoAnaliseFichaTecnica,
 } from "services/fichaTecnica.service";
 import ModalGenerico from "components/Shareable/ModalGenerico";
-import { PRE_RECEBIMENTO, PAINEL_FICHAS_TECNICAS } from "configs/constants";
+import {
+  PRE_RECEBIMENTO,
+  PAINEL_FICHAS_TECNICAS,
+  FICHA_TECNICA,
+} from "configs/constants";
 import { useNavigate } from "react-router-dom";
-import { getMensagemDeErro } from "../../../../../../helpers/statusErrors";
+import { getMensagemDeErro } from "helpers/statusErrors";
+import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
+
+import "./styles.scss";
 
 const idCollapse = "collapseAnalisarFichaTecnica";
 
-export default () => {
+interface AnalisarProps {
+  somenteLeitura?: boolean;
+}
+
+export default ({ somenteLeitura = false }: AnalisarProps) => {
   const navigate = useNavigate();
   const [carregando, setCarregando] = useState<boolean>(true);
   const [showModalCancelar, setShowModalCancelar] = useState<boolean>(false);
@@ -170,8 +181,13 @@ export default () => {
     }
   };
 
-  const voltarPagina = () =>
-    navigate(`/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}`);
+  const voltarPagina = () => {
+    const link = usuarioEhEmpresaFornecedor()
+      ? `/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`
+      : `/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}`;
+
+    window.history.length > 1 ? navigate(-1) : navigate(link);
+  };
 
   const validaForm = (ehNaoPerecivel: boolean) => {
     let conferidosFiltrados = conferidos;
@@ -181,6 +197,33 @@ export default () => {
 
     return Object.values(conferidosFiltrados).some(
       (conf) => conf !== true && conf !== false
+    );
+  };
+
+  const renderizarTag = () => {
+    if (!ficha.analise) {
+      return (
+        <div className="status analise">
+          <i className="fas fa-exclamation-triangle" />
+          Enviada para Análise em {ficha.log_mais_recente}
+        </div>
+      );
+    }
+
+    if (ficha.analise.aprovada) {
+      return (
+        <div className="status aprovado">
+          <i className="fas fa-check-circle" />
+          Aprovada em {ficha.log_mais_recente}
+        </div>
+      );
+    }
+
+    return (
+      <div className="status correcao">
+        <i className="fas fa-exclamation-triangle" />
+        Solicitada correção em {ficha.log_mais_recente}
+      </div>
     );
   };
 
@@ -196,7 +239,10 @@ export default () => {
               const ehNaoPerecivel = values["categoria"] === "Não Perecíveis";
               return (
                 <form onSubmit={handleSubmit}>
-                  <div className="subtitulo">Identificação do Produto</div>
+                  <div className="flex-header">
+                    <div className="subtitulo">Identificação do Produto</div>
+                    {somenteLeitura && renderizarTag()}
+                  </div>
 
                   <div className="row mt-4">
                     <div className="col-8">
@@ -456,13 +502,15 @@ export default () => {
                       {ehNaoPerecivel && (
                         <FormNaoPereciveis values={values} desabilitar={true} />
                       )}
-                      <FormAprovacao
-                        name={"detalhes_produto"}
-                        aprovaCollapse={aprovaCollapse}
-                        values={values}
-                        reprovaCollapse={reprovaCollapse}
-                        cancelaCollapse={cancelaCollapse}
-                      />
+                      {!somenteLeitura && (
+                        <FormAprovacao
+                          name={"detalhes_produto"}
+                          aprovaCollapse={aprovaCollapse}
+                          values={values}
+                          reprovaCollapse={reprovaCollapse}
+                          cancelaCollapse={cancelaCollapse}
+                        />
+                      )}
                     </section>
 
                     <section id="informacoes_nutricionais">
@@ -519,13 +567,15 @@ export default () => {
                         }
                         desabilitar={true}
                       />
-                      <FormAprovacao
-                        name={"informacoes_nutricionais"}
-                        aprovaCollapse={aprovaCollapse}
-                        values={values}
-                        reprovaCollapse={reprovaCollapse}
-                        cancelaCollapse={cancelaCollapse}
-                      />
+                      {!somenteLeitura && (
+                        <FormAprovacao
+                          name={"informacoes_nutricionais"}
+                          aprovaCollapse={aprovaCollapse}
+                          values={values}
+                          reprovaCollapse={reprovaCollapse}
+                          cancelaCollapse={cancelaCollapse}
+                        />
+                      )}
                     </section>
 
                     <section id="conservacao">
@@ -553,13 +603,15 @@ export default () => {
                           />
                         </div>
                       </div>
-                      <FormAprovacao
-                        name={"conservacao"}
-                        aprovaCollapse={aprovaCollapse}
-                        values={values}
-                        reprovaCollapse={reprovaCollapse}
-                        cancelaCollapse={cancelaCollapse}
-                      />
+                      {!somenteLeitura && (
+                        <FormAprovacao
+                          name={"conservacao"}
+                          aprovaCollapse={aprovaCollapse}
+                          values={values}
+                          reprovaCollapse={reprovaCollapse}
+                          cancelaCollapse={cancelaCollapse}
+                        />
+                      )}
                     </section>
 
                     {ehPerecivel && (
@@ -601,13 +653,15 @@ export default () => {
                             />
                           </div>
                         </div>
-                        <FormAprovacao
-                          name={"temperatura_e_transporte"}
-                          aprovaCollapse={aprovaCollapse}
-                          values={values}
-                          reprovaCollapse={reprovaCollapse}
-                          cancelaCollapse={cancelaCollapse}
-                        />
+                        {!somenteLeitura && (
+                          <FormAprovacao
+                            name={"temperatura_e_transporte"}
+                            aprovaCollapse={aprovaCollapse}
+                            values={values}
+                            reprovaCollapse={reprovaCollapse}
+                            cancelaCollapse={cancelaCollapse}
+                          />
+                        )}
                       </section>
                     )}
 
@@ -640,13 +694,15 @@ export default () => {
                           />
                         </div>
                       </div>
-                      <FormAprovacao
-                        name={"armazenamento"}
-                        aprovaCollapse={aprovaCollapse}
-                        values={values}
-                        reprovaCollapse={reprovaCollapse}
-                        cancelaCollapse={cancelaCollapse}
-                      />
+                      {!somenteLeitura && (
+                        <FormAprovacao
+                          name={"armazenamento"}
+                          aprovaCollapse={aprovaCollapse}
+                          values={values}
+                          reprovaCollapse={reprovaCollapse}
+                          cancelaCollapse={cancelaCollapse}
+                        />
+                      )}
                     </section>
 
                     <section id="embalagem_e_rotulagem">
@@ -900,13 +956,15 @@ export default () => {
                           />
                         </div>
                       </div>
-                      <FormAprovacao
-                        name={"embalagem_e_rotulagem"}
-                        aprovaCollapse={aprovaCollapse}
-                        values={values}
-                        reprovaCollapse={reprovaCollapse}
-                        cancelaCollapse={cancelaCollapse}
-                      />
+                      {!somenteLeitura && (
+                        <FormAprovacao
+                          name={"embalagem_e_rotulagem"}
+                          aprovaCollapse={aprovaCollapse}
+                          values={values}
+                          reprovaCollapse={reprovaCollapse}
+                          cancelaCollapse={cancelaCollapse}
+                        />
+                      )}
                     </section>
 
                     <section id="responsavel_tecnico">
@@ -946,11 +1004,13 @@ export default () => {
                           <BotaoAnexo urlAnexo={ficha.arquivo} />
                         </div>
                       </div>
-                      <BotaoCiente
-                        name={"responsavel_tecnico"}
-                        aprovaCollapse={aprovaCollapse}
-                        desabilitar={conferidos.responsavel_tecnico}
-                      />
+                      {!somenteLeitura && (
+                        <BotaoCiente
+                          name={"responsavel_tecnico"}
+                          aprovaCollapse={aprovaCollapse}
+                          desabilitar={conferidos.responsavel_tecnico}
+                        />
+                      )}
                     </section>
 
                     <section id="modo_preparo">
@@ -965,11 +1025,13 @@ export default () => {
                           />
                         </div>
                       </div>
-                      <BotaoCiente
-                        name={"modo_preparo"}
-                        aprovaCollapse={aprovaCollapse}
-                        desabilitar={conferidos.modo_preparo}
-                      />
+                      {!somenteLeitura && (
+                        <BotaoCiente
+                          name={"modo_preparo"}
+                          aprovaCollapse={aprovaCollapse}
+                          desabilitar={conferidos.modo_preparo}
+                        />
+                      )}
                     </section>
 
                     <section id="outras_informacoes">
@@ -984,39 +1046,47 @@ export default () => {
                           />
                         </div>
                       </div>
-                      <BotaoCiente
-                        name={"outras_informacoes"}
-                        aprovaCollapse={aprovaCollapse}
-                        desabilitar={conferidos.outras_informacoes}
-                      />
+                      {!somenteLeitura && (
+                        <BotaoCiente
+                          name={"outras_informacoes"}
+                          aprovaCollapse={aprovaCollapse}
+                          desabilitar={conferidos.outras_informacoes}
+                        />
+                      )}
                     </section>
                   </Collapse>
 
                   <div className="mt-4 mb-4">
-                    <Botao
-                      texto="Enviar Análise"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN}
-                      className="float-end ms-3"
-                      onClick={() => salvarAnalise(values)}
-                      disabled={validaForm(ehNaoPerecivel)}
-                    />
-                    <Botao
-                      texto="Salvar Rascunho"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-end ms-3"
-                      onClick={() => salvarRascunho(values)}
-                    />
-                    <Botao
-                      texto="Cancelar"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-end ms-3"
-                      onClick={() => {
-                        setShowModalCancelar(true);
-                      }}
-                    />
+                    {somenteLeitura ? (
+                      <BotaoVoltar onClick={voltarPagina} />
+                    ) : (
+                      <>
+                        <Botao
+                          texto="Enviar Análise"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN}
+                          className="float-end ms-3"
+                          onClick={() => salvarAnalise(values)}
+                          disabled={validaForm(ehNaoPerecivel)}
+                        />
+                        <Botao
+                          texto="Salvar Rascunho"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          className="float-end ms-3"
+                          onClick={() => salvarRascunho(values)}
+                        />
+                        <Botao
+                          texto="Cancelar"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          className="float-end ms-3"
+                          onClick={() => {
+                            setShowModalCancelar(true);
+                          }}
+                        />
+                      </>
+                    )}
                   </div>
 
                   <ModalGenerico
