@@ -38,18 +38,20 @@ export default (props: Props) => {
           label="DRE"
           name="dre"
           placeholder="Selecione uma DRE"
-          options={view.diretoriasRegionaisOptions}
+          options={view.diretoriasRegionaisOpcoes}
           naoDesabilitarPrimeiraOpcao
+          onChangeEffect={view.onChangeDRE}
         />
       </div>
 
       <div className="col-4">
         <Field
-          component={Select}
+          component={MultiSelect}
           label="Lote"
           name="lote"
-          placeholder="Selecione o lote"
-          options={[]}
+          placeholder="Selecione os lotes"
+          options={view.lotesOpcoes}
+          nomeDoItemNoPlural="lotes"
         />
       </div>
 
