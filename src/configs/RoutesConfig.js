@@ -256,6 +256,7 @@ import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/Detalha
 import EmpenhosPage from "pages/LancamentoMedicaoInicial/EmpenhosPage";
 import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
 import EditarEmpenhoPage from "pages/LancamentoMedicaoInicial/EditarEmpenhoPage";
+import RelatorioAdesao from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesao";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
@@ -1487,6 +1488,11 @@ const routesConfig = [
     path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}/${constants.EDITAR_EMPENHO}`,
     component: EditarEmpenhoPage,
     tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.RELATORIOS}/${constants.RELATORIO_ADESAO}`,
+    component: RelatorioAdesao,
+    tipoUsuario: usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,
