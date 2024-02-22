@@ -502,6 +502,7 @@ export const usuarioComAcessoAoCalendarioCronograma = () => {
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.DINUTRE_DIRETORIA,
     PERFIL.DILOG_DIRETORIA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 
