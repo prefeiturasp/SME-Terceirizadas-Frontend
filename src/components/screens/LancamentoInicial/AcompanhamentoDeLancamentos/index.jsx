@@ -151,7 +151,9 @@ export const AcompanhamentoDeLancamentos = () => {
           );
         }
 
-        setDadosDashboard(NovoDashboardResults);
+        if (!dadosDashboard || (diretoriaRegional && !params.mes_ano)) {
+          setDadosDashboard(NovoDashboardResults);
+        }
       }
       if (statusSelecionado) {
         setResultados(
