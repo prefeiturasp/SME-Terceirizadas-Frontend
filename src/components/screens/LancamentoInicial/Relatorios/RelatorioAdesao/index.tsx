@@ -8,8 +8,10 @@ import FormFiltro from "./components/FormFiltro";
 export default () => {
   const [loading, setLoading] = useState(false);
 
-  // eslint-disable-next-line
   const filtrar = async (values: Record<string, any>) => {
+    // eslint-disable-next-line
+    console.log(values);
+
     setLoading(true);
     setLoading(false);
   };

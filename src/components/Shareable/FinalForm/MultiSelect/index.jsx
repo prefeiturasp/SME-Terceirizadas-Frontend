@@ -67,7 +67,7 @@ export default ({
           {...input}
           onSelectedChanged={(values) => {
             input.onChange(values);
-            onChangeEffect(values);
+            if (onChangeEffect) onChangeEffect(values);
           }}
           disableSearch={props.disabled || disableSearch}
           selected={input.value}
