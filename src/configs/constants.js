@@ -248,7 +248,10 @@ export const ENVIADOS_PARA_CORRECAO = "enviados-para-correcao";
 export const DOCUMENTOS_RECEBIMENTO = "documentos-recebimento";
 export const CADASTRO_DOCUMENTOS_RECEBIMENTO =
   "cadastro-documentos-recebimento";
-export const DETALHAR_DOCUMENTO_RECEBIMENTO = "detalhe-documento-recebimento";
+export const DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO =
+  "detalhe-fornecedor-documento-recebimento";
+export const DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO =
+  "detalhe-codae-documento-recebimento";
 export const ANALISAR_DOCUMENTO_RECEBIMENTO = "analise-documento-recebimento";
 export const PAINEL_DOCUMENTOS_RECEBIMENTO = "painel-documentos-recebimento";
 export const CORRIGIR_DOCUMENTOS_RECEBIMENTO =
@@ -258,6 +261,7 @@ export const FICHA_TECNICA = "ficha-tecnica";
 export const CADASTRO_FICHA_TECNICA = "cadastro-ficha-tecnica";
 export const PAINEL_FICHAS_TECNICAS = "painel-fichas-tecnicas";
 export const ANALISE_FICHA_TECNICA = "analise-ficha-tecnica";
+export const DETALHAR_FICHA_TECNICA = "detalhe-ficha-tecnica";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";

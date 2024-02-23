@@ -278,7 +278,8 @@ import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutE
 import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayoutEmbalagemPage";
 import DocumentosRecebimentoPage from "../pages/PreRecebimento/DocumentosRecebimentoPage";
 import CadastroDocumentosRecebimentoPage from "../pages/PreRecebimento/CadastroDocumentosRecebimentoPage";
-import DetalharDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharDocumentosRecebimentoPage";
+import DetalharFornecedorDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharFornecedorDocumentosRecebimentoPage";
+import DetalharCodaeDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharCodaeDocumentosRecebimentoPage";
 import PainelDocumentosRecebimentoPage from "../pages/PreRecebimento/PainelDocumentosRecebimentoPage";
 import StatusDocumentoPendenteAprovacao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoPendenteAprovacao";
 import StatusDocumentoAprovados from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoAprovados";
@@ -289,6 +290,7 @@ import FichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/FichaTecnicaP
 import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/CadastroFichaTecnicaPage";
 import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
 import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
+import DetalharFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/DetalharFichaTecnicaPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
 import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
@@ -1865,10 +1867,16 @@ const routesConfig = [
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_DOCUMENTO_RECEBIMENTO}`,
-    component: DetalharDocumentosRecebimentoPage,
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO}`,
+    component: DetalharFornecedorDocumentosRecebimentoPage,
     tipoUsuario:
-      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelEmbalagens(),
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelDocumentos(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO}`,
+    component: DetalharCodaeDocumentosRecebimentoPage,
+    tipoUsuario:
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelDocumentos(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_DOCUMENTOS_RECEBIMENTO}`,
@@ -1935,15 +1943,21 @@ const routesConfig = [
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
-    component: CalendarioCronogramaPage,
-    tipoUsuario: usuarioComAcessoAoCalendarioCronograma(),
-  },
-  {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_FICHA_TECNICA}`,
     component: AnalisarFichaTecnicaPage,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_FICHA_TECNICA}/`,
+    component: DetalharFichaTecnicaPage,
+    tipoUsuario:
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
+    component: CalendarioCronogramaPage,
+    tipoUsuario: usuarioComAcessoAoCalendarioCronograma(),
   },
 ];
 

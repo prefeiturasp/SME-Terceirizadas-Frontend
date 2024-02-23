@@ -6,7 +6,7 @@ import {
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
-export default ({ showModalErro, setShowModalErro }) => {
+export default ({ showModalErro, setShowModalErro, msgModalErro = null }) => {
   const handleModalClose = () => {
     setShowModalErro(false);
   };
@@ -23,8 +23,8 @@ export default ({ showModalErro, setShowModalErro }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Existem campos a serem corrigidos. Realize as correções para prosseguir
-        para a próxima semana.
+        {msgModalErro ||
+          "Existem campos a serem corrigidos. Realize as correções para prosseguir para a próxima semana."}
       </Modal.Body>
       <Modal.Footer>
         <Botao

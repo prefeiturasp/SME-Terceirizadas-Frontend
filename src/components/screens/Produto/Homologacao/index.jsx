@@ -1,24 +1,26 @@
-import React, { useEffect, useState } from "react";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoTerceirizada } from "components/Shareable/FluxoDeStatus/helper";
-import { Form } from "react-final-form";
-import DadosDaEmpresa from "./components/DadosDaEmpresa";
-import EditaisVinculados from "./components/EditaisVinculados";
-import IdentificacaoProduto from "./components/IdentificacaoProduto";
-import InformacoesNutricionais from "./components/InformacoesNutricionais";
-import InformacoesProduto from "./components/InformacoesProduto";
-import FotosProduto from "./components/FotosProduto";
-import DocumentosProduto from "./components/DocumentosProduto";
-import BotoesCabecalho from "./components/BotoesCabecalho";
-import BotoesGPCODAE from "./components/BotoesGPCODAE";
-import BotoesTerceirizada from "./components/BotoesTerceirizada";
-import BotoesRodape from "./components/BotoesRodape";
-import Respostas from "./components/Respostas/index";
-import { AnaliseSensorial } from "./components/AnaliseSensorial";
+import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
 import {
   usuarioEhCODAEGestaoProduto,
   usuarioEhEmpresaTerceirizada,
 } from "helpers/utilities";
+import React, { useEffect, useState } from "react";
+import { Form } from "react-final-form";
+import { AnaliseSensorial } from "./components/AnaliseSensorial";
+import BotoesCabecalho from "./components/BotoesCabecalho";
+import BotoesGPCODAE from "./components/BotoesGPCODAE";
+import BotoesRodape from "./components/BotoesRodape";
+import BotoesTerceirizada from "./components/BotoesTerceirizada";
+import DadosDaEmpresa from "./components/DadosDaEmpresa";
+import DocumentosProduto from "./components/DocumentosProduto";
+import { EditaisSuspensos } from "./components/EditaisSuspensos";
+import { EditaisVinculados } from "./components/EditaisVinculados";
+import FotosProduto from "./components/FotosProduto";
+import IdentificacaoProduto from "./components/IdentificacaoProduto";
+import InformacoesNutricionais from "./components/InformacoesNutricionais";
+import InformacoesProduto from "./components/InformacoesProduto";
+import Respostas from "./components/Respostas/index";
 import "./style.scss";
 
 export const Homologacao = ({
@@ -33,14 +35,24 @@ export const Homologacao = ({
   const setDefaultEditaisVinculados = () => {
     let result = [];
     if (homologacao.eh_para_alunos_com_dieta) {
-      result = homologacao.rastro_terceirizada.contratos.map((contrato) => {
-        return contrato.edital.uuid;
-      });
+      result = homologacao.rastro_terceirizada.contratos
+        .filter(
+          ({ edital }) =>
+            !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
+        )
+        .map((contrato) => {
+          return contrato.edital.uuid;
+        });
     }
     if (homologacao.produto.vinculos_produto_edital.length) {
-      result = homologacao.produto.vinculos_produto_edital.map((vinculo) => {
-        return vinculo.edital.uuid;
-      });
+      result = homologacao.produto.vinculos_produto_edital
+        .filter(
+          ({ edital }) =>
+            !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
+        )
+        .map((vinculo) => {
+          return vinculo.edital.uuid;
+        });
     }
     return result;
   };
@@ -88,9 +100,14 @@ export const Homologacao = ({
               <DadosDaEmpresa />
               {homologacao.logs.filter(
                 (log) => log.status_evento_explicacao === "CODAE homologou"
-              ).length > 0 && (
-                <EditaisVinculados ehCardSuspensos={ehCardSuspensos} />
-              )}
+              ).length > 0 && [
+                formValues.produto.editais_homologados && (
+                  <EditaisVinculados key={0} />
+                ),
+                formValues.produto.editais_suspensos && (
+                  <EditaisSuspensos key={1} />
+                ),
+              ]}
               <IdentificacaoProduto homologacao={homologacao} />
               <InformacoesNutricionais homologacao={homologacao} />
               <InformacoesProduto homologacao={homologacao} />

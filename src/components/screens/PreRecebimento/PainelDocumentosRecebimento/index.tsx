@@ -4,7 +4,8 @@ import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
 import { cardsPainel } from "./constants";
 import {
   ANALISAR_DOCUMENTO_RECEBIMENTO,
-  DETALHAR_DOCUMENTO_RECEBIMENTO,
+  DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO,
+  DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO,
   PRE_RECEBIMENTO,
 } from "configs/constants";
 import {
@@ -25,6 +26,7 @@ import {
   FiltrosDashboardDocumentos,
 } from "interfaces/pre_recebimento.interface";
 import { ResponseDocumentosRecebimentoDashboard } from "interfaces/responses.interface";
+import { PERFIL } from "constants/shared";
 
 export default () => {
   const [carregando, setCarregando] = useState<boolean>(false);
@@ -63,11 +65,17 @@ export default () => {
   };
 
   const gerarLinkDocumento = (item: DocumentosRecebimentoDashboard): string => {
-    return ["Aprovado", "Enviado para Correção"].includes(item.status)
-      ? `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
-      : item.status === "Enviado para Análise"
-      ? `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
-      : ``;
+    const perfilLogado = localStorage.getItem("perfil");
+
+    if (item.status === "Enviado para Análise") {
+      if (perfilLogado === PERFIL.DILOG_QUALIDADE) {
+        return `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
+      }
+
+      return `/${PRE_RECEBIMENTO}/${DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
+    }
+
+    return `/${PRE_RECEBIMENTO}/${DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
   };
 
   const agruparCardsPorStatus = (

@@ -22,6 +22,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import {
   defaultValue,
+  desabilitarBotaoObservacoesConferenciaLancamentos,
   formatarLinhasTabelaAlimentacao,
   formatarLinhasTabelaDietaEnteral,
   formatarLinhasTabelasDietas,
@@ -32,6 +33,7 @@ import {
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
   validacaoSemana,
+  tabAlunosEmebs,
 } from "components/screens/LancamentoInicial/PeriodoLancamentoMedicaoInicial/helper";
 import {
   formatarLinhasTabelaAlimentacaoCEI,
@@ -79,6 +81,7 @@ import {
   exibirTooltipSuspensaoAutorizadaAlimentacaoDreCodae,
   exibirTooltipRepeticaoDiasSobremesaDoceDreCodae,
 } from "../../../PeriodoLancamentoMedicaoInicial/validacoes";
+import { ALUNOS_EMEBS, FUNDAMENTAL_EMEBS } from "../../../constants";
 
 export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const {
@@ -104,7 +107,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     useState(false);
   const [semanaSelecionada, setSemanaSelecionada] = useState(1);
   const [data, setData] = useState(null);
-  const [tabItems, setTabItems] = useState(null);
+  const [tabItemsSemanas, setTabItemsSemanas] = useState(null);
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState(null);
   const [periodoEscolar, setPeriodoEscolar] = useState(null);
   const [tabelaAlimentacaoRows, setTabelaAlimentacaoRows] = useState(null);
@@ -142,6 +145,10 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   ] = useState(null);
   const [dataInicioPermissoes, setDataInicioPermissoes] = useState(null);
   const [erroAPI, setErroAPI] = useState("");
+  const [tabItemsAlunosEmebs, setTabItemsAlunosEmebs] = useState(null);
+  const [alunosTabSelecionada, setAlunosTabSelecionada] = useState(
+    FUNDAMENTAL_EMEBS.key
+  );
 
   const exibirBotoesDRE =
     usuarioEhDRE() &&
@@ -384,7 +391,23 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               label: `Semana ${i + 1}`,
             })
           );
-          setTabItems(items);
+          setTabItemsSemanas(items);
+
+          const valoresMatriculados = response_valores_periodos?.data.filter(
+            (valor) => valor.nome_campo === "matriculados"
+          );
+          const valoresDietasAutorizadas =
+            response_valores_periodos?.data.filter(
+              (valor) => valor.nome_campo === "dietas_autorizadas"
+            );
+
+          tabAlunosEmebs(
+            solicitacao?.escola_eh_emebs === true,
+            { data: valoresMatriculados },
+            { data: valoresDietasAutorizadas },
+            setAlunosTabSelecionada,
+            setTabItemsAlunosEmebs
+          );
 
           const formatarLinhasTabelasCEI = async () => {
             const idCategoriaAlimentacao =
@@ -679,6 +702,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     if (!showTabelaLancamentosPeriodo) {
       setLoading(true);
       setOcorrenciaExpandida();
+      setSemanaSelecionada(1);
     } else {
       setErroAPI("");
     }
@@ -705,12 +729,25 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   };
 
   const onClickBotaoObservacao = (dia, categoriaId) => {
-    const observacao = valoresLancamentos.find(
-      (valor) =>
-        valor.nome_campo === "observacoes" &&
-        Number(valor.dia) === Number(dia) &&
-        Number(valor.categoria_medicao) === Number(categoriaId)
-    );
+    let observacao;
+    if (solicitacao?.escola_eh_emebs === true) {
+      observacao = valoresLancamentos.find(
+        (valor) =>
+          valor.nome_campo === "observacoes" &&
+          Number(valor.dia) === Number(dia) &&
+          Number(valor.categoria_medicao) === Number(categoriaId) &&
+          valor.infantil_ou_fundamental !== "N/A" &&
+          ALUNOS_EMEBS[valor.infantil_ou_fundamental].key ===
+            alunosTabSelecionada
+      );
+    } else {
+      observacao = valoresLancamentos.find(
+        (valor) =>
+          valor.nome_campo === "observacoes" &&
+          Number(valor.dia) === Number(dia) &&
+          Number(valor.categoria_medicao) === Number(categoriaId)
+      );
+    }
     let valorObservacao = null;
     if (observacao) {
       valorObservacao = observacao.valor;
@@ -725,6 +762,11 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
 
   const onChangeSemana = (key) => {
     setSemanaSelecionada(key);
+  };
+
+  const onChangeTabAlunos = (key) => {
+    setSemanaSelecionada(1);
+    setAlunosTabSelecionada(key);
   };
 
   const ehInputParaCorrecao = (inputNameMedicao) => {
@@ -988,16 +1030,33 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
         valoresLancamentos && (
           <>
             <p className="section-title-conf-lancamentos">Lançamentos da UE</p>
-            <div className="weeks-tabs mb-2">
-              <Tabs
-                activeKey={semanaSelecionada}
-                onChange={(key) => onChangeSemana(key)}
-                type="card"
-                className={`${
-                  semanaSelecionada === 1 ? "default-color-first-semana" : ""
-                }`}
-                items={tabItems}
-              />
+            <div>
+              <div className="weeks-tabs mb-2">
+                <Tabs
+                  activeKey={semanaSelecionada}
+                  onChange={(key) => onChangeSemana(key)}
+                  type="card"
+                  className={`${
+                    semanaSelecionada === 1 ? "default-color-first-semana" : ""
+                  }`}
+                  items={tabItemsSemanas}
+                />
+              </div>
+              {solicitacao?.escola_eh_emebs === true ? (
+                <div className="alunos-tabs mb-2">
+                  <Tabs
+                    activeKey={alunosTabSelecionada}
+                    onChange={(key) => onChangeTabAlunos(key)}
+                    type="card"
+                    className={`${
+                      alunosTabSelecionada === 1
+                        ? "default-color-first-aluno"
+                        : ""
+                    }`}
+                    items={tabItemsAlunosEmebs}
+                  />
+                </div>
+              ) : null}
               {categoriasDeMedicao &&
                 categoriasDeMedicao.length > 0 &&
                 categoriasDeMedicao.map((categoria, idx) => [
@@ -1182,18 +1241,13 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                               categoria.id
                                             )
                                           }
-                                          disabled={
-                                            !valoresLancamentos.find(
-                                              (valor) =>
-                                                valor.nome_campo ===
-                                                  "observacoes" &&
-                                                Number(valor.dia) ===
-                                                  Number(column.dia) &&
-                                                Number(
-                                                  valor.categoria_medicao
-                                                ) === Number(categoria.id)
-                                            )
-                                          }
+                                          disabled={desabilitarBotaoObservacoesConferenciaLancamentos(
+                                            valoresLancamentos,
+                                            column,
+                                            categoria,
+                                            solicitacao,
+                                            alunosTabSelecionada
+                                          )}
                                         />
                                       )
                                     ) : (
@@ -1264,7 +1318,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                             categoria,
                                             form,
                                             periodoGrupo,
-                                            solicitacao
+                                            solicitacao,
+                                            alunosTabSelecionada
                                           )}
                                           exibeTooltipPadraoRepeticaoDiasSobremesaDoce={
                                             !ehEscolaTipoCEI({

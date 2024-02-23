@@ -22,13 +22,23 @@ export const cadastraDocumentoRecebimento = async (
 
 export const detalharDocumentoRecebimento = async (
   uuid: string
-): Promise<ResponseDocumentosRecebimentoDetalhado> =>
-  await axios.get(`/documentos-de-recebimento/${uuid}/`);
+): Promise<ResponseDocumentosRecebimentoDetalhado> => {
+  try {
+    return await axios.get(`/documentos-de-recebimento/${uuid}/`);
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
 
 export const detalharDocumentoParaAnalise = async (
   uuid: string
-): Promise<ResponseDocumentosRecebimentoParaAnalise> =>
-  await axios.get(`/documentos-de-recebimento/${uuid}/`);
+): Promise<ResponseDocumentosRecebimentoParaAnalise> => {
+  try {
+    return await axios.get(`/documentos-de-recebimento/${uuid}/`);
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
 
 export const listarDocumentosRecebimento = async (
   params: URLSearchParams
@@ -43,14 +53,24 @@ export const listarDocumentosRecebimento = async (
 // Service retorna vários status diferente dentro dos resultados, filtros são apenas strings
 export const getDashboardDocumentosRecebimento = async (
   params: FiltrosDashboardDocumentos = null
-): Promise<ResponseDocumentosRecebimentoDashboard> =>
-  await axios.get(`/documentos-de-recebimento/dashboard/`, { params });
+): Promise<ResponseDocumentosRecebimentoDashboard> => {
+  try {
+    return await axios.get(`/documentos-de-recebimento/dashboard/`, { params });
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
 
 // Service retorna apenas um status nos resultados, filtros em formatos de array são transformados em parametros de URL
 export const getDashboardDocumentosRecebimentoPorStatus = async (
   params: URLSearchParams = null
-): Promise<ResponseDocumentosPorStatusDashboard> =>
-  await axios.get(`/documentos-de-recebimento/dashboard/`, { params });
+): Promise<ResponseDocumentosPorStatusDashboard> => {
+  try {
+    return await axios.get(`/documentos-de-recebimento/dashboard/`, { params });
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
 
 export const analisaDocumentoRecebimentoRascunho = async (
   payload: AnaliseDocumentoPayload,
