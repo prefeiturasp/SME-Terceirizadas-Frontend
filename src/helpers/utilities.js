@@ -530,6 +530,7 @@ export const usuarioComAcessoAoPainelDocumentos = () => {
     PERFIL.DILOG_QUALIDADE,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 
