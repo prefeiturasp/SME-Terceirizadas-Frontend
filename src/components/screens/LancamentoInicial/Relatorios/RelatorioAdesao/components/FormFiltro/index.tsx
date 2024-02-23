@@ -88,7 +88,7 @@ export default (props: Props) => {
           name="tipo_alimentacao"
           nomeDoItemNoPlural="alimentações"
           placeholder="Selecione os tipos de alimentação"
-          options={[]}
+          options={view.tiposAlimentacaoOpcoes}
         />
       </div>
     </div>

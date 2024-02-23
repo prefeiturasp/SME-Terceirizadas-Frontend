@@ -5,9 +5,10 @@ import { formatarOpcoesLote } from "helpers/utilities";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getLotesSimples } from "services/lote.service";
 import {
-  getEscolasSimplissima,
+  getEscolasParaFiltros,
   buscaPeriodosEscolares,
 } from "services/escola.service";
+import { getTiposDeAlimentacao } from "services/cadastroTipoAlimentacao.service";
 
 import {
   Args,
@@ -28,6 +29,9 @@ export default ({ form }: Args) => {
   const [periodosEscolaresOpcoes, setPeriodosEscolaresOpcoes] = useState<
     Array<MultiSelectOption>
   >([]);
+  const [tiposAlimentacaoOpcoes, setTiposAlimentacaoOpcoes] = useState<
+    Array<MultiSelectOption>
+  >([]);
 
   const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
 
@@ -46,6 +50,15 @@ export default ({ form }: Args) => {
         response.data.results.map((periodo) => ({
           label: periodo.nome,
           value: periodo.uuid,
+        }))
+      );
+    });
+
+    getTiposDeAlimentacao().then((data) => {
+      setTiposAlimentacaoOpcoes(
+        data.results.map((alimentacao) => ({
+          label: alimentacao.nome,
+          value: alimentacao.uuid,
         }))
       );
     });
@@ -90,6 +103,14 @@ export default ({ form }: Args) => {
           escola.periodos_escolares.some((p) => p.uuid === periodo.value)
         );
       });
+
+      setTiposAlimentacaoOpcoes((prev) => {
+        return prev.filter((alimentacao) =>
+          escola.periodos_escolares.some((p) =>
+            p.tipos_alimentacao.some((t) => t.uuid === alimentacao.value)
+          )
+        );
+      });
     }
   };
 
@@ -115,7 +136,7 @@ export default ({ form }: Args) => {
     if (values.lotes && values.lotes.length > 0)
       params.lote__uuid = values.lotes;
 
-    getEscolasSimplissima(params).then((response) => {
+    getEscolasParaFiltros(params).then((response) => {
       let escolas = response.results;
 
       // caso os lotes sejam selecionados antes de receber a resposta da requisicao da DRE
@@ -151,10 +172,11 @@ export default ({ form }: Args) => {
     diretoriasRegionaisOpcoes,
     lotesOpcoes,
     unidadesEducacionaisOpcoes,
+    periodosEscolaresOpcoes,
+    tiposAlimentacaoOpcoes,
     onChangeDRE,
     onChangeLotes,
     onChangeUnidadeEducacional,
     filtraUnidadesEducacionaisOpcoes,
-    periodosEscolaresOpcoes,
   };
 };
