@@ -19,6 +19,7 @@ export default ({
   nomeDoItemNoPlural,
   pluralFeminino,
   placeholder,
+  onChangeEffect,
   ...props
 }) => {
   const allItemsAreSelectedText = `${
@@ -64,7 +65,10 @@ export default ({
         <MultiSelect
           {...props}
           {...input}
-          onSelectedChanged={input.onChange}
+          onSelectedChanged={(values) => {
+            input.onChange(values);
+            onChangeEffect(values);
+          }}
           disableSearch={props.disabled || disableSearch}
           selected={input.value}
           overrideStrings={{

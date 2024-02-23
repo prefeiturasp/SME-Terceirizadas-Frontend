@@ -24,7 +24,7 @@ export default () => {
           onClear={limparFiltro}
           titulo="Filtrar Resultados"
         >
-          {(values, form) => <FormFiltro values={values} form={form} />}
+          {(_, form) => <FormFiltro form={form} />}
         </CollapseFiltros>
 
         {loading ? (

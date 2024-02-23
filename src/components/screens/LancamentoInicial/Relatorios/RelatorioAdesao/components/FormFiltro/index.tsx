@@ -5,19 +5,18 @@ import { FormApi } from "final-form";
 
 import Select from "components/Shareable/Select";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import AutoCompleteField from "components/Shareable/AutoCompleteField";
 
 import useView from "./view";
 
 type Props = {
-  values: Record<string, any>;
   form: FormApi;
 };
 
 export default (props: Props) => {
-  const { values, form } = props;
+  const { form } = props;
 
-  // eslint-disable-next-line
-  const view = useView({ values, form });
+  const view = useView({ form });
 
   return (
     <div className="row">
@@ -47,21 +46,24 @@ export default (props: Props) => {
       <div className="col-4">
         <Field
           component={MultiSelect}
-          label="Lote"
-          name="lote"
+          disableSearch
+          label="Lotes"
+          name="lotes"
           placeholder="Selecione os lotes"
           options={view.lotesOpcoes}
           nomeDoItemNoPlural="lotes"
+          onChangeEffect={view.onChangeLotes}
         />
       </div>
 
       <div className="col-8">
         <Field
-          component={Select}
+          component={AutoCompleteField}
           label="Unidade Educacional"
           name="unidade_educacional"
           placeholder="Selecione uma Unidade Educacional"
-          options={[]}
+          options={view.unidadesEducacionaisOpcoes}
+          filterOption={view.filtraUnidadesEducacionaisOpcoes}
         />
       </div>
 
