@@ -258,10 +258,11 @@ export const CORRIGIR_DOCUMENTOS_RECEBIMENTO =
   "corrigir-documentos-recebimento";
 
 export const FICHA_TECNICA = "ficha-tecnica";
-export const CADASTRO_FICHA_TECNICA = "cadastro-ficha-tecnica";
+export const CADASTRAR_FICHA_TECNICA = "cadastrar-ficha-tecnica";
 export const PAINEL_FICHAS_TECNICAS = "painel-fichas-tecnicas";
-export const ANALISE_FICHA_TECNICA = "analise-ficha-tecnica";
-export const DETALHAR_FICHA_TECNICA = "detalhe-ficha-tecnica";
+export const ANALISAR_FICHA_TECNICA = "analisar-ficha-tecnica";
+export const DETALHAR_FICHA_TECNICA = "detalhar-ficha-tecnica";
+export const ALTERAR_FICHA_TECNICA = "alterar-ficha-tecnica";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";

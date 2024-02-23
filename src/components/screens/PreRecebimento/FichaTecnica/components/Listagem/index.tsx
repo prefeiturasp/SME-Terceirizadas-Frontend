@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 import {
   PRE_RECEBIMENTO,
-  CADASTRO_FICHA_TECNICA,
+  CADASTRAR_FICHA_TECNICA,
   DETALHAR_FICHA_TECNICA,
 } from "configs/constants";
 import { FichaTecnica } from "interfaces/pre_recebimento.interface";
@@ -26,7 +26,7 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
     const botaoContinuarCadastro = (
       <NavLink
         className="float-start"
-        to={`/${PRE_RECEBIMENTO}/${CADASTRO_FICHA_TECNICA}?uuid=${objeto.uuid}`}
+        to={`/${PRE_RECEBIMENTO}/${CADASTRAR_FICHA_TECNICA}?uuid=${objeto.uuid}`}
       >
         <span className="link-acoes px-2">
           <i title="Continuar Cadastro" className="fas fa-edit green" />

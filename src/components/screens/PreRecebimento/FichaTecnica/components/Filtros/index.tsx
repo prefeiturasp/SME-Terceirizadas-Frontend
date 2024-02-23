@@ -10,7 +10,7 @@ import {
 import "./styles.scss";
 import { NavLink } from "react-router-dom";
 import {
-  CADASTRO_FICHA_TECNICA,
+  CADASTRAR_FICHA_TECNICA,
   PRE_RECEBIMENTO,
 } from "../../../../../../configs/constants";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
@@ -138,7 +138,7 @@ const Filtros: React.FC<Props> = ({
             </div>
 
             <div className="pt-4 pb-4">
-              <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_FICHA_TECNICA}`}>
+              <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRAR_FICHA_TECNICA}`}>
                 <Botao
                   texto="Cadastrar Ficha Técnica"
                   type={BUTTON_TYPE.BUTTON}

@@ -1894,7 +1894,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_FICHA_TECNICA}`,
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRAR_FICHA_TECNICA}`,
     component: CadastroFichaTecnicaPage,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
@@ -1923,7 +1923,7 @@ const routesConfig = [
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_FICHA_TECNICA}`,
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_FICHA_TECNICA}`,
     component: AnalisarFichaTecnicaPage,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
