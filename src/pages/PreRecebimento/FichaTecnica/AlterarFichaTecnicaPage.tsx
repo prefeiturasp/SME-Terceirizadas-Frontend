@@ -8,6 +8,7 @@ import {
   FICHA_TECNICA,
   PRE_RECEBIMENTO,
 } from "configs/constants";
+import Alterar from "components/screens/PreRecebimento/FichaTecnica/components/Alterar";
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${ALTERAR_FICHA_TECNICA}`,
@@ -32,6 +33,6 @@ export default () => (
     titulo={atual.titulo}
   >
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-    <></>
+    <Alterar />
   </Page>
 );
