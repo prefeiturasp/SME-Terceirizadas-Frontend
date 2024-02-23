@@ -5,6 +5,7 @@ import {
   PRE_RECEBIMENTO,
   CADASTRAR_FICHA_TECNICA,
   DETALHAR_FICHA_TECNICA,
+  ALTERAR_FICHA_TECNICA,
 } from "configs/constants";
 import { FichaTecnica } from "interfaces/pre_recebimento.interface";
 
@@ -48,7 +49,7 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
     const botaoAlterar = (
       <NavLink
         className="float-start"
-        to={`/${PRE_RECEBIMENTO}/?uuid=${objeto.uuid}`}
+        to={`/${PRE_RECEBIMENTO}/${ALTERAR_FICHA_TECNICA}?uuid=${objeto.uuid}`}
       >
         <span className="link-acoes px-2">
           <i title="Alterar" className="fas fa-edit orange" />

@@ -291,6 +291,7 @@ import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/Cadas
 import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
 import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
 import DetalharFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/DetalharFichaTecnicaPage";
+import AlterarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AlterarFichaTecnicaPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
 import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
@@ -1933,6 +1934,11 @@ const routesConfig = [
     component: DetalharFichaTecnicaPage,
     tipoUsuario:
       usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ALTERAR_FICHA_TECNICA}/`,
+    component: AlterarFichaTecnicaPage,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
