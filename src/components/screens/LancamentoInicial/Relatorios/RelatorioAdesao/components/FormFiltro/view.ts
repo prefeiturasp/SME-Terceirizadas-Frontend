@@ -79,9 +79,9 @@ export default ({ form }: Args) => {
       );
   };
 
-  const onChangeUnidadeEducacional = (escolaUUID: string) => {
-    const escola = unidadesEducacionais.find(
-      (escola) => escola.uuid === escolaUUID
+  const onChangeUnidadeEducacional = (escolaLabel: string) => {
+    const escola = unidadesEducacionais.find((escola) =>
+      escolaLabel.includes(escola.codigo_eol)
     );
 
     if (escola) {
@@ -94,14 +94,13 @@ export default ({ form }: Args) => {
   };
 
   const formataUnidadesEducacionaisOpcoes = (escolas): Array<Option> => {
-    return escolas.map(
-      (escola): Option => ({
-        label: `${escola.codigo_eol} - ${escola.nome} - ${
-          escola.lote ? escola.lote.nome : ""
-        }`,
-        value: escola.uuid,
-      })
-    );
+    return escolas.map((escola): Option => {
+      const label = `${escola.codigo_eol} - ${escola.nome} - ${
+        escola.lote ? escola.lote.nome : ""
+      }`;
+
+      return { label, value: label };
+    });
   };
 
   const buscaUnidadesEducacionais = () => {

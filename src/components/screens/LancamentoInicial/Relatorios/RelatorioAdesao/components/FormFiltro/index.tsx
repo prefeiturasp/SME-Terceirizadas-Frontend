@@ -1,12 +1,11 @@
 import React from "react";
 
-import { OnChange } from "react-final-form-listeners";
 import { Field } from "react-final-form";
 import { FormApi } from "final-form";
 
 import Select from "components/Shareable/Select";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
-import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 
 import useView from "./view";
 
@@ -59,16 +58,14 @@ export default (props: Props) => {
 
       <div className="col-8">
         <Field
-          component={AutoCompleteField}
+          component={AutoCompleteSelectField}
           label="Unidade Educacional"
           name="unidade_educacional"
           placeholder="Selecione uma Unidade Educacional"
           options={view.unidadesEducacionaisOpcoes}
           filterOption={view.filtraUnidadesEducacionaisOpcoes}
+          onSelect={view.onChangeUnidadeEducacional}
         />
-        <OnChange name="unidade_educacional">
-          {view.onChangeUnidadeEducacional}
-        </OnChange>
       </div>
 
       <div className="col-4">
