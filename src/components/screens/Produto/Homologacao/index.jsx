@@ -46,6 +46,7 @@ export const Homologacao = ({
     }
     if (homologacao.produto.vinculos_produto_edital.length) {
       result = homologacao.produto.vinculos_produto_edital
+        .filter((vinculo) => !vinculo.suspenso)
         .filter(
           ({ edital }) =>
             !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
