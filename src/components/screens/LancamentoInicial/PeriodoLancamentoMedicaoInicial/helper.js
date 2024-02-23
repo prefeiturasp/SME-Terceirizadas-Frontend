@@ -1017,7 +1017,8 @@ export const defaultValue = (
   categoria,
   form,
   periodoGrupo,
-  solicitacao
+  solicitacao,
+  alunosTabSelecionada = null
 ) => {
   let result = null;
   let valorLancamento = null;
@@ -1036,12 +1037,24 @@ export const defaultValue = (
         valor.faixa_etaria === row.uuid
     );
   } else {
-    valorLancamento = valoresLancamentos.find(
-      (valor) =>
-        Number(valor.categoria_medicao) === Number(categoria.id) &&
-        Number(valor.dia) === Number(column.dia) &&
-        valor.nome_campo === row.name
-    );
+    if (solicitacao?.escola_eh_emebs === true) {
+      valorLancamento = valoresLancamentos.find(
+        (valor) =>
+          Number(valor.categoria_medicao) === Number(categoria.id) &&
+          Number(valor.dia) === Number(column.dia) &&
+          valor.nome_campo === row.name &&
+          valor.infantil_ou_fundamental !== "N/A" &&
+          ALUNOS_EMEBS[valor.infantil_ou_fundamental].key ===
+            alunosTabSelecionada
+      );
+    } else {
+      valorLancamento = valoresLancamentos.find(
+        (valor) =>
+          Number(valor.categoria_medicao) === Number(categoria.id) &&
+          Number(valor.dia) === Number(column.dia) &&
+          valor.nome_campo === row.name
+      );
+    }
   }
 
   if (valorLancamento) {
@@ -1234,20 +1247,18 @@ export const tabAlunosEmebs = (
   if (escolaEhEMEBS) {
     let itemsAlunosEmebs = [];
     if (
-      (response_matriculados.data &&
-        response_matriculados.data
-          .filter(
-            (matriculado) => matriculado.infantil_ou_fundamental === "INFANTIL"
-          )
-          .some((matriculado) => matriculado.quantidade_alunos !== 0)) ||
-      (response_log_dietas_autorizadas.data &&
-        response_log_dietas_autorizadas.data
-          .filter(
-            (log) =>
-              log.infantil_ou_fundamental === "INFANTIL" &&
-              log.classificacao.toUpperCase() !== "TIPO C"
-          )
-          .some((log) => log.quantidade !== 0))
+      response_matriculados?.data
+        .filter(
+          (matriculado) => matriculado.infantil_ou_fundamental === "INFANTIL"
+        )
+        .some((matriculado) => matriculado.quantidade_alunos !== 0) ||
+      response_log_dietas_autorizadas?.data
+        .filter(
+          (log) =>
+            log.infantil_ou_fundamental === "INFANTIL" &&
+            log.classificacao.toUpperCase() !== "TIPO C"
+        )
+        .some((log) => log.quantidade !== 0)
     ) {
       itemsAlunosEmebs.push({
         key: INFANTIL_EMEBS.key,
@@ -1260,5 +1271,31 @@ export const tabAlunosEmebs = (
       label: FUNDAMENTAL_EMEBS.label,
     });
     setTabItemsAlunosEmebs(itemsAlunosEmebs);
+  }
+};
+
+export const desabilitarBotaoObservacoesConferenciaLancamentos = (
+  valoresLancamentos,
+  column,
+  categoria,
+  solicitacao,
+  alunosTabSelecionada
+) => {
+  if (solicitacao?.escola_eh_emebs === true) {
+    return !valoresLancamentos.find(
+      (valor) =>
+        valor.nome_campo === "observacoes" &&
+        Number(valor.dia) === Number(column.dia) &&
+        Number(valor.categoria_medicao) === Number(categoria.id) &&
+        valor.infantil_ou_fundamental !== "N/A" &&
+        ALUNOS_EMEBS[valor.infantil_ou_fundamental].key === alunosTabSelecionada
+    );
+  } else {
+    return !valoresLancamentos.find(
+      (valor) =>
+        valor.nome_campo === "observacoes" &&
+        Number(valor.dia) === Number(column.dia) &&
+        Number(valor.categoria_medicao) === Number(categoria.id)
+    );
   }
 };
