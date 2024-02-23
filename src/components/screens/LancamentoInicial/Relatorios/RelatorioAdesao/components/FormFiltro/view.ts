@@ -41,33 +41,23 @@ export default ({ form }: Args) => {
 
   const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
 
-  const [buscandoUnidadesEducacionais, setBuscandoUnidadesEducacionais] =
-    useState<boolean>(false);
+  const [buscandoOpcoes, setBuscandoOpcoes] = useState({
+    buscandoMesesAnos: false,
+    buscandoDiretoriasRegionais: false,
+    buscandoLotes: false,
+    buscandoUnidadesEducacionais: false,
+    buscandoPeriodosEscolares: false,
+    buscandoTiposAlimentacao: false,
+  });
 
   useEffect(() => {
-    getDiretoriaregionalSimplissima().then((response) => {
-      setDiretoriasRegionaisOpcoes(
-        [{ nome: "Selecione uma DRE", uuid: "" }].concat(response.data.results)
-      );
-    });
-
-    buscaPeriodosEscolares().then((response) => {
-      setPeriodosEscolaresOpcoes(
-        response.data.results.map((periodo) => ({
-          label: periodo.nome,
-          value: periodo.uuid,
-        }))
-      );
-    });
-
-    getTiposDeAlimentacao().then((data) => {
-      setTiposAlimentacaoOpcoes(
-        data.results.map((alimentacao) => ({
-          label: alimentacao.nome,
-          value: alimentacao.uuid,
-        }))
-      );
-    });
+    setBuscandoOpcoes((prev) => ({
+      ...prev,
+      buscandoMesesAnos: true,
+      buscandoDiretoriasRegionais: true,
+      buscandoPeriodosEscolares: true,
+      buscandoTiposAlimentacao: true,
+    }));
 
     getMesesAnosSolicitacoesMedicaoinicial({
       status: "MEDICAO_APROVADA_PELA_CODAE",
@@ -80,6 +70,46 @@ export default ({ form }: Args) => {
           }))
         )
       );
+      setBuscandoOpcoes((prev) => ({
+        ...prev,
+        buscandoMesesAnos: false,
+      }));
+    });
+
+    getDiretoriaregionalSimplissima().then((response) => {
+      setDiretoriasRegionaisOpcoes(
+        [{ nome: "Selecione uma DRE", uuid: "" }].concat(response.data.results)
+      );
+      setBuscandoOpcoes((prev) => ({
+        ...prev,
+        buscandoDiretoriasRegionais: false,
+      }));
+    });
+
+    buscaPeriodosEscolares().then((response) => {
+      setPeriodosEscolaresOpcoes(
+        response.data.results.map((periodo) => ({
+          label: periodo.nome,
+          value: periodo.uuid,
+        }))
+      );
+      setBuscandoOpcoes((prev) => ({
+        ...prev,
+        buscandoPeriodosEscolares: false,
+      }));
+    });
+
+    getTiposDeAlimentacao().then((data) => {
+      setTiposAlimentacaoOpcoes(
+        data.results.map((alimentacao) => ({
+          label: alimentacao.nome,
+          value: alimentacao.uuid,
+        }))
+      );
+      setBuscandoOpcoes((prev) => ({
+        ...prev,
+        buscandoTiposAlimentacao: false,
+      }));
     });
   }, []);
 
@@ -91,9 +121,18 @@ export default ({ form }: Args) => {
       return;
     }
 
+    setBuscandoOpcoes((prev) => ({
+      ...prev,
+      buscandoLotes: true,
+    }));
+
     getLotesSimples({ diretoria_regional__uuid: e.target.value }).then(
       (response) => {
         setLotesOpcoes(formatarOpcoesLote(response.data.results));
+        setBuscandoOpcoes((prev) => ({
+          ...prev,
+          buscandoLotes: false,
+        }));
       }
     );
 
@@ -101,7 +140,7 @@ export default ({ form }: Args) => {
   };
 
   const onChangeLotes = (lotes: Array<string>) => {
-    if (!buscandoUnidadesEducacionais)
+    if (!buscandoOpcoes.buscandoUnidadesEducacionais)
       setUnidadesEducacionaisOpcoes(
         formataUnidadesEducacionaisOpcoes(
           unidadesEducacionais.filter(
@@ -144,9 +183,12 @@ export default ({ form }: Args) => {
   };
 
   const buscaUnidadesEducacionais = () => {
-    if (buscandoUnidadesEducacionais) return;
+    if (buscandoOpcoes.buscandoUnidadesEducacionais) return;
 
-    setBuscandoUnidadesEducacionais(true);
+    setBuscandoOpcoes((prev) => ({
+      ...prev,
+      buscandoUnidadesEducacionais: true,
+    }));
 
     const params: EscolasSimplissimaParams = {};
 
@@ -173,7 +215,11 @@ export default ({ form }: Args) => {
           formataUnidadesEducacionaisOpcoes(escolas)
         )
       );
-      setBuscandoUnidadesEducacionais(false);
+
+      setBuscandoOpcoes((prev) => ({
+        ...prev,
+        buscandoUnidadesEducacionais: false,
+      }));
     });
   };
 
@@ -198,5 +244,6 @@ export default ({ form }: Args) => {
     onChangeLotes,
     onChangeUnidadeEducacional,
     filtraUnidadesEducacionaisOpcoes,
+    buscandoOpcoes,
   };
 };
