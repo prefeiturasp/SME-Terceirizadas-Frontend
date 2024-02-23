@@ -26,8 +26,9 @@ export default (props: Props) => {
           label="Mês de Referência"
           name="mes"
           placeholder="Selecione o mês de referência"
-          options={[]}
+          options={view.mesesAnosOpcoes}
           required
+          naoDesabilitarPrimeiraOpcao
         />
       </div>
 

@@ -9,6 +9,9 @@ import {
   buscaPeriodosEscolares,
 } from "services/escola.service";
 import { getTiposDeAlimentacao } from "services/cadastroTipoAlimentacao.service";
+import { getMesesAnosSolicitacoesMedicaoinicial } from "services/medicaoInicial/dashboard.service";
+
+import { MESES } from "constants/shared";
 
 import {
   Args,
@@ -19,6 +22,9 @@ import {
 } from "./types";
 
 export default ({ form }: Args) => {
+  const [mesesAnosOpcoes, setMesesAnosOpcoes] = useState<Array<SelectOption>>(
+    []
+  );
   const [diretoriasRegionaisOpcoes, setDiretoriasRegionaisOpcoes] = useState<
     Array<SelectOption>
   >([]);
@@ -60,6 +66,19 @@ export default ({ form }: Args) => {
           label: alimentacao.nome,
           value: alimentacao.uuid,
         }))
+      );
+    });
+
+    getMesesAnosSolicitacoesMedicaoinicial({
+      status: "MEDICAO_APROVADA_PELA_CODAE",
+    }).then((response) => {
+      setMesesAnosOpcoes(
+        [{ nome: "Selecione o mês de referência", uuid: "" }].concat(
+          response.data.results.map((mesAno) => ({
+            nome: `${MESES[parseInt(mesAno.mes) - 1]} - ${mesAno.ano}`,
+            uuid: `${mesAno.mes}_${mesAno.ano}`,
+          }))
+        )
       );
     });
   }, []);
@@ -169,6 +188,7 @@ export default ({ form }: Args) => {
   };
 
   return {
+    mesesAnosOpcoes,
     diretoriasRegionaisOpcoes,
     lotesOpcoes,
     unidadesEducacionaisOpcoes,
