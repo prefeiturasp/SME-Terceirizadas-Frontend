@@ -11,7 +11,7 @@ export type SelectOption = {
 
 export type MultiSelectOption = {
   label: string;
-  value: number;
+  value: string | number;
 };
 
 export type EscolasSimplissimaParams =

@@ -4,7 +4,10 @@ import { formatarOpcoesLote } from "helpers/utilities";
 
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getLotesSimples } from "services/lote.service";
-import { getEscolasSimplissima } from "services/escola.service";
+import {
+  getEscolasSimplissima,
+  buscaPeriodosEscolares,
+} from "services/escola.service";
 
 import {
   Args,
@@ -22,6 +25,9 @@ export default ({ form }: Args) => {
   const [unidadesEducacionaisOpcoes, setUnidadesEducacionaisOpcoes] = useState<
     Array<Option>
   >([]);
+  const [periodosEscolaresOpcoes, setPeriodosEscolaresOpcoes] = useState<
+    Array<MultiSelectOption>
+  >([]);
 
   const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
 
@@ -32,6 +38,15 @@ export default ({ form }: Args) => {
     getDiretoriaregionalSimplissima().then((response) => {
       setDiretoriasRegionaisOpcoes(
         [{ nome: "Selecione uma DRE", uuid: "" }].concat(response.data.results)
+      );
+    });
+
+    buscaPeriodosEscolares().then((response) => {
+      setPeriodosEscolaresOpcoes(
+        response.data.results.map((periodo) => ({
+          label: periodo.nome,
+          value: periodo.uuid,
+        }))
       );
     });
   }, []);
@@ -62,6 +77,20 @@ export default ({ form }: Args) => {
           )
         )
       );
+  };
+
+  const onChangeUnidadeEducacional = (escolaUUID: string) => {
+    const escola = unidadesEducacionais.find(
+      (escola) => escola.uuid === escolaUUID
+    );
+
+    if (escola) {
+      setPeriodosEscolaresOpcoes((prev) => {
+        return prev.filter((periodo) =>
+          escola.periodos_escolares.some((p) => p.uuid === periodo.value)
+        );
+      });
+    }
   };
 
   const formataUnidadesEducacionaisOpcoes = (escolas): Array<Option> => {
@@ -125,6 +154,8 @@ export default ({ form }: Args) => {
     unidadesEducacionaisOpcoes,
     onChangeDRE,
     onChangeLotes,
+    onChangeUnidadeEducacional,
     filtraUnidadesEducacionaisOpcoes,
+    periodosEscolaresOpcoes,
   };
 };

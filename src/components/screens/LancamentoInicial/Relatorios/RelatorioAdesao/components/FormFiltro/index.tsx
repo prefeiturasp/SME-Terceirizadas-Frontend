@@ -1,5 +1,6 @@
 import React from "react";
 
+import { OnChange } from "react-final-form-listeners";
 import { Field } from "react-final-form";
 import { FormApi } from "final-form";
 
@@ -65,6 +66,9 @@ export default (props: Props) => {
           options={view.unidadesEducacionaisOpcoes}
           filterOption={view.filtraUnidadesEducacionaisOpcoes}
         />
+        <OnChange name="unidade_educacional">
+          {view.onChangeUnidadeEducacional}
+        </OnChange>
       </div>
 
       <div className="col-4">
@@ -72,10 +76,10 @@ export default (props: Props) => {
           component={MultiSelect}
           disableSearch
           label="Período"
-          name="periodo"
+          name="periodos"
           nomeDoItemNoPlural="períodos"
           placeholder="Selecione os períodos"
-          options={[]}
+          options={view.periodosEscolaresOpcoes}
         />
       </div>
 
