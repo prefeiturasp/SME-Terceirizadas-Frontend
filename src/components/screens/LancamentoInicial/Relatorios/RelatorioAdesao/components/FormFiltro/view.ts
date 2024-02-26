@@ -140,7 +140,11 @@ export default ({ form }: Args) => {
   };
 
   const onChangeLotes = (lotes: Array<string>) => {
-    if (!buscandoOpcoes.buscandoUnidadesEducacionais)
+    if (lotes.length === 0) {
+      setUnidadesEducacionaisOpcoes(
+        formataUnidadesEducacionaisOpcoes(unidadesEducacionais)
+      );
+    } else if (!buscandoOpcoes.buscandoUnidadesEducacionais)
       setUnidadesEducacionaisOpcoes(
         formataUnidadesEducacionaisOpcoes(
           unidadesEducacionais.filter(
@@ -171,13 +175,15 @@ export default ({ form }: Args) => {
   };
 
   const formataUnidadesEducacionaisOpcoes = (escolas): Array<Option> => {
-    return escolas.map((escola): Option => {
-      const label = `${escola.codigo_eol} - ${escola.nome} - ${
-        escola.lote ? escola.lote.nome : ""
-      }`;
+    return [{ label: "Selecione uma Unidade Educacional", value: "" }].concat(
+      escolas.map((escola): Option => {
+        const label = `${escola.codigo_eol} - ${escola.nome} - ${
+          escola.lote ? escola.lote.nome : ""
+        }`;
 
-      return { label, value: label };
-    });
+        return { label, value: label };
+      })
+    );
   };
 
   const buscaUnidadesEducacionais = () => {
@@ -208,11 +214,7 @@ export default ({ form }: Args) => {
 
       setUnidadesEducacionais(escolas);
 
-      setUnidadesEducacionaisOpcoes(
-        [{ label: "Selecione uma Unidade Educacional", value: "" }].concat(
-          formataUnidadesEducacionaisOpcoes(escolas)
-        )
-      );
+      setUnidadesEducacionaisOpcoes(formataUnidadesEducacionaisOpcoes(escolas));
 
       setBuscandoOpcoes((prev) => ({
         ...prev,
