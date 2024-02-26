@@ -6,6 +6,8 @@ import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
   MEDICAO_INICIAL,
+  RELATORIOS,
+  RELATORIO_ADESAO,
 } from "configs/constants";
 import {
   exibirModuloMedicaoInicial,
@@ -20,6 +22,8 @@ import {
 
 const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
   const exibeCadastros = usuarioEhMedicao();
+  const exibeRelatorios =
+    usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao();
 
   return (
     exibirModuloMedicaoInicial() && (
@@ -52,6 +56,20 @@ const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
             activeMenu={activeSubmenu}
           >
             <LeafItem to={`/${MEDICAO_INICIAL}/${EMPENHOS}`}>Empenhos</LeafItem>
+          </SubMenu>
+        )}
+        {exibeRelatorios && (
+          <SubMenu
+            icon="fa-chevron-down"
+            onClick={onSubmenuLancamentoClick}
+            title="Relatórios"
+            activeMenu={activeSubmenu}
+          >
+            <LeafItem
+              to={`/${MEDICAO_INICIAL}/${RELATORIOS}/${RELATORIO_ADESAO}`}
+            >
+              Relatório de Adesão
+            </LeafItem>
           </SubMenu>
         )}
       </Menu>
