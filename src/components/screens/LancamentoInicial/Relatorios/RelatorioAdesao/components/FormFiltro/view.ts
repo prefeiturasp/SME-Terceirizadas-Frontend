@@ -164,9 +164,7 @@ export default ({ form }: Args) => {
 
       setTiposAlimentacaoOpcoes((prev) => {
         return prev.filter((alimentacao) =>
-          escola.periodos_escolares.some((p) =>
-            p.tipos_alimentacao.some((t) => t.uuid === alimentacao.value)
-          )
+          escola.tipos_alimentacao.some((t) => t.uuid === alimentacao.value)
         );
       });
     }
