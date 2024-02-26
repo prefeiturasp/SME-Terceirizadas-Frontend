@@ -538,6 +538,7 @@ export const usuarioComAcessoAoPainelFichasTecnicas = () => {
   return [
     PERFIL.COORDENADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 

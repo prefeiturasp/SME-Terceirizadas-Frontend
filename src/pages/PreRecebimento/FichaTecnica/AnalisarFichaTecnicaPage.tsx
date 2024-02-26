@@ -8,6 +8,7 @@ import {
   PRE_RECEBIMENTO,
 } from "configs/constants";
 import Analisar from "components/screens/PreRecebimento/FichaTecnica/components/Analisar";
+import { usuarioEhCODAEGabinete } from "helpers/utilities";
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${ANALISE_FICHA_TECNICA}`,
@@ -24,6 +25,7 @@ const anteriores = [
     titulo: "Fichas Técnicas",
   },
 ];
+const somenteLeitura = usuarioEhCODAEGabinete() ? true : false;
 
 export default () => (
   <Page
@@ -32,6 +34,6 @@ export default () => (
     titulo={atual.titulo}
   >
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-    <Analisar />
+    <Analisar somenteLeitura={somenteLeitura} />
   </Page>
 );
