@@ -1,9 +1,26 @@
 import React from "react";
 
-import { Filtros } from "../../types";
+import TabelaResultadoPeriodo from "./components/TabelaResultadoPeriodo";
 
-type Props = {
-  filtros: Filtros;
+import { Props } from "./types";
+
+const MOCK_DADOS = {
+  INTEGRAL: [
+    {
+      alimentacao: "batata",
+      total_servido: 100.0,
+      total_frequencia: 80.0,
+      total_adesao: (100.0 / 80.0) * 100,
+    },
+  ],
+  MANHA: [
+    {
+      alimentacao: "batata",
+      total_servido: 100.0,
+      total_frequencia: 80.0,
+      total_adesao: (100.0 / 80.0) * 100,
+    },
+  ],
 };
 
 export default (props: Props) => {
@@ -12,29 +29,33 @@ export default (props: Props) => {
   return (
     <div className="container-fluid mt-4">
       <h2 className="text-start texto-simples-verde">
-        <strong>Adesão das Alimentações Servidas</strong>
+        <b>Adesão das Alimentações Servidas</b>
         {filtros && (
           <>
-            <strong className="mx-2">-</strong>
-            <strong className="text-dark">{filtros.mes}</strong>
-            {filtros.dre && (
-              <strong className="text-dark"> | {filtros.dre}</strong>
-            )}
+            <b className="mx-2">-</b>
+            <b className="text-dark">{filtros.mes}</b>
+            {filtros.dre && <b className="text-dark"> | {filtros.dre}</b>}
             {filtros.lotes && (
-              <strong className="text-dark">
-                {" "}
-                | {filtros.lotes.join(", ")}
-              </strong>
+              <b className="text-dark"> | {filtros.lotes.join(", ")}</b>
             )}
             {filtros.unidade_educacional && (
-              <strong className="text-dark">
-                {" "}
-                | {filtros.unidade_educacional}
-              </strong>
+              <b className="text-dark"> | {filtros.unidade_educacional}</b>
             )}
           </>
         )}
       </h2>
+      {filtros && (
+        <div>
+          {Object.entries(MOCK_DADOS).map(([periodo, dados], index) => (
+            <TabelaResultadoPeriodo
+              className="mt-4"
+              key={index}
+              periodo={periodo}
+              dados={dados}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
