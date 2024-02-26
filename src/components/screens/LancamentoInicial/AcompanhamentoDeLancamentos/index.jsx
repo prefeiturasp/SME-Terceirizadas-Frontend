@@ -484,6 +484,10 @@ export const AcompanhamentoDeLancamentos = () => {
                           setResultados(null);
                           setMudancaDre(true);
                           adicionaFiltroNaURL("diretoria_regional", value);
+                          setInitialValues((prev) => ({
+                            ...prev,
+                            diretoria_regional: value,
+                          }));
                         }}
                         name="diretoria_regional"
                         filterOption={(inputValue, option) =>
