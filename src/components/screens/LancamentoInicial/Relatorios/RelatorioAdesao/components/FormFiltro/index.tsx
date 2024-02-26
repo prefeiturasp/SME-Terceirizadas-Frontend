@@ -111,7 +111,7 @@ export default (props: Props) => {
             component={MultiSelect}
             disableSearch
             label="Tipo de Alimentação"
-            name="tipo_alimentacao"
+            name="alimentacoes"
             nomeDoItemNoPlural="alimentações"
             placeholder="Selecione os tipos de alimentação"
             options={view.tiposAlimentacaoOpcoes}
