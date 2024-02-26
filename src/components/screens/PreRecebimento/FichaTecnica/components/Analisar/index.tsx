@@ -6,7 +6,7 @@ import InputText from "components/Shareable/Input/InputText";
 import Collapse, { CollapseControl } from "components/Shareable/Collapse";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
-import { FichaTecnicaPraAnalise } from "interfaces/pre_recebimento.interface";
+import { FichaTecnicaDetalhadaComAnalise } from "interfaces/pre_recebimento.interface";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -56,8 +56,8 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
   const [carregando, setCarregando] = useState<boolean>(true);
   const [showModalCancelar, setShowModalCancelar] = useState<boolean>(false);
   const [collapse, setCollapse] = useState<CollapseControl>({});
-  const [ficha, setFicha] = useState<FichaTecnicaPraAnalise>(
-    {} as FichaTecnicaPraAnalise
+  const [ficha, setFicha] = useState<FichaTecnicaDetalhadaComAnalise>(
+    {} as FichaTecnicaDetalhadaComAnalise
   );
   const [initialValues, setInitialValues] = useState<Record<string, any>>({});
   const [conferidos, setConferidos] = useState<StateConferidosAnalise>({});

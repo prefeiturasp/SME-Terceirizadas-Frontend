@@ -18,7 +18,7 @@ import {
   FichaTecnicaDashboard,
   FichaTecnicaSimples,
   DadosCronogramaFichaTecnica,
-  FichaTecnicaPraAnalise,
+  FichaTecnicaDetalhadaComAnalise,
 } from "./pre_recebimento.interface";
 import { InformacaoNutricional } from "./produto.interface";
 import { LoteRascunhosInterface } from "./rascunhos.interface";
@@ -156,7 +156,7 @@ export interface ResponseFichaTecnicaDetalhada extends ResponseInterface {
 }
 
 export interface ResponseFichaTecnicaPraAnalise extends ResponseInterface {
-  data: FichaTecnicaPraAnalise;
+  data: FichaTecnicaDetalhadaComAnalise;
 }
 
 export interface ResponseInformacoesNutricionais extends ResponseInterface {

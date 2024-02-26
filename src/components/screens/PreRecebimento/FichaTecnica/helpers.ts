@@ -27,7 +27,7 @@ import {
   ArquivoForm,
   CategoriaFichaTecnicaChoices,
   FichaTecnicaDetalhada,
-  FichaTecnicaPraAnalise,
+  FichaTecnicaDetalhadaComAnalise,
   OptionsGenerico,
 } from "interfaces/pre_recebimento.interface";
 import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interface";
@@ -47,6 +47,7 @@ import {
   stringToBoolean,
 } from "helpers/parsers";
 import { NavigateFunction } from "react-router-dom";
+import { CATEGORIA_OPTIONS } from "./constants";
 
 export const formataInformacoesNutricionais = (values: Record<string, any>) => {
   const uuids_informacoes = Object.keys(values)
@@ -147,7 +148,7 @@ export const carregarDadosAnalise = async (
   listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
     InformacaoNutricional[]
   >,
-  setFicha: Dispatch<SetStateAction<FichaTecnicaPraAnalise>>,
+  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhadaComAnalise>>,
   setConferidos: Dispatch<SetStateAction<StateConferidosAnalise>>,
   setInitialValues: Dispatch<SetStateAction<Record<string, any>>>,
   setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>,
@@ -176,7 +177,9 @@ export const carregarDadosAnalise = async (
     const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
     setProponente(response.data);
 
-    setInitialValues(geraInitialValuesAnalise(fichaTecnica, setConferidos));
+    setInitialValues(
+      geraInitialValuesDetalharEAnalisar(fichaTecnica, setConferidos)
+    );
   }
 
   setCarregando(false);
@@ -215,7 +218,7 @@ export const carregarDados = async (
       );
 
     setFicha(fichaTecnica);
-    setInitialValues(geraInitialValuesDetalhe(fichaTecnica));
+    setInitialValues(geraInitialValuesCadastrar(fichaTecnica));
 
     if (fichaTecnica.arquivo) {
       const arquivo = await carregarArquivo(fichaTecnica.arquivo);
@@ -317,11 +320,7 @@ export const validaAssinarEnviar = (
   );
 };
 
-export const geraInitialValues = <
-  Ficha extends FichaTecnicaDetalhada | FichaTecnicaPraAnalise
->(
-  ficha: Ficha
-) => {
+export const geraInitialValuesCadastrar = (ficha: FichaTecnicaDetalhada) => {
   const valuesInformacoesNutricionais = {};
   ficha?.informacoes_nutricionais.forEach((informacao) => {
     valuesInformacoesNutricionais[
@@ -344,6 +343,17 @@ export const geraInitialValues = <
     });
 
   const initialValues = {
+    marca: ficha.marca?.uuid,
+    produto: ficha.produto?.nome,
+    fabricante: ficha.fabricante?.nome,
+    categoria: ficha.categoria as CategoriaFichaTecnicaChoices,
+    unidade_medida_porcao: ficha.unidade_medida_porcao?.uuid,
+    unidade_medida_volume_primaria: ficha.unidade_medida_volume_primaria?.uuid,
+    unidade_medida_primaria: ficha.unidade_medida_primaria?.uuid,
+    unidade_medida_secundaria: ficha.unidade_medida_secundaria?.uuid,
+    unidade_medida_primaria_vazia: ficha.unidade_medida_primaria_vazia?.uuid,
+    unidade_medida_secundaria_vazia:
+      ficha.unidade_medida_secundaria_vazia?.uuid,
     pregao_chamada_publica: ficha.pregao_chamada_publica,
     cnpj_fabricante: ficha.cnpj_fabricante,
     cep_fabricante: ficha.cep_fabricante,
@@ -412,44 +422,23 @@ export const geraInitialValues = <
   return initialValues as FichaTecnicaPayload;
 };
 
-export const geraInitialValuesDetalhe = (ficha: FichaTecnicaDetalhada) => {
-  const initialValues = {
-    marca: ficha.marca.uuid,
-    produto: ficha.produto?.nome,
-    fabricante: ficha.fabricante?.nome,
-    categoria: ficha.categoria as CategoriaFichaTecnicaChoices,
-    unidade_medida_porcao: ficha.unidade_medida_porcao?.uuid,
-
-    unidade_medida_volume_primaria: ficha.unidade_medida_volume_primaria?.uuid,
-    unidade_medida_primaria: ficha.unidade_medida_primaria?.uuid,
-
-    unidade_medida_secundaria: ficha.unidade_medida_secundaria?.uuid,
-
-    unidade_medida_primaria_vazia: ficha.unidade_medida_primaria_vazia?.uuid,
-
-    unidade_medida_secundaria_vazia:
-      ficha.unidade_medida_secundaria_vazia?.uuid,
-    ...geraInitialValues(ficha),
-  };
-
-  return initialValues as FichaTecnicaPayload;
-};
-
-export const geraInitialValuesAnalise = (
-  ficha: FichaTecnicaPraAnalise,
+export const geraInitialValuesDetalharEAnalisar = (
+  ficha: FichaTecnicaDetalhadaComAnalise,
   setConferidos: Dispatch<SetStateAction<StateConferidosAnalise>>
 ) => {
   const initialValues = {
-    marca: ficha.marca,
-    categoria: ficha.categoria,
-    produto: ficha.produto,
-    fabricante: ficha.fabricante,
-    unidade_medida_porcao: ficha.unidade_medida_porcao,
-    unidade_medida_volume_primaria: ficha.unidade_medida_volume_primaria,
-    unidade_medida_primaria: ficha.unidade_medida_primaria,
-    unidade_medida_secundaria: ficha.unidade_medida_secundaria,
-    unidade_medida_primaria_vazia: ficha.unidade_medida_primaria_vazia,
-    unidade_medida_secundaria_vazia: ficha.unidade_medida_secundaria_vazia,
+    ...geraInitialValuesCadastrar(ficha),
+    marca: ficha.marca?.nome,
+    fabricante: ficha.fabricante?.nome,
+    categoria: CATEGORIA_OPTIONS.find(({ uuid }) => uuid === ficha.categoria)
+      ?.nome,
+    unidade_medida_porcao: ficha.unidade_medida_porcao?.nome,
+    unidade_medida_volume_primaria: ficha.unidade_medida_volume_primaria?.nome,
+    unidade_medida_primaria: ficha.unidade_medida_primaria?.nome,
+    unidade_medida_secundaria: ficha.unidade_medida_secundaria?.nome,
+    unidade_medida_primaria_vazia: ficha.unidade_medida_primaria_vazia?.nome,
+    unidade_medida_secundaria_vazia:
+      ficha.unidade_medida_secundaria_vazia?.nome,
     armazenamento_correcoes: ficha.analise?.armazenamento_correcoes,
     conservacao_correcoes: ficha.analise?.conservacao_correcoes,
     detalhes_produto_correcoes: ficha.analise?.detalhes_produto_correcoes,
@@ -459,8 +448,6 @@ export const geraInitialValuesAnalise = (
       ficha.analise?.informacoes_nutricionais_correcoes,
     temperatura_e_transporte_correcoes:
       ficha.analise?.temperatura_e_transporte_correcoes,
-
-    ...geraInitialValues(ficha),
   };
 
   const stateConferidos: StateConferidosAnalise = {
