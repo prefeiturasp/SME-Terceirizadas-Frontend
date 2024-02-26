@@ -231,6 +231,17 @@ export default ({ form }: Args) => {
     );
   };
 
+  const validaMesAno = (mesAno: string) => {
+    if (!mesAno) return;
+
+    const hoje = new Date();
+    let [mesSelecionado, anoSelecionado] = mesAno.split("_");
+
+    return hoje <= new Date(Number(anoSelecionado), Number(mesSelecionado), 0)
+      ? "Não é possível exportar o relatório com mês posterior ao atual"
+      : "";
+  };
+
   return {
     mesesAnosOpcoes,
     diretoriasRegionaisOpcoes,
@@ -243,5 +254,6 @@ export default ({ form }: Args) => {
     onChangeUnidadeEducacional,
     filtraUnidadesEducacionaisOpcoes,
     buscandoOpcoes,
+    validaMesAno,
   };
 };

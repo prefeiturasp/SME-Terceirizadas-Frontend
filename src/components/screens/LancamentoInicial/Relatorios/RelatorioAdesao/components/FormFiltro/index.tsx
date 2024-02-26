@@ -33,6 +33,7 @@ export default (props: Props) => {
             options={view.mesesAnosOpcoes}
             required
             naoDesabilitarPrimeiraOpcao
+            validate={view.validaMesAno}
           />
         )}
       </div>
