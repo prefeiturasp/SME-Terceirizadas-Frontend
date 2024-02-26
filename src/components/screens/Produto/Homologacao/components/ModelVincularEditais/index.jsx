@@ -32,9 +32,9 @@ export const ModalVincularEditais = ({ ...props }) => {
   const [loading, setLoading] = useState(false);
 
   const excluiuEditalEmAlteracaoProduto = () => {
-    const editaisHomologados = produto.vinculos_produto_edital.map(
-      (vinculo) => vinculo.edital.uuid
-    );
+    const editaisHomologados = produto.vinculos_produto_edital
+      .filter((vinculo) => !vinculo.suspenso)
+      .map((vinculo) => vinculo.edital.uuid);
     return !editaisHomologados.every((edital) => editais.includes(edital));
   };
 
