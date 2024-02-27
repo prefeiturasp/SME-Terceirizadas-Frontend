@@ -19,7 +19,8 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalCadastroVinculo from "./components/ModalCadastroVinculo";
 import ModalExclusaoVinculo from "./components/ModalExclusaoVinculo";
 import { Paginacao } from "components/Shareable/Paginacao";
-import { TIPO_GESTAO } from "constants/shared";
+import { TIPO_GESTAO, PERFIL } from "constants/shared";
+import useSomenteLeitura from "hooks/useSomenteLeitura";
 
 export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
   const [carregando, setCarregando] = useState(false);
@@ -37,6 +38,10 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
   const [vinculoModal, setVinculoModal] = useState();
   const [perfisSubordinados, setPerfisSubordinados] = useState();
   const [ehUEParceira, setEhUEParceira] = useState(false);
+
+  const somenteLeitura = useSomenteLeitura([
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+  ]);
 
   const buscaFiltros = async () => {
     setCarregando(true);
@@ -282,6 +287,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
             visaoUnica={visaoUnica}
             desabilitaCadastro={desabilitaCadastro}
             qtdLimiteCadastro={qtdLimiteCadastro}
+            somenteLeitura={somenteLeitura}
           />
           {vinculos && (
             <>
@@ -290,6 +296,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
                 vinculos={vinculos}
                 toggleEdicao={toggleEdicao}
                 toggleExclusao={toggleExclusao}
+                somenteLeitura={somenteLeitura}
               />
               <div className="row">
                 <div className="col">

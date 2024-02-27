@@ -25,11 +25,16 @@ import {
   toastSuccess,
 } from "../../../../../Shareable/Toast/dialogs";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
+import { PERFIL } from "constants/shared";
+import useSomenteLeitura from "hooks/useSomenteLeitura";
 
 export default () => {
   const navigate = useNavigate();
 
   const { meusDados } = useContext(MeusDadosContext);
+  const somenteLeitura = useSomenteLeitura([
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+  ]);
 
   const [carregando, setCarregando] = useState(true);
   const [layoutDeEmbalagem, setLayoutDeEmbalagem] = useState({});
@@ -417,8 +422,10 @@ export default () => {
                           </div>
                         )
                       )}
-                      {layoutDeEmbalagem.tipos_de_embalagens[0].status !==
-                        "APROVADO" && retornaBotoesAprovacao(0, form)}
+                      {!somenteLeitura &&
+                        layoutDeEmbalagem.tipos_de_embalagens[0].status !==
+                          "APROVADO" &&
+                        retornaBotoesAprovacao(0, form)}
                     </div>
                     {retornaTextoAprovacaoOuCampoCorrecao(0, values, form)}
                   </div>
@@ -444,8 +451,10 @@ export default () => {
                           </div>
                         )
                       )}
-                      {layoutDeEmbalagem.tipos_de_embalagens[1].status !==
-                        "APROVADO" && retornaBotoesAprovacao(1, form)}
+                      {!somenteLeitura &&
+                        layoutDeEmbalagem.tipos_de_embalagens[1].status !==
+                          "APROVADO" &&
+                        retornaBotoesAprovacao(1, form)}
                     </div>
                     {retornaTextoAprovacaoOuCampoCorrecao(1, values, form)}
                   </div>
@@ -473,8 +482,10 @@ export default () => {
                               </div>
                             )
                           )}
-                          {layoutDeEmbalagem.tipos_de_embalagens[2].status !==
-                            "APROVADO" && retornaBotoesAprovacao(2, form)}
+                          {!somenteLeitura &&
+                            layoutDeEmbalagem.tipos_de_embalagens[2].status !==
+                              "APROVADO" &&
+                            retornaBotoesAprovacao(2, form)}
                         </div>
                         {retornaTextoAprovacaoOuCampoCorrecao(2, values, form)}
                       </div>
@@ -483,19 +494,21 @@ export default () => {
 
                   <hr />
 
-                  <Botao
-                    texto="Enviar para o Fornecedor"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    className="float-end ms-3"
-                    disabled={
-                      !validaAprovacoes || Object.keys(errors).length > 0
-                    }
-                    tooltipExterno={
-                      (!validaAprovacoes || Object.keys(errors).length > 0) &&
-                      "É necessário avaliar todas as embalagens antes de prosseguir."
-                    }
-                  />
+                  {!somenteLeitura && (
+                    <Botao
+                      texto="Enviar para o Fornecedor"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      className="float-end ms-3"
+                      disabled={
+                        !validaAprovacoes || Object.keys(errors).length > 0
+                      }
+                      tooltipExterno={
+                        (!validaAprovacoes || Object.keys(errors).length > 0) &&
+                        "É necessário avaliar todas as embalagens antes de prosseguir."
+                      }
+                    />
+                  )}
 
                   <Botao
                     texto="Cancelar"
