@@ -326,9 +326,10 @@ export const AcompanhamentoDeLancamentos = () => {
     );
     form.reset();
     resetURL(["mes_ano", "lotes", "tipo_unidade", "escola"]);
-    setInitialValues({
-      diretoria_regional: diretoria_regional.value,
-    });
+    diretoria_regional &&
+      setInitialValues({
+        diretoria_regional: diretoria_regional.value,
+      });
     setResultados(undefined);
     diretoria_regional &&
       form.change("diretoria_regional", diretoria_regional.value);
