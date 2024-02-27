@@ -169,18 +169,28 @@ export default ({ form }: Args) => {
   };
 
   const onChangeLotes = (lotes: Array<string>) => {
-    if (lotes.length === 0) {
-      setUnidadesEducacionaisOpcoes(
-        formataUnidadesEducacionaisOpcoes(unidadesEducacionais)
+    limpaCampo("unidade_educacional");
+
+    let escolas = unidadesEducacionais;
+
+    const dreUUID = form.getState().values.dre;
+    if (dreUUID) {
+      escolas = escolas.filter(
+        (escola) => escola.diretoria_regional.uuid === dreUUID
       );
-    } else if (!buscandoOpcoes.buscandoUnidadesEducacionais)
+    }
+
+    if (lotes.length === 0) {
+      setUnidadesEducacionaisOpcoes(formataUnidadesEducacionaisOpcoes(escolas));
+    } else {
       setUnidadesEducacionaisOpcoes(
         formataUnidadesEducacionaisOpcoes(
-          unidadesEducacionais.filter(
+          escolas.filter(
             (escola) => escola.lote && lotes.includes(escola.lote.uuid)
           )
         )
       );
+    }
   };
 
   const onChangeUnidadeEducacional = (escolaLabel: string) => {
