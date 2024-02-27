@@ -267,7 +267,8 @@ export default ({ form }: Args) => {
     const hoje = new Date();
     let [mesSelecionado, anoSelecionado] = mesAno.split("_");
 
-    return hoje <= new Date(Number(anoSelecionado), Number(mesSelecionado), 0)
+    return new Date(Number(anoSelecionado), Number(mesSelecionado) - 1, 1) >
+      hoje
       ? "Não é possível exportar o relatório com mês posterior ao atual"
       : "";
   };
