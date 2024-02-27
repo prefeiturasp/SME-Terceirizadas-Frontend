@@ -1780,7 +1780,10 @@ export default () => {
     }
 
     if (ehCorrecao) {
-      const payloadParaCorrecao = formatarPayloadParaCorrecao(payload);
+      const payloadParaCorrecao = formatarPayloadParaCorrecao(
+        payload,
+        escolaEhEMEBS()
+      );
       const response = await escolaCorrigeMedicao(
         valoresPeriodosLancamentos[0].medicao_uuid,
         payloadParaCorrecao
@@ -1924,7 +1927,9 @@ export default () => {
     row,
     column,
     categoria,
-    inclusoesAutorizadas
+    inclusoesAutorizadas,
+    valoresPeriodosLancamentos,
+    diasParaCorrecao
   ) => {
     const EH_INCLUSAO_SOMENTE_SOBREMESA =
       inclusoesAutorizadas.length &&
@@ -1941,7 +1946,15 @@ export default () => {
     ) {
       return "";
     }
-    return validacaoDiaLetivo(column.dia) ? "" : "nao-eh-dia-letivo";
+    return validacaoDiaLetivo(column.dia) ||
+      ehDiaParaCorrigir(
+        column.dia,
+        categoria.id,
+        valoresPeriodosLancamentos,
+        diasParaCorrecao
+      )
+      ? ""
+      : "nao-eh-dia-letivo";
   };
 
   const openModalObservacaoDiaria = (dia, categoria) => {
@@ -2277,13 +2290,38 @@ export default () => {
     return undefined;
   };
 
-  const exibeBotaoAdicionarObservacao = (dia) => {
+  const exibeBotaoAdicionarObservacao = (dia, categoriaId) => {
     const temInclusaoAutorizadaNoDia = inclusoesAutorizadas.some(
       (inclusao) => inclusao.dia === dia
     );
     return (
-      !validacaoSemana(dia) &&
-      (validacaoDiaLetivo(dia) || temInclusaoAutorizadaNoDia)
+      (!validacaoSemana(dia) &&
+        (validacaoDiaLetivo(dia) || temInclusaoAutorizadaNoDia) &&
+        !(
+          escolaEhEMEBS() &&
+          [
+            "MEDICAO_CORRECAO_SOLICITADA",
+            "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+            "MEDICAO_CORRIGIDA_PELA_UE",
+            "MEDICAO_CORRIGIDA_PARA_CODAE",
+          ].includes(location.state.status_periodo)
+        )) ||
+      (escolaEhEMEBS() &&
+        [
+          "MEDICAO_CORRECAO_SOLICITADA",
+          "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+          "MEDICAO_CORRIGIDA_PELA_UE",
+          "MEDICAO_CORRIGIDA_PARA_CODAE",
+        ].includes(location.state.status_periodo) &&
+        !validacaoSemana(dia) &&
+        diasParaCorrecao.find(
+          (diaParaCorrecao) =>
+            String(diaParaCorrecao.dia) === String(dia) &&
+            String(diaParaCorrecao.categoria_medicao) === String(categoriaId) &&
+            diaParaCorrecao.habilitado_correcao === true &&
+            ALUNOS_EMEBS[diaParaCorrecao.infantil_ou_fundamental].key ===
+              alunosTabSelecionada
+        ))
     );
   };
 
@@ -2497,7 +2535,8 @@ export default () => {
                                                   {row.name ===
                                                   "observacoes" ? (
                                                     exibeBotaoAdicionarObservacao(
-                                                      column.dia
+                                                      column.dia,
+                                                      categoria.id
                                                     ) && (
                                                       <Botao
                                                         texto={textoBotaoObservacao(
@@ -2578,7 +2617,9 @@ export default () => {
                                                           row,
                                                           column,
                                                           categoria,
-                                                          inclusoesAutorizadas
+                                                          inclusoesAutorizadas,
+                                                          valoresPeriodosLancamentos,
+                                                          diasParaCorrecao
                                                         )}`}
                                                         component={
                                                           InputValueMedicao
@@ -2622,7 +2663,9 @@ export default () => {
                                                           diasParaCorrecao,
                                                           ehPeriodoEscolarSimples,
                                                           permissoesLancamentosEspeciaisPorDia,
-                                                          alimentacoesLancamentosEspeciais
+                                                          alimentacoesLancamentosEspeciais,
+                                                          escolaEhEMEBS(),
+                                                          alunosTabSelecionada
                                                         )}
                                                         dia={column.dia}
                                                         defaultValue={defaultValue(
@@ -2704,7 +2747,8 @@ export default () => {
                                                     {row.name ===
                                                     "observacoes" ? (
                                                       exibeBotaoAdicionarObservacao(
-                                                        column.dia
+                                                        column.dia,
+                                                        categoria.id
                                                       ) && (
                                                         <Botao
                                                           texto={textoBotaoObservacao(
@@ -2841,7 +2885,9 @@ export default () => {
                                                             diasParaCorrecao,
                                                             ehPeriodoEscolarSimples,
                                                             permissoesLancamentosEspeciaisPorDia,
-                                                            alimentacoesLancamentosEspeciais
+                                                            alimentacoesLancamentosEspeciais,
+                                                            escolaEhEMEBS(),
+                                                            alunosTabSelecionada
                                                           )}
                                                           exibeTooltipPadraoRepeticaoDiasSobremesaDoce={exibirTooltipPadraoRepeticaoDiasSobremesaDoce(
                                                             formValuesAtualizados,
