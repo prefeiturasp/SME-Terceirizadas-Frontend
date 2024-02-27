@@ -13,13 +13,7 @@ import { getMesesAnosSolicitacoesMedicaoinicial } from "services/medicaoInicial/
 
 import { MESES } from "constants/shared";
 
-import {
-  Args,
-  SelectOption,
-  MultiSelectOption,
-  EscolasSimplissimaParams,
-  Option,
-} from "./types";
+import { Args, SelectOption, MultiSelectOption, Option } from "./types";
 
 export default ({ form }: Args) => {
   const [mesesAnosOpcoes, setMesesAnosOpcoes] = useState<Array<SelectOption>>(
@@ -39,6 +33,7 @@ export default ({ form }: Args) => {
     Array<MultiSelectOption>
   >([]);
 
+  const [lotes, setLotes] = useState([]);
   const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
   const [periodosEscolares, setPeriodosEscolares] = useState([]);
   const [tiposAlimentacao, setTiposAlimentacao] = useState([]);
@@ -53,114 +48,177 @@ export default ({ form }: Args) => {
   });
 
   useEffect(() => {
-    setBuscandoOpcoes((prev) => ({
-      ...prev,
+    setBuscandoOpcoes({
       buscandoMesesAnos: true,
       buscandoDiretoriasRegionais: true,
+      buscandoLotes: true,
+      buscandoUnidadesEducacionais: true,
       buscandoPeriodosEscolares: true,
       buscandoTiposAlimentacao: true,
-    }));
-
-    getMesesAnosSolicitacoesMedicaoinicial({
-      status: "MEDICAO_APROVADA_PELA_CODAE",
-    }).then((response) => {
-      setMesesAnosOpcoes(
-        [{ nome: "Selecione o mês de referência", uuid: "" }].concat(
-          response.data.results.map((mesAno) => ({
-            nome: `${MESES[parseInt(mesAno.mes) - 1]} - ${mesAno.ano}`,
-            uuid: `${mesAno.mes}_${mesAno.ano}`,
-          }))
-        )
-      );
-      setBuscandoOpcoes((prev) => ({
-        ...prev,
-        buscandoMesesAnos: false,
-      }));
     });
 
-    getDiretoriaregionalSimplissima().then((response) => {
-      setDiretoriasRegionaisOpcoes(
-        [{ nome: "Selecione uma DRE", uuid: "" }].concat(response.data.results)
-      );
-      setBuscandoOpcoes((prev) => ({
-        ...prev,
-        buscandoDiretoriasRegionais: false,
-      }));
-    });
+    Promise.all([
+      getMesesAnosSolicitacoesMedicaoinicial({
+        status: "MEDICAO_APROVADA_PELA_CODAE",
+      }),
+      getDiretoriaregionalSimplissima(),
+      getLotesSimples(),
+      getEscolasParaFiltros(),
+      buscaPeriodosEscolares(),
+      getTiposDeAlimentacao(),
+    ]).then(
+      ([
+        responseMesesAnos,
+        responseDRE,
+        responseLotes,
+        responseEscolas,
+        responsePeriodos,
+        responseAlimentacoes,
+      ]) => {
+        setMesesAnosOpcoes(
+          formataMesesAnosOpcoes(responseMesesAnos.data.results)
+        );
 
-    buscaPeriodosEscolares().then((response) => {
-      const periodos = response.data.results.map((periodo) => ({
-        label: periodo.nome,
-        value: periodo.uuid,
-      }));
+        setDiretoriasRegionaisOpcoes(
+          formataDiretoriasRegionaisOpcoes(responseDRE.data.results)
+        );
 
-      setPeriodosEscolares(periodos);
-      setPeriodosEscolaresOpcoes(periodos);
+        const lotes = responseLotes.data.results;
+        setLotes(lotes);
+        setLotesOpcoes(formatarOpcoesLote(lotes));
 
-      setBuscandoOpcoes((prev) => ({
-        ...prev,
-        buscandoPeriodosEscolares: false,
-      }));
-    });
+        let escolas = responseEscolas.results.filter(
+          (escola) =>
+            !["CEI", "CCI", "CEU CEI", "CEU CEMEI", "CEMEI"].includes(
+              escola.tipo_unidade.iniciais
+            )
+        );
+        setUnidadesEducacionais(escolas);
+        setUnidadesEducacionaisOpcoes(
+          formataUnidadesEducacionaisOpcoes(escolas)
+        );
 
-    getTiposDeAlimentacao().then((data) => {
-      const tipos = data.results.map((alimentacao) => ({
-        label: alimentacao.nome,
-        value: alimentacao.uuid,
-      }));
+        const periodos = formataPeriodosEscolaresOpcoes(
+          responsePeriodos.data.results
+        );
+        setPeriodosEscolares(periodos);
+        setPeriodosEscolaresOpcoes(periodos);
 
-      setTiposAlimentacao(tipos);
-      setTiposAlimentacaoOpcoes(tipos);
+        const tipos = formataTiposAlimentacoesOpcoes(
+          responseAlimentacoes.results
+        );
+        setTiposAlimentacao(tipos);
+        setTiposAlimentacaoOpcoes(tipos);
 
-      setBuscandoOpcoes((prev) => ({
-        ...prev,
-        buscandoTiposAlimentacao: false,
-      }));
-    });
-  }, []);
+        form.subscribe(
+          (values) => {
+            if (!values.dirty) {
+              setLotesOpcoes(formatarOpcoesLote(lotes));
+              setUnidadesEducacionaisOpcoes(
+                formataUnidadesEducacionaisOpcoes(escolas)
+              );
+              setPeriodosEscolaresOpcoes(periodos);
+              setTiposAlimentacaoOpcoes(tipos);
+            }
+          },
+          { dirty: true }
+        );
 
-  const onChangeDRE = (e: ChangeEvent<HTMLInputElement>) => {
-    form.resetFieldState("lotes");
-
-    if (!e.target.value) {
-      form.resetFieldState("unidade_educacional");
-      return;
-    }
-
-    setBuscandoOpcoes((prev) => ({
-      ...prev,
-      buscandoLotes: true,
-    }));
-
-    getLotesSimples({ diretoria_regional__uuid: e.target.value }).then(
-      (response) => {
-        setLotesOpcoes(formatarOpcoesLote(response.data.results));
-        setBuscandoOpcoes((prev) => ({
-          ...prev,
+        setBuscandoOpcoes({
+          buscandoMesesAnos: false,
+          buscandoDiretoriasRegionais: false,
           buscandoLotes: false,
-        }));
+          buscandoUnidadesEducacionais: false,
+          buscandoPeriodosEscolares: false,
+          buscandoTiposAlimentacao: false,
+        });
       }
     );
+  }, []);
 
-    buscaUnidadesEducacionais();
+  const formataMesesAnosOpcoes = (mesesAnos) => {
+    return [{ nome: "Selecione o mês de referência", uuid: "" }].concat(
+      mesesAnos.map((mesAno) => ({
+        nome: `${MESES[parseInt(mesAno.mes) - 1]} - ${mesAno.ano}`,
+        uuid: `${mesAno.mes}_${mesAno.ano}`,
+      }))
+    );
   };
 
-  const onChangeLotes = (lotes: Array<string>) => {
-    if (lotes.length === 0) {
+  const formataDiretoriasRegionaisOpcoes = (dres) => {
+    return [{ nome: "Selecione uma DRE", uuid: "" }].concat(dres);
+  };
+
+  const formataPeriodosEscolaresOpcoes = (periodos) => {
+    return periodos.map((periodo) => ({
+      label: periodo.nome,
+      value: periodo.uuid,
+    }));
+  };
+
+  const formataTiposAlimentacoesOpcoes = (tipos) => {
+    return tipos.map((alimentacao) => ({
+      label: alimentacao.nome,
+      value: alimentacao.uuid,
+    }));
+  };
+
+  const onChangeDRE = (e: ChangeEvent<HTMLInputElement>) => {
+    limpaCampos(["lotes", "unidade_educacional"]);
+
+    const dreUUID = e.target.value;
+
+    if (!dreUUID) {
+      setLotesOpcoes(formatarOpcoesLote(lotes));
       setUnidadesEducacionaisOpcoes(
         formataUnidadesEducacionaisOpcoes(unidadesEducacionais)
       );
-    } else if (!buscandoOpcoes.buscandoUnidadesEducacionais)
+
+      return;
+    }
+
+    setLotesOpcoes(
+      formatarOpcoesLote(
+        lotes.filter((lote) => lote.diretoria_regional.uuid === dreUUID)
+      )
+    );
+    setUnidadesEducacionaisOpcoes(
+      formataUnidadesEducacionaisOpcoes(
+        unidadesEducacionais.filter(
+          (escola) => escola.diretoria_regional.uuid === dreUUID
+        )
+      )
+    );
+  };
+
+  const onChangeLotes = (lotes: Array<string>) => {
+    limpaCampo("unidade_educacional");
+
+    let escolas = unidadesEducacionais;
+
+    const dreUUID = form.getState().values.dre;
+    if (dreUUID) {
+      escolas = escolas.filter(
+        (escola) => escola.diretoria_regional.uuid === dreUUID
+      );
+    }
+
+    if (lotes.length === 0) {
+      setUnidadesEducacionaisOpcoes(formataUnidadesEducacionaisOpcoes(escolas));
+    } else {
       setUnidadesEducacionaisOpcoes(
         formataUnidadesEducacionaisOpcoes(
-          unidadesEducacionais.filter(
+          escolas.filter(
             (escola) => escola.lote && lotes.includes(escola.lote.uuid)
           )
         )
       );
+    }
   };
 
   const onChangeUnidadeEducacional = (escolaLabel: string) => {
+    limpaCampos(["periodos", "tipo_alimentacao"]);
+
     if (!escolaLabel) {
       setPeriodosEscolaresOpcoes(periodosEscolares);
       setTiposAlimentacaoOpcoes(tiposAlimentacao);
@@ -198,43 +256,6 @@ export default ({ form }: Args) => {
     );
   };
 
-  const buscaUnidadesEducacionais = () => {
-    if (buscandoOpcoes.buscandoUnidadesEducacionais) return;
-
-    setBuscandoOpcoes((prev) => ({
-      ...prev,
-      buscandoUnidadesEducacionais: true,
-    }));
-
-    const params: EscolasSimplissimaParams = {};
-
-    const values = form.getState().values;
-    if (values.dre) params.diretoria_regional__uuid = values.dre;
-    if (values.lotes && values.lotes.length > 0)
-      params.lote__uuid = values.lotes;
-
-    getEscolasParaFiltros(params).then((response) => {
-      let escolas = response.results;
-
-      // caso os lotes sejam selecionados antes de receber a resposta da requisicao da DRE
-      const lotes = form.getState().values.lotes;
-      if (lotes && lotes.length > 0) {
-        escolas = escolas.filter((escola) =>
-          lotes.includes(escola.lote && escola.lote.uuid)
-        );
-      }
-
-      setUnidadesEducacionais(escolas);
-
-      setUnidadesEducacionaisOpcoes(formataUnidadesEducacionaisOpcoes(escolas));
-
-      setBuscandoOpcoes((prev) => ({
-        ...prev,
-        buscandoUnidadesEducacionais: false,
-      }));
-    });
-  };
-
   const filtraUnidadesEducacionaisOpcoes = (
     inputValue: string,
     option: Option
@@ -251,9 +272,19 @@ export default ({ form }: Args) => {
     const hoje = new Date();
     let [mesSelecionado, anoSelecionado] = mesAno.split("_");
 
-    return hoje <= new Date(Number(anoSelecionado), Number(mesSelecionado), 0)
+    return new Date(Number(anoSelecionado), Number(mesSelecionado) - 1, 1) >
+      hoje
       ? "Não é possível exportar o relatório com mês posterior ao atual"
       : "";
+  };
+
+  const limpaCampo = (nomeCampo: string) => {
+    form.resetFieldState(nomeCampo);
+    form.change(nomeCampo, undefined);
+  };
+
+  const limpaCampos = (nomeCampos: Array<string>) => {
+    nomeCampos.forEach((nomeCampo) => limpaCampo(nomeCampo));
   };
 
   return {
