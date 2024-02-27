@@ -105,6 +105,20 @@ export default ({ form }: Args) => {
         setTiposAlimentacao(tipos);
         setTiposAlimentacaoOpcoes(tipos);
 
+        form.subscribe(
+          (values) => {
+            if (!values.dirty) {
+              setLotesOpcoes(formatarOpcoesLote(lotes));
+              setUnidadesEducacionaisOpcoes(
+                formataUnidadesEducacionaisOpcoes(escolas)
+              );
+              setPeriodosEscolaresOpcoes(periodos);
+              setTiposAlimentacaoOpcoes(tipos);
+            }
+          },
+          { dirty: true }
+        );
+
         setBuscandoOpcoes({
           buscandoMesesAnos: false,
           buscandoDiretoriasRegionais: false,
@@ -198,6 +212,8 @@ export default ({ form }: Args) => {
   };
 
   const onChangeUnidadeEducacional = (escolaLabel: string) => {
+    limpaCampos(["periodos", "tipo_alimentacao"]);
+
     if (!escolaLabel) {
       setPeriodosEscolaresOpcoes(periodosEscolares);
       setTiposAlimentacaoOpcoes(tiposAlimentacao);
