@@ -840,7 +840,10 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_MASTER}`,
     component: GestaoAcessoMasterPage,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_DIRETOR_ESCOLA}`,
@@ -1508,7 +1511,7 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.ENVIO_REQUISICOES_ENTREGA_AVANCADO}`,
     component: ConsultaRequisicaoEntregaDilog,
-    tipoUsuario: usuarioEhLogistica(),
+    tipoUsuario: usuarioEhLogistica() || usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_REQUISICAO_ENTREGA}`,
@@ -1518,7 +1521,7 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_SOLICITACAO_ALTERACAO}`,
     component: GestaoSolicitacaoAlteracaoPage,
-    tipoUsuario: usuarioEhLogistica(),
+    tipoUsuario: usuarioEhLogistica() || usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CONSULTA_SOLICITACAO_ALTERACAO}`,
@@ -1600,7 +1603,10 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO}`,
     component: GuiasNotificacoesPage,
-    tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico(),
+    tipoUsuario:
+      usuarioEhCodaeDilog() ||
+      usuarioEhDilogJuridico() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO_FISCAL}`,
@@ -1645,7 +1651,10 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
     component: CronogramaEntregaPage,
-    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor(),
+    tipoUsuario:
+      usuarioEhPreRecebimento() ||
+      usuarioEhEmpresaFornecedor() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.SOLICITACAO_ALTERACAO_CRONOGRAMA}`,
@@ -1663,7 +1672,10 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
     component: DetalharCronogramaPage,
-    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor(),
+    tipoUsuario:
+      usuarioEhPreRecebimento() ||
+      usuarioEhEmpresaFornecedor() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ALTERACAO_CRONOGRAMA}`,
@@ -1681,7 +1693,8 @@ const routesConfig = [
       usuarioEhDinutreDiretoria() ||
       usuarioEhDilogDiretoria() ||
       usuarioEhEmpresaFornecedor() ||
-      usuarioEhCodaeDilog(),
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     /*
@@ -1749,7 +1762,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhDilogDiretoria() ||
       usuarioEhCronograma() ||
-      usuarioEhCodaeDilog(),
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.DILOG}/${constants.ALTERACOES_REPROVADAS}`,
@@ -1757,12 +1771,16 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhDilogDiretoria() ||
       usuarioEhCronograma() ||
-      usuarioEhCodaeDilog(),
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.CRONOGRAMA}/${constants.AGUARDANDO_ASSINATURAS}`,
     component: StatusAguardandoAssinaturasCronograma,
-    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.ASSINADO_CODAE}`,
@@ -1771,12 +1789,16 @@ const routesConfig = [
       usuarioEhDinutreDiretoria() ||
       usuarioEhDilogDiretoria() ||
       usuarioEhCodaeDilog() ||
-      usuarioEhCronograma(),
+      usuarioEhCronograma() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.CRONOGRAMA}/${constants.SOLICITACOES_ALTERACOES}`,
     component: StatusSolicitacoesAlteracoesCronograma,
-    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.CRONOGRAMA}/${constants.ALTERACOES_CODAE}`,
@@ -1785,7 +1807,8 @@ const routesConfig = [
       usuarioEhCronograma() ||
       usuarioEhDilogDiretoria() ||
       usuarioEhCodaeDilog() ||
-      usuarioEhDinutreDiretoria(),
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.LAYOUT_EMBALAGEM}`,

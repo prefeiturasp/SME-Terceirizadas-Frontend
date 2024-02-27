@@ -18,7 +18,7 @@ import { CADASTRO_NOTIFICACAO, LOGISTICA } from "configs/constants";
 
 const FORM_NAME = "guiasOcorrencias";
 
-export default ({ setFiltros, setNotificacoes, fiscal }) => {
+export default ({ setFiltros, setNotificacoes, fiscal, somenteLeitura }) => {
   const [distribuidores, setDistribuidores] = useState([]);
 
   const initialValues = {};
@@ -103,7 +103,7 @@ export default ({ setFiltros, setNotificacoes, fiscal }) => {
             </div>
 
             <div className="mt-4 mb-4">
-              {fiscal === false && (
+              {fiscal === false && somenteLeitura === false && (
                 <NavLink to={`/${LOGISTICA}/${CADASTRO_NOTIFICACAO}`}>
                   <Botao
                     texto="Nova Notificação"
