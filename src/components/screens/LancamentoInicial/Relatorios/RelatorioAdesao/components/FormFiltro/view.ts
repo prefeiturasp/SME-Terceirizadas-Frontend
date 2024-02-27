@@ -87,7 +87,12 @@ export default ({ form }: Args) => {
         setLotes(lotes);
         setLotesOpcoes(formatarOpcoesLote(lotes));
 
-        let escolas = responseEscolas.results;
+        let escolas = responseEscolas.results.filter(
+          (escola) =>
+            !["CEI", "CCI", "CEU CEI", "CEU CEMEI", "CEMEI"].includes(
+              escola.tipo_unidade.iniciais
+            )
+        );
         setUnidadesEducacionais(escolas);
         setUnidadesEducacionaisOpcoes(
           formataUnidadesEducacionaisOpcoes(escolas)
