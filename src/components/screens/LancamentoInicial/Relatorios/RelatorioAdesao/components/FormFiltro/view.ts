@@ -13,13 +13,7 @@ import { getMesesAnosSolicitacoesMedicaoinicial } from "services/medicaoInicial/
 
 import { MESES } from "constants/shared";
 
-import {
-  Args,
-  SelectOption,
-  MultiSelectOption,
-  EscolasSimplissimaParams,
-  Option,
-} from "./types";
+import { Args, SelectOption, MultiSelectOption, Option } from "./types";
 
 export default ({ form }: Args) => {
   const [mesesAnosOpcoes, setMesesAnosOpcoes] = useState<Array<SelectOption>>(
@@ -59,6 +53,7 @@ export default ({ form }: Args) => {
       buscandoMesesAnos: true,
       buscandoDiretoriasRegionais: true,
       buscandoLotes: true,
+      buscandoUnidadesEducacionais: true,
       buscandoPeriodosEscolares: true,
       buscandoTiposAlimentacao: true,
     }));
@@ -102,6 +97,18 @@ export default ({ form }: Args) => {
       }));
     });
 
+    getEscolasParaFiltros().then((response) => {
+      let escolas = response.results;
+
+      setUnidadesEducacionais(escolas);
+      setUnidadesEducacionaisOpcoes(formataUnidadesEducacionaisOpcoes(escolas));
+
+      setBuscandoOpcoes((prev) => ({
+        ...prev,
+        buscandoUnidadesEducacionais: false,
+      }));
+    });
+
     buscaPeriodosEscolares().then((response) => {
       const periodos = response.data.results.map((periodo) => ({
         label: periodo.nome,
@@ -134,24 +141,31 @@ export default ({ form }: Args) => {
   }, []);
 
   const onChangeDRE = (e: ChangeEvent<HTMLInputElement>) => {
-    if (form.getFieldState("lotes")) form.resetFieldState("lotes");
+    limpaCampos(["lotes", "unidade_educacional"]);
 
-    if (!e.target.value) {
-      if (form.getFieldState("unidade_educacional"))
-        form.resetFieldState("unidade_educacional");
+    const dreUUID = e.target.value;
 
+    if (!dreUUID) {
       setLotesOpcoes(formatarOpcoesLote(lotes));
+      setUnidadesEducacionaisOpcoes(
+        formataUnidadesEducacionaisOpcoes(unidadesEducacionais)
+      );
 
       return;
     }
 
     setLotesOpcoes(
       formatarOpcoesLote(
-        lotes.filter((lote) => lote.diretoria_regional.uuid === e.target.value)
+        lotes.filter((lote) => lote.diretoria_regional.uuid === dreUUID)
       )
     );
-
-    buscaUnidadesEducacionais();
+    setUnidadesEducacionaisOpcoes(
+      formataUnidadesEducacionaisOpcoes(
+        unidadesEducacionais.filter(
+          (escola) => escola.diretoria_regional.uuid === dreUUID
+        )
+      )
+    );
   };
 
   const onChangeLotes = (lotes: Array<string>) => {
@@ -207,43 +221,6 @@ export default ({ form }: Args) => {
     );
   };
 
-  const buscaUnidadesEducacionais = () => {
-    if (buscandoOpcoes.buscandoUnidadesEducacionais) return;
-
-    setBuscandoOpcoes((prev) => ({
-      ...prev,
-      buscandoUnidadesEducacionais: true,
-    }));
-
-    const params: EscolasSimplissimaParams = {};
-
-    const values = form.getState().values;
-    if (values.dre) params.diretoria_regional__uuid = values.dre;
-    if (values.lotes && values.lotes.length > 0)
-      params.lote__uuid = values.lotes;
-
-    getEscolasParaFiltros(params).then((response) => {
-      let escolas = response.results;
-
-      // caso os lotes sejam selecionados antes de receber a resposta da requisicao da DRE
-      const lotes = form.getState().values.lotes;
-      if (lotes && lotes.length > 0) {
-        escolas = escolas.filter((escola) =>
-          lotes.includes(escola.lote && escola.lote.uuid)
-        );
-      }
-
-      setUnidadesEducacionais(escolas);
-
-      setUnidadesEducacionaisOpcoes(formataUnidadesEducacionaisOpcoes(escolas));
-
-      setBuscandoOpcoes((prev) => ({
-        ...prev,
-        buscandoUnidadesEducacionais: false,
-      }));
-    });
-  };
-
   const filtraUnidadesEducacionaisOpcoes = (
     inputValue: string,
     option: Option
@@ -263,6 +240,15 @@ export default ({ form }: Args) => {
     return hoje <= new Date(Number(anoSelecionado), Number(mesSelecionado), 0)
       ? "Não é possível exportar o relatório com mês posterior ao atual"
       : "";
+  };
+
+  const limpaCampo = (nomeCampo: string) => {
+    form.resetFieldState(nomeCampo);
+    form.change(nomeCampo, undefined);
+  };
+
+  const limpaCampos = (nomeCampos: Array<string>) => {
+    nomeCampos.forEach((nomeCampo) => limpaCampo(nomeCampo));
   };
 
   return {

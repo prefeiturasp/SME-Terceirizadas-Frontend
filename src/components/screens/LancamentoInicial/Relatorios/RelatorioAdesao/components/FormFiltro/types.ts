@@ -14,10 +14,6 @@ export type MultiSelectOption = {
   value: string | number;
 };
 
-export type EscolasSimplissimaParams =
-  | { diretoria_regional__uuid: string; lote__uuid: string }
-  | Record<string, any>;
-
 export type Option = {
   label: string;
   value: any;
