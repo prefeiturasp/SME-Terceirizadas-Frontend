@@ -122,9 +122,12 @@ export const AcompanhamentoDeLancamentos = () => {
     if (diretoriaRegional) {
       params = { ...params, dre: diretoriaRegional };
     }
-    const response = await getDashboardMedicaoInicial(params);
+    const [responseDre, response] = await Promise.all([
+      getDashboardMedicaoInicial({ dre: diretoriaRegional }),
+      getDashboardMedicaoInicial(params),
+    ]);
     if (response.status === HTTP_STATUS.OK) {
-      const dashboardResults = response.data.results;
+      const dashboardResults = responseDre.data.results;
       if (
         (!usuarioEhMedicao() &&
           !usuarioEhCODAENutriManifestacao() &&
@@ -151,7 +154,11 @@ export const AcompanhamentoDeLancamentos = () => {
           );
         }
 
-        if (!dadosDashboard || (diretoriaRegional && !params.mes_ano)) {
+        if (
+          mudancaDre ||
+          !dadosDashboard ||
+          (diretoriaRegional && !params.mes_ano)
+        ) {
           setDadosDashboard(NovoDashboardResults);
         }
       }
