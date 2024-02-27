@@ -60,6 +60,7 @@ const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
         )}
         {exibeRelatorios && (
           <SubMenu
+            path="relatorios"
             icon="fa-chevron-down"
             onClick={onSubmenuLancamentoClick}
             title="Relatórios"
