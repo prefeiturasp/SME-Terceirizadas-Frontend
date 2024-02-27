@@ -94,7 +94,7 @@ export const AcompanhamentoDeLancamentos = () => {
   const [exibirModalRelatorioUnificado, setExibirModalRelatorioUnificado] =
     useState(false);
 
-  const [initialValues] = useState({
+  const [initialValues, setInitialValues] = useState({
     diretoria_regional: diretoriaRegional,
     mes_ano: searchParams.get("mes_ano"),
     lotes_selecionados: searchParams.get("lotes")
@@ -326,6 +326,10 @@ export const AcompanhamentoDeLancamentos = () => {
     );
     form.reset();
     resetURL(["mes_ano", "lotes", "tipo_unidade", "escola"]);
+    diretoria_regional &&
+      setInitialValues({
+        diretoria_regional: diretoria_regional.value,
+      });
     setResultados(undefined);
     diretoria_regional &&
       form.change("diretoria_regional", diretoria_regional.value);
@@ -481,6 +485,10 @@ export const AcompanhamentoDeLancamentos = () => {
                           setResultados(null);
                           setMudancaDre(true);
                           adicionaFiltroNaURL("diretoria_regional", value);
+                          setInitialValues((prev) => ({
+                            ...prev,
+                            diretoria_regional: value,
+                          }));
                         }}
                         name="diretoria_regional"
                         filterOption={(inputValue, option) =>

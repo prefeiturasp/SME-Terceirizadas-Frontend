@@ -6,7 +6,7 @@ import {
   usuarioEhCogestorDRE,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhEmpresaTerceirizada,
-  usuarioEhEscolaTerceirizadaQualquerPerfil,
+  usuarioEhEscola,
   usuarioEhNutricionistaSupervisao,
 } from "helpers/utilities";
 
@@ -26,10 +26,7 @@ export const labelSidebar = (nomeEscolaOuTerceirizada) => {
     return "Núcleo de Supervisão da Alimentação Escolar";
   } else if (usuarioEhCogestorDRE()) {
     return "Cogestor de Alimentação Escolar";
-  } else if (
-    usuarioEhEscolaTerceirizadaQualquerPerfil() ||
-    usuarioEhEmpresaTerceirizada()
-  ) {
+  } else if (usuarioEhEscola() || usuarioEhEmpresaTerceirizada()) {
     return nomeEscolaOuTerceirizada;
   }
 };

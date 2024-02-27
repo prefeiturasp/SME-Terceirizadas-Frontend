@@ -27,6 +27,7 @@ import {
   usuarioEhCogestorDRE,
   usuarioEhCodaeDilog,
   usuarioEhDiretorUE,
+  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
@@ -46,6 +47,8 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCoordenadorNutriCODAE() ||
     usuarioEhCoordenadorGpCODAE() ||
     usuarioEhCoordenadorNutriSupervisao();
+
+  const exibirGestaoAcessoSomenteLeitura = usuarioEhCODAEGabinete();
 
   return (
     <Menu id="Configuracoes" icon="fa-cog" title={"Configurações"}>
@@ -145,6 +148,19 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
           activeMenu={activeMenu}
         >
           <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_GERAL}/`}>
+            Gestão de Acesso
+          </LeafItem>
+        </SubMenu>
+      )}
+
+      {exibirGestaoAcessoSomenteLeitura && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Gestão de Usuários"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_MASTER}/`}>
             Gestão de Acesso
           </LeafItem>
         </SubMenu>

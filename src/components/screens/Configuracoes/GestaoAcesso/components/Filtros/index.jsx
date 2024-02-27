@@ -20,6 +20,7 @@ export default ({
   visaoUnica,
   desabilitaCadastro,
   qtdLimiteCadastro,
+  somenteLeitura,
 }) => {
   const initialValues = visaoUnica
     ? {
@@ -87,19 +88,21 @@ export default ({
             </div>
 
             <div className="mt-4 mb-4" ref={inicioResultado}>
-              <Botao
-                texto="Adicionar Acesso"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.GREEN}
-                className="float-start"
-                onClick={() => setShowCadastro(true)}
-                disabled={desabilitaCadastro()}
-                tooltipExterno={
-                  desabilitaCadastro()
-                    ? `É possível manter até ${qtdLimiteCadastro} usuários utilizando o SIGPAE em sua UE.`
-                    : ""
-                }
-              />
+              {!somenteLeitura && (
+                <Botao
+                  texto="Adicionar Acesso"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN}
+                  className="float-start"
+                  onClick={() => setShowCadastro(true)}
+                  disabled={desabilitaCadastro()}
+                  tooltipExterno={
+                    desabilitaCadastro()
+                      ? `É possível manter até ${qtdLimiteCadastro} usuários utilizando o SIGPAE em sua UE.`
+                      : ""
+                  }
+                />
+              )}
 
               <Botao
                 texto="Filtrar"

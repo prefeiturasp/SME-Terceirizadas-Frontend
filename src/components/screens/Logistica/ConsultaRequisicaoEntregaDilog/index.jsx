@@ -27,6 +27,8 @@ import { Modal } from "react-bootstrap";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads/index.js";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload/index.jsx";
 import { Paginacao } from "components/Shareable/Paginacao/index.jsx";
+import useSomenteLeitura from "hooks/useSomenteLeitura.js";
+import { PERFIL } from "../../../../constants/shared.js";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -45,6 +47,9 @@ export default () => {
   const centralDownloadContext = useContext(CentralDeDownloadContext);
 
   const inicioResultado = useRef();
+  const somenteLeitura = useSomenteLeitura([
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+  ]);
 
   const buscarSolicitacoes = async (page) => {
     setCarregando(true);
@@ -214,6 +219,7 @@ export default () => {
                 setAtivos={setAtivos}
                 arquivaDesarquivaGuias={arquivaDesarquivaGuias}
                 setShowDownload={setShowDownload}
+                somenteLeitura={somenteLeitura}
               />
               <div className="row">
                 <div className="col">
@@ -235,7 +241,9 @@ export default () => {
                     onClick={() => {
                       setShowModal(true);
                     }}
-                    disabled={confereSolicitacoesSelecionadas()}
+                    disabled={
+                      somenteLeitura || confereSolicitacoesSelecionadas()
+                    }
                   />
                   <Spin size="small" spinning={carregandoExcel}>
                     <Botao

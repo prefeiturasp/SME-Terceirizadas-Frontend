@@ -103,13 +103,19 @@ export const formatarPayloadPeriodoLancamento = (
   return { ...values, valores_medicao: valoresMedicao };
 };
 
-export const formatarPayloadParaCorrecao = (payload) => {
+export const formatarPayloadParaCorrecao = (payload, escolaEhEMEBS = false) => {
   let payloadParaCorrecao = payload.valores_medicao.filter(
     (valor) =>
       !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
         valor.nome_campo
       )
   );
+  if (escolaEhEMEBS) {
+    payloadParaCorrecao.forEach((objValueParaCorrecao) => {
+      objValueParaCorrecao.infantil_ou_fundamental =
+        payload?.infantil_ou_fundamental;
+    });
+  }
   return payloadParaCorrecao;
 };
 
@@ -265,7 +271,9 @@ export const desabilitarField = (
   diasParaCorrecao,
   ehPeriodoEscolarSimples,
   permissoesLancamentosEspeciaisPorDia,
-  alimentacoesLancamentosEspeciais
+  alimentacoesLancamentosEspeciais,
+  escolaEhEMEBS = false,
+  alunosTabSelecionada = null
 ) => {
   const EH_INCLUSAO_SOMENTE_SOBREMESA =
     inclusoesAutorizadas.length &&
@@ -273,7 +281,7 @@ export const desabilitarField = (
   if (nomeCategoria.includes("DIETA") && EH_INCLUSAO_SOMENTE_SOBREMESA) {
     return true;
   }
-  const valorField = valoresPeriodosLancamentos.some(
+  const valorFieldParaCorrecao = valoresPeriodosLancamentos.some(
     (valor) =>
       String(valor.categoria_medicao) === String(categoria) &&
       String(valor.dia) === String(dia) &&
@@ -290,7 +298,7 @@ export const desabilitarField = (
     ];
   }
   if (
-    (valorField ||
+    (valorFieldParaCorrecao ||
       (diasParaCorrecao &&
         diasParaCorrecao.find(
           (diaParaCorrecao) =>
@@ -318,6 +326,34 @@ export const desabilitarField = (
     ) {
       return true;
     }
+    if (escolaEhEMEBS) {
+      if (
+        ehDiaParaCorrigir(
+          dia,
+          categoria,
+          valoresPeriodosLancamentos,
+          diasParaCorrecao
+        ) &&
+        diasParaCorrecao.find(
+          (diaParaCorrecao) =>
+            String(diaParaCorrecao.dia) === String(dia) &&
+            String(diaParaCorrecao.categoria_medicao) === String(categoria) &&
+            diaParaCorrecao.habilitado_correcao === true &&
+            ALUNOS_EMEBS[diaParaCorrecao.infantil_ou_fundamental].key ===
+              alunosTabSelecionada
+        )
+      ) {
+        if (
+          grupoLocation === "Programas e Projetos" &&
+          !valorFieldParaCorrecao
+        ) {
+          return true;
+        }
+        return false;
+      } else {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -332,7 +368,7 @@ export const desabilitarField = (
           "MEDICAO_CORRIGIDA_PELA_UE",
           "MEDICAO_CORRIGIDA_PARA_CODAE",
         ].includes(location.state.status_periodo) &&
-          !valorField))) ||
+          !valorFieldParaCorrecao))) ||
     ["matriculados", "numero_de_alunos", "dietas_autorizadas"].includes(rowName)
   ) {
     return true;

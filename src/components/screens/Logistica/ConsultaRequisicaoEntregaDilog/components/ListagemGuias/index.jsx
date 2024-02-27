@@ -10,7 +10,12 @@ import {
 } from "components/Shareable/Botao/constants";
 import { Modal } from "react-bootstrap";
 
-export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
+export default ({
+  solicitacao,
+  situacao,
+  arquivaDesarquivaGuias,
+  somenteLeitura,
+}) => {
   const [allChecked, setAllChecked] = useState(false);
   const [selecionados, setSelecionados] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -109,7 +114,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                     setShowModal(true);
                   }}
                   style={BUTTON_STYLE.GREEN}
-                  disabled={validaBotao()}
+                  disabled={somenteLeitura || validaBotao()}
                 />
                 <span className="tooltiptext">
                   O botão arquivar será habilitado para guias de remessa
