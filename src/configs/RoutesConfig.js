@@ -1370,7 +1370,8 @@ const routesConfig = [
       usuarioEhCoordenadorNutriSupervisao() ||
       usuarioEhAdministradorNutriCODAE() ||
       usuarioEhCoordenadorNutriCODAE() ||
-      usuarioEhMedicao(),
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GERENCIAL_DIETAS}`,
