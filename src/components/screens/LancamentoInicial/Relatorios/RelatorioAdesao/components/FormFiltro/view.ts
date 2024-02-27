@@ -39,6 +39,7 @@ export default ({ form }: Args) => {
     Array<MultiSelectOption>
   >([]);
 
+  const [lotes, setLotes] = useState([]);
   const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
   const [periodosEscolares, setPeriodosEscolares] = useState([]);
   const [tiposAlimentacao, setTiposAlimentacao] = useState([]);
@@ -57,6 +58,7 @@ export default ({ form }: Args) => {
       ...prev,
       buscandoMesesAnos: true,
       buscandoDiretoriasRegionais: true,
+      buscandoLotes: true,
       buscandoPeriodosEscolares: true,
       buscandoTiposAlimentacao: true,
     }));
@@ -85,6 +87,18 @@ export default ({ form }: Args) => {
       setBuscandoOpcoes((prev) => ({
         ...prev,
         buscandoDiretoriasRegionais: false,
+      }));
+    });
+
+    getLotesSimples().then((response) => {
+      const lotes = response.data.results;
+
+      setLotes(lotes);
+      setLotesOpcoes(formatarOpcoesLote(lotes));
+
+      setBuscandoOpcoes((prev) => ({
+        ...prev,
+        buscandoLotes: false,
       }));
     });
 
@@ -120,26 +134,21 @@ export default ({ form }: Args) => {
   }, []);
 
   const onChangeDRE = (e: ChangeEvent<HTMLInputElement>) => {
-    form.resetFieldState("lotes");
+    if (form.getFieldState("lotes")) form.resetFieldState("lotes");
 
     if (!e.target.value) {
-      form.resetFieldState("unidade_educacional");
+      if (form.getFieldState("unidade_educacional"))
+        form.resetFieldState("unidade_educacional");
+
+      setLotesOpcoes(formatarOpcoesLote(lotes));
+
       return;
     }
 
-    setBuscandoOpcoes((prev) => ({
-      ...prev,
-      buscandoLotes: true,
-    }));
-
-    getLotesSimples({ diretoria_regional__uuid: e.target.value }).then(
-      (response) => {
-        setLotesOpcoes(formatarOpcoesLote(response.data.results));
-        setBuscandoOpcoes((prev) => ({
-          ...prev,
-          buscandoLotes: false,
-        }));
-      }
+    setLotesOpcoes(
+      formatarOpcoesLote(
+        lotes.filter((lote) => lote.diretoria_regional.uuid === e.target.value)
+      )
     );
 
     buscaUnidadesEducacionais();
