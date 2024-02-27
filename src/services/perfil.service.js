@@ -4,6 +4,8 @@ import axios from "./_base";
 import { AUTH_TOKEN } from "./constants";
 import Cookies from "js-cookie";
 import { ErrorHandlerFunction } from "./service-helpers";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { getMensagemDeErro } from "helpers/statusErrors";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -195,7 +197,14 @@ export const getVisoesListagem = async (params) =>
 
 export const getPerfisSubordinados = async (params) => {
   const perfil = localStorage.getItem("perfil").replace(/['"]+/g, "");
-  return await axios.get(`/perfis-vinculados/${perfil}/perfis-subordinados/`, {
-    params,
-  });
+  try {
+    return await axios.get(
+      `/perfis-vinculados/${perfil}/perfis-subordinados/`,
+      {
+        params,
+      }
+    );
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
 };

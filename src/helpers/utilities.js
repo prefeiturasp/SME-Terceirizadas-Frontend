@@ -475,7 +475,6 @@ export const usuarioComAcessoTelaEntregasDilog = () => {
 
 export const usuarioEhOutrosDilog = () => {
   return [
-    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
   ].includes(localStorage.getItem("perfil"));
