@@ -11,7 +11,6 @@ import {
 } from "configs/constants";
 import {
   usuarioEhCronograma,
-  usuarioEhCronogramaCriacaoEdicao,
   usuarioEhEmpresaFornecedor,
   formataMilhar,
 } from "helpers/utilities";
@@ -167,7 +166,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                         </>
                       ) : (
                         <>
-                          {usuarioEhCronogramaCriacaoEdicao() && (
+                          {usuarioEhCronograma() && (
                             <NavLink
                               className="float-start"
                               to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${cronograma.uuid}`}
