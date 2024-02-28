@@ -1,6 +1,7 @@
 import React from "react";
 
 import TabelaResultadoPeriodo from "./components/TabelaResultadoPeriodo";
+import { TotalAlimentacao } from "./components/TabelaResultadoPeriodo/types";
 
 import { Props } from "./types";
 
@@ -32,7 +33,14 @@ export default (props: Props) => {
               className="mt-4"
               key={index}
               periodo={periodo}
-              dados={dados}
+              dados={Object.entries(dados).map(
+                ([tipoAlimentacao, d]): TotalAlimentacao => ({
+                  tipo_alimentacao: tipoAlimentacao,
+                  total_servido: d.total_servido,
+                  total_frequencia: d.total_frequencia,
+                  total_adesao: d.total_adesao,
+                })
+              )}
             />
           ))}
         </div>

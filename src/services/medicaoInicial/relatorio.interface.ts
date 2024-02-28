@@ -1,12 +1,13 @@
-type RelatorioAdesaoTotalPeriodo = {
-  tipo_alimentacao: string;
-  total_servido: number;
-  total_frequencia: number;
-  total_adesao: number;
+type RelatorioAdesaoTotalAlimentacao = {
+  [key: string]: {
+    total_servido: number;
+    total_frequencia: number;
+    total_adesao: number;
+  };
 };
 
 type RelatorioAdesaoPeriodo = {
-  [key: string]: Array<RelatorioAdesaoTotalPeriodo>;
+  [key: string]: RelatorioAdesaoTotalAlimentacao;
 };
 
 export interface RelatorioAdesaoParams {
