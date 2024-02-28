@@ -11,6 +11,9 @@ export default class RelatorioService {
   static async getRelatorioAdesao(
     params: RelatorioAdesaoParams
   ): Promise<RelatorioAdesaoResponse> {
-    return await axios.get(`${BASE_URL}/relatorio-adesao/`, { params });
+    const response = await axios.get(`${BASE_URL}/relatorio-adesao/`, {
+      params,
+    });
+    return response.data;
   }
 }

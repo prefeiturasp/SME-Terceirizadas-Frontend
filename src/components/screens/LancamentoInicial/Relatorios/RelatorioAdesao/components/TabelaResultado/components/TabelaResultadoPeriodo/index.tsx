@@ -43,8 +43,8 @@ export default (props: Props) => {
       <Table pagination={false} bordered dataSource={dados} summary={Total}>
         <Column
           title="Tipo de Alimentação"
-          dataIndex="alimentacao"
-          key="alimentacao"
+          dataIndex="tipo_alimentacao"
+          key="tipo_alimentacao"
         />
         <Column
           title="Total de Alimentações Servidas"

@@ -4,27 +4,8 @@ import TabelaResultadoPeriodo from "./components/TabelaResultadoPeriodo";
 
 import { Props } from "./types";
 
-const MOCK_DADOS = {
-  INTEGRAL: [
-    {
-      alimentacao: "batata",
-      total_servido: 100.0,
-      total_frequencia: 80.0,
-      total_adesao: (100.0 / 80.0) * 100,
-    },
-  ],
-  MANHA: [
-    {
-      alimentacao: "batata",
-      total_servido: 100.0,
-      total_frequencia: 80.0,
-      total_adesao: (100.0 / 80.0) * 100,
-    },
-  ],
-};
-
 export default (props: Props) => {
-  const { filtros } = props;
+  const { filtros, resultado } = props;
 
   return (
     <div className="container-fluid mt-4">
@@ -46,7 +27,7 @@ export default (props: Props) => {
       </h2>
       {filtros && (
         <div>
-          {Object.entries(MOCK_DADOS).map(([periodo, dados], index) => (
+          {Object.entries(resultado).map(([periodo, dados], index) => (
             <TabelaResultadoPeriodo
               className="mt-4"
               key={index}

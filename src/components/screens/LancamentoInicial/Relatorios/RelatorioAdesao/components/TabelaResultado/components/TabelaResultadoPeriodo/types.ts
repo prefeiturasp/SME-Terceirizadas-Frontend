@@ -1,5 +1,5 @@
 export type TotalAlimentacao = {
-  alimentacao: string;
+  tipo_alimentacao: string;
   total_servido: number;
   total_frequencia: number;
   total_adesao: number;
