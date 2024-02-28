@@ -1697,24 +1697,14 @@ const routesConfig = [
       usuarioEhCODAEGabinete(),
   },
   {
-    /*
-    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
-    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
-    permissionamento deve se remover usuarioEhLogistica() desta rota.
-    */
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}`,
     component: CadastroCronogramaPage,
-    tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica(),
+    tipoUsuario: usuarioEhCronograma(),
   },
   {
-    /*
-    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
-    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
-    permissionamento deve se remover usuarioEhLogistica() desta rota.
-    */
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}/${constants.EDITAR}`,
     component: EditarCronogramaPage,
-    tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica(),
+    tipoUsuario: usuarioEhCronograma(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_APROVACOES}`,
