@@ -122,9 +122,12 @@ export const AcompanhamentoDeLancamentos = () => {
     if (diretoriaRegional) {
       params = { ...params, dre: diretoriaRegional };
     }
-    const response = await getDashboardMedicaoInicial(params);
+    const [responseDre, response] = await Promise.all([
+      getDashboardMedicaoInicial({ dre: diretoriaRegional }),
+      getDashboardMedicaoInicial(params),
+    ]);
     if (response.status === HTTP_STATUS.OK) {
-      const dashboardResults = response.data.results;
+      const dashboardResults = responseDre.data.results;
       if (
         (!usuarioEhMedicao() &&
           !usuarioEhCODAENutriManifestacao() &&
@@ -151,7 +154,11 @@ export const AcompanhamentoDeLancamentos = () => {
           );
         }
 
-        if (!dadosDashboard || (diretoriaRegional && !params.mes_ano)) {
+        if (
+          mudancaDre ||
+          !dadosDashboard ||
+          (diretoriaRegional && !params.mes_ano)
+        ) {
           setDadosDashboard(NovoDashboardResults);
         }
       }
@@ -203,18 +210,20 @@ export const AcompanhamentoDeLancamentos = () => {
     );
   };
 
-  useEffect(() => {
-    const getMesesAnosSolicitacoesMedicaoinicialAsync = async () => {
-      const response = await getMesesAnosSolicitacoesMedicaoinicial();
-      if (response.status === HTTP_STATUS.OK) {
-        setMesesAnos(response.data.results);
-      } else {
-        setErroAPI(
-          "Erro ao carregar meses/anos das solicitações de medição inicial. Tente novamente mais tarde."
-        );
-      }
-    };
+  const getMesesAnosSolicitacoesMedicaoinicialAsync = async () => {
+    const response = await getMesesAnosSolicitacoesMedicaoinicial({
+      dre: diretoriaRegional,
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setMesesAnos(response.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar meses/anos das solicitações de medição inicial. Tente novamente mais tarde."
+      );
+    }
+  };
 
+  useEffect(() => {
     const getTiposUnidadeEscolarAsync = async () => {
       const response = await getTiposUnidadeEscolar();
       if (response.status === HTTP_STATUS.OK) {
@@ -274,6 +283,7 @@ export const AcompanhamentoDeLancamentos = () => {
     }
     if (diretoriaRegional) {
       getDashboardMedicaoInicialAsync();
+      getMesesAnosSolicitacoesMedicaoinicialAsync();
     }
   }, [meusDados, diretoriaRegional]);
 
@@ -326,9 +336,10 @@ export const AcompanhamentoDeLancamentos = () => {
     );
     form.reset();
     resetURL(["mes_ano", "lotes", "tipo_unidade", "escola"]);
-    setInitialValues({
-      diretoria_regional: diretoria_regional.value,
-    });
+    diretoria_regional &&
+      setInitialValues({
+        diretoria_regional: diretoria_regional.value,
+      });
     setResultados(undefined);
     diretoria_regional &&
       form.change("diretoria_regional", diretoria_regional.value);

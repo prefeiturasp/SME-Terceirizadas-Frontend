@@ -5,6 +5,8 @@ import "./styles.scss";
 import AlimentosConsolidado from "../AlimentosConsolidado";
 import Alterar from "../Alterar";
 import { BOTAO_ACEITAR, BOTAO_NEGAR } from "../../constans";
+import useSomenteLeitura from "../../../../../../hooks/useSomenteLeitura";
+import { PERFIL } from "../../../../../../constants/shared";
 
 const ListagemSolicitacoes = ({
   solicitacoes,
@@ -12,6 +14,9 @@ const ListagemSolicitacoes = ({
   setAtivos,
   updatePage,
 }) => {
+  const somenteLeitura = useSomenteLeitura([
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+  ]);
   return (
     <section className="resultado-gestao-solicitacao-alteracao">
       <header>Solicitações Disponibilizadas</header>
@@ -31,7 +36,9 @@ const ListagemSolicitacoes = ({
               ? "desativar-borda"
               : "";
           const toggleText =
-            solicitacao.status === "Em análise" ? "Analisar" : "Visualizar";
+            solicitacao.status === "Em análise" && somenteLeitura === false
+              ? "Analisar"
+              : "Visualizar";
           return (
             <>
               <div className="grid-table body-table">
@@ -50,7 +57,10 @@ const ListagemSolicitacoes = ({
                 <div>
                   <Button
                     className={`${
-                      solicitacao.status === "Em análise" ? "fw-bold" : ""
+                      solicitacao.status === "Em análise" &&
+                      somenteLeitura === false
+                        ? "fw-bold"
+                        : ""
                     } acoes verde`}
                     variant="link"
                     onClick={() => {
@@ -110,22 +120,23 @@ const ListagemSolicitacoes = ({
                     <div>
                       <AlimentosConsolidado solicitacao={solicitacao} />
 
-                      {solicitacao.status === "Em análise" && (
-                        <div className="d-flex justify-content-end">
-                          <Alterar
-                            acao={BOTAO_ACEITAR}
-                            className=""
-                            solicitacao={solicitacao}
-                            updatePage={updatePage}
-                          />
-                          <Alterar
-                            acao={BOTAO_NEGAR}
-                            className=""
-                            solicitacao={solicitacao}
-                            updatePage={updatePage}
-                          />
-                        </div>
-                      )}
+                      {solicitacao.status === "Em análise" &&
+                        somenteLeitura === false && (
+                          <div className="d-flex justify-content-end">
+                            <Alterar
+                              acao={BOTAO_ACEITAR}
+                              className=""
+                              solicitacao={solicitacao}
+                              updatePage={updatePage}
+                            />
+                            <Alterar
+                              acao={BOTAO_NEGAR}
+                              className=""
+                              solicitacao={solicitacao}
+                              updatePage={updatePage}
+                            />
+                          </div>
+                        )}
                     </div>
                   </div>
                 </section>

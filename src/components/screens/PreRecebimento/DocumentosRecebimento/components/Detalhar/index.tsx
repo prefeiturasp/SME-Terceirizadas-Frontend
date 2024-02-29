@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import "./styles.scss";
-import { DOCUMENTOS_RECEBIMENTO, PRE_RECEBIMENTO } from "configs/constants";
+import {
+  DOCUMENTOS_RECEBIMENTO,
+  PRE_RECEBIMENTO,
+  PAINEL_DOCUMENTOS_RECEBIMENTO,
+} from "configs/constants";
 import { useNavigate } from "react-router-dom";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
@@ -13,6 +17,7 @@ import {
 } from "interfaces/pre_recebimento.interface";
 import ArquivosTipoRecebimento from "../ArquivosTipoDocumento";
 import OutrosDocumentos from "../OutrosDocumentos";
+import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
 
 export default () => {
   const navigate = useNavigate();
@@ -23,8 +28,13 @@ export default () => {
   );
   const [laudo, setLaudo] = useState<TiposDocumentos>();
 
-  const voltarPaginaGrid = () =>
-    navigate(`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`);
+  const voltarPagina = () => {
+    const link = usuarioEhEmpresaFornecedor()
+      ? `/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`
+      : `/${PRE_RECEBIMENTO}/${PAINEL_DOCUMENTOS_RECEBIMENTO}`;
+
+    navigate(link);
+  };
 
   const carregarDados = async (): Promise<void> => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -117,7 +127,7 @@ export default () => {
 
           <hr />
 
-          <BotaoVoltar onClick={voltarPaginaGrid} />
+          <BotaoVoltar onClick={voltarPagina} />
         </div>
       </div>
     </Spin>

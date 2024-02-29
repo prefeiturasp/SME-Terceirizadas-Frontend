@@ -3,7 +3,12 @@ import React from "react";
 import "./styles.scss";
 import { Tooltip } from "antd";
 
-const ListagemVinculos = ({ vinculos, toggleEdicao, toggleExclusao }) => {
+const ListagemVinculos = ({
+  vinculos,
+  toggleEdicao,
+  toggleExclusao,
+  somenteLeitura,
+}) => {
   return (
     <section className="tabela-gestao-acesso">
       <header>Usuários com Acesso Cadastrados</header>
@@ -30,6 +35,7 @@ const ListagemVinculos = ({ vinculos, toggleEdicao, toggleExclusao }) => {
                     <button
                       className="verde"
                       onClick={() => toggleExclusao(true, vinculo)}
+                      disabled={somenteLeitura}
                     >
                       <i className="fas fa-trash" />
                     </button>
@@ -39,6 +45,7 @@ const ListagemVinculos = ({ vinculos, toggleEdicao, toggleExclusao }) => {
                     <button
                       className="verde"
                       onClick={() => toggleEdicao(true, vinculo)}
+                      disabled={somenteLeitura}
                     >
                       <i className="fas fa-edit" />
                     </button>
