@@ -15,7 +15,7 @@ import { MESES } from "constants/shared";
 
 import { Args, SelectOption, MultiSelectOption, Option } from "./types";
 
-export default ({ form }: Args) => {
+export default ({ form, onChange }: Args) => {
   const [mesesAnosOpcoes, setMesesAnosOpcoes] = useState<Array<SelectOption>>(
     []
   );
@@ -163,10 +163,31 @@ export default ({ form }: Args) => {
     }));
   };
 
+  const onChangeMesAno = (e: ChangeEvent<HTMLInputElement>) => {
+    const mesAno = e.target.value;
+
+    onChange({
+      mes: mesAno
+        ? mesesAnosOpcoes
+            .find((m) => m.uuid === e.target.value)
+            .nome.replace("-", "")
+            .toUpperCase()
+        : undefined,
+    });
+  };
+
   const onChangeDRE = (e: ChangeEvent<HTMLInputElement>) => {
     limpaCampos(["lotes", "unidade_educacional"]);
 
     const dreUUID = e.target.value;
+
+    onChange({
+      dre: dreUUID
+        ? diretoriasRegionaisOpcoes.find((d) => d.uuid === dreUUID).nome
+        : undefined,
+      lotes: undefined,
+      unidade_educacional: undefined,
+    });
 
     if (!dreUUID) {
       setLotesOpcoes(formatarOpcoesLote(lotes));
@@ -194,6 +215,13 @@ export default ({ form }: Args) => {
   const onChangeLotes = (lotes: Array<string>) => {
     limpaCampo("unidade_educacional");
 
+    onChange({
+      lotes: lotesOpcoes
+        .filter((l) => lotes.includes(l.value.toString()))
+        .map((l) => l.label),
+      unidade_educacional: undefined,
+    });
+
     let escolas = unidadesEducacionais;
 
     const dreUUID = form.getState().values.dre;
@@ -217,7 +245,11 @@ export default ({ form }: Args) => {
   };
 
   const onChangeUnidadeEducacional = (escolaLabel: string) => {
-    limpaCampos(["periodos", "tipo_alimentacao"]);
+    limpaCampos(["periodos", "tipos_alimentacao"]);
+
+    onChange({
+      unidade_educacional: escolaLabel,
+    });
 
     if (!escolaLabel) {
       setPeriodosEscolaresOpcoes(periodosEscolares);
@@ -294,6 +326,7 @@ export default ({ form }: Args) => {
     unidadesEducacionaisOpcoes,
     periodosEscolaresOpcoes,
     tiposAlimentacaoOpcoes,
+    onChangeMesAno,
     onChangeDRE,
     onChangeLotes,
     onChangeUnidadeEducacional,
