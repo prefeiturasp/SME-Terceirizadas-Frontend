@@ -548,14 +548,6 @@ export const usuarioEhLogistica = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
-export const usuarioEhCronogramaCriacaoEdicao = () => {
-  return [
-    PERFIL.DILOG_CRONOGRAMA,
-    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
-    PERFIL.COORDENADOR_LOGISTICA,
-  ].includes(localStorage.getItem("perfil"));
-};
-
 export const usuarioEhDilogQualidade = () =>
   localStorage.getItem("perfil") === PERFIL.DILOG_QUALIDADE;
 
@@ -566,15 +558,6 @@ export const usuarioEhDilogQualidadeOuCronograma = () => {
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
   ].includes(localStorage.getItem("perfil"));
 };
-
-/*
-  TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
-  temporariamente ao Pré Recebimento. Após finalização da definição de
-  permissionamento deve se remover usuarioEhLogistica() desta regra.
-  Quando essa mudança for realizada, apagar o usuarioEhPreRecebimentoSemLogistica,
-  ele é uma solucao temporaria pro menu de configurações aparecer pros usuarios
-  de Logistica
-  */
 
 export const usuarioEhPreRecebimento = () => {
   return (
