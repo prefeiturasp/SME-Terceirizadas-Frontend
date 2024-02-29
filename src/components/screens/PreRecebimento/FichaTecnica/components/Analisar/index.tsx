@@ -12,7 +12,10 @@ import {
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
-import { carregarDadosAnalise } from "../../helpers";
+import {
+  carregaListaCompletaInformacoesNutricionais,
+  carregarDadosAnalisarDetalhar,
+} from "../../helpers";
 import FormPereciveis from "../Cadastrar/components/FormPereciveis";
 import FormNaoPereciveis from "../Cadastrar/components/FormNaoPereciveis";
 import { InformacaoNutricional } from "interfaces/produto.interface";
@@ -74,8 +77,10 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
 
   useEffect(() => {
     (async () => {
-      await carregarDadosAnalise(
-        listaCompletaInformacoesNutricionais,
+      await carregaListaCompletaInformacoesNutricionais(
+        listaCompletaInformacoesNutricionais
+      );
+      await carregarDadosAnalisarDetalhar(
         listaInformacoesNutricionaisFichaTecnica,
         setFicha,
         setConferidos,
@@ -704,7 +709,9 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                     </section>
 
                     <section id="embalagem_e_rotulagem">
-                      <div className="subtitulo">Embalagem</div>
+                      <div className="row">
+                        <div className="subtitulo">Embalagem</div>
+                      </div>
 
                       <div className="row mt-3">
                         <div className="col">
@@ -940,7 +947,9 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
 
                       <hr />
 
-                      <div className="subtitulo">Rotulagem</div>
+                      <div className="row">
+                        <div className="subtitulo">Rotulagem</div>
+                      </div>
 
                       <div className="row mt-3">
                         <div className="col">
