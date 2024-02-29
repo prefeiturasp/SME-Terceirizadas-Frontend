@@ -6,11 +6,12 @@ import axios from "./_base";
 import {
   ResponseDadosCronogramaFichaTecnica,
   ResponseFichaTecnicaDetalhada,
-  ResponseFichaTecnicaPraAnalise,
+  ResponseFichaTecnicaDetalhadaComAnalise,
   ResponseFichasTecnicas,
   ResponseFichasTecnicasDashboard,
   ResponseFichasTecnicasPorStatusDashboard,
   ResponseFichasTecnicasSimples,
+  ResponseSemDadosInterface,
 } from "interfaces/responses.interface";
 import { FiltrosDashboardFichasTecnicas } from "interfaces/pre_recebimento.interface";
 import { getMensagemDeErro } from "../helpers/statusErrors";
@@ -32,9 +33,9 @@ export const getFichaTecnica = async (
 ): Promise<ResponseFichaTecnicaDetalhada> =>
   await axios.get(`/ficha-tecnica/${uuid}/`);
 
-export const getFichaTecnicaPraAnalise = async (
+export const getFichaTecnicaComAnalise = async (
   uuid: string
-): Promise<ResponseFichaTecnicaPraAnalise> =>
+): Promise<ResponseFichaTecnicaDetalhadaComAnalise> =>
   await axios.get(`/ficha-tecnica/${uuid}/detalhar-com-analise/`);
 
 export const listarFichastecnicas = async (
@@ -82,17 +83,31 @@ export const getDadosCronogramaFichaTecnica = async (
 export const cadastraRascunhoAnaliseFichaTecnica = async (
   payload: AnaliseFichaTecnicaPayload,
   uuid: string
-): Promise<ResponseFichaTecnicaPraAnalise> =>
+): Promise<ResponseFichaTecnicaDetalhadaComAnalise> =>
   await axios.post(`/ficha-tecnica/${uuid}/rascunho-analise-gpcodae/`, payload);
 
 export const editaRascunhoAnaliseFichaTecnica = async (
   payload: AnaliseFichaTecnicaPayload,
   uuid: string
-): Promise<ResponseFichaTecnicaPraAnalise> =>
+): Promise<ResponseFichaTecnicaDetalhadaComAnalise> =>
   await axios.put(`/ficha-tecnica/${uuid}/rascunho-analise-gpcodae/`, payload);
 
 export const cadastraAnaliseFichaTecnica = async (
   payload: AnaliseFichaTecnicaPayload,
   uuid: string
-): Promise<ResponseFichaTecnicaPraAnalise> =>
+): Promise<ResponseSemDadosInterface> =>
   await axios.post(`/ficha-tecnica/${uuid}/analise-gpcodae/`, payload);
+
+export const corrigirFichaTecnica = async (
+  payload: FichaTecnicaPayload,
+  uuid: string
+): Promise<ResponseSemDadosInterface> => {
+  try {
+    return await axios.patch(
+      `/ficha-tecnica/${uuid}/correcao-fornecedor/`,
+      payload
+    );
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
