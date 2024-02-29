@@ -15,7 +15,8 @@ import {
   cadastrarFichaTecnica,
   editaRascunhoFichaTecnica,
   getFichaTecnica,
-  getFichaTecnicaPraAnalise,
+  getFichaTecnicaComAnalise,
+  corrigirFichaTecnica,
 } from "services/fichaTecnica.service";
 
 import { removeCaracteresEspeciais, exibeError } from "helpers/utilities";
@@ -48,23 +49,6 @@ import {
 } from "helpers/parsers";
 import { NavigateFunction } from "react-router-dom";
 import { CATEGORIA_OPTIONS } from "./constants";
-
-export const formataInformacoesNutricionais = (values: Record<string, any>) => {
-  const uuids_informacoes = Object.keys(values)
-    .filter((key) => key.startsWith("quantidade_por_100g_"))
-    .map((key) => key.split("_").pop());
-
-  const payload = uuids_informacoes.map((uuid) => {
-    return {
-      informacao_nutricional: uuid,
-      quantidade_por_100g: values[`quantidade_por_100g_${uuid}`],
-      quantidade_porcao: values[`quantidade_porcao_${uuid}`],
-      valor_diario: values[`valor_diario_${uuid}`],
-    };
-  });
-
-  return payload as InformacoesNutricionaisFichaTecnicaPayload[];
-};
 
 export const cepCalculator = (
   setDesabilitaEndereco: Dispatch<SetStateAction<boolean>>
@@ -141,54 +125,7 @@ export const carregarTerceirizada = async (
   }
 };
 
-export const carregarDadosAnalise = async (
-  listaCompletaInformacoesNutricionais: MutableRefObject<
-    InformacaoNutricional[]
-  >,
-  listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
-    InformacaoNutricional[]
-  >,
-  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhadaComAnalise>>,
-  setConferidos: Dispatch<SetStateAction<StateConferidosAnalise>>,
-  setInitialValues: Dispatch<SetStateAction<Record<string, any>>>,
-  setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>,
-  setCarregando: Dispatch<SetStateAction<boolean>>
-) => {
-  setCarregando(true);
-
-  const responseInformacoes: ResponseInformacoesNutricionais =
-    await getInformacoesNutricionaisOrdenadas();
-  listaCompletaInformacoesNutricionais.current =
-    responseInformacoes.data.results;
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const uuid = urlParams.get("uuid");
-  if (uuid) {
-    const responseFicha = await getFichaTecnicaPraAnalise(uuid);
-    const fichaTecnica = responseFicha.data;
-
-    setFicha(fichaTecnica);
-
-    listaInformacoesNutricionaisFichaTecnica.current =
-      fichaTecnica.informacoes_nutricionais.map(
-        ({ informacao_nutricional }) => informacao_nutricional
-      );
-
-    const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
-    setProponente(response.data);
-
-    setInitialValues(
-      geraInitialValuesDetalharEAnalisar(fichaTecnica, setConferidos)
-    );
-  }
-
-  setCarregando(false);
-};
-
-export const carregarDados = async (
-  listaCompletaInformacoesNutricionais: MutableRefObject<
-    InformacaoNutricional[]
-  >,
+export const carregarDadosCadastrar = async (
   listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
     InformacaoNutricional[]
   >,
@@ -199,42 +136,121 @@ export const carregarDados = async (
   setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>,
   setCarregando: Dispatch<SetStateAction<boolean>>
 ) => {
-  setCarregando(true);
+  try {
+    setCarregando(true);
 
-  const responseInformacoes: ResponseInformacoesNutricionais =
-    await getInformacoesNutricionaisOrdenadas();
-  listaCompletaInformacoesNutricionais.current =
-    responseInformacoes.data.results;
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const uuid = urlParams.get("uuid");
-  if (uuid) {
-    const responseFicha = await getFichaTecnica(uuid);
+    if (uuid) {
+      const responseFicha = await getFichaTecnica(uuid);
+      const fichaTecnica = responseFicha.data;
+
+      listaInformacoesNutricionaisFichaTecnica.current =
+        fichaTecnica.informacoes_nutricionais.map(
+          ({ informacao_nutricional }) => informacao_nutricional
+        );
+
+      setFicha(fichaTecnica);
+      setInitialValues(geraInitialValuesCadastrar(fichaTecnica));
+
+      if (fichaTecnica.arquivo) {
+        const arquivo = await carregarArquivo(fichaTecnica.arquivo);
+        setArquivo(arquivo);
+      }
+
+      const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
+      setProponente(response.data);
+    } else if (meusDados) {
+      const response = await getTerceirizadaUUID(
+        meusDados.vinculo_atual.instituicao.uuid
+      );
+      setProponente(response.data);
+    }
+  } finally {
+    setCarregando(false);
+  }
+};
+
+export const carregarDadosCorrgir = async (
+  listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
+    InformacaoNutricional[]
+  >,
+  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhadaComAnalise>>,
+  setInitialValues: Dispatch<SetStateAction<Record<string, any>>>,
+  setConferidos: Dispatch<SetStateAction<StateConferidosAnalise>>,
+  setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>,
+  setCarregando: Dispatch<SetStateAction<boolean>>
+) => {
+  try {
+    setCarregando(true);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    const responseFicha = await getFichaTecnicaComAnalise(uuid);
     const fichaTecnica = responseFicha.data;
+
+    setInitialValues(geraInitialValuesCorrigir(fichaTecnica));
+    carregaTagsCollapses(fichaTecnica, setConferidos);
+    setFicha(fichaTecnica);
 
     listaInformacoesNutricionaisFichaTecnica.current =
       fichaTecnica.informacoes_nutricionais.map(
         ({ informacao_nutricional }) => informacao_nutricional
       );
 
-    setFicha(fichaTecnica);
-    setInitialValues(geraInitialValuesCadastrar(fichaTecnica));
+    const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
+    setProponente(response.data);
+  } finally {
+    setCarregando(false);
+  }
+};
 
-    if (fichaTecnica.arquivo) {
-      const arquivo = await carregarArquivo(fichaTecnica.arquivo);
-      setArquivo(arquivo);
-    }
+export const carregarDadosAnalisarDetalhar = async (
+  listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
+    InformacaoNutricional[]
+  >,
+  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhadaComAnalise>>,
+  setConferidos: Dispatch<SetStateAction<StateConferidosAnalise>>,
+  setInitialValues: Dispatch<SetStateAction<Record<string, any>>>,
+  setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>,
+  setCarregando: Dispatch<SetStateAction<boolean>>
+) => {
+  try {
+    setCarregando(true);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    const responseFicha = await getFichaTecnicaComAnalise(uuid);
+    const fichaTecnica = responseFicha.data;
+    setInitialValues(geraInitialValuesDetalharEAnalisar(fichaTecnica));
+    carregaTagsCollapses(fichaTecnica, setConferidos);
+
+    setFicha(fichaTecnica);
+
+    listaInformacoesNutricionaisFichaTecnica.current =
+      fichaTecnica.informacoes_nutricionais.map(
+        ({ informacao_nutricional }) => informacao_nutricional
+      );
 
     const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
     setProponente(response.data);
-  } else if (meusDados) {
-    const response = await getTerceirizadaUUID(
-      meusDados.vinculo_atual.instituicao.uuid
-    );
-    setProponente(response.data);
+  } finally {
+    setCarregando(false);
   }
+};
 
-  setCarregando(false);
+export const carregaListaCompletaInformacoesNutricionais = async (
+  listaCompletaInformacoesNutricionais: MutableRefObject<
+    InformacaoNutricional[]
+  >
+) => {
+  const responseInformacoes: ResponseInformacoesNutricionais =
+    await getInformacoesNutricionaisOrdenadas();
+  listaCompletaInformacoesNutricionais.current =
+    responseInformacoes.data.results;
 };
 
 export const validaRascunho = (values: FichaTecnicaPayload): boolean => {
@@ -343,10 +359,11 @@ export const geraInitialValuesCadastrar = (ficha: FichaTecnicaDetalhada) => {
     });
 
   const initialValues = {
-    marca: ficha.marca?.uuid,
     produto: ficha.produto?.nome,
-    fabricante: ficha.fabricante?.nome,
     categoria: ficha.categoria as CategoriaFichaTecnicaChoices,
+    marca: ficha.marca?.uuid,
+    pregao_chamada_publica: ficha.pregao_chamada_publica,
+    fabricante: ficha.fabricante?.nome,
     unidade_medida_porcao: ficha.unidade_medida_porcao?.uuid,
     unidade_medida_volume_primaria: ficha.unidade_medida_volume_primaria?.uuid,
     unidade_medida_primaria: ficha.unidade_medida_primaria?.uuid,
@@ -354,7 +371,6 @@ export const geraInitialValuesCadastrar = (ficha: FichaTecnicaDetalhada) => {
     unidade_medida_primaria_vazia: ficha.unidade_medida_primaria_vazia?.uuid,
     unidade_medida_secundaria_vazia:
       ficha.unidade_medida_secundaria_vazia?.uuid,
-    pregao_chamada_publica: ficha.pregao_chamada_publica,
     cnpj_fabricante: ficha.cnpj_fabricante,
     cep_fabricante: ficha.cep_fabricante,
     endereco_fabricante: ficha.endereco_fabricante,
@@ -422,9 +438,22 @@ export const geraInitialValuesCadastrar = (ficha: FichaTecnicaDetalhada) => {
   return initialValues as FichaTecnicaPayload;
 };
 
+export const geraInitialValuesCorrigir = (
+  ficha: FichaTecnicaDetalhadaComAnalise
+) => {
+  const initialValues = {
+    ...geraInitialValuesCadastrar(ficha),
+    produto: ficha.produto?.nome,
+    categoria: CATEGORIA_OPTIONS.find(({ uuid }) => uuid === ficha.categoria)
+      ?.nome,
+    marca: ficha.marca?.nome,
+  };
+
+  return initialValues;
+};
+
 export const geraInitialValuesDetalharEAnalisar = (
-  ficha: FichaTecnicaDetalhadaComAnalise,
-  setConferidos: Dispatch<SetStateAction<StateConferidosAnalise>>
+  ficha: FichaTecnicaDetalhadaComAnalise
 ) => {
   const initialValues = {
     ...geraInitialValuesCadastrar(ficha),
@@ -450,6 +479,13 @@ export const geraInitialValuesDetalharEAnalisar = (
       ficha.analise?.temperatura_e_transporte_correcoes,
   };
 
+  return initialValues as FichaTecnicaPayload;
+};
+
+export const carregaTagsCollapses = (
+  ficha: FichaTecnicaDetalhadaComAnalise,
+  setConferidos: Dispatch<SetStateAction<StateConferidosAnalise>>
+) => {
   const stateConferidos: StateConferidosAnalise = {
     armazenamento: ficha.analise?.armazenamento_conferido,
     conservacao: ficha.analise?.conservacao_conferido,
@@ -463,8 +499,6 @@ export const geraInitialValuesDetalharEAnalisar = (
   };
 
   setConferidos(stateConferidos);
-
-  return initialValues as FichaTecnicaPayload;
 };
 
 export const carregarArquivo = async (urlArquivo: string) => {
@@ -476,125 +510,213 @@ export const carregarArquivo = async (urlArquivo: string) => {
   return arquivo;
 };
 
-export const formataPayload = (
+export const formataPayloadCadastroFichaTecnica = (
   values: Record<string, any>,
   proponente: TerceirizadaComEnderecoInterface,
   produtosOptions: OptionsGenerico[],
   fabricantesOptions: OptionsGenerico[],
   arquivo: ArquivoForm[],
-  password: string = ""
-): FichaTecnicaPayload => {
+  password?: string
+) => {
   let payload: FichaTecnicaPayload = {
+    ...gerarCamposObrigatoriosRascunho(values, produtosOptions),
+    ...gerarCamposProponenteFabricante(values, proponente, fabricantesOptions),
+    ...gerarCamposDetalhesProduto(values),
+    ...gerarCamposInformacoesNutricionais(values),
+    ...gerarCamposConservacao(values),
+    ...gerarCamposTemperaturaTransporte(values),
+    ...gerarCamposArmazenamento(values),
+    ...gerarCamposEmbalagemRotulagem(values),
+    ...gerarCamposResponsavelTecnico(values, arquivo),
+    ...gerarCamposModoPreparo(values),
+    ...gerarCamposOutrasInformacoes(values),
+    password: password,
+  };
+
+  return payload;
+};
+
+export const formataPayloadCorrecaoFichaTecnica = (
+  values: Record<string, any>,
+  conferidos: StateConferidosAnalise,
+  password?: string
+) => {
+  let payload: FichaTecnicaPayload = {
+    ...(!conferidos.detalhes_produto ? gerarCamposDetalhesProduto(values) : {}),
+    ...(!conferidos.informacoes_nutricionais
+      ? gerarCamposInformacoesNutricionais(values)
+      : {}),
+    ...(!conferidos.conservacao ? gerarCamposConservacao(values) : {}),
+    ...(!conferidos.temperatura_e_transporte &&
+    values.categoria === "PERECIVEIS"
+      ? gerarCamposTemperaturaTransporte(values)
+      : {}),
+    ...(!conferidos.armazenamento ? gerarCamposArmazenamento(values) : {}),
+    ...(!conferidos.embalagem_e_rotulagem
+      ? gerarCamposEmbalagemRotulagem(values)
+      : {}),
+    password: password,
+  };
+
+  return payload;
+};
+
+const gerarCamposObrigatoriosRascunho = (
+  values: Record<string, any>,
+  produtosOptions: OptionsGenerico[]
+) => {
+  return {
     produto: produtosOptions.find((p) => p.nome === values.produto)?.uuid,
     marca: values.marca,
     categoria: values.categoria,
     pregao_chamada_publica: values.pregao_chamada_publica,
+  };
+};
+
+const gerarCamposProponenteFabricante = (
+  values: Record<string, any>,
+  proponente: TerceirizadaComEnderecoInterface,
+  fabricantesOptions: OptionsGenerico[]
+) => {
+  return {
     empresa: proponente.uuid,
-    fabricante:
-      fabricantesOptions.find((p) => p.nome === values.fabricante)?.uuid ||
-      null,
-    cnpj_fabricante: removeCaracteresEspeciais(values.cnpj_fabricante) || "",
-    cep_fabricante: removeCaracteresEspeciais(values.cep_fabricante) || "",
-    endereco_fabricante: values.endereco_fabricante || "",
-    numero_fabricante: values.numero_fabricante || "",
-    complemento_fabricante: values.complemento_fabricante || "",
-    bairro_fabricante: values.bairro_fabricante || "",
-    cidade_fabricante: values.cidade_fabricante || "",
-    estado_fabricante: values.estado_fabricante || "",
-    email_fabricante: values.email_fabricante || "",
-    telefone_fabricante:
-      removeCaracteresEspeciais(values.telefone_fabricante) || "",
-    prazo_validade: values.prazo_validade || "",
-    componentes_produto: values.componentes_produto || "",
+    fabricante: fabricantesOptions.find((p) => p.nome === values.fabricante)
+      ?.uuid,
+    cnpj_fabricante: removeCaracteresEspeciais(values.cnpj_fabricante),
+    cep_fabricante: removeCaracteresEspeciais(values.cep_fabricante),
+    endereco_fabricante: values.endereco_fabricante,
+    numero_fabricante: values.numero_fabricante,
+    complemento_fabricante: values.complemento_fabricante,
+    bairro_fabricante: values.bairro_fabricante,
+    cidade_fabricante: values.cidade_fabricante,
+    estado_fabricante: values.estado_fabricante,
+    email_fabricante: values.email_fabricante,
+    telefone_fabricante: removeCaracteresEspeciais(values.telefone_fabricante),
+  };
+};
+
+const gerarCamposDetalhesProduto = (values: Record<string, any>) => {
+  return {
+    prazo_validade: values.prazo_validade,
+    numero_registro: values.numero_registro,
+    agroecologico: stringToBoolean(values.agroecologico as string),
+    organico: stringToBoolean(values.organico as string),
+    mecanismo_controle: values.mecanismo_controle,
+    componentes_produto: values.componentes_produto,
     alergenicos: stringToBoolean(values.alergenicos as string),
+    ingredientes_alergenicos: values.ingredientes_alergenicos,
     gluten: stringToBoolean(values.gluten as string),
     lactose: stringToBoolean(values.lactose as string),
+    lactose_detalhe: values.lactose_detalhe,
+  };
+};
+
+const gerarCamposInformacoesNutricionais = (values: Record<string, any>) => {
+  return {
     porcao: stringDecimalToNumber(values.porcao),
-    unidade_medida_porcao: values.unidade_medida_porcao || null,
+    unidade_medida_porcao: values.unidade_medida_porcao,
     valor_unidade_caseira: stringDecimalToNumber(values.valor_unidade_caseira),
-    unidade_medida_caseira: values.unidade_medida_caseira || "",
+    unidade_medida_caseira: values.unidade_medida_caseira,
     informacoes_nutricionais: formataInformacoesNutricionais(values),
-    condicoes_de_conservacao: values.condicoes_de_conservacao || "",
-    embalagem_primaria: values.embalagem_primaria || "",
-    embalagem_secundaria: values.embalagem_secundaria || "",
+  };
+};
+
+const gerarCamposConservacao = (values: Record<string, any>) => {
+  return {
+    prazo_validade_descongelamento: values.prazo_validade_descongelamento,
+    condicoes_de_conservacao: values.condicoes_de_conservacao,
+  };
+};
+
+const gerarCamposTemperaturaTransporte = (values: Record<string, any>) => {
+  return {
+    temperatura_congelamento: stringDecimalToNumber(
+      values.temperatura_congelamento
+    ),
+    temperatura_veiculo: stringDecimalToNumber(values.temperatura_veiculo),
+    condicoes_de_transporte: values.condicoes_de_transporte,
+  };
+};
+
+const gerarCamposArmazenamento = (values: Record<string, any>) => {
+  return {
+    embalagem_primaria: values.embalagem_primaria,
+    embalagem_secundaria: values.embalagem_secundaria,
+  };
+};
+
+const gerarCamposEmbalagemRotulagem = (values: Record<string, any>) => {
+  return {
     embalagens_de_acordo_com_anexo:
       values.embalagens_de_acordo_com_anexo || false,
-    material_embalagem_primaria: values.material_embalagem_primaria || "",
+    material_embalagem_primaria: values.material_embalagem_primaria,
+    produto_eh_liquido: stringToBoolean(values.produto_eh_liquido as string),
+    volume_embalagem_primaria: stringDecimalToNumber(
+      values.volume_embalagem_primaria
+    ),
+    unidade_medida_volume_primaria: values.unidade_medida_volume_primaria,
     peso_liquido_embalagem_primaria: stringDecimalToNumber(
       values.peso_liquido_embalagem_primaria
     ),
-    unidade_medida_primaria: values.unidade_medida_primaria || "",
+    unidade_medida_primaria: values.unidade_medida_primaria,
     peso_liquido_embalagem_secundaria: stringDecimalToNumber(
       values.peso_liquido_embalagem_secundaria
     ),
-    unidade_medida_secundaria: values.unidade_medida_secundaria || "",
+    unidade_medida_secundaria: values.unidade_medida_secundaria,
     peso_embalagem_primaria_vazia: stringDecimalToNumber(
       values.peso_embalagem_primaria_vazia
     ),
-    unidade_medida_primaria_vazia: values.unidade_medida_primaria_vazia || "",
+    unidade_medida_primaria_vazia: values.unidade_medida_primaria_vazia,
     peso_embalagem_secundaria_vazia: stringDecimalToNumber(
       values.peso_embalagem_secundaria_vazia
     ),
-    unidade_medida_secundaria_vazia:
-      values.unidade_medida_secundaria_vazia || "",
+    unidade_medida_secundaria_vazia: values.unidade_medida_secundaria_vazia,
+    variacao_percentual: stringDecimalToNumber(values.variacao_percentual),
     sistema_vedacao_embalagem_secundaria:
-      values.sistema_vedacao_embalagem_secundaria || "",
+      values.sistema_vedacao_embalagem_secundaria,
     rotulo_legivel: values.rotulo_legivel || false,
-    nome_responsavel_tecnico: values.nome_responsavel_tecnico || "",
-    habilitacao: values.habilitacao || "",
-    numero_registro_orgao: values.numero_registro_orgao || "",
-    arquivo: arquivo[0]?.base64 || "",
-    modo_de_preparo: values.modo_de_preparo || "",
-    informacoes_adicionais: values.informacoes_adicionais || "",
   };
+};
 
-  if (payload.alergenicos) {
-    payload.ingredientes_alergenicos = values.ingredientes_alergenicos || "";
-  }
+const gerarCamposResponsavelTecnico = (
+  values: Record<string, any>,
+  arquivo: ArquivoForm[]
+) => {
+  return {
+    nome_responsavel_tecnico: values.nome_responsavel_tecnico,
+    habilitacao: values.habilitacao,
+    numero_registro_orgao: values.numero_registro_orgao,
+    arquivo: arquivo[0]?.base64,
+  };
+};
 
-  if (payload.lactose) {
-    payload.lactose_detalhe = values.lactose_detalhe || "";
-  }
+const gerarCamposModoPreparo = (values: Record<string, any>) => {
+  return {
+    modo_de_preparo: values.modo_de_preparo,
+  };
+};
 
-  if (payload.categoria === "PERECIVEIS") {
-    payload.numero_registro = values.numero_registro;
-    payload.agroecologico = stringToBoolean(values.agroecologico as string);
-    payload.organico = stringToBoolean(values.organico as string);
-    payload.prazo_validade_descongelamento =
-      values.prazo_validade_descongelamento;
-    payload.temperatura_congelamento = stringDecimalToNumber(
-      values.temperatura_congelamento
-    );
-    payload.temperatura_veiculo = stringDecimalToNumber(
-      values.temperatura_veiculo
-    );
-    payload.condicoes_de_transporte = values.condicoes_de_transporte;
-    payload.variacao_percentual = stringDecimalToNumber(
-      values.variacao_percentual
-    );
+const gerarCamposOutrasInformacoes = (values: Record<string, any>) => {
+  return {
+    informacoes_adicionais: values.informacoes_adicionais,
+  };
+};
 
-    if (payload.organico) {
-      payload.mecanismo_controle = values.mecanismo_controle;
-    }
-  }
+export const formataInformacoesNutricionais = (values: Record<string, any>) => {
+  const uuids_informacoes = Object.keys(values)
+    .filter((key) => key.startsWith("quantidade_por_100g_"))
+    .map((key) => key.split("_").pop());
 
-  if (payload.categoria === "NAO_PERECIVEIS") {
-    payload.produto_eh_liquido = stringToBoolean(
-      values.produto_eh_liquido as string
-    );
+  const payload = uuids_informacoes.map((uuid) => {
+    return {
+      informacao_nutricional: uuid,
+      quantidade_por_100g: values[`quantidade_por_100g_${uuid}`],
+      quantidade_porcao: values[`quantidade_porcao_${uuid}`],
+      valor_diario: values[`valor_diario_${uuid}`],
+    };
+  });
 
-    if (payload.produto_eh_liquido) {
-      payload.volume_embalagem_primaria = stringDecimalToNumber(
-        values.volume_embalagem_primaria
-      );
-      payload.unidade_medida_volume_primaria =
-        values.unidade_medida_volume_primaria || "";
-    }
-  }
-
-  payload.password = password;
-
-  return payload;
+  return payload as InformacoesNutricionaisFichaTecnicaPayload[];
 };
 
 export const inserirArquivoFichaAssinadaRT = (
@@ -650,6 +772,30 @@ export const assinarEnviarFichaTecnica = async (
       : await cadastrarFichaTecnica(payload);
 
     if (response.status === 201 || response.status === 200) {
+      toastSuccess("Ficha Técnica Assinada e Enviada com sucesso!");
+      navigate(`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`);
+    } else {
+      toastError("Ocorreu um erro ao assinar e enviar a Ficha Técnica");
+    }
+  } catch (error) {
+    exibeError(error, "Ocorreu um erro ao assinar e enviar a Ficha Técnica");
+  } finally {
+    setCarregando(false);
+  }
+};
+
+export const assinarCorrigirFichaTecnica = async (
+  payload: FichaTecnicaPayload,
+  ficha: FichaTecnicaDetalhadaComAnalise,
+  setCarregando: Dispatch<SetStateAction<boolean>>,
+  navigate: NavigateFunction
+) => {
+  try {
+    setCarregando(true);
+
+    const response = await corrigirFichaTecnica(payload, ficha.uuid);
+
+    if (response.status === 200) {
       toastSuccess("Ficha Técnica Assinada e Enviada com sucesso!");
       navigate(`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`);
     } else {
