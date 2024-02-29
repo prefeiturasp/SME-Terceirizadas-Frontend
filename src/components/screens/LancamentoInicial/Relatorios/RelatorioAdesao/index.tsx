@@ -19,7 +19,9 @@ export default () => {
           onClear={view.limparFiltro}
           titulo="Filtrar Resultados"
         >
-          {(_, form) => <FormFiltro form={form} />}
+          {(_, form) => (
+            <FormFiltro form={form} onChange={view.atualizaFiltros} />
+          )}
         </CollapseFiltros>
 
         {view.loading ? (

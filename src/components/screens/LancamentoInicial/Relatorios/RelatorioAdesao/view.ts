@@ -15,7 +15,6 @@ export default () => {
 
   const filtrar = async (values: Filtros) => {
     setLoading(true);
-    setFiltros(values);
 
     try {
       const dados = await RelatorioService.getRelatorioAdesao({
@@ -24,7 +23,7 @@ export default () => {
         lotes: values.lotes,
         escola: values.unidade_educacional,
         periodos_escolares: values.periodos,
-        tipos_alimentacao: values.alimentacoes,
+        tipos_alimentacao: values.tipos_alimentacao,
       });
 
       setResultado(dados);
@@ -37,7 +36,22 @@ export default () => {
 
   const limparFiltro = () => {
     setFiltros(null);
+    setResultado(null);
   };
 
-  return { loading, filtros, resultado, filtrar, limparFiltro };
+  const atualizaFiltros = (values: Filtros) => {
+    setFiltros((prev) => {
+      if (prev) return { ...prev, ...values };
+      return values;
+    });
+  };
+
+  return {
+    loading,
+    filtros,
+    resultado,
+    filtrar,
+    limparFiltro,
+    atualizaFiltros,
+  };
 };
