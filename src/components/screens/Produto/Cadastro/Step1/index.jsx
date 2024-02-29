@@ -5,14 +5,14 @@ import { Select } from "antd";
 import {
   getNomeDeProdutosEdital,
   getMarcasProdutos,
-  getFabricantesProdutos
+  getFabricantesProdutos,
 } from "../../../../../services/produto.service";
 import "./style.scss";
 
 import Botao from "../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../Shareable/Botao/constants";
 
 import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
@@ -43,24 +43,23 @@ class Step1 extends Component {
         componentes: null,
         tem_aditivos_alergenicos: null,
         tem_gluten: null,
-        aditivos: null
+        aditivos: null,
       },
       dafaultArrayProtocolo: [],
       retornadoAoStep: false,
       marcaDefault: null,
       fabricantesNomes: [],
-      marcasNomes: []
+      marcasNomes: [],
     };
     this.closeModalCadastrarItem = this.closeModalCadastrarItem.bind(this);
     this.getItensCadastrados = this.getItensCadastrados.bind(this);
     this.setaNomeProduto = this.setaNomeProduto.bind(this);
-    this.updateOpcoesItensCadastrados = this.updateOpcoesItensCadastrados.bind(
-      this
-    );
+    this.updateOpcoesItensCadastrados =
+      this.updateOpcoesItensCadastrados.bind(this);
     this.produtoTemGluten = this.produtoTemGluten.bind(this);
   }
 
-  abreOuFechaFormDietaEspecial = value => {
+  abreOuFechaFormDietaEspecial = (value) => {
     let { payloadStep1 } = this.state;
     let condicao = false;
     if (value === 1) {
@@ -70,12 +69,12 @@ class Step1 extends Component {
     }
     payloadStep1.eh_para_alunos_com_dieta = condicao;
     this.setState({
-      payloadStep1
+      payloadStep1,
     });
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
-  abreOuFechaFormAlergenico = value => {
+  abreOuFechaFormAlergenico = (value) => {
     let { payloadStep1 } = this.state;
     let condicao = false;
     if (value === 1) {
@@ -86,12 +85,12 @@ class Step1 extends Component {
     payloadStep1.tem_aditivos_alergenicos = condicao;
     this.props.mostrarFormAlergenico(condicao);
     this.setState({
-      payloadStep1
+      payloadStep1,
     });
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
-  produtoTemGluten = value => {
+  produtoTemGluten = (value) => {
     let { payloadStep1 } = this.state;
     let condicao = false;
     if (value === 1) {
@@ -101,20 +100,20 @@ class Step1 extends Component {
     }
     payloadStep1.tem_gluten = condicao;
     this.setState({
-      payloadStep1
+      payloadStep1,
     });
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
   showModalCadastrarItem = () => {
     this.setState({
-      showModalCadastrarItem: true
+      showModalCadastrarItem: true,
     });
   };
 
   closeModalCadastrarItem = () => {
     this.setState({
-      showModalCadastrarItem: false
+      showModalCadastrarItem: false,
     });
   };
 
@@ -125,7 +124,7 @@ class Step1 extends Component {
       fabricantesArray: itensCadastrados.listaFabricantes,
       loading: false,
       marcasNomes: itensCadastrados.marcasCadastradas,
-      fabricantesNomes: itensCadastrados.fabricantesCadastrados
+      fabricantesNomes: itensCadastrados.fabricantesCadastrados,
     });
   };
 
@@ -134,12 +133,12 @@ class Step1 extends Component {
     let listaFabricantes = [];
     const responseMarcas = await getMarcasProdutos();
     const responseFabricantes = await getFabricantesProdutos();
-    responseMarcas.data.results.forEach(marca => {
+    responseMarcas.data.results.forEach((marca) => {
       listaMarcas.push(
         <Option key={`${marca.nome}+${marca.uuid}`}>{marca.nome}</Option>
       );
     });
-    responseFabricantes.data.results.forEach(fabricante => {
+    responseFabricantes.data.results.forEach((fabricante) => {
       listaFabricantes.push(
         <Option key={`${fabricante.nome}+${fabricante.uuid}`}>
           {fabricante.nome}
@@ -150,7 +149,7 @@ class Step1 extends Component {
       marcasCadastradas: responseMarcas.data.results,
       fabricantesCadastrados: responseFabricantes.data.results,
       listaMarcas: listaMarcas,
-      listaFabricantes: listaFabricantes
+      listaFabricantes: listaFabricantes,
     };
   };
 
@@ -161,7 +160,7 @@ class Step1 extends Component {
       this.setState({
         payloadStep1: retornaObjetoRequest(payload),
         dafaultArrayProtocolo,
-        retornadoAoStep: true
+        retornadoAoStep: true,
       });
     }
 
@@ -170,7 +169,7 @@ class Step1 extends Component {
     if (marcasArray.length === 0 && fabricantesArray.length === 0) {
       const itensCadastrados = await this.getItensCadastrados();
       const responseNomeDeProdutosEdital = await getNomeDeProdutosEdital();
-      responseNomeDeProdutosEdital.data.results.forEach(produtoEdital => {
+      responseNomeDeProdutosEdital.data.results.forEach((produtoEdital) => {
         listaNomeDeProdutosEdital.push(
           <Option key={`${produtoEdital.nome}+${produtoEdital.uuid}`}>
             {produtoEdital.nome}
@@ -184,7 +183,7 @@ class Step1 extends Component {
         fabricantesArray: itensCadastrados.listaFabricantes,
         loading: false,
         marcasNomes: itensCadastrados.marcasCadastradas,
-        fabricantesNomes: itensCadastrados.fabricantesCadastrados
+        fabricantesNomes: itensCadastrados.fabricantesCadastrados,
       });
     }
   };
@@ -196,7 +195,7 @@ class Step1 extends Component {
       marcasArray,
       fabricantesArray,
       dafaultArrayProtocolo,
-      retornadoAoStep
+      retornadoAoStep,
     } = this.state;
     let listaNomeDeProdutosEdital = [];
     let listaMarcas = [];
@@ -205,7 +204,7 @@ class Step1 extends Component {
       this.setState({
         payloadStep1: retornaObjetoRequest(payload),
         dafaultArrayProtocolo,
-        retornadoAoStep: true
+        retornadoAoStep: true,
       });
     }
     if (marcasArray.length === 0 && loading && fabricantesArray.length === 0) {
@@ -213,7 +212,7 @@ class Step1 extends Component {
       const responseMarcas = await getMarcasProdutos();
       const responseFabricantes = await getFabricantesProdutos();
 
-      responseNomeDeProdutosEdital.data.results.forEach(produtoEdital => {
+      responseNomeDeProdutosEdital.data.results.forEach((produtoEdital) => {
         listaNomeDeProdutosEdital.push(
           <Option key={`${produtoEdital.nome}+${produtoEdital.uuid}`}>
             {produtoEdital.nome}
@@ -221,13 +220,13 @@ class Step1 extends Component {
         );
       });
 
-      responseMarcas.data.results.forEach(marca => {
+      responseMarcas.data.results.forEach((marca) => {
         listaMarcas.push(
           <Option key={`${marca.nome}+${marca.uuid}`}>{marca.nome}</Option>
         );
       });
 
-      responseFabricantes.data.results.forEach(fabricante => {
+      responseFabricantes.data.results.forEach((fabricante) => {
         listaFabricantes.push(
           <Option key={`${fabricante.nome}+${fabricante.uuid}`}>
             {fabricante.nome}
@@ -238,44 +237,44 @@ class Step1 extends Component {
         nomeDeProdutosEditalArray: listaNomeDeProdutosEdital,
         marcasArray: listaMarcas,
         fabricantesArray: listaFabricantes,
-        loading: false
+        loading: false,
       });
     }
   };
 
-  extrairUuidString = string => {
+  extrairUuidString = (string) => {
     return string.split("+")[1];
   };
 
-  setaCampoDetalhesDieta = value => {
+  setaCampoDetalhesDieta = (value) => {
     let { payloadStep1 } = this.state;
     payloadStep1.detalhes_da_dieta = value;
     this.setState({ payloadStep1 });
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
-  setaCampoDetalheAlergenico = value => {
+  setaCampoDetalheAlergenico = (value) => {
     let { payloadStep1 } = this.state;
     payloadStep1.aditivos = value;
     this.setState({ payloadStep1 });
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
-  setaNomeProduto = value => {
+  setaNomeProduto = (value) => {
     let { payloadStep1 } = this.state;
     payloadStep1.nome = value.split("+")[0];
     this.setState({ payloadStep1 });
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
-  setaNomeComponentes = value => {
+  setaNomeComponentes = (value) => {
     let { payloadStep1 } = this.state;
     payloadStep1.componentes = value.toUpperCase();
     this.setState({ payloadStep1 });
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
-  addMarca = value => {
+  addMarca = (value) => {
     this.props.setDefaultMarcaStep1(value);
     let { payloadStep1 } = this.state;
     const uuid = this.extrairUuidString(value);
@@ -284,7 +283,7 @@ class Step1 extends Component {
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
-  addFabricante = value => {
+  addFabricante = (value) => {
     this.props.setDefaultFabricanteStep1(value);
     let { payloadStep1 } = this.state;
     const uuid = this.extrairUuidString(value);
@@ -294,16 +293,13 @@ class Step1 extends Component {
   };
 
   render() {
-    const {
-      nomeDeProdutosEditalArray,
-      marcasArray,
-      fabricantesArray
-    } = this.state;
+    const { nomeDeProdutosEditalArray, marcasArray, fabricantesArray } =
+      this.state;
     const {
       renderizaFormAlergenicos,
       defaultNomeDeProdutosEditalStep1,
       defaultMarcaStep1,
-      defaultFabricanteStep1
+      defaultFabricanteStep1,
     } = this.props;
     return (
       <div className="cadastro-produto-step1">
@@ -326,7 +322,7 @@ class Step1 extends Component {
               }}
               onSelect={this.setaNomeProduto}
               defaultValue={defaultNomeDeProdutosEditalStep1}
-              onBlur={e => {
+              onBlur={(e) => {
                 e.preventDefault();
               }}
               validate={required}
@@ -342,7 +338,7 @@ class Step1 extends Component {
             </label>
             <Field
               component={ASelect}
-              onBlur={e => {
+              onBlur={(e) => {
                 e.preventDefault();
               }}
               className={"select-form-produto"}
@@ -366,7 +362,7 @@ class Step1 extends Component {
             </label>
             <Field
               component={ASelect}
-              onBlur={e => {
+              onBlur={(e) => {
                 e.preventDefault();
               }}
               className={"select-form-produto"}
@@ -444,7 +440,7 @@ class Step1 extends Component {
               type="text"
               validate={[maxLength5000]}
               maxLength={5001}
-              onChange={event => {
+              onChange={(event) => {
                 this.setaNomeComponentes(event.target.value);
               }}
               required
@@ -497,7 +493,7 @@ class Step1 extends Component {
                   component={TextArea}
                   label={"Quais?"}
                   name="aditivos"
-                  onChange={event => {
+                  onChange={(event) => {
                     this.setaCampoDetalheAlergenico(event.target.value);
                   }}
                   required

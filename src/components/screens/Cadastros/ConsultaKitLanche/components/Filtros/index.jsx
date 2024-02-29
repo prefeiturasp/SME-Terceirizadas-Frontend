@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Form, Field } from "react-final-form";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { getNumerosEditais } from "../../../../../../services/edital.service";
 import "./style.scss";
@@ -15,11 +15,11 @@ import "./style.scss";
 const FORM_NAME = "buscaKitsLanche";
 
 export default ({ setFiltros, setKits }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [initialValues] = useState();
   const [editais, setEditais] = useState();
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
@@ -30,13 +30,13 @@ export default ({ setFiltros, setKits }) => {
 
   const carregarEditais = async () => {
     const response = await getNumerosEditais();
-    setEditais(response.data.results.map(edital => edital.numero));
+    setEditais(response.data.results.map((edital) => edital.numero));
   };
 
-  const getEditaisFiltrado = numEdital => {
+  const getEditaisFiltrado = (numEdital) => {
     if (numEdital) {
       const reg = new RegExp(numEdital, "i");
-      return editais.filter(a => reg.test(a));
+      return editais.filter((a) => reg.test(a));
     }
     return [];
   };
@@ -71,12 +71,12 @@ export default ({ setFiltros, setKits }) => {
                   options={[
                     {
                       value: "ATIVO",
-                      label: "Ativo"
+                      label: "Ativo",
                     },
                     {
                       value: "INATIVO",
-                      label: "Inativo"
-                    }
+                      label: "Inativo",
+                    },
                   ]}
                 />
               </div>
@@ -87,15 +87,15 @@ export default ({ setFiltros, setKits }) => {
                 texto="Adicionar Novo Modelo de KIT"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
-                className="float-left"
-                onClick={() => history.push(`/codae/cadastros/kits`)}
+                className="float-start"
+                onClick={() => navigate("/codae/cadastros/kits")}
               />
 
               <Botao
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting}
               />
 
@@ -103,7 +103,7 @@ export default ({ setFiltros, setKits }) => {
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset(initialValues);
                   setKits(undefined);

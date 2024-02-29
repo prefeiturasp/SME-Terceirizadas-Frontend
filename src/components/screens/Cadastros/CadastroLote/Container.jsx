@@ -3,7 +3,7 @@ import { meusDados } from "../../../../services/perfil.service";
 import {
   getEscolasSimplissima,
   getTiposGestao,
-  getSubprefeituras
+  getSubprefeituras,
 } from "../../../../services/escola.service";
 import { getDiretoriaregionalSimplissima } from "../../../../services/diretoriaRegional.service";
 import { agregarDefault } from "../../../../helpers/utilities";
@@ -20,44 +20,44 @@ class Container extends Component {
       diretoriasRegionais: [],
       escolas: [],
       tiposGestao: [],
-      subprefeituras: []
+      subprefeituras: [],
     };
   }
 
   componentDidMount() {
-    meusDados().then(response => {
+    meusDados().then((response) => {
       this.setState({
-        meusDados: response
+        meusDados: response,
       });
     });
 
-    getDiretoriaregionalSimplissima().then(response => {
+    getDiretoriaregionalSimplissima().then((response) => {
       this.setState({
-        diretoriasRegionais: agregarDefault(response.data.results)
+        diretoriasRegionais: agregarDefault(response.data.results),
       });
     });
 
-    getTiposGestao().then(response => {
+    getTiposGestao().then((response) => {
       this.setState({
-        tiposGestao: agregarDefault(response.results)
+        tiposGestao: agregarDefault(response.results),
       });
     });
 
-    getSubprefeituras().then(response => {
+    getSubprefeituras().then((response) => {
       this.setState({
-        subprefeituras: formatarParaMultiselect(response.results)
+        subprefeituras: formatarParaMultiselect(response.results),
       });
     });
   }
 
-  getEscolasPorDre = async dre_uuid => {
+  getEscolasPorDre = async (dre_uuid) => {
     this.setState({
-      escolas: []
+      escolas: [],
     });
     getEscolasSimplissima({ diretoria_regional__uuid: dre_uuid }).then(
-      response => {
+      (response) => {
         this.setState({
-          escolas: formatarEscolasParaMultiselect(response.results)
+          escolas: formatarEscolasParaMultiselect(response.results),
         });
       }
     );

@@ -8,10 +8,12 @@ import InputText from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { CODAEHomologaProduto } from "services/produto.service";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
+import { required } from "helpers/fieldValidators";
 
 export const ModalVincularEditais = ({ ...props }) => {
   const {
@@ -24,10 +26,17 @@ export const ModalVincularEditais = ({ ...props }) => {
     loadSolicitacao,
     produto,
     tituloModal,
-    ehSuspensaoFluxoAlteracaoDados
+    ehSuspensaoFluxoAlteracaoDados,
   } = props;
 
   const [loading, setLoading] = useState(false);
+
+  const excluiuEditalEmAlteracaoProduto = () => {
+    const editaisHomologados = produto.vinculos_produto_edital
+      .filter((vinculo) => !vinculo.suspenso)
+      .map((vinculo) => vinculo.edital.uuid);
+    return !editaisHomologados.every((edital) => editais.includes(edital));
+  };
 
   const renderizarLabelEditais = (selected, options) => {
     if (selected.length === 0) {
@@ -42,39 +51,42 @@ export const ModalVincularEditais = ({ ...props }) => {
     return `${selected.length} editais selecionados`;
   };
 
-  const onSubmit = () => {
+  const onSubmit = async (values) => {
     setLoading(true);
-    CODAEHomologaProduto(uuid, editais).then(response => {
-      if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Solicitação de homologado enviada com sucesso");
-        setLoading(false);
-        closeModal();
-        if (ehSuspensaoFluxoAlteracaoDados) {
-          const searchParams = new URLSearchParams(window.location.search);
-          searchParams.set("uuid", response.data.uuid);
-          const newRelativePathQuery =
-            window.location.pathname + "?" + searchParams.toString();
-          history.pushState(null, "", newRelativePathQuery);
-          loadSolicitacao(response.data.uuid);
-        } else {
-          loadSolicitacao(uuid);
-        }
-      } else {
-        toastError(response.data.detail);
-        setLoading(false);
-      }
+    const response = await CODAEHomologaProduto(uuid, {
+      editais: editais,
+      justificativa: values.justificativa,
     });
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Solicitação de homologado enviada com sucesso");
+      setLoading(false);
+      closeModal();
+      if (ehSuspensaoFluxoAlteracaoDados) {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set("uuid", response.data.uuid);
+        const newRelativePathQuery =
+          window.location.pathname + "?" + searchParams.toString();
+        history.pushState(null, "", newRelativePathQuery);
+        loadSolicitacao(response.data.uuid);
+      } else {
+        loadSolicitacao(uuid);
+      }
+    } else {
+      toastError(response.data.detail);
+      setLoading(false);
+    }
   };
 
   return (
     <Form
+      keepDirtyOnReinitialize
       initialValues={{
         produto: {
           tipo: produto.eh_para_alunos_com_dieta ? "Dieta Especial" : "Comum",
           nome: produto.nome,
           marca: produto.marca.nome,
-          fabricante: produto.fabricante.nome
-        }
+          fabricante: produto.fabricante.nome,
+        },
       }}
       onSubmit={onSubmit}
     >
@@ -136,20 +148,36 @@ export const ModalVincularEditais = ({ ...props }) => {
                       name="editais"
                       selected={editais}
                       disableSearch={true}
-                      options={editaisOptions.map(edital => ({
+                      options={editaisOptions.map((edital) => ({
                         label: edital.numero,
-                        value: edital.uuid
+                        value: edital.uuid,
                       }))}
                       valueRenderer={(selected, options) =>
                         renderizarLabelEditais(selected, options)
                       }
                       overrideStrings={{
-                        selectAll: "Todos os editais"
+                        selectAll: "Todos os editais",
                       }}
-                      onSelectedChanged={values => onChangeEditais(values)}
+                      onSelectedChanged={(values) => onChangeEditais(values)}
                     />
                   </div>
                 </div>
+                {excluiuEditalEmAlteracaoProduto() && (
+                  <div className="row">
+                    <div className="col-12">
+                      <Field
+                        component={TextArea}
+                        height="100"
+                        label="Justificativa de suspensão"
+                        placeholder="Justifique o porquê da suspensão do(s) edital(is)."
+                        name="justificativa"
+                        maxLength={1000}
+                        validate={required}
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
               </Modal.Body>
               <Modal.Footer>
                 <div className="row mt-4">
@@ -159,13 +187,13 @@ export const ModalVincularEditais = ({ ...props }) => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
                       style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Homologar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       onClick={() => {
                         form.submit();
                       }}

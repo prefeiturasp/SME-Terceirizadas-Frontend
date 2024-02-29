@@ -5,7 +5,7 @@ import { Form, Field } from "react-final-form";
 import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 
@@ -13,7 +13,7 @@ import {
   getNomesProdutos,
   getMarcas,
   getFabricantes,
-  filtrarReclamacoesEscola
+  filtrarReclamacoesEscola,
 } from "services/reclamacaoProduto.service";
 
 import { formataOpcoes, formataPayload } from "./helpers.js";
@@ -26,7 +26,7 @@ const Filtros = ({
   setTotal,
   setFiltros,
   setPage,
-  PAGE_SIZE
+  PAGE_SIZE,
 }) => {
   const [opcoesNomesProdutos, setOpcoesNomesProdutos] = useState();
   const [opcoesMarcas, setOpcoesMarcas] = useState();
@@ -63,7 +63,7 @@ const Filtros = ({
     setCarregando(false);
   };
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     window.history.replaceState(null, null, window.location.pathname);
     let params = "";
     setProdutos(undefined);
@@ -132,7 +132,7 @@ const Filtros = ({
               />
               <Botao
                 texto="Limpar Filtros"
-                className="mr-3 botoesFiltro"
+                className="me-3 botoesFiltro"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={() => {

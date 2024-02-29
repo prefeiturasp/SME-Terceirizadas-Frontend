@@ -7,14 +7,14 @@ import ConsultaEntregas from "components/screens/Logistica/ConsultaEntregas";
 
 const atual = {
   href: `/${LOGISTICA}/${ENTREGAS_DILOG}`,
-  titulo: "Entregas"
+  titulo: "Entregas",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
-  }
+    titulo: "Abastecimento",
+  },
 ];
 
 export default () => (

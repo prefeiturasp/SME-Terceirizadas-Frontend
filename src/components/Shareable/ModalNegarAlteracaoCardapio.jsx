@@ -5,7 +5,7 @@ import { Field } from "redux-form";
 import { required } from "../../helpers/fieldValidators";
 import {
   DRENaoValidaAlteracaoCardapio,
-  CODAENegaAlteracaoCardapio
+  CODAENegaAlteracaoCardapio,
 } from "../../services/alteracaoDeCardapio";
 import { toastError, toastSuccess } from "./Toast/dialogs";
 import { statusEnum } from "../../constants/shared";
@@ -76,12 +76,12 @@ export class ModalNegarAlteracaoCardapio extends Component {
                 options={[
                   {
                     nome: "Sem motivo",
-                    uuid: "Sem motivo"
+                    uuid: "Sem motivo",
                   },
                   {
                     nome: "Em desacordo com o contrato",
-                    uuid: "Em desacordo com o contrato"
-                  }
+                    uuid: "Em desacordo com o contrato",
+                  },
                 ]}
                 validate={required}
               />
@@ -102,7 +102,7 @@ export class ModalNegarAlteracaoCardapio extends Component {
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
             style={BUTTON_STYLE.BLUE_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Sim"
@@ -111,7 +111,7 @@ export class ModalNegarAlteracaoCardapio extends Component {
               this.negarAlteracaoCardapio(uuid);
             }}
             style={BUTTON_STYLE.BLUE}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>

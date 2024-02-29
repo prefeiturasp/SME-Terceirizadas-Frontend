@@ -10,7 +10,7 @@ import { DIETA_ESPECIAL, CANCELAMENTO } from "configs/constants";
 
 const atual = {
   href: `/${DIETA_ESPECIAL}/${CANCELAMENTO}`,
-  titulo: "Cancelamento de Dieta Especial"
+  titulo: "Cancelamento de Dieta Especial",
 };
 
 export default () => (

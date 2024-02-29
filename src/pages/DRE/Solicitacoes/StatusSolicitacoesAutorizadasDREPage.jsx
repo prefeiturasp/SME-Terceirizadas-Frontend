@@ -6,7 +6,7 @@ import { DRE, SOLICITACOES_AUTORIZADAS } from "../../../configs/constants";
 import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getSolicitacoesAutorizadasDRE } from "services/painelDRE.service";
 import CardLegendas from "components/Shareable/CardLegendas";
@@ -16,7 +16,7 @@ import MeusDadosContext from "context/MeusDadosContext";
 
 const atual = {
   href: `/${DRE}/${SOLICITACOES_AUTORIZADAS}`,
-  titulo: "Solicitações Autorizadas"
+  titulo: "Solicitações Autorizadas",
 };
 
 export default () => {

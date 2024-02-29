@@ -3,7 +3,7 @@ import { Field } from "react-final-form";
 import CKEditorField from "components/Shareable/CKEditorField";
 import {
   peloMenosUmCaractere,
-  textAreaRequired
+  textAreaRequired,
 } from "helpers/fieldValidators";
 
 const InformacoesAdicionais = () => {

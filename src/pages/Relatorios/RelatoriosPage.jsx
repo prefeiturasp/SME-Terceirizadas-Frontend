@@ -16,14 +16,14 @@ import {
   getEvolucaoSolicitacoesCODAE,
   getResumoTotaisPorMesCODAE,
   getPedidosESolicitacoesFiltroCODAE,
-  getPedidosESolicitacoesFiltroPaginacaoCODAE
+  getPedidosESolicitacoesFiltroPaginacaoCODAE,
 } from "../../services/relatorios.service";
 
 class RelatoriosBase extends React.Component {
   render() {
     const atual = {
       href: "#",
-      titulo: "Relatórios"
+      titulo: "Relatórios",
     };
 
     return (

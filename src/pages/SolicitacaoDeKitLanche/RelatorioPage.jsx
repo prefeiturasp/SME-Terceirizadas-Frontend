@@ -8,7 +8,7 @@ import {
   DRENaoValidaKitLancheAvulso,
   DREValidaKitLancheAvulso,
   terceirizadaRespondeQuestionamentoKitLanche,
-  terceirizadaTomaCienciaKitLanche
+  terceirizadaTomaCienciaKitLanche,
 } from "services/kitLanche";
 import { getMotivosDREnaoValida } from "services/relatorios";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
@@ -38,18 +38,18 @@ export const RelatorioBase = ({ ...props }) => {
 
   const atual = {
     href: "#",
-    titulo: "Relatório"
+    titulo: "Relatório",
   };
 
   const anteriores = [
     {
       href: `/painel-gestao-alimentacao`,
-      titulo: "Gestão de Alimentação"
+      titulo: "Gestão de Alimentação",
     },
     {
       href: `/painel-gestao-alimentacao`,
-      titulo: "Painel de Solicitações"
-    }
+      titulo: "Painel de Solicitações",
+    },
   ];
 
   return (

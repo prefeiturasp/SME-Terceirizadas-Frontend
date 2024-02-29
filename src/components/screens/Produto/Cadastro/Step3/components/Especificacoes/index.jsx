@@ -4,7 +4,7 @@ import InputText from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import Select from "components/Shareable/Select";
 import "./style.scss";
@@ -14,7 +14,7 @@ const Especificaoes = ({
   meta: { error, submitFailed },
   unidades_de_medida,
   embalagens,
-  especificacoesIniciais
+  especificacoesIniciais,
 }) => {
   const [mounted, setMounted] = useState(false);
   const opcoesUnidadesDeMedida =
@@ -22,10 +22,10 @@ const Especificaoes = ({
     [
       {
         uuid: undefined,
-        nome: "Selecione a Unidade de Medida"
-      }
+        nome: "Selecione a Unidade de Medida",
+      },
     ].concat(
-      unidades_de_medida.map(unidade_de_medida => {
+      unidades_de_medida.map((unidade_de_medida) => {
         return { uuid: unidade_de_medida.uuid, nome: unidade_de_medida.nome };
       })
     );
@@ -35,10 +35,10 @@ const Especificaoes = ({
     [
       {
         uuid: undefined,
-        nome: "Selecione a Embalagem"
-      }
+        nome: "Selecione a Embalagem",
+      },
     ].concat(
-      embalagens.map(embalagem => {
+      embalagens.map((embalagem) => {
         return { uuid: embalagem.uuid, nome: embalagem.nome };
       })
     );

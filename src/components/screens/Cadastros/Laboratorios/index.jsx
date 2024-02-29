@@ -5,9 +5,10 @@ import ListagemLaboratorios from "./components/ListagemLaboratorios";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   getLaboratorios,
-  getListaLaboratorios
+  getListaLaboratorios,
 } from "services/laboratorio.service";
 import { Paginacao } from "components/Shareable/Paginacao";
+import "./styles.scss";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -31,13 +32,13 @@ export default () => {
 
   const buscaDadosAutoComplete = async () => {
     const response = await getListaLaboratorios();
-    const nomes = response.data.results.map(e => e.nome);
-    const cnpjs = response.data.results.map(e => e.cnpj);
+    const nomes = response.data.results.map((e) => e.nome);
+    const cnpjs = response.data.results.map((e) => e.cnpj);
     setNomesLaboratorios(nomes);
     setCnpjsLaboratorios(cnpjs);
   };
 
-  const buscaResultado = async page => {
+  const buscaResultado = async (page) => {
     setCarregando(true);
 
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -52,7 +53,7 @@ export default () => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscaResultado(page);
     setPage(page);
   };
@@ -60,7 +61,7 @@ export default () => {
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-laboratorios">
-        <div className="card-body">
+        <div className="card-body laboratorios">
           <Filtros
             setFiltros={setFiltros}
             nomesLaboratorios={nomesLaboratorios}

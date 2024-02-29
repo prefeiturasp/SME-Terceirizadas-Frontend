@@ -7,7 +7,7 @@ import RelatorioProdutosHomologados from "components/screens/RelatorioProdutosHo
 
 const atual = {
   href: "/relatorios/produtos-homologados",
-  titulo: "Relatório de Produto"
+  titulo: "Relatório de Produto",
 };
 
 const RelatorioProdutosHomologadosPage = () => {

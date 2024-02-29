@@ -5,13 +5,13 @@ import { Form, Field } from "react-final-form";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import { Radio } from "antd";
 import InputFile from "components/Shareable/Input/InputFile";
 
-const FORMATOS_IMAGEM = "XLSX, XLS";
+const EXTENSOES_PERMITIDAS = "XLSX, XLS";
 
 const ModalCadastroVinculo = ({ show, setShow, onSubmit, servidores }) => {
   const [tipoPlanilha, setTipoPlanilha] = useState(
@@ -19,7 +19,7 @@ const ModalCadastroVinculo = ({ show, setShow, onSubmit, servidores }) => {
   );
   const [arquivo, setArquivo] = useState([]);
 
-  const setFiles = files => {
+  const setFiles = (files) => {
     let arquivos = arquivo;
     arquivos = files;
     setArquivo(arquivos);
@@ -55,14 +55,15 @@ const ModalCadastroVinculo = ({ show, setShow, onSubmit, servidores }) => {
                       Modelo de Planilha a ser Inserido
                     </span>
                     <Radio.Group
-                      onChange={event => setTipoPlanilha(event.target.value)}
+                      onChange={(event) => setTipoPlanilha(event.target.value)}
                       value={tipoPlanilha}
                     >
-                      <Radio className="" value={"SERVIDOR"}>
-                        Planilha Servidores
-                      </Radio>
-                      <Radio className="" value={"NAO_SERVIDOR"}>
+                      <Radio value={"SERVIDOR"}>Planilha Servidores</Radio>
+                      <Radio value={"NAO_SERVIDOR"}>
                         Planilha Não Servidores
+                      </Radio>
+                      <Radio value={"UE_PARCEIRA"}>
+                        Planilha UEs Parceiras
                       </Radio>
                     </Radio.Group>
                   </div>
@@ -76,7 +77,7 @@ const ModalCadastroVinculo = ({ show, setShow, onSubmit, servidores }) => {
                         className="inputfile"
                         texto="Anexar Planilha"
                         name="files"
-                        accept={FORMATOS_IMAGEM}
+                        accept={EXTENSOES_PERMITIDAS}
                         setFiles={setFiles}
                         removeFile={removeFile}
                         toastSuccess={"Planilha incluída com sucesso!"}
@@ -85,7 +86,7 @@ const ModalCadastroVinculo = ({ show, setShow, onSubmit, servidores }) => {
                       />
                       <label className="mb-3">
                         {"IMPORTANTE: Envie um arquivo nos formatos: " +
-                          FORMATOS_IMAGEM +
+                          EXTENSOES_PERMITIDAS +
                           ", com até 10MB"}
                       </label>
                     </article>
@@ -104,14 +105,14 @@ const ModalCadastroVinculo = ({ show, setShow, onSubmit, servidores }) => {
                   }}
                   disabled={!arquivo[0] || !tipoPlanilha}
                   style={BUTTON_STYLE.GREEN}
-                  className="ml-3 float-right"
+                  className="ms-3 float-end"
                 />
                 <Botao
                   texto="Cancelar"
                   type={BUTTON_TYPE.BUTTON}
                   onClick={handleClose}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="ml-3 float-right"
+                  className="ms-3 float-end"
                 />
               </div>
             </Modal.Footer>

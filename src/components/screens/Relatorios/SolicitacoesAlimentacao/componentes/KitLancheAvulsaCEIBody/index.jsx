@@ -4,10 +4,10 @@ export const KitLancheAvulsaCEIBody = ({ ...props }) => {
   const { solicitacao, item, index, filtros, labelData } = props;
   const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
-  const total = solicitacao.faixas_etarias.reduce(function(acc, v) {
+  const total = solicitacao.faixas_etarias.reduce(function (acc, v) {
     return acc + (v.quantidade || v.quantidade_alunos);
   }, 0);
-  const total_matriculados = solicitacao.faixas_etarias.reduce(function(
+  const total_matriculados = solicitacao.faixas_etarias.reduce(function (
     acc,
     v
   ) {
@@ -62,13 +62,9 @@ export const KitLancheAvulsaCEIBody = ({ ...props }) => {
                 </p>
               </div>
               <div className="col-3">
-                <p>Opção Desejada:</p>
+                <p>Evento/Passeio:</p>
                 <p>
-                  <b>
-                    {solicitacao.solicitacao_kit_lanche.kits
-                      .map(kit => kit.nome)
-                      .join(", ")}
-                  </b>
+                  <b>{solicitacao.evento || "- -"}</b>
                 </p>
               </div>
               <div className="col-3">
@@ -87,6 +83,16 @@ export const KitLancheAvulsaCEIBody = ({ ...props }) => {
                       solicitacao.solicitacao_kit_lanche
                         .tempo_passeio_explicacao
                     }
+                  </b>
+                </p>
+              </div>
+              <div className="col-3">
+                <p>Opção Desejada:</p>
+                <p>
+                  <b>
+                    {solicitacao.solicitacao_kit_lanche.kits
+                      .map((kit) => kit.nome)
+                      .join(", ")}
                   </b>
                 </p>
               </div>
@@ -138,7 +144,7 @@ export const KitLancheAvulsaCEIBody = ({ ...props }) => {
                       <p
                         className="observacao-negrito"
                         dangerouslySetInnerHTML={{
-                          __html: solicitacao.solicitacao_kit_lanche.descricao
+                          __html: solicitacao.solicitacao_kit_lanche.descricao,
                         }}
                       />
                     </b>
@@ -148,6 +154,6 @@ export const KitLancheAvulsaCEIBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

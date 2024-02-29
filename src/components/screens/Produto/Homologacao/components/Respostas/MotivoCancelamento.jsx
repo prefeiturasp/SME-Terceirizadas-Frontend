@@ -2,7 +2,7 @@ import React from "react";
 import * as R from "ramda";
 
 export const MotivoCancelamento = ({ logs }) => {
-  const getCorrecao = logs => {
+  const getCorrecao = (logs) => {
     const arr = R.filter(
       R.propEq(
         "status_evento_explicacao",
@@ -26,7 +26,7 @@ export const MotivoCancelamento = ({ logs }) => {
         <p
           className="justificativa-ficha-produto no-margin"
           dangerouslySetInnerHTML={{
-            __html: correcao.justificativa
+            __html: correcao.justificativa,
           }}
         />
       </div>

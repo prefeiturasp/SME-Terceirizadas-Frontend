@@ -6,14 +6,14 @@ import FaixasEtarias from "../../components/screens/Cadastros/FaixasEtarias";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${EMPRESA}`,
-  titulo: "Cadastro de Faixas Etárias"
+  titulo: "Cadastro de Faixas Etárias",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
-  }
+    titulo: "Cadastros",
+  },
 ];
 
 export default () => (

@@ -7,7 +7,7 @@ import SSelect from "components/Shareable/Select";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   getAlergiasIntoleranciasAxios,
-  getClassificacoesDietaEspecial
+  getClassificacoesDietaEspecial,
 } from "services/dietaEspecial.service";
 import { dadosDoAluno, getAlunosListagem } from "services/perfil.service";
 import InputText from "components/Shareable/Input/InputText";
@@ -17,7 +17,7 @@ import { length, required } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
@@ -26,7 +26,7 @@ import { TIPO_PERFIL } from "constants/shared";
 
 import {
   formFiltrosObtemDreEEscolasNovo,
-  getDadosIniciais
+  getDadosIniciais,
 } from "helpers/dietaEspecial";
 
 import "./styles.scss";
@@ -62,22 +62,22 @@ export default ({ onSubmit, setCarregando }) => {
         ,
         dadosIniciaisObtidos,
         responseDiagnosticos,
-        responseClassificacoesDieta
+        responseClassificacoesDieta,
       ] = await Promise.all([
         promiseDreEscolas,
         promiseDadosIniciais,
         promiseDiagnosticos,
-        promiseClassificoesDieta
+        promiseClassificoesDieta,
       ]);
       setDadosIniciais(dadosIniciaisObtidos);
       setDiagnosticos(
-        responseDiagnosticos.data.map(d => {
+        responseDiagnosticos.data.map((d) => {
           return { value: d.id, label: d.descricao };
         })
       );
       getAlunos(dadosIniciaisObtidos);
       setClassificacoesDieta(
-        responseClassificacoesDieta.results.map(c => {
+        responseClassificacoesDieta.results.map((c) => {
           return { value: c.id, label: c.nome };
         })
       );
@@ -86,22 +86,22 @@ export default ({ onSubmit, setCarregando }) => {
     effect();
   }, []);
 
-  const getAlunos = async dadosIniciais => {
+  const getAlunos = async (dadosIniciais) => {
     if (tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL) {
       const response = await getAlunosListagem({ dre: dadosIniciais.dre[0] });
-      setAlunos(response.data.results.map(aluno => aluno.nome));
+      setAlunos(response.data.results.map((aluno) => aluno.nome));
     } else if (tipoUsuario === TIPO_PERFIL.ESCOLA) {
       const response = await getAlunosListagem({
-        escola: dadosIniciais.escola[0]
+        escola: dadosIniciais.escola[0],
       });
-      setAlunos(response.data.results.map(aluno => aluno.nome));
+      setAlunos(response.data.results.map((aluno) => aluno.nome));
     } else {
       const response = await getAlunosListagem();
-      setAlunos(response.data.results.map(aluno => aluno.nome));
+      setAlunos(response.data.results.map((aluno) => aluno.nome));
     }
   };
 
-  const getEscolasFiltrado = dre => {
+  const getEscolasFiltrado = (dre) => {
     if (
       tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
       tipoUsuario === TIPO_PERFIL.ESCOLA
@@ -111,16 +111,16 @@ export default ({ onSubmit, setCarregando }) => {
       if (dre.length === 0) {
         return escolas;
       } else {
-        return escolas.filter(e => dre.includes(e.dre.uuid));
+        return escolas.filter((e) => dre.includes(e.dre.uuid));
       }
     }
     return [];
   };
 
-  const getAlunosFiltrado = nomeAluno => {
+  const getAlunosFiltrado = (nomeAluno) => {
     if (nomeAluno) {
       const reg = new RegExp(nomeAluno, "i");
-      return alunos.filter(a => reg.test(a));
+      return alunos.filter((a) => reg.test(a));
     }
     return [];
   };
@@ -193,7 +193,7 @@ export default ({ onSubmit, setCarregando }) => {
                     tipoUsuario === TIPO_PERFIL.ESCOLA
                   }
                   options={[{ nome: "Selecione...", uuid: "" }].concat(
-                    diretoriasRegionais.map(dre => {
+                    diretoriasRegionais.map((dre) => {
                       return { uuid: dre.value, nome: dre.label };
                     })
                   )}
@@ -239,7 +239,7 @@ export default ({ onSubmit, setCarregando }) => {
                   validate={length7}
                 />
                 <OnChange name="codigo_eol_aluno">
-                  {value => {
+                  {(value) => {
                     getAlunoPorEol(value, values);
                   }}
                 </OnChange>
@@ -324,7 +324,7 @@ export default ({ onSubmit, setCarregando }) => {
                 <Botao
                   style={BUTTON_STYLE.GREEN}
                   texto="Consultar"
-                  className="ml-3"
+                  className="ms-3"
                   type={BUTTON_TYPE.SUBMIT}
                   disabled={submitting}
                 />

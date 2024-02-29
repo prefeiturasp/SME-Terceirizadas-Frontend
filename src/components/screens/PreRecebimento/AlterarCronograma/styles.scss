@@ -12,11 +12,17 @@
   }
 
   .vermelho {
-    color: #b40c02;
+    color: $redCard;
   }
 
   .verde {
-    color: #0c6b45;
+    color: $greenDark;
+  }
+
+  .titulo-laranja {
+    color: $orange;
+    font-size: 18px;
+    font-weight: bold;
   }
 
   .radio-entrega-sim {

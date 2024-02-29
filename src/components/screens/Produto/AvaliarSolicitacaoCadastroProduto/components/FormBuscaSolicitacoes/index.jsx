@@ -3,14 +3,14 @@ import React, { useState, useEffect } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useNavigationType } from "react-router-dom";
 
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import Select from "components/Shareable/Select";
@@ -18,9 +18,11 @@ import { getNomesProdutosSolicitacaoInclusao } from "services/produto.service";
 
 const FORM_NAME = "buscaAvaliarSolicCadProd";
 
-const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
+const FormBuscaSolicitacao = ({ initialValues, onSubmit }) => {
   const [nomesProdutosFiltrado, setNomesProdutosFiltrado] = useState([]);
   const [nomesProdutos, setNomesProdutos] = useState([]);
+
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,16 +34,16 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
     fetchData();
   }, []);
 
-  const onSearch = searchText => {
+  const onSearch = (searchText) => {
     if (searchText.length) {
       const reg = new RegExp(searchText, "i");
-      setNomesProdutosFiltrado(nomesProdutos.filter(nome => reg.test(nome)));
+      setNomesProdutosFiltrado(nomesProdutos.filter((nome) => reg.test(nome)));
     }
   };
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={history.action === "POP" && initialValues}
+      initialValues={navigationType === "POP" && initialValues}
       render={({ form, handleSubmit, submitting, values }) => (
         <form onSubmit={handleSubmit} className="busca-produtos">
           <FinalFormToRedux form={FORM_NAME} />
@@ -65,9 +67,9 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
                   { uuid: "", nome: "Todos" },
                   {
                     uuid: "AGUARDANDO_CONFIRMACAO",
-                    nome: "Aguardando confirmação"
+                    nome: "Aguardando confirmação",
                   },
-                  { uuid: "CONFIRMADA", nome: "Confirmada" }
+                  { uuid: "CONFIRMADA", nome: "Confirmada" },
                 ]}
                 label="Situação do Pedido"
                 name="status"
@@ -75,7 +77,7 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
             </div>
             <div className="col col-lg-9 col-xl-6">
               <div className="row">
-                <label className="ml-3">Data da solicitação</label>
+                <label className="ms-3">Data da solicitação</label>
               </div>
               <div className="row">
                 <div className="col mt-1">
@@ -117,7 +119,7 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
 
@@ -125,13 +127,13 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-right ml-3"
+              className="float-end ms-3"
               onClick={() => {
                 form.reset({
                   nome_produto: undefined,
                   status: undefined,
                   data_final: undefined,
-                  data_inicial: undefined
+                  data_inicial: undefined,
                 });
               }}
             />
@@ -142,10 +144,10 @@ const FormBuscaSolicitacao = ({ initialValues, history, onSubmit }) => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    initialValues: state.finalForm[FORM_NAME]
+    initialValues: state.finalForm[FORM_NAME],
   };
 };
 
-export default withRouter(connect(mapStateToProps)(FormBuscaSolicitacao));
+export default connect(mapStateToProps)(FormBuscaSolicitacao);

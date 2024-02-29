@@ -15,7 +15,7 @@ const MaskedInputText = ({
   className,
   placeholder,
   mask,
-  disabled
+  disabled,
 }) => {
   return (
     <div className="input">
@@ -27,17 +27,19 @@ const MaskedInputText = ({
         ),
         <label key={1} htmlFor={name} className={`col-form-label`}>
           {label}
-        </label>
+        </label>,
       ]}
       <MaskedInput
         {...input}
         name={name}
         id={id}
         mask={mask}
-        className={`form-control ${className} ${meta &&
+        className={`form-control ${className} ${
+          meta &&
           meta.touched &&
           (meta.error || meta.warning) &&
-          "invalid-field"}`}
+          "invalid-field"
+        }`}
         guide={false}
         required={required}
         placeholder={placeholder}

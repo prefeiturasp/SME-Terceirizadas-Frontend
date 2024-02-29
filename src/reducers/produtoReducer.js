@@ -5,7 +5,7 @@ const initialState = {
   nomesFabricantes: [],
   produtoRelatorio: {},
   produtosFiltrados: [],
-  informacoesNutricionais: []
+  informacoesNutricionais: [],
 };
 
 export const produtoReducer = (state = initialState, action) => {
@@ -13,46 +13,46 @@ export const produtoReducer = (state = initialState, action) => {
     case "PRODUTOS_SEARCH":
       return {
         ...state,
-        list: action.payload
+        list: action.payload,
       };
     case "NOMES_PRODUTOS":
       return {
         ...state,
-        nomesProdutos: action.payload.data.results.map(res => {
+        nomesProdutos: action.payload.data.results.map((res) => {
           return res.nome;
-        })
+        }),
       };
     case "NOMES_MARCAS":
       return {
         ...state,
-        nomesMarcas: action.payload.data.results.map(res => {
+        nomesMarcas: action.payload.data.results.map((res) => {
           return res.nome;
-        })
+        }),
       };
     case "NOMES_FABRICANTES":
       return {
         ...state,
-        nomesFabricantes: action.payload.data.results.map(res => {
+        nomesFabricantes: action.payload.data.results.map((res) => {
           return res.nome;
-        })
+        }),
       };
     case "PRODUTO_RELATORIO":
       return {
         ...state,
-        produtoRelatorio: action.payload
+        produtoRelatorio: action.payload,
       };
     case "PRODUTO_FILTRADO":
       return {
         ...state,
-        produtosFiltrados: action.payload
+        produtosFiltrados: action.payload,
       };
     case "INFORMACOES_NUTRICIONAIS":
       return {
         ...state,
-        informacoesNutricionais: action.payload.data.results.map(res => {
+        informacoesNutricionais: action.payload.data.results.map((res) => {
           res["ativo"] = false;
           return res;
-        })
+        }),
       };
     default:
       return state;

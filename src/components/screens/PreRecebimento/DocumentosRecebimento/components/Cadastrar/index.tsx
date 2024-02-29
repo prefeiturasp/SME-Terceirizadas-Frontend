@@ -1,0 +1,320 @@
+import React, { useEffect, useState } from "react";
+import { Spin } from "antd";
+import "./styles.scss";
+import { Field, Form } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
+import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import { required } from "../../../../../../helpers/fieldValidators";
+import InputText from "components/Shareable/Input/InputText";
+import { getListaCronogramasPraCadastro } from "../../../../../../services/cronograma.service";
+import {
+  DocumentosRecebimentoPayload,
+  DocumentosState,
+  TiposDocumentosPayload,
+} from "../../interfaces";
+import InserirDocumento from "../InserirDocumento";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+} from "../../../../../Shareable/Botao/constants";
+import Botao from "../../../../../Shareable/Botao";
+import { useNavigate } from "react-router-dom";
+import { DOCUMENTOS_RECEBIMENTO, PRE_RECEBIMENTO } from "configs/constants";
+import ModalConfirmarEnvio from "../ModalConfirmarEnvio";
+import { exibeError } from "helpers/utilities";
+import {
+  toastError,
+  toastSuccess,
+} from "../../../../../Shareable/Toast/dialogs";
+import { cadastraDocumentoRecebimento } from "../../../../../../services/documentosRecebimento.service";
+import {
+  Arquivo,
+  ArquivoForm,
+  CronogramaSimples,
+  TiposDocumentoChoices,
+} from "interfaces/pre_recebimento.interface";
+import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
+
+export default () => {
+  const navigate = useNavigate();
+  const [carregando, setCarregando] = useState<boolean>(true);
+  const [cronogramas, setCronogramas] = useState<Array<CronogramaSimples>>([]);
+  const [laudo, setLaudo] = useState<Array<Arquivo>>([]);
+  const [documentos, setDocumentos] = useState<DocumentosState>({});
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const onSubmit = (): void => {
+    setShowModal(true);
+  };
+
+  const getCronogramasFiltrado = (
+    numero_cronograma: string
+  ): Array<CronogramaSimples> => {
+    if (numero_cronograma) {
+      const reg = new RegExp(numero_cronograma, "iu");
+      return cronogramas.filter((a) => reg.test(a.value));
+    }
+    return cronogramas;
+  };
+
+  const buscaCronogramas = async (): Promise<void> => {
+    let response = await getListaCronogramasPraCadastro();
+    let lista = response.data.results.map((crono: CronogramaSimples) => {
+      crono.value = crono.numero;
+      return crono;
+    });
+    setCronogramas(lista);
+  };
+
+  const removeFileLaudo = (index: number): void => {
+    let newFiles = [...laudo];
+    newFiles.splice(index, 1);
+    setLaudo(newFiles);
+  };
+
+  const setFilesLaudo = (files: Array<ArquivoForm>): void => {
+    const arquivosAtualizados = files.map((arquivo: ArquivoForm) => {
+      return {
+        nome: arquivo.nome,
+        arquivo: arquivo.base64,
+      };
+    });
+
+    setLaudo(arquivosAtualizados);
+  };
+
+  const removeFileDocumentos = (index: number, key: string): void => {
+    let newFiles = { ...documentos };
+    newFiles[key].splice(index, 1);
+    setDocumentos(newFiles);
+  };
+
+  const setFilesDocumentos = (files: Array<ArquivoForm>, key: string): void => {
+    const arquivosAtualizados = files.map((arquivo: ArquivoForm) => {
+      return {
+        nome: arquivo.nome,
+        arquivo: arquivo.base64,
+      };
+    });
+
+    const documentosAtualizados = { ...documentos };
+    documentosAtualizados[key] = arquivosAtualizados;
+
+    setDocumentos(documentosAtualizados);
+  };
+
+  const formataPayload = (values): DocumentosRecebimentoPayload => {
+    let documentosPayload: Array<TiposDocumentosPayload> =
+      values.tipos_de_documentos?.map(
+        (valor: TiposDocumentoChoices): TiposDocumentosPayload => {
+          return {
+            tipo_documento: valor,
+            arquivos_do_tipo_de_documento: documentos[valor],
+            descricao_documento:
+              valor === "OUTROS" ? values.descricao_documento : undefined,
+          };
+        }
+      );
+    documentosPayload.push({
+      tipo_documento: "LAUDO",
+      arquivos_do_tipo_de_documento: laudo,
+    });
+    let payload: DocumentosRecebimentoPayload = {
+      cronograma: values.cronograma_uuid,
+      numero_laudo: values.numero_laudo,
+      tipos_de_documentos: documentosPayload,
+    };
+    return payload;
+  };
+
+  const salvarDocumentosRecebimiento = async (
+    values: Record<string, any>
+  ): Promise<void> => {
+    setCarregando(true);
+    let payload: DocumentosRecebimentoPayload = formataPayload(values);
+    try {
+      let response = await cadastraDocumentoRecebimento(payload);
+      if (response.status === 201 || response.status === 200) {
+        toastSuccess("Documentos enviados com sucesso!");
+        voltarPagina();
+      } else {
+        toastError("Ocorreu um erro ao salvar o Documento de Recebimento");
+      }
+    } catch (error) {
+      exibeError(error, "Ocorreu um erro ao salvar o Documento de Recebimento");
+    } finally {
+      setShowModal(false);
+      setCarregando(false);
+    }
+  };
+
+  const voltarPagina = () =>
+    navigate(`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`);
+
+  useEffect(() => {
+    setCarregando(true);
+
+    buscaCronogramas();
+
+    setCarregando(false);
+  }, []);
+
+  const validaArquivos = (values: Record<string, any>): boolean => {
+    let laudoInvalido = laudo.length === 0;
+    let documentoValido = values.tipos_de_documentos?.every((valor: string) => {
+      return documentos[valor]?.length > 0;
+    });
+    return laudoInvalido || !documentoValido;
+  };
+
+  return (
+    <Spin tip="Carregando..." spinning={carregando}>
+      <div className="card mt-3 card-cadastro-documento-recebimento">
+        <div className="card-body cadastro-documento-recebimento">
+          <Form
+            onSubmit={onSubmit}
+            initialValues={{}}
+            render={({ handleSubmit, values, errors, form }) => (
+              <form onSubmit={handleSubmit}>
+                <ModalConfirmarEnvio
+                  show={showModal}
+                  handleClose={() => setShowModal(false)}
+                  loading={carregando}
+                  handleSim={() => salvarDocumentosRecebimiento(values)}
+                />
+                <div className="subtitulo">Dados do Laudo</div>
+                <div className="row">
+                  <div className="col-6">
+                    <Field
+                      component={AutoCompleteSelectField}
+                      options={getCronogramasFiltrado(values.cronograma)}
+                      label="Nº do Cronograma"
+                      name={`cronograma`}
+                      className="input-busca-produto"
+                      placeholder="Digite o Nº do Cronograma"
+                      required
+                      validate={required}
+                      esconderIcone
+                    />
+                    <OnChange name="cronograma">
+                      {(value: string) => {
+                        let cronograma = cronogramas.find(
+                          (c) => c.numero === value
+                        );
+
+                        if (cronograma) {
+                          values.cronograma_uuid = cronograma.uuid;
+                          form.change(
+                            "pregao",
+                            cronograma.pregao_chamada_publica
+                          );
+                          form.change("nome_produto", cronograma.nome_produto);
+                        }
+                      }}
+                    </OnChange>
+                  </div>
+                  <div className="col-6">
+                    <Field
+                      component={InputText}
+                      label="Nº do Pregão/Chamada Pública"
+                      name={`pregao`}
+                      placeholder="Nº do Pregão/Chamada Pública"
+                      required
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <Field
+                      component={InputText}
+                      label="Nome do Produto"
+                      name={`nome_produto`}
+                      placeholder="Nome do Produto"
+                      required
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <Field
+                      component={InputText}
+                      label="Nº do Laudo"
+                      name={`numero_laudo`}
+                      placeholder="Digite o Nº do Laudo"
+                      required
+                      validate={required}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <InserirDocumento
+                    setFiles={setFilesLaudo}
+                    removeFile={removeFileLaudo}
+                    formatosAceitos="PDF"
+                    multiplosArquivos={false}
+                    concatenarNovosArquivos={false}
+                  />
+                </div>
+
+                <hr />
+
+                <div className="subtitulo">Outros Documentos</div>
+                <div className="row mb-3">
+                  <div className="col-12">
+                    <Field
+                      label="Selecione o documento"
+                      component={MultiSelect}
+                      disableSearch
+                      name="tipos_de_documentos"
+                      multiple
+                      nomeDoItemNoPlural="documentos"
+                      options={OUTROS_DOCUMENTOS_OPTIONS}
+                      placeholder="Selecione o documento"
+                      required
+                      validate={required}
+                    />
+                  </div>
+                </div>
+
+                {values.tipos_de_documentos?.map(
+                  (value: string, idx: number) => (
+                    <InserirDocumento
+                      setFiles={(files: Array<ArquivoForm>) =>
+                        setFilesDocumentos(files, value)
+                      }
+                      removeFile={(index: number) =>
+                        removeFileDocumentos(index, value)
+                      }
+                      tipoDocumento={value}
+                      key={idx}
+                    />
+                  )
+                )}
+
+                <hr />
+
+                <div className="mt-4 mb-4">
+                  <Botao
+                    texto="Salvar e Enviar"
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                    className="float-end ms-3"
+                    disabled={
+                      Object.keys(errors).length > 0 || validaArquivos(values)
+                    }
+                  />
+                  <Botao
+                    texto="Cancelar"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    className="float-end ms-3"
+                    onClick={() => voltarPagina()}
+                  />
+                </div>
+              </form>
+            )}
+          />
+        </div>
+      </div>
+    </Spin>
+  );
+};

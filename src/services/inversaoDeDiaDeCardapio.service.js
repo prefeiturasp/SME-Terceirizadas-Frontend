@@ -6,41 +6,41 @@ import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 export const getInversoesDeDiaDeCardapio = async () => {
   const url = `${API_URL}/inversoes-dia-cardapio/minhas-solicitacoes/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
 
-export const criarInversaoDeDiaDeCardapio = async values => {
+export const criarInversaoDeDiaDeCardapio = async (values) => {
   const url = `${API_URL}/inversoes-dia-cardapio/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "POST",
-    body: JSON.stringify(values)
+    body: JSON.stringify(values),
   };
   let status = 0;
   return await fetch(url, OBJ_REQUEST)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -51,101 +51,99 @@ export const atualizarInversaoDeDiaDeCardapio = (uuid, payload) => {
   return fetch(url, {
     method: "PUT",
     body: JSON.stringify(payload),
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const getInversaoDeDiaDeCardapio = uuid => {
+export const getInversaoDeDiaDeCardapio = (uuid) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const removerInversaoDeDiaDeCardapio = async uuid => {
+export const removerInversaoDeDiaDeCardapio = async (uuid) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "DELETE"
+    method: "DELETE",
   };
   let status = 0;
   return await fetch(url, OBJ_REQUEST)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return { data: error, status: status };
     });
 };
 
-export const inicioPedido = uuid => {
+export const inicioPedido = (uuid) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/inicio-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const dreValidaPedidoEscola = uuid => {
+export const dreValidaPedidoEscola = (uuid) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/diretoria-regional-valida-pedido/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
 export const DRENegaInversaoDeDiaDeCardapio = async (uuid, payload) => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
-    FLUXO.DRE_NAO_VALIDA
-  }/`;
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
   const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -153,26 +151,13 @@ export const DRENegaInversaoDeDiaDeCardapio = async (uuid, payload) => {
   }
 };
 
-export const CODAEAutorizaPedidoDRE = (uuid, justificativa) => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
-    FLUXO.CODAE_AUTORIZA
-  }/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    body: JSON.stringify({ justificativa: justificativa }),
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+export const CODAEAutorizaPedidoDRE = async (uuid, payload) => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const CODAENegaInversaoDeDiaDeCardapio = async (uuid, payload) => {
@@ -185,9 +170,7 @@ export const CODAENegaInversaoDeDiaDeCardapio = async (uuid, payload) => {
 };
 
 export const CODAEQuestionaInversaoDeDiaDeCardapio = async (uuid, payload) => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
-    FLUXO.CODAE_QUESTIONA
-  }/`;
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
   const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -199,42 +182,40 @@ export const TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio = (
   uuid,
   payload
 ) => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
-    FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
-  }/`;
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
     headers: authToken,
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const terceirizadaTomaCiencia = uuid => {
+export const terceirizadaTomaCiencia = (uuid) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/terceirizada-toma-ciencia/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -259,39 +240,28 @@ export const getCODAEPedidosDeInversoes = async (
   return response.data;
 };
 
-export const getTerceirizadaPedidosDeInversoes = filtroAplicado => {
+export const getTerceirizadaPedidosDeInversoes = (filtroAplicado) => {
   const url = `${API_URL}/inversoes-dia-cardapio/pedidos-terceirizadas/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
 
-export const escolaCancelaInversaoDiaCardapio = (uuid, payload) => {
-  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
-    FLUXO.ESCOLA_CANCELA
-  }/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify({ justificativa: payload })
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+export const escolaCancelaInversaoDiaCardapio = async (uuid, justificativa) => {
+  const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
+  const response = await axios
+    .patch(url, { justificativa })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

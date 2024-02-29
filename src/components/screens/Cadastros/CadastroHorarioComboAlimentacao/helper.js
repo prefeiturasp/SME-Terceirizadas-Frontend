@@ -1,12 +1,12 @@
 import moment from "moment";
 
-const temHorariosDeAlimentacaoCadastrado = horarioDosAlimentos => {
+const temHorariosDeAlimentacaoCadastrado = (horarioDosAlimentos) => {
   return horarioDosAlimentos.length > 0;
 };
 
 const montarArrayHorariosIniciais = (vinculo, uuidEscola, uuidPeriodo) => {
   let arrayDosHorarios = [];
-  vinculo.tipos_alimentacao.forEach(tipo_alimentacao => {
+  vinculo.tipos_alimentacao.forEach((tipo_alimentacao) => {
     arrayDosHorarios.push({
       uuid: null,
       tipo_alimentacao: tipo_alimentacao.uuid,
@@ -14,7 +14,7 @@ const montarArrayHorariosIniciais = (vinculo, uuidEscola, uuidPeriodo) => {
       periodo_escolar: uuidPeriodo,
       hora_inicial: "00:00",
       hora_final: "00:00",
-      label: tipo_alimentacao.nome
+      label: tipo_alimentacao.nome,
     });
   });
   return arrayDosHorarios;
@@ -22,7 +22,7 @@ const montarArrayHorariosIniciais = (vinculo, uuidEscola, uuidPeriodo) => {
 
 const alimentoPossuiHorario = (tipo_alimentacao, horarioDosAlimentos) => {
   return horarioDosAlimentos.find(
-    horario => horario.tipo_alimentacao.uuid === tipo_alimentacao.uuid
+    (horario) => horario.tipo_alimentacao.uuid === tipo_alimentacao.uuid
   );
 };
 
@@ -33,7 +33,7 @@ const montaArrayHorarios = (
   uuidPeriodo
 ) => {
   let arrayDosHorarios = [];
-  vinculo.tipos_alimentacao.forEach(tipo_alimentacao => {
+  vinculo.tipos_alimentacao.forEach((tipo_alimentacao) => {
     let horario = alimentoPossuiHorario(tipo_alimentacao, horarioDosAlimentos);
     if (horario) {
       arrayDosHorarios.push({
@@ -43,7 +43,7 @@ const montaArrayHorarios = (
         periodo_escolar: horario.periodo_escolar.uuid,
         hora_inicial: horario.hora_inicial,
         hora_final: horario.hora_final,
-        label: horario.tipo_alimentacao.nome
+        label: horario.tipo_alimentacao.nome,
       });
     } else {
       arrayDosHorarios.push({
@@ -53,7 +53,7 @@ const montaArrayHorarios = (
         periodo_escolar: uuidPeriodo,
         hora_inicial: "00:00",
         hora_final: "00:00",
-        label: tipo_alimentacao.nome
+        label: tipo_alimentacao.nome,
       });
     }
   });
@@ -71,9 +71,9 @@ const obtemQuantidadeDeAlunosPeloPeriodoEscolar = (
     justificativa: null,
     escola: null,
     periodo_escolar: null,
-    ativo: true
+    ativo: true,
   };
-  periodosEQuantidadeAlunos.forEach(periodo => {
+  periodosEQuantidadeAlunos.forEach((periodo) => {
     if (periodo.periodo_escolar.uuid === uuidPeriodo) {
       periodo_alunos.quantidade_alunos_anterior = periodo.quantidade_alunos;
       periodo_alunos.escola = periodo.escola.uuid;
@@ -90,7 +90,7 @@ const montaVinculosDeHorariosIniciais = (
   periodosEQuantidadeAlunos
 ) => {
   let arrayVinculos = [];
-  vinculosPeriodoEscolarUnidadeEscolar.forEach(vinculo => {
+  vinculosPeriodoEscolarUnidadeEscolar.forEach((vinculo) => {
     const info_alunos = obtemQuantidadeDeAlunosPeloPeriodoEscolar(
       vinculo.periodo_escolar.uuid,
       periodosEQuantidadeAlunos
@@ -103,7 +103,7 @@ const montaVinculosDeHorariosIniciais = (
         uuidEscola,
         vinculo.periodo_escolar.uuid
       ),
-      quantidade_alunos: info_alunos
+      quantidade_alunos: info_alunos,
     });
   });
   return arrayVinculos;
@@ -116,7 +116,7 @@ const montaVinculosDeHorariosExistentes = (
   periodosEQuantidadeAlunos
 ) => {
   let arrayVinculos = [];
-  vinculosPeriodoEscolarUnidadeEscolar.forEach(vinculo => {
+  vinculosPeriodoEscolarUnidadeEscolar.forEach((vinculo) => {
     const info_alunos = obtemQuantidadeDeAlunosPeloPeriodoEscolar(
       vinculo.periodo_escolar.uuid,
       periodosEQuantidadeAlunos
@@ -130,7 +130,7 @@ const montaVinculosDeHorariosExistentes = (
         uuidEscola,
         vinculo.periodo_escolar.uuid
       ),
-      quantidade_alunos: info_alunos
+      quantidade_alunos: info_alunos,
     });
   });
   return arrayVinculos;

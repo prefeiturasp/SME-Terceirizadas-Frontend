@@ -5,7 +5,7 @@ export const CentralDeDownloadContext = createContext({
   qtdeDownloadsNaoLidas: "",
   setQtdeDownloadsNaoLidas() {},
 
-  getQtdeDownloadsNaoLidas() {}
+  getQtdeDownloadsNaoLidas() {},
 });
 
 export const CentralDeDownloadContextProvider = ({ children }) => {
@@ -22,7 +22,7 @@ export const CentralDeDownloadContextProvider = ({ children }) => {
       value={{
         qtdeDownloadsNaoLidas,
         setQtdeDownloadsNaoLidas,
-        getQtdeDownloadsNaoLidas
+        getQtdeDownloadsNaoLidas,
       }}
     >
       {children}

@@ -25,6 +25,17 @@ const TabelaDietas = ({ solicitacoes }) => {
   if (solicitacoes === undefined || solicitacoes.length === 0) {
     return <div>Carregando...</div>;
   }
+
+  const gerarLink = (dados) => {
+    let link = "";
+    if (!dados.codigo_eol) {
+      link = `/aluno/dieta-especial?eh_aluno_nao_matriculado=true&codigo_eol_escola=${dados.codigo_eol_escola}&nome_aluno=${dados.nome}`;
+    } else {
+      link = `/aluno/dieta-especial?codigo_eol=${dados.codigo_eol}`;
+    }
+    return link;
+  };
+
   return (
     <div className="row">
       <div className="col-12">
@@ -44,7 +55,7 @@ const TabelaDietas = ({ solicitacoes }) => {
                     alt="foto-aluno"
                   />
                 </div>
-                <div className="col-xl-11 col-lg-10 pr-0 pl-4">
+                <div className="col-xl-11 col-lg-10 pe-0 ps-4">
                   <div className="mb-3">
                     <Form
                       onSubmit={() => {}}
@@ -75,33 +86,28 @@ const TabelaDietas = ({ solicitacoes }) => {
                     />
                   </div>
                   <div className="row">
-                    <div className="row col-lg-10 ml-0">
+                    <div className="row col-lg-10 ms-0">
                       <div>
-                        <p className="font-weight-bold mb-0">
+                        <p className="fw-bold mb-0">
                           Quantidade Ativas <br />
                         </p>
                         {dados.ativas}
                       </div>
-                      <div className="pl-4">
-                        <p className="font-weight-bold mb-0">
+                      <div className="ps-4">
+                        <p className="fw-bold mb-0">
                           Classificação da Dieta Especial <br />
                         </p>
                         {dados.classificacao_dieta_ativa || "--"}
                       </div>
-                      <div className="pl-4">
-                        <p className="font-weight-bold mb-0">
+                      <div className="ps-4">
+                        <p className="fw-bold mb-0">
                           Quantidade Inativas <br />
                         </p>
                         {dados.inativas}
                       </div>
                     </div>
-                    <div className="col-lg-2 pr-0">
-                      <Link
-                        to={`/aluno/dieta-especial?codigo_eol=${
-                          dados.codigo_eol
-                        }`}
-                        className="float-right"
-                      >
+                    <div className="col-lg-2 pe-0">
+                      <Link to={gerarLink(dados)} className="float-end">
                         <Botao
                           texto="Visualizar"
                           icon={undefined}

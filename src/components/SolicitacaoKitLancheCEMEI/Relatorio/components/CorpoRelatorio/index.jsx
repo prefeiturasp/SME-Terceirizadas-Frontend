@@ -6,13 +6,13 @@ import {
   deepCopy,
   justificativaAoAprovarSolicitacao,
   justificativaAoNegarSolicitacao,
-  visualizaBotoesDoFluxo
+  visualizaBotoesDoFluxo,
 } from "helpers/utilities";
 import {
   totalAlunosCEI,
   tempoPasseio,
   checaPrazo,
-  getNumeroTotalKits
+  getNumeroTotalKits,
 } from "components/SolicitacaoKitLancheCEMEI/helpers";
 import Botao from "components/Shareable/Botao";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
@@ -21,7 +21,7 @@ import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import { CODAE, TERCEIRIZADA } from "configs/constants";
@@ -53,18 +53,16 @@ export const CorpoRelatorio = ({ ...props }) => {
     toastAprovaMensagemErro,
     fetchData,
     ModalQuestionamento,
-    endpointQuestionamento
+    endpointQuestionamento,
   } = props;
 
   const [collapseAlunosCEI, setCollapseAlunosCEI] = useState(false);
   const [collapseAlunosEMEI, setCollapseAlunosEMEI] = useState(false);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
-  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
-    false
-  );
-  const [showModalObservacaoCodae, setShowModalObservacaoCodae] = useState(
-    false
-  );
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] =
+    useState(false);
+  const [showModalObservacaoCodae, setShowModalObservacaoCodae] =
+    useState(false);
   const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
   const [respostaSimNao, setRespostaSimNao] = useState(null);
   const [imprimindo, setImprimindo] = useState(false);
@@ -88,20 +86,20 @@ export const CorpoRelatorio = ({ ...props }) => {
   const EXIBIR_BOTAO_APROVAR =
     (![
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
       textoBotaoAprova) ||
     (solicitacaoKitLancheCEMEI &&
       (solicitacaoKitLancheCEMEI.prioridade === "REGULAR" ||
         [
           statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
-          statusEnum.CODAE_AUTORIZADO
+          statusEnum.CODAE_AUTORIZADO,
         ].includes(solicitacaoKitLancheCEMEI.status)) &&
       textoBotaoAprova);
   const EXIBIR_BOTAO_QUESTIONAMENTO =
     [
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
     solicitacaoKitLancheCEMEI &&
     (solicitacaoKitLancheCEMEI.prioridade !== "REGULAR" ||
@@ -147,17 +145,16 @@ export const CorpoRelatorio = ({ ...props }) => {
     }
   };
 
-  const collapseSolicitacaoSimilar = idxSolicitacaoSimilar => {
+  const collapseSolicitacaoSimilar = (idxSolicitacaoSimilar) => {
     let _solicitacoesSimilares = deepCopy(solicitacoesSimilares);
-    _solicitacoesSimilares[idxSolicitacaoSimilar][
-      "collapsed"
-    ] = !_solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"];
+    _solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"] =
+      !_solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"];
     setSolicitacoesSimilares(_solicitacoesSimilares);
   };
 
-  const kitsSelecionados = kits => {
+  const kitsSelecionados = (kits) => {
     let nomeKits = [];
-    kits.forEach(kit => nomeKits.push(kit.nome));
+    kits.forEach((kit) => nomeKits.push(kit.nome));
     return nomeKits.join(", ");
   };
 
@@ -182,7 +179,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               await getRelatorioKitLancheCEMEI(solicitacaoKitLancheCEMEI.uuid);
               setImprimindo(false);
             }}
-            className="float-right"
+            className="float-end"
           />
         </div>
       </div>
@@ -297,6 +294,10 @@ export const CorpoRelatorio = ({ ...props }) => {
           <p className="mb-2">Local do passeio:</p>
           <p className="value-important">{solicitacaoKitLancheCEMEI.local}</p>
         </div>
+        <div className="col-4 report-label-value mt-0">
+          <p className="mb-2">Evento/Atividade</p>
+          <p className="value-important">{solicitacaoKitLancheCEMEI.evento}</p>
+        </div>
       </div>
       {solicitacaoKitLancheCEMEI.solicitacao_cei && (
         <>
@@ -305,7 +306,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <div className="col">
               <p className="mt-3">
                 Número de alunos:{" "}
-                <b className="green ml-1">
+                <b className="green ms-1">
                   {
                     totalAlunosCEI(solicitacaoKitLancheCEMEI)
                       .totalQuantidadeAlunos
@@ -318,7 +319,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <div className="col-6">
               <p>
                 Tempo previsto de passeio:{" "}
-                <b className="green ml-1">
+                <b className="green ms-1">
                   {tempoPasseio(solicitacaoKitLancheCEMEI.solicitacao_cei)}
                 </b>
               </p>
@@ -326,7 +327,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <div className="col-6">
               <p>
                 Opção desejada:{" "}
-                <b className="green ml-1">
+                <b className="green ms-1">
                   {kitsSelecionados(
                     solicitacaoKitLancheCEMEI.solicitacao_cei.kits
                   )}
@@ -382,9 +383,9 @@ export const CorpoRelatorio = ({ ...props }) => {
             <div className="card card-history mt-3 seletor-alunos-dieta-especial">
               <div className="card-header">
                 <div className="row">
-                  <div className="col-2 ml-0">Código EOL</div>
+                  <div className="col-2 ms-0">Código EOL</div>
                   <div className="col-8">Nome do Aluno</div>
-                  <div className="col-2 ml-0 toggle-right">
+                  <div className="col-2 ms-0 toggle-right">
                     <ToggleExpandir
                       onClick={() => setCollapseAlunosCEI(!collapseAlunosCEI)}
                       ativo={collapseAlunosCEI}
@@ -418,7 +419,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <div className="col">
               <p className="mt-3">
                 Número de alunos:{" "}
-                <b className="green ml-1">
+                <b className="green ms-1">
                   {solicitacaoKitLancheCEMEI.solicitacao_emei.quantidade_alunos}
                 </b>
               </p>
@@ -428,7 +429,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <div className="col-6">
               <p>
                 Tempo previsto de passeio:{" "}
-                <b className="green ml-1">
+                <b className="green ms-1">
                   {tempoPasseio(solicitacaoKitLancheCEMEI.solicitacao_emei)}
                 </b>
               </p>
@@ -436,7 +437,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <div className="col-6">
               <p>
                 Opção desejada:{" "}
-                <b className="green ml-1">
+                <b className="green ms-1">
                   {kitsSelecionados(
                     solicitacaoKitLancheCEMEI.solicitacao_emei.kits
                   )}
@@ -475,9 +476,9 @@ export const CorpoRelatorio = ({ ...props }) => {
             <div className="card card-history mt-3 seletor-alunos-dieta-especial">
               <div className="card-header">
                 <div className="row">
-                  <div className="col-2 ml-0">Código EOL</div>
+                  <div className="col-2 ms-0">Código EOL</div>
                   <div className="col-8">Nome do Aluno</div>
-                  <div className="col-2 ml-0 toggle-right">
+                  <div className="col-2 ms-0 toggle-right">
                     <ToggleExpandir
                       onClick={() => setCollapseAlunosEMEI(!collapseAlunosEMEI)}
                       ativo={collapseAlunosEMEI}
@@ -508,7 +509,7 @@ export const CorpoRelatorio = ({ ...props }) => {
         <div className="col">
           <p className="total-kits">
             Número total de kits:{" "}
-            <b className="green ml-1">
+            <b className="green ms-1">
               {getNumeroTotalKits(solicitacaoKitLancheCEMEI, true)}
             </b>
           </p>
@@ -520,7 +521,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <p>Observações:</p>
             <p
               dangerouslySetInnerHTML={{
-                __html: solicitacaoKitLancheCEMEI.observacao
+                __html: solicitacaoKitLancheCEMEI.observacao,
               }}
             />
           </div>
@@ -533,7 +534,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaNegacao
+                __html: justificativaNegacao,
               }}
             />
           </div>
@@ -547,13 +548,13 @@ export const CorpoRelatorio = ({ ...props }) => {
             </p>
             <p>{`${
               solicitacaoKitLancheCEMEI.logs.find(
-                log => log.status_evento_explicacao === "CODAE autorizou"
+                (log) => log.status_evento_explicacao === "CODAE autorizou"
               ).criado_em
             } - Informações da CODAE`}</p>
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaAprovacao
+                __html: justificativaAprovacao,
               }}
             />
           </div>
@@ -567,11 +568,11 @@ export const CorpoRelatorio = ({ ...props }) => {
       />
       {visualizaBotoesDoFluxo(solicitacaoKitLancheCEMEI) && (
         <>
-          <div className="form-group row float-right mt-4">
+          <div className="form-group d-flex justify-content-end mt-4">
             {EXIBIR_BOTAO_NAO_APROVAR && (
               <Botao
                 texto={textoBotaoNaoAprova}
-                className="float-right"
+                className="float-end"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={() => {
@@ -597,26 +598,26 @@ export const CorpoRelatorio = ({ ...props }) => {
               />
             )}
             {EXIBIR_BOTAO_APROVAR &&
-              (textoBotaoAprova !== "Ciente" &&
-                (visao === CODAE &&
-                solicitacaoKitLancheCEMEI.logs.filter(
-                  log =>
-                    log.status_evento_explicacao ===
-                      "Terceirizada respondeu questionamento" &&
-                    !log.resposta_sim_nao
-                ).length > 0 ? null : (
-                  <Botao
-                    texto={textoBotaoAprova}
-                    type={BUTTON_TYPE.SUBMIT}
-                    onClick={() =>
-                      tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-                        ? setShowModalObservacaoCodae(true)
-                        : onClickBotaoAprovar()
-                    }
-                    style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
-                  />
-                )))}
+              textoBotaoAprova !== "Ciente" &&
+              (visao === CODAE &&
+              solicitacaoKitLancheCEMEI.logs.filter(
+                (log) =>
+                  log.status_evento_explicacao ===
+                    "Terceirizada respondeu questionamento" &&
+                  !log.resposta_sim_nao
+              ).length > 0 ? null : (
+                <Botao
+                  texto={textoBotaoAprova}
+                  type={BUTTON_TYPE.SUBMIT}
+                  onClick={() =>
+                    tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                      ? setShowModalObservacaoCodae(true)
+                      : onClickBotaoAprovar()
+                  }
+                  style={BUTTON_STYLE.GREEN}
+                  className="ms-3"
+                />
+              ))}
             {EXIBIR_BOTAO_QUESTIONAMENTO && (
               <Botao
                 texto={
@@ -630,14 +631,14 @@ export const CorpoRelatorio = ({ ...props }) => {
                   setShowQuestionamentoModal(true);
                 }}
                 style={BUTTON_STYLE.GREEN}
-                className="ml-3"
+                className="ms-3"
               />
             )}
             {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-              <div className="form-group float-right mt-4">
+              <div className="form-group float-end mt-4">
                 {solicitacaoKitLancheCEMEI.terceirizada_conferiu_gestao ? (
-                  <label className="ml-3 conferido">
-                    <i className="fas fa-check mr-2" />
+                  <label className="ms-3 conferido">
+                    <i className="fas fa-check me-2" />
                     Solicitação Conferida
                   </label>
                 ) : (
@@ -645,7 +646,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                     texto="Marcar Conferência"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                     onClick={() => {
                       setShowModalMarcarConferencia(true);
                     }}

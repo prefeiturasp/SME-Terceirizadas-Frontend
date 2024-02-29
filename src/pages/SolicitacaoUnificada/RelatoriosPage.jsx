@@ -11,7 +11,7 @@ import {
   CODAEAutorizaPedidoKitLancheUnificado,
   terceirizadaRespondeQuestionamentoSolitacaoUnificada,
   CODAEquestionaSolicitacaoUnificada,
-  cancelaKitLancheUnificadoEscola
+  cancelaKitLancheUnificadoEscola,
 } from "../../services/solicitacaoUnificada.service";
 import ModalCancelarSolicitacao from "../../components/Shareable/ModalCancelarSolicitacao_";
 import ModalNegarSolicitacao from "../../components/Shareable/ModalNegarSolicitacao";
@@ -22,13 +22,13 @@ class RelatorioBase extends React.Component {
   render() {
     const atual = {
       href: "#",
-      titulo: "Relatório"
+      titulo: "Relatório",
     };
     const anteriores = [
       {
         href: "/painel-gestao-alimentacao",
-        titulo: "Solicitação Unificada"
-      }
+        titulo: "Solicitação Unificada",
+      },
     ];
 
     return (

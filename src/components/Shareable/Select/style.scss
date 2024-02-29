@@ -1,13 +1,15 @@
-@import "../../../styles/variables.scss";
+@import "styles/variables.scss";
 
 div.select {
   span.required-asterisk {
     color: $red;
     padding-right: 5px;
   }
+
   label {
     font-size: 14px;
   }
+
   select {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -19,15 +21,22 @@ div.select {
     font-size: 14px;
     height: 38px;
     color: $blackInput;
+
     &:disabled {
       background-color: $grayDisabled;
     }
+
     &:focus {
       color: $blackInput;
     }
+
     &.invalid-field:not(:focus):invalid {
       box-shadow: none;
       border-color: $red;
+    }
+
+    option {
+      font-weight: 400 !important;
     }
   }
 }

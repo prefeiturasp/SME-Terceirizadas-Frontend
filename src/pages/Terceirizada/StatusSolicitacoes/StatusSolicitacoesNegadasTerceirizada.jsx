@@ -14,7 +14,7 @@ import MeusDadosContext from "context/MeusDadosContext";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${SOLICITACOES_NEGADAS}`,
-  titulo: "Solicitações Negadas"
+  titulo: "Solicitações Negadas",
 };
 
 export const StatusSolicitacoesNegadasTerceirizadaPage = () => {

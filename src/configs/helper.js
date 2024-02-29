@@ -41,6 +41,7 @@ export const painelGestaoAlimentacao = () => {
       return DashboardNutricionistaGAPage;
     case TIPO_PERFIL.NUTRICAO_MANIFESTACAO:
     case TIPO_PERFIL.MEDICAO:
+    case TIPO_PERFIL.CODAE_GABINETE:
       return DashboardNutriManifestacaoPage;
     default:
       return DashboardEscolaPage;
@@ -69,6 +70,7 @@ export const dashBoardDietaEspecial = () => {
     case TIPO_PERFIL.DIETA_ESPECIAL:
     case TIPO_PERFIL.NUTRICAO_MANIFESTACAO:
     case TIPO_PERFIL.MEDICAO:
+    case TIPO_PERFIL.CODAE_GABINETE:
       return DashBoardDietaEspecial.DietaEspecialCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:
       return DashBoardDietaEspecial.DietaEspecialTerceirizada;
@@ -173,6 +175,7 @@ export const relatoriosDietaEspecial = () => {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
     case TIPO_PERFIL.NUTRICAO_MANIFESTACAO:
+    case TIPO_PERFIL.CODAE_GABINETE:
       return RelatoriosDietaEspecial.RelatorioEscola;
     case TIPO_PERFIL.DIETA_ESPECIAL:
       return RelatoriosDietaEspecial.RelatorioCODAE;
@@ -204,6 +207,7 @@ export const StatusSolicitacoesDietaEspecial = () => {
     case TIPO_PERFIL.SUPERVISAO_NUTRICAO:
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
     case TIPO_PERFIL.NUTRICAO_MANIFESTACAO:
+    case TIPO_PERFIL.CODAE_GABINETE:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialTerceirizada;
@@ -238,20 +242,14 @@ export const suspensaoAlimentacao = () => {
     : SuspensaoDeAlimentacaoPage;
 };
 
-export const getDDMMYYYfromDate = date => {
-  return `${date
-    .getDate()
-    .toString()
-    .padStart(2, "0")}/${(date.getMonth() + 1)
+export const getDDMMYYYfromDate = (date) => {
+  return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
     .toString()
     .padStart(2, "0")}/${date.getFullYear()}`;
 };
 
-export const getYYYYMMDDfromDate = date => {
+export const getYYYYMMDDfromDate = (date) => {
   return `${date.getFullYear()}-${(date.getMonth() + 1)
     .toString()
-    .padStart(2, "0")}-${date
-    .getDate()
-    .toString()
-    .padStart(2, "0")}`;
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
 };

@@ -6,7 +6,7 @@ import ConsultaKitLanche from "../../components/screens/Cadastros/ConsultaKitLan
 
 const atual = {
   href: `/${CODAE}/${CADASTROS}/${CONSULTA_KITS}`,
-  titulo: "Consulta de Kits"
+  titulo: "Consulta de Kits",
 };
 
 export default () => (

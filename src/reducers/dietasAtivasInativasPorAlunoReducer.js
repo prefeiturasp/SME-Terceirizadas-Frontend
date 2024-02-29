@@ -30,7 +30,7 @@ const initialValues = {
   page: 1,
   escolas: [],
   diretoriasRegionais: [],
-  meusDados: undefined
+  meusDados: undefined,
 };
 
 // Reducer
@@ -39,48 +39,48 @@ export default function reducer(state = initialValues, action = {}) {
     case SET_DADOS_RESULTADOS:
       return {
         ...state,
-        dadosResultados: action.payload
+        dadosResultados: action.payload,
       };
     case SET_TOTAL_RESULTADOS:
       return {
         ...state,
-        totalResultados: action.payload
+        totalResultados: action.payload,
       };
     case SET_EXIBIR_RESULTADOS:
       return {
         ...state,
-        exibirResultados: action.payload
+        exibirResultados: action.payload,
       };
     case SET_FILTROS:
       return {
         ...state,
-        filtros: action.payload
+        filtros: action.payload,
       };
     case SET_PAGE:
       return {
         ...state,
-        page: action.payload
+        page: action.payload,
       };
     case SET_ESCOLAS:
       return {
         ...state,
-        escolas: action.payload
+        escolas: action.payload,
       };
     case SET_DIRETORIAS_REGIONAIS:
       return {
         ...state,
-        diretoriasRegionais: action.payload
+        diretoriasRegionais: action.payload,
       };
     case SET_MEUS_DADOS:
       return {
         ...state,
-        meusDados: action.payload
+        meusDados: action.payload,
       };
 
     case RESET:
       return {
         ...state,
-        ...initialValues
+        ...initialValues,
       };
     default:
       return state;
@@ -88,46 +88,46 @@ export default function reducer(state = initialValues, action = {}) {
 }
 
 // Action Creators
-export const setDadosResultados = dadosResultados => ({
+export const setDadosResultados = (dadosResultados) => ({
   type: SET_DADOS_RESULTADOS,
-  payload: dadosResultados
+  payload: dadosResultados,
 });
 
-export const setTotalResultados = totalResultados => ({
+export const setTotalResultados = (totalResultados) => ({
   type: SET_TOTAL_RESULTADOS,
-  payload: totalResultados
+  payload: totalResultados,
 });
 
-export const setExibirResultados = exibirResultados => ({
+export const setExibirResultados = (exibirResultados) => ({
   type: SET_EXIBIR_RESULTADOS,
-  payload: exibirResultados
+  payload: exibirResultados,
 });
 
-export const setFiltros = filtros => ({
+export const setFiltros = (filtros) => ({
   type: SET_FILTROS,
-  payload: filtros
+  payload: filtros,
 });
 
-export const setPage = pageNumber => ({
+export const setPage = (pageNumber) => ({
   type: SET_PAGE,
-  payload: pageNumber
+  payload: pageNumber,
 });
 
-export const setEscolas = escolas => ({
+export const setEscolas = (escolas) => ({
   type: SET_ESCOLAS,
-  payload: escolas
+  payload: escolas,
 });
 
-export const setDiretoriasRegionais = dre => ({
+export const setDiretoriasRegionais = (dre) => ({
   type: SET_DIRETORIAS_REGIONAIS,
-  payload: dre
+  payload: dre,
 });
 
-export const setMeusDados = meusDados => ({
+export const setMeusDados = (meusDados) => ({
   type: SET_MEUS_DADOS,
-  payload: meusDados
+  payload: meusDados,
 });
 
 export const reset = () => ({
-  type: RESET
+  type: RESET,
 });

@@ -6,17 +6,17 @@ import { CADASTROS, CONFIGURACOES, LOTE } from "../../configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${LOTE}`,
-  titulo: "Cadastro de Lote"
+  titulo: "Cadastro de Lote",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
-  }
+    titulo: "Cadastros",
+  },
 ];
 
-export default props => (
+export default (props) => (
   <Page
     titulo={atual.titulo}
     botaoVoltar

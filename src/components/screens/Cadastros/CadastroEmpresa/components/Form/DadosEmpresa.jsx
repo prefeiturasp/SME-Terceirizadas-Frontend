@@ -12,72 +12,74 @@ import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 const optionsTiposServico = [
   {
     nome: "Selecione...",
-    uuid: ""
+    uuid: "",
   },
   {
     nome: "Distribuidor (Armazém)",
-    uuid: "DISTRIBUIDOR_ARMAZEM"
+    uuid: "DISTRIBUIDOR_ARMAZEM",
   },
   {
     nome: "Fornecedor",
-    uuid: "FORNECEDOR"
+    uuid: "FORNECEDOR",
   },
   {
     nome: "Fornecedor e Distribuidor",
-    uuid: "FORNECEDOR_E_DISTRIBUIDOR"
-  }
+    uuid: "FORNECEDOR_E_DISTRIBUIDOR",
+  },
 ];
 const optionsTiposEmpresas = [
   {
     nome: "Selecione...",
-    uuid: ""
+    uuid: "",
   },
   {
     nome: "Convencional",
-    uuid: "CONVENCIONAL"
+    uuid: "CONVENCIONAL",
   },
   {
     nome: "Agricultura Familiar",
-    uuid: "AGRICULTURA_FAMILIAR"
-  }
+    uuid: "AGRICULTURA_FAMILIAR",
+  },
 ];
 
 const optionsTiposAlimento = [
   {
     nome: "Selecione...",
-    uuid: ""
+    uuid: "",
   },
   {
     nome: "Congelados e resfriados",
-    uuid: "CONGELADOS_E_RESFRIADOS"
+    uuid: "CONGELADOS_E_RESFRIADOS",
   },
   {
     nome: "FLVO",
-    uuid: "FLVO"
+    uuid: "FLVO",
   },
   {
     nome: "Pães & bolos",
-    uuid: "PAES_E_BOLO"
+    uuid: "PAES_E_BOLO",
   },
   {
     nome: "Secos",
-    uuid: "SECOS"
-  }
+    uuid: "SECOS",
+  },
 ];
 
 export const DadosEmpresa = ({ ehDistribuidor }) => {
-  const composeValidators = (...validators) => value =>
-    validators.reduce(
-      (error, validator) => error || validator(value),
-      undefined
-    );
+  const composeValidators =
+    (...validators) =>
+    (value) =>
+      validators.reduce(
+        (error, validator) => error || validator(value),
+        undefined
+      );
 
   return (
     <>
       <div className="card-body">
         <div className="card-title green">Dados da Empresa</div>
         <div className="row pt-3">
-          <div className="col-12 text-right">
+          <div className="col-12 text-end">
             <Link to="/configuracoes/cadastros/empresas-cadastradas">
               <Botao
                 texto="Empresas Cadastradas"

@@ -3,6 +3,7 @@ import React from "react";
 export const IconeMedicaoInicial = () => {
   return (
     <svg
+      className="fill-white"
       width="123"
       height="82"
       viewBox="0 0 123 82"

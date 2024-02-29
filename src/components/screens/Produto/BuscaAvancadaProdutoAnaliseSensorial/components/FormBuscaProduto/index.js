@@ -5,13 +5,13 @@ import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import {
   getNomesProdutos,
   getNomesMarcas,
   getNomesFabricantes,
-  getNomesTerceirizadas
+  getNomesTerceirizadas,
 } from "services/produto.service";
 import { InputComData } from "components/Shareable/DatePicker";
 import "./style.scss";
@@ -23,7 +23,7 @@ const initialState = {
   marcas: [],
   fabricantes: [],
   dataMinima: null,
-  dataMaxima: null
+  dataMaxima: null,
 };
 
 function reducer(state, { type: actionType, payload }) {
@@ -35,7 +35,7 @@ function reducer(state, { type: actionType, payload }) {
         return { ...state, [payload.filtro]: [] };
       }
       const reg = new RegExp(payload.searchText, "i");
-      const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
+      const filtrado = state.dados[payload.filtro].filter((el) => reg.test(el));
       return { ...state, [payload.filtro]: filtrado };
     }
 
@@ -56,18 +56,18 @@ const FormBuscaProduto = ({ onSubmit }) => {
         getNomesProdutos(),
         getNomesMarcas(),
         getNomesFabricantes(),
-        getNomesTerceirizadas()
+        getNomesTerceirizadas(),
       ]).then(([produtos, marcas, fabricantes, terceirizadas]) => {
         dispatch({
           type: "popularDados",
           payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome),
+            produtos: produtos.data.results.map((el) => el.nome),
+            marcas: marcas.data.results.map((el) => el.nome),
+            fabricantes: fabricantes.data.results.map((el) => el.nome),
             terceirizadas: terceirizadas.data.results.map(
-              el => el.nome_fantasia
-            )
-          }
+              (el) => el.nome_fantasia
+            ),
+          },
         });
       });
     }
@@ -79,8 +79,8 @@ const FormBuscaProduto = ({ onSubmit }) => {
       type: "atualizarFiltro",
       payload: {
         filtro,
-        searchText
-      }
+        searchText,
+      },
     });
   };
 
@@ -97,7 +97,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 label="Nome do Produto"
                 placeholder="Digite nome do produto"
                 className="input-busca-produto"
-                onSearch={v => onSearch("produtos", v)}
+                onSearch={(v) => onSearch("produtos", v)}
                 name="nome_produto"
               />
             </div>
@@ -107,7 +107,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 dataSource={state.terceirizadas}
                 label="Nome da empresa solicitante (Terceirizada)"
                 placeholder="Digite nome da terceirizada"
-                onSearch={v => onSearch("terceirizadas", v)}
+                onSearch={(v) => onSearch("terceirizadas", v)}
                 name="nome_terceirizada"
               />
             </div>
@@ -120,7 +120,7 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 className="input-busca-produto"
                 label="Marca do Produto"
                 placeholder="Digite marca do produto"
-                onSearch={v => onSearch("marcas", v)}
+                onSearch={(v) => onSearch("marcas", v)}
                 name="nome_marca"
               />
             </div>
@@ -130,14 +130,14 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 dataSource={state.fabricantes}
                 label="Fabricante do Produto"
                 placeholder="Digite fabricante do produto"
-                onSearch={v => onSearch("fabricantes", v)}
+                onSearch={(v) => onSearch("fabricantes", v)}
                 name="nome_fabricante"
               />
             </div>
 
             <div className="col-12 col-md-4 col-xl-4">
               <div className="row">
-                <label className="ml-3">Data análise sensorial</label>
+                <label className="ms-3">Data análise sensorial</label>
               </div>
               <div className="row">
                 <div className="col mt-1">
@@ -178,14 +178,14 @@ const FormBuscaProduto = ({ onSubmit }) => {
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ms-3"
             />
 
             <Botao
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-right ml-3"
+              className="float-end ms-3"
               onClick={() => form.reset()}
             />
           </div>

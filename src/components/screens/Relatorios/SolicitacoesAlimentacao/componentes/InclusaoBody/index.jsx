@@ -5,7 +5,7 @@ export const InclusaoBody = ({ ...props }) => {
   const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
 
-  const ehDiaCancelado = inclusao => {
+  const ehDiaCancelado = (inclusao) => {
     return inclusao.cancelado || solicitacao.status === "ESCOLA_CANCELOU"
       ? "dia-cancelado"
       : "";
@@ -86,6 +86,22 @@ export const InclusaoBody = ({ ...props }) => {
                   ) : (
                     <div className="col-3" />
                   )}
+                  {inclusao.evento && (
+                    <>
+                      <div className="col-md-9 offset-md-3">
+                        <p>Descrição do Evento:</p>
+                      </div>
+                      <div className="col-md-9 offset-md-3">
+                        <p>{inclusao.evento}</p>
+                      </div>
+                      <div className="col-12 mb-3">
+                        <div
+                          className="linha-divisoria"
+                          style={{ height: "1px", backgroundColor: "#858796" }}
+                        ></div>
+                      </div>
+                    </>
+                  )}
                 </div>
               );
             })}
@@ -102,7 +118,7 @@ export const InclusaoBody = ({ ...props }) => {
             </div>
             {solicitacao.quantidades_periodo.map((quantidade_periodo, idx) => {
               const tiposAlimentacao = quantidade_periodo.tipos_alimentacao
-                .map(tipo_alimentacao => tipo_alimentacao.nome)
+                .map((tipo_alimentacao) => tipo_alimentacao.nome)
                 .join(", ");
               return (
                 <div className="row" key={idx}>
@@ -125,14 +141,14 @@ export const InclusaoBody = ({ ...props }) => {
               );
             })}
             {solicitacao.inclusoes.find(
-              inclusao => inclusao.cancelado_justificativa
+              (inclusao) => inclusao.cancelado_justificativa
             ) && (
               <>
                 <hr />
                 <p>
                   <strong>Histórico de cancelamento</strong>
                   {solicitacao.inclusoes
-                    .filter(inclusao => inclusao.cancelado_justificativa)
+                    .filter((inclusao) => inclusao.cancelado_justificativa)
                     .map((inclusao, key) => {
                       return (
                         <div className="cancelado_justificativa" key={key}>
@@ -148,6 +164,6 @@ export const InclusaoBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

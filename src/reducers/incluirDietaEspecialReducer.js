@@ -8,7 +8,7 @@ export default function reducer(state = {}, action = {}) {
     case LOAD_SOLICITACOES_VIGENTES:
       return {
         ...state,
-        solicitacoesVigentes: action.payload
+        solicitacoesVigentes: action.payload,
       };
     default:
       return state;
@@ -16,7 +16,7 @@ export default function reducer(state = {}, action = {}) {
 }
 
 // Action Creators
-export const loadSolicitacoesVigentes = solicitacoes => ({
+export const loadSolicitacoesVigentes = (solicitacoes) => ({
   type: LOAD_SOLICITACOES_VIGENTES,
-  payload: solicitacoes
+  payload: solicitacoes,
 });

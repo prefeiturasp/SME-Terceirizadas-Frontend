@@ -5,20 +5,20 @@ export const fluxoPartindoEscola = [
     titulo: "Solicitação Realizada",
     status: "",
     criado_em: "",
-    usuario: null
+    usuario: null,
   },
   {
     titulo: "DRE",
     status: "",
     criado_em: "",
-    usuario: null
+    usuario: null,
   },
   {
     titulo: "CODAE",
     status: "",
     criado_em: "",
-    usuario: null
-  }
+    usuario: null,
+  },
 ];
 
 export const fluxoDietaEspecialPartindoEscola = [
@@ -26,14 +26,14 @@ export const fluxoDietaEspecialPartindoEscola = [
     titulo: "Solicitação Realizada",
     status: "",
     criado_em: "",
-    usuario: null
+    usuario: null,
   },
   {
     titulo: "CODAE",
     status: "",
     criado_em: "",
-    usuario: null
-  }
+    usuario: null,
+  },
 ];
 
 export const fluxoDietaEspecialComInativacao = [
@@ -41,14 +41,14 @@ export const fluxoDietaEspecialComInativacao = [
     titulo: "Escola solicitou cancelamento",
     status: "",
     criado_em: "",
-    usuario: null
+    usuario: null,
   },
   {
     titulo: "CODAE",
     status: "",
     criado_em: "",
-    usuario: null
-  }
+    usuario: null,
+  },
 ];
 
 export const fluxoPartindoDRE = [
@@ -56,14 +56,14 @@ export const fluxoPartindoDRE = [
     titulo: "Solicitação Realizada",
     status: "",
     criado_em: "",
-    usuario: null
+    usuario: null,
   },
   {
     titulo: "CODAE",
     status: "",
     criado_em: "",
-    usuario: null
-  }
+    usuario: null,
+  },
 ];
 
 export const fluxoInformativoPartindoEscola = [
@@ -71,8 +71,8 @@ export const fluxoInformativoPartindoEscola = [
     titulo: "Solicitação Realizada",
     status: "",
     criado_em: "",
-    usuario: null
-  }
+    usuario: null,
+  },
 ];
 
 export const fluxoPartindoTerceirizada = [
@@ -80,14 +80,14 @@ export const fluxoPartindoTerceirizada = [
     titulo: "Solicitação Realizada",
     status: "",
     criado_em: "",
-    usuario: null
+    usuario: null,
   },
   {
     titulo: "CODAE",
     status: "",
     criado_em: "",
-    usuario: null
-  }
+    usuario: null,
+  },
 ];
 
 export const fluxoMedicaoInicial = [
@@ -96,18 +96,18 @@ export const fluxoMedicaoInicial = [
     status: "",
     criado_em: "",
     usuario: null,
-    status_evento_explicacao: "Solicitação de Medição não Iniciada"
+    status_evento_explicacao: "Solicitação de Medição não Iniciada",
   },
   {
     titulo: "Aguardando encerramento pela CODAE",
     status: "",
     criado_em: "",
     usuario: null,
-    status_evento_explicacao: "Aguardando encerramento pela CODAE"
-  }
+    status_evento_explicacao: "Aguardando encerramento pela CODAE",
+  },
 ];
 
-export const tipoDeStatus = status => {
+export const tipoDeStatus = (status) => {
   switch (status) {
     case "Solicitação Realizada":
     case "Escola revisou":
@@ -164,7 +164,7 @@ export const tipoDeStatus = status => {
   }
 };
 
-export const tipoDeStatusClasse = status => {
+export const tipoDeStatusClasse = (status) => {
   return tipoDeStatus(status.status_evento_explicacao) === "prosseguiu"
     ? "active"
     : tipoDeStatus(status.status_evento_explicacao) === "reprovado"
@@ -180,10 +180,10 @@ export const formatarFluxoDietaEspecial = () => {
   return fluxoDietaEspecialComInativacao;
 };
 
-export const existeAlgumStatusFimDeFluxo = logs => {
+export const existeAlgumStatusFimDeFluxo = (logs) => {
   return (
     logs.findIndex(
-      log =>
+      (log) =>
         log.status_evento_explicacao.includes("neg") ||
         log.status_evento_explicacao.includes("não") ||
         log.status_evento_explicacao.includes("cancel") ||
@@ -192,6 +192,6 @@ export const existeAlgumStatusFimDeFluxo = logs => {
   );
 };
 
-export const formatarLogs = logs => {
+export const formatarLogs = (logs) => {
   return deepCopy(logs);
 };

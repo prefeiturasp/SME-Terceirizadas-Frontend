@@ -7,18 +7,18 @@ import CargasUsuarios from "components/screens/Configuracoes/CargasUsuarios";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CARGAS_USUARIOS}`,
-  titulo: "Cargas de Usuários"
+  titulo: "Cargas de Usuários",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Configurações"
+    titulo: "Configurações",
   },
   {
     href: `/`,
-    titulo: "Gestão de Usuários"
-  }
+    titulo: "Gestão de Usuários",
+  },
 ];
 
 export default () => (

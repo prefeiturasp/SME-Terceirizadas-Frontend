@@ -4,7 +4,7 @@ import { CODAE, DRE } from "configs/constants";
 import { statusEnum } from "constants/shared";
 import "./style.scss";
 
-export const TabelaKits = props => {
+export const TabelaKits = (props) => {
   const { escola_quantidade, solicitacaoUnificada, visao } = props;
 
   const ehCancelado = () => {

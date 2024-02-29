@@ -1,0 +1,86 @@
+.cor-titulo-modal {
+  color: #4d4d4d;
+  font-weight: 500;
+}
+
+.cor-texo-detalhes {
+  color: #4d4d4d;
+}
+
+.cor-texo-periodos-corrigidos {
+  color: #0c6b45;
+}
+
+.cards-usuario {
+  background-color: #f3f3f3;
+  border-radius: 5px;
+  border: 1px solid#f3f3f3;
+  color: #4d4d4d;
+}
+
+.cards-usuario:hover {
+  background-color: #4d4d4d;
+  border-radius: 5px;
+  border: 1px solid#4d4d4d;
+  color: #f3f3f3 !important;
+}
+
+.historico-ativo {
+  background-color: #4d4d4d;
+  border-radius: 5px;
+  border: 1px solid#4d4d4d;
+  color: #f3f3f3 !important;
+}
+
+.iniciais-usuario {
+  background-color: #0c6b45;
+  color: #fff;
+  padding: 5px;
+  width: 50px;
+  font-size: 25px;
+  border-radius: 50px;
+  border: 1px solid#0C6B45;
+}
+
+.detalhes-historico {
+  border: 1px solid #0c6b45;
+  border-radius: 5px;
+  height: 450px;
+  overflow: auto;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.celula-transbordada {
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
+}
+
+.custom-padding {
+  padding-bottom: 7px !important;
+  padding-top: 7px !important;
+}
+
+.grid-item {
+  padding: 5px;
+  // border-bottom: 1px solid rgb(218, 218, 218);
+}
+
+.divisor {
+  border-bottom: 1px solid rgb(218, 218, 218);
+}
+
+.borda-lateral {
+  border-right: 1px solid rgb(218, 218, 218);
+}
+
+table {
+  font-size: 12px;
+
+  p {
+    font-size: 12px !important;
+  }
+}

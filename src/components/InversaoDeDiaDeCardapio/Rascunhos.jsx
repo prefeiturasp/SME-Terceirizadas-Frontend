@@ -2,11 +2,8 @@ import React, { Component } from "react";
 
 export class Rascunhos extends Component {
   render() {
-    const {
-      rascunhosInversoes,
-      removerRascunho,
-      carregarRascunho
-    } = this.props;
+    const { rascunhosInversoes, removerRascunho, carregarRascunho } =
+      this.props;
     if (rascunhosInversoes && rascunhosInversoes.length) {
       const cardsInversoes = rascunhosInversoes.map(
         (inversaoDeDiaDeCardapio, key) => {
@@ -15,17 +12,17 @@ export class Rascunhos extends Component {
           return (
             <div key={key} className="draft bg-white border rounded mt-1 p-2">
               <div className="mt-2">
-                <label className="bold ml-3">
+                <label className="bold ms-3">
                   Inversão de dia de Cardápio {`# ${id_externo}`}
                 </label>
                 <span
-                  className="ml-3 p-1 border rounded"
+                  className="ms-3 p-1 border rounded"
                   style={{ background: backgroundColor }}
                 >
                   {"RASCUNHO"}
                 </span>
               </div>
-              <div className="icon-draft-card float-right">
+              <div className="icon-draft-card float-end">
                 Criado em: {inversaoDeDiaDeCardapio.criado_em}
                 <span onClick={() => removerRascunho(id_externo, uuid)}>
                   <i className="fas fa-trash" />
@@ -33,14 +30,14 @@ export class Rascunhos extends Component {
                 <span
                   onClick={() =>
                     carregarRascunho({
-                      inversaoDeDiaDeCardapio
+                      inversaoDeDiaDeCardapio,
                     })
                   }
                 >
                   <i className="fas fa-edit" />
                 </span>
               </div>
-              <div className="ml-3">
+              <div className="ms-3">
                 <p>
                   Substituição do dia:{" "}
                   <b>
@@ -49,7 +46,7 @@ export class Rascunhos extends Component {
                       : inversaoDeDiaDeCardapio.data_de_inversao}
                   </b>{" "}
                   <i
-                    className={"fa fa-arrow-right ml-2 mr-2"}
+                    className={"fa fa-arrow-right ms-2 me-2"}
                     style={{ color: "#2881BB" }}
                   />{" "}
                   para o dia:
@@ -68,7 +65,7 @@ export class Rascunhos extends Component {
                           : inversaoDeDiaDeCardapio.data_de_inversao_2}
                       </b>{" "}
                       <i
-                        className={"fa fa-arrow-right ml-2 mr-2"}
+                        className={"fa fa-arrow-right ms-2 me-2"}
                         style={{ color: "#2881BB" }}
                       />{" "}
                       para o dia:

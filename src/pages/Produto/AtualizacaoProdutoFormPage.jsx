@@ -4,12 +4,12 @@ import AtualizacaoProdutoForm from "../../components/screens/Produto/Atualizacao
 import Page from "../../components/Shareable/Page/Page";
 import {
   PESQUISA_DESENVOLVIMENTO,
-  HOMOLOGACAO_PRODUTO
+  HOMOLOGACAO_PRODUTO,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${PESQUISA_DESENVOLVIMENTO}/${HOMOLOGACAO_PRODUTO}`,
-  titulo: "Homologação de Produto"
+  titulo: "Homologação de Produto",
 };
 
 export default () => (

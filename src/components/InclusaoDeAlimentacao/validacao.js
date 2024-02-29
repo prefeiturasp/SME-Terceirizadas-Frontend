@@ -3,7 +3,7 @@ export const validarSubmissaoNormal = (
   meusDados,
   ehMotivoEspecifico
 ) => {
-  if (!values.quantidades_periodo.find(qp => qp.checked))
+  if (!values.quantidades_periodo.find((qp) => qp.checked))
     return "Necessário selecionar ao menos um período";
 
   let totalAlunos = 0;
@@ -11,8 +11,8 @@ export const validarSubmissaoNormal = (
   const periodosSemTipoAlimentacao = [];
 
   values.quantidades_periodo
-    .filter(qp => qp.checked)
-    .forEach(quantidade_periodo => {
+    .filter((qp) => qp.checked)
+    .forEach((quantidade_periodo) => {
       totalAlunos += parseInt(quantidade_periodo.numero_alunos);
       if (quantidade_periodo.tipos_alimentacao_selecionados.length === 0) {
         periodosSemTipoAlimentacao.push(quantidade_periodo.nome);
@@ -48,12 +48,12 @@ export const validarSubmissaoContinua = (
 
   let totalAlunos = 0;
 
-  values.quantidades_periodo.forEach(quantidade_periodo => {
+  values.quantidades_periodo.forEach((quantidade_periodo) => {
     totalAlunos += parseInt(quantidade_periodo.numero_alunos);
   });
 
   if (
-    !values.quantidades_periodo.find(qp => qp.nome === "NOITE") &&
+    !values.quantidades_periodo.find((qp) => qp.nome === "NOITE") &&
     meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
       "CEU GESTAO"
   ) {

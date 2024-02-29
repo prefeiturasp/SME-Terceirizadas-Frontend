@@ -14,7 +14,7 @@ export default () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
 
-  const buscarDietas = async filtros => {
+  const buscarDietas = async (filtros) => {
     setCarregando(true);
     setAtivos([]);
     const params = gerarParametrosConsulta({
@@ -23,7 +23,7 @@ export default () => {
       dre: filtros.dre[0],
       escola: filtros.escola[0],
       page: filtros.page,
-      status: ["CODAE_AUTORIZADO", "TERCEIRIZADA_TOMOU_CIENCIA"]
+      status: ["CODAE_AUTORIZADO", "TERCEIRIZADA_TOMOU_CIENCIA"],
     });
 
     const dietasResponse = await getSolicitacaoDietaEspecialListagem(
@@ -41,7 +41,7 @@ export default () => {
     }
   }, [filtros]);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarDietas({ ...filtros, page: page });
     setPage(page);
   };
@@ -72,7 +72,7 @@ export default () => {
                 current={page || 1}
                 total={total}
                 showSizeChanger={false}
-                onChange={page => {
+                onChange={(page) => {
                   nextPage(page);
                 }}
                 pageSize={10}

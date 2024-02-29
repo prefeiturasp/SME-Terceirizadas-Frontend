@@ -8,8 +8,7 @@ import {
   deepCopy,
   usuarioEhDRE,
   usuarioEhEmpresaTerceirizada,
-  usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaTerceirizadaDiretor
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
 } from "helpers/utilities";
 import React, { useState } from "react";
 import { useEffect } from "react";
@@ -20,13 +19,13 @@ import { lotesToOptions } from "../../helpers";
 import "../../style.scss";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 import { STATUS_SOLICITACOES, TIPOS_SOLICITACAO } from "../../constants";
-import { getEscolaSimples, getEscolasTrecTotal } from "services/escola.service";
+import { getEscolaSimples, getEscolasTercTotal } from "services/escola.service";
 import { InputComData } from "components/Shareable/DatePicker";
 import { getNomesTerceirizadas } from "services/produto.service";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { OnChange } from "react-final-form-listeners";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -49,7 +48,7 @@ export const Filtros = ({ ...props }) => {
     endpoint,
     getSolicitacoesDetalhadasAsync,
     setCarregando,
-    setResultadoPaginado
+    setResultadoPaginado,
   } = props;
 
   const getLotesSimplesAsync = async () => {
@@ -71,7 +70,7 @@ export const Filtros = ({ ...props }) => {
 
   const getTiposUnidadeEscolarAsync = async () => {
     const response = await getTiposUnidadeEscolar({
-      pertence_relatorio_solicitacoes_alimentacao: true
+      pertence_relatorio_solicitacoes_alimentacao: true,
     });
     if (response.status === HTTP_STATUS.OK) {
       setTiposUnidades(response.data.results);
@@ -82,13 +81,14 @@ export const Filtros = ({ ...props }) => {
 
   const getEscolasSimplissimaComDREUnpaginatedAsync = async () => {
     let params = null;
-    if (usuarioEhDRE()) {
+    if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      params = { escola: meusDados.vinculo_atual.instituicao.uuid };
+    } else if (usuarioEhDRE()) {
       params = { dre: meusDados.vinculo_atual.instituicao.uuid };
-    }
-    if (usuarioEhEmpresaTerceirizada()) {
+    } else if (usuarioEhEmpresaTerceirizada()) {
       params = { terceirizada: meusDados.vinculo_atual.instituicao.uuid };
     }
-    const response = await getEscolasTrecTotal(params);
+    const response = await getEscolasTercTotal(params);
     if (response.status === HTTP_STATUS.OK) {
       setUnidadesEducacionais(response.data);
     } else {
@@ -97,10 +97,7 @@ export const Filtros = ({ ...props }) => {
   };
 
   const getEscolaSimplesAsync = async () => {
-    let uuidEscola = null;
-    if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
-      uuidEscola = meusDados.vinculo_atual.instituicao.uuid;
-    }
+    let uuidEscola = meusDados.vinculo_atual.instituicao.uuid;
     const response = await getEscolaSimples(uuidEscola);
     if (response.status === HTTP_STATUS.OK) {
       let unidadeEducacional = response.data;
@@ -124,31 +121,36 @@ export const Filtros = ({ ...props }) => {
   };
 
   useEffect(() => {
-    getLotesSimplesAsync();
-    getTiposUnidadeEscolarAsync();
-    getEscolasSimplissimaComDREUnpaginatedAsync();
-    getTerceirizadasAsync();
-    getEscolaSimplesAsync();
+    Promise.all([
+      getLotesSimplesAsync(),
+      getTiposUnidadeEscolarAsync(),
+      getEscolasSimplissimaComDREUnpaginatedAsync(),
+      getTerceirizadasAsync(),
+    ]);
+
+    if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      getEscolaSimplesAsync();
+    }
   }, []);
 
   const filtroEscolas = (unidadesEducacionais, values) => {
     if (values.lotes && values.lotes.length > 0) {
-      unidadesEducacionais = unidadesEducacionais.filter(ue =>
+      unidadesEducacionais = unidadesEducacionais.filter((ue) =>
         values.lotes.includes(ue.lote)
       );
     }
     if (values.tipos_unidade && values.tipos_unidade.length > 0) {
-      unidadesEducacionais = unidadesEducacionais.filter(ue =>
+      unidadesEducacionais = unidadesEducacionais.filter((ue) =>
         values.tipos_unidade.includes(ue.tipo_unidade)
       );
     }
-    return unidadesEducacionais.map(unidadeEducacional => ({
+    return unidadesEducacionais.map((unidadeEducacional) => ({
       label: unidadeEducacional.nome,
-      value: unidadeEducacional.uuid
+      value: unidadeEducacional.uuid,
     }));
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     setCarregando(true);
     let _values = deepCopy(values);
     setFiltros(values);
@@ -195,7 +197,7 @@ export const Filtros = ({ ...props }) => {
                     naoDesabilitarPrimeiraOpcao
                   />
                   <OnChange name="status">
-                    {async value => {
+                    {async (value) => {
                       if (value) {
                         form.reset();
                         form.change("status", value);
@@ -212,17 +214,19 @@ export const Filtros = ({ ...props }) => {
                       values.lotes ||
                       (unidadeEducacional &&
                         unidadeEducacional.lote && [
-                          unidadeEducacional.lote.uuid
+                          unidadeEducacional.lote.uuid,
                         ]) ||
                       []
                     }
                     options={lotes}
-                    onSelectedChanged={values_ => form.change(`lotes`, values_)}
+                    onSelectedChanged={(values_) =>
+                      form.change(`lotes`, values_)
+                    }
                     hasSelectAll
                     overrideStrings={{
                       selectSomeItems: "Selecione",
                       allItemsAreSelected: "Todos os lotes",
-                      selectAll: "Todos"
+                      selectAll: "Todos",
                     }}
                     disabled={!values.status || unidadeEducacional}
                   />
@@ -234,14 +238,14 @@ export const Filtros = ({ ...props }) => {
                     name="tipos_solicitacao"
                     selected={values.tipos_solicitacao || []}
                     options={TIPOS_SOLICITACAO}
-                    onSelectedChanged={values_ =>
+                    onSelectedChanged={(values_) =>
                       form.change(`tipos_solicitacao`, values_)
                     }
                     hasSelectAll
                     overrideStrings={{
                       selectSomeItems: "Selecione",
                       allItemsAreSelected: "Todos os tipos de alimentação",
-                      selectAll: "Todos"
+                      selectAll: "Todos",
                     }}
                     disabled={!values.status}
                   />
@@ -257,22 +261,22 @@ export const Filtros = ({ ...props }) => {
                       selected={
                         values.tipos_unidade ||
                         (unidadeEducacional && [
-                          unidadeEducacional.tipo_unidade.uuid
+                          unidadeEducacional.tipo_unidade?.uuid,
                         ]) ||
                         []
                       }
-                      options={tiposUnidades.map(tipoUnidade => ({
+                      options={tiposUnidades.map((tipoUnidade) => ({
                         label: tipoUnidade.iniciais,
-                        value: tipoUnidade.uuid
+                        value: tipoUnidade.uuid,
                       }))}
-                      onSelectedChanged={values_ =>
+                      onSelectedChanged={(values_) =>
                         form.change(`tipos_unidade`, values_)
                       }
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
                         allItemsAreSelected: "Todos os tipos de unidade",
-                        selectAll: "Todos"
+                        selectAll: "Todos",
                       }}
                       disabled={!values.status || unidadeEducacional}
                     />
@@ -288,14 +292,18 @@ export const Filtros = ({ ...props }) => {
                         []
                       }
                       options={filtroEscolas(unidadesEducacionais, values)}
-                      onSelectedChanged={values_ => {
+                      onSelectedChanged={(values_) => {
                         form.change(`unidades_educacionais`, values_);
                       }}
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
-                        allItemsAreSelected: "Todos os tipos de unidade",
-                        selectAll: "Todos"
+                        allItemsAreSelected:
+                          unidadesEducacionais.length > 1
+                            ? "Todos os tipos de unidade"
+                            : unidadesEducacionais[0] &&
+                              unidadesEducacionais[0].nome,
+                        selectAll: "Todos",
                       }}
                       disabled={!values.status || unidadeEducacional}
                     />
@@ -310,9 +318,9 @@ export const Filtros = ({ ...props }) => {
                       label="Terceirizada"
                       name="terceirizada"
                       options={agregarDefault(
-                        terceirizadas.map(terceirizada => ({
+                        terceirizadas.map((terceirizada) => ({
                           nome: terceirizada.nome_fantasia,
-                          uuid: terceirizada.uuid
+                          uuid: terceirizada.uuid,
                         }))
                       )}
                       naoDesabilitarPrimeiraOpcao
@@ -348,7 +356,7 @@ export const Filtros = ({ ...props }) => {
                 </div>
               </div>
               <div className="row mt-3">
-                <div className="col-12 text-right">
+                <div className="col-12 text-end">
                   <Botao
                     texto="Limpar Filtros"
                     type={BUTTON_TYPE.BUTTON}
@@ -366,7 +374,7 @@ export const Filtros = ({ ...props }) => {
                     texto="Consultar"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </div>
               </div>

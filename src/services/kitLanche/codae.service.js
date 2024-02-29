@@ -38,18 +38,18 @@ export const CODAEAutorizaKitLancheAvulso = (
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     body: JSON.stringify(justificativa),
-    method: "PATCH"
+    method: "PATCH",
   };
   let status = 0;
   return fetch(url, OBJ_REQUEST)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -61,13 +61,13 @@ export const getCODAEPedidosKitLanchePendentes = (
   const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
@@ -92,7 +92,6 @@ export const CODAENegaKitLancheCEMEI = async (uuid, payload) => {
 };
 
 export const CODAEAutorizaKitLancheCEMEI = async (uuid, payload) => {
-  console.log(payload);
   const url = `solicitacao-kit-lanche-cemei/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
   if (response) {

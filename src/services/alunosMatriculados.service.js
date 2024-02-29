@@ -11,7 +11,7 @@ export const getFiltros = async () => {
   }
 };
 
-export const filtrarAlunosMatriculados = async params => {
+export const filtrarAlunosMatriculados = async (params) => {
   const url = `${API_URL}/relatorio-alunos-matriculados/filtrar/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {

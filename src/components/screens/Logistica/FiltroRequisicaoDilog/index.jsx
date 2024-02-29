@@ -2,20 +2,20 @@ import moment from "moment";
 import React, { useEffect, useReducer, useState, Fragment } from "react";
 import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useNavigationType } from "react-router-dom";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { InputComData } from "components/Shareable/DatePicker";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import {
   getNomesDistribuidores,
   getNumerosRequisicoes,
-  getRequisicoesDoFiltro
+  getRequisicoesDoFiltro,
 } from "../../../../services/logistica.service.js";
 
 import { DisponibilizacaoDeSolicitacoes } from "../DisponibilizacaoDeSolicitacoes";
@@ -23,7 +23,7 @@ import { DisponibilizacaoDeSolicitacoes } from "../DisponibilizacaoDeSolicitacoe
 const initialState = {
   dados: {},
   distribuidores: [],
-  requisicoes: []
+  requisicoes: [],
 };
 
 const FORM_NAME = "buscaRequisicoesDilog";
@@ -37,7 +37,7 @@ function reducer(state, { type: actionType, payload }) {
         return { ...state, [payload.filtro]: [] };
       }
       const reg = new RegExp(payload.searchText, "i");
-      const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
+      const filtrado = state.dados[payload.filtro].filter((el) => reg.test(el));
       return { ...state, [payload.filtro]: filtrado };
     }
 
@@ -49,14 +49,16 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const formatDate = date => {
+const formatDate = (date) => {
   return moment(date, "DD/MM/YYYY").format("YYYY-MM-DD");
 };
 
-const FiltroRequisicaoDilog = ({ initialValues, history }) => {
+const FiltroRequisicaoDilog = ({ initialValues }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [filtrado, setFiltrado] = useState(false);
   const [requisicoesFiltro, setRequisicoesFiltro] = useState([]);
+
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     async function fetchData() {
@@ -66,12 +68,12 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
             type: "popularDados",
             payload: {
               distribuidores: distribuidores.data.results.map(
-                el => el.nome_fantasia
+                (el) => el.nome_fantasia
               ),
               requisicoes: requisicoes.data.results.map(
-                el => el.numero_solicitacao
-              )
-            }
+                (el) => el.numero_solicitacao
+              ),
+            },
           });
         }
       );
@@ -79,7 +81,7 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
     fetchData();
   }, []);
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     let queryParams = "";
     for (const [key, value] of Object.entries(values)) {
       if (queryParams.length > 0) {
@@ -107,8 +109,8 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
       type: "atualizarFiltro",
       payload: {
         filtro,
-        searchText
-      }
+        searchText,
+      },
     });
   };
 
@@ -118,7 +120,7 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
         <div className="card-body">
           <Form
             onSubmit={onSubmit}
-            initialValues={history.action === "POP" && initialValues}
+            initialValues={navigationType === "POP" && initialValues}
             render={({ form, handleSubmit, submitting, values }) => (
               <form onSubmit={handleSubmit}>
                 <FinalFormToRedux form={FORM_NAME} />
@@ -131,7 +133,7 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
                       name="numero_requisicao"
                       placeholder="Digite o numero da requisição"
                       className="input-busca-produto"
-                      onSearch={v => onSearch("requisicoes", v)}
+                      onSearch={(v) => onSearch("requisicoes", v)}
                     />
                   </div>
                   <div className="col-3 data_inicio">
@@ -176,7 +178,7 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
                       label="Nome do distribuidor"
                       placeholder="Digite nome do distribuidor/fornecedor"
                       className="input-busca-produto"
-                      onSearch={v => onSearch("distribuidores", v)}
+                      onSearch={(v) => onSearch("distribuidores", v)}
                       name="nome_distribuidor"
                     />
                   </div>
@@ -187,7 +189,7 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
                     texto="Consultar"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     disabled={submitting}
                     onClick={() => {
                       setFiltrado(false);
@@ -198,7 +200,7 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
                     texto="Limpar Filtros"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     onClick={() => {
                       form.reset({});
                       setRequisicoesFiltro([]);
@@ -226,10 +228,10 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    initialValues: state.finalForm[FORM_NAME]
+    initialValues: state.finalForm[FORM_NAME],
   };
 };
 
-export default withRouter(connect(mapStateToProps)(FiltroRequisicaoDilog));
+export default connect(mapStateToProps)(FiltroRequisicaoDilog);

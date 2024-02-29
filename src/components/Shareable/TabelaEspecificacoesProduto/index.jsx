@@ -1,13 +1,13 @@
 import { Tooltip } from "antd";
 import {
   RECLAMACAO_PRODUTO_STATUS_EXPLICACAO,
-  TIPO_PERFIL
+  TIPO_PERFIL,
 } from "constants/shared";
 import { truncarString } from "helpers/utilities";
 import React, { Fragment } from "react";
 import "./style.scss";
 
-export const TabelaEspecificacoesProduto = props => {
+export const TabelaEspecificacoesProduto = (props) => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   const renderLabel =
     props.homologacao.ultimo_log.status_evento_explicacao ===

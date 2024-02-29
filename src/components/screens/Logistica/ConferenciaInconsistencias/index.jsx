@@ -4,14 +4,14 @@ import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   getGuiasInconsistencias,
-  vinculaGuiasComEscolas
+  vinculaGuiasComEscolas,
 } from "services/logistica.service";
 import ListagemInconsistencias from "./ListagemInconsistencias";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import Filtros from "./Filtros";
 import { Paginacao } from "components/Shareable/Paginacao";
@@ -25,7 +25,7 @@ export default () => {
 
   const inicioResultado = useRef();
 
-  const buscarGuias = async page => {
+  const buscarGuias = async (page) => {
     setCarregando(true);
 
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -63,7 +63,7 @@ export default () => {
     }
   }, [filtros]);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarGuias(page);
     setPage(page);
   };
@@ -88,7 +88,7 @@ export default () => {
                   texto="Vincular"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="float-right ml-3"
+                  className="float-end ms-3"
                   onClick={() => {
                     vincularGuias();
                   }}

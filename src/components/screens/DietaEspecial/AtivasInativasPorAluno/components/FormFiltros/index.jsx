@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useNavigationType } from "react-router-dom";
 import { Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import InputText from "components/Shareable/Input/InputText";
 import Select from "components/Shareable/Select";
@@ -16,14 +16,14 @@ import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import {
   length,
-  requiredSearchSelectUnidEducDietas
+  requiredSearchSelectUnidEducDietas,
 } from "helpers/fieldValidators";
 
 import { TIPO_PERFIL } from "constants/shared";
 
 import {
   formFiltrosObtemDreEEscolasDietas,
-  getDadosIniciais
+  getDadosIniciais,
 } from "helpers/dietaEspecial";
 
 import { meusDados } from "services/perfil.service";
@@ -37,9 +37,10 @@ const FormFiltros = ({
   setLoading,
   setFiltros,
   initialValues,
-  history,
-  setDadosUsuario
+  setDadosUsuario,
 }) => {
+  const navigationType = useNavigationType();
+
   const [carregandoAluno, setCarregandoAluno] = useState(false);
   const [dadosIniciais, setDadosIniciais] = useState({});
   const [diretoriasRegionais, setDiretoriasRegionais] = useState([]);
@@ -66,7 +67,7 @@ const FormFiltros = ({
 
       getAlunos(dadosIniciais);
 
-      if (history.action === "POP" && initialValues)
+      if (navigationType === "POP" && initialValues)
         setDadosIniciais({ ...initialValues, ...dadosIniciais });
       else setDadosIniciais(dadosIniciais);
       setLoading(false);
@@ -74,14 +75,14 @@ const FormFiltros = ({
     fetch();
   }, []);
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     setFiltros({ ...formValues, escolas: escolas });
   };
 
-  const getAlunosFiltrado = nomeAluno => {
+  const getAlunosFiltrado = (nomeAluno) => {
     if (nomeAluno) {
       const reg = new RegExp(nomeAluno, "i");
-      return alunos.filter(a => reg.test(a));
+      return alunos.filter((a) => reg.test(a));
     }
     return [];
   };
@@ -125,28 +126,28 @@ const FormFiltros = ({
     setCarregandoAluno(false);
   };
 
-  const getAlunos = async dadosIniciais => {
+  const getAlunos = async (dadosIniciais) => {
     if (tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL) {
       const response = await getAlunosListagem({ dre: dadosIniciais.dre[0] });
-      setAlunos(response.data.results.map(aluno => aluno.nome));
+      setAlunos(response.data.results.map((aluno) => aluno.nome));
     } else if (tipoUsuario === TIPO_PERFIL.ESCOLA) {
       const response = await getAlunosListagem({
-        escola: dadosIniciais.escola[0]
+        escola: dadosIniciais.escola[0],
       });
-      setAlunos(response.data.results.map(aluno => aluno.nome));
+      setAlunos(response.data.results.map((aluno) => aluno.nome));
     } else {
       const response = await getAlunosListagem();
-      setAlunos(response.data.results.map(aluno => aluno.nome));
+      setAlunos(response.data.results.map((aluno) => aluno.nome));
     }
   };
 
-  const getNomesItemsFiltrado = value => {
+  const getNomesItemsFiltrado = (value) => {
     if (value) {
       let value_ = value;
       if (localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA) {
         value_ = value[0];
       }
-      return nomeEscolas.filter(a => a.includes(value_.toUpperCase()));
+      return nomeEscolas.filter((a) => a.includes(value_.toUpperCase()));
     }
     return [];
   };
@@ -169,7 +170,7 @@ const FormFiltros = ({
                   className="input-busca-dre form-control"
                   name="dre"
                   options={[{ uuid: "", nome: "Todas" }].concat(
-                    diretoriasRegionais.map(dre => {
+                    diretoriasRegionais.map((dre) => {
                       return { uuid: dre.value, nome: dre.label };
                     })
                   )}
@@ -180,11 +181,13 @@ const FormFiltros = ({
                   naoDesabilitarPrimeiraOpcao
                 />
                 <OnChange name="dre">
-                  {async value => {
+                  {async (value) => {
                     setNomeEscolas(
                       escolas
-                        .filter(escola => value.includes(escola.dre.uuid))
-                        .map(escola => `${escola.codigo_eol} - ${escola.label}`)
+                        .filter((escola) => value.includes(escola.dre.uuid))
+                        .map(
+                          (escola) => `${escola.codigo_eol} - ${escola.label}`
+                        )
                     );
                     tipoUsuario !== TIPO_PERFIL.ESCOLA &&
                       form.change("escola", undefined);
@@ -216,7 +219,7 @@ const FormFiltros = ({
                   disabled={carregandoAluno}
                 />
                 <OnChange name="codigo_eol">
-                  {value => {
+                  {(value) => {
                     getAlunoPorEol(value, values);
                   }}
                 </OnChange>
@@ -238,26 +241,26 @@ const FormFiltros = ({
                 <div className="mt-4">
                   <Botao
                     texto="Consultar"
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
                   />
                   <Botao
                     texto="Limpar Filtros"
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     onClick={() => {
                       if (tipoUsuario === TIPO_PERFIL.ESCOLA)
                         form.restart({
                           ...dadosIniciais,
                           nome_aluno: undefined,
-                          codigo_eol: undefined
+                          codigo_eol: undefined,
                         });
                       else if (tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL)
                         form.restart({
                           ...dadosIniciais,
                           escolas: [],
                           nome_aluno: undefined,
-                          codigo_eol: undefined
+                          codigo_eol: undefined,
                         });
                       else form.restart({});
                     }}
@@ -274,10 +277,10 @@ const FormFiltros = ({
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    initialValues: state.finalForm[FORM_NAME]
+    initialValues: state.finalForm[FORM_NAME],
   };
 };
 
-export default withRouter(connect(mapStateToProps)(FormFiltros));
+export default connect(mapStateToProps)(FormFiltros);

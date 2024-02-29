@@ -20,7 +20,7 @@ const DataTermino = ({
   hasIcon,
   datePickerProps,
   helpText,
-  _calendar
+  _calendar,
 }) => {
   const [comData, setComData] = useState(temData);
 
@@ -33,7 +33,7 @@ const DataTermino = ({
     setComData(true);
   };
 
-  const handleChange = data => {
+  const handleChange = (data) => {
     input.onChange(data);
   };
 
@@ -52,7 +52,7 @@ const DataTermino = ({
           className={`col-form-label ${labelClassName}`}
         >
           {label}
-        </p>
+        </p>,
       ]}
       <div className="data-opcional-inner">
         <label className="container-radio">
@@ -77,10 +77,10 @@ const DataTermino = ({
           {...datePickerProps}
           isClearable={true}
           selected={input.value}
-          className={`form-control ${className} ${meta.touched &&
-            meta.error &&
-            "invalid-field"}`}
-          ref={c => (_calendar = c)}
+          className={`form-control ${className} ${
+            meta.touched && meta.error && "invalid-field"
+          }`}
+          ref={(c) => (_calendar = c)}
           onChange={handleChange}
           locale={ptBR}
           minDate={minDate}

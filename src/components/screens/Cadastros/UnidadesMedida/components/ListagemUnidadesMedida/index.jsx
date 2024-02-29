@@ -1,7 +1,7 @@
 import {
   CADASTROS,
   CONFIGURACOES,
-  EDICAO_UNIDADE_MEDIDA
+  EDICAO_UNIDADE_MEDIDA,
 } from "configs/constants";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -11,7 +11,7 @@ import "./styles.scss";
 const ListagemUnidadesMedida = ({ unidadesMedida }) => {
   return (
     <div className="container-listagem-resultados">
-      <div className="titulo-verde mt-5 mb-3">Unidades Cadastradas</div>
+      <div className="titulo-verde mb-3">Unidades Cadastradas</div>
       <article>
         <div className="grid-table header-table">
           <div>Nome da Unidade de Medida</div>
@@ -19,7 +19,7 @@ const ListagemUnidadesMedida = ({ unidadesMedida }) => {
           <div>Data do Cadastro</div>
           <div>Ações</div>
         </div>
-        {unidadesMedida.map(unidadeMedida => {
+        {unidadesMedida.map((unidadeMedida) => {
           return (
             <>
               <div key={unidadeMedida.uuid} className="grid-table body-table">
@@ -28,9 +28,7 @@ const ListagemUnidadesMedida = ({ unidadesMedida }) => {
                 <div>{unidadeMedida.criado_em.slice(0, 10)}</div>
                 <div>
                   <NavLink
-                    to={`/${CONFIGURACOES}/${CADASTROS}/${EDICAO_UNIDADE_MEDIDA}/?uuid=${
-                      unidadeMedida.uuid
-                    }`}
+                    to={`/${CONFIGURACOES}/${CADASTROS}/${EDICAO_UNIDADE_MEDIDA}/?uuid=${unidadeMedida.uuid}`}
                   >
                     <span className="link-acoes px-2">
                       <i title="Editar" className="verde fas fa-edit" />

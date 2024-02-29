@@ -15,19 +15,19 @@ export const getDREPedidosDeKitLanche = async (
   return { results: results, status };
 };
 
-export const getDREPedidosDeKitLancheReprovados = tipoSolicitacao => {
+export const getDREPedidosDeKitLancheReprovados = (tipoSolicitacao) => {
   const url = `${getPath(
     tipoSolicitacao
   )}/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
@@ -36,18 +36,18 @@ export const DREValidaKitLancheAvulso = (uuid, _, tipoSolicitacao) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.DRE_VALIDA}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "PATCH"
+    method: "PATCH",
   };
   let status = 0;
   return fetch(url, OBJ_REQUEST)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };

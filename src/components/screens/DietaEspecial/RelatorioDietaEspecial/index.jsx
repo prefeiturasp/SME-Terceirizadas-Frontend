@@ -8,7 +8,7 @@ import { Form } from "react-final-form";
 import {
   gerarExcelRelatorioDietaEspecial,
   gerarPdfRelatorioDietaEspecial,
-  getSolicitacoesRelatorioDietasEspeciais
+  getSolicitacoesRelatorioDietasEspeciais,
 } from "services/dietaEspecial.service";
 import { Filtros } from "./components/Filtros";
 import { ListagemDietas } from "./components/ListagemDietas";
@@ -16,7 +16,7 @@ import "./styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
@@ -33,14 +33,12 @@ export const RelatorioDietaEspecial = () => {
   const [loadingDietas, setLoadingDietas] = useState(false);
   const [imprimindoPdf, setImprimindoPdf] = useState(false);
   const [imprimindoExcel, setImprimindoExcel] = useState(false);
-  const [
-    exibirModalCentralDownloads,
-    setExibirModalCentralDownloads
-  ] = useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
 
   const PARAMS = { limit: PAGE_SIZE, offset: 0 };
 
-  const ajustaParams = params => {
+  const ajustaParams = (params) => {
     if (
       params.classificacoes_selecionadas &&
       params.classificacoes_selecionadas.length ===
@@ -67,11 +65,11 @@ export const RelatorioDietaEspecial = () => {
     return params;
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     setLoadingDietas(true);
     let params = {
       ...PARAMS,
-      ...values
+      ...values,
     };
     if (usuarioEhEmpresaTerceirizada()) {
       params["terceirizada"] = meusDados.vinculo_atual.instituicao.uuid;
@@ -89,7 +87,7 @@ export const RelatorioDietaEspecial = () => {
     setLoadingDietas(false);
   };
 
-  const exportarXLSX = async values => {
+  const exportarXLSX = async (values) => {
     if (usuarioEhEmpresaTerceirizada()) {
       values["terceirizada"] = meusDados.vinculo_atual.instituicao.uuid;
     }
@@ -105,7 +103,7 @@ export const RelatorioDietaEspecial = () => {
     setImprimindoExcel(false);
   };
 
-  const exportarPDF = async values => {
+  const exportarPDF = async (values) => {
     if (usuarioEhEmpresaTerceirizada()) {
       values["terceirizada"] = meusDados.vinculo_atual.instituicao.uuid;
     }
@@ -147,7 +145,7 @@ export const RelatorioDietaEspecial = () => {
                     {dietasEspeciais && (
                       <>
                         <div className="row">
-                          <div className="total-dietas col-12 text-right">
+                          <div className="total-dietas col-12 text-end">
                             Total de dietas:
                             <div className="numero-total-dietas">
                               {dietasEspeciais.count}
@@ -168,7 +166,7 @@ export const RelatorioDietaEspecial = () => {
                           </div>
                         )}
                         <div className="row">
-                          <div className="col-12 text-right">
+                          <div className="col-12 text-end">
                             <Botao
                               texto="Exportar PDF"
                               style={
@@ -197,7 +195,7 @@ export const RelatorioDietaEspecial = () => {
                                   : BUTTON_ICON.FILE_EXCEL
                               }
                               disabled={imprimindoPdf || imprimindoExcel}
-                              className="ml-3"
+                              className="ms-3"
                               onClick={() => exportarXLSX(values)}
                             />
                             {exibirModalCentralDownloads && (

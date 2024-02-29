@@ -2,7 +2,7 @@ import React from "react";
 import * as R from "ramda";
 
 export const MotivoSuspensao = ({ logs }) => {
-  const getSuspensao = logs => {
+  const getSuspensao = (logs) => {
     const arr = R.filter(
       R.propEq("status_evento_explicacao", "CODAE suspendeu o produto"),
       logs
@@ -24,7 +24,7 @@ export const MotivoSuspensao = ({ logs }) => {
         <p
           className="justificativa-ficha-produto no-margin"
           dangerouslySetInnerHTML={{
-            __html: suspensao.justificativa
+            __html: suspensao.justificativa,
           }}
         />
       </div>

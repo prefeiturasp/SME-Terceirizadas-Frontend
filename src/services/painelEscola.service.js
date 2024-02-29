@@ -5,7 +5,7 @@ import axios from "./_base";
 
 const SOLICITACOES_ESCOLA = `${API_URL}/escola-solicitacoes`;
 
-export const getSolicitacoesPendentesEscola = async params => {
+export const getSolicitacoesPendentesEscola = async (params) => {
   const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.PENDENTES}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -14,7 +14,7 @@ export const getSolicitacoesPendentesEscola = async params => {
   }
 };
 
-export const getSolicitacoesAutorizadasEscola = async params => {
+export const getSolicitacoesAutorizadasEscola = async (params) => {
   const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.AUTORIZADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -23,7 +23,7 @@ export const getSolicitacoesAutorizadasEscola = async params => {
   }
 };
 
-export const getSolicitacoesNegadasEscola = async params => {
+export const getSolicitacoesNegadasEscola = async (params) => {
   const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.NEGADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -32,7 +32,7 @@ export const getSolicitacoesNegadasEscola = async params => {
   }
 };
 
-export const getSolicitacoesCanceladasEscola = async params => {
+export const getSolicitacoesCanceladasEscola = async (params) => {
   const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.CANCELADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {

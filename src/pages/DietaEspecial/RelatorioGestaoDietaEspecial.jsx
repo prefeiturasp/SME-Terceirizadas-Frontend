@@ -8,12 +8,12 @@ import Page from "components/Shareable/Page/Page";
 import RelatorioGestaoDietaEspecial from "components/screens/DietaEspecial/RelatorioGestaoDietaEspecial";
 import {
   DIETA_ESPECIAL,
-  RELATORIO_GESTAO_DIETA_ESPECIAL
+  RELATORIO_GESTAO_DIETA_ESPECIAL,
 } from "configs/constants";
 
 const atual = {
   href: `/${DIETA_ESPECIAL}/${RELATORIO_GESTAO_DIETA_ESPECIAL}`,
-  titulo: "Relatório de Gestão Dieta Especial"
+  titulo: "Relatório de Gestão Dieta Especial",
 };
 
 export default () => (

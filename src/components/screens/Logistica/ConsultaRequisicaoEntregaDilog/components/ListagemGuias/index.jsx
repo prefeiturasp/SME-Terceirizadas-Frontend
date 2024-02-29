@@ -6,11 +6,16 @@ import { Checkbox } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { Modal } from "react-bootstrap";
 
-export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
+export default ({
+  solicitacao,
+  situacao,
+  arquivaDesarquivaGuias,
+  somenteLeitura,
+}) => {
   const [allChecked, setAllChecked] = useState(false);
   const [selecionados, setSelecionados] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -18,13 +23,13 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
   const [guiaAtual, setGuiaAtual] = useState({});
   const [carregandoModal, setCarregandoModal] = useState(false);
 
-  const guias = solicitacao.guias.filter(x => x.situacao === situacao);
+  const guias = solicitacao.guias.filter((x) => x.situacao === situacao);
 
   const textoBotao = situacao === "ATIVA" ? "Arquivar" : "Desarquivar";
   const textoTitulo =
     situacao === "ATIVA" ? "Guia(s) Ativa(s)" : "Guia(s) Arquivada(s)";
 
-  const checkSolicitacao = guia => {
+  const checkSolicitacao = (guia) => {
     let newSelecionados = [...selecionados];
     if (guia.checked) {
       guia.checked = false;
@@ -43,7 +48,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
 
   const checkAll = () => {
     let newSelecionados = [];
-    guias.forEach(guia => {
+    guias.forEach((guia) => {
       guia.checked = !allChecked;
       if (!allChecked) newSelecionados.push(guia);
     });
@@ -52,13 +57,13 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
   };
 
   const validaBotao = () => {
-    let invalidas = guias.filter(guia =>
+    let invalidas = guias.filter((guia) =>
       ["Aguardando envio", "Aguardando confirmação"].includes(guia.status)
     );
     return invalidas.length > 0 || selecionados.length <= 0;
   };
 
-  const abrirModalGuia = guia => {
+  const abrirModalGuia = (guia) => {
     setGuiaAtual(guia);
     setShowModalGuia(true);
   };
@@ -77,7 +82,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
               <div>Nome da Unidade Educacional</div>
               <div>Status</div>
             </div>
-            {guias.map(guia => {
+            {guias.map((guia) => {
               return (
                 <>
                   <div className="grid-table body-table hand-cursor">
@@ -101,7 +106,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
               );
             })}
             <div className="button-row mt-3">
-              <span className="float-right tooltip-botao ">
+              <span className="float-end tooltip-botao ">
                 <Botao
                   texto={textoBotao}
                   type={BUTTON_TYPE.BUTTON}
@@ -109,7 +114,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                     setShowModal(true);
                   }}
                   style={BUTTON_STYLE.GREEN}
-                  disabled={validaBotao()}
+                  disabled={somenteLeitura || validaBotao()}
                 />
                 <span className="tooltiptext">
                   O botão arquivar será habilitado para guias de remessa
@@ -144,7 +149,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                     <br />
                     {guiaAtual.codigo_unidade}
                   </div>
-                  <div className="col border-left">
+                  <div className="col border-start">
                     <b>Nome Unidade Educacional</b>
                     <br />
                     {guiaAtual.nome_unidade}
@@ -167,7 +172,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                     <br />
                     {guiaAtual.contato_unidade}
                   </div>
-                  <div className="col border-left">
+                  <div className="col border-start">
                     <b>Telefone</b>
                     <br />
                     {guiaAtual.telefone_unidade}
@@ -187,7 +192,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                   </div>
 
                   {guiaAtual.alimentos &&
-                    guiaAtual.alimentos.map(alimento => {
+                    guiaAtual.alimentos.map((alimento) => {
                       return (
                         <>
                           <div className="grid-table body-table">
@@ -214,7 +219,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
               setShowModalGuia(false);
             }}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>
@@ -248,7 +253,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                 );
               }}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               disabled={carregandoModal}
             />
             <Botao
@@ -258,7 +263,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                 setShowModal(false);
               }}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
           </Modal.Footer>
         </Spin>

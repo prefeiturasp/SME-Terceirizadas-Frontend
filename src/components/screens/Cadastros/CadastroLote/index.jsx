@@ -6,7 +6,7 @@ import { bindActionCreators } from "redux";
 import { loadLote } from "../../../../reducers/lote.reducer";
 import { Select } from "../../../Shareable/Select";
 import { InputText } from "../../../Shareable/Input/InputText";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { ModalCadastroLote } from "./components/ModalCadastroLote";
@@ -14,7 +14,7 @@ import {
   getLote,
   criarLote,
   atualizarLote,
-  excluirLote
+  excluirLote,
 } from "../../../../services/lote.service";
 import { renderizarLabelEscola, renderizarLabelSubprefeitura } from "./helper";
 import { extrairUUIDs, getError } from "../../../../helpers/utilities";
@@ -25,7 +25,7 @@ import { BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import {
   CONFIGURACOES,
   CADASTROS,
-  LOTES_CADASTRADOS
+  LOTES_CADASTRADOS,
 } from "../../../../configs/constants";
 
 class CadastroLote extends Component {
@@ -42,7 +42,7 @@ class CadastroLote extends Component {
       uuid: null,
       redirect: false,
       deactivate: true,
-      escolasParaEdicaoCarregadas: false
+      escolasParaEdicaoCarregadas: false,
     };
     this.exibirModal = this.exibirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
@@ -60,7 +60,7 @@ class CadastroLote extends Component {
       subprefeituras,
       location,
       diretoria_regional,
-      getEscolasPorDre
+      getEscolasPorDre,
     } = this.props;
     if (
       lotes !== [] &&
@@ -71,7 +71,7 @@ class CadastroLote extends Component {
       loading
     ) {
       this.setState({
-        loading: false
+        loading: false,
       });
       if (
         meusDados.vinculo_atual.perfil.nome ===
@@ -80,29 +80,30 @@ class CadastroLote extends Component {
           "ADMINISTRADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA"
       ) {
         this.setState({
-          deactivate: false
+          deactivate: false,
         });
       } else {
         this.setState({
-          deactivate: true
+          deactivate: true,
         });
       }
     }
     const urlParams = new URLSearchParams(window.location.search);
+
     const uuid =
       this.props.location && this.props.location.state
         ? this.props.location.state.uuid
         : urlParams.get("uuid");
     if (uuid && !loading && !loteCarregado) {
-      getLote(uuid).then(response => {
+      getLote(uuid).then((response) => {
         if (response.status !== HTTP_STATUS.NOT_FOUND) {
           this.props.reset("loteForm");
           let subprefeiturasSelecionadasNomes = [];
-          response.data.subprefeituras.forEach(subprefeitura => {
+          response.data.subprefeituras.forEach((subprefeitura) => {
             subprefeiturasSelecionadasNomes.push(subprefeitura.nome);
           });
           let escolasSelecionadasNomes = [];
-          response.data.escolas.forEach(escola => {
+          response.data.escolas.forEach((escola) => {
             escolasSelecionadasNomes.push(
               `${escola.codigo_eol} - ${escola.nome} - ${escola.lote.nome}`
             );
@@ -117,7 +118,7 @@ class CadastroLote extends Component {
             escolasSelecionadasNomes,
             escolasSelecionadas: extrairUUIDs(response.data.escolas),
             loteCarregado: true,
-            uuid
+            uuid,
           });
           this.props.loadLote(response.data);
         } else {
@@ -128,8 +129,7 @@ class CadastroLote extends Component {
     }
 
     if (
-      location &&
-      location.state &&
+      ((location && location.state) || uuid) &&
       diretoria_regional &&
       !escolasParaEdicaoCarregadas
     ) {
@@ -140,14 +140,14 @@ class CadastroLote extends Component {
 
   setRedirect() {
     this.setState({
-      redirect: true
+      redirect: true,
     });
   }
 
   renderRedirect = () => {
     if (this.state.redirect) {
       return (
-        <Redirect to={`/${CONFIGURACOES}/${CADASTROS}/${LOTES_CADASTRADOS}`} />
+        <Navigate to={`/${CONFIGURACOES}/${CADASTROS}/${LOTES_CADASTRADOS}`} />
       );
     }
   };
@@ -163,7 +163,7 @@ class CadastroLote extends Component {
   excluirLote() {
     if (window.confirm("Tem certeza que deseja excluir o lote?")) {
       excluirLote(this.state.uuid).then(
-        res => {
+        (res) => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess("Lote excluído com sucesso");
             this.setRedirect();
@@ -174,21 +174,21 @@ class CadastroLote extends Component {
             toastError(`Houve um erro ao excluir o lote: ${res.data}`);
           }
         },
-        function() {
+        function () {
           toastError("Houve um erro ao excluir o lote");
         }
       );
     }
   }
 
-  onDiretoriaRegionalSelected = async value => {
+  onDiretoriaRegionalSelected = async (value) => {
     let { diretoriasRegionais, getEscolasPorDre } = this.props;
     const indice = diretoriasRegionais.findIndex(
-      diretoria_regional => diretoria_regional.uuid === value
+      (diretoria_regional) => diretoria_regional.uuid === value
     );
     this.setState({
       diretoria_regional: diretoriasRegionais[indice].nome,
-      carregandoEscolas: true
+      carregandoEscolas: true,
     });
     await getEscolasPorDre(value);
     this.setState({ escolasSelecionadas: [], escolasSelecionadasNomes: [] });
@@ -197,22 +197,22 @@ class CadastroLote extends Component {
   onSubprefeiturasSelected(values) {
     let subprefeituras = this.props.subprefeituras;
     let subprefeiturasSelecionadasNomes = [];
-    values.forEach(value => {
+    values.forEach((value) => {
       const indice = subprefeituras.findIndex(
-        subprefeitura => subprefeitura.value === value
+        (subprefeitura) => subprefeitura.value === value
       );
       subprefeiturasSelecionadasNomes.push(subprefeituras[indice].label);
     });
     this.setState({
       subprefeiturasSelecionadas: values,
-      subprefeiturasSelecionadasNomes
+      subprefeiturasSelecionadasNomes,
     });
   }
 
   onTipoGestaoSelected(value) {
     let tiposGestao = this.props.tiposGestao;
     const indice = tiposGestao.findIndex(
-      tipo_gestao => tipo_gestao.uuid === value
+      (tipo_gestao) => tipo_gestao.uuid === value
     );
     this.setState({ tipo_gestao: tiposGestao[indice].nome });
   }
@@ -220,8 +220,8 @@ class CadastroLote extends Component {
   onEscolasSelected(values) {
     const escolas = this.props.escolas;
     let escolasSelecionadasNomes = [];
-    values.forEach(value => {
-      const indice = escolas.findIndex(escola => escola.value === value);
+    values.forEach((value) => {
+      const indice = escolas.findIndex((escola) => escola.value === value);
       escolasSelecionadasNomes.push(escolas[indice].label);
     });
     this.setState({ escolasSelecionadas: values, escolasSelecionadasNomes });
@@ -229,7 +229,7 @@ class CadastroLote extends Component {
 
   resetForm() {
     ["nome", "iniciais", "diretoria_regional", "tipo_gestao"].forEach(
-      element => {
+      (element) => {
         this.props.change(element, "");
       }
     );
@@ -237,7 +237,7 @@ class CadastroLote extends Component {
       subprefeiturasSelecionadas: [],
       subprefeiturasSelecionadasNomes: [],
       escolasSelecionadas: [],
-      escolasSelecionadasNomes: []
+      escolasSelecionadasNomes: [],
     });
   }
 
@@ -248,7 +248,7 @@ class CadastroLote extends Component {
     values.tipo_gestao = this.props.tipo_gestao;
     if (!this.state.uuid) {
       criarLote(JSON.stringify(values)).then(
-        res => {
+        (res) => {
           if (res.status === HTTP_STATUS.CREATED) {
             toastSuccess("Lote salvo com sucesso");
             this.setRedirect();
@@ -257,14 +257,14 @@ class CadastroLote extends Component {
             toastError(`Houve um erro ao salvar o lote: ${getError(res.data)}`);
           }
         },
-        function() {
+        function () {
           toastError("Houve um erro ao salvar o lote");
         }
       );
       this.fecharModal();
     } else {
       atualizarLote(JSON.stringify(values), this.state.uuid).then(
-        res => {
+        (res) => {
           if (res.status === HTTP_STATUS.OK) {
             toastSuccess("Lote atualizado com sucesso");
             this.setRedirect();
@@ -275,7 +275,7 @@ class CadastroLote extends Component {
             );
           }
         },
-        function() {
+        function () {
           toastError("Houve um erro ao atualizar o lote");
         }
       );
@@ -291,7 +291,7 @@ class CadastroLote extends Component {
       tiposGestao,
       subprefeituras,
       nome,
-      iniciais
+      iniciais,
     } = this.props;
     const {
       escolasSelecionadas,
@@ -302,7 +302,7 @@ class CadastroLote extends Component {
       diretoria_regional,
       tipo_gestao,
       uuid,
-      deactivate
+      deactivate,
     } = this.state;
     return (
       <div className="cadastro pt-3">
@@ -322,7 +322,7 @@ class CadastroLote extends Component {
         <form onSubmit={handleSubmit}>
           <div className="card">
             <div className="card-body">
-              <div className="card-title font-weight-bold">Dados do Lote</div>
+              <div className="card-title fw-bold">Dados do Lote</div>
               <div className="row pt-3">
                 {!deactivate && (
                   <div className="col-12">
@@ -343,7 +343,7 @@ class CadastroLote extends Component {
                     label="DRE"
                     component={Select}
                     name="diretoria_regional"
-                    onChange={event =>
+                    onChange={(event) =>
                       this.onDiretoriaRegionalSelected(event.target.value)
                     }
                     disabled={deactivate}
@@ -356,7 +356,7 @@ class CadastroLote extends Component {
               <div className="row pt-3">
                 {!deactivate && (
                   <div className="col-8">
-                    <label className="label font-weight-normal pb-3">
+                    <label className="label fw-normal pb-3">
                       Subprefeitura
                     </label>
                     {subprefeituras.length ? (
@@ -368,7 +368,7 @@ class CadastroLote extends Component {
                         valueRenderer={(selected, options) =>
                           renderizarLabelSubprefeitura(selected, options)
                         }
-                        onSelectedChanged={value =>
+                        onSelectedChanged={(value) =>
                           this.onSubprefeiturasSelected(value)
                         }
                         overrideStrings={{
@@ -376,7 +376,7 @@ class CadastroLote extends Component {
                           selectSomeItems: "Selecione",
                           allItemsAreSelected:
                             "Todos os itens estão selecionados",
-                          selectAll: "Todos"
+                          selectAll: "Todos",
                         }}
                       />
                     ) : (
@@ -414,7 +414,7 @@ class CadastroLote extends Component {
                     component={Select}
                     label="Tipo de Gestão"
                     name="tipo_gestao"
-                    onChange={event =>
+                    onChange={(event) =>
                       this.onTipoGestaoSelected(event.target.value)
                     }
                     disabled={deactivate}
@@ -427,7 +427,7 @@ class CadastroLote extends Component {
               <div className="row pt-3">
                 {!deactivate && (
                   <div className="col-12">
-                    <label className="label font-weight-normal pb-3">
+                    <label className="label fw-normal pb-3">
                       Unidades Específicas do Lote
                     </label>
                     <Field
@@ -438,13 +438,15 @@ class CadastroLote extends Component {
                       valueRenderer={(selected, options) =>
                         renderizarLabelEscola(selected, options)
                       }
-                      onSelectedChanged={value => this.onEscolasSelected(value)}
+                      onSelectedChanged={(value) =>
+                        this.onEscolasSelected(value)
+                      }
                       overrideStrings={{
                         search: "Busca",
                         selectSomeItems: "Selecione",
                         allItemsAreSelected:
                           "Todos os itens estão selecionados",
-                        selectAll: "Todos"
+                        selectAll: "Todos",
                       }}
                       disabled={escolas.length ? false : true}
                     />
@@ -469,7 +471,7 @@ class CadastroLote extends Component {
               )}
               <div className="row mt-5">
                 {!deactivate && (
-                  <div className="col-12 text-right">
+                  <div className="col-12 text-end">
                     {!uuid && (
                       <Botao
                         texto="Limpar Campos"
@@ -492,7 +494,7 @@ class CadastroLote extends Component {
                     <Botao
                       texto={"Salvar"}
                       onClick={handleSubmit(() => this.exibirModal())}
-                      className="ml-3"
+                      className="ms-3"
                       type={BUTTON_STYLE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                     />
@@ -509,28 +511,25 @@ class CadastroLote extends Component {
 
 const loteForm = reduxForm({
   form: "loteForm",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(CadastroLote);
 const selector = formValueSelector("loteForm");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     initialValues: state.loteForm.data,
     diretoria_regional: selector(state, "diretoria_regional"),
     nome: selector(state, "nome"),
     iniciais: selector(state, "iniciais"),
-    tipo_gestao: selector(state, "tipo_gestao")
+    tipo_gestao: selector(state, "tipo_gestao"),
   };
 };
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      loadLote
+      loadLote,
     },
     dispatch
   );
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(loteForm);
+export default connect(mapStateToProps, mapDispatchToProps)(loteForm);

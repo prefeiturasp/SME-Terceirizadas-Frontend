@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Dropdown } from "antd";
 import Botao from "../Botao";
 import { BUTTON_STYLE } from "../Botao/constants";
@@ -11,7 +11,8 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 export default () => {
   const [notificacoes, setNotificacoes] = useState([]);
   const [quantidade, setQuantidade] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const buscarNotificacoes = async () => {
     const params = gerarParametrosConsulta({ page_size: 4 });
@@ -21,15 +22,15 @@ export default () => {
     setNotificacoes(notifsResponse.data.results);
   };
 
-  const goToNotificacoes = notificacao => {
+  const goToNotificacoes = (notificacao) => {
     let path = `/${NOTIFICACOES}/${
       notificacao ? `?uuid=${notificacao.uuid}` : ""
     }`;
-    if (history.location.pathname.includes(`/${NOTIFICACOES}/`)) {
-      history.push("/");
-      setTimeout(() => history.push(path), 10);
+    if (location.pathname.includes(`/${NOTIFICACOES}/`)) {
+      navigate("/");
+      setTimeout(() => navigate(path), 10);
     } else {
-      history.push(path);
+      navigate(path);
     }
   };
 
@@ -41,7 +42,7 @@ export default () => {
     <div className="menu-notificacoes">
       <table className="table mb-0">
         <tbody>
-          {notificacoes.map((notificacao, index) => {
+          {notificacoes?.map((notificacao, index) => {
             return (
               <tr
                 onClick={() => goToNotificacoes(notificacao)}
@@ -58,7 +59,7 @@ export default () => {
                 >
                   {notificacao.lido ? "Lida" : "Não Lida"}
                 </td>
-                <td className="py-1 px-2 align-middle w-25 text-right">
+                <td className="py-1 px-2 align-middle w-25 text-end">
                   {notificacao.criado_em}
                 </td>
               </tr>

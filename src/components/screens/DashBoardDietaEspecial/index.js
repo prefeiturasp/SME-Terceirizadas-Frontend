@@ -7,7 +7,9 @@ import {
   dataAtual,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhEmpresaTerceirizada,
-  usuarioEhEscolaTerceirizada
+  usuarioEhEscolaTerceirizada,
+  usuarioEscolaEhGestaoDireta,
+  usuarioEscolaEhGestaoParceira,
 } from "helpers/utilities";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import { getMeusLotes } from "services/lote.service";
@@ -15,7 +17,7 @@ import CardMatriculados from "components/Shareable/CardMatriculados";
 import CardBody from "components/Shareable/CardBody";
 import CardStatusDeSolicitacao, {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 import CardAtalho from "components/Shareable/CardAtalho";
@@ -29,7 +31,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     getDietaEspecialAutorizadasTemporariamente,
     getDietaEspecialInativasTemporariamente,
     getDietaEspecialInativas,
-    getDietaEspecialAguardandoVigencia
+    getDietaEspecialAguardandoVigencia,
   } = props;
 
   const LIMIT = 6;
@@ -37,18 +39,18 @@ export const DashboardDietaEspecial = ({ ...props }) => {
 
   const { meusDados } = useContext(MeusDadosContext);
 
-  const [instituicao, setInstituicao] = useState(null);
-  const [aguardandoVigencia, setAguardandoVigencia] = useState(null);
-  const [aguardandoAutorizacao, setAguardandoAutorizacao] = useState(null);
-  const [autorizadas, setAutorizadas] = useState(null);
-  const [autorizadasTemporariamente, setAutorizadasTemporariamente] = useState(
-    null
-  );
-  const [negadas, setNegadas] = useState(null);
-  const [canceladas, setCanceladas] = useState(null);
-  const [inativas, setInativas] = useState(null);
-  const [inativasTemporariamente, setInativasTemporariamente] = useState(null);
-  const [listaLotes, setListaLotes] = useState(null);
+  const [instituicao, setInstituicao] = useState();
+  const [aguardandoVigencia, setAguardandoVigencia] = useState();
+  const [aguardandoAutorizacao, setAguardandoAutorizacao] = useState();
+  const [autorizadas, setAutorizadas] = useState();
+  const [autorizadasTemporariamente, setAutorizadasTemporariamente] =
+    useState();
+  const [negadas, setNegadas] = useState();
+  const [canceladas, setCanceladas] = useState();
+  const [inativas, setInativas] = useState();
+  const [inativasTemporariamente, setInativasTemporariamente] = useState();
+  const [listaLotes, setListaLotes] = useState();
+
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -66,14 +68,32 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     !inativasTemporariamente;
 
   const EXIBE_ATALHOS_SOLICITACOES =
-    usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
+    usuarioEhEscolaTerceirizadaDiretor() ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEscolaEhGestaoDireta() ||
+    usuarioEscolaEhGestaoParceira();
 
   const getSolicitacoesAsync = async (params = null) => {
     setLoading(true);
-    const responsePendenteAutorizacao = await getDietaEspecialPendenteAutorizacao(
-      instituicao.uuid,
-      params
-    );
+
+    const [
+      responsePendenteAutorizacao,
+      responseAutorizadas,
+      responseNegadas,
+      responseCanceladas,
+      responseInativas,
+      responseInativasTemporariamente,
+      responseAutorizadasTemporariamente,
+    ] = await Promise.all([
+      getDietaEspecialPendenteAutorizacao(instituicao.uuid, params),
+      getDietaEspecialAutorizadas(instituicao.uuid, params),
+      getDietaEspecialNegadas(instituicao.uuid, params),
+      getDietaEspecialCanceladas(instituicao.uuid, params),
+      getDietaEspecialInativas(instituicao.uuid, params),
+      getDietaEspecialInativasTemporariamente(instituicao.uuid, params),
+      getDietaEspecialAutorizadasTemporariamente(instituicao.uuid, params),
+    ]);
+
     if (responsePendenteAutorizacao.status === HTTP_STATUS.OK) {
       setAguardandoAutorizacao(
         ajustarFormatoLog(
@@ -86,10 +106,6 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       setErro("Erro ao carregar solicitações aguardando autorização.");
     }
 
-    const responseAutorizadas = await getDietaEspecialAutorizadas(
-      instituicao.uuid,
-      params
-    );
     if (responseAutorizadas.status === HTTP_STATUS.OK) {
       setAutorizadas(
         ajustarFormatoLog(responseAutorizadas.data.results, "autorizadas")
@@ -99,20 +115,12 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       setErro("Erro ao carregar solicitações autorizadas.");
     }
 
-    const responseNegadas = await getDietaEspecialNegadas(
-      instituicao.uuid,
-      params
-    );
     if (responseNegadas.status === HTTP_STATUS.OK) {
       setNegadas(ajustarFormatoLog(responseNegadas.data.results, "negadas"));
     } else {
       setErro("Erro ao carregar solicitações negadas.");
     }
 
-    const responseCanceladas = await getDietaEspecialCanceladas(
-      instituicao.uuid,
-      params
-    );
     if (responseCanceladas.status === HTTP_STATUS.OK) {
       setCanceladas(
         ajustarFormatoLog(responseCanceladas.data.results, "canceladas")
@@ -121,20 +129,12 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       setErro("Erro ao carregar solicitações canceladas.");
     }
 
-    const responseInativas = await getDietaEspecialInativas(
-      instituicao.uuid,
-      params
-    );
     if (responseInativas.status === HTTP_STATUS.OK) {
       setInativas(ajustarFormatoLog(responseInativas.data.results, "inativas"));
     } else {
       setErro("Erro ao carregar solicitações inativas.");
     }
 
-    const responseInativasTemporariamente = await getDietaEspecialInativasTemporariamente(
-      instituicao.uuid,
-      params
-    );
     if (responseInativasTemporariamente.status === HTTP_STATUS.OK) {
       setInativasTemporariamente(
         ajustarFormatoLog(
@@ -146,10 +146,6 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       setErro("Erro ao carregar solicitações inativas temporariamente.");
     }
 
-    const responseAutorizadasTemporariamente = await getDietaEspecialAutorizadasTemporariamente(
-      instituicao.uuid,
-      params
-    );
     if (responseAutorizadasTemporariamente.status === HTTP_STATUS.OK) {
       setAutorizadasTemporariamente(
         ajustarFormatoLog(
@@ -166,10 +162,8 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhEmpresaTerceirizada()
     ) {
-      const responseAguardandoVigencia = await getDietaEspecialAguardandoVigencia(
-        instituicao.uuid,
-        params
-      );
+      const responseAguardandoVigencia =
+        await getDietaEspecialAguardandoVigencia(instituicao.uuid, params);
       if (responseAguardandoVigencia.status === HTTP_STATUS.OK) {
         setAguardandoVigencia(
           ajustarFormatoLog(
@@ -216,7 +210,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
 
   let typingTimeout = null;
 
-  const onPesquisaChanged = values => {
+  const onPesquisaChanged = (values) => {
     clearTimeout(typingTimeout);
 
     typingTimeout = setTimeout(async () => {
@@ -230,7 +224,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     }, 1000);
   };
 
-  const contadorDietas = title => {
+  const contadorDietas = (title) => {
     if (!usuarioEhCoordenadorNutriCODAE()) return title;
     const count = title === "Autorizadas" ? countAutorizadas : countRecebidas;
     return `${title}${` (${count}) `}`;
@@ -250,12 +244,12 @@ export const DashboardDietaEspecial = ({ ...props }) => {
               <CardBody
                 titulo={"Acompanhamento de solicitações dieta especial"}
                 dataAtual={dataAtual()}
-                onChange={values => onPesquisaChanged(values)}
+                onChange={(values) => onPesquisaChanged(values)}
                 listaLotes={listaLotes}
                 listaStatus={[
                   { nome: "Conferência Status", uuid: "" },
                   { nome: "Conferida", uuid: "1" },
-                  { nome: "Não Conferida", uuid: "0" }
+                  { nome: "Não Conferida", uuid: "0" },
                 ]}
                 loadingDietas={LOADING || loading}
               >

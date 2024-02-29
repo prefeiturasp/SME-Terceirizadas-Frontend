@@ -11,8 +11,8 @@ describe("teste InputText", () => {
     const props = {
       meta: {
         touched: true,
-        error: "This field is required"
-      }
+        error: "This field is required",
+      },
     };
     inputWrapper = mount(
       <InputText
@@ -56,8 +56,8 @@ describe("teste InputText warning message", () => {
     const props = {
       meta: {
         touched: true,
-        warning: "Password invalid"
-      }
+        warning: "Password invalid",
+      },
     };
     inputWrapper = mount(
       <InputText

@@ -5,7 +5,7 @@ import { Field, Form } from "react-final-form";
 import {
   peloMenosUmCaractere,
   required,
-  maxLengthProduto
+  maxLengthProduto,
 } from "helpers/fieldValidators";
 import CKEditorField from "components/Shareable/CKEditorField";
 import InputText from "components/Shareable/Input/InputText";
@@ -13,7 +13,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
 import { cancelaHomologacao } from "services/produto.service";
@@ -29,16 +29,16 @@ export default class ModalCancelarHomologacaoProduto extends Component {
       const dadosIniciais = {
         nome_produto: produto.nome,
         marca: produto.marca.nome,
-        fabricante: produto.fabricante.nome
+        fabricante: produto.fabricante.nome,
       };
       return dadosIniciais;
     }
     return {};
   };
 
-  onSubmit = async values => {
+  onSubmit = async (values) => {
     const response = await cancelaHomologacao(this.props.idHomologacao, {
-      justificativa: values.justificativa
+      justificativa: values.justificativa,
     });
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Cancelamento enviado com sucesso.");
@@ -107,11 +107,11 @@ export default class ModalCancelarHomologacaoProduto extends Component {
                       label="Justificativa"
                       name="justificativa"
                       required
-                      validate={value => {
+                      validate={(value) => {
                         for (let validator of [
                           peloMenosUmCaractere,
                           required,
-                          maxLength500
+                          maxLength500,
                         ]) {
                           const erro = validator(value);
                           if (erro) return erro;
@@ -130,13 +130,13 @@ export default class ModalCancelarHomologacaoProduto extends Component {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Enviar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                     />
                   </div>

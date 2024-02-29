@@ -11,7 +11,7 @@ export default class ManagedInputFileField extends Component {
     super(props);
 
     this.state = {
-      descricaoProtocolo: ""
+      descricaoProtocolo: "",
     };
 
     this.removeFile = this.removeFile.bind(this);
@@ -20,13 +20,13 @@ export default class ManagedInputFileField extends Component {
 
   removeFile(index) {
     const {
-      input: { onChange, value }
+      input: { onChange, value },
     } = this.props;
     onChange(value.length === 1 ? "" : value.splice(index, 1));
   }
   setFiles(files) {
     this.setState({
-      descricaoProtocolo: ""
+      descricaoProtocolo: "",
     });
     this.props.input.onChange(files);
   }

@@ -10,7 +10,7 @@ import { STATUS_CODAE_QUESTIONADO } from "configs/constants";
 import {
   updateProduto,
   excluirImagemDoProduto,
-  alteracaoProdutoHomologado
+  alteracaoProdutoHomologado,
 } from "services/produto.service";
 import { getError } from "helpers/utilities";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -18,14 +18,14 @@ import "./styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
-import { withRouter } from "react-router-dom";
+import withNavigate from "components/Shareable/withNavigate";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import ModalConfirmacaoSimNao from "components/Shareable/ModalConfirmacaoSimNao";
 import {
   getUnidadesDeMedidaProduto,
-  getEmbalagensProduto
+  getEmbalagensProduto,
 } from "services/produto.service";
 
 class WizardFormTerceiraPagina extends Component {
@@ -39,7 +39,7 @@ class WizardFormTerceiraPagina extends Component {
       mostraModalConfimacao: false,
       formValues: undefined,
       especificacoesIniciais: this.props.produto.especificacoes,
-      status_codae_questionado: false
+      status_codae_questionado: false,
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -50,7 +50,7 @@ class WizardFormTerceiraPagina extends Component {
     const responseEmbalagens = await getEmbalagensProduto();
     this.setState({
       unidades_de_medida: reponseUnidades.data.results,
-      embalagens: responseEmbalagens.data.results
+      embalagens: responseEmbalagens.data.results,
     });
   };
 
@@ -60,7 +60,7 @@ class WizardFormTerceiraPagina extends Component {
     }
     if (this.props.produto.homologacao.status === STATUS_CODAE_QUESTIONADO) {
       this.setState({
-        status_codae_questionado: true
+        status_codae_questionado: true,
       });
     }
     await this.updateOpcoesItensCadastrados();
@@ -70,7 +70,7 @@ class WizardFormTerceiraPagina extends Component {
       change("numero_registro", valoresterceiroForm.numero_registro);
       change("tipo", valoresterceiroForm.tipo);
       let especificacoes = valoresterceiroForm.especificacoes.length
-        ? valoresterceiroForm.especificacoes.map(especificacao => {
+        ? valoresterceiroForm.especificacoes.map((especificacao) => {
             return {
               volume: especificacao.volume,
               unidade_de_medida: especificacao.unidade_de_medida
@@ -80,7 +80,7 @@ class WizardFormTerceiraPagina extends Component {
               embalagem_produto: especificacao.embalagem_produto
                 ? especificacao.embalagem_produto.uuid ||
                   especificacao.embalagem_produto
-                : undefined
+                : undefined,
             };
           })
         : [{}];
@@ -92,11 +92,11 @@ class WizardFormTerceiraPagina extends Component {
       change("numero_registro", produto.numero_registro);
       change("tipo", produto.tipo);
       let especificacoes = produto.especificacoes.length
-        ? produto.especificacoes.map(especificacao => {
+        ? produto.especificacoes.map((especificacao) => {
             return {
               volume: especificacao.volume,
               unidade_de_medida: especificacao.unidade_de_medida.uuid,
-              embalagem_produto: especificacao.embalagem_produto.uuid
+              embalagem_produto: especificacao.embalagem_produto.uuid,
             };
           })
         : [{}];
@@ -115,33 +115,33 @@ class WizardFormTerceiraPagina extends Component {
   }
 
   setFiles(files) {
-    const img = files.map(imagem => {
+    const img = files.map((imagem) => {
       return {
         arquivo: imagem.base64,
-        nome: imagem.nome
+        nome: imagem.nome,
       };
     });
     this.setState({ arquivos: img });
   }
 
-  onSubmit = values => {
+  onSubmit = (values) => {
     this.setState({
       mostraModalConfimacao: true,
-      formValues: values
+      formValues: values,
     });
   };
 
-  enviaDados = async values => {
+  enviaDados = async (values) => {
     const { valoresSegundoForm, produto } = this.props;
     values["uuid"] = produto.uuid;
     values["cadastro_atualizado"] = true;
     values["cadastro_finalizado"] = false;
     if (values.anexos) {
-      values["imagens"] = values.anexos.map(imagem => {
+      values["imagens"] = values.anexos.map((imagem) => {
         if (imagem.base64) {
           return {
             arquivo: imagem.base64,
-            nome: imagem.nome
+            nome: imagem.nome,
           };
         }
         return imagem;
@@ -150,7 +150,7 @@ class WizardFormTerceiraPagina extends Component {
     values["informacoes_nutricionais"] =
       valoresSegundoForm["informacoes_nutricionais"];
     const arrayKeys = Object.keys(values);
-    arrayKeys.forEach(item => {
+    arrayKeys.forEach((item) => {
       item.includes("informacao=") && delete values[item];
     });
     if (values["eh_para_alunos_com_dieta"] === "1") {
@@ -169,6 +169,9 @@ class WizardFormTerceiraPagina extends Component {
     if (values["aditivos"] === null) {
       values["aditivos"] = "";
     }
+    if (!values["numero_registro"]) {
+      values["numero_registro"] = "";
+    }
     const endpoint =
       this.props.homologacao.esta_homologado &&
       this.props.homologacao.status !== "CODAE_QUESTIONADO"
@@ -179,19 +182,19 @@ class WizardFormTerceiraPagina extends Component {
       if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO)
         toastSuccess("Correção efetuada com sucesso.");
       else toastSuccess("Nova homologação solicitada.");
-      this.props.history.push("/painel-gestao-produto");
+      this.props.navigate("/painel-gestao-produto");
     } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
       toastError(getError(response.data));
     } else {
       toastError(`Erro ao atualizar homologação`);
-      this.props.history.push("/painel-gestao-produto");
+      this.props.navigate("/painel-gestao-produto");
     }
   };
 
   removerAnexo = async (uuid, index) => {
     if (window.confirm("Deseja remover este anexo do produto?")) {
       excluirImagemDoProduto(uuid)
-        .then(response => {
+        .then((response) => {
           if (response.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess("Arquivo excluído do produto com sucesso!");
             let produto = this.state.produto;
@@ -208,13 +211,8 @@ class WizardFormTerceiraPagina extends Component {
   };
 
   render() {
-    const {
-      handleSubmit,
-      pristine,
-      previousPage,
-      submitting,
-      valuesForm
-    } = this.props;
+    const { handleSubmit, pristine, previousPage, submitting, valuesForm } =
+      this.props;
     const { mostraModalConfimacao } = this.state;
     return (
       <form onSubmit={handleSubmit} className="cadastro-produto-step3">
@@ -339,7 +337,7 @@ class WizardFormTerceiraPagina extends Component {
             <Botao
               texto={"Cancelar"}
               type={BUTTON_TYPE.BUTTON}
-              className="ml-3"
+              className="ms-3"
               style={BUTTON_STYLE.GREEN_OUTLINE}
               onClick={() => {
                 this.props.showModal(true);
@@ -348,7 +346,7 @@ class WizardFormTerceiraPagina extends Component {
           )}
           <Botao
             texto={"Enviar"}
-            className="ml-3"
+            className="ms-3"
             type={BUTTON_TYPE.SUBMIT}
             style={BUTTON_STYLE.GREEN_OUTLINE}
             disabled={pristine || submitting}
@@ -363,5 +361,5 @@ class WizardFormTerceiraPagina extends Component {
 export default reduxForm({
   form: "atualizacaoProduto",
   destroyOnUnmount: false,
-  forceUnregisterOnUnmount: true
-})(withRouter(WizardFormTerceiraPagina));
+  forceUnregisterOnUnmount: true,
+})(withNavigate(WizardFormTerceiraPagina));

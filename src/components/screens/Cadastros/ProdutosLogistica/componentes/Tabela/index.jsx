@@ -1,18 +1,17 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import "./style.scss";
 import { CADASTROS, CONFIGURACOES, EDICAO_PRODUTOS } from "configs/constants";
 
 const Tabela = ({ produtos }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const editarProduto = produto =>
-    history.push({
-      pathname: `/${CONFIGURACOES}/${CADASTROS}/${EDICAO_PRODUTOS}`,
+  const editarProduto = (produto) =>
+    navigate(`/${CONFIGURACOES}/${CADASTROS}/${EDICAO_PRODUTOS}`, {
       state: {
-        produto: produto
-      }
+        produto: produto,
+      },
     });
 
   return (
@@ -25,7 +24,7 @@ const Tabela = ({ produtos }) => {
           <div>Data do Cadastro</div>
           <div>Ações</div>
         </div>
-        {produtos.map(produto => {
+        {produtos.map((produto) => {
           return (
             <>
               <div key={produto.uuid} className="grid-table body-table">

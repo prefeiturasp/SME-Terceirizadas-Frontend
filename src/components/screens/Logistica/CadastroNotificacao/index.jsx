@@ -9,23 +9,23 @@ import {
   criarNotificacao,
   editarNotificacao,
   getGuiaDetalhe,
-  getGuiasNaoNotificadas
+  getGuiasNaoNotificadas,
 } from "services/logistica.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalDesvincular from "./components/ModalDesvincular";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { GUIAS_NOTIFICACAO, LOGISTICA } from "configs/constants";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./styles.scss";
 import ModalDetalharGuia from "./components/ModalDetalharGuia";
 import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [carregando, setCarregando] = useState(false);
   const [guias, setGuias] = useState();
   const [filtros, setFiltros] = useState();
@@ -48,13 +48,13 @@ export default () => {
     }
   }, [filtros]);
 
-  const buscarGuias = async page => {
+  const buscarGuias = async (page) => {
     setCarregando(true);
 
     if (!showVinculadas) {
       const params = {
         page: page,
-        ...filtros
+        ...filtros,
       };
       if (notificacao) {
         params["notificacao_uuid"] = notificacao.uuid;
@@ -77,26 +77,26 @@ export default () => {
     setCarregando(false);
   };
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarGuias(page);
     setPage(page);
   };
 
-  const vincularGuia = guia => {
+  const vincularGuia = (guia) => {
     setGuiasVinculadas([...guiasVinculadas, guia]);
     toastSuccess("Guia Vinculada com sucesso!");
   };
 
-  const desvincularGuia = guia => {
+  const desvincularGuia = (guia) => {
     setGuiasVinculadas(
-      guiasVinculadas.filter(g => g.numero_guia !== guia.numero_guia)
+      guiasVinculadas.filter((g) => g.numero_guia !== guia.numero_guia)
     );
     toastSuccess("Guia desvinculada com sucesso!");
     setModal(false);
     setGuiaModal(false);
   };
 
-  const buscarDetalheGuia = async guia => {
+  const buscarDetalheGuia = async (guia) => {
     let response;
     try {
       setCarregando(true);
@@ -112,7 +112,7 @@ export default () => {
   const salvarNotificacao = async () => {
     const payload = {
       empresa,
-      guias: guiasVinculadas.map(guia => guia.uuid)
+      guias: guiasVinculadas.map((guia) => guia.uuid),
     };
     if (notificacao) {
       const response = await editarNotificacao(notificacao.uuid, payload);
@@ -123,19 +123,19 @@ export default () => {
       const response = await criarNotificacao(payload);
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Notificação criada com sucesso");
-        history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
+        navigate(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
       }
     }
   };
 
-  const botaoAcao = guia => {
-    if (guia && guiasVinculadas.find(g => g.uuid === guia.uuid)) {
+  const botaoAcao = (guia) => {
+    if (guia && guiasVinculadas.find((g) => g.uuid === guia.uuid)) {
       return (
         <Botao
           texto="Excluir Vínculo"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => setModal(guia)}
         />
       );
@@ -145,7 +145,7 @@ export default () => {
           texto="Vincular Guia"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             setGuiaModal(false);
             vincularGuia(guia);
@@ -191,7 +191,7 @@ export default () => {
                 guias={guias}
                 guiasVinculadas={guiasVinculadas}
                 vincularGuia={vincularGuia}
-                desvincularGuia={guia => {
+                desvincularGuia={(guia) => {
                   setModal(guia);
                 }}
                 showVinculadas={showVinculadas}
@@ -199,7 +199,7 @@ export default () => {
               />
               <div className="row">
                 <div className="col-12 pb-3">
-                  <span className="green-dot mr-1" />
+                  <span className="green-dot me-1" />
                   {guiasVinculadas.length} Guia(s) já vinculada(s) a
                   notificação.
                 </div>
@@ -228,7 +228,7 @@ export default () => {
                     texto="Salvar Rascunho"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     onClick={salvarNotificacao}
                     disabled={guiasVinculadas.length === 0}
                   />

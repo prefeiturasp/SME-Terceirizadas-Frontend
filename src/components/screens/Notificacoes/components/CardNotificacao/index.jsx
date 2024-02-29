@@ -11,9 +11,9 @@ export default ({
   handleChangeMarcarComoLida,
   clickBtnNotificacoes,
   toggleBtnNotificacoes,
-  index
+  index,
 }) => {
-  const retornaClasseStatus = notificacao => {
+  const retornaClasseStatus = (notificacao) => {
     if (notificacao.tipo === "Pendência" && !notificacao.resolvido) {
       return "card-header-notificacao-pendente";
     } else if (notificacao.lido) {
@@ -49,16 +49,16 @@ export default ({
               </div>
             </div>
           </div>
-          <div className="col-2 align-self-center text-right">
+          <div className="col-2 align-self-center text-end">
             <p className="mb-0">{notificacao.criado_em}</p>
           </div>
           <div className="col-1 align-self-center">
             <button
               onClick={() => toggleBtnNotificacoes(notificacao.uuid)}
-              className="btn btn-link btn-block text-left px-0"
+              className="btn btn-link btn-block text-start px-0"
               type="button"
-              data-toggle="collapse"
-              data-target={`#collapse_${notificacao.uuid}`}
+              data-bs-toggle="collapse"
+              data-bs-target={`#collapse_${notificacao.uuid}`}
               aria-expanded="true"
               aria-controls={`collapse_${notificacao.uuid}`}
             >
@@ -80,14 +80,14 @@ export default ({
         id={`collapse_${notificacao.uuid}`}
         className="collapse"
         aria-labelledby="headingOne"
-        data-parent="#accordionNotificacoes"
+        data-bs-parent="#accordionNotificacoes"
       >
         <div className="card-body">
           <div className="row">
             <div
               className="col-12 descricao-notificacao"
               dangerouslySetInnerHTML={{
-                __html: notificacao.descricao
+                __html: notificacao.descricao,
               }}
             />
           </div>
@@ -99,7 +99,7 @@ export default ({
                   style={{
                     fontSize: "16px",
                     paddingTop: "10px",
-                    paddingLeft: "12px"
+                    paddingLeft: "12px",
                   }}
                   onChange={() => {
                     handleChangeMarcarComoLida(notificacao, index);

@@ -7,14 +7,14 @@ import { INCLUSAO_ALIMENTACAO, TERCEIRIZADA } from "../../../configs/constants";
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 
 const anteriores = [
   {
     href: `/${TERCEIRIZADA}/${INCLUSAO_ALIMENTACAO}`,
-    titulo: "Inclusões de Alimentação"
-  }
+    titulo: "Inclusões de Alimentação",
+  },
 ];
 
 export default () => (

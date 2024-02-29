@@ -7,12 +7,12 @@ import { Botao } from "../../../../../Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "../../../../../Shareable/Botao/constants";
-import { withRouter } from "react-router-dom";
+import withNavigate from "components/Shareable/withNavigate";
 import {
   toastSuccess,
-  toastError
+  toastError,
 } from "../../../../../Shareable/Toast/dialogs";
 import { getError } from "../../../../../../helpers/utilities";
 import { escolaInativaDietaEspecial } from "../../../../../../services/dietaEspecial.service";
@@ -25,7 +25,7 @@ export class SolicitacaoVigente extends Component {
       submitted: false,
       files: null,
       solicitacoesVigentes: null,
-      titulo: "Dietas Ativas/Inativas"
+      titulo: "Dietas Ativas/Inativas",
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -73,12 +73,12 @@ export class SolicitacaoVigente extends Component {
 
   onSubmit(values) {
     this.setState({ submitted: true });
-    escolaInativaDietaEspecial(values.uuid, values).then(response => {
+    escolaInativaDietaEspecial(values.uuid, values).then((response) => {
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Cancelamento de solicitação realizada com sucesso.");
         this.setState({
           submitted: false,
-          solicitacoesVigentes: null
+          solicitacoesVigentes: null,
         });
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
         toastError(getError(response.data));
@@ -93,18 +93,18 @@ export class SolicitacaoVigente extends Component {
   }
 
   naoEhDietaAlterada(solicitacoes, sol) {
-    return sol.ativo || !solicitacoes.some(s => s.dieta_alterada === sol.id);
+    return sol.ativo || !solicitacoes.some((s) => s.dieta_alterada === sol.id);
   }
 
   filtrarSolicitacoesAtivasEInativas(solicitacoes) {
     return solicitacoes
-      .filter(sol => this.naoEhDietaAlterada(solicitacoes, sol))
-      .filter(sol =>
+      .filter((sol) => this.naoEhDietaAlterada(solicitacoes, sol))
+      .filter((sol) =>
         [
           statusEnum.CODAE_AUTORIZOU_INATIVACAO,
           statusEnum.TERMINADA_AUTOMATICAMENTE_SISTEMA,
           statusEnum.CODAE_AUTORIZADO,
-          statusEnum.TERCEIRIZADA_TOMOU_CIENCIA
+          statusEnum.TERCEIRIZADA_TOMOU_CIENCIA,
         ].includes(sol.status_solicitacao)
       );
   }
@@ -140,7 +140,7 @@ export class SolicitacaoVigente extends Component {
               return (
                 <div className="pb-2" key={key}>
                   <div
-                    className="school-container col-md-12 mr-4"
+                    className="school-container col-md-12 me-4"
                     style={
                       solicitacaoVigente.active ? { background: "#F2FBFE" } : {}
                     }
@@ -149,16 +149,16 @@ export class SolicitacaoVigente extends Component {
                       <div className="col-4">
                         {`Solicitação: # ${solicitacaoVigente.id_externo}`}
                       </div>
-                      <div className="col-8 text-right">
+                      <div className="col-8 text-end">
                         <i
                           style={{ color: corIcone }}
                           className={iconClassName}
                         />
-                        <label className="ml-1 pr-3 ">{texto}</label>
+                        <label className="ms-1 pe-3 ">{texto}</label>
                         <ToggleExpandir
                           onClick={() => this.activateSolicitacao(key)}
                           ativo={solicitacaoVigente.active}
-                          className="float-right"
+                          className="float-end"
                         />
                       </div>
                     </div>
@@ -177,7 +177,7 @@ export class SolicitacaoVigente extends Component {
                             <div className="col-4 report-label-value">
                               <p>Anexos</p>
                               {solicitacaoVigente.anexos
-                                .filter(anexo => !anexo.eh_laudo_alta)
+                                .filter((anexo) => !anexo.eh_laudo_alta)
                                 .map((anexo, key) => {
                                   return (
                                     <div key={key}>
@@ -200,7 +200,7 @@ export class SolicitacaoVigente extends Component {
                             <p
                               className="value"
                               dangerouslySetInnerHTML={{
-                                __html: solicitacaoVigente.observacoes
+                                __html: solicitacaoVigente.observacoes,
                               }}
                             />
                           </div>
@@ -219,17 +219,15 @@ export class SolicitacaoVigente extends Component {
                               <Botao
                                 tabindex="-1"
                                 onClick={() =>
-                                  this.props.history.push(
-                                    `/dieta-especial/relatorio?uuid=${
-                                      solicitacaoVigente.uuid
-                                    }`
+                                  this.props.navigate(
+                                    `/dieta-especial/relatorio?uuid=${solicitacaoVigente.uuid}`
                                   )
                                 }
                                 texto="Visualizar Solicitação"
                                 style={BUTTON_STYLE.BLUE_OUTLINE}
                                 type={BUTTON_TYPE.BUTTON}
                                 icon={BUTTON_ICON.FILE_ALT}
-                                className="mr-3"
+                                className="me-3"
                               />
                             </div>
                           </div>
@@ -249,7 +247,7 @@ export class SolicitacaoVigente extends Component {
 
 const InativarDietaForm = reduxForm({
   form: "inativaDietaForm",
-  enableReinitialize: true
-})(SolicitacaoVigente);
+  enableReinitialize: true,
+})(withNavigate(SolicitacaoVigente));
 
-export default withRouter(InativarDietaForm);
+export default InativarDietaForm;

@@ -12,7 +12,7 @@ import { textAreaRequiredAndAtLeastOneCharacter } from "../../../helpers/fieldVa
 import "./style.scss";
 import InputText from "../Input/InputText";
 import { PAINEL_GESTAO_PRODUTO } from "configs/constants";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const ModalPadrao = ({ ...props }) => {
   const {
@@ -35,15 +35,15 @@ export const ModalPadrao = ({ ...props }) => {
     ...textAreaProps
   } = props;
 
-  const history = useHistory();
-  const painelProdutos = history => history.push(`/${PAINEL_GESTAO_PRODUTO}`);
+  const navigate = useNavigate();
+  const painelProdutos = () => navigate(`/${PAINEL_GESTAO_PRODUTO}`);
 
-  const enviarJustificativa = async formValues => {
+  const enviarJustificativa = async (formValues) => {
     const { justificativa } = formValues;
     let resp = undefined;
     if (eAnalise) {
       const terceirizada = terceirizadas.find(
-        t => t.nome_fantasia === formValues.nome_terceirizada
+        (t) => t.nome_fantasia === formValues.nome_terceirizada
       );
       resp = await endpoint(uuid, justificativa, terceirizada.uuid);
     } else {
@@ -54,7 +54,7 @@ export const ModalPadrao = ({ ...props }) => {
       if (loadSolicitacao) {
         loadSolicitacao(uuid);
       } else {
-        painelProdutos(history);
+        painelProdutos();
       }
       toastSuccess(toastSuccessMessage);
     } else {
@@ -62,12 +62,14 @@ export const ModalPadrao = ({ ...props }) => {
     }
   };
 
-  const getTerceirizadasFiltrado = t => {
+  const getTerceirizadasFiltrado = (t) => {
     if (t) {
       const reg = new RegExp(t, "i");
-      return terceirizadas.map(t => t.nome_fantasia).filter(a => reg.test(a));
+      return terceirizadas
+        .map((t) => t.nome_fantasia)
+        .filter((a) => reg.test(a));
     }
-    return terceirizadas.map(t => t.nome_fantasia);
+    return terceirizadas.map((t) => t.nome_fantasia);
   };
 
   return (
@@ -137,7 +139,7 @@ export const ModalPadrao = ({ ...props }) => {
                       label="Nome da empresa solicitante (Terceirizada)"
                       placeholder="Digite nome da terceirizada"
                       name="nome_terceirizada"
-                      validate={value =>
+                      validate={(value) =>
                         !value ? "Campo obrigatório" : undefined
                       }
                       required
@@ -175,13 +177,13 @@ export const ModalPadrao = ({ ...props }) => {
                     type={BUTTON_TYPE.BUTTON}
                     onClick={closeModal}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   <Botao
                     texto="Enviar"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                   />
                 </div>
               </div>

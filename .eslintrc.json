@@ -10,7 +10,7 @@
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
-  "parser": "@babel/eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "babelOptions": {
       "presets": ["@babel/preset-react"]
@@ -19,10 +19,10 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2020,
     "sourceType": "module"
   },
-  "plugins": ["react", "import"],
+  "plugins": ["react", "typescript", "import"],
   "rules": {
     "eqeqeq": "error",
     "yoda": "error",
@@ -33,7 +33,9 @@
     "react/no-string-refs": "off", // TODO: investigar  essa regra.
     "no-dupe-else-if": 0,
     "no-import-assign": 0,
-    "no-setter-return": 0
+    "no-setter-return": 0,
+    "no-console": "error",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
   },
   "settings": {
     "react": {

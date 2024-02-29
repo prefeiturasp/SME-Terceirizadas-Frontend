@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { getInclusaoCEMEI } from "services/inclusaoDeAlimentacao";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
-import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import {
+  getVinculosTipoAlimentacaoPorEscola,
+  getVinculosTipoAlimentacaoMotivoInclusaoEspecifico,
+} from "services/cadastroTipoAlimentacao.service";
 import { visualizaBotoesDoFluxo } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { statusEnum, TIPO_PERFIL } from "constants/shared";
 import { CODAE, DRE, TERCEIRIZADA } from "configs/constants";
@@ -23,10 +26,12 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [respostaSimNao, setRespostaSimNao] = useState(null);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
   const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
-  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
-    false
-  );
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] =
+    useState(false);
   const [showModalCodaeAutorizar, setShowModalCodaeAutorizar] = useState(false);
+  const [vinculosMotivoEspecifico, setVinculosMotivoEspecifico] =
+    useState(null);
+  const [ehMotivoEspecifico, setEhMotivoEspecifico] = useState(false);
 
   const {
     endpointAprovaSolicitacao,
@@ -41,12 +46,63 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     visao,
     tipoSolicitacao,
     toastAprovaMensagem,
-    toastAprovaMensagemErro
+    toastAprovaMensagemErro,
   } = props;
 
-  const getVinculosTipoAlimentacaoPorEscolaAsync = async escola => {
-    const response = await getVinculosTipoAlimentacaoPorEscola(escola.uuid);
+  const getVinculosMotivoEspecificoCEMEIAsync = async (
+    escola,
+    periodosNormais
+  ) => {
+    const tipo_unidade_escolar_iniciais = escola.tipo_unidade.iniciais;
+    const response = await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico({
+      tipo_unidade_escolar_iniciais,
+    });
     if (response.status === HTTP_STATUS.OK) {
+      let periodosMotivoInclusaoEspecifico = [];
+      response.data.forEach((vinculo) => {
+        let periodo = vinculo.periodo_escolar;
+        let tipos_de_alimentacao = vinculo.tipos_alimentacao;
+        let periodoNormal = periodosNormais.find(
+          (p) => periodo.nome === p.periodo_escolar.nome
+        );
+        if (!periodoNormal) {
+          periodoNormal = periodosNormais.find(
+            (p) => p.periodo_escolar.nome === "INTEGRAL"
+          );
+          tipos_de_alimentacao = response.data.find(
+            (p) => p.periodo_escolar.nome === "INTEGRAL"
+          ).tipos_alimentacao;
+        }
+        periodo.tipos_alimentacao = tipos_de_alimentacao;
+        periodo.maximo_alunos = null;
+        periodosMotivoInclusaoEspecifico.push(periodo);
+      });
+      const periodosOrdenados = periodosMotivoInclusaoEspecifico.sort(
+        (obj1, obj2) => (obj1.posicao > obj2.posicao ? 1 : -1)
+      );
+      setVinculosMotivoEspecifico(periodosOrdenados);
+    }
+  };
+
+  const getVinculosTipoAlimentacaoPorEscolaAsync = async (inclusao) => {
+    const response = await getVinculosTipoAlimentacaoPorEscola(
+      inclusao.escola.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      const diasMotivos = inclusao.dias_motivos_da_inclusao_cemei;
+      const temMotivoEspecifico = diasMotivos.some((dm) =>
+        dm.motivo.nome.includes("Específico")
+      );
+      if (temMotivoEspecifico) {
+        setEhMotivoEspecifico(true);
+        const periodosEMEI = response.data.results.filter(
+          (r) => r.tipo_unidade_escolar.iniciais === "EMEI"
+        );
+        await getVinculosMotivoEspecificoCEMEIAsync(
+          inclusao.escola,
+          periodosEMEI
+        );
+      }
       setVinculos(response.data.results);
     }
   };
@@ -56,14 +112,14 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacao(response.data);
       if (!vinculos) {
-        getVinculosTipoAlimentacaoPorEscolaAsync(response.data.escola);
+        getVinculosTipoAlimentacaoPorEscolaAsync(response.data);
       }
     }
   };
 
-  const onSubmit = values => {
+  const onSubmit = (values) => {
     endpointAprovaSolicitacao(uuid, values.justificativa, tipoSolicitacao).then(
-      response => {
+      (response) => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
           getInclusaoCEMEIAsync();
@@ -71,7 +127,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
           toastError(toastAprovaMensagemErro);
         }
       },
-      function() {
+      function () {
         toastError(toastAprovaMensagemErro);
       }
     );
@@ -94,21 +150,21 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const EXIBIR_BOTAO_APROVAR =
     (![
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
       textoBotaoAprova) ||
     (solicitacao &&
       (solicitacao.prioridade === "REGULAR" ||
         [
           statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
-          statusEnum.CODAE_AUTORIZADO
+          statusEnum.CODAE_AUTORIZADO,
         ].includes(solicitacao.status)) &&
       textoBotaoAprova);
 
   const EXIBIR_BOTAO_QUESTIONAMENTO =
     [
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
     solicitacao &&
     (solicitacao.prioridade !== "REGULAR" ||
@@ -130,18 +186,20 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
           {({ handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <div className="report">
-                <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
-                  solicitacao.id_externo
-                }`}</span>
+                <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${solicitacao.id_externo}`}</span>
                 <div className="card mt-3">
                   <div className="card-body">
                     <CorpoRelatorio
                       solicitacao={solicitacao}
-                      vinculos={vinculos}
+                      solicitacoesSimilares={solicitacao.solicitacoes_similares}
+                      vinculos={
+                        ehMotivoEspecifico ? vinculosMotivoEspecifico : vinculos
+                      }
+                      ehMotivoEspecifico={ehMotivoEspecifico}
                     />
                     {visualizaBotoesDoFluxo(solicitacao) && (
                       <div className="row">
-                        <div className="col-12 text-right">
+                        <div className="col-12 text-end">
                           {EXIBIR_BOTAO_NAO_APROVAR && (
                             <Botao
                               texto={textoBotaoNaoAprova}
@@ -167,35 +225,35 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                                 setShowQuestionamentoModal(true);
                               }}
                               style={BUTTON_STYLE.GREEN}
-                              className="ml-3"
+                              className="ms-3"
                             />
                           )}
                           {EXIBIR_BOTAO_APROVAR &&
-                            (textoBotaoAprova !== "Ciente" &&
-                              (visao === CODAE &&
-                              solicitacao.logs.filter(
-                                log =>
-                                  log.status_evento_explicacao ===
-                                    "Terceirizada respondeu questionamento" &&
-                                  !log.resposta_sim_nao
-                              ).length > 0 ? null : (
-                                <Botao
-                                  texto={textoBotaoAprova}
-                                  type={BUTTON_TYPE.BUTTON}
-                                  onClick={() =>
-                                    visao === DRE
-                                      ? handleSubmit()
-                                      : setShowModalCodaeAutorizar(true)
-                                  }
-                                  style={BUTTON_STYLE.GREEN}
-                                  className="ml-3"
-                                />
-                              )))}
+                            textoBotaoAprova !== "Ciente" &&
+                            (visao === CODAE &&
+                            solicitacao.logs.filter(
+                              (log) =>
+                                log.status_evento_explicacao ===
+                                  "Terceirizada respondeu questionamento" &&
+                                !log.resposta_sim_nao
+                            ).length > 0 ? null : (
+                              <Botao
+                                texto={textoBotaoAprova}
+                                type={BUTTON_TYPE.BUTTON}
+                                onClick={() =>
+                                  visao === DRE
+                                    ? handleSubmit()
+                                    : setShowModalCodaeAutorizar(true)
+                                }
+                                style={BUTTON_STYLE.GREEN}
+                                className="ms-3"
+                              />
+                            ))}
                           {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-                            <div className="form-group float-right mt-4">
+                            <div className="form-group float-end mt-4">
                               {solicitacao.terceirizada_conferiu_gestao ? (
-                                <label className="ml-3 conferido">
-                                  <i className="fas fa-check mr-2" />
+                                <label className="ms-3 conferido">
+                                  <i className="fas fa-check me-2" />
                                   Solicitação Conferida
                                 </label>
                               ) : (
@@ -203,7 +261,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                                   texto="Marcar Conferência"
                                   type={BUTTON_TYPE.BUTTON}
                                   style={BUTTON_STYLE.GREEN}
-                                  className="ml-3"
+                                  className="ms-3"
                                   onClick={() => {
                                     setShowModalMarcarConferencia(true);
                                   }}

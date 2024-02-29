@@ -2,7 +2,7 @@ import React from "react";
 import * as R from "ramda";
 import "./styles.scss";
 
-export const getCorrecao = logs => {
+export const getCorrecao = (logs) => {
   const arr = R.filter(
     R.propEq("status_evento_explicacao", "Questionamento pela CODAE"),
     logs
@@ -27,7 +27,7 @@ export default ({ logs }) => {
           <p
             className="texto-wysiwyg-recusa"
             dangerouslySetInnerHTML={{
-              __html: correcao.justificativa
+              __html: correcao.justificativa,
             }}
           />
         </div>

@@ -8,7 +8,7 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { consultaItems } from "services/produto.service";
 import HTTP_STATUS from "http-status-codes";
@@ -22,31 +22,33 @@ export default ({
   setTotal,
   setFiltros,
   setPage,
-  changePage
+  changePage,
+  tipoFixo,
+  initialValues,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [open, setOpen] = useState(false);
   const { Option } = SelectAntd;
   const opcoes = tipos
-    ? tipos.map(tipo => {
+    ? tipos.map((tipo) => {
         return <Option key={tipo.tipo}>{tipo.tipo_display}</Option>;
       })
     : [];
 
-  const getNomesItemsFiltrado = nomeItem => {
+  const getNomesItemsFiltrado = (nomeItem) => {
     if (nomeItem) {
       const reg = new RegExp(nomeItem, "iu");
-      return nomes.filter(a => reg.test(a));
+      return nomes.filter((a) => reg.test(a));
     }
     return [];
   };
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     try {
       setCarregando(true);
       const payload = {
         nome: formValues.nome_item,
-        tipo: formValues.tipo
+        tipo: formValues.tipo,
       };
       const response = await consultaItems(payload);
       if (response.status === HTTP_STATUS.OK) {
@@ -64,7 +66,7 @@ export default ({
     <>
       <Form
         onSubmit={onSubmit}
-        initialValues={{}}
+        initialValues={initialValues}
         render={({ submitting, form, handleSubmit, values }) => (
           <form onSubmit={handleSubmit}>
             <div className="row mt-3 mb-3">
@@ -97,6 +99,7 @@ export default ({
                       .toLowerCase()
                       .includes(inputValue.toLowerCase())
                   }
+                  disabled={tipoFixo}
                 >
                   {opcoes}
                 </Field>
@@ -116,16 +119,16 @@ export default ({
                   texto="Pesquisar"
                   type={BUTTON_TYPE.SUBMIT}
                   style={BUTTON_STYLE.GREEN}
-                  className="float-right ml-3"
+                  className="float-end ms-3"
                   disabled={submitting}
                 />
                 <Botao
                   texto="Limpar Filtros"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="float-right ml-3"
+                  className="float-end ms-3"
                   onClick={() => {
-                    form.reset({});
+                    form.reset(initialValues);
                     setResultado(undefined);
                     setPage(1);
                   }}
@@ -139,6 +142,7 @@ export default ({
         closeModal={() => setShowModal(false)}
         showModal={showModal}
         changePage={() => changePage()}
+        tipoFixo={tipoFixo}
       />
     </>
   );

@@ -9,12 +9,12 @@ import { podeEditarProduto } from "./helpers";
 import {
   getNomesUnicosProdutos,
   getNomesUnicosMarcas,
-  getNomesUnicosFabricantes
+  getNomesUnicosFabricantes,
 } from "../../../../../services/produto.service";
 import { getProdutosListagem } from "services/produto.service";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../Shareable/Botao/constants";
 import Botao from "../../../../Shareable/Botao";
 import { Link } from "react-router-dom";
@@ -27,13 +27,13 @@ export default class BuscaProduto extends Component {
       nomesMarcas: null,
       nomesFabricantes: null,
 
-      resultadosProduto: []
+      resultadosProduto: [],
     };
   }
 
-  retornaListaDeNomes = arrayObjetos => {
+  retornaListaDeNomes = (arrayObjetos) => {
     let arrayNomes = [];
-    arrayObjetos.forEach(objeto => {
+    arrayObjetos.forEach((objeto) => {
       arrayNomes.push(objeto.nome);
     });
     return arrayNomes;
@@ -53,21 +53,21 @@ export default class BuscaProduto extends Component {
       this.setState({
         nomesProdutos: produtos.data.results,
         nomesMarcas: marcas.data.results,
-        nomesFabricantes: fabricantes.data.results
+        nomesFabricantes: fabricantes.data.results,
       });
     }
   };
 
-  adicionaResponseAoResultadoProduto = response => {
-    response.data.results.forEach(produto => {
+  adicionaResponseAoResultadoProduto = (response) => {
+    response.data.results.forEach((produto) => {
       produto["ativo"] = false;
     });
     this.setState({
-      resultadosProduto: response.data.results
+      resultadosProduto: response.data.results,
     });
   };
 
-  dropDownProduto = indice => {
+  dropDownProduto = (indice) => {
     let { resultadosProduto } = this.state;
     resultadosProduto.forEach((produto, indiceProduto) => {
       if (indiceProduto === indice) {
@@ -81,22 +81,18 @@ export default class BuscaProduto extends Component {
 
   cancelaPesquisa = () => {
     this.setState({
-      resultadosProduto: []
+      resultadosProduto: [],
     });
   };
 
-  onSubmit = async values => {
+  onSubmit = async (values) => {
     const response = await getProdutosListagem({ ...values });
     this.adicionaResponseAoResultadoProduto(response);
   };
 
   render() {
-    const {
-      nomesProdutos,
-      nomesMarcas,
-      nomesFabricantes,
-      resultadosProduto
-    } = this.state;
+    const { nomesProdutos, nomesMarcas, nomesFabricantes, resultadosProduto } =
+      this.state;
     const { exibeFormularioInicial } = this.props;
     return (
       <Form
@@ -182,9 +178,7 @@ export default class BuscaProduto extends Component {
                                 {podeEditarProduto(produto) && (
                                   <div className="botoes-produto">
                                     <Link
-                                      to={`/gestao-produto/editar?uuid=${
-                                        produto.ultima_homologacao.uuid
-                                      }`}
+                                      to={`/gestao-produto/editar?uuid=${produto.ultima_homologacao.uuid}`}
                                     >
                                       <i className="fas fa-pen editar" />
                                     </Link>
@@ -279,7 +273,7 @@ export default class BuscaProduto extends Component {
             <div className="botoes-busca">
               <Botao
                 texto={"Limpar Filtros"}
-                className="mr-3"
+                className="me-3"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={() => {

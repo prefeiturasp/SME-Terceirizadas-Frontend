@@ -5,7 +5,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import InputFile from "components/Shareable/Input/InputFile";
 import { Field, Form } from "react-final-form";
@@ -20,18 +20,20 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     escolaInstituicao,
     solicitacaoMedicaoInicial,
     setObjSolicitacaoMIFinalizada,
-    onClickInfoBasicas
+    onClickInfoBasicas,
+    setErrosAoSalvar,
+    setFinalizandoMedicao,
   } = props;
 
   const [opcaoSelecionada, setOpcaoSelecionada] = useState(null);
   const [disableFinalizarMedicao, setDisableFinalizarMedicao] = useState(true);
-  const [showButtonAnexarPlanilha, setShowButtonAnexarPlanilha] = useState(
-    false
-  );
+  const [showButtonAnexarPlanilha, setShowButtonAnexarPlanilha] =
+    useState(false);
   const [arquivo, setArquivo] = useState([]);
   const [validationFile, setValidationFile] = useState({ touched: false });
+  const [desativarAnexar, setDesativarAnexar] = useState(false);
 
-  const handleOnChange = event => {
+  const handleOnChange = (event) => {
     if (opcaoSelecionada === OPCOES_AVALIACAO_A_CONTENTO.NAO_COM_OCORRENCIAS) {
       setArquivo([]);
     }
@@ -53,31 +55,52 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     setDisableFinalizarMedicao(true);
     setShowButtonAnexarPlanilha(false);
     setArquivo([]);
+    setDesativarAnexar(false);
     closeModal();
   };
 
-  const isValidFiles = files => {
+  const isValidFiles = (files) => {
     let validation = { touched: true };
-    files.forEach(element => {
+    let xlsCount = 0;
+    let pdfCount = 0;
+    files.forEach((element) => {
       const base64Ext = element.base64.split(";")[0];
       if (base64Ext.includes("pdf")) {
-        validation = {
-          ...validation,
-          pdf: true
-        };
+        pdfCount++;
+        if (element.size > 10 * 1024 * 1024) {
+          toastError("PDF deve ter menos de 10MB");
+          setDisableFinalizarMedicao(true);
+          return;
+        }
+        validation = { ...validation, pdf: true };
       }
-      if (base64Ext.includes("spreadsheetml")) {
-        validation = {
-          ...validation,
-          xls: true
-        };
+      if (
+        base64Ext.includes("spreadsheetml") ||
+        base64Ext.includes("application/vnd.ms-excel.sheet.macroEnabled.12")
+      ) {
+        xlsCount++;
+        if (element.size > 25 * 1024 * 1024) {
+          toastError("Excel deve ter menos de 25MB");
+          setDisableFinalizarMedicao(true);
+          return;
+        }
+        validation = { ...validation, xls: true };
       }
     });
+
+    if (xlsCount > 1 || pdfCount > 1) {
+      toastError("O sistema permite apenas 1 arquivo Excel e 1 arquivo PDF");
+      setDisableFinalizarMedicao(true);
+      return;
+    }
+
     if (validation.xls && validation.pdf) {
       setDisableFinalizarMedicao(false);
+      setDesativarAnexar(true);
     } else {
       setDisableFinalizarMedicao(true);
     }
+
     setValidationFile(validation);
   };
 
@@ -85,9 +108,10 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     let arquivos = arquivo;
     isValidFiles(arquivos);
     setArquivo(arquivos);
+    setDesativarAnexar(false);
   };
 
-  const setFiles = files => {
+  const setFiles = (files) => {
     let arquivos = arquivo;
     arquivos = files;
     isValidFiles(arquivos);
@@ -95,12 +119,17 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
   };
 
   const handleFinalizarMedicao = async () => {
+    setFinalizandoMedicao(true);
+
     let data = new FormData();
     data.append("escola", String(escolaInstituicao.uuid));
-    data.append(
-      "tipo_contagem_alimentacoes",
-      String(solicitacaoMedicaoInicial.tipo_contagem_alimentacoes.uuid)
-    );
+
+    if (solicitacaoMedicaoInicial.tipo_contagem_alimentacoes) {
+      data.append(
+        "tipo_contagem_alimentacoes",
+        String(solicitacaoMedicaoInicial.tipo_contagem_alimentacoes?.uuid)
+      );
+    }
     data.append(
       "responsaveis",
       JSON.stringify(solicitacaoMedicaoInicial.responsaveis)
@@ -109,24 +138,28 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
 
     if (!opcaoSelecionada) {
       let payloadAnexos = [];
-      arquivo.forEach(element => {
+      arquivo.forEach((element) => {
         payloadAnexos.push({
           nome: String(element.nome),
-          base64: String(element.base64)
+          base64: String(element.base64),
         });
       });
       data.append("anexos", JSON.stringify(payloadAnexos));
     }
-
+    data.append("finaliza_medicao", true);
+    handleHideModal();
     const response = await updateSolicitacaoMedicaoInicial(
       solicitacaoMedicaoInicial.uuid,
       data
     );
     if (response.status === HTTP_STATUS.OK) {
-      toastSuccess("Solicitação de Medição Inicial Finalizada com sucesso!");
+      toastSuccess("Medição Inicial finalizada com sucesso!");
       setObjSolicitacaoMIFinalizada(response.data);
-      handleHideModal();
+      setFinalizandoMedicao(false);
+      setErrosAoSalvar([]);
     } else {
+      setErrosAoSalvar(response.data);
+      setFinalizandoMedicao(false);
       toastError("Não foi possível finalizar as alterações!");
     }
     onClickInfoBasicas();
@@ -136,6 +169,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     <Modal
       dialogClassName="modal-50w"
       show={showModal}
+      backdrop="static"
       onHide={() => handleHideModal()}
     >
       <Modal.Header closeButton>
@@ -144,7 +178,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
       <Modal.Body>
         <div className="row">
           <div className="col">
-            <p className="ml-2">
+            <p className="ms-2">
               Neste mês, a direção da Unidade Educacional considera que o
               serviço foi realizado a contento?
             </p>
@@ -152,7 +186,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
         </div>
         <div className="row">
           <Radio.Group
-            onChange={event => handleOnChange(event)}
+            onChange={(event) => handleOnChange(event)}
             value={opcaoSelecionada}
           >
             <Radio
@@ -169,7 +203,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
             </Radio>
           </Radio.Group>
         </div>
-        <div className="row pl-2">
+        <div className="row ps-2">
           {showButtonAnexarPlanilha && (
             <Form
               onSubmit={() => {}}
@@ -180,7 +214,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
                   alignLeft={true}
                   texto="Anexar arquivos"
                   name="files"
-                  accept=".xls, .xlsx, .pdf"
+                  accept=".xls, .xlsm, .xlsx, .pdf"
                   setFiles={setFiles}
                   removeFile={removeFile}
                   toastSuccess={"Arquivos anexados com sucesso!"}
@@ -191,6 +225,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
                     "É obrigatório anexar o relatório de ocorrências no formato Excel e também no formato PDF"
                   }
                   customHelpTextClassName="custom-style-help-text"
+                  disabled={desativarAnexar}
                 />
               )}
             />
@@ -205,14 +240,14 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
               type={BUTTON_TYPE.BUTTON}
               onClick={() => handleHideModal()}
               style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto="Finalizar Medição"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => handleFinalizarMedicao()}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               disabled={disableFinalizarMedicao}
             />
           </div>

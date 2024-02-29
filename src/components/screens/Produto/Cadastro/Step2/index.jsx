@@ -3,7 +3,7 @@ import { Field, reduxForm } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
 import {
   required,
-  inteiroOuDecimal
+  inteiroOuDecimal,
 } from "../../../../../helpers/fieldValidators";
 import "./style.scss";
 import { ToggleExpandir } from "../../../../Shareable/ToggleExpandir";
@@ -11,14 +11,14 @@ import { Collapse } from "react-collapse";
 import Botao from "../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../Shareable/Botao/constants";
 
 class Step2 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      solicitacoesVigentes: null
+      solicitacoesVigentes: null,
     };
   }
   componentDidMount() {
@@ -33,7 +33,7 @@ class Step2 extends Component {
     ) {
       this.props.change("porcao", payload.porcao);
       this.props.change("unidade_caseira", payload.unidade_caseira);
-      payload.informacoes_nutricionais.forEach(informacao => {
+      payload.informacoes_nutricionais.forEach((informacao) => {
         this.props.change(
           `porcao=${informacao.informacao_nutricional}`,
           informacao.quantidade_porcao
@@ -47,8 +47,8 @@ class Step2 extends Component {
   }
   componentDidUpdate() {
     if (this.props.informacoesAgrupadas !== this.state.informacoesAgrupadas) {
-      this.props.informacoesAgrupadas.forEach(item => {
-        item.informacoes_nutricionais.forEach(info => {
+      this.props.informacoesAgrupadas.forEach((item) => {
+        item.informacoes_nutricionais.forEach((info) => {
           info["check"] = false;
         });
       });
@@ -62,18 +62,18 @@ class Step2 extends Component {
     this.setState({ informacoesAgrupadas });
   }
 
-  onSubmit = values => {
+  onSubmit = (values) => {
     const { informacoesAgrupadas } = this.state;
     const { payload } = this.props;
-    informacoesAgrupadas.forEach(item => {
-      item.informacoes_nutricionais.forEach(informacao => {
+    informacoesAgrupadas.forEach((item) => {
+      item.informacoes_nutricionais.forEach((informacao) => {
         const temPorcao = Object.prototype.hasOwnProperty.call(
           values,
           `porcao=${informacao.uuid}`
         );
         if (temPorcao) {
           let inf_nutr_atualizada = payload.informacoes_nutricionais.find(
-            inf_nutr => inf_nutr.informacao_nutricional === informacao.uuid
+            (inf_nutr) => inf_nutr.informacao_nutricional === informacao.uuid
           );
           if (inf_nutr_atualizada) {
             inf_nutr_atualizada.quantidade_porcao =
@@ -83,7 +83,7 @@ class Step2 extends Component {
             payload.informacoes_nutricionais.push({
               informacao_nutricional: informacao.uuid,
               quantidade_porcao: values[`porcao=${informacao.uuid}`],
-              valor_diario: values[`vd=${informacao.uuid}`]
+              valor_diario: values[`vd=${informacao.uuid}`],
             });
           }
         }
@@ -97,8 +97,8 @@ class Step2 extends Component {
 
   setaInformacaoComoVisto = ({ uuid }) => {
     let { informacoesAgrupadas } = this.state;
-    informacoesAgrupadas.forEach(item => {
-      item.informacoes_nutricionais.forEach(info => {
+    informacoesAgrupadas.forEach((item) => {
+      item.informacoes_nutricionais.forEach((info) => {
         if (info.uuid === uuid) {
           info.check = true;
         }
@@ -153,23 +153,23 @@ class Step2 extends Component {
             />
           </div>
         </div>
-        <div className="row card-title font-weight-bold ml-2">
+        <div className="row card-title fw-bold ms-2">
           Necessário o preenchimento das informações nutricionais abaixo
         </div>
         {informacoesAgrupadas &&
           informacoesAgrupadas.map((informacao, key) => {
             return (
               <div className="pb-2" key={key}>
-                <div className="school-container col-md-12 mr-4">
+                <div className="school-container col-md-12 me-4">
                   <div className="row pt-2 pb-2 title">
                     <div className="title col-4">
                       {this.retornaNomesFormatados(informacao)}
                     </div>
-                    <div className="col-8 text-right">
+                    <div className="col-8 text-end">
                       <ToggleExpandir
                         onClick={() => this.activateInformacao(key)}
                         ativo={informacao.active}
-                        className="float-right"
+                        className="float-end"
                       />
                     </div>
                   </div>
@@ -197,9 +197,7 @@ class Step2 extends Component {
                                     <div className="col-8">
                                       <Field
                                         component={InputText}
-                                        name={`porcao=${
-                                          informacaoNutricional.uuid
-                                        }`}
+                                        name={`porcao=${informacaoNutricional.uuid}`}
                                         type="text"
                                         validate={inteiroOuDecimal}
                                         onBlur={() => {
@@ -207,12 +205,10 @@ class Step2 extends Component {
                                             informacaoNutricional
                                           );
                                         }}
-                                        onChange={e => {
+                                        onChange={(e) => {
                                           this.changeFormValue(
                                             e,
-                                            `porcao=${
-                                              informacaoNutricional.uuid
-                                            }`
+                                            `porcao=${informacaoNutricional.uuid}`
                                           );
                                           this.props.setBlockProximo();
                                         }}
@@ -228,9 +224,7 @@ class Step2 extends Component {
                                     <div className="col-8">
                                       <Field
                                         component={InputText}
-                                        name={`vd=${
-                                          informacaoNutricional.uuid
-                                        }`}
+                                        name={`vd=${informacaoNutricional.uuid}`}
                                         type="text"
                                         validate={inteiroOuDecimal}
                                         onBlur={() => {
@@ -270,9 +264,9 @@ class Step2 extends Component {
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 className="botaoSalvar"
-                onClick={handleSubmit(values =>
+                onClick={handleSubmit((values) =>
                   this.onSubmit({
-                    ...values
+                    ...values,
                   })
                 )}
               />
@@ -285,7 +279,7 @@ class Step2 extends Component {
 }
 
 Step2 = reduxForm({
-  form: "step2"
+  form: "step2",
 })(Step2);
 
 export default Step2;

@@ -45,7 +45,7 @@ export default () => {
     fetchData();
   }, []);
 
-  const changePage = async page => {
+  const changePage = async (page) => {
     try {
       setCarregando(true);
       let payload = filtros;
@@ -62,7 +62,7 @@ export default () => {
   };
 
   return (
-    <div className="card mt-3 card-cadastro-protocolo-padrao pl-3 pr-3">
+    <div className="card mt-3 card-cadastro-protocolo-padrao ps-3 pe-3">
       {erroAPI && (
         <div>Erro ao carregar dados. Tente novamente mais tarde.</div>
       )}
@@ -91,7 +91,7 @@ export default () => {
               current={page || 1}
               total={total}
               showSizeChanger={false}
-              onChange={page => {
+              onChange={(page) => {
                 setPage(page);
                 changePage(page);
               }}

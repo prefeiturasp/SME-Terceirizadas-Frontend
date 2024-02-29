@@ -7,14 +7,14 @@ import GestaoRequisicaoEntrega from "components/screens/Logistica/GestaoRequisic
 
 const atual = {
   href: `/${LOGISTICA}/${GESTAO_REQUISICAO_ENTREGA}`,
-  titulo: "Requisição de Entrega"
+  titulo: "Requisição de Entrega",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
-  }
+    titulo: "Abastecimento",
+  },
 ];
 
 export default () => (

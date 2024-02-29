@@ -13,7 +13,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 
 import { gerarLabelPorFiltro } from "helpers/produto";
@@ -94,18 +94,18 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
-  const onSearch = searchText => {
+  const onSearch = (searchText) => {
     if (!searchText.length) {
       setTerceirizadasFiltrado(terceirizadas);
     }
     const reg = new RegExp(searchText, "i");
-    setTerceirizadasFiltrado(terceirizadas.filter(el => reg.test(el)));
+    setTerceirizadasFiltrado(terceirizadas.filter((el) => reg.test(el)));
   };
 
   useEffect(() => {
     async function fetchData() {
-      getNomesTerceirizadas().then(response => {
-        const results = response.data.results.map(el => el.nome_fantasia);
+      getNomesTerceirizadas().then((response) => {
+        const results = response.data.results.map((el) => el.nome_fantasia);
         setTerceirizadas(results);
         setTerceirizadasFiltrado(results);
       });
@@ -124,7 +124,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
     fetchData();
   }, [filtros, setDadosRelatorio]);
 
-  const onSubmitForm = formValues => {
+  const onSubmitForm = (formValues) => {
     setFiltros(formValues);
   };
 
@@ -191,14 +191,14 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
                   </Col>
                 </Row>
                 <div className="row row-botoes">
-                  <div className="col-12 text-right col-botoes">
+                  <div className="col-12 text-end col-botoes">
                     <Botao
                       texto="Limpar Filtros"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       disabled={submitting}
                       onClick={form.reset}
-                      className="mr-3"
+                      className="me-3"
                     />
                     <Botao
                       texto="Consultar"
@@ -232,7 +232,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
           </Modal.Title>
         </Modal.Header>
         <section className="m-3">
-          <p className="text-black font-weight-bold mb-1">
+          <p className="text-black fw-bold mb-1">
             {filtros && gerarLabelPorFiltro(filtros)}
           </p>
           <TabelaQuantitativoPorTerceirizada dadosRelatorio={dadosRelatorio} />
@@ -245,7 +245,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
               texto="Imprimir"
               onClick={() => getPdfRelatorioQuantitativo(filtros)}
               type={BUTTON_TYPE.BUTTON}
-              className="float-right"
+              className="float-end"
             />
             <Botao
               texto="voltar"
@@ -254,7 +254,7 @@ const RelatorioQuantitativoPorTerdeirizada = () => {
               style={BUTTON_STYLE.BLUE_OUTLINE}
               icon={BUTTON_ICON.ARROW_LEFT}
               onClick={handleClose}
-              className="float-right mr-2"
+              className="float-end me-2"
             />
           </section>
         </Modal.Footer>

@@ -43,9 +43,15 @@
   background-color: #f4f4f4;
 }
 
-.required-asterisk {
+.required-asterisk-2 {
+  padding-left: 0;
+}
+
+.required-asterisk-2::before {
+  content: "*";
   color: $red;
-  padding-right: 5px;
+  margin-right: 5px;
+  padding-left: 0 !important;
 }
 
 .card-kits {

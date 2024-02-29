@@ -5,7 +5,7 @@ import "./style.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
 import ModalJustificativa from "components/Shareable/ModalJustificativa";
@@ -22,7 +22,7 @@ import {
   CODAERecusaReclamacao,
   CODAEQuestionaTerceirizada,
   CODAEQuestionaUE,
-  CODAEQuestionaNutrisupervisor
+  CODAEQuestionaNutrisupervisor,
 } from "services/reclamacaoProduto.service";
 import { ordenaPorCriadoEm } from "./helpers";
 import { corrigeLinkAnexo } from "../../../../../../helpers/utilities";
@@ -38,7 +38,7 @@ const {
   AGUARDANDO_RESPOSTA_TERCEIRIZADA,
   RESPONDIDO_TERCEIRIZADA,
   ANALISE_SENSORIAL_RESPONDIDA,
-  RESPONDIDO_NUTRISUPERVISOR
+  RESPONDIDO_NUTRISUPERVISOR,
 } = RECLAMACAO_PRODUTO_STATUS;
 
 export default class TabelaProdutos extends Component {
@@ -56,7 +56,7 @@ export default class TabelaProdutos extends Component {
       terceirizada: null,
       escola: null,
       uuisdReclamacaoDisabled: [],
-      uuidReclamacaoResposta: undefined
+      uuidReclamacaoResposta: undefined,
     };
   }
 
@@ -151,7 +151,7 @@ export default class TabelaProdutos extends Component {
     }
   };
 
-  exibiAnexos = reclamacao => {
+  exibiAnexos = (reclamacao) => {
     return (
       <>
         <div key={1}>
@@ -190,7 +190,7 @@ export default class TabelaProdutos extends Component {
       uuidReclamacao,
       produto,
       terceirizada: terceirizada,
-      escola: escola
+      escola: escola,
     });
   };
 
@@ -206,12 +206,12 @@ export default class TabelaProdutos extends Component {
     this.setState({ mostraModalSuspensao: false });
   };
 
-  abreModalAnalise = async uuidReclamacao => {
+  abreModalAnalise = async (uuidReclamacao) => {
     let response = await getNumeroProtocoloAnaliseSensorial();
     this.setState({
       showModalAnalise: true,
       protocoloAnalise: response.data,
-      uuidReclamacao: uuidReclamacao
+      uuidReclamacao: uuidReclamacao,
     });
   };
 
@@ -219,7 +219,7 @@ export default class TabelaProdutos extends Component {
     this.setState({ showModalAnalise: false });
   };
 
-  onModalJustificativaOuSuspensaoSubmit = async formValues => {
+  onModalJustificativaOuSuspensaoSubmit = async (formValues) => {
     const { uuidReclamacao } = this.state;
     const endpoint = this.defineEndpoint();
     const response = await endpoint(uuidReclamacao, formValues);
@@ -233,14 +233,14 @@ export default class TabelaProdutos extends Component {
         this.setState({
           uuisdReclamacaoDisabled: [
             ...this.state.uuisdReclamacaoDisabled,
-            this.state.uuidReclamacaoResposta
-          ]
+            this.state.uuidReclamacaoResposta,
+          ],
         });
       } else if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
         const uuidsReclamacoes = this.props.listaProdutos
-          .map(produto =>
+          .map((produto) =>
             produto.ultima_homologacao.reclamacoes.map(
-              reclamacao => reclamacao.uuid
+              (reclamacao) => reclamacao.uuid
             )
           )
           .flat();
@@ -251,8 +251,8 @@ export default class TabelaProdutos extends Component {
         this.setState({
           uuisdReclamacaoDisabled: [
             ...this.state.uuisdReclamacaoDisabled,
-            this.state.uuidReclamacaoResposta
-          ]
+            this.state.uuidReclamacaoResposta,
+          ],
         });
       }
     } else {
@@ -261,7 +261,7 @@ export default class TabelaProdutos extends Component {
     this.props.setLoading(false);
   };
 
-  deveDesabilitarBotao = uuidReclamacao => {
+  deveDesabilitarBotao = (uuidReclamacao) => {
     return this.state.uuisdReclamacaoDisabled.includes(uuidReclamacao);
   };
 
@@ -270,7 +270,7 @@ export default class TabelaProdutos extends Component {
       listaProdutos,
       indiceProdutoAtivo,
       setIndiceProdutoAtivo,
-      terceirizadas
+      terceirizadas,
     } = this.props;
     const {
       mostraModalJustificativa,
@@ -278,7 +278,7 @@ export default class TabelaProdutos extends Component {
       showModalAnalise,
       protocoloAnalise,
       escola,
-      terceirizada
+      terceirizada,
     } = this.state;
     return (
       <section className="resultados-busca-produtos mb-3">
@@ -294,9 +294,10 @@ export default class TabelaProdutos extends Component {
         </section>
         {listaProdutos.map((produto, indice) => {
           const isProdutoAtivo = indice === indiceProdutoAtivo;
-          const reclamacoesAceitas = produto.ultima_homologacao.reclamacoes.find(
-            reclamacao => reclamacao.status === CODAE_ACEITOU
-          );
+          const reclamacoesAceitas =
+            produto.ultima_homologacao.reclamacoes.find(
+              (reclamacao) => reclamacao.status === CODAE_ACEITOU
+            );
           const produtoTemReclacaoAceita = reclamacoesAceitas !== undefined;
           return (
             <div key={indice}>
@@ -325,13 +326,11 @@ export default class TabelaProdutos extends Component {
                 <div className="container">
                   <div className="botao-ver-produto mt-4">
                     <Link
-                      to={`/gestao-produto/relatorio?uuid=${
-                        produto.ultima_homologacao.uuid
-                      }`}
+                      to={`/gestao-produto/relatorio?uuid=${produto.ultima_homologacao.uuid}`}
                     >
                       <Botao
                         texto="Ver produto"
-                        className="ml-3"
+                        className="ms-3"
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
@@ -348,14 +347,14 @@ export default class TabelaProdutos extends Component {
                           RESPONDIDO_TERCEIRIZADA,
                           ANALISE_SENSORIAL_RESPONDIDA,
                           RESPONDIDO_UE,
-                          RESPONDIDO_NUTRISUPERVISOR
+                          RESPONDIDO_NUTRISUPERVISOR,
                         ].includes(reclamacao.status);
                       const desabilitaResponder =
                         produtoTemReclacaoAceita ||
                         [
                           CODAE_ACEITOU,
                           CODAE_RECUSOU,
-                          AGUARDANDO_ANALISE_SENSORIAL
+                          AGUARDANDO_ANALISE_SENSORIAL,
                         ].includes(reclamacao.status);
                       const desabilitarAnalise =
                         produtoTemReclacaoAceita ||
@@ -364,7 +363,7 @@ export default class TabelaProdutos extends Component {
                           RESPONDIDO_TERCEIRIZADA,
                           ANALISE_SENSORIAL_RESPONDIDA,
                           RESPONDIDO_UE,
-                          RESPONDIDO_NUTRISUPERVISOR
+                          RESPONDIDO_NUTRISUPERVISOR,
                         ].includes(reclamacao.status);
                       const desabilitaQuestionarUE =
                         produtoTemReclacaoAceita ||
@@ -421,7 +420,7 @@ export default class TabelaProdutos extends Component {
                               "supervisao_nutricao" && (
                               <Botao
                                 texto="Questionar nutricionista supervisor"
-                                className="ml-3"
+                                className="ms-3"
                                 type={BUTTON_TYPE.BUTTON}
                                 style={BUTTON_STYLE.GREEN_OUTLINE}
                                 disabled={desabilitaQuestionarNutrisupervisao}
@@ -438,7 +437,7 @@ export default class TabelaProdutos extends Component {
                             )}
                           <Botao
                             texto="Questionar U.E"
-                            className="ml-3"
+                            className="ms-3"
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
                             disabled={desabilitaQuestionarUE}
@@ -461,7 +460,7 @@ export default class TabelaProdutos extends Component {
                         <div key={4} className="botao-reclamacao mt-4">
                           <Botao
                             texto="Solicitar análise sensorial"
-                            className="mr-3"
+                            className="me-3"
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
                             onClick={() =>
@@ -471,7 +470,7 @@ export default class TabelaProdutos extends Component {
                           />
                           <Botao
                             texto="Responder"
-                            className="ml-3 botaoResponder"
+                            className="ms-3 botaoResponder"
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN}
                             disabled={
@@ -485,12 +484,12 @@ export default class TabelaProdutos extends Component {
                                 produto
                               );
                               this.setState({
-                                uuidReclamacaoResposta: reclamacao.uuid
+                                uuidReclamacaoResposta: reclamacao.uuid,
                               });
                             }}
                           />
                         </div>,
-                        deveMostrarBarraHorizontal && <hr />
+                        deveMostrarBarraHorizontal && <hr />,
                       ];
                     })}
                 </div>

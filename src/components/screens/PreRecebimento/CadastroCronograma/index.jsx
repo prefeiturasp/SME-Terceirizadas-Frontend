@@ -2,356 +2,136 @@ import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
-import moment from "moment";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Field, Form, FormSpy } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
-import { InputComData } from "components/Shareable/DatePicker";
 import { getNomesDistribuidores } from "services/logistica.service";
-import SelectSelecione from "components/Shareable/SelectSelecione";
+import Select from "components/Shareable/Select";
+import Label from "components/Shareable/Label";
 import {
   cadastraCronograma,
   editaCronograma,
   getCronograma,
-  getEtapas,
   getRascunhos,
-  getUnidadesDeMedidaLogistica
+  getUnidadesDeMedidaLogistica,
 } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { useHistory } from "react-router-dom";
-import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
+import { useNavigate } from "react-router-dom";
+import {
+  CRONOGRAMA_ENTREGA,
+  PRE_RECEBIMENTO,
+  CADASTRO_CRONOGRAMA,
+  EDITAR,
+} from "configs/constants";
 import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
-import { required } from "helpers/fieldValidators";
-import { OnChange } from "react-final-form-listeners";
-import { agregarDefault, exibeError } from "helpers/utilities";
+import {
+  required,
+  composeValidators,
+  decimalMonetario,
+} from "helpers/fieldValidators";
+import { exibeError, formataMilhar } from "helpers/utilities";
 import { getEmpresasCronograma } from "services/terceirizada.service";
-import { getListaCompletaProdutosLogistica } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
+import FormEtapa from "../../../PreRecebimento/FormEtapa";
+import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
+import FormRecebimento from "components/PreRecebimento/FormRecebimento";
+import {
+  getListaFichasTecnicasSimplesSemCronograma,
+  getDadosCronogramaFichaTecnica,
+} from "services/fichaTecnica.service";
+import {
+  stringNaoVaziaOuUndefined,
+  numberToStringDecimal,
+  numberToStringDecimalMonetario,
+} from "helpers/parsers";
+import {
+  formataPayload,
+  geraOptionsFichasTecnicas,
+  getEmpresaFiltrado,
+  getOpcoesContrato,
+  validaRascunho,
+} from "./helpers";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [collapse, setCollapse] = useState([]);
-  const [produtosOptions, setProdutosOptions] = useState([{}]);
+
+  const [fichasTecnicas, setFichasTecnicas] = useState([{}]);
   const [unidadesMedidaOptions, setUnidadesMedidaOptions] = useState([{}]);
   const [empresaSelecionada, setEmpresaSelecionada] = useState(undefined);
   const [contratoSelecionado, setContratoSelecionado] = useState(undefined);
   const [unidadeSelecionada, setUnidadeSelecionada] = useState({});
+  const [fichaTecnicaSelecionada, setFichaTecnicaSelecionada] = useState();
   const [etapas, setEtapas] = useState([{}]);
-  const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
   const [fornecedores, setFornecedores] = useState([{}]);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [listaRascunhos, setListaRascunhos] = useState(null);
   const [duplicados, setDuplicados] = useState([]);
   const [restante, setRestante] = useState(undefined);
-  const [datasProgramadas, setDatasProgramadas] = useState([]);
   const [edicao, setEdicao] = useState(false);
   const [cronograma, setCronograma] = useState({});
-  const [valoresIniciais, setValoresIniciais] = useState(true);
-  const [uuidCronograma, setUuidCronograma] = useState(null);
-  const [etapasValues, setEtapasValues] = useState({});
-  const [recebimentosValues, setRecebimentosValues] = useState({});
 
-  const getRascunhosAsync = async () => {
-    try {
-      const response = await getRascunhos();
-      if (response.status === HTTP_STATUS.OK) {
-        setListaRascunhos(response.data.results);
-      }
-    } catch (erro) {
-      setListaRascunhos();
-      toastError("Ocorreu um erro ao tentar carregar a lista de rascunhos.");
-    }
-  };
+  const [initialValues, setInitialValues] = useState();
 
-  const onSubmit = () => {
-    setShowModal(true);
-  };
-
-  const getEmpresaFiltrado = empresa => {
-    if (empresa) {
-      const reg = new RegExp(empresa, "iu");
-      return fornecedores.filter(a => reg.test(a.value));
-    }
-    return fornecedores;
-  };
-
-  const getEtapasFiltrado = etapa => {
-    if (etapa) {
-      const reg = new RegExp(etapa, "iu");
-      return etapasOptions.filter(a => reg.test(a.value));
-    }
-    return etapasOptions;
-  };
-
-  const adicionaEtapa = () => {
-    setEtapas([...etapas, {}]);
-  };
-
-  const deletaEtapa = index => {
-    let etapasNovo = [...etapas];
-    etapasNovo.splice(index, 1);
-    setEtapas(etapasNovo);
-  };
-
-  const adicionaRecebimento = () => {
-    setRecebimentos([...recebimentos, {}]);
-  };
-
-  const deletaRecebimento = index => {
-    let recebimentosNovo = [...recebimentos];
-    recebimentosNovo.splice(index, 1);
-    setRecebimentos(recebimentosNovo);
-  };
-
-  const toggleCollapse = index => {
+  const toggleCollapse = (index) => {
     setCollapse({
-      [index]: !collapse[index]
+      [index]: !collapse[index],
     });
-  };
-
-  const quantidadeFaltante = values => {
-    let restante = values.quantidade_total;
-    etapas.forEach((e, index) => {
-      if (values[`quantidade_${index}`])
-        restante = restante - values[`quantidade_${index}`];
-    });
-    return restante;
-  };
-
-  const textoFaltante = values => {
-    let qtdFaltante = quantidadeFaltante(values);
-    let textoPadrao = (
-      <div>
-        Faltam
-        <span className="font-weight-bold">
-          &nbsp;
-          {qtdFaltante}
-          &nbsp;
-          {unidadeSelecionada.nome}
-          &nbsp;
-        </span>
-        para programar
-      </div>
-    );
-
-    let textoAcima = <div>Quantidade maior que a prevista em contrato</div>;
-
-    return (
-      <div className="row">
-        <div
-          className={`col-12 texto-alimento-faltante ${
-            qtdFaltante === 0 ? "verde" : "vermelho"
-          }`}
-        >
-          {qtdFaltante < 0 ? textoAcima : textoPadrao}
-        </div>
-      </div>
-    );
-  };
-
-  const getOptionsDataProgramada = values => {
-    let options = [];
-    etapas.forEach((e, index) => {
-      if (values[`etapa_${index}`] && values[`data_programada_${index}`]) {
-        let nomeConcatenado = `${values[`data_programada_${index}`]} - ${
-          values[`etapa_${index}`]
-        } ${values[`parte_${index}`] ? ` - ${values[`parte_${index}`]}` : ""}`;
-        options.push({
-          uuid: nomeConcatenado,
-          nome: nomeConcatenado
-        });
-      }
-    });
-    return agregarDefault(options);
-  };
-
-  const formataPayload = (values, rascunho) => {
-    let payload = {};
-    payload.cadastro_finalizado = !rascunho;
-    payload.contrato = values.contrato;
-    payload.empresa = empresaSelecionada.uuid;
-    payload.produto = values.produto;
-    payload.qtd_total_programada = values.quantidade_total;
-    payload.unidade_medida = values.unidade_medida;
-    payload.armazem = values.armazem;
-    payload.tipo_embalagem = values.tipo_embalagem;
-
-    payload.etapas = etapas.map((etapa, index) => ({
-      numero_empenho: values[`empenho_${index}`],
-      etapa: values[`etapa_${index}`],
-      parte: values[`parte_${index}`],
-      data_programada: values[`data_programada_${index}`]
-        ? moment(values[`data_programada_${index}`], "DD/MM/YYYY").format(
-            "YYYY-MM-DD"
-          )
-        : undefined,
-      quantidade: values[`quantidade_${index}`],
-      total_embalagens: values[`total_embalagens_${index}`]
-    }));
-
-    payload.programacoes_de_recebimento = recebimentos.map((etapa, index) => ({
-      data_programada: values[`data_recebimento_${index}`],
-      tipo_carga: values[`tipo_recebimento_${index}`]
-    }));
-    return payload;
   };
 
   const salvarCronograma = async (values, rascunho) => {
     setCarregando(true);
-    let payload = formataPayload(values, rascunho);
+
+    let payload = formataPayload(
+      values,
+      rascunho,
+      empresaSelecionada,
+      etapas,
+      recebimentos
+    );
+
     if (!rascunho) {
       payload["password"] = values["password"];
     }
+
     try {
       let response = edicao
-        ? await editaCronograma(payload, uuidCronograma)
+        ? await editaCronograma(payload, cronograma.uuid)
         : await cadastraCronograma(payload);
       if (response.status === 201 || response.status === 200) {
         if (rascunho) {
           toastSuccess("Rascunho salvo com sucesso!");
-          getRascunhosAsync();
-          setCarregando(false);
+          navigate(
+            `/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}/?uuid=${response.data.uuid}`
+          );
         } else {
-          setCarregando(false);
           toastSuccess(
             "Cadastro de Cronograma salvo e enviado para aprovação!"
           );
           setShowModal(false);
-          history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+          navigate(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
         }
       } else {
         toastError("Ocorreu um erro ao salvar o Cronograma");
-        setCarregando(false);
       }
     } catch (error) {
       if (error.response.status === 401) {
         toastError(MSG_SENHA_INVALIDA);
-        setCarregando(false);
       } else {
         exibeError(error, "Ocorreu um erro ao salvar o Cronograma");
       }
-    }
-  };
-
-  const validaRascunho = values => {
-    return !values.contrato;
-  };
-  const lengthOrUnderfined = value => {
-    let valor = value ? value.toString() : undefined;
-    return valor && valor.length > 0 ? valor : undefined;
-  };
-
-  const getDadosCronograma = async () => {
-    try {
-      const responseCronograma = await getCronograma(uuidCronograma);
-      if (responseCronograma.status === HTTP_STATUS.OK) {
-        const programacoes_de_recebimento = responseCronograma.data.programacoes_de_recebimento.reverse();
-        setEtapas(responseCronograma.data.etapas);
-        setRecebimentos(programacoes_de_recebimento);
-
-        const cronogramaValues = {};
-        const crono = responseCronograma.data;
-        setEmpresaSelecionada(crono.empresa);
-        cronogramaValues["empresa"] = lengthOrUnderfined(
-          crono.empresa.nome_fantasia
-        );
-        setContratoSelecionado(crono.contrato);
-        cronogramaValues["contrato"] = lengthOrUnderfined(crono.contrato.uuid);
-        cronogramaValues["numero_processo"] = lengthOrUnderfined(
-          crono.contrato.processo
-        );
-        cronogramaValues["quantidade_total"] = lengthOrUnderfined(
-          crono.qtd_total_programada
-        );
-        cronogramaValues["unidade_medida"] = lengthOrUnderfined(
-          crono.unidade_medida ? crono.unidade_medida.uuid : undefined
-        );
-        cronogramaValues["produto"] = lengthOrUnderfined(
-          crono.produto ? crono.produto.uuid : undefined
-        );
-        cronogramaValues["armazem"] = lengthOrUnderfined(
-          crono.armazem ? crono.armazem.uuid : undefined
-        );
-        cronogramaValues["tipo_embalagem"] = lengthOrUnderfined(
-          crono.tipo_embalagem
-        );
-        cronogramaValues["numero"] = crono.numero ? crono.numero : undefined;
-        setCronograma(cronogramaValues);
-
-        const etapaValues = {};
-        responseCronograma.data.etapas.forEach((etapa, i) => {
-          etapaValues[`empenho_${i}`] = lengthOrUnderfined(
-            etapa.numero_empenho
-          );
-          etapaValues[`etapa_${i}`] = lengthOrUnderfined(etapa.etapa);
-          etapaValues[`parte_${i}`] = lengthOrUnderfined(etapa.parte);
-          etapaValues[`data_programada_${i}`] = lengthOrUnderfined(
-            etapa.data_programada
-          );
-          etapaValues[`quantidade_${i}`] = lengthOrUnderfined(etapa.quantidade);
-          etapaValues[`total_embalagens_${i}`] = lengthOrUnderfined(
-            etapa.total_embalagens
-          );
-        });
-        setEtapasValues(etapaValues);
-
-        const recebimentoValues = {};
-        programacoes_de_recebimento.forEach((recebimento, i) => {
-          recebimentoValues[`data_recebimento_${i}`] = lengthOrUnderfined(
-            recebimento.data_programada
-          );
-          recebimentoValues[`tipo_recebimento_${i}`] = lengthOrUnderfined(
-            recebimento.tipo_carga
-          );
-        });
-        setRecebimentosValues(recebimentoValues);
-        setCarregando(false);
-      }
-    } catch (e) {
-      toastError("Ocorreu um erro ao carregar o Cronograma");
-    }
-  };
-
-  const getOpcoesContrato = () => {
-    if (!empresaSelecionada) return [];
-    return empresaSelecionada.contratos.map(contrato => ({
-      nome: contrato.numero,
-      uuid: contrato.uuid
-    }));
-  };
-
-  const selecionaEmpresa = uuid_empresa => {
-    if (!empresaSelecionada || empresaSelecionada.uuid !== uuid_empresa) {
-      let fornecedor = fornecedores.find(f => f.value === uuid_empresa);
-      setEmpresaSelecionada(fornecedor);
-    }
-  };
-
-  const selecionaContrato = values => {
-    let uuid_contrato = values.contrato;
-    if (!contratoSelecionado || contratoSelecionado.uuid !== uuid_contrato) {
-      let contrato = empresaSelecionada.contratos.find(
-        c => c.uuid === uuid_contrato
-      );
-      values.numero_processo = contrato.processo;
-      setContratoSelecionado(contrato);
-    }
-  };
-
-  const selecionaUnidade = uuid_unidade => {
-    if (!unidadeSelecionada || unidadeSelecionada.uuid !== uuid_unidade) {
-      let unidade = unidadesMedidaOptions.find(u => u.uuid === uuid_unidade);
-      setUnidadeSelecionada(unidade);
+    } finally {
+      setCarregando(false);
     }
   };
 
@@ -359,596 +139,646 @@ export default () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
 
-    if (uuid && valoresIniciais) {
-      setUuidCronograma(uuid);
-      setCarregando(true);
+    if (uuid) {
       setEdicao(true);
-    } else {
-      setCarregando(false);
     }
 
-    const buscaArmazens = async () => {
-      const response = await getNomesDistribuidores();
-      setArmazens(
-        response.data.results.map(armazem => ({
-          nome: armazem.nome_fantasia,
-          uuid: armazem.uuid
-        }))
+    carregaPagina(uuid);
+  }, []);
+
+  const carregaPagina = async (uuid) => {
+    try {
+      setCarregando(true);
+      await Promise.all([
+        buscaArmazens(),
+        buscaFornecedores(),
+        buscaFichasTecnicas(),
+        buscaUnidadesMedida(),
+        buscaRascunhos(),
+      ]);
+      if (uuid) {
+        const responseCronograma = await getCronograma(uuid);
+        setInitialValues(geraInitialValues(responseCronograma.data));
+      }
+    } catch (error) {
+      exibeError(error, "Ocorreu um erro ao carregar o Cronograma");
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const buscaArmazens = async () => {
+    const response = await getNomesDistribuidores();
+    setArmazens(
+      response.data.results.map((armazem) => ({
+        nome: armazem.nome_fantasia,
+        uuid: armazem.uuid,
+      }))
+    );
+  };
+
+  const buscaFornecedores = async () => {
+    const response = await getEmpresasCronograma();
+    setFornecedores(
+      response.data.results.map((fornecedor) => ({
+        uuid: fornecedor.uuid,
+        value: fornecedor.nome_fantasia,
+        contratos: fornecedor.contratos,
+      }))
+    );
+  };
+
+  const buscaFichasTecnicas = async () => {
+    const response = await getListaFichasTecnicasSimplesSemCronograma();
+    setFichasTecnicas(response.data.results);
+  };
+
+  const buscaUnidadesMedida = async () => {
+    const response = await getUnidadesDeMedidaLogistica();
+    setUnidadesMedidaOptions(response.data.results);
+  };
+
+  const buscaRascunhos = async () => {
+    try {
+      const response = await getRascunhos();
+      if (response.status === HTTP_STATUS.OK) {
+        setListaRascunhos(response.data.results);
+      }
+    } catch {
+      toastError("Ocorreu um erro ao tentar carregar a lista de rascunhos.");
+    }
+  };
+
+  const geraInitialValues = (cronograma) => {
+    const programacoesDeRecebimento =
+      cronograma.programacoes_de_recebimento.reverse();
+    setEtapas(cronograma.etapas);
+    setRecebimentos(programacoesDeRecebimento);
+    setEmpresaSelecionada(cronograma.empresa);
+    setContratoSelecionado(cronograma.contrato);
+    setFichaTecnicaSelecionada(cronograma.ficha_tecnica);
+
+    const cronogramaValues = {};
+    cronogramaValues["empresa"] = cronograma.empresa?.nome_fantasia;
+    cronogramaValues["contrato"] = cronograma.contrato?.uuid;
+    cronogramaValues["numero_processo"] = cronograma.contrato?.processo;
+    cronogramaValues["numero_pregao_chamada_publica"] =
+      cronograma.contrato?.numero_pregao ||
+      cronograma.contrato?.numero_chamada_publica;
+    cronogramaValues["ata"] = cronograma.contrato?.ata;
+    cronogramaValues["quantidade_total"] = formataMilhar(
+      cronograma.qtd_total_programada
+    );
+    cronogramaValues["unidade_medida"] = cronograma.unidade_medida?.uuid;
+    cronogramaValues["produto"] = cronograma.produto?.uuid;
+    cronogramaValues["armazem"] = cronograma.armazem?.uuid;
+    cronogramaValues["ficha_tecnica"] = cronograma.ficha_tecnica?.uuid;
+    cronogramaValues["marca"] = cronograma.ficha_tecnica?.marca.nome;
+    cronogramaValues["peso_liquido_embalagem_primaria"] = numberToStringDecimal(
+      cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria
+    );
+    cronogramaValues["unidade_medida_primaria"] =
+      cronograma.ficha_tecnica?.unidade_medida_primaria.uuid;
+    cronogramaValues["peso_liquido_embalagem_secundaria"] =
+      numberToStringDecimal(
+        cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria
       );
-    };
+    cronogramaValues["unidade_medida_secundaria"] =
+      cronograma.ficha_tecnica?.unidade_medida_secundaria.uuid;
+    cronogramaValues["volume_embalagem_primaria"] = numberToStringDecimal(
+      cronograma.ficha_tecnica?.volume_embalagem_primaria
+    );
+    cronogramaValues["unidade_medida_volume_primaria"] =
+      cronograma.ficha_tecnica?.unidade_medida_volume_primaria?.uuid;
+    cronogramaValues["custo_unitario_produto"] = numberToStringDecimalMonetario(
+      cronograma.custo_unitario_produto
+    );
+    cronogramaValues["numero"] = cronograma.numero;
+    cronogramaValues["uuid"] = cronograma.uuid;
 
-    const buscaFornecedores = async () => {
-      const response = await getEmpresasCronograma();
-      setFornecedores(
-        response.data.results.map(forn => ({
-          uuid: forn.uuid,
-          value: forn.nome_fantasia,
-          contratos: forn.contratos
-        }))
+    const etapaValues = {};
+    cronograma.etapas.forEach((etapa, i) => {
+      etapaValues[`empenho_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.numero_empenho
       );
+      etapaValues[`qtd_total_empenho_${i}`] = numberToStringDecimal(
+        etapa.qtd_total_empenho
+      );
+      etapaValues[`etapa_${i}`] = stringNaoVaziaOuUndefined(etapa.etapa);
+      etapaValues[`parte_${i}`] = stringNaoVaziaOuUndefined(etapa.parte);
+      etapaValues[`data_programada_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.data_programada
+      );
+      etapaValues[`quantidade_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.quantidade
+      );
+      etapaValues[`total_embalagens_${i}`] = stringNaoVaziaOuUndefined(
+        etapa.total_embalagens
+      );
+    });
+
+    const recebimentoValues = {};
+    programacoesDeRecebimento.forEach((recebimento, i) => {
+      recebimentoValues[`data_recebimento_${i}`] = stringNaoVaziaOuUndefined(
+        recebimento.data_programada
+      );
+      recebimentoValues[`tipo_recebimento_${i}`] = stringNaoVaziaOuUndefined(
+        recebimento.tipo_carga
+      );
+    });
+
+    setCronograma(cronogramaValues);
+
+    return {
+      ...cronogramaValues,
+      ...etapaValues,
+      ...recebimentoValues,
     };
+  };
 
-    const buscaEtapas = async () => {
-      const response = await getEtapas();
-      setEtapasOptions(response.data);
-    };
-
-    const buscaProdutos = async () => {
-      const response = await getListaCompletaProdutosLogistica();
-      setProdutosOptions(response.data.results);
-    };
-
-    const buscaUnidadesMedida = async () => {
-      const response = await getUnidadesDeMedidaLogistica();
-      setUnidadesMedidaOptions(response.data.results);
-    };
-
-    buscaArmazens();
-    buscaEtapas();
-    buscaFornecedores();
-    buscaProdutos();
-    buscaUnidadesMedida();
-    getRascunhosAsync();
-  }, [valoresIniciais]);
-
-  if (valoresIniciais && edicao) {
-    getDadosCronograma();
-    setValoresIniciais(false);
-  }
-
-  const onChangeFormSpy = async changes => {
+  const onChangeFormSpy = async (changes, form) => {
     if (changes.values.empresa) selecionaEmpresa(changes.values.empresa);
     if (changes.values.contrato) selecionaContrato(changes.values);
     if (changes.values.unidade_medida)
       selecionaUnidade(changes.values.unidade_medida);
-    let restante = changes.values.quantidade_total;
-    etapas.forEach((e, index) => {
-      if (changes.values[`quantidade_${index}`])
-        restante = restante - changes.values[`quantidade_${index}`];
-    });
-    setRestante(restante);
-    if (etapas.length < 2) return;
-    const partes_etapas = [];
-    etapas.forEach((_, i) => {
-      partes_etapas.push({
-        parte: changes.values[`parte_${i}`],
-        etapa: changes.values[`etapa_${i}`],
-        index: i
-      });
-    });
-    const duplicados = [];
-    partes_etapas.forEach(pe => {
-      if (
-        partes_etapas.filter(
-          pe_ => pe_.parte === pe.parte && pe_.etapa === pe.etapa
-        ).length > 1
-      ) {
-        duplicados.push(pe.index);
-      }
-    });
-    setDuplicados(duplicados);
+    if (changes.values.ficha_tecnica)
+      await selecionaFichaTecnica(changes.values, form);
+
+    onChangeEtapas(changes, etapas, setRestante, setDuplicados);
   };
+
+  const selecionaEmpresa = (uuidEmpresa) => {
+    if (!empresaSelecionada || empresaSelecionada.uuid !== uuidEmpresa) {
+      let fornecedor = fornecedores.find((f) => f.value === uuidEmpresa);
+      setEmpresaSelecionada(fornecedor);
+    }
+  };
+
+  const selecionaContrato = (values) => {
+    let uuidContrato = values.contrato;
+    if (!contratoSelecionado || contratoSelecionado.uuid !== uuidContrato) {
+      let contrato = empresaSelecionada.contratos.find(
+        (c) => c.uuid === uuidContrato
+      );
+
+      values.numero_processo = contrato.processo;
+      values.numero_pregao_chamada_publica =
+        contrato.numero_pregao || contrato.numero_chamada_publica;
+      values.ata = contrato.ata;
+
+      setContratoSelecionado(contrato);
+    }
+  };
+
+  const selecionaUnidade = (uuidUnidade) => {
+    if (!unidadeSelecionada || unidadeSelecionada.uuid !== uuidUnidade) {
+      let unidade = unidadesMedidaOptions.find((u) => u.uuid === uuidUnidade);
+      setUnidadeSelecionada(unidade);
+    }
+  };
+
+  const selecionaFichaTecnica = async (values, form) => {
+    const uuidFicha = values.ficha_tecnica;
+    if (
+      !fichaTecnicaSelecionada ||
+      fichaTecnicaSelecionada.uuid !== uuidFicha
+    ) {
+      setCarregando(true);
+
+      const response = await getDadosCronogramaFichaTecnica(uuidFicha);
+      const fichaTecnica = response.data;
+
+      form.change("marca", fichaTecnica.marca.nome);
+      form.change(
+        "peso_liquido_embalagem_primaria",
+        numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_primaria)
+      );
+      form.change(
+        "unidade_medida_primaria",
+        fichaTecnica.unidade_medida_primaria.uuid
+      );
+      form.change(
+        "peso_liquido_embalagem_secundaria",
+        numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_secundaria)
+      );
+      form.change(
+        "unidade_medida_secundaria",
+        fichaTecnica.unidade_medida_secundaria.uuid
+      );
+      form.change(
+        "volume_embalagem_primaria",
+        numberToStringDecimal(fichaTecnica.volume_embalagem_primaria)
+      );
+      form.change(
+        "unidade_medida_volume_primaria",
+        fichaTecnica.unidade_medida_volume_primaria?.uuid
+      );
+
+      setFichaTecnicaSelecionada(fichaTecnica);
+      setCarregando(false);
+    }
+  };
+
   return (
-    <Spin tip="Carregando..." spinning={carregando}>
+    <>
       {!edicao && <Rascunhos listaRascunhos={listaRascunhos} />}
-      <div className="card mt-3 card-cadastro-cronograma">
-        <div className="card-body cadastro-cronograma">
-          <Form
-            onSubmit={onSubmit}
-            initialValues={{
-              ...cronograma,
-              ...etapasValues,
-              ...recebimentosValues
-            }}
-            validate={() => {}}
-            render={({ form, handleSubmit, submitting, values }) => (
-              <form onSubmit={handleSubmit}>
-                <FormSpy
-                  subscription={{ values: true, active: true, valid: true }}
-                  onChange={changes => onChangeFormSpy(changes)}
-                />
-                <div className="row">
-                  <div className="col-5">
-                    <Field
-                      component={AutoCompleteField}
-                      options={getEmpresaFiltrado(values.empresa)}
-                      label="Pesquisar Empresa"
-                      name="empresa"
-                      required
-                      validate={required}
-                      placeholder={"Selecione uma Empresa Cadastrada"}
-                      esconderIcone
-                    />
-                  </div>
-                  {edicao && (
-                    <div className="col-6 text-right">
-                      <p>
-                        <b>Nº do Cronograma: </b>
+      <Spin tip="Carregando..." spinning={carregando}>
+        <div className="card mt-3 card-cadastro-cronograma">
+          <div className="card-body cadastro-cronograma">
+            <Form
+              onSubmit={() => setShowModal(true)}
+              initialValues={initialValues}
+              render={({ form, handleSubmit, values, errors }) => (
+                <form onSubmit={handleSubmit}>
+                  <FormSpy
+                    subscription={{ values: true, active: true, valid: true }}
+                    onChange={(changes) => onChangeFormSpy(changes, form)}
+                  />
+                  <div className="row">
+                    {edicao && (
+                      <div className="col text-end">
+                        <p>
+                          <b>Nº do Cronograma: </b>
 
-                        <span className="head-green">{cronograma.numero}</span>
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="row">
-                  <div className="col-8">
-                    <Field
-                      component={SelectSelecione}
-                      naoDesabilitarPrimeiraOpcao
-                      options={getOpcoesContrato()}
-                      label="Nº do Contrato"
-                      name="contrato"
-                      required
-                      validate={required}
-                      placeholder={"Selecione um Contrato"}
-                    />
-                  </div>
-                  <div className="col-4">
-                    <Field
-                      component={InputText}
-                      label="Nº do Processo SEI - Contratos"
-                      name="numero_processo"
-                      className="input-busca-produto"
-                      validate={required}
-                      disabled={true}
-                    />
-                  </div>
-                </div>
-
-                {values.empresa && values.contrato && (
-                  <div className="accordion mt-1" id="accordionCronograma">
-                    <div className="card mt-3">
-                      <div className={`card-header card-tipo`} id={`heading_1`}>
-                        <div className="row card-header-content">
-                          <span className="nome-alimento">
-                            Dados do Produto
+                          <span className="head-green">
+                            {cronograma.numero}
                           </span>
-                          <div className="col-1 align-self-center">
-                            <button
-                              onClick={() => toggleCollapse(1)}
-                              className="btn btn-link btn-block text-right px-0"
-                              type="button"
-                              data-toggle="collapse"
-                              data-target={`#collapse_1`}
-                              aria-expanded="true"
-                              aria-controls={`collapse_1`}
-                            >
-                              <span className="span-icone-toogle">
-                                <i
-                                  className={
-                                    collapse[1]
-                                      ? "fas fa-chevron-up"
-                                      : "fas fa-chevron-down"
-                                  }
-                                />
-                              </span>
-                            </button>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="row">
+                    <div className="col-8">
+                      <Field
+                        className="input-cronograma"
+                        component={AutoCompleteField}
+                        options={getEmpresaFiltrado(
+                          fornecedores,
+                          values.empresa
+                        )}
+                        label="Pesquisar Empresa"
+                        name="empresa"
+                        required
+                        validate={required}
+                        placeholder={"Selecione uma Empresa Cadastrada"}
+                        esconderIcone
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        className="input-cronograma"
+                        component={Select}
+                        naoDesabilitarPrimeiraOpcao
+                        options={[
+                          { nome: "Selecione um Contrato", uuid: "" },
+                          ...getOpcoesContrato(empresaSelecionada),
+                        ]}
+                        label="Nº do Contrato"
+                        name="contrato"
+                        required
+                        validate={required}
+                        disabled={!values.empresa}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-4">
+                      <Field
+                        className="input-cronograma"
+                        component={InputText}
+                        label="Nº do Pregão Eletrônico/Chamada Pública"
+                        name="numero_pregao_chamada_publica"
+                        validate={required}
+                        disabled={true}
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        className="input-cronograma"
+                        component={InputText}
+                        label="Nº ATA"
+                        name="ata"
+                        disabled={true}
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        className="input-cronograma"
+                        component={InputText}
+                        label="Nº do Processo SEI - Contratos"
+                        name="numero_processo"
+                        validate={required}
+                        disabled={true}
+                      />
+                    </div>
+                  </div>
+
+                  {values.empresa && values.contrato && (
+                    <div className="accordion mt-1" id="accordionCronograma">
+                      <div className="card mt-3">
+                        <div
+                          className={`card-header card-tipo`}
+                          id={`heading_1`}
+                        >
+                          <div className="row card-header-content">
+                            <span className="col-11 nome-alimento">
+                              Dados do Produto
+                            </span>
+                            <div className="col-1 align-self-center">
+                              <button
+                                onClick={() => toggleCollapse(1)}
+                                className="btn btn-link btn-block text-end px-0"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target={`#collapse_1`}
+                                aria-expanded="true"
+                                aria-controls={`collapse_1`}
+                              >
+                                <span className="span-icone-toogle">
+                                  <i
+                                    className={
+                                      collapse[1]
+                                        ? "fas fa-chevron-up"
+                                        : "fas fa-chevron-down"
+                                    }
+                                  />
+                                </span>
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div
-                        id={`collapse_1`}
-                        className="collapse"
-                        aria-labelledby="headingOne"
-                        data-parent="#accordionCronograma"
-                      >
-                        <div className="card-body">
-                          <div className="row">
-                            <div className="col-6">
-                              <Field
-                                component={SelectSelecione}
-                                naoDesabilitarPrimeiraOpcao
-                                options={produtosOptions}
-                                label="Produto"
-                                name="produto"
-                                placeholder={"Selecione um Produto"}
-                                required
-                              />
-                            </div>
-                            <div className="col-3">
-                              <Field
-                                component={InputText}
-                                label="Quantidade Total Programada"
-                                name="quantidade_total"
-                                className="input-busca-produto"
-                                disabled={false}
-                                apenasNumeros
-                                required
-                                placeholder="Informe a Quantidade Total"
-                              />
-                            </div>
-                            <div className="col-3">
-                              <Field
-                                component={SelectSelecione}
-                                naoDesabilitarPrimeiraOpcao
-                                options={unidadesMedidaOptions}
-                                label="Unidade de Medida"
-                                name="unidade_medida"
-                                required
-                                validate={required}
-                                placeholder={"Selecione a Unidade"}
-                              />
-                            </div>
-                          </div>
-                          <div className="row">
-                            <div className="col-6">
-                              <Field
-                                component={SelectSelecione}
-                                naoDesabilitarPrimeiraOpcao
-                                options={armazens}
-                                label="Armazém"
-                                name="armazem"
-                                required
-                                validate={required}
-                                placeholder={"Selecione o Armazém"}
-                              />
-                            </div>
-                            <div className="col-3">
-                              <Field
-                                component={SelectSelecione}
-                                naoDesabilitarPrimeiraOpcao
-                                options={[
-                                  {
-                                    uuid: "CAIXA",
-                                    nome: "Caixa"
-                                  },
-                                  {
-                                    uuid: "FARDO",
-                                    nome: "Fardo"
-                                  },
-                                  {
-                                    uuid: "TUBET",
-                                    nome: "Tubet"
-                                  }
-                                ]}
-                                label="Tipo de Embalagem"
-                                name="tipo_embalagem"
-                                required
-                                validate={required}
-                                placeholder={"Selecione a Embalagem"}
-                              />
-                            </div>
-                          </div>
+                        <div
+                          id={`collapse_1`}
+                          className="collapse"
+                          aria-labelledby="headingOne"
+                          data-bs-parent="#accordionCronograma"
+                        >
+                          <div className="card-body">
+                            <div className="row">
+                              <div className="col-6">
+                                <Field
+                                  className="input-cronograma"
+                                  component={Select}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={[
+                                    {
+                                      nome: "Selecione uma Ficha Técnica de Produto",
+                                      uuid: "",
+                                    },
+                                    ...geraOptionsFichasTecnicas(
+                                      fichasTecnicas,
+                                      empresaSelecionada,
+                                      fichaTecnicaSelecionada
+                                    ),
+                                  ]}
+                                  label="Ficha Técnica e Produto"
+                                  name="ficha_tecnica"
+                                  required
+                                />
+                              </div>
+                              <div className="col-6">
+                                <Field
+                                  className="input-cronograma"
+                                  component={InputText}
+                                  label="Marca"
+                                  name="marca"
+                                  required
+                                  disabled
+                                />
+                              </div>
 
-                          <div className="subtitulo">
-                            Cronograma das Entregas
-                          </div>
-                          <hr className="linha-verde" />
-                          {etapas &&
-                            etapas.map((etapa, index) => (
-                              <>
-                                {index !== 0 && (
-                                  <>
-                                    <hr />
-                                    <div className="row">
-                                      <div className="w-100">
-                                        <Botao
-                                          texto=""
-                                          type={BUTTON_TYPE.BUTTON}
-                                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                                          icon="fas fa-trash"
-                                          className="float-right ml-3"
-                                          onClick={() => deletaEtapa(index)}
-                                          disabled={submitting}
-                                        />
-                                      </div>
-                                    </div>
-                                  </>
-                                )}
+                              <div className="row mt-3">
                                 <div className="row">
-                                  <div className="col-4">
-                                    <Field
-                                      component={InputText}
-                                      label="Nº do Empenho"
-                                      name={`empenho_${index}`}
-                                      placeholder="Informe o Nº do Empenho"
+                                  <div className="col-6">
+                                    <Label
+                                      content="Peso da Embalagem Primária"
                                       required
-                                      validate={required}
-                                      proibeLetras
                                     />
                                   </div>
-                                  <div className="col-4">
-                                    <Field
-                                      component={AutoCompleteField}
-                                      options={getEtapasFiltrado(
-                                        values[`etapa_${index}`]
-                                      )}
-                                      label="Etapa"
-                                      name={`etapa_${index}`}
-                                      className="input-busca-produto"
-                                      placeholder="Selecione a Etapa"
+
+                                  <div className="col-6">
+                                    <Label
+                                      content="Peso da Embalagem Secundária"
                                       required
-                                      validate={required}
-                                      esconderIcone
-                                    />
-                                  </div>
-                                  <div className="col-4">
-                                    <Field
-                                      component={SelectSelecione}
-                                      naoDesabilitarPrimeiraOpcao
-                                      options={[
-                                        {
-                                          uuid: "Parte 1",
-                                          nome: "Parte 1"
-                                        },
-                                        {
-                                          uuid: "Parte 2",
-                                          nome: "Parte 2"
-                                        },
-                                        {
-                                          uuid: "Parte 3",
-                                          nome: "Parte 3"
-                                        },
-                                        {
-                                          uuid: "Parte 4",
-                                          nome: "Parte 4"
-                                        },
-                                        {
-                                          uuid: "Parte 5",
-                                          nome: "Parte 5"
-                                        }
-                                      ]}
-                                      label="Parte"
-                                      name={`parte_${index}`}
-                                      placeholder={"Selecione a Parte"}
-                                      validate={() =>
-                                        duplicados.includes(index) &&
-                                        "Parte já selecionada"
-                                      }
                                     />
                                   </div>
                                 </div>
+
                                 <div className="row">
-                                  <div className="col-4">
+                                  <div className="col-3">
                                     <Field
-                                      component={InputComData}
-                                      label="Data Programada"
-                                      name={`data_programada_${index}`}
-                                      placeholder="Selecionar a Data"
+                                      className="input-cronograma"
+                                      component={InputText}
+                                      name={`peso_liquido_embalagem_primaria`}
                                       required
-                                      validate={required}
-                                      writable={false}
-                                      minDate={null}
+                                      disabled
                                     />
                                   </div>
-                                  <div className="col-4">
+
+                                  <div className="col-3">
                                     <Field
-                                      component={InputText}
-                                      label="Quantidade"
-                                      name={`quantidade_${index}`}
-                                      placeholder="Digite a Quantidade"
-                                      validate={() =>
-                                        restante !== 0 &&
-                                        `quantidade total é diferente de ${values.quantidade_total ||
-                                          0}`
-                                      }
+                                      className="input-cronograma"
+                                      component={Select}
+                                      options={unidadesMedidaOptions}
+                                      name={`unidade_medida_primaria`}
                                       required
-                                      type="number"
-                                      pattern="[0-9]*"
+                                      disabled
                                     />
                                   </div>
-                                  <div className="col-4">
+
+                                  <div className="col-3">
                                     <Field
+                                      className="input-cronograma"
                                       component={InputText}
-                                      label="Total de Embalagens"
-                                      name={`total_embalagens_${index}`}
-                                      placeholder="Digite a Quantidade"
+                                      name={`peso_liquido_embalagem_secundaria`}
                                       required
-                                      validate={required}
-                                      apenasNumeros
+                                      disabled
+                                    />
+                                  </div>
+
+                                  <div className="col-3">
+                                    <Field
+                                      className="input-cronograma"
+                                      component={Select}
+                                      options={unidadesMedidaOptions}
+                                      name={`unidade_medida_secundaria`}
+                                      required
+                                      disabled
                                     />
                                   </div>
                                 </div>
-                              </>
-                            ))}
+                              </div>
 
-                          {values.quantidade_total && textoFaltante(values)}
-
-                          <div className="text-center mb-2 mt-2">
-                            <Botao
-                              texto="+ Adicionar Etapa"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              className=""
-                              onClick={() => adicionaEtapa()}
-                              disabled={submitting}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="card mt-3">
-                      <div className={`card-header card-tipo`} id={`heading_2`}>
-                        <div className="row card-header-content">
-                          <span className="nome-alimento">
-                            Dados do Recebimento
-                          </span>
-                          <div className="col-1 align-self-center">
-                            <button
-                              onClick={() => toggleCollapse(2)}
-                              className="btn btn-link btn-block text-right px-0"
-                              type="button"
-                              data-toggle="collapse"
-                              data-target={`#collapse_2`}
-                              aria-expanded="true"
-                              aria-controls={`collapse_2`}
-                            >
-                              <span className="span-icone-toogle">
-                                <i
-                                  className={
-                                    collapse[2]
-                                      ? "fas fa-chevron-up"
-                                      : "fas fa-chevron-down"
-                                  }
+                              <div className="col-6">
+                                <Field
+                                  className="input-cronograma"
+                                  component={Select}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={[
+                                    { nome: "Selecione o Armazém", uuid: "" },
+                                    ...armazens,
+                                  ]}
+                                  label="Armazém"
+                                  name="armazem"
+                                  required
+                                  validate={required}
                                 />
-                              </span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                              </div>
 
-                      <div
-                        id={`collapse_2`}
-                        className="collapse"
-                        aria-labelledby="headingOne"
-                        data-parent="#accordionCronograma"
-                      >
-                        <div className="card-body">
-                          {recebimentos.map((recebimento, index) => (
-                            <>
-                              {index !== 0 && (
-                                <>
-                                  <hr />
+                              <div className="col-3">
+                                <Field
+                                  className="input-cronograma"
+                                  component={InputText}
+                                  label="Quantidade Total Programada"
+                                  name="quantidade_total"
+                                  disabled={false}
+                                  agrupadorMilhar
+                                  required
+                                  placeholder="Informe a Quantidade Total"
+                                  validate={required}
+                                />
+                              </div>
+                              <div className="col-3">
+                                <Field
+                                  className="input-cronograma"
+                                  component={Select}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={[
+                                    { nome: "Selecione a Unidade", uuid: "" },
+                                    ...unidadesMedidaOptions,
+                                  ]}
+                                  label="Unidade de Medida"
+                                  name="unidade_medida"
+                                  required
+                                  validate={required}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="row mt-3">
+                              <div className="col-4">
+                                <Field
+                                  className="input-cronograma"
+                                  component={InputText}
+                                  name={`custo_unitario_produto`}
+                                  label="Custo Unitário do Produto"
+                                  placeholder="Informe o Custo Unitário"
+                                  required
+                                  proibeLetras
+                                  validate={composeValidators(
+                                    required,
+                                    decimalMonetario
+                                  )}
+                                />
+                              </div>
+                              {values.volume_embalagem_primaria && (
+                                <div className="col-8">
                                   <div className="row">
-                                    <div className="w-100">
-                                      <Botao
-                                        texto=""
-                                        type={BUTTON_TYPE.BUTTON}
-                                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                                        icon="fas fa-trash"
-                                        className="float-right ml-3"
-                                        onClick={() => deletaRecebimento(index)}
-                                        disabled={submitting}
+                                    <div className="col">
+                                      <Label
+                                        content="Volume da Embalagem Primária"
+                                        required
                                       />
                                     </div>
                                   </div>
-                                </>
+
+                                  <div className="row">
+                                    <div className="col">
+                                      <Field
+                                        className="input-cronograma"
+                                        component={InputText}
+                                        name={`volume_embalagem_primaria`}
+                                        required
+                                        disabled
+                                      />
+                                    </div>
+
+                                    <div className="col">
+                                      <Field
+                                        className="input-cronograma"
+                                        component={Select}
+                                        options={unidadesMedidaOptions}
+                                        name={`unidade_medida_volume_primaria`}
+                                        required
+                                        disabled
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
                               )}
+                            </div>
 
-                              <div className="row">
-                                <div className="col-4">
-                                  <Field
-                                    component={SelectSelecione}
-                                    naoDesabilitarPrimeiraOpcao
-                                    options={getOptionsDataProgramada(
-                                      values
-                                    ).filter(
-                                      op =>
-                                        !datasProgramadas.find(
-                                          dp =>
-                                            dp.nome === op.nome &&
-                                            dp.index !== index
-                                        )
-                                    )}
-                                    label="Data Programada"
-                                    name={`data_recebimento_${index}`}
-                                    placeholder={"Selecionar a Data"}
-                                  />
-                                  <OnChange name={`data_recebimento_${index}`}>
-                                    {async value => {
-                                      const index_ = datasProgramadas.findIndex(
-                                        dp => dp.index === index
-                                      );
-                                      if (index_ !== -1) {
-                                        datasProgramadas.splice(index_, 1);
-                                      }
-                                      datasProgramadas.push({
-                                        nome: value,
-                                        index
-                                      });
-                                      setDatasProgramadas(datasProgramadas);
-                                      form.change("reload", !values.reload);
-                                    }}
-                                  </OnChange>
-                                </div>
-                                <div className="col-4">
-                                  <Field
-                                    component={SelectSelecione}
-                                    naoDesabilitarPrimeiraOpcao
-                                    options={[
-                                      {
-                                        uuid: "PALETIZADA",
-                                        nome: "Paletizada"
-                                      },
-                                      {
-                                        uuid: "ESTIVADA_BATIDA",
-                                        nome: "Estivada/Batida"
-                                      }
-                                    ]}
-                                    label="Tipo de Carga"
-                                    name={`tipo_recebimento_${index}`}
-                                    placeholder={"Selecione a Carga"}
-                                  />
-                                </div>
-                              </div>
-                            </>
-                          ))}
+                            <div className="subtitulo">
+                              Cronograma das Entregas
+                            </div>
 
-                          <div className="text-center mb-2 mt-2">
-                            <Botao
-                              texto="+ Adicionar Recebimento"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              className=""
-                              onClick={() => adicionaRecebimento()}
-                              disabled={submitting}
+                            <hr className="linha-verde" />
+
+                            <FormEtapa
+                              form={form}
+                              etapas={etapas}
+                              setEtapas={setEtapas}
+                              values={values}
+                              errors={errors}
+                              duplicados={duplicados}
+                              restante={restante}
+                              unidadeMedida={unidadeSelecionada}
                             />
                           </div>
                         </div>
                       </div>
+
+                      <FormRecebimento
+                        values={values}
+                        form={form}
+                        etapas={etapas}
+                        recebimentos={recebimentos}
+                        setRecebimentos={setRecebimentos}
+                      />
                     </div>
+                  )}
+
+                  <hr />
+
+                  <div className="mt-4 mb-4">
+                    <Botao
+                      texto="Assinar e Enviar Cronograma"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      className="float-end ms-3"
+                    />
+                    <Botao
+                      texto="Salvar Rascunho"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-end ms-3"
+                      onClick={() => salvarCronograma(values, true)}
+                      disabled={validaRascunho(values)}
+                    />
                   </div>
-                )}
-
-                <hr />
-
-                <div className="mt-4 mb-4">
-                  <Botao
-                    texto="Assinar e Enviar Cronograma"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                  <ModalAssinaturaUsuario
+                    titulo="Assinar Cronograma"
+                    texto="Você confirma a assinatura digital deste cronograma de entrega"
+                    show={showModal}
+                    loading={carregando}
+                    handleClose={() => {
+                      setShowModal(false);
+                      setCarregando(false);
+                    }}
+                    handleSim={(password) => {
+                      values["password"] = password;
+                      salvarCronograma(values, false);
+                    }}
                   />
-                  <Botao
-                    texto="Salvar Rascunho"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
-                    onClick={() => salvarCronograma(values, true)}
-                    disabled={validaRascunho(values)}
-                  />
-                </div>
-                <ModalAssinaturaUsuario
-                  titulo="Assinar Cronograma"
-                  texto="Você confirma a assinatura digital deste cronograma de entrega"
-                  show={showModal}
-                  loading={carregando}
-                  handleClose={() => {
-                    setShowModal(false);
-                    setCarregando(false);
-                  }}
-                  handleSim={password => {
-                    values["password"] = password;
-                    salvarCronograma(values, false);
-                  }}
-                />
-              </form>
-            )}
-          />
+                </form>
+              )}
+            />
+          </div>
         </div>
-      </div>
-    </Spin>
+      </Spin>
+    </>
   );
 };

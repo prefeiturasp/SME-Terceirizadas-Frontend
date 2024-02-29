@@ -2,7 +2,7 @@ import React from "react";
 import { mascaraCNPJ, mascaraTelefoneOuCelular } from "./helper";
 import "./style.scss";
 
-export const EmpresaDoLote = props => {
+export const EmpresaDoLote = (props) => {
   const { empresa, ativo } = props;
   if (empresa === undefined || !ativo) return <tr />;
   return [
@@ -20,7 +20,7 @@ export const EmpresaDoLote = props => {
           empresa.contatos[0].telefone ||
           empresa.contatos[0].telefone2
       )}
-    </td>
+    </td>,
   ];
 };
 

@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import { Botao } from "../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../Shareable/Botao/constants.js";
 
 export class ModalCadastroEmpresa extends Component {
@@ -29,14 +29,14 @@ export class ModalCadastroEmpresa extends Component {
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => this.onSubmit(values)}
             style={BUTTON_STYLE.GREEN}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>

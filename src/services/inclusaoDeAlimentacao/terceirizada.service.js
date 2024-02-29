@@ -10,7 +10,7 @@ export const terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao = async (
   }/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   try {
     const result = await fetch(url, OBJ_REQUEST);
@@ -23,17 +23,19 @@ export const terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao = async (
 };
 
 // TODO: confirmar necessidade do parametro
-export const terceirizadaListarSolicitacoesDeInclusaoDeAlimentacaoReprovados = tipoSolicitacao => {
+export const terceirizadaListarSolicitacoesDeInclusaoDeAlimentacaoReprovados = (
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/pedidos-reprovados-terceirizada/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
@@ -48,40 +50,37 @@ export const terceirizadaDarCienciaDeInclusaoDeAlimentacao = (
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: AUTH_TOKEN
+    headers: AUTH_TOKEN,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao = async (
-  uuid,
-  payload,
-  tipoSolicitacao
-) => {
-  const url = `${getPath(tipoSolicitacao)}/${uuid}/${
-    FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
-  }/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "PATCH",
-    body: JSON.stringify(payload)
+export const terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao =
+  async (uuid, payload, tipoSolicitacao) => {
+    const url = `${getPath(tipoSolicitacao)}/${uuid}/${
+      FLUXO.TERCEIRIZADA_RESPONDE_QUESTIONAMENTO
+    }/`;
+    const OBJ_REQUEST = {
+      headers: AUTH_TOKEN,
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    };
+    let status = 0;
+    try {
+      const res = await fetch(url, OBJ_REQUEST);
+      const data = await res.json();
+      status = res.status;
+      return { ...data, status: status };
+    } catch (error) {
+      return error.json();
+    }
   };
-  let status = 0;
-  try {
-    const res = await fetch(url, OBJ_REQUEST);
-    const data = await res.json();
-    status = res.status;
-    return { ...data, status: status };
-  } catch (error) {
-    return error.json();
-  }
-};

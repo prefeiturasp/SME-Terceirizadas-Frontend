@@ -108,7 +108,7 @@ export const InversaoCardapioBody = ({ ...props }) => {
                     <p
                       className="observacao-negrito"
                       dangerouslySetInnerHTML={{
-                        __html: solicitacao.motivo
+                        __html: solicitacao.motivo,
                       }}
                     />
                   </b>
@@ -121,7 +121,7 @@ export const InversaoCardapioBody = ({ ...props }) => {
                         <p
                           className="observacao-negrito"
                           dangerouslySetInnerHTML={{
-                            __html: solicitacao.observacao
+                            __html: solicitacao.observacao,
                           }}
                         />
                       </b>
@@ -132,6 +132,6 @@ export const InversaoCardapioBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

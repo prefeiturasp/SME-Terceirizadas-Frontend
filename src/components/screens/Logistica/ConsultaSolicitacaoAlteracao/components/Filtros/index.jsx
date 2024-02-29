@@ -8,7 +8,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 
@@ -18,9 +18,9 @@ export default ({
   setFiltros,
   setSolicitacoes,
   numeroSolicitacaoInicial,
-  inicioResultado
+  inicioResultado,
 }) => {
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     if (filtros.motivos) {
       filtros.motivos = filtros.motivos.toString();
@@ -91,37 +91,36 @@ export default ({
             <div className="row mt-3">
               <div className="col">
                 <Field
-                  component={InputText}
-                  label="Nome do Distribuidor"
-                  name="nome_distribuidor"
-                  placeholder="Digite o Nome do Distribuidor"
-                  className="input-busca-produto"
-                />
-              </div>
-              <div className="col">
-                <Field
                   label="Motivo de Alteração"
                   component={MultiSelect}
                   disableSearch
                   name="motivos"
                   multiple
-                  nomeDoItemNoPlural="classificações"
-                  pluralFeminino
+                  nomeDoItemNoPlural="status"
                   options={[
                     {
                       value: "ALTERAR_DATA_ENTREGA",
-                      label: "Alterar data de entrega"
+                      label: "Alterar data de entrega",
                     },
                     {
                       value: "ALTERAR_QTD_ALIMENTO",
-                      label: "Alterar quantidade de alimento"
+                      label: "Alterar quantidade de alimento",
                     },
                     {
                       value: "ALTERAR_ALIMENTO",
-                      label: "Alterar alimento"
+                      label: "Alterar alimento",
                     },
-                    { value: "OUTROS", label: "Outros" }
+                    { value: "OUTROS", label: "Outros" },
                   ]}
+                />
+              </div>
+              <div className="col">
+                <Field
+                  component={InputText}
+                  label="Nome do Distribuidor"
+                  name="nome_distribuidor"
+                  placeholder="Digite o Nome do Distribuidor"
+                  className="input-busca-produto"
                 />
               </div>
             </div>
@@ -131,7 +130,7 @@ export default ({
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting}
               />
 
@@ -139,7 +138,7 @@ export default ({
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset({});
                   setSolicitacoes(undefined);

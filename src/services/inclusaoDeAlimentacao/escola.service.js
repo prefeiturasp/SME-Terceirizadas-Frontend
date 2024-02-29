@@ -41,18 +41,18 @@ export const escolaExcluirSolicitacaoDeInclusaoDeAlimentacao = async (
 ) => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "DELETE"
+    method: "DELETE",
   };
   let status = 0;
   return await fetch(`${getPath(tipoSolicitacao)}/${uuid}/`, OBJ_REQUEST)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return { data: error, status: status };
     });
 };
@@ -63,19 +63,10 @@ export const escolaCancelarSolicitacaoDeInclusaoDeAlimentacao = async (
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "PATCH",
-    body: JSON.stringify(payload)
-  };
-  let status = 0;
-  try {
-    const res = await fetch(url, OBJ_REQUEST);
-    const data = await res.json();
-    status = res.status;
-    return { ...data, status: status };
-  } catch (error) {
-    return error.json();
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 
@@ -97,7 +88,7 @@ export const getMotivosInclusaoContinua = async () => {
   }
 };
 
-export const createInclusaoAlimentacaoCEMEI = async payload => {
+export const createInclusaoAlimentacaoCEMEI = async (payload) => {
   const url = `inclusao-alimentacao-cemei/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -126,7 +117,7 @@ export const getInclusaoCEMEIRascunhos = async () => {
   }
 };
 
-export const iniciaFluxoInclusaoAlimentacaoCEMEI = async uuid => {
+export const iniciaFluxoInclusaoAlimentacaoCEMEI = async (uuid) => {
   const url = `inclusao-alimentacao-cemei/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
   const response = await axios.patch(url).catch(ErrorHandlerFunction);
   if (response) {
@@ -135,7 +126,7 @@ export const iniciaFluxoInclusaoAlimentacaoCEMEI = async uuid => {
   }
 };
 
-export const deleteInclusaoDeAlimentacaoCEMEI = async uuid => {
+export const deleteInclusaoDeAlimentacaoCEMEI = async (uuid) => {
   const url = `inclusao-alimentacao-cemei/${uuid}/`;
   const response = await axios.delete(url).catch(ErrorHandlerFunction);
   if (response) {
@@ -144,7 +135,7 @@ export const deleteInclusaoDeAlimentacaoCEMEI = async uuid => {
   }
 };
 
-export const getInclusaoCEMEI = async uuid => {
+export const getInclusaoCEMEI = async (uuid) => {
   const url = `inclusao-alimentacao-cemei/${uuid}/`;
   const response = await axios.get(url).catch(ErrorHandlerFunction);
   if (response) {

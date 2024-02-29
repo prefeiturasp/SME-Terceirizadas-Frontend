@@ -17,7 +17,7 @@ export default () => {
 
   const inicioResultado = useRef();
 
-  const buscarGuias = async page => {
+  const buscarGuias = async (page) => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     const response = await getGuiasRemessaParaInsucesso(params);
@@ -40,7 +40,7 @@ export default () => {
     }
   }, [filtros]);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarGuias(page);
     setPage(page);
   };

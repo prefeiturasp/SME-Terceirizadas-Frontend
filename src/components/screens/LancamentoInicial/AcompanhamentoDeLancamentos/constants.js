@@ -9,7 +9,7 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
         para análise
       </div>
     ),
-    cor: "azul-claro"
+    cor: "azul-claro",
   },
   MEDICAO_CORRECAO_SOLICITADA: {
     nome: (
@@ -18,7 +18,7 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
         <br /> ajustes pela DRE
       </div>
     ),
-    cor: "laranja"
+    cor: "laranja",
   },
   MEDICAO_CORRECAO_SOLICITADA_CODAE: {
     nome: (
@@ -27,11 +27,11 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
         <br /> ajustes pela CODAE
       </div>
     ),
-    cor: "vermelho"
+    cor: "vermelho",
   },
   MEDICAO_CORRIGIDA_PELA_UE: {
     nome: <div>Corrigido para DRE</div>,
-    cor: "azul-escuro"
+    cor: "azul-escuro",
   },
   MEDICAO_CORRIGIDA_PARA_CODAE: {
     nome: (
@@ -40,11 +40,11 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
         <br /> CODAE
       </div>
     ),
-    cor: "azul-escuro"
+    cor: "azul-escuro",
   },
   MEDICAO_APROVADA_PELA_DRE: {
     nome: <div>Aprovado pela DRE</div>,
-    cor: "verde-claro"
+    cor: "verde-claro",
   },
   MEDICAO_APROVADA_PELA_CODAE: {
     nome: (
@@ -52,7 +52,7 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
         Aprovado pela <br /> CODAE
       </div>
     ),
-    cor: "verde-escuro"
+    cor: "verde-escuro",
   },
   TODOS_OS_LANCAMENTOS: {
     nome: (
@@ -60,10 +60,24 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
         Todos os <br /> Lançamentos
       </div>
     ),
-    cor: "vermelho"
+    cor: "vermelho",
   },
   MEDICAO_CORRIGIDA: {
     nome: <div>Corrigido</div>,
-    cor: "azul-escuro"
-  }
+    cor: "azul-escuro",
+  },
+  MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE: {
+    nome: (
+      <div>
+        Em Preenchimento <br /> pela Unidade
+      </div>
+    ),
+    cor: "greenLight",
+  },
 };
+
+export const STATUS_RELACAO_DRE_UE = [
+  "MEDICAO_ENVIADA_PELA_UE",
+  "MEDICAO_CORRECAO_SOLICITADA",
+  "MEDICAO_CORRIGIDA_PELA_UE",
+];

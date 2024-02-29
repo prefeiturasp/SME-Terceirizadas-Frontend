@@ -1,56 +1,55 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import InclusaoDeAlimentacaoDaCei from ".";
 import { backgroundLabelPeriodo } from "./helper";
 import { dataParaUTC } from "helpers/utilities";
-import { getMeusDados } from "services/perfil.service";
 import { getMotivosInclusaoNormal } from "services/inclusaoDeAlimentacao";
 import { getDiasUteis } from "services/diasUteis.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
+import MeusDadosContext from "context/MeusDadosContext";
 
 export const Container = () => {
-  const [dados, setDados] = useState(null);
-  const [motivos, setMotivos] = useState(null);
-  const [periodos, setPeriodos] = useState(null);
-  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
-  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
-  const [vinculosAlimentacao, setVinculosAlimentacao] = useState(null);
+  const { meusDados } = useContext(MeusDadosContext);
 
-  const [erro, setErro] = useState(false);
+  const [motivos, setMotivos] = useState();
+  const [periodos, setPeriodos] = useState();
+  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState();
+  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState();
+  const [vinculosAlimentacao, setVinculosAlimentacao] = useState();
 
-  const getVinculosAlimentacao = async escola_uuid => {
+  const [erro, setErro] = useState("");
+
+  const getVinculosAlimentacao = async (escola_uuid) => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
       setVinculosAlimentacao(response.data.results);
     } else {
-      setErro(true);
-    }
-  };
-
-  const getMeusDadosAsync = async () => {
-    const response = await getMeusDados();
-    if (response.status === HTTP_STATUS.OK) {
-      setDados(response.data);
-      const escola = response.data.vinculo_atual.instituicao;
-      const periodosStyle = backgroundLabelPeriodo(escola.periodos_escolares);
-      setPeriodos(periodosStyle);
-      getVinculosAlimentacao(escola.uuid);
-    } else {
-      setErro(true);
+      setErro(
+        "Erro ao carregar vinculos do tipo de alimentação. Tente novamente mais tarde."
+      );
     }
   };
 
   const getMotivosInclusaoNormalAsync = async () => {
     const response = await getMotivosInclusaoNormal();
     if (response.status === HTTP_STATUS.OK) {
-      setMotivos(response.data.results);
+      setMotivos(
+        response.data.results.filter(
+          (motivo) => motivo.nome !== "Evento Específico"
+        )
+      );
     } else {
-      setErro(true);
+      setErro(
+        "Erro ao carregar motivos de inclusão normal. Tente novamente mais tarde."
+      );
     }
   };
 
   const getDiasUteisAsync = async () => {
-    const response = await getDiasUteis();
+    const response = await getDiasUteis({
+      escola_uuid: meusDados.vinculo_atual.instituicao.uuid,
+    });
     if (response.status === HTTP_STATUS.OK) {
       setProximosDoisDiasUteis(
         dataParaUTC(new Date(response.data.proximos_dois_dias_uteis))
@@ -59,18 +58,32 @@ export const Container = () => {
         dataParaUTC(new Date(response.data.proximos_cinco_dias_uteis))
       );
     } else {
-      setErro(true);
+      setErro("Erro ao carregar dias úteis. Tente novamente mais tarde.");
     }
   };
 
+  const requisicoesPreRenderComMeusDados = async () => {
+    const escola = meusDados.vinculo_atual.instituicao;
+    const periodosStyle = backgroundLabelPeriodo(escola.periodos_escolares);
+    setPeriodos(periodosStyle);
+    await Promise.all([
+      getVinculosAlimentacao(escola.uuid),
+      getDiasUteisAsync(),
+    ]);
+  };
+
   useEffect(() => {
-    getMeusDadosAsync();
     getMotivosInclusaoNormalAsync();
-    getDiasUteisAsync();
   }, []);
 
+  useEffect(() => {
+    if (meusDados) {
+      requisicoesPreRenderComMeusDados();
+    }
+  }, [meusDados]);
+
   const REQUISICOES_CONCLUIDAS =
-    dados &&
+    meusDados &&
     motivos &&
     periodos &&
     proximosDoisDiasUteis &&
@@ -79,13 +92,11 @@ export const Container = () => {
 
   return (
     <div className="mt-3">
-      {!REQUISICOES_CONCLUIDAS && !erro && <div>Carregando...</div>}
-      {erro && (
-        <div>Erro ao carregar informações. Tente novamente mais tarde.</div>
-      )}
+      {!REQUISICOES_CONCLUIDAS && !erro && <SigpaeLogoLoader />}
+      {!!erro && <div>{erro}</div>}
       {REQUISICOES_CONCLUIDAS && (
         <InclusaoDeAlimentacaoDaCei
-          meusDados={dados}
+          meusDados={meusDados}
           motivos={motivos}
           periodos={periodos}
           proximosDoisDiasUteis={proximosDoisDiasUteis}

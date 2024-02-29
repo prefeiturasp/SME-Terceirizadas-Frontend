@@ -12,7 +12,7 @@ import {
   // escola
   escolaCancelarSolicitacaoDeInclusaoDeAlimentacao,
   // terceirizada
-  terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao
+  terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao,
 } from "services/inclusaoDeAlimentacao";
 import { getMotivosDREnaoValida } from "services/relatorios";
 import Relatorio from "../../components/InclusaoDeAlimentacao/Relatorio";
@@ -42,7 +42,7 @@ export const RelatorioBase = ({ ...props }) => {
 
   const atual = {
     href: "#",
-    titulo: "Relatório"
+    titulo: "Relatório",
   };
 
   return (

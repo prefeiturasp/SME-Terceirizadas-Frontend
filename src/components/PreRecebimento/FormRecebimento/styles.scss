@@ -1,0 +1,36 @@
+#accordionCronograma > .form-recebimento {
+  border-radius: 5px;
+}
+
+#accordionCronograma > .form-recebimento > .card-header {
+  border-radius: 5px;
+  margin-bottom: 0;
+  background-color: #fff;
+}
+
+#accordionCronograma > .form-recebimento > .card-header,
+#accordionCronograma > .form-recebimento > .card-body {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.form-recebimento {
+  .span-icone-toogle {
+    color: #42474a;
+  }
+
+  .card-header {
+    height: 50px;
+    border-left: #198459 solid 8px;
+
+    .card-header-content {
+      height: 100%;
+      align-content: center;
+      justify-content: space-between;
+      color: #42474a;
+
+      .nome-alimento {
+        margin: auto 0;
+      }
+    }
+  }
+}

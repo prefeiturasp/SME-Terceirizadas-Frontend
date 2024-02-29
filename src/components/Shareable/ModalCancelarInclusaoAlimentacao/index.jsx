@@ -1,4 +1,3 @@
-import { formataMotivosDias } from "components/InclusaoDeAlimentacao/Relatorio/componentes/helper";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { required } from "helpers/fieldValidators";
 import HTTP_STATUS from "http-status-codes";
@@ -10,6 +9,7 @@ import { deepCopy, mensagemCancelamento } from "../../../helpers/utilities";
 import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import { toastError, toastSuccess } from "../Toast/dialogs";
+import { formataMotivosDiasComOutros } from "../../InclusaoDeAlimentacao/Relatorio/componentes/helper";
 
 export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
   const {
@@ -19,7 +19,7 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
     solicitacao,
     endpoint,
     tipoSolicitacao,
-    loadSolicitacao
+    loadSolicitacao,
   } = props;
 
   const dias_motivos =
@@ -28,11 +28,11 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
       solicitacao.dias_motivos_da_inclusao_cemei ||
       solicitacao.dias_motivos_da_inclusao_cei);
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     if (
       [
         TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
-        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
       ].includes(tipoSolicitacao) &&
       (!values.datas || values.datas.length === 0)
     ) {
@@ -41,11 +41,8 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
     }
     const values_ = deepCopy(values);
     if (values.datas) {
-      values_.datas = values_.datas.map(data =>
-        data
-          .split("/")
-          .reverse()
-          .join("-")
+      values_.datas = values_.datas.map((data) =>
+        data.split("/").reverse().join("-")
       );
     }
     const resp = await endpoint(uuid, values_, tipoSolicitacao);
@@ -54,9 +51,10 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
       if (
         [
           TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
-          TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+          TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
         ].includes(tipoSolicitacao) &&
-        values_.datas.length + dias_motivos.filter(i => i.cancelado).length !==
+        values_.datas.length +
+          dias_motivos.filter((i) => i.cancelado).length !==
           dias_motivos.length
       ) {
         toastSuccess("Solicitação cancelada parcialmente com sucesso");
@@ -90,41 +88,41 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
               {[
                 TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
                 TIPO_SOLICITACAO.SOLICITACAO_CEI,
-                TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+                TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
               ].includes(tipoSolicitacao) && (
                 <>
                   <p>Selecione a(s) data(s) para solicitar o cancelamento:</p>
-                  {Object.entries(formataMotivosDias(dias_motivos)).map(
-                    (dadosMotivo, key) => {
-                      const [motivo, datas] = dadosMotivo;
-                      return (
-                        <div key={key}>
-                          <p>
-                            Motivo: <strong>{motivo}</strong>
-                          </p>
-                          {datas.map((dia, key_) => {
-                            return (
-                              <label key={key_} className="mr-3">
-                                <Field
-                                  name="datas"
-                                  component="input"
-                                  disabled={
-                                    dias_motivos.find(i => i.data === dia)
-                                      .cancelado ||
-                                    moment(dia, "DD/MM/YYYY") <= moment()
-                                  }
-                                  type="checkbox"
-                                  value={dia}
-                                />{" "}
-                                {dia}
-                              </label>
-                            );
-                          })}
-                          <hr />
-                        </div>
-                      );
-                    }
-                  )}
+                  {Object.entries(
+                    formataMotivosDiasComOutros(dias_motivos)
+                  ).map((dadosMotivo, key) => {
+                    const [motivo, datas] = dadosMotivo;
+                    return (
+                      <div key={key}>
+                        <p>
+                          Motivo: <strong>{motivo}</strong>
+                        </p>
+                        {datas.map((dia, key_) => {
+                          return (
+                            <label key={key_} className="me-3">
+                              <Field
+                                name="datas"
+                                component="input"
+                                disabled={
+                                  dias_motivos.find((i) => i.data === dia)
+                                    .cancelado ||
+                                  moment(dia, "DD/MM/YYYY") <= moment()
+                                }
+                                type="checkbox"
+                                value={dia}
+                              />{" "}
+                              {dia}
+                            </label>
+                          );
+                        })}
+                        <hr />
+                      </div>
+                    );
+                  })}
                 </>
               )}
               {solicitacao.inclusoes &&
@@ -132,7 +130,7 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                   <>
                     <p>
                       Selecione a(s) data(s) para solicitar o cancelamento:
-                      <span className="ml-2">
+                      <span className="ms-2">
                         {solicitacao.data_inicial} até {solicitacao.data_final}
                       </span>
                     </p>
@@ -142,9 +140,10 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                     </p>
                   </>
                 )}
-              <div className="row pl-3 pr-3">
-                <span className="required-asterisk">*</span>
-                <label>Justificativa</label>
+              <div className="row ps-3 pe-3">
+                <span className="required-asterisk-2">
+                  <label>Justificativa</label>
+                </span>
                 <Field
                   className="col-12 pb-5"
                   component="textarea"
@@ -160,14 +159,14 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={submitting}
-                className="ml-3"
+                className="ms-3"
               />
             </Modal.Footer>
           </form>

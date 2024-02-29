@@ -8,7 +8,7 @@ import {
   dreValidarSolicitacaoDeAlteracaoDeCardapio,
   escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI,
   terceirizadaRespondeQuestionamentoAlteracaoCardapio,
-  TerceirizadaTomaCienciaAlteracaoCardapio
+  TerceirizadaTomaCienciaAlteracaoCardapio,
 } from "services/alteracaoDeCardapio";
 import { getMotivosDREnaoValida } from "services/relatorios";
 import Breadcrumb from "components/Shareable/Breadcrumb";
@@ -18,7 +18,7 @@ import { ESCOLA, CODAE, TERCEIRIZADA, DRE } from "configs/constants";
 import { HOME } from "constants/config";
 import { ModalNaoValidarFinalForm } from "components/Shareable/ModalNaoValidarFinalForm";
 import { TIPO_SOLICITACAO } from "constants/shared";
-import { ModalEscolaCancela } from "components/AlteracaoDeCardapioCEMEI/Relatorio/componentes/ModalEscolaCancela";
+import { ModalCancelarAlteracaoCardapio } from "components/Shareable/ModalCancelaAlteracaoCardapio";
 import { ModalNegarFinalForm } from "components/Shareable/ModalNegarFinalForm";
 import { ModalCODAEQuestionaFinalForm } from "components/Shareable/ModalCODAEQuestionaFinalForm";
 import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
@@ -42,17 +42,17 @@ export const RelatorioBase = ({ ...props }) => {
   const anteriores = [
     {
       href: `#`,
-      titulo: "Gestão de Alimentação"
+      titulo: "Gestão de Alimentação",
     },
     {
       href: `/painel-gestao-alimentacao`,
-      titulo: "Painel de Solicitações"
-    }
+      titulo: "Painel de Solicitações",
+    },
   ];
 
   const atual = {
     href: `/alteracao-do-tipo-de-alimentacao-cemei/relatorio?uuid=${uuid}&ehInclusaoContinua=false&tipoSolicitacao=solicitacao-cemei&card=undefined`,
-    titulo: "Relatório"
+    titulo: "Relatório",
   };
 
   return (
@@ -67,7 +67,7 @@ export const RelatorioBase = ({ ...props }) => {
 export const RelatorioEscola = () => (
   <RelatorioBase
     visao={ESCOLA}
-    ModalNaoAprova={ModalEscolaCancela}
+    ModalNaoAprova={ModalCancelarAlteracaoCardapio}
     toastNaoAprovaMensagem={
       "Alteração do Tipo de Alimentação cancelada com sucesso!"
     }

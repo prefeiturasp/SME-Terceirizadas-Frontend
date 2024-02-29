@@ -3,7 +3,7 @@ import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
 import {
   SOLICITACOES_AUTORIZADAS,
-  TERCEIRIZADA
+  TERCEIRIZADA,
 } from "../../../configs/constants";
 import { HOME } from "../constants";
 import { ICON_CARD_TYPE_ENUM } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
@@ -17,7 +17,7 @@ import { PAGINACAO_DEFAULT } from "constants/shared";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${SOLICITACOES_AUTORIZADAS}`,
-  titulo: "Solicitações Autorizadas"
+  titulo: "Solicitações Autorizadas",
 };
 
 export const StatusSolicitacoesAutorizadasTerceirizadaPage = () => {
@@ -41,7 +41,7 @@ export const StatusSolicitacoesAutorizadasTerceirizadaPage = () => {
           listaStatus={[
             { nome: "Conferência Status", uuid: "" },
             { nome: "Conferida", uuid: "1" },
-            { nome: "Não Conferida", uuid: "0" }
+            { nome: "Não Conferida", uuid: "0" },
           ]}
         />
       )}

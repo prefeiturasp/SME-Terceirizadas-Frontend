@@ -32,7 +32,7 @@ export default class AutoCompleteField extends Component {
           ),
           <label key={1} htmlFor={name} className="col-form-label">
             {label}
-          </label>
+          </label>,
         ]}
         <AutoComplete
           className="autocomplete"
@@ -40,7 +40,7 @@ export default class AutoCompleteField extends Component {
           {...input}
           onSearch={onSearch}
           maxLength={maxlength}
-          onInput={e => {
+          onInput={(e) => {
             e.target.value = toUppercaseActive
               ? e.target.value.toUpperCase()
               : e.target.value;
@@ -55,20 +55,24 @@ export default class AutoCompleteField extends Component {
           {esconderIcone ? (
             <Input
               {...input}
-              className={`${className} ${meta &&
+              className={`${className} ${
+                meta &&
                 meta.touched &&
                 (meta.error || meta.warning) &&
-                "invalid-field"}`}
+                "invalid-field"
+              }`}
               name={name}
               size="large"
             />
           ) : (
             <Input.Search
               {...input}
-              className={`${className} ${meta &&
+              className={`${className} ${
+                meta &&
                 meta.touched &&
                 (meta.error || meta.warning) &&
-                "invalid-field"}`}
+                "invalid-field"
+              }`}
               name={name}
               size="large"
               onSearch={onSearch}

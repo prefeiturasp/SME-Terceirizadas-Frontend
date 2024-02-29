@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import { Botao } from "../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../Shareable/Botao/constants.js";
 import "../../style.scss";
 
@@ -12,7 +12,7 @@ export class ModalCadastroLote extends Component {
     const values = {
       nome: this.props.nome,
       iniciais: this.props.iniciais,
-      escolasSelecionadas: this.props.escolasSelecionadas
+      escolasSelecionadas: this.props.escolasSelecionadas,
     };
     this.props.onSubmit(values);
   }
@@ -27,7 +27,7 @@ export class ModalCadastroLote extends Component {
       iniciais,
       nome,
       tipo_gestao,
-      escolasSelecionadas
+      escolasSelecionadas,
     } = this.props;
     const title = atualizando
       ? "Deseja atualizar o lote?"
@@ -71,9 +71,7 @@ export class ModalCadastroLote extends Component {
             <div className="row pt-3">
               <div className="col-12">
                 <label className="label-selected-unities">
-                  {`( ${
-                    escolasSelecionadas.length
-                  } ) Unidades Específicas do Lote Selecionadas`}
+                  {`( ${escolasSelecionadas.length} ) Unidades Específicas do Lote Selecionadas`}
                 </label>
                 {escolasSelecionadas.map((escola, indice) => {
                   return (
@@ -92,14 +90,14 @@ export class ModalCadastroLote extends Component {
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => this.onSubmit()}
             style={BUTTON_STYLE.GREEN}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>

@@ -5,7 +5,7 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { Botao } from "../components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { HeaderLogo } from "components/Shareable/HeaderLogo";
 import { InfoSenhaServidorMunicipal } from "components/Shareable/InfoSenhaServidorMunicipal";
@@ -23,7 +23,7 @@ class RecuperarSenhaPage extends Component {
     this.state = {
       numero: false,
       tamanho: false,
-      letra: false
+      letra: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -34,7 +34,7 @@ class RecuperarSenhaPage extends Component {
     this.setState({
       numero: value.match(numbers),
       tamanho: value.length >= 8,
-      letra: value.match(letters)
+      letra: value.match(letters),
     });
   }
 
@@ -42,11 +42,11 @@ class RecuperarSenhaPage extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     const confirmationKey = urlParams.get("confirmationKey");
-    atualizarSenha(uuid, confirmationKey, payLoad).then(response => {
+    atualizarSenha(uuid, confirmationKey, payLoad).then((response) => {
       if (response.status === HTTP_STATUS.OK) {
         this.props.reset();
         toastSuccess("Senha atualizada com sucesso!");
-        setTimeout(function() {
+        setTimeout(function () {
           window.location.href = "/";
         }, 1000);
       } else {
@@ -67,7 +67,7 @@ class RecuperarSenhaPage extends Component {
           <div className="card">
             <div className="card-body alinha-centro">
               <div className="">
-                <div className="card-title font-weight-bold">Alterar Senha</div>
+                <div className="card-title fw-bold">Alterar Senha</div>
                 <Field
                   component={InputPassword}
                   className="input-login"
@@ -75,7 +75,7 @@ class RecuperarSenhaPage extends Component {
                   label="Senha"
                   name="senha1"
                   placeholder={"Digite sua Senha"}
-                  onChange={event => this.onSenhaChanged(event.target.value)}
+                  onChange={(event) => this.onSenhaChanged(event.target.value)}
                   maxlength={20}
                   pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                   title="Pelo menos 8 caracteres, uma letra e um número"
@@ -90,7 +90,7 @@ class RecuperarSenhaPage extends Component {
                   label="Repetir Senha"
                   name="senha2"
                   placeholder={"Digite sua Senha"}
-                  onChange={event => this.onSenhaChanged(event.target.value)}
+                  onChange={(event) => this.onSenhaChanged(event.target.value)}
                   maxlength={20}
                   pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                   title="Pelo menos 8 caracteres, uma letra e um número"
@@ -125,15 +125,15 @@ class RecuperarSenhaPage extends Component {
 const formName = "recuperarSenha";
 
 RecuperarSenhaPage = reduxForm({
-  form: formName
+  form: formName,
 })(RecuperarSenhaPage);
 
 const selector = formValueSelector(formName);
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     senha1: selector(state, "senha1"),
-    senha2: selector(state, "senha2")
+    senha2: selector(state, "senha2"),
   };
 };
 

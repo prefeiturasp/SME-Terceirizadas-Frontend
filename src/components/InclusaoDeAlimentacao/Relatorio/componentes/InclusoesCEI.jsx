@@ -7,48 +7,50 @@ import { formataPeriodos } from "./helper";
 export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
   const [vinculosAlimentacao, setVinculosAlimentacao] = useState(null);
 
-  const unique = arr => [...new Set(arr)];
+  const unique = (arr) => [...new Set(arr)];
 
   const nomes_periodos = unique(
     inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias
-      .filter(qa => qa.periodo_externo.nome === "INTEGRAL")
-      .map(qa => qa.periodo.nome)
+      .filter((qa) => qa.periodo_externo.nome === "INTEGRAL")
+      .map((qa) => qa.periodo.nome)
   );
 
   const nomes_periodos_externos = unique(
     inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias.map(
-      qa => qa.periodo_externo.nome
+      (qa) => qa.periodo_externo.nome
     )
   );
 
   const periodos_formatados = formataPeriodos(nomes_periodos);
   const periodos_externos_formatados = formataPeriodos(nomes_periodos_externos);
 
-  const faixasEtariasPorPeriodo = periodos_externos_formatados.map(periodo => {
-    if (periodo.nome === "INTEGRAL") {
-      periodo["periodos"] = [];
-      periodos_formatados.forEach(p => {
-        let faixas = inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias.filter(
-          qa =>
-            qa.periodo.nome === p.nome &&
-            qa.periodo_externo.nome === periodo.nome
-        );
-        periodo["periodos"].push({
-          periodo: p,
-          faixas: faixas
+  const faixasEtariasPorPeriodo = periodos_externos_formatados.map(
+    (periodo) => {
+      if (periodo.nome === "INTEGRAL") {
+        periodo["periodos"] = [];
+        periodos_formatados.forEach((p) => {
+          let faixas =
+            inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias.filter(
+              (qa) =>
+                qa.periodo.nome === p.nome &&
+                qa.periodo_externo.nome === periodo.nome
+            );
+          periodo["periodos"].push({
+            periodo: p,
+            faixas: faixas,
+          });
         });
-      });
-    } else {
-      periodo[
-        "faixas"
-      ] = inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias.filter(
-        qa =>
-          qa.periodo.nome === periodo.nome &&
-          qa.periodo_externo.nome === periodo.nome
-      );
+      } else {
+        periodo["faixas"] =
+          inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias.filter(
+            (qa) =>
+              qa.periodo.nome === periodo.nome &&
+              qa.periodo_externo.nome === periodo.nome
+          );
+      }
+      return periodo;
     }
-    return periodo;
-  });
+  );
 
   const getVinculosAlimentacao = async () => {
     const escola_uuid = inclusaoDeAlimentacao.escola.uuid;
@@ -58,13 +60,13 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
     }
   };
 
-  const alimentosFormatados = nome_periodo => {
+  const alimentosFormatados = (nome_periodo) => {
     const vinculo = vinculosAlimentacao.find(
-      v => v.periodo_escolar.nome === nome_periodo
+      (v) => v.periodo_escolar.nome === nome_periodo
     );
 
     return vinculo
-      ? vinculo.tipos_alimentacao.map(ta => ta.nome).join(", ")
+      ? vinculo.tipos_alimentacao.map((ta) => ta.nome).join(", ")
       : "Nenhum tipo de alimentação definido";
   };
 
@@ -86,7 +88,7 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                   margin: "1% 0px",
                   width: "100%",
                   padding: "8px 15px",
-                  height: "40px"
+                  height: "40px",
                 }}
               >
                 {faixa_por_periodo.nome}
@@ -99,7 +101,7 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                 return (
                   <div key={periodo_interno_key} className="row">
                     <div className="col-12">
-                      <div className="container-fluid pr-0">
+                      <div className="container-fluid pe-0">
                         <label
                           style={{
                             background: periodo_interno.periodo.background,
@@ -108,7 +110,7 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                             margin: "1% 0px",
                             width: "100%",
                             padding: "8px 15px",
-                            height: "40px"
+                            height: "40px",
                           }}
                         >
                           {periodo_interno.periodo.nome}
@@ -116,7 +118,7 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                       </div>
                     </div>
                     <div className="col-12 mt-3">
-                      <div className="container-fluid pr-0">
+                      <div className="container-fluid pe-0">
                         <span>
                           Tipos de alimentação no período{" "}
                           {periodo_interno.periodo.nome.toLowerCase()}:{" "}
@@ -127,7 +129,7 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                       </div>
                     </div>
                     <div className="col-12">
-                      <div className="container-fluid pr-0">
+                      <div className="container-fluid pe-0">
                         <TabelaFaixaEtaria
                           key={periodo_interno_key}
                           faixas={periodo_interno.faixas}

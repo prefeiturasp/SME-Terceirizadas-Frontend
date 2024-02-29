@@ -8,19 +8,19 @@ export const InclusaoCEIBody = ({ ...props }) => {
   const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
 
-  const unique = arr => [...new Set(arr)];
+  const unique = (arr) => [...new Set(arr)];
 
   const nomes_periodos = solicitacao.periodo_escolar
     ? [solicitacao.periodo_escolar.nome]
     : unique(
         solicitacao.quantidade_alunos_por_faixas_etarias.map(
-          qa => qa.periodo.nome
+          (qa) => qa.periodo.nome
         )
       );
 
   const periodosExternos = unique(
     solicitacao.quantidade_alunos_por_faixas_etarias.map(
-      qa => qa.periodo_externo.nome
+      (qa) => qa.periodo_externo.nome
     )
   );
 
@@ -36,7 +36,7 @@ export const InclusaoCEIBody = ({ ...props }) => {
     getVinculosAlimentacao();
   }, []);
 
-  const ehDiaCancelado = dia_motivo_inclusao => {
+  const ehDiaCancelado = (dia_motivo_inclusao) => {
     return dia_motivo_inclusao.cancelado ||
       solicitacao.status === "ESCOLA_CANCELOU"
       ? "dia-cancelado"
@@ -131,20 +131,21 @@ export const InclusaoCEIBody = ({ ...props }) => {
                     faixas_etarias =
                       solicitacao.quantidade_alunos_por_faixas_etarias;
                   } else {
-                    faixas_etarias = solicitacao.quantidade_alunos_por_faixas_etarias.filter(
-                      qpf =>
-                        qpf.periodo.nome === periodo &&
-                        qpf.periodo_externo.nome === periodoExt
-                    );
+                    faixas_etarias =
+                      solicitacao.quantidade_alunos_por_faixas_etarias.filter(
+                        (qpf) =>
+                          qpf.periodo.nome === periodo &&
+                          qpf.periodo_externo.nome === periodoExt
+                      );
                   }
                   const alimentosFormatados = vinculosAlimentacao
-                    .find(v => v.periodo_escolar.nome === periodoExt)
-                    .tipos_alimentacao.map(ta => ta.nome)
+                    .find((v) => v.periodo_escolar.nome === periodoExt)
+                    .tipos_alimentacao.map((ta) => ta.nome)
                     .join(", ");
-                  const total = faixas_etarias.reduce(function(acc, v) {
+                  const total = faixas_etarias.reduce(function (acc, v) {
                     return acc + (v.quantidade || v.quantidade_alunos);
                   }, 0);
-                  const total_matriculados = faixas_etarias.reduce(function(
+                  const total_matriculados = faixas_etarias.reduce(function (
                     acc,
                     v
                   ) {
@@ -169,7 +170,7 @@ export const InclusaoCEIBody = ({ ...props }) => {
                           {periodoExt !== periodo || periodo === "INTEGRAL" ? (
                             <div className="row">
                               <div className="col-12">
-                                <div className="container-fluid pr-0">
+                                <div className="container-fluid pe-0">
                                   <label className="label-periodo-cei-cemei">
                                     {periodo}
                                   </label>
@@ -179,7 +180,7 @@ export const InclusaoCEIBody = ({ ...props }) => {
                           ) : null}
                           <div className="row mt-3">
                             <div className="col-12">
-                              <div className="container-fluid pr-0">
+                              <div className="container-fluid pe-0">
                                 <p>
                                   Tipos de Inclusão de Alimentação:{" "}
                                   <b>{alimentosFormatados}</b>
@@ -189,7 +190,7 @@ export const InclusaoCEIBody = ({ ...props }) => {
                           </div>
                           <div className="row">
                             <div className="col-12">
-                              <div className="container-fluid pr-0">
+                              <div className="container-fluid pe-0">
                                 <table className="table table-bordered table-items">
                                   <thead>
                                     <tr className="table-head-items">
@@ -238,14 +239,14 @@ export const InclusaoCEIBody = ({ ...props }) => {
                 });
               })}
             {solicitacao.dias_motivos_da_inclusao_cei.find(
-              inclusao => inclusao.cancelado_justificativa
+              (inclusao) => inclusao.cancelado_justificativa
             ) && (
               <>
                 <hr />
                 <p>
                   <strong>Histórico de cancelamento</strong>
                   {solicitacao.dias_motivos_da_inclusao_cei
-                    .filter(inclusao => inclusao.cancelado_justificativa)
+                    .filter((inclusao) => inclusao.cancelado_justificativa)
                     .map((inclusao, key) => {
                       return (
                         <div className="cancelado_justificativa" key={key}>
@@ -261,6 +262,6 @@ export const InclusaoCEIBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

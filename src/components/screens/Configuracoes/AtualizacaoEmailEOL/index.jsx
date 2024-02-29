@@ -6,7 +6,7 @@ import InputText from "components/Shareable/Input/InputText";
 import { SMEPrefeituraEmail } from "helpers/fieldValidators";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { getDadosUsuarioEOLCompleto } from "services/permissoes.service";
 import { formataCPFCensurado } from "helpers/utilities";
@@ -18,7 +18,7 @@ export default () => {
   const [carregando, setCarregando] = useState(false);
   const [rfBuscado, setRfBuscado] = useState(false);
 
-  const buscaEOL = async values => {
+  const buscaEOL = async (values) => {
     let response = await getDadosUsuarioEOLCompleto(values.registro_funcional);
 
     if (response.status === 200) {
@@ -49,11 +49,11 @@ export default () => {
       <div className="card mt-3 card-atualizacao-email">
         <div className="card-body atualizacao-email">
           <Form
-            onSubmit={async values => {
+            onSubmit={async (values) => {
               setCarregando(true);
               let payload = {
                 username: values.registro_funcional,
-                email: values.email_atualizado
+                email: values.email_atualizado,
               };
               let response = await alterarEmailCore(payload);
 
@@ -80,7 +80,7 @@ export default () => {
                         className="input-busca-produto"
                       />
                     </div>
-                    <div className="col-6 pl-0">
+                    <div className="col-6 ps-0">
                       <Botao
                         texto=""
                         icon="fas fa-search"
@@ -162,14 +162,14 @@ export default () => {
                       texto="Salvar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="float-right ml-3"
+                      className="float-end ms-3"
                     />
 
                     <Botao
                       texto="Limpar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-right ml-3"
+                      className="float-end ms-3"
                       onClick={() => {
                         form.restart({});
                         setRfBuscado(false);

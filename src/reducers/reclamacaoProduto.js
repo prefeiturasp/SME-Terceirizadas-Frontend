@@ -14,28 +14,28 @@ export default function reducer(state = {}, action = {}) {
     case SET_PRODUTOS:
       return {
         ...state,
-        produtos: action.payload
+        produtos: action.payload,
       };
     case SET_PRODUTOS_COUNT:
       return {
         ...state,
-        produtosCount: action.payload
+        produtosCount: action.payload,
       };
     case SET_INDICE_PRODUTO_ATIVO:
       return {
         ...state,
-        indiceProdutoAtivo: action.payload
+        indiceProdutoAtivo: action.payload,
       };
     case SET_PAGE:
       return {
         ...state,
-        page: action.payload
+        page: action.payload,
       };
     case RESET:
       return {
         ...state,
         indiceProdutoAtivo: undefined,
-        produtos: undefined
+        produtos: undefined,
       };
     default:
       return state;
@@ -43,26 +43,26 @@ export default function reducer(state = {}, action = {}) {
 }
 
 // Action Creators
-export const setProdutos = listaProdutos => ({
+export const setProdutos = (listaProdutos) => ({
   type: SET_PRODUTOS,
-  payload: listaProdutos
+  payload: listaProdutos,
 });
 
-export const setProdutosCount = count => ({
+export const setProdutosCount = (count) => ({
   type: SET_PRODUTOS_COUNT,
-  payload: count
+  payload: count,
 });
 
-export const setIndiceProdutoAtivo = indiceProdutoAtivo => ({
+export const setIndiceProdutoAtivo = (indiceProdutoAtivo) => ({
   type: SET_INDICE_PRODUTO_ATIVO,
-  payload: indiceProdutoAtivo
+  payload: indiceProdutoAtivo,
 });
 
-export const setPage = page => ({
+export const setPage = (page) => ({
   type: SET_PAGE,
-  payload: page
+  payload: page,
 });
 
 export const reset = () => ({
-  type: RESET
+  type: RESET,
 });

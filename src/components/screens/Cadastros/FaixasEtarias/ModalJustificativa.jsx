@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import {
   peloMenosUmCaractere,
-  required
+  required,
 } from "../../../../helpers/fieldValidators";
 import CKEditorField from "components/Shareable/CKEditorField";
 import { toastWarn } from "../../../Shareable/Toast/dialogs";
@@ -46,9 +46,9 @@ export class ModalJustificativa extends Component {
               required
               validate={[required, peloMenosUmCaractere]}
               input={{
-                onChange: valor => this.setState({ justificativa: valor }),
+                onChange: (valor) => this.setState({ justificativa: valor }),
                 value: this.state.justificativa,
-                onBlur: () => {}
+                onBlur: () => {},
               }}
             />
           </div>
@@ -59,14 +59,14 @@ export class ModalJustificativa extends Component {
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             onClick={this.onSubmit}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>

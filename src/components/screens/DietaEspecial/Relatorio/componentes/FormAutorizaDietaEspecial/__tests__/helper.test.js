@@ -17,7 +17,7 @@ describe("test validateSubstituicao", () => {
 
     resultadoValidacao = validateSubstituicao({
       alimento: "9",
-      substitutos: ["12", "14"]
+      substitutos: ["12", "14"],
     });
     expect(resultadoValidacao).toEqual("Falta preencher tipo");
 
@@ -27,7 +27,7 @@ describe("test validateSubstituicao", () => {
     resultadoValidacao = validateSubstituicao({
       substitutos: [],
       tipo: "isento",
-      alimento: "9"
+      alimento: "9",
     });
     expect(resultadoValidacao).toEqual("Falta preencher substitutos");
   });
@@ -36,7 +36,7 @@ describe("test validateSubstituicao", () => {
       validateSubstituicao({
         substitutos: ["1", "7"],
         tipo: "isento",
-        alimento: "9"
+        alimento: "9",
       })
     ).toEqual(undefined);
   });

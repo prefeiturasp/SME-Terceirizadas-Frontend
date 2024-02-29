@@ -5,7 +5,7 @@ import { Field, Form } from "react-final-form";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { required } from "helpers/fieldValidators";
@@ -13,7 +13,7 @@ import { getError } from "helpers/utilities";
 import { escolaCancelaSuspensaoCEI } from "services/suspensaoAlimentacaoCei.service";
 
 export default ({ showModal, closeModal, setSolicitacaoSuspensao, uuid }) => {
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const resp = await escolaCancelaSuspensaoCEI(uuid, values);
     if (resp.status === HTTP_STATUS.OK) {
       setSolicitacaoSuspensao(resp.data);
@@ -46,7 +46,7 @@ export default ({ showModal, closeModal, setSolicitacaoSuspensao, uuid }) => {
                   </p>
                 </div>
               </div>
-              <div className="row pl-3 pr-3">
+              <div className="row ps-3 pe-3">
                 <label>* Justificativa</label>
                 <Field
                   className="col-12 pb-5"
@@ -63,14 +63,14 @@ export default ({ showModal, closeModal, setSolicitacaoSuspensao, uuid }) => {
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={submitting}
-                className="ml-3"
+                className="ms-3"
               />
             </Modal.Footer>
           </form>

@@ -8,7 +8,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
@@ -19,12 +19,12 @@ import {
   maxValue,
   naoPodeSerZero,
   numericInteger,
-  required
+  required,
 } from "helpers/fieldValidators";
 import {
   composeValidators,
   fimDoCalendario,
-  formatarParaMultiselect
+  formatarParaMultiselect,
 } from "helpers/utilities";
 import "../../style.scss";
 
@@ -36,7 +36,7 @@ export const DataInclusaoNormal = ({ ...props }) => {
     name,
     values,
     onDataChanged,
-    nameFieldArray
+    nameFieldArray,
   } = props;
 
   return (
@@ -57,7 +57,7 @@ export const DataInclusaoNormal = ({ ...props }) => {
               )}
             />
             <OnChange name={`${name}.data`}>
-              {value => {
+              {(value) => {
                 if (value) {
                   onDataChanged(value);
                 }
@@ -115,6 +115,20 @@ export const OutroMotivo = ({ name }) => {
   );
 };
 
+export const EventoEspecifico = ({ name }) => {
+  return (
+    <div className="mb-3">
+      <Field
+        component={TextArea}
+        label="Descrição do Evento"
+        name={`${name}.evento`}
+        required
+        validate={composeValidators(required, maxLength(1500))}
+      />
+    </div>
+  );
+};
+
 export const PeriodosInclusaoNormal = ({
   form,
   values,
@@ -123,9 +137,9 @@ export const PeriodosInclusaoNormal = ({
   ehETEC,
   motivoEspecifico,
   uuid,
-  idExterno
+  idExterno,
 }) => {
-  const getPeriodo = indice => {
+  const getPeriodo = (indice) => {
     return values.quantidades_periodo[indice];
   };
   form.change("uuid", uuid);
@@ -133,14 +147,17 @@ export const PeriodosInclusaoNormal = ({
   const onTiposAlimentacaoChanged = (values_, indice) => {
     if (ehETEC) {
       const LANCHE_4H_UUID = periodos[0].tipos_alimentacao.find(
-        ta => ta.nome === "Lanche 4h"
+        (ta) => ta.nome === "Lanche 4h"
       ).uuid;
       const LANCHE_EMERGENCIAL = periodos[0].tipos_alimentacao.find(
-        ta => ta.nome === "Lanche Emergencial"
+        (ta) => ta.nome === "Lanche Emergencial"
       ).uuid;
-      const NOT_LANCHE_4H_OR_EMERGENCIAL_UUID_ARRAY = periodos[0].tipos_alimentacao
-        .filter(ta => ![LANCHE_4H_UUID, LANCHE_EMERGENCIAL].includes(ta.uuid))
-        .map(ta => ta.uuid);
+      const NOT_LANCHE_4H_OR_EMERGENCIAL_UUID_ARRAY =
+        periodos[0].tipos_alimentacao
+          .filter(
+            (ta) => ![LANCHE_4H_UUID, LANCHE_EMERGENCIAL].includes(ta.uuid)
+          )
+          .map((ta) => ta.uuid);
       if (values_.at(-1) === LANCHE_4H_UUID) {
         form.change(
           `quantidades_periodo[
@@ -189,8 +206,8 @@ export const PeriodosInclusaoNormal = ({
           naoPodeSerZero,
           numericInteger,
           maxValue(
-            periodos.find(p => p.uuid === getPeriodo(indice).uuid) &&
-              periodos.find(p => p.uuid === getPeriodo(indice).uuid)
+            periodos.find((p) => p.uuid === getPeriodo(indice).uuid) &&
+              periodos.find((p) => p.uuid === getPeriodo(indice).uuid)
                 .maximo_alunos
           )
         );
@@ -210,7 +227,7 @@ export const PeriodosInclusaoNormal = ({
               <div className="row">
                 <div className="col-3">
                   <div
-                    className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
+                    className={`period-quantity number-${indice} ps-5 pt-2 pb-2`}
                   >
                     <label htmlFor="check" className="checkbox-label">
                       <Field
@@ -249,7 +266,7 @@ export const PeriodosInclusaoNormal = ({
                       options={formatarParaMultiselect(
                         getPeriodo(indice).tipos_alimentacao
                       )}
-                      onSelectedChanged={values_ =>
+                      onSelectedChanged={(values_) =>
                         onTiposAlimentacaoChanged(values_, indice)
                       }
                       disableSearch={true}
@@ -258,7 +275,7 @@ export const PeriodosInclusaoNormal = ({
                         selectSomeItems: "Selecione",
                         allItemsAreSelected:
                           "Todos os itens estão selecionados",
-                        selectAll: "Todos"
+                        selectAll: "Todos",
                       }}
                     />
                   </div>

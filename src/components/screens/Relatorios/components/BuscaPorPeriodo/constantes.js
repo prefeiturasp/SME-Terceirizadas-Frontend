@@ -9,7 +9,7 @@ export const BUSCA_TIPO_SOLICITACAO = [
   { nome: "Inclusão de Alimentação Continua", uuid: "INC_ALIMENTA_CONTINUA" },
   { nome: "Kit Lanche Avulsa", uuid: "KIT_LANCHE_AVULSA" },
   { nome: "Kit Lanche Unificada", uuid: "KIT_LANCHE_UNIFICADA" },
-  { nome: "Suspensão de Alimentação", uuid: "SUSP_ALIMENTACAO" }
+  { nome: "Suspensão de Alimentação", uuid: "SUSP_ALIMENTACAO" },
 ];
 
 export const STATUS_SOLICITACAO = [
@@ -17,7 +17,7 @@ export const STATUS_SOLICITACAO = [
   { nome: "Autorizados", uuid: "AUTORIZADOS" },
   { nome: "Negados", uuid: "NEGADOS" },
   { nome: "Cancelados", uuid: "CANCELADOS" },
-  { nome: "Em Andamento", uuid: "EM_ANDAMENTO" }
+  { nome: "Em Andamento", uuid: "EM_ANDAMENTO" },
 ];
 
 export const ENTER = 13;

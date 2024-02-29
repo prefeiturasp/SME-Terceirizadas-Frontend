@@ -4,19 +4,19 @@ export default () => (
   <div>
     <p className="caption">Legenda</p>
     <div className="caption-choices">
-      <span className="mr-0">
+      <span className="me-0">
         <i className="fas fa-check" />
         Solicitação Autorizada
       </span>
-      <span className="mr-0">
+      <span className="me-0">
         <i className="fas fa-exclamation-triangle" />
         Solicitação Aguardando Autorização
       </span>
-      <span className="mr-0">
+      <span className="me-0">
         <i className="fas fa-exclamation-triangle" />
-        Solicitação Aguardando Respota da Empresa
+        Solicitação Aguardando Resposta da Empresa
       </span>
-      <span className="mr-0">
+      <span className="me-0">
         <i className="fas fa-ban" />
         Solicitação Negada
       </span>

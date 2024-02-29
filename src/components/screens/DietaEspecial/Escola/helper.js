@@ -1,15 +1,15 @@
 import {
   USUARIO_PODE_ATUALIZAR_FOTO_DEV_HOM,
-  USUARIO_PODE_ATUALIZAR_FOTO_PROD
+  USUARIO_PODE_ATUALIZAR_FOTO_PROD,
 } from "configs/constants";
 import { ENVIRONMENT } from "constants/config";
 import {
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada
+  usuarioEhEscolaTerceirizada,
 } from "helpers/utilities";
 
-export const formatarSolicitacoesVigentes = solicitacoes => {
-  solicitacoes.forEach(solicitacao => {
+export const formatarSolicitacoesVigentes = (solicitacoes) => {
+  solicitacoes.forEach((solicitacao) => {
     solicitacao.active = false;
   });
   return solicitacoes;
@@ -26,7 +26,7 @@ export const exibirParteInativacao = (solicitacao, uuid) => {
   );
 };
 
-export const podeAtualizarFoto = criadoRF => {
+export const podeAtualizarFoto = (criadoRF) => {
   return (
     (ENVIRONMENT !== "production" &&
       criadoRF === USUARIO_PODE_ATUALIZAR_FOTO_DEV_HOM) ||

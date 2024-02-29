@@ -1,4 +1,4 @@
-@import "../../../styles/variables.scss";
+@import "styles/variables.scss";
 
 .card-logo {
   height: 218px;
@@ -6,31 +6,44 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border-bottom: 6px solid !important;
+  border-bottom: 6px solid #e3e6f0 !important;
+  transition: 0.5s;
+
+  .card-title {
+    padding-top: 25px;
+    font-weight: bold;
+    text-align: center;
+  }
+
   &.disabled {
     opacity: 0.5;
     color: $green;
     cursor: initial;
   }
+
   &:not(.disabled):hover {
     color: #2c98f0;
     background-color: $green;
-    border-bottom: $green !important;
+    border-bottom-color: $white !important;
+    transition: 0.5s;
+
     svg {
       path {
         stroke: $white;
       }
     }
+    svg.fill-white {
+      path {
+        fill: $white;
+      }
+    }
+
     .card-title {
-      color: $white;
+      color: $white !important;
     }
   }
+
   .icon-component {
-    text-align: center;
-  }
-  .card-title {
-    padding-top: 25px;
-    font-weight: bold;
     text-align: center;
   }
 }

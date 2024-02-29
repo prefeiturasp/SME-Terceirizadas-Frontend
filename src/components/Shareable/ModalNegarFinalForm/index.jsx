@@ -6,12 +6,12 @@ import HTTP_STATUS from "http-status-codes";
 import { composeValidators, getError } from "helpers/utilities";
 import {
   peloMenosUmCaractere,
-  textAreaRequired
+  textAreaRequired,
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
@@ -24,7 +24,7 @@ export const ModalNegarFinalForm = ({ ...props }) => {
     solicitacao,
     endpoint,
     loadSolicitacao,
-    tipoSolicitacao
+    tipoSolicitacao,
   } = props;
   const [justificativa, setJustificativa] = useState("");
 
@@ -32,7 +32,7 @@ export const ModalNegarFinalForm = ({ ...props }) => {
     SolicitacaoAlimentacaoContext
   );
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const resp = await endpoint(solicitacao.uuid, values, tipoSolicitacao);
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
@@ -75,7 +75,7 @@ export const ModalNegarFinalForm = ({ ...props }) => {
                     )}
                   />
                   <OnChange name="justificativa">
-                    {value => setJustificativa(value)}
+                    {(value) => setJustificativa(value)}
                   </OnChange>
                 </div>
               </div>
@@ -86,14 +86,14 @@ export const ModalNegarFinalForm = ({ ...props }) => {
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={justificativa === "" || justificativa === undefined}
-                className="ml-3"
+                className="ms-3"
               />
             </Modal.Footer>
           </form>

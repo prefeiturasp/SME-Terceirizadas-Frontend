@@ -3,13 +3,13 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import {
   AVALIAR_SOLICITACAO_CADASTRO_PRODUTO,
-  GESTAO_PRODUTO
+  GESTAO_PRODUTO,
 } from "../../configs/constants";
 import AvaliarSolicitacaoCadastroProduto from "components/screens/Produto/AvaliarSolicitacaoCadastroProduto";
 
 const atual = {
   href: `/${GESTAO_PRODUTO}/${AVALIAR_SOLICITACAO_CADASTRO_PRODUTO}`,
-  titulo: "Confirmação das Solicitações de Novos Produtos"
+  titulo: "Confirmação das Solicitações de Novos Produtos",
 };
 
 export default () => {

@@ -10,10 +10,13 @@ import {
   FAIXAS_ETARIAS,
   HORARIO_COMBOS_ALIMENTACAO,
   SOBREMESA_DOCE,
+  SUSPENSAO_ATIVIDADES,
   LABORATORIOS_CADASTRADOS,
   PRODUTOS,
-  EMBALAGENS_CADASTRADAS,
-  UNIDADES_MEDIDA
+  TIPOS_EMBALAGENS,
+  UNIDADES_MEDIDA,
+  MARCAS,
+  FABRICANTES,
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -25,7 +28,7 @@ import {
   usuarioEhLogistica,
   usuarioEhMedicao,
   usuarioEhCodaeDilog,
-  usuarioEhEmpresaFornecedor
+  usuarioEhEmpresaFornecedor,
 } from "helpers/utilities";
 
 const MenuCadastros = () => {
@@ -46,10 +49,8 @@ const MenuCadastros = () => {
       )}
       {usuarioEhDilogQualidadeOuCronograma() && (
         <>
-          <LeafItem
-            to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`}
-          >
-            Embalagens
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${TIPOS_EMBALAGENS}`}>
+            Tipos de Embalagens
           </LeafItem>
           <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`}>
             Unidades de Medida
@@ -86,12 +87,24 @@ const MenuCadastros = () => {
           <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`}>
             Sobremesa Doce
           </LeafItem>
+          <LeafItem
+            to={`/${CONFIGURACOES}/${CADASTROS}/${SUSPENSAO_ATIVIDADES}`}
+          >
+            Suspensão de Atividades
+          </LeafItem>
         </>
       )}
       {usuarioEhMedicao() && (
-        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`}>
-          Sobremesa Doce
-        </LeafItem>
+        <>
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`}>
+            Sobremesa Doce
+          </LeafItem>
+          <LeafItem
+            to={`/${CONFIGURACOES}/${CADASTROS}/${SUSPENSAO_ATIVIDADES}`}
+          >
+            Suspensão de Atividades
+          </LeafItem>
+        </>
       )}
       {(usuarioEhCronograma() ||
         usuarioEhCodaeDilog() ||
@@ -99,6 +112,16 @@ const MenuCadastros = () => {
         <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`}>
           Produtos
         </LeafItem>
+      )}
+      {(usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog()) && (
+        <>
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${MARCAS}`}>
+            Marcas
+          </LeafItem>
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${FABRICANTES}`}>
+            Fabricantes
+          </LeafItem>
+        </>
       )}
     </Menu>
   );

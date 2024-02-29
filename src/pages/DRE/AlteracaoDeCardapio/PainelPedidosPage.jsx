@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 export default () => {
   const atual = {
     href: `/${DRE}/${ALTERACAO_TIPO_ALIMENTACAO}`,
-    titulo: "Alteração do Tipo de Alimentação - Pendente Validação"
+    titulo: "Alteração do Tipo de Alimentação - Pendente Validação",
   };
 
   const location = useLocation();

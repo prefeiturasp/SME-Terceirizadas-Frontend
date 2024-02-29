@@ -7,20 +7,20 @@ import Botao from "components/Shareable/Botao";
 import { Spin } from "antd";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { Modal } from "react-bootstrap";
 import {
   enviaSolicitacaoRemessa,
-  enviaSolicitacoesDaGrade
+  enviaSolicitacoesDaGrade,
 } from "../../../../services/disponibilizacaoDeSolicitacoes.service";
 import {
   toastError,
   toastInfo,
-  toastSuccess
+  toastSuccess,
 } from "components/Shareable/Toast/dialogs";
 
-export const DisponibilizacaoDeSolicitacoes = props => {
+export const DisponibilizacaoDeSolicitacoes = (props) => {
   const [solicitacoes, setSolicitacoes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -34,7 +34,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
       setLoading(false);
     } else {
       getSolicitacoesDisponibilizadas()
-        .then(response => {
+        .then((response) => {
           if (response.status === HTTP_STATUS.OK) {
             setSolicitacoes(response.data);
             setLoading(false);
@@ -48,7 +48,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
     }
   }, []);
 
-  const exibeToastPeloStatus = status => {
+  const exibeToastPeloStatus = (status) => {
     if (status === HTTP_STATUS.OK && solicitacaoUuid) {
       toastSuccess("Requisição de entrega enviada com sucesso");
     } else if (status === HTTP_STATUS.OK && !solicitacaoUuid) {
@@ -62,7 +62,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
 
   const enviarSolicitacoes = async () => {
     const arrayUuidSolicitacoes = [];
-    solicitacoes.forEach(solicitacao => {
+    solicitacoes.forEach((solicitacao) => {
       if (solicitacao.status === "Aguardando envio") {
         arrayUuidSolicitacoes.push(solicitacao.uuid);
       }
@@ -82,12 +82,12 @@ export const DisponibilizacaoDeSolicitacoes = props => {
     exibeToastPeloStatus(response.status);
   };
 
-  const atualizaStatusdaSolicitacao = dataSolicitacao => {
+  const atualizaStatusdaSolicitacao = (dataSolicitacao) => {
     let arraySolicitacoes = [];
-    solicitacoes.forEach(solicitacao => {
+    solicitacoes.forEach((solicitacao) => {
       if (solicitacao.uuid === dataSolicitacao.uuid) {
         arraySolicitacoes = solicitacoes.filter(
-          item => item.uuid !== dataSolicitacao.uuid
+          (item) => item.uuid !== dataSolicitacao.uuid
         );
       }
     });
@@ -128,7 +128,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
             <div />
           </div>
           {solicitacoes &&
-            solicitacoes.map(solicitacao => {
+            solicitacoes.map((solicitacao) => {
               const bordas =
                 ativos && ativos.includes(solicitacao.uuid)
                   ? "desativar-borda"
@@ -162,7 +162,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
                         onClick={() => {
                           ativos && ativos.includes(solicitacao.uuid)
                             ? setAtivos(
-                                ativos.filter(el => el !== solicitacao.uuid)
+                                ativos.filter((el) => el !== solicitacao.uuid)
                               )
                             : setAtivos(
                                 ativos
@@ -191,7 +191,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
                   </div>
                   {ativos &&
                     ativos.includes(solicitacao.uuid) &&
-                    solicitacao.guias.map(guia => {
+                    solicitacao.guias.map((guia) => {
                       return (
                         <>
                           <section className="resultado-busca-detalhe pb-3 pt-3">
@@ -219,7 +219,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
                                   <br />
                                   {guia.codigo_unidade}
                                 </div>
-                                <div className="col border-left">
+                                <div className="col border-start">
                                   <b>Nome Unidade Educacional</b>
                                   <br />
                                   {guia.nome_unidade}
@@ -243,14 +243,14 @@ export const DisponibilizacaoDeSolicitacoes = props => {
                                   <br />
                                   {guia.contato_unidade}
                                 </div>
-                                <div className="col border-left">
+                                <div className="col border-start">
                                   <b>Telefone</b>
                                   <br />
                                   {guia.telefone_unidade}
                                 </div>
                               </div>
 
-                              {guia.alimentos.map(alimento => {
+                              {guia.alimentos.map((alimento) => {
                                 return (
                                   <>
                                     <div className="row mt-3 overflow-auto">
@@ -287,7 +287,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
 
                                       {alimento.embalagens.length > 1 && (
                                         <>
-                                          <div className={"col-2 border-left"}>
+                                          <div className={"col-2 border-start"}>
                                             <b>Quantidade</b>
                                             <br />
                                             {alimento.embalagens[1].qtd_volume}
@@ -357,7 +357,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
                     setLoading(true);
                   }}
                   style={BUTTON_STYLE.BLUE}
-                  className="ml-3"
+                  className="ms-3"
                   disabled={loading}
                 />
                 <Botao
@@ -369,14 +369,14 @@ export const DisponibilizacaoDeSolicitacoes = props => {
                     setSolicitacaoUuid(null);
                   }}
                   style={BUTTON_STYLE.BLUE}
-                  className="ml-3"
+                  className="ms-3"
                 />
               </Modal.Footer>
             </Spin>
           </Modal>
         </article>
         <div className="row mb-3">
-          <div className="col-12 text-right pt-3">
+          <div className="col-12 text-end pt-3">
             <Botao
               style={BUTTON_STYLE.GREEN_OUTLINE}
               texto="Enviar todos"

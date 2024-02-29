@@ -5,12 +5,9 @@ import {
   getEscolasSimplissimaComDRE,
   getEscolasSimplissimaComDREUnpaginated,
   getEscolasSimplissimaPorDiretoriaRegional,
-  getEscolasTrecTotal
+  getEscolasTercTotal,
 } from "services/escola.service";
-import {
-  getDiretoriaregionalSimplissima,
-  getDiretoriaregionalSimplissimaAxios
-} from "services/diretoriaRegional.service";
+import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 
 import { usuarioEhCODAEDietaEspecial } from "./utilities";
 
@@ -53,27 +50,27 @@ export const formFiltrosObtemDreEEscolas = async (
   }
 };
 
-const formataUuidNomeParaMultiSelect = results =>
-  results.map(r => {
-    return {
-      label: r.nome,
-      value: r.uuid,
-      dre: r.diretoria_regional
-    };
-  });
-
-const formataUuidNomeComCodEol = results =>
-  results.map(r => {
+const formataUuidNomeParaMultiSelect = (results) =>
+  results.map((r) => {
     return {
       label: r.nome,
       value: r.uuid,
       dre: r.diretoria_regional,
-      codigo_eol: r.codigo_eol
     };
   });
 
-const formataNomeComCodEol = results =>
-  results.map(r => `${r.codigo_eol} - ${r.nome}`);
+const formataUuidNomeComCodEol = (results) =>
+  results.map((r) => {
+    return {
+      label: r.nome,
+      value: r.uuid,
+      dre: r.diretoria_regional,
+      codigo_eol: r.codigo_eol,
+    };
+  });
+
+const formataNomeComCodEol = (results) =>
+  results.map((r) => `${r.codigo_eol} - ${r.nome}`);
 
 export const formFiltrosObtemDreEEscolasNovo = async (
   setEscolas,
@@ -92,7 +89,7 @@ export const formFiltrosObtemDreEEscolasNovo = async (
       setEscolas(formataUuidNomeParaMultiSelect(resposta2));
       setDiretoriasRegionais([{ value: uuid, label: nome }]);
     } else {
-      const respostaDre = await getDiretoriaregionalSimplissimaAxios();
+      const respostaDre = await getDiretoriaregionalSimplissima();
       const respostaEscola = await getEscolasSimplissimaComDREUnpaginated();
       setDiretoriasRegionais(
         formataUuidNomeParaMultiSelect(respostaDre.data.results)
@@ -117,21 +114,21 @@ export const formFiltrosObtemDreEEscolasDietas = async (
         label: nome,
         value: uuid,
         dre: dre,
-        codigo_eol: codigo_eol
-      }
+        codigo_eol: codigo_eol,
+      },
     ]);
 
     setDiretoriasRegionais([{ value: dre.uuid, label: dre.nome }]);
   } else {
     if (dadosUsuario.tipo_usuario === "diretoriaregional") {
       const { uuid, nome } = dadosUsuario.vinculo_atual.instituicao;
-      const resposta2 = await getEscolasTrecTotal({ dre: uuid });
+      const resposta2 = await getEscolasTercTotal({ dre: uuid });
       setDiretoriasRegionais([{ value: uuid, label: nome }]);
       setNomeEscolas(formataNomeComCodEol(resposta2.data));
       setEscolas(formataUuidNomeComCodEol(resposta2.data));
     } else {
-      const respostaDre = await getDiretoriaregionalSimplissimaAxios();
-      const respostaEscola = await getEscolasTrecTotal();
+      const respostaDre = await getDiretoriaregionalSimplissima();
+      const respostaEscola = await getEscolasTercTotal();
       setDiretoriasRegionais(
         formataUuidNomeComCodEol(respostaDre.data.results)
       );
@@ -141,24 +138,24 @@ export const formFiltrosObtemDreEEscolasDietas = async (
   }
 };
 
-export const getDadosIniciais = async dadosUsuario => {
+export const getDadosIniciais = async (dadosUsuario) => {
   if (dadosUsuario.tipo_usuario === "escola") {
     let { uuid } = dadosUsuario.vinculo_atual.instituicao;
     const dre = dadosUsuario.vinculo_atual.instituicao.diretoria_regional;
     return {
       escola: [uuid],
-      dre: [dre.uuid]
+      dre: [dre.uuid],
     };
   } else if (dadosUsuario.tipo_usuario === "diretoriaregional") {
     const { uuid } = dadosUsuario.vinculo_atual.instituicao;
     return {
-      dre: [uuid]
+      dre: [uuid],
     };
   }
   return {};
 };
 
-export const getCabecalhoPorFiltros = filtros => {
+export const getCabecalhoPorFiltros = (filtros) => {
   if (filtros.data_inicial && filtros.data_final) {
     return "Veja os resultados para a busca ";
   } else if (filtros.data_inicial) {
@@ -176,7 +173,7 @@ export const getCabecalhoPorFiltros = filtros => {
   }
 };
 
-export const validateFormDreEscola = formValues => {
+export const validateFormDreEscola = (formValues) => {
   const error = {};
   if (
     (formValues.dre === undefined || formValues.dre.length === 0) &&
@@ -199,7 +196,7 @@ export const getStatusSolicitacoesVigentes = () => {
     "ESCOLA_SOLICITOU_INATIVACAO",
     "CODAE_NEGOU_INATIVACAO",
     "CODAE_AUTORIZOU_INATIVACAO",
-    "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO"
+    "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO",
   ];
 };
 
@@ -209,7 +206,7 @@ export const getStatusSolicitacoesInativas = () => {
     "CODAE_NEGOU_PEDIDO",
     "ESCOLA_CANCELOU",
     "CODAE_AUTORIZOU_INATIVACAO",
-    "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO"
+    "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO",
   ];
 };
 

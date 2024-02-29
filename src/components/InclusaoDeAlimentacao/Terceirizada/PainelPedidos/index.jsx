@@ -5,7 +5,7 @@ import { FiltroEnum, TIPO_SOLICITACAO } from "../../../../constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
+  filtraRegular,
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
@@ -19,7 +19,7 @@ class PainelPedidos extends Component {
       loading: true,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
-      pedidosNoPrazoRegular: []
+      pedidosNoPrazoRegular: [],
     };
   }
 
@@ -36,7 +36,7 @@ class PainelPedidos extends Component {
       terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao(
         filtro,
         TIPO_SOLICITACAO.SOLICITACAO_CEI
-      )
+      ),
     ]);
     const inclusoes = safeConcatOn("results", avulsas, continuas, cei);
     const pedidosPrioritarios = filtraPrioritarios(inclusoes);
@@ -46,7 +46,7 @@ class PainelPedidos extends Component {
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular,
-      loading: false
+      loading: false,
     });
   }
 
@@ -64,7 +64,7 @@ class PainelPedidos extends Component {
       loading,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
-      pedidosNoPrazoRegular
+      pedidosNoPrazoRegular,
     } = this.state;
     const { visaoPorCombo, valorDoFiltro } = this.props;
     return (
@@ -79,12 +79,12 @@ class PainelPedidos extends Component {
                   <div className="col-3 font-10 my-auto">
                     Data: {dataAtualDDMMYYYY()}
                   </div>
-                  <div className="offset-6 col-3 text-right">
+                  <div className="offset-6 col-3 text-end">
                     <Field
                       component={Select}
                       name="visao_por"
                       naoDesabilitarPrimeiraOpcao
-                      onChange={event => this.filtrar(event.target.value)}
+                      onChange={(event) => this.filtrar(event.target.value)}
                       placeholder={"Filtro por"}
                       options={visaoPorCombo}
                     />
@@ -98,7 +98,7 @@ class PainelPedidos extends Component {
                       }
                       tipoDeCard={"priority"}
                       pedidos={pedidosPrioritarios}
-                      ultimaColunaLabel={"Data da Inclusão"}
+                      colunaDataLabel={"Data da Inclusão"}
                     />
                   </div>
                 </div>
@@ -109,7 +109,7 @@ class PainelPedidos extends Component {
                         titulo={"Solicitações no prazo limite"}
                         tipoDeCard={"on-limit"}
                         pedidos={pedidosNoPrazoLimite}
-                        ultimaColunaLabel={"Data da Inclusão"}
+                        colunaDataLabel={"Data da Inclusão"}
                       />
                     </div>
                   </div>
@@ -121,7 +121,7 @@ class PainelPedidos extends Component {
                         titulo={"Solicitações no prazo regular"}
                         tipoDeCard={"regular"}
                         pedidos={pedidosNoPrazoRegular}
-                        ultimaColunaLabel={"Data da Inclusão"}
+                        colunaDataLabel={"Data da Inclusão"}
                       />
                     </div>
                   </div>
@@ -137,12 +137,12 @@ class PainelPedidos extends Component {
 
 const PainelPedidosForm = reduxForm({
   form: "painelPedidos",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(PainelPedidos);
 const selector = formValueSelector("painelPedidos");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    valorDoFiltro: selector(state, "visao_por")
+    valorDoFiltro: selector(state, "visao_por"),
   };
 };
 

@@ -14,14 +14,14 @@ const JustificativaCancelamento = ({ dietaEspecial }) => {
       {[
         "ESCOLA_CANCELOU",
         "ESCOLA_SOLICITOU_INATIVACAO",
-        "CODAE_NEGOU_CANCELAMENTO"
+        "CODAE_NEGOU_CANCELAMENTO",
       ].includes(dietaEspecial.status_solicitacao) ? (
         <div className="col-12">
           <div
             name="log_cancelamento"
             className="orientacoes"
             dangerouslySetInnerHTML={{
-              __html: justificativa
+              __html: justificativa,
             }}
           />
         </div>

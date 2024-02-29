@@ -1,6 +1,6 @@
 @import "styles/variables.scss";
 
-.resultado-cronograma-de-entrega {
+.resultado-solicitacao-alteracao-cronograma-de-entrega {
   margin-top: 40px;
 
   header {
@@ -24,10 +24,10 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.6fr 0.6fr 0.4fr 0.7fr 0.7fr 0.8fr;
+      grid-template-columns: 0.6fr 0.6fr 0.4fr 0.7fr 0.7fr 0.2fr;
 
       &.fornecedor {
-        grid-template-columns: 0.6fr 0.6fr 0.8fr 0.7fr 0.8fr !important;
+        grid-template-columns: 0.6fr 0.6fr 0.8fr 0.7fr 0.2fr !important;
       }
     }
 
@@ -66,15 +66,11 @@
         font-weight: 900;
         font-size: 16px;
         line-height: 18px;
-        display: flex;
+        padding-right: 4px;
+        padding-left: 4px;
         align-items: center;
         text-align: center;
         letter-spacing: 0.01em;
-        font-size: 12px !important;
-
-        /* $neutral/dark */
-
-        color: #42474a;
       }
 
       div {
@@ -101,6 +97,10 @@
 
     .verde {
       color: $green;
+    }
+
+    .orange {
+      color: $orange;
     }
   }
 }

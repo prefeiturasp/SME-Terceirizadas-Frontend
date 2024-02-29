@@ -4,12 +4,12 @@ import BuscaProdutoAnaliseSensorial from "../../components/screens/Produto/Busca
 import Page from "../../components/Shareable/Page/Page";
 import {
   PESQUISA_DESENVOLVIMENTO,
-  BUSCA_PRODUTO_ANALISE_SENSORIAL
+  BUSCA_PRODUTO_ANALISE_SENSORIAL,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${PESQUISA_DESENVOLVIMENTO}/${BUSCA_PRODUTO_ANALISE_SENSORIAL}`,
-  titulo: "Responder análise sensorial"
+  titulo: "Responder análise sensorial",
 };
 
 export default () => (

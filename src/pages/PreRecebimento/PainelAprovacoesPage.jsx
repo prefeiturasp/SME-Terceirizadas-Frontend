@@ -7,14 +7,14 @@ import PainelAprovacoes from "components/screens/PreRecebimento/PainelAprovacoes
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`,
-  titulo: "Painel de Aprovações"
+  titulo: "Painel de Aprovações",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Pré-Recebimento"
-  }
+    titulo: "Pré-Recebimento",
+  },
 ];
 
 export default () => (

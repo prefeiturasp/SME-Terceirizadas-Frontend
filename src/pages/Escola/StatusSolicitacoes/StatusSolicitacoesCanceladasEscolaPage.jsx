@@ -6,7 +6,7 @@ import { HOME } from "../constants";
 import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardLegendas from "components/Shareable/CardLegendas";
 import { getSolicitacoesCanceladasEscola } from "services/painelEscola.service";
@@ -14,7 +14,7 @@ import { PAGINACAO_DEFAULT } from "constants/shared";
 
 const atual = {
   href: `/${ESCOLA}/${SOLICITACOES_PENDENTES}`,
-  titulo: "Solicitações Canceladas"
+  titulo: "Solicitações Canceladas",
 };
 
 export default () => (

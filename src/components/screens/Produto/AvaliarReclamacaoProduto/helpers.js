@@ -1,10 +1,10 @@
 const FORMATA_STATUS = {
   "Aguardando resposta terceirizada": "CODAE_PEDIU_ANALISE_RECLAMACAO",
   "Aguardando avaliação CODAE": "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
-  "Respondido terceirizada": "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+  "Respondido terceirizada": "TERCEIRIZADA_RESPONDEU_RECLAMACAO",
 };
 
-export const formatarValues = values => {
+export const formatarValues = (values) => {
   if (values.status) {
     values.status = [FORMATA_STATUS[values.status]];
   } else {
@@ -17,7 +17,7 @@ export const formatarValues = values => {
       "CODAE_QUESTIONOU_UE",
       "UE_RESPONDEU_QUESTIONAMENTO",
       "CODAE_QUESTIONOU_NUTRISUPERVISOR",
-      "NUTRISUPERVISOR_RESPONDEU_QUESTIONAMENTO"
+      "NUTRISUPERVISOR_RESPONDEU_QUESTIONAMENTO",
     ];
   }
   values.status_reclamacao = [
@@ -29,7 +29,7 @@ export const formatarValues = values => {
     "AGUARDANDO_RESPOSTA_UE",
     "RESPONDIDO_UE",
     "AGUARDANDO_RESPOSTA_NUTRISUPERVISOR",
-    "RESPONDIDO_NUTRISUPERVISOR"
+    "RESPONDIDO_NUTRISUPERVISOR",
   ];
   return values;
 };

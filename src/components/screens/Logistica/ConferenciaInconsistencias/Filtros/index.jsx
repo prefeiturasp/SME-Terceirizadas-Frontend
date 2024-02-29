@@ -5,14 +5,14 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 
 const FORM_NAME = "buscaGuiaInconsistencias";
 
 export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     if (filtros.motivos) {
       filtros.motivos = filtros.motivos.toString();
@@ -64,14 +64,14 @@ export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
               />
 
               <Botao
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset({});
                   setGuias(undefined);

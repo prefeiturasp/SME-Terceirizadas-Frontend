@@ -7,7 +7,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import MultiSelectDistribuidores from "components/Shareable/MultiSelectDistribuidores";
@@ -20,11 +20,11 @@ export default ({
   setTotal,
   dilog,
   dre,
-  inicioResultado
+  inicioResultado,
 }) => {
   const [initialValues] = useState({});
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
@@ -107,7 +107,7 @@ export default ({
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting}
               />
 
@@ -115,7 +115,7 @@ export default ({
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset({});
                   setSolicitacoes(undefined);

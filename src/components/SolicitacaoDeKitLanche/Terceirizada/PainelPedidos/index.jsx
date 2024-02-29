@@ -9,7 +9,7 @@ import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
+  filtraRegular,
 } from "./../../../../helpers/painelPedidos";
 
 class PainelPedidos extends Component {
@@ -19,7 +19,7 @@ class PainelPedidos extends Component {
       pedidosCarregados: 0,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
-      pedidosNoPrazoRegular: []
+      pedidosNoPrazoRegular: [],
     };
   }
 
@@ -28,7 +28,7 @@ class PainelPedidos extends Component {
     let pedidosNoPrazoLimite = [];
     let pedidosNoPrazoRegular = [];
     this.setState({ pedidosCarregados: 0 });
-    getTerceirizadasPedidosDeKitLanche(filtro).then(response => {
+    getTerceirizadasPedidosDeKitLanche(filtro).then((response) => {
       pedidosPrioritarios = filtraPrioritarios(response.results);
       pedidosNoPrazoLimite = filtraNoLimite(response.results);
       pedidosNoPrazoRegular = filtraRegular(response.results);
@@ -36,7 +36,7 @@ class PainelPedidos extends Component {
         pedidosPrioritarios,
         pedidosNoPrazoLimite,
         pedidosNoPrazoRegular,
-        pedidosCarregados: this.state.pedidosCarregados + 1
+        pedidosCarregados: this.state.pedidosCarregados + 1,
       });
     });
   }
@@ -61,7 +61,7 @@ class PainelPedidos extends Component {
       pedidosCarregados,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
-      pedidosNoPrazoRegular
+      pedidosNoPrazoRegular,
     } = this.state;
     const { visaoPorCombo, valorDoFiltro } = this.props;
     const todosOsPedidosForamCarregados = pedidosCarregados;
@@ -77,12 +77,12 @@ class PainelPedidos extends Component {
                   <div className="col-3 font-10 my-auto">
                     Data: {dataAtualDDMMYYYY()}
                   </div>
-                  <div className="offset-6 col-3 text-right">
+                  <div className="offset-6 col-3 text-end">
                     <Field
                       component={Select}
                       name="visao_por"
                       naoDesabilitarPrimeiraOpcao
-                      onChange={event =>
+                      onChange={(event) =>
                         this.onFiltroSelected(event.target.value)
                       }
                       placeholder={"Filtro por"}
@@ -137,12 +137,12 @@ class PainelPedidos extends Component {
 
 const PainelPedidosForm = reduxForm({
   form: "painelPedidos",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(PainelPedidos);
 const selector = formValueSelector("painelPedidos");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    valorDoFiltro: selector(state, "visao_por")
+    valorDoFiltro: selector(state, "visao_por"),
   };
 };
 

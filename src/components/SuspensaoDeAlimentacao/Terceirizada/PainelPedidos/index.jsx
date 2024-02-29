@@ -4,14 +4,14 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
   getTerceirizadasSuspensoesDeAlimentacao,
-  getSuspensaoDeAlimentacaoTomadaCiencia
+  getSuspensaoDeAlimentacaoTomadaCiencia,
 } from "../../../../services/suspensaoDeAlimentacao.service.js";
 import CardHistorico from "../../components/CardHistorico";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular,
-  formatarPedidos
+  formatarPedidos,
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { FiltroEnum } from "../../../../constants/shared";
@@ -26,12 +26,12 @@ class PainelPedidos extends Component {
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: [],
       pedidosTomadaCiencia: [],
-      pedidosCarregados: false
+      pedidosCarregados: false,
     };
   }
 
   filtrar(filtro) {
-    getTerceirizadasSuspensoesDeAlimentacao(filtro).then(response => {
+    getTerceirizadasSuspensoesDeAlimentacao(filtro).then((response) => {
       let pedidosPrioritarios = filtraPrioritarios(response.results);
       let pedidosNoPrazoLimite = filtraNoLimite(response.results);
       let pedidosNoPrazoRegular = filtraRegular(response.results);
@@ -39,7 +39,7 @@ class PainelPedidos extends Component {
         pedidosPrioritarios,
         pedidosNoPrazoLimite,
         pedidosNoPrazoRegular,
-        pedidosCarregados: true
+        pedidosCarregados: true,
       });
     });
   }
@@ -47,9 +47,9 @@ class PainelPedidos extends Component {
   componentDidMount() {
     this.filtrar(FiltroEnum.SEM_FILTRO);
 
-    getSuspensaoDeAlimentacaoTomadaCiencia().then(response => {
+    getSuspensaoDeAlimentacaoTomadaCiencia().then((response) => {
       this.setState({
-        pedidosTomadaCiencia: response.data.results
+        pedidosTomadaCiencia: response.data.results,
       });
     });
   }
@@ -71,7 +71,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular,
       pedidosTomadaCiencia,
-      pedidosCarregados
+      pedidosCarregados,
     } = this.state;
     const { visaoPorCombo } = this.props;
     return (
@@ -86,12 +86,12 @@ class PainelPedidos extends Component {
                   <div className="col-3 font-10 my-auto">
                     Data: {dataAtualDDMMYYYY()}
                   </div>
-                  <div className="offset-6 col-3 text-right">
+                  <div className="offset-6 col-3 text-end">
                     <Field
                       component={Select}
                       name="visao_por"
                       naoDesabilitarPrimeiraOpcao
-                      onChange={event =>
+                      onChange={(event) =>
                         this.onFiltroSelected(event.target.value)
                       }
                       placeholder={"Filtro por"}
@@ -156,12 +156,12 @@ class PainelPedidos extends Component {
 
 const PainelPedidosForm = reduxForm({
   form: "painelPedidos",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(PainelPedidos);
 const selector = formValueSelector("painelPedidos");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    valorDoFiltro: selector(state, "visao_por")
+    valorDoFiltro: selector(state, "visao_por"),
   };
 };
 

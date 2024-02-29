@@ -6,21 +6,21 @@ import { AlunosMatriculados } from "components/screens/Relatorios/AlunosMatricul
 
 const atual = {
   href: `/${RELATORIO_ALUNOS_MATRICULADOS}`,
-  titulo: "Alunos Matriculados"
+  titulo: "Alunos Matriculados",
 };
 
 const anteriores = [
   {
     href: `/painel-gestao-alimentacao`,
-    titulo: "Gestão de Alimentação"
+    titulo: "Gestão de Alimentação",
   },
   {
     href: `/`,
-    titulo: "Relatórios"
-  }
+    titulo: "Relatórios",
+  },
 ];
 
-export default props => (
+export default (props) => (
   <Page titulo="Alunos Matriculados" botaoVoltar {...props}>
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
     <AlunosMatriculados {...props} />

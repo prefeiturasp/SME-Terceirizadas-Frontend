@@ -1,59 +1,103 @@
-import React, { useEffect, useState } from "react";
-import { meusDados } from "services/perfil.service";
+import React, { useContext, useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { getDiasUteis } from "services/diasUteis.service";
 import { getKitLanches } from "services/kitLanche";
-import { getEscolasTrecTotal } from "services/escola.service";
+import { getEscolasTercTotal } from "services/escola.service";
 import { dataParaUTC } from "helpers/utilities";
 import SolicitacaoUnificada from ".";
+import MeusDadosContext from "context/MeusDadosContext";
+import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
 
-export default () => {
-  const [dadosUsuario, setDadosUsuario] = useState(null);
-  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
-  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
-  const [escolas, setEscolas] = useState(undefined);
-  const [lotes, setLotes] = useState([]);
-  const [kits, setKits] = useState([]);
+export const Container = () => {
+  const { meusDados } = useContext(MeusDadosContext);
 
-  async function fetchData() {
-    meusDados().then(response => {
-      setDadosUsuario(response);
-      setLotes(response.vinculo_atual.instituicao.lotes);
-      const dre_uuid = response.vinculo_atual.instituicao.uuid;
-      getEscolasTrecTotal({ dre: dre_uuid }).then(response => {
-        setEscolas(response.data);
-      });
-    });
+  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState();
+  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState();
+  const [escolas, setEscolas] = useState();
+  const [lotes, setLotes] = useState();
+  const [kits, setKits] = useState();
 
-    getDiasUteis().then(response => {
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_dois_dias_uteis)
-      );
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_cinco_dias_uteis)
-      );
-      setProximosDoisDiasUteis(proximos_dois_dias_uteis);
-      setProximosCincoDiasUteis(proximos_cinco_dias_uteis);
-    });
+  const [erro, setErro] = useState("");
 
-    getKitLanches({ status: "ATIVO" }).then(response => {
+  const getKitLanchesAsync = async () => {
+    const response = await getKitLanches({ status: "ATIVO" });
+    if (response.status === HTTP_STATUS.OK) {
       setKits(response.data.results);
+    } else {
+      setErro("Erro ao carregar kits lanche. Tente novamente mais tarde.");
+    }
+  };
+
+  const getDiasUteisAsync = async () => {
+    const response = await getDiasUteis({
+      eh_solicitacao_unificada: true,
     });
-  }
+    if (response.status === HTTP_STATUS.OK) {
+      setProximosDoisDiasUteis(
+        dataParaUTC(new Date(response.data.proximos_dois_dias_uteis))
+      );
+      setProximosCincoDiasUteis(
+        dataParaUTC(new Date(response.data.proximos_cinco_dias_uteis))
+      );
+    } else {
+      setErro("Erro ao carregar dias úteis. Tente novamente mais tarde.");
+    }
+  };
+
+  const getEscolasTrecTotalAsync = async (dre_uuid) => {
+    const response = await getEscolasTercTotal({ dre: dre_uuid });
+    if (response.status === HTTP_STATUS.OK) {
+      setEscolas(response.data);
+    } else {
+      setErro("Erro ao carregar escolas. Tente novamente mais tarde.");
+    }
+  };
+
+  const requisicoesPreRender = async () => {
+    await Promise.all([getKitLanchesAsync()]);
+  };
+
+  const requisicoesPreRenderComMeusDados = async () => {
+    const dre_uuid = meusDados.vinculo_atual.instituicao.uuid;
+    await Promise.all([
+      getDiasUteisAsync(),
+      setLotes(meusDados.vinculo_atual.instituicao.lotes),
+      getEscolasTrecTotalAsync(dre_uuid),
+    ]);
+  };
 
   useEffect(() => {
-    fetchData();
+    requisicoesPreRender();
   }, []);
 
-  return escolas && kits ? (
-    <SolicitacaoUnificada
-      dadosUsuario={dadosUsuario}
-      proximosDoisDiasUteis={proximosDoisDiasUteis}
-      proximosCincoDiasUteis={proximosCincoDiasUteis}
-      escolas={escolas}
-      lotes={lotes}
-      kits={kits}
-    />
-  ) : (
-    <p>Carregando...</p>
+  useEffect(() => {
+    if (meusDados) {
+      requisicoesPreRenderComMeusDados();
+    }
+  }, [meusDados]);
+
+  const LOADING =
+    !meusDados ||
+    !proximosCincoDiasUteis ||
+    !proximosDoisDiasUteis ||
+    !escolas ||
+    !lotes ||
+    !kits;
+
+  return (
+    <>
+      {LOADING && !erro && <SigpaeLogoLoader />}
+      {!!erro && <div>{erro}</div>}
+      {!LOADING && !erro && (
+        <SolicitacaoUnificada
+          dadosUsuario={meusDados}
+          proximosDoisDiasUteis={proximosDoisDiasUteis}
+          proximosCincoDiasUteis={proximosCincoDiasUteis}
+          escolas={escolas}
+          lotes={lotes}
+          kits={kits}
+        />
+      )}
+    </>
   );
 };

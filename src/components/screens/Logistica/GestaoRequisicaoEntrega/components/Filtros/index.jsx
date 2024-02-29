@@ -9,7 +9,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { getNomesUnidadesEscolares } from "services/logistica.service.js";
@@ -22,7 +22,7 @@ export default ({
   setTotal,
   initialValues,
   setInitialValues,
-  inicioResultado
+  inicioResultado,
 }) => {
   const [desabilitarAluno, setDesabilitarAluno] = useState(false);
 
@@ -33,11 +33,11 @@ export default ({
       "DISTRIBUIDOR_CONFIRMA",
       "DISTRIBUIDOR_SOLICITA_ALTERACAO",
       "DILOG_ACEITA_ALTERACAO",
-      "AGUARDANDO_CANCELAMENTO"
+      "AGUARDANDO_CANCELAMENTO",
     ];
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
 
     if (!filtros.status || filtros.status === "Todos") {
@@ -54,13 +54,13 @@ export default ({
       setDesabilitarAluno(false);
     } else {
       const response = await getNomesUnidadesEscolares({
-        codigo_unidade: codigo
+        codigo_unidade: codigo,
       });
       if (response.status === 200) {
         if (response.data.results.length) {
           setInitialValues({
             ...values,
-            nome_unidade: response.data.results[0].nome_unidade
+            nome_unidade: response.data.results[0].nome_unidade,
           });
           setDesabilitarAluno(true);
         } else {
@@ -116,13 +116,13 @@ export default ({
               </div>
             </div>
 
-            <div className="row mt-2">
+            <div className="row">
               <div className="col-4">
-                <span className="col-form-label">
+                <label className="col-form-label">
                   Selecionar Período de Entrega{" "}
-                </span>
+                </label>
                 <div className="row">
-                  <div className="col-6 mt-1">
+                  <div className="col-6">
                     <Field
                       component={InputComData}
                       name="data_inicial"
@@ -136,7 +136,7 @@ export default ({
                       }
                     />
                   </div>
-                  <div className="col-6 mt-1">
+                  <div className="col-6">
                     <Field
                       component={InputComData}
                       name="data_final"
@@ -164,7 +164,7 @@ export default ({
                 />
 
                 <OnChange name="codigo_unidade">
-                  {value => {
+                  {(value) => {
                     getNomeUnidadeEscola(value, values);
                   }}
                 </OnChange>
@@ -193,15 +193,15 @@ export default ({
                     { uuid: "DILOG_ENVIA", nome: "Recebida" },
                     {
                       uuid: "AGUARDANDO_CANCELAMENTO",
-                      nome: "Aguardando cancelamento"
+                      nome: "Aguardando cancelamento",
                     },
                     { uuid: "CANCELADA", nome: "Cancelada" },
                     { uuid: "DISTRIBUIDOR_CONFIRMA", nome: "Confirmada" },
                     { uuid: "DILOG_ACEITA_ALTERACAO", nome: "Alterada" },
                     {
                       uuid: "DISTRIBUIDOR_SOLICITA_ALTERACAO",
-                      nome: "Em análise"
-                    }
+                      nome: "Em análise",
+                    },
                   ]}
                   className="input-busca-produto"
                 />
@@ -212,7 +212,7 @@ export default ({
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting}
               />
 
@@ -220,7 +220,7 @@ export default ({
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset({});
                   setSolicitacoes(undefined);

@@ -6,21 +6,21 @@ export const getOpcoesStatusReclamacao = () => {
     {
       disabled: false,
       value: "AGUARDANDO_AVALIACAO",
-      option: "Aguardando avaliação da CODAE"
+      option: "Aguardando avaliação da CODAE",
     },
     {
       disabled: false,
       value: "AGUARDANDO_RESPOSTA_TERCEIRIZADA",
-      option: "Aguardando resposta da terceirizada"
+      option: "Aguardando resposta da terceirizada",
     },
     {
       disabled: false,
       value: "RESPONDIDO_TERCEIRIZADA",
-      option: "Respondido pela terceirizada"
+      option: "Respondido pela terceirizada",
     },
     { disabled: false, value: "CODAE_ACEITOU", option: "CODAE aceitou" },
     { disabled: false, value: "CODAE_RECUSOU", option: "CODAE recusou" },
-    { disabled: false, value: "CODAE_RESPONDEU", option: "CODAE respondeu" }
+    { disabled: false, value: "CODAE_RESPONDEU", option: "CODAE respondeu" },
   ];
 };
 
@@ -37,7 +37,7 @@ export const getTodosStatusReclamacao = () => {
     "RESPONDIDO_NUTRISUPERVISOR",
     "CODAE_ACEITOU",
     "CODAE_RECUSOU",
-    "CODAE_RESPONDEU"
+    "CODAE_RESPONDEU",
   ];
 };
 
@@ -55,7 +55,7 @@ export const getTodasOpcoesStatusPorPerfil = () => {
       "CODAE_PEDIU_ANALISE_SENSORIAL",
       "CODAE_PENDENTE_HOMOLOGACAO",
       "CODAE_HOMOLOGADO",
-      "CODAE_NAO_HOMOLOGADO"
+      "CODAE_NAO_HOMOLOGADO",
     ];
   } else if (tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO) {
     return [
@@ -65,19 +65,19 @@ export const getTodasOpcoesStatusPorPerfil = () => {
       "CODAE_PEDIU_ANALISE_SENSORIAL",
       "CODAE_PENDENTE_HOMOLOGACAO",
       "CODAE_HOMOLOGADO",
-      "CODAE_NAO_HOMOLOGADO"
+      "CODAE_NAO_HOMOLOGADO",
     ];
   } else {
     return [
       "CODAE_HOMOLOGADO",
       "CODAE_NAO_HOMOLOGADO",
       "CODAE_SUSPENDEU",
-      "CODAE_AUTORIZOU_RECLAMACAO"
+      "CODAE_AUTORIZOU_RECLAMACAO",
     ];
   }
 };
 
-export const retornaStatusBackend = status => {
+export const retornaStatusBackend = (status) => {
   switch (status) {
     case "Reclamações de produtos":
       return "CODAE_AUTORIZOU_RECLAMACAO";

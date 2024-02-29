@@ -5,7 +5,7 @@ import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "../../../Shareable/Botao/constants";
 
 import {
@@ -15,7 +15,7 @@ import {
   mesesFinaisValidos,
   mesesForaDasFaixas,
   ordenaFaixas,
-  range
+  range,
 } from "../../../../helpers/faixasEtarias";
 
 import "./style.scss";
@@ -26,7 +26,7 @@ const FaixaEtariaItem = ({
   fim,
   onApagar,
   onCancelar,
-  onConfirmar
+  onConfirmar,
 }) => (
   <div className="faixa-etaria-item">
     <InputText
@@ -70,7 +70,7 @@ export default class FaixasEtariasEditar extends Component {
     this.state = {
       meses: range(this.SEIS_ANOS_MAIS_UM_MES),
       faixasEtarias: [],
-      mesEdicaoAtual: undefined
+      mesEdicaoAtual: undefined,
     };
     this.cancelarEdicao = this.cancelarEdicao.bind(this);
     this.onFinalizar = this.onFinalizar.bind(this);
@@ -87,13 +87,13 @@ export default class FaixasEtariasEditar extends Component {
       const faixasEtarias = ordenaFaixas(
         this.state.faixasEtarias.concat({
           inicio: this.state.mesEdicaoAtual,
-          fim: segundoClique
+          fim: segundoClique,
         })
       );
       this.setState({
         mesEdicaoAtual: undefined,
         faixasEtarias,
-        meses: mesesForaDasFaixas(faixasEtarias, this.SEIS_ANOS_MAIS_UM_MES)
+        meses: mesesForaDasFaixas(faixasEtarias, this.SEIS_ANOS_MAIS_UM_MES),
       });
     } else {
       this.setState({
@@ -102,7 +102,7 @@ export default class FaixasEtariasEditar extends Component {
           mes,
           this.state.faixasEtarias,
           this.SEIS_ANOS_MAIS_UM_MES
-        )
+        ),
       });
     }
   }
@@ -112,7 +112,7 @@ export default class FaixasEtariasEditar extends Component {
       meses: mesesForaDasFaixas(
         this.state.faixasEtarias,
         this.SEIS_ANOS_MAIS_UM_MES
-      )
+      ),
     });
   }
   apagarFaixa(indice) {
@@ -121,7 +121,7 @@ export default class FaixasEtariasEditar extends Component {
     );
     this.setState({
       faixasEtarias,
-      meses: mesesForaDasFaixas(faixasEtarias, this.SEIS_ANOS_MAIS_UM_MES)
+      meses: mesesForaDasFaixas(faixasEtarias, this.SEIS_ANOS_MAIS_UM_MES),
     });
   }
   onFinalizar() {
@@ -148,7 +148,7 @@ export default class FaixasEtariasEditar extends Component {
                   "form-control select-meses" +
                   (this.state.mesEdicaoAtual ? " select-meses-editando" : "")
                 }
-                onClick={e => this.selecionaMes(parseInt(e.target.value))}
+                onClick={(e) => this.selecionaMes(parseInt(e.target.value))}
               >
                 {this.state.meses.map((mes, key) => (
                   <option
@@ -192,7 +192,7 @@ export default class FaixasEtariasEditar extends Component {
           <div>
             <Botao
               texto="Finalizar"
-              className="float-right botao-finalizar"
+              className="float-end botao-finalizar"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
               disabled={this.state.meses.length > 0}
@@ -201,7 +201,7 @@ export default class FaixasEtariasEditar extends Component {
             {this.props.redefinir && (
               <Botao
                 texto="Cancelar"
-                className="float-right"
+                className="float-end"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={this.props.onCancelar}

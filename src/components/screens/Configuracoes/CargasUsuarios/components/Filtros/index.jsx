@@ -5,13 +5,14 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import {
   baixarExcelModeloNaoServidor,
-  baixarExcelModeloServidor
+  baixarExcelModeloServidor,
+  baixarExcelModeloUEParceira,
 } from "services/cargaUsuario.service";
 import { required } from "helpers/fieldValidators";
 import moment from "moment";
@@ -25,31 +26,27 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
   const inicioResultado = useRef();
 
   const OPTIONS_MODELO = [
-    {
-      uuid: "SERVIDOR",
-      nome: "Servidor"
-    },
     ...(!servidores
       ? [
           {
             uuid: "NAO_SERVIDOR",
-            nome: "Não Servidor"
-          }
+            nome: "Não Servidor",
+          },
         ]
-      : [])
+      : []),
+    {
+      uuid: "SERVIDOR",
+      nome: "Servidor",
+    },
+    {
+      uuid: "UE_PARCEIRA",
+      nome: "UEs Parceiras",
+    },
   ];
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
-  };
-
-  const downloadPlanilhaServidor = () => {
-    baixarExcelModeloServidor();
-  };
-
-  const downloadPlanilhaNaoServidor = () => {
-    baixarExcelModeloNaoServidor();
   };
 
   return (
@@ -59,24 +56,28 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
           texto="Modelo Planilha Servidores"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="float-right ml-3"
+          className="col-3"
           icon="fas fa-download"
-          onClick={() => {
-            downloadPlanilhaServidor();
-          }}
+          onClick={baixarExcelModeloServidor}
         />
         {!servidores && (
           <Botao
             texto="Modelo Planilha Não Servidores"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="float-right ml-3"
+            className="col-3 ms-3"
             icon="fas fa-download"
-            onClick={() => {
-              downloadPlanilhaNaoServidor();
-            }}
+            onClick={baixarExcelModeloNaoServidor}
           />
         )}
+        <Botao
+          texto="Modelo Planilha UEs Parceiras"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
+          className="col-3 ms-3"
+          icon="fas fa-download"
+          onClick={baixarExcelModeloUEParceira}
+        />
       </div>
 
       <Form
@@ -160,7 +161,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
                 texto="Inserir Carga de Usuários"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
-                className="float-left"
+                className="float-start"
                 icon="fas fa-upload"
                 onClick={() => setShowCadastro(true)}
               />
@@ -169,7 +170,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
                 texto="Filtrar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting || Object.keys(errors).length > 0}
                 onClick={() => inicioResultado.current.scrollIntoView()}
               />
@@ -178,7 +179,7 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
                 texto="Limpar"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset(initialValues);
                   setFiltros(null);

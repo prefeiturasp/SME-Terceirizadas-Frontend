@@ -8,20 +8,22 @@ import {
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhCogestorDRE,
+  usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoAlimentacao,
-  usuarioEhCODAENutriManifestacao
+  usuarioEhCODAENutriManifestacao,
+  usuarioEhOrgaoFiscalizador,
 } from "helpers/utilities";
 import {
   RELATORIO,
   GESTAO_PRODUTO,
   EDITAR,
   PESQUISA_DESENVOLVIMENTO,
-  ATIVACAO_DE_PRODUTO
+  ATIVACAO_DE_PRODUTO,
 } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import {
   CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE,
-  CARD_AGUARDANDO_ANALISE_RECLAMACAO
+  CARD_AGUARDANDO_ANALISE_RECLAMACAO,
 } from "helpers/gestaoDeProdutos";
 const {
   CODAE_PEDIU_ANALISE_RECLAMACAO,
@@ -34,12 +36,12 @@ const {
   CODAE_NAO_HOMOLOGADO,
   CODAE_QUESTIONADO,
   CODAE_QUESTIONOU_UE,
-  TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO
+  TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO,
 } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 export const incluirDados = (statuses, arr) => {
   const result = [];
-  arr.forEach(el => {
+  arr.forEach((el) => {
     if (el.dados.length && statuses.includes(el.status.toLowerCase())) {
       result.push(...el.dados);
     }
@@ -51,10 +53,12 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   if (
     (usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao()) &&
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhOrgaoFiscalizador() ||
+      usuarioEhCODAEGabinete()) &&
     [
       CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo,
-      CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo
+      CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo,
     ].includes(titulo)
   ) {
     return `/${GESTAO_PRODUTO}/responder-reclamacao/consulta?uuid=${item.uuid}`;
@@ -67,9 +71,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_SENSORIAL &&
     usuarioEhEmpresaTerceirizada()
   ) {
-    return `/${PESQUISA_DESENVOLVIMENTO}/relatorio-analise-sensorial?uuid=${
-      item.uuid
-    }`;
+    return `/${PESQUISA_DESENVOLVIMENTO}/relatorio-analise-sensorial?uuid=${item.uuid}`;
   } else if (
     usuarioEhCODAEGestaoProduto() &&
     CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo === titulo
@@ -99,7 +101,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
       CODAE_NAO_HOMOLOGADO,
       CODAE_QUESTIONADO,
       CODAE_AUTORIZOU_RECLAMACAO,
-      TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO
+      TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO,
     ].includes(item.status.toLowerCase())
   ) {
     return `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${item.uuid}`;
@@ -111,7 +113,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
       CODAE_NAO_HOMOLOGADO,
       CODAE_QUESTIONADO,
       CODAE_AUTORIZOU_RECLAMACAO,
-      TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO
+      TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO,
     ].includes(item.status.toLowerCase())
   ) {
     return `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`;
@@ -122,25 +124,17 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
     item.status.toLowerCase() === CODAE_QUESTIONOU_UE &&
     CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo === titulo
   ) {
-    return `/${GESTAO_PRODUTO}/responder-questionamento-ue/?nome_produto=${
-      item.nome_produto
-    }`;
+    return `/${GESTAO_PRODUTO}/responder-questionamento-ue/?nome_produto=${item.nome_produto}`;
   } else if (
     CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo === titulo &&
     (usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada())
   ) {
-    return `/${GESTAO_PRODUTO}/nova-reclamacao-de-produto?nome_produto=${
-      item.nome_produto
-    }&marca_produto=${item.marca_produto}&fabricante_produto=${
-      item.fabricante_produto
-    }`;
+    return `/${GESTAO_PRODUTO}/nova-reclamacao-de-produto?nome_produto=${item.nome_produto}&marca_produto=${item.marca_produto}&fabricante_produto=${item.fabricante_produto}`;
   } else if (
     usuarioEhCoordenadorNutriSupervisao() &&
     CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo === titulo
   ) {
-    return `/${GESTAO_PRODUTO}/responder-questionamento-nutrisupervisor/?nome_produto=${
-      item.nome_produto
-    }`;
+    return `/${GESTAO_PRODUTO}/responder-questionamento-nutrisupervisor/?nome_produto=${item.nome_produto}`;
   }
 
   return apontaParaEdicao
@@ -160,7 +154,7 @@ export const ordenaPorLogMaisRecente = (a, b) => {
   return comparaObjetosMoment(data_b, data_a);
 };
 
-const getText = item => {
+const getText = (item) => {
   const TAMANHO_MAXIMO = 48;
   let appendix = "";
 
@@ -175,7 +169,7 @@ const getText = item => {
     [
       CODAE_PEDIU_ANALISE_RECLAMACAO,
       ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
-      TERCEIRIZADA_RESPONDEU_RECLAMACAO
+      TERCEIRIZADA_RESPONDEU_RECLAMACAO,
     ].includes(item.status.toLowerCase())
   ) {
     appendix = ` (${item.qtde_reclamacoes})`;
@@ -188,7 +182,7 @@ const getText = item => {
 };
 
 export const formataCards = (items, apontaParaEdicao, titulo) => {
-  return items.sort(ordenaPorLogMaisRecente).map(item => ({
+  return items.sort(ordenaPorLogMaisRecente).map((item) => ({
     text: getText(item),
     date:
       item.status === "CODAE_HOMOLOGADO" &&
@@ -200,6 +194,6 @@ export const formataCards = (items, apontaParaEdicao, titulo) => {
     status: item.status,
     marca: item.marca_produto,
     editais: item.editais,
-    produto_editais: item.produto_editais
+    produto_editais: item.produto_editais,
   }));
 };

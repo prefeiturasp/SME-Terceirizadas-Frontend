@@ -1,41 +1,45 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   usuarioEhCronograma,
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
-  usuarioEhEmpresaFornecedor
+  usuarioEhEmpresaFornecedor,
 } from "helpers/utilities";
 import ModalEnviarSolicitacao from "../Modals/ModalEnviarSolicitacao";
 import ModalAnalise from "../Modals/ModalAnalise";
-import { dilogCienteSolicitacaoAlteracaoCronograma } from "services/cronograma.service";
-import {
-  PRE_RECEBIMENTO,
-  SOLICITACAO_ALTERACAO_CRONOGRAMA
-} from "configs/constants";
 import ModalAnaliseDinutre from "../Modals/ModalAnaliseDinutre";
 import ModalAnaliseDilog from "../Modals/ModalAnaliseDilog";
+import ModalEnviarAlteracao from "../Modals/ModalEnviarAlteracao";
+import ModalCienciaAlteracao from "../Modals/ModalCienciaAlteracao";
+import ModalVoltar from "../../../../../Shareable/Page/ModalVoltar";
 
 export default ({
   handleSubmit,
+  handleSubmitCronograma,
   podeSubmeter,
   solicitacaoAlteracaoCronograma,
   disabledDinutre,
-  disabledDilog
+  disabledDilog,
 }) => {
   const [show, setShow] = useState(false);
+  const [showVoltar, setShowVoltar] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const history = useHistory();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleShowVoltar = () => setShowVoltar(true);
+
+  const enviaAnaliseCronograma = async (values) => {
+    setLoading(true);
+    await handleSubmitCronograma(values);
+    setLoading(false);
+  };
 
   const handleSim = async () => {
     setLoading(true);
@@ -43,124 +47,151 @@ export default ({
     setLoading(false);
   };
 
-  const handleBack = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    history.goBack();
-  };
-
   return (
     <>
+      {usuarioEhEmpresaFornecedor() &&
+        solicitacaoAlteracaoCronograma &&
+        solicitacaoAlteracaoCronograma.status ===
+          "Alteração Enviada ao Fornecedor" && (
+          <>
+            <Botao
+              texto="Ciente da Alteração"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              className="float-end ms-3"
+              onClick={() => {
+                handleShow();
+              }}
+            />
+            <ModalCienciaAlteracao
+              show={show}
+              handleClose={handleClose}
+              loading={loading}
+              handleSim={handleSim}
+            />
+          </>
+        )}
+
       {usuarioEhEmpresaFornecedor() && !solicitacaoAlteracaoCronograma && (
-        <Botao
-          texto="Enviar Solicitação"
-          type={BUTTON_TYPE.BUTTON}
-          disabled={!podeSubmeter}
-          style={BUTTON_STYLE.GREEN}
-          className="float-right ml-3"
-          onClick={() => {
-            if (!podeSubmeter) {
-              toastError("Selecione os campos obrigatórios");
-              return;
-            }
-            handleShow();
-          }}
-        />
+        <>
+          <Botao
+            texto="Enviar Solicitação"
+            type={BUTTON_TYPE.BUTTON}
+            disabled={!podeSubmeter}
+            style={BUTTON_STYLE.GREEN}
+            className="float-end ms-3"
+            onClick={() => {
+              if (!podeSubmeter) {
+                toastError("Selecione os campos obrigatórios");
+                return;
+              }
+              handleShow();
+            }}
+          />
+          <ModalEnviarSolicitacao
+            show={show}
+            handleClose={handleClose}
+            loading={loading}
+            handleSim={handleSim}
+          />
+        </>
+      )}
+
+      {usuarioEhCronograma() && !solicitacaoAlteracaoCronograma && (
+        <>
+          <Botao
+            texto="Enviar Alteração"
+            type={BUTTON_TYPE.BUTTON}
+            disabled={!podeSubmeter}
+            style={BUTTON_STYLE.GREEN}
+            className="float-end ms-3"
+            onClick={() => {
+              if (!podeSubmeter) {
+                toastError("Selecione os campos obrigatórios");
+                return;
+              }
+              handleShow();
+            }}
+          />
+          <ModalEnviarAlteracao
+            show={show}
+            handleClose={handleClose}
+            loading={loading}
+            handleSim={handleSim}
+          />
+        </>
       )}
       {usuarioEhCronograma() &&
+        solicitacaoAlteracaoCronograma &&
         solicitacaoAlteracaoCronograma.status === "Em análise" && (
-          <Botao
-            texto="Enviar DINUTRE"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            className="float-right ml-3"
-            onClick={() => handleShow()}
-          />
+          <>
+            <Botao
+              texto="Enviar DINUTRE"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              className="float-end ms-3"
+              onClick={() => handleShow()}
+              disabled={!podeSubmeter}
+            />
+            <ModalAnalise
+              show={show}
+              setShow={setShow}
+              handleClose={handleClose}
+              loading={loading}
+              handleSim={enviaAnaliseCronograma}
+            />
+          </>
         )}
 
       {usuarioEhDinutreDiretoria() &&
         solicitacaoAlteracaoCronograma.status === "Cronograma ciente" && (
-          <Botao
-            texto="Enviar DILOG"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            className="float-right ml-3"
-            onClick={() => handleShow()}
-            disabled={disabledDinutre}
-          />
+          <>
+            <Botao
+              texto="Enviar DILOG"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              className="float-end ms-3"
+              onClick={() => handleShow()}
+              disabled={disabledDinutre}
+            />
+            <ModalAnaliseDinutre
+              show={show}
+              handleClose={handleClose}
+              loading={loading}
+              handleSim={handleSim}
+            />
+          </>
         )}
 
       {usuarioEhDilogDiretoria() &&
         ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
           solicitacaoAlteracaoCronograma.status
         ) && (
-          <Botao
-            texto="Enviar Fornecedor"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            className="float-right ml-3"
-            onClick={() => handleShow()}
-            disabled={disabledDilog}
-          />
+          <>
+            <Botao
+              texto="Enviar Fornecedor"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              className="float-end ms-3"
+              onClick={() => handleShow()}
+              disabled={disabledDilog}
+            />
+            <ModalAnaliseDilog
+              show={show}
+              handleClose={handleClose}
+              loading={loading}
+              handleSim={handleSim}
+            />
+          </>
         )}
       <Botao
         texto="Voltar"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN_OUTLINE}
-        className="float-right ml-3"
-        onClick={() => handleBack()}
+        className="float-end ms-3"
+        onClick={() => handleShowVoltar()}
       />
-
-      {usuarioEhEmpresaFornecedor() && (
-        <ModalEnviarSolicitacao
-          show={show}
-          handleClose={handleClose}
-          loading={loading}
-          handleSim={handleSim}
-        />
-      )}
-      {usuarioEhCronograma() && (
-        <ModalAnalise
-          show={show}
-          setShow={setShow}
-          handleClose={handleClose}
-          loading={loading}
-          handleSim={async values => {
-            setLoading(true);
-            const urlParams = new URLSearchParams(window.location.search);
-            const uuid = urlParams.get("uuid");
-            const payload = {
-              justificativa_cronograma: values["justificativa_cronograma"]
-            };
-            await dilogCienteSolicitacaoAlteracaoCronograma(uuid, payload)
-              .then(() => {
-                toastSuccess("Análise da alteração enviada com sucesso!");
-                history.push(
-                  `/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`
-                );
-              })
-              .catch(() => {
-                toastError("Ocorreu um erro ao salvar o Cronograma");
-              });
-            setLoading(false);
-          }}
-        />
-      )}
-      {usuarioEhDinutreDiretoria() && (
-        <ModalAnaliseDinutre
-          show={show}
-          handleClose={handleClose}
-          loading={loading}
-          handleSim={handleSim}
-        />
-      )}
-      {usuarioEhDilogDiretoria() && (
-        <ModalAnaliseDilog
-          show={show}
-          handleClose={handleClose}
-          loading={loading}
-          handleSim={handleSim}
-        />
-      )}
+      <ModalVoltar modalVoltar={showVoltar} setModalVoltar={handleClose} />
     </>
   );
 };

@@ -5,12 +5,12 @@ import Container from "../../../components/SuspensaoDeAlimentacao/Terceirizada/P
 import { HOME } from "../constants";
 import {
   TERCEIRIZADA,
-  SUSPENSAO_ALIMENTACAO
+  SUSPENSAO_ALIMENTACAO,
 } from "../../../configs/constants";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`,
-  titulo: "Suspensão de Alimentação - Pendente Ciência"
+  titulo: "Suspensão de Alimentação - Pendente Ciência",
 };
 
 export default () => (

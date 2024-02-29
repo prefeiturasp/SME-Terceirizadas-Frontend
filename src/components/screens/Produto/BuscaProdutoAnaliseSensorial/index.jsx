@@ -1,31 +1,32 @@
 import { Spin } from "antd";
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
 
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import { Paginacao } from "components/Shareable/Paginacao";
+import withNavigationType from "components/Shareable/withNavigationType";
 
 import {
   reset,
   setHomologacoes,
   setPage,
-  setUuidHomologacaoAtiva
+  setUuidHomologacaoAtiva,
 } from "reducers/responderAnaliseSensorial";
 
 import {
   getHomologacoesDeProdutoAnaliseSensorial,
-  flegarHomologacaoPDF
+  flegarHomologacaoPDF,
 } from "services/produto.service";
 import { getRelatorioProdutoAnaliseSensorialRecebimento } from "services/relatorios";
 
 import DetalheProduto from "./components/DetalheProduto";
-import ModalResponderAnaliseSensorial from "./components/ModalResponderAnaliseSensorial";
+import { ModalResponderAnaliseSensorial } from "./components/ModalResponderAnaliseSensorial";
 
 import "./styles.scss";
 
@@ -34,22 +35,22 @@ class BuscaProdutoAnaliseSensorial extends Component {
     super(props);
     this.state = {
       showModal: false,
-      loading: false
+      loading: false,
     };
     this.pageSize = 10;
   }
 
   UNSAFE_componentWillMount() {
-    const { history, reset, homologacoes } = this.props;
-    if (history && history.action === "PUSH") reset();
-    if (homologacoes === undefined || history.action === "PUSH") this.refresh();
+    const { navigationType, reset, homologacoes } = this.props;
+    if (navigationType === "PUSH") reset();
+    if (homologacoes === undefined || navigationType === "PUSH") this.refresh();
   }
 
   pdfGerado = async ({ uuid }) => {
     let { homologacoes, setHomologacoes } = this.props;
     await flegarHomologacaoPDF(uuid);
     setHomologacoes(
-      homologacoes.map(hom => {
+      homologacoes.map((hom) => {
         if (hom.uuid === uuid) {
           hom.pdf_gerado = true;
         }
@@ -66,7 +67,7 @@ class BuscaProdutoAnaliseSensorial extends Component {
     this.setState({ showModal: false });
   };
 
-  ativaDesativaHomologacao = uuid => {
+  ativaDesativaHomologacao = (uuid) => {
     const { uuidHomologacaoAtiva, setUuidHomologacaoAtiva } = this.props;
     setUuidHomologacaoAtiva(uuidHomologacaoAtiva === uuid ? undefined : uuid);
   };
@@ -86,11 +87,11 @@ class BuscaProdutoAnaliseSensorial extends Component {
     const response = await getHomologacoesDeProdutoAnaliseSensorial();
     this.props.setHomologacoes(response.data);
     this.setState({
-      loading: false
+      loading: false,
     });
   };
 
-  responder_deve_aparecer = rastro_terceirizada => {
+  responder_deve_aparecer = (rastro_terceirizada) => {
     if (rastro_terceirizada === null) {
       return true;
     } else if (
@@ -128,9 +129,10 @@ class BuscaProdutoAnaliseSensorial extends Component {
                   homologacao.uuid === uuidHomologacaoAtiva;
                 const icone = homologacaoAtiva ? "angle-up" : "angle-down";
                 const produto = homologacao.produto;
-                const dataPedido = homologacao.logs[
-                  homologacao.logs.length - 1
-                ].criado_em.split(" ")[0];
+                const dataPedido =
+                  homologacao.logs[homologacao.logs.length - 1].criado_em.split(
+                    " "
+                  )[0];
                 return (
                   <Fragment key={index}>
                     <article className="item-produto">
@@ -164,9 +166,7 @@ class BuscaProdutoAnaliseSensorial extends Component {
                             }}
                           />
                           <Link
-                            to={`/pesquisa-desenvolvimento/relatorio-analise-sensorial?uuid=${
-                              homologacao.uuid
-                            }`}
+                            to={`/pesquisa-desenvolvimento/relatorio-analise-sensorial?uuid=${homologacao.uuid}`}
                           >
                             <Botao
                               texto="Ver produto"
@@ -196,7 +196,9 @@ class BuscaProdutoAnaliseSensorial extends Component {
               closeModal={this.closeModal}
               homologacao={
                 homologacoes
-                  ? homologacoes.find(hom => hom.uuid === uuidHomologacaoAtiva)
+                  ? homologacoes.find(
+                      (hom) => hom.uuid === uuidHomologacaoAtiva
+                    )
                   : undefined
               }
               onSend={this.refresh}
@@ -214,28 +216,25 @@ class BuscaProdutoAnaliseSensorial extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     uuidHomologacaoAtiva: state.responderAnaliseSensorial.uuidHomologacaoAtiva,
     homologacoes: state.responderAnaliseSensorial.homologacoes,
-    page: state.responderAnaliseSensorial.page
+    page: state.responderAnaliseSensorial.page,
   };
 };
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setHomologacoes,
       setPage,
       setUuidHomologacaoAtiva,
-      reset
+      reset,
     },
     dispatch
   );
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(BuscaProdutoAnaliseSensorial)
+export default withNavigationType(
+  connect(mapStateToProps, mapDispatchToProps)(BuscaProdutoAnaliseSensorial)
 );

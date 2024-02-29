@@ -6,13 +6,13 @@ import {
   statusEnum,
   TIPOS_SOLICITACAO_LABEL,
   TIPO_SERVICO,
-  TIPO_SOLICITACAO
+  TIPO_SOLICITACAO,
 } from "constants/shared";
 import {
   MODULO_GESTAO,
   PERFIL,
   TIPO_PERFIL,
-  TIPO_GESTAO
+  TIPO_GESTAO,
 } from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
 import { ENVIRONMENT } from "constants/config";
@@ -24,8 +24,8 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 //         - lidar com tipo de usuário ou perfil
 //       Os que não tiverem categoria definida podem ficar aqui
 
-export const showResults = values =>
-  new Promise(resolve => {
+export const showResults = (values) =>
+  new Promise((resolve) => {
     setTimeout(() => {
       // simulate server latency
       window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`);
@@ -33,7 +33,7 @@ export const showResults = values =>
     }, 1500);
   });
 
-export const dateDelta = daysDelta => {
+export const dateDelta = (daysDelta) => {
   let today = new Date();
   today.setDate(today.getDate() + daysDelta);
   return today;
@@ -70,21 +70,21 @@ export const agregarDefault = (lista, valor = "") => {
   return [{ nome: `Selecione ${valor}`, uuid: "" }].concat(lista);
 };
 
-export const formatarParaMultiselect = lista => {
-  return lista.map(element => {
+export const formatarParaMultiselect = (lista) => {
+  return lista.map((element) => {
     return { value: element.uuid, label: element.nome };
   });
 };
 
-export const extrairUUIDs = lista => {
+export const extrairUUIDs = (lista) => {
   let uuids = [];
-  lista.forEach(element => {
+  lista.forEach((element) => {
     uuids.push(element.uuid);
   });
   return uuids;
 };
 
-export const dataParaUTC = data => {
+export const dataParaUTC = (data) => {
   return new Date(
     data.getUTCFullYear(),
     data.getUTCMonth(),
@@ -96,7 +96,7 @@ export const dataParaUTC = data => {
 };
 
 export const geradorUUID = () => {
-  let S4 = function() {
+  let S4 = function () {
     return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
   };
   return (
@@ -117,7 +117,7 @@ export const geradorUUID = () => {
 
 export const stringSeparadaPorVirgulas = (obj, campo) => {
   let array = [];
-  obj.forEach(function(elemento) {
+  obj.forEach(function (elemento) {
     array.push(elemento[campo]);
   });
   return array.join(", ");
@@ -137,11 +137,11 @@ export const talvezPluralizar = (contador, substantivo, sufixo = "s") => {
   return `${substantivo}${contador !== 1 ? sufixo : ""}`;
 };
 
-export const getDataObj = data => {
+export const getDataObj = (data) => {
   return moment(data, "DD/MM/YYYY")["_d"];
 };
 
-export const prazoDoPedidoMensagem = prioridade => {
+export const prazoDoPedidoMensagem = (prioridade) => {
   switch (prioridade) {
     case "REGULAR":
       return "Solicitação no prazo regular";
@@ -154,13 +154,13 @@ export const prazoDoPedidoMensagem = prioridade => {
   }
 };
 
-export const corDaMensagem = mensagem => {
+export const corDaMensagem = (mensagem) => {
   if (mensagem.includes("vencimento")) return "red";
   else if (mensagem.includes("limite")) return "yellow";
   else return "green";
 };
 
-export const pontuarValor = valor => {
+export const pontuarValor = (valor) => {
   return parseFloat(valor).toLocaleString();
 };
 
@@ -184,7 +184,7 @@ export const mensagemCancelamento = (status, tipoDoc) => {
   }
 };
 
-export const validarCPF = cpf => {
+export const validarCPF = (cpf) => {
   cpf = cpf.replace(/[^\d]+/g, "");
   if (cpf === "") return false;
   // Elimina CPFs invalidos conhecidos
@@ -218,32 +218,37 @@ export const validarCPF = cpf => {
   return true;
 };
 
-export const removeCaracteresEspeciais = valor =>
+export const removeCaracteresEspeciais = (valor) =>
   valor?.replace(/[^\w\s]/gi, "");
 
-export const formataCPF = cpf => {
+export const formataCPF = (cpf) => {
   cpf = cpf.replace(/[^\d]/g, "");
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 };
 
-export const formataCPFCensurado = cpf => {
+export const formataCPFCensurado = (cpf) => {
   cpf = cpf.replace(/[^\d]/g, "");
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.***.***-$4");
 };
 
-export const truncarString = (str, numeroMaximoChars) => {
-  if (str.length > numeroMaximoChars) {
-    return str.slice(0, numeroMaximoChars) + "...";
-  } else {
-    return str;
-  }
+export const formataMilhar = (value) => {
+  const valor = value?.toString().replace(/\D/g, "");
+  return valor?.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
-export const deepCopy = obj => {
+export const truncarString = (str, numeroMaximoChars) => {
+  if (!str) return "";
+
+  return str.length > numeroMaximoChars
+    ? str.slice(0, numeroMaximoChars) + "..."
+    : str;
+};
+
+export const deepCopy = (obj) => {
   return JSON.parse(JSON.stringify(obj));
 };
 
-export const visualizaBotoesDoFluxo = solicitacao => {
+export const visualizaBotoesDoFluxo = (solicitacao) => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   switch (solicitacao.status) {
     case statusEnum.DRE_A_VALIDAR:
@@ -256,7 +261,7 @@ export const visualizaBotoesDoFluxo = solicitacao => {
       return [
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
         TIPO_PERFIL.DIETA_ESPECIAL,
-        TIPO_PERFIL.ESCOLA
+        TIPO_PERFIL.ESCOLA,
       ].includes(tipoPerfil);
     case statusEnum.CODAE_AUTORIZADO:
     case statusEnum.CODAE_QUESTIONADO:
@@ -275,7 +280,7 @@ export const visualizaBotoesDoFluxo = solicitacao => {
   }
 };
 
-export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
+export const visualizaBotoesDoFluxoSolicitacaoUnificada = (solicitacao) => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   switch (solicitacao.status) {
     case statusEnum.CODAE_A_AUTORIZAR:
@@ -283,7 +288,7 @@ export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
       return [
         TIPO_PERFIL.DIRETORIA_REGIONAL,
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-        TIPO_PERFIL.DIETA_ESPECIAL
+        TIPO_PERFIL.DIETA_ESPECIAL,
       ].includes(tipoPerfil);
     case statusEnum.CODAE_AUTORIZADO:
       return [TIPO_PERFIL.ESCOLA, TIPO_PERFIL.DIRETORIA_REGIONAL].includes(
@@ -301,7 +306,7 @@ export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
   }
 };
 
-export const vizualizaBotoesDietaEspecial = solicitacao => {
+export const vizualizaBotoesDietaEspecial = (solicitacao) => {
   switch (solicitacao.status_solicitacao) {
     case statusEnum.CODAE_A_AUTORIZAR:
       return (
@@ -319,7 +324,7 @@ export const vizualizaBotoesDietaEspecial = solicitacao => {
   }
 };
 
-export const formatarCPFouCNPJ = value => {
+export const formatarCPFouCNPJ = (value) => {
   const cnpjCpf = value.replace(/\D/g, "");
   if (cnpjCpf.length === 11) {
     return cnpjCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
@@ -330,14 +335,14 @@ export const formatarCPFouCNPJ = value => {
   );
 };
 
-export const formatarCEP = value => {
+export const formatarCEP = (value) => {
   const cep = value.replace(/\D/g, "");
   if (cep.length === 8) {
     return cep.replace(/(\d{5})(\d{3})/g, "$1-$2");
   }
 };
 
-export const formatarTelefone = value => {
+export const formatarTelefone = (value) => {
   const cep = value.replace(/\D/g, "");
   if (cep.length === 11) {
     return cep.replace(/(\d{2})(\d{5})(\d{4})/g, "($1) $2-$3");
@@ -440,6 +445,10 @@ export const usuarioEscolaEhGestaoDireta = () => {
   return [TIPO_GESTAO.DIRETA].includes(localStorage.getItem("tipo_gestao"));
 };
 
+export const usuarioEscolaEhGestaoParceira = () => {
+  return [TIPO_GESTAO.PARCEIRA].includes(localStorage.getItem("tipo_gestao"));
+};
+
 export const usuarioEhEscolaAbastecimentoDiretor = () => {
   return (
     localStorage.getItem("perfil") === PERFIL.DIRETOR_UE &&
@@ -460,15 +469,14 @@ export const usuarioComAcessoTelaEntregasDilog = () => {
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
-    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
   ].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEhOutrosDilog = () => {
   return [
-    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
-    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -478,18 +486,65 @@ export const usuarioEhDilogJuridico = () => {
   );
 };
 
-export const usuarioEhLogistica = () => {
+export const usuarioComAcessoTelaDetalharNotificacaoOcorrencia = () => {
   return [
-    PERFIL.COORDENADOR_LOGISTICA,
-    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 
-export const usuarioEhCronogramaCriacaoEdicao = () => {
+export const usuarioComAcessoAoCalendarioCronograma = () => {
   return [
     PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.DILOG_QUALIDADE,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
-    PERFIL.COORDENADOR_LOGISTICA
+    PERFIL.DINUTRE_DIRETORIA,
+    PERFIL.DILOG_DIRETORIA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioComAcessoAoPainelAprovacoes = () => {
+  return [
+    PERFIL.DILOG_DIRETORIA,
+    PERFIL.DINUTRE_DIRETORIA,
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioComAcessoAoPainelEmbalagens = () => {
+  return [
+    PERFIL.DILOG_QUALIDADE,
+    PERFIL.COORDENADOR_GESTAO_PRODUTO,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioComAcessoAoPainelDocumentos = () => {
+  return [
+    PERFIL.DILOG_QUALIDADE,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioComAcessoAoPainelFichasTecnicas = () => {
+  return [
+    PERFIL.COORDENADOR_GESTAO_PRODUTO,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhLogistica = () => {
+  return [
+    PERFIL.COORDENADOR_LOGISTICA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -500,18 +555,9 @@ export const usuarioEhDilogQualidadeOuCronograma = () => {
   return [
     PERFIL.DILOG_QUALIDADE,
     PERFIL.DILOG_CRONOGRAMA,
-    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
   ].includes(localStorage.getItem("perfil"));
 };
-
-/*
-  TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
-  temporariamente ao Pré Recebimento. Após finalização da definição de
-  permissionamento deve se remover usuarioEhLogistica() desta regra.
-  Quando essa mudança for realizada, apagar o usuarioEhPreRecebimentoSemLogistica,
-  ele é uma solucao temporaria pro menu de configurações aparecer pros usuarios
-  de Logistica
-  */
 
 export const usuarioEhPreRecebimento = () => {
   return (
@@ -541,7 +587,7 @@ export const usuarioEhEmpresaDistribuidora = () => {
     ) &&
     [
       TIPO_SERVICO.DISTRIBUIDOR_ARMAZEM,
-      TIPO_SERVICO.FORNECEDOR_E_DISTRIBUIDOR
+      TIPO_SERVICO.FORNECEDOR_E_DISTRIBUIDOR,
     ].includes(localStorage.getItem("tipo_servico"))
   );
 };
@@ -569,6 +615,10 @@ export const escolaEhCei = () => {
 
 export const escolaEhCEMEI = () => {
   return localStorage.getItem("eh_cemei") === "true";
+};
+
+export const escolaEhEMEBS = () => {
+  return localStorage.getItem("eh_emebs") === "true";
 };
 
 export const nomeInstituicao = () => {
@@ -646,7 +696,38 @@ export const usuarioEhMedicao = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.MEDICAO;
 };
 
-export const converterDDMMYYYYparaYYYYMMDD = data => {
+export const usuarioEhOrgaoFiscalizador = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ORGAO_FISCALIZADOR;
+};
+
+export const usuarioEhCODAEGabinete = () => {
+  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_CODAE_GABINETE;
+};
+
+export const acessoModuloMedicaoInicialEscola = () => {
+  return (
+    localStorage.getItem("acesso_modulo_medicao_inicial") === "true" ||
+    localStorage.getItem("dre_acesso_modulo_medicao_inicial") === "true"
+  );
+};
+
+export const acessoModuloMedicaoInicialDRE = () => {
+  return (
+    localStorage.getItem("possui_escolas_com_acesso_ao_medicao_inicial") ===
+    "true"
+  );
+};
+
+export const acessoModuloMedicaoInicialCODAE = () => {
+  return (
+    localStorage.getItem("acesso_modulo_medicao_inicial") === "true" &&
+    (usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhCODAEGabinete())
+  );
+};
+
+export const converterDDMMYYYYparaYYYYMMDD = (data) => {
   return moment(data, "DD/MM/YYYY").format("YYYY-MM-DD");
 };
 
@@ -655,11 +736,12 @@ export const obtemIdentificacaoNutricionista = () =>
     "registro_funcional"
   )}`.replace(/[^\w\s-]/g, "");
 
-export const getKey = obj => {
+export const getKey = (obj) => {
   return Object.keys(obj)[0];
 };
 
-export const getError = obj => {
+export const getError = (obj) => {
+  if (typeof obj === "string") return obj;
   let result = "Erro";
   if (!obj[getKey(obj)]) {
     return "Erro";
@@ -694,46 +776,46 @@ export const exibeError = (error, msg) => {
   }
 };
 
-export const formatarLotesParaVisao = lotes => {
-  lotes.forEach(lote => {
+export const formatarLotesParaVisao = (lotes) => {
+  lotes.forEach((lote) => {
     lote["titulo"] = lote["nome"];
     lote["link"] = lote["uuid"];
   });
   return lotes;
 };
 
-export const formatarOpcoesLote = lista => {
-  const listaFormatada = lista.map(obj => {
+export const formatarOpcoesLote = (lista) => {
+  const listaFormatada = lista.map((obj) => {
     return {
       label: `${obj.diretoria_regional.iniciais} - ${obj.nome}`,
-      value: obj.uuid
+      value: obj.uuid,
     };
   });
   return listaFormatada;
 };
 
-export const formatarOpcoesDRE = lista => {
-  const listaFormatada = lista.map(obj => {
+export const formatarOpcoesDRE = (lista) => {
+  const listaFormatada = lista.map((obj) => {
     return {
       label: obj.nome,
-      value: obj.uuid
+      value: obj.uuid,
     };
   });
   return listaFormatada;
 };
 
-export const ehInclusaoContinua = tipoSolicitacao => {
+export const ehInclusaoContinua = (tipoSolicitacao) => {
   return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
 };
-export const ehInclusaoAvulsa = tipoSolicitacao => {
+export const ehInclusaoAvulsa = (tipoSolicitacao) => {
   return tipoSolicitacao !== TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
 };
 
-export const ehInclusaoCei = tipoSolicitacao => {
+export const ehInclusaoCei = (tipoSolicitacao) => {
   return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI;
 };
 
-export const ehEscolaTipoCEI = escola => {
+export const ehEscolaTipoCEI = (escola) => {
   const nome = (escola && escola.nome) || "";
   return (
     nome.startsWith("CEU CEI") ||
@@ -742,16 +824,20 @@ export const ehEscolaTipoCEI = escola => {
   );
 };
 
-export const ehEscolaTipoCEMEI = escola => {
+export const ehEscolaTipoCEMEI = (escola) => {
   const nome = (escola && escola.nome) || "";
   return nome.startsWith("CEMEI") || nome.startsWith("CEU CEMEI");
 };
 
-export const tipoSolicitacaoComoQuery = obj => {
+export const ehEscolaTipoCEUGESTAO = (nome_escola) => {
+  return nome_escola.startsWith("CEU GESTAO");
+};
+
+export const tipoSolicitacaoComoQuery = (obj) => {
   return `tipoSolicitacao=${comoTipo(obj)}`;
 };
 
-export const comoTipo = obj => {
+export const comoTipo = (obj) => {
   if (ehEscolaTipoCEI(obj.escola)) {
     return TIPO_SOLICITACAO.SOLICITACAO_CEI;
   }
@@ -801,12 +887,12 @@ export const comparaObjetosMoment = (a, b) => {
   return 0;
 };
 
-export const parseDataHoraBrToMoment = dataHoraString => {
+export const parseDataHoraBrToMoment = (dataHoraString) => {
   const formats = ["DD/MM/YYYY", "DD/MM/YYYY HH:mm"];
   return moment(dataHoraString, formats);
 };
 
-export const gerarParametrosConsulta = data => {
+export const gerarParametrosConsulta = (data) => {
   const params = new URLSearchParams();
   Object.entries(data).forEach(([key, value]) => {
     if (Array.isArray(value)) {
@@ -821,25 +907,30 @@ export const gerarParametrosConsulta = data => {
 export const cpfMask = createTextMask({
   pattern: "999.999.999-99",
   allowEmpty: false,
-  guide: false
+  guide: false,
 });
 
 export const cepMask = createTextMask({
   pattern: "99999-999",
   allowEmpty: false,
-  guide: true
+  guide: true,
 });
 
-export const composeValidators = (...validators) => value =>
-  validators.reduce((error, validator) => error || validator(value), undefined);
+export const composeValidators =
+  (...validators) =>
+  (value) =>
+    validators.reduce(
+      (error, validator) => error || validator(value),
+      undefined
+    );
 
-export const transformaNullsEmUndefined = objeto => {
+export const transformaNullsEmUndefined = (objeto) => {
   for (let chave of Object.keys(objeto)) {
     if (objeto[chave] === null) objeto[chave] = undefined;
   }
 };
 
-export const corrigeLinkAnexo = url => {
+export const corrigeLinkAnexo = (url) => {
   if (
     window.location.href.startsWith("https://") &&
     url.startsWith("http://")
@@ -849,10 +940,10 @@ export const corrigeLinkAnexo = url => {
   return url;
 };
 
-export const trocaAcentuadasPorSemAcento = texto =>
+export const trocaAcentuadasPorSemAcento = (texto) =>
   texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-export const retornaDuplicadasArray = arr =>
+export const retornaDuplicadasArray = (arr) =>
   arr.filter((item, index) => arr.indexOf(item) !== index);
 
 export const exibirGA = () => {
@@ -867,71 +958,90 @@ export const exibirGA = () => {
     "SAO MATEUS",
     "SAO MIGUEL",
     "JACANA/TREMEMBE",
-    "ITAQUERA"
+    "ITAQUERA",
+    "PENHA",
   ];
 
-  if (["production"].includes(ENVIRONMENT)) {
-    switch (localStorage.getItem("tipo_perfil")) {
-      case `"diretoriaregional"`:
-        return dresPermitidas.some(dre =>
-          localStorage.getItem("nome_instituicao").includes(dre)
-        );
-      case `"escola"`:
-        return dresPermitidas.some(dre =>
-          localStorage.getItem("dre_nome").includes(dre)
-        );
-      case `"terceirizada"`:
-        return (
-          [
-            `"Anga"`,
-            `"ANGA"`,
-            `"VERDE MAIS"`,
-            `"Verde Mais"`,
-            `"Apetece"`,
-            `"APETECE"`
-          ].includes(localStorage.getItem("nome_instituicao")) ||
-          JSON.parse(localStorage.getItem("lotes")).find(lote =>
-            dresPermitidas.some(dre =>
-              lote.diretoria_regional.nome.includes(dre)
-            )
+  switch (localStorage.getItem("tipo_perfil")) {
+    case `"diretoriaregional"`:
+      return dresPermitidas.some((dre) =>
+        localStorage.getItem("nome_instituicao").includes(dre)
+      );
+    case `"escola"`:
+      return dresPermitidas.some((dre) =>
+        localStorage.getItem("dre_nome").includes(dre)
+      );
+    case `"terceirizada"`:
+      return (
+        [
+          `"Anga"`,
+          `"ANGA"`,
+          `"VERDE MAIS"`,
+          `"Verde Mais"`,
+          `"Apetece"`,
+          `"APETECE"`,
+        ].includes(localStorage.getItem("nome_instituicao")) ||
+        JSON.parse(localStorage.getItem("lotes")).find((lote) =>
+          dresPermitidas.some((dre) =>
+            lote.diretoria_regional.nome.includes(dre)
           )
-        );
-      case `"gestao_alimentacao_terceirizada"`:
-      case `"nutricao_manifestacao"`:
-      case `"supervisao_nutricao"`:
-      case `"medicao"`:
-        return true;
-      default:
-        return false;
-    }
+        )
+      );
+    case `"gestao_alimentacao_terceirizada"`:
+    case `"nutricao_manifestacao"`:
+    case `"supervisao_nutricao"`:
+    case `"medicao"`:
+    case `"codae_gabinete"`:
+      return true;
+    default:
+      return false;
   }
 };
 
 export const exibirModuloMedicaoInicial = () => {
-  return (
-    !["production"].includes(ENVIRONMENT) &&
-    (usuarioEhDRE() ||
+  if (!["production"].includes(ENVIRONMENT))
+    return (
+      usuarioEhDRE() ||
       ((usuarioEhEscolaTerceirizada() ||
         usuarioEhEscolaTerceirizadaDiretor()) &&
         !usuarioEscolaEhGestaoDireta()) ||
-      usuarioEhMedicao())
-  );
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhCODAEGabinete()
+    );
+
+  switch (localStorage.getItem("tipo_perfil")) {
+    case `"escola"`:
+      return acessoModuloMedicaoInicialEscola();
+    case `"diretoriaregional"`:
+      return acessoModuloMedicaoInicialDRE();
+    case `"medicao"`:
+      return true;
+    case `"nutricao_manifestacao"`:
+    case `"gestao_alimentacao_terceirizada"`:
+    case `"codae_gabinete"`:
+      return acessoModuloMedicaoInicialCODAE();
+    default:
+      return false;
+  }
 };
 
 export const exibirModuloOcorrencias = () => {
   return (
-    !["production"].includes(ENVIRONMENT) &&
-    (usuarioEhCodaeDilog() ||
-      usuarioEhDilogJuridico() ||
-      usuarioEhDilogQualidade() ||
-      usuarioEhDilog())
+    (!["production"].includes(ENVIRONMENT) &&
+      (usuarioEhCodaeDilog() ||
+        usuarioEhDilogJuridico() ||
+        usuarioEhDilogQualidade() ||
+        usuarioEhDilog())) ||
+    usuarioEhCODAEGabinete()
   );
 };
 
-export const justificativaAoNegarSolicitacao = logs => {
+export const justificativaAoNegarSolicitacao = (logs) => {
   let justificativa = null;
   if (logs.length) {
-    justificativa = logs.filter(log =>
+    justificativa = logs.filter((log) =>
       ["DRE não validou", "CODAE negou"].includes(log.status_evento_explicacao)
     );
     justificativa = justificativa.length
@@ -941,10 +1051,10 @@ export const justificativaAoNegarSolicitacao = logs => {
   return justificativa;
 };
 
-export const justificativaAoAprovarSolicitacao = logs => {
+export const justificativaAoAprovarSolicitacao = (logs) => {
   let justificativa = null;
   if (logs.length) {
-    justificativa = logs.filter(log =>
+    justificativa = logs.filter((log) =>
       ["CODAE autorizou"].includes(log.status_evento_explicacao)
     );
     justificativa = justificativa.length
@@ -960,41 +1070,41 @@ export const deepEqual = (x, y) => {
     ty = typeof y;
   return x && y && tx === "object" && tx === ty
     ? ok(x).length === ok(y).length &&
-        ok(x).every(key => deepEqual(x[key], y[key]))
+        ok(x).every((key) => deepEqual(x[key], y[key]))
     : x === y;
 };
 
 export const tipoStatus = () => {
   return [
     {
-      status: "Ativo"
+      status: "Ativo",
     },
     {
-      status: "Inativo"
-    }
+      status: "Inativo",
+    },
   ];
 };
 
 export const statusProdutos = [
   {
     uuid: "Ativo",
-    nome: "Ativo"
+    nome: "Ativo",
   },
   {
     uuid: "Inativo",
-    nome: "Inativo"
-  }
+    nome: "Inativo",
+  },
 ];
 
 export const ehLaboratorioCredenciado = [
   {
     uuid: "true",
-    nome: "Sim"
+    nome: "Sim",
   },
   {
     uuid: "false",
-    nome: "Não"
-  }
+    nome: "Não",
+  },
 ];
 
 export const fimDoCalendario = () => {
@@ -1005,4 +1115,64 @@ export const fimDoCalendario = () => {
 
 export const tiposAlimentacaoETEC = () => {
   return ["Lanche 4h", "Refeição", "Sobremesa", "Lanche Emergencial"];
+};
+
+export const formataMesNome = (mes) => {
+  switch (mes) {
+    case "01":
+      return "Janeiro";
+    case "02":
+      return "Fevereiro";
+    case "03":
+      return "Março";
+    case "04":
+      return "Abril";
+    case "05":
+      return "Maio";
+    case "06":
+      return "Junho";
+    case "07":
+      return "Julho";
+    case "08":
+      return "Agosto";
+    case "09":
+      return "Setembro";
+    case "10":
+      return "Outubro";
+    case "11":
+      return "Novembro";
+    case "12":
+      return "Dezembro";
+    default:
+      return mes;
+  }
+};
+
+export const ehFimDeSemana = (dateObj) => {
+  return dateObj.getDay() % 6 === 0;
+};
+
+export const getISOLocalDatetimeString = () => {
+  const date = new Date();
+  const isoDateTime = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60000
+  ).toISOString();
+  return isoDateTime;
+};
+
+export const getAmanha = () => {
+  const amanha = new Date();
+  amanha.setDate(amanha.getDate() + 1);
+  return amanha;
+};
+
+export const maxEntreDatas = (arrayDeDatas) => {
+  return new Date(Math.max(...arrayDeDatas));
+};
+
+export const ordenarPorLogMaisRecente = (itemA, itemB) => {
+  let dataA = parseDataHoraBrToMoment(itemA.log_mais_recente);
+  let dataB = parseDataHoraBrToMoment(itemB.log_mais_recente);
+
+  return comparaObjetosMoment(dataB, dataA);
 };

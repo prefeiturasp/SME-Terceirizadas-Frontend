@@ -35,8 +35,8 @@ const DataTermino = ({ tipoSolicitacao, temData }) => {
             name="data_termino"
             temData={temData}
             hasIcon={true}
-            format={v => v && moment(v, "YYYY-MM-DD")["_d"]}
-            parse={v => v && moment(v).format("YYYY-MM-DD")}
+            format={(v) => v && moment(v, "YYYY-MM-DD")["_d"]}
+            parse={(v) => v && moment(v).format("YYYY-MM-DD")}
           />
         </div>
       )}

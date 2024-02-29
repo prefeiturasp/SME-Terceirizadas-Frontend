@@ -8,12 +8,12 @@ import Page from "components/Shareable/Page/Page";
 import RelatorioQuantitativoClassificacaoDietaEsp from "components/screens/DietaEspecial/RelatorioQuantitativoClassificacaoDietaEsp";
 import {
   DIETA_ESPECIAL,
-  RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP
+  RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP,
 } from "configs/constants";
 
 const atual = {
   href: `/${DIETA_ESPECIAL}/${RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP}`,
-  titulo: "Relatório Quantitativo por Classificação da Dieta Especial"
+  titulo: "Relatório Quantitativo por Classificação da Dieta Especial",
 };
 
 export default () => (

@@ -295,6 +295,10 @@ div.caption-choices {
   max-width: 90% !important;
 }
 
+.modal-60w {
+  max-width: 60% !important;
+}
+
 .modal-50w {
   max-width: 50% !important;
 }
@@ -617,6 +621,42 @@ table.table-reasons {
     &:nth-child(even):not(:last-child) {
       border-bottom: 1px solid #c0c0c0;
     }
+
+    th {
+      font-weight: normal;
+
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+    }
+
+    td {
+      font-weight: bold;
+      color: $blackInput;
+
+      &:not(:first-child) {
+        padding-left: 40px;
+      }
+
+      &.cancelado span {
+        color: $grayLight;
+        text-decoration: line-through;
+      }
+
+      &.cancelado div {
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+table.table-reasons-inclusao {
+  width: 100%;
+
+  tr {
+    padding: 5px 0;
+    color: $gray;
+    font-size: 14px;
 
     th {
       font-weight: normal;

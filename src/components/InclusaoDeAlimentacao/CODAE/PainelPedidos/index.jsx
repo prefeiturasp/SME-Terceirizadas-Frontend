@@ -6,22 +6,24 @@ import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular,
-  ordenarPedidosDataMaisRecente
-} from "../../../../helpers/painelPedidos";
+  ordenarPedidosDataMaisRecente,
+} from "helpers/painelPedidos";
 import {
   formatarOpcoesLote,
   formatarOpcoesDRE,
-  usuarioEhCODAEGestaoAlimentacao
+  usuarioEhCODAEGestaoAlimentacao,
 } from "helpers/utilities";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getLotesSimples } from "services/lote.service";
 import HTTP_STATUS from "http-status-codes";
-import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
-import { Select } from "../../../Shareable/Select";
+import { dataAtualDDMMYYYY, safeConcatOn } from "helpers/utilities";
+import { Select } from "components/Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import { codaeListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { getError } from "helpers/utilities";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -32,11 +34,11 @@ class PainelPedidos extends Component {
       pedidosNoPrazoRegular: [],
       filtros: this.props.filtros || {
         lote: undefined,
-        diretoria_regional: undefined
+        diretoria_regional: undefined,
       },
       lotes: [],
       diretoriasRegionais: [],
-      loading: true
+      loading: true,
     };
     this.setFiltros = this.setFiltros.bind(this);
   }
@@ -62,8 +64,25 @@ class PainelPedidos extends Component {
         filtro,
         TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
         paramsFromPrevPage
-      )
+      ),
     ]);
+    if (avulsas.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError(
+        "Erro ao carregar inclusões normais (EMEI, EMEF, etc.): " +
+          getError(avulsas.data)
+      );
+    }
+    if (continuas.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError(
+        "Erro ao carregar inclusões contínuas: " + getError(continuas.data)
+      );
+    }
+    if (cei.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError("Erro ao carregar inclusões CEI: " + getError(cei.data));
+    }
+    if (cemei.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError("Erro ao carregar inclusões CEMEI: " + getError(cemei.data));
+    }
     const inclusoes = safeConcatOn("results", avulsas, continuas, cei, cemei);
     const pedidosPrioritarios = ordenarPedidosDataMaisRecente(
       filtraPrioritarios(inclusoes)
@@ -78,7 +97,7 @@ class PainelPedidos extends Component {
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular,
-      loading: false
+      loading: false,
     });
   }
 
@@ -86,15 +105,15 @@ class PainelPedidos extends Component {
     const response = await getLotesSimples();
     if (response.status === HTTP_STATUS.OK) {
       const { Option } = SelectAntd;
-      const lotes_ = formatarOpcoesLote(response.data.results).map(lote => {
+      const lotes_ = formatarOpcoesLote(response.data.results).map((lote) => {
         return <Option key={lote.value}>{lote.label}</Option>;
       });
       this.setState({
         lotes: [
           <Option value="" key={0}>
             Filtrar por Lote
-          </Option>
-        ].concat(lotes_)
+          </Option>,
+        ].concat(lotes_),
       });
     }
   }
@@ -103,15 +122,15 @@ class PainelPedidos extends Component {
     const response = await getDiretoriaregionalSimplissima();
     if (response.status === HTTP_STATUS.OK) {
       const { Option } = SelectAntd;
-      const dres = formatarOpcoesDRE(response.data.results).map(dre => {
+      const dres = formatarOpcoesDRE(response.data.results).map((dre) => {
         return <Option key={dre.value}>{dre.label}</Option>;
       });
       this.setState({
         diretoriasRegionais: [
           <Option value="" key={0}>
             Filtrar por DRE
-          </Option>
-        ].concat(dres)
+          </Option>,
+        ].concat(dres),
       });
     }
   }
@@ -129,7 +148,7 @@ class PainelPedidos extends Component {
     this.getDiretoriasRegionaisAsync();
     const paramsFromPrevPage = this.props.filtros || {
       lote: undefined,
-      diretoria_regional: undefined
+      diretoria_regional: undefined,
     };
     const filtro = FiltroEnum.SEM_FILTRO;
     this.atualizarDadosDasInclusoes(filtro, paramsFromPrevPage);
@@ -150,7 +169,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoRegular,
       diretoriasRegionais,
       lotes,
-      filtros
+      filtros,
     } = this.state;
     const { visaoPorCombo, valorDoFiltro } = this.props;
     return (
@@ -171,15 +190,15 @@ class PainelPedidos extends Component {
                         <Field
                           component={ASelect}
                           showSearch
-                          onChange={value => {
+                          onChange={(value) => {
                             const filtros_ = {
                               diretoria_regional: value || undefined,
-                              lote: filtros.lote
+                              lote: filtros.lote,
                             };
                             this.setFiltros(filtros_);
                             this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
                           }}
-                          onBlur={e => {
+                          onBlur={(e) => {
                             e.preventDefault();
                           }}
                           name="diretoria_regional"
@@ -197,15 +216,15 @@ class PainelPedidos extends Component {
                         <Field
                           component={ASelect}
                           showSearch
-                          onChange={value => {
+                          onChange={(value) => {
                             const filtros_ = {
                               diretoria_regional: filtros.diretoria_regional,
-                              lote: value || undefined
+                              lote: value || undefined,
                             };
                             this.setFiltros(filtros_);
                             this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
                           }}
-                          onBlur={e => {
+                          onBlur={(e) => {
                             e.preventDefault();
                           }}
                           name="lote"
@@ -221,12 +240,12 @@ class PainelPedidos extends Component {
                       </div>
                     </>
                   ) : (
-                    <div className="offset-6 col-3 text-right">
+                    <div className="offset-6 col-3 text-end">
                       <Field
                         component={Select}
                         name="visao_por"
                         naoDesabilitarPrimeiraOpcao
-                        onChange={event =>
+                        onChange={(event) =>
                           this.filtrar(event.target.value, filtros)
                         }
                         placeholder={"Filtro por"}
@@ -243,7 +262,7 @@ class PainelPedidos extends Component {
                       }
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
-                      ultimaColunaLabel={"Data da Inclusão"}
+                      colunaDataLabel={"Data da Inclusão"}
                     />
                   </div>
                 </div>
@@ -254,7 +273,7 @@ class PainelPedidos extends Component {
                         titulo={"Solicitações no prazo limite"}
                         tipoDeCard={TIPODECARD.NO_LIMITE}
                         pedidos={pedidosNoPrazoLimite}
-                        ultimaColunaLabel={"Data da Inclusão"}
+                        colunaDataLabel={"Data da Inclusão"}
                       />
                     </div>
                   </div>
@@ -266,7 +285,7 @@ class PainelPedidos extends Component {
                         titulo={"Solicitações no prazo regular"}
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
-                        ultimaColunaLabel={"Data da Inclusão"}
+                        colunaDataLabel={"Data da Inclusão"}
                       />
                     </div>
                   </div>
@@ -282,12 +301,12 @@ class PainelPedidos extends Component {
 
 const PainelPedidosForm = reduxForm({
   form: "painelPedidos",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(PainelPedidos);
 const selector = formValueSelector("painelPedidos");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    valorDoFiltro: selector(state, "visao_por")
+    valorDoFiltro: selector(state, "visao_por"),
   };
 };
 

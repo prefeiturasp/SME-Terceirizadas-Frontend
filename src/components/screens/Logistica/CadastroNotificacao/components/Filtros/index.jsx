@@ -8,14 +8,14 @@ import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { useLocation } from "react-router-dom";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { useState } from "react";
 import {
   getNomesDistribuidores,
-  getNotificacoesOcorrenciaByUuid
+  getNotificacoesOcorrenciaByUuid,
 } from "services/logistica.service";
 import { useEffect } from "react";
 import { TIPOS_OCORRENCIAS_OPTIONS } from "constants/shared";
@@ -32,7 +32,7 @@ export default ({
   travaEmpresa,
   showVinculadas,
   setShowVinculadas,
-  setNotificacaoIndex
+  setNotificacaoIndex,
 }) => {
   const [distribuidores, setDistribuidores] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,12 +42,12 @@ export default ({
   let initialValues = {};
   const location = useLocation();
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
 
-  const onChangeVinculadas = event => {
+  const onChangeVinculadas = (event) => {
     setShowVinculadas(event.target.checked);
   };
 
@@ -55,9 +55,9 @@ export default ({
     const buscaDistribuidores = async () => {
       const response = await getNomesDistribuidores();
       setDistribuidores(
-        response.data.results.map(distribuidor => ({
+        response.data.results.map((distribuidor) => ({
           nome: distribuidor.nome_fantasia,
-          uuid: distribuidor.uuid
+          uuid: distribuidor.uuid,
         }))
       );
     };
@@ -65,7 +65,7 @@ export default ({
     buscaDistribuidores();
   }, []);
 
-  const getNotificacoesOcorrenciaAsync = async uuid => {
+  const getNotificacoesOcorrenciaAsync = async (uuid) => {
     const response = await getNotificacoesOcorrenciaByUuid(uuid);
     if (response.status === HTTP_STATUS.OK) {
       setNotificacao(response.data);
@@ -73,7 +73,7 @@ export default ({
       setGuiasVinculadas(response.data.guias_notificadas);
       setFiltros({
         empresa: response.data.empresa.uuid,
-        notificacao_uuid: response.data.uuid
+        notificacao_uuid: response.data.uuid,
       });
       setLoading(false);
     } else {
@@ -179,7 +179,7 @@ export default ({
                   </div>
 
                   <div className="mt-4 mb-4">
-                    <div className="float-left">
+                    <div className="float-start">
                       <Checkbox
                         checked={showVinculadas}
                         onChange={onChangeVinculadas}
@@ -192,7 +192,7 @@ export default ({
                       texto="Consultar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="float-right ml-3"
+                      className="float-end ms-3"
                       disabled={!values.empresa}
                     />
 
@@ -201,7 +201,7 @@ export default ({
                         texto="Limpar Filtros"
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="float-right ml-3"
+                        className="float-end ms-3"
                         onClick={() => {
                           form.reset({});
                           setShowVinculadas(false);

@@ -1,18 +1,18 @@
 import { Spin } from "antd";
 import React, { useEffect, useState, Fragment } from "react";
 import { connect } from "react-redux";
-import { withRouter, Link } from "react-router-dom";
+import { Link, useNavigationType } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import {
   gerarParametrosConsulta,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhEmpresaTerceirizada,
 } from "helpers/utilities";
 
 import Botao from "components/Shareable/Botao";
 import LabelResultadoDaBusca from "components/Shareable/LabelResultadoDaBusca";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 
 import {
@@ -20,7 +20,7 @@ import {
   setProdutos,
   setAtivos,
   setPage,
-  setProdutosCount
+  setProdutosCount,
 } from "reducers/responderReclamacaoProduto";
 
 import { getReclamacoesTerceirizadaPorFiltro } from "services/produto.service";
@@ -38,7 +38,7 @@ const TabelaProdutos = ({
   setProdutos,
   setCarregando,
   ativos,
-  setAtivos
+  setAtivos,
 }) => {
   if (!produtos) return false;
 
@@ -86,10 +86,12 @@ const TabelaProdutos = ({
                     className={`table-body-cell ${bordas} d-flex justify-content-between`}
                   >
                     <i
-                      className={`fas fa-${icone} mr-3`}
+                      className={`fas fa-${icone} me-3`}
                       onClick={() => {
                         ativos.includes(indexProduto)
-                          ? setAtivos(ativos.filter(el => el !== indexProduto))
+                          ? setAtivos(
+                              ativos.filter((el) => el !== indexProduto)
+                            )
                           : setAtivos([...ativos, indexProduto]);
                       }}
                     />
@@ -98,17 +100,15 @@ const TabelaProdutos = ({
               </div>
               {ativos.includes(indexProduto) && (
                 <Fragment key={indexProduto}>
-                  <div className="mt-2 text-right">
+                  <div className="mt-2 text-end">
                     <Link
-                      to={`/gestao-produto/relatorio?uuid=${
-                        produto.ultima_homologacao.uuid
-                      }`}
+                      to={`/gestao-produto/relatorio?uuid=${produto.ultima_homologacao.uuid}`}
                     >
                       <Botao
                         texto="Ver produto"
                         type={BUTTON_TYPE.SUBMIT}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="ml-3 mr-3"
+                        className="ms-3 me-3"
                       />
                     </Link>
                   </div>
@@ -133,7 +133,7 @@ const TabelaProdutos = ({
                             produto.ultima_homologacao.rastro_terceirizada
                           }
                         />,
-                        deveMostrarBarraHorizontal && <hr />
+                        deveMostrarBarraHorizontal && <hr />,
                       ];
                     }
                   )}
@@ -150,7 +150,6 @@ const TabelaProdutos = ({
 };
 
 const ResponderReclamacaoProduto = ({
-  history,
   produtos,
   setProdutos,
   ativos,
@@ -159,7 +158,7 @@ const ResponderReclamacaoProduto = ({
   page,
   produtosCount,
   setProdutosCount,
-  setPage
+  setPage,
 }) => {
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
@@ -168,8 +167,10 @@ const ResponderReclamacaoProduto = ({
   const uuid = urlParams.get("uuid");
   const PAGE_SIZE = 10;
 
+  const navigationType = useNavigationType();
+
   useEffect(() => {
-    if (history && history.action === "PUSH") {
+    if (navigationType === "PUSH") {
       reset();
     }
     if (!filtros && !uuid) return;
@@ -184,7 +185,7 @@ const ResponderReclamacaoProduto = ({
           ...getStatus(filtros),
           page: 1,
           uuid: uuid,
-          page_size: PAGE_SIZE
+          page_size: PAGE_SIZE,
         });
         response = await getReclamacoesTerceirizadaPorFiltro(params);
         setAtivos([0]);
@@ -192,7 +193,7 @@ const ResponderReclamacaoProduto = ({
         const params = gerarParametrosConsulta({
           ...getStatus(filtros),
           page: page,
-          page_size: PAGE_SIZE
+          page_size: PAGE_SIZE,
         });
         response = await getReclamacoesTerceirizadaPorFiltro(params);
         setAtivos([]);
@@ -204,7 +205,7 @@ const ResponderReclamacaoProduto = ({
     fetchData();
   }, [filtros, page]);
 
-  const onSubmitForm = formValues => {
+  const onSubmitForm = (formValues) => {
     setFiltros({ ...formValues });
     setPage(1);
   };
@@ -232,7 +233,6 @@ const ResponderReclamacaoProduto = ({
             <>
               <TabelaProdutos
                 produtos={produtos}
-                history={history}
                 filtros={filtros}
                 setProdutos={setProdutos}
                 setCarregando={setCarregando}
@@ -244,7 +244,7 @@ const ResponderReclamacaoProduto = ({
                 current={page || 1}
                 total={produtosCount}
                 showSizeChanger={false}
-                onChange={page => {
+                onChange={(page) => {
                   setPage(page);
                 }}
                 pageSize={PAGE_SIZE}
@@ -257,30 +257,28 @@ const ResponderReclamacaoProduto = ({
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     ativos: state.responderReclamacaoProduto.ativos,
     produtos: state.responderReclamacaoProduto.produtos,
     produtosCount: state.responderReclamacaoProduto.produtosCount,
-    page: state.responderReclamacaoProduto.page
+    page: state.responderReclamacaoProduto.page,
   };
 };
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setAtivos,
       setPage,
       setProdutosCount,
       setProdutos,
-      reset
+      reset,
     },
     dispatch
   );
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ResponderReclamacaoProduto)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ResponderReclamacaoProduto);

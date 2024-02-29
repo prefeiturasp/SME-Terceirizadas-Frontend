@@ -3,7 +3,7 @@ import { TIPO_USUARIO } from "../../../constants/shared";
 import "./style.scss";
 import { existeLogDeQuestionamentoDaCODAE } from "./helper";
 
-export const RelatorioHistoricoQuestionamento = props => {
+export const RelatorioHistoricoQuestionamento = (props) => {
   const { solicitacao } = props;
   const EXIBIR_HISTORICO =
     solicitacao.prioridade !== "REGULAR" &&
@@ -22,7 +22,7 @@ export const RelatorioHistoricoQuestionamento = props => {
             return (
               [
                 TIPO_USUARIO.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-                TIPO_USUARIO.TERCEIRIZADA
+                TIPO_USUARIO.TERCEIRIZADA,
               ].includes(log.usuario.tipo_usuario) &&
               log.status_evento_explicacao !== "Terceirizada tomou ciência" && (
                 <div key={key} className="question-log">
@@ -43,8 +43,10 @@ export const RelatorioHistoricoQuestionamento = props => {
                       <div
                         className="obs"
                         dangerouslySetInnerHTML={{
-                          __html: `Observação da CODAE: ${log.justificativa ||
-                            "Sem observações por parte da CODAE"}`
+                          __html: `Observação da CODAE: ${
+                            log.justificativa ||
+                            "Sem observações por parte da CODAE"
+                          }`,
                         }}
                       />
                     </div>
@@ -68,8 +70,10 @@ export const RelatorioHistoricoQuestionamento = props => {
                       <div
                         className="obs"
                         dangerouslySetInnerHTML={{
-                          __html: `Informações da CODAE: ${log.justificativa ||
-                            `<br />Sem observações por parte da CODAE`}`
+                          __html: `Informações da CODAE: ${
+                            log.justificativa ||
+                            `<br />Sem observações por parte da CODAE`
+                          }`,
                         }}
                       />
                     </div>
@@ -81,7 +85,7 @@ export const RelatorioHistoricoQuestionamento = props => {
                         <div
                           className="obs"
                           dangerouslySetInnerHTML={{
-                            __html: `Observação da CODAE: ${log.justificativa}`
+                            __html: `Observação da CODAE: ${log.justificativa}`,
                           }}
                         />
                       )}

@@ -4,7 +4,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import { getRelatorioEmAnaliseSensorial } from "services/relatorios";
@@ -20,20 +20,20 @@ const ModalRelatorioAnaliseSensorial = ({
   setProdutos,
   filtros,
   produtosCount,
-  pageSize
+  pageSize,
 }) => {
   const [carregando, setCarregando] = useState(false);
   const [page, setPage] = useState(1);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     setCarregando(true);
     setPage(page);
     const params = gerarParametrosConsulta({
       ...filtros,
       page: page,
-      page_size: pageSize
+      page_size: pageSize,
     });
-    getProdutosRelatorioAnaliseSensorial(params).then(response => {
+    getProdutosRelatorioAnaliseSensorial(params).then((response) => {
       setProdutos(response.data.results);
       setCarregando(false);
     });
@@ -51,7 +51,7 @@ const ModalRelatorioAnaliseSensorial = ({
           current={page}
           total={produtosCount}
           showSizeChanger={false}
-          onChange={page => {
+          onChange={(page) => {
             nextPage(page);
           }}
           pageSize={pageSize}
@@ -74,7 +74,7 @@ const ModalRelatorioAnaliseSensorial = ({
             const params = gerarParametrosConsulta({ ...filtros });
             getRelatorioEmAnaliseSensorial(params);
           }}
-        />
+        />,
       ]}
     >
       <Spin tip="Carregando..." spinning={carregando}>
@@ -95,9 +95,10 @@ const ModalRelatorioAnaliseSensorial = ({
 
                 {produtos !== null &&
                   produtos.map((produto, index) => {
-                    const dataSolicitacao = produto.ultima_homologacao.log_solicitacao_analise.criado_em.split(
-                      " "
-                    )[0];
+                    const dataSolicitacao =
+                      produto.ultima_homologacao.log_solicitacao_analise.criado_em.split(
+                        " "
+                      )[0];
                     const infoAdicionais =
                       produto.ultima_homologacao.log_solicitacao_analise
                         .justificativa;
@@ -113,7 +114,7 @@ const ModalRelatorioAnaliseSensorial = ({
 
                         <div className="row mt-3">
                           <div className="col">
-                            <div className="ml-3">
+                            <div className="ms-3">
                               <label>Empresa solicitante (Terceirizada)</label>
                               <br />
                               <b>
@@ -128,12 +129,12 @@ const ModalRelatorioAnaliseSensorial = ({
                         <hr />
                         <div className="row mt-3">
                           <div className="col-6">
-                            <div className="ml-3">
+                            <div className="ms-3">
                               <label>Informações adicionais</label>
                               <br />
                               <b
                                 dangerouslySetInnerHTML={{
-                                  __html: infoAdicionais
+                                  __html: infoAdicionais,
                                 }}
                               />
                             </div>
@@ -171,7 +172,7 @@ const ModalRelatorioAnaliseSensorial = ({
                         <hr />
                         <div className="row mt-3">
                           <div className="col-3">
-                            <div className="ml-3">
+                            <div className="ms-3">
                               <label>Número de protocolo AS.</label>
                               <br />
                               <b>

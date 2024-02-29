@@ -8,7 +8,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import MultiSelectDistribuidores from "components/Shareable/MultiSelectDistribuidores";
@@ -20,9 +20,9 @@ export default ({
   setSolicitacoes,
   setTotal,
   numeroSolicitacaoInicial,
-  inicioResultado
+  inicioResultado,
 }) => {
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     if (filtros.motivos) {
       filtros.motivos = filtros.motivos.toString();
@@ -109,17 +109,17 @@ export default ({
                   options={[
                     {
                       value: "ALTERAR_DATA_ENTREGA",
-                      label: "Alterar data de entrega"
+                      label: "Alterar data de entrega",
                     },
                     {
                       value: "ALTERAR_QTD_ALIMENTO",
-                      label: "Alterar quantidade de alimento"
+                      label: "Alterar quantidade de alimento",
                     },
                     {
                       value: "ALTERAR_ALIMENTO",
-                      label: "Alterar alimento"
+                      label: "Alterar alimento",
                     },
-                    { value: "OUTROS", label: "Outros" }
+                    { value: "OUTROS", label: "Outros" },
                   ]}
                 />
               </div>
@@ -130,7 +130,7 @@ export default ({
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting}
               />
 
@@ -138,7 +138,7 @@ export default ({
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset({});
                   setSolicitacoes(undefined);

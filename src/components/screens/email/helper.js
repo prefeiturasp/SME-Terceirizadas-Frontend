@@ -1,6 +1,6 @@
-export const generateOptions = optionsArray => {
+export const generateOptions = (optionsArray) => {
   let options = [];
-  optionsArray.forEach(option => {
+  optionsArray.forEach((option) => {
     options.push({ nome: option, uuid: option });
   });
   return options;
@@ -8,5 +8,5 @@ export const generateOptions = optionsArray => {
 
 export const SECURITY_OPTIONS = {
   TLS: "TLS",
-  SSL: "SSL"
+  SSL: "SSL",
 };

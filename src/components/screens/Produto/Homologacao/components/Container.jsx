@@ -4,11 +4,12 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   getNomesTerceirizadas,
   getHomologacaoProduto,
-  getNumeroProtocoloAnaliseSensorial
+  getNumeroProtocoloAnaliseSensorial,
 } from "services/produto.service";
 import { getNumerosEditais } from "services/edital.service";
 import { Homologacao } from "../index";
-import { formataEditais, formataValoresBooleanos } from "../helper";
+import { formataValoresBooleanos } from "../helper";
+import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
 
 export const Container = () => {
   const [erro, setErro] = useState(false);
@@ -32,7 +33,10 @@ export const Container = () => {
   const getNumerosEditaisAsync = async () => {
     const response = await getNumerosEditais();
     if (response.status === HTTP_STATUS.OK) {
-      setEditaisOptions(response.data.results);
+      let editais = response.data.results.filter(
+        (edital) => !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
+      );
+      setEditaisOptions(editais);
     } else {
       toastError("Erro ao carregar editais");
       setErro(true);
@@ -49,24 +53,28 @@ export const Container = () => {
     }
   };
 
-  const setInitialValuesForm = (data, card_suspensos) => {
+  const setInitialValuesForm = (data) => {
     let values = {
       ...data,
       produto: {
         ...data.produto,
-        editais: formataEditais(
-          data.produto.vinculos_produto_edital,
-          card_suspensos
-        ),
+        editais_homologados: data.produto.vinculos_produto_edital
+          .filter((vinculo) => !vinculo.suspenso)
+          .map((vinculo) => vinculo.edital.numero)
+          .join(", "),
+        editais_suspensos: data.produto.vinculos_produto_edital
+          .filter((vinculo) => vinculo.suspenso)
+          .map((vinculo) => vinculo.edital.numero)
+          .join(", "),
         dieta_especial: formataValoresBooleanos(
           data.produto.eh_para_alunos_com_dieta
         ),
         aditivos_alergicos: formataValoresBooleanos(
           data.produto.tem_aditivos_alergenicos
         ),
-        tem_gluten: formataValoresBooleanos(data.produto.tem_gluten)
+        tem_gluten: formataValoresBooleanos(data.produto.tem_gluten),
       },
-      necessita_analise_sensorial: "1"
+      necessita_analise_sensorial: "1",
     };
     setFormValues(values);
   };

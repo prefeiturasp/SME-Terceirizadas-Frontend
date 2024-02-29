@@ -8,16 +8,16 @@ import "./style.scss";
 import {
   usuarioEhLogistica,
   usuarioEhEmpresaDistribuidora,
-  usuarioEhEscola
+  usuarioEhEscola,
 } from "helpers/utilities";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import MeusDadosContext from "context/MeusDadosContext";
 import ModalVoltar from "./ModalVoltar";
 import ModalCestasBasicas from "../ModalCestasBasicas";
 
 export const Page = ({ ...props }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const {
     children,
@@ -25,13 +25,12 @@ export const Page = ({ ...props }) => {
     botaoVoltar,
     voltarPara,
     temModalVoltar,
-    textoModalVoltar
+    textoModalVoltar,
   } = props;
 
   const [nome, setNome] = useState(null);
-  const [nomeEscolaOuTerceirizada, setNomeEscolaOuTerceirizada] = useState(
-    null
-  );
+  const [nomeEscolaOuTerceirizada, setNomeEscolaOuTerceirizada] =
+    useState(null);
   const [toggled, setToggled] = useState(false);
   const [modalVoltar, setModalVoltar] = useState(false);
 
@@ -39,7 +38,7 @@ export const Page = ({ ...props }) => {
 
   useEffect(() => {
     if (!localStorage.getItem("meusDados")) {
-      getMeusDados().then(meusDados => {
+      getMeusDados().then((meusDados) => {
         setMeusDados(meusDados);
         localStorage.setItem("nome", JSON.stringify(meusDados.nome));
         if (meusDados.tipo_usuario === "dieta_especial") {
@@ -70,13 +69,13 @@ export const Page = ({ ...props }) => {
     if (temModalVoltar) {
       setModalVoltar(true);
     } else {
-      voltarPara ? history.push(voltarPara) : history.goBack();
+      voltarPara ? navigate(voltarPara) : navigate(-1);
     }
   };
 
   const mostrarModalCestaBasica = () => {
-    let dataInicial = new Date("2023-06-09T00:00:00");
-    let dataFinal = new Date("2023-07-03T00:00:00");
+    let dataInicial = new Date("2023-11-13T00:00:00");
+    let dataFinal = new Date("2023-12-12T00:00:00");
     let now = new Date();
 
     if (ENVIRONMENT !== "production") {
@@ -102,8 +101,9 @@ export const Page = ({ ...props }) => {
       {mostrarModalCestaBasica() && <ModalCestasBasicas />}
       <div id="content-wrapper" className="pt-5">
         <div
-          className={`content-wrapper-div ${toggled &&
-            "toggled"} d-flex flex-column p-4 mt-5`}
+          className={`content-wrapper-div ${
+            toggled && "toggled"
+          } d-flex flex-column p-4 mt-5`}
         >
           {children.length ? children[0] : children}
           <h1 className="page-title">
@@ -125,6 +125,7 @@ export const Page = ({ ...props }) => {
       </div>
       <ModalVoltar
         modalVoltar={modalVoltar}
+        voltarPara={voltarPara}
         setModalVoltar={setModalVoltar}
         textoModalVoltar={textoModalVoltar}
       />

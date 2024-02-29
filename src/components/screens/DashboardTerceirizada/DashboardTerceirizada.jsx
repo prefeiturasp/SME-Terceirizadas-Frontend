@@ -5,7 +5,7 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_COM_QUESTIONAMENTO,
   SOLICITACOES_NEGADAS,
-  SOLICITACOES_CANCELADAS
+  SOLICITACOES_CANCELADAS,
 } from "configs/constants";
 import { PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { dataAtual, deepCopy } from "helpers/utilities";
@@ -13,13 +13,13 @@ import {
   getSolicitacoesCanceladasTerceirizada,
   getSolicitacoesComQuestionamento,
   getSolicitacoesNegadasTerceirizada,
-  getSolicitacoesAutorizadasTerceirizada
+  getSolicitacoesAutorizadasTerceirizada,
 } from "services/painelTerceirizada.service";
 import CardBody from "components/Shareable/CardBody";
 import CardMatriculados from "components/Shareable/CardMatriculados";
 import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
-  CARD_TYPE_ENUM
+  CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { ajustarFormatoLog, LOG_PARA } from "../helper";
 import { MENU_DASHBOARD_TERCEIRIZADAS } from "./constants";
@@ -46,8 +46,8 @@ class DashboardTerceirizada extends Component {
       listaStatus: [
         { nome: "Conferência Status", uuid: "" },
         { nome: "Conferida", uuid: "1" },
-        { nome: "Não Conferida", uuid: "0" }
-      ]
+        { nome: "Não Conferida", uuid: "0" },
+      ],
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
@@ -61,45 +61,45 @@ class DashboardTerceirizada extends Component {
   async getSolicitacoesAsync(params = null) {
     this.setState({ loadingAcompanhamentoSolicitacoes: true });
 
-    getSolicitacoesComQuestionamento(params).then(request => {
+    getSolicitacoesComQuestionamento(params).then((request) => {
       let questionamentosListSolicitacao = ajustarFormatoLog(
         request.data.results,
         LOG_PARA.TERCEIRIZADA
       );
       this.setState({
         questionamentosListSolicitacao,
-        loadingFiltro: false
+        loadingFiltro: false,
       });
     });
 
-    getSolicitacoesCanceladasTerceirizada(params).then(request => {
+    getSolicitacoesCanceladasTerceirizada(params).then((request) => {
       let canceladasListSolicitacao = ajustarFormatoLog(
         request.data.results,
         LOG_PARA.TERCEIRIZADA
       );
       this.setState({
-        canceladasListSolicitacao
+        canceladasListSolicitacao,
       });
     });
 
-    getSolicitacoesNegadasTerceirizada(params).then(request => {
+    getSolicitacoesNegadasTerceirizada(params).then((request) => {
       let negadasListSolicitacao = ajustarFormatoLog(
         request.data.results,
         LOG_PARA.TERCEIRIZADA
       );
       this.setState({
-        negadasListSolicitacao
+        negadasListSolicitacao,
       });
     });
 
-    getSolicitacoesAutorizadasTerceirizada(params).then(request => {
+    getSolicitacoesAutorizadasTerceirizada(params).then((request) => {
       let autorizadasListSolicitacao = ajustarFormatoLog(
         request.data.results,
         LOG_PARA.TERCEIRIZADA
       );
       this.setState({
         autorizadasListSolicitacao,
-        loadingAcompanhamentoSolicitacoes: false
+        loadingAcompanhamentoSolicitacoes: false,
       });
     });
   }
@@ -118,7 +118,7 @@ class DashboardTerceirizada extends Component {
       this.props.location.state.botaoVoltar
     ) {
       this.setState({
-        secao: MENU_DASHBOARD_TERCEIRIZADAS.GESTAO_DE_ALIMENTACAO
+        secao: MENU_DASHBOARD_TERCEIRIZADAS.GESTAO_DE_ALIMENTACAO,
       });
     }
     this.resetParams();
@@ -142,11 +142,7 @@ class DashboardTerceirizada extends Component {
     params["lote"] = values.lote;
     params["tipo_solicitacao"] = values.tipo_solicitacao;
     params["data_evento"] =
-      values_.data_evento &&
-      values_.data_evento
-        .split("/")
-        .reverse()
-        .join("-");
+      values_.data_evento && values_.data_evento.split("/").reverse().join("-");
     if (
       values.status ||
       values.lote ||
@@ -154,7 +150,7 @@ class DashboardTerceirizada extends Component {
       values.data_evento
     ) {
       this.setState({
-        loadingFiltro: true
+        loadingFiltro: true,
       });
     }
 
@@ -174,7 +170,7 @@ class DashboardTerceirizada extends Component {
       autorizadasListSolicitacao,
       listaStatus,
       loadingFiltro,
-      loadingAcompanhamentoSolicitacoes
+      loadingAcompanhamentoSolicitacoes,
     } = this.state;
 
     const LOADING =
@@ -201,7 +197,7 @@ class DashboardTerceirizada extends Component {
             <CardBody
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
-              onChange={values => {
+              onChange={(values) => {
                 clearTimeout(this.typingTimeout);
                 this.typingTimeout = setTimeout(async () => {
                   this.onPesquisaChanged(values);
@@ -265,7 +261,7 @@ class DashboardTerceirizada extends Component {
 
 const DashboardTerceirizadaForm = reduxForm({
   form: "dashboardTerceirizada",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(DashboardTerceirizada);
 
 export default DashboardTerceirizadaForm;

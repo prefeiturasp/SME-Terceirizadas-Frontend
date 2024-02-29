@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 
 export const ModalSolicitarCorrecaoUE = ({ ...props }) => {
@@ -28,7 +28,7 @@ export const ModalSolicitarCorrecaoUE = ({ ...props }) => {
       <Modal.Footer>
         <div className="col-12">
           <Botao
-            className="float-right"
+            className="float-end"
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => {
@@ -38,7 +38,7 @@ export const ModalSolicitarCorrecaoUE = ({ ...props }) => {
             style={BUTTON_STYLE.GREEN}
           />
           <Botao
-            className="float-right mr-2"
+            className="float-end me-2"
             texto="Não"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => setShowModal(false)}

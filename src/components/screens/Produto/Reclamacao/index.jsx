@@ -1,7 +1,6 @@
 import { Spin } from "antd";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 
 import FormBuscaProduto from "./components/FormBuscaProduto";
@@ -12,13 +11,14 @@ import {
   setIndiceProdutoAtivo,
   setPage,
   setProdutos,
-  setProdutosCount
+  setProdutosCount,
 } from "reducers/reclamacaoProduto";
 
 import { getProdutosPorParametros } from "services/produto.service";
 
 import "./style.scss";
 import { Paginacao } from "components/Shareable/Paginacao";
+import withNavigationType from "components/Shareable/withNavigationType";
 
 class ReclamacaoProduto extends Component {
   constructor(props) {
@@ -26,13 +26,13 @@ class ReclamacaoProduto extends Component {
     this.state = {
       loading: false,
       error: "",
-      formValues: undefined
+      formValues: undefined,
     };
     this.TAMANHO_PAGINA = 10;
   }
   UNSAFE_componentWillMount() {
-    const { history, reset } = this.props;
-    if (history && history.action === "PUSH") {
+    const { navigationType, reset } = this.props;
+    if (navigationType === "PUSH") {
       reset();
     }
 
@@ -43,15 +43,15 @@ class ReclamacaoProduto extends Component {
     const parametrosBusca = {
       nome_produto: nome_produto,
       nome_marca: marca_produto,
-      nome_fabricante: fabricante_produto
+      nome_fabricante: fabricante_produto,
     };
     this.onSubmitFormBuscaProduto(parametrosBusca);
   }
 
-  onAtualizarProduto = page => {
+  onAtualizarProduto = (page) => {
     this.setState({
       loading: true,
-      error: ""
+      error: "",
     });
     this.atualizaListaProdutos(this.state.formValues, page);
   };
@@ -70,11 +70,11 @@ class ReclamacaoProduto extends Component {
     }
   };
 
-  onSubmitFormBuscaProduto = formValues => {
+  onSubmitFormBuscaProduto = (formValues) => {
     this.setState({
       formValues,
       loading: true,
-      error: ""
+      error: "",
     });
     try {
       this.atualizaListaProdutos(formValues);
@@ -92,7 +92,7 @@ class ReclamacaoProduto extends Component {
       setIndiceProdutoAtivo,
       formValues,
       page,
-      setPage
+      setPage,
     } = this.props;
     return (
       <Spin tip="Carregando..." spinning={this.state.loading}>
@@ -102,7 +102,7 @@ class ReclamacaoProduto extends Component {
               novaReclamacao
               formName="reclamacao"
               onSubmit={this.onSubmitFormBuscaProduto}
-              onAtualizaProdutos={produtos => setProdutos(produtos)}
+              onAtualizaProdutos={(produtos) => setProdutos(produtos)}
             />
 
             {produtos && produtos.length > 0 && (
@@ -123,7 +123,7 @@ class ReclamacaoProduto extends Component {
                   current={page || 1}
                   total={produtosCount}
                   showSizeChanger={false}
-                  onChange={page => {
+                  onChange={(page) => {
                     setPage(page);
                     this.onAtualizarProduto(page);
                   }}
@@ -143,31 +143,28 @@ class ReclamacaoProduto extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     indiceProdutoAtivo: state.reclamacaoProduto.indiceProdutoAtivo,
     produtos: state.reclamacaoProduto.produtos,
     produtosCount: state.reclamacaoProduto.produtosCount,
     page: state.reclamacaoProduto.page,
-    formValues: state.finalForm.reclamacao
+    formValues: state.finalForm.reclamacao,
   };
 };
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
       setIndiceProdutoAtivo,
       setPage,
       setProdutos,
       setProdutosCount,
-      reset
+      reset,
     },
     dispatch
   );
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(ReclamacaoProduto)
+export default withNavigationType(
+  connect(mapStateToProps, mapDispatchToProps)(ReclamacaoProduto)
 );

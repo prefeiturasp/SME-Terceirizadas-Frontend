@@ -1,7 +1,7 @@
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import React from "react";
 import { Modal } from "react-bootstrap";
@@ -13,7 +13,7 @@ export const ModalPadraoSimNao = ({ ...props }) => {
     tituloModal,
     descricaoModal,
     funcaoSim,
-    desabilitaSim
+    desabilitaSim,
   } = props;
 
   return (
@@ -22,13 +22,13 @@ export const ModalPadraoSimNao = ({ ...props }) => {
         <Modal.Title>{tituloModal}</Modal.Title>
       </Modal.Header>
       <Modal.Body>{descricaoModal}</Modal.Body>
-      <Modal.Footer className="float-right">
+      <Modal.Footer className="float-end">
         <Botao
           texto="Não"
           type={BUTTON_TYPE.BUTTON}
           onClick={closeModal}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="ml-3"
+          className="ms-3"
         />
         <Botao
           texto={
@@ -42,7 +42,7 @@ export const ModalPadraoSimNao = ({ ...props }) => {
           onClick={() => funcaoSim()}
           style={BUTTON_STYLE.GREEN}
           disabled={desabilitaSim}
-          className="ml-3"
+          className="ms-3"
         />
       </Modal.Footer>
     </Modal>

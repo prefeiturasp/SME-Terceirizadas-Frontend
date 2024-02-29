@@ -4,10 +4,10 @@ import { caminhoURL } from "./helper";
 import { NavLink } from "react-router-dom";
 import { RELATORIO } from "../../../configs/constants";
 
-export const CardStatusDeSolicitacaoLargo = props => {
+export const CardStatusDeSolicitacaoLargo = (props) => {
   const { titulo, tipo, solicitacoes, icone } = props;
   return (
-    <div className={`card card-panel card-colored ${tipo} mb-4 mr-4`}>
+    <div className={`card card-panel card-colored ${tipo} mb-4 me-4`}>
       <div className="card-title-status">
         <i className={"fas " + icone} />
         {titulo}
@@ -22,13 +22,14 @@ export const CardStatusDeSolicitacaoLargo = props => {
                 solicitacao.link ||
                 `${caminhoURL(solicitacao.tipo_doc)}/${RELATORIO}?uuid=${
                   solicitacao.uuid
-                }&ehInclusaoContinua=${solicitacao.tipo_doc ===
-                  "INC_ALIMENTA_CONTINUA"}`
+                }&ehInclusaoContinua=${
+                  solicitacao.tipo_doc === "INC_ALIMENTA_CONTINUA"
+                }`
               }
             >
               <p className="data">
                 {solicitacao.descricao || solicitacao.text}
-                <span className="mr-3 float-right">
+                <span className="me-3 float-end">
                   {solicitacao.data_log || solicitacao.date}
                 </span>
               </p>

@@ -1,12 +1,12 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Row, Col } from "antd";
-import CardLogo from "../../Shareable/CardLogo/CardLogo";
-import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
-import IconeGestaoDeProduto from "../../Shareable/Icones/IconeGestaoDeProduto";
-import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
-import IconeAbastecimento from "../../Shareable/Icones/IconeAbastecimento";
-import IconeMedicaoInicial from "../../Shareable/Icones/IconeMedicaoInicial";
+import CardLogo from "components/Shareable/CardLogo/CardLogo";
+import IconeGestaoDeAlimentacao from "components/Shareable/Icones/IconeGestaoDeAlimentacao";
+import IconeGestaoDeProduto from "components/Shareable/Icones/IconeGestaoDeProduto";
+import IconeDietaEspecial from "components/Shareable/Icones/IconeDietaEspecial";
+import IconeAbastecimento from "components/Shareable/Icones/IconeAbastecimento";
+import IconeMedicaoInicial from "components/Shareable/Icones/IconeMedicaoInicial";
 import {
   usuarioEhEmpresaTerceirizada,
   usuarioEhQualquerCODAE,
@@ -21,12 +21,23 @@ import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaAbastecimentoDiretor,
-  exibirModuloMedicaoInicial
+  exibirModuloMedicaoInicial,
+  usuarioEhOrgaoFiscalizador,
+  usuarioEscolaEhGestaoDireta,
+  usuarioEscolaEhGestaoParceira,
+  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 import { ACOMPANHAMENTO_DE_LANCAMENTOS } from "configs/constants";
+import { ENVIRONMENT } from "constants/config";
 
-const PainelInicial = ({ history }) => {
+const PainelInicial = () => {
+  const navigate = useNavigate();
+
   const exibeMenuValidandoAmbiente = exibirGA();
+
+  const usuarioEscolaEhGestaoDiretaParceira =
+    (usuarioEscolaEhGestaoDireta() || usuarioEscolaEhGestaoParceira()) &&
+    !["production"].includes(ENVIRONMENT);
 
   return (
     <Row className="mt-3" gutter={[16, 16]}>
@@ -38,11 +49,12 @@ const PainelInicial = ({ history }) => {
           usuarioEhMedicao() ||
           usuarioEhNutricionistaSupervisao() ||
           usuarioEhEscolaTerceirizadaDiretor() ||
-          usuarioEhEscolaTerceirizada()) && (
+          usuarioEhEscolaTerceirizada() ||
+          usuarioEhCODAEGabinete()) && (
           <Col xs={24} sm={24} md={24} lg={8} xl={8}>
             <CardLogo
               titulo={"Gestão de Alimentação"}
-              onClick={() => history.push("/painel-gestao-alimentacao")}
+              onClick={() => navigate("/painel-gestao-alimentacao")}
             >
               <IconeGestaoDeAlimentacao />
             </CardLogo>
@@ -56,11 +68,13 @@ const PainelInicial = ({ history }) => {
         usuarioEhEmpresaTerceirizada() ||
         usuarioEhDRE() ||
         usuarioEhEscolaTerceirizadaDiretor() ||
-        usuarioEhEscolaTerceirizada()) && (
+        usuarioEhEscolaTerceirizada() ||
+        usuarioEhCODAEGabinete() ||
+        usuarioEscolaEhGestaoDiretaParceira) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Dieta Especial"}
-            onClick={() => history.push("/painel-dieta-especial")}
+            onClick={() => navigate("/painel-dieta-especial")}
           >
             <IconeDietaEspecial />
           </CardLogo>
@@ -72,11 +86,13 @@ const PainelInicial = ({ history }) => {
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhDRE() ||
         usuarioEhEscolaTerceirizadaDiretor() ||
-        usuarioEhEscolaTerceirizada()) && (
+        usuarioEhEscolaTerceirizada() ||
+        usuarioEhOrgaoFiscalizador() ||
+        usuarioEhCODAEGabinete()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Gestão de Produto"}
-            onClick={() => history.push("/painel-gestao-produto")}
+            onClick={() => navigate("/painel-gestao-produto")}
           >
             <IconeGestaoDeProduto />
           </CardLogo>
@@ -89,11 +105,13 @@ const PainelInicial = ({ history }) => {
             onClick={() => {
               (usuarioEhEscolaTerceirizada() ||
                 usuarioEhEscolaTerceirizadaDiretor()) &&
-                history.push("/lancamento-inicial/lancamento-medicao-inicial");
-              (usuarioEhDRE() || usuarioEhMedicao()) &&
-                history.push(
-                  `/medicao-inicial/${ACOMPANHAMENTO_DE_LANCAMENTOS}`
-                );
+                navigate("/lancamento-inicial/lancamento-medicao-inicial");
+              (usuarioEhDRE() ||
+                usuarioEhMedicao() ||
+                usuarioEhCODAEGestaoAlimentacao() ||
+                usuarioEhCODAENutriManifestacao() ||
+                usuarioEhCODAEGabinete()) &&
+                navigate(`/medicao-inicial/${ACOMPANHAMENTO_DE_LANCAMENTOS}`);
             }}
           >
             <IconeMedicaoInicial />
@@ -104,7 +122,7 @@ const PainelInicial = ({ history }) => {
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Abastecimento"}
-            onClick={() => history.push("/logistica/entregas-dre")}
+            onClick={() => navigate("/logistica/entregas-dre")}
           >
             <IconeAbastecimento />
           </CardLogo>
@@ -115,7 +133,7 @@ const PainelInicial = ({ history }) => {
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Abastecimento"}
-            onClick={() => history.push("/logistica/conferir-entrega")}
+            onClick={() => navigate("/logistica/conferir-entrega")}
           >
             <IconeAbastecimento />
           </CardLogo>
@@ -125,4 +143,4 @@ const PainelInicial = ({ history }) => {
   );
 };
 
-export default withRouter(PainelInicial);
+export default PainelInicial;

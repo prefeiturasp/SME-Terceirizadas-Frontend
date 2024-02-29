@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 export default ({ show, handleClose, voltarPagina }) => {
@@ -25,7 +25,7 @@ export default ({ show, handleClose, voltarPagina }) => {
             handleClose();
           }}
           style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="ml-3"
+          className="ms-3"
         />
         <Botao
           texto="Sim"
@@ -34,7 +34,7 @@ export default ({ show, handleClose, voltarPagina }) => {
             voltarPagina();
           }}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
         />
       </Modal.Footer>
     </Modal>

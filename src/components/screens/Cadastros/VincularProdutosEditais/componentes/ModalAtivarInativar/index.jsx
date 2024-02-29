@@ -7,7 +7,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
 export default ({ closeModal, showModal, item, changePage }) => {
@@ -21,7 +21,7 @@ export default ({ closeModal, showModal, item, changePage }) => {
           `Produto ${item.ativo ? "inativado" : "ativado"} com sucesso`
         );
       })
-      .catch(error => {
+      .catch((error) => {
         toastError(error.response.data.detail);
       });
     setCarregando(false);
@@ -62,13 +62,13 @@ export default ({ closeModal, showModal, item, changePage }) => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Sim"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                     />
                   </div>

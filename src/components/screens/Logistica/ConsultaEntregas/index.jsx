@@ -17,7 +17,7 @@ export default ({ dilog, dre }) => {
 
   const inicioResultado = useRef();
 
-  const buscarSolicitacoes = async page => {
+  const buscarSolicitacoes = async (page) => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     const response = await getEntregasDilog(params);
@@ -40,7 +40,7 @@ export default ({ dilog, dre }) => {
       const urlParams = new URLSearchParams(window.location.search);
       const codigo = urlParams.get("numero_requisicao");
       const filtro = {
-        numero_requisicao: codigo
+        numero_requisicao: codigo,
       };
       setFiltros({ ...filtro });
     }
@@ -53,7 +53,7 @@ export default ({ dilog, dre }) => {
     }
   }, [filtros]);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarSolicitacoes(page);
     setPage(page);
   };

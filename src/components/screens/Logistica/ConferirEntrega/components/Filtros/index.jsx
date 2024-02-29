@@ -8,7 +8,7 @@ import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 
@@ -18,7 +18,7 @@ export default ({
   setFiltros,
   initialValuesProp,
   inicioResultado,
-  setGuias
+  setGuias,
 }) => {
   const [initialValuesDefault] = useState({});
 
@@ -26,7 +26,7 @@ export default ({
     ? initialValuesProp
     : initialValuesDefault;
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
@@ -97,36 +97,36 @@ export default ({
                   options={[
                     {
                       value: "PENDENTE_DE_CONFERENCIA",
-                      label: "Pendente de conferência"
+                      label: "Pendente de conferência",
                     },
                     {
                       value: "RECEBIDA",
-                      label: "Recebida"
+                      label: "Recebida",
                     },
                     {
                       value: "RECEBIMENTO_PARCIAL",
-                      label: "Parcial"
+                      label: "Parcial",
                     },
                     {
                       value: "NAO_RECEBIDA",
-                      label: "Não Recebida"
+                      label: "Não Recebida",
                     },
                     {
                       value: "DISTRIBUIDOR_REGISTRA_INSUCESSO",
-                      label: "Insucesso"
+                      label: "Insucesso",
                     },
                     {
                       value: "REPOSICAO_PARCIAL",
-                      label: "Reposição parcial"
+                      label: "Reposição parcial",
                     },
                     {
                       value: "REPOSICAO_TOTAL",
-                      label: "Reposição total"
+                      label: "Reposição total",
                     },
                     {
                       value: "CANCELADA",
-                      label: "Cancelada"
-                    }
+                      label: "Cancelada",
+                    },
                   ]}
                 />
               </div>
@@ -137,7 +137,7 @@ export default ({
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting}
               />
 
@@ -145,7 +145,7 @@ export default ({
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset({});
                   setGuias(undefined);

@@ -9,30 +9,28 @@ import { ErrorHandlerFunction } from "services/service-helpers";
     de qualquer tipo (CEI ou nao-CEI)
 */
 
-const {
-  QUANTIDADE_ALUNOS_POR_PERIODO,
-  INCLUSOES_ALIMENTACAO_DA_CEI
-} = ENDPOINT;
+const { QUANTIDADE_ALUNOS_POR_PERIODO, INCLUSOES_ALIMENTACAO_DA_CEI } =
+  ENDPOINT;
 
-export const getInclusaoDeAlimentacaoDaCei = async uuid => {
+export const getInclusaoDeAlimentacaoDaCei = async (uuid) => {
   // shared
   const response = await axios.get(`${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`);
   return response.data;
 };
 
-export const getDREPedidosDeInclusaoAlimentacaoDaCei = async filtroAplicado => {
+export const getDREPedidosDeInclusaoAlimentacaoDaCei = async (
+  filtroAplicado
+) => {
   // dre
-  const url = `${INCLUSOES_ALIMENTACAO_DA_CEI}/${
-    PEDIDOS.DRE
-  }/${filtroAplicado}/`;
+  const url = `${INCLUSOES_ALIMENTACAO_DA_CEI}/${PEDIDOS.DRE}/${filtroAplicado}/`;
   const response = await axios.get(url);
   const results = response.data.results;
   return {
-    results: results.map(el => ({
+    results: results.map((el) => ({
       ...el,
-      isCei: true
+      isCei: true,
     })),
-    status: response.status
+    status: response.status,
   };
 };
 
@@ -48,19 +46,25 @@ export const getQuantidadeAlunosFaixaEtaria = async (
   uuid,
   data_referencia_str
 ) => {
-  return await axios.get(
-    `/${QUANTIDADE_ALUNOS_POR_PERIODO}/${uuid}/alunos-por-faixa-etaria/${data_referencia_str}/`
-  );
+  const response = await axios
+    .get(
+      `/${QUANTIDADE_ALUNOS_POR_PERIODO}/${uuid}/alunos-por-faixa-etaria/${data_referencia_str}/`
+    )
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getQuantidadeAlunosPeriodoEscolar = async uuidEscola => {
+export const getQuantidadeAlunosPeriodoEscolar = async (uuidEscola) => {
   // escola
   return await axios.get(
     `/${QUANTIDADE_ALUNOS_POR_PERIODO}/escola/${uuidEscola}/`
   );
 };
 
-export const criarInclusoesDaCEI = async payload => {
+export const criarInclusoesDaCEI = async (payload) => {
   // escola
   const response = await axios
     .post(`/${INCLUSOES_ALIMENTACAO_DA_CEI}/`, payload)
@@ -71,7 +75,7 @@ export const criarInclusoesDaCEI = async payload => {
   }
 };
 
-export const excluirInclusoesDaCei = async uuid => {
+export const excluirInclusoesDaCei = async (uuid) => {
   // escola
   return await axios.delete(`/${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`);
 };
@@ -81,7 +85,7 @@ export const atualizarInclusoesDaCEI = async (payload, uuid) => {
   return await axios.put(`/${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/`, payload);
 };
 
-export const iniciarInclusoesDaCEI = async uuid => {
+export const iniciarInclusoesDaCEI = async (uuid) => {
   // escola
   return await axios.patch(
     `/${INCLUSOES_ALIMENTACAO_DA_CEI}/${uuid}/inicio-pedido/`

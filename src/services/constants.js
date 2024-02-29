@@ -13,14 +13,14 @@ export const FLUXO = {
   DRE_CANCELA: "diretoria-regional-cancela",
   CODAE_NEGA: "codae-cancela-pedido",
   CODAE_QUESTIONA: "codae-questiona-pedido",
-  TERCEIRIZADA_RESPONDE_QUESTIONAMENTO: "terceirizada-responde-questionamento"
+  TERCEIRIZADA_RESPONDE_QUESTIONAMENTO: "terceirizada-responde-questionamento",
 };
 
 export const PEDIDOS = {
   TERCEIRIZADA: "pedidos-terceirizadas",
   CODAE: "pedidos-codae",
   DRE: "pedidos-diretoria-regional",
-  MEUS: "minhas-solicitacoes"
+  MEUS: "minhas-solicitacoes",
 };
 
 export const SOLICITACOES = {
@@ -31,7 +31,9 @@ export const SOLICITACOES = {
   NEGADOS: "negados",
   CANCELADOS: "cancelados",
   PENDENTES_VALIDACAO_DRE: "pendentes-validacao",
-  QUESTIONAMENTOS: "questionamentos"
+  QUESTIONAMENTOS: "questionamentos",
+  ANOS_COM_DIETAS: "anos-com-dietas",
+  TOTAIS_GERENCIAL_DIETAS: "totais-gerencial-dietas",
 };
 
 export const TIPO_MOTIVO = {
@@ -40,13 +42,13 @@ export const TIPO_MOTIVO = {
   ALTERACAO_TIPO_ALIMENTACAO: "motivos-alteracao-tipo-alimentacao",
   NEGACAO: "motivos-negacao",
   SUSPENSAO_CARDAPIO: "motivos-suspensao-cardapio",
-  DRE_NAO_VALIDA: "motivos-dre-nao-valida"
+  DRE_NAO_VALIDA: "motivos-dre-nao-valida",
 };
 
 export const RESUMO_POR = {
   TIPO_DE_SOLICITACAO: "desc_doc",
   LOTE: "lote",
-  DRE: "dre_nome"
+  DRE: "dre_nome",
 };
 
 export const SOLICITACOES_DIETA = `${API_URL}/dieta-especial`;
@@ -66,5 +68,5 @@ export const URL_KIT_LANCHES_SOLICITACOES_CEMEI = `${API_URL}/solicitacao-kit-la
 
 export const AUTH_TOKEN = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };

@@ -11,28 +11,32 @@ const ListagemPlanilhas = ({
   buscarPlanilhas,
   page,
   setShowRemocao,
-  executarCarga
+  executarCarga,
 }) => {
-  const formataNomeArquivo = url => {
+  const formataNomeArquivo = (url) => {
     return url.split("/").pop();
   };
 
-  const formataStatus = uuid => {
-    let obj = OPTIONS_STATUS.find(el => el.uuid === uuid);
+  const formataStatus = (uuid) => {
+    let obj = OPTIONS_STATUS.find((el) => el.uuid === uuid);
     return obj ? obj.nome : "";
   };
 
-  const downloadArquivo = url => {
+  const downloadArquivo = (url) => {
     saveAs(url.replace("http://", "https://"));
   };
 
+  const tituloListagem = (modeloPlanilha) => {
+    return {
+      SERVIDOR: "Usuários Servidores",
+      NAO_SERVIDOR: "Usuários Não Servidores",
+      UE_PARCEIRA: "Usuários UEs Parceiras",
+    }[modeloPlanilha];
+  };
+
   return (
-    <section className="tabela-gestao-acesso">
-      <header>
-        {filtros.modelo === "SERVIDOR"
-          ? "Usuários Servidores"
-          : "Usuários Não Servidores"}
-      </header>
+    <section className="tabela-carga-usuarios">
+      <header>{tituloListagem(filtros.modelo)}</header>
       <article>
         <div className="grid-table header-table">
           <div>Nome do Arquivo</div>

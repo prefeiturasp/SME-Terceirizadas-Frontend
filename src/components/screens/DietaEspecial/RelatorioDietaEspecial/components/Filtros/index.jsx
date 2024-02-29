@@ -4,7 +4,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import Select from "components/Shareable/Select";
@@ -17,7 +17,7 @@ import React from "react";
 import { OnChange } from "react-final-form-listeners";
 import {
   getFiltrosRelatorioDietasEspeciais,
-  getUnidadesEducacionaisTercTotal
+  getUnidadesEducacionaisTercTotal,
 } from "services/dietaEspecial.service";
 import "./styles.scss";
 import { Field } from "react-final-form";
@@ -33,18 +33,18 @@ export const Filtros = ({ ...props }) => {
     setFiltros,
     setUnidadesEducacionais,
     unidadesEducacionais,
-    values
+    values,
   } = props;
 
-  const getUnidadesEducacionaisAsync = async values => {
+  const getUnidadesEducacionaisAsync = async (values) => {
     setUnidadesEducacionais([]);
     let data = { lotes: values };
     const response = await getUnidadesEducacionaisTercTotal(data);
     if (response.status === HTTP_STATUS.OK) {
       setUnidadesEducacionais(
-        response.data.map(unidade => ({
+        response.data.map((unidade) => ({
           label: unidade.codigo_eol_escola,
-          value: unidade.codigo_eol
+          value: unidade.codigo_eol,
         }))
       );
     } else {
@@ -52,7 +52,7 @@ export const Filtros = ({ ...props }) => {
     }
   };
 
-  const getFiltrosRelatorioDietasEspeciaisAsync = async values => {
+  const getFiltrosRelatorioDietasEspeciaisAsync = async (values) => {
     setFiltros(null);
     const response = await getFiltrosRelatorioDietasEspeciais(values);
     if (response.status === HTTP_STATUS.OK) {
@@ -77,9 +77,9 @@ export const Filtros = ({ ...props }) => {
             options={OPTIONS_STATUS_DIETA}
           />
           <OnChange name="status_selecionado">
-            {value => {
+            {(value) => {
               const params = {
-                status_selecionado: value
+                status_selecionado: value,
               };
               if (usuarioEhEmpresaTerceirizada()) {
                 params["terceirizada"] =
@@ -95,9 +95,11 @@ export const Filtros = ({ ...props }) => {
               <Field
                 component={InputComData}
                 label="Período de:"
-                name="data_inicial"
+                name="data_cancelamento_inicial"
                 placeholder="Selecione"
-                maxDate={moment(values.data_final, "DD/MM/YYYY")._d}
+                maxDate={
+                  moment(values.data_cancelamento_final, "DD/MM/YYYY")._d
+                }
                 minDate={null}
               />
             </div>
@@ -105,9 +107,11 @@ export const Filtros = ({ ...props }) => {
               <Field
                 component={InputComData}
                 label="Até:"
-                name="data_final"
+                name="data_cancelamento_final"
                 placeholder="Selecione"
-                minDate={moment(values.data_inicial, "DD/MM/YYYY")._d}
+                minDate={
+                  moment(values.data_cancelamento_inicial, "DD/MM/YYYY")._d
+                }
                 maxDate={new Date()}
               />
             </div>
@@ -121,18 +125,16 @@ export const Filtros = ({ ...props }) => {
               <>
                 <div className="row">
                   <div className="col-4">
-                    <label className="label font-weight-normal pb-2 pt-2">
-                      Lote
-                    </label>
+                    <label className="label fw-normal pb-2 pt-2">Lote</label>
                     <Field
                       component={StatefulMultiSelect}
                       name="lotes"
-                      options={filtros.lotes.map(lote => ({
+                      options={filtros.lotes.map((lote) => ({
                         label: lote.nome,
-                        value: lote.uuid
+                        value: lote.uuid,
                       }))}
                       selected={values.lotes_selecionados || []}
-                      onSelectedChanged={value =>
+                      onSelectedChanged={(value) =>
                         form.change("lotes_selecionados", value)
                       }
                       overrideStrings={{
@@ -140,11 +142,11 @@ export const Filtros = ({ ...props }) => {
                         selectSomeItems: "Selecione lotes",
                         allItemsAreSelected:
                           "Todos os lotes estão selecionados",
-                        selectAll: "Todos"
+                        selectAll: "Todos",
                       }}
                     />
                     <OnChange name="lotes_selecionados">
-                      {value => {
+                      {(value) => {
                         if (value && value.length === 0) {
                           setUnidadesEducacionais([]);
                           form.change(
@@ -158,18 +160,18 @@ export const Filtros = ({ ...props }) => {
                     </OnChange>
                   </div>
                   <div className="col-4">
-                    <label className="label font-weight-normal pb-2 pt-2">
+                    <label className="label fw-normal pb-2 pt-2">
                       Classificação da dieta
                     </label>
                     <Field
                       component={StatefulMultiSelect}
                       name="classificacoes"
-                      options={filtros.classificacoes.map(classificacao => ({
+                      options={filtros.classificacoes.map((classificacao) => ({
                         label: classificacao.nome,
-                        value: classificacao.id
+                        value: classificacao.id,
                       }))}
                       selected={values.classificacoes_selecionadas || []}
-                      onSelectedChanged={value =>
+                      onSelectedChanged={(value) =>
                         form.change("classificacoes_selecionadas", value)
                       }
                       overrideStrings={{
@@ -177,7 +179,7 @@ export const Filtros = ({ ...props }) => {
                         selectSomeItems: "Selecione classificações de dieta",
                         allItemsAreSelected:
                           "Todos as classificações estão selecionadas",
-                        selectAll: "Todas"
+                        selectAll: "Todas",
                       }}
                     />
                   </div>
@@ -185,22 +187,22 @@ export const Filtros = ({ ...props }) => {
                 <div className="row mt-3">
                   {!usuarioEhEmpresaTerceirizada() && (
                     <div className="col-4">
-                      <label className="label font-weight-normal pb-2 pt-2">
+                      <label className="label fw-normal pb-2 pt-2">
                         Relação por Diagnóstico
                       </label>
                       <Field
                         component={StatefulMultiSelect}
                         name="alergias_intolerancias"
                         options={filtros.alergias_intolerancias.map(
-                          alergia_intolerancia => ({
+                          (alergia_intolerancia) => ({
                             label: alergia_intolerancia.nome,
-                            value: alergia_intolerancia.id
+                            value: alergia_intolerancia.id,
                           })
                         )}
                         selected={
                           values.alergias_intolerancias_selecionadas || []
                         }
-                        onSelectedChanged={value =>
+                        onSelectedChanged={(value) =>
                           form.change(
                             "alergias_intolerancias_selecionadas",
                             value
@@ -211,27 +213,27 @@ export const Filtros = ({ ...props }) => {
                           selectSomeItems: "Selecione diagnósticos",
                           allItemsAreSelected:
                             "Todos os diagnósticos estão selecionados",
-                          selectAll: "Todos"
+                          selectAll: "Todos",
                         }}
                       />
                     </div>
                   )}
                   {usuarioEhEmpresaTerceirizada() && (
                     <div className="col-4">
-                      <label className="label font-weight-normal pb-2 pt-2">
+                      <label className="label fw-normal pb-2 pt-2">
                         Protocolo padrão
                       </label>
                       <Field
                         component={StatefulMultiSelect}
                         name="protocolos_padrao"
                         options={filtros.protocolos_padrao.map(
-                          protocolo_padrao => ({
+                          (protocolo_padrao) => ({
                             label: protocolo_padrao.nome,
-                            value: protocolo_padrao.uuid
+                            value: protocolo_padrao.uuid,
                           })
                         )}
                         selected={values.protocolos_padrao_selecionados || []}
-                        onSelectedChanged={value =>
+                        onSelectedChanged={(value) =>
                           form.change("protocolos_padrao_selecionados", value)
                         }
                         overrideStrings={{
@@ -239,13 +241,13 @@ export const Filtros = ({ ...props }) => {
                           selectSomeItems: "Selecione protocolos padrão",
                           allItemsAreSelected:
                             "Todos os protocolos padrão estão selecionados",
-                          selectAll: "Todos"
+                          selectAll: "Todos",
                         }}
                       />
                     </div>
                   )}
                   <div className="col-6">
-                    <label className="label font-weight-normal pb-2 pt-2">
+                    <label className="label fw-normal pb-2 pt-2">
                       Unidades Educacionais
                     </label>
                     <Spin
@@ -263,7 +265,7 @@ export const Filtros = ({ ...props }) => {
                         selected={
                           values.unidades_educacionais_selecionadas || []
                         }
-                        onSelectedChanged={value => {
+                        onSelectedChanged={(value) => {
                           form.change(
                             "unidades_educacionais_selecionadas",
                             value
@@ -274,7 +276,7 @@ export const Filtros = ({ ...props }) => {
                           selectSomeItems: "Selecione unidades educacionais",
                           allItemsAreSelected:
                             "Todos as unidades estão selecionadas",
-                          selectAll: "Todas"
+                          selectAll: "Todas",
                         }}
                         disabled={!values.lotes_selecionados}
                       />
@@ -283,7 +285,7 @@ export const Filtros = ({ ...props }) => {
                 </div>
 
                 <div className="row mt-3">
-                  <div className="col-12 text-right">
+                  <div className="col-12 text-end">
                     <Botao
                       texto="Limpar Filtros"
                       style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -299,7 +301,7 @@ export const Filtros = ({ ...props }) => {
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                       icon={BUTTON_ICON.FILTER}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

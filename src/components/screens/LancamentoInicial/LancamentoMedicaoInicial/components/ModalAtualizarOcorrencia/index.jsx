@@ -7,7 +7,7 @@ import { OnChange } from "react-final-form-listeners";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { OPCOES_AVALIACAO_A_CONTENTO } from "../LancamentoPorPeriodo/helpers";
 import InputFile from "components/Shareable/Input/InputFile";
@@ -15,7 +15,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import CKEditorField from "components/Shareable/CKEditorField";
 import {
   peloMenosUmCaractere,
-  textAreaRequired
+  textAreaRequired,
 } from "helpers/fieldValidators";
 import { composeValidators } from "helpers/utilities";
 import { updateOcorrenciaSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
@@ -26,32 +26,31 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
     closeModal,
     solicitacaoMedicaoInicial,
     onClickInfoBasicas,
-    setObjSolicitacaoMIFinalizada
+    setObjSolicitacaoMIFinalizada,
   } = props;
 
   const [opcaoSelecionada, setOpcaoSelecionada] = useState(null);
   const [disableFinalizarMedicao, setDisableFinalizarMedicao] = useState(true);
-  const [showButtonAnexarPlanilha, setShowButtonAnexarPlanilha] = useState(
-    false
-  );
+  const [showButtonAnexarPlanilha, setShowButtonAnexarPlanilha] =
+    useState(false);
   const [arquivo, setArquivo] = useState([]);
   const [validationFile, setValidationFile] = useState({ touched: false });
   const [justificativa, setJustificativa] = useState(null);
 
-  const isValidFiles = files => {
+  const isValidFiles = (files) => {
     let validation = { touched: true };
-    files.forEach(element => {
+    files.forEach((element) => {
       const base64Ext = element.base64.split(";")[0];
       if (base64Ext.includes("pdf")) {
         validation = {
           ...validation,
-          pdf: true
+          pdf: true,
         };
       }
       if (base64Ext.includes("spreadsheetml")) {
         validation = {
           ...validation,
-          xls: true
+          xls: true,
         };
       }
     });
@@ -67,7 +66,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
     setValidationFile(validation);
   };
 
-  const handleOnChange = event => {
+  const handleOnChange = (event) => {
     if (opcaoSelecionada === OPCOES_AVALIACAO_A_CONTENTO.NAO_COM_OCORRENCIAS) {
       setArquivo([]);
     }
@@ -100,7 +99,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
     setArquivo(arquivos);
   };
 
-  const setFiles = files => {
+  const setFiles = (files) => {
     let arquivos = arquivo;
     arquivos = files;
     isValidFiles(arquivos);
@@ -122,10 +121,10 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
 
     if (!opcaoSelecionada) {
       let payloadAnexos = [];
-      arquivo.forEach(element => {
+      arquivo.forEach((element) => {
         payloadAnexos.push({
           nome: String(element.nome),
-          base64: String(element.base64)
+          base64: String(element.base64),
         });
       });
       data.append("anexos", JSON.stringify(payloadAnexos));
@@ -156,7 +155,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
       <Modal.Body>
         <div className="row">
           <div className="col">
-            <p className="ml-2">
+            <p className="ms-2">
               Neste mês, a direção da Unidade Educacional considera que o
               serviço foi realizado a contento?
             </p>
@@ -164,7 +163,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
         </div>
         <div className="row">
           <Radio.Group
-            onChange={event => handleOnChange(event)}
+            onChange={(event) => handleOnChange(event)}
             value={opcaoSelecionada}
           >
             <Radio
@@ -201,7 +200,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
                     )}
                   />
                   <OnChange name="justificativa">
-                    {async value => {
+                    {async (value) => {
                       form.change("justificativa", value);
                       setJustificativa(value);
                       if (
@@ -228,7 +227,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
                   </OnChange>
                 </div>
               ) : null}
-              <div className="row pl-2">
+              <div className="row ps-2">
                 {showButtonAnexarPlanilha && (
                   <div className="col-12">
                     <Field
@@ -264,14 +263,14 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
               type={BUTTON_TYPE.BUTTON}
               onClick={() => handleHideModal()}
               style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto="Finalizar Atualização"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => handleFinalizarAtualizacao()}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               disabled={disableFinalizarMedicao}
             />
           </div>

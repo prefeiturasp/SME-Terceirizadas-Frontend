@@ -11,22 +11,21 @@ import Page from "../../components/Shareable/Page/Page";
 import Relatorio from "../../../pages/DietaEspecial/Relatorio";
 import {
   toastSuccess,
-  toastError
+  toastError,
 } from "../../components/Shareable/Toast/dialogs";
 
 import "./style.scss";
 
 import {
   getSolicitacaoDietaEspecial,
-  terceirizadaTomarCiencia
+  terceirizadaTomarCiencia,
 } from "../../services/painelNutricionista.service";
 
 export default class RelatorioPage extends Component {
   constructor(props) {
     super(props);
-    this.onTerceirizadaTomarCiencia = this.onTerceirizadaTomarCiencia.bind(
-      this
-    );
+    this.onTerceirizadaTomarCiencia =
+      this.onTerceirizadaTomarCiencia.bind(this);
   }
 
   UNSAFE_componentWillMount = async () => {
@@ -36,7 +35,7 @@ export default class RelatorioPage extends Component {
       const dietaEspecial = await getSolicitacaoDietaEspecial(uuid);
       this.setState({
         dietaEspecial: dietaEspecial.results,
-        mostrarBotaoTomarCiencia: true
+        mostrarBotaoTomarCiencia: true,
       });
     }
   };
@@ -48,7 +47,7 @@ export default class RelatorioPage extends Component {
           style={BUTTON_STYLE.GREEN}
           onClick={this.onTerceirizadaTomarCiencia}
           texto="Ciente"
-          className="float-right"
+          className="float-end"
         />
       </div>
     </div>
@@ -59,7 +58,7 @@ export default class RelatorioPage extends Component {
     if (resposta.status === 200) {
       toastSuccess(resposta.data.mensagem);
       this.setState({
-        mostrarBotaoTomarCiencia: false
+        mostrarBotaoTomarCiencia: false,
       });
     } else {
       toastError(`Erro ao tomar ciência: ${resposta}`);
@@ -69,13 +68,13 @@ export default class RelatorioPage extends Component {
   render() {
     const atual = {
       href: "#",
-      titulo: "Relatório"
+      titulo: "Relatório",
     };
     const anteriores = [
       {
         href: `/${constants.RELATORIOS}`,
-        titulo: "Dietas Especiais"
-      }
+        titulo: "Dietas Especiais",
+      },
     ];
     const { dietaEspecial, mostrarBotaoTomarCiencia } = this.state;
     const botao =

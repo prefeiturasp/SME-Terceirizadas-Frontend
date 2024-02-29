@@ -9,7 +9,7 @@ import { InputComData } from "../../../../Shareable/DatePicker";
 import { Botao } from "../../../../Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "../../../../Shareable/Botao/constants";
 import { required } from "../../../../../helpers/fieldValidators";
 import {
@@ -17,7 +17,7 @@ import {
   STATUS_SOLICITACAO,
   ENTER,
   DATA_MINIMA,
-  DATA_MAXIMA
+  DATA_MAXIMA,
 } from "./constantes";
 import { toastError } from "../../../../Shareable/Toast/dialogs";
 import "./style.scss";
@@ -26,7 +26,7 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   converterDDMMYYYYparaYYYYMMDD,
   usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaTerceirizadaDiretor
+  usuarioEhEscolaTerceirizadaDiretor,
 } from "../../../../../helpers/utilities";
 import { formataValues } from "./helper";
 import { getEscolasSimplissimaPorDiretoriaRegional } from "../../../../../services/escola.service";
@@ -41,7 +41,7 @@ class FiltrosDeBusca extends Component {
       dataAte: null,
       paginacao: null,
       values: null,
-      escolasState: null
+      escolasState: null,
     };
   }
 
@@ -80,18 +80,18 @@ class FiltrosDeBusca extends Component {
       this.setState({ dataAte: moment(new Date())._d });
     } else {
       this.setState({
-        dataAte: moment(dataDe, "DD/MM/YYYY").add(30, "days")["_d"]
+        dataAte: moment(dataDe, "DD/MM/YYYY").add(30, "days")["_d"],
       });
     }
   }
 
-  onRequest = values => {
+  onRequest = (values) => {
     const data_de = converterDDMMYYYYparaYYYYMMDD(values.data_de);
     const data_ate = converterDDMMYYYYparaYYYYMMDD(values.data_ate);
     this.props.setaValuesForm(values);
     this.props
       .getPedidosESolicitacoesFiltro(formataValues(values), data_de, data_ate)
-      .then(response => {
+      .then((response) => {
         this.props.setaPaginacao(response.count);
         if (response.results.length > 0) {
           this.props.renderizarRelatorio(response.results, response.count);
@@ -108,18 +108,18 @@ class FiltrosDeBusca extends Component {
       this.props.change("unidade_escolar", TODOS);
     } else {
       this.setState({
-        escolasState: [{ nome: "Carregando...", uuid: "Carregando..." }]
+        escolasState: [{ nome: "Carregando...", uuid: "Carregando..." }],
       });
-      getEscolasSimplissimaPorDiretoriaRegional(value).then(escolasState => {
+      getEscolasSimplissimaPorDiretoriaRegional(value).then((escolasState) => {
         if (escolasState.length > 0)
           this.setState({
-            escolasState: [{ nome: TODOS, uuid: TODOS }].concat(escolasState)
+            escolasState: [{ nome: TODOS, uuid: TODOS }].concat(escolasState),
           });
         else
           this.setState({
             escolasState: [
-              { nome: "Nenhum resultado", uuid: "Nenhum resultado" }
-            ]
+              { nome: "Nenhum resultado", uuid: "Nenhum resultado" },
+            ],
           });
       });
     }
@@ -127,12 +127,8 @@ class FiltrosDeBusca extends Component {
 
   render() {
     const { dataDe, dataAte, escolasState } = this.state;
-    const {
-      handleSubmit,
-      escolas,
-      diretoriasRegionais,
-      diretoria_regional
-    } = this.props;
+    const { handleSubmit, escolas, diretoriasRegionais, diretoria_regional } =
+      this.props;
     return (
       <div>
         {!escolas ? (
@@ -151,7 +147,7 @@ class FiltrosDeBusca extends Component {
                     <Field
                       name="diretoria_regional"
                       component={Select}
-                      onChange={event =>
+                      onChange={(event) =>
                         this.onDiretoriaRegionalChanged(event.target.value)
                       }
                       options={diretoriasRegionais}
@@ -173,7 +169,7 @@ class FiltrosDeBusca extends Component {
                       validate={required}
                       minDate={DATA_MINIMA}
                       maxDate={DATA_MAXIMA}
-                      onChange={value => {
+                      onChange={(value) => {
                         this.setState({ dataDe: value });
                         this.setaLimiteDeData(value);
                       }}
@@ -224,10 +220,12 @@ class FiltrosDeBusca extends Component {
                     <div className="filtrar">
                       <Botao
                         texto={"Filtrar"}
-                        className={"pr-3 pl-3"}
+                        className={"pe-3 ps-3"}
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN}
-                        onClick={handleSubmit(values => this.onRequest(values))}
+                        onClick={handleSubmit((values) =>
+                          this.onRequest(values)
+                        )}
                       />
                     </div>
                   </div>
@@ -243,24 +241,21 @@ class FiltrosDeBusca extends Component {
 
 const FiltrosDeBuscaForm = reduxForm({
   form: "filtrosDeBuscaForm",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(FiltrosDeBusca);
 const selector = formValueSelector("filtrosDeBuscaForm");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     initialValues: state.FiltrosDeBuscaForm.data,
-    diretoria_regional: selector(state, "diretoria_regional")
+    diretoria_regional: selector(state, "diretoria_regional"),
   };
 };
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   bindActionCreators(
     {
-      loadFiltroBusca
+      loadFiltroBusca,
     },
     dispatch
   );
 };
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FiltrosDeBuscaForm);
+export default connect(mapStateToProps, mapDispatchToProps)(FiltrosDeBuscaForm);

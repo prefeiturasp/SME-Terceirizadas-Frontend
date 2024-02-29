@@ -6,19 +6,19 @@ import {
   CADASTROS,
   CONFIGURACOES,
   EDICAO_PRODUTOS,
-  PRODUTOS
+  PRODUTOS,
 } from "configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${EDICAO_PRODUTOS}`,
-  titulo: "Editar Cadastro de Produto"
+  titulo: "Editar Cadastro de Produto",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
-  }
+    titulo: "Cadastros",
+  },
 ];
 
 export default () => (

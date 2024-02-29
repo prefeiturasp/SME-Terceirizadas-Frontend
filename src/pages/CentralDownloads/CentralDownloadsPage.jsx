@@ -7,7 +7,7 @@ import CentralDownloads from "components/screens/CentralDownloads";
 
 const atual = {
   href: `/${CENTRAL_DOWNLOADS}`,
-  titulo: "Central de Downloads"
+  titulo: "Central de Downloads",
 };
 
 export default () => (

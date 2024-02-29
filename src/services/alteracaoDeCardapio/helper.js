@@ -2,10 +2,10 @@ import {
   API_ALTERACOES_CARDAPIO,
   API_ALTERACOES_CARDAPIO_CEI,
   API_ALTERACOES_CARDAPIO_CEMEI,
-  TIPO_SOLICITACAO
+  TIPO_SOLICITACAO,
 } from "services/constants";
 
-export const getPath = tipoSolicitacao => {
+export const getPath = (tipoSolicitacao) => {
   switch (tipoSolicitacao) {
     case TIPO_SOLICITACAO.SOLICITACAO_NORMAL:
       return API_ALTERACOES_CARDAPIO;

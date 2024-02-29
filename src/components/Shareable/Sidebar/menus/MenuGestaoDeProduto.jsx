@@ -6,7 +6,7 @@ import {
   PESQUISA_DESENVOLVIMENTO,
   RECLAMACAO_DE_PRODUTO,
   AVALIAR_RECLAMACAO_PRODUTO,
-  ATIVACAO_DE_PRODUTO
+  ATIVACAO_DE_PRODUTO,
 } from "configs/constants";
 import { listarCardsPermitidos, CADASTROS } from "helpers/gestaoDeProdutos";
 import {
@@ -14,7 +14,7 @@ import {
   usuarioEhEscolaTerceirizada,
   usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEGestaoProduto,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
 } from "helpers/utilities";
 
 const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {

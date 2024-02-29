@@ -8,14 +8,14 @@ import { ASelect } from "components/Shareable/MakeField";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 
 import {
   getNomesProdutos,
   getNomesMarcas,
-  getNomesFabricantes
+  getNomesFabricantes,
 } from "services/produto.service";
 
 import { getOpcoesStatusReclamacao, getTodosStatusReclamacao } from "./helpers";
@@ -30,7 +30,7 @@ const initialState = {
   opcoesStatusReclamacao: [],
   dataMinima: null,
   dataMaxima: null,
-  statusReclamacaoPadrao: "Selecione"
+  statusReclamacaoPadrao: "Selecione",
 };
 
 const FORM_NAME = "buscaAvancadaProduto";
@@ -44,7 +44,7 @@ function reducer(state, { type: actionType, payload }) {
         return { ...state, [payload.filtro]: [] };
       }
       const reg = new RegExp(payload.searchText, "i");
-      const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
+      const filtrado = state.dados[payload.filtro].filter((el) => reg.test(el));
       return { ...state, [payload.filtro]: filtrado };
     }
     case "resetar":
@@ -64,15 +64,15 @@ const FormBuscaProduto = ({ setFiltros, setPage }) => {
       Promise.all([
         getNomesProdutos(),
         getNomesMarcas(),
-        getNomesFabricantes()
+        getNomesFabricantes(),
       ]).then(([produtos, marcas, fabricantes]) => {
         dispatch({
           type: "popularDados",
           payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome)
-          }
+            produtos: produtos.data.results.map((el) => el.nome),
+            marcas: marcas.data.results.map((el) => el.nome),
+            fabricantes: fabricantes.data.results.map((el) => el.nome),
+          },
         });
       });
     }
@@ -84,8 +84,8 @@ const FormBuscaProduto = ({ setFiltros, setPage }) => {
       type: "atualizarFiltro",
       payload: {
         filtro,
-        searchText
-      }
+        searchText,
+      },
     });
   };
 
@@ -99,7 +99,7 @@ const FormBuscaProduto = ({ setFiltros, setPage }) => {
     });
   };
 
-  const onSubmit = values => {
+  const onSubmit = (values) => {
     let formValues = null;
     if (values.status_reclamacao === "Selecione")
       formValues = { ...values, status_reclamacao: getTodosStatusReclamacao() };
@@ -123,7 +123,7 @@ const FormBuscaProduto = ({ setFiltros, setPage }) => {
                 label="Nome do Produto"
                 placeholder="Digite nome do produto"
                 className="input-busca-produto"
-                onSearch={v => onSearch("produtos", v)}
+                onSearch={(v) => onSearch("produtos", v)}
                 name="nome_produto"
               />
             </div>
@@ -147,7 +147,7 @@ const FormBuscaProduto = ({ setFiltros, setPage }) => {
                 className="input-busca-produto"
                 label="Marca do Produto"
                 placeholder="Digite marca do produto"
-                onSearch={v => onSearch("marcas", v)}
+                onSearch={(v) => onSearch("marcas", v)}
                 name="nome_marca"
               />
             </div>
@@ -157,14 +157,14 @@ const FormBuscaProduto = ({ setFiltros, setPage }) => {
                 dataSource={state.fabricantes}
                 label="Fabricante do Produto"
                 placeholder="Digite fabricante do produto"
-                onSearch={v => onSearch("fabricantes", v)}
+                onSearch={(v) => onSearch("fabricantes", v)}
                 name="nome_fabricante"
               />
             </div>
 
             <div className="col-12 col-md-4 col-xl-4">
               <div className="row">
-                <label className="ml-3">Data da reclamação</label>
+                <label className="ms-3">Data da reclamação</label>
               </div>
               <div className="row">
                 <div className="col mt-1">
@@ -206,14 +206,14 @@ const FormBuscaProduto = ({ setFiltros, setPage }) => {
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
             <Botao
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
               onClick={() => {
                 form.reset({ status_reclamacao: state.statusReclamacaoPadrao });

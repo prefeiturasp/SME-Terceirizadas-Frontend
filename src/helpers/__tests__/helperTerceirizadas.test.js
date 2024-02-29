@@ -9,32 +9,32 @@ const DADOS_TESTE_RELATORIO_QUANTITATIVO = {
       qtde_por_status: [
         {
           status: "CODAE_NAO_HOMOLOGADO",
-          qtde: 1
+          qtde: 1,
         },
         {
           status: "TERCEIRIZADA_RESPONDEU_RECLAMACAO",
-          qtde: 1
-        }
-      ]
+          qtde: 1,
+        },
+      ],
     },
     {
       nome_terceirizada: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
       qtde_por_status: [
         {
           status: "CODAE_HOMOLOGADO",
-          qtde: 1
+          qtde: 1,
         },
         {
           status: "CODAE_NAO_HOMOLOGADO",
-          qtde: 1
+          qtde: 1,
         },
         {
           status: "CODAE_PEDIU_ANALISE_RECLAMACAO",
-          qtde: 1
-        }
-      ]
-    }
-  ]
+          qtde: 1,
+        },
+      ],
+    },
+  ],
 };
 
 const RESULTADO_RELATORIO_QUANTITATIVO = {
@@ -52,8 +52,8 @@ const RESULTADO_RELATORIO_QUANTITATIVO = {
         PRODUTOS_AGUARDANDO_ANALISE_SENSORIAL: 0,
         PRODUTOS_AGUARDANDO_CORRECAO: 0,
         PRODUTOS_HOMOLOGADOS: 0,
-        PRODUTOS_NAO_HOMOLOGADOS: 1
-      }
+        PRODUTOS_NAO_HOMOLOGADOS: 1,
+      },
     },
     {
       nomeTerceirizada: "SINGULAR GESTÃO DE SERVIÇOS LTDA",
@@ -66,10 +66,10 @@ const RESULTADO_RELATORIO_QUANTITATIVO = {
         PRODUTOS_AGUARDANDO_ANALISE_SENSORIAL: 0,
         PRODUTOS_AGUARDANDO_CORRECAO: 0,
         PRODUTOS_HOMOLOGADOS: 1,
-        PRODUTOS_NAO_HOMOLOGADOS: 1
-      }
-    }
-  ]
+        PRODUTOS_NAO_HOMOLOGADOS: 1,
+      },
+    },
+  ],
 };
 
 describe("test helperTerceirizadas", () => {

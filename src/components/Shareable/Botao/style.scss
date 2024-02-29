@@ -127,16 +127,16 @@ button.general-button {
   }
   &.red-button {
     color: $white;
-    border: 1.5px solid $redToastError;
-    background-color: $redToastError;
+    border: 1.5px solid $redCard;
+    background-color: $redCard;
     i {
       color: $white;
     }
     &:hover {
-      color: $redToastError;
+      color: $redCard;
       background-color: $white;
       i {
-        color: $redToastError;
+        color: $redCard;
       }
     }
     &:disabled {
@@ -146,15 +146,15 @@ button.general-button {
     }
   }
   &.red-button-outline {
-    color: $redToastError;
-    border: 1px solid $redToastError;
+    color: $redCard;
+    border: 1px solid $redCard;
     background-color: transparent;
     i {
-      color: $redToastError;
+      color: $redCard;
     }
     &:hover {
       color: $white;
-      background-color: $redToastError;
+      background-color: $redCard;
       i {
         color: $white;
       }
@@ -179,6 +179,30 @@ button.general-button {
     &:hover:not(:disabled) {
       color: $white;
       background-color: $blackInput;
+      i {
+        color: $white;
+      }
+    }
+    &:disabled {
+      background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
+
+  &.orange-button-outline {
+    color: $orange;
+    border: 1px solid $orange;
+    background-color: transparent;
+    &:not(:disabled) {
+      i {
+        color: $orange;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      color: $white;
+      background-color: $orange;
       i {
         color: $white;
       }

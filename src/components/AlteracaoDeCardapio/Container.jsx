@@ -1,59 +1,102 @@
-import React, { Component } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import AlteracaoDeCardapio from ".";
-import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
+import { agregarDefault, dataParaUTC } from "helpers/utilities";
 import { getMotivosAlteracaoCardapio } from "services/alteracaoDeCardapio";
-import { getDiasUteis, getFeriadosAno } from "../../services/diasUteis.service";
-import { meusDados } from "../../services/perfil.service";
+import { getDiasUteis, getFeriadosAno } from "services/diasUteis.service";
+import MeusDadosContext from "context/MeusDadosContext";
 
-class Container extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      meusDados: null,
-      motivos: [],
-      periodos: [],
-      proximos_dois_dias_uteis: null,
-      proximos_cinco_dias_uteis: null,
-      feriados_ano: null
-    };
-  }
+export const Container = () => {
+  const { meusDados } = useContext(MeusDadosContext);
 
-  componentDidMount() {
-    meusDados().then(response => {
-      this.setState({
-        meusDados: response,
-        periodos: response.vinculo_atual.instituicao.periodos_escolares
-      });
-    });
+  const [motivos, setMotivos] = useState();
+  const [periodos, setPeriodos] = useState();
+  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState();
+  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState();
+  const [feriados, setFeriados] = useState();
 
-    getMotivosAlteracaoCardapio().then(response => {
-      this.setState({
-        motivos: agregarDefault(response.data.results)
-      });
-    });
+  const [erro, setErro] = useState("");
 
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_cinco_dias_uteis)
+  const getMotivosAlteracaoCardapioAsync = async () => {
+    const response = await getMotivosAlteracaoCardapio();
+    if (response.status === HTTP_STATUS.OK) {
+      setMotivos(agregarDefault(response.data.results));
+    } else {
+      setErro(
+        "Erro ao carregar motivos de alteração de cardápio. Tente novamente mais tarde."
       );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_dois_dias_uteis)
+    }
+  };
+
+  const getDiasUteisAsync = async () => {
+    const response = await getDiasUteis({
+      escola_uuid: meusDados.vinculo_atual.instituicao.uuid,
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setProximosDoisDiasUteis(
+        dataParaUTC(new Date(response.data.proximos_dois_dias_uteis))
       );
-      this.setState({
-        proximos_dois_dias_uteis,
-        proximos_cinco_dias_uteis
-      });
-    });
+      setProximosCincoDiasUteis(
+        dataParaUTC(new Date(response.data.proximos_cinco_dias_uteis))
+      );
+    } else {
+      setErro(
+        "Erro ao carregar quais são os dias úteis deste tipo de unidade. Tente novamente mais tarde."
+      );
+    }
+  };
 
-    getFeriadosAno().then(response => {
-      const feriados_ano = response.data.results;
-      this.setState({ feriados_ano });
-    });
-  }
+  const getFeriadosAnoAsync = async () => {
+    const response = await getFeriadosAno();
+    if (response.status === HTTP_STATUS.OK) {
+      setFeriados(response.data.results);
+    } else {
+      setErro(
+        "Erro ao carregar quais são os feriados deste ano. Tente novamente mais tarde."
+      );
+    }
+  };
 
-  render() {
-    return <AlteracaoDeCardapio {...this.state} />;
-  }
-}
+  const requisicoesPreRender = async () => {
+    await Promise.all([
+      getMotivosAlteracaoCardapioAsync(),
+      getFeriadosAnoAsync(),
+    ]);
+  };
 
-export default Container;
+  useEffect(() => {
+    requisicoesPreRender();
+  }, []);
+
+  useEffect(() => {
+    if (meusDados) {
+      setPeriodos(meusDados.vinculo_atual.instituicao.periodos_escolares);
+      getDiasUteisAsync();
+    }
+  }, [meusDados]);
+
+  const REQUISICOES_CONCLUIDAS =
+    meusDados &&
+    motivos &&
+    periodos &&
+    proximosDoisDiasUteis &&
+    proximosCincoDiasUteis &&
+    feriados;
+
+  return (
+    <div className="mt-3">
+      {!REQUISICOES_CONCLUIDAS && !erro && <div>Carregando...</div>}
+      {!!erro && <div>{erro}</div>}
+      {REQUISICOES_CONCLUIDAS && (
+        <AlteracaoDeCardapio
+          meusDados={meusDados}
+          motivos={motivos}
+          periodos={periodos}
+          proximos_cinco_dias_uteis={proximosCincoDiasUteis}
+          proximos_dois_dias_uteis={proximosDoisDiasUteis}
+          feriados_ano={feriados}
+        />
+      )}
+    </div>
+  );
+};

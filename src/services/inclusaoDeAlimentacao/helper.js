@@ -3,10 +3,10 @@ import {
   URL_INCLUSAO_NORMAL,
   URL_INCLUSAO_CONTINUA,
   URL_INCLUSAO_CEI,
-  URL_INCLUSAO_CEMEI
+  URL_INCLUSAO_CEMEI,
 } from "../constants";
 
-export const getPath = tipoSolicitacao => {
+export const getPath = (tipoSolicitacao) => {
   switch (tipoSolicitacao) {
     case TIPO_SOLICITACAO.SOLICITACAO_NORMAL:
       return URL_INCLUSAO_NORMAL;

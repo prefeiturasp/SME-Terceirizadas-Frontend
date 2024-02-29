@@ -5,7 +5,7 @@ import {
   CONFERENCIA_GUIA,
   LOGISTICA,
   REPOSICAO_GUIA,
-  DETALHAMENTO_GUIA
+  DETALHAMENTO_GUIA,
 } from "configs/constants";
 import { NavLink } from "react-router-dom";
 import { imprimirGuiaRemessa } from "services/logistica.service.js";
@@ -17,17 +17,17 @@ import TooltipIcone from "components/Shareable/TooltipIcone";
 const ListagemSolicitacoes = ({ guias }) => {
   const [carregando, setCarregando] = useState(false);
 
-  const checaReposicao = guia => {
-    let alimentosPendentes = guia.alimentos.filter(alimento => {
+  const checaReposicao = (guia) => {
+    let alimentosPendentes = guia.alimentos.filter((alimento) => {
       return (
-        alimento.embalagens.filter(embalagem => embalagem.qtd_a_receber !== 0)
+        alimento.embalagens.filter((embalagem) => embalagem.qtd_a_receber !== 0)
           .length > 0
       );
     });
     return alimentosPendentes.length > 0;
   };
 
-  const baixarPDFGuiaRemessa = guia => {
+  const baixarPDFGuiaRemessa = (guia) => {
     setCarregando(true);
     let uuid = guia.uuid;
     let numero = guia.numero_guia;
@@ -35,13 +35,13 @@ const ListagemSolicitacoes = ({ guias }) => {
       .then(() => {
         setCarregando(false);
       })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
   };
 
-  const retornaBotaoAcao = guia => {
+  const retornaBotaoAcao = (guia) => {
     if (
       ["Recebimento parcial", "Não recebida"].includes(guia.status) &&
       checaReposicao(guia) &&
@@ -50,7 +50,7 @@ const ListagemSolicitacoes = ({ guias }) => {
       return (
         <>
           <NavLink
-            className="float-left"
+            className="float-start"
             to={`/${LOGISTICA}/${REPOSICAO_GUIA}?uuid=${guia.uuid}`}
           >
             <span className="link-acoes green">Reposição</span>
@@ -66,7 +66,7 @@ const ListagemSolicitacoes = ({ guias }) => {
       return (
         <>
           <NavLink
-            className="float-left"
+            className="float-start"
             to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`}
           >
             <span className="link-acoes green">Conferir entrega</span>
@@ -80,10 +80,8 @@ const ListagemSolicitacoes = ({ guias }) => {
       const editarConferencia = (
         <>
           <NavLink
-            className="float-left"
-            to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${
-              guia.uuid
-            }&editar=true`}
+            className="float-start"
+            to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}&editar=true`}
           >
             <span className="link-acoes green">Editar Conferência</span>
           </NavLink>
@@ -94,7 +92,7 @@ const ListagemSolicitacoes = ({ guias }) => {
       const editarReposicao = (
         <>
           <NavLink
-            className="float-left"
+            className="float-start"
             to={`/${LOGISTICA}/${REPOSICAO_GUIA}?uuid=${guia.uuid}&editar=true`}
           >
             <span className="link-acoes green">Editar Reposição</span>
@@ -131,7 +129,7 @@ const ListagemSolicitacoes = ({ guias }) => {
             <div>Conferência de Entregas</div>
             <div>Opções</div>
           </div>
-          {guias.map(guia => {
+          {guias.map((guia) => {
             return (
               <>
                 <div key={guia.uuid} className="grid-table body-table">
@@ -151,10 +149,8 @@ const ListagemSolicitacoes = ({ guias }) => {
                   <div className="opcoes-entregas">
                     <span className="link-acoes px-2">
                       <NavLink
-                        className="float-left"
-                        to={`/${LOGISTICA}/${DETALHAMENTO_GUIA}?uuid=${
-                          guia.uuid
-                        }`}
+                        className="float-start"
+                        to={`/${LOGISTICA}/${DETALHAMENTO_GUIA}?uuid=${guia.uuid}`}
                       >
                         <Tooltip title="Detalhar guia">
                           <i className="fas fa-eye" />

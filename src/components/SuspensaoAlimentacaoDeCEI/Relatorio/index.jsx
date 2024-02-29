@@ -5,7 +5,7 @@ import CorpoRelatorio from "./components/CorpoRelatorio";
 import ModalCancelaSuspensao from "./components/ModalCancelaSuspensao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
@@ -14,7 +14,7 @@ import { statusEnum } from "constants/shared";
 import { TERCEIRIZADA } from "configs/constants";
 import {
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada
+  usuarioEhEscolaTerceirizada,
 } from "helpers/utilities";
 import { getSuspensaoAlimentacaoCEI } from "services/suspensaoAlimentacaoCei.service";
 import "./style.scss";
@@ -23,9 +23,8 @@ export default ({ ...props }) => {
   const [carregando, setCarregando] = useState(true);
   const [solicitacaoSuspensao, setSolicitacaoSuspensao] = useState(undefined);
   const [showModal, setShowModal] = useState(false);
-  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
-    false
-  );
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] =
+    useState(false);
 
   const { visao } = props;
 
@@ -33,7 +32,7 @@ export default ({ ...props }) => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      await getSuspensaoAlimentacaoCEI(uuid).then(response => {
+      await getSuspensaoAlimentacaoCEI(uuid).then((response) => {
         setSolicitacaoSuspensao(response.data);
       });
     }
@@ -44,7 +43,7 @@ export default ({ ...props }) => {
     fetchData();
   }, []);
 
-  const loadSolicitacao = async uuid => {
+  const loadSolicitacao = async (uuid) => {
     const response = await getSuspensaoAlimentacaoCEI(uuid);
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacaoSuspensao(response.data);
@@ -63,7 +62,7 @@ export default ({ ...props }) => {
       <span className="page-title">{`Suspensão de Alimentação - Solicitação # ${
         solicitacaoSuspensao ? solicitacaoSuspensao.id_externo : ""
       }`}</span>
-      <div className="card mt-3 card-relatorio-suspensao pl-3 pr-3">
+      <div className="card mt-3 card-relatorio-suspensao ps-3 pe-3">
         <div className="card-body">
           {solicitacaoSuspensao && (
             <CorpoRelatorio solicitacaoSuspensao={solicitacaoSuspensao} />
@@ -80,7 +79,7 @@ export default ({ ...props }) => {
               <>
                 {" "}
                 <div className="row">
-                  <div className="col-12 text-right">
+                  <div className="col-12 text-end">
                     <Botao
                       texto="Cancelar"
                       onClick={() => setShowModal(true)}
@@ -98,10 +97,10 @@ export default ({ ...props }) => {
               </>
             )}
           {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-            <div className="form-group float-right mt-4">
+            <div className="form-group float-end mt-4">
               {solicitacaoSuspensao.terceirizada_conferiu_gestao ? (
-                <label className="ml-3 conferido">
-                  <i className="fas fa-check mr-2" />
+                <label className="ms-3 conferido">
+                  <i className="fas fa-check me-2" />
                   Solicitação Conferida
                 </label>
               ) : (
@@ -109,7 +108,7 @@ export default ({ ...props }) => {
                   texto="Marcar Conferência"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
-                  className="ml-3"
+                  className="ms-3"
                   onClick={() => {
                     setShowModalMarcarConferencia(true);
                   }}

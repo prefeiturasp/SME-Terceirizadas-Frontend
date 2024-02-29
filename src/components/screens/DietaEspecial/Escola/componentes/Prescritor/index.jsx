@@ -6,7 +6,7 @@ import {
   minLength,
   required,
   numericInteger,
-  maxLength
+  maxLength,
 } from "helpers/fieldValidators";
 
 const minLength6 = minLength(6);

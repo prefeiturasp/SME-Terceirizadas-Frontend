@@ -11,7 +11,7 @@ import {
   // escola
   escolaCancelarSolicitacaoDeAlteracaoDeCardapio,
   terceirizadaRespondeQuestionamentoAlteracaoCardapio,
-  TerceirizadaTomaCienciaAlteracaoCardapio
+  TerceirizadaTomaCienciaAlteracaoCardapio,
 } from "services/alteracaoDeCardapio";
 import { getMotivosDREnaoValida } from "services/relatorios";
 import Relatorio from "../../components/AlteracaoDeCardapio/Relatorio";
@@ -41,7 +41,7 @@ export const RelatorioBase = ({ ...props }) => {
 
   const atual = {
     href: "#",
-    titulo: "Relatório"
+    titulo: "Relatório",
   };
 
   return (

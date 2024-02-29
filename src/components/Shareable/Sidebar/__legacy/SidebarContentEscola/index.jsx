@@ -15,7 +15,7 @@ import {
   SUSPENSAO_ALIMENTACAO,
   CONFIGURACOES,
   CADASTROS,
-  HORARIO_COMBOS_ALIMENTACAO
+  HORARIO_COMBOS_ALIMENTACAO,
 } from "../../../../../configs/constants";
 import { PERFIL } from "../../../../../constants/shared";
 
@@ -27,7 +27,7 @@ export class SidebarContentEscola extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      subMenu: ""
+      subMenu: "",
     };
   }
 
@@ -65,16 +65,11 @@ export class SidebarContentEscola extends Component {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to="/painel-gestao-alimentacao"
-            >
+            <NavLink className="collapse-item" to="/painel-gestao-alimentacao">
               Painel de Solicitações
             </NavLink>
             <NavLink
               onClick={() => this.onSubmenuClick("novas-solicitacoes")}
-              activeClassName="active"
               className="collapse-item"
               to="#"
             >
@@ -84,35 +79,30 @@ export class SidebarContentEscola extends Component {
             {subMenu === "novas-solicitacoes" && (
               <div className="submenu">
                 <NavLink
-                  activeClassName="active"
                   className="collapse-item"
                   to={`/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}
                 >
                   Inclusão de Alimentação
                 </NavLink>
                 <NavLink
-                  activeClassName="active"
                   className="collapse-item"
                   to={`/${ESCOLA}/${ALTERACAO_TIPO_ALIMENTACAO}`}
                 >
                   Alteração do Tipo de Alimentação
                 </NavLink>
                 <NavLink
-                  activeClassName="active"
                   className="collapse-item"
                   to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}
                 >
                   Kit Lanche Passeio
                 </NavLink>
                 <NavLink
-                  activeClassName="active"
                   className="collapse-item"
                   to={`/${ESCOLA}/${INVERSAO_CARDAPIO}`}
                 >
                   Inversão de Dia de Cardápio
                 </NavLink>
                 <NavLink
-                  activeClassName="active"
                   className="collapse-item"
                   to={`/${ESCOLA}/${SUSPENSAO_ALIMENTACAO}`}
                 >
@@ -122,7 +112,6 @@ export class SidebarContentEscola extends Component {
             )}
             <NavLink
               onClick={() => this.onSubmenuClick("consulta-solicitacoes")}
-              activeClassName="active"
               className="collapse-item"
               to="#"
             >
@@ -132,28 +121,24 @@ export class SidebarContentEscola extends Component {
             {subMenu === "consulta-solicitacoes" && (
               <div className="submenu">
                 <NavLink
-                  activeClassName="active"
                   className="collapse-item"
                   to={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
                 >
                   Aguardando autorização
                 </NavLink>
                 <NavLink
-                  activeClassName="active"
                   className="collapse-item"
                   to={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
                 >
                   Autorizadas
                 </NavLink>
                 <NavLink
-                  activeClassName="active"
                   className="collapse-item"
                   to={`/${ESCOLA}/${SOLICITACOES_NEGADAS}`}
                 >
                   Negadas
                 </NavLink>
                 <NavLink
-                  activeClassName="active"
                   className="collapse-item"
                   to={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
                 >
@@ -183,22 +168,16 @@ export class SidebarContentEscola extends Component {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to="/painel-dieta-especial"
-            >
+            <NavLink className="collapse-item" to="/painel-dieta-especial">
               Painel de Solicitações
             </NavLink>
             <NavLink
-              activeClassName="active"
               className="collapse-item"
               to={`/${ESCOLA}/${DIETA_ESPECIAL}`}
             >
               Nova Solicitação
             </NavLink>
             <NavLink
-              activeClassName="active"
               className="collapse-item"
               to={`/dieta-especial/ativas-inativas`}
             >
@@ -226,15 +205,10 @@ export class SidebarContentEscola extends Component {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
-            <NavLink
-              activeClassName="active"
-              className="collapse-item"
-              to={`/painel-gestao-produto`}
-            >
+            <NavLink className="collapse-item" to={`/painel-gestao-produto`}>
               Painel de Solicitações
             </NavLink>
             <NavLink
-              activeClassName="active"
               className="collapse-item"
               to={`/pesquisa-desenvolvimento/busca-produto`}
             >
@@ -269,7 +243,6 @@ export class SidebarContentEscola extends Component {
         >
           <div className="bg-white py-2 collapse-inner rounded">
             <NavLink
-              activeClassName="active"
               className="collapse-item"
               to={`/${CONFIGURACOES}/${CADASTROS}/${HORARIO_COMBOS_ALIMENTACAO}`}
             >
@@ -292,7 +265,7 @@ export class SidebarContentEscola extends Component {
             <span>Configurações</span>
           </Link>
         </li>
-      )
+      ),
     ];
   }
 }

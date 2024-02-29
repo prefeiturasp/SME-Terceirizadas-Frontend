@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "../../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../../Shareable/Botao/constants";
 import "./style.scss";
 
@@ -36,7 +36,7 @@ const ModalAvisoDietaImportada = ({ showModal, closeModal }) => {
               type={BUTTON_TYPE.BUTTON}
               onClick={closeModal}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
             />
           </div>
         </div>

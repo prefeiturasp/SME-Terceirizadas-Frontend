@@ -1,0 +1,40 @@
+.tabela-alunos-parciais {
+  padding: 12px;
+
+  .ant-table-cell {
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .ant-table-thead {
+    .ant-table-cell {
+      padding: 8px 16px !important;
+    }
+  }
+  .ant-table-row {
+    .ant-table-cell {
+      padding: 5px 16px !important;
+    }
+  }
+
+  .ant-table-footer {
+    font-weight: bold;
+    padding: 8px 16px !important;
+  }
+  /* Estilização para a última célula da linha para remover a borda direita */
+  .ant-table-row > .ant-table-cell:last-child {
+    border-right: none;
+  }
+
+  /* Se você também deseja ter uma borda ao redor de toda a tabela, adicione o seguinte: */
+  .ant-table {
+    border: 1px solid #ccc;
+  }
+}
+.table-disabled {
+  pointer-events: none;
+  opacity: 0.5; /* Opcional: para dar um visual "desativado" */
+}
+.input-error .ant-input {
+  border-color: red !important;
+}

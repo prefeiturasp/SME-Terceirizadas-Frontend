@@ -1,4 +1,4 @@
-export const retornaTituloCardPendencias = solicitacao => {
+export const retornaTituloCardPendencias = (solicitacao) => {
   if (solicitacao === undefined) {
     return "Solicitações";
   }

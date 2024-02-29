@@ -10,7 +10,7 @@ export const Weekly = ({ ...props }) => {
         props.required && <span className="required-asterisk">*</span>,
         <label key={1} htmlFor={props.name} className="col-form-label">
           {props.label}
-        </label>
+        </label>,
       ]}
       <div>
         {WEEK.map((day, key) => {

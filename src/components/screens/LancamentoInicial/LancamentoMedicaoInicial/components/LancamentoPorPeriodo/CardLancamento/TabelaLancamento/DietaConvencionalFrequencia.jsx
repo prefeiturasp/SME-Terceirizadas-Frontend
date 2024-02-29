@@ -3,7 +3,7 @@ import { Field } from "react-final-form";
 
 import {
   nonRequiredNumericInteger,
-  numericInteger
+  numericInteger,
 } from "helpers/fieldValidators";
 
 import BorderlessInput from "../../../BorderlessInput";
@@ -17,7 +17,7 @@ export default ({
   panorama,
   deveDesabilitarRepeticaoSobremesa,
   desabilitarLanche,
-  desabilitarRefeicao
+  desabilitarRefeicao,
 }) => (
   <div className="tabela-lancamento tabela-dieta-convencional-frequencia">
     <div className="cabecalho-tabela">

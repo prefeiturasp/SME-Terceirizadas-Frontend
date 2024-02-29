@@ -9,7 +9,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { getNomesUnidadesEscolares } from "services/logistica.service.js";
@@ -23,11 +23,11 @@ export default ({
   setSolicitacoes,
   initialValues,
   setInitialValues,
-  inicioResultado
+  inicioResultado,
 }) => {
   const [desabilitarAluno, setDesabilitarAluno] = useState(false);
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     if (values.data_inicial)
       filtros.data_inicial = moment(values.data_inicial).format("DD/MM/YYYY");
@@ -47,13 +47,13 @@ export default ({
       setDesabilitarAluno(false);
     } else {
       const response = await getNomesUnidadesEscolares({
-        codigo_unidade: codigo
+        codigo_unidade: codigo,
       });
       if (response.status === 200) {
         if (response.data.results.length) {
           setInitialValues({
             ...values,
-            nome_unidade: response.data.results[0].nome_unidade
+            nome_unidade: response.data.results[0].nome_unidade,
           });
           setDesabilitarAluno(true);
         } else {
@@ -142,7 +142,7 @@ export default ({
                     { uuid: "AGUARDANDO_ENVIO", nome: "Aguardando envio" },
                     {
                       uuid: "AGUARDANDO_CANCELAMENTO",
-                      nome: "Aguardando cancelamento"
+                      nome: "Aguardando cancelamento",
                     },
                     { uuid: "DILOG_ENVIA", nome: "Enviada" },
                     { uuid: "CANCELADA", nome: "Cancelada" },
@@ -150,8 +150,8 @@ export default ({
                     { uuid: "DILOG_ACEITA_ALTERACAO", nome: "Alterada" },
                     {
                       uuid: "DISTRIBUIDOR_SOLICITA_ALTERACAO",
-                      nome: "Em análise"
-                    }
+                      nome: "Em análise",
+                    },
                   ]}
                   className="input-busca-produto"
                 />
@@ -167,7 +167,7 @@ export default ({
                 />
 
                 <OnChange name="codigo_unidade">
-                  {value => {
+                  {(value) => {
                     getNomeUnidadeEscolaDebounced(value, values);
                   }}
                 </OnChange>
@@ -211,7 +211,7 @@ export default ({
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting}
               />
 
@@ -219,7 +219,7 @@ export default ({
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset({});
                   setSolicitacoes(undefined);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 
 import ModalCancelamento from "../ModalCancelamento";
@@ -19,7 +19,7 @@ export default ({
   setAtivos,
   icone,
   filtros,
-  setFiltros
+  setFiltros,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [solicitacoesVigentes, setSolicitacoesVigentes] = useState(null);
@@ -28,9 +28,9 @@ export default ({
     const params = gerarParametrosConsulta({
       ativo: false,
       status: getStatusSolicitacoesInativas(),
-      aluno: dieta.aluno.uuid
+      aluno: dieta.aluno.uuid,
     });
-    getSolicitacoesDietaEspecial(params).then(response => {
+    getSolicitacoesDietaEspecial(params).then((response) => {
       setSolicitacoesVigentes(response.data.results);
     });
   }, []);
@@ -54,7 +54,7 @@ export default ({
             className={`fas fa-${icone}`}
             onClick={() => {
               ativos && ativos.includes(dieta.uuid)
-                ? setAtivos(ativos.filter(el => el !== dieta.uuid))
+                ? setAtivos(ativos.filter((el) => el !== dieta.uuid))
                 : setAtivos(ativos ? [...ativos, dieta.uuid] : [dieta.uuid]);
             }}
           />
@@ -154,7 +154,7 @@ export default ({
               <p
                 className="label-dieta-cancelamento"
                 dangerouslySetInnerHTML={{
-                  __html: dieta.observacoes
+                  __html: dieta.observacoes,
                 }}
               />
             </div>
@@ -164,7 +164,7 @@ export default ({
             <div className="col">
               <Botao
                 texto="Solicitar Cancelamento"
-                className="float-right ml-3"
+                className="float-end ms-3"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={() => setShowModal(true)}

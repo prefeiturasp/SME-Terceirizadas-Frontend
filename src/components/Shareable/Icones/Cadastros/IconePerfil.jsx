@@ -1,6 +1,6 @@
 import React from "react";
 
-export const IconePerfil = props => {
+export const IconePerfil = (props) => {
   const { hover } = props;
   return (
     <svg

@@ -21,29 +21,27 @@ const renderizarLabelLote = (selected, options) => {
   return `${selected.length} lotes selecionados`;
 };
 
-export const LotesFormSet = props => {
+export const LotesFormSet = (props) => {
   const [lotes, setLotes] = useState([]);
   const [lotesRaw, setLotesRaw] = useState([]);
   const {
     ehDistribuidor,
     lotesSelecionados,
     terceirizada,
-    setLotesSelecionados
+    setLotesSelecionados,
   } = props;
   const [lotesNomesSelecionados, setLotesNomesSelecionados] = useState([]);
   const [loteAdicionado, setLoteAdicionado] = useState(undefined);
   const [atualizarLotes, setAtualizarLotes] = useState(false);
-  const [
-    exibirModalTransferenciaLote,
-    setExibirModalTransferenciaLote
-  ] = useState(false);
+  const [exibirModalTransferenciaLote, setExibirModalTransferenciaLote] =
+    useState(false);
 
-  const lidarComSelecionados = values => {
+  const lidarComSelecionados = (values) => {
     if (
       terceirizada &&
       terceirizada.lotes
-        .map(lote => lote.uuid)
-        .filter(lote => !values.includes(lote)).length > 0
+        .map((lote) => lote.uuid)
+        .filter((lote) => !values.includes(lote)).length > 0
     ) {
       toastError(
         "Não é possível remover um lote, apenas transferí-lo para outra empresa."
@@ -51,19 +49,19 @@ export const LotesFormSet = props => {
       return;
     }
     const loteSelecionado = values.find(
-      lote => !lotesSelecionados.includes(lote)
+      (lote) => !lotesSelecionados.includes(lote)
     );
     if (
       loteSelecionado &&
-      lotesRaw.find(l => l.uuid === loteSelecionado).terceirizada
+      lotesRaw.find((l) => l.uuid === loteSelecionado).terceirizada
     ) {
-      setLoteAdicionado(lotesRaw.find(l => l.uuid === loteSelecionado));
+      setLoteAdicionado(lotesRaw.find((l) => l.uuid === loteSelecionado));
       setExibirModalTransferenciaLote(true);
     }
 
     let lotesNomesSelecionados = [];
-    values.forEach(value => {
-      const indice = lotes.findIndex(lote => lote.uuid === value);
+    values.forEach((value) => {
+      const indice = lotes.findIndex((lote) => lote.uuid === value);
       lotesNomesSelecionados.push(lotes[indice].label);
     });
 
@@ -71,17 +69,17 @@ export const LotesFormSet = props => {
     setLotesSelecionados(values);
   };
 
-  const naoAceitaTransferenciaLote = lote => {
+  const naoAceitaTransferenciaLote = (lote) => {
     setExibirModalTransferenciaLote(false);
-    setLotesSelecionados(lotesSelecionados.filter(l => l !== lote.uuid));
+    setLotesSelecionados(lotesSelecionados.filter((l) => l !== lote.uuid));
     setLotesNomesSelecionados(
-      lotesNomesSelecionados.filter(l => l !== lote.nome)
+      lotesNomesSelecionados.filter((l) => l !== lote.nome)
     );
   };
 
   useEffect(() => {
     if (!ehDistribuidor) {
-      getLotesSimples().then(response => {
+      getLotesSimples().then((response) => {
         setLotes(transformaObjetos(response.data));
         setLotesRaw(response.data.results);
       });
@@ -105,11 +103,11 @@ export const LotesFormSet = props => {
             <div className="card-body">
               <div className="row pt-3">
                 <div className="col-12">
-                  <label className="label font-weight-normal pb-3">
+                  <label className="label fw-normal pb-3">
                     Lotes de atendimento
                     <span
                       onClick={() => setAtualizarLotes(!atualizarLotes)}
-                      className="link editar-lotes ml-3"
+                      className="link editar-lotes ms-3"
                     >
                       editar lotes
                     </span>
@@ -122,7 +120,7 @@ export const LotesFormSet = props => {
                       selected={lotesSelecionados}
                       options={lotes}
                       valueRenderer={renderizarLabelLote}
-                      onSelectedChanged={value => {
+                      onSelectedChanged={(value) => {
                         lidarComSelecionados(value);
                       }}
                       overrideStrings={{
@@ -130,7 +128,7 @@ export const LotesFormSet = props => {
                         selectSomeItems: "Selecione",
                         allItemsAreSelected:
                           "Todos os itens estão selecionados",
-                        selectAll: "Todos"
+                        selectAll: "Todos",
                       }}
                       disabled={!atualizarLotes}
                     />

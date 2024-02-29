@@ -1,38 +1,45 @@
 import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
-import CardLancamento from "./CardLancamento";
+import { CardLancamento } from "./CardLancamento";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
 import {
   getPeriodosInclusaoContinua,
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
-  getSolicitacoesInclusoesEtecAutorizadasEscola
+  getSolicitacoesInclusoesEtecAutorizadasEscola,
+  getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola,
+  getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import {
   escolaEnviaCorrecaoMedicaoInicialCODAE,
   escolaEnviaCorrecaoMedicaoInicialDRE,
+  getCEUGESTAOFrequenciasDietas,
   getQuantidadeAlimentacoesLancadasPeriodoGrupo,
-  getSolicitacaoMedicaoInicial
+  getSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { CORES, removeObjetosDuplicados } from "./helpers";
 import {
+  CORES,
+  removeObjetosDuplicados,
+  renderBotaoEnviarCorrecao,
+  verificaSeEnviarCorrecaoDisabled,
+} from "./helpers";
+import {
+  ehEscolaTipoCEUGESTAO,
   getError,
-  usuarioEhDiretorUE,
-  usuarioEhEscolaTerceirizadaDiretor
+  usuarioEhEscolaTerceirizadaDiretor,
 } from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
-import { ENVIRONMENT } from "constants/config";
-import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
-import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
 
-export default ({
+export const LancamentoPorPeriodo = ({
   escolaInstituicao,
   periodosEscolaSimples,
   solicitacaoMedicaoInicial,
@@ -42,42 +49,50 @@ export default ({
   ano,
   objSolicitacaoMIFinalizada,
   setObjSolicitacaoMIFinalizada,
-  setSolicitacaoMedicaoInicial
+  periodosPermissoesLancamentosEspeciais,
+  setSolicitacaoMedicaoInicial,
+  naoPodeFinalizar,
+  setFinalizandoMedicao,
 }) => {
-  const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
-    false
-  );
+  const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
+    useState(false);
   const [showModalEnviarCorrecao, setShowModalEnviarCorrecao] = useState(false);
   const [desabilitaSim, setDesabilitaSim] = useState(false);
-  const [periodosInclusaoContinua, setPeriodosInclusaoContinua] = useState(
-    undefined
-  );
+  const [periodosInclusaoContinua, setPeriodosInclusaoContinua] =
+    useState(undefined);
   const [
     solicitacoesKitLanchesAutorizadas,
-    setSolicitacoesKitLanchesAutorizadas
+    setSolicitacoesKitLanchesAutorizadas,
   ] = useState(undefined);
   const [
     solicitacoesAlteracaoLancheEmergencialAutorizadas,
-    setSolicitacoesAlteracaoLancheEmergencialAutorizadas
+    setSolicitacoesAlteracaoLancheEmergencialAutorizadas,
   ] = useState(undefined);
   const [
     solicitacoesInclusoesEtecAutorizadas,
-    setSolicitacoesInclusoesEtecAutorizadas
+    setSolicitacoesInclusoesEtecAutorizadas,
   ] = useState(undefined);
+  const [periodosCEUGESTAO, setPeriodosCEUGESTAO] = useState(undefined);
+  const [frequenciasDietasCEUGESTAO, setFrequenciasDietasCEUGESTAO] =
+    useState(undefined);
+
   const [
-    quantidadeAlimentacoesLancadas,
-    setQuantidadeAlimentacoesLancadas
+    frequenciasDietasPeriodosEspeciais,
+    setFrequenciasDietasPeriodosEspeciais,
   ] = useState(undefined);
+  const [quantidadeAlimentacoesLancadas, setQuantidadeAlimentacoesLancadas] =
+    useState(undefined);
   const [erroAPI, setErroAPI] = useState("");
-  const [
-    exibirModalCentralDownloads,
-    setExibirModalCentralDownloads
-  ] = useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
+
+  const [periodosEspecificos, setPeriodosEspecificos] = useState([]);
+  const [errosAoSalvar, setErrosAoSalvar] = useState([]);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
     const response = await getPeriodosInclusaoContinua({
       mes,
-      ano
+      ano,
     });
     if (response.status === HTTP_STATUS.OK) {
       setPeriodosInclusaoContinua(response.data.periodos);
@@ -95,7 +110,7 @@ export default ({
       escola_uuid,
       mes,
       ano,
-      tipo_solicitacao
+      tipo_solicitacao,
     });
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacoesKitLanchesAutorizadas(response.data.results);
@@ -106,26 +121,26 @@ export default ({
     }
   };
 
-  const getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync = async () => {
-    const params = {};
-    params["escola_uuid"] = escolaInstituicao.uuid;
-    params["tipo_solicitacao"] = "Alteração";
-    params["mes"] = mes;
-    params["ano"] = ano;
-    params["eh_lanche_emergencial"] = true;
-    const response = await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(
-      params
-    );
-    if (response.status === HTTP_STATUS.OK) {
-      setSolicitacoesAlteracaoLancheEmergencialAutorizadas(
-        response.data.results
-      );
-    } else {
-      setErroAPI(
-        "Erro ao carregar Alteração de Lanche Emergencial Autorizadas. Tente novamente mais tarde."
-      );
-    }
-  };
+  const getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync =
+    async () => {
+      const params = {};
+      params["escola_uuid"] = escolaInstituicao.uuid;
+      params["tipo_solicitacao"] = "Alteração";
+      params["mes"] = mes;
+      params["ano"] = ano;
+      params["eh_lanche_emergencial"] = true;
+      const response =
+        await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(params);
+      if (response.status === HTTP_STATUS.OK) {
+        setSolicitacoesAlteracaoLancheEmergencialAutorizadas(
+          response.data.results
+        );
+      } else {
+        setErroAPI(
+          "Erro ao carregar Alteração de Lanche Emergencial Autorizadas. Tente novamente mais tarde."
+        );
+      }
+    };
 
   const getSolicitacoesInclusoesEtecAutorizadasAsync = async () => {
     const escola_uuid = escolaInstituicao.uuid;
@@ -134,13 +149,48 @@ export default ({
       escola_uuid,
       mes,
       ano,
-      tipo_solicitacao
+      tipo_solicitacao,
     });
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacoesInclusoesEtecAutorizadas(response.data.results);
     } else {
       setErroAPI(
         "Erro ao carregar Inclusões ETEC Autorizadas. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const getSolicitacoesInclusoesComEventoEspecificoAsync = async () => {
+    setPeriodosEspecificos([]);
+    const escola_uuid = escolaInstituicao.uuid;
+    const tipo_solicitacao = "Inclusão de";
+    const response =
+      await getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola({
+        escola_uuid,
+        mes,
+        ano,
+        tipo_solicitacao,
+      });
+    if (response.status === HTTP_STATUS.OK) {
+      const data = response.data.map((vinculo) => {
+        vinculo.periodo_escolar.eh_periodo_especifico = true;
+        return vinculo;
+      });
+      const nomesPeriodosNormais = periodosEscolaSimples.map(
+        (vinculo) => vinculo.periodo_escolar.nome
+      );
+      const pEspecificos = data.filter(
+        (vinculo) =>
+          !nomesPeriodosNormais.includes(vinculo.periodo_escolar.nome)
+      );
+      let periodos = periodosEscolaSimples.concat(pEspecificos);
+      periodos = periodos.sort((obj1, obj2) =>
+        obj1.periodo_escolar.posicao > obj2.periodo_escolar.posicao ? 1 : -1
+      );
+      setPeriodosEspecificos(periodos);
+    } else {
+      setErroAPI(
+        "Erro ao carregar Inclusões Autorizadas com Evento Específico. Tente novamente mais tarde."
       );
     }
   };
@@ -159,12 +209,60 @@ export default ({
     }
   };
 
+  const getPeriodosCEUGESTAOAsync = async () => {
+    const escola_uuid = escolaInstituicao.uuid;
+    const response = await getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola({
+      escola_uuid,
+      mes,
+      ano,
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setPeriodosCEUGESTAO(response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar períodos de escolas CEU GESTÃO. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const getCEUGESTAOFrequenciasDietasAsync = async () => {
+    const response = await getCEUGESTAOFrequenciasDietas(
+      solicitacaoMedicaoInicial.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setFrequenciasDietasCEUGESTAO(response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar frequência de dietas de escolas CEU GESTÃO. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const getFrequenciasDietasAsync = async () => {
+    const response = await getCEUGESTAOFrequenciasDietas(
+      solicitacaoMedicaoInicial.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setFrequenciasDietasPeriodosEspeciais(response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar frequência de dietas de escolas CEU GESTÃO. Tente novamente mais tarde."
+      );
+    }
+  };
+
   useEffect(() => {
     getPeriodosInclusaoContinuaAsync();
     getSolicitacoesKitLanchesAutorizadasAsync();
     getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
     getSolicitacoesInclusoesEtecAutorizadasAsync();
-    getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
+    getSolicitacoesInclusoesComEventoEspecificoAsync();
+    solicitacaoMedicaoInicial && getFrequenciasDietasAsync();
+    solicitacaoMedicaoInicial &&
+      getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync() &&
+      ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
+      getPeriodosCEUGESTAOAsync() &&
+      getCEUGESTAOFrequenciasDietasAsync();
   }, [periodoSelecionado, solicitacaoMedicaoInicial]);
 
   const getPathPlanilhaOcorr = () => {
@@ -194,11 +292,11 @@ export default ({
     }
   };
 
-  const getSolicitacaoMedicalInicial = async () => {
+  const getSolicitacaoMedicaoInicialAsync = async () => {
     const payload = {
       escola: escolaInstituicao.uuid,
       mes: mes,
-      ano: ano
+      ano: ano,
     };
 
     const solicitacao = await getSolicitacaoMedicaoInicial(payload);
@@ -226,17 +324,6 @@ export default ({
     );
   };
 
-  const renderBotaoEnviarCorrecao = () => {
-    return (
-      solicitacaoMedicaoInicial &&
-      [
-        "MEDICAO_CORRECAO_SOLICITADA",
-        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
-      ].includes(solicitacaoMedicaoInicial.status) &&
-      usuarioEhDiretorUE()
-    );
-  };
-
   const escolaEnviaCorrecaoDreCodae = async () => {
     setDesabilitaSim(true);
     const endpoint =
@@ -247,7 +334,7 @@ export default ({
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Correção da Medição Inicial enviada com sucesso!");
       getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
-      getSolicitacaoMedicalInicial();
+      getSolicitacaoMedicaoInicialAsync();
       setShowModalEnviarCorrecao(false);
     } else {
       toastError(getError(response.data));
@@ -255,34 +342,16 @@ export default ({
     setDesabilitaSim(false);
   };
 
-  const verificaSeEnviarCorrecaoDisabled = () => {
-    return (
-      quantidadeAlimentacoesLancadas.some(
-        periodo =>
-          ![
-            "MEDICAO_APROVADA_PELA_DRE",
-            "MEDICAO_APROVADA_PELA_CODAE",
-            "MEDICAO_CORRIGIDA_PELA_UE",
-            "MEDICAO_CORRIGIDA_PARA_CODAE"
-          ].includes(periodo.status)
-      ) ||
-      (solicitacaoMedicaoInicial.com_ocorrencias &&
-        ![
-          "MEDICAO_APROVADA_PELA_DRE",
-          "MEDICAO_APROVADA_PELA_CODAE",
-          "MEDICAO_CORRIGIDA_PELA_UE",
-          "MEDICAO_CORRIGIDA_PARA_CODAE"
-        ].includes(solicitacaoMedicaoInicial.ocorrencia.status))
-    );
-  };
-
   const tiposAlimentacaoProgramasEProjetos = () => {
     let tiposAlimentacao = [];
-    Object.keys(periodosInclusaoContinua).forEach(periodo => {
-      const tipos = periodosEscolaSimples.find(
-        p => p.periodo_escolar.nome === periodo
-      ).tipos_alimentacao;
-      tiposAlimentacao = [...tiposAlimentacao, ...tipos];
+    Object.keys(periodosInclusaoContinua).forEach((periodo) => {
+      const periodoProgramasEProjetos = periodosEscolaSimples.find(
+        (p) => p.periodo_escolar.nome === periodo
+      );
+      if (periodoProgramasEProjetos) {
+        const tipos = periodoProgramasEProjetos.tipos_alimentacao;
+        tiposAlimentacao = [...tiposAlimentacao, ...tipos];
+      }
     });
 
     return removeObjetosDuplicados(tiposAlimentacao, "nome");
@@ -293,35 +362,95 @@ export default ({
       {erroAPI && <div>{erroAPI}</div>}
       {!erroAPI && quantidadeAlimentacoesLancadas && (
         <>
-          <div className="row pb-2">
-            <div className="col">
-              <b className="section-title">Períodos</b>
-            </div>
+          <div className="pb-2">
+            <b className="section-title">Períodos</b>
           </div>
-          {periodosEscolaSimples.map((periodo, index) => (
-            <CardLancamento
-              key={index}
-              textoCabecalho={periodo.periodo_escolar.nome}
-              cor={CORES[index]}
-              tipos_alimentacao={periodo.tipos_alimentacao}
-              periodoSelecionado={periodoSelecionado}
-              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
-              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
-            />
-          ))}
-          {periodosInclusaoContinua && (
-            <CardLancamento
-              grupo="Programas e Projetos"
-              cor={CORES[4]}
-              tipos_alimentacao={tiposAlimentacaoProgramasEProjetos()}
-              periodoSelecionado={periodoSelecionado}
-              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
-              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
-              periodosInclusaoContinua={periodosInclusaoContinua}
-            />
-          )}
+          {!ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
+            frequenciasDietasPeriodosEspeciais &&
+            periodosEspecificos.length &&
+            periodosEspecificos.map((periodo, index) => (
+              <CardLancamento
+                key={index}
+                textoCabecalho={periodo.periodo_escolar.nome}
+                cor={CORES[index]}
+                tipos_alimentacao={periodo.tipos_alimentacao}
+                periodoSelecionado={periodoSelecionado}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                ehPeriodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico
+                }
+                periodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico ? periodo : null
+                }
+                frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
+                errosAoSalvar={errosAoSalvar}
+                periodosPermissoesLancamentosEspeciais={
+                  periodosPermissoesLancamentosEspeciais
+                }
+              />
+            ))}
+
+          {!ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
+            frequenciasDietasPeriodosEspeciais &&
+            !periodosEspecificos.length &&
+            periodosEscolaSimples.map((periodo, index) => (
+              <CardLancamento
+                key={index}
+                textoCabecalho={periodo.periodo_escolar.nome}
+                cor={CORES[index]}
+                tipos_alimentacao={periodo.tipos_alimentacao}
+                periodoSelecionado={periodoSelecionado}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                ehPeriodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico
+                }
+                periodoEspecifico={
+                  periodo.periodo_escolar.eh_periodo_especifico ? periodo : null
+                }
+                frequenciasDietasCEUGESTAO={frequenciasDietasPeriodosEspeciais}
+                errosAoSalvar={errosAoSalvar}
+                periodosPermissoesLancamentosEspeciais={
+                  periodosPermissoesLancamentosEspeciais
+                }
+              />
+            ))}
+          {ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
+            periodosCEUGESTAO &&
+            frequenciasDietasCEUGESTAO &&
+            periodosCEUGESTAO.map((periodo, index) => (
+              <CardLancamento
+                key={index}
+                textoCabecalho={periodo.nome}
+                cor={CORES[index]}
+                tipos_alimentacao={periodo.tipos_alimentacao}
+                periodoSelecionado={periodoSelecionado}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                frequenciasDietasCEUGESTAO={frequenciasDietasCEUGESTAO}
+                errosAoSalvar={errosAoSalvar}
+              />
+            ))}
+          {periodosInclusaoContinua &&
+            (!ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) ||
+              frequenciasDietasCEUGESTAO) && (
+              <CardLancamento
+                grupo="Programas e Projetos"
+                cor={CORES[4]}
+                tipos_alimentacao={tiposAlimentacaoProgramasEProjetos()}
+                periodoSelecionado={periodoSelecionado}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                periodosInclusaoContinua={periodosInclusaoContinua}
+                frequenciasDietasCEUGESTAO={frequenciasDietasCEUGESTAO}
+                errosAoSalvar={errosAoSalvar}
+              />
+            )}
           {((solicitacoesKitLanchesAutorizadas &&
             solicitacoesKitLanchesAutorizadas.length > 0) ||
             (solicitacoesAlteracaoLancheEmergencialAutorizadas &&
@@ -336,6 +465,7 @@ export default ({
               objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
               ehGrupoSolicitacoesDeAlimentacao={true}
               quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+              errosAoSalvar={errosAoSalvar}
             />
           )}
           {solicitacoesInclusoesEtecAutorizadas &&
@@ -349,6 +479,7 @@ export default ({
                 objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
                 ehGrupoETEC={true}
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                errosAoSalvar={errosAoSalvar}
               />
             )}
           <div className="mt-4">
@@ -356,19 +487,21 @@ export default ({
               <Botao
                 texto="Finalizar"
                 style={BUTTON_STYLE.GREEN}
-                className="float-right"
-                disabled={!usuarioEhEscolaTerceirizadaDiretor()}
+                className="float-end"
+                disabled={
+                  !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
+                }
                 onClick={() => setShowModalFinalizarMedicao(true)}
               />
             ) : (
               <div className="row">
-                <div className="col-12 text-right">
+                <div className="col-12 text-end">
                   {renderBotaoExportarPlanilha() && (
                     <a href={getPathPlanilhaOcorr()}>
                       <Botao
                         texto="Exportar Planilha de Ocorrências"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="mr-3"
+                        className="me-3"
                       />
                     </a>
                   )}
@@ -376,18 +509,20 @@ export default ({
                     <Botao
                       texto="Exportar PDF"
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="mr-3"
                       onClick={() => gerarPDFMedicaoInicial()}
-                      disabled={ENVIRONMENT === "production"}
                     />
                   )}
-                  {renderBotaoEnviarCorrecao() && (
+                  {renderBotaoEnviarCorrecao(solicitacaoMedicaoInicial) && (
                     <Botao
                       texto="Enviar Correção"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN}
+                      className="ms-3"
                       onClick={() => setShowModalEnviarCorrecao(true)}
-                      disabled={verificaSeEnviarCorrecaoDisabled()}
+                      disabled={verificaSeEnviarCorrecaoDisabled(
+                        quantidadeAlimentacoesLancadas,
+                        solicitacaoMedicaoInicial
+                      )}
                     />
                   )}
                 </div>
@@ -397,10 +532,12 @@ export default ({
           <ModalFinalizarMedicao
             showModal={showModalFinalizarMedicao}
             closeModal={() => setShowModalFinalizarMedicao(false)}
+            setErrosAoSalvar={(value) => setErrosAoSalvar(value)}
             setObjSolicitacaoMIFinalizada={setObjSolicitacaoMIFinalizada}
             escolaInstituicao={escolaInstituicao}
             solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
             onClickInfoBasicas={onClickInfoBasicas}
+            setFinalizandoMedicao={setFinalizandoMedicao}
           />
           <ModalSolicitacaoDownload
             show={exibirModalCentralDownloads}

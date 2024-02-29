@@ -5,19 +5,19 @@ import Relatorio from "../../../components/AlteracaoDeCardapio/Terceirizada/Rela
 import { HOME } from "../constants";
 import {
   ALTERACAO_TIPO_ALIMENTACAO,
-  TERCEIRIZADA
+  TERCEIRIZADA,
 } from "../../../configs/constants";
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 
 const anteriores = [
   {
     href: `/${TERCEIRIZADA}/${ALTERACAO_TIPO_ALIMENTACAO}`,
-    titulo: "Alterações de Cardápio"
-  }
+    titulo: "Alterações de Cardápio",
+  },
 ];
 
 export default () => (

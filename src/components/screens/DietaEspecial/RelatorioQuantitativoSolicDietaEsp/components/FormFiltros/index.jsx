@@ -6,7 +6,7 @@ import { OnChange } from "react-final-form-listeners";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
@@ -18,7 +18,7 @@ import { TIPO_PERFIL } from "constants/shared";
 import {
   formFiltrosObtemDreEEscolasNovo,
   getDadosIniciais,
-  validateFormDreEscola
+  validateFormDreEscola,
 } from "helpers/dietaEspecial";
 import { required } from "helpers/fieldValidators";
 
@@ -26,10 +26,10 @@ import "./styles.scss";
 
 export default ({ onSubmit, loading, setLoading }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] = useState([
-    { value: "", label: "Carregando..." }
+    { value: "", label: "Carregando..." },
   ]);
   const [escolas, setEscolas] = useState([
-    { value: "", label: "Carregando...", dre: { uuid: "" } }
+    { value: "", label: "Carregando...", dre: { uuid: "" } },
   ]);
   const [dadosIniciais, setDadosIniciais] = useState({});
 
@@ -46,7 +46,7 @@ export default ({ onSubmit, loading, setLoading }) => {
       const promiseDadosIniciais = getDadosIniciais(dadosUsuario);
       const [, dadosIniciaisObtidos] = await Promise.all([
         promiseDreEscolas,
-        promiseDadosIniciais
+        promiseDadosIniciais,
       ]);
       setDadosIniciais(dadosIniciaisObtidos);
       setLoading(false);
@@ -54,7 +54,7 @@ export default ({ onSubmit, loading, setLoading }) => {
     effect();
   }, []);
 
-  const getEscolasFiltrado = dre => {
+  const getEscolasFiltrado = (dre) => {
     if (
       tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
       tipoUsuario === TIPO_PERFIL.ESCOLA
@@ -64,7 +64,7 @@ export default ({ onSubmit, loading, setLoading }) => {
       if (dre.length === 0) {
         return escolas;
       } else {
-        return escolas.filter(e => dre.includes(e.dre.uuid));
+        return escolas.filter((e) => dre.includes(e.dre.uuid));
       }
     }
     return escolas;
@@ -142,7 +142,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                     { uuid: "", nome: "Todos" },
                     { uuid: "ativas", nome: "Ativa" },
                     { uuid: "inativas", nome: "Inativa" },
-                    { uuid: "pendentes", nome: "Pendente de aprovação" }
+                    { uuid: "pendentes", nome: "Pendente de aprovação" },
                   ]}
                   naoDesabilitarPrimeiraOpcao
                 />
@@ -193,7 +193,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                 <Botao
                   style={BUTTON_STYLE.GREEN}
                   texto="Consultar"
-                  className="ml-3"
+                  className="ms-3"
                   type={BUTTON_TYPE.SUBMIT}
                   disabled={loading || submitting}
                 />

@@ -8,7 +8,7 @@ class InputPhoneNumber extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ehCelular: false
+      ehCelular: false,
     };
   }
 
@@ -27,7 +27,7 @@ class InputPhoneNumber extends Component {
         /\d/,
         /\d/,
         /\d/,
-        /\d/
+        /\d/,
       ];
     }
     if (quantidadeInput > 12) {
@@ -44,22 +44,14 @@ class InputPhoneNumber extends Component {
         /\d/,
         /\d/,
         /\d/,
-        /\d/
+        /\d/,
       ];
     }
   }
 
   render() {
-    const {
-      name,
-      id,
-      input,
-      label,
-      required,
-      helpText,
-      meta,
-      className
-    } = this.props;
+    const { name, id, input, label, required, helpText, meta, className } =
+      this.props;
     return (
       <div className="input">
         {label && [
@@ -70,17 +62,19 @@ class InputPhoneNumber extends Component {
           ),
           <label key={1} htmlFor={name} className={`col-form-label`}>
             {label}
-          </label>
+          </label>,
         ]}
         <MaskedInput
           {...input}
           name={name}
           id={id}
-          mask={valor => this.verificaCampo(valor)}
-          className={`form-control ${className} ${meta &&
+          mask={(valor) => this.verificaCampo(valor)}
+          className={`form-control ${className} ${
+            meta &&
             meta.touched &&
             (meta.error || meta.warning) &&
-            "invalid-field"}`}
+            "invalid-field"
+          }`}
           guide={false}
           required={required}
         />

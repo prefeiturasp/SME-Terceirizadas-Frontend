@@ -38,7 +38,7 @@ const InformacaoDeReclamante = ({ reclamacao, questionamento, showTitle }) => {
         <div className="value-empresa mb-3">
           <p
             dangerouslySetInnerHTML={{
-              __html: reclamacao.reclamacao
+              __html: reclamacao.reclamacao,
             }}
           />
         </div>
@@ -46,7 +46,7 @@ const InformacaoDeReclamante = ({ reclamacao, questionamento, showTitle }) => {
         <div className="value-empresa">
           <p
             dangerouslySetInnerHTML={{
-              __html: questionamento.justificativa
+              __html: questionamento.justificativa,
             }}
           />
         </div>
@@ -64,7 +64,7 @@ const InformacaoDeReclamante = ({ reclamacao, questionamento, showTitle }) => {
                     rel="noopener noreferrer"
                     target="_blank"
                     href={anexo.arquivo}
-                    className="link font-weight-bold"
+                    className="link fw-bold"
                   >
                     {`Anexo ${key + 1}`}
                   </a>

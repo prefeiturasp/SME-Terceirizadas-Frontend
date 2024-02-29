@@ -15,7 +15,7 @@ export default () => {
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
 
-  const buscarKits = async page => {
+  const buscarKits = async (page) => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     const response = await getKitsLanche(params);
@@ -37,7 +37,7 @@ export default () => {
     }
   }, [filtros]);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarKits(page);
     setPage(page);
   };

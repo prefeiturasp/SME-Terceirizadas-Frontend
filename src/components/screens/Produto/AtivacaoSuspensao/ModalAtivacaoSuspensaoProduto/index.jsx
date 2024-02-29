@@ -12,9 +12,10 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
+import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
 import { ativarProduto, suspenderProduto } from "services/produto.service";
 import { meusDados } from "services/perfil.service";
 import "./style.scss";
@@ -29,7 +30,7 @@ const ModalAtivacaoSuspensaoProduto = ({
   closeModal,
   showModal,
   produto,
-  ehSuspensaoFluxoAlteracaoDados
+  ehSuspensaoFluxoAlteracaoDados,
 }) => {
   const [meusDadosUsuario, setMeusDadosUsuario] = useState(undefined);
   const [editais, setEditais] = useState(undefined);
@@ -48,12 +49,12 @@ const ModalAtivacaoSuspensaoProduto = ({
       ? {
           funcionario_registro_funcional: meusDadosUsuario.registro_funcional,
           funcionario_nome: meusDadosUsuario.nome,
-          funcionario_cargo: meusDadosUsuario.cargo || ""
+          funcionario_cargo: meusDadosUsuario.cargo || "",
         }
       : {};
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const endpoint = acao === "ativação" ? ativarProduto : suspenderProduto;
     const response = await endpoint(idHomologacao, values);
     if (response.status === HTTP_STATUS.OK) {
@@ -102,19 +103,28 @@ const ModalAtivacaoSuspensaoProduto = ({
         let vinculos_produto_edital = produto.vinculos_produto_edital;
         if (vinculos_produto_edital) {
           vinculos_produto_edital = vinculos_produto_edital.filter(
-            vinculo => !vinculo.suspenso
+            (vinculo) => !vinculo.suspenso
           );
         }
-        options = vinculos_produto_edital.map(vinculo => ({
-          value: vinculo.edital.uuid,
-          label: vinculo.edital.numero
-        }));
+        options = vinculos_produto_edital
+          .filter(
+            ({ edital }) =>
+              !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
+          )
+          .map((vinculo) => ({
+            value: vinculo.edital.uuid,
+            label: vinculo.edital.numero,
+          }));
       }
       if (acao === "ativação" && editais?.length > 0) {
-        options = editais.map(edital => ({
-          label: edital.numero,
-          value: edital.uuid
-        }));
+        options = editais
+          .filter(
+            (edital) => !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
+          )
+          .map((edital) => ({
+            label: edital.numero,
+            value: edital.uuid,
+          }));
       }
     }
     return options;
@@ -184,7 +194,7 @@ const ModalAtivacaoSuspensaoProduto = ({
                     label="Justificativa"
                     name="justificativa"
                     required
-                    validate={value => {
+                    validate={(value) => {
                       for (let validator of [peloMenosUmCaractere, required]) {
                         const erro = validator(value);
                         if (erro) return erro;
@@ -195,9 +205,7 @@ const ModalAtivacaoSuspensaoProduto = ({
               </div>
               <section className="form-row attachments">
                 <div className="col-9">
-                  <div className="card-title font-weight-bold cinza-escuro">
-                    Anexar
-                  </div>
+                  <div className="card-title fw-bold cinza-escuro">Anexar</div>
                   <div className="text">
                     Anexar fotos, documentos ou relatórios relacionados à
                     reclamação do produto.
@@ -225,20 +233,20 @@ const ModalAtivacaoSuspensaoProduto = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={closeModal}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   <Botao
                     texto="Enviar"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                     disabled={
                       submitting ||
                       peloMenosUmCaractere(values.justificativa) !==
                         undefined ||
-                      (!values.editais_para_suspensao_ativacao ||
-                        (values.editais_para_suspensao_ativacao &&
-                          values.editais_para_suspensao_ativacao.length === 0))
+                      !values.editais_para_suspensao_ativacao ||
+                      (values.editais_para_suspensao_ativacao &&
+                        values.editais_para_suspensao_ativacao.length === 0)
                     }
                   />
                 </div>

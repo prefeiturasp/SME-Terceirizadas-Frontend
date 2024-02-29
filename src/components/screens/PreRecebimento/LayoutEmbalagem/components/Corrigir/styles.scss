@@ -1,0 +1,48 @@
+@import "../../../../../../styles/variables.scss";
+
+.card-corrigir-layout-embalagem {
+  .subtitulo {
+    color: $greenDark;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0px;
+  }
+
+  .fa-question-circle {
+    color: gray;
+  }
+
+  .subtitulo-laranja {
+    color: $orange;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0px;
+  }
+
+  .data-hora-correcao {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    span {
+      color: $greenDark;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  }
+
+  .label-imagem {
+    font-size: 12px;
+    margin: 0 !important;
+  }
+
+  .label-dados-produto {
+    font-weight: bold;
+    color: $blackSubtle;
+  }
+
+  .valor-dados-produto {
+    font-weight: bold;
+    font-size: 20px;
+    color: $greenDark;
+  }
+}

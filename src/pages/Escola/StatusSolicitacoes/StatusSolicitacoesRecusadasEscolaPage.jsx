@@ -6,7 +6,7 @@ import { ESCOLA, SOLICITACOES_NEGADAS } from "configs/constants";
 import { HOME } from "../constants";
 import {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getSolicitacoesNegadasEscola } from "services/painelEscola.service";
 import CardLegendas from "components/Shareable/CardLegendas";
@@ -14,7 +14,7 @@ import { PAGINACAO_DEFAULT } from "constants/shared";
 
 const atual = {
   href: `/${ESCOLA}/${SOLICITACOES_NEGADAS}`,
-  titulo: "Solicitações Negadas"
+  titulo: "Solicitações Negadas",
 };
 
 export default () => (

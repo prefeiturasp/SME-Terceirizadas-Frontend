@@ -5,26 +5,26 @@ import "./style.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { Modal } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
   cep,
   email,
   noSpaceStartOrEnd,
   required,
-  tamanhoCnpjMascara
+  tamanhoCnpjMascara,
 } from "helpers/fieldValidators";
 import {
   cadastraLaboratorio,
   editaLaboratorio,
   getLaboratorio,
-  getListaLaboratorios
+  getListaLaboratorios,
 } from "services/laboratorio.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
@@ -33,7 +33,7 @@ import {
   formatarCEP,
   formatarCPFouCNPJ,
   formatarTelefone,
-  removeCaracteresEspeciais
+  removeCaracteresEspeciais,
 } from "helpers/utilities";
 import createDecorator from "final-form-calculate";
 import { getEnderecoPorCEP } from "services/cep.service";
@@ -54,7 +54,7 @@ export default ({ naoEditavel = false }) => {
   const [laboratorio, setLaboratorio] = useState({});
   const [contatosValues, setContatosValues] = useState({});
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const getDadosLaboratorio = async () => {
     try {
@@ -128,7 +128,7 @@ export default ({ naoEditavel = false }) => {
     setShowModalEnviar(true);
   };
 
-  const salvarLaboratorio = async values => {
+  const salvarLaboratorio = async (values) => {
     setCarregando(true);
     let payload = montaPayload(values);
 
@@ -160,8 +160,8 @@ export default ({ naoEditavel = false }) => {
   const cepCalculator = createDecorator({
     field: "cep",
     updates: {
-      dummy: (minimumValue, allValues) => buscaCEP(minimumValue, allValues)
-    }
+      dummy: (minimumValue, allValues) => buscaCEP(minimumValue, allValues),
+    },
   });
 
   const buscaCEP = async (cep, values) => {
@@ -180,7 +180,7 @@ export default ({ naoEditavel = false }) => {
     }
   };
 
-  const montaPayload = values => {
+  const montaPayload = (values) => {
     let payload = {};
 
     payload.nome = values.nome_laboratorio;
@@ -197,13 +197,13 @@ export default ({ naoEditavel = false }) => {
     payload.contatos = contatos.map((contatos, index) => ({
       nome: values[`nome_${index}`],
       telefone: removeCaracteresEspeciais(values[`telefone_${index}`]),
-      email: values[`email_${index}`]
+      email: values[`email_${index}`],
     }));
 
     return payload;
   };
 
-  const validaNomeLab = value => {
+  const validaNomeLab = (value) => {
     if (
       laboratorios &&
       laboratorios.includes(value.toUpperCase()) &&
@@ -213,7 +213,7 @@ export default ({ naoEditavel = false }) => {
     else return undefined;
   };
 
-  const lengthOrUnderfined = value => {
+  const lengthOrUnderfined = (value) => {
     let valor = value ? value.toString() : undefined;
     return valor && valor.length > 0 ? valor : undefined;
   };
@@ -235,7 +235,7 @@ export default ({ naoEditavel = false }) => {
     );
   };
 
-  const renderizarCredenciamentoEditavel = formValues => {
+  const renderizarCredenciamentoEditavel = (formValues) => {
     return (
       <>
         <div className="row pergunta-credenciado">
@@ -243,7 +243,7 @@ export default ({ naoEditavel = false }) => {
             Esse Laboratório está Credenciado?
           </div>
           <Radio.Group
-            onChange={event => handleOnChangeCredenciado(event, formValues)}
+            onChange={(event) => handleOnChangeCredenciado(event, formValues)}
             value={credenciado}
           >
             <Radio className="" value={true}>
@@ -266,13 +266,13 @@ export default ({ naoEditavel = false }) => {
             texto="Salvar"
             type={BUTTON_TYPE.SUBMIT}
             style={BUTTON_STYLE.GREEN}
-            className="float-right ml-3"
+            className="float-end ms-3"
           />
           <Botao
             texto="Cancelar"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="float-right ml-3"
+            className="float-end ms-3"
             onClick={() => {
               setShowModalCancelar(true);
             }}
@@ -300,7 +300,7 @@ export default ({ naoEditavel = false }) => {
                 setShowModalCancelar(false);
               }}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto="Sim"
@@ -308,13 +308,13 @@ export default ({ naoEditavel = false }) => {
               onClick={() => {
                 setShowModalCancelar(false);
                 edicao
-                  ? history.push(
+                  ? navigate(
                       "/configuracoes/cadastros/laboratorios-cadastrados"
                     )
-                  : history.push("/");
+                  : navigate("/");
               }}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
             />
           </Modal.Footer>
         </Modal>
@@ -341,7 +341,7 @@ export default ({ naoEditavel = false }) => {
                 setCarregando(false);
               }}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto="Sim"
@@ -350,7 +350,7 @@ export default ({ naoEditavel = false }) => {
                 salvarLaboratorio(formValues);
               }}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
             />
           </Modal.Footer>
         </Modal>
@@ -368,9 +368,9 @@ export default ({ naoEditavel = false }) => {
             initialValues={{
               data_cadastro: new Date().toLocaleDateString(),
               ...laboratorio,
-              ...contatosValues
+              ...contatosValues,
             }}
-            validate={values => {
+            validate={(values) => {
               const errors = {};
               if (
                 values.credenciado === undefined ||
@@ -612,7 +612,7 @@ export default ({ naoEditavel = false }) => {
                   Laboratórios Credenciados
                 </div>
                 <div className="texto-laboratorios">
-                  <p className="font-weight-bold">Lembrete!</p>
+                  <p className="fw-bold">Lembrete!</p>
                   <p className="">
                     Verifique se o laboratório está credenciado em órgãos
                     oficiais (Ministério da Saúde, Ministério da Agricultura,

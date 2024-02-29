@@ -6,7 +6,7 @@ import { Field, Form } from "react-final-form";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import CKEditorField from "components/Shareable/CKEditorField";
@@ -18,7 +18,7 @@ import { converterDDMMYYYYparaYYYYMMDD } from "helpers/utilities";
 import "./styles.scss";
 
 export default ({ onUpdate, uuidSolicitacao }) => {
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const resposta = await updateSolicitacaoCadastroProdutoDieta(
       uuidSolicitacao,
       values
@@ -44,8 +44,8 @@ export default ({ onUpdate, uuidSolicitacao }) => {
             minDate={moment()._d}
             required
             validate={required}
-            parse={d => converterDDMMYYYYparaYYYYMMDD(d)}
-            format={d =>
+            parse={(d) => converterDDMMYYYYparaYYYYMMDD(d)}
+            format={(d) =>
               d === undefined ? "" : moment(d).format("DD/MM/YYYY")
             }
           />

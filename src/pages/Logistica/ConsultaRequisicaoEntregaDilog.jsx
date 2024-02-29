@@ -4,20 +4,20 @@ import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
 import {
   ENVIO_REQUISICOES_ENTREGA_AVANCADO,
-  LOGISTICA
+  LOGISTICA,
 } from "configs/constants";
 import ConsultaRequisicaoEntregaDilog from "components/screens/Logistica/ConsultaRequisicaoEntregaDilog";
 
 const atual = {
   href: `/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`,
-  titulo: "Requisição de Entrega"
+  titulo: "Requisição de Entrega",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
-  }
+    titulo: "Abastecimento",
+  },
 ];
 
 export default () => (

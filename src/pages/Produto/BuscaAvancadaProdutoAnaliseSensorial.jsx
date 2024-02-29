@@ -4,12 +4,12 @@ import BuscaAvancadaProdutoAnaliseSensorial from "../../components/screens/Produ
 import Page from "../../components/Shareable/Page/Page";
 import {
   GESTAO_PRODUTO,
-  RELATORIO_ANALISE_SENSORIAL
+  RELATORIO_ANALISE_SENSORIAL,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${GESTAO_PRODUTO}/${RELATORIO_ANALISE_SENSORIAL}`,
-  titulo: "Relatório de produtos em análise sensorial"
+  titulo: "Relatório de produtos em análise sensorial",
 };
 
 export default () => (

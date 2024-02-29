@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { distribuidorAltera } from "services/logistica.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -15,7 +15,7 @@ export default ({
   handleCloseAll,
   updatePage,
   solicitacao,
-  values
+  values,
 }) => {
   const handleClose = () => setShow(false);
 
@@ -40,7 +40,7 @@ export default ({
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         onClick={form.submit}
-        className="float-right ml-3"
+        className="float-end ms-3"
       />
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -55,14 +55,14 @@ export default ({
             type={BUTTON_TYPE.BUTTON}
             onClick={handleClose}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Sim"
             type={BUTTON_TYPE.SUBMIT}
             style={BUTTON_STYLE.GREEN}
             onClick={enviarSolicitacao}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>

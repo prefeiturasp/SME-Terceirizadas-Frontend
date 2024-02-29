@@ -11,11 +11,13 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
+import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
 import { vinculosAtivosProdutoEditais } from "services/produto.service";
 import { meusDados } from "services/perfil.service";
+import { usuarioEhEscolaTerceirizadaQualquerPerfil } from "helpers/utilities";
 import "./style.scss";
 
 const ModalSuspensaoProdutoEdital = ({
@@ -23,7 +25,7 @@ const ModalSuspensaoProdutoEdital = ({
   showModal,
   produto,
   onSubmitSupender,
-  state
+  state,
 }) => {
   const [dados, setDados] = useState(undefined);
   const [vinculos, setVinculos] = useState([]);
@@ -43,7 +45,7 @@ const ModalSuspensaoProdutoEdital = ({
     const fetchDados = async () => {
       const resposta = await meusDados();
       setDados(resposta);
-      vinculosProdutoEditais();
+      !usuarioEhEscolaTerceirizadaQualquerPerfil() && vinculosProdutoEditais();
     };
 
     fetchDados();
@@ -59,7 +61,7 @@ const ModalSuspensaoProdutoEdital = ({
           marca_produto: produto.marca.nome,
           produto_tipo: produto.eh_para_alunos_com_dieta
             ? "D. Especial"
-            : "Comum"
+            : "Comum",
         }
       : {};
   };
@@ -69,18 +71,20 @@ const ModalSuspensaoProdutoEdital = ({
 
     if (vinculos_produto_edital) {
       vinculos_produto_edital = vinculos_produto_edital.filter(
-        vinculo => !vinculo.suspenso
+        (vinculo) =>
+          !vinculo.suspenso &&
+          !EDITAIS_INVALIDOS.includes(vinculo.edital.numero.toUpperCase())
       );
 
-      return vinculos_produto_edital.map(vinculo => ({
+      return vinculos_produto_edital.map((vinculo) => ({
         value: vinculo.edital.uuid,
-        label: vinculo.edital.numero
+        label: vinculo.edital.numero,
       }));
     }
     return [];
   };
 
-  const verificaEditaisSelecionados = values => {
+  const verificaEditaisSelecionados = (values) => {
     const editaisSelecionados =
       values.editais_para_suspensao && values.editais_para_suspensao.length;
     return editaisSelecionados === opcoesEditais().length;
@@ -174,7 +178,7 @@ const ModalSuspensaoProdutoEdital = ({
                     label="Justificativa"
                     name="justificativa"
                     required
-                    validate={value => {
+                    validate={(value) => {
                       for (let validator of [peloMenosUmCaractere, required]) {
                         const erro = validator(value);
                         if (erro) return erro;
@@ -185,9 +189,7 @@ const ModalSuspensaoProdutoEdital = ({
               </div>
               <section className="form-row attachments">
                 <div className="col-9">
-                  <div className="card-title font-weight-bold cinza-escuro">
-                    Anexar
-                  </div>
+                  <div className="card-title fw-bold cinza-escuro">Anexar</div>
                   <div className="text">
                     Anexar fotos, documentos ou relatórios relacionados à
                     reclamação do produto.
@@ -215,17 +217,16 @@ const ModalSuspensaoProdutoEdital = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={closeModalSuspender}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   <Botao
                     texto="Suspender"
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => {
-                      const todosEditaisSelecionados = verificaEditaisSelecionados(
-                        values
-                      );
+                      const todosEditaisSelecionados =
+                        verificaEditaisSelecionados(values);
                       state.tipo_resposta = todosEditaisSelecionados
                         ? "aceitar"
                         : "aceitar_parcialmente";
@@ -234,9 +235,9 @@ const ModalSuspensaoProdutoEdital = ({
                     disabled={
                       peloMenosUmCaractere(values.justificativa) !==
                         undefined ||
-                      (!values.editais_para_suspensao ||
-                        (values.editais_para_suspensao &&
-                          values.editais_para_suspensao.length === 0))
+                      !values.editais_para_suspensao ||
+                      (values.editais_para_suspensao &&
+                        values.editais_para_suspensao.length === 0)
                     }
                   />
                 </div>

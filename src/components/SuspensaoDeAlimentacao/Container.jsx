@@ -13,34 +13,36 @@ class Container extends Component {
       motivos: [],
       periodos: [],
       proximos_dois_dias_uteis: null,
-      proximos_cinco_dias_uteis: null
+      proximos_cinco_dias_uteis: null,
     };
   }
 
   componentDidMount() {
-    meusDados().then(response => {
+    meusDados().then((response) => {
       this.setState({
         meusDados: response,
-        periodos: response.vinculo_atual.instituicao.periodos_escolares
+        periodos: response.vinculo_atual.instituicao.periodos_escolares,
       });
-    });
 
-    getMotivosSuspensaoCardapio().then(response => {
-      this.setState({
-        motivos: agregarDefault(response.results)
+      getMotivosSuspensaoCardapio().then((response) => {
+        this.setState({
+          motivos: agregarDefault(response.data.results),
+        });
       });
-    });
 
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_cinco_dias_uteis)
-      );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_dois_dias_uteis)
-      );
-      this.setState({
-        proximos_dois_dias_uteis,
-        proximos_cinco_dias_uteis
+      getDiasUteis({
+        escola_uuid: response.vinculo_atual.instituicao.uuid,
+      }).then((response) => {
+        const proximos_cinco_dias_uteis = dataParaUTC(
+          new Date(response.data.proximos_cinco_dias_uteis)
+        );
+        const proximos_dois_dias_uteis = dataParaUTC(
+          new Date(response.data.proximos_dois_dias_uteis)
+        );
+        this.setState({
+          proximos_dois_dias_uteis,
+          proximos_cinco_dias_uteis,
+        });
       });
     });
   }

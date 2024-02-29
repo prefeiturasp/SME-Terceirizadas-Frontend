@@ -13,22 +13,22 @@ import { getNomesUnicosEditais } from "services/produto.service";
 import {
   updateStatusDieta,
   updateTituloDieta,
-  updateLoteDieta
+  updateLoteDieta,
 } from "reducers/filtersDietaReducer";
 import {
   updateMarcaProduto,
   updateNomeProduto,
-  updateEditalProduto
+  updateEditalProduto,
 } from "reducers/filtersProdutoReducer";
 import {
   updateDataEventoAlimentacao,
   updateLoteAlimentacao,
   updateStatusAlimentacao,
   updateTipoSolicitacaoAlimentacao,
-  updateTituloAlimentacao
+  updateTituloAlimentacao,
 } from "reducers/filtersAlimentacaoReducer";
 
-const CardBody = props => {
+const CardBody = (props) => {
   const [editais, setEditais] = useState([]);
   const ehTerceirizada = usuarioEhEmpresaTerceirizada();
   const { exibirFiltrosDataEventoETipoSolicitacao } = props;
@@ -40,7 +40,7 @@ const CardBody = props => {
     (async () => {
       const listaEditais = await getNomesUnicosEditais();
       let listaRsultados = listaEditais.data.results;
-      let listaFormatada = listaRsultados.map(element => {
+      let listaFormatada = listaRsultados.map((element) => {
         return { value: element, label: element };
       });
       setEditais(listaFormatada);
@@ -50,7 +50,7 @@ const CardBody = props => {
   return (
     <div className="card mt-3">
       <div className="card-body dash-terc">
-        <div className="card-title font-weight-bold dashboard-card-title">
+        <div className="card-title fw-bold dashboard-card-title">
           <Form
             onSubmit={() => {}}
             initialValues={{}}
@@ -62,7 +62,7 @@ const CardBody = props => {
                       ehTerceirizada && props.listaStatus && props.listaLotes
                         ? "col-3"
                         : ehDashboardGestaoProduto
-                        ? "col-12 text-right"
+                        ? "col-12 text-end"
                         : exibirFiltrosDataEventoETipoSolicitacao
                         ? "col-3 px-0"
                         : "col-6"
@@ -99,7 +99,7 @@ const CardBody = props => {
                         }
                       />
                       <OnChange name="edital">
-                        {edital => {
+                        {(edital) => {
                           props.updateEditalProduto(edital);
                           props.onChange(values);
                         }}
@@ -141,9 +141,12 @@ const CardBody = props => {
                       * mínimo de 3 caracteres
                       <OnChange name="titulo">
                         {(value, previous) => {
-                          props.updateTituloDieta(value);
-                          props.updateNomeProduto(value);
-                          props.updateTituloAlimentacao(value);
+                          pathname === "/painel-dieta-especial" &&
+                            props.updateTituloDieta(value);
+                          pathname === "/painel-gestao-produto" &&
+                            props.updateNomeProduto(value);
+                          pathname === "/painel-gestao-alimentacao" &&
+                            props.updateTituloAlimentacao(value);
                           props.onChange(values, previous);
                         }}
                       </OnChange>
@@ -151,30 +154,32 @@ const CardBody = props => {
                   </div>
                   {exibirFiltrosDataEventoETipoSolicitacao && (
                     <>
-                      <div className={"col-3 pl-0"}>
+                      <div className={"col-3 ps-0"}>
                         <Field
                           component={Select}
                           name="tipo_solicitacao"
                           naoDesabilitarPrimeiraOpcao
                           placeholder="Tipo de Solicitação"
+                          disabled={props.filtrosDesabilitados}
                           options={TIPOS_SOLICITACOES_OPTIONS}
                         />
                       </div>
                       <OnChange name="tipo_solicitacao">
-                        {tipo => {
+                        {(tipo) => {
                           props.updateTipoSolicitacaoAlimentacao(tipo);
                           props.onChange(values);
                         }}
                       </OnChange>
-                      <div className="col-3 pl-0">
+                      <div className="col-3 ps-0">
                         <Field
                           name="data_evento"
                           minDate={null}
                           component={InputComData}
+                          disabled={props.filtrosDesabilitados}
                           placeholder="Data do evento"
                         />
                         <OnChange name="data_evento">
-                          {data => {
+                          {(data) => {
                             props.updateDataEventoAlimentacao(data);
                             props.onChange(values);
                           }}
@@ -198,7 +203,7 @@ const CardBody = props => {
                         * mínimo de 3 caracteres
                       </div>
                       <OnChange name="marca">
-                        {marca => {
+                        {(marca) => {
                           props.updateMarcaProduto(marca);
                           props.onChange(values);
                         }}
@@ -218,7 +223,7 @@ const CardBody = props => {
                           naoDesabilitarPrimeiraOpcao
                         />
                         <OnChange name="status">
-                          {status => {
+                          {(status) => {
                             props.updateStatusAlimentacao(status);
                             props.updateStatusDieta(status);
                             props.onChange(values);
@@ -236,7 +241,7 @@ const CardBody = props => {
                           naoDesabilitarPrimeiraOpcao
                         />
                         <OnChange name="lote">
-                          {lote => {
+                          {(lote) => {
                             props.updateLoteAlimentacao(lote);
                             props.updateLoteDieta(lote);
                             props.onChange(values);
@@ -251,10 +256,11 @@ const CardBody = props => {
                             component={Select}
                             options={TIPOS_SOLICITACOES_OPTIONS}
                             name="tipo_solicitacao"
+                            disabled={props.filtrosDesabilitados}
                             naoDesabilitarPrimeiraOpcao
                           />
                           <OnChange name="tipo_solicitacao">
-                            {tipo => {
+                            {(tipo) => {
                               props.updateTipoSolicitacaoAlimentacao(tipo);
                               props.onChange(values);
                             }}
@@ -266,9 +272,10 @@ const CardBody = props => {
                             minDate={null}
                             component={InputComData}
                             placeholder="Data do evento"
+                            disabled={props.filtrosDesabilitados}
                           />
                           <OnChange name="data_evento">
-                            {data => {
+                            {(data) => {
                               props.updateDataEventoAlimentacao(data);
                               props.onChange(values);
                             }}
@@ -288,43 +295,40 @@ const CardBody = props => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  updateStatusDieta: statusDieta => {
+const mapDispatchToProps = (dispatch) => ({
+  updateStatusDieta: (statusDieta) => {
     dispatch(updateStatusDieta(statusDieta));
   },
-  updateTituloDieta: tituloDieta => {
+  updateTituloDieta: (tituloDieta) => {
     dispatch(updateTituloDieta(tituloDieta));
   },
-  updateLoteDieta: loteDieta => {
+  updateLoteDieta: (loteDieta) => {
     dispatch(updateLoteDieta(loteDieta));
   },
-  updateMarcaProduto: marcaProduto => {
+  updateMarcaProduto: (marcaProduto) => {
     dispatch(updateMarcaProduto(marcaProduto));
   },
-  updateNomeProduto: tituloProduto => {
+  updateNomeProduto: (tituloProduto) => {
     dispatch(updateNomeProduto(tituloProduto));
   },
-  updateEditalProduto: editalProduto => {
+  updateEditalProduto: (editalProduto) => {
     dispatch(updateEditalProduto(editalProduto));
   },
-  updateTituloAlimentacao: tituloAlimentacao => {
+  updateTituloAlimentacao: (tituloAlimentacao) => {
     dispatch(updateTituloAlimentacao(tituloAlimentacao));
   },
-  updateLoteAlimentacao: loteAlimentacao => {
+  updateLoteAlimentacao: (loteAlimentacao) => {
     dispatch(updateLoteAlimentacao(loteAlimentacao));
   },
-  updateStatusAlimentacao: statusAlimentacao => {
+  updateStatusAlimentacao: (statusAlimentacao) => {
     dispatch(updateStatusAlimentacao(statusAlimentacao));
   },
-  updateTipoSolicitacaoAlimentacao: tipoSolicitacaoAlimentacao => {
+  updateTipoSolicitacaoAlimentacao: (tipoSolicitacaoAlimentacao) => {
     dispatch(updateTipoSolicitacaoAlimentacao(tipoSolicitacaoAlimentacao));
   },
-  updateDataEventoAlimentacao: dataEventoAlimentacao => {
+  updateDataEventoAlimentacao: (dataEventoAlimentacao) => {
     dispatch(updateDataEventoAlimentacao(dataEventoAlimentacao));
-  }
+  },
 });
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(CardBody);
+export default connect(null, mapDispatchToProps)(CardBody);

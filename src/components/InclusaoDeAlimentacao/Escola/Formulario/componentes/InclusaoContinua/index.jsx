@@ -3,7 +3,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import CKEditorField from "components/Shareable/CKEditorField";
 import { InputComData } from "components/Shareable/DatePicker";
@@ -17,7 +17,7 @@ import {
   maxValue,
   naoPodeSerZero,
   numericInteger,
-  required
+  required,
 } from "helpers/fieldValidators";
 import {
   agregarDefault,
@@ -26,7 +26,7 @@ import {
   deepEqual,
   fimDoCalendario,
   formatarParaMultiselect,
-  getDataObj
+  getDataObj,
 } from "helpers/utilities";
 import React from "react";
 import { Field } from "react-final-form";
@@ -52,7 +52,7 @@ export const DatasInclusaoContinua = ({ ...props }) => {
               maxDate={fimDoCalendario()}
             />
             <OnChange name={`${name}.data_inicial`}>
-              {value => {
+              {(value) => {
                 if (value) {
                   onDataChanged(value);
                 }
@@ -80,7 +80,7 @@ export const DatasInclusaoContinua = ({ ...props }) => {
   );
 };
 
-const limpaRecorrencia = form => {
+const limpaRecorrencia = (form) => {
   form.change("dias_semana", undefined);
   form.change("tipos_alimentacao_selecionados", []);
   form.change("periodo_escolar");
@@ -96,11 +96,11 @@ export const Recorrencia = ({
   meusDados,
   ehMotivoInclusaoEspecifico,
   uuid,
-  idExterno
+  idExterno,
 }) => {
   form.change("uuid", uuid);
   form.change("id_externo", idExterno);
-  const handleWeekly = async value => {
+  const handleWeekly = async (value) => {
     const dias_semana = values.dias_semana || [];
     if (dias_semana.includes(value)) {
       dias_semana.splice(dias_semana.indexOf(value), 1);
@@ -134,7 +134,7 @@ export const Recorrencia = ({
         values.numero_alunos <= 0 ||
         (!ehMotivoInclusaoEspecifico &&
           values.numero_alunos >
-            periodos.find(p => p.uuid === values.periodo_escolar)
+            periodos.find((p) => p.uuid === values.periodo_escolar)
               ?.maximo_alunos))
     ) {
       toastError("Número de alunos inválido");
@@ -142,7 +142,7 @@ export const Recorrencia = ({
     } else if (
       values.quantidades_periodo &&
       values.quantidades_periodo.find(
-        qp =>
+        (qp) =>
           deepEqual(qp.dias_semana, values.dias_semana) &&
           deepEqual(qp.periodo_escolar, values.periodo_escolar) &&
           deepEqual(qp.tipos_alimentacao, values.tipos_alimentacao_selecionados)
@@ -161,14 +161,14 @@ export const Recorrencia = ({
           periodo_escolar: deepCopy(values.periodo_escolar),
           tipos_alimentacao: deepCopy(values.tipos_alimentacao_selecionados),
           numero_alunos: deepCopy(values.numero_alunos),
-          observacao: values.observacao ? deepCopy(values.observacao) : ""
-        }
+          observacao: values.observacao ? deepCopy(values.observacao) : "",
+        },
       ]);
       limpaRecorrencia(form);
     } else {
       await push("quantidades_periodo");
       ["dias_semana", "periodo_escolar", "numero_alunos", "observacao"].forEach(
-        async item => {
+        async (item) => {
           await form.change(
             `quantidades_periodo[${values.quantidades_periodo.length}].${item}`,
             values[item] ? deepCopy(values[item]) : ""
@@ -176,9 +176,7 @@ export const Recorrencia = ({
         }
       );
       await form.change(
-        `quantidades_periodo[${
-          values.quantidades_periodo.length
-        }].tipos_alimentacao`,
+        `quantidades_periodo[${values.quantidades_periodo.length}].tipos_alimentacao`,
         deepCopy(values.tipos_alimentacao_selecionados)
       );
       limpaRecorrencia(form);
@@ -188,12 +186,13 @@ export const Recorrencia = ({
   const validacaoNumeroAlunos = () => {
     return ehMotivoInclusaoEspecifico
       ? composeValidators(naoPodeSerZero, numericInteger)
-      : periodos.find(p => p.uuid === values.periodo_escolar)
+      : periodos.find((p) => p.uuid === values.periodo_escolar)
       ? composeValidators(
           naoPodeSerZero,
           numericInteger,
           maxValue(
-            periodos.find(p => p.uuid === values.periodo_escolar).maximo_alunos
+            periodos.find((p) => p.uuid === values.periodo_escolar)
+              .maximo_alunos
           )
         )
       : null;
@@ -239,21 +238,21 @@ export const Recorrencia = ({
             selected={values.tipos_alimentacao_selecionados || []}
             options={
               values.periodo_escolar &&
-              periodos.find(p => p.uuid === values.periodo_escolar)
+              periodos.find((p) => p.uuid === values.periodo_escolar)
                 ? formatarParaMultiselect(
-                    periodos.find(p => p.uuid === values.periodo_escolar)
+                    periodos.find((p) => p.uuid === values.periodo_escolar)
                       .tipos_alimentacao
                   )
                 : []
             }
-            onSelectedChanged={values_ => {
+            onSelectedChanged={(values_) => {
               form.change(`tipos_alimentacao_selecionados`, values_);
             }}
             disableSearch={true}
             overrideStrings={{
               selectSomeItems: "Selecione",
               allItemsAreSelected: "Todos os itens estão selecionados",
-              selectAll: "Todos"
+              selectAll: "Todos",
             }}
           />
         </div>
@@ -282,7 +281,7 @@ export const Recorrencia = ({
         name={`observacao`}
       />
       <div className="row mt-3">
-        <div className="col-12 text-right">
+        <div className="col-12 text-end">
           <Botao
             texto="Adicionar recorrência"
             onClick={() => {
@@ -342,7 +341,7 @@ export const RecorrenciaTabela = ({ form, values, periodos }) => {
                       <td className="col-2">
                         {values.quantidades_periodo[indice].periodo_escolar &&
                           periodos.find(
-                            periodo =>
+                            (periodo) =>
                               periodo.uuid ===
                               values.quantidades_periodo[indice].periodo_escolar
                           )?.nome}
@@ -352,17 +351,17 @@ export const RecorrenciaTabela = ({ form, values, periodos }) => {
                           values.quantidades_periodo[indice].periodo_escolar &&
                           periodos
                             .find(
-                              p =>
+                              (p) =>
                                 p.uuid ===
                                 values.quantidades_periodo[indice]
                                   .periodo_escolar
                             )
-                            ?.tipos_alimentacao.filter(t =>
+                            ?.tipos_alimentacao.filter((t) =>
                               values.quantidades_periodo[
                                 indice
                               ].tipos_alimentacao.includes(t.uuid)
                             )
-                            .map(t => t.nome)
+                            .map((t) => t.nome)
                             .join(", ")}
                       </td>
                       <td className="col-1">
@@ -370,7 +369,7 @@ export const RecorrenciaTabela = ({ form, values, periodos }) => {
                       </td>
                       <td
                         dangerouslySetInnerHTML={{
-                          __html: values.quantidades_periodo[indice].observacao
+                          __html: values.quantidades_periodo[indice].observacao,
                         }}
                         className="col-3"
                       />

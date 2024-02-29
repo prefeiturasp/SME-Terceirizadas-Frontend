@@ -5,7 +5,7 @@ import CardMatriculados from "components/Shareable/CardMatriculados";
 import CardPendencia from "components/Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
-  CARD_TYPE_ENUM
+  CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { FILTRO_VISAO, PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { FILTRO } from "../const";
@@ -15,7 +15,7 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS,
-  SOLICITACOES_AGUARDADAS
+  SOLICITACOES_AGUARDADAS,
 } from "configs/constants";
 import { ajustarFormatoLog } from "../helper";
 import {
@@ -24,7 +24,7 @@ import {
   getSolicitacoesPendentesDRE,
   getSolicitacoesCanceladasDRE,
   getSolicitacoesAutorizadasDRE,
-  getSolicitacoesAguardandoCODAE
+  getSolicitacoesAguardandoCODAE,
 } from "services/painelDRE.service";
 import corrigeResumo from "helpers/corrigeDadosDoDashboard";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -34,18 +34,18 @@ import { Select as SelectAntd } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import {
   updateLoteAlimentacao,
-  updateTituloAlimentacao
+  updateTituloAlimentacao,
 } from "reducers/filtersAlimentacaoReducer";
 import { connect } from "react-redux";
 import { Spin } from "antd";
 import CardBody from "components/Shareable/CardBody";
 
-export const DashboardDRE = props => {
+export const DashboardDRE = (props) => {
   const { cards, lotes, handleSubmit, meusDados } = props;
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
   const filtroPorVencimento = FILTRO.SEM_FILTRO;
@@ -56,9 +56,9 @@ export const DashboardDRE = props => {
     ? [
         <Option key={0} value={""}>
           Filtrar por Lote
-        </Option>
+        </Option>,
       ].concat(
-        lotes.map(lote => {
+        lotes.map((lote) => {
           return (
             <Option value={lote.value} key={lote.value}>
               {lote.label}
@@ -71,12 +71,11 @@ export const DashboardDRE = props => {
   const [collapsed, setCollapsed] = useState(true);
   const [filtros, setFiltros] = useState({});
   const [resumo, setResumo] = useState([]);
-  const [loadingPainelSolicitacoes, setLoadingPainelSolicitacoes] = useState(
-    false
-  );
+  const [loadingPainelSolicitacoes, setLoadingPainelSolicitacoes] =
+    useState(false);
   const [
     loadingAcompanhamentoSolicitacoes,
-    setLoadingAcompanhamentoSolicitacoes
+    setLoadingAcompanhamentoSolicitacoes,
   ] = useState(false);
 
   const [solicitacoesFiltradas, setSolicitacoesFiltradas] = useState({
@@ -84,7 +83,7 @@ export const DashboardDRE = props => {
     questionadas: [],
     autorizadas: [],
     negadas: [],
-    canceladas: []
+    canceladas: [],
   });
 
   const getSolicitacoesAsync = async (params = null) => {
@@ -96,25 +95,25 @@ export const DashboardDRE = props => {
 
     setLoadingAcompanhamentoSolicitacoes(true);
 
-    await getSolicitacoesPendentesDRE(params).then(response => {
+    await getSolicitacoesPendentesDRE(params).then((response) => {
       pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(
         response.data.results
       );
     });
 
-    await getSolicitacoesCanceladasDRE(params).then(response => {
+    await getSolicitacoesCanceladasDRE(params).then((response) => {
       canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
     });
 
-    await getSolicitacoesNegadasDRE(params).then(response => {
+    await getSolicitacoesNegadasDRE(params).then((response) => {
       negadasListSolicitacao = ajustarFormatoLog(response.data.results);
     });
 
-    await getSolicitacoesAutorizadasDRE(params).then(response => {
+    await getSolicitacoesAutorizadasDRE(params).then((response) => {
       autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
     });
 
-    await getSolicitacoesAguardandoCODAE(params).then(response => {
+    await getSolicitacoesAguardandoCODAE(params).then((response) => {
       aguardandoCodaeListSolicitacao = ajustarFormatoLog(response.data.results);
     });
 
@@ -123,7 +122,7 @@ export const DashboardDRE = props => {
       aguardandoCodae: aguardandoCodaeListSolicitacao,
       autorizadas: autorizadasListSolicitacao,
       negadas: negadasListSolicitacao,
-      canceladas: canceladasListSolicitacao
+      canceladas: canceladasListSolicitacao,
     });
     setLoadingAcompanhamentoSolicitacoes(false);
   };
@@ -134,11 +133,8 @@ export const DashboardDRE = props => {
       filtroPorVencimento,
       visao,
       prepararParametros(values)
-    ).then(response => {
+    ).then((response) => {
       const resumo = response.data.results;
-      // // TODO melhorar essas duas linhas abaixo
-      resumo["Kit Lanche Unificado"] = resumo["Kit Lanche Passeio Unificado"];
-      delete resumo["Kit Lanche Passeio Unificado"];
       const correcaoOk = corrigeResumo(resumo);
       if (!correcaoOk) toastError("Erro na inclusão de dados da CEI");
       setResumo(resumo);
@@ -146,13 +142,13 @@ export const DashboardDRE = props => {
     setLoadingPainelSolicitacoes(false);
   };
 
-  const onPesquisaChanged = values => {
+  const onPesquisaChanged = (values) => {
     carregaResumoPendencias(values);
     if (values.titulo && values.titulo.length > 2) {
       setTimeout(async () => {
         getSolicitacoesAsync({
           busca: values.titulo,
-          ...prepararParametros(values)
+          ...prepararParametros(values),
         });
       }, 500);
     } else {
@@ -162,29 +158,19 @@ export const DashboardDRE = props => {
     }
   };
 
-  const linkTo = link => {
+  const linkTo = (link) => {
     let url =
       visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO ? `/${DRE}/${link}` : "/";
 
-    return {
-      pathname: url,
-      state: {
-        prevPath: window.location.pathname,
-        filtros: filtros
-      }
-    };
+    return url;
   };
 
-  const prepararParametros = values => {
+  const prepararParametros = (values) => {
     setFiltros(values);
     const params = PARAMS;
     params["tipo_solicitacao"] = values.tipo_solicitacao;
     params["data_evento"] =
-      values.data_evento &&
-      values.data_evento
-        .split("/")
-        .reverse()
-        .join("-");
+      values.data_evento && values.data_evento.split("/").reverse().join("-");
     params["lote"] = values.lote;
     return params;
   };
@@ -216,14 +202,14 @@ export const DashboardDRE = props => {
             />
             <div className="card mt-3">
               <div className="card-body">
-                <div className="card-title font-weight-bold dashboard-card-title">
+                <div className="card-title fw-bold dashboard-card-title">
                   <div className="row">
                     <div className="col-3 mt-3 color-black">Pendências</div>
                     <div className="offset-6 col-3 my-auto">
                       <Field
                         component={ASelect}
                         showSearch
-                        onChange={value => {
+                        onChange={(value) => {
                           form.change(`lote`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                           props.updateLoteAlimentacao(value);
@@ -246,7 +232,13 @@ export const DashboardDRE = props => {
                   {cards.map((card, key) => {
                     return resumo[card.titulo] ? (
                       <div key={key} className="col-6 pb-3">
-                        <Link to={linkTo(card.link)}>
+                        <Link
+                          to={linkTo(card.link)}
+                          state={{
+                            prevPath: window.location.pathname,
+                            filtros: filtros,
+                          }}
+                        >
                           <CardPendencia
                             cardTitle={card.titulo}
                             totalOfOrders={resumo[card.titulo]["TOTAL"] || 0}
@@ -261,7 +253,13 @@ export const DashboardDRE = props => {
                       </div>
                     ) : (
                       <div key={key} className="col-6 pb-3">
-                        <Link to={linkTo(card.link)}>
+                        <Link
+                          to={linkTo(card.link)}
+                          state={{
+                            prevPath: window.location.pathname,
+                            filtros: filtros,
+                          }}
+                        >
                           <CardPendencia
                             cardTitle={card.titulo}
                             totalOfOrders={0}
@@ -281,7 +279,7 @@ export const DashboardDRE = props => {
               exibirFiltrosDataEventoETipoSolicitacao
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
-              onChange={value => {
+              onChange={(value) => {
                 clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(async () => {
                   onPesquisaChanged(value);
@@ -351,7 +349,7 @@ export const DashboardDRE = props => {
             </CardBody>
             <div className="card card-shortcut-to-form mt-3">
               <div className="card-body">
-                <div className="card-title font-weight-bold">
+                <div className="card-title fw-bold">
                   Faça uma Solicitação Unificada
                 </div>
                 <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
@@ -371,16 +369,13 @@ export const DashboardDRE = props => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  updateLoteAlimentacao: loteAlimentacao => {
+const mapDispatchToProps = (dispatch) => ({
+  updateLoteAlimentacao: (loteAlimentacao) => {
     dispatch(updateLoteAlimentacao(loteAlimentacao));
   },
-  updateTituloAlimentacao: tituloAlimentacao => {
+  updateTituloAlimentacao: (tituloAlimentacao) => {
     dispatch(updateTituloAlimentacao(tituloAlimentacao));
-  }
+  },
 });
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(DashboardDRE);
+export default connect(null, mapDispatchToProps)(DashboardDRE);

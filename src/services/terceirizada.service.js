@@ -9,7 +9,7 @@ import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 export const getTerceirizada = (filtros = null) => {
@@ -20,16 +20,16 @@ export const getTerceirizada = (filtros = null) => {
   let status = 0;
   return fetch(url, {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   })
-    .then(response => {
+    .then((response) => {
       status = response.status;
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -39,77 +39,43 @@ export const getTerceirizada_razoes = () => {
   let status = 0;
   return fetch(url, {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   })
-    .then(response => {
+    .then((response) => {
       status = response.status;
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const getTerceirizadaUUID = uuid => {
-  const url = `${API_URL}/terceirizadas/${uuid}/`;
-  let status = 0;
-  return fetch(url, {
-    headers: authToken,
-    method: "GET"
-  })
-    .then(response => {
-      status = response.status;
-      return response.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
-};
+export const getTerceirizadaUUID = async (uuid) =>
+  await axios.get(`/terceirizadas/${uuid}/`);
 
-export const createNaoTerceirizada = payload => {
-  const url = `${API_URL}/empresas-nao-terceirizadas/`;
+export const createNaoTerceirizada = async (payload) =>
+  await axios.post("/empresas-nao-terceirizadas/", payload);
 
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
-};
-
-export const createTerceirizada = payload => {
+export const createTerceirizada = (payload) => {
   const url = `${API_URL}/terceirizadas/`;
 
   let status = 0;
   return fetch(url, {
     method: "POST",
     body: JSON.stringify(payload),
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -121,57 +87,48 @@ export const updateTerceirizada = (uuid, payload) => {
   return fetch(url, {
     method: "PUT",
     body: JSON.stringify(payload),
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const updateNaoTerceirizada = (uuid, payload) => {
-  const url = `${API_URL}/empresas-nao-terceirizadas/${uuid}/`;
+export const updateNaoTerceirizada = async (uuid, payload) =>
+  await axios.patch(`/empresas-nao-terceirizadas/${uuid}/`, payload);
 
-  let status = 0;
-  return fetch(url, {
-    method: "PUT",
-    body: JSON.stringify(payload),
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+export const encerraContratoTerceirizada = async (uuid) => {
+  const url = `/contratos/${uuid}/encerrar-contrato/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const encerraContratoTerceirizada = async uuid =>
-  await axios.patch(`/contratos/${uuid}/encerrar-contrato/`);
+export const obterNumeroContratosCadastrados = async () =>
+  await axios.get("/contratos/numeros-contratos-cadastrados/");
 
-export const getRelatorioQuantitativo = async params => {
+export const getRelatorioQuantitativo = async (params) => {
   if (params) {
     return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO, { params });
   }
   return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO);
 };
 
-export const getPdfRelatorioQuantitativo = async params => {
+export const getPdfRelatorioQuantitativo = async (params) => {
   const { data } = await axios.get(
     "/terceirizadas/imprimir-relatorio-quantitativo/",
     {
       responseType: "blob",
-      params
+      params,
     }
   );
   saveAs(data, "relatorio_quantitativo_por_terceirizada.pdf");
@@ -183,7 +140,7 @@ export const getEmpresasCronograma = async () =>
 export const getCNPJsEmpresas = async () =>
   await axios.get("/terceirizadas/lista-cnpjs/");
 
-export const getEmailsTerceirizadasPorModulo = async params => {
+export const getEmailsTerceirizadasPorModulo = async (params) => {
   const url = `/terceirizadas/emails-por-modulo/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
@@ -192,7 +149,7 @@ export const getEmailsTerceirizadasPorModulo = async params => {
   }
 };
 
-export const createEmailsTerceirizadasPorModulo = async payload => {
+export const createEmailsTerceirizadasPorModulo = async (payload) => {
   return axios.post(`/emails-terceirizadas-modulos/`, payload);
 };
 
@@ -205,7 +162,7 @@ export const updateEmailsTerceirizadasPorModulo = async (uuid, payload) => {
   }
 };
 
-export const deleteEmailsTerceirizadasPorModulo = async uuid => {
+export const deleteEmailsTerceirizadasPorModulo = async (uuid) => {
   const url = `/emails-terceirizadas-modulos/${uuid}/`;
   const response = await axios.delete(url).catch(ErrorHandlerFunction);
   if (response) {

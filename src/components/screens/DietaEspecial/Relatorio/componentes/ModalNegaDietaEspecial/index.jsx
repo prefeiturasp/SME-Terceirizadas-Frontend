@@ -5,18 +5,18 @@ import { Field, Form } from "react-final-form";
 import CKEditorField from "components/Shareable/CKEditorField";
 import {
   toastError,
-  toastSuccess
+  toastSuccess,
 } from "../../../../../Shareable/Toast/dialogs";
 import Botao from "../../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../../Shareable/Botao/constants";
 import Select from "../../../../../Shareable/Select";
 import {
   peloMenosUmCaractere,
   required,
-  textAreaRequired
+  textAreaRequired,
 } from "helpers/fieldValidators";
 import { composeValidators } from "helpers/utilities";
 import { agregarDefault } from "../../../../../../helpers/utilities";
@@ -28,7 +28,7 @@ export default class ModalNegarSolicitacao extends Component {
     this.state = { motivosNegacao: [] };
   }
 
-  onSubmit = async values => {
+  onSubmit = async (values) => {
     const { uuid, submitModal } = this.props;
     const resp = await submitModal(uuid, values);
     if (resp.status === HTTP_STATUS.OK) {
@@ -45,7 +45,7 @@ export default class ModalNegarSolicitacao extends Component {
   componentDidMount = async () => {
     const motivosNegacao = await this.props.getMotivos();
     this.setState({
-      motivosNegacao: agregarDefault(formataMotivos(motivosNegacao.results))
+      motivosNegacao: agregarDefault(formataMotivos(motivosNegacao.results)),
     });
   };
 
@@ -101,13 +101,13 @@ export default class ModalNegarSolicitacao extends Component {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={this.props.closeModal}
                       style={BUTTON_STYLE.DARK_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Sim"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                     />
                   </div>

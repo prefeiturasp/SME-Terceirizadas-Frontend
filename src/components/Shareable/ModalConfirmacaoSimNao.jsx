@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants.js";
 
 const ModalConfirmacaoSimNao = ({
@@ -13,7 +13,7 @@ const ModalConfirmacaoSimNao = ({
   titulo,
   corpo,
   onSimClick,
-  onNaoClick
+  onNaoClick,
 }) => {
   return (
     <Modal
@@ -36,14 +36,14 @@ const ModalConfirmacaoSimNao = ({
             onNaoClick();
           }}
           style={BUTTON_STYLE.BLUE_OUTLINE}
-          className="ml-3"
+          className="ms-3"
         />
         <Botao
           texto="Sim"
           type={BUTTON_TYPE.BUTTON}
           onClick={onSimClick}
           style={BUTTON_STYLE.BLUE}
-          className="ml-3"
+          className="ms-3"
         />
       </Modal.Footer>
     </Modal>
@@ -56,11 +56,11 @@ ModalConfirmacaoSimNao.propTypes = {
   titulo: PropTypes.string,
   onSimClick: PropTypes.func.isRequired,
   onNaoClick: PropTypes.func,
-  corpo: PropTypes.element
+  corpo: PropTypes.element,
 };
 
 ModalConfirmacaoSimNao.defaultProps = {
-  onNaoClick: () => {}
+  onNaoClick: () => {},
 };
 
 export default ModalConfirmacaoSimNao;

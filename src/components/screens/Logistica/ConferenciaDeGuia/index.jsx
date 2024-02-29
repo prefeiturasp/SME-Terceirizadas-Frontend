@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { Spin, Radio, Checkbox } from "antd";
 import {
   getGuiaParaConferencia,
-  getConferenciaParaEdicao
+  getConferenciaParaEdicao,
 } from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
@@ -15,7 +15,7 @@ import {
   maxLength,
   apenasLetras,
   alphaNumeric,
-  peloMenosUmNumeroEUmaLetra
+  peloMenosUmNumeroEUmaLetra,
 } from "../../../../helpers/fieldValidators";
 import { composeValidators } from "../../../../helpers/utilities";
 import TabelaAlimentoConsolidado from "components/Logistica/TabelaAlimentoConsolidado";
@@ -24,7 +24,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import ReceberSemOcorrencia from "./components/ReceberSemOcorrencia";
 import moment from "moment";
@@ -47,7 +47,7 @@ export default () => {
   const [existeOcorrencia, setExisteOcorrencia] = useState();
   const [uuidEdicao, setUuidEdicao] = useState(false);
 
-  const carregarGuia = async uuid => {
+  const carregarGuia = async (uuid) => {
     let response;
     try {
       setCarregando(true);
@@ -55,12 +55,12 @@ export default () => {
       response = await getGuiaParaConferencia(params);
       setGuia(response.data);
       setNomesAlimentos(
-        response.data.alimentos.map(alimento => alimento.nome_alimento)
+        response.data.alimentos.map((alimento) => alimento.nome_alimento)
       );
       setInitialValues({
         numero_guia: response.data.numero_guia,
         data_entrega: response.data.data_entrega,
-        hora_recebimento: "00:00"
+        hora_recebimento: "00:00",
       });
       setCarregando(false);
     } catch (e) {
@@ -69,7 +69,7 @@ export default () => {
     }
   };
 
-  const carregarConferenciaEdicao = async uuid => {
+  const carregarConferenciaEdicao = async (uuid) => {
     let response;
     try {
       setCarregando(true);
@@ -78,7 +78,7 @@ export default () => {
       let conferencia = response.data.results;
       setGuia(conferencia.guia);
       setNomesAlimentos(
-        conferencia.guia.alimentos.map(alimento => alimento.nome_alimento)
+        conferencia.guia.alimentos.map((alimento) => alimento.nome_alimento)
       );
       setExisteOcorrencia(conferencia.guia.status !== "Recebida");
       setInitialValues({
@@ -87,7 +87,7 @@ export default () => {
         hora_recebimento: conferencia.hora_recebimento,
         placa_veiculo: conferencia.placa_veiculo,
         data_entrega_real: conferencia.data_recebimento,
-        nome_motorista: conferencia.nome_motorista
+        nome_motorista: conferencia.nome_motorista,
       });
       setHoraRecebimento(conferencia.hora_recebimento);
       setHoraRecebimentoAlterada(true);
@@ -100,7 +100,7 @@ export default () => {
     }
   };
 
-  const escolherHora = hora => {
+  const escolherHora = (hora) => {
     if (hora) {
       const horario = moment(hora).format("HH:mm");
       setHoraRecebimento(horario);
@@ -111,17 +111,17 @@ export default () => {
     }
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     values.hora_recebimento = HoraRecebimento;
     values.data_recebimento = values.data_entrega_real;
     values.guia = uuid;
   };
 
-  const onChangeCampos = e => {
+  const onChangeCampos = (e) => {
     setExisteOcorrencia(e.target.value);
   };
 
-  const validaDataEntrega = value => {
+  const validaDataEntrega = (value) => {
     if (value === null) return "Digite uma data válida";
     if (guia.status === "Insucesso de entrega") return undefined;
     let dataPrevista = moment(guia.data_entrega, "DD/MM/YYYY");
@@ -131,17 +131,17 @@ export default () => {
     else return undefined;
   };
 
-  const validaHoraRecebimento = value => {
+  const validaHoraRecebimento = (value) => {
     value = HoraRecebimentoAlterada ? HoraRecebimento : undefined;
     return value !== undefined ? "" : "Campo obrigatório";
   };
 
-  const onChangeAlimentos = list => {
+  const onChangeAlimentos = (list) => {
     setAlimentos(list);
     localStorage.alimentosConferencia = JSON.stringify(list);
   };
 
-  const onChangeAlimentosAll = e => {
+  const onChangeAlimentosAll = (e) => {
     let listaAlimentos = e.target.checked ? nomesAlimentos : [];
     setAlimentos(listaAlimentos);
     localStorage.alimentosConferencia = JSON.stringify(listaAlimentos);
@@ -291,7 +291,7 @@ export default () => {
                             name="hora_recebimento"
                             placeholder="Selecione a Hora"
                             horaAtual={HoraRecebimento}
-                            onChangeFunction={data => {
+                            onChangeFunction={(data) => {
                               escolherHora(data);
                             }}
                             className="input-busca-produto"
@@ -328,7 +328,7 @@ export default () => {
                           />
                         </div>
                         <NavLink
-                          className="float-right ml-3"
+                          className="float-end ms-3"
                           to={`/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}?uuid=${
                             guia.uuid
                           }${uuidEdicao ? "&editar=true" : ""}`}

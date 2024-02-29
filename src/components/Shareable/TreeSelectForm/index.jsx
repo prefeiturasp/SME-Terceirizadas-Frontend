@@ -2,7 +2,7 @@ import { TreeSelect } from "antd";
 import React from "react";
 import { InputErroMensagem } from "components/Shareable/Input/InputErroMensagem";
 
-const TreeSelectForm = props => {
+const TreeSelectForm = (props) => {
   const { label, meta, treeData, input, name, required } = props;
 
   return (
@@ -15,7 +15,7 @@ const TreeSelectForm = props => {
         ),
         <label key={1} htmlFor={name} className="col-form-label">
           {label}
-        </label>
+        </label>,
       ]}
       <TreeSelect
         {...props}

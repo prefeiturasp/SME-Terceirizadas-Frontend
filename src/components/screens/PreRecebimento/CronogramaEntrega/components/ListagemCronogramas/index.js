@@ -7,20 +7,25 @@ import {
   DETALHE_CRONOGRAMA,
   PRE_RECEBIMENTO,
   EDITAR,
-  ALTERACAO_CRONOGRAMA
+  ALTERACAO_CRONOGRAMA,
 } from "configs/constants";
 import {
-  usuarioEhCronogramaCriacaoEdicao,
-  usuarioEhEmpresaFornecedor
+  usuarioEhCronograma,
+  usuarioEhEmpresaFornecedor,
+  formataMilhar,
 } from "helpers/utilities";
 import { deParaStatusCronograma } from "../Filtros/utils";
 import { Tooltip } from "antd";
 import { formataNome } from "./helpers";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { imprimirCronograma } from "services/cronograma.service";
+import {
+  usuarioEhDilogDiretoria,
+  usuarioEhDinutreDiretoria,
+} from "../../../../../../helpers/utilities";
 
 const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
-  const statusValue = status => {
+  const statusValue = (status) => {
     if (
       status === "Assinado e Enviado ao Fornecedor" &&
       usuarioEhEmpresaFornecedor()
@@ -31,7 +36,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
     }
   };
 
-  const baixarPDFCronograma = cronograma => {
+  const baixarPDFCronograma = (cronograma) => {
     setCarregando(true);
     let uuid = cronograma.uuid;
     let numero = cronograma.numero;
@@ -39,14 +44,24 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
       .then(() => {
         setCarregando(false);
       })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
   };
 
+  const getAssinarEnviar = (cronograma) => {
+    return (
+      (usuarioEhEmpresaFornecedor() &&
+        cronograma.status === "Assinado e Enviado ao Fornecedor") ||
+      (usuarioEhDinutreDiretoria() &&
+        cronograma.status === "Assinado Fornecedor") ||
+      (usuarioEhDilogDiretoria() && cronograma.status === "Assinado Dinutre")
+    );
+  };
+
   return (
-    <section className="resultado-cronograma-de-entrega">
+    <section className="resultado-cronograma-de-entrega mt-5">
       <header>
         <div className="row">
           <div className="col-5">
@@ -54,9 +69,9 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
               Resultados da Pesquisa
             </p>
           </div>
-          <div className="col-7 text-right">
+          <div className="col-7 text-end">
             <p className="helper-grid-alunos-matriculados">
-              <i className="fa fa-info-circle mr-2" />
+              <i className="fa fa-info-circle me-2" />
               Veja a descrição do produto passando o mouse sobre o nome.
             </p>
           </div>
@@ -87,7 +102,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                       overlayStyle={{
                         maxWidth: "320px",
                         fontSize: "12px",
-                        fontWeight: "700"
+                        fontWeight: "700",
                       }}
                       title={cronograma.produto && cronograma.produto.nome}
                     >
@@ -96,7 +111,8 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                     </Tooltip>
                   </div>
                   <div className={`${bordas}`}>
-                    {cronograma.qtd_total_programada}
+                    {cronograma.qtd_total_programada &&
+                      formataMilhar(cronograma.qtd_total_programada)}
                   </div>
                   <div className={`${bordas}`}>
                     {cronograma.armazem
@@ -112,52 +128,52 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                       {cronograma.status !== "Rascunho" ? (
                         <>
                           <NavLink
-                            className="float-left"
-                            to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
-                              cronograma.uuid
-                            }`}
+                            className="float-start"
+                            to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${cronograma.uuid}`}
                           >
-                            <span className="link-acoes green">Detalhar</span>
+                            <span className="link-acoes green">
+                              {getAssinarEnviar(cronograma) ? (
+                                <i
+                                  className="fas fa-file-signature"
+                                  title="Assinar"
+                                />
+                              ) : (
+                                <i className="fas fa-eye" title="Detalhar" />
+                              )}
+                            </span>
                           </NavLink>
 
                           {cronograma.status === "Assinado CODAE" && (
-                            <>
-                              <span className="ml-1">| </span>
-                              <span
-                                className="float-left ml-1 link-acoes green"
-                                onClick={() => baixarPDFCronograma(cronograma)}
-                              >
-                                Imprimir
-                              </span>
-                            </>
+                            <span
+                              className="float-start ms-1 link-acoes green"
+                              onClick={() => baixarPDFCronograma(cronograma)}
+                            >
+                              <i className="fas fa-print" title="Imprimir" />
+                            </span>
                           )}
                           {cronograma.status === "Assinado CODAE" &&
-                            usuarioEhEmpresaFornecedor() && (
-                              <>
-                                <span className="ml-1">|</span>
-                                <NavLink
-                                  className="float-left ml-1"
-                                  to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${
-                                    cronograma.uuid
-                                  }`}
-                                >
-                                  <span className="link-acoes green">
-                                    Solicitar Alteração
-                                  </span>
-                                </NavLink>
-                              </>
+                            (usuarioEhEmpresaFornecedor() ||
+                              usuarioEhCronograma()) && (
+                              <NavLink
+                                className="float-start ms-1"
+                                to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${cronograma.uuid}`}
+                              >
+                                <span className="link-acoes laranja">
+                                  <i className="fas fa-edit" title="Alterar" />
+                                </span>
+                              </NavLink>
                             )}
                         </>
                       ) : (
                         <>
-                          {usuarioEhCronogramaCriacaoEdicao() && (
+                          {usuarioEhCronograma() && (
                             <NavLink
-                              className="float-left"
-                              to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${
-                                cronograma.uuid
-                              }`}
+                              className="float-start"
+                              to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${cronograma.uuid}`}
                             >
-                              <span className="link-acoes green">Editar</span>
+                              <span className="link-acoes green">
+                                <i className="fas fa-edit" title="Editar" />
+                              </span>
                             </NavLink>
                           )}
                         </>

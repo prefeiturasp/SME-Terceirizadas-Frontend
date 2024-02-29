@@ -36,10 +36,10 @@
       }
     }
     .is-active {
-      color: #2670e8;
+      color: $greenDark;
       font-weight: 600;
       a {
-        color: #2670e8;
+        color: $greenDark;
         font-weight: 600;
         text-decoration: none;
       }
@@ -65,16 +65,16 @@
 
 .dark-content {
   .contrast {
-    color: #fff;
+    color: $white;
   }
   .br-breadcrumb {
     li {
       a {
-        color: #fff;
+        color: $white;
       }
     }
     .is-active {
-      color: #fff;
+      color: $white;
     }
   }
 }

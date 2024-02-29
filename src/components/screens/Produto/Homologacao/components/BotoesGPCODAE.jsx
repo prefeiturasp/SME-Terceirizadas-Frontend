@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { ModalPadrao } from "components/Shareable/ModalPadrao";
 import { ModalVincularEditais } from "./ModelVincularEditais";
@@ -10,7 +10,7 @@ import {
   CODAECancelaSoliticaoCorrecao,
   CODAENaoHomologaProduto,
   CODAEPedeAnaliseSensorialProduto,
-  CODAEPedeCorrecao
+  CODAEPedeCorrecao,
 } from "services/produto.service";
 import ModalAtivacaoSuspensaoProduto from "../../AtivacaoSuspensao/ModalAtivacaoSuspensaoProduto";
 
@@ -23,18 +23,18 @@ export const BotoesGPCODAE = ({
   setEditais,
   editais,
   tipoModal,
-  values
+  values,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalHomologar, setShowModalHomologar] = useState(false);
   const [showModalSuspender, setShowModalSuspender] = useState(false);
   const [propsModal, setPropsModal] = useState({});
 
-  const onChangeEditais = values => {
+  const onChangeEditais = (values) => {
     setEditais(values);
   };
 
-  const setPropsModalPadrao = tipoModal => {
+  const setPropsModalPadrao = (tipoModal) => {
     switch (tipoModal) {
       case "analise":
         setPropsModal({
@@ -46,7 +46,7 @@ export const BotoesGPCODAE = ({
           helpText:
             "Solicitamos que seja informado a quantidade e descrição para análise sensorial",
           eAnalise: true,
-          tipoModal: tipoModal
+          tipoModal: tipoModal,
         });
         break;
 
@@ -58,7 +58,7 @@ export const BotoesGPCODAE = ({
           labelJustificativa: "Justificativa",
           helpText: undefined,
           eAnalise: false,
-          tipoModal: tipoModal
+          tipoModal: tipoModal,
         });
         break;
 
@@ -71,7 +71,7 @@ export const BotoesGPCODAE = ({
           labelJustificativa: "Justificativa",
           helpText: undefined,
           eAnalise: false,
-          tipoModal: tipoModal
+          tipoModal: tipoModal,
         });
         break;
 
@@ -84,7 +84,7 @@ export const BotoesGPCODAE = ({
           helpText: undefined,
           eAnalise: false,
           tipoModal: tipoModal,
-          cancelaSolicitacao: homologacao
+          cancelaSolicitacao: homologacao,
         });
         break;
 
@@ -146,10 +146,10 @@ export const BotoesGPCODAE = ({
         status={homologacao.status}
         terceirizada={
           homologacao.logs.filter(
-            log => log.status_evento_explicacao === "Solicitação Realizada"
+            (log) => log.status_evento_explicacao === "Solicitação Realizada"
           )[
             homologacao.logs.filter(
-              log => log.status_evento_explicacao === "Solicitação Realizada"
+              (log) => log.status_evento_explicacao === "Solicitação Realizada"
             ).length - 1
           ].usuario
         }
@@ -161,7 +161,7 @@ export const BotoesGPCODAE = ({
           <>
             <Botao
               texto="Cancelar Solicitação"
-              className="float-right"
+              className="float-end"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => setPropsModalPadrao("cancelar")}
               style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -173,7 +173,7 @@ export const BotoesGPCODAE = ({
               texto={
                 homologacao.esta_homologado ? "Aceitar alterações" : "Homologar"
               }
-              className="float-right"
+              className="float-end"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => setShowModalHomologar(true)}
               style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -183,7 +183,7 @@ export const BotoesGPCODAE = ({
               texto={
                 homologacao.esta_homologado ? "Suspender" : "Não homologar"
               }
-              className="mr-3 float-right"
+              className="me-3 float-end"
               onClick={() =>
                 homologacao.esta_homologado
                   ? setShowModalSuspender(true)
@@ -195,7 +195,7 @@ export const BotoesGPCODAE = ({
             />
             <Botao
               texto="Corrigir"
-              className="mr-3 float-right"
+              className="me-3 float-end"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
               onClick={() => setPropsModalPadrao("corrigir")}
@@ -203,7 +203,7 @@ export const BotoesGPCODAE = ({
             />
             <Botao
               texto="Solicitar análise sensorial"
-              className="mr-3 float-right"
+              className="me-3 float-end"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => setPropsModalPadrao("analise")}
               style={BUTTON_STYLE.GREEN}

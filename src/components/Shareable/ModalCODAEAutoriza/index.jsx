@@ -7,7 +7,7 @@ import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import {
   maxLengthProduto,
-  textAreaRequiredAndAtLeastOneCharacter
+  textAreaRequiredAndAtLeastOneCharacter,
 } from "helpers/fieldValidators";
 import CKEditorField from "../CKEditorField";
 import { toastError, toastSuccess, toastWarn } from "../Toast/dialogs";
@@ -27,13 +27,13 @@ export class ModalCODAEAutoriza extends Component {
   setDesabilitarSubmit(value) {
     if (this.props.ehInclusao) {
       this.setState({
-        desabilitarSubmit: maxLength1500(value)
+        desabilitarSubmit: maxLength1500(value),
       });
     } else {
       this.setState({
         desabilitarSubmit:
           [undefined, null, "", "<p></p>\n"].includes(value) ||
-          maxLength1500(value)
+          maxLength1500(value),
       });
     }
   }
@@ -91,7 +91,7 @@ export class ModalCODAEAutoriza extends Component {
                       }
                     />
                     <OnChange name="justificativa_autorizacao">
-                      {value => {
+                      {(value) => {
                         this.setDesabilitarSubmit(value);
                       }}
                     </OnChange>
@@ -106,7 +106,7 @@ export class ModalCODAEAutoriza extends Component {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Sim"
@@ -116,7 +116,7 @@ export class ModalCODAEAutoriza extends Component {
                       }}
                       disabled={this.state.desabilitarSubmit}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

@@ -28,7 +28,7 @@ const ResponderQuestionamentoUE = () => {
     }
   }, [nome_produto]);
 
-  const changePage = async page => {
+  const changePage = async (page) => {
     try {
       setCarregando(true);
       const response = await filtrarReclamacoesEscola(
@@ -85,12 +85,12 @@ const ResponderQuestionamentoUE = () => {
                 current={page || 1}
                 total={total}
                 showSizeChanger={false}
-                onChange={page => {
+                onChange={(page) => {
                   setPage(page);
                   changePage(page);
                 }}
                 pageSize={10}
-              />
+              />,
             ]}
           </Spin>
         </div>

@@ -7,18 +7,18 @@ import GestaoAcesso from "components/screens/Configuracoes/GestaoAcesso";
 
 const atual = {
   href: `/${CONFIGURACOES}/${GESTAO_ACESSO_EMPRESA}`,
-  titulo: "Gestão de Acesso"
+  titulo: "Gestão de Acesso",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Configurações"
+    titulo: "Configurações",
   },
   {
     href: `/`,
-    titulo: "Gestão de Usuários"
-  }
+    titulo: "Gestão de Usuários",
+  },
 ];
 
 export default () => (

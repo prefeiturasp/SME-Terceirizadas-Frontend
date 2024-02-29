@@ -1,17 +1,19 @@
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
   stringSeparadaPorVirgulas,
   ehInclusaoContinua,
   ehInclusaoCei,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
+  gerarLinkRelatorio,
 } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { formataMotivosDias } from "./helper";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
@@ -20,6 +22,12 @@ import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/Relatorio
 import { getRelatorioInclusaoAlimentacao } from "services/relatorios";
 import { WEEK } from "configs/constants";
 import InclusoesCEI from "./InclusoesCEI";
+import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
+import { SolicitacoesSimilaresInclusao } from "components/Shareable/SolicitacoesSimilaresInclusao";
+import {
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhDRE,
+} from "helpers/utilities";
 
 const renderParteAvulsa = (
   inclusaoDeAlimentacao,
@@ -27,18 +35,17 @@ const renderParteAvulsa = (
   tipoSolicitacao
 ) => {
   const diasMotivosFormatados = formataMotivosDias(inclusoes);
-
-  const getDia = dia => {
+  const getDia = (dia) => {
     return inclusaoDeAlimentacao[
       !ehInclusaoCei(tipoSolicitacao)
         ? "inclusoes"
         : "dias_motivos_da_inclusao_cei"
-    ].find(i => i.data === dia);
+    ].find((i) => i.data === dia);
   };
 
   return (
     <>
-      <table className="table-reasons">
+      <table className="table-reasons-inclusao">
         <tbody>
           {Object.entries(diasMotivosFormatados).map((dadosMotivo, key) => {
             const [motivo, datas] = dadosMotivo;
@@ -77,16 +84,74 @@ const renderParteAvulsa = (
                     );
                   })}
                 </tr>
+                <hr />
               </Fragment>
             );
           })}
+          {inclusaoDeAlimentacao[
+            !ehInclusaoCei(tipoSolicitacao)
+              ? "inclusoes"
+              : "dias_motivos_da_inclusao_cei"
+          ]
+            .filter(
+              (inclusao) =>
+                inclusao.motivo.nome.includes("Outro") ||
+                inclusao.motivo.nome.includes("Evento Específico")
+            )
+            .map((inclusao, key) => {
+              return [
+                <tr className="row" key={key}>
+                  <th className="col-2">Motivo</th>
+                  <th className="col-10">Dia de inclusão</th>
+                </tr>,
+                <tr className="row" key={key}>
+                  <td className="col-2">{inclusao.motivo.nome}</td>
+                  <td
+                    key={key}
+                    className={`col-2 ${
+                      inclusao.cancelado ||
+                      inclusaoDeAlimentacao.status === "ESCOLA_CANCELOU"
+                        ? `cancelado`
+                        : ""
+                    }`}
+                  >
+                    <span>{inclusao.data}</span>
+                    {(inclusao.cancelado ||
+                      inclusaoDeAlimentacao.status === "ESCOLA_CANCELOU") && (
+                      <div className="dark-red">
+                        <strong>justificativa:</strong>{" "}
+                        {inclusao.cancelado_justificativa ||
+                          inclusaoDeAlimentacao.logs[
+                            inclusaoDeAlimentacao.logs.length - 1
+                          ].justificativa}
+                      </div>
+                    )}
+                  </td>
+                </tr>,
+                <tr className="row" key={key}>
+                  <th className="col-12">
+                    {inclusao.motivo.nome.includes("Evento Específico")
+                      ? "Descrição do Evento"
+                      : "Qual o motivo?"}
+                  </th>
+                </tr>,
+                <tr className="row" key={key}>
+                  <td className="col-12">
+                    {inclusao.motivo.nome.includes("Evento Específico")
+                      ? inclusao.evento
+                      : inclusao.outro_motivo}
+                  </td>
+                </tr>,
+                <hr key={key} />,
+              ];
+            })}
         </tbody>
       </table>
     </>
   );
 };
 
-const renderParteContinua = inclusaoDeAlimentacao => {
+const renderParteContinua = (inclusaoDeAlimentacao) => {
   const { motivo, data_final, data_inicial } = inclusaoDeAlimentacao;
   return (
     <div>
@@ -109,11 +174,12 @@ const renderParteContinua = inclusaoDeAlimentacao => {
 };
 
 export const CorpoRelatorio = ({ ...props }) => {
-  const {
-    tipoSolicitacao,
-    prazoDoPedidoMensagem,
-    inclusaoDeAlimentacao
-  } = props;
+  const { tipoSolicitacao, prazoDoPedidoMensagem, inclusaoDeAlimentacao } =
+    props;
+
+  const [solicitacoesSimilares, setSolicitacoesSimilares] = useState(
+    props.solicitacoesSimilares
+  );
 
   const [baixandoPDF, setBaixandoPDF] = useState(false);
 
@@ -123,6 +189,20 @@ export const CorpoRelatorio = ({ ...props }) => {
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     inclusaoDeAlimentacao.logs
   );
+
+  const collapseSolicitacaoSimilar = (idxSolicitacaoSimilar) => {
+    const novoSolicitacoesSimilares = solicitacoesSimilares.map(
+      (solicitacaoSimilar, index) => {
+        if (index === idxSolicitacaoSimilar) {
+          solicitacaoSimilar.collapsed = !solicitacaoSimilar.collapsed;
+        }
+        return solicitacaoSimilar;
+      }
+    );
+
+    setSolicitacoesSimilares(novoSolicitacoesSimilares);
+  };
+
   return (
     <div>
       <div className="row">
@@ -142,7 +222,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               )
             }
             disabled={baixandoPDF}
-            className="float-right"
+            className="float-end"
             onClick={async () => {
               setBaixandoPDF(true);
               await getRelatorioInclusaoAlimentacao(
@@ -162,7 +242,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="pl-2 my-auto offset-1 col-5">
+        <div className="ps-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
@@ -222,6 +302,56 @@ export const CorpoRelatorio = ({ ...props }) => {
         </div>
       )}
       <hr />
+      {(usuarioEhCODAEGestaoAlimentacao() || usuarioEhDRE()) &&
+        solicitacoesSimilares &&
+        solicitacoesSimilares.length > 0 && (
+          <>
+            {solicitacoesSimilares.map((solicitacao, idxSolicitacaoSimilar) => {
+              return (
+                <>
+                  <div className="row" key={idxSolicitacaoSimilar}>
+                    <div className="col-2">
+                      <p>
+                        Solicitação Similar:
+                        <b className="gatilho-style">
+                          <Link
+                            style={{
+                              color: "#0c6b45",
+                            }}
+                            to={gerarLinkRelatorio(
+                              `inclusao-de-alimentacao${
+                                solicitacao.dias_motivos_da_inclusao_cemei
+                                  ? "-cemei"
+                                  : ""
+                              }`,
+                              solicitacao
+                            )}
+                            target="blank"
+                          >
+                            {`#${solicitacao.id_externo}`}
+                          </Link>
+                          <ToggleExpandir
+                            onClick={() =>
+                              collapseSolicitacaoSimilar(idxSolicitacaoSimilar)
+                            }
+                            ativo={solicitacao.collapsed}
+                            className="icon-padding"
+                          />
+                        </b>
+                      </p>
+                    </div>
+                  </div>
+                  <SolicitacoesSimilaresInclusao
+                    key={idxSolicitacaoSimilar}
+                    solicitacao={solicitacao}
+                    index={idxSolicitacaoSimilar}
+                  />
+                </>
+              );
+            })}
+            <hr />
+          </>
+        )}
       {ehInclusaoContinua(tipoSolicitacao)
         ? renderParteContinua(inclusaoDeAlimentacao)
         : renderParteAvulsa(
@@ -231,8 +361,8 @@ export const CorpoRelatorio = ({ ...props }) => {
                 {
                   data: inclusaoDeAlimentacao.data,
                   motivo: inclusaoDeAlimentacao.motivo,
-                  outro_motivo: inclusaoDeAlimentacao.outro_motivo
-                }
+                  outro_motivo: inclusaoDeAlimentacao.outro_motivo,
+                },
               ],
             tipoSolicitacao
           )}
@@ -324,7 +454,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                                 <p
                                   className="value"
                                   dangerouslySetInnerHTML={{
-                                    __html: quantidade_por_periodo.observacao
+                                    __html: quantidade_por_periodo.observacao,
                                   }}
                                 />
                               ) : (
@@ -336,12 +466,10 @@ export const CorpoRelatorio = ({ ...props }) => {
                               inclusaoDeAlimentacao.status ===
                                 "ESCOLA_CANCELOU") && (
                               <p className="justificativa-cancelamento dark-red">
-                                <span className="font-weight-bold">
-                                  justificativa:{" "}
-                                </span>
+                                <span className="fw-bold">justificativa: </span>
                                 {quantidade_por_periodo.cancelado_justificativa ||
                                   inclusaoDeAlimentacao.logs.find(
-                                    log =>
+                                    (log) =>
                                       log.status_evento_explicacao ===
                                       "Escola cancelou"
                                   ).justificativa}
@@ -349,7 +477,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                             )}
                           </td>
                         </tr>
-                      )
+                      ),
                     ];
                   }
                 )
@@ -367,7 +495,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                   </td>
                   <td>
                     {inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias.reduce(
-                      function(acc, v) {
+                      function (acc, v) {
                         return acc + (v.quantidade || v.quantidade_alunos);
                       },
                       0
@@ -396,7 +524,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               </p>
               {
                 inclusaoDeAlimentacao.logs.find(
-                  log => log.status_evento_explicacao === "CODAE autorizou"
+                  (log) => log.status_evento_explicacao === "CODAE autorizou"
                 ).criado_em
               }{" "}
               - Informações da CODAE
@@ -405,9 +533,12 @@ export const CorpoRelatorio = ({ ...props }) => {
               <div
                 className="obs"
                 dangerouslySetInnerHTML={{
-                  __html: `${inclusaoDeAlimentacao.logs.find(
-                    log => log.status_evento_explicacao === "CODAE autorizou"
-                  ).justificativa || `Sem observações por parte da CODAE`}`
+                  __html: `${
+                    inclusaoDeAlimentacao.logs.find(
+                      (log) =>
+                        log.status_evento_explicacao === "CODAE autorizou"
+                    ).justificativa || `Sem observações por parte da CODAE`
+                  }`,
                 }}
               />
             </p>
@@ -421,7 +552,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaNegacao
+                __html: justificativaNegacao,
               }}
             />
           </div>

@@ -5,24 +5,24 @@ import Page from "components/Shareable/Page/Page";
 import {
   CONFERIR_ENTREGA,
   DETALHAMENTO_GUIA,
-  LOGISTICA
+  LOGISTICA,
 } from "configs/constants";
 import DetalhamentoGuia from "components/screens/Logistica/DetalhamentoGuia";
 
 const atual = {
   href: `/${LOGISTICA}/${DETALHAMENTO_GUIA}`,
-  titulo: "Detalhamento da Guia de Remessa"
+  titulo: "Detalhamento da Guia de Remessa",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
+    titulo: "Abastecimento",
   },
   {
     href: `/${LOGISTICA}/${CONFERIR_ENTREGA}`,
-    titulo: "Conferir Entrega"
-  }
+    titulo: "Conferir Entrega",
+  },
 ];
 
 export default () => (

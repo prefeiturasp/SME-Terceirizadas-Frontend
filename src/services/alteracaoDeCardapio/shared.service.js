@@ -17,18 +17,18 @@ export const getAlteracaoCardapio = (uuid, tipoSolicitacao) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   let status = 0;
   return fetch(url, OBJ_REQUEST)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };

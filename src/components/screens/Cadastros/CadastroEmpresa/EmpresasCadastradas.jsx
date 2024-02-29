@@ -16,18 +16,18 @@ class EmpresasCadastradas extends Component {
       empresasFiltradas: [],
       empresasFiltradasEstadoInicial: [],
       ehDistribuidor: false,
-      loading: false
+      loading: false,
     };
   }
 
   buscaTerceirizadas(filtro = null) {
     this.setState({ loading: true });
-    getTerceirizada(filtro).then(response => {
+    getTerceirizada(filtro).then((response) => {
       const resp = retornArrayTerceirizadas(response.data.results);
       const tipoPerfil = localStorage.getItem("perfil");
       let empresasF = [];
       if (tipoPerfil === PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA) {
-        resp.forEach(empresa => {
+        resp.forEach((empresa) => {
           if (!empresa.eh_distribuidor) {
             empresasF.push(empresa);
           }
@@ -38,7 +38,7 @@ class EmpresasCadastradas extends Component {
         tipoPerfil === PERFIL.DILOG_CRONOGRAMA
       ) {
         this.setState({ ...this.state, ehDistribuidor: true });
-        resp.forEach(empresa => {
+        resp.forEach((empresa) => {
           if (empresa.eh_distribuidor) {
             empresasF.push(empresa);
           }
@@ -69,7 +69,7 @@ class EmpresasCadastradas extends Component {
       }, 500);
     } else if (values.length < 3 && !this.state.loading) {
       this.setState({
-        empresasFiltradas: this.state.empresasFiltradasEstadoInicial
+        empresasFiltradas: this.state.empresasFiltradasEstadoInicial,
       });
     }
     this.setState({ pesquisar: values });
@@ -84,6 +84,7 @@ class EmpresasCadastradas extends Component {
             <tr>
               {!this.state.ehDistribuidor && <th className="col">ID</th>}
               <th className="col">Razão Social</th>
+              <th className="col">Nome Fantasia</th>
               <th className="col text-center">CNPJ</th>
               <th className="col text-center">Tipo de Serviço</th>
               <th className="col text-center">Situação</th>
@@ -93,7 +94,7 @@ class EmpresasCadastradas extends Component {
                     className="input-search"
                     placeholder="Pesquisar"
                     value={pesquisar}
-                    onChange={e => this.onPesquisaChanged(e.target.value)}
+                    onChange={(e) => this.onPesquisaChanged(e.target.value)}
                     autoFocus={true}
                   />
                   <i className="fas fa-search" />
@@ -114,24 +115,22 @@ class EmpresasCadastradas extends Component {
                         <td>{empresa.codigo_empresa}</td>
                       )}
                     <td className="nome-empresa">{empresa.nome}</td>
+                    <td>{empresa.nome_fantasia}</td>
                     <td className="text-center">{empresa.cnpj}</td>
                     <td className="text-center">{empresa.tipo_servico}</td>
                     <td className="text-center">{empresa.status}</td>
 
-                    <td className="btn-action botao-direita">
+                    <td>
                       <ToggleExpandir
-                        className={"ml-auto"}
                         onClick={() => this.lidarComBurger(empresa)}
                         ativo={empresa.ativo}
                       />
-                      <div className="ml-4">
+                      <div className="ms-4">
                         <Tooltip title="Editar">
                           <span>
                             <NavLink
-                              className="float-left botao-editar"
-                              to={`/configuracoes/cadastros/editar-empresa?uuid=${
-                                empresa.uuid
-                              }`}
+                              className="float-start botao-editar"
+                              to={`/configuracoes/cadastros/editar-empresa?uuid=${empresa.uuid}`}
                             >
                               <i className="fas fa-edit" />
                             </NavLink>
@@ -146,16 +145,10 @@ class EmpresasCadastradas extends Component {
                       {!empresa.eh_distribuidor && (
                         <td className="detalhe-empresa" />
                       )}
-                      <td className="container-detalhe" colSpan="5">
+                      <td className="container-detalhe" colSpan="6">
                         <div className="secao-empresa">
-                          <div className="endereco-empresa-top">
-                            <div>
-                              <span className="descricao">Nome Fantasia:</span>
-                              <span className="valor-desc">
-                                {empresa.nome_fantasia}
-                              </span>
-                            </div>
-                            <div>
+                          <div className="tipo-de-empresa">
+                            <div className="mt-4">
                               <span className="descricao">
                                 Tipo de Empresa:
                               </span>
@@ -226,33 +219,28 @@ class EmpresasCadastradas extends Component {
                             </div>
                           </div>
                         </div>
-                        {empresa.eh_distribuidor ? (
+                        {empresa.eh_distribuidor || empresa.eh_fornecedor ? (
                           <Fragment>
                             <div className="secao-distribuidor">
                               <header className="titulo-secao">
-                                <span>
-                                  Usuário Responsável pelo acesso ao sistema
-                                </span>
+                                <span>Representante do Contrato</span>
                               </header>
                               <div className="secao-empresa">
                                 <section className="contato-empresa">
                                   <div>
                                     <span className="descricao">E-mail:</span>
-                                    <br />
                                     <span className="valor-desc">
                                       {empresa.responsavel_email}
                                     </span>
                                   </div>
                                   <div>
                                     <span className="descricao">Nome:</span>
-                                    <br />
                                     <span className="valor-desc">
                                       {empresa.responsavel_nome}
                                     </span>
                                   </div>
                                   <div>
                                     <span className="descricao">Cargo:</span>
-                                    <br />
                                     <span className="valor-desc">
                                       {empresa.responsavel_cargo}
                                     </span>
@@ -267,7 +255,6 @@ class EmpresasCadastradas extends Component {
                                   </div>
                                   <div>
                                     <span className="descricao">Telefone:</span>
-                                    <br />
                                     <span className="valor-desc">
                                       {empresa.responsavel_telefone}
                                     </span>
@@ -282,8 +269,8 @@ class EmpresasCadastradas extends Component {
                               </header>
                               <div className="secao-empresa">
                                 {empresa.contatos
-                                  .filter(contato => contato.nome)
-                                  .map(contato => (
+                                  .filter((contato) => contato.nome)
+                                  .map((contato) => (
                                     <section key="" className="contato-empresa">
                                       <div>
                                         <span className="descricao">Nome:</span>
@@ -318,20 +305,11 @@ class EmpresasCadastradas extends Component {
                                   <span>Contratos</span>
                                 </header>
                                 <div className="secao-empresa">
-                                  {empresa.contratos.map(contrato => (
+                                  {empresa.contratos.map((contrato) => (
                                     <section
                                       key=""
                                       className="contrato-empresa"
                                     >
-                                      <div>
-                                        <span className="descricao">
-                                          Nº do Processo Administrativo do
-                                          Contrato:
-                                        </span>
-                                        <span className="valor-desc">
-                                          {contrato.processo}
-                                        </span>
-                                      </div>
                                       <div>
                                         <span className="descricao">
                                           Nº do Contrato
@@ -340,16 +318,66 @@ class EmpresasCadastradas extends Component {
                                           {contrato.numero}
                                         </span>
                                       </div>
-                                      <div className="mt-4">
+                                      <div>
+                                        <span className="descricao">
+                                          Nº do Processo Administrativo:
+                                        </span>
+                                        <span className="valor-desc">
+                                          {contrato.processo}
+                                        </span>
+                                      </div>
+                                      {contrato.modalidade && (
+                                        <Fragment>
+                                          <div className="mt-2">
+                                            <span className="descricao">
+                                              Modalidade:
+                                            </span>
+                                            <span className="valor-desc">
+                                              {contrato.modalidade_display}
+                                            </span>
+                                          </div>
+                                          {contrato.modalidade ===
+                                          "PREGAO_ELETRONICO" ? (
+                                            <Fragment>
+                                              <div className="mt-2">
+                                                <span className="descricao">
+                                                  Nº do Pregão Eletrônico:
+                                                </span>
+                                                <span className="valor-desc">
+                                                  {contrato.numero_pregao}
+                                                </span>
+                                              </div>
+                                              <div className="mt-2">
+                                                <span className="descricao">
+                                                  Nº da ATA:
+                                                </span>
+                                                <span className="valor-desc">
+                                                  {contrato.ata}
+                                                </span>
+                                              </div>
+                                            </Fragment>
+                                          ) : (
+                                            <div className="mt-2">
+                                              <span className="descricao">
+                                                Nº da Chamada Pública:
+                                              </span>
+                                              <span className="valor-desc">
+                                                {
+                                                  contrato.numero_chamada_publica
+                                                }
+                                              </span>
+                                            </div>
+                                          )}
+                                        </Fragment>
+                                      )}
+                                      <div className="mt-2 mb-3">
                                         <span className="descricao">
                                           Vigência do Contrato:
                                         </span>
                                         <span className="valor-desc">
                                           {contrato.vigencias.map(
-                                            vigencia =>
-                                              `${vigencia.data_inicial} até ${
-                                                vigencia.data_final
-                                              }`
+                                            (vigencia) =>
+                                              `${vigencia.data_inicial} até ${vigencia.data_final}`
                                           )}
                                         </span>
                                       </div>
@@ -405,7 +433,7 @@ class EmpresasCadastradas extends Component {
                                         <span className="valor-desc">
                                           {nutri.nome}
                                           {nutri.super_admin_terceirizadas && (
-                                            <span className="ml-1 badge badge-secondary">
+                                            <span className="ms-1 badge badge-secondary">
                                               Admin
                                             </span>
                                           )}
@@ -439,7 +467,7 @@ class EmpresasCadastradas extends Component {
                                       </div>
                                     </div>
                                   </div>
-                                </Fragment>
+                                </Fragment>,
                               ];
                             })}
 
@@ -470,7 +498,7 @@ class EmpresasCadastradas extends Component {
                                       </div>
                                     </div>
                                   </div>
-                                </Fragment>
+                                </Fragment>,
                               ];
                             })}
                             {empresa.editais.length > 0 && (
@@ -489,9 +517,7 @@ class EmpresasCadastradas extends Component {
                                   {empresa.lotes.map((lote, key) => (
                                     <li key={key}>
                                       <Link
-                                        to={`/configuracoes/cadastros/lote?uuid=${
-                                          lote.uuid
-                                        }`}
+                                        to={`/configuracoes/cadastros/lote?uuid=${lote.uuid}`}
                                       >
                                         {lote.nome}
                                       </Link>
@@ -504,7 +530,7 @@ class EmpresasCadastradas extends Component {
                         )}
                       </td>
                     </tr>
-                  )
+                  ),
                 ];
               })
             )}

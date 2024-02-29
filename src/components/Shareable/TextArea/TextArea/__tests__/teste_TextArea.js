@@ -8,7 +8,7 @@ describe("teste TextArea", () => {
     input: { onChange: jest.fn() },
     name: "TESTX",
     placeholder: "PLACETEST",
-    label: "LBLTEST"
+    label: "LBLTEST",
   };
   beforeEach(() => {
     wrapper = mount(<TextArea {...props} />);

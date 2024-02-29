@@ -143,10 +143,10 @@ const camposPossiveis = [
   "refeicoes.1.ref_oferta",
   "refeicoes.1.ref_repet",
   "refeicoes.1.sob_oferta",
-  "refeicoes.1.sob_repet"
+  "refeicoes.1.sob_repet",
 ];
 
-const calculaTotaisAbsolutos = lancamentos => {
+const calculaTotaisAbsolutos = (lancamentos) => {
   const totaisAbsolutos = {};
   for (let dadosLancamento of lancamentos) {
     const lancamento = dadosLancamento.lancamento;
@@ -182,7 +182,7 @@ const calculaTotaisPagamento = (lancamentos, panorama) => {
   }
   return {
     totalRefeicoes,
-    totalSobremesas
+    totalSobremesas,
   };
 };
 
@@ -190,17 +190,17 @@ export default ({
   panorama,
   listagemAberta,
   setListagemAberta,
-  setLoading
+  setLoading,
 }) => {
   const [lancamentos, setLancamentos] = useState([]);
   const [totaisAbsolutos, setTotaisAbsolutos] = useState({});
   const [totaisPagamento, setTotaisPagamento] = useState({});
-  const onMesLancamentoChange = value => {
+  const onMesLancamentoChange = (value) => {
     setLoading(true);
     getLancamentosPorMes({
       escola_periodo_escolar: panorama.uuid_escola_periodo_escolar,
-      mes: value
-    }).then(response => {
+      mes: value,
+    }).then((response) => {
       if (response.status === OK) {
         setLancamentos(response.data);
         setTotaisAbsolutos(calculaTotaisAbsolutos(response.data));

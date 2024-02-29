@@ -1,5 +1,5 @@
-export const backgroundLabelPeriodo = periodos => {
-  const periodosComStyles = periodos.map(periodo => {
+export const backgroundLabelPeriodo = (periodos) => {
+  const periodosComStyles = periodos.map((periodo) => {
     switch (periodo.nome) {
       case "MANHA":
         periodo["background"] = "#fff7cb";
@@ -31,26 +31,29 @@ export const backgroundLabelPeriodo = periodos => {
   return periodosComStyles;
 };
 
-export const formataDadosTabelaCEMEI = solicitacao => {
-  let substituicoes = solicitacao.substituicoes_cemei_cei_periodo_escolar.concat(
-    solicitacao.substituicoes_cemei_emei_periodo_escolar
-  );
+export const formataDadosTabelaCEMEI = (solicitacao) => {
+  let substituicoes =
+    solicitacao.substituicoes_cemei_cei_periodo_escolar.concat(
+      solicitacao.substituicoes_cemei_emei_periodo_escolar
+    );
   let periodos = substituicoes.sort(
     (a, b) => a.periodo_escolar.posicao - b.periodo_escolar.posicao
   );
-  periodos = periodos.map(s => s.periodo_escolar.nome);
+  periodos = periodos.map((s) => s.periodo_escolar.nome);
   periodos = [...new Set(periodos)];
-  periodos = periodos.map(p => {
+  periodos = periodos.map((p) => {
     return { nome: p };
   });
   periodos = backgroundLabelPeriodo(periodos);
-  substituicoes = periodos.map(p => {
-    const alunosPorFaixaCEI = solicitacao.substituicoes_cemei_cei_periodo_escolar.filter(
-      s => s.periodo_escolar.nome === p.nome
-    )[0];
-    const alunosPorFaixaEMEI = solicitacao.substituicoes_cemei_emei_periodo_escolar.filter(
-      s => s.periodo_escolar.nome === p.nome
-    )[0];
+  substituicoes = periodos.map((p) => {
+    const alunosPorFaixaCEI =
+      solicitacao.substituicoes_cemei_cei_periodo_escolar.filter(
+        (s) => s.periodo_escolar.nome === p.nome
+      )[0];
+    const alunosPorFaixaEMEI =
+      solicitacao.substituicoes_cemei_emei_periodo_escolar.filter(
+        (s) => s.periodo_escolar.nome === p.nome
+      )[0];
     p["substituicoesCEI"] = alunosPorFaixaCEI;
     p["substituicoesEMEI"] = alunosPorFaixaEMEI;
     return p;
@@ -58,11 +61,11 @@ export const formataDadosTabelaCEMEI = solicitacao => {
   return substituicoes;
 };
 
-export const totalMatriculados = faixas => {
+export const totalMatriculados = (faixas) => {
   let total = 0;
   faixas
-    .filter(faixa => faixa.inicio > 11)
-    .forEach(faixa => {
+    .filter((faixa) => faixa.inicio > 11)
+    .forEach((faixa) => {
       total += faixa.quantidade_alunos;
     });
   return total;
@@ -70,13 +73,13 @@ export const totalMatriculados = faixas => {
 
 export const totalSolicitacao = (values, periodoCEI) => {
   let total = 0;
-  values.substituicoes.forEach(substituicao => {
+  values.substituicoes.forEach((substituicao) => {
     if (
       periodoCEI.periodo_escolar.uuid === substituicao.periodo_uuid &&
       substituicao.cei &&
       substituicao.cei.faixas_etarias
     ) {
-      substituicao.cei.faixas_etarias.forEach(faixa => {
+      substituicao.cei.faixas_etarias.forEach((faixa) => {
         total += faixa.quantidade_alunos
           ? parseInt(faixa.quantidade_alunos)
           : 0;
@@ -90,7 +93,7 @@ export const formatarPayload = (values, meusDados) => {
   let substituicoes_cemei_cei_periodo_escolar = [];
   let substituicoes_cemei_emei_periodo_escolar = [];
 
-  values.substituicoes.forEach(substituicao => {
+  values.substituicoes.forEach((substituicao) => {
     if (substituicao && substituicao.checked) {
       if (substituicao.cei) {
         substituicoes_cemei_cei_periodo_escolar.push({
@@ -104,15 +107,15 @@ export const formatarPayload = (values, meusDados) => {
               ? [substituicao.cei.tipos_alimentacao_para]
               : substituicao.cei.tipos_alimentacao_para,
           faixas_etarias: substituicao.cei.faixas_etarias
-            .filter(faixa => faixa !== null)
-            .map(faixa => {
+            .filter((faixa) => faixa !== null)
+            .map((faixa) => {
               return {
                 faixa_etaria: faixa.faixa_uuid,
                 quantidade: faixa.quantidade_alunos,
-                matriculados_quando_criado: faixa.matriculados_quando_criado
+                matriculados_quando_criado: faixa.matriculados_quando_criado,
               };
             })
-            .filter(faixa => faixa.faixa_etaria !== undefined)
+            .filter((faixa) => faixa.faixa_etaria !== undefined),
         });
       }
       if (substituicao.emei) {
@@ -122,7 +125,7 @@ export const formatarPayload = (values, meusDados) => {
             substituicao.emei.matriculados_quando_criado,
           periodo_escolar: substituicao.periodo_uuid,
           tipos_alimentacao_de: substituicao.emei.tipos_alimentacao_de,
-          tipos_alimentacao_para: substituicao.emei.tipos_alimentacao_para
+          tipos_alimentacao_para: substituicao.emei.tipos_alimentacao_para,
         });
       }
     }
@@ -135,17 +138,19 @@ export const formatarPayload = (values, meusDados) => {
     alterar_dia: values.alterar_dia,
     data_inicial: values.data_inicial,
     data_final: values.data_final,
-    substituicoes_cemei_cei_periodo_escolar: substituicoes_cemei_cei_periodo_escolar,
-    substituicoes_cemei_emei_periodo_escolar: substituicoes_cemei_emei_periodo_escolar,
-    observacao: values.observacao
+    substituicoes_cemei_cei_periodo_escolar:
+      substituicoes_cemei_cei_periodo_escolar,
+    substituicoes_cemei_emei_periodo_escolar:
+      substituicoes_cemei_emei_periodo_escolar,
+    observacao: values.observacao,
   };
   return payload;
 };
 
-export const validarSubmit = values => {
+export const validarSubmit = (values) => {
   let erro = false;
   let substituicoes = values.substituicoes.filter(
-    substituicao => substituicao && substituicao.checked === true
+    (substituicao) => substituicao && substituicao.checked === true
   );
   if (!values.alterar_dia && (!values.data_final || !values.data_final)) {
     erro = "Necessário preencher datas da alteração";
@@ -158,7 +163,7 @@ export const validarSubmit = values => {
   }
 
   if (values.alunos_cei_e_ou_emei === "TODOS") {
-    substituicoes.forEach(substituicao => {
+    substituicoes.forEach((substituicao) => {
       if (
         substituicao.cei &&
         (!substituicao.cei.tipos_alimentacao_de ||
@@ -185,7 +190,7 @@ export const validarSubmit = values => {
   }
 
   if (values.alunos_cei_e_ou_emei === "CEI") {
-    substituicoes.forEach(substituicao => {
+    substituicoes.forEach((substituicao) => {
       if (
         substituicao.cei &&
         (!substituicao.cei.tipos_alimentacao_de ||
@@ -204,7 +209,7 @@ export const validarSubmit = values => {
   }
 
   if (values.alunos_cei_e_ou_emei === "EMEI") {
-    substituicoes.forEach(substituicao => {
+    substituicoes.forEach((substituicao) => {
       if (
         substituicao.emei &&
         (!substituicao.emei.tipos_alimentacao_de ||

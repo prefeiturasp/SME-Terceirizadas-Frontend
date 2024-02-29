@@ -5,13 +5,13 @@ import Container from "../../../components/SolicitacaoUnificada/CODAE/PainelPedi
 import { HOME } from "../constants";
 import {
   CODAE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
 } from "../../../configs/constants";
 import { useLocation } from "react-router-dom";
 
 const atual = {
   href: `/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
-  titulo: "Solicitação Unificada - Pendente Autorização"
+  titulo: "Solicitação Unificada - Pendente Autorização",
 };
 
 export default () => {

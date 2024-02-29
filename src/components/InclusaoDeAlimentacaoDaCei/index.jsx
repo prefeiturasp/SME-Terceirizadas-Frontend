@@ -9,13 +9,13 @@ import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
   deepCopy,
-  getError
+  getError,
 } from "helpers/utilities";
 import { required } from "helpers/fieldValidators";
 import {
   AdicionarDia,
   DataInclusaoNormal,
-  OutroMotivo
+  OutroMotivo,
 } from "components/InclusaoDeAlimentacao/Escola/Formulario/componentes/InclusaoNormal";
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
@@ -25,12 +25,12 @@ import {
   excluirInclusoesDaCei,
   getQuantidadeAlunosFaixaEtaria,
   iniciarInclusoesDaCEI,
-  meusRascunhosDeInclusaoDeAlimentacao
+  meusRascunhosDeInclusaoDeAlimentacao,
 } from "services/inclusaoDeAlimentacao/cei.legacy.service";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 import InputText from "components/Shareable/Input/InputText";
@@ -50,7 +50,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
     periodos,
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
-    vinculosAlimentacao
+    vinculosAlimentacao,
   } = props;
 
   const [showModal, setShowModal] = useState(false);
@@ -58,7 +58,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const payload = formataPayload(values);
     const erro = validarForm(payload);
     if (erro) {
@@ -104,7 +104,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
     }
   };
 
-  const resetForm = values => {
+  const resetForm = (values) => {
     values.uuid = undefined;
     values.escola = valoresIniciais.escola;
     values.dias_motivos_da_inclusao_cei =
@@ -118,19 +118,19 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
       values.dias_motivos_da_inclusao_cei[index] &&
       values.dias_motivos_da_inclusao_cei[index].motivo &&
       motivos.find(
-        motivo =>
+        (motivo) =>
           motivo.uuid === values.dias_motivos_da_inclusao_cei[index].motivo
       ) &&
       motivos
         .find(
-          motivo =>
+          (motivo) =>
             motivo.uuid === values.dias_motivos_da_inclusao_cei[index].motivo
         )
         .nome.includes("Outro")
     );
   };
 
-  const onDataChanged = value => {
+  const onDataChanged = (value) => {
     if (
       value &&
       checaSeDataEstaEntre2e5DiasUteis(
@@ -143,20 +143,21 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
     }
   };
 
-  const motivoSelecionado = values => {
+  const motivoSelecionado = (values) => {
     return (
       values.dias_motivos_da_inclusao_cei &&
       values.dias_motivos_da_inclusao_cei[0].motivo &&
       motivos.find(
-        motivo => motivo.uuid === values.dias_motivos_da_inclusao_cei[0].motivo
+        (motivo) =>
+          motivo.uuid === values.dias_motivos_da_inclusao_cei[0].motivo
       )
     );
   };
 
-  const alimentacoesFormatadas = periodo => {
+  const alimentacoesFormatadas = (periodo) => {
     const alimentosFormatados = vinculosAlimentacao
-      .find(v => v.periodo_escolar.uuid === periodo.uuid)
-      .tipos_alimentacao.map(ta => ta.nome)
+      .find((v) => v.periodo_escolar.uuid === periodo.uuid)
+      .tipos_alimentacao.map((ta) => ta.nome)
       .join(", ");
     return alimentosFormatados;
   };
@@ -172,25 +173,26 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
 
   const carregarRascunho = (form, inclusao, values) => {
     let _periodos_e_faixas = deepCopy(values.periodos_e_faixas);
-    let periodos_externos_inclusao = inclusao.quantidade_alunos_por_faixas_etarias.map(
-      periodo_faixa => {
+    let periodos_externos_inclusao =
+      inclusao.quantidade_alunos_por_faixas_etarias.map((periodo_faixa) => {
         return periodo_faixa.periodo_externo.nome;
-      }
-    );
+      });
     periodos_externos_inclusao = [...new Set(periodos_externos_inclusao)];
-    periodos_externos_inclusao.forEach(periodo_nome => {
-      _periodos_e_faixas = _periodos_e_faixas.map(periodo_faixa => {
+    periodos_externos_inclusao.forEach((periodo_nome) => {
+      _periodos_e_faixas = _periodos_e_faixas.map((periodo_faixa) => {
         if (periodo_faixa.nome === periodo_nome) {
           periodo_faixa.checked = true;
           if (periodo_faixa.nome !== "INTEGRAL") {
             periodo_faixa.faixas_etarias = periodo_faixa.faixas_etarias.map(
-              fx => {
-                const faixa_inclusao = inclusao.quantidade_alunos_por_faixas_etarias.find(
-                  faixa_etaria =>
-                    faixa_etaria.periodo.uuid === periodo_faixa.uuid &&
-                    faixa_etaria.periodo_externo.uuid === periodo_faixa.uuid &&
-                    faixa_etaria.faixa_etaria.uuid === fx.faixa_etaria.uuid
-                );
+              (fx) => {
+                const faixa_inclusao =
+                  inclusao.quantidade_alunos_por_faixas_etarias.find(
+                    (faixa_etaria) =>
+                      faixa_etaria.periodo.uuid === periodo_faixa.uuid &&
+                      faixa_etaria.periodo_externo.uuid ===
+                        periodo_faixa.uuid &&
+                      faixa_etaria.faixa_etaria.uuid === fx.faixa_etaria.uuid
+                  );
                 if (faixa_inclusao) {
                   fx["quantidade_alunos"] = faixa_inclusao.quantidade_alunos;
                 }
@@ -198,24 +200,27 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
               }
             );
           } else {
-            let faixas_periodo_integral = inclusao.quantidade_alunos_por_faixas_etarias.filter(
-              faixa_etaria => faixa_etaria.periodo_externo.nome === "INTEGRAL"
-            );
+            let faixas_periodo_integral =
+              inclusao.quantidade_alunos_por_faixas_etarias.filter(
+                (faixa_etaria) =>
+                  faixa_etaria.periodo_externo.nome === "INTEGRAL"
+              );
             let periodos_internos_nomes = faixas_periodo_integral.map(
-              faixa_etaria => faixa_etaria.periodo.nome
+              (faixa_etaria) => faixa_etaria.periodo.nome
             );
             periodos_internos_nomes = [...new Set(periodos_internos_nomes)];
-            periodo_faixa.periodos = periodo_faixa.periodos.map(periodo => {
+            periodo_faixa.periodos = periodo_faixa.periodos.map((periodo) => {
               if (periodos_internos_nomes.includes(periodo.nome)) {
                 periodo.checked = true;
-                periodo.faixas_etarias = periodo.faixas_etarias.map(fx => {
-                  const faixa_inclusao = inclusao.quantidade_alunos_por_faixas_etarias.find(
-                    faixa_etaria =>
-                      faixa_etaria.periodo.uuid === periodo.uuid &&
-                      faixa_etaria.periodo_externo.uuid ===
-                        periodo_faixa.uuid &&
-                      faixa_etaria.faixa_etaria.uuid === fx.faixa_etaria.uuid
-                  );
+                periodo.faixas_etarias = periodo.faixas_etarias.map((fx) => {
+                  const faixa_inclusao =
+                    inclusao.quantidade_alunos_por_faixas_etarias.find(
+                      (faixa_etaria) =>
+                        faixa_etaria.periodo.uuid === periodo.uuid &&
+                        faixa_etaria.periodo_externo.uuid ===
+                          periodo_faixa.uuid &&
+                        faixa_etaria.faixa_etaria.uuid === fx.faixa_etaria.uuid
+                    );
                   if (faixa_inclusao) {
                     fx["quantidade_alunos"] = faixa_inclusao.quantidade_alunos;
                   }
@@ -235,10 +240,10 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
     form.change("escola", inclusao.escola.uuid);
     form.change(
       "dias_motivos_da_inclusao_cei",
-      inclusao.dias_motivos_da_inclusao_cei.map(dia_motivo => ({
+      inclusao.dias_motivos_da_inclusao_cei.map((dia_motivo) => ({
         motivo: dia_motivo.motivo.uuid,
         outro_motivo: dia_motivo.outro_motivo,
-        data: dia_motivo.data
+        data: dia_motivo.data,
       }))
     );
   };
@@ -257,7 +262,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
     }
   };
 
-  const refresh = values => {
+  const refresh = (values) => {
     getRascunhos();
     resetForm(values);
   };
@@ -276,7 +281,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
           let _periodos_e_faixas = {
             nome: periodo.nome,
             uuid: periodo.uuid,
-            checked: false
+            checked: false,
           };
           const total_matriculados = response.data.results.reduce(
             (somatorio, faixa) => {
@@ -285,13 +290,13 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
             0
           );
           if (periodo.nome === "INTEGRAL") {
-            _periodos_e_faixas["periodos"] = periodos.map(p => {
+            _periodos_e_faixas["periodos"] = periodos.map((p) => {
               return {
                 nome: p.nome,
                 uuid: p.uuid,
                 checked: false,
                 faixas_etarias: response.data.results,
-                total_matriculados: total_matriculados
+                total_matriculados: total_matriculados,
               };
             });
           } else {
@@ -304,7 +309,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
       setValoresIniciais({
         escola: meusDados.vinculo_atual.instituicao.uuid,
         dias_motivos_da_inclusao_cei: [{ motivo: undefined }],
-        periodos_e_faixas: periodos_e_faixas
+        periodos_e_faixas: periodos_e_faixas,
       });
       setLoading(false);
     }
@@ -318,7 +323,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
         <Form
           keepDirtyOnReinitialize
           mutators={{
-            ...arrayMutators
+            ...arrayMutators,
           }}
           initialValues={valoresIniciais}
           onSubmit={onSubmit}
@@ -328,9 +333,9 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
             submitting,
             form,
             form: {
-              mutators: { push }
+              mutators: { push },
             },
-            values
+            values,
           }) => (
             <form onSubmit={handleSubmit}>
               <Field component={"input"} type="hidden" name="uuid" />
@@ -357,7 +362,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
               </div>
               <div className="card solicitation mt-2">
                 <div className="card-body">
-                  <div className="card-title font-weight-bold">
+                  <div className="card-title fw-bold">
                     Descrição da Inclusão de Alimentação
                   </div>
                   <FieldArray name="dias_motivos_da_inclusao_cei">
@@ -422,7 +427,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                                 marginBottom: "1%",
                                 width: "100%",
                                 padding: "8px 15px",
-                                height: "40px"
+                                height: "40px",
                               }}
                             >
                               <Field
@@ -433,7 +438,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                               <OnChange
                                 name={`periodos_e_faixas[${periodo_faixa_idx}].checked`}
                               >
-                                {async value => {
+                                {async (value) => {
                                   let _periodos_e_faixas = deepCopy(
                                     values.periodos_e_faixas
                                   );
@@ -442,29 +447,31 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                                     periodo_faixa.nome === "INTEGRAL"
                                   ) {
                                     _periodos_e_faixas = _periodos_e_faixas.map(
-                                      _periodo_faixa => {
+                                      (_periodo_faixa) => {
                                         if (
                                           _periodo_faixa.nome ===
                                           periodo_faixa.nome
                                         ) {
-                                          _periodo_faixa.periodos = _periodo_faixa.periodos.map(
-                                            _periodo => {
-                                              _periodo.checked = false;
-                                              _periodo.faixas_etarias = _periodo.faixas_etarias.map(
-                                                _fx => {
-                                                  if (
-                                                    _fx["quantidade_alunos"]
-                                                  ) {
-                                                    delete _fx[
-                                                      "quantidade_alunos"
-                                                    ];
-                                                  }
-                                                  return _fx;
-                                                }
-                                              );
-                                              return _periodo;
-                                            }
-                                          );
+                                          _periodo_faixa.periodos =
+                                            _periodo_faixa.periodos.map(
+                                              (_periodo) => {
+                                                _periodo.checked = false;
+                                                _periodo.faixas_etarias =
+                                                  _periodo.faixas_etarias.map(
+                                                    (_fx) => {
+                                                      if (
+                                                        _fx["quantidade_alunos"]
+                                                      ) {
+                                                        delete _fx[
+                                                          "quantidade_alunos"
+                                                        ];
+                                                      }
+                                                      return _fx;
+                                                    }
+                                                  );
+                                                return _periodo;
+                                              }
+                                            );
                                         }
                                         return _periodo_faixa;
                                       }
@@ -475,19 +482,22 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                                     periodo_faixa.nome !== "INTEGRAL"
                                   ) {
                                     _periodos_e_faixas = _periodos_e_faixas.map(
-                                      _periodo_faixa => {
+                                      (_periodo_faixa) => {
                                         if (
                                           _periodo_faixa.nome ===
                                           periodo_faixa.nome
                                         ) {
-                                          _periodo_faixa.faixas_etarias = _periodo_faixa.faixas_etarias.map(
-                                            _fx => {
-                                              if (_fx["quantidade_alunos"]) {
-                                                delete _fx["quantidade_alunos"];
+                                          _periodo_faixa.faixas_etarias =
+                                            _periodo_faixa.faixas_etarias.map(
+                                              (_fx) => {
+                                                if (_fx["quantidade_alunos"]) {
+                                                  delete _fx[
+                                                    "quantidade_alunos"
+                                                  ];
+                                                }
+                                                return _fx;
                                               }
-                                              return _fx;
-                                            }
-                                          );
+                                            );
                                         }
                                         return _periodo_faixa;
                                       }
@@ -608,10 +618,10 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                                 periodo_faixa_idx
                               ].periodos.map((periodo, periodo_idx) => {
                                 const background = periodos.find(
-                                  p => p.uuid === periodo.uuid
+                                  (p) => p.uuid === periodo.uuid
                                 ).background;
                                 const borderColor = periodos.find(
-                                  p => p.uuid === periodo.uuid
+                                  (p) => p.uuid === periodo.uuid
                                 ).borderColor;
                                 return (
                                   <div
@@ -627,7 +637,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                                           marginBottom: "1%",
                                           width: "100%",
                                           padding: "8px 15px",
-                                          height: "40px"
+                                          height: "40px",
                                         }}
                                       >
                                         <Field
@@ -638,45 +648,48 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                                         <OnChange
                                           name={`periodos_e_faixas[${periodo_faixa_idx}].periodos[${periodo_idx}].checked`}
                                         >
-                                          {async value => {
+                                          {async (value) => {
                                             let _periodos_e_faixas = deepCopy(
                                               values.periodos_e_faixas
                                             );
                                             if (!value) {
-                                              _periodos_e_faixas = _periodos_e_faixas.map(
-                                                _periodo_faixa => {
-                                                  if (
-                                                    _periodo_faixa.nome ===
-                                                    "INTEGRAL"
-                                                  ) {
-                                                    _periodo_faixa.periodos = _periodo_faixa.periodos.map(
-                                                      _periodo => {
-                                                        if (
-                                                          _periodo.nome ===
-                                                          periodo.nome
-                                                        ) {
-                                                          _periodo.faixas_etarias = _periodo.faixas_etarias.map(
-                                                            _fx => {
-                                                              if (
-                                                                _fx[
-                                                                  "quantidade_alunos"
-                                                                ]
-                                                              ) {
-                                                                delete _fx[
-                                                                  "quantidade_alunos"
-                                                                ];
-                                                              }
-                                                              return _fx;
+                                              _periodos_e_faixas =
+                                                _periodos_e_faixas.map(
+                                                  (_periodo_faixa) => {
+                                                    if (
+                                                      _periodo_faixa.nome ===
+                                                      "INTEGRAL"
+                                                    ) {
+                                                      _periodo_faixa.periodos =
+                                                        _periodo_faixa.periodos.map(
+                                                          (_periodo) => {
+                                                            if (
+                                                              _periodo.nome ===
+                                                              periodo.nome
+                                                            ) {
+                                                              _periodo.faixas_etarias =
+                                                                _periodo.faixas_etarias.map(
+                                                                  (_fx) => {
+                                                                    if (
+                                                                      _fx[
+                                                                        "quantidade_alunos"
+                                                                      ]
+                                                                    ) {
+                                                                      delete _fx[
+                                                                        "quantidade_alunos"
+                                                                      ];
+                                                                    }
+                                                                    return _fx;
+                                                                  }
+                                                                );
                                                             }
-                                                          );
-                                                        }
-                                                        return _periodo;
-                                                      }
-                                                    );
+                                                            return _periodo;
+                                                          }
+                                                        );
+                                                    }
+                                                    return _periodo_faixa;
                                                   }
-                                                  return _periodo_faixa;
-                                                }
-                                              );
+                                                );
                                             }
                                             form.change(
                                               "periodos_e_faixas",
@@ -686,11 +699,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                                         </OnChange>
                                         <span
                                           className="checkbox-custom"
-                                          data-cy={`checkbox-${
-                                            valoresIniciais.periodos_e_faixas[
-                                              periodo_faixa_idx
-                                            ].periodos[periodo_idx].nome
-                                          }`}
+                                          data-cy={`checkbox-${valoresIniciais.periodos_e_faixas[periodo_faixa_idx].periodos[periodo_idx].nome}`}
                                         />
                                         {periodo.nome}
                                       </label>
@@ -811,7 +820,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                       );
                     }
                   )}
-                  <div className="row float-right mt-4">
+                  <div className="row float-end mt-4">
                     <div className="col-12">
                       <Botao
                         texto="Cancelar"
@@ -833,12 +842,12 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                         texto={
                           values.uuid ? "Atualizar rascunho" : "Salvar rascunho"
                         }
-                        className="ml-3"
+                        className="ms-3"
                         disabled={submitting}
                         type={BUTTON_TYPE.SUBMIT}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         onClick={() => {
-                          handleSubmit(values => onSubmit(values));
+                          handleSubmit((values) => onSubmit(values));
                         }}
                       />
                       <Botao
@@ -847,10 +856,10 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                         disabled={submitting}
                         onClick={() => {
                           values["status"] = STATUS_DRE_A_VALIDAR;
-                          handleSubmit(values => onSubmit(values));
+                          handleSubmit((values) => onSubmit(values));
                         }}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
+                        className="ms-3"
                       />
                     </div>
                   </div>

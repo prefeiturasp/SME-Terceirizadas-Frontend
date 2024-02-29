@@ -13,7 +13,7 @@ import {
   ENTREGAS_DRE,
   ENTREGAS_DISTRIBUIDOR,
   GUIAS_NOTIFICACAO,
-  GUIAS_NOTIFICACAO_FISCAL
+  GUIAS_NOTIFICACAO_FISCAL,
 } from "configs/constants";
 import {
   usuarioEhEmpresaDistribuidora,
@@ -27,13 +27,14 @@ import {
   exibirModuloOcorrencias,
   usuarioEhDilogJuridico,
   usuarioEhDilogQualidade,
-  usuarioEhDilog
+  usuarioEhDilog,
+  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 
 const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
   return (
     <Menu id="Logistica" icon="fa-truck" title="Abastecimento">
-      {usuarioEhLogistica() && (
+      {(usuarioEhLogistica() || usuarioEhCODAEGabinete()) && (
         <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`}>
           Requisição de Entrega
         </LeafItem>
@@ -57,7 +58,7 @@ const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
         </LeafItem>
       )}
 
-      {usuarioEhLogistica() && (
+      {(usuarioEhLogistica() || usuarioEhCODAEGabinete()) && (
         <LeafItem to={`/${LOGISTICA}/${GESTAO_SOLICITACAO_ALTERACAO}`}>
           Alteração da Requisição
         </LeafItem>
@@ -98,7 +99,9 @@ const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
           title="Ocorrências"
           activeMenu={activeMenu}
         >
-          {(usuarioEhCodaeDilog() || usuarioEhDilogJuridico()) && (
+          {(usuarioEhCodaeDilog() ||
+            usuarioEhDilogJuridico() ||
+            usuarioEhCODAEGabinete()) && (
             <LeafItem to={`/${LOGISTICA}/${GUIAS_NOTIFICACAO}/`}>
               Guias com Notificações
             </LeafItem>

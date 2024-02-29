@@ -22,12 +22,12 @@ export class ModalRecusarSolicitacao extends Component {
                 component={Select}
                 name="razao"
                 label="Motivo"
-                onChange={value => this.props.change("razao", value)}
+                onChange={(value) => this.props.change("razao", value)}
                 options={[
                   {
                     value: "Fora do prazo",
-                    label: "Fora do prazo/em desacordo com o contrato"
-                  }
+                    label: "Fora do prazo/em desacordo com o contrato",
+                  },
                 ]}
                 validate={required}
               />
@@ -48,7 +48,7 @@ export class ModalRecusarSolicitacao extends Component {
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>

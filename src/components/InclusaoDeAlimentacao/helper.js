@@ -1,11 +1,29 @@
-export const formatarTiposDeAlimentacao = tiposAlimentacao => {
-  return tiposAlimentacao.map(element => {
+export const formatarTiposDeAlimentacao = (tiposAlimentacao) => {
+  return tiposAlimentacao.map((element) => {
     return { value: element.uuid, label: element.nome };
   });
 };
 
-export const formatarPeriodos = periodos => {
-  periodos.forEach(periodo => {
+export const formatarPeriodosEspecificosEMEF = (periodos) => {
+  periodos.forEach((periodo) => {
+    periodo["checked"] = false;
+    periodo["tipos_alimentacao_selecionados"] = [];
+    periodo["numero_alunos"] = null;
+    periodo["multiselect"] = "multiselect-wrapper-disabled";
+    periodo["dias_semana"] = [];
+
+    // Filtrar o array 'tipos_alimentacao' para remover o objeto com nome 'Lanche Emergencial'
+    if (periodo["tipos_alimentacao"]) {
+      periodo["tipos_alimentacao"] = periodo["tipos_alimentacao"].filter(
+        (tipo) => tipo.nome !== "Lanche Emergencial"
+      );
+    }
+  });
+  return periodos;
+};
+
+export const formatarPeriodos = (periodos) => {
+  periodos.forEach((periodo) => {
     periodo["checked"] = false;
     periodo["tipos_alimentacao_selecionados"] = [];
     periodo["numero_alunos"] = null;
@@ -15,54 +33,54 @@ export const formatarPeriodos = periodos => {
   return periodos;
 };
 
-export const construirPeriodosECombos = periodos => {
+export const construirPeriodosECombos = (periodos) => {
   let periodosCombo = [];
-  periodos.forEach(periodo => {
+  periodos.forEach((periodo) => {
     let dicionarioPeriodo = {
       checked: false,
       tipos_alimentacao_selecionados: [],
       numero_alunos: null,
       nome: periodo.periodo_escolar.nome,
       uuid: periodo.periodo_escolar.uuid,
-      tipos_alimentacao: periodo.tipos_alimentacao.map(alimento => {
+      tipos_alimentacao: periodo.tipos_alimentacao.map((alimento) => {
         return {
           nome: alimento.nome,
-          uuid: alimento.uuid
+          uuid: alimento.uuid,
         };
-      })
+      }),
     };
     periodosCombo.push(dicionarioPeriodo);
   });
   return periodosCombo;
 };
 
-export const extrairTiposALimentacao = tiposAlimentacao => {
+export const extrairTiposALimentacao = (tiposAlimentacao) => {
   let uuidsTiposAlimentacao = [];
-  tiposAlimentacao.forEach(tipoAlimentacao => {
+  tiposAlimentacao.forEach((tipoAlimentacao) => {
     uuidsTiposAlimentacao.push(tipoAlimentacao.uuid);
   });
   return uuidsTiposAlimentacao;
 };
 
-export const formatarDiasSemana = diasSemana => {
+export const formatarDiasSemana = (diasSemana) => {
   let paraStringDiasSemana = [];
-  diasSemana.forEach(diaSemana => {
+  diasSemana.forEach((diaSemana) => {
     paraStringDiasSemana.push(diaSemana.toString());
   });
   return paraStringDiasSemana;
 };
 
-export const formatarSubmissaoSolicitacaoContinua = values => {
+export const formatarSubmissaoSolicitacaoContinua = (values) => {
   values.motivo = values.inclusoes[0].motivo;
   values.data_inicial = values.inclusoes[0].data_inicial;
   values.data_final = values.inclusoes[0].data_final;
   return values;
 };
 
-export const formatarSubmissaoSolicitacaoNormal = values => {
+export const formatarSubmissaoSolicitacaoNormal = (values) => {
   values.quantidades_periodo
-    .filter(qp => qp.checked)
-    .forEach(quantidade_periodo => {
+    .filter((qp) => qp.checked)
+    .forEach((quantidade_periodo) => {
       if (
         quantidade_periodo.nome !== "NOITE" ||
         !quantidade_periodo["periodo_escolar"]
@@ -75,7 +93,7 @@ export const formatarSubmissaoSolicitacaoNormal = values => {
       delete quantidade_periodo.inclusao_alimentacao_continua;
     });
   values.quantidades_periodo = values.quantidades_periodo.filter(
-    qp => qp.checked
+    (qp) => qp.checked
   );
   return values;
 };
@@ -85,7 +103,7 @@ const retornaQuantidadeDeAlunosNoPeriodoEscolar = (
   periodosQuantidadeAlunos
 ) => {
   let quantidadeAlunos = null;
-  periodosQuantidadeAlunos.forEach(periodo => {
+  periodosQuantidadeAlunos.forEach((periodo) => {
     if (periodo.periodo_escolar.uuid === periodoUuid) {
       quantidadeAlunos = periodo.quantidade_alunos;
     }
@@ -98,14 +116,14 @@ export const abstraiPeriodosComAlunosMatriculados = (
   periodosQuantidadeAlunos,
   ehAlteracao
 ) => {
-  periodos.forEach(periodo => {
+  periodos.forEach((periodo) => {
     periodo["maximo_alunos"] = retornaQuantidadeDeAlunosNoPeriodoEscolar(
       periodo.uuid,
       periodosQuantidadeAlunos
     );
     if (!ehAlteracao) {
       periodo["tipos_alimentacao"] = periodo.tipos_alimentacao.filter(
-        tipo_alimentacao => tipo_alimentacao.nome !== "Lanche Emergencial"
+        (tipo_alimentacao) => tipo_alimentacao.nome !== "Lanche Emergencial"
       );
     }
   });

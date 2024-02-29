@@ -17,9 +17,9 @@ describe("Teste formatarSubmissão Solicitação Unificada", () => {
         nro_alunos: "33",
         kit_lanche: ["9f86ecb8-bdba-4d70-9fb7-13844f563636"],
         uuid: "73605a3b-7767-4ea6-845e-fef62f84dc1c",
-        kitsChecked: ["9f86ecb8-bdba-4d70-9fb7-13844f563636"]
-      }
-    ]
+        kitsChecked: ["9f86ecb8-bdba-4d70-9fb7-13844f563636"],
+      },
+    ],
   };
 
   it("formata submissao com kit lanches iguais", () => {
@@ -31,16 +31,16 @@ describe("Teste formatarSubmissão Solicitação Unificada", () => {
         kits: ["9f86ecb8-bdba-4d70-9fb7-13844f563636"],
         data: "02/08/2019",
         descricao: "<p></p>\n",
-        tempo_passeio: "0"
+        tempo_passeio: "0",
       },
       escolas_quantidades: [
         {
           tempo_passeio: null,
           quantidade_alunos: "22",
           kits: [],
-          escola: "73605a3b-7767-4ea6-845e-fef62f84dc1c"
-        }
-      ]
+          escola: "73605a3b-7767-4ea6-845e-fef62f84dc1c",
+        },
+      ],
     };
     expect(formatarSubmissao(solicitacaoKitLanche)).toEqual(resposta);
   });
@@ -56,16 +56,16 @@ describe("Teste formatarSubmissão Solicitação Unificada", () => {
         kits: [],
         data: "02/08/2019",
         descricao: "<p></p>\n",
-        tempo_passeio: null
+        tempo_passeio: null,
       },
       escolas_quantidades: [
         {
           tempo_passeio: "0",
           quantidade_alunos: "33",
           kits: ["9f86ecb8-bdba-4d70-9fb7-13844f563636"],
-          escola: "73605a3b-7767-4ea6-845e-fef62f84dc1c"
-        }
-      ]
+          escola: "73605a3b-7767-4ea6-845e-fef62f84dc1c",
+        },
+      ],
     };
     expect(formatarSubmissao(solicitacaoKitLancheDiferente)).toEqual(resposta);
   });

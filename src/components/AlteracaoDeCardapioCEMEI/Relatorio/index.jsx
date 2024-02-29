@@ -8,7 +8,7 @@ import { CODAE, TERCEIRIZADA } from "configs/constants";
 import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
@@ -32,7 +32,7 @@ export const Relatorio = ({ ...props }) => {
     tipoSolicitacao,
     toastAprovaMensagem,
     toastAprovaMensagemErro,
-    visao
+    visao,
   } = props;
 
   const [solicitacao, setSolicitacao] = useState(undefined);
@@ -41,26 +41,22 @@ export const Relatorio = ({ ...props }) => {
   const [respostaSimNao, setRespostaSimNao] = useState(null);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
   const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
-  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
-    false
-  );
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] =
+    useState(false);
   const [uuid, setUuid] = useState(null);
 
-  const [
-    justificativaCancelamentoEscola,
-    setJustificativaCancelamentoEscola
-  ] = useState(undefined);
+  const [justificativaCancelamentoEscola, setJustificativaCancelamentoEscola] =
+    useState(undefined);
 
-  const getMatriculados = async codigo_eol => {
+  const getMatriculados = async (codigo_eol) => {
     const response = await getQuantidadeAlunosCEMEIporCEIEMEI(codigo_eol);
     if (response.status === HTTP_STATUS.OK) {
       setMatriculados(response.data);
     }
   };
 
-  const [showModalObservacaoCodae, setShowModalObservacaoCodae] = useState(
-    false
-  );
+  const [showModalObservacaoCodae, setShowModalObservacaoCodae] =
+    useState(false);
 
   const getSolicitacao = async (uuid_ = uuid) => {
     const response = await getAlteracaoCEMEI(uuid_);
@@ -69,7 +65,7 @@ export const Relatorio = ({ ...props }) => {
       setDadosTabela(formataDadosTabelaCEMEI(response.data));
       getMatriculados(response.data.escola.codigo_eol);
       const logCancelamentoEscola = response.data.logs.filter(
-        log => log.status_evento_explicacao === "Escola cancelou"
+        (log) => log.status_evento_explicacao === "Escola cancelou"
       );
       setJustificativaCancelamentoEscola(logCancelamentoEscola);
     }
@@ -86,21 +82,21 @@ export const Relatorio = ({ ...props }) => {
   const EXIBIR_BOTAO_APROVAR =
     (![
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
       textoBotaoAprova) ||
     (solicitacao &&
       (solicitacao.prioridade === "REGULAR" ||
         [
           statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
-          statusEnum.CODAE_AUTORIZADO
+          statusEnum.CODAE_AUTORIZADO,
         ].includes(solicitacao.status)) &&
       textoBotaoAprova);
 
   const EXIBIR_BOTAO_QUESTIONAMENTO =
     [
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
     solicitacao &&
     (solicitacao.prioridade !== "REGULAR" ||
@@ -116,9 +112,9 @@ export const Relatorio = ({ ...props }) => {
       solicitacao.status
     );
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     endpointAprovaSolicitacao(uuid, values, tipoSolicitacao).then(
-      response => {
+      (response) => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
           getSolicitacao();
@@ -126,7 +122,7 @@ export const Relatorio = ({ ...props }) => {
           toastError(toastAprovaMensagemErro);
         }
       },
-      function() {
+      function () {
         toastError(toastAprovaMensagemErro);
       }
     );
@@ -148,9 +144,7 @@ export const Relatorio = ({ ...props }) => {
           <Form onSubmit={onSubmit}>
             {({ handleSubmit, form }) => (
               <form onSubmit={handleSubmit}>
-                <span className="page-title">{`Alteração do Tipo de Alimentação - Solicitação # ${
-                  solicitacao.id_externo
-                }`}</span>
+                <span className="page-title">{`Alteração do Tipo de Alimentação - Solicitação # ${solicitacao.id_externo}`}</span>
                 <div className="card style-padrao-inclusao-cei mt-3">
                   <div className="card-body">
                     <CorpoRelatorio
@@ -163,7 +157,7 @@ export const Relatorio = ({ ...props }) => {
                     />
                     {visualizaBotoesDoFluxo(solicitacao) && (
                       <div className="row">
-                        <div className="col-12 text-right">
+                        <div className="col-12 text-end">
                           {EXIBIR_BOTAO_NAO_APROVAR && (
                             <Botao
                               texto={textoBotaoNaoAprova}
@@ -189,36 +183,36 @@ export const Relatorio = ({ ...props }) => {
                                 setShowQuestionamentoModal(true);
                               }}
                               style={BUTTON_STYLE.GREEN}
-                              className="ml-3"
+                              className="ms-3"
                             />
                           )}
                           {EXIBIR_BOTAO_APROVAR &&
-                            (textoBotaoAprova !== "Ciente" &&
-                              (visao === CODAE &&
-                              solicitacao.logs.filter(
-                                log =>
-                                  log.status_evento_explicacao ===
-                                    "Terceirizada respondeu questionamento" &&
-                                  !log.resposta_sim_nao
-                              ).length > 0 ? null : (
-                                <Botao
-                                  texto={textoBotaoAprova}
-                                  type={BUTTON_TYPE.BUTTON}
-                                  style={BUTTON_STYLE.GREEN}
-                                  onClick={() => {
-                                    tipoPerfil ===
-                                    TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-                                      ? setShowModalObservacaoCodae(true)
-                                      : form.submit();
-                                  }}
-                                  className="ml-3"
-                                />
-                              )))}
+                            textoBotaoAprova !== "Ciente" &&
+                            (visao === CODAE &&
+                            solicitacao.logs.filter(
+                              (log) =>
+                                log.status_evento_explicacao ===
+                                  "Terceirizada respondeu questionamento" &&
+                                !log.resposta_sim_nao
+                            ).length > 0 ? null : (
+                              <Botao
+                                texto={textoBotaoAprova}
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.GREEN}
+                                onClick={() => {
+                                  tipoPerfil ===
+                                  TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                                    ? setShowModalObservacaoCodae(true)
+                                    : form.submit();
+                                }}
+                                className="ms-3"
+                              />
+                            ))}
                           {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-                            <div className="form-group float-right mt-4">
+                            <div className="form-group float-end mt-4">
                               {solicitacao.terceirizada_conferiu_gestao ? (
-                                <label className="ml-3 conferido">
-                                  <i className="fas fa-check mr-2" />
+                                <label className="ms-3 conferido">
+                                  <i className="fas fa-check me-2" />
                                   Solicitação Conferida
                                 </label>
                               ) : (
@@ -226,7 +220,7 @@ export const Relatorio = ({ ...props }) => {
                                   texto="Marcar Conferência"
                                   type={BUTTON_TYPE.BUTTON}
                                   style={BUTTON_STYLE.GREEN}
-                                  className="ml-3"
+                                  className="ms-3"
                                   onClick={() => {
                                     setShowModalMarcarConferencia(true);
                                   }}

@@ -5,7 +5,7 @@ import Botao from "components/Shareable/Botao";
 import HTTP_STATUS from "http-status-codes";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { formataOpcoes } from "../../helpers";
@@ -25,10 +25,10 @@ export const Filtros = ({ ...props }) => {
     setPage,
     setResultado,
     setTotal,
-    setShowPeriodosFaixas
+    setShowPeriodosFaixas,
   } = props;
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     setFiltrando(true);
     let _values = deepCopy(values);
     const page = 1;
@@ -49,15 +49,15 @@ export const Filtros = ({ ...props }) => {
     setFiltrando(false);
   };
 
-  const filtrarOpcoesEscola = values => {
+  const filtrarOpcoesEscola = (values) => {
     let escolas = listaOpcoes.escolas;
     if (values.diretorias_regionais && values.diretorias_regionais.length) {
-      escolas = escolas.filter(escola =>
+      escolas = escolas.filter((escola) =>
         values.diretorias_regionais.includes(escola.diretoria_regional.uuid)
       );
     }
     if (values.lotes && values.lotes.length) {
-      escolas = escolas.filter(escola =>
+      escolas = escolas.filter((escola) =>
         values.lotes.includes(escola.lote.uuid)
       );
     }
@@ -82,7 +82,7 @@ export const Filtros = ({ ...props }) => {
                         values.diretorias_regionais &&
                         values.diretorias_regionais.length
                           ? formataOpcoes(
-                              listaOpcoes.lotes.filter(lote =>
+                              listaOpcoes.lotes.filter((lote) =>
                                 values.diretorias_regionais.includes(
                                   lote.diretoria_regional.uuid
                                 )
@@ -90,7 +90,7 @@ export const Filtros = ({ ...props }) => {
                             )
                           : lotes
                       }
-                      onSelectedChanged={values_ => {
+                      onSelectedChanged={(values_) => {
                         form.change("lotes", values_);
                         form.change("unidades_educacionais", []);
                       }}
@@ -98,7 +98,7 @@ export const Filtros = ({ ...props }) => {
                       overrideStrings={{
                         selectSomeItems: "Selecione",
                         allItemsAreSelected: "Todos os lotes",
-                        selectAll: "Todos"
+                        selectAll: "Todos",
                       }}
                     />
                   </div>
@@ -109,14 +109,14 @@ export const Filtros = ({ ...props }) => {
                       name="tipos_unidades"
                       selected={values.tipos_unidades || []}
                       options={tiposUnidades}
-                      onSelectedChanged={values_ =>
+                      onSelectedChanged={(values_) =>
                         form.change("tipos_unidades", values_)
                       }
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
                         allItemsAreSelected: "Todos os Tipos de Unidades",
-                        selectAll: "Todos"
+                        selectAll: "Todos",
                       }}
                     />
                   </div>
@@ -133,14 +133,14 @@ export const Filtros = ({ ...props }) => {
                           ? filtrarOpcoesEscola(values)
                           : unidadesEducacionais
                       }
-                      onSelectedChanged={values_ =>
+                      onSelectedChanged={(values_) =>
                         form.change("unidades_educacionais", values_)
                       }
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
                         allItemsAreSelected: "Todas as Unidades Educacionais",
-                        selectAll: "Todas"
+                        selectAll: "Todas",
                       }}
                     />
                   </div>
@@ -156,7 +156,7 @@ export const Filtros = ({ ...props }) => {
                       name="diretorias_regionais"
                       selected={values.diretorias_regionais || []}
                       options={dres}
-                      onSelectedChanged={values_ => {
+                      onSelectedChanged={(values_) => {
                         form.change("diretorias_regionais", values_);
                         form.change("lotes", []);
                         form.change("unidades_educacionais", []);
@@ -165,7 +165,7 @@ export const Filtros = ({ ...props }) => {
                       overrideStrings={{
                         selectSomeItems: "Selecione",
                         allItemsAreSelected: "Todas as DREs",
-                        selectAll: "Todas"
+                        selectAll: "Todas",
                       }}
                     />
                   </div>
@@ -179,7 +179,7 @@ export const Filtros = ({ ...props }) => {
                         values.diretorias_regionais &&
                         values.diretorias_regionais.length
                           ? formataOpcoes(
-                              listaOpcoes.lotes.filter(lote =>
+                              listaOpcoes.lotes.filter((lote) =>
                                 values.diretorias_regionais.includes(
                                   lote.diretoria_regional.uuid
                                 )
@@ -187,7 +187,7 @@ export const Filtros = ({ ...props }) => {
                             )
                           : lotes
                       }
-                      onSelectedChanged={values_ => {
+                      onSelectedChanged={(values_) => {
                         form.change("lotes", values_);
                         form.change("unidades_educacionais", []);
                       }}
@@ -195,7 +195,7 @@ export const Filtros = ({ ...props }) => {
                       overrideStrings={{
                         selectSomeItems: "Selecione",
                         allItemsAreSelected: "Todos os lotes",
-                        selectAll: "Todos"
+                        selectAll: "Todos",
                       }}
                     />
                   </div>
@@ -208,14 +208,14 @@ export const Filtros = ({ ...props }) => {
                       name="tipos_unidades"
                       selected={values.tipos_unidades || []}
                       options={tiposUnidades}
-                      onSelectedChanged={values_ =>
+                      onSelectedChanged={(values_) =>
                         form.change("tipos_unidades", values_)
                       }
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
                         allItemsAreSelected: "Todos os Tipos de Unidades",
-                        selectAll: "Todos"
+                        selectAll: "Todos",
                       }}
                     />
                   </div>
@@ -232,14 +232,14 @@ export const Filtros = ({ ...props }) => {
                           ? filtrarOpcoesEscola(values)
                           : unidadesEducacionais
                       }
-                      onSelectedChanged={values_ =>
+                      onSelectedChanged={(values_) =>
                         form.change("unidades_educacionais", values_)
                       }
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
                         allItemsAreSelected: "Todas as Unidades Educacionais",
-                        selectAll: "Todas"
+                        selectAll: "Todas",
                       }}
                     />
                   </div>
@@ -247,7 +247,7 @@ export const Filtros = ({ ...props }) => {
               </>
             )}
             <div className="row mt-3">
-              <div className="col-12 text-right">
+              <div className="col-12 text-end">
                 <Botao
                   texto="Limpar Filtros"
                   type={BUTTON_TYPE.BUTTON}
@@ -263,7 +263,7 @@ export const Filtros = ({ ...props }) => {
                   texto="Consultar"
                   type={BUTTON_TYPE.SUBMIT}
                   style={BUTTON_STYLE.GREEN}
-                  className="ml-3"
+                  className="ms-3"
                 />
               </div>
             </div>

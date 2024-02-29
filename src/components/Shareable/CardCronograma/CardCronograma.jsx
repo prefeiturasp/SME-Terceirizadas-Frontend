@@ -1,24 +1,40 @@
 import React from "react";
 import "./style.scss";
 import { NavLink } from "react-router-dom";
+import { Tooltip } from "antd";
 
-export const CardCronograma = props => {
-  const { cardTitle, cardType, solicitations, icon, loading, href } = props;
-
-  const renderSolicitations = solicitations => {
-    return solicitations.slice(0, 5).map((solicitation, key) => {
-      return (
-        <NavLink key={key} to={solicitation.link}>
-          <p key={key} className={`data`}>
-            {solicitation.text}
-            <span className="float-right">{solicitation.date}</span>
-          </p>
-        </NavLink>
-      );
-    });
+export const CardCronograma = ({
+  cardTitle,
+  cardType,
+  solicitations,
+  icon,
+  loading,
+  href,
+  exibirTooltip = false,
+}) => {
+  const renderSolicitations = (solicitations, exibirTooltip) => {
+    return exibirTooltip
+      ? solicitations.slice(0, 5).map((solicitation, key) => (
+          <Tooltip placement="topLeft" key={key} title={solicitation.fullText}>
+            <NavLink key={key} to={solicitation.link}>
+              <p key={key} className={`data`}>
+                {solicitation.text}
+                <span className="float-end">{solicitation.date}</span>
+              </p>
+            </NavLink>
+          </Tooltip>
+        ))
+      : solicitations.slice(0, 5).map((solicitation, key) => (
+          <NavLink key={key} to={solicitation.link}>
+            <p key={key} className={`data`}>
+              {solicitation.text}
+              <span className="float-end">{solicitation.date}</span>
+            </p>
+          </NavLink>
+        ));
   };
 
-  const renderVerMais = solicitations => {
+  const renderVerMais = (solicitations) => {
     return (
       solicitations.length > 5 && (
         <NavLink
@@ -33,7 +49,7 @@ export const CardCronograma = props => {
   };
 
   return (
-    <div className={`card card-panel card-colored ${cardType}`}>
+    <div className={`card card-panel-cronograma card-colored ${cardType}`}>
       <div className={`card-title-status ajuste-icones`}>
         <div>
           <i className={"fas " + icon} />
@@ -42,10 +58,10 @@ export const CardCronograma = props => {
         {loading && (
           <img src="/assets/image/ajax-loader.gif" alt="ajax-loader" />
         )}
-        <span className="float-right my-auto">Data</span>
+        <span className="float-end my-auto">Data</span>
       </div>
       <hr />
-      {renderSolicitations(solicitations)}
+      {renderSolicitations(solicitations, exibirTooltip)}
       {renderVerMais(solicitations)}
     </div>
   );

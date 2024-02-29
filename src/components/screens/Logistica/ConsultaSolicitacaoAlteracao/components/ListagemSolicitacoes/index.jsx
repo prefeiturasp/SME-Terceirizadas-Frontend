@@ -17,7 +17,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
           <div>Data de Entrega</div>
           <div />
         </div>
-        {solicitacoes.map(solicitacao => {
+        {solicitacoes.map((solicitacao) => {
           const bordas =
             ativos && ativos.includes(solicitacao.uuid)
               ? "desativar-borda"
@@ -45,7 +45,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                     onClick={() => {
                       ativos && ativos.includes(solicitacao.uuid)
                         ? setAtivos(
-                            ativos.filter(el => el !== solicitacao.uuid)
+                            ativos.filter((el) => el !== solicitacao.uuid)
                           )
                         : setAtivos(
                             ativos

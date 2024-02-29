@@ -4,7 +4,7 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import { stringSeparadaPorVirgulas } from "helpers/utilities";
@@ -40,7 +40,7 @@ export default ({ solicitacaoSuspensao }) => {
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
-            className="float-right"
+            className="float-end"
             onClick={() =>
               imprimeRelatorioSuspensaoAlimentacao(
                 solicitacaoSuspensao.uuid,
@@ -106,9 +106,10 @@ export default ({ solicitacaoSuspensao }) => {
           <th>N° de Alunos</th>
         </tr>
         {solicitacaoSuspensao.periodos_escolares.map((periodo, key) => {
-          let escola_periodo = solicitacaoSuspensao.escola.periodos_escolares.find(
-            pr => pr.nome === periodo.nome
-          );
+          let escola_periodo =
+            solicitacaoSuspensao.escola.periodos_escolares.find(
+              (pr) => pr.nome === periodo.nome
+            );
           let tipos_alimentacao = stringSeparadaPorVirgulas(
             escola_periodo.tipos_alimentacao,
             "nome"
@@ -130,7 +131,7 @@ export default ({ solicitacaoSuspensao }) => {
               <p
                 className="value"
                 dangerouslySetInnerHTML={{
-                  __html: solicitacaoSuspensao.observacao
+                  __html: solicitacaoSuspensao.observacao,
                 }}
               />
             </>

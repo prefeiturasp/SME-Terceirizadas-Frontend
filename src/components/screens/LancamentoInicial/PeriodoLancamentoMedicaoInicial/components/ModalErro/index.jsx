@@ -3,10 +3,10 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
-export default ({ showModalErro, setShowModalErro }) => {
+export default ({ showModalErro, setShowModalErro, msgModalErro = null }) => {
   const handleModalClose = () => {
     setShowModalErro(false);
   };
@@ -23,8 +23,8 @@ export default ({ showModalErro, setShowModalErro }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Existem campos a serem corrigidos. Realize as correções para prosseguir
-        para a próxima semana.
+        {msgModalErro ||
+          "Existem campos a serem corrigidos. Realize as correções para prosseguir para a próxima semana."}
       </Modal.Body>
       <Modal.Footer>
         <Botao
@@ -32,7 +32,7 @@ export default ({ showModalErro, setShowModalErro }) => {
           type={BUTTON_TYPE.BUTTON}
           onClick={() => handleModalClose()}
           style={BUTTON_STYLE.GREEN}
-          className="float-right"
+          className="float-end"
         />
       </Modal.Footer>
     </Modal>

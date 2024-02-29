@@ -12,19 +12,20 @@ import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 
 import {
   escolheStatusPendenteHomologacao,
-  escolheStatusAguardandoAnaliseReclamacao
+  escolheStatusAguardandoAnaliseReclamacao,
 } from "./helpers";
 import {
+  usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
-  usuarioEhCogestorDRE
+  usuarioEhCogestorDRE,
 } from "helpers/utilities";
 
 class StatusSolicitacoesBase extends React.Component {
   render() {
     const atual = {
       href: "#",
-      titulo: "Status Solicitações"
+      titulo: "Status Solicitações",
     };
 
     return (
@@ -120,7 +121,8 @@ export const ResponderQuestionamentoDaCodae = () => (
     status={
       usuarioEhCogestorDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao()
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhCODAEGabinete()
         ? ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.RESPONDER_QUESTIONAMENTO_DA_CODAE
         : ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO
     }

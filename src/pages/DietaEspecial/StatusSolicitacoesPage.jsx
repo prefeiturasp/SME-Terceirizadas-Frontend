@@ -34,7 +34,7 @@ import {
   getDietaEspecialPendenteAutorizacaoEscola,
   getDietaEspecialPendenteAutorizacaoTerceirizada,
   getDietaEspecialAguardandoVigenciaTerceirizada,
-  getDietaEspecialAguardandoVigenciaEscola
+  getDietaEspecialAguardandoVigenciaEscola,
 } from "../../services/dashBoardDietaEspecial.service";
 
 export const HOME = "/painel-dieta-especial";
@@ -43,19 +43,19 @@ export const LOG_PARA = {
   ESCOLA: 0,
   DRE: 1,
   CODAE: 3,
-  TERCEIRIZADA: 2
+  TERCEIRIZADA: 2,
 };
 
-const StatusSolicitacoesBase = props => {
+const StatusSolicitacoesBase = (props) => {
   const atual = {
     href: "#",
-    titulo: "Status Solicitações"
+    titulo: "Status Solicitações",
   };
   const anteriores = [
     {
       href: `/painel-dieta-especial`,
-      titulo: "Painel Dieta Especial"
-    }
+      titulo: "Painel Dieta Especial",
+    },
   ];
   return (
     <Page titulo={atual.titulo} botaoVoltar>

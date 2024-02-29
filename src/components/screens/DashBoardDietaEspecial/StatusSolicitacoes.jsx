@@ -3,37 +3,20 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "../../../services/perfil.service";
-import {
-  getPaginacaoSolicitacoesDietaEspecial,
-  getPaginacaoSolicitacoesDietaEspecialCODAE
-} from "../../../services/dashBoardDietaEspecial.service";
 import { extrairStatusDaSolicitacaoURL } from "./helpers";
 import {
-  CODAE,
-  TERCEIRIZADA,
-  ESCOLA,
-  DRE,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
-  AUTORIZADOS_DIETA,
-  AUTORIZADAS_TEMPORARIAMENTE_DIETA,
-  CANCELADOS_DIETA,
-  PENDENTES_DIETA,
-  NEGADOS_DIETA,
-  DIETA_ESPECIAL_SOLICITACOES,
   SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE,
   SOLICITACOES_INATIVAS_TEMPORARIAMENTE,
   SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA,
-  INATIVAS_TEMPORARIAMENTE_DIETA,
   SOLICITACOES_INATIVAS,
-  INATIVAS_DIETA,
-  AGUARDANDO_VIGENCIA_DIETA
 } from "../../../configs/constants";
 import {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { ajustarFormatoLog } from "../helper";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
@@ -50,22 +33,22 @@ function StatusSolicitacoes(props) {
   const [count, setCount] = useState(0);
   const [tipoSolicitacao, setTipoSolicitacao] = useState(null);
   const [solicitacoes, setSolicitacoes] = useState(null);
-  const [listaSolicitacoesSemFiltro, setListaSolicitacoesSemFiltro] = useState(
-    null
-  );
-  const [originalCount, setOriginalCount] = useState(null);
+  const [listaSolicitacoesSemFiltro, setListaSolicitacoesSemFiltro] =
+    useState(null);
   const [tipoCard, setTipoCard] = useState(null);
   const [icone, setIcone] = useState(null);
   const [titulo, setTitulo] = useState(null);
   const [solicitacoesFiltrados, setSolicitacoesFiltrados] = useState(null);
-  const [urlPaginacao, setUrlPaginacao] = useState(null);
   const [selecionarTodos, setSelecionarTodos] = useState(false);
   const [listaLotes, setListaLotes] = useState(null);
   const [filtrouInicial, setFiltroInicial] = useState(false);
+  const [busca, setBusca] = useState({ offset: 0, limit: 10 });
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [propsDietaRedux, setPropsDietaRedux] = useState({});
+  let typingTimeout = null;
 
-  const selectTodos = solicitacoes => {
+  const selectTodos = (solicitacoes) => {
     const novoEstadoSelecionarTodos = !selecionarTodos;
     solicitacoes.forEach((_, key) => {
       props.change(`check_${key}`, novoEstadoSelecionarTodos);
@@ -79,50 +62,54 @@ function StatusSolicitacoes(props) {
     props.change(`check_${key}`, solicitacoes[key].checked);
   };
 
-  const onPesquisarChanged = values => {
-    let filtrados = listaSolicitacoesSemFiltro;
-
-    if (values.titulo === undefined) values.titulo = "";
-
-    if (values.lote && values.lote.length > 0) {
-      filtrados = filtrarLote(filtrados, values.lote);
-    }
-
+  const onPesquisarChanged = (values) => {
+    let params = busca;
     if (values.status && values.status.length > 0) {
-      filtrados = filtrarStatus(filtrados, values.status);
+      params["status"] = values.status;
+    } else {
+      delete params.status;
     }
-
-    if (values.titulo && values.titulo.length > 0) {
-      filtrados = filtrarNome(filtrados, values.titulo);
+    if (values.lote && values.lote.length > 0) {
+      params["lote"] = values.lote;
+    } else {
+      delete params.lote;
     }
-
-    filtrados && setCount(filtrados.length);
-
-    if (values.titulo === "") {
-      setCount(originalCount);
+    if (values.titulo && values.titulo.length >= 2) {
+      params["titulo"] = values.titulo;
+      setBusca(params);
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(async () => {
+        getSolicitacoesAsync();
+        setPage(1);
+      }, 1000);
+    } else {
+      delete params.titulo;
+      setBusca(params);
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(async () => {
+        getSolicitacoesAsync();
+        setPage(1);
+      }, 1000);
     }
-
-    setSolicitacoesFiltrados(filtrados);
   };
 
   const filtragemInicial = () => {
     const propsDieta = {
       tituloDieta: props.tituloDieta,
       loteDieta: props.loteDieta,
-      statusDieta: props.statusDieta
+      statusDieta: props.statusDieta,
     };
     setPropsDietaRedux(propsDieta);
     const values = {
       titulo: propsDieta.tituloDieta || "",
       lote: propsDieta.loteDieta || "",
-      status: propsDieta.statusDieta || ""
+      status: propsDieta.statusDieta || "",
     };
     props.resetCamposDieta();
     onPesquisarChanged(values);
   };
 
   const {
-    visao,
     getDietaEspecialPendenteAutorizacao,
     getDietaEspecialNegadas,
     getDietaEspecialAutorizadas,
@@ -130,7 +117,7 @@ function StatusSolicitacoes(props) {
     getDietaEspecialAutorizadasTemporariamente,
     getDietaEspecialAguardandoVigencia,
     getDietaEspecialInativasTemporariamente,
-    getDietaEspecialInativas
+    getDietaEspecialInativas,
   } = props;
 
   useEffect(() => {
@@ -138,7 +125,7 @@ function StatusSolicitacoes(props) {
       const url = window.location.href;
       let tipoSolicitacao = extrairStatusDaSolicitacaoURL(url);
       setTipoSolicitacao(tipoSolicitacao);
-      meusDados().then(response => {
+      meusDados().then((response) => {
         setInstituicao(response.vinculo_atual.instituicao);
       });
       if (usuarioEhEmpresaTerceirizada()) {
@@ -153,14 +140,12 @@ function StatusSolicitacoes(props) {
     fetchData();
   }, []);
 
-  const updateSolicitacoesState = (response, tipo, titulo, urlPaginacao) => {
+  const updateSolicitacoesState = (response, tipo, titulo) => {
     setSolicitacoes(ajustarFormatoLog(response.data.results, tipo));
-    setCount(response.count);
-    setOriginalCount(response.count);
+    setCount(response.data.count);
     setTipoCard(CARD_TYPE_ENUM[tipo.toUpperCase()]);
     setIcone(ICON_CARD_TYPE_ENUM[tipo.toUpperCase()]);
     setTitulo(titulo);
-    setUrlPaginacao(urlPaginacao);
   };
 
   const updateSolicitacoesSemFiltro = (response, tipo) => {
@@ -169,133 +154,99 @@ function StatusSolicitacoes(props) {
     );
   };
 
-  const getSolicitacoesAutorizadas = async () => {
-    const response = await getDietaEspecialAutorizadas(instituicao.uuid);
-    updateSolicitacoesState(
-      response,
-      "autorizado",
-      "Autorizadas",
-      retornaUrlPaginacao(visao, AUTORIZADOS_DIETA)
-    );
-    const responseNaoPaginado = await getDietaEspecialAutorizadas(
+  const getSolicitacoesAutorizadas = async (offset) => {
+    let params = busca;
+    params["offset"] = offset;
+    const response = await getDietaEspecialAutorizadas(
       instituicao.uuid,
-      { sem_paginacao: true }
+      params
     );
-    updateSolicitacoesSemFiltro(responseNaoPaginado, "autorizadas");
+    updateSolicitacoesState(response, "autorizado", "Autorizadas");
+    updateSolicitacoesSemFiltro(response, "autorizadas");
   };
 
-  const getSolicitacoesNegadas = async () => {
-    const response = await getDietaEspecialNegadas(instituicao.uuid);
-    updateSolicitacoesState(
-      response,
-      "negado",
-      "Negadas",
-      retornaUrlPaginacao(visao, NEGADOS_DIETA)
-    );
-    const responseNaoPaginado = await getDietaEspecialNegadas(
-      instituicao.uuid,
-      { sem_paginacao: true }
-    );
-    updateSolicitacoesSemFiltro(responseNaoPaginado, "negadas");
+  const getSolicitacoesNegadas = async (offset) => {
+    let params = busca;
+    params["offset"] = offset;
+    const response = await getDietaEspecialNegadas(instituicao.uuid, params);
+    updateSolicitacoesState(response, "negado", "Negadas");
+    updateSolicitacoesSemFiltro(response, "negadas");
   };
 
-  const getSolicitacoesPendentesAutorizacao = async () => {
+  const getSolicitacoesPendentesAutorizacao = async (offset) => {
+    let params = busca;
+    params["offset"] = offset;
     const response = await getDietaEspecialPendenteAutorizacao(
-      instituicao.uuid
+      instituicao.uuid,
+      params
     );
     updateSolicitacoesState(
       response,
       "pendente",
-      getNomeCardAguardandoAutorizacao(),
-      retornaUrlPaginacao(visao, PENDENTES_DIETA)
+      getNomeCardAguardandoAutorizacao()
     );
-    const responseNaoPaginado = await getDietaEspecialPendenteAutorizacao(
-      instituicao.uuid,
-      { sem_paginacao: true }
-    );
-    updateSolicitacoesSemFiltro(responseNaoPaginado, "pendentes-aut");
+    updateSolicitacoesSemFiltro(response, "pendentes-aut");
   };
 
-  const getSolicitacoesCanceladas = async () => {
-    const response = await getDietaEspecialCanceladas(instituicao.uuid);
+  const getSolicitacoesCanceladas = async (offset) => {
+    let params = busca;
+    params["offset"] = offset;
+    const response = await getDietaEspecialCanceladas(instituicao.uuid, params);
+    updateSolicitacoesState(response, "cancelado", "Canceladas");
+    updateSolicitacoesSemFiltro(response, "canceladas");
+  };
+
+  const getSolicitacoesAutorizadasTemporariamente = async (offset) => {
+    let params = busca;
+    params["offset"] = offset;
+    const response = await getDietaEspecialAutorizadasTemporariamente(
+      instituicao.uuid,
+      params
+    );
     updateSolicitacoesState(
       response,
-      "cancelado",
-      "Canceladas",
-      retornaUrlPaginacao(visao, CANCELADOS_DIETA)
-    );
-    const responseNaoPaginado = await getDietaEspecialCanceladas(
-      instituicao.uuid,
-      { sem_paginacao: true }
-    );
-    updateSolicitacoesSemFiltro(responseNaoPaginado, "canceladas");
-  };
-
-  const getSolicitacoesAutorizadasTemporariamente = async () => {
-    const response = await getDietaEspecialAutorizadasTemporariamente(
-      instituicao.uuid
-    );
-    updateSolicitacoesState(
-      response.data,
       "autorizado",
-      "Autorizadas Temporariamente",
-      retornaUrlPaginacao(visao, AUTORIZADAS_TEMPORARIAMENTE_DIETA)
+      "Autorizadas Temporariamente"
     );
-    const responseNaoPaginado = await getDietaEspecialAutorizadasTemporariamente(
-      instituicao.uuid,
-      { sem_paginacao: true }
-    );
-    updateSolicitacoesSemFiltro(responseNaoPaginado.data, "autorizadas-temp");
+    updateSolicitacoesSemFiltro(response, "autorizadas-temp");
   };
 
-  const getSolicitacoesAguardandoInicioVigencia = async () => {
-    const response = await getDietaEspecialAguardandoVigencia(instituicao.uuid);
+  const getSolicitacoesAguardandoInicioVigencia = async (offset) => {
+    let params = busca;
+    params["offset"] = offset;
+    const response = await getDietaEspecialAguardandoVigencia(
+      instituicao.uuid,
+      params
+    );
     updateSolicitacoesState(
-      response.data,
+      response,
       "aguardando_analise_reclamacao",
-      "Aguardando início da vigência",
-      retornaUrlPaginacao(visao, AGUARDANDO_VIGENCIA_DIETA)
+      "Aguardando início da vigência"
     );
-    const responseNaoPaginado = await getDietaEspecialAguardandoVigencia(
-      instituicao.uuid,
-      { sem_paginacao: true }
-    );
-    updateSolicitacoesSemFiltro(
-      responseNaoPaginado.data,
-      "aguardando-inicio-vigencia"
-    );
+    updateSolicitacoesSemFiltro(response, "aguardando-inicio-vigencia");
   };
 
-  const getSolicitacoesInativasTemporariamente = async () => {
+  const getSolicitacoesInativasTemporariamente = async (offset) => {
+    let params = busca;
+    params["offset"] = offset;
     const response = await getDietaEspecialInativasTemporariamente(
-      instituicao.uuid
+      instituicao.uuid,
+      params
     );
     updateSolicitacoesState(
-      response.data,
+      response,
       "aguardando_analise_reclamacao",
-      "Inativas Temporariamente",
-      retornaUrlPaginacao(visao, INATIVAS_TEMPORARIAMENTE_DIETA)
+      "Inativas Temporariamente"
     );
-    const responseNaoPaginado = await getDietaEspecialInativasTemporariamente(
-      instituicao.uuid,
-      { sem_paginacao: true }
-    );
-    updateSolicitacoesSemFiltro(responseNaoPaginado.data, "inativas-temp");
+    updateSolicitacoesSemFiltro(response, "inativas-temp");
   };
 
-  const getSolicitacoesInativas = async () => {
-    const response = await getDietaEspecialInativas(instituicao.uuid);
-    updateSolicitacoesState(
-      response.data,
-      "cancelado",
-      "Inativas",
-      retornaUrlPaginacao(visao, INATIVAS_DIETA)
-    );
-    const responseNaoPaginado = await getDietaEspecialInativas(
-      instituicao.uuid,
-      { sem_paginacao: true }
-    );
-    updateSolicitacoesSemFiltro(responseNaoPaginado.data, "inativas");
+  const getSolicitacoesInativas = async (offset) => {
+    let params = busca;
+    params["offset"] = offset;
+    const response = await getDietaEspecialInativas(instituicao.uuid, params);
+    updateSolicitacoesState(response, "cancelado", "Inativas");
+    updateSolicitacoesSemFiltro(response, "inativas");
   };
 
   const solicitacaoHandlers = {
@@ -303,16 +254,19 @@ function StatusSolicitacoes(props) {
     [SOLICITACOES_NEGADAS]: getSolicitacoesNegadas,
     [SOLICITACOES_AUTORIZADAS]: getSolicitacoesAutorizadas,
     [SOLICITACOES_CANCELADAS]: getSolicitacoesCanceladas,
-    [SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE]: getSolicitacoesAutorizadasTemporariamente,
-    [SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA]: getSolicitacoesAguardandoInicioVigencia,
-    [SOLICITACOES_INATIVAS_TEMPORARIAMENTE]: getSolicitacoesInativasTemporariamente,
-    [SOLICITACOES_INATIVAS]: getSolicitacoesInativas
+    [SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE]:
+      getSolicitacoesAutorizadasTemporariamente,
+    [SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA]:
+      getSolicitacoesAguardandoInicioVigencia,
+    [SOLICITACOES_INATIVAS_TEMPORARIAMENTE]:
+      getSolicitacoesInativasTemporariamente,
+    [SOLICITACOES_INATIVAS]: getSolicitacoesInativas,
   };
 
-  const getSolicitacoesAsync = async () => {
+  const getSolicitacoesAsync = async (offset = 0) => {
     const handler = solicitacaoHandlers[tipoSolicitacao];
     if (handler) {
-      handler();
+      handler(offset);
     }
   };
 
@@ -335,72 +289,18 @@ function StatusSolicitacoes(props) {
     }
   }, [solicitacoesFiltrados, filtrouInicial]);
 
-  const filtrarStatus = (listaFiltro, value) => {
-    if (value === "1") {
-      listaFiltro = listaFiltro.filter(item => item.conferido === true);
-    }
-    if (value === "0") {
-      listaFiltro = listaFiltro.filter(
-        item => item.conferido === false || item.conferido === null
-      );
-    }
-    return listaFiltro;
-  };
-
-  const filtrarLote = (listaFiltro, value) => {
-    listaFiltro = listaFiltro.filter(item => item.lote_uuid === value);
-    return listaFiltro;
-  };
-
-  const filtrarNome = (listaFiltro, value) => {
-    listaFiltro = listaFiltro.filter(item => {
-      const wordToFilter = value.toLowerCase();
-      return item.text.toLowerCase().search(wordToFilter) !== -1;
-    });
-    return listaFiltro;
-  };
-
-  const retornaUrlPaginacao = (visao, statusDieta) => {
-    switch (visao) {
-      case ESCOLA:
-        return `${DIETA_ESPECIAL_SOLICITACOES.ESCOLA}/${statusDieta}`;
-      case TERCEIRIZADA:
-        return `${DIETA_ESPECIAL_SOLICITACOES.TERCEIRIZADA}/${statusDieta}`;
-      case CODAE:
-        return `${DIETA_ESPECIAL_SOLICITACOES.CODAE}/${statusDieta}`;
-      case DRE:
-        return `${DIETA_ESPECIAL_SOLICITACOES.DRE}/${statusDieta}`;
-      default:
-        break;
-    }
-  };
-
   const navegacaoPage = (multiploQuantidade, quantidadePorPagina) => {
     setLoading(true);
     const offSet = quantidadePorPagina * (multiploQuantidade - 1);
-    const handleResponse = response => {
-      setSolicitacoesFiltrados(ajustarFormatoLog(response.data.results));
-      setSolicitacoes(ajustarFormatoLog(response.data.results));
-      setLoading(false);
-    };
-
-    if (visao === CODAE) {
-      getPaginacaoSolicitacoesDietaEspecialCODAE(urlPaginacao, offSet).then(
-        handleResponse
-      );
-    } else {
-      getPaginacaoSolicitacoesDietaEspecial(
-        urlPaginacao,
-        instituicao.uuid,
-        offSet
-      ).then(handleResponse);
-    }
+    getSolicitacoesAsync(offSet);
+    setPage(multiploQuantidade);
+    setLoading(false);
   };
 
   return (
     <div className="card mt-3">
       <div className="card-body">
-        <div className="pr-3">
+        <div className="pe-3">
           <InputSearchPendencias
             voltarLink={`/`}
             filterList={onPesquisarChanged}
@@ -421,7 +321,11 @@ function StatusSolicitacoes(props) {
               onCheckClicked={onCheckClicked}
             />
           )}
-          <Paginacao onChange={navegacaoPage} total={count} />
+          <Paginacao
+            current={page}
+            total={count}
+            onChange={(page) => navegacaoPage(page, 10)}
+          />
         </Spin>
       </div>
     </div>
@@ -430,11 +334,11 @@ function StatusSolicitacoes(props) {
 
 const StatusSolicitacoesDietaEspecialForm = reduxForm({
   form: "statusSolicitacoesDietaEspecial",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(StatusSolicitacoes);
 
 const selector = formValueSelector("statusSolicitacoesDietaEspecialForm");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const statusDieta = state.filtersDieta.statusDieta;
   const loteDieta = state.filtersDieta.loteDieta;
   const tituloDieta = state.filtersDieta.tituloDieta;
@@ -442,12 +346,12 @@ const mapStateToProps = state => {
     selecionar_todos: selector(state, "selecionar_todos"),
     statusDieta: statusDieta,
     loteDieta: loteDieta,
-    tituloDieta: tituloDieta
+    tituloDieta: tituloDieta,
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  resetCamposDieta: () => dispatch(resetCamposDieta())
+const mapDispatchToProps = (dispatch) => ({
+  resetCamposDieta: () => dispatch(resetCamposDieta()),
 });
 
 export default connect(

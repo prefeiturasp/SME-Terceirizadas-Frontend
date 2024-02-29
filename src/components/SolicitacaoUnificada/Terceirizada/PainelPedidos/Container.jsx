@@ -8,7 +8,7 @@ class Container extends Component {
     this.state = {
       visaoPorCombo: visaoPorComboSomenteDatas,
       pedidosAutorizados: [],
-      pedidosReprovados: []
+      pedidosReprovados: [],
     };
   }
 

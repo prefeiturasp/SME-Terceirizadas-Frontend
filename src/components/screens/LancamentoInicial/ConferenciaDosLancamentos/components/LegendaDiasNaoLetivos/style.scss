@@ -1,0 +1,9 @@
+@import "styles/variables.scss";
+
+div.legenda-dias-nao-letivos {
+  .square {
+    height: 10px;
+    width: 10px;
+    background-color: $grayHeader;
+  }
+}

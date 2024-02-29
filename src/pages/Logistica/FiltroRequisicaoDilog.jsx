@@ -7,14 +7,14 @@ import FiltroRequisicaoDilog from "components/screens/Logistica/FiltroRequisicao
 
 const atual = {
   href: `/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA}`,
-  titulo: "Envio de Requisições de Entrega"
+  titulo: "Envio de Requisições de Entrega",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
-  }
+    titulo: "Abastecimento",
+  },
 ];
 
 export default () => (

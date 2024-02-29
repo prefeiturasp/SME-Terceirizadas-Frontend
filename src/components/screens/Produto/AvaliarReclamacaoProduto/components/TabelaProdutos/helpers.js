@@ -1,6 +1,6 @@
 import {
   parseDataHoraBrToMoment,
-  comparaObjetosMoment
+  comparaObjetosMoment,
 } from "helpers/utilities";
 
 export const ordenaPorCriadoEm = (a, b) => {

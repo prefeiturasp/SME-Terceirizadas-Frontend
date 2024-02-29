@@ -3,18 +3,18 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { INSUCESSO_ENTREGA, LOGISTICA } from "configs/constants";
 import { registraInsucessoDeEntrega } from "services/logistica.service";
 import { Spin } from "antd";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 export default ({ values, disabled }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -33,7 +33,7 @@ export default ({ values, disabled }) => {
         setLoading(false);
         goToInsucesso();
       })
-      .catch(e => {
+      .catch((e) => {
         toastError(e.response.data.detail);
         setShow(false);
         setLoading(false);
@@ -41,7 +41,7 @@ export default ({ values, disabled }) => {
   };
 
   const goToInsucesso = () => {
-    history.push(`/${LOGISTICA}/${INSUCESSO_ENTREGA}`);
+    navigate(`/${LOGISTICA}/${INSUCESSO_ENTREGA}`);
   };
 
   return (
@@ -50,7 +50,7 @@ export default ({ values, disabled }) => {
         texto="Registrar"
         type={BUTTON_TYPE.SUBMIT}
         style={BUTTON_STYLE.GREEN}
-        className="float-right ml-3"
+        className="float-end ms-3"
         onClick={handleShow}
         disabled={disabled}
       />
@@ -69,13 +69,13 @@ export default ({ values, disabled }) => {
               type={BUTTON_TYPE.BUTTON}
               onClick={handleClose}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto="Sim"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               onClick={handleSim}
             />
           </Modal.Footer>

@@ -1,16 +1,46 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import "./styles.scss";
 import { NavLink } from "react-router-dom";
 import * as constants from "configs/constants";
 import { deParaStatusAltCronograma } from "components/screens/helper";
+import MeusDadosContext from "context/MeusDadosContext";
 
 const ListagemAlteracoesCronogramas = ({
   alteracoesCronogramas,
-  fornecedor
+  fornecedor,
 }) => {
+  const { meusDados } = useContext(MeusDadosContext);
+
+  const STATUS_PRIORITARIO = {
+    ADMINISTRADOR_EMPRESA: ["Alteração Enviada ao Fornecedor"],
+    USUARIO_EMPRESA: ["Alteração Enviada ao Fornecedor"],
+    DILOG_CRONOGRAMA: ["Em análise"],
+    DILOG_DIRETORIA: ["Aprovado DINUTRE", "Reprovado DINUTRE"],
+    DINUTRE_DIRETORIA: ["Cronograma ciente"],
+  };
+
+  const ehStatusPrioritario = (status) =>
+    STATUS_PRIORITARIO[meusDados.vinculo_atual.perfil.nome].includes(status);
+
+  const getBotaoAcao = (status) => {
+    if (ehStatusPrioritario(status)) {
+      return (
+        <span className={`link-acoes orange px-2`}>
+          <i className="fas fa-edit" title="Analisar" />
+        </span>
+      );
+    } else {
+      return (
+        <span className={`link-acoes green px-2`}>
+          <i className="fas fa-eye" title="Detalhar" />
+        </span>
+      );
+    }
+  };
+
   return (
-    <section className="resultado-cronograma-de-entrega">
+    <section className="resultado-solicitacao-alteracao-cronograma-de-entrega">
       <header>Resultados da Pesquisa</header>
       <article className="mt-3">
         <div
@@ -36,7 +66,11 @@ const ListagemAlteracoesCronogramas = ({
                 <div>{alteracaoCronograma.numero_solicitacao}</div>
                 <div>{alteracaoCronograma.cronograma}</div>
                 {!fornecedor && <div>{alteracaoCronograma.fornecedor}</div>}
-                <div>
+                <div
+                  className={`${
+                    ehStatusPrioritario(alteracaoCronograma.status) && "orange"
+                  }`}
+                >
                   {fornecedor
                     ? deParaStatusAltCronograma(alteracaoCronograma.status)
                     : alteracaoCronograma.status}
@@ -44,12 +78,10 @@ const ListagemAlteracoesCronogramas = ({
                 <div>{alteracaoCronograma.criado_em.split(" ")[0]}</div>
                 <div>
                   <NavLink
-                    className="float-left"
-                    to={`/${constants.PRE_RECEBIMENTO}/${
-                      constants.DETALHAR_ALTERACAO_CRONOGRAMA
-                    }?uuid=${alteracaoCronograma.uuid}`}
+                    className="float-start"
+                    to={`/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${alteracaoCronograma.uuid}`}
                   >
-                    <span className="link-acoes green">Detalhar</span>
+                    {getBotaoAcao(alteracaoCronograma.status)}
                   </NavLink>
                 </div>
               </div>

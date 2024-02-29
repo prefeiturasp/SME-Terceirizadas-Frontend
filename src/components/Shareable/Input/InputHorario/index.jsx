@@ -9,9 +9,9 @@ import moment from "moment";
 
 const format = "HH:mm";
 
-export const InputHorario = props => {
+export const InputHorario = (props) => {
   const {
-    input: { onChange, onBlur }
+    input: { onChange, onBlur },
   } = props;
   const {
     disabled,
@@ -29,7 +29,7 @@ export const InputHorario = props => {
     onChangeFunction,
     functionComponent,
     tooltipText,
-    writable
+    writable,
   } = props;
   return (
     <div className={`input-horario ${className}`}>
@@ -46,7 +46,7 @@ export const InputHorario = props => {
             className={`col-form-label ${labelClassName}`}
           >
             {label}
-          </label>
+          </label>,
         ]}
       </div>
       <div>
@@ -60,10 +60,12 @@ export const InputHorario = props => {
           disabled={disabled}
           format={format}
           inputReadOnly={writable === undefined ? false : !writable}
-          className={`${meta &&
+          className={`${
+            meta &&
             meta.touched &&
             (meta.error || meta.warning) &&
-            "invalid-field"}`}
+            "invalid-field"
+          }`}
           value={horaAtual === "00:00" ? null : moment(horaAtual, "HH:mm")}
         />
 

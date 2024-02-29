@@ -6,7 +6,7 @@ import If from "./layout";
 export const ErrorAlert = ({ meta }) => {
   const isVisible = meta !== undefined;
   let divStyle = {
-    color: "red"
+    color: "red",
   };
   return (
     <If isVisible={isVisible}>

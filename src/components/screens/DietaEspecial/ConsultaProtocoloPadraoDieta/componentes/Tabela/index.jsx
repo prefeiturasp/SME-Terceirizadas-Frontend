@@ -5,7 +5,7 @@ import "./style.scss";
 export default ({ resultado }) => {
   const [selecionado, setSelecionado] = useState(undefined);
 
-  const selecionaProtocolo = idx => {
+  const selecionaProtocolo = (idx) => {
     if (selecionado === idx) {
       setSelecionado(undefined);
     } else {
@@ -32,7 +32,7 @@ export default ({ resultado }) => {
                   <tr className="table-body-alimentacao">
                     <td>{protocoloPadrao.nome_protocolo}</td>
                     <td>
-                      {protocoloPadrao.editais.map(e => e.numero).join(", ")}
+                      {protocoloPadrao.editais.map((e) => e.numero).join(", ")}
                     </td>
                     <td>
                       <div className="row">

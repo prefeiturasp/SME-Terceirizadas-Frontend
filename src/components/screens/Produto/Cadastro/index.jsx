@@ -17,7 +17,7 @@ import {
   getRascunhosDeProduto,
   excluirRascunhoDeProduto,
   excluirImagemDoProduto,
-  produtoJaExiste
+  produtoJaExiste,
 } from "../../../../services/produto.service";
 import BuscaProduto from "./BuscaProduto";
 import validate from "./validate";
@@ -36,19 +36,19 @@ class cadastroProduto extends Component {
       wizardSteps: [
         {
           step: {
-            nome: "Identificação"
-          }
+            nome: "Identificação",
+          },
         },
         {
           step: {
-            nome: "Informação Nutricional"
-          }
+            nome: "Informação Nutricional",
+          },
         },
         {
           step: {
-            nome: "Informação do Produto"
-          }
-        }
+            nome: "Informação do Produto",
+          },
+        },
       ],
 
       payload: {
@@ -71,7 +71,7 @@ class cadastroProduto extends Component {
         outras_informacoes: null,
         numero_registro: null,
         porcao: null,
-        unidade_caseira: null
+        unidade_caseira: null,
       },
       renderizaFormAlergenicos: false,
       arrayErrosStep1: [],
@@ -81,15 +81,14 @@ class cadastroProduto extends Component {
       defaultFabricanteStep1: null,
       informacoesAgrupadas: null,
       renderBuscaProduto: true,
-      blockProximoStep3: false
+      blockProximoStep3: false,
     };
     this.exibeFormularioInicial = this.exibeFormularioInicial.bind(this);
     this.setaAtributosPrimeiroStep = this.setaAtributosPrimeiroStep.bind(this);
     this.mostrarFormAlergenico = this.mostrarFormAlergenico.bind(this);
     this.setArrayErrosStep1 = this.setArrayErrosStep1.bind(this);
-    this.setDefaultNomeDeProdutosEditalStep1 = this.setDefaultNomeDeProdutosEditalStep1.bind(
-      this
-    );
+    this.setDefaultNomeDeProdutosEditalStep1 =
+      this.setDefaultNomeDeProdutosEditalStep1.bind(this);
     this.setDefaultMarcaStep1 = this.setDefaultMarcaStep1.bind(this);
     this.setDefaultFabricanteStep1 = this.setDefaultFabricanteStep1.bind(this);
     this.setaValoresStep2 = this.setaValoresStep2.bind(this);
@@ -103,7 +102,7 @@ class cadastroProduto extends Component {
   setaValoresStep2 = ({
     informacoes_nutricionais,
     porcao,
-    unidade_caseira
+    unidade_caseira,
   }) => {
     const { payload } = this.state;
     payload["informacoes_nutricionais"] = informacoes_nutricionais;
@@ -113,14 +112,14 @@ class cadastroProduto extends Component {
     this.setState({ payload, blockProximoStep3: false });
   };
 
-  setArrayErrosStep1 = erros => {
+  setArrayErrosStep1 = (erros) => {
     this.setState({
-      arrayErrosStep1: erros
+      arrayErrosStep1: erros,
     });
   };
 
   getRascunhos() {
-    getRascunhosDeProduto().then(response => {
+    getRascunhosDeProduto().then((response) => {
       const rascunhos = response.data.results;
       this.setState({ rascunhos });
     });
@@ -133,7 +132,7 @@ class cadastroProduto extends Component {
   removerRascunho = (id_externo, uuid) => {
     if (window.confirm("Deseja remover este rascunho?")) {
       excluirRascunhoDeProduto(uuid).then(
-        res => {
+        (res) => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.getRascunhos();
@@ -141,7 +140,7 @@ class cadastroProduto extends Component {
             toastError(`Erro ao remover rascunho`);
           }
         },
-        function() {
+        function () {
           toastError("Houve um erro ao excluir o rascunho");
         }
       );
@@ -159,12 +158,12 @@ class cadastroProduto extends Component {
     produto.fabricante =
       produtoRaw.fabricante !== null ? produtoRaw.fabricante.uuid : null;
     let informacoes_nutricionais = [];
-    produtoRaw.informacoes_nutricionais.forEach(informacaoNutricional => {
+    produtoRaw.informacoes_nutricionais.forEach((informacaoNutricional) => {
       informacoes_nutricionais.push({
         informacao_nutricional:
           informacaoNutricional.informacao_nutricional.uuid,
         valor_diario: informacaoNutricional.valor_diario,
-        quantidade_porcao: informacaoNutricional.quantidade_porcao
+        quantidade_porcao: informacaoNutricional.quantidade_porcao,
       });
     });
     produto.imagens_salvas = produtoRaw.imagens;
@@ -173,14 +172,14 @@ class cadastroProduto extends Component {
     this.setState({
       renderBuscaProduto: false,
       payload: produto,
-      renderizaFormAlergenicos: produtoRaw.tem_aditivos_alergenicos
+      renderizaFormAlergenicos: produtoRaw.tem_aditivos_alergenicos,
     });
   }
 
   removerAnexo = async (uuid, index) => {
     if (window.confirm("Deseja remover este anexo do rascunho?")) {
       excluirImagemDoProduto(uuid)
-        .then(response => {
+        .then((response) => {
           if (response.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess("Arquivo excluído do rascunho com sucesso!");
             let payload = this.state.payload;
@@ -200,7 +199,7 @@ class cadastroProduto extends Component {
   componentDidMount = async () => {
     const infoAgrupada = await getInformacoesGrupo();
     this.setState({
-      informacoesAgrupadas: infoAgrupada.data.results
+      informacoesAgrupadas: infoAgrupada.data.results,
     });
     this.getRascunhos();
   };
@@ -210,42 +209,42 @@ class cadastroProduto extends Component {
     this.setState({ renderBuscaProduto: false });
   };
 
-  mostrarFormAlergenico = value => {
+  mostrarFormAlergenico = (value) => {
     this.setState({
-      renderizaFormAlergenicos: value
+      renderizaFormAlergenicos: value,
     });
   };
 
-  setDefaultNomeDeProdutosEditalStep1 = value => {
+  setDefaultNomeDeProdutosEditalStep1 = (value) => {
     this.setState({
-      defaultNomeDeProdutosEditalStep1: value
+      defaultNomeDeProdutosEditalStep1: value,
     });
   };
 
-  setDefaultMarcaStep1 = value => {
+  setDefaultMarcaStep1 = (value) => {
     this.setState({
-      defaultMarcaStep1: value
+      defaultMarcaStep1: value,
     });
   };
 
-  setDefaultFabricanteStep1 = value => {
+  setDefaultFabricanteStep1 = (value) => {
     this.setState({
-      defaultFabricanteStep1: value
+      defaultFabricanteStep1: value,
     });
   };
 
-  removeFile = index => {
+  removeFile = (index) => {
     let { payload } = this.state;
     payload.imagens.splice(index, 1);
     this.setState({ payload });
   };
 
-  setFiles = imagens => {
+  setFiles = (imagens) => {
     if (imagens.length > 0) {
-      const img = imagens.map(imagem => {
+      const img = imagens.map((imagem) => {
         return {
           arquivo: imagem.base64,
-          nome: imagem.nome
+          nome: imagem.nome,
         };
       });
       let { payload } = this.state;
@@ -264,7 +263,7 @@ class cadastroProduto extends Component {
     componentes,
     tem_aditivos_alergenicos,
     tem_gluten,
-    aditivos
+    aditivos,
   }) => {
     let { payload } = this.state;
 
@@ -282,7 +281,7 @@ class cadastroProduto extends Component {
     this.setState({ payload, concluidoStep1: true });
   };
 
-  onSubmit = async values => {
+  onSubmit = async (values) => {
     let erro = null;
     const { payload } = this.state;
     payload["nome"] = values.nome.split("+")[0];
@@ -330,7 +329,7 @@ class cadastroProduto extends Component {
         defaultMarcaStep1: null,
         defaultFabricanteStep1: null,
         renderBuscaProduto: true,
-        currentStep: 0
+        currentStep: 0,
       });
       this.getRascunhos();
       this.props.reset("cadastroProduto");
@@ -341,7 +340,7 @@ class cadastroProduto extends Component {
     }
   };
 
-  updateOrCreateProduto = async values => {
+  updateOrCreateProduto = async (values) => {
     const { payload, currentStep } = this.state;
     let erro = null;
 
@@ -399,12 +398,12 @@ class cadastroProduto extends Component {
       toastError(erro);
     } else {
       if (!payload.uuid) {
-        submitProduto(payload).then(response => {
+        submitProduto(payload).then((response) => {
           if (response.status === HTTP_STATUS.CREATED) {
             toastSuccess("Rascunho salvo com sucesso.");
             payload.uuid = response.data.uuid;
             this.setState({ payload });
-            setTimeout(function() {
+            setTimeout(function () {
               window.location.reload();
             }, 2000);
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
@@ -417,7 +416,7 @@ class cadastroProduto extends Component {
         const response = await updateProduto(payload);
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Rascunho atualizado com sucesso.");
-          setTimeout(function() {
+          setTimeout(function () {
             window.location.reload();
           }, 2000);
         } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
@@ -463,7 +462,7 @@ class cadastroProduto extends Component {
       defaultMarcaStep1,
       defaultFabricanteStep1,
       rascunhos,
-      blockProximoStep3
+      blockProximoStep3,
     } = this.state;
     const { handleSubmit } = this.props;
     return (
@@ -475,7 +474,7 @@ class cadastroProduto extends Component {
               rascunhos={rascunhos}
               removerRascunho={this.removerRascunho}
               resetForm={() => this.resetForm()}
-              carregarRascunho={params => this.carregarRascunho(params)}
+              carregarRascunho={(params) => this.carregarRascunho(params)}
             />
           </div>
         )}
@@ -535,10 +534,10 @@ class cadastroProduto extends Component {
                   <div className="col-12 mt-3">
                     <hr />
                   </div>
-                  <div className="col-12 text-right pt-3">
+                  <div className="col-12 text-end pt-3">
                     <Botao
                       texto={"Anterior"}
-                      className="mr-3"
+                      className="me-3"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       disabled={currentStep === 0}
@@ -548,12 +547,12 @@ class cadastroProduto extends Component {
                     />
                     <Botao
                       texto={"Salvar Rascunho"}
-                      className="mr-3 salvarRascunho"
+                      className="me-3 salvarRascunho"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      onClick={handleSubmit(values =>
+                      onClick={handleSubmit((values) =>
                         this.updateOrCreateProduto({
-                          ...values
+                          ...values,
                         })
                       )}
                       disabled={
@@ -595,9 +594,9 @@ class cadastroProduto extends Component {
                         texto={"Enviar"}
                         type={BUTTON_TYPE.SUBMIT}
                         style={BUTTON_STYLE.GREEN}
-                        onClick={handleSubmit(values =>
+                        onClick={handleSubmit((values) =>
                           this.onSubmit({
-                            ...values
+                            ...values,
                           })
                         )}
                       />
@@ -616,24 +615,21 @@ class cadastroProduto extends Component {
 const componentNameForm = reduxForm({
   form: "cadastroProduto",
   validate: validate,
-  enableReinitialize: true
+  enableReinitialize: true,
 })(cadastroProduto);
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    initialValues: state.cadastroProduto.data
+    initialValues: state.cadastroProduto.data,
   };
 };
 
-const mapDispatchToProps = dispatch =>
+const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
     {
-      loadProduto
+      loadProduto,
     },
     dispatch
   );
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(componentNameForm);
+export default connect(mapStateToProps, mapDispatchToProps)(componentNameForm);

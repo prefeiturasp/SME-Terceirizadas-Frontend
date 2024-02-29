@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 #wrapper {
   .ant-switch-checked {
     background-color: #198459;
@@ -20,4 +22,17 @@
   .ant-checkbox-wrapper {
     color: #42474a;
   }
+}
+
+.ReactCollapse--collapse {
+  transition: height 500ms;
+}
+
+.text-justify {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+hr {
+  color: $grayLight !important;
 }

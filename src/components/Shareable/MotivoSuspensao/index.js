@@ -2,7 +2,7 @@ import React from "react";
 import * as R from "ramda";
 import "./styles.scss";
 
-export const getSuspensao = logs => {
+export const getSuspensao = (logs) => {
   const arr = R.filter(
     R.propEq("status_evento_explicacao", "CODAE suspendeu o produto"),
     logs
@@ -25,7 +25,7 @@ const MotivoSuspensao = ({ logs }) => {
           <p
             className="texto-wysiwyg-suspensao"
             dangerouslySetInnerHTML={{
-              __html: suspensao.justificativa
+              __html: suspensao.justificativa,
             }}
           />
         </div>

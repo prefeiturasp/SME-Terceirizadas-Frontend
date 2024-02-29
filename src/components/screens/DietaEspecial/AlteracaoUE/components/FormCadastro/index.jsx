@@ -8,20 +8,20 @@ import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import {
   dateDelta,
   getError,
   composeValidators,
-  gerarParametrosConsulta
+  gerarParametrosConsulta,
 } from "helpers/utilities";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import InputText from "components/Shareable/Input/InputText";
 import { length, required } from "helpers/fieldValidators";
 import {
   getSolicitacoesDietaEspecial,
-  getMotivosAlteracaoUE
+  getMotivosAlteracaoUE,
 } from "services/dietaEspecial.service";
 import { getEscolasSimplissima } from "services/escola.service";
 import { getStatusSolicitacoesVigentes } from "helpers/dietaEspecial";
@@ -39,7 +39,7 @@ import { toastSuccess } from "components/Shareable/Toast/dialogs";
 export default ({
   solicitacoesVigentes,
   setSolicitacoesVigentes,
-  meusDadosEscola
+  meusDadosEscola,
 }) => {
   const [carregandoAluno, setCarregandoAluno] = useState(null);
   const [carregandoEscola, setCarregandoEscola] = useState(null);
@@ -47,7 +47,7 @@ export default ({
   const [motivosAlteracaoUE, setMotivosAlteracaoUE] = useState(null);
 
   useEffect(() => {
-    getMotivosAlteracaoUE().then(response => {
+    getMotivosAlteracaoUE().then((response) => {
       setMotivosAlteracaoUE(response.data.results);
     });
   }, []);
@@ -64,7 +64,7 @@ export default ({
     payload.escola_destino = values.codigo_eol_escola;
 
     return createSolicitacaoAlteracaoUE(payload)
-      .then(response => {
+      .then((response) => {
         if (response.status === HTTP_STATUS.CREATED) {
           toastSuccess("Solicitação de alteração criada com sucesso");
           setDadosIniciais(null);
@@ -72,7 +72,7 @@ export default ({
           setTimeout(() => form.restart());
         }
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(getError(error.response.data));
         }
@@ -85,11 +85,6 @@ export default ({
       return;
     }
 
-    if (codigoEol === meusDadosEscola.codigo_eol) {
-      setDadosIniciais({ ...values, nome_escola: undefined });
-      toastError("Escola de destino deve ser diferente da escola de origem.");
-      return;
-    }
     setCarregandoEscola(true);
 
     const params = { codigo_eol: codigoEol };
@@ -102,13 +97,21 @@ export default ({
     }
 
     if (response.results.length) {
-      if (response.results[0].tipo_gestao === "TERC TOTAL") {
+      const tipoGestao = response.results[0].tipo_gestao;
+      const tipoGestaoEhPermitida = [
+        "TERC TOTAL",
+        "DIRETA",
+        "PARCEIRA",
+      ].includes(tipoGestao);
+      if (tipoGestaoEhPermitida) {
         setDadosIniciais({
           ...values,
-          nome_escola: response.results[0].nome
+          nome_escola: response.results[0].nome,
         });
       } else {
-        toastError("Escola não possui gestão Terceirizada Total.");
+        toastError(
+          "Escola não possui gestão Terceirizada Total, Direta ou Parceira."
+        );
       }
     } else {
       toastError("Escola não encontrada no EOL.");
@@ -137,7 +140,7 @@ export default ({
         ativo: true,
         status: getStatusSolicitacoesVigentes(),
         escola: meusDadosEscola.uuid,
-        tipo_solicitacao: "COMUM"
+        tipo_solicitacao: "COMUM",
       });
 
       const response = await getSolicitacoesDietaEspecial(params);
@@ -150,7 +153,7 @@ export default ({
           setDadosIniciais({
             ...values,
             nome_aluno: response.data.results[0].aluno.nome,
-            data_nascimento: response.data.results[0].aluno.data_nascimento
+            data_nascimento: response.data.results[0].aluno.data_nascimento,
           });
         } else {
           toastError("Aluno informado não tem dieta ativa.");
@@ -176,7 +179,7 @@ export default ({
     setCarregandoAluno(false);
   };
 
-  const formValidation = values => {
+  const formValidation = (values) => {
     let errors = {};
     if (values.data_inicio && values.data_termino) {
       const data_inicial = moment(values.data_inicio, "DD/MM/YYYY");
@@ -201,7 +204,7 @@ export default ({
             onSubmit={handleSubmit}
             className="form-cadastro-dieta-alteracao-ue"
           >
-            <span className="card-title font-weight-bold cinza-escuro">
+            <span className="card-title fw-bold cinza-escuro">
               Descrição da Solicitação
             </span>
             <div className="row">
@@ -218,7 +221,7 @@ export default ({
                   validate={composeValidators(required, length(7))}
                 />
                 <OnChange name="codigo_eol_aluno">
-                  {value => {
+                  {(value) => {
                     getAlunoPorEol(value, values);
                   }}
                 </OnChange>
@@ -318,7 +321,7 @@ export default ({
             </div>
             <div className="row mt-2">
               <div className="col">
-                <span className="card-title font-weight-bold cinza-escuro ">
+                <span className="card-title fw-bold cinza-escuro ">
                   Escola onde será realizado o programa
                 </span>
               </div>
@@ -338,7 +341,7 @@ export default ({
                   validate={composeValidators(required, length(6))}
                 />
                 <OnChange name="codigo_eol_escola">
-                  {value => {
+                  {(value) => {
                     getEscolaPorEol(value, values);
                   }}
                 </OnChange>
@@ -368,14 +371,14 @@ export default ({
             <div className="mt-5">
               <Botao
                 texto="Enviar"
-                className="float-right ml-3"
+                className="float-end ms-3"
                 type={BUTTON_TYPE.SUBMIT}
                 disabled={submitting}
                 style={BUTTON_STYLE.GREEN}
               />
               <Botao
                 texto="Limpar Campos"
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   setDadosIniciais(null);
                   setSolicitacoesVigentes(null);

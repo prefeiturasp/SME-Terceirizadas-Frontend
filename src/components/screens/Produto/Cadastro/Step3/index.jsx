@@ -5,7 +5,7 @@ import Especificacoes from "./components/Especificacoes";
 import { required } from "../../../../../helpers/fieldValidators";
 import {
   getUnidadesDeMedidaProduto,
-  getEmbalagensProduto
+  getEmbalagensProduto,
 } from "../../../../../services/produto.service";
 import "./style.scss";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
@@ -17,7 +17,7 @@ class Step3 extends Component {
     super(props);
     this.state = {
       unidades_de_medida: null,
-      embalagens: null
+      embalagens: null,
     };
   }
 
@@ -30,11 +30,11 @@ class Step3 extends Component {
     const responseEmbalagens = await getEmbalagensProduto();
     this.setState({
       unidades_de_medida: reponseUnidades.data.results,
-      embalagens: responseEmbalagens.data.results
+      embalagens: responseEmbalagens.data.results,
     });
   };
 
-  openFile = file => {
+  openFile = (file) => {
     if (file.arquivo && file.arquivo.startsWith("http")) {
       window.open(file.arquivo);
     } else if (file.nome.includes(".doc")) {
@@ -50,7 +50,7 @@ class Step3 extends Component {
     }
   };
 
-  maxLengthCaracteres = max => value =>
+  maxLengthCaracteres = (max) => (value) =>
     value && value.length > max
       ? `Limite máximo de ${max} caracteres`
       : undefined;
@@ -165,7 +165,7 @@ class Step3 extends Component {
               payload.imagens_salvas.length > 0 && (
                 <>
                   {payload.imagens_salvas
-                    .filter(anexo => anexo.arquivo.includes("media"))
+                    .filter((anexo) => anexo.arquivo.includes("media"))
                     .map((anexo, key) => {
                       return (
                         <div
@@ -181,12 +181,12 @@ class Step3 extends Component {
                             rel="noopener noreferrer"
                             target="_blank"
                             href={anexo.arquivo}
-                            className="link ml-1 mr-5"
+                            className="link ms-1 me-5"
                           >
                             {anexo.nome}
                           </a>
                           <span
-                            className="float-right"
+                            className="float-end"
                             onClick={() =>
                               this.props.removerAnexo(anexo.uuid, key)
                             }

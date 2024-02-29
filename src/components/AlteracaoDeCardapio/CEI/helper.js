@@ -4,40 +4,36 @@ export const totalAlunosPorPeriodo = (values, index) => {
   let totalAlunos = 0;
   return (
     values.substituicoes[index].faixas_etarias &&
-    values.substituicoes[index].faixas_etarias.reduce(function(total, faixa) {
+    values.substituicoes[index].faixas_etarias.reduce(function (total, faixa) {
       return total + faixa.count;
     }, totalAlunos)
   );
 };
 
 export const totalAlunosInputPorPeriodo = (values, index) => {
-  let totalAlunos = 0;
   const faixas = values.substituicoes[index].faixas;
   if (!faixas) return 0;
-  return Object.values(faixas).reduce(function(total, faixa) {
+  return Object.values(faixas).reduce(function (total, faixa) {
     return total + parseInt(faixa);
-  }, totalAlunos);
+  }, 0);
 };
 
-export const formataPayload = values => {
+export const formataPayload = (values) => {
   const values_ = deepCopy(values);
-  let filteredSubstituicoes = values_.substituicoes.filter(obj =>
+  let filteredSubstituicoes = values_.substituicoes.filter((obj) =>
     Object.prototype.hasOwnProperty.call(obj, "faixas")
   );
   values_.substituicoes = filteredSubstituicoes;
-  values_.data = values_.data
-    .split("/")
-    .reverse()
-    .join("-");
-  values_.substituicoes.forEach(substituicao => {
+  values_.data = values_.data.split("/").reverse().join("-");
+  values_.substituicoes.forEach((substituicao) => {
     const faixas_etarias = [];
     substituicao.periodo_escolar = substituicao.uuid;
-    substituicao.faixas_etarias.forEach(faixa => {
+    substituicao.faixas_etarias.forEach((faixa) => {
       if (substituicao.faixas[faixa.faixa_etaria.uuid]) {
         faixas_etarias.push({
           faixa_etaria: faixa.faixa_etaria.uuid,
           quantidade: substituicao.faixas[faixa.faixa_etaria.uuid],
-          matriculados_quando_criado: faixa.count
+          matriculados_quando_criado: faixa.count,
         });
       }
     });
@@ -53,13 +49,15 @@ export const formataPayload = values => {
   return values_;
 };
 
-export const validaForm = values => {
+export const validaForm = (values) => {
   let erro = "";
-  if (!values.substituicoes.find(subs => subs.checked)) {
+  if (!values.substituicoes.find((subs) => subs.checked)) {
     erro = "É necessário selecionar pelo menos um período";
   }
   if (
-    !values.substituicoes.filter(subs => subs.checked).find(subs => subs.faixas)
+    !values.substituicoes
+      .filter((subs) => subs.checked)
+      .find((subs) => subs.faixas)
   ) {
     erro =
       "Ao selecionar um período, é necessário preencher ao menos uma faixa etária";

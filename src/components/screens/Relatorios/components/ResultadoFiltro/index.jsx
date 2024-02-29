@@ -3,7 +3,7 @@ import { Botao } from "../../../../Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "../../../../Shareable/Botao/constants";
 import { toastError } from "../../../../Shareable/Toast/dialogs";
 import { Paginacao } from "../../../../Shareable/Paginacao";
@@ -18,7 +18,7 @@ class ResultadoFiltro extends Component {
       checkTodos: false,
       listaSolicitacoes: null,
       pagina: false,
-      index: 0
+      index: 0,
     };
   }
 
@@ -33,7 +33,7 @@ class ResultadoFiltro extends Component {
       }
       if (!this.state.pagina) {
         this.setState({
-          listaSolicitacoes: this.props.resultadosFiltro
+          listaSolicitacoes: this.props.resultadosFiltro,
         });
       }
     }
@@ -43,7 +43,7 @@ class ResultadoFiltro extends Component {
     let checkTodos = this.state.checkTodos;
     checkTodos = !checkTodos;
     let listaSolicitacoes = this.state.listaSolicitacoes;
-    listaSolicitacoes.forEach(item => {
+    listaSolicitacoes.forEach((item) => {
       item.check = checkTodos;
     });
     this.setState({ checkTodos, listaSolicitacoes });
@@ -60,11 +60,11 @@ class ResultadoFiltro extends Component {
     if (paginaSelecionanda === 1) {
       this.props
         .getPedidosESolicitacoesFiltro(this.props.values, dataDe, dataAte)
-        .then(response => {
+        .then((response) => {
           if (response.results.length > 0) {
             this.setState({
               listaSolicitacoes: response.results,
-              pagina: true
+              pagina: true,
             });
           } else {
             toastError("Nenhum resultado encontrado!");
@@ -79,11 +79,11 @@ class ResultadoFiltro extends Component {
           dataAte,
           rangeQuantidade
         )
-        .then(response => {
+        .then((response) => {
           if (response.results.length > 0) {
             this.setState({
               listaSolicitacoes: response.results,
-              pagina: true
+              pagina: true,
             });
           } else {
             toastError("Nenhum resultado encontrado!");
@@ -106,7 +106,7 @@ class ResultadoFiltro extends Component {
             <div className="cabecalho-direito">
               <section>
                 <Botao
-                  className="ml-2"
+                  className="ms-2"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.PRINT}
                   texto={"Imprimir"}
@@ -114,7 +114,7 @@ class ResultadoFiltro extends Component {
                   type={BUTTON_TYPE.BUTTON}
                 />
                 <Botao
-                  className="ml-2"
+                  className="ms-2"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.SAIR}
                   texto={"Sair"}

@@ -5,29 +5,29 @@ import {
   getDietasEspeciaisVigentesDeUmAluno,
   deleteSolicitacaoAberta,
   createSolicitacaoAberta,
-  updateSolicitacaoAberta
+  updateSolicitacaoAberta,
 } from "services/dietaEspecial.service";
 import {
   getProtocoloDietaEspecial,
-  getRelatorioDietaEspecial
+  getRelatorioDietaEspecial,
 } from "services/relatorios";
 import {
   CODAENegaSolicitacaoCancelamento,
-  getMotivosNegarSolicitacaoCancelamento
+  getMotivosNegarSolicitacaoCancelamento,
 } from "services/dietaEspecial.service";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import HTTP_STATUS from "http-status-codes";
 import { ESCOLA, CODAE, TERCEIRIZADA } from "configs/constants";
 import {
   statusEnum,
   TIPO_PERFIL,
-  TIPO_SOLICITACAO_DIETA
+  TIPO_SOLICITACAO_DIETA,
 } from "constants/shared";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 
@@ -36,20 +36,22 @@ import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
-import ModalHistorico from "../../../Shareable/ModalHistorico";
+import ModalHistorico from "components/Shareable/ModalHistorico";
 import { Spin } from "antd";
 import "./style.scss";
 import ModalAvisoDietaImportada from "./componentes/ModalAvisoDietaImportada";
 import { Websocket } from "services/websocket";
-import { usuarioEhCoordenadorNutriCODAE } from "helpers/utilities";
+import {
+  usuarioEhEmpresaTerceirizada,
+  usuarioEhCoordenadorNutriCODAE,
+} from "helpers/utilities";
 
 const Relatorio = ({ visao }) => {
   const [dietaEspecial, setDietaEspecial] = useState(null);
   const [carregando, setCarregando] = useState(false);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
-  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
-    false
-  );
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] =
+    useState(false);
   const [showModalAviso, setShowModalAviso] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [mostrarHistorico, setMostrarHistorico] = useState(false);
@@ -64,9 +66,9 @@ const Relatorio = ({ visao }) => {
   const dietaCancelada = status ? ehSolicitacaoDeCancelamento(status) : false;
   const tipoPerfil = localStorage.getItem("tipo_perfil");
 
-  const fetchData = async uuid => {
+  const fetchData = async (uuid) => {
     const payload = {
-      uuid_solicitacao: uuid
+      uuid_solicitacao: uuid,
     };
     const response = await createSolicitacaoAberta(payload);
     if (response.status === HTTP_STATUS.CREATED) {
@@ -74,7 +76,7 @@ const Relatorio = ({ visao }) => {
     }
   };
 
-  const initSocket = uuid => {
+  const initSocket = (uuid) => {
     return new Websocket(
       "solicitacoes-abertas/",
       ({ data }) => {
@@ -99,12 +101,15 @@ const Relatorio = ({ visao }) => {
     setEditar(!editar);
   };
 
-  const getDietasEspeciaisAbertas = content => {
+  const getDietasEspeciaisAbertas = (content) => {
     content && setDietasAbertas(content.message);
   };
 
-  const loadSolicitacao = async uuid => {
+  const loadSolicitacao = async (uuid, setDietaNull = false) => {
     setCarregando(true);
+    if (setDietaNull) {
+      setDietaEspecial(null);
+    }
     const responseDietaEspecial = await getDietaEspecial(uuid);
     if (responseDietaEspecial.status === HTTP_STATUS.OK) {
       setDietaEspecial(responseDietaEspecial.data);
@@ -119,7 +124,7 @@ const Relatorio = ({ visao }) => {
     }
   };
 
-  const getSolicitacoesVigentes = async codigo_eol => {
+  const getSolicitacoesVigentes = async (codigo_eol) => {
     const responseDietasVigentes = await getDietasEspeciaisVigentesDeUmAluno(
       codigo_eol
     );
@@ -162,7 +167,7 @@ const Relatorio = ({ visao }) => {
     }
   };
 
-  const gerarRelatorio = async uuid => {
+  const gerarRelatorio = async (uuid) => {
     setCarregando(true);
     await getRelatorioDietaEspecial(uuid);
     setCarregando(false);
@@ -170,12 +175,12 @@ const Relatorio = ({ visao }) => {
 
   const BotaoAutorizaCancelamento = ({ uuid, onAutorizar, setCarregando }) => {
     return (
-      <div className="form-group row float-right mt-4">
+      <div className="form-group row float-end mt-4">
         <Botao
           texto="Autorizar"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             setCarregando(true);
             escolaCancelaSolicitacao(uuid).then(() => {
@@ -197,7 +202,7 @@ const Relatorio = ({ visao }) => {
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         icon={BUTTON_ICON.PRINT}
-        className="float-right botaoImprimirDieta"
+        className="float-end botaoImprimirDieta"
         onClick={() => gerarRelatorio(uuid)}
       />
     );
@@ -209,7 +214,7 @@ const Relatorio = ({ visao }) => {
         texto="Marcar Conferência"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
-        className="ml-3"
+        className="ms-3"
         onClick={() => {
           setShowModalMarcarConferencia(true);
         }}
@@ -219,13 +224,13 @@ const Relatorio = ({ visao }) => {
 
   const BotaoGerarProtocolo = ({ uuid, eh_importado }) => {
     return (
-      <div className="form-group float-right mt-4">
+      <div className="form-group float-end mt-4">
         <Botao
           texto="Gerar Protocolo"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.PRINT}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             gerarProtocolo(uuid, eh_importado);
           }}
@@ -236,13 +241,13 @@ const Relatorio = ({ visao }) => {
 
   const BotaoEditarDieta = ({ nome }) => {
     return (
-      <div className="form-group float-right mt-4">
+      <div className="form-group float-end mt-4">
         <Botao
           texto={nome}
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.PEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => habilitarEdicao()}
         />
       </div>
@@ -266,7 +271,7 @@ const Relatorio = ({ visao }) => {
   };
 
   const dietasFiltradas = () => {
-    return dietasAbertas.filter(dieta =>
+    return dietasAbertas.filter((dieta) =>
       dieta.uuid_solicitacao.includes(uuidDieta)
     );
   };
@@ -310,9 +315,7 @@ const Relatorio = ({ visao }) => {
                     <ul className="col-11 usuarios-simultaneos-dietas">
                       {dietasFiltradas().map((dieta, index) => (
                         <li key={index}>
-                          {`${dieta.usuario.nome} - RF: ${
-                            dieta.usuario.registro_funcional
-                          } - ${dieta.usuario.email}`}
+                          {`${dieta.usuario.nome} - RF: ${dieta.usuario.registro_funcional} - ${dieta.usuario.email}`}
                         </li>
                       ))}
                     </ul>
@@ -325,7 +328,7 @@ const Relatorio = ({ visao }) => {
                 exibirUsuariosSimultaneos() ? "col-3" : "col-12"
               } col-3 mb-3`}
             >
-              {dietaEspecial && !editar && (
+              {dietaEspecial && !editar && !usuarioEhEmpresaTerceirizada() && (
                 <BotaoImprimir uuid={dietaEspecial.uuid} />
               )}
               {dietaEspecial && !editar && historico && (
@@ -334,8 +337,8 @@ const Relatorio = ({ visao }) => {
                   texto="Histórico"
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={showModalHistorico}
-                  className={`mr-2 ${
-                    exibirUsuariosSimultaneos() ? "float-right" : "float-left"
+                  className={`me-2 ${
+                    exibirUsuariosSimultaneos() ? "float-end" : "float-start"
                   }`}
                 />
               )}
@@ -368,7 +371,8 @@ const Relatorio = ({ visao }) => {
                 ![
                   TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
                   TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
-                  TIPO_PERFIL.MEDICAO
+                  TIPO_PERFIL.MEDICAO,
+                  TIPO_PERFIL.CODAE_GABINETE,
                 ].includes(tipoPerfil) && (
                   <EscolaCancelaDietaEspecial
                     uuid={dietaEspecial.uuid}
@@ -382,12 +386,14 @@ const Relatorio = ({ visao }) => {
             visao === CODAE && (
               <FormAutorizaDietaEspecial
                 dietaEspecial={dietaEspecial}
-                onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
+                onAutorizarOuNegar={(setDietaNull = false) =>
+                  loadSolicitacao(dietaEspecial.uuid, setDietaNull)
+                }
                 visao={visao}
                 setTemSolicitacaoCadastroProduto={() =>
                   setDietaEspecial({
                     ...dietaEspecial,
-                    tem_solicitacao_cadastro_produto: true
+                    tem_solicitacao_cadastro_produto: true,
                   })
                 }
                 editar={editar}
@@ -407,25 +413,25 @@ const Relatorio = ({ visao }) => {
                 }}
                 setCarregando={setCarregando}
               />,
-              <div className="form-group row float-right mt-4 mr-3" key={1}>
+              <div className="form-group row float-end mt-4 me-3" key={1}>
                 <Botao
                   texto="Negar"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.RED}
-                  className="ml-3"
+                  className="ms-3"
                   onClick={() => setShowNaoAprovaModal(true)}
                 />
-              </div>
+              </div>,
             ]}
           {dietaEspecial &&
             visao === TERCEIRIZADA &&
             (status === statusEnum.CODAE_AUTORIZADO ||
               dietaCancelada ||
               status === statusEnum.CODAE_NEGOU_PEDIDO) && (
-              <div className="form-group float-right mt-4">
+              <div className="form-group float-end mt-4">
                 {dietaEspecial.conferido ? (
-                  <label className="ml-3 conferido">
-                    <i className="fas fa-check mr-2" />
+                  <label className="ms-3 conferido">
+                    <i className="fas fa-check me-2" />
                     Solicitação Conferida
                   </label>
                 ) : (
@@ -435,7 +441,7 @@ const Relatorio = ({ visao }) => {
             )}
           {dietaEspecial &&
             status === statusEnum.CODAE_AUTORIZADO &&
-            card !== "inativas-temp" && (
+            !["inativas", "inativas-temp"].includes(card) && (
               <>
                 {!editar && (
                   <BotaoGerarProtocolo

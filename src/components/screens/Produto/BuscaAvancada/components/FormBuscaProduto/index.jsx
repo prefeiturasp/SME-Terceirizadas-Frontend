@@ -2,7 +2,7 @@ import moment from "moment";
 import React, { useEffect, useReducer, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useNavigationType } from "react-router-dom";
 
 import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import CheckboxField from "components/Shareable/Checkbox/Field";
@@ -12,7 +12,7 @@ import { SelectWithHideOptions } from "components/Shareable/SelectWithHideOption
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 
@@ -21,7 +21,7 @@ import {
   getNomesUnicosMarcas,
   getNomesUnicosFabricantes,
   getNomesTerceirizadas,
-  getNomesUnicosEditais
+  getNomesUnicosEditais,
 } from "services/produto.service";
 
 import { getOpecoesStatus, retornaStatusBackend } from "./helpers";
@@ -37,7 +37,7 @@ const initialState = {
   fabricantes: [],
   dataMinima: null,
   dataMaxima: null,
-  editais: []
+  editais: [],
 };
 
 const FORM_NAME = "buscaAvancadaProduto";
@@ -54,12 +54,14 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
+const FormBuscaProduto = ({ setFiltros, setPage, initialValues }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [status, setStatus] = useState({
     opcoesStatus: getOpecoesStatus(),
-    statusSelecionados: []
+    statusSelecionados: [],
   });
+
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     async function fetchData() {
@@ -68,7 +70,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
         getNomesUnicosMarcas(),
         getNomesUnicosFabricantes(),
         getNomesTerceirizadas(),
-        getNomesUnicosEditais()
+        getNomesUnicosEditais(),
       ]).then(([produtos, marcas, fabricantes, terceirizadas, editais]) =>
         dispatch({
           type: "popularDados",
@@ -77,40 +79,42 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
             marcas: marcas.data.results,
             fabricantes: fabricantes.data.results,
             terceirizadas: terceirizadas.data.results.map(
-              el => el.nome_fantasia
+              (el) => el.nome_fantasia
             ),
-            editais: editais.data.results
-          }
+            editais: editais.data.results,
+          },
         })
       );
     }
     fetchData();
   }, []);
 
-  const onSelectStatus = value => {
+  const onSelectStatus = (value) => {
     if (value === "Todos") {
       setStatus({ opcoesStatus: [], statusSelecionados: ["Todos"] });
     } else {
       setStatus({
         opcoesStatus: getOpecoesStatus(),
-        statusSelecionados: [...status.statusSelecionados, value]
+        statusSelecionados: [...status.statusSelecionados, value],
       });
     }
   };
 
-  const onDeselectStatus = value => {
+  const onDeselectStatus = (value) => {
     if (value === "Todos") {
       setStatus({ opcoesStatus: getOpecoesStatus(), statusSelecionados: [] });
     } else {
-      const filtered = status.statusSelecionados.filter(item => item !== value);
+      const filtered = status.statusSelecionados.filter(
+        (item) => item !== value
+      );
       setStatus({
         opcoesStatus: getOpecoesStatus(),
-        statusSelecionados: filtered
+        statusSelecionados: filtered,
       });
     }
   };
 
-  const onSubmit = values => {
+  const onSubmit = (values) => {
     let formValues = JSON.parse(JSON.stringify(values));
 
     if (formValues.tipo_produto_comum && !formValues.dieta_especial) {
@@ -138,7 +142,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={history.action === "POP" && initialValues}
+      initialValues={navigationType === "POP" && initialValues}
       render={({ form, handleSubmit, submitting, values }) => (
         <form onSubmit={handleSubmit} className="busca-produtos">
           <FinalFormToRedux form={FORM_NAME} />
@@ -158,7 +162,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
           <div className="form-row">
             <div className="col-12 col-md-4 col-xl-4">
               <div className="row">
-                <label className="ml-3">Data cadastro</label>
+                <label className="ms-1">Data cadastro</label>
               </div>
               <div className="row">
                 <div className="col mt-1">
@@ -200,17 +204,17 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
                 options={status.opcoesStatus}
                 name="status"
                 selectedItems={status.statusSelecionados}
-                onSelect={value => onSelectStatus(value)}
-                onDeselect={value => onDeselectStatus(value)}
+                onSelect={(value) => onSelectStatus(value)}
+                onDeselect={(value) => onDeselectStatus(value)}
               />
             </div>
             <div className="col-12 col-md-3 col-xl-3 check-tipos-prod">
               <div className="row">
-                <label className="ml-3">Tipo de produto</label>
+                <label className="ms-1">Tipo de produto</label>
               </div>
 
               <div className="row">
-                <div className="col mt-2 ml-1">
+                <div className="col mt-2 ms-1">
                   <Field
                     className="check-tipo-produto"
                     component={CheckboxField}
@@ -294,7 +298,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
 
@@ -302,7 +306,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-right ml-3"
+              className="float-end ms-3"
               onClick={() => {
                 form.reset({
                   tipo_produto_comum: undefined,
@@ -314,11 +318,11 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
                   tem_aditivos_alergenicos: undefined,
                   status: undefined,
                   data_final: undefined,
-                  data_inicial: undefined
+                  data_inicial: undefined,
                 });
                 setStatus({
                   opcoesStatus: getOpecoesStatus(),
-                  statusSelecionados: []
+                  statusSelecionados: [],
                 });
               }}
             />
@@ -329,10 +333,10 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    initialValues: state.finalForm[FORM_NAME]
+    initialValues: state.finalForm[FORM_NAME],
   };
 };
 
-export default withRouter(connect(mapStateToProps)(FormBuscaProduto));
+export default connect(mapStateToProps)(FormBuscaProduto);

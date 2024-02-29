@@ -6,7 +6,7 @@ import { NUTRISUPERVISAO, SOLICITACOES_AUTORIZADAS } from "configs/constants";
 import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardLegendas from "components/Shareable/CardLegendas";
 import { getSolicitacoesAutorizadasNutrisupervisao } from "services/painelNutricionista.service";
@@ -14,7 +14,7 @@ import { PAGINACAO_DEFAULT } from "constants/shared";
 
 const atual = {
   href: `/${NUTRISUPERVISAO}/${SOLICITACOES_AUTORIZADAS}`,
-  titulo: "Solicitações Autorizadas"
+  titulo: "Solicitações Autorizadas",
 };
 
 export default () => (

@@ -6,41 +6,36 @@ import {
   talvezPluralizar,
   ehEscolaTipoCEI,
   ehEscolaTipoCEMEI,
-  deepCopy
+  deepCopy,
 } from "../../../../helpers/utilities";
 import {
   SOLICITACAO_KIT_LANCHE,
-  SOLICITACAO_KIT_LANCHE_CEMEI
+  SOLICITACAO_KIT_LANCHE_CEMEI,
 } from "../../../../configs/constants";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { SolicitacoesSimilaresKitLanche } from "components/Shareable/SolicitacoesSimilaresKitLanche";
 
-const {
-  SOLICITACAO_CEI,
-  SOLICITACAO_NORMAL,
-  SOLICITACAO_CEMEI
-} = TIPO_SOLICITACAO;
+const { SOLICITACAO_CEI, SOLICITACAO_NORMAL, SOLICITACAO_CEMEI } =
+  TIPO_SOLICITACAO;
 
 export class CardPendenteAcao extends Component {
   constructor(props) {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: this.props.pedidos.map(solicitacao => {
-        solicitacao[
-          "solicitacoes_similares"
-        ] = solicitacao.solicitacoes_similares.map(sol_similar => {
-          sol_similar["collapsed"] = true;
-          return sol_similar;
-        });
+      pedidosFiltrados: this.props.pedidos.map((solicitacao) => {
+        solicitacao["solicitacoes_similares"] =
+          solicitacao.solicitacoes_similares.map((sol_similar) => {
+            sol_similar["collapsed"] = true;
+            return sol_similar;
+          });
         return solicitacao;
-      })
+      }),
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
-    this.collapseSolicitacaoSimilar = this.collapseSolicitacaoSimilar.bind(
-      this
-    );
+    this.collapseSolicitacaoSimilar =
+      this.collapseSolicitacaoSimilar.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -65,7 +60,7 @@ export class CardPendenteAcao extends Component {
   filtrarPedidos(event) {
     if (event === undefined) event = { target: { value: "" } };
     let pedidosFiltrados = this.props.pedidos;
-    pedidosFiltrados = pedidosFiltrados.filter(function(item) {
+    pedidosFiltrados = pedidosFiltrados.filter(function (item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.id_externo.toLowerCase().includes(palavraAFiltrar) ||
@@ -132,7 +127,7 @@ export class CardPendenteAcao extends Component {
               />
               <i className="fas fa-search inside-input" />
             </div>
-            <table className="orders-table mt-4 ml-3 mr-3">
+            <table className="orders-table mt-4 ms-3 me-3">
               <thead>
                 <tr className="row">
                   <th className="col-2">Código do Pedido</th>
@@ -160,9 +155,7 @@ export class CardPendenteAcao extends Component {
                             <Link
                               className="text-dark"
                               key={key}
-                              to={`/${solicitacaoUrl}/relatorio?uuid=${
-                                pedido.uuid
-                              }&tipoSolicitacao=${tipoSolicitacao}`}
+                              to={`/${solicitacaoUrl}/relatorio?uuid=${pedido.uuid}&tipoSolicitacao=${tipoSolicitacao}`}
                             >
                               {pedido.id_externo}
                             </Link>
@@ -171,9 +164,7 @@ export class CardPendenteAcao extends Component {
                             <Link
                               className="text-dark"
                               key={key}
-                              to={`/${solicitacaoUrl}/relatorio?uuid=${
-                                pedido.uuid
-                              }&tipoSolicitacao=${tipoSolicitacao}`}
+                              to={`/${solicitacaoUrl}/relatorio?uuid=${pedido.uuid}&tipoSolicitacao=${tipoSolicitacao}`}
                             >
                               {pedido.escola.codigo_eol}
                             </Link>
@@ -182,9 +173,7 @@ export class CardPendenteAcao extends Component {
                             <Link
                               className="text-dark"
                               key={key}
-                              to={`/${solicitacaoUrl}/relatorio?uuid=${
-                                pedido.uuid
-                              }&tipoSolicitacao=${tipoSolicitacao}`}
+                              to={`/${solicitacaoUrl}/relatorio?uuid=${pedido.uuid}&tipoSolicitacao=${tipoSolicitacao}`}
                             >
                               {pedido.escola.nome}
                             </Link>
@@ -193,9 +182,7 @@ export class CardPendenteAcao extends Component {
                             <Link
                               className="text-dark"
                               key={key}
-                              to={`/${solicitacaoUrl}/relatorio?uuid=${
-                                pedido.uuid
-                              }&tipoSolicitacao=${tipoSolicitacao}`}
+                              to={`/${solicitacaoUrl}/relatorio?uuid=${pedido.uuid}&tipoSolicitacao=${tipoSolicitacao}`}
                             >
                               {pedido.solicitacao_kit_lanche
                                 ? pedido.solicitacao_kit_lanche.data
@@ -212,7 +199,7 @@ export class CardPendenteAcao extends Component {
                                       key={idxSolicitacaoSimilar}
                                     >
                                       <i
-                                        className="fa fa-info-circle mr-1"
+                                        className="fa fa-info-circle me-1"
                                         aria-hidden="true"
                                       />
                                       <b>

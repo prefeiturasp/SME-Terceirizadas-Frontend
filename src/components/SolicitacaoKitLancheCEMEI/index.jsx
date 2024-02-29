@@ -9,7 +9,7 @@ import {
   composeValidators,
   deepCopy,
   fimDoCalendario,
-  getError
+  getError,
 } from "helpers/utilities";
 import React, { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
@@ -19,7 +19,7 @@ import Botao from "components/Shareable/Botao";
 import HTTP_STATUS from "http-status-codes";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 import {
@@ -27,7 +27,7 @@ import {
   deleteSolicitacaoKitLancheCEMEI,
   getSolicitacaoKitLancheCEMEIRascunhos,
   iniciaFluxoSolicitacaoKitLancheCEMEI,
-  updateSolicitacaoKitLancheCEMEI
+  updateSolicitacaoKitLancheCEMEI,
 } from "services/kitLanche";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { Rascunhos } from "./componentes/Rascunhos";
@@ -36,7 +36,7 @@ import {
   Kits,
   QuantidadeAlunosEMEI,
   TabelaFaixasEtariasCEI,
-  TempoPasseio
+  TempoPasseio,
 } from "./componentes";
 import { getAlunosPorFaixaEtariaNumaData } from "services/alteracaoDeCardapio";
 import { formataSubmit, getNumeroTotalKits } from "./helpers";
@@ -47,7 +47,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
     kits,
-    alunosComDietaEspecial
+    alunosComDietaEspecial,
   } = props;
 
   const [rascunhos, setRascunhos] = useState(null);
@@ -59,16 +59,14 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     getRascunhos();
   }, []);
 
-  const getAlunosPorFaixaEtariaNumaDataAsync = async data => {
-    const periodo = props.meusDados.vinculo_atual.instituicao.periodos_escolares.find(
-      p => p.nome === "INTEGRAL"
-    );
+  const getAlunosPorFaixaEtariaNumaDataAsync = async (data) => {
+    const periodo =
+      props.meusDados.vinculo_atual.instituicao.periodos_escolares.find(
+        (p) => p.nome === "INTEGRAL"
+      );
     const response = await getAlunosPorFaixaEtariaNumaData(
       periodo.uuid,
-      data
-        .split("/")
-        .reverse()
-        .join("-")
+      data.split("/").reverse().join("-")
     );
     if (response.status === HTTP_STATUS.OK) {
       setFaixasEtariasCEI(response.data.results);
@@ -148,7 +146,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     if (solicitacao_kit_lanche.solicitacao_cei) {
       const faixasQuantidades = {};
       solicitacao_kit_lanche.solicitacao_cei.faixas_quantidades.forEach(
-        faixa_quantidade => {
+        (faixa_quantidade) => {
           faixasQuantidades[faixa_quantidade.faixa_etaria.uuid] =
             faixa_quantidade.quantidade_alunos;
         }
@@ -161,6 +159,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     //form.initialize(solicitacao);
     form.change("data", solicitacao.data);
     form.change("local", solicitacao.local);
+    form.change("evento", solicitacao.evento);
     form.change("alunos_cei_e_ou_emei", solicitacao.alunos_cei_e_ou_emei);
     form.change("escola", solicitacao.escola);
     form.change("uuid", solicitacao.uuid);
@@ -171,14 +170,15 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     form.change("observacao", solicitacao.observacao);
   };
 
-  const refresh = form => {
+  const refresh = (form) => {
     getRascunhos();
     resetForm(form);
   };
 
-  const resetForm = form => {
+  const resetForm = (form) => {
     form.change("data", undefined);
     form.change("local", undefined);
+    form.change("evento", undefined);
     form.change("alunos_cei_e_ou_emei", undefined);
     form.change("solicitacao_emei", {});
     form.change("solicitacao_cei", { faixas_quantidades: {} });
@@ -188,7 +188,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     form.change("status", undefined);
   };
 
-  const validaDiasUteis = value => {
+  const validaDiasUteis = (value) => {
     if (
       value &&
       checaSeDataEstaEntre2e5DiasUteis(
@@ -219,7 +219,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
       <Form
         keepDirtyOnReinitialize
         initialValues={{
-          escola: meusDados.vinculo_atual.instituicao.uuid
+          escola: meusDados.vinculo_atual.instituicao.uuid,
         }}
         onSubmit={onSubmit}
       >
@@ -256,11 +256,11 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                       validate={required}
                     />
                     <OnChange name={`data`}>
-                      {value => {
+                      {(value) => {
                         if (value) {
                           if (!values.solicitacao_cei) {
                             values.solicitacao_cei = {
-                              faixas_quantidades: {}
+                              faixas_quantidades: {},
                             };
                           }
                           if (!values.solicitacao_emei) {
@@ -294,8 +294,17 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                         { uuid: "", nome: "Selecione" },
                         { uuid: "TODOS", nome: "Todos" },
                         { uuid: "CEI", nome: "CEI" },
-                        { uuid: "EMEI", nome: "EMEI" }
+                        { uuid: "EMEI", nome: "EMEI" },
                       ]}
+                      validate={required}
+                    />
+                  </div>
+                  <div className="col-9">
+                    <Field
+                      component={InputText}
+                      label="Evento/Atividade"
+                      name="evento"
+                      required
                       validate={required}
                     />
                   </div>
@@ -324,7 +333,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                       )}
                     <AlunosDietaEspecial
                       alunosComDietaEspecial={alunosComDietaEspecial.filter(
-                        aluno =>
+                        (aluno) =>
                           aluno.serie.includes("1") ||
                           aluno.serie.includes("2") ||
                           aluno.serie.includes("3") ||
@@ -353,7 +362,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                     <QuantidadeAlunosEMEI meusDados={meusDados} />
                     <AlunosDietaEspecial
                       alunosComDietaEspecial={alunosComDietaEspecial.filter(
-                        aluno =>
+                        (aluno) =>
                           !(
                             aluno.serie.includes("1") ||
                             aluno.serie.includes("2") ||
@@ -375,7 +384,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                   className="form-control"
                 />
                 <hr />
-                <div className="row float-right mt-4">
+                <div className="row float-end mt-4">
                   <div className="col-12">
                     <Botao
                       texto="Cancelar"
@@ -387,7 +396,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                       texto={
                         values.uuid ? "Atualizar rascunho" : "Salvar rascunho"
                       }
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -398,10 +407,10 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                       disabled={submitting}
                       onClick={() => {
                         values["status"] = STATUS_DRE_A_VALIDAR;
-                        handleSubmit(values => onSubmit(values, form));
+                        handleSubmit((values) => onSubmit(values, form));
                       }}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </div>
                 </div>

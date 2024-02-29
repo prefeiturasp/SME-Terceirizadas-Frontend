@@ -13,18 +13,18 @@ const MultiSelectDistribuidores = ({ name, label, className }) => {
     (async () => {
       const listaDistribuidores = await getNomesDistribuidores();
       let listaRsultados = listaDistribuidores.data.results;
-      let listaFormatada = listaRsultados.map(element => {
+      let listaFormatada = listaRsultados.map((element) => {
         return { value: element.uuid, label: element.razao_social };
       });
       setDistribuidores(listaFormatada);
     })();
   }, []);
 
-  const onDistribuidoresSelected = values => {
+  const onDistribuidoresSelected = (values) => {
     let distribuidoresSelecionadosNomes = [];
-    values.forEach(value => {
+    values.forEach((value) => {
       const indice = distribuidores.findIndex(
-        distribuidor => distribuidor.value === value
+        (distribuidor) => distribuidor.value === value
       );
       distribuidoresSelecionadosNomes.push(distribuidores[indice].label);
     });
@@ -40,7 +40,7 @@ const MultiSelectDistribuidores = ({ name, label, className }) => {
       nomeDoItemNoPlural="distribuidores"
       selected={distribuidoresSelecionados}
       options={distribuidores}
-      onSelectedChanged={value => onDistribuidoresSelected(value)}
+      onSelectedChanged={(value) => onDistribuidoresSelected(value)}
     />
   );
 };

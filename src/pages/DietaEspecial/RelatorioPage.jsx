@@ -10,24 +10,24 @@ import {
   CODAENegaDietaEspecial,
   CODAEAutorizaDietaEspecial,
   terceirizadaTomaCienciaDietaEspecial,
-  escolaCancelaSolicitacao
+  escolaCancelaSolicitacao,
 } from "../../services/dietaEspecial.service";
 
 class RelatorioBase extends React.Component {
   render() {
     const atual = {
       href: "#",
-      titulo: this.props.tituloPagina
+      titulo: this.props.tituloPagina,
     };
     const anteriores = [
       {
         href: `/painel-dieta-especial`,
-        titulo: "Dieta Especial"
+        titulo: "Dieta Especial",
       },
       {
         href: `/solicitacoes-dieta-especial/solicitacoes-pendentes`,
-        titulo: "Recebidas"
-      }
+        titulo: "Recebidas",
+      },
     ];
 
     return (

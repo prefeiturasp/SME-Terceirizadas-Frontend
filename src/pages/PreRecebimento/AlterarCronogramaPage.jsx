@@ -5,29 +5,30 @@ import Page from "components/Shareable/Page/Page";
 import {
   ALTERACAO_CRONOGRAMA,
   CRONOGRAMA_ENTREGA,
-  PRE_RECEBIMENTO
+  PRE_RECEBIMENTO,
 } from "configs/constants";
 import AlterarCronograma from "components/screens/PreRecebimento/AlterarCronograma";
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}`,
-  titulo: "Alteração do Cronograma de Entrega"
+  titulo: "Alteração do Cronograma de Entrega",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Pré-Recebimento"
+    titulo: "Pré-Recebimento",
   },
   {
     href: `/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`,
-    titulo: "Cronograma de Entrega"
-  }
+    titulo: "Cronograma de Entrega",
+  },
 ];
 
 export default () => (
   <Page
     botaoVoltar
+    temModalVoltar
     voltarPara="/pre-recebimento/cronograma-entrega"
     titulo={atual.titulo}
   >

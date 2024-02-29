@@ -3,23 +3,21 @@ import { filter, propEq } from "ramda";
 import {
   ALTERACAO_TIPO_ALIMENTACAO,
   ALTERACAO_TIPO_ALIMENTACAO_CEMEI,
-  DETALHE_CRONOGRAMA,
   DIETA_ESPECIAL,
   INCLUSAO_ALIMENTACAO,
   INCLUSAO_ALIMENTACAO_CEMEI,
   INVERSAO_CARDAPIO,
-  PRE_RECEBIMENTO,
   RELATORIO,
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_CEMEI,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SUSPENSAO_ALIMENTACAO,
-  SUSPENSAO_ALIMENTACAO_CEI
+  SUSPENSAO_ALIMENTACAO_CEI,
 } from "../../configs/constants";
 import {
   truncarString,
   usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaTerceirizadaDiretor
+  usuarioEhEscolaTerceirizadaDiretor,
 } from "../../helpers/utilities";
 import { TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
 import { STATUS_ALIMENTO } from "./const";
@@ -45,12 +43,12 @@ export const LOG_PARA = {
   DRE: 1,
   TERCEIRIZADA: 2,
   CODAE: 3,
-  NUTRISUPERVISAO: 4
+  NUTRISUPERVISAO: 4,
 };
 
 export const ajustaFormatoLogPainelDietaEspecial = (logs, card) => {
   if (!logs) return;
-  return logs.map(log => {
+  return logs.map((log) => {
     let tamanhoString = 53;
     let descricao = log.descricao;
     let texto = truncarString(descricao, tamanhoString);
@@ -65,10 +63,7 @@ export const ajustaFormatoLogPainelDietaEspecial = (logs, card) => {
     // Faz uma abreviação no texto quando tiver data com hora pra não quebrar o layout.
     if (
       log.data_log.length > 10 &&
-      texto
-        .split("-")
-        .pop()
-        .trim() === "Alteração U.E"
+      texto.split("-").pop().trim() === "Alteração U.E"
     ) {
       texto = texto.replace("Alteração", "Alt.");
     }
@@ -91,14 +86,15 @@ export const ajustaFormatoLogPainelDietaEspecial = (logs, card) => {
       date: log.data_log,
       link: `/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
         log.uuid
-      }&ehInclusaoContinua=${log.tipo_doc ===
-        INC_ALIMENTA_CONTINUA}&card=${card}`
+      }&ehInclusaoContinua=${
+        log.tipo_doc === INC_ALIMENTA_CONTINUA
+      }&card=${card}`,
     };
   });
 };
 
 export const ajustarFormatoLog = (logs, card) => {
-  return logs.map(log => {
+  return logs.map((log) => {
     let tamanhoString = 52;
     let descricao = log.descricao;
     let solicitacao = "falta-implementar";
@@ -218,26 +214,25 @@ export const ajustarFormatoLog = (logs, card) => {
       conferido: log.conferido || log.terceirizada_conferiu_gestao,
       lote_uuid: log.lote_uuid,
       date: getDate(),
-      link: `/${solicitacao}/${RELATORIO}?uuid=${
-        log.uuid
-      }&ehInclusaoContinua=${log.tipo_doc ===
-        INC_ALIMENTA_CONTINUA}&tipoSolicitacao=${tipo}&card=${card}`
+      link: `/${solicitacao}/${RELATORIO}?uuid=${log.uuid}&ehInclusaoContinua=${
+        log.tipo_doc === INC_ALIMENTA_CONTINUA
+      }&tipoSolicitacao=${tipo}&card=${card}`,
     };
   });
 };
 
-export const ajustarFormaLotes = lotes => {
-  return lotes.map(lote => {
+export const ajustarFormaLotes = (lotes) => {
+  return lotes.map((lote) => {
     return {
       id: lote.uuid,
       lote: lote.nome,
       dre: lote.diretoria_regional && lote.diretoria_regional.nome,
-      tipo: lote.tipo_gestao && lote.tipo_gestao.nome
+      tipo: lote.tipo_gestao && lote.tipo_gestao.nome,
     };
   });
 };
 
-export const slugify = str => {
+export const slugify = (str) => {
   // Function from https://gist.github.com/marcelo-ribeiro/abd651b889e4a20e0bab558a05d38d77
   const map = {
     "-": "_",
@@ -247,7 +242,7 @@ export const slugify = str => {
     o: "ó|ò|ô|õ|ö|Ó|Ò|Ô|Õ|Ö",
     u: "ú|ù|û|ü|Ú|Ù|Û|Ü",
     c: "ç|Ç",
-    n: "ñ|Ñ"
+    n: "ñ|Ñ",
   };
 
   for (const pattern in map) {
@@ -257,15 +252,15 @@ export const slugify = str => {
   return str;
 };
 
-export const slugifyMin = str => slugify(str).toLowerCase();
+export const slugifyMin = (str) => slugify(str).toLowerCase();
 
-export const mapeiaStatusAlimento = str => {
+export const mapeiaStatusAlimento = (str) => {
   if (str === "Recebido") return STATUS_ALIMENTO.RECEBIDO;
   if (str === "Parcial") return STATUS_ALIMENTO.PARCIAL;
   if (str === "Não Recebido") return STATUS_ALIMENTO.NAO_RECEBIDO;
 };
 
-export const getDataHomologacao = logs => {
+export const getDataHomologacao = (logs) => {
   const arr = filter(
     propEq("status_evento_explicacao", "CODAE homologou"),
     logs
@@ -273,29 +268,16 @@ export const getDataHomologacao = logs => {
   return arr[0] ? arr[0].criado_em : "--";
 };
 
-export const gerarLinkDoItem = item => {
-  const mapeamentoItens = {
-    "assinado dinutre": `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
-      item.uuid
-    }`,
-    "assinado fornecedor": `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
-      item.uuid
-    }`,
-    "assinado codae": `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
-      item.uuid
-    }`
-  };
-  return mapeamentoItens[item.status.toLowerCase()];
-};
-
-export const deParaStatusAltCronograma = status =>
+export const deParaStatusAltCronograma = (status) =>
   ["Cronograma ciente", "Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
     status
   )
     ? "Em análise"
+    : ["Alteração Enviada ao Fornecedor"].includes(status)
+    ? "Recebida Alteração da CODAE"
     : status;
 
-export const formatarPara4Digitos = numero => {
+export const formatarPara4Digitos = (numero) => {
   let numeroFormatado = numero.toString();
   if (numeroFormatado.length === 1) {
     numeroFormatado = "000" + numeroFormatado;

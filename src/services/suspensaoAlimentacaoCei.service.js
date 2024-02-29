@@ -5,7 +5,7 @@ import axios from "./_base";
 export const escolaInformaSuspensao = async (uuid, payload) =>
   await axios.patch(`${ENDPOINT.INFORMA_SUSPENSAO_DA_CEI(uuid)}`, payload);
 
-export const EscolaSalvaRascunhoDeSuspensao = async payload => {
+export const EscolaSalvaRascunhoDeSuspensao = async (payload) => {
   return await axios.post(
     `/${ENDPOINT.SUSPENSAO_ALIMENTACAO_DA_CEI}/`,
     payload
@@ -31,7 +31,7 @@ export const EscolaAtualizaSuspensao = async (uuid, payload) => {
   );
 };
 
-export const getSuspensaoAlimentacaoCEI = async uuid => {
+export const getSuspensaoAlimentacaoCEI = async (uuid) => {
   return await axios.get(`/${ENDPOINT.SUSPENSAO_ALIMENTACAO_DA_CEI}/${uuid}/`);
 };
 

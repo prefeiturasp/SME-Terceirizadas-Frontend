@@ -5,7 +5,7 @@ import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 // ESCOLA
@@ -323,19 +323,19 @@ export const getPaginacaoSolicitacoesDietaEspecial = (
   uuidInstituicao,
   offSet
 ) => {
-  const url = `${API_URL}/${urlPaginacao}/${uuidInstituicao}/?limit=100${
+  const url = `${API_URL}/${urlPaginacao}/${uuidInstituicao}/?limit=10${
     offSet > 0 ? `&offset=${offSet}` : "/"
   }`;
 
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
@@ -344,19 +344,19 @@ export const getPaginacaoSolicitacoesDietaEspecialCODAE = (
   urlPaginacao,
   offSet
 ) => {
-  const url = `${API_URL}/${urlPaginacao}/?limit=100${
+  const url = `${API_URL}/${urlPaginacao}/?limit=10${
     offSet > 0 ? `&offset=${offSet}` : ""
   }`;
 
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };

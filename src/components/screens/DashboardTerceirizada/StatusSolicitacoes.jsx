@@ -11,16 +11,16 @@ import { ordenaPorDate, extrairStatusDaSolicitacaoURL } from "./helper";
 import { getMeusLotes } from "services/lote.service";
 import {
   usuarioEhCogestorDRE,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhEmpresaTerceirizada,
 } from "helpers/utilities";
 import {
   ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS,
-  TIPO_PERFIL
+  TIPO_PERFIL,
 } from "constants/shared";
 import { GESTAO_PRODUTO_CARDS } from "configs/constants";
 import {
   getHomologacoesDeProdutoPorStatusTitulo,
-  getNomesUnicosEditais
+  getNomesUnicosEditais,
 } from "services/produto.service";
 import { resetCamposProduto } from "reducers/filtersProdutoReducer";
 
@@ -33,15 +33,15 @@ export class StatusSolicitacoes extends Component {
         {
           text: "...",
           date: "...",
-          link: "..."
-        }
+          link: "...",
+        },
       ],
       solicitacoesFiltrados: [
         {
           text: "...",
           date: "...",
-          link: "..."
-        }
+          link: "...",
+        },
       ],
       titulo: "...",
       tipoCard: "...",
@@ -60,25 +60,25 @@ export class StatusSolicitacoes extends Component {
         {
           text: "...",
           date: "...",
-          link: "..."
-        }
+          link: "...",
+        },
       ],
       todasSolicitacoesCardAtual: [
         {
           text: "...",
           date: "...",
-          link: "..."
-        }
+          link: "...",
+        },
       ],
       solicitacoesCardRespQuest: [
         {
           text: "...",
           date: "...",
-          link: "..."
-        }
+          link: "...",
+        },
       ],
       originalCount: null,
-      propsProdutoRedux: {}
+      propsProdutoRedux: {},
     };
     this.typingTimeout = null;
 
@@ -102,15 +102,15 @@ export class StatusSolicitacoes extends Component {
         data["nome_edital"] = values.edital;
         data["nome_marca"] = values.marca;
         this.setState({
-          loading: true
+          loading: true,
         });
-        const promises = listaStatus.map(status =>
+        const promises = listaStatus.map((status) =>
           getHomologacoesDeProdutoPorStatusTitulo(status, data)
         );
         const retornos = await Promise.all(promises);
         if (retornos[0].status === HTTP_STATUS.OK) {
           retornos.forEach(
-            retorno =>
+            (retorno) =>
               (solicitacoes = solicitacoes.concat(
                 formatarDadosSolicitacao(
                   retorno.data ? retorno.data.results : retorno.results,
@@ -124,12 +124,12 @@ export class StatusSolicitacoes extends Component {
             count: 1,
             currentPage: 1,
             loading: false,
-            solicitacoesFiltrados: solicitacoesFiltrados
+            solicitacoesFiltrados: solicitacoesFiltrados,
           });
         } else {
           this.setState({
             loading: false,
-            erro: true
+            erro: true,
           });
         }
       }
@@ -140,7 +140,7 @@ export class StatusSolicitacoes extends Component {
         solicitacoesFiltrados = this.state.solicitacoesPaginaAtual;
         this.setState({
           count: this.state.originalCount,
-          currentPage: this.state.originalCurrentPage
+          currentPage: this.state.originalCurrentPage,
         });
       }
     }, 1000);
@@ -179,21 +179,21 @@ export class StatusSolicitacoes extends Component {
   }
 
   filtrarMarca(listaFiltro, value) {
-    return listaFiltro.filter(item =>
+    return listaFiltro.filter((item) =>
       item.marca.toLowerCase().includes(value.toLowerCase())
     );
   }
 
   filtrarEdital(listaFiltro, value) {
     return listaFiltro.filter(
-      item =>
+      (item) =>
         item.produto_editais &&
         item.produto_editais.toLowerCase().includes(value.toLowerCase())
     );
   }
 
   filtrarNome(listaFiltro, value) {
-    listaFiltro = listaFiltro.filter(function(item) {
+    listaFiltro = listaFiltro.filter(function (item) {
       const wordToFilter = value.toLowerCase();
       return item.text.toLowerCase().search(wordToFilter) !== -1;
     });
@@ -202,29 +202,26 @@ export class StatusSolicitacoes extends Component {
 
   filtrarStatus(listaFiltro, value) {
     if (value === "1") {
-      listaFiltro = listaFiltro.filter(item => item.conferido === true);
+      listaFiltro = listaFiltro.filter((item) => item.conferido === true);
     }
     if (value === "0") {
-      listaFiltro = listaFiltro.filter(item => item.conferido === false);
+      listaFiltro = listaFiltro.filter((item) => item.conferido === false);
     }
     return listaFiltro;
   }
 
   filtrarLote(listaFiltro, value) {
-    listaFiltro = listaFiltro.filter(item => item.lote_uuid === value);
+    listaFiltro = listaFiltro.filter((item) => item.lote_uuid === value);
     return listaFiltro;
   }
 
-  navegacaoPage = async paginaAtual => {
-    const {
-      endpointGetSolicitacoes,
-      formatarDadosSolicitacao,
-      status
-    } = this.props;
+  navegacaoPage = async (paginaAtual) => {
+    const { endpointGetSolicitacoes, formatarDadosSolicitacao, status } =
+      this.props;
     const { solicitacoesCardRespQuest, pageSize, dadosMeus } = this.state;
 
     this.setState({
-      originalCurrentPage: paginaAtual
+      originalCurrentPage: paginaAtual,
     });
 
     const listaStatus = Array.isArray(status) ? status : [status];
@@ -242,23 +239,23 @@ export class StatusSolicitacoes extends Component {
         solicitacoesPaginaAtual: solicitacoesPaginaAtual,
         solicitacoesFiltrados: solicitacoesPaginaAtual,
         currentPage: paginaAtual,
-        loading: false
+        loading: false,
       });
       return;
     }
 
     try {
       this.setState({
-        loading: true
+        loading: true,
       });
-      const promises = listaStatus.map(status =>
+      const promises = listaStatus.map((status) =>
         endpointGetSolicitacoes(
           status || dadosMeus.vinculo_atual.instituicao.uuid,
           [
             "Autorizadas",
             "Negadas",
             "Canceladas",
-            "Questionamentos da CODAE"
+            "Questionamentos da CODAE",
           ].includes(this.props.titulo)
             ? { limit: 100, offset: (paginaAtual - 1) * 100 }
             : paginaAtual
@@ -266,7 +263,7 @@ export class StatusSolicitacoes extends Component {
       );
       const retornos = await Promise.all(promises);
       retornos.forEach(
-        retorno =>
+        (retorno) =>
           (solicitacoes = solicitacoes.concat(
             formatarDadosSolicitacao(
               retorno.data ? retorno.data.results : retorno.results,
@@ -278,28 +275,25 @@ export class StatusSolicitacoes extends Component {
 
       this.setState({
         nextPage: retornos[0].data.next,
-        previousPage: retornos[0].data.previous
+        previousPage: retornos[0].data.previous,
       });
     } catch {
       this.setState({
         loading: false,
-        erro: true
+        erro: true,
       });
     }
     this.setState({
       solicitacoesPaginaAtual: solicitacoes,
       solicitacoesFiltrados: solicitacoes,
       currentPage: paginaAtual,
-      loading: false
+      loading: false,
     });
   };
 
   async componentDidMount() {
-    const {
-      endpointGetSolicitacoes,
-      formatarDadosSolicitacao,
-      status
-    } = this.props;
+    const { endpointGetSolicitacoes, formatarDadosSolicitacao, status } =
+      this.props;
     const listaStatus = Array.isArray(status) ? status : [status];
     const { erro, loading, currentPage } = this.state;
     const url = window.location.href;
@@ -314,7 +308,7 @@ export class StatusSolicitacoes extends Component {
     const propsProduto = {
       marcaProduto: this.props.marcaProduto || "",
       editalProduto: this.props.editalProduto || "",
-      nomeProduto: this.props.nomeProduto || ""
+      nomeProduto: this.props.nomeProduto || "",
     };
     this.setState({ propsProdutoRedux: propsProduto });
 
@@ -322,16 +316,16 @@ export class StatusSolicitacoes extends Component {
       this.onPesquisarChanged({
         marca: propsProduto.marcaProduto || "",
         edital: propsProduto.editalProduto || "",
-        titulo: propsProduto.nomeProduto || ""
+        titulo: propsProduto.nomeProduto || "",
       });
     } else {
       try {
-        const promises = listaStatus.map(status =>
+        const promises = listaStatus.map((status) =>
           endpointGetSolicitacoes(status || terceirizadaUUID, currentPage)
         );
         const retornos = await Promise.all(promises);
         retornos.forEach(
-          retorno =>
+          (retorno) =>
             (solicitacoes = solicitacoes.concat(
               formatarDadosSolicitacao(
                 retorno.data ? retorno.data.results : retorno.results,
@@ -345,12 +339,12 @@ export class StatusSolicitacoes extends Component {
           pageSize: retornos[0].data.page_size,
           nextPage: retornos[0].data.next,
           originalCount: retornos[0].data.count,
-          loading: false
+          loading: false,
         });
       } catch (e) {
         this.setState({
           loading: false,
-          erro: true
+          erro: true,
         });
       }
     }
@@ -361,35 +355,35 @@ export class StatusSolicitacoes extends Component {
     }
     solicitacoes = solicitacoes.sort(ordenaPorDate);
     if (usuarioEhEmpresaTerceirizada() || usuarioEhCogestorDRE()) {
-      await getMeusLotes().then(response => {
+      await getMeusLotes().then((response) => {
         this.setState({
           listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(
             response.data.results
-          )
+          ),
         });
       });
     }
     this.setState({
       solicitacoes,
       solicitacoesFiltrados: solicitacoes,
-      solicitacoesPaginaAtual: solicitacoes
+      solicitacoesPaginaAtual: solicitacoes,
     });
 
     const listaEditais = await getNomesUnicosEditais();
     let listaRsultados = listaEditais.data.results;
-    let listaFormatada = listaRsultados.map(element => {
+    let listaFormatada = listaRsultados.map((element) => {
       return { value: element, label: element };
     });
     this.setState({ editais: listaFormatada });
   }
 
-  cardResponderQuestionamentosCodae = solicitacoes => {
+  cardResponderQuestionamentosCodae = (solicitacoes) => {
     const nomeUsuario = localStorage.getItem("nome");
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     if (tipoPerfil === TIPO_PERFIL.TERCEIRIZADA) {
       return solicitacoes
         .filter(
-          solicitacao =>
+          (solicitacao) =>
             ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO.toUpperCase() ===
             solicitacao.status
         )
@@ -397,7 +391,7 @@ export class StatusSolicitacoes extends Component {
     } else if (tipoPerfil === TIPO_PERFIL.ESCOLA) {
       return solicitacoes
         .filter(
-          solicitacao =>
+          (solicitacao) =>
             nomeUsuario === `"${solicitacao.nome_usuario_log_de_reclamacao}"` &&
             ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_UE.toUpperCase() ===
               solicitacao.status
@@ -406,7 +400,7 @@ export class StatusSolicitacoes extends Component {
     } else if (tipoPerfil === TIPO_PERFIL.SUPERVISAO_NUTRICAO) {
       return solicitacoes
         .filter(
-          solicitacao =>
+          (solicitacao) =>
             ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_NUTRISUPERVISOR.toUpperCase() ===
             solicitacao.status
         )
@@ -425,7 +419,7 @@ export class StatusSolicitacoes extends Component {
       pageSize,
       editais,
       currentPage,
-      propsProdutoRedux
+      propsProdutoRedux,
     } = this.state;
     const { titulo, tipoCard, icone } = this.props;
     return (
@@ -434,7 +428,7 @@ export class StatusSolicitacoes extends Component {
           <div className="card-body">
             {!erro ? (
               <Spin tip="Carregando..." spinning={loading}>
-                <div className="pr-3">
+                <div className="pe-3">
                   <InputSearchPendencias
                     voltarLink={`/`}
                     filterList={this.onPesquisarChanged}
@@ -480,11 +474,11 @@ export class StatusSolicitacoes extends Component {
 
 const StatusSolicitacoesForm = reduxForm({
   form: "statusSolicitacoes",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(StatusSolicitacoes);
 
 const selector = formValueSelector("statusSolicitacoesForm");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const marcaProduto = state.filtersProduto.marcaProduto;
   const editalProduto = state.filtersProduto.editalProduto;
   const nomeProduto = state.filtersProduto.nomeProduto;
@@ -492,12 +486,12 @@ const mapStateToProps = state => {
     selecionar_todos: selector(state, "selecionar_todos"),
     marcaProduto: marcaProduto,
     editalProduto: editalProduto,
-    nomeProduto: nomeProduto
+    nomeProduto: nomeProduto,
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  resetCamposProduto: () => dispatch(resetCamposProduto())
+const mapDispatchToProps = (dispatch) => ({
+  resetCamposProduto: () => dispatch(resetCamposProduto()),
 });
 
 export default connect(

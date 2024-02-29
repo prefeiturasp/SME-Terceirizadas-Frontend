@@ -6,18 +6,18 @@ import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import {
   peloMenosUmCaractere,
   required,
-  textAreaRequired
+  textAreaRequired,
 } from "../../../../../../helpers/fieldValidators";
 import CKEditorField from "components/Shareable/CKEditorField";
 import { escolaCancelaSolicitacao } from "../../../../../../services/dietaEspecial.service";
 import Botao from "../../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../../Shareable/Botao/constants";
 import {
   toastSuccess,
-  toastError
+  toastError,
 } from "../../../../../Shareable/Toast/dialogs";
 import { getError } from "../../../../../../helpers/utilities";
 
@@ -25,9 +25,9 @@ const ModalCancelaDietaEspecial = ({
   showModal,
   onCloseModal,
   uuid,
-  onCancelar
+  onCancelar,
 }) => {
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const response = await escolaCancelaSolicitacao(uuid, values);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Solicitação de Dieta Especial cancelada com sucesso!");
@@ -58,11 +58,11 @@ const ModalCancelaDietaEspecial = ({
                 label="Justificativa"
                 name="justificativa"
                 required
-                validate={value => {
+                validate={(value) => {
                   for (let validator of [
                     textAreaRequired,
                     peloMenosUmCaractere,
-                    required
+                    required,
                   ]) {
                     const erro = validator(value);
                     if (erro) return erro;
@@ -78,14 +78,14 @@ const ModalCancelaDietaEspecial = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={onCloseModal}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                     disabled={submitting}
                   />
                   <Botao
                     texto="Sim"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                     disabled={submitting}
                   />
                 </div>

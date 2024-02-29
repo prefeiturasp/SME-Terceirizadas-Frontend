@@ -6,7 +6,7 @@ import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular,
-  ordenarPedidosDataMaisRecente
+  ordenarPedidosDataMaisRecente,
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { dreListarSolicitacoesDeAlteracaoDeCardapio } from "services/alteracaoDeCardapio";
@@ -18,11 +18,8 @@ import { formatarOpcoesLote } from "helpers/utilities";
 import { meusDados } from "services/perfil.service";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 
-const {
-  SOLICITACAO_NORMAL,
-  SOLICITACAO_CEI,
-  SOLICITACAO_CEMEI
-} = TIPO_SOLICITACAO;
+const { SOLICITACAO_NORMAL, SOLICITACAO_CEI, SOLICITACAO_CEMEI } =
+  TIPO_SOLICITACAO;
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -34,9 +31,9 @@ class PainelPedidos extends Component {
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: [],
       filtros: this.props.filtros || {
-        lote: undefined
+        lote: undefined,
       },
-      lotes: []
+      lotes: [],
     };
   }
 
@@ -56,7 +53,7 @@ class PainelPedidos extends Component {
         filtro,
         SOLICITACAO_CEMEI,
         filtros
-      )
+      ),
     ]).then(([response, ceiResponse, cemeiResponse]) => {
       const results = safeConcatOn(
         "results",
@@ -77,20 +74,20 @@ class PainelPedidos extends Component {
         pedidosCarregados: true,
         pedidosPrioritarios,
         pedidosNoPrazoLimite,
-        pedidosNoPrazoRegular
+        pedidosNoPrazoRegular,
       });
     });
   }
 
   componentDidMount() {
-    meusDados().then(response => {
+    meusDados().then((response) => {
       if (response) {
         this.setState({ meusDados: response });
         this.getLotesAsync(response.vinculo_atual.instituicao.uuid);
       }
     });
     const paramsFromPrevPage = this.props.filtros || {
-      lote: undefined
+      lote: undefined,
     };
     this.filtrar(FiltroEnum.SEM_FILTRO, paramsFromPrevPage);
     if (this.props.filtros) {
@@ -102,15 +99,15 @@ class PainelPedidos extends Component {
     const response = await getLotesSimples({ diretoria_regional__uuid: uuid });
     if (response.status === HTTP_STATUS.OK) {
       const { Option } = SelectAntd;
-      const lotes_ = formatarOpcoesLote(response.data.results).map(lote => {
+      const lotes_ = formatarOpcoesLote(response.data.results).map((lote) => {
         return <Option key={lote.value}>{lote.label}</Option>;
       });
       this.setState({
         lotes: [
           <Option value="" key={0}>
             Filtrar por Lote
-          </Option>
-        ].concat(lotes_)
+          </Option>,
+        ].concat(lotes_),
       });
     }
   }
@@ -125,7 +122,7 @@ class PainelPedidos extends Component {
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular,
-      lotes
+      lotes,
     } = this.state;
     const { valorDoFiltro } = this.props;
     const todosOsPedidosForamCarregados = pedidosCarregados === true;
@@ -145,14 +142,14 @@ class PainelPedidos extends Component {
                     <Field
                       component={ASelect}
                       showSearch
-                      onChange={value => {
+                      onChange={(value) => {
                         const filtros_ = {
-                          lote: value || undefined
+                          lote: value || undefined,
                         };
                         this.setFiltros(filtros_);
                         this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
                       }}
-                      onBlur={e => {
+                      onBlur={(e) => {
                         e.preventDefault();
                       }}
                       name="lote"
@@ -214,12 +211,12 @@ class PainelPedidos extends Component {
 
 const PainelPedidosForm = reduxForm({
   form: "painelPedidos",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(PainelPedidos);
 const selector = formValueSelector("painelPedidos");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    valorDoFiltro: selector(state, "visao_por")
+    valorDoFiltro: selector(state, "visao_por"),
   };
 };
 

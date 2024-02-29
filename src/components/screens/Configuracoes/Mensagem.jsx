@@ -6,7 +6,7 @@ import { required } from "../../../helpers/fieldValidators";
 import {
   atualizarTemplateMensagem,
   getTemplateMensagemDetalhe,
-  getTemplatesMensagem
+  getTemplatesMensagem,
 } from "../../../services/configuracoesMensagens";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { getOptions } from "./helper";
@@ -25,7 +25,7 @@ class Mensagem extends Component {
 
   onTipoEmailComboChanged(uuid) {
     if (uuid !== "Selecione") {
-      getTemplateMensagemDetalhe(uuid).then(resp => {
+      getTemplateMensagemDetalhe(uuid).then((resp) => {
         this.props.change("assunto", resp.assunto);
         this.props.change("template_html", resp.template_html);
       });
@@ -36,7 +36,7 @@ class Mensagem extends Component {
 
   onSubmit(values) {
     const uuid = values.tipo_email;
-    atualizarTemplateMensagem(uuid, values).then(resp => {
+    atualizarTemplateMensagem(uuid, values).then((resp) => {
       if (resp.status === HTTP_STATUS.OK) {
         toastSuccess("Configurações de E-mail salvas com sucesso!");
       } else {
@@ -46,7 +46,7 @@ class Mensagem extends Component {
   }
 
   componentDidMount() {
-    getTemplatesMensagem().then(resp => {
+    getTemplatesMensagem().then((resp) => {
       const templates = resp.results;
       this.setState({ templates });
     });
@@ -65,7 +65,7 @@ class Mensagem extends Component {
                     label="Tipo de E-mail"
                     component={Select}
                     name="tipo_email"
-                    onChange={event =>
+                    onChange={(event) =>
                       this.onTipoEmailComboChanged(event.target.value)
                     }
                     options={getOptions(this.state.templates)}
@@ -96,7 +96,7 @@ class Mensagem extends Component {
               </div>
               <div className="row pt-3 mt-5">
                 <div className="col-4 mt-4" />
-                <div className="col-8 text-right">
+                <div className="col-8 text-end">
                   <Botao
                     texto="Cancelar"
                     onClick={() => this.props.reset()}
@@ -104,10 +104,10 @@ class Mensagem extends Component {
                   />
                   <Botao
                     texto={"Salvar"}
-                    onClick={handleSubmit(values => {
+                    onClick={handleSubmit((values) => {
                       this.onSubmit(values);
                     })}
-                    className="ml-3"
+                    className="ms-3"
                     disabled={!tipo_email || tipo_email === "Selecione"}
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
@@ -124,12 +124,12 @@ class Mensagem extends Component {
 
 const MensagemForm = reduxForm({
   form: "mensagemForm",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(Mensagem);
 const selector = formValueSelector("mensagemForm");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    tipo_email: selector(state, "tipo_email")
+    tipo_email: selector(state, "tipo_email"),
   };
 };
 

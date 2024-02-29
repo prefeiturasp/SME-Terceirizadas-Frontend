@@ -12,7 +12,7 @@ const ListagemInconsistencias = ({ guias }) => {
             <div>Código CODAE</div>
             <div>Nome da UE</div>
           </div>
-          {guias.map(guia => {
+          {guias.map((guia) => {
             const bordas = "desativar-borda";
             return (
               <>

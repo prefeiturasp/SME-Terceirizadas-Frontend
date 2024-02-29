@@ -1,7 +1,7 @@
 import moment from "moment";
 
-const ordenaProdutosPorDataCadastro = produtos => {
-  produtos.sort(function(a, b) {
+const ordenaProdutosPorDataCadastro = (produtos) => {
+  produtos.sort(function (a, b) {
     const dataA = moment(a.criado_em, "DD/MM/YYYY");
     const dataB = moment(b.criado_em, "DD/MM/YYYY");
     if (dataA < dataB) {
@@ -15,8 +15,8 @@ const ordenaProdutosPorDataCadastro = produtos => {
   return produtos;
 };
 
-const ordenaProdutosPorNome = produtos => {
-  produtos.sort(function(a, b) {
+const ordenaProdutosPorNome = (produtos) => {
+  produtos.sort(function (a, b) {
     if (a.nome < b.nome) {
       return -1;
     }
@@ -28,7 +28,7 @@ const ordenaProdutosPorNome = produtos => {
   return produtos;
 };
 
-export const ordenaProdutos = produtos => {
+export const ordenaProdutos = (produtos) => {
   produtos = ordenaProdutosPorNome(produtos);
   produtos = ordenaProdutosPorDataCadastro(produtos);
   return produtos;

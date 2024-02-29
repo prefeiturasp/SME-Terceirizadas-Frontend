@@ -16,9 +16,9 @@ import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 import { meusDados } from "services/perfil.service";
 import ModalAutorizarAposQuestionamento from "components/Shareable/ModalAutorizarAposQuestionamento";
-import ModalAprovarSolicitacaoKitLanche from "./componentes/ModalAprovarSolicitacaoKitLanche";
+import { ModalAprovarGenericoSimOpcional } from "components/Shareable/ModalAprovarGenericoSimOpcional";
 
-const Relatorio = props => {
+const Relatorio = (props) => {
   const [estado, setEstado] = useState({
     uuid: null,
     showNaoAprovaModal: false,
@@ -27,7 +27,7 @@ const Relatorio = props => {
     meusDados: null,
     prazoDoPedidoMensagem: "",
     resposta_sim_nao: null,
-    showModalMarcarConferencia: false
+    showModalMarcarConferencia: false,
   });
   const [solicitacaoKitLanche, setSolicitacaoKitLanche] = useState(null);
 
@@ -42,7 +42,7 @@ const Relatorio = props => {
       meusDados(),
       uuid && tipoSolicitacao
         ? getDetalheKitLancheAvulsa(uuid, tipoSolicitacao)
-        : Promise.resolve()
+        : Promise.resolve(),
     ]).then(([dadosResponse, detalheResponse]) => {
       if (dadosResponse) {
         newState = { ...newState, meusDados: dadosResponse };
@@ -53,10 +53,12 @@ const Relatorio = props => {
 
       if (detalheResponse) {
         let _response = deepCopy(detalheResponse);
-        let solicitacoes_similares = _response.solicitacoes_similares.map(s => {
-          s["collapsed"] = true;
-          return s;
-        });
+        let solicitacoes_similares = _response.solicitacoes_similares.map(
+          (s) => {
+            s["collapsed"] = true;
+            return s;
+          }
+        );
         _response["solicitacoes_similares"] = solicitacoes_similares;
         setSolicitacaoKitLanche(_response);
         newState = {
@@ -65,14 +67,14 @@ const Relatorio = props => {
           tipoSolicitacao,
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(
             detalheResponse.prioridade
-          )
+          ),
         };
       }
       setEstado(newState);
     });
   }, [closeNaoAprovaModal]);
 
-  const showQuestionamentoModal = resposta_sim_nao => {
+  const showQuestionamentoModal = (resposta_sim_nao) => {
     setEstado({ ...estado, resposta_sim_nao, showQuestionamentoModal: true });
   };
 
@@ -80,16 +82,16 @@ const Relatorio = props => {
     setEstado({ ...estado, showQuestionamentoModal: false });
   };
 
-  const showNaoAprovaModal = resposta_sim_nao => {
-    setEstado(prevState => ({
+  const showNaoAprovaModal = (resposta_sim_nao) => {
+    setEstado((prevState) => ({
       ...prevState,
       resposta_sim_nao,
-      showNaoAprovaModal: true
+      showNaoAprovaModal: true,
     }));
   };
 
   const closeNaoAprovaModal = () => {
-    setEstado(prevState => ({ ...prevState, showNaoAprovaModal: false }));
+    setEstado((prevState) => ({ ...prevState, showNaoAprovaModal: false }));
   };
 
   const showAutorizarModal = () => {
@@ -116,22 +118,19 @@ const Relatorio = props => {
     setEstado({ ...estado, showModalObservacaoCodae: false });
   };
 
-  const loadSolicitacao = uuid => {
-    getDetalheKitLancheAvulsa(uuid, estado.tipoSolicitacao).then(response => {
+  const loadSolicitacao = (uuid) => {
+    getDetalheKitLancheAvulsa(uuid, estado.tipoSolicitacao).then((response) => {
       setSolicitacaoKitLanche(response);
     });
   };
 
   const onSubmitForm = () => {
-    const {
-      toastAprovaMensagem,
-      toastAprovaMensagemErro,
-      justificativa
-    } = props;
+    const { toastAprovaMensagem, toastAprovaMensagemErro, justificativa } =
+      props;
     const uuid = estado.uuid;
     const tipoSolicitacao = estado.tipoSolicitacao;
     props.endpointAprovaSolicitacao(uuid, justificativa, tipoSolicitacao).then(
-      response => {
+      (response) => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
           loadSolicitacao(uuid, tipoSolicitacao);
@@ -139,7 +138,7 @@ const Relatorio = props => {
           toastError(toastAprovaMensagemErro);
         }
       },
-      function() {
+      function () {
         toastError(toastAprovaMensagemErro);
       }
     );
@@ -156,7 +155,7 @@ const Relatorio = props => {
     endpointNaoAprovaSolicitacao,
     endpointQuestionamento,
     ModalNaoAprova,
-    ModalQuestionamento
+    ModalQuestionamento,
   } = props;
 
   const tipoPerfil = localStorage.getItem("tipo_perfil");
@@ -172,21 +171,21 @@ const Relatorio = props => {
   const EXIBIR_BOTAO_APROVAR =
     (![
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
       textoBotaoAprova) ||
     (solicitacaoKitLanche &&
       (solicitacaoKitLanche.prioridade === "REGULAR" ||
         [
           statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
-          statusEnum.CODAE_AUTORIZADO
+          statusEnum.CODAE_AUTORIZADO,
         ].includes(solicitacaoKitLanche.status)) &&
       textoBotaoAprova);
 
   const EXIBIR_BOTAO_QUESTIONAMENTO =
     [
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.TERCEIRIZADA
+      TIPO_PERFIL.TERCEIRIZADA,
     ].includes(tipoPerfil) &&
     solicitacaoKitLanche &&
     (solicitacaoKitLanche.prioridade !== "REGULAR" ||
@@ -215,7 +214,7 @@ const Relatorio = props => {
         texto="Marcar Conferência"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
-        className="ml-3"
+        className="ms-3"
         onClick={() => {
           showModalMarcarConferencia();
         }}
@@ -285,9 +284,7 @@ const Relatorio = props => {
                     tipoSolicitacao={estado.tipoSolicitacao}
                   />
                 )}
-                <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${
-                  solicitacaoKitLanche.id_externo
-                }`}</span>
+                <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${solicitacaoKitLanche.id_externo}`}</span>
                 <div className="card mt-3">
                   <div className="card-body">
                     <CorpoRelatorio
@@ -306,22 +303,23 @@ const Relatorio = props => {
                       solicitacao={solicitacaoKitLanche}
                     />
                     {visualizaBotoesDoFluxo(solicitacaoKitLanche) && (
-                      <div className="form-group row float-right mt-4">
-                        {EXIBIR_BOTAO_NAO_APROVAR && (
-                          <Botao
-                            texto={textoBotaoNaoAprova}
-                            className="ml-3"
-                            onClick={() => showNaoAprovaModal("Não")}
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                          />
-                        )}
+                      <div className="row mt-4 me-2">
+                        <div className="col-12 text-end">
+                          {EXIBIR_BOTAO_NAO_APROVAR && (
+                            <Botao
+                              texto={textoBotaoNaoAprova}
+                              className="custom-col-width ms-3"
+                              onClick={() => showNaoAprovaModal("Não")}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                          )}
 
-                        {EXIBIR_BOTAO_APROVAR &&
-                          (textoBotaoAprova !== "Ciente" &&
+                          {EXIBIR_BOTAO_APROVAR &&
+                            textoBotaoAprova !== "Ciente" &&
                             (visao === CODAE &&
                             solicitacaoKitLanche.logs.filter(
-                              log =>
+                              (log) =>
                                 log.status_evento_explicacao ===
                                   "Terceirizada respondeu questionamento" &&
                                 !log.resposta_sim_nao
@@ -338,42 +336,43 @@ const Relatorio = props => {
                                     : handleSubmit()
                                 }
                                 style={BUTTON_STYLE.GREEN}
-                                className="ml-3"
+                                className="custom-col-width ms-3"
                               />
-                            )))}
-                        {EXIBIR_BOTAO_QUESTIONAMENTO && (
-                          <Botao
-                            texto={
-                              tipoPerfil ===
-                              TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-                                ? "Questionar"
-                                : "Sim"
-                            }
-                            type={BUTTON_TYPE.BUTTON}
-                            onClick={() => showQuestionamentoModal("Sim")}
-                            style={BUTTON_STYLE.GREEN}
-                            className="ml-3"
-                          />
-                        )}
-                        {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-                          <div className="form-group float-right mt-4">
-                            {solicitacaoKitLanche.terceirizada_conferiu_gestao ? (
-                              <label className="ml-3 conferido">
-                                <i className="fas fa-check mr-2" />
-                                Solicitação Conferida
-                              </label>
-                            ) : (
-                              <BotaoMarcarConferencia
-                                uuid={solicitacaoKitLanche.uuid}
-                              />
-                            )}
-                          </div>
-                        )}
+                            ))}
+                          {EXIBIR_BOTAO_QUESTIONAMENTO && (
+                            <Botao
+                              texto={
+                                tipoPerfil ===
+                                TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                                  ? "Questionar"
+                                  : "Sim"
+                              }
+                              type={BUTTON_TYPE.BUTTON}
+                              onClick={() => showQuestionamentoModal("Sim")}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ms-3"
+                            />
+                          )}
+                          {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                            <div className="form-group float-end mt-4">
+                              {solicitacaoKitLanche.terceirizada_conferiu_gestao ? (
+                                <label className="ms-3 conferido">
+                                  <i className="fas fa-check me-2" />
+                                  Solicitação Conferida
+                                </label>
+                              ) : (
+                                <BotaoMarcarConferencia
+                                  uuid={solicitacaoKitLanche.uuid}
+                                />
+                              )}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
                 </div>
-                <ModalAprovarSolicitacaoKitLanche
+                <ModalAprovarGenericoSimOpcional
                   showModal={estado.showModalObservacaoCodae}
                   loadSolicitacao={() => loadSolicitacao(estado.uuid)}
                   justificativa={justificativa}

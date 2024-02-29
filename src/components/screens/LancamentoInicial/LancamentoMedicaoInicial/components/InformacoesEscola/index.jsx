@@ -4,15 +4,13 @@ import { Collapse } from "antd";
 export default ({ escolaInstituicao, loteEscolaSimples }) => {
   const { Panel } = Collapse;
 
-  const formataEnderencoCompleto = endereco => {
-    return `${endereco.logradouro}, ${endereco.numero} - ${
-      endereco.bairro
-    } - CEP: ${endereco.cep}`;
+  const formataEnderencoCompleto = (endereco) => {
+    return `${endereco.logradouro}, ${endereco.numero} - ${endereco.bairro} - CEP: ${endereco.cep}`;
   };
 
   return (
     <div className="col-8 info-ue">
-      <div className="pl-0 label-adjustments">
+      <div className="ps-0 label-adjustments">
         <Collapse expandIconPosition="end">
           <Panel header="Informações da Unidade Educacional">
             <div className="row">

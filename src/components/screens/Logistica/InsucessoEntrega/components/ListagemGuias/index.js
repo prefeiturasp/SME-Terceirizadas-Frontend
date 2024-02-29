@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import { Tooltip } from "antd";
 
 const ListagemGuias = ({ guias, ativos, setAtivos }) => {
-  const isDisabled = guia => {
+  const isDisabled = (guia) => {
     if (
       guia.situacao === "ARQUIVADA" ||
       guia.status !== "Pendente de conferência" ||
@@ -37,7 +37,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
           <div>Registrar Insucesso de Entrega</div>
           <div />
         </div>
-        {guias.map(guia => {
+        {guias.map((guia) => {
           const bordas =
             ativos && ativos.includes(guia.uuid) ? "desativar-borda" : "";
           const icone = ativos && ativos.includes(guia.uuid) ? "minus" : "plus";
@@ -60,11 +60,9 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                   >
                     <span>
                       <NavLink
-                        className="float-left"
-                        to={`/${LOGISTICA}/${REGISTRAR_INSUCESSO}?uuid=${
-                          guia.uuid
-                        }`}
-                        onClick={event => validaLink(desabilitar, event)}
+                        className="float-start"
+                        to={`/${LOGISTICA}/${REGISTRAR_INSUCESSO}?uuid=${guia.uuid}`}
+                        onClick={(event) => validaLink(desabilitar, event)}
                         disabled={desabilitar}
                       >
                         <span
@@ -86,7 +84,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                     className={`fas fa-${icone}`}
                     onClick={() => {
                       ativos && ativos.includes(guia.uuid)
-                        ? setAtivos(ativos.filter(el => el !== guia.uuid))
+                        ? setAtivos(ativos.filter((el) => el !== guia.uuid))
                         : setAtivos(
                             ativos ? [...ativos, guia.uuid] : [guia.uuid]
                           );
@@ -115,7 +113,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                           <br />
                           {guia.codigo_unidade}
                         </div>
-                        <div className="col border-left">
+                        <div className="col border-start">
                           <b>Nome Unidade Educacional</b>
                           <br />
                           {guia.nome_unidade}
@@ -138,14 +136,14 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                           <br />
                           {guia.contato_unidade}
                         </div>
-                        <div className="col border-left">
+                        <div className="col border-start">
                           <b>Telefone</b>
                           <br />
                           {guia.telefone_unidade}
                         </div>
                       </div>
 
-                      {guia.alimentos.map(alimento => {
+                      {guia.alimentos.map((alimento) => {
                         return (
                           <>
                             <div className="row mt-3">
@@ -171,7 +169,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
 
                               {alimento.embalagens.length > 1 && (
                                 <>
-                                  <div className={"col-2 border-left"}>
+                                  <div className={"col-2 border-start"}>
                                     <b>Quantidade</b>
                                     <br />
                                     {alimento.embalagens[1].qtd_volume}

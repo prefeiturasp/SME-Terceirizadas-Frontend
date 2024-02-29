@@ -1,11 +1,10 @@
 import React from "react";
 import { Field } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
-import { required } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { OnChange } from "react-final-form-listeners";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
@@ -15,15 +14,15 @@ export const ContatoFormSet = ({
   ehDistribuidor,
   contatosPessoaEmpresa,
   setContatosPessoaEmpresa,
-  values
+  values,
 }) => {
   const adicionaContatoPessoaEmpresa = () => {
     contatosPessoaEmpresa = contatosPessoaEmpresa.concat([
       {
         nome: "",
         telefone: "",
-        email: ""
-      }
+        email: "",
+      },
     ]);
     setContatosPessoaEmpresa(contatosPessoaEmpresa);
   };
@@ -38,7 +37,7 @@ export const ContatoFormSet = ({
     setContatosPessoaEmpresa(contatosPessoaEmpresa);
   };
 
-  const removeContato = index => {
+  const removeContato = (index) => {
     let newContatos = [...contatosPessoaEmpresa];
     newContatos.splice(index, 1);
     setContatosPessoaEmpresa(newContatos);
@@ -74,12 +73,10 @@ export const ContatoFormSet = ({
                             name={`nome_contato_${indiceEmpresa}`}
                             component={InputText}
                             label="Nome"
-                            validate={required}
-                            required
                             maxlength="140"
                           />
                           <OnChange name={`nome_contato_${indiceEmpresa}`}>
-                            {value => {
+                            {(value) => {
                               setaContatosPessoaEmpresa(
                                 "nome",
                                 value,
@@ -98,11 +95,10 @@ export const ContatoFormSet = ({
                             id={`telefone_contato_${indiceEmpresa}`}
                             indice={indiceEmpresa}
                             cenario="contatoEmpresa"
-                            required
                             maxlength="140"
                           />
                           <OnChange name={`telefone_contato_${indiceEmpresa}`}>
-                            {value => {
+                            {(value) => {
                               setaContatosPessoaEmpresa(
                                 "telefone",
                                 value,
@@ -118,11 +114,9 @@ export const ContatoFormSet = ({
                             component={InputText}
                             label="E-mail"
                             maxlength="140"
-                            validate={required}
-                            required
                           />
                           <OnChange name={`email_contato_${indiceEmpresa}`}>
-                            {value => {
+                            {(value) => {
                               setaContatosPessoaEmpresa(
                                 "email",
                                 value,
@@ -137,7 +131,7 @@ export const ContatoFormSet = ({
                             <Botao
                               className="deletar-contato"
                               type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.RED_OUTLINE}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
                               icon="fas fa-trash"
                               onClick={() => {
                                 removeContato(indiceEmpresa);

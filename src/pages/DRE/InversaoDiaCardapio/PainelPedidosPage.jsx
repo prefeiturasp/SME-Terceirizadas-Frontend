@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 export default () => {
   const atual = {
     href: `/${DRE}/${INVERSAO_CARDAPIO}`,
-    titulo: "Inversão de dia de Cardápio"
+    titulo: "Inversão de dia de Cardápio",
   };
 
   const location = useLocation();

@@ -3,7 +3,7 @@ import {
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
   SOLICITACAO_KIT_LANCHE,
-  SOLICITACAO_KIT_LANCHE_UNIFICADA
+  SOLICITACAO_KIT_LANCHE_UNIFICADA,
 } from "../configs/constants";
 
 export const ENTER = 13;
@@ -11,8 +11,12 @@ export const TAMANHO_RF = 7;
 export const TAMANHO_CPF = 11;
 export const DOIS_MB = 2097152;
 export const DEZ_MB = 10485760;
+export const VINTE_CINCO_MB = 26214400;
 export const TODOS = "TODOS";
 
+export const JS_DATE_JANEIRO = 0;
+export const JS_DATE_FEVEREIRO = 1;
+export const JS_DATE_JULHO = 6;
 export const JS_DATE_NOVEMBRO = 10;
 export const JS_DATE_DEZEMBRO = 11;
 
@@ -40,7 +44,7 @@ export const PERFIL = {
   DILOG_QUALIDADE: `"DILOG_QUALIDADE"`,
   DILOG_DIRETORIA: `"DILOG_DIRETORIA"`,
   DINUTRE_DIRETORIA: `"DINUTRE_DIRETORIA"`,
-  ADMINISTRADOR_REPRESENTANTE_CODAE: `"ADMINISTRADOR_REPRESENTANTE_CODAE"`
+  ADMINISTRADOR_REPRESENTANTE_CODAE: `"ADMINISTRADOR_REPRESENTANTE_CODAE"`,
 };
 
 export const VISAO = {
@@ -48,7 +52,7 @@ export const VISAO = {
   DIRETORIA_REGIONAL: "dre",
   CODAE: "codae",
   TERCEIRIZADA: "terceirizada",
-  ALUNO: "aluno"
+  ALUNO: "aluno",
 };
 
 export const TIPO_PERFIL = {
@@ -62,7 +66,9 @@ export const TIPO_PERFIL = {
   LOGISTICA: `"logistica_abastecimento"`,
   NUTRICAO_MANIFESTACAO: `"nutricao_manifestacao"`,
   PRE_RECEBIMENTO: `"pre_recebimento"`,
-  MEDICAO: `"medicao"`
+  MEDICAO: `"medicao"`,
+  ORGAO_FISCALIZADOR: `"orgao_fiscalizador"`,
+  CODAE_GABINETE: `"codae_gabinete"`,
 };
 
 export const TIPO_USUARIO = {
@@ -72,89 +78,89 @@ export const TIPO_USUARIO = {
   DIETA_ESPECIAL: `dieta_especial`,
   GESTAO_PRODUTO: `gestao_produto`,
   TERCEIRIZADA: `terceirizada`,
-  NUTRICIONISTA_SUPERVISAO: "supervisao_nutricao"
+  NUTRICIONISTA_SUPERVISAO: "supervisao_nutricao",
 };
 
 export const TIPO_GESTAO = {
   PARCEIRA: `"PARCEIRA"`,
   DIRETA: `"DIRETA"`,
   MISTA: `"MISTA"`,
-  TERC_TOTAL: `"TERC TOTAL"`
+  TERC_TOTAL: `"TERC TOTAL"`,
 };
 
 export const MODULO_GESTAO = {
   TERCEIRIZADA: `"TERCEIRIZADA"`,
-  ABASTECIMENTO: `"ABASTECIMENTO"`
+  ABASTECIMENTO: `"ABASTECIMENTO"`,
 };
 
 export const TIPO_SERVICO = {
   TERCEIRIZADA: `"TERCEIRIZADA"`,
   DISTRIBUIDOR_ARMAZEM: `"DISTRIBUIDOR_ARMAZEM"`,
   FORNECEDOR: `"FORNECEDOR"`,
-  FORNECEDOR_E_DISTRIBUIDOR: `"FORNECEDOR_E_DISTRIBUIDOR"`
+  FORNECEDOR_E_DISTRIBUIDOR: `"FORNECEDOR_E_DISTRIBUIDOR"`,
 };
 
 export const TIPODECARD = {
   PRIORIDADE: "priority",
   NO_LIMITE: "on-limit",
-  REGULAR: "regular"
+  REGULAR: "regular",
 };
 
 export const FiltroEnum = {
   SEM_FILTRO: "sem_filtro",
   HOJE: "hoje",
   DAQUI_A_7_DIAS: "daqui_a_7_dias",
-  DAQUI_A_30_DIAS: "daqui_a_30_dias"
+  DAQUI_A_30_DIAS: "daqui_a_30_dias",
 };
 
 export const FILTRO_VISAO = {
   POR_TIPO_SOLICITACAO: "tipo_solicitacao",
   LOTE: "lote",
-  DRE: "dre"
+  DRE: "dre",
 };
 
 export const TEMPO_PASSEIO = {
   QUATRO_HORAS: "0",
   CINCO_A_SETE_HORAS: "1",
-  OITO_HORAS_OU_MAIS: "2"
+  OITO_HORAS_OU_MAIS: "2",
 };
 
 export const visaoPorCombo = [
   {
     nome: "Visão por dia",
-    uuid: ""
+    uuid: "",
   },
   {
     nome: "Dia",
-    uuid: "day"
+    uuid: "day",
   },
   {
     nome: "Semana",
-    uuid: "week"
+    uuid: "week",
   },
   {
     nome: "Mês",
-    uuid: "month"
+    uuid: "month",
   },
   {
     nome: "Lote",
-    uuid: "lote"
-  }
+    uuid: "lote",
+  },
 ];
 
 export const visaoPorComboSomenteDatas = [
   {
     nome: "Sem filtro",
-    uuid: "sem_filtro"
+    uuid: "sem_filtro",
   },
   {
     nome: "Daqui a 7 dias",
-    uuid: "daqui_a_7_dias"
+    uuid: "daqui_a_7_dias",
   },
   {
     nome: "Daqui a 30 dias",
-    uuid: "daqui_a_30_dias"
-  }
+    uuid: "daqui_a_30_dias",
+  },
 ];
 
 export const statusEnum = {
@@ -177,10 +183,10 @@ export const statusEnum = {
   CODAE_NEGOU_INATIVACAO: "CODAE_NEGOU_INATIVACAO",
   TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO:
     "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO",
-  TERMINADA_AUTOMATICAMENTE_SISTEMA: "TERMINADA_AUTOMATICAMENTE_SISTEMA"
+  TERMINADA_AUTOMATICAMENTE_SISTEMA: "TERMINADA_AUTOMATICAMENTE_SISTEMA",
 };
 
-export const escolaPodeCancelar = status => {
+export const escolaPodeCancelar = (status) => {
   return (
     status === statusEnum.TERCEIRIZADA_TOMOU_CIENCIA ||
     status === statusEnum.CODAE_AUTORIZADO ||
@@ -196,7 +202,7 @@ export const TIPO_SOLICITACAO = {
   SOLICITACAO_NORMAL: "solicitacao-normal",
   SOLICITACAO_CONTINUA: "solicitacao-continua",
   SOLICITACAO_CEI: "solicitacao-cei",
-  SOLICITACAO_CEMEI: "solicitacao-cemei"
+  SOLICITACAO_CEMEI: "solicitacao-cemei",
 };
 
 export const TIPOS_SOLICITACAO_LABEL = {
@@ -210,58 +216,58 @@ export const TIPOS_SOLICITACAO_LABEL = {
   SOLICITACAO_DE_KIT_LANCHE_PASSEIO_CEI: "Kit Lanche Passeio de CEI",
   INVERSAO_DE_DIA_DE_CARDAPIO: "Inversão de dia de Cardápio",
   SOLICITACAO_UNIFICADA: "Kit Lanche Unificado",
-  SUSPENSAO_DE_ALIMENTACAO: "Suspensão de Alimentação"
+  SUSPENSAO_DE_ALIMENTACAO: "Suspensão de Alimentação",
 };
 
 export const TIPOS_SOLICITACAO_LISTA = [
   {
     titulo: TIPOS_SOLICITACAO_LABEL.INCLUSAO_DE_ALIMENTACAO,
     cor: "rgba(205, 100, 2, 1)",
-    link: INCLUSAO_ALIMENTACAO
+    link: INCLUSAO_ALIMENTACAO,
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.ALTERACAO_DO_TIPO_DE_ALIMENTACAO,
     cor: "rgba(1, 68, 111, 1)",
-    link: ALTERACAO_TIPO_ALIMENTACAO
+    link: ALTERACAO_TIPO_ALIMENTACAO,
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.SOLICITACAO_DE_KIT_LANCHE_PASSEIO,
     cor: "rgba(173, 0, 7, 1)",
-    link: SOLICITACAO_KIT_LANCHE
+    link: SOLICITACAO_KIT_LANCHE,
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.INVERSAO_DE_DIA_DE_CARDAPIO,
     cor: "rgba(41, 120, 5, 1)",
-    link: INVERSAO_CARDAPIO
+    link: INVERSAO_CARDAPIO,
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.SOLICITACAO_UNIFICADA,
     cor: "rgba(244, 77, 167, 1)",
-    link: SOLICITACAO_KIT_LANCHE_UNIFICADA
-  }
+    link: SOLICITACAO_KIT_LANCHE_UNIFICADA,
+  },
 ];
 
 export const TIPOS_SOLICITACAO_LISTA_DRE = [
   {
     titulo: TIPOS_SOLICITACAO_LABEL.INCLUSAO_DE_ALIMENTACAO,
     cor: "rgba(205, 100, 2, 1)",
-    link: INCLUSAO_ALIMENTACAO
+    link: INCLUSAO_ALIMENTACAO,
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.ALTERACAO_DO_TIPO_DE_ALIMENTACAO,
     cor: "rgba(1, 68, 111, 1)",
-    link: ALTERACAO_TIPO_ALIMENTACAO
+    link: ALTERACAO_TIPO_ALIMENTACAO,
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.SOLICITACAO_DE_KIT_LANCHE_PASSEIO,
     cor: "rgba(173, 0, 7, 1)",
-    link: SOLICITACAO_KIT_LANCHE
+    link: SOLICITACAO_KIT_LANCHE,
   },
   {
     titulo: TIPOS_SOLICITACAO_LABEL.INVERSAO_DE_DIA_DE_CARDAPIO,
     cor: "rgba(41, 120, 5, 1)",
-    link: INVERSAO_CARDAPIO
-  }
+    link: INVERSAO_CARDAPIO,
+  },
 ];
 
 const ENDPOINT = {
@@ -280,15 +286,15 @@ const ENDPOINT = {
   SOLICITACOES_DIETA_ESPECIAL: "solicitacoes-dieta-especial",
   SOLICITACOES_DIETA_ESPECIAL_ATIVAS_INATIVAS:
     "solicitacoes-dieta-especial-ativas-inativas",
-  PERIODOS_COM_MATRICULADOS_POR_UE: "periodos-com-matriculados-por-ue"
+  PERIODOS_COM_MATRICULADOS_POR_UE: "periodos-com-matriculados-por-ue",
 };
-ENDPOINT.AUTORIZAR_DIETA = uuid =>
+ENDPOINT.AUTORIZAR_DIETA = (uuid) =>
   `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/autorizar`;
 
-ENDPOINT.ATUALIZA_PROTOCOLO_DIETA = uuid =>
+ENDPOINT.ATUALIZA_PROTOCOLO_DIETA = (uuid) =>
   `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/codae-atualiza-protocolo`;
 
-ENDPOINT.INFORMA_SUSPENSAO_DA_CEI = uuid =>
+ENDPOINT.INFORMA_SUSPENSAO_DA_CEI = (uuid) =>
   `${ENDPOINT.SUSPENSAO_ALIMENTACAO_DA_CEI}/${uuid}/informa-suspensao/`;
 
 export { ENDPOINT };
@@ -314,7 +320,7 @@ export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
   CODAE_QUESTIONOU_NUTRISUPERVISOR: "codae_questionou_nutrisupervisor",
   NUTRISUPERVISOR_RESPONDEU_QUESTIONAMENTO:
     "nutrisupervisor_respondeu_questionamento",
-  RESPONDER_QUESTIONAMENTO_DA_CODAE: "responder_questionamentos_da_codae"
+  RESPONDER_QUESTIONAMENTO_DA_CODAE: "responder_questionamentos_da_codae",
 };
 
 export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {
@@ -331,7 +337,7 @@ export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {
   NUTRISUPERVISOR_RESPONDEU_RECLAMACAO:
     "Nutrisupervisor respondeu a reclamação",
   AGUARDANDO_ANALISE_SENSORIAL: "CODAE pediu análise sensorial",
-  ANALISE_SENSORIAL_RESPONDIDA: "Terceirizada respondeu a análise"
+  ANALISE_SENSORIAL_RESPONDIDA: "Terceirizada respondeu a análise",
 };
 
 export const RECLAMACAO_PRODUTO_STATUS = {
@@ -346,79 +352,79 @@ export const RECLAMACAO_PRODUTO_STATUS = {
   CODAE_ACEITOU: "CODAE_ACEITOU",
   CODAE_RECUSOU: "CODAE_RECUSOU",
   CODAE_RESPONDEU: "CODAE_RESPONDEU",
-  RESPONDIDO_NUTRISUPERVISOR: "RESPONDIDO_NUTRISUPERVISOR"
+  RESPONDIDO_NUTRISUPERVISOR: "RESPONDIDO_NUTRISUPERVISOR",
 };
 
 export const STATUS_RECLAMACAO_PRODUTO = [
   "Aguardando resposta terceirizada",
   "Aguardando avaliação CODAE",
-  "Respondido terceirizada"
+  "Respondido terceirizada",
 ];
 
 export const TIPO_SOLICITACAO_DIETA = {
   COMUM: "COMUM",
   ALUNO_NAO_MATRICULADO: "ALUNO_NAO_MATRICULADO",
-  ALTERACAO_UE: "ALTERACAO_UE"
+  ALTERACAO_UE: "ALTERACAO_UE",
 };
 
 export const STATUS_DOWNLOAD = {
   CONCLUIDO: "Concluído",
   EM_PROCESSAMENTO: "Em processamento",
-  ERRO: "Erro"
+  ERRO: "Erro",
 };
 
 export const OPTIONS_STATUS_DOWNLOAD = [
   {
     uuid: "",
-    nome: "Selecione um Status"
+    nome: "Selecione um Status",
   },
   {
     uuid: "CONCLUIDO",
-    nome: STATUS_DOWNLOAD.CONCLUIDO
+    nome: STATUS_DOWNLOAD.CONCLUIDO,
   },
   {
     uuid: "EM_PROCESSAMENTO",
-    nome: STATUS_DOWNLOAD.EM_PROCESSAMENTO
+    nome: STATUS_DOWNLOAD.EM_PROCESSAMENTO,
   },
   {
     uuid: "ERRO",
-    nome: STATUS_DOWNLOAD.ERRO
-  }
+    nome: STATUS_DOWNLOAD.ERRO,
+  },
 ];
 
 export const OPTIONS_VISTO_DOWNLOAD = [
   {
     uuid: "",
-    nome: "Selecione"
+    nome: "Selecione",
   },
   {
     uuid: true,
-    nome: "Visto"
+    nome: "Visto",
   },
   {
     uuid: false,
-    nome: "Não Visto"
-  }
+    nome: "Não Visto",
+  },
 ];
 
 export const STATUS_DIETAS = {
   AUTORIZADAS: "Autorizadas",
-  CANCELADAS: "Canceladas"
+  CANCELADAS: "Canceladas",
 };
 
 export const OPTIONS_STATUS_DIETA = [
   {
     uuid: "",
-    nome: "Selecione"
+    nome: "Selecione",
   },
   {
     uuid: "AUTORIZADAS",
-    nome: STATUS_DIETAS.AUTORIZADAS
+    nome: STATUS_DIETAS.AUTORIZADAS,
   },
   {
     uuid: "CANCELADAS",
-    nome: STATUS_DIETAS.CANCELADAS
-  }
+    nome: STATUS_DIETAS.CANCELADAS,
+  },
 ];
 
 export const PAGINACAO_DEFAULT = 10;
@@ -429,55 +435,55 @@ export const TIPOS_SOLICITACOES_OPTIONS = [
   { nome: "Inclusão de Alimentação", uuid: "Inclusão de" },
   {
     nome: "Alteração do Tipo de Alimentação",
-    uuid: "Alteração"
+    uuid: "Alteração",
   },
   { nome: "Kit Lanche", uuid: "KIT_LANCHE" },
-  { nome: "Kit Lanche Unificado", uuid: "Kit Lanche Passeio Unificado" },
+  { nome: "Kit Lanche Unificado", uuid: "Kit Lanche Unificado" },
   { nome: "Inversão de dia de Cardápio", uuid: "Inversão" },
-  { nome: "Suspensão de Alimentação", uuid: "Suspensão" }
+  { nome: "Suspensão de Alimentação", uuid: "Suspensão" },
 ];
 
 export const TIPOS_OCORRENCIAS_OPTIONS = [
   {
     value: "QTD_MENOR",
-    label: "Quantidade menor que a prevista"
+    label: "Quantidade menor que a prevista",
   },
   {
     value: "PROBLEMA_QUALIDADE",
-    label: "Problema de qualidade do produto"
+    label: "Problema de qualidade do produto",
   },
   {
     value: "ALIMENTO_DIFERENTE",
-    label: "Alimento diferente do previsto"
+    label: "Alimento diferente do previsto",
   },
   {
     value: "EMBALAGEM_DANIFICADA",
-    label: "Embalagem danificada"
+    label: "Embalagem danificada",
   },
   {
     value: "EMBALAGEM_VIOLADA",
-    label: "Embalagem violada"
+    label: "Embalagem violada",
   },
   {
     value: "VALIDADE_EXPIRADA",
-    label: "Prazo de validade expirado"
+    label: "Prazo de validade expirado",
   },
   {
     value: "ATRASO_ENTREGA",
-    label: "Atraso na entrega"
+    label: "Atraso na entrega",
   },
   {
     value: "AUSENCIA_PRODUTO",
-    label: "Ausência do produto"
+    label: "Ausência do produto",
   },
   {
     value: "FALTA_URBANIDADE",
-    label: "Falta de urbanidade na entrega"
+    label: "Falta de urbanidade na entrega",
   },
   {
     value: "FALTA_ESPACO_ARMAZENAMENTO",
-    label: "Falta de espaço no freezer para armazenamento"
-  }
+    label: "Falta de espaço no freezer para armazenamento",
+  },
 ];
 
 export const cnpjMask = [
@@ -498,7 +504,7 @@ export const cnpjMask = [
   /\d/,
   "-",
   /\d/,
-  /\d/
+  /\d/,
 ];
 
 export const cepMask = [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/];
@@ -518,7 +524,7 @@ export const telefoneMask = [
   /\d/,
   /\d/,
   /\d/,
-  /\d/
+  /\d/,
 ];
 
 export const cpfMask = [
@@ -535,7 +541,29 @@ export const cpfMask = [
   /\d/,
   "-",
   /\d/,
-  /\d/
+  /\d/,
+];
+
+export const numeroProcessoContratoSEIMask = [
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "/",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
 ];
 
 export const MESES = [
@@ -550,5 +578,34 @@ export const MESES = [
   "Setembro",
   "Outubro",
   "Novembro",
-  "Dezembro"
+  "Dezembro",
+];
+
+export const PERIODOS_OPTIONS = [
+  { nome: "Últimos 2 meses", uuid: "60" },
+  { nome: "Últimos 6 meses", uuid: "180" },
+  { nome: "Últimos 12 meses", uuid: "365" },
+  { nome: "Todos", uuid: "" },
+];
+
+export const numeroChamadaPublicamMask = [
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "/",
+  "S",
+  "M",
+  "E",
+  "/",
+  "C",
+  "O",
+  "D",
+  "A",
+  "E",
+  "/",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
 ];

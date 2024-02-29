@@ -6,7 +6,7 @@ import "./styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { ToggleExpandir } from "components/Shareable/ToggleExpandir";
 import { STATUS_CODAE_QUESTIONADO } from "configs/constants";
@@ -19,14 +19,14 @@ class WizardFormSegundaPagina extends React.Component {
       valuesForm: {},
       verificado: false,
       temCamposPreenchidos: false,
-      status_codae_questionado: false
+      status_codae_questionado: false,
     };
   }
 
-  verificaSeOsCamposEstaoCorretos = informacoes => {
+  verificaSeOsCamposEstaoCorretos = (informacoes) => {
     const { valuesForm } = this.props;
     let arrayIncorretos = [];
-    informacoes.forEach(informacao => {
+    informacoes.forEach((informacao) => {
       const objeto = valuesForm[informacao];
       objeto.porcao === undefined &&
         objeto.valor_diario !== undefined &&
@@ -35,10 +35,10 @@ class WizardFormSegundaPagina extends React.Component {
     return arrayIncorretos.length === 0;
   };
 
-  verificaSeAlgumCampoEstaPreenchido = values => {
+  verificaSeAlgumCampoEstaPreenchido = (values) => {
     const arrayKeys = Object.keys(values);
     let informacoes = [];
-    arrayKeys.forEach(item => {
+    arrayKeys.forEach((item) => {
       item.includes("informacao=") && informacoes.push(item);
     });
     return (
@@ -53,7 +53,7 @@ class WizardFormSegundaPagina extends React.Component {
 
     if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO) {
       this.setState({
-        status_codae_questionado: true
+        status_codae_questionado: true,
       });
     }
 
@@ -64,8 +64,8 @@ class WizardFormSegundaPagina extends React.Component {
       !verificado
     ) {
       informacoes = this.props.informacoes;
-      informacoes.forEach(item => {
-        item.informacoes_nutricionais.forEach(informacao => {
+      informacoes.forEach((item) => {
+        item.informacoes_nutricionais.forEach((informacao) => {
           informacao["check"] = false;
           informacao["validate"] = [];
         });
@@ -78,7 +78,7 @@ class WizardFormSegundaPagina extends React.Component {
       valuesForm = this.props.valuesForm;
 
       if (segundoStep) {
-        valoresSegundoForm.informacoes_nutricionais.forEach(info => {
+        valoresSegundoForm.informacoes_nutricionais.forEach((info) => {
           this.props.change(
             `informacao=${info.informacao_nutricional}.porcao`,
             info.quantidade_porcao
@@ -100,19 +100,16 @@ class WizardFormSegundaPagina extends React.Component {
 
       const { informacoes_nutricionais } = produto;
 
-      informacoes_nutricionais.forEach(informacao => {
-        const {
-          quantidade_porcao,
-          valor_diario,
-          informacao_nutricional
-        } = informacao;
+      informacoes_nutricionais.forEach((informacao) => {
+        const { quantidade_porcao, valor_diario, informacao_nutricional } =
+          informacao;
         const { tipo_nutricional, uuid } = informacao_nutricional;
         if (!segundoStep) {
           this.props.change(`informacao=${uuid}.porcao`, quantidade_porcao);
           this.props.change(`informacao=${uuid}.valor_diario`, valor_diario);
 
-          informacoes.forEach(item => {
-            item.informacoes_nutricionais.forEach(informacao => {
+          informacoes.forEach((item) => {
+            item.informacoes_nutricionais.forEach((informacao) => {
               if (informacao.uuid === uuid) {
                 informacao.validate.push(inteiroOuDecimal);
               }
@@ -122,7 +119,7 @@ class WizardFormSegundaPagina extends React.Component {
           this.setState({ informacoes });
         }
 
-        informacoes.forEach(informacao => {
+        informacoes.forEach((informacao) => {
           if (informacao.nome === tipo_nutricional.nome) {
             informacao.ativo = true;
           }
@@ -150,8 +147,8 @@ class WizardFormSegundaPagina extends React.Component {
       !verificado
     ) {
       informacoes = prevProps.informacoes;
-      informacoes.forEach(item => {
-        item.informacoes_nutricionais.forEach(informacao => {
+      informacoes.forEach((item) => {
+        item.informacoes_nutricionais.forEach((informacao) => {
           informacao["check"] = false;
           informacao["validate"] = [];
         });
@@ -164,7 +161,7 @@ class WizardFormSegundaPagina extends React.Component {
       valuesForm = prevProps.valuesForm;
 
       if (segundoStep) {
-        valoresSegundoForm.informacoes_nutricionais.forEach(info => {
+        valoresSegundoForm.informacoes_nutricionais.forEach((info) => {
           this.props.change(
             `informacao=${info.informacao_nutricional}.porcao`,
             info.quantidade_porcao
@@ -186,19 +183,16 @@ class WizardFormSegundaPagina extends React.Component {
 
       const { informacoes_nutricionais } = produto;
 
-      informacoes_nutricionais.forEach(informacao => {
-        const {
-          quantidade_porcao,
-          valor_diario,
-          informacao_nutricional
-        } = informacao;
+      informacoes_nutricionais.forEach((informacao) => {
+        const { quantidade_porcao, valor_diario, informacao_nutricional } =
+          informacao;
         const { tipo_nutricional, uuid } = informacao_nutricional;
         if (!segundoStep) {
           this.props.change(`informacao=${uuid}.porcao`, quantidade_porcao);
           this.props.change(`informacao=${uuid}.valor_diario`, valor_diario);
 
-          informacoes.forEach(item => {
-            item.informacoes_nutricionais.forEach(informacao => {
+          informacoes.forEach((item) => {
+            item.informacoes_nutricionais.forEach((informacao) => {
               if (informacao.uuid === uuid) {
                 informacao.validate.push(inteiroOuDecimal);
               }
@@ -208,7 +202,7 @@ class WizardFormSegundaPagina extends React.Component {
           this.setState({ informacoes });
         }
 
-        informacoes.forEach(informacao => {
+        informacoes.forEach((informacao) => {
           if (informacao.nome === tipo_nutricional.nome) {
             informacao.ativo = true;
           }
@@ -228,7 +222,7 @@ class WizardFormSegundaPagina extends React.Component {
 
   checkInformacao = ({ nome }) => {
     let { informacoes } = this.state;
-    informacoes.forEach(info => {
+    informacoes.forEach((info) => {
       if (info.nome === nome) {
         info.ativo = !info.ativo;
       }
@@ -238,8 +232,8 @@ class WizardFormSegundaPagina extends React.Component {
 
   onBlurField = ({ uuid }) => {
     let { informacoes } = this.state;
-    informacoes.forEach(item => {
-      item.informacoes_nutricionais.forEach(info => {
+    informacoes.forEach((item) => {
+      item.informacoes_nutricionais.forEach((info) => {
         if (info.uuid === uuid) {
           info.validate.push(inteiroOuDecimal);
         }
@@ -259,11 +253,8 @@ class WizardFormSegundaPagina extends React.Component {
 
   render() {
     const { handleSubmit, previousPage, valuesForm } = this.props;
-    const {
-      informacoes,
-      temCamposPreenchidos,
-      status_codae_questionado
-    } = this.state;
+    const { informacoes, temCamposPreenchidos, status_codae_questionado } =
+      this.state;
     return (
       <form onSubmit={handleSubmit} className="segundo-formulario">
         <header>Informações Nutricionais</header>
@@ -369,7 +360,7 @@ class WizardFormSegundaPagina extends React.Component {
             <Botao
               texto={"Cancelar"}
               type={BUTTON_TYPE.BUTTON}
-              className="ml-3"
+              className="ms-3"
               style={BUTTON_STYLE.GREEN_OUTLINE}
               onClick={() => {
                 this.props.showModal(true);
@@ -380,7 +371,7 @@ class WizardFormSegundaPagina extends React.Component {
             <Botao
               texto={"Próximo"}
               type={BUTTON_TYPE.SUBMIT}
-              className="ml-3"
+              className="ms-3"
               style={BUTTON_STYLE.GREEN_OUTLINE}
               onClick={() => {
                 this.props.passouSegundoStep(valuesForm);
@@ -396,5 +387,5 @@ class WizardFormSegundaPagina extends React.Component {
 export default reduxForm({
   form: "atualizacaoProduto",
   destroyOnUnmount: false,
-  forceUnregisterOnUnmount: true
+  forceUnregisterOnUnmount: true,
 })(WizardFormSegundaPagina);

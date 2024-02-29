@@ -6,7 +6,7 @@ import { ContadorCaracteres } from "../../ContadorCaracteres";
 import "../style.scss";
 import TooltipIcone from "../../TooltipIcone";
 
-export const InputText = props => {
+export const InputText = (props) => {
   const {
     acrescentarAppend,
     className,
@@ -34,7 +34,9 @@ export const InputText = props => {
     apenasNumeros,
     id,
     proibeLetras,
-    proibeNumeros
+    proibeNumeros,
+    agrupadorMilhar,
+    valorInicial,
   } = props;
   return (
     <div className={`input ${icone && "icon"}`}>
@@ -50,15 +52,17 @@ export const InputText = props => {
           className={`col-form-label ${labelClassName}`}
         >
           {label}
-        </label>
+        </label>,
       ]}
       {tooltipText && <TooltipIcone tooltipText={tooltipText} />}
       <input
         {...input}
-        className={`form-control ${className} ${meta &&
+        className={`form-control ${className} ${
+          meta &&
           meta.touched &&
           (meta.error || meta.warning) &&
-          "invalid-field"}`}
+          "invalid-field"
+        }`}
         id={id}
         disabled={disabled}
         min={min}
@@ -72,7 +76,8 @@ export const InputText = props => {
         title={title}
         pattern={pattern}
         maxLength={maxlength}
-        onInput={e => {
+        value={valorInicial || input.value}
+        onInput={(e) => {
           e.target.value = toUppercaseActive
             ? e.target.value.toUpperCase()
             : e.target.value;
@@ -87,6 +92,12 @@ export const InputText = props => {
             : e.target.value;
           e.target.value = proibeNumeros
             ? e.target.value.replace(/[0-9]/, "")
+            : e.target.value;
+          e.target.value = agrupadorMilhar
+            ? e.target.value
+                .toString()
+                .replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
             : e.target.value;
         }}
       />
@@ -121,7 +132,8 @@ InputText.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   type: PropTypes.string,
-  contador: PropTypes.number
+  contador: PropTypes.number,
+  valorInicial: PropTypes.string,
 };
 
 InputText.defaultProps = {
@@ -137,7 +149,7 @@ InputText.defaultProps = {
   name: "",
   placeholder: "",
   required: false,
-  type: "text"
+  type: "text",
 };
 
 export default InputText;

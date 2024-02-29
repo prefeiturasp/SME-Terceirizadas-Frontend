@@ -5,37 +5,33 @@ export class Rascunhos extends Component {
     const {
       rascunhosSolicitacoesKitLanche,
       OnDeleteButtonClicked,
-      OnEditButtonClicked
+      OnEditButtonClicked,
     } = this.props;
     const cardsRascunhos = rascunhosSolicitacoesKitLanche.map(
-      solicitacaoKitLanche => {
-        const {
-          uuid,
-          id_externo,
-          local,
-          quantidade_alunos
-        } = solicitacaoKitLanche;
+      (solicitacaoKitLanche) => {
+        const { uuid, id_externo, local, quantidade_alunos } =
+          solicitacaoKitLanche;
         let backgroundColor = "#DADADA";
         return (
           <div className="draft card border rounded mt-3 p-3" key={id_externo}>
             <div className="mt-2">
-              <label className="bold ml-3">
+              <label className="bold ms-3">
                 {`Solicitação de Kit Lanche Passeio #${id_externo}`}
               </label>
               <span
-                className="ml-3 p-1 border rounded"
+                className="ms-3 p-1 border rounded"
                 style={{ background: backgroundColor }}
               >
                 RASCUNHO
               </span>
-              <div className="ml-3">
+              <div className="ms-3">
                 <div>
                   <label>
                     Data do evento:{" "}
                     <b>{solicitacaoKitLanche.solicitacao_kit_lanche.data}</b>{" "}
                     Local do passeio: <b>{local}</b>
                   </label>
-                  <div className="icon-draft-card float-right">
+                  <div className="icon-draft-card float-end">
                     Salvo em:{" "}
                     {solicitacaoKitLanche.solicitacao_kit_lanche.criado_em}
                     <span

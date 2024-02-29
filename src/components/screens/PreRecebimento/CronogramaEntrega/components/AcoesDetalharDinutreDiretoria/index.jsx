@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { dinutreAssinaCronograma } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   CRONOGRAMA_ENTREGA,
-  PRE_RECEBIMENTO
+  PRE_RECEBIMENTO,
 } from "../../../../../../configs/constants";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
@@ -18,26 +18,26 @@ export default ({ cronograma }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleSim = password => {
+  const handleSim = (password) => {
     setLoading(true);
     dinutreAssinaCronograma(cronograma.uuid, password)
-      .then(response => {
+      .then((response) => {
         if (response.status === 200) {
           window.scrollTo({ top: 0, behavior: "smooth" });
           setShow(false);
           setLoading(false);
-          if (!history.goBack()) {
-            history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+          if (!navigate(-1)) {
+            navigate(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
           }
           toastSuccess("Cronograma assinado com sucesso!");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         if (e.response && e.response.status === 401) {
           toastError(MSG_SENHA_INVALIDA);
         } else {
@@ -49,7 +49,7 @@ export default ({ cronograma }) => {
 
   const handleBack = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    history.goBack();
+    navigate(-1);
   };
 
   return (
@@ -59,7 +59,7 @@ export default ({ cronograma }) => {
           texto="Assinar Cronograma"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="float-right ml-3"
+          className="float-end ms-3"
           onClick={() => handleShow()}
         />
       )}
@@ -68,15 +68,13 @@ export default ({ cronograma }) => {
         texto="Voltar"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN_OUTLINE}
-        className="float-right ml-3"
+        className="float-end ms-3"
         onClick={() => handleBack()}
       />
 
       <ModalAssinaturaUsuario
         titulo="Assinar Cronograma"
-        texto={`Você confirma a assinatura digital do cronograma de entrega ${
-          cronograma.numero
-        }?`}
+        texto={`Você confirma a assinatura digital do cronograma de entrega ${cronograma.numero}?`}
         show={show}
         loading={loading}
         handleClose={handleClose}

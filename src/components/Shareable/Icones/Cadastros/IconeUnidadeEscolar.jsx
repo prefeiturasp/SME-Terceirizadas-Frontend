@@ -1,6 +1,6 @@
 import React from "react";
 
-export const IconeUnidadeEscolar = props => {
+export const IconeUnidadeEscolar = (props) => {
   const { hover } = props;
   return (
     <svg

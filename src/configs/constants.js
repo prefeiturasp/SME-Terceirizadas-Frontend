@@ -36,7 +36,9 @@ export const NUTRIMANIFESTACAO = "nutrimanifestacao";
 export const MEDICAO = "medicao";
 export const DINUTRE = "dinutre";
 export const DILOG = "dilog";
+export const CRONOGRAMA = "cronograma";
 
+export const AGUARDANDO_ASSINATURAS = "aguardando-assinaturas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
@@ -66,7 +68,7 @@ export const ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO = {
   SOLICITACOES_PENDENTE_HOMOLOGACAO: "solicitacoes-pendente-homologacao",
   SOLICITACOES_HOMOLOGADAS: "solicitacoes-homologadas",
   SOLICITACOES_NAO_HOMOLOGADAS: "solicitacoes-nao-homologadas",
-  RESPONDER_QUESTIONAMENTOS_DA_CODAE: "responder-questionamentos-da-codae"
+  RESPONDER_QUESTIONAMENTOS_DA_CODAE: "responder-questionamentos-da-codae",
 };
 
 export const AUTORIZADOS_DIETA = "autorizados-dieta";
@@ -83,7 +85,7 @@ export const DIETA_ESPECIAL_SOLICITACOES = {
   CODAE: "codae-solicitacoes",
   ESCOLA: "escola-solicitacoes",
   TERCEIRIZADA: "terceirizada-solicitacoes",
-  DRE: "diretoria-regional-solicitacoes"
+  DRE: "diretoria-regional-solicitacoes",
 };
 
 export const GESTAO_PRODUTO_CARDS = {
@@ -95,11 +97,12 @@ export const GESTAO_PRODUTO_CARDS = {
   PENDENTE_HOMOLOGACAO: "Pendentes de homologação",
   HOMOLOGADOS: "Homologados",
   NAO_HOMOLOGADOS: "Não homologados",
-  RESPONDER_QUESTIONAMENTOS_DA_CODAE: "Responder Questionamentos da CODAE"
+  RESPONDER_QUESTIONAMENTOS_DA_CODAE: "Responder Questionamentos da CODAE",
 };
 
 export const SOLICITACOES_CODAE = "codae-solicitacoes";
 
+export const RELATORIO_ADESAO = "relatorio-adesao";
 export const RELATORIO = "relatorio";
 export const RELATORIOS = "relatorios";
 export const HISTORICO = "historico";
@@ -128,6 +131,7 @@ export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
 export const RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP =
   "relatorio-quantitativo-classificacao-dieta-esp";
 export const RELATORIO_DIETA_ESPECIAL = "relatorio-dieta-especial";
+export const RELATORIO_GERENCIAL_DIETAS = "relatorio-gerencial-dietas";
 export const RELATORIO_GESTAO_DIETA_ESPECIAL =
   "relatorio-gestao-dieta-especial";
 export const RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP =
@@ -140,6 +144,8 @@ export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
 export const SUSPENSAO_DE_PRODUTO = "relatorio-produtos-suspensos";
 export const ATIVACAO_DE_PRODUTO = "ativacao-de-produto";
 export const CADASTROS = "cadastros";
+export const MARCAS = "marcas";
+export const FABRICANTES = "fabricantes";
 export const EDITAIS_CONTRATOS = "editais-contratos";
 export const EDITAIS_CADASTRADOS = "editais-cadastrados";
 export const EMPRESA = "empresa";
@@ -147,14 +153,19 @@ export const EDITAR_EMPRESA = "editar-empresa";
 export const EMPRESAS_CADASTRADAS = "empresas-cadastradas";
 export const FAIXAS_ETARIAS = "faixas-etarias";
 export const SOBREMESA_DOCE = "sobremesa-doce";
+export const SUSPENSAO_ATIVIDADES = "suspensao-atividades";
 export const CONSULTA_KITS = "consulta-kits";
 export const KITS = "kits";
 export const LOTE = "lote";
 export const LOTES_CADASTRADOS = "lotes-cadastrados";
 export const HORARIO_COMBOS_ALIMENTACAO = "horario-combos-alimentacao";
-export const TIPO_ALIMENTACAO_UNIDADE_ESCOLAR =
-  "tipo-alimentacao-unidade-escolar";
 export const TIPOS_ALIMENTACAO = "tipos-alimentacao";
+export const PERMISSAO_LANCAMENTOS_ESPECIAIS =
+  "permissao-lancamentos-especiais";
+export const NOVA_PERMISSAO_LANCAMENTO_ESPECIAL =
+  "nova-permissao-lancamento-especial";
+export const EDITAR_PERMISSAO_LANCAMENTO_ESPECIAL =
+  "editar-permissao-lancamento-especial";
 export const DISPONIBILIZACAO_DE_SOLICITACOES =
   "disponibilizacao-de-solicitacoes";
 export const ENVIO_REQUISICOES_ENTREGA = "envio-requisicoes-entrega";
@@ -182,14 +193,20 @@ export const GUIAS_NOTIFICACAO_FISCAL = "guias-notificacao-fiscal";
 export const CADASTRO_NOTIFICACAO = "cadastro-notificacao";
 export const EDITAR_NOTIFICACAO = "editar-notificacao";
 export const NOTIFICAR_EMPRESA = "notificar-empresa";
+export const ANALISAR_ASSINAR = "analisar-assinar";
+export const DETALHAR_NOTIFICACAO = "detalhar-notificacao";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 export const PERIODO_LANCAMENTO = "periodo-lancamento";
+export const PERIODO_LANCAMENTO_CEI = "periodo-lancamento-cei";
 export const ACOMPANHAMENTO_DE_LANCAMENTOS = "acompanhamento-de-lancamentos";
 export const CONFERENCIA_DOS_LANCAMENTOS = "conferencia-dos-lancamentos";
 export const DETALHAMENTO_DO_LANCAMENTO = "detalhamento-do-lancamento";
+export const CADASTRO_DE_EMPENHO = "cadastro-de-empenho";
+export const EDITAR_EMPENHO = "editar-empenho";
+export const EMPENHOS = "empenhos";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
@@ -214,12 +231,44 @@ export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
 export const DETALHE_CRONOGRAMA = "detalhe-cronograma";
 export const ALTERACAO_CRONOGRAMA = "altera-cronograma";
 export const DETALHAR_ALTERACAO_CRONOGRAMA = "detalhe-alteracao-cronograma";
+export const CALENDARIO_CRONOGRAMA = "calendario-cronograma";
+
+export const LAYOUT_EMBALAGEM = "layout-embalagem";
+export const CADASTRO_LAYOUT_EMBALAGEM = "cadastro-layout-embalagem";
+export const DETALHAR_LAYOUT_EMBALAGEM = "detalhe-layout-embalagem";
+export const DETALHAR_LAYOUT_EMBALAGEM_SOLICITACAO_ALTERACAO =
+  "detalhe-layout-embalagem-solicitacao-alteracao";
+export const ANALISAR_LAYOUT_EMBALAGEM = "analise-layout-embalagem";
+export const CORRIGR_LAYOUT_EMBALAGEM = "corrigir-layout-embalagem";
+export const ATUALIZAR_LAYOUT_EMBALAGEM = "atualizar-layout-embalagem";
+export const PAINEL_LAYOUT_EMBALAGEM = "painel-layout-embalagem";
+export const PENDENTES_APROVACAO = "pendentes-aprovacao";
+export const APROVADOS = "aprovados";
+export const ENVIADOS_PARA_CORRECAO = "enviados-para-correcao";
+
+export const DOCUMENTOS_RECEBIMENTO = "documentos-recebimento";
+export const CADASTRO_DOCUMENTOS_RECEBIMENTO =
+  "cadastro-documentos-recebimento";
+export const DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO =
+  "detalhe-fornecedor-documento-recebimento";
+export const DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO =
+  "detalhe-codae-documento-recebimento";
+export const ANALISAR_DOCUMENTO_RECEBIMENTO = "analise-documento-recebimento";
+export const PAINEL_DOCUMENTOS_RECEBIMENTO = "painel-documentos-recebimento";
+export const CORRIGIR_DOCUMENTOS_RECEBIMENTO =
+  "corrigir-documentos-recebimento";
+
+export const FICHA_TECNICA = "ficha-tecnica";
+export const CADASTRO_FICHA_TECNICA = "cadastro-ficha-tecnica";
+export const PAINEL_FICHAS_TECNICAS = "painel-fichas-tecnicas";
+export const ANALISE_FICHA_TECNICA = "analise-ficha-tecnica";
+export const DETALHAR_FICHA_TECNICA = "detalhe-ficha-tecnica";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";
 
-export const EMBALAGENS_CADASTRADAS = "embalagens";
-export const CADASTRO_EMBALAGEM = "cadastro-embalagem";
+export const TIPOS_EMBALAGENS = "tipos-embalagens";
+export const CADASTRO_TIPO_EMBALAGEM = "cadastro-tipo-embalagem";
 
 export const UNIDADES_MEDIDA = "unidades-medida";
 export const CADASTRO_UNIDADE_MEDIDA = "cadastro-unidade-medida";
@@ -233,6 +282,7 @@ export const PAINEL_APROVACOES = "painel-aprovacoes";
 export const SOLICITACOES_ALTERACOES = "solicitacoes-alteracoes";
 export const ALTERACOES_APROVADAS = "alteracoes-aprovadas";
 export const ALTERACOES_REPROVADAS = "alteracoes-reprovadas";
+export const ALTERACOES_CODAE = "alteracoes-codae";
 
 export const AGUARDANDO_DILOG = "aguardando-dilog";
 export const ASSINADO_CODAE = "assinado-codae";
@@ -266,38 +316,38 @@ export const STATUS_RECLAMACAO = {
   AGUARDANDO_RESPOSTA_TERCEIRIZADA: "AGUARDANDO_RESPOSTA_TERCEIRIZADA",
   RESPONDIDO_TERCEIRIZADA: "RESPONDIDO_TERCEIRIZADA",
   CODAE_ACEITOU: "CODAE_ACEITOU",
-  CODAE_RECUSOU: "CODAE_RECUSOU"
+  CODAE_RECUSOU: "CODAE_RECUSOU",
 };
 
 export const WEEK = [
   {
     label: "D",
-    value: "6"
+    value: "6",
   },
   {
     label: "S",
-    value: "0"
+    value: "0",
   },
   {
     label: "T",
-    value: "1"
+    value: "1",
   },
   {
     label: "Q",
-    value: "2"
+    value: "2",
   },
   {
     label: "Q",
-    value: "3"
+    value: "3",
   },
   {
     label: "S",
-    value: "4"
+    value: "4",
   },
   {
     label: "S",
-    value: "5"
-  }
+    value: "5",
+  },
 ];
 
 export const USUARIO_PODE_ATUALIZAR_FOTO_DEV_HOM = "6769195";

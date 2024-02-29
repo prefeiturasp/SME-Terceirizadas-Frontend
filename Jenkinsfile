@@ -3,11 +3,14 @@ pipeline {
       branchname =  env.BRANCH_NAME.toLowerCase()
       kubeconfig = getKubeconf(env.branchname)
       registryCredential = 'jenkins_registry'
+      namespace = "${env.branchname == 'development' ? 'sme-sigpae-dev' : env.branchname == 'homolog' ? 'sme-sigpae-hom' : env.branchname == 'homolog-r2' ? 'sme-sigpae-hom2' : 'sme-sigpae' }" 
     }
   
-    agent {
-      node { label 'AGENT-NODES' }
-    }
+    agent { kubernetes { 
+              label 'builder'
+              defaultContainer 'builder'
+            }
+          }
 
     options {
       buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
@@ -33,7 +36,7 @@ pipeline {
         }
 
         stage('Testes') {
-          when { branch 'homolog' }
+          when { branch 'homolog_' }
           steps {
                 sh 'npm install'
                 sh 'npm run-script eslint'
@@ -47,16 +50,12 @@ pipeline {
           when { anyOf { branch 'master'; branch 'main'; branch "story/*"; branch 'development'; branch 'release'; branch 'homolog';  } } 
           steps {
             script {
-              imagename1 = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/sme-sigpae-frontend"
-              //imagename2 = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/sme-outra"
+              imagename1 = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/sigpae-frontend"
               dockerImage1 = docker.build(imagename1, "-f Dockerfile .")
-              //dockerImage2 = docker.build(imagename2, "-f Dockerfile_outro .")
               docker.withRegistry( 'https://registry.sme.prefeitura.sp.gov.br', registryCredential ) {
               dockerImage1.push()
-              //dockerImage2.push()
               }
               sh "docker rmi $imagename1"
-              //sh "docker rmi $imagename2"
             }
           }
         }
@@ -65,7 +64,7 @@ pipeline {
             when { anyOf {  branch 'master'; branch 'main'; branch 'development'; branch 'release'; branch 'homolog';  } }        
             steps {
                 script{
-                    if ( env.branchname == 'main' ||  env.branchname == 'master' || env.branchname == 'homolog' || env.branchname == 'release' ) {
+                    if ( env.branchname == 'main' ||  env.branchname == 'master' ) {
                         sendTelegram("🤩 [Deploy ${env.branchname}] Job Name: ${JOB_NAME} \nBuild: ${BUILD_DISPLAY_NAME} \nMe aprove! \nLog: \n${env.BUILD_URL}")
                         withCredentials([string(credentialsId: 'aprovadores-sigpae', variable: 'aprovadores')]) {
                                 timeout(time: 24, unit: "HOURS") {
@@ -75,14 +74,16 @@ pipeline {
                     }
                     if ( env.branchname == 'homolog' || env.branchname == 'release' ) {
                         withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
+                            sh('rm -f '+"$home"+'/.kube/config')
                             sh('cp $config '+"$home"+'/.kube/config')
                             sh 'kubectl rollout restart deployment/sigpae-frontend -n sme-sigpae-treino'
                             sh('rm -f '+"$home"+'/.kube/config')
                         }
                     }
                     withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
+                            sh('rm -f '+"$home"+'/.kube/config')
                             sh('cp $config '+"$home"+'/.kube/config')
-                            sh 'kubectl rollout restart deployment/sigpae-frontend -n sme-sigpae'
+                            sh "kubectl rollout restart deployment/sigpae-frontend -n ${namespace}"
                             sh('rm -f '+"$home"+'/.kube/config')
                     }
                 }
@@ -112,7 +113,7 @@ def sendTelegram(message) {
 def getKubeconf(branchName) {
     if("main".equals(branchName)) { return "config_prd"; }
     else if ("master".equals(branchName)) { return "config_prd"; }
-    else if ("homolog".equals(branchName)) { return "config_hom"; }
-    else if ("release".equals(branchName)) { return "config_hom"; }
-    else if ("development".equals(branchName)) { return "config_dev"; }  
+    else if ("homolog".equals(branchName)) { return "config_release"; }
+    else if ("release".equals(branchName)) { return "config_release"; }
+    else if ("development".equals(branchName)) { return "config_release"; }  
 }

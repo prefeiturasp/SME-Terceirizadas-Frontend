@@ -11,7 +11,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { responderReclamacaoProduto } from "services/produto.service";
 import "./style.scss";
@@ -24,7 +24,7 @@ export default class ModalResponderReclamacao extends Component {
 
   UNSAFE_componentWillMount = async () => {};
 
-  onSubmit = async values => {
+  onSubmit = async (values) => {
     try {
       const response = await responderReclamacaoProduto(
         this.props.reclamacao.uuid,
@@ -104,10 +104,10 @@ export default class ModalResponderReclamacao extends Component {
                       label="Resposta"
                       name="justificativa"
                       required
-                      validate={value => {
+                      validate={(value) => {
                         for (let validator of [
                           peloMenosUmCaractere,
-                          required
+                          required,
                         ]) {
                           const erro = validator(value);
                           if (erro) return erro;
@@ -118,7 +118,7 @@ export default class ModalResponderReclamacao extends Component {
                 </div>
                 <section className="form-row attachments">
                   <div className="col-9">
-                    <div className="card-title font-weight-bold cinza-escuro">
+                    <div className="card-title fw-bold cinza-escuro">
                       Anexar
                     </div>
                     <div className="text">
@@ -148,13 +148,13 @@ export default class ModalResponderReclamacao extends Component {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Enviar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       disabled={
                         submitting ||
                         peloMenosUmCaractere(values.justificativa) !== undefined

@@ -8,23 +8,23 @@ export const getNomesDistribuidores = async () =>
 export const getNumerosRequisicoes = async () =>
   await axios.get("/solicitacao-remessa/lista-numeros/");
 
-export const getRequisicoesDoFiltro = async queryparams => {
+export const getRequisicoesDoFiltro = async (queryparams) => {
   let url = `/solicitacao-remessa/lista-requisicoes-para-envio/`;
   if (queryparams) url += "?" + queryparams + "&&param=01/";
   return await axios.get(url);
 };
 
-export const getRequisicoesListagem = async params => {
+export const getRequisicoesListagem = async (params) => {
   const url = `/solicitacao-remessa/`;
   return await axios.get(url, { params });
 };
 
-export const getNomesUnidadesEscolares = async params => {
+export const getNomesUnidadesEscolares = async (params) => {
   const url = "/guias-da-requisicao/unidades-escolares/";
   return await axios.get(url, { params });
 };
 
-export const distribuidorConfirma = async uuid => {
+export const distribuidorConfirma = async (uuid) => {
   const url = `/solicitacao-remessa/${uuid}/distribuidor-confirma/`;
   return await axios.patch(url);
 };
@@ -34,38 +34,38 @@ export const distribuidorConfirmaTodos = async () => {
   return await axios.patch(url);
 };
 
-export const getConsolidadoAlimentos = async uuid => {
+export const getConsolidadoAlimentos = async (uuid) => {
   const url = `/solicitacao-remessa/${uuid}/consolidado-alimentos/`;
   return await axios.get(url);
 };
 
-export const distribuidorAltera = async payload => {
+export const distribuidorAltera = async (payload) => {
   const url = `/solicitacao-de-alteracao-de-requisicao/`;
   return await axios.post(url, payload);
 };
 
-export const gerarPDFDistribuidorSolicitacao = async uuid => {
+export const gerarPDFDistribuidorSolicitacao = async (uuid) => {
   const url = `/solicitacao-remessa/${uuid}/gerar-pdf-distribuidor/`;
   return await axios.get(url);
 };
 
-export const gerarPDFDistribuidorSolicitacoes = async params => {
+export const gerarPDFDistribuidorSolicitacoes = async (params) => {
   const url = `/solicitacao-remessa/gerar-pdf-distribuidor-geral/`;
   return await axios.get(url, { params, responseType: "blob" });
 };
 
-export const gerarExcelSolicitacoes = async params => {
+export const gerarExcelSolicitacoes = async (params) => {
   const url = `/solicitacao-remessa/exporta-excel-visao-analitica/`;
   return await axios.get(url, { params });
 };
 
-export const gerarPDFDistribuidorGuia = async uuid => {
+export const gerarPDFDistribuidorGuia = async (uuid) => {
   const url = `/guias-da-requisicao/${uuid}/gerar-pdf-distribuidor/`;
   const { data } = await axios.get(url, { responseType: "blob" });
   saveAs(data, "guia_de_remessa.pdf");
 };
 
-export const getListagemSolicitacaoAlteracao = async params => {
+export const getListagemSolicitacaoAlteracao = async (params) => {
   const url = `/solicitacao-de-alteracao-de-requisicao/`;
   return await axios.get(url, { params });
 };
@@ -80,89 +80,87 @@ export const dilogNegaAlteracao = async (uuid, params) => {
   return await axios.patch(url, params);
 };
 
-export const getGuiasRemessaParaInsucesso = async params => {
+export const getGuiasRemessaParaInsucesso = async (params) => {
   const url = `/guias-da-requisicao/lista-guias-para-insucesso/`;
   return await axios.get(url, { params });
 };
 
-export const getGuiasInconsistencias = async params => {
+export const getGuiasInconsistencias = async (params) => {
   const url = `/guias-da-requisicao/inconsistencias/`;
   return await axios.get(url, { params });
 };
 
-export const vinculaGuiasComEscolas = async params => {
+export const vinculaGuiasComEscolas = async (params) => {
   const url = `/guias-da-requisicao/vincula-guias/`;
   return await axios.patch(url, { params });
 };
 
-export const getGuiasEscola = async params => {
+export const getGuiasEscola = async (params) => {
   const url = `/guias-da-requisicao/guias-escola/`;
   return await axios.get(url, { params });
 };
 
-export const getGuiaParaConferencia = async params => {
+export const getGuiaParaConferencia = async (params) => {
   const url = `/guias-da-requisicao/guia-para-conferencia/`;
   return await axios.get(url, { params });
 };
 
-export const getGuiaDetalhe = async uuid => {
+export const getGuiaDetalhe = async (uuid) => {
   const url = `/guias-da-requisicao/${uuid}/detalhe-guia-de-remessa/`;
   return await axios.get(url);
 };
 
-export const getConferenciaParaEdicao = async params => {
+export const getConferenciaParaEdicao = async (params) => {
   const url = `/conferencia-da-guia-com-ocorrencia/get-ultima-conferencia/`;
   return await axios.get(url, { params });
 };
 
-export const getReposicaoParaEdicao = async params => {
+export const getReposicaoParaEdicao = async (params) => {
   const url = `/conferencia-da-guia-com-ocorrencia/get-ultima-reposicao/`;
   return await axios.get(url, { params });
 };
 
-export const recebeGuiaSemOcorrencia = async params => {
+export const recebeGuiaSemOcorrencia = async (params) => {
   const url = `/conferencia-da-guia/`;
   return await axios.post(url, params);
 };
 
-export const registraInsucessoDeEntrega = async params => {
+export const registraInsucessoDeEntrega = async (params) => {
   const url = `/insucesso-de-entrega/`;
   return await axios.post(url, params);
 };
 
-export const getGuiaParaInsucesso = async params => {
+export const getGuiaParaInsucesso = async (params) => {
   const url = `/guias-da-requisicao/guia-para-insucesso/`;
   return await axios.get(url, { params });
 };
 
-export const recebeGuiaComOcorrencia = async params => {
+export const recebeGuiaComOcorrencia = async (params) => {
   const url = `/conferencia-da-guia-com-ocorrencia/`;
   return await axios.post(url, params);
 };
 
-export const editaGuiaComOcorrencia = async payload => {
-  const url = `/conferencia-da-guia-com-ocorrencia/${
-    payload.uuid_conferencia
-  }/`;
+export const editaGuiaComOcorrencia = async (payload) => {
+  const url = `/conferencia-da-guia-com-ocorrencia/${payload.uuid_conferencia}/`;
   return await axios.put(url, payload);
 };
 
-export const getEntregasDilog = async params => {
+export const getEntregasDilog = async (params) => {
   const url = `/solicitacao-remessa/lista-requisicoes-confirmadas/`;
   return await axios.get(url, { params });
 };
 
-export const gerarExcelEntregas = async params => {
+export const gerarExcelEntregas = async (params) => {
   const url = `/solicitacao-remessa/exporta-excel-visao-entregas/`;
   return await axios.get(url, { params });
 };
 
-export const arquivaGuias = async payload => {
+export const arquivaGuias = async (payload) => {
   const url = `/solicitacao-remessa/arquivar/`;
   return await axios.post(url, payload);
 };
 
-export const desarquivaGuias = async payload => {
+export const desarquivaGuias = async (payload) => {
   const url = `/solicitacao-remessa/desarquivar/`;
   return await axios.post(url, payload);
 };
@@ -178,17 +176,17 @@ export const imprimirGuiasDaSolicitacao = async (uuid, params) => {
   return await axios.get(url, { params });
 };
 
-export const confirmaCancelamento = async payload => {
+export const confirmaCancelamento = async (payload) => {
   const url = `/solicitacao-remessa/confirmar-cancelamento/`;
   return await axios.post(url, payload);
 };
 
-export const getGuiasNaoNotificadas = async params => {
+export const getGuiasNaoNotificadas = async (params) => {
   const url = `/guias-da-requisicao/guias-com-ocorrencias-sem-notificacao/`;
   return await axios.get(url, { params });
 };
 
-export const criarNotificacao = async payload => {
+export const criarNotificacao = async (payload) => {
   const url = `/notificacao-guias-com-ocorrencias/`;
   return await axios.post(url, payload);
 };
@@ -220,17 +218,35 @@ export const enviarNotificacao = async (uuid, payload) => {
   }
 };
 
-export const getNotificacoesOcorrencia = async params => {
+export const solicitarAlteracaoNotificacao = async (uuid, payload) => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/solicitar-alteracao/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const assinarEnviarNotificacao = async (uuid, payload) => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/assinar/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getNotificacoesOcorrencia = async (params) => {
   const url = `/notificacao-guias-com-ocorrencias/`;
   return await axios.get(url, { params });
 };
 
-export const getNotificacoesOcorrenciaByUuid = async uuid => {
+export const getNotificacoesOcorrenciaByUuid = async (uuid) => {
   const url = `/notificacao-guias-com-ocorrencias/${uuid}/`;
   return await axios.get(url);
 };
 
-export const getNotificacao = async uuid => {
+export const getNotificacao = async (uuid) => {
   const url = `/notificacao-guias-com-ocorrencias/${uuid}/`;
   return await axios.get(url);
 };

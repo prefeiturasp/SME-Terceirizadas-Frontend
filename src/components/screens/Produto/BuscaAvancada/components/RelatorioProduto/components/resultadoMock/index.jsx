@@ -8,7 +8,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 
 import { Modal } from "antd";
@@ -21,24 +21,24 @@ export default class ResultadoMock extends Component {
 
   showModal = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
   };
 
   handleOk = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
   handleCancel = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
   itemLogAtivo = (index, ativo) => {
-    logs.forEach(log => {
+    logs.forEach((log) => {
       log.ativo = false;
     });
     logs[index].ativo = !ativo;
@@ -50,15 +50,15 @@ export default class ResultadoMock extends Component {
         <article className="flex-botoes-relatorio">
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            texto="historico"
+            texto="Histórico"
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="mr-2"
+            className="me-2"
             onClick={this.showModal}
           />
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            texto="imprimir"
-            style={BUTTON_STYLE.BLUE}
+            texto="Imprimir"
+            style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
           />
         </article>

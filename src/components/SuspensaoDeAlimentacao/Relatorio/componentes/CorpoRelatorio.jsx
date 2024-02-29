@@ -3,14 +3,14 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import { fluxoInformativoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import { stringSeparadaPorVirgulas } from "helpers/utilities";
 import { imprimeRelatorioSuspensaoAlimentacao } from "services/relatorios";
 
-export const CorpoRelatorio = props => {
+export const CorpoRelatorio = (props) => {
   const { suspensaoAlimentacao, dadosEscola } = props;
   return (
     <div>
@@ -24,7 +24,7 @@ export const CorpoRelatorio = props => {
             <span className="number-of-order-label">Nº DA SOLICITAÇÂO</span>
           </span>
         </div>
-        <div className="pl-2 my-auto offset-1 col-5">
+        <div className="ps-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
@@ -39,12 +39,12 @@ export const CorpoRelatorio = props => {
               suspensaoAlimentacao.escola.codigo_eol}
           </span>
         </div>
-        <p className={`col-2 title-message pr-3`}>
+        <p className={`col-2 title-message pe-3`}>
           <Botao
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
-            className="float-right"
+            className="float-end"
             onClick={() =>
               imprimeRelatorioSuspensaoAlimentacao(suspensaoAlimentacao.uuid)
             }
@@ -137,7 +137,7 @@ export const CorpoRelatorio = props => {
           <p
             className="value"
             dangerouslySetInnerHTML={{
-              __html: suspensaoAlimentacao.observacao
+              __html: suspensaoAlimentacao.observacao,
             }}
           />
         </div>

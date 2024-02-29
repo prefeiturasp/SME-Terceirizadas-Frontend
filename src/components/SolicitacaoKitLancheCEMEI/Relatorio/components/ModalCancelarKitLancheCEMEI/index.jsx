@@ -9,26 +9,21 @@ import Botao from "components/Shareable/Botao";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
 
 export const ModalCancelarKitLancheCEMEI = ({ ...props }) => {
-  const {
-    showModal,
-    closeModal,
-    solicitacao,
-    endpoint,
-    loadSolicitacao
-  } = props;
+  const { showModal, closeModal, solicitacao, endpoint, loadSolicitacao } =
+    props;
   const [justificativa, setJustificativa] = useState("");
 
   const solicitacaoAlimentacaoContext = useContext(
     SolicitacaoAlimentacaoContext
   );
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const resp = await endpoint(solicitacao.uuid, values);
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
@@ -79,7 +74,7 @@ export const ModalCancelarKitLancheCEMEI = ({ ...props }) => {
                     validate={textAreaRequired}
                   />
                   <OnChange name="justificativa">
-                    {value => setJustificativa(value)}
+                    {(value) => setJustificativa(value)}
                   </OnChange>
                 </div>
               </div>
@@ -90,14 +85,14 @@ export const ModalCancelarKitLancheCEMEI = ({ ...props }) => {
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={justificativa === "" || justificativa === undefined}
-                className="ml-3"
+                className="ms-3"
               />
             </Modal.Footer>
           </form>

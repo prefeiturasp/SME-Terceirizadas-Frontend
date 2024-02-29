@@ -5,25 +5,25 @@ import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
-export const criarLote = payload => {
+export const criarLote = (payload) => {
   const url = `${API_URL}/lotes/`;
   let status = 0;
   return fetch(url, {
     method: "POST",
     body: payload,
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -34,73 +34,73 @@ export const atualizarLote = (payload, uuid) => {
   return fetch(url, {
     method: "PUT",
     body: payload,
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const excluirLote = async uuid => {
+export const excluirLote = async (uuid) => {
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "DELETE"
+    method: "DELETE",
   };
   let status = 0;
   return await fetch(`${API_URL}/lotes/${uuid}/`, OBJ_REQUEST)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return { data: error, status: status };
     });
 };
-export const getLote = uuid => {
+export const getLote = (uuid) => {
   const url = `${API_URL}/lotes/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const getLotes = payload => {
+export const getLotes = (payload) => {
   const url = `${API_URL}/lotes/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
     body: payload,
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { ...data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };

@@ -1,15 +1,24 @@
 import { deParaStatusAltCronograma } from "components/screens/helper";
-import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
+import { usuarioEhEmpresaFornecedor, formataMilhar } from "helpers/utilities";
 import React from "react";
+import "./styles.scss";
 
 export default ({
   cronograma,
   esconderInformacoesAdicionais,
-  solicitacaoAlteracaoCronograma
+  solicitacaoAlteracaoCronograma,
 }) => {
+  const enderecoFormatado = (armazem) =>
+    armazem
+      ? `${armazem.endereco} ${armazem.numero}, ${armazem.bairro}, ${armazem.estado} - CEP: ${armazem.cep}`
+      : "";
+
   return (
     <>
-      <p className="head-green mt-4 mb-4">Dados Gerais</p>
+      <div className="row my-3">
+        <p className="head-green">Dados Gerais</p>
+      </div>
+
       {solicitacaoAlteracaoCronograma ? (
         <div className="row detalhar-head">
           <div className="col-3">
@@ -48,120 +57,198 @@ export default ({
           </div>
         </div>
       ) : (
-        <div className="row detalhar-head">
-          <div className="col-4">
-            <p>
-              <b>Nº do Cronograma:</b>
-            </p>
-            <p className="head-green">{cronograma.numero}</p>
+        <>
+          <div className="row detalhar-head">
+            <div className="col-4">
+              <p>
+                <b>Nº do Cronograma:</b>
+              </p>
+              <p className="head-green">{cronograma.numero}</p>
+            </div>
+            <div className="col-4">
+              <p>
+                <b>Nº do Pregão Eletrônico/Chamada Pública:</b>
+              </p>
+              <p className="head-green">
+                {cronograma.contrato.numero_pregao ||
+                  cronograma.contrato.numero_chamada_publica}
+              </p>
+            </div>
+            <div className="col-4">
+              <p>
+                <b>Nº do Contrato:</b>
+              </p>
+              {cronograma.contrato && (
+                <p className="head-green">{cronograma.contrato.numero}</p>
+              )}
+            </div>
           </div>
-          <div className="col-4">
-            <p>
-              <b>Nº do Contrato:</b>
-            </p>
-            {cronograma.contrato && (
-              <p className="head-green">{cronograma.contrato.numero}</p>
+
+          <div className="row detalhar-head mt-4">
+            <div className="col-4">
+              <p>
+                <b>Nº do Processo SEI - Contratos:</b>
+              </p>
+              {cronograma.contrato && (
+                <p className="head-green">{cronograma.contrato.processo}</p>
+              )}
+            </div>
+            {cronograma.contrato?.ata && (
+              <div className="col-4">
+                <p>
+                  <b>Nº da ATA:</b>
+                </p>
+                <p className="head-green">{cronograma.contrato.ata}</p>
+              </div>
             )}
           </div>
-          <div className="col-4">
-            <p>
-              <b>Nº do Processo SEI - Contratos:</b>
-            </p>
-            {cronograma.contrato && (
-              <p className="head-green">{cronograma.contrato.processo}</p>
-            )}
-          </div>
-        </div>
+        </>
       )}
+
       <hr />
+
       {!esconderInformacoesAdicionais ? (
         <>
-          <div>
+          <div className="row my-3">
             <p>Empresa:</p>
             <p>
-              {cronograma.empresa && <b>{cronograma.empresa.nome_fantasia}</b>}
+              <b>{cronograma.empresa?.nome_fantasia}</b>
             </p>
           </div>
-          <hr />
-          <p className="head-green">
-            {solicitacaoAlteracaoCronograma
-              ? "Dados do Produto"
-              : "Dados do produto e datas das entregas"}
-          </p>
-          <br />
 
-          <div className="row">
+          <hr />
+
+          <div className="row my-3">
+            <p>Produto:</p>
+            <p>
+              <b>{cronograma.ficha_tecnica?.produto.nome}</b>
+            </p>
+          </div>
+
+          <hr />
+
+          <div className="row my-2">
+            <p className="head-green">
+              {solicitacaoAlteracaoCronograma
+                ? "Dados do Produto"
+                : "Dados do produto e datas das entregas"}
+            </p>
+          </div>
+
+          <div className="row mb-4">
             <div className="col-4">
-              <p>Produto:</p>
-              <p className="mb-3">
-                {cronograma.produto && <b>{cronograma.produto.nome}</b>}
+              <p>Marca:</p>
+              <p>
+                <b>{cronograma.ficha_tecnica?.marca.nome}</b>
               </p>
             </div>
             <div className="col-4">
               <p>Quantidade Total Programada:</p>
               <p>
-                <b>{cronograma.qtd_total_programada}</b>
+                <b>{formataMilhar(cronograma.qtd_total_programada)}</b>
               </p>
             </div>
             <div className="col-4">
-              <p>Unidade de Medida:</p>
+              <p>Custo Unitário do Produto:</p>
               <p>
-                {cronograma.unidade_medida && (
-                  <b>{cronograma.unidade_medida.nome}</b>
-                )}
-              </p>
-            </div>
-            <br />
-            <div className="col-4 mt-3">
-              <p>Armazém:</p>
-              <p>
-                <b>{cronograma.armazem.nome_fantasia}</b>
-              </p>
-            </div>
-            <div className="col-4 mt-3">
-              <p>Tipo de Embalagem:</p>
-              <p>
-                <b>{cronograma.tipo_embalagem}</b>
+                <b>
+                  {cronograma.custo_unitario_produto
+                    ?.toFixed(2)
+                    .replace(".", ",")}
+                </b>
               </p>
             </div>
           </div>
-          {!solicitacaoAlteracaoCronograma && (
-            <table className="table mt-4 mb-3">
-              <thead className="head-crono">
-                <th className="borda-crono">N° do Empenho</th>
-                <th className="borda-crono">Etapa</th>
-                <th className="borda-crono">Parte</th>
-                <th className="borda-crono">Data Programada</th>
-                <th className="borda-crono">Quantidade</th>
-                <th className="borda-crono">Total de Embalagens</th>
-              </thead>
-              <tbody>
-                {cronograma.etapas.length > 0 &&
-                  cronograma.etapas.map((etapa, key) => {
-                    return (
-                      <tr key={key}>
-                        <td className="borda-crono">{etapa.numero_empenho}</td>
-                        <td className="borda-crono">{etapa.etapa}</td>
-                        <td className="borda-crono">{etapa.parte}</td>
-                        <td className="borda-crono">
-                          {etapa.data_programada_atual}
-                        </td>
-                        <td className="borda-crono">
-                          {etapa.quantidade_atual}
-                        </td>
-                        <td className="borda-crono">
-                          {etapa.total_embalagens}
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          )}
+
+          <div className="row mb-4">
+            <div className="col-4">
+              <p>Peso da Embalagem Primária:</p>
+              <p>
+                <b>
+                  {cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria}
+                </b>
+              </p>
+            </div>
+            <div className="col-4">
+              <p>Peso da Embalagem Secundária:</p>
+              <p>
+                <b>
+                  {cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria}
+                </b>
+              </p>
+            </div>
+            {cronograma.ficha_tecnica?.volume_embalagem_primaria && (
+              <div className="col-4">
+                <p>Volume da Embalagem Primária:</p>
+                <p>
+                  <b>{cronograma.ficha_tecnica?.volume_embalagem_primaria}</b>
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="row mb-4">
+            <div className="col">
+              <table className="table tabela-dados-cronograma">
+                <thead className="head-crono">
+                  <th className="borda-crono">N° do Empenho</th>
+                  <th className="borda-crono">Qtde. Total do Empenho</th>
+                  <th className="borda-crono">Etapa</th>
+                  <th className="borda-crono">Parte</th>
+                  <th className="borda-crono">Data Programada</th>
+                  <th className="borda-crono">Quantidade</th>
+                  <th className="borda-crono">Total de Embalagens</th>
+                </thead>
+                <tbody>
+                  {(() => {
+                    let etapas = solicitacaoAlteracaoCronograma
+                      ? solicitacaoAlteracaoCronograma.etapas_antigas
+                      : cronograma.etapas;
+                    return etapas.map((etapa, key) => {
+                      return (
+                        <tr key={key}>
+                          <td className="borda-crono">
+                            {etapa.numero_empenho}
+                          </td>
+                          <td className="borda-crono">
+                            {etapa.qtd_total_empenho}
+                          </td>
+                          <td className="borda-crono">{etapa.etapa}</td>
+                          <td className="borda-crono">{etapa.parte}</td>
+                          <td className="borda-crono">
+                            {etapa.data_programada}
+                          </td>
+                          <td className="borda-crono">
+                            {formataMilhar(etapa.quantidade)}
+                          </td>
+                          <td className="borda-crono">
+                            {formataMilhar(etapa.total_embalagens)}
+                          </td>
+                        </tr>
+                      );
+                    });
+                  })()}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <hr />
+
+          <div className="row head-green my-3">
+            <div className="col">Armazém</div>
+          </div>
+          <div className="row">
+            <p>
+              <b>{cronograma.armazem?.nome_fantasia}</b>{" "}
+              <span className="mx-2">|</span>
+              {enderecoFormatado(cronograma.armazem)}
+            </p>
+          </div>
         </>
       ) : (
         <>
-          <p className="head-green">
+          <p className="head-green my-3">
             <strong>Dados do Produto e Datas das Entregas</strong>
           </p>
           <table className="table mt-4 mb-3">
@@ -189,7 +276,9 @@ export default ({
                       <td className="borda-crono">{etapa.data_programada}</td>
                       <td className="borda-crono">{etapa.etapa}</td>
                       <td className="borda-crono">{etapa.parte}</td>
-                      <td className="borda-crono">{etapa.quantidade}</td>
+                      <td className="borda-crono">
+                        {formataMilhar(etapa.quantidade)}
+                      </td>
                       <td className="borda-crono">
                         {cronograma.armazem && cronograma.armazem.nome_fantasia}
                       </td>

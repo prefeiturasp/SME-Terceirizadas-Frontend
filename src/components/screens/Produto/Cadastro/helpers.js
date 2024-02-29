@@ -10,7 +10,7 @@ export const validaFormularioStep1 = async ({
   componentes,
   tem_aditivos_alergenicos,
   tem_gluten,
-  aditivos
+  aditivos,
 }) => {
   let arrayValidacao = [];
   if (eh_para_alunos_com_dieta === null) {
@@ -46,7 +46,7 @@ export const validaFormularioStep1 = async ({
     const resposta = await produtoJaExiste({
       nome,
       marca,
-      fabricante
+      fabricante,
     });
     if (resposta.status !== HTTP_STATUS.OK) {
       arrayValidacao.push("Erro ao consultar se produto já existe.");
@@ -64,7 +64,7 @@ export const Step1EstaValido = ({
   marca,
   fabricante,
   tem_gluten,
-  componentes
+  componentes,
 }) => {
   if (
     nome !== null &&
@@ -88,7 +88,7 @@ export const retornaObjetoRequest = ({
   componentes,
   tem_aditivos_alergenicos,
   tem_gluten,
-  aditivos
+  aditivos,
 }) => {
   return {
     eh_para_alunos_com_dieta: eh_para_alunos_com_dieta,
@@ -99,7 +99,7 @@ export const retornaObjetoRequest = ({
     componentes: componentes,
     tem_aditivos_alergenicos: tem_aditivos_alergenicos,
     tem_gluten: tem_gluten,
-    aditivos: aditivos
+    aditivos: aditivos,
   };
 };
 
@@ -124,6 +124,6 @@ export const retornaPayloadDefault = () => {
     numero_registro: null,
     especificacoes: null,
     porcao: null,
-    unidade_caseira: null
+    unidade_caseira: null,
   };
 };

@@ -5,7 +5,7 @@ import "./styles.scss";
 import { Checkbox } from "antd";
 import {
   gerarExcelSolicitacoes,
-  imprimirGuiasDaSolicitacao
+  imprimirGuiasDaSolicitacao,
 } from "services/logistica.service.js";
 import ListagemGuias from "../ListagemGuias";
 import { Spin } from "antd";
@@ -20,13 +20,14 @@ export default ({
   selecionados,
   setSelecionados,
   arquivaDesarquivaGuias,
-  setShowDownload
+  setShowDownload,
+  somenteLeitura,
 }) => {
   const [allChecked, setAllChecked] = useState(false);
   const [carregando, setCarregando] = useState(false);
   const centralDownloadContext = useContext(CentralDeDownloadContext);
 
-  const baixarPDFGuiasRemessa = solicitacao => {
+  const baixarPDFGuiasRemessa = (solicitacao) => {
     setCarregando(true);
     let uuid = solicitacao.uuid;
     imprimirGuiasDaSolicitacao(uuid)
@@ -35,16 +36,16 @@ export default ({
         setShowDownload(true);
         centralDownloadContext.getQtdeDownloadsNaoLidas();
       })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
   };
 
-  const baixarExcelGuiasRemessa = solicitacao => {
+  const baixarExcelGuiasRemessa = (solicitacao) => {
     setCarregando(true);
     const params = gerarParametrosConsulta({
-      numero_requisicao: solicitacao.numero_solicitacao
+      numero_requisicao: solicitacao.numero_solicitacao,
     });
     gerarExcelSolicitacoes(params)
       .then(() => {
@@ -52,13 +53,13 @@ export default ({
         setShowDownload(true);
         centralDownloadContext.getQtdeDownloadsNaoLidas();
       })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
   };
 
-  const checkSolicitacao = solicitacao => {
+  const checkSolicitacao = (solicitacao) => {
     let newSelecionados = [...selecionados];
     if (solicitacao.checked) {
       solicitacao.checked = false;
@@ -77,7 +78,7 @@ export default ({
 
   const checkAll = () => {
     let newSelecionados = [];
-    solicitacoes.forEach(solicitacao => {
+    solicitacoes.forEach((solicitacao) => {
       solicitacao.checked = !allChecked;
       if (!allChecked) newSelecionados.push(solicitacao);
     });
@@ -114,7 +115,7 @@ export default ({
             <div>Exportar Requisição</div>
             <div />
           </div>
-          {solicitacoes.map(solicitacao => {
+          {solicitacoes.map((solicitacao) => {
             const bordas =
               ativos && ativos.includes(solicitacao.uuid)
                 ? "desativar-borda"
@@ -173,7 +174,7 @@ export default ({
                       onClick={() => {
                         ativos && ativos.includes(solicitacao.uuid)
                           ? setAtivos(
-                              ativos.filter(el => el !== solicitacao.uuid)
+                              ativos.filter((el) => el !== solicitacao.uuid)
                             )
                           : setAtivos(
                               ativos
@@ -190,11 +191,13 @@ export default ({
                       arquivaDesarquivaGuias={arquivaDesarquivaGuias}
                       solicitacao={solicitacao}
                       situacao={"ATIVA"}
+                      somenteLeitura={somenteLeitura}
                     />
                     <ListagemGuias
                       arquivaDesarquivaGuias={arquivaDesarquivaGuias}
                       solicitacao={solicitacao}
                       situacao={"ARQUIVADA"}
+                      somenteLeitura={somenteLeitura}
                     />
                   </>
                 )}

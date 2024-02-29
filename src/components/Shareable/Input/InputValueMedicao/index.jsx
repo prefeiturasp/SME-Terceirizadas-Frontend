@@ -3,7 +3,7 @@ import { Tooltip } from "antd";
 import PropTypes from "prop-types";
 import "../style.scss";
 
-export const InputText = props => {
+export const InputText = (props) => {
   const {
     classNameToNextInput,
     classNameToPrevInput,
@@ -28,7 +28,8 @@ export const InputText = props => {
     icone,
     toUppercaseActive,
     apenasNumeros,
-    exibeTooltipDiaSobremesaDoce,
+    exibeTooltipPadraoRepeticaoDiasSobremesaDoce,
+    exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero,
     exibeTooltipErroQtdMaiorQueAutorizado,
     numeroDeInclusoesAutorizadas,
     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo,
@@ -38,10 +39,21 @@ export const InputText = props => {
     exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas,
     exibeTooltipKitLancheSolAlimentacoes,
     exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas,
-    exibeTooltipLancheEmergencialSolAlimentacoes,
+    exibeTooltipLancheEmergencialNaoAutorizado,
+    exibeTooltipLancheEmergencialAutorizado,
+    exibeTooltipLancheEmergencialZeroAutorizado,
+    exibeTooltipLancheEmergencialZeroAutorizadoJustificado,
     exibeTooltipFrequenciaZeroTabelaEtec,
     exibeTooltipLancheEmergTabelaEtec,
-    exibeTooltipRepeticao
+    exibeTooltipRepeticao,
+    exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI,
+    exibeTooltipSuspensoesAutorizadasCEI,
+    exibeTooltipInclusaoAlimentacaoAutorizadaDreCodae,
+    exibeTooltipAlteracaoAlimentacaoAutorizadaDreCodae,
+    exibeTooltipSuspensaoAutorizadaFrequenciaDreCodae,
+    exibeTooltipSuspensaoAutorizadaAlimentacaoDreCodae,
+    exibeTooltipInclusoesAutorizadasComZero,
+    exibeTooltipDietasInclusaoDiaNaoLetivoCEI,
   } = props;
 
   let msgTooltip = "";
@@ -93,15 +105,20 @@ export const InputText = props => {
           className={`col-form-label ${labelClassName}`}
         >
           {label}
-        </label>
+        </label>,
       ]}
-      {exibeTooltipDiaSobremesaDoce && (
+      {exibeTooltipPadraoRepeticaoDiasSobremesaDoce && (
+        <Tooltip title={"Dia de sobremesa doce."}>
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
+      {exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero && (
         <Tooltip
           title={
             "Dia de sobremesa doce. Justifique o lançamento de repetição nas observações."
           }
         >
-          <i className="fas fa-info icone-info-success" />
+          <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
       {exibeTooltipRepeticao && (
@@ -151,6 +168,15 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
+      {exibeTooltipInclusoesAutorizadasComZero && (
+        <Tooltip
+          title={
+            "Nenhuma frequência e alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
       {exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas && (
         <Tooltip
           title={
@@ -178,10 +204,34 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
-      {exibeTooltipLancheEmergencialSolAlimentacoes && (
+      {exibeTooltipLancheEmergencialNaoAutorizado && (
         <Tooltip
           title={
             "Não há autorização para oferta de Lanche Emergencial. Justifique na Observação para análise de CODAE."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipLancheEmergencialZeroAutorizado &&
+        !exibeTooltipLancheEmergencialZeroAutorizadoJustificado && (
+          <Tooltip
+            title={
+              "Há autorização de Lanche Emergencial para esta data. Justifique a ausência do lançamento."
+            }
+          >
+            <i className="fas fa-info icone-info-warning" />
+          </Tooltip>
+        )}
+      {exibeTooltipLancheEmergencialZeroAutorizadoJustificado && (
+        <Tooltip title={"Há autorização de Lanche Emergencial para esta data."}>
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
+      {exibeTooltipLancheEmergencialAutorizado && (
+        <Tooltip
+          title={
+            "Há autorização de Lanche Emergencial para esta data. Informe a quantidade ofertada."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -219,6 +269,58 @@ export const InputText = props => {
             <i className="fas fa-info icone-info-warning" />
           </Tooltip>
         )}
+      {exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI && !input.value && (
+        <Tooltip
+          title={
+            "Existe autorização para o Lançamento de Alimentações para o dia. Justifique a ausência do apontamento!"
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipSuspensoesAutorizadasCEI && (
+        <Tooltip
+          title={
+            "Há suspensão de alimentação autorizada para essa data. Obrigatório adicionar observação para lançamento de frequência neste dia."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipDietasInclusaoDiaNaoLetivoCEI && (
+        <Tooltip
+          title={
+            "Existe autorização para o Lançamento de Dietas Especiais para o dia. Justifique a ausência do apontamento!"
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+
+      {exibeTooltipInclusaoAlimentacaoAutorizadaDreCodae && (
+        <Tooltip title={"Foi autorizada inclusão de alimentações neste dia."}>
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
+      {exibeTooltipAlteracaoAlimentacaoAutorizadaDreCodae && (
+        <Tooltip title={"Há autorização de LPR ou RPL para este dia."}>
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
+      {exibeTooltipSuspensaoAutorizadaFrequenciaDreCodae && (
+        <Tooltip
+          title={"Há suspensão de alimentações autorizada para este dia."}
+        >
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
+      {exibeTooltipSuspensaoAutorizadaAlimentacaoDreCodae && (
+        <Tooltip
+          title={"Há suspensão deste tipo de alimentação para este dia."}
+        >
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
 
       <input
         {...input}
@@ -236,9 +338,16 @@ export const InputText = props => {
             exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas ||
             exibeTooltipKitLancheSolAlimentacoes ||
             exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas ||
-            exibeTooltipLancheEmergencialSolAlimentacoes ||
+            exibeTooltipLancheEmergencialNaoAutorizado ||
+            exibeTooltipLancheEmergencialAutorizado ||
             exibeTooltipFrequenciaZeroTabelaEtec ||
-            exibeTooltipLancheEmergTabelaEtec)
+            exibeTooltipLancheEmergTabelaEtec ||
+            exibeTooltipInclusoesAutorizadasComZero ||
+            exibeTooltipRepeticaoDiasSobremesaDoceDiferenteZero ||
+            exibeTooltipDietasInclusaoDiaNaoLetivoCEI ||
+            (exibeTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI &&
+              !input.value) ||
+            exibeTooltipSuspensoesAutorizadasCEI)
             ? "border-warning"
             : ""
         }`}
@@ -254,7 +363,7 @@ export const InputText = props => {
         title={title}
         pattern={pattern}
         maxLength={maxlength}
-        onInput={e => {
+        onInput={(e) => {
           e.target.value = toUppercaseActive
             ? e.target.value.toUpperCase()
             : e.target.value;
@@ -262,7 +371,7 @@ export const InputText = props => {
             ? e.target.value.replace(/\D/g, "")
             : e.target.value;
         }}
-        onKeyDown={e => {
+        onKeyDown={(e) => {
           if (e.key === "Enter" && classNameToPrevInput && e.shiftKey) {
             let elements = document.getElementsByName(classNameToPrevInput);
             if (elements && elements.length === 1) {
@@ -298,7 +407,7 @@ InputText.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   type: PropTypes.string,
-  contador: PropTypes.number
+  contador: PropTypes.number,
 };
 
 InputText.defaultProps = {
@@ -316,7 +425,7 @@ InputText.defaultProps = {
   name: "",
   placeholder: "",
   required: false,
-  type: "text"
+  type: "text",
 };
 
 export default InputText;

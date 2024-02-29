@@ -5,7 +5,7 @@ import { Form, Field } from "react-final-form";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import { Radio } from "antd";
@@ -16,19 +16,19 @@ import {
   required,
   tamanhoCnpj,
   validaCPF,
-  SMEPrefeituraEmail
+  SMEPrefeituraEmail,
 } from "helpers/fieldValidators";
 import {
   composeValidators,
   formataCPFCensurado,
-  formatarCPFouCNPJ
+  formatarCPFouCNPJ,
 } from "helpers/utilities";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { getDadosUsuarioEOLCompleto } from "services/permissoes.service";
 import { useEffect } from "react";
 import {
   getSubdivisoesCodae,
-  getVinculoEmpresa
+  getVinculoEmpresa,
 } from "services/vinculos.service";
 import MeusDadosContext from "context/MeusDadosContext";
 import ModalExclusaoVinculo from "../ModalExclusaoVinculo";
@@ -40,7 +40,7 @@ const ENTER = 13;
 
 const campoObrigatorio = {
   touched: true,
-  error: "Informação não localizada"
+  error: "Informação não localizada",
 };
 
 const ModalCadastroVinculo = ({
@@ -55,7 +55,8 @@ const ModalCadastroVinculo = ({
   empresa,
   visaoUnica,
   codae,
-  cogestor
+  cogestor,
+  ehUEParceira,
 }) => {
   const [tipoUsuario, setTipoUsuario] = useState();
   const [subdivisoes, setSubdivisoes] = useState();
@@ -72,21 +73,21 @@ const ModalCadastroVinculo = ({
     toggleShow(false, null);
   };
 
-  const getPerfis = visao => {
+  const getPerfis = (visao) => {
     return listaPerfis
-      .filter(perfil => perfil.visao === visao)
-      .map(perfil => ({
+      .filter((perfil) => perfil.visao === visao)
+      .map((perfil) => ({
         uuid: perfil.nome,
-        nome: perfil.nome
+        nome: perfil.nome,
       }));
   };
 
   const buscaSubdivisoes = async () => {
     const subdivisoes = await getSubdivisoesCodae();
 
-    let options_subs = subdivisoes.results.map(sub => ({
+    let options_subs = subdivisoes.results.map((sub) => ({
       uuid: sub.uuid,
-      nome: sub.nome
+      nome: sub.nome,
     }));
     const perfil = JSON.parse(localStorage.getItem("perfil"));
 
@@ -94,19 +95,19 @@ const ModalCadastroVinculo = ({
       COORDENADOR_DIETA_ESPECIAL: "CODAE - Gestão Dieta Especial",
       COORDENADOR_GESTAO_PRODUTO: "CODAE - Gestão de Produtos",
       COORDENADOR_SUPERVISAO_NUTRICAO:
-        "CODAE - Coordenador Supervisão de Nutrição"
+        "CODAE - Coordenador Supervisão de Nutrição",
     };
 
     if (perfil in subdivisoes_restrita_por_perfil) {
       options_subs = options_subs.filter(
-        option => option.nome === subdivisoes_restrita_por_perfil[perfil]
+        (option) => option.nome === subdivisoes_restrita_por_perfil[perfil]
       );
     }
 
     setSubdivisoes(options_subs);
   };
 
-  const buscaEOL = async values => {
+  const buscaEOL = async (values) => {
     let response = await getDadosUsuarioEOLCompleto(values.registro_funcional);
 
     if (response.status === 200) {
@@ -128,6 +129,7 @@ const ModalCadastroVinculo = ({
         ? formataCPFCensurado(usuarioEOL.cpf)
         : undefined;
       values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
+      values.nome_escola = usuarioEOL.nome_escola;
 
       let t = document.getElementById("inputRF");
       t.blur();
@@ -142,6 +144,34 @@ const ModalCadastroVinculo = ({
     }
   };
 
+  const buscaEOLFuncionarioUnidadeParceira = async (values) => {
+    let response = await getDadosUsuarioEOLCompleto(
+      values.cpf_pesquisado.replace(/[^\w\s]/gi, "")
+    );
+
+    if (response.status === 200) {
+      const usuarioEOL = response.data;
+      values.nome_parceira = usuarioEOL.nome ? usuarioEOL.nome : undefined;
+      values.cargo_parceira = usuarioEOL.cargo ? usuarioEOL.cargo : undefined;
+      values.cpf = usuarioEOL.cpf;
+      values.cpf_parceira = usuarioEOL.cpf
+        ? formatarCPFouCNPJ(usuarioEOL.cpf)
+        : undefined;
+      values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
+
+      let t = document.getElementById("inputCPF");
+      t.blur();
+      t.focus();
+      setRfBuscado(true);
+    } else {
+      if (values.cpf_pesquisado) {
+        toastError(
+          `API do EOL não retornou nada para o CPF ${values.cpf_pesquisado}`
+        );
+      }
+    }
+  };
+
   const abreDeletar = () => {
     toggleExclusao(true, vinculo);
     toggleShow(false, vinculo);
@@ -149,7 +179,11 @@ const ModalCadastroVinculo = ({
 
   const onKeyPress = (event, values) => {
     if (event.which === ENTER) {
-      buscaEOL(values);
+      if (ehUEParceira) {
+        buscaEOLFuncionarioUnidadeParceira(values);
+      } else {
+        buscaEOL(values);
+      }
     }
   };
 
@@ -185,13 +219,23 @@ const ModalCadastroVinculo = ({
       toggleShow(false, null);
       toastError("Ocorreu um erro ao carregar este usuário.", error);
     }
-
     if (empresa) {
       setTipoUsuario("NAO_SERVIDOR");
+    } else if (diretor_escola && ehUEParceira) {
+      setTipoUsuario("UNIDADE_PARCEIRA");
     } else if (diretor_escola || visaoUnica || codae) {
       setTipoUsuario("SERVIDOR");
     }
-  }, [vinculo, show, diretor_escola, empresa, toggleShow, visaoUnica, codae]);
+  }, [
+    vinculo,
+    show,
+    diretor_escola,
+    empresa,
+    toggleShow,
+    visaoUnica,
+    codae,
+    ehUEParceira,
+  ]);
 
   return (
     <>
@@ -214,7 +258,7 @@ const ModalCadastroVinculo = ({
                 <form
                   onSubmit={handleSubmit}
                   className=""
-                  onKeyPress={event => onKeyPress(event, values)}
+                  onKeyPress={(event) => onKeyPress(event, values)}
                 >
                   {diretor_escola ||
                     empresa ||
@@ -225,7 +269,9 @@ const ModalCadastroVinculo = ({
                           Selecione o tipo de usuário:
                         </span>
                         <Radio.Group
-                          onChange={event => setTipoUsuario(event.target.value)}
+                          onChange={(event) =>
+                            setTipoUsuario(event.target.value)
+                          }
                           value={tipoUsuario}
                         >
                           <Radio className="" value={"SERVIDOR"}>
@@ -233,6 +279,9 @@ const ModalCadastroVinculo = ({
                           </Radio>
                           <Radio className="" value={"NAO_SERVIDOR"}>
                             Não Servidor
+                          </Radio>
+                          <Radio className="" value={"UNIDADE_PARCEIRA"}>
+                            Unidade Parceira
                           </Radio>
                         </Radio.Group>
                       </div>
@@ -251,7 +300,7 @@ const ModalCadastroVinculo = ({
                             validate={required}
                           />
                         </div>
-                        <div className="col-6 pl-0">
+                        <div className="col-1 ps-0">
                           <Botao
                             texto=""
                             icon="fas fa-search"
@@ -259,6 +308,15 @@ const ModalCadastroVinculo = ({
                             onClick={() => buscaEOL(values)}
                             style={BUTTON_STYLE.GREEN}
                             className="botao-rf"
+                          />
+                        </div>
+                        <div className="col-5">
+                          <Field
+                            component={InputText}
+                            label="UE"
+                            name="nome_escola"
+                            className="input-busca-produto"
+                            disabled={true}
                           />
                         </div>
                       </div>
@@ -460,11 +518,130 @@ const ModalCadastroVinculo = ({
                             className="input-busca-produto"
                             required
                             options={
-                              listaPerfis.some(perfil => perfil.visao)
+                              listaPerfis.some((perfil) => perfil.visao)
                                 ? getPerfis("EMPRESA")
                                 : listaPerfis
                             }
                             validate={required}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {tipoUsuario === "UNIDADE_PARCEIRA" && (
+                    <>
+                      <div className="row">
+                        <div className="col-6">
+                          <Field
+                            component={MaskedInputText}
+                            mask={cpfMask}
+                            id="inputCPF"
+                            label="Pesquisar CPF"
+                            name="cpf_pesquisado"
+                            placeholder="Digite o CPF"
+                            className="input-busca-produto"
+                            validate={composeValidators(required, validaCPF)}
+                          />
+                        </div>
+                        <div className="col-6 ps-0">
+                          <Botao
+                            texto=""
+                            icon="fas fa-search"
+                            type={BUTTON_TYPE.BUTTON}
+                            onClick={() =>
+                              buscaEOLFuncionarioUnidadeParceira(values)
+                            }
+                            style={BUTTON_STYLE.GREEN}
+                            className="botao-rf"
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-7">
+                          <Field
+                            component={InputText}
+                            label="Nome do Usuário"
+                            name="nome_parceira"
+                            className="input-busca-produto"
+                            disabled={true}
+                            validate={required}
+                            required
+                          />
+                          {rfBuscado && !values.nome_parceira && (
+                            <InputErroMensagem meta={campoObrigatorio} />
+                          )}
+                        </div>
+                        <div className="col-5">
+                          <Field
+                            component={InputText}
+                            label="Cargo"
+                            name="cargo_parceira"
+                            className="input-busca-produto"
+                            disabled={true}
+                            validate={required}
+                            required
+                          />
+                          {rfBuscado && !values.cargo_parceira && (
+                            <InputErroMensagem meta={campoObrigatorio} />
+                          )}
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-7">
+                          <Field
+                            component={InputText}
+                            label="E-mail"
+                            name="email_parceira"
+                            className="input-busca-produto"
+                            validate={email}
+                            required
+                          />
+                        </div>
+                        <div className="col-5">
+                          <Field
+                            component={InputText}
+                            label="CPF"
+                            name="cpf_parceira"
+                            className="input-busca-produto"
+                            disabled={true}
+                            validate={required}
+                            required
+                          />
+                          {rfBuscado && !values.cpf_parceira && (
+                            <InputErroMensagem meta={campoObrigatorio} />
+                          )}
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-6">
+                          <Field
+                            component={SelectSelecione}
+                            label="Visão"
+                            name="visao_parceira"
+                            placeholder="Selecione a visão"
+                            className="input-busca-produto"
+                            required
+                            options={listaVisao}
+                            validate={required}
+                            defaultValue={"ESCOLA"}
+                            disabled={true}
+                          />
+                        </div>
+                        <div className="col-6">
+                          <Field
+                            component={SelectSelecione}
+                            label="Perfil de Acesso"
+                            name="perfil_parceira"
+                            placeholder="Selecione o perfil de acesso"
+                            className="input-busca-produto"
+                            required
+                            options={
+                              visaoUnica
+                                ? listaPerfis
+                                : getPerfis(values.visao_parceira)
+                            }
+                            validate={required}
+                            disabled={!values.visao_parceira}
                           />
                         </div>
                       </div>
@@ -481,11 +658,11 @@ const ModalCadastroVinculo = ({
                       onClick={() => abreDeletar()}
                       style={BUTTON_STYLE.RED_OUTLINE}
                       icon="fas fa-trash"
-                      className="float-left"
+                      className="float-start"
                     />
                   )}
                   {tipoUsuario === "SERVIDOR" && (
-                    <div className="float-left texto-rodape">
+                    <div className="float-start texto-rodape">
                       Para adicionar o acesso do usuário, é necessário que todas
                       as informações acima estejam preenchidas. Caso faltem
                       informações, entre em contato com o administrador da sua
@@ -504,14 +681,14 @@ const ModalCadastroVinculo = ({
                     }}
                     disabled={Object.keys(errors).length > 0}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3 float-right"
+                    className="ms-3 float-end"
                   />
                   <Botao
                     texto="Cancelar"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={handleClose}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3 float-right"
+                    className="ms-3 float-end"
                   />
                 </div>
               </Modal.Footer>

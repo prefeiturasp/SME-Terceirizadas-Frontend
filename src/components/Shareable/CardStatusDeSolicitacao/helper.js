@@ -2,10 +2,10 @@ import {
   INVERSAO_CARDAPIO,
   INCLUSAO_ALIMENTACAO,
   SOLICITACAO_KIT_LANCHE,
-  ALTERACAO_TIPO_ALIMENTACAO
+  ALTERACAO_TIPO_ALIMENTACAO,
 } from "../../../configs/constants";
 
-export const caminhoURL = tipoDeSolicitacao => {
+export const caminhoURL = (tipoDeSolicitacao) => {
   switch (tipoDeSolicitacao) {
     case "INV_CARDAPIO":
       return INVERSAO_CARDAPIO;

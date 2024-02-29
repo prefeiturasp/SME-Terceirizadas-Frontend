@@ -64,7 +64,7 @@ export const AlteracaoCEIBody = ({ ...props }) => {
             </div>
 
             {solicitacao.substituicoes.map((substituicao, idx) => {
-              const total = substituicao.faixas_etarias.reduce(function(
+              const total = substituicao.faixas_etarias.reduce(function (
                 acc,
                 v
               ) {
@@ -72,7 +72,7 @@ export const AlteracaoCEIBody = ({ ...props }) => {
               },
               0);
               const total_matriculados = substituicao.faixas_etarias.reduce(
-                function(acc, v) {
+                function (acc, v) {
                   return acc + (v.matriculados_quando_criado || 0);
                 },
                 0
@@ -86,14 +86,14 @@ export const AlteracaoCEIBody = ({ ...props }) => {
                       </label>
                     </div>
                   </div>
-                  <div className="container-fluid pr-0">
+                  <div className="container-fluid pe-0">
                     <div className="row mt-3">
                       <div className="col-4">
                         <p>Alteração de Alimentação De:</p>
                         <p>
                           <b>
                             {substituicao.tipos_alimentacao_de
-                              .map(ta => ta.nome)
+                              .map((ta) => ta.nome)
                               .join(", ")}
                           </b>
                         </p>
@@ -159,7 +159,7 @@ export const AlteracaoCEIBody = ({ ...props }) => {
                   <p
                     className="observacao-negrito"
                     dangerouslySetInnerHTML={{
-                      __html: solicitacao.observacao
+                      __html: solicitacao.observacao,
                     }}
                   />
                 </div>
@@ -168,6 +168,6 @@ export const AlteracaoCEIBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

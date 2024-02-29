@@ -10,13 +10,13 @@ export default function reducer(state = {}, action) {
       }
       return {
         data: {
-          ...action.data
-        }
+          ...action.data,
+        },
       };
     default:
       return state;
   }
 }
 
-export const loadTipoAlimentacao = data => dispatch =>
+export const loadTipoAlimentacao = (data) => (dispatch) =>
   dispatch({ type: LOAD_TIPO_ALIMENTACAO, data });

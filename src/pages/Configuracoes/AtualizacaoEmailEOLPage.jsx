@@ -7,18 +7,18 @@ import AtualizacaoEmailEOL from "components/screens/Configuracoes/AtualizacaoEma
 
 const atual = {
   href: `/${CONFIGURACOES}/${ATUALIZACAO_EMAIL_EOL}`,
-  titulo: "Atualização de E-mail do EOL"
+  titulo: "Atualização de E-mail do EOL",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Configurações"
+    titulo: "Configurações",
   },
   {
     href: `/`,
-    titulo: "Gestão de Usuários"
-  }
+    titulo: "Gestão de Usuários",
+  },
 ];
 
 export default () => (

@@ -1,13 +1,13 @@
 import React from "react";
 import {
   TIPOS_SOLICITACAO_LABEL,
-  TIPO_USUARIO
+  TIPO_USUARIO,
 } from "../../../constants/shared";
 import "./style.scss";
 import { existeLogDeCancelamentoDaEscola } from "./helper";
 import { CODAE, DRE, ESCOLA } from "configs/constants";
 
-export const RelatorioHistoricoJustificativaEscola = props => {
+export const RelatorioHistoricoJustificativaEscola = (props) => {
   const { solicitacao, visao, nomeEscola } = props;
   const EXIBIR_HISTORICO = existeLogDeCancelamentoDaEscola(solicitacao);
   let EXIBIR_HISTORICO_CANCELAMENTO_ESCOLA = false;
@@ -15,23 +15,23 @@ export const RelatorioHistoricoJustificativaEscola = props => {
 
   if (solicitacao && visao === ESCOLA) {
     escolaQuantidade = solicitacao.escolas_quantidades.filter(
-      eq => `"${eq.escola.nome}"` === nomeEscola
+      (eq) => `"${eq.escola.nome}"` === nomeEscola
     )[0];
     EXIBIR_HISTORICO_CANCELAMENTO_ESCOLA = escolaQuantidade.cancelado;
   }
 
-  const foiCanceladoPelaDRE = tipoUsuario => {
+  const foiCanceladoPelaDRE = (tipoUsuario) => {
     return tipoUsuario === "diretoriaregional";
   };
 
-  const formataJustificativasDRE = escolas_quantidades => {
+  const formataJustificativasDRE = (escolas_quantidades) => {
     let justificativasFormatadas = [];
     let arrayHorariosCancelados = [];
-    escolas_quantidades.forEach(eq =>
+    escolas_quantidades.forEach((eq) =>
       arrayHorariosCancelados.push(eq.cancelado_em_com_hora)
     );
     let uniqueArrayHorarioCancelados = [...new Set(arrayHorariosCancelados)];
-    uniqueArrayHorarioCancelados.forEach(dateTime => {
+    uniqueArrayHorarioCancelados.forEach((dateTime) => {
       const [dateStr, timeStr] = dateTime.split(" ");
       const [month, day, year] = dateStr.split("/");
       const [hours, minutes, seconds] = timeStr.split(":");
@@ -51,8 +51,8 @@ export const RelatorioHistoricoJustificativaEscola = props => {
       let nome_dre = "";
       let cancelado_por = "";
       escolas_quantidades
-        .filter(eq => eq.cancelado_em_com_hora === dateTime)
-        .forEach(eq => {
+        .filter((eq) => eq.cancelado_em_com_hora === dateTime)
+        .forEach((eq) => {
           unidades.push(eq.escola.nome);
           justificativa = eq.cancelado_justificativa;
           tipo_usuario = eq.cancelado_por.tipo_usuario;
@@ -66,7 +66,7 @@ export const RelatorioHistoricoJustificativaEscola = props => {
         justificativa: justificativa,
         tipo_usuario: tipo_usuario,
         nome_dre: nome_dre,
-        cancelado_por: cancelado_por
+        cancelado_por: cancelado_por,
       });
     });
 
@@ -116,7 +116,7 @@ export const RelatorioHistoricoJustificativaEscola = props => {
             }
           </div>
         ) : solicitacao.escolas_quantidades.some(
-            eq => eq.cancelado && (visao === DRE || visao === CODAE)
+            (eq) => eq.cancelado && (visao === DRE || visao === CODAE)
           ) ? (
           <div className="question-history">
             <hr />
@@ -126,7 +126,7 @@ export const RelatorioHistoricoJustificativaEscola = props => {
               </div>
             </div>
             {formataJustificativasDRE(
-              solicitacao.escolas_quantidades.filter(eq => eq.cancelado)
+              solicitacao.escolas_quantidades.filter((eq) => eq.cancelado)
             ).map((item, key) => {
               return (
                 <div className="question-log" key={key}>

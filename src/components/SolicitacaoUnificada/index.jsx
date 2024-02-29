@@ -9,7 +9,7 @@ import {
   criarSolicitacaoUnificada,
   atualizarSolicitacaoUnificada,
   removerSolicitacaoUnificada,
-  inicioPedido
+  inicioPedido,
 } from "../../services/solicitacaoUnificada.service";
 import { InputText } from "../Shareable/Input/InputText";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
@@ -20,13 +20,13 @@ import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
   composeValidators,
   fimDoCalendario,
-  getError
+  getError,
 } from "../../helpers/utilities";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { formatarSubmissao } from "./helper";
@@ -38,13 +38,11 @@ const SolicitacaoUnificada = ({
   proximosCincoDiasUteis,
   proximosDoisDiasUteis,
   escolas,
-  kits
+  kits,
 }) => {
   const [rascunhosSalvos, setRascunhosSalvos] = useState([]);
-  const [
-    unidadesEscolaresSelecionadas,
-    setUnidadesEscolaresSelecionadas
-  ] = useState([]);
+  const [unidadesEscolaresSelecionadas, setUnidadesEscolaresSelecionadas] =
+    useState([]);
   const [totalKits, setTotalKits] = useState(0);
   const [opcoes, setOpcoes] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -52,10 +50,10 @@ const SolicitacaoUnificada = ({
 
   async function fetchData() {
     await solicitacoesUnificadasSalvas().then(
-      res => {
+      (res) => {
         setRascunhosSalvos(res.results);
       },
-      function(error) {
+      function (error) {
         toastError(
           `Erro ao carregar as inclusões salvas: ${getError(error.data)}`
         );
@@ -66,7 +64,7 @@ const SolicitacaoUnificada = ({
   useEffect(() => {
     fetchData();
     if (escolas) {
-      const opcoesEscolas = escolas.map(escola => {
+      const opcoesEscolas = escolas.map((escola) => {
         let label = `${escola.codigo_eol} - ${
           escola.nome.length > 28 ? escola.nome.slice(0, 28) : escola.nome
         }`;
@@ -82,26 +80,27 @@ const SolicitacaoUnificada = ({
   const carregarRascunho = (solicitacaoUnificada, form) => {
     form.change("data", solicitacaoUnificada.data);
     form.change("local", solicitacaoUnificada.local);
+    form.change("evento", solicitacaoUnificada.evento);
     form.change("uuid", solicitacaoUnificada.uuid);
     form.change(
       "descricao",
       solicitacaoUnificada.solicitacao_kit_lanche.descricao
     );
     let escolas_quantidades = opcoes
-      .filter(opcao =>
+      .filter((opcao) =>
         solicitacaoUnificada.escolas_quantidades.find(
-          eq => eq.escola.uuid === opcao.uuid
+          (eq) => eq.escola.uuid === opcao.uuid
         )
       )
-      .map(opcao => opcao.value);
+      .map((opcao) => opcao.value);
     setUnidadesEscolaresSelecionadas(escolas_quantidades);
-    escolas_quantidades.forEach(eq => {
+    escolas_quantidades.forEach((eq) => {
       const eq_back = solicitacaoUnificada.escolas_quantidades.find(
-        equ => equ.escola.uuid === eq.uuid
+        (equ) => equ.escola.uuid === eq.uuid
       );
       eq.nmr_alunos = eq_back.quantidade_alunos;
       eq.quantidade_kits = (eq_back.tempo_passeio + 1).toString();
-      eq.kits_selecionados = eq_back.kits.map(kit => kit.uuid);
+      eq.kits_selecionados = eq_back.kits.map((kit) => kit.uuid);
     });
     form.change("unidades_escolares", escolas_quantidades);
   };
@@ -129,7 +128,7 @@ const SolicitacaoUnificada = ({
         await criarSolicitacaoUnificada(
           JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
         ).then(
-          res => {
+          (res) => {
             if (res.status === HTTP_STATUS.CREATED) {
               if (formValues.status === "DRE_A_VALIDAR") {
                 iniciarPedido(res.data.uuid);
@@ -154,7 +153,7 @@ const SolicitacaoUnificada = ({
               setSubmeteu(false);
             }
           },
-          function() {
+          function () {
             toastError("Houve um erro ao salvar a solicitação unificada");
           }
         );
@@ -163,7 +162,7 @@ const SolicitacaoUnificada = ({
           formValues.uuid,
           JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
         ).then(
-          res => {
+          (res) => {
             if (res.status === HTTP_STATUS.OK) {
               if (formValues.status === "DRE_A_VALIDAR") {
                 iniciarPedido(res.data.uuid);
@@ -189,7 +188,7 @@ const SolicitacaoUnificada = ({
               setSubmeteu(false);
             }
           },
-          function() {
+          function () {
             toastError("Houve um erro ao atualizar a solicitação unificada");
           }
         );
@@ -200,7 +199,7 @@ const SolicitacaoUnificada = ({
   const removerRascunho = (id_externo, uuid) => {
     if (window.confirm("Deseja remover este rascunho?")) {
       removerSolicitacaoUnificada(uuid).then(
-        res => {
+        (res) => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             fetchData();
@@ -210,7 +209,7 @@ const SolicitacaoUnificada = ({
             );
           }
         },
-        function(error) {
+        function (error) {
           toastError(
             `Houve um erro ao excluir o rascunho: ${getError(error.data)}`
           );
@@ -219,9 +218,9 @@ const SolicitacaoUnificada = ({
     }
   };
 
-  const iniciarPedido = uuid => {
+  const iniciarPedido = (uuid) => {
     inicioPedido(uuid).then(
-      res => {
+      (res) => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Solicitação Unificada enviada com sucesso!");
           fetchData();
@@ -233,26 +232,26 @@ const SolicitacaoUnificada = ({
           );
         }
       },
-      function() {
+      function () {
         toastError("Houve um erro ao enviar a solicitação unificada");
       }
     );
   };
 
   const removerEscola = (ue, form, values) => {
-    let resultado = values.unidades_escolares.filter(v => v.uuid !== ue.uuid);
+    let resultado = values.unidades_escolares.filter((v) => v.uuid !== ue.uuid);
     let resultadoLabels = unidadesEscolaresSelecionadas.filter(
-      v => v.uuid !== ue.uuid
+      (v) => v.uuid !== ue.uuid
     );
     let total = 0;
     let listaQuantidadeKits = resultado.filter(
-      v =>
+      (v) =>
         !["", undefined].includes(v.quantidade_kits) &&
         !["", undefined].includes(v.nmr_alunos)
     );
     if (listaQuantidadeKits.length !== 0) {
       listaQuantidadeKits = listaQuantidadeKits.map(
-        v => parseInt(v.quantidade_kits) * parseInt(v.nmr_alunos)
+        (v) => parseInt(v.quantidade_kits) * parseInt(v.nmr_alunos)
       );
       for (let index = 0; index < listaQuantidadeKits.length; index++) {
         total = total + listaQuantidadeKits[index];
@@ -278,7 +277,7 @@ const SolicitacaoUnificada = ({
     }
   };
 
-  const validaDiasUteis = value => {
+  const validaDiasUteis = (value) => {
     if (
       value &&
       checaSeDataEstaEntre2e5DiasUteis(
@@ -291,7 +290,7 @@ const SolicitacaoUnificada = ({
     }
   };
 
-  const validaNdeAlunos = ue => {
+  const validaNdeAlunos = (ue) => {
     if (ue.nome.includes("CEU GESTAO")) {
       return required;
     } else {
@@ -344,7 +343,7 @@ const SolicitacaoUnificada = ({
                         required
                       />
                       <OnChange name="data">
-                        {value => {
+                        {(value) => {
                           validaDiasUteis(value);
                         }}
                       </OnChange>
@@ -376,12 +375,13 @@ const SolicitacaoUnificada = ({
                         className="form-control"
                         valueRenderer={renderizarLabelUnidadesEscolares}
                         selected={unidadesEscolaresSelecionadas}
-                        onSelectedChanged={value => {
-                          let resultado = value.map(v => {
+                        onSelectedChanged={(value) => {
+                          let resultado = value.map((v) => {
                             if (values.unidades_escolares) {
-                              let elementFromForm = values.unidades_escolares.find(
-                                e => e.uuid === v.uuid
-                              );
+                              let elementFromForm =
+                                values.unidades_escolares.find(
+                                  (e) => e.uuid === v.uuid
+                                );
                               if (elementFromForm) {
                                 return elementFromForm;
                               }
@@ -390,13 +390,13 @@ const SolicitacaoUnificada = ({
                           });
                           let total = 0;
                           let listaQuantidadeKits = resultado.filter(
-                            v =>
+                            (v) =>
                               !["", undefined].includes(v.quantidade_kits) &&
                               !["", undefined].includes(v.nmr_alunos)
                           );
                           if (listaQuantidadeKits.length !== 0) {
                             listaQuantidadeKits = listaQuantidadeKits.map(
-                              v =>
+                              (v) =>
                                 parseInt(v.quantidade_kits) *
                                 parseInt(v.nmr_alunos)
                             );
@@ -417,8 +417,17 @@ const SolicitacaoUnificada = ({
                           selectSomeItems: "Selecione",
                           allItemsAreSelected:
                             "Todas as escolas estão selecionadas",
-                          selectAll: "Todas"
+                          selectAll: "Todas",
                         }}
+                      />
+                    </div>
+                    <div className="col-12">
+                      <Field
+                        component={InputText}
+                        label="Evento/Atividade"
+                        name="evento"
+                        required
+                        validate={required}
                       />
                     </div>
                   </div>
@@ -444,7 +453,7 @@ const SolicitacaoUnificada = ({
                                       <p className="local">{values.local}</p>
                                     </div>
                                     <div className="col-4">
-                                      <p className="float-right mt-3">
+                                      <p className="float-end mt-3">
                                         {values.data}
                                       </p>
                                     </div>
@@ -521,30 +530,32 @@ const SolicitacaoUnificada = ({
                                         placeholder="Quantidade de alunos"
                                         name={`unidades_escolares[${idx}].nmr_alunos`}
                                         className="form-control"
-                                        onChange={event => {
+                                        onChange={(event) => {
                                           form.change(
                                             `unidades_escolares[${idx}].nmr_alunos`,
                                             event.target.value
                                           );
                                           let total = 0;
-                                          let listaQuantidadeKits = values.unidades_escolares.filter(
-                                            e =>
-                                              e.uuid !== ue.uuid &&
-                                              !["", undefined].includes(
-                                                e.quantidade_kits
-                                              ) &&
-                                              !["", undefined].includes(
-                                                e.nmr_alunos
-                                              )
-                                          );
+                                          let listaQuantidadeKits =
+                                            values.unidades_escolares.filter(
+                                              (e) =>
+                                                e.uuid !== ue.uuid &&
+                                                !["", undefined].includes(
+                                                  e.quantidade_kits
+                                                ) &&
+                                                !["", undefined].includes(
+                                                  e.nmr_alunos
+                                                )
+                                            );
                                           if (
                                             listaQuantidadeKits.length !== 0
                                           ) {
-                                            listaQuantidadeKits = listaQuantidadeKits.map(
-                                              e =>
-                                                parseInt(e.quantidade_kits) *
-                                                parseInt(e.nmr_alunos)
-                                            );
+                                            listaQuantidadeKits =
+                                              listaQuantidadeKits.map(
+                                                (e) =>
+                                                  parseInt(e.quantidade_kits) *
+                                                  parseInt(e.nmr_alunos)
+                                              );
                                             for (
                                               let i = 0;
                                               i < listaQuantidadeKits.length;
@@ -594,26 +605,29 @@ const SolicitacaoUnificada = ({
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
-                                                let listaQuantidadeKits = values.unidades_escolares.filter(
-                                                  e =>
-                                                    e.uuid !== ue.uuid &&
-                                                    !["", undefined].includes(
-                                                      e.quantidade_kits
-                                                    ) &&
-                                                    !["", undefined].includes(
-                                                      e.nmr_alunos
-                                                    )
-                                                );
+                                                let listaQuantidadeKits =
+                                                  values.unidades_escolares.filter(
+                                                    (e) =>
+                                                      e.uuid !== ue.uuid &&
+                                                      !["", undefined].includes(
+                                                        e.quantidade_kits
+                                                      ) &&
+                                                      !["", undefined].includes(
+                                                        e.nmr_alunos
+                                                      )
+                                                  );
                                                 if (
                                                   listaQuantidadeKits.length !==
                                                   0
                                                 ) {
-                                                  listaQuantidadeKits = listaQuantidadeKits.map(
-                                                    e =>
-                                                      parseInt(
-                                                        e.quantidade_kits
-                                                      ) * parseInt(e.nmr_alunos)
-                                                  );
+                                                  listaQuantidadeKits =
+                                                    listaQuantidadeKits.map(
+                                                      (e) =>
+                                                        parseInt(
+                                                          e.quantidade_kits
+                                                        ) *
+                                                        parseInt(e.nmr_alunos)
+                                                    );
                                                   for (
                                                     let i = 0;
                                                     i <
@@ -660,26 +674,29 @@ const SolicitacaoUnificada = ({
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
-                                                let listaQuantidadeKits = values.unidades_escolares.filter(
-                                                  e =>
-                                                    e.uuid !== ue.uuid &&
-                                                    !["", undefined].includes(
-                                                      e.quantidade_kits
-                                                    ) &&
-                                                    !["", undefined].includes(
-                                                      e.nmr_alunos
-                                                    )
-                                                );
+                                                let listaQuantidadeKits =
+                                                  values.unidades_escolares.filter(
+                                                    (e) =>
+                                                      e.uuid !== ue.uuid &&
+                                                      !["", undefined].includes(
+                                                        e.quantidade_kits
+                                                      ) &&
+                                                      !["", undefined].includes(
+                                                        e.nmr_alunos
+                                                      )
+                                                  );
                                                 if (
                                                   listaQuantidadeKits.length !==
                                                   0
                                                 ) {
-                                                  listaQuantidadeKits = listaQuantidadeKits.map(
-                                                    e =>
-                                                      parseInt(
-                                                        e.quantidade_kits
-                                                      ) * parseInt(e.nmr_alunos)
-                                                  );
+                                                  listaQuantidadeKits =
+                                                    listaQuantidadeKits.map(
+                                                      (e) =>
+                                                        parseInt(
+                                                          e.quantidade_kits
+                                                        ) *
+                                                        parseInt(e.nmr_alunos)
+                                                    );
                                                   for (
                                                     let i = 0;
                                                     i <
@@ -726,26 +743,29 @@ const SolicitacaoUnificada = ({
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
-                                                let listaQuantidadeKits = values.unidades_escolares.filter(
-                                                  e =>
-                                                    e.uuid !== ue.uuid &&
-                                                    !["", undefined].includes(
-                                                      e.quantidade_kits
-                                                    ) &&
-                                                    !["", undefined].includes(
-                                                      e.nmr_alunos
-                                                    )
-                                                );
+                                                let listaQuantidadeKits =
+                                                  values.unidades_escolares.filter(
+                                                    (e) =>
+                                                      e.uuid !== ue.uuid &&
+                                                      !["", undefined].includes(
+                                                        e.quantidade_kits
+                                                      ) &&
+                                                      !["", undefined].includes(
+                                                        e.nmr_alunos
+                                                      )
+                                                  );
                                                 if (
                                                   listaQuantidadeKits.length !==
                                                   0
                                                 ) {
-                                                  listaQuantidadeKits = listaQuantidadeKits.map(
-                                                    e =>
-                                                      parseInt(
-                                                        e.quantidade_kits
-                                                      ) * parseInt(e.nmr_alunos)
-                                                  );
+                                                  listaQuantidadeKits =
+                                                    listaQuantidadeKits.map(
+                                                      (e) =>
+                                                        parseInt(
+                                                          e.quantidade_kits
+                                                        ) *
+                                                        parseInt(e.nmr_alunos)
+                                                    );
                                                   for (
                                                     let i = 0;
                                                     i <
@@ -811,24 +831,18 @@ const SolicitacaoUnificada = ({
                                                         required
                                                         validate={required}
                                                         value={kit.uuid}
-                                                        id={`${ue.codigo_eol}-${
-                                                          kit.uuid
-                                                        }`}
-                                                        className="float-right"
+                                                        id={`${ue.codigo_eol}-${kit.uuid}`}
+                                                        className="float-end"
                                                         name={`unidades_escolares[${idx}].kits_selecionados`}
                                                         disabled={
                                                           [
                                                             undefined,
-                                                            ""
+                                                            "",
                                                           ].includes(
                                                             ue.quantidade_kits
                                                           ) ||
                                                           (ue.quantidade_kits ===
-                                                            `${
-                                                              ue
-                                                                .kits_selecionados
-                                                                .length
-                                                            }` &&
+                                                            `${ue.kits_selecionados.length}` &&
                                                             !ue.kits_selecionados.includes(
                                                               kit.uuid
                                                             ))
@@ -839,7 +853,7 @@ const SolicitacaoUnificada = ({
                                                     <div className="col-12 kit-itens mt-3">
                                                       <div
                                                         dangerouslySetInnerHTML={{
-                                                          __html: kit.descricao
+                                                          __html: kit.descricao,
                                                         }}
                                                       />
                                                     </div>
@@ -882,7 +896,7 @@ const SolicitacaoUnificada = ({
                       </p>
                     </div>
                     <div className="col-6">
-                      <p className="float-right">
+                      <p className="float-end">
                         Total de Kits Lanche: {totalKits}
                       </p>
                     </div>
@@ -927,7 +941,7 @@ const SolicitacaoUnificada = ({
                         onClick={() => {
                           values["status"] = "DRE_A_VALIDAR";
                           !submeteu &&
-                            handleSubmit(values => onSubmit(values, form));
+                            handleSubmit((values) => onSubmit(values, form));
                         }}
                         className="w-100"
                       />

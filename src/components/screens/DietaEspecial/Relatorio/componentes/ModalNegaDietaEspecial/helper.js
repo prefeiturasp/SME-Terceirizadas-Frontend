@@ -1,6 +1,6 @@
-export const formataMotivos = motivos => {
+export const formataMotivos = (motivos) => {
   let motivosFormatados = [];
-  motivos.forEach(motivo => {
+  motivos.forEach((motivo) => {
     motivosFormatados.push({ uuid: motivo.id, nome: motivo.descricao });
   });
   return motivosFormatados;

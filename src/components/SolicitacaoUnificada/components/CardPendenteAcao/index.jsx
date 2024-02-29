@@ -10,7 +10,7 @@ import "./style.scss";
 export const TIPO_CARD_ENUM = {
   LIMITE: "on-limit",
   REGULAR: "regular",
-  PRIORIDADE: "priority"
+  PRIORIDADE: "priority",
 };
 
 export class CardPendenteAcao extends Component {
@@ -19,7 +19,7 @@ export class CardPendenteAcao extends Component {
     this.state = {
       collapsed: true,
       pedidosFiltrados: [],
-      filtrado: false
+      filtrado: false,
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
   }
@@ -35,7 +35,7 @@ export class CardPendenteAcao extends Component {
   filtrarPedidos(event) {
     if (event === undefined) event = { target: { value: "" } };
     let pedidosFiltrados = this.props.pedidos;
-    pedidosFiltrados = pedidosFiltrados.filter(function(item) {
+    pedidosFiltrados = pedidosFiltrados.filter(function (item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.id_externo.toLowerCase().search(palavraAFiltrar) !== -1 ||
@@ -103,7 +103,7 @@ export class CardPendenteAcao extends Component {
               />
               <i className="fas fa-search inside-input" />
             </div>
-            <table className="orders-table-unified-solicitation mt-4 mr-3">
+            <table className="orders-table-unified-solicitation mt-4 me-3">
               <thead>
                 <tr className="row">
                   <th className="col-3">Código do Pedido</th>
@@ -118,9 +118,7 @@ export class CardPendenteAcao extends Component {
                     return (
                       <Link
                         key={key}
-                        to={`/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/relatorio?uuid=${
-                          pedido.uuid
-                        }`}
+                        to={`/${SOLICITACAO_KIT_LANCHE_UNIFICADA}/relatorio?uuid=${pedido.uuid}`}
                       >
                         <tr className="row">
                           <td className="col-3">{pedido.id_externo}</td>

@@ -1,4 +1,4 @@
-export const formatarNomePeriodo = nomePeriodo => {
+export const formatarNomePeriodo = (nomePeriodo) => {
   switch (nomePeriodo) {
     case "MANHA":
       return "Manhã";

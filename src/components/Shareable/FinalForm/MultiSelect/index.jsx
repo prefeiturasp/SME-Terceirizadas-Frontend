@@ -4,6 +4,8 @@ import React from "react";
 import { InputErroMensagem } from "components/Shareable/Input/InputErroMensagem";
 import { HelpText } from "components/Shareable/HelpText";
 
+import TooltipIcone from "components/Shareable/TooltipIcone";
+
 import "./styles.scss";
 
 export default ({
@@ -17,6 +19,7 @@ export default ({
   nomeDoItemNoPlural,
   pluralFeminino,
   placeholder,
+  onChangeEffect,
   ...props
 }) => {
   const allItemsAreSelectedText = `${
@@ -32,7 +35,7 @@ export default ({
       return allItemsAreSelectedText;
     } else if (input.value[0]) {
       const matchingOption = props.options.find(
-        e => e.value === input.value[0]
+        (e) => e.value === input.value[0]
       );
       return matchingOption ? matchingOption.label : "";
     }
@@ -53,13 +56,19 @@ export default ({
           className={`${labelClassName || "col-form-label"}`}
         >
           {label}
-        </label>
+        </label>,
+        props.tooltipText && (
+          <TooltipIcone key={2} tooltipText={props.tooltipText} />
+        ),
       ]}
       {!props.disabled && (
         <MultiSelect
           {...props}
           {...input}
-          onSelectedChanged={input.onChange}
+          onSelectedChanged={(values) => {
+            input.onChange(values);
+            if (onChangeEffect) onChangeEffect(values);
+          }}
           disableSearch={props.disabled || disableSearch}
           selected={input.value}
           overrideStrings={{
@@ -68,7 +77,7 @@ export default ({
             allItemsAreSelected:
               input.value.length === 1 && props.options[0]
                 ? props.options[0].label
-                : allItemsAreSelectedText
+                : allItemsAreSelectedText,
           }}
           valueRenderer={(selected, options) => {
             if (selected.length === 0) {
@@ -88,10 +97,12 @@ export default ({
       )}
       {props.disabled && (
         <input
-          className={`form-control ${meta &&
+          className={`form-control ${
+            meta &&
             meta.touched &&
             (meta.error || meta.warning) &&
-            "invalid-field"}`}
+            "invalid-field"
+          }`}
           disabled={props.disabled}
           placeholder={placeholder ? placeholder : "Selecione"}
           data-cy={input.name}

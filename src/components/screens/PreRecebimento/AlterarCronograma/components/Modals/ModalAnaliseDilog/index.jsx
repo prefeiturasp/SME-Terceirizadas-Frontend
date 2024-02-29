@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 export default ({ show, handleClose, loading, handleSim }) => {
   return (
@@ -25,13 +25,13 @@ export default ({ show, handleClose, loading, handleSim }) => {
             type={BUTTON_TYPE.BUTTON}
             onClick={() => handleClose()}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
-            className="ml-3"
+            className="ms-3"
             onClick={() => handleSim()}
           />
         </Modal.Footer>

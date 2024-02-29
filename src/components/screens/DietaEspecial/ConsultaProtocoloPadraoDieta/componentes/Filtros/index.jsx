@@ -3,11 +3,11 @@ import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Form, Field } from "react-final-form";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import Botao from "components/Shareable/Botao";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DIETA_ESPECIAL, PROTOCOLO_PADRAO_DIETA } from "configs/constants";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { consultaProtocoloPadrao } from "services/dietaEspecial.service";
 import HTTP_STATUS from "http-status-codes";
@@ -24,30 +24,30 @@ export default ({
   setFiltros,
   setPage,
   editais,
-  onChangePage
+  onChangePage,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
-  const getNomesProtocolosFiltrado = nomeProtocolo => {
+  const getNomesProtocolosFiltrado = (nomeProtocolo) => {
     if (nomeProtocolo) {
-      return nomes.filter(nome =>
+      return nomes.filter((nome) =>
         nome.toUpperCase().includes(nomeProtocolo.toUpperCase())
       );
     }
     return [];
   };
 
-  const getStatusProtocolosFiltrado = statusProtocolo => {
+  const getStatusProtocolosFiltrado = (statusProtocolo) => {
     if (statusProtocolo) {
-      return status.filter(status =>
+      return status.filter((status) =>
         status.toUpperCase().includes(statusProtocolo.toUpperCase())
       );
     }
     return [];
   };
 
-  const formatStatus = status => {
+  const formatStatus = (status) => {
     if (status === "Liberado") {
       return "LIBERADO";
     }
@@ -57,13 +57,13 @@ export default ({
     return status;
   };
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     try {
       setCarregando(true);
       const payload = {
         nome_protocolo: formValues.nome_protocolo,
         status: formatStatus(formValues.status),
-        editais: formValues.editais
+        editais: formValues.editais,
       };
       const response = await consultaProtocoloPadrao(payload);
       if (response.status === HTTP_STATUS.OK) {
@@ -110,18 +110,18 @@ export default ({
                 component={StatefulMultiSelect}
                 name="editais"
                 selected={values.editais || []}
-                options={editais.map(edital => ({
+                options={editais.map((edital) => ({
                   label: edital.numero,
-                  value: edital.uuid
+                  value: edital.uuid,
                 }))}
-                onSelectedChanged={values_ => {
+                onSelectedChanged={(values_) => {
                   form.change(`editais`, values_);
                 }}
                 overrideStrings={{
                   search: "Busca",
                   selectSomeItems: "Selecione",
                   allItemsAreSelected: "Todos os itens estão selecionados",
-                  selectAll: "Todos"
+                  selectAll: "Todos",
                 }}
               />
             </div>
@@ -133,12 +133,12 @@ export default ({
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
                 onClick={() =>
-                  history.push(`/${DIETA_ESPECIAL}/${PROTOCOLO_PADRAO_DIETA}`)
+                  navigate(`/${DIETA_ESPECIAL}/${PROTOCOLO_PADRAO_DIETA}`)
                 }
               />
               <Botao
                 texto="Vincular Protocolos Padrão"
-                className="ml-3"
+                className="ms-3"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={() => setShowModal(true)}
@@ -149,14 +149,14 @@ export default ({
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting}
               />
               <Botao
                 texto="Limpar campos"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset({});
                   setResultado(undefined);
@@ -167,7 +167,7 @@ export default ({
           </div>
           <ModalVincularProtocolos
             showModal={showModal}
-            closeModal={value => setShowModal(value)}
+            closeModal={(value) => setShowModal(value)}
             editais={editais}
             buscar={() => onChangePage()}
             filtros={filtros}

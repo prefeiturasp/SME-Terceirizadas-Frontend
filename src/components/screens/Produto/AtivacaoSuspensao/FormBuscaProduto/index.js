@@ -1,5 +1,4 @@
 import React, { useEffect, useReducer } from "react";
-import { withRouter } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import { Row, Col } from "antd";
 import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
@@ -7,13 +6,13 @@ import SelectSelecione from "components/Shareable/SelectSelecione";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import {
   getNomesUnicosProdutos,
   getNomesUnicosMarcas,
   getNomesUnicosFabricantes,
-  getNomesUnicosEditais
+  getNomesUnicosEditais,
 } from "services/produto.service";
 import "./style.scss";
 
@@ -22,7 +21,7 @@ const initialState = {
   status: ["Ativo", "Suspenso"],
   produtos: [],
   marcas: [],
-  fabricantes: []
+  fabricantes: [],
 };
 
 function reducer(state, { type: actionType, payload }) {
@@ -40,7 +39,7 @@ function reducer(state, { type: actionType, payload }) {
 const FormBuscaProduto = ({
   onSubmit,
   exibirBotaoVoltar,
-  exibirStatus = true
+  exibirStatus = true,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -50,7 +49,7 @@ const FormBuscaProduto = ({
         getNomesUnicosProdutos(),
         getNomesUnicosMarcas(),
         getNomesUnicosFabricantes(),
-        getNomesUnicosEditais()
+        getNomesUnicosEditais(),
       ]).then(([produtos, marcas, fabricantes, editais]) => {
         dispatch({
           type: "popularDados",
@@ -58,8 +57,8 @@ const FormBuscaProduto = ({
             produtos: produtos.data.results,
             marcas: marcas.data.results,
             fabricantes: fabricantes.data.results,
-            editais: editais.data.results
-          }
+            editais: editais.data.results,
+          },
         });
       });
     }
@@ -121,7 +120,7 @@ const FormBuscaProduto = ({
                     name="status"
                     options={[
                       { nome: "Ativo", uuid: "ativo" },
-                      { nome: "Suspenso", uuid: "suspenso" }
+                      { nome: "Suspenso", uuid: "suspenso" },
                     ]}
                   />
                 </div>
@@ -133,7 +132,7 @@ const FormBuscaProduto = ({
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
             {!!exibirBotaoVoltar && (
@@ -141,7 +140,7 @@ const FormBuscaProduto = ({
                 texto="Limpar Filtro"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => form.reset()}
                 disabled={submitting}
               />
@@ -153,4 +152,4 @@ const FormBuscaProduto = ({
   );
 };
 
-export default withRouter(FormBuscaProduto);
+export default FormBuscaProduto;

@@ -7,18 +7,18 @@ import ReposicaoDeGuia from "components/screens/Logistica/ReposicaoDeGuia";
 
 const atual = {
   href: `/${LOGISTICA}/${REPOSICAO_GUIA}`,
-  titulo: "Reposição de alimentos faltantes"
+  titulo: "Reposição de alimentos faltantes",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Abastecimento"
+    titulo: "Abastecimento",
   },
   {
     href: `/${LOGISTICA}/${CONFERIR_ENTREGA}`,
-    titulo: "Conferir Entrega"
-  }
+    titulo: "Conferir Entrega",
+  },
 ];
 
 export default () => (

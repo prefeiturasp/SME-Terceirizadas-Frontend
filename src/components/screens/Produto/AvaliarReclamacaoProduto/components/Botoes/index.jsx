@@ -3,7 +3,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_ICON,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 
 export const Botoes = ({
@@ -12,11 +12,11 @@ export const Botoes = ({
   verUnicoProduto,
   setModal,
   setProdutoAAtualizar,
-  setPropsPageProduto
+  setPropsPageProduto,
 }) => {
   return (
     <div className="row mb-3">
-      <div className="col-12 text-right">
+      <div className="col-12 text-end">
         <Botao
           onClick={() => {
             setVerProduto(verUnicoProduto ? null : produto);
@@ -30,7 +30,7 @@ export const Botoes = ({
           icon={verUnicoProduto && BUTTON_ICON.ARROW_LEFT}
         />
         <Botao
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             setModal("Questionar terceirizada");
             setProdutoAAtualizar(produto);
@@ -45,7 +45,7 @@ export const Botoes = ({
           }
         />
         <Botao
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             setModal("Recusar reclamação");
             setProdutoAAtualizar(produto);
@@ -56,12 +56,12 @@ export const Botoes = ({
           disabled={
             ![
               "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
-              "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+              "TERCEIRIZADA_RESPONDEU_RECLAMACAO",
             ].includes(produto.ultima_homologacao.status)
           }
         />
         <Botao
-          className="ml-3 mr-3"
+          className="ms-3 me-3"
           onClick={() => {
             setModal("Aceitar reclamação");
             setProdutoAAtualizar(produto);
@@ -72,7 +72,7 @@ export const Botoes = ({
           disabled={
             ![
               "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
-              "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
+              "TERCEIRIZADA_RESPONDEU_RECLAMACAO",
             ].includes(produto.ultima_homologacao.status)
           }
         />

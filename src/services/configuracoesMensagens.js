@@ -3,14 +3,14 @@ import authService from "./auth";
 
 const authHeader = {
   "Content-Type": "application/json",
-  Authorization: `JWT ${authService.getToken()}`
+  Authorization: `JWT ${authService.getToken()}`,
 };
 
 export const getTemplatesMensagem = async () => {
   try {
     const response = await fetch(`${CONFIG.API_URL}/templates-mensagem/`, {
       method: "GET",
-      headers: authHeader
+      headers: authHeader,
     });
     const json = await response.json();
     return json;
@@ -19,13 +19,13 @@ export const getTemplatesMensagem = async () => {
   }
 };
 
-export const getTemplateMensagemDetalhe = async uuid => {
+export const getTemplateMensagemDetalhe = async (uuid) => {
   try {
     const response = await fetch(
       `${CONFIG.API_URL}/templates-mensagem/${uuid}/`,
       {
         method: "GET",
-        headers: authHeader
+        headers: authHeader,
       }
     );
     const json = await response.json();
@@ -42,7 +42,7 @@ export const atualizarTemplateMensagem = async (uuid, values) => {
       {
         method: "PUT",
         headers: authHeader,
-        body: JSON.stringify(values)
+        body: JSON.stringify(values),
       }
     );
     let json = await response.json();

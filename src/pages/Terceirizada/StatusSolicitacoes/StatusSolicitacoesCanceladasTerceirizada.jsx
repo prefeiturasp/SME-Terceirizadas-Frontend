@@ -14,7 +14,7 @@ import MeusDadosContext from "context/MeusDadosContext";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${SOLICITACOES_CANCELADAS}`,
-  titulo: "Solicitações Canceladas"
+  titulo: "Solicitações Canceladas",
 };
 
 export const StatusSolicitacoesCanceladasTerceirizadaPage = () => {
@@ -38,7 +38,7 @@ export const StatusSolicitacoesCanceladasTerceirizadaPage = () => {
           listaStatus={[
             { nome: "Conferência Status", uuid: "" },
             { nome: "Conferida", uuid: "1" },
-            { nome: "Não Conferida", uuid: "0" }
+            { nome: "Não Conferida", uuid: "0" },
           ]}
         />
       )}

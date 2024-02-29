@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import Botao from "components/Shareable/Botao";
 import {
   recebeGuiaComOcorrencia,
-  editaGuiaComOcorrencia
+  editaGuiaComOcorrencia,
 } from "services/logistica.service";
 import { mapeiaStatusAlimento } from "../../helper";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import {
   CONFERENCIA_GUIA_COM_OCORRENCIA,
   LOGISTICA,
   CONFERIR_ENTREGA,
-  REPOSICAO_GUIA
+  REPOSICAO_GUIA,
 } from "configs/constants";
 import moment from "moment";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ConfirmacaoEdicao from "./components/confirmacaoEdicao";
@@ -29,7 +29,7 @@ export default ({ reposicao }) => {
   const [loading, setLoading] = useState(false);
   const [reposicaoInvalida, setReposicaoInvalida] = useState(false);
   const [edicao, setEdicao] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const chaveValores = reposicao ? "valoresReposicao" : "valoresConferencia";
   const chaveGuia = reposicao ? "guiaReposicao" : "guiaConferencia";
@@ -88,7 +88,7 @@ export default ({ reposicao }) => {
           setLoading(false);
           goToConferir();
         })
-        .catch(e => {
+        .catch((e) => {
           toastError(e.response.data.detail);
           setLoading(false);
         });
@@ -104,7 +104,7 @@ export default ({ reposicao }) => {
           setLoading(false);
           goToConferir();
         })
-        .catch(e => {
+        .catch((e) => {
           toastError(e.response.data.detail);
           setLoading(false);
         });
@@ -112,18 +112,18 @@ export default ({ reposicao }) => {
   };
 
   const goToConferir = () => {
-    history.push(`/${LOGISTICA}/${CONFERIR_ENTREGA}`);
+    navigate(`/${LOGISTICA}/${CONFERIR_ENTREGA}`);
   };
 
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
-    const embalagensFiltradas = embalagens.filter(value => {
+    const embalagensFiltradas = embalagens.filter((value) => {
       return value.tipo_embalagem.toUpperCase() === tipo;
     });
     if (embalagensFiltradas.length) return embalagensFiltradas[0];
     else return false;
   };
 
-  const getClassStatus = item => {
+  const getClassStatus = (item) => {
     switch (item.status) {
       case "Recebido":
         return "green";
@@ -138,15 +138,15 @@ export default ({ reposicao }) => {
 
   const cancelarConferencia = () => {
     let uuid = guia.uuid;
-    history.push(
+    navigate(
       `/${LOGISTICA}/${
         reposicao ? REPOSICAO_GUIA : CONFERENCIA_GUIA_COM_OCORRENCIA
       }/?uuid=${uuid}&autofill=true`
     );
   };
 
-  const validaReposicao = valores => {
-    const alimentosValidos = valores.filter(alim => {
+  const validaReposicao = (valores) => {
+    const alimentosValidos = valores.filter((alim) => {
       return alim.status !== "Não Recebido";
     });
     if (alimentosValidos.length) {
@@ -189,7 +189,7 @@ export default ({ reposicao }) => {
         {!conferenciaInvalida && (
           <div className="card-body conferencia-guia-resumo-final">
             <span className="subtitulo">{subtitulo}</span>
-            <span className="numero-guia float-right">
+            <span className="numero-guia float-end">
               Guia número: <strong>{parseInt(guia.numero_guia)}</strong>
             </span>
             <hr />
@@ -363,10 +363,10 @@ export default ({ reposicao }) => {
               </div>
             )}
             <div>
-              <span className="float-right">
+              <span className="float-end">
                 <Botao
                   texto="Cancelar"
-                  className="mr-3"
+                  className="me-3"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={() => {

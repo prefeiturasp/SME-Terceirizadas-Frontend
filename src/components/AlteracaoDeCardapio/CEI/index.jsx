@@ -10,7 +10,7 @@ import {
   escolaCriarSolicitacaoDeAlteracaoCardapio,
   escolaExcluirSolicitacaoDeAlteracaoCardapio,
   escolaAlterarSolicitacaoDeAlteracaoCardapio,
-  escolaIniciarSolicitacaoDeAlteracaoDeCardapio
+  escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
 } from "services/alteracaoDeCardapio";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { Rascunhos } from "../Rascunhos";
@@ -22,7 +22,7 @@ import {
   naoPodeSerZero,
   peloMenosUmCaractere,
   required,
-  textAreaRequired
+  textAreaRequired,
 } from "helpers/fieldValidators";
 import {
   agregarDefault,
@@ -30,7 +30,7 @@ import {
   composeValidators,
   deepCopy,
   fimDoCalendario,
-  getError
+  getError,
 } from "helpers/utilities";
 import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 import { OnChange } from "react-final-form-listeners";
@@ -45,12 +45,12 @@ import {
   formataPayload,
   totalAlunosInputPorPeriodo,
   totalAlunosPorPeriodo,
-  validaForm
+  validaForm,
 } from "./helper";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 
@@ -64,14 +64,13 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     proximosCincoDiasUteis,
     proximosDoisDiasUteis,
     vinculos,
-    feriadosAno
+    feriadosAno,
   } = props;
 
   const [rascunhos, setRascunhos] = useState(null);
   const [erroAPI, setErroAPI] = useState("");
-  const [showModalDataPrioritaria, setShowModalDataPrioritaria] = useState(
-    false
-  );
+  const [showModalDataPrioritaria, setShowModalDataPrioritaria] =
+    useState(false);
   const [solicitacao, setSolicitacao] = useState(null);
 
   const getRascunhos = async () => {
@@ -89,7 +88,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     getRascunhos();
   }, []);
 
-  const onAlterarDiaChanged = value => {
+  const onAlterarDiaChanged = (value) => {
     if (
       value &&
       checaSeDataEstaEntre2e5DiasUteis(
@@ -161,7 +160,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     return values && values.substituicoes[indice];
   };
 
-  const encontrarIndiceSubstituicao = periodoEscolarUuid => {
+  const encontrarIndiceSubstituicao = (periodoEscolarUuid) => {
     for (let index = 0; index < solicitacao.substituicoes.length; index++) {
       const substituicao = solicitacao.substituicoes[index];
       if (substituicao.periodo_escolar.uuid === periodoEscolarUuid) {
@@ -178,7 +177,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
       await form.change(
         `substituicoes[${index}].faixas_etarias`,
         response.data.results.filter(
-          faixas => faixas.faixa_etaria.inicio > 11 && faixas.count > 0
+          (faixas) => faixas.faixa_etaria.inicio > 11 && faixas.count > 0
         )
       );
 
@@ -186,13 +185,12 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
         const faixasQuantidades = {};
 
         const periodoEscolarUuid = periodo;
-        const indiceSubstituicao = encontrarIndiceSubstituicao(
-          periodoEscolarUuid
-        );
+        const indiceSubstituicao =
+          encontrarIndiceSubstituicao(periodoEscolarUuid);
 
         solicitacao.substituicoes[indiceSubstituicao] &&
           solicitacao.substituicoes[indiceSubstituicao].faixas_etarias.forEach(
-            faixa => {
+            (faixa) => {
               faixasQuantidades[faixa.faixa_etaria.uuid] = faixa.quantidade;
             }
           );
@@ -207,95 +205,97 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     await form.change(`substituicoes[${index}].loading_faixas`, false);
   };
 
-  const ehMotivoRPL = values => {
+  const ehMotivoRPL = (values) => {
     return (
       motivos.find(
-        motivo => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
+        (motivo) => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
       ) &&
       motivos.find(
-        motivo => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
+        (motivo) => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
       ).uuid === values.motivo
     );
   };
 
-  const ehMotivoLPR = values => {
+  const ehMotivoLPR = (values) => {
     return (
       motivos.find(
-        motivo => motivo.nome.toUpperCase() === "LPR - LANCHE POR REFEIÇÃO"
+        (motivo) => motivo.nome.toUpperCase() === "LPR - LANCHE POR REFEIÇÃO"
       ) &&
       motivos.find(
-        motivo => motivo.nome.toUpperCase() === "LPR - LANCHE POR REFEIÇÃO"
+        (motivo) => motivo.nome.toUpperCase() === "LPR - LANCHE POR REFEIÇÃO"
       ).uuid === values.motivo
     );
   };
 
-  const refresh = form => {
+  const refresh = (form) => {
     getRascunhos();
     setTimeout(() => {
       form.reset();
     }, 100);
   };
 
-  const getTiposAlimentacaoDe = values => {
+  const getTiposAlimentacaoDe = (values) => {
     const tipos_alimentacao_de = vinculos.find(
-      vinculo => vinculo.periodo_escolar.nome === "INTEGRAL"
+      (vinculo) => vinculo.periodo_escolar.nome === "INTEGRAL"
     ).tipos_alimentacao;
     if (ehMotivoRPL(values)) {
       return agregarDefault(
         tipos_alimentacao_de
-          .filter(tipo_alimentacao =>
+          .filter((tipo_alimentacao) =>
             ["Refeição da tarde", "Almoço"].includes(tipo_alimentacao.nome)
           )
-          .map(tipo_alimentacao => ({
+          .map((tipo_alimentacao) => ({
             nome: tipo_alimentacao.nome,
-            uuid: tipo_alimentacao.uuid
+            uuid: tipo_alimentacao.uuid,
           }))
       );
     } else if (ehMotivoLPR(values)) {
       return tipos_alimentacao_de
-        .filter(tipo_alimentacao => ["Lanche"].includes(tipo_alimentacao.nome))
-        .map(tipo_alimentacao => ({
+        .filter((tipo_alimentacao) =>
+          ["Lanche"].includes(tipo_alimentacao.nome)
+        )
+        .map((tipo_alimentacao) => ({
           label: tipo_alimentacao.nome,
-          value: tipo_alimentacao.uuid
+          value: tipo_alimentacao.uuid,
         }));
     } else {
-      return tipos_alimentacao_de.map(tipo_alimentacao => ({
+      return tipos_alimentacao_de.map((tipo_alimentacao) => ({
         label: tipo_alimentacao.nome,
-        value: tipo_alimentacao.uuid
+        value: tipo_alimentacao.uuid,
       }));
     }
   };
 
   const getTiposAlimentacaoPara = (values, index) => {
     const tipos_alimentacao_de = vinculos.find(
-      vinculo => vinculo.periodo_escolar.nome === "INTEGRAL"
+      (vinculo) => vinculo.periodo_escolar.nome === "INTEGRAL"
     ).tipos_alimentacao;
     if (ehMotivoRPL(values)) {
       return agregarDefault(
         tipos_alimentacao_de
-          .filter(tipo_alimentacao =>
+          .filter((tipo_alimentacao) =>
             ["Lanche"].includes(tipo_alimentacao.nome)
           )
-          .map(tipo_alimentacao => ({
+          .map((tipo_alimentacao) => ({
             nome: tipo_alimentacao.nome,
-            uuid: tipo_alimentacao.uuid
+            uuid: tipo_alimentacao.uuid,
           }))
       );
     } else if (ehMotivoLPR(values)) {
       return agregarDefault(
         tipos_alimentacao_de
-          .filter(tipo_alimentacao =>
+          .filter((tipo_alimentacao) =>
             ["Refeição da tarde", "Almoço"].includes(tipo_alimentacao.nome)
           )
-          .map(tipo_alimentacao => ({
+          .map((tipo_alimentacao) => ({
             nome: tipo_alimentacao.nome,
-            uuid: tipo_alimentacao.uuid
+            uuid: tipo_alimentacao.uuid,
           }))
       );
     } else {
       return agregarDefault(
         tipos_alimentacao_de
-          .filter(tipo_alimentacao =>
+          .filter((tipo_alimentacao) =>
             values.substituicoes[index].tipos_alimentacao_de_selecionados
               ? !values.substituicoes[
                   index
@@ -305,9 +305,9 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
               : tipo_alimentacao.uuid !==
                 values.substituicoes[index].tipo_alimentacao_para
           )
-          .map(tipo_alimentacao => ({
+          .map((tipo_alimentacao) => ({
             nome: tipo_alimentacao.nome,
-            uuid: tipo_alimentacao.uuid
+            uuid: tipo_alimentacao.uuid,
           }))
       );
     }
@@ -319,9 +319,9 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     await form.change("motivo", solicitacao.motivo.uuid);
     await form.change("escola", solicitacao.escola.uuid);
     await form.change("uuid", solicitacao.uuid);
-    solicitacao.substituicoes.forEach(substituicao => {
+    solicitacao.substituicoes.forEach((substituicao) => {
       const index = substituicoes.findIndex(
-        subs => subs.uuid === substituicao.periodo_escolar.uuid
+        (subs) => subs.uuid === substituicao.periodo_escolar.uuid
       );
       substituicoes[index].checked = true;
       substituicoes[index].tipo_alimentacao_para =
@@ -331,7 +331,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
         substituicao.tipos_alimentacao_de[0].uuid;
       substituicoes[index].tipos_alimentacao_de_selecionados =
         !solicitacao.motivo.nome.includes("RPL") &&
-        substituicao.tipos_alimentacao_de.map(ta => ta.uuid);
+        substituicao.tipos_alimentacao_de.map((ta) => ta.uuid);
     });
     await form.change("substituicoes", substituicoes);
     await form.change("data", solicitacao.data);
@@ -365,10 +365,10 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
           <Form
             initialValues={{
               substituicoes: periodos,
-              escola: meusDados.vinculo_atual.instituicao.uuid
+              escola: meusDados.vinculo_atual.instituicao.uuid,
             }}
             mutators={{
-              ...arrayMutators
+              ...arrayMutators,
             }}
             onSubmit={onSubmit}
           >
@@ -404,7 +404,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                   <div className="card-body">
                     <Field component="input" type="hidden" name="uuid" />
                     <Field component="input" type="hidden" name="escola" />
-                    <div className="card-title font-weight-bold descricao">
+                    <div className="card-title fw-bold descricao">
                       Descrição da Alteração do Tipo de Alimentação
                     </div>
                     <div className="row">
@@ -421,7 +421,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                           validate={required}
                         />
                         <OnChange name="motivo">
-                          {async value => {
+                          {async (value) => {
                             if (value) {
                               const data_ = values.data;
                               form.reset();
@@ -446,7 +446,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                           usarDirty={true}
                         />
                         <OnChange name="data">
-                          {value => {
+                          {(value) => {
                             if (value) {
                               onAlterarDiaChanged(value);
                               values.substituicoes.forEach(
@@ -454,10 +454,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                   if (substituicao.checked) {
                                     getFaixasEtariasPorPeriodo(
                                       values.substituicoes[indice].uuid,
-                                      value
-                                        .split("/")
-                                        .reverse()
-                                        .join("-"),
+                                      value.split("/").reverse().join("-"),
                                       indice,
                                       form
                                     );
@@ -483,7 +480,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                 <div className="row">
                                   <div className="col-4">
                                     <div
-                                      className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
+                                      className={`period-quantity number-${indice} ps-5 pt-2 pb-2`}
                                     >
                                       <label
                                         htmlFor="check"
@@ -525,7 +522,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                         {getPeriodo(values, indice).nome}
                                       </label>
                                       <OnChange name={`${name}.checked`}>
-                                        {value => {
+                                        {(value) => {
                                           if (!value) {
                                             form.change(
                                               `substituicoes[${indice}].tipos_alimentacao_de`,
@@ -584,7 +581,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                           []
                                         }
                                         options={getTiposAlimentacaoDe(values)}
-                                        onSelectedChanged={values_ => {
+                                        onSelectedChanged={(values_) => {
                                           form.change(
                                             `substituicoes[${indice}].tipos_alimentacao_de_selecionados`,
                                             values_
@@ -596,7 +593,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                             "Selecione um tipo de alimentação",
                                           allItemsAreSelected:
                                             "Todos os tipos de alimentação estão selecionados",
-                                          selectAll: "Todos"
+                                          selectAll: "Todos",
                                         }}
                                       />
                                     </div>
@@ -665,9 +662,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                                   <Field
                                                     component={InputText}
                                                     type="number"
-                                                    name={`${name}.faixas.${
-                                                      faixa.faixa_etaria.uuid
-                                                    }`}
+                                                    name={`${name}.faixas.${faixa.faixa_etaria.uuid}`}
                                                     validate={
                                                       getPeriodo(values, indice)
                                                         .checked &&
@@ -682,7 +677,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                             );
                                           })}
                                         <tr className="row">
-                                          <td className="col-8 font-weight-bold">
+                                          <td className="col-8 fw-bold">
                                             Total
                                           </td>
                                           <td className="col-2 text-center">
@@ -720,7 +715,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                         )}
                       />
                     </div>
-                    <div className="row float-right mt-4">
+                    <div className="row float-end mt-4">
                       <div className="col-12">
                         <Botao
                           texto="Cancelar"
@@ -735,7 +730,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                               ? "Atualizar rascunho"
                               : "Salvar rascunho"
                           }
-                          className="ml-3"
+                          className="ms-3"
                           disabled={submitting}
                           type={BUTTON_TYPE.SUBMIT}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -746,10 +741,10 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                           disabled={submitting}
                           onClick={() => {
                             values["status"] = STATUS_DRE_A_VALIDAR;
-                            handleSubmit(values => onSubmit(values, form));
+                            handleSubmit((values) => onSubmit(values, form));
                           }}
                           style={BUTTON_STYLE.GREEN}
-                          className="ml-3"
+                          className="ms-3"
                         />
                       </div>
                     </div>

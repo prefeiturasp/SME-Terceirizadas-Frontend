@@ -3,11 +3,11 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import {
   dilogAceitaAlteracao,
-  dilogNegaAlteracao
+  dilogNegaAlteracao,
 } from "services/logistica.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { BOTAO_ACEITAR, BOTAO_NEGAR } from "../../constans";
@@ -20,25 +20,25 @@ export default ({
   updatePage,
   solicitacao,
   acao,
-  values
+  values,
 }) => {
   const handleClose = () => setShow(false);
 
   const responderSolicitacao = () => {
     if (acao === BOTAO_ACEITAR) {
       const newValues = {
-        justificativa_aceite: values.justificativa
+        justificativa_aceite: values.justificativa,
       };
       aceitarSolicitacao(newValues);
     } else if (acao === BOTAO_NEGAR) {
       const newValues = {
-        justificativa_negacao: values.justificativa
+        justificativa_negacao: values.justificativa,
       };
       negarSolicitacao(newValues);
     }
   };
 
-  const aceitarSolicitacao = async val => {
+  const aceitarSolicitacao = async (val) => {
     const payload = { ...val };
     const res = await dilogAceitaAlteracao(solicitacao.uuid, payload);
     try {
@@ -57,7 +57,7 @@ export default ({
     }
   };
 
-  const negarSolicitacao = async val => {
+  const negarSolicitacao = async (val) => {
     const payload = { ...val };
     try {
       const res = await dilogNegaAlteracao(solicitacao.uuid, payload);
@@ -87,7 +87,7 @@ export default ({
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         onClick={form.submit}
-        className="float-right ml-3"
+        className="float-end ms-3"
       />
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -100,14 +100,14 @@ export default ({
             type={BUTTON_TYPE.SUBMIT}
             style={BUTTON_STYLE.BLUE}
             onClick={responderSolicitacao}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Não"
             type={BUTTON_TYPE.BUTTON}
             onClick={handleClose}
             style={BUTTON_STYLE.BLUE_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>

@@ -2,7 +2,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
@@ -15,7 +15,7 @@ import {
   corDaMensagem,
   justificativaAoAprovarSolicitacao,
   justificativaAoNegarSolicitacao,
-  prazoDoPedidoMensagem
+  prazoDoPedidoMensagem,
 } from "helpers/utilities";
 import React, { useState } from "react";
 import { getRelatorioAlteracaoTipoAlimentacao } from "services/relatorios";
@@ -55,7 +55,7 @@ export const CorpoRelatorio = ({ ...props }) => {
           style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
           icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
           disabled={imprimindo}
-          className="float-right"
+          className="float-end"
           onClick={imprimirRelatorio}
         />
       </p>
@@ -124,34 +124,53 @@ export const CorpoRelatorio = ({ ...props }) => {
             <b>Solicitação de Alteração</b>
           </p>
         </div>
-        <div className="col-4">
-          <p>Tipo de Alteração:</p>
-          <p>
-            <b>{solicitacao.motivo.nome}</b>
-          </p>
-        </div>
-        <div className="col-3">
-          <p>Alterar de:</p>
-          <p>
-            <b>
-              {solicitacao.data_inicial
-                ? solicitacao.data_inicial
-                : solicitacao.alterar_dia}
-            </b>
-          </p>
-        </div>
-
-        <div className="col-3">
-          {solicitacao.data_final && (
-            <>
-              <p>Até o dia:</p>
-              <p>
-                <b>{solicitacao.data_final}</b>
-              </p>
-            </>
-          )}
-        </div>
       </div>
+      <table className="table-periods-alteracao">
+        <thead>
+          <tr className="row">
+            <th className="col-2">Tipo de Alteração</th>
+            {solicitacao.alterar_dia ? (
+              <th className="col-2">Alterar dia</th>
+            ) : (
+              <th className="col-2">Dia(s) de Alteração</th>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="row">
+            <td className="col-2">{solicitacao.motivo.nome}</td>
+            {solicitacao.datas_intervalo.map((data_intervalo, key) => {
+              return (
+                <td
+                  className={`col-2 ${
+                    key > 0 && key % 5 === 0 ? "offset-2" : ""
+                  }`}
+                  key={key}
+                >
+                  <span
+                    className={
+                      data_intervalo.cancelado_justificativa
+                        ? `data-cancelada`
+                        : ""
+                    }
+                  >
+                    {data_intervalo.data}
+                  </span>
+                  <br />
+                  {data_intervalo.cancelado_justificativa && (
+                    <span className="justificativa">
+                      justificativa:{" "}
+                      <span className="fw-normal">
+                        {data_intervalo.cancelado_justificativa}
+                      </span>
+                    </span>
+                  )}
+                </td>
+              );
+            })}
+          </tr>
+        </tbody>
+      </table>
       {dadosTabela.map((periodo, index) => {
         return (
           <div className="row" key={index}>
@@ -164,14 +183,14 @@ export const CorpoRelatorio = ({ ...props }) => {
                   margin: "1% 0px",
                   width: "100%",
                   padding: "8px 15px",
-                  height: "40px"
+                  height: "40px",
                 }}
               >
                 {periodo.nome}
               </label>
             </div>
             <div className="col-12">
-              <div className="container-fluid pr-0">
+              <div className="container-fluid pe-0">
                 {periodo.substituicoesCEI && (
                   <div className="row">
                     <div className="col-12">
@@ -182,7 +201,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                         Alteração do tipo de Alimentação de:{" "}
                         <b className="tipos-alimentacao-style">
                           {periodo.substituicoesCEI.tipos_alimentacao_de
-                            .map(ta => ta.nome)
+                            .map((ta) => ta.nome)
                             .join(", ")}
                         </b>
                       </p>
@@ -190,7 +209,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                         Para o tipo de Alimentação:{" "}
                         <b className="tipos-alimentacao-style">
                           {periodo.substituicoesCEI.tipos_alimentacao_para
-                            .map(ta => ta.nome)
+                            .map((ta) => ta.nome)
                             .join(", ")}
                         </b>
                       </p>
@@ -209,10 +228,10 @@ export const CorpoRelatorio = ({ ...props }) => {
                         <tbody>
                           {solicitacao.substituicoes_cemei_cei_periodo_escolar
                             .filter(
-                              q => q.periodo_escolar.nome === periodo.nome
+                              (q) => q.periodo_escolar.nome === periodo.nome
                             )
                             .map((faixa, key) =>
-                              faixa.faixas_etarias.map(f => {
+                              faixa.faixas_etarias.map((f) => {
                                 return (
                                   <tr key={key}>
                                     <td className="col-7">
@@ -237,10 +256,10 @@ export const CorpoRelatorio = ({ ...props }) => {
                             <th className="col-3 text-center">
                               {solicitacao.substituicoes_cemei_cei_periodo_escolar
                                 .filter(
-                                  q => q.periodo_escolar.nome === periodo.nome
+                                  (q) => q.periodo_escolar.nome === periodo.nome
                                 )
-                                .map(faixa =>
-                                  faixa.faixas_etarias.reduce(function(
+                                .map((faixa) =>
+                                  faixa.faixas_etarias.reduce(function (
                                     total,
                                     f
                                   ) {
@@ -252,10 +271,10 @@ export const CorpoRelatorio = ({ ...props }) => {
                             <th className="col-2 text-center">
                               {solicitacao.substituicoes_cemei_cei_periodo_escolar
                                 .filter(
-                                  q => q.periodo_escolar.nome === periodo.nome
+                                  (q) => q.periodo_escolar.nome === periodo.nome
                                 )
-                                .map(faixa =>
-                                  faixa.faixas_etarias.reduce(function(
+                                .map((faixa) =>
+                                  faixa.faixas_etarias.reduce(function (
                                     total,
                                     f
                                   ) {
@@ -280,7 +299,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                         Alteração do tipo de Alimentação de:{" "}
                         <b className="tipos-alimentacao-style">
                           {periodo.substituicoesEMEI.tipos_alimentacao_de
-                            .map(ta => ta.nome)
+                            .map((ta) => ta.nome)
                             .join(", ")}
                         </b>
                       </p>
@@ -288,7 +307,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                         Para o tipo de Alimentação:{" "}
                         <b className="tipos-alimentacao-style">
                           {periodo.substituicoesEMEI.tipos_alimentacao_para
-                            .map(ta => ta.nome)
+                            .map((ta) => ta.nome)
                             .join(", ")}
                         </b>
                       </p>
@@ -298,8 +317,8 @@ export const CorpoRelatorio = ({ ...props }) => {
                         <thead>
                           <tr>
                             <th className="col-7">
-                              <span className="ml-5">Alunos matriculados</span>
-                              <b className="ml-5">
+                              <span className="ms-5">Alunos matriculados</span>
+                              <b className="ms-5">
                                 {
                                   periodo.substituicoesEMEI
                                     .matriculados_quando_criado
@@ -307,8 +326,8 @@ export const CorpoRelatorio = ({ ...props }) => {
                               </b>
                             </th>
                             <th className="col-5">
-                              <span className="ml-5">Quantidade</span>
-                              <b className="ml-5">
+                              <span className="ms-5">Quantidade</span>
+                              <b className="ms-5">
                                 {periodo.substituicoesEMEI.qtd_alunos}
                               </b>
                             </th>
@@ -324,18 +343,41 @@ export const CorpoRelatorio = ({ ...props }) => {
         );
       })}
       <hr />
-      {solicitacao && solicitacao.observacao && (
+      {solicitacao?.observacao && (
         <div className="row mt-3">
           <div className="col-12">
             <p>Observações:</p>
             <p
               className="observacao-alteracao-cardapio-cemei"
               dangerouslySetInnerHTML={{
-                __html: solicitacao.observacao
+                __html: solicitacao.observacao,
               }}
             />
           </div>
         </div>
+      )}
+      {solicitacao.datas_intervalo.find(
+        (data_intervalo) => data_intervalo.cancelado_justificativa
+      ) && (
+        <>
+          <hr />
+          <p>
+            <strong>Histórico de cancelamento</strong>
+            {solicitacao.datas_intervalo
+              .filter(
+                (data_intervalo) => data_intervalo.cancelado_justificativa
+              )
+              .map((data_intervalo, key) => {
+                return (
+                  <div key={key}>
+                    {data_intervalo.data}
+                    {" - justificativa: "}
+                    {data_intervalo.cancelado_justificativa}
+                  </div>
+                );
+              })}
+          </p>
+        </>
       )}
       {solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs) && (
         <div className="row">
@@ -344,7 +386,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaAoNegarSolicitacao(solicitacao.logs)
+                __html: justificativaAoNegarSolicitacao(solicitacao.logs),
               }}
             />
           </div>
@@ -360,13 +402,13 @@ export const CorpoRelatorio = ({ ...props }) => {
               </p>
               <p>{`${
                 solicitacao.logs.find(
-                  log => log.status_evento_explicacao === "CODAE autorizou"
+                  (log) => log.status_evento_explicacao === "CODAE autorizou"
                 ).criado_em
               } - Informações da CODAE`}</p>
               <p
                 className="value"
                 dangerouslySetInnerHTML={{
-                  __html: justificativaAoAprovarSolicitacao(solicitacao.logs)
+                  __html: justificativaAoAprovarSolicitacao(solicitacao.logs),
                 }}
               />
             </div>

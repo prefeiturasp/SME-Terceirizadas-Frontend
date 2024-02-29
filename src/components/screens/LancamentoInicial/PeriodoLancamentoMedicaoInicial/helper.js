@@ -7,9 +7,17 @@ import {
   getSolicitacoesInclusoesAutorizadasEscola,
   getSolicitacoesInclusoesEtecAutorizadasEscola,
   getSolicitacoesKitLanchesAutorizadasEscola,
-  getSolicitacoesSuspensoesAutorizadasEscola
+  getSolicitacoesSuspensoesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { tiposAlimentacaoETEC } from "helpers/utilities";
+import { getPermissoesLancamentosEspeciaisMesAnoPorPeriodo } from "services/medicaoInicial/permissaoLancamentosEspeciais.service";
+import {
+  deepCopy,
+  ehEscolaTipoCEI,
+  ehEscolaTipoCEUGESTAO,
+  tiposAlimentacaoETEC,
+} from "helpers/utilities";
+import { ehEscolaTipoCEMEI } from "../../../../helpers/utilities";
+import { ALUNOS_EMEBS, FUNDAMENTAL_EMEBS, INFANTIL_EMEBS } from "../constants";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
@@ -19,10 +27,12 @@ export const formatarPayloadPeriodoLancamento = (
   diasDaSemanaSelecionada,
   ehGrupoSolicitacoesDeAlimentacaoUrlParam,
   ehGrupoETECUrlParam,
-  grupoLocation
+  grupoLocation,
+  tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows
 ) => {
   if (
-    values["periodo_escolar"].includes("Solicitações") ||
+    (values["periodo_escolar"] &&
+      values["periodo_escolar"].includes("Solicitações")) ||
     values["periodo_escolar"] === "ETEC" ||
     values["periodo_escolar"] === "Programas e Projetos"
   ) {
@@ -44,19 +54,24 @@ export const formatarPayloadPeriodoLancamento = (
     }
   });
 
-  arrayCategoriesValues.map(arr => {
+  arrayCategoriesValues.map((arr) => {
     const keySplitted = arr[0].split("__");
     const categoria = keySplitted.pop();
     const idCategoria = categoria.match(/\d/g).join("");
     const dia = keySplitted[1].match(/\d/g).join("");
     const nome_campo = keySplitted[0];
     let tipoAlimentacao = tabelaAlimentacaoRows.find(
-      alimentacao => alimentacao.name === nome_campo
+      (alimentacao) => alimentacao.name === nome_campo
     );
 
     if (!tipoAlimentacao) {
       tipoAlimentacao = tabelaDietaEnteralRows.find(
-        row => row.name === nome_campo
+        (row) => row.name === nome_campo
+      );
+    }
+    if (!tipoAlimentacao) {
+      tipoAlimentacao = tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows.find(
+        (row) => row.name === nome_campo
       );
     }
 
@@ -69,12 +84,12 @@ export const formatarPayloadPeriodoLancamento = (
         !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
         !ehGrupoETECUrlParam &&
         grupoLocation !== "Programas e Projetos"
-          ? tipoAlimentacao.uuid
-          : ""
+          ? tipoAlimentacao?.uuid || ""
+          : "",
     });
   });
 
-  valoresMedicao = valoresMedicao.filter(valorMed => {
+  valoresMedicao = valoresMedicao.filter((valorMed) => {
     return (
       !(valorMed.nome_campo === "observacoes" && valorMed.valor === 0) &&
       diasDaSemanaSelecionada.includes(valorMed.dia)
@@ -88,31 +103,19 @@ export const formatarPayloadPeriodoLancamento = (
   return { ...values, valores_medicao: valoresMedicao };
 };
 
-export const formatarPayloadParaCorrecao = (
-  valoresPeriodosLancamentos,
-  payload
-) => {
-  let payloadParaCorrecao = [];
-  valoresPeriodosLancamentos
-    .filter(
-      valor =>
-        valor.habilitado_correcao &&
-        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
-          valor.nome_campo
-        )
-    )
-    .forEach(valor_lancamento => {
-      payloadParaCorrecao.push(
-        payload.valores_medicao.filter(
-          valor_medicao =>
-            String(valor_lancamento.categoria_medicao) ===
-              valor_medicao.categoria_medicao &&
-            valor_lancamento.dia === valor_medicao.dia &&
-            valor_lancamento.nome_campo === valor_medicao.nome_campo
-        )[0]
-      );
+export const formatarPayloadParaCorrecao = (payload, escolaEhEMEBS = false) => {
+  let payloadParaCorrecao = payload.valores_medicao.filter(
+    (valor) =>
+      !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
+        valor.nome_campo
+      )
+  );
+  if (escolaEhEMEBS) {
+    payloadParaCorrecao.forEach((objValueParaCorrecao) => {
+      objValueParaCorrecao.infantil_ou_fundamental =
+        payload?.infantil_ou_fundamental;
     });
-
+  }
   return payloadParaCorrecao;
 };
 
@@ -123,9 +126,9 @@ export const deveExistirObservacao = (
 ) => {
   let diasNaoLetivos = [];
   const objDiasNaoLetivos = calendarioMesConsiderado.filter(
-    obj => !obj.dia_letivo
+    (obj) => !obj.dia_letivo
   );
-  objDiasNaoLetivos.map(obj => diasNaoLetivos.push(obj.dia));
+  objDiasNaoLetivos.map((obj) => diasNaoLetivos.push(obj.dia));
 
   const valuesAsArray = Object.entries(values);
   const arrayCategoriesValuesDiasNaoletivos = valuesAsArray.filter(
@@ -136,17 +139,17 @@ export const deveExistirObservacao = (
       !key.includes("frequencia") &&
       !key.includes("observacoes") &&
       !["Mês anterior", "Mês posterior", null].includes(value) &&
-      diasNaoLetivos.some(dia => key.includes(dia))
+      diasNaoLetivos.some((dia) => key.includes(dia))
   );
   let dias = [];
-  arrayCategoriesValuesDiasNaoletivos.forEach(arr => {
+  arrayCategoriesValuesDiasNaoletivos.forEach((arr) => {
     const keySplitted = arr[0].split("__");
     const dia = keySplitted[1].match(/\d/g).join("");
     dias.push(dia);
   });
 
   return !dias.every(
-    dia =>
+    (dia) =>
       values[`observacoes__dia_${dia}__categoria_${categoria}`] !== undefined
   );
 };
@@ -159,9 +162,7 @@ export const valorZeroFrequencia = (
   form,
   tabelaAlimentacaoRows,
   tabelaDietaRows,
-  tabelaDietaEnteralRows,
-  dadosValoresInclusoesAutorizadasState,
-  validacaoDiaLetivo
+  tabelaDietaEnteralRows
 ) => {
   if (rowName === "frequencia" && value && Number(value) === 0) {
     let linhasDaTabela = null;
@@ -171,30 +172,14 @@ export const valorZeroFrequencia = (
       linhasDaTabela = tabelaDietaRows;
     } else {
       linhasDaTabela = tabelaAlimentacaoRows;
-      if (
-        Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
-          String(key).includes(`__dia_${dia}__categoria_${categoria.id}`)
-        ) &&
-        !validacaoDiaLetivo(dia)
-      ) {
-        linhasDaTabela = linhasDaTabela.filter(linha =>
-          Object.keys(
-            Object.fromEntries(
-              Object.entries(dadosValoresInclusoesAutorizadasState).filter(
-                ([key]) => key.includes(dia)
-              )
-            )
-          ).some(key => key.includes(linha.name))
-        );
-      }
     }
 
-    linhasDaTabela.forEach(linha => {
+    linhasDaTabela.forEach((linha) => {
       ![
         "matriculados",
         "frequencia",
         "observacoes",
-        "dietas_autorizadas"
+        "dietas_autorizadas",
       ].includes(linha.name) &&
         form.change(
           `${linha.name}__dia_${dia}__categoria_${categoria.id}`,
@@ -204,6 +189,61 @@ export const valorZeroFrequencia = (
     return true;
   }
   return;
+};
+
+const validaAlimentacoesEDietasCEUGESTAO = (
+  inclusoesAutorizadas,
+  rowName,
+  dia,
+  nomeCategoria
+) => {
+  /* REGRA VÁLIDA APENAS PARA CEU GESTÃO
+
+    Desabilita slot caso o dia com inclusão autorizada não possua o tipo de alimentação */
+  if (rowName === "frequencia" && nomeCategoria === "ALIMENTAÇÃO") return false;
+  if (
+    ![
+      "lanche",
+      "lanche_4h",
+      "refeicao",
+      "repeticao_refeicao",
+      "sobremesa",
+      "repeticao_sobremesa",
+      "frequencia",
+    ].includes(rowName)
+  )
+    return false;
+  const tiposAlimentacaoExistentes = [];
+  inclusoesAutorizadas
+    .filter((inc) => inc.dia === dia)
+    .forEach((inclusao) => {
+      inclusao.alimentacoes.split(", ").forEach((alimentacao) => {
+        if (!tiposAlimentacaoExistentes.includes(alimentacao)) {
+          tiposAlimentacaoExistentes.push(alimentacao);
+        }
+      });
+    });
+  if (rowName === "frequencia") {
+    if (nomeCategoria.includes("ENTERAL")) {
+      return (
+        !tiposAlimentacaoExistentes.includes("refeicao") &&
+        !tiposAlimentacaoExistentes.includes("lanche") &&
+        !tiposAlimentacaoExistentes.includes("lanche_4h")
+      );
+    }
+    if (
+      !tiposAlimentacaoExistentes.includes("lanche") &&
+      !tiposAlimentacaoExistentes.includes("lanche_4h")
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  const tipoAlimentacao = rowName.includes("repeticao")
+    ? rowName.split("_")[1]
+    : rowName;
+  return !tiposAlimentacaoExistentes.includes(tipoAlimentacao);
 };
 
 export const desabilitarField = (
@@ -223,47 +263,145 @@ export const desabilitarField = (
   inclusoesEtecAutorizadas = null,
   grupoLocation = null,
   valoresPeriodosLancamentos,
-  feriadosNoMes
+  feriadosNoMes,
+  inclusoesAutorizadas,
+  categoriasDeMedicao,
+  kitLanchesAutorizadas,
+  alteracoesAlimentacaoAutorizadas,
+  diasParaCorrecao,
+  ehPeriodoEscolarSimples,
+  permissoesLancamentosEspeciaisPorDia,
+  alimentacoesLancamentosEspeciais,
+  escolaEhEMEBS = false,
+  alunosTabSelecionada = null
 ) => {
-  const valorField = valoresPeriodosLancamentos
-    .filter(valor => valor.nome_campo === rowName)
-    .filter(valor => String(valor.dia) === String(dia))
-    .filter(valor => String(valor.categoria_medicao) === String(categoria))
-    .filter(valor => valor.habilitado_correcao === true)[0];
+  const EH_INCLUSAO_SOMENTE_SOBREMESA =
+    inclusoesAutorizadas.length &&
+    inclusoesAutorizadas.every((i) => i.alimentacoes === "sobremesa");
+  if (nomeCategoria.includes("DIETA") && EH_INCLUSAO_SOMENTE_SOBREMESA) {
+    return true;
+  }
+  const valorFieldParaCorrecao = valoresPeriodosLancamentos.some(
+    (valor) =>
+      String(valor.categoria_medicao) === String(categoria) &&
+      String(valor.dia) === String(dia) &&
+      valor.habilitado_correcao === true
+  );
+  let alimentacoesLancamentosEspeciaisDia = [];
+  if (ehPeriodoEscolarSimples && permissoesLancamentosEspeciaisPorDia) {
+    alimentacoesLancamentosEspeciaisDia = [
+      ...new Set(
+        permissoesLancamentosEspeciaisPorDia
+          .filter((permissao) => permissao.dia === dia)
+          .flatMap((permissao) => permissao.alimentacoes)
+      ),
+    ];
+  }
   if (
+    (valorFieldParaCorrecao ||
+      (diasParaCorrecao &&
+        diasParaCorrecao.find(
+          (diaParaCorrecao) =>
+            String(diaParaCorrecao.dia) === String(dia) &&
+            String(diaParaCorrecao.categoria_medicao) === String(categoria) &&
+            diaParaCorrecao.habilitado_correcao === true
+        ))) &&
+    !["Mês anterior", "Mês posterior"].includes(
+      values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+    ) &&
     location.state &&
-    (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
-      location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
-      location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
-      ([
-        "MEDICAO_CORRECAO_SOLICITADA",
-        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-        "MEDICAO_CORRIGIDA_PELA_UE",
-        "MEDICAO_CORRIGIDA_PARA_CODAE"
-      ].includes(location.state.status_periodo) &&
-        !valorField))
+    [
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_CORRIGIDA_PELA_UE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE",
+    ].includes(location.state.status_periodo) &&
+    !["matriculados", "numero_de_alunos", "dietas_autorizadas"].includes(
+      rowName
+    )
+  ) {
+    if (
+      alimentacoesLancamentosEspeciais?.includes(rowName) &&
+      !alimentacoesLancamentosEspeciaisDia?.includes(rowName)
+    ) {
+      return true;
+    }
+    if (escolaEhEMEBS) {
+      if (
+        ehDiaParaCorrigir(
+          dia,
+          categoria,
+          valoresPeriodosLancamentos,
+          diasParaCorrecao
+        ) &&
+        diasParaCorrecao.find(
+          (diaParaCorrecao) =>
+            String(diaParaCorrecao.dia) === String(dia) &&
+            String(diaParaCorrecao.categoria_medicao) === String(categoria) &&
+            diaParaCorrecao.habilitado_correcao === true &&
+            ALUNOS_EMEBS[diaParaCorrecao.infantil_ou_fundamental].key ===
+              alunosTabSelecionada
+        )
+      ) {
+        if (
+          grupoLocation === "Programas e Projetos" &&
+          !valorFieldParaCorrecao
+        ) {
+          return true;
+        }
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  if (
+    (location.state &&
+      (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
+        location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
+        location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
+        ([
+          "MEDICAO_CORRECAO_SOLICITADA",
+          "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+          "MEDICAO_CORRIGIDA_PELA_UE",
+          "MEDICAO_CORRIGIDA_PARA_CODAE",
+        ].includes(location.state.status_periodo) &&
+          !valorFieldParaCorrecao))) ||
+    ["matriculados", "numero_de_alunos", "dietas_autorizadas"].includes(rowName)
   ) {
     return true;
   }
 
   const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
-    locale: ptBR
+    locale: ptBR,
   }).toString();
   const mesAtual = format(mesAnoDefault, "LLLL", {
-    locale: ptBR
+    locale: ptBR,
   }).toString();
 
   if (nomeCategoria.includes("SOLICITAÇÕES")) {
-    return (
-      !validacaoDiaLetivo(dia) ||
+    if (
+      (!validacaoDiaLetivo(dia) &&
+        ((!kitLanchesAutorizadas.filter((kitLanche) => kitLanche.dia === dia)
+          .length &&
+          rowName === "kit_lanche") ||
+          (!alteracoesAlimentacaoAutorizadas.filter(
+            (lancheEmergencial) => lancheEmergencial.dia === dia
+          ).length &&
+            rowName === "lanche_emergencial"))) ||
       validacaoSemana(dia) ||
       (mesConsiderado === mesAtual &&
         Number(dia) >= format(mesAnoDefault, "dd"))
-    );
+    ) {
+      return true;
+    }
+    return false;
   }
   if (ehGrupoETECUrlParam && nomeCategoria === "ALIMENTAÇÃO") {
     const inclusao = inclusoesEtecAutorizadas.filter(
-      inclusao => Number(inclusao.dia) === Number(dia)
+      (inclusao) => Number(inclusao.dia) === Number(dia)
     );
     if (
       rowName === "frequencia" &&
@@ -272,7 +410,7 @@ export const desabilitarField = (
       !["Mês anterior", "Mês posterior"].includes(
         values[`frequencia__dia_${dia}__categoria_${categoria}`]
       ) &&
-      Object.keys(dadosValoresInclusoesEtecAutorizadasState).some(key =>
+      Object.keys(dadosValoresInclusoesEtecAutorizadasState).some((key) =>
         String(key).includes(`__dia_${dia}__categoria_${categoria}`)
       )
     ) {
@@ -281,14 +419,16 @@ export const desabilitarField = (
       rowName === "repeticao_refeicao" &&
       validacaoDiaLetivo(dia) &&
       !validacaoSemana(dia) &&
-      (inclusao.length && inclusao[0].alimentacoes.includes("refeicao"))
+      inclusao.length &&
+      inclusao[0].alimentacoes.includes("refeicao")
     ) {
       return false;
     } else if (
       rowName === "repeticao_sobremesa" &&
       validacaoDiaLetivo(dia) &&
       !validacaoSemana(dia) &&
-      (inclusao.length && inclusao[0].alimentacoes.includes("sobremesa"))
+      inclusao.length &&
+      inclusao[0].alimentacoes.includes("sobremesa")
     ) {
       return false;
     } else {
@@ -296,7 +436,7 @@ export const desabilitarField = (
         !validacaoDiaLetivo(dia) ||
         validacaoSemana(dia) ||
         rowName === "numero_de_alunos" ||
-        !Object.keys(dadosValoresInclusoesEtecAutorizadasState).some(key =>
+        !Object.keys(dadosValoresInclusoesEtecAutorizadasState).some((key) =>
           String(key).includes(`__dia_${dia}__categoria_${categoria}`)
         ) ||
         (inclusao.length && !inclusao[0].alimentacoes.includes(rowName)) ||
@@ -304,6 +444,36 @@ export const desabilitarField = (
           Number(dia) >= format(mesAnoDefault, "dd"))
       );
     }
+  }
+  if (
+    ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola) ||
+    location.state.periodoEspecifico
+  ) {
+    return (
+      validacaoSemana(dia) ||
+      rowName === "numero_de_alunos" ||
+      rowName === "dietas_autorizadas" ||
+      (nomeCategoria === "ALIMENTAÇÃO" &&
+        !values[`numero_de_alunos__dia_${dia}__categoria_${categoria}`]) ||
+      (nomeCategoria.includes("DIETA ESPECIAL") &&
+        !values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]) ||
+      Number(
+        values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+      ) === 0 ||
+      !values[
+        `numero_de_alunos__dia_${dia}__categoria_${
+          categoriasDeMedicao.find((cat) => cat.nome === "ALIMENTAÇÃO").id
+        }`
+      ] ||
+      (mesConsiderado === mesAtual &&
+        Number(dia) >= format(mesAnoDefault, "dd")) ||
+      validaAlimentacoesEDietasCEUGESTAO(
+        inclusoesAutorizadas,
+        rowName,
+        dia,
+        nomeCategoria
+      )
+    );
   }
   if (
     grupoLocation === "Programas e Projetos" &&
@@ -317,7 +487,7 @@ export const desabilitarField = (
       } else if (validacaoSemana(dia)) {
         return true;
       } else if (
-        !Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+        !Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
           key.includes(`__dia_${dia}`)
         )
       ) {
@@ -328,14 +498,57 @@ export const desabilitarField = (
     } else {
       if (rowName === "dietas_autorizadas") {
         return true;
-      } else if (!validacaoDiaLetivo(dia) || validacaoSemana(dia)) {
+      } else if (validacaoSemana(dia)) {
+        return true;
+      } else if (
+        !Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
+          key.includes(`__dia_${dia}`)
+        )
+      ) {
+        return true;
+      } else if (
+        !values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+      ) {
         return true;
       } else {
         return false;
       }
     }
   }
-  if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
+
+  if (
+    ehPeriodoEscolarSimples &&
+    nomeCategoria === "ALIMENTAÇÃO" &&
+    permissoesLancamentosEspeciaisPorDia &&
+    alimentacoesLancamentosEspeciais.includes(rowName)
+  ) {
+    if (
+      ((alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+        validacaoDiaLetivo(dia)) ||
+        (alimentacoesLancamentosEspeciaisDia.includes(rowName) &&
+          !validacaoDiaLetivo(dia) &&
+          inclusoesAutorizadas.filter((inc) => inc.dia === dia).length)) &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+      ) &&
+      values[`matriculados__dia_${dia}__categoria_${categoria}`]
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  if (
+    !values[`matriculados__dia_${dia}__categoria_${categoria}`] &&
+    !nomeCategoria.includes("DIETA ESPECIAL")
+  ) {
+    return true;
+  }
+  if (
+    !values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`] &&
+    nomeCategoria.includes("DIETA ESPECIAL")
+  ) {
     return true;
   }
   if (
@@ -347,9 +560,27 @@ export const desabilitarField = (
   ) {
     return false;
   } else if (
+    `refeicao__dia_${dia}__categoria_${categoria}` in
+      dadosValoresInclusoesAutorizadasState &&
+    rowName === "repeticao_refeicao" &&
+    !["Mês anterior", "Mês posterior"].includes(
+      values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+    )
+  ) {
+    return false;
+  } else if (
+    `sobremesa__dia_${dia}__categoria_${categoria}` in
+      dadosValoresInclusoesAutorizadasState &&
+    rowName === "repeticao_sobremesa" &&
+    !["Mês anterior", "Mês posterior"].includes(
+      values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+    )
+  ) {
+    return false;
+  } else if (
     `${rowName}__dia_${dia}__categoria_${categoria}` ===
       `frequencia__dia_${dia}__categoria_${categoria}` &&
-    Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+    Object.keys(dadosValoresInclusoesAutorizadasState).some((key) =>
       String(key).includes(`__dia_${dia}__categoria_${categoria}`)
     ) &&
     !["Mês anterior", "Mês posterior"].includes(
@@ -364,7 +595,8 @@ export const desabilitarField = (
       rowName === "matriculados" ||
       rowName === "numero_de_alunos" ||
       rowName === "dietas_autorizadas" ||
-      !values[`matriculados__dia_${dia}__categoria_${categoria}`] ||
+      (!values[`matriculados__dia_${dia}__categoria_${categoria}`] &&
+        !nomeCategoria.includes("DIETA ESPECIAL")) ||
       Number(
         values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
       ) === 0 ||
@@ -379,7 +611,7 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   mes,
   ano,
   periodos_escolares,
-  location
+  location = null
 ) => {
   const params = {};
   params["escola_uuid"] = escolaUuuid;
@@ -388,16 +620,18 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   params["ano"] = ano;
   params["periodos_escolares"] = periodos_escolares;
   if (
-    location.state.grupo &&
-    location.state.grupo.includes("Programas e Projetos")
+    location &&
+    ((location.state.grupo &&
+      location.state.grupo.includes("Programas e Projetos")) ||
+      (location.state.periodo &&
+        location.state.periodo.includes("Programas e Projetos")))
   ) {
     params["tipo_doc"] = "INC_ALIMENTA_CONTINUA";
   } else {
     params["excluir_inclusoes_continuas"] = true;
   }
-  const responseInclusoesAutorizadas = await getSolicitacoesInclusoesAutorizadasEscola(
-    params
-  );
+  const responseInclusoesAutorizadas =
+    await getSolicitacoesInclusoesAutorizadasEscola(params);
   if (responseInclusoesAutorizadas.status === HTTP_STATUS.OK) {
     return responseInclusoesAutorizadas.data.results;
   } else {
@@ -416,9 +650,8 @@ export const getSolicitacoesInclusoesEtecAutorizadasAsync = async (
   params["tipo_solicitacao"] = "Inclusão de";
   params["mes"] = mes;
   params["ano"] = ano;
-  const responseInclusoesAutorizadas = await getSolicitacoesInclusoesEtecAutorizadasEscola(
-    params
-  );
+  const responseInclusoesAutorizadas =
+    await getSolicitacoesInclusoesEtecAutorizadasEscola(params);
   if (responseInclusoesAutorizadas.status === HTTP_STATUS.OK) {
     return responseInclusoesAutorizadas.data.results;
   } else {
@@ -439,13 +672,36 @@ export const getSolicitacoesSuspensoesAutorizadasAsync = async (
   params["mes"] = mes;
   params["ano"] = ano;
   params["nome_periodo_escolar"] = nome_periodo_escolar;
-  const responseSuspensoesAutorizadas = await getSolicitacoesSuspensoesAutorizadasEscola(
-    params
-  );
+  const responseSuspensoesAutorizadas =
+    await getSolicitacoesSuspensoesAutorizadasEscola(params);
   if (responseSuspensoesAutorizadas.status === HTTP_STATUS.OK) {
     return responseSuspensoesAutorizadas.data.results;
   } else {
     toastError("Erro ao carregar Suspensões Autorizadas");
+    return [];
+  }
+};
+
+export const getPermissoesLancamentosEspeciaisMesAnoPorPeriodoAsync = async (
+  escolaUuuid,
+  mes,
+  ano,
+  nome_periodo_escolar
+) => {
+  const params = {};
+  params["escola_uuid"] = escolaUuuid;
+  params["mes"] = mes;
+  params["ano"] = ano;
+  params["nome_periodo_escolar"] = nome_periodo_escolar;
+  const responsePermissoesLancamentosEspeciaisMesAnoPorPeriodo =
+    await getPermissoesLancamentosEspeciaisMesAnoPorPeriodo(params);
+  if (
+    responsePermissoesLancamentosEspeciaisMesAnoPorPeriodo.status ===
+    HTTP_STATUS.OK
+  ) {
+    return responsePermissoesLancamentosEspeciaisMesAnoPorPeriodo.data.results;
+  } else {
+    toastError("Erro ao carregar Permissões de Lançamentos Especiais");
     return [];
   }
 };
@@ -466,9 +722,8 @@ export const getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync = async (
   if (!ehLancheEmergencial) {
     params["nome_periodo_escolar"] = nomePeriodoEscolar;
   }
-  const responseAlteracoesAlimentacaoAutorizadas = await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(
-    params
-  );
+  const responseAlteracoesAlimentacaoAutorizadas =
+    await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(params);
   if (responseAlteracoesAlimentacaoAutorizadas.status === HTTP_STATUS.OK) {
     return responseAlteracoesAlimentacaoAutorizadas.data.results;
   } else {
@@ -487,9 +742,8 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
   params["tipo_solicitacao"] = "Kit Lanche";
   params["mes"] = mes;
   params["ano"] = ano;
-  const responseKitLanchesAutorizadas = await getSolicitacoesKitLanchesAutorizadasEscola(
-    params
-  );
+  const responseKitLanchesAutorizadas =
+    await getSolicitacoesKitLanchesAutorizadasEscola(params);
   if (responseKitLanchesAutorizadas.status === HTTP_STATUS.OK) {
     return responseKitLanchesAutorizadas.data.results;
   } else {
@@ -500,89 +754,146 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
 
 export const formatarLinhasTabelaAlimentacao = (
   tipos_alimentacao,
-  periodoGrupo
+  periodoGrupo,
+  solicitacao,
+  eh_periodo_especifico = false,
+  ehPeriodoSimples = false,
+  alimentacoesLancamentosEspeciais = null
 ) => {
   const tiposAlimentacaoFormatadas = tipos_alimentacao
-    .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
-    .map(alimentacao => {
+    .filter((alimentacao) => alimentacao.nome !== "Lanche Emergencial")
+    .map((alimentacao) => {
       return {
         ...alimentacao,
         name: alimentacao.nome
           .normalize("NFD")
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase()
-          .replaceAll(/ /g, "_")
+          .replaceAll(/ /g, "_"),
       };
     });
   const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
-    ali => ali.nome === "Refeição"
+    (ali) => ali.nome === "Refeição"
   );
   if (indexRefeicao !== -1) {
     tiposAlimentacaoFormatadas[indexRefeicao].nome = "Refeição 1ª Oferta";
     tiposAlimentacaoFormatadas.splice(indexRefeicao + 1, 0, {
       nome: "Repetição Refeição",
       name: "repeticao_refeicao",
-      uuid: null
+      uuid: null,
     });
   }
 
   const indexSobremesa = tiposAlimentacaoFormatadas.findIndex(
-    ali => ali.nome === "Sobremesa"
+    (ali) => ali.nome === "Sobremesa"
   );
   if (indexSobremesa !== -1) {
     tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1º Oferta";
     tiposAlimentacaoFormatadas.splice(indexSobremesa + 1, 0, {
       nome: "Repetição Sobremesa",
       name: "repeticao_sobremesa",
-      uuid: null
+      uuid: null,
     });
   }
 
   const matriculadosOuNumeroDeAlunos = () => {
-    return periodoGrupo.grupo === "Programas e Projetos"
+    return periodoGrupo.grupo === "Programas e Projetos" ||
+      ehEscolaTipoCEUGESTAO(solicitacao.escola) ||
+      eh_periodo_especifico
       ? {
           nome: "Número de Alunos",
           name: "numero_de_alunos",
-          uuid: null
+          uuid: null,
         }
       : {
           nome: "Matriculados",
           name: "matriculados",
-          uuid: null
+          uuid: null,
         };
   };
 
   tiposAlimentacaoFormatadas.unshift(matriculadosOuNumeroDeAlunos(), {
     nome: "Frequência",
     name: "frequencia",
-    uuid: null
+    uuid: null,
   });
+
+  if (ehPeriodoSimples) {
+    const indexLanche = tiposAlimentacaoFormatadas.findIndex(
+      (ali) => ali.nome === "Lanche"
+    );
+    const indexLanche4h = tiposAlimentacaoFormatadas.findIndex(
+      (ali) => ali.nome === "Lanche 4h"
+    );
+    const cloneAlimentacoesLancamentosEspeciais = deepCopy(
+      alimentacoesLancamentosEspeciais
+    );
+    const lanchesLancamentosEspeciais =
+      cloneAlimentacoesLancamentosEspeciais.filter((alimentacao) =>
+        alimentacao.name.includes("lanche")
+      );
+    for (
+      let index = 0;
+      index <= lanchesLancamentosEspeciais.length - 1;
+      index++
+    ) {
+      tiposAlimentacaoFormatadas.splice(
+        Math.max(indexLanche, indexLanche4h) + 1 + index,
+        0,
+        lanchesLancamentosEspeciais[index]
+      );
+    }
+  }
 
   tiposAlimentacaoFormatadas.push({
     nome: "Observações",
     name: "observacoes",
-    uuid: null
+    uuid: null,
   });
+
+  if (ehPeriodoSimples) {
+    const indexObservacoes = tiposAlimentacaoFormatadas.findIndex(
+      (ali) => ali.nome === "Observações"
+    );
+    const cloneAlimentacoesLancamentosEspeciais = deepCopy(
+      alimentacoesLancamentosEspeciais
+    );
+    const lancamentosEspeciaisSemLanches =
+      cloneAlimentacoesLancamentosEspeciais.filter(
+        (alimentacao) => !alimentacao.name.includes("lanche")
+      );
+    for (
+      let index = 0;
+      index <= lancamentosEspeciaisSemLanches.length - 1;
+      index++
+    ) {
+      tiposAlimentacaoFormatadas.splice(
+        indexObservacoes + index,
+        0,
+        lancamentosEspeciaisSemLanches[index]
+      );
+    }
+  }
 
   return tiposAlimentacaoFormatadas;
 };
 
-export const formatarLinhasTabelasDietas = tipos_alimentacao => {
+export const formatarLinhasTabelasDietas = (tipos_alimentacao) => {
   const linhasTabelasDietas = [];
   linhasTabelasDietas.push(
     {
       nome: "Dietas Autorizadas",
       name: "dietas_autorizadas",
-      uuid: null
+      uuid: null,
     },
     {
       nome: "Frequência",
       name: "frequencia",
-      uuid: null
+      uuid: null,
     }
   );
 
-  const indexLanche4h = tipos_alimentacao.findIndex(ali =>
+  const indexLanche4h = tipos_alimentacao.findIndex((ali) =>
     ali.nome.includes("4h")
   );
   if (indexLanche4h !== -1) {
@@ -593,11 +904,13 @@ export const formatarLinhasTabelasDietas = tipos_alimentacao => {
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .replaceAll(/ /g, "_"),
-      uuid: tipos_alimentacao[indexLanche4h].uuid
+      uuid: tipos_alimentacao[indexLanche4h].uuid,
     });
   }
 
-  const indexLanche = tipos_alimentacao.findIndex(ali => ali.nome === "Lanche");
+  const indexLanche = tipos_alimentacao.findIndex(
+    (ali) => ali.nome === "Lanche"
+  );
   if (indexLanche !== -1) {
     linhasTabelasDietas.push({
       nome: "Lanche",
@@ -606,14 +919,14 @@ export const formatarLinhasTabelasDietas = tipos_alimentacao => {
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .replaceAll(/ /g, "_"),
-      uuid: tipos_alimentacao[indexLanche].uuid
+      uuid: tipos_alimentacao[indexLanche].uuid,
     });
   }
 
   linhasTabelasDietas.push({
     nome: "Observações",
     name: "observacoes",
-    uuid: null
+    uuid: null,
   });
 
   return linhasTabelasDietas;
@@ -624,13 +937,16 @@ export const formatarLinhasTabelaDietaEnteral = (
   linhasTabelasDietas
 ) => {
   const indexRefeicaoDieta = tipos_alimentacao.findIndex(
-    ali => ali.nome === "Refeição"
+    (ali) => ali.nome === "Refeição"
   );
-  linhasTabelasDietas.splice(linhasTabelasDietas.length - 1, 0, {
-    nome: "Refeição",
-    name: "refeicao",
-    uuid: tipos_alimentacao[indexRefeicaoDieta].uuid
-  });
+
+  if (indexRefeicaoDieta >= 0) {
+    linhasTabelasDietas.splice(linhasTabelasDietas.length - 1, 0, {
+      nome: "Refeição",
+      name: "refeicao",
+      uuid: tipos_alimentacao[indexRefeicaoDieta].uuid,
+    });
+  }
 
   return linhasTabelasDietas;
 };
@@ -641,17 +957,17 @@ export const formatarLinhasTabelaSolicitacoesAlimentacao = () => {
     {
       nome: "Lanche Emergencial",
       name: "lanche_emergencial",
-      uuid: null
+      uuid: null,
     },
     {
       nome: "Kit Lanche",
       name: "kit_lanche",
-      uuid: null
+      uuid: null,
     },
     {
       nome: "Observações",
       name: "observacoes",
-      uuid: null
+      uuid: null,
     }
   );
 
@@ -661,8 +977,8 @@ export const formatarLinhasTabelaSolicitacoesAlimentacao = () => {
 export const formatarLinhasTabelaEtecAlimentacao = () => {
   const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
   const tiposAlimentacaoEtecFormatadas = tiposAlimentacaoEtec
-    .filter(alimentacao => alimentacao !== "Lanche Emergencial")
-    .map(alimentacao => {
+    .filter((alimentacao) => alimentacao !== "Lanche Emergencial")
+    .map((alimentacao) => {
       return {
         nome: alimentacao,
         name: alimentacao
@@ -670,12 +986,12 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
           .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase()
           .replaceAll(/ /g, "_"),
-        uuid: null
+        uuid: null,
       };
     });
 
   const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
-    ali => ali.nome === "Refeição"
+    (ali) => ali.nome === "Refeição"
   );
   if (indexRefeicaoEtec !== -1) {
     tiposAlimentacaoEtecFormatadas[indexRefeicaoEtec].nome =
@@ -683,12 +999,12 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
     tiposAlimentacaoEtecFormatadas.splice(indexRefeicaoEtec + 1, 0, {
       nome: "Repetição Refeição",
       name: "repeticao_refeicao",
-      uuid: null
+      uuid: null,
     });
   }
 
   const indexSobremesaEtec = tiposAlimentacaoEtecFormatadas.findIndex(
-    ali => ali.nome === "Sobremesa"
+    (ali) => ali.nome === "Sobremesa"
   );
   if (indexSobremesaEtec !== -1) {
     tiposAlimentacaoEtecFormatadas[indexSobremesaEtec].nome =
@@ -696,7 +1012,7 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
     tiposAlimentacaoEtecFormatadas.splice(indexSobremesaEtec + 1, 0, {
       nome: "Repetição Sobremesa",
       name: "repeticao_sobremesa",
-      uuid: null
+      uuid: null,
     });
   }
 
@@ -704,19 +1020,19 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
     {
       nome: "Número de Alunos",
       name: "numero_de_alunos",
-      uuid: null
+      uuid: null,
     },
     {
       nome: "Frequência",
       name: "frequencia",
-      uuid: null
+      uuid: null,
     }
   );
 
   tiposAlimentacaoEtecFormatadas.push({
     nome: "Observações",
     name: "observacoes",
-    uuid: null
+    uuid: null,
   });
 
   return tiposAlimentacaoEtecFormatadas;
@@ -734,16 +1050,48 @@ export const defaultValue = (
   row,
   semanaSelecionada,
   valoresLancamentos,
-  categoria
+  categoria,
+  form,
+  periodoGrupo,
+  solicitacao,
+  alunosTabSelecionada = null
 ) => {
   let result = null;
+  let valorLancamento = null;
 
-  const valorLancamento = valoresLancamentos.find(
-    valor =>
-      Number(valor.categoria_medicao) === Number(categoria.id) &&
-      Number(valor.dia) === Number(column.dia) &&
-      valor.nome_campo === row.name
-  );
+  if (
+    solicitacao &&
+    (ehEscolaTipoCEI({ nome: solicitacao.escola }) ||
+      (ehEscolaTipoCEMEI({ nome: solicitacao.escola }) &&
+        ["INTEGRAL", "PARCIAL"].includes(periodoGrupo.nome_periodo_grupo)))
+  ) {
+    valorLancamento = valoresLancamentos.find(
+      (valor) =>
+        Number(valor.categoria_medicao) === Number(categoria.id) &&
+        Number(valor.dia) === Number(column.dia) &&
+        valor.nome_campo === row.name &&
+        valor.faixa_etaria === row.uuid
+    );
+  } else {
+    if (solicitacao?.escola_eh_emebs === true) {
+      valorLancamento = valoresLancamentos.find(
+        (valor) =>
+          Number(valor.categoria_medicao) === Number(categoria.id) &&
+          Number(valor.dia) === Number(column.dia) &&
+          valor.nome_campo === row.name &&
+          valor.infantil_ou_fundamental !== "N/A" &&
+          ALUNOS_EMEBS[valor.infantil_ou_fundamental].key ===
+            alunosTabSelecionada
+      );
+    } else {
+      valorLancamento = valoresLancamentos.find(
+        (valor) =>
+          Number(valor.categoria_medicao) === Number(categoria.id) &&
+          Number(valor.dia) === Number(column.dia) &&
+          valor.nome_campo === row.name
+      );
+    }
+  }
 
   if (valorLancamento) {
     result = valorLancamento.valor;
@@ -758,46 +1106,105 @@ export const defaultValue = (
     result = "Mês posterior";
   }
 
+  if (form && periodoGrupo) {
+    if (
+      solicitacao &&
+      (ehEscolaTipoCEI({ nome: solicitacao.escola }) ||
+        (ehEscolaTipoCEMEI({ nome: solicitacao.escola }) &&
+          ["INTEGRAL", "PARCIAL"].includes(periodoGrupo.nome_periodo_grupo)))
+    ) {
+      form.change(
+        `${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${
+          categoria.id
+        }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+          0,
+          5
+        )}`,
+        result
+      );
+    } else {
+      form.change(
+        `${row.name}__dia_${column.dia}__categoria_${
+          categoria.id
+        }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+          0,
+          5
+        )}`,
+        result
+      );
+    }
+  }
+
   return result;
 };
 
 export const ehDiaParaCorrigir = (
   dia,
   categoria,
-  valoresPeriodosLancamentos
+  valoresPeriodosLancamentos,
+  diasParaCorrecao
 ) => {
   const existeAlgumCampoParaCorrigir = valoresPeriodosLancamentos
-    .filter(
-      valor =>
-        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
-          valor.nome_campo
-        )
-    )
-    .filter(valor => String(valor.dia) === String(dia))
-    .filter(valor => String(valor.categoria_medicao) === String(categoria))
-    .filter(valor => valor.habilitado_correcao === true)[0];
+    .filter((valor) => String(valor.dia) === String(dia))
+    .filter((valor) => String(valor.categoria_medicao) === String(categoria))
+    .filter((valor) => valor.habilitado_correcao === true)[0];
 
-  return existeAlgumCampoParaCorrigir;
+  return (
+    existeAlgumCampoParaCorrigir ||
+    (diasParaCorrecao &&
+      diasParaCorrecao.find(
+        (diaParaCorrecao) =>
+          String(diaParaCorrecao.dia) === String(dia) &&
+          String(diaParaCorrecao.categoria_medicao) === String(categoria) &&
+          diaParaCorrecao.habilitado_correcao === true
+      ))
+  );
 };
 
 export const textoBotaoObservacao = (
   value,
   valoresObservacoes,
   dia,
-  categoria
+  categoria,
+  escolaEhEMEBS = false,
+  alunosTabSelecionada = null,
+  values = null
 ) => {
   let text = "Adicionar";
-  if (value && !["<p></p>", "<p></p>\n", null, "", undefined].includes(value)) {
-    text = "Visualizar";
-  } else if (
+  const valorObs =
     valoresObservacoes &&
     valoresObservacoes.find(
-      valor =>
+      (valor) =>
         String(valor.dia) === String(dia) &&
         String(valor.categoria_medicao) === String(categoria)
-    )
-  ) {
-    text = "Visualizar";
+    );
+  if (value && !["<p></p>", "<p></p>\n", null, "", undefined].includes(value)) {
+    if (
+      escolaEhEMEBS &&
+      valorObs &&
+      ALUNOS_EMEBS[valorObs.infantil_ou_fundamental].key !==
+        alunosTabSelecionada
+    ) {
+      text = "Adicionar";
+    } else {
+      text = "Visualizar";
+    }
+    if (
+      escolaEhEMEBS &&
+      values[`observacoes__dia_${dia}__categoria_${categoria}`] === value
+    ) {
+      text = "Visualizar";
+    }
+  } else if (valorObs) {
+    if (
+      escolaEhEMEBS &&
+      ALUNOS_EMEBS[valorObs.infantil_ou_fundamental].key !==
+        alunosTabSelecionada
+    ) {
+      text = "Adicionar";
+    } else {
+      text = "Visualizar";
+    }
   }
   return text;
 };
@@ -810,7 +1217,8 @@ export const desabilitarBotaoColunaObservacoes = (
   formValuesAtualizados,
   row,
   valoresObservacoes,
-  dia
+  dia,
+  diasParaCorrecao
 ) => {
   const botaoEhAdicionar =
     textoBotaoObservacao(
@@ -831,19 +1239,20 @@ export const desabilitarBotaoColunaObservacoes = (
         "MEDICAO_CORRECAO_SOLICITADA",
         "MEDICAO_CORRECAO_SOLICITADA_CODAE",
         "MEDICAO_CORRIGIDA_PELA_UE",
-        "MEDICAO_CORRIGIDA_PARA_CODAE"
+        "MEDICAO_CORRIGIDA_PARA_CODAE",
       ].includes(location.state.status_periodo) &&
         !valoresPeriodosLancamentos
-          .filter(valor => valor.nome_campo === "observacoes")
-          .filter(valor => String(valor.dia) === String(column.dia))
+          .filter((valor) => valor.nome_campo === "observacoes")
+          .filter((valor) => String(valor.dia) === String(column.dia))
           .filter(
-            valor => String(valor.categoria_medicao) === String(categoria.id)
+            (valor) => String(valor.categoria_medicao) === String(categoria.id)
           )[0])) &&
       botaoEhAdicionar &&
       !ehDiaParaCorrigir(
         column.dia,
         categoria.id,
-        valoresPeriodosLancamentos
+        valoresPeriodosLancamentos,
+        diasParaCorrecao
       )) ||
       (["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_APROVADA_PELA_CODAE"].includes(
         location.state.status_periodo
@@ -853,12 +1262,76 @@ export const desabilitarBotaoColunaObservacoes = (
         "MEDICAO_CORRECAO_SOLICITADA",
         "MEDICAO_CORRECAO_SOLICITADA_CODAE",
         "MEDICAO_CORRIGIDA_PELA_UE",
-        "MEDICAO_CORRIGIDA_PARA_CODAE"
+        "MEDICAO_CORRIGIDA_PARA_CODAE",
       ].includes(location.state.status_periodo) &&
         !ehDiaParaCorrigir(
           column.dia,
           categoria.id,
-          valoresPeriodosLancamentos
+          valoresPeriodosLancamentos,
+          diasParaCorrecao
         )))
   );
+};
+
+export const tabAlunosEmebs = (
+  escolaEhEMEBS,
+  response_matriculados,
+  response_log_dietas_autorizadas,
+  setAlunosTabSelecionada,
+  setTabItemsAlunosEmebs
+) => {
+  if (escolaEhEMEBS) {
+    let itemsAlunosEmebs = [];
+    if (
+      response_matriculados?.data
+        .filter(
+          (matriculado) => matriculado.infantil_ou_fundamental === "INFANTIL"
+        )
+        .some((matriculado) => matriculado.quantidade_alunos !== 0) ||
+      response_log_dietas_autorizadas?.data
+        .filter(
+          (log) =>
+            log.infantil_ou_fundamental === "INFANTIL" &&
+            log.classificacao.toUpperCase() !== "TIPO C"
+        )
+        .some((log) => log.quantidade !== 0)
+    ) {
+      itemsAlunosEmebs.push({
+        key: INFANTIL_EMEBS.key,
+        label: INFANTIL_EMEBS.label,
+      });
+      setAlunosTabSelecionada(INFANTIL_EMEBS.key);
+    }
+    itemsAlunosEmebs.push({
+      key: FUNDAMENTAL_EMEBS.key,
+      label: FUNDAMENTAL_EMEBS.label,
+    });
+    setTabItemsAlunosEmebs(itemsAlunosEmebs);
+  }
+};
+
+export const desabilitarBotaoObservacoesConferenciaLancamentos = (
+  valoresLancamentos,
+  column,
+  categoria,
+  solicitacao,
+  alunosTabSelecionada
+) => {
+  if (solicitacao?.escola_eh_emebs === true) {
+    return !valoresLancamentos.find(
+      (valor) =>
+        valor.nome_campo === "observacoes" &&
+        Number(valor.dia) === Number(column.dia) &&
+        Number(valor.categoria_medicao) === Number(categoria.id) &&
+        valor.infantil_ou_fundamental !== "N/A" &&
+        ALUNOS_EMEBS[valor.infantil_ou_fundamental].key === alunosTabSelecionada
+    );
+  } else {
+    return !valoresLancamentos.find(
+      (valor) =>
+        valor.nome_campo === "observacoes" &&
+        Number(valor.dia) === Number(column.dia) &&
+        Number(valor.categoria_medicao) === Number(categoria.id)
+    );
+  }
 };

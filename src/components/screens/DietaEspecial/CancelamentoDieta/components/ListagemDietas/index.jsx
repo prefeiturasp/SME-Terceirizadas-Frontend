@@ -18,7 +18,7 @@ const ListagemDietas = ({ dietas, ativos, setAtivos, filtros, setFiltros }) => {
           <div>Tipo de Solicitação</div>
           <div />
         </div>
-        {dietas.map(dieta => {
+        {dietas.map((dieta) => {
           const bordas =
             ativos && ativos.includes(dieta.uuid) ? "desativar-borda" : "";
           const icone =

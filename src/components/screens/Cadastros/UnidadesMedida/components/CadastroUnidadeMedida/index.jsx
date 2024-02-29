@@ -5,21 +5,21 @@ import "./style.scss";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { Modal } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
   noSpaceStartOrEnd,
-  required
+  required,
 } from "helpers/fieldValidators";
 import {
   cadastrarUnidadeMedida,
   editarUnidadeMedida,
-  getUnidadeMedida
+  getUnidadeMedida,
 } from "services/qualidade.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { composeValidators } from "helpers/utilities";
@@ -43,7 +43,7 @@ export default () => {
   const [uuid, setUuid] = useState(null);
   const [initialValues, setInitialValues] = useState({});
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const onSubmit = () => {
     setShowModalSalvar(true);
@@ -64,7 +64,7 @@ export default () => {
         form.restart(initialValues);
         setCarregando(false);
       } else if (response.status === HTTP_STATUS.OK) {
-        history.push(`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`);
+        navigate(`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`);
         toastSuccess("Unidade de Medida atualizada com sucesso!");
         setCarregando(false);
         setShowModalSalvar(false);
@@ -80,7 +80,7 @@ export default () => {
     }
   };
 
-  const montaPayload = values => {
+  const montaPayload = (values) => {
     let payload = {};
 
     payload.nome = values.nome_unidade_medida;
@@ -89,13 +89,13 @@ export default () => {
     return payload;
   };
 
-  const erroCadastroOuEdicaoRepetido = error => {
+  const erroCadastroOuEdicaoRepetido = (error) => {
     return error.response.data.non_field_errors.includes(
       "Os campos nome devem criar um set único."
     );
   };
 
-  const buscaUnidadeMedida = async uuid => {
+  const buscaUnidadeMedida = async (uuid) => {
     let response;
     try {
       response = await getUnidadeMedida(uuid);
@@ -103,7 +103,7 @@ export default () => {
         setInitialValues({
           nome_unidade_medida: response.data.nome,
           abreviacao: response.data.abreviacao,
-          data_cadastro: response.data.criado_em.slice(0, 10)
+          data_cadastro: response.data.criado_em.slice(0, 10),
         });
         setCarregando(false);
       }
@@ -127,8 +127,8 @@ export default () => {
         data_cadastro: new Date().toLocaleDateString("pt-BR", {
           day: "2-digit",
           month: "2-digit",
-          year: "numeric"
-        })
+          year: "numeric",
+        }),
       });
     }
   }, []);
@@ -192,13 +192,13 @@ export default () => {
                     texto="Salvar"
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                   />
                   <Botao
                     texto="Cancelar"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     onClick={() => {
                       setShowModalCancelar(true);
                     }}
@@ -231,19 +231,19 @@ export default () => {
                         setShowModalCancelar(false);
                       }}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Sim"
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
                         setShowModalCancelar(false);
-                        history.push(
+                        navigate(
                           `/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`
                         );
                       }}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </Modal.Footer>
                 </Modal>
@@ -270,7 +270,7 @@ export default () => {
                         setCarregando(false);
                       }}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Sim"
@@ -279,7 +279,7 @@ export default () => {
                         salvarDados(values, form);
                       }}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                     />
                   </Modal.Footer>
                 </Modal>

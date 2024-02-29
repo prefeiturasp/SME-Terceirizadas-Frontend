@@ -5,24 +5,24 @@ import { NavLink } from "react-router-dom";
 import {
   CADASTRO_CRONOGRAMA,
   EDITAR,
-  PRE_RECEBIMENTO
+  PRE_RECEBIMENTO,
 } from "configs/constants";
 
 export default ({ listaRascunhos }) => {
-  const so_data = data => {
+  const so_data = (data) => {
     if (data) {
       return data.slice(0, 10);
     }
   };
-  const so_hora = hora => {
+  const so_hora = (hora) => {
     if (hora) {
       return hora.slice(11, 16);
     }
   };
   return (
     <>
-      <Spin tip="Carregando..." spinning={!listaRascunhos}>
-        {listaRascunhos && listaRascunhos.length > 0 && (
+      {listaRascunhos && listaRascunhos.length > 0 && (
+        <Spin tip="Carregando..." spinning={!listaRascunhos}>
           <div className="card mt-3">
             <div className="card-body body-rascunho">
               <span className="titulo-rascunho">Rascunhos</span>
@@ -30,21 +30,17 @@ export default ({ listaRascunhos }) => {
                 {listaRascunhos.map((rascunho, idx) => {
                   return (
                     <div key={idx} className="row row-rascunho">
-                      <div className="col-5 numero-rascunho">{`Cronograma #${
-                        rascunho.numero
-                      }`}</div>
+                      <div className="col-5 numero-rascunho">{`Cronograma #${rascunho.numero}`}</div>
                       <div className="col-7 data-rascunho ">
                         {`Rascunho salvo em ${so_data(
                           rascunho.alterado_em
                         )} às ${so_hora(rascunho.alterado_em)}`}
 
                         <NavLink
-                          to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${
-                            rascunho.uuid
-                          }`}
+                          to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${rascunho.uuid}`}
                         >
                           <span className="icon-editar-rascunho">
-                            <i className="fas fa-edit" />
+                            <i title="Editar" className="fas fa-edit" />
                           </span>
                         </NavLink>
                       </div>
@@ -54,8 +50,8 @@ export default ({ listaRascunhos }) => {
               </div>
             </div>
           </div>
-        )}
-      </Spin>
+        </Spin>
+      )}
     </>
   );
 };

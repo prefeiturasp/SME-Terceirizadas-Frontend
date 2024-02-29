@@ -8,7 +8,7 @@ export const field = ({ input, meta, options }) => {
   const inputValue = input.value;
 
   const checkboxes = options.map(({ label, value }, index) => {
-    const handleChange = event => {
+    const handleChange = (event) => {
       const arr = [...inputValue];
       if (event.target.checked) {
         arr.push(value);
@@ -21,7 +21,7 @@ export const field = ({ input, meta, options }) => {
     const checked = inputValue.includes(value);
     const style = {
       width: "2em",
-      height: "2em"
+      height: "2em",
     };
     return (
       <div key={index} className="form-check  form-check-inline">
@@ -36,7 +36,7 @@ export const field = ({ input, meta, options }) => {
           onChange={handleChange}
           onFocus={onFocus}
         />
-        <label className="form-check-label ml-2" htmlFor={`checkbox-${index}`}>
+        <label className="form-check-label ms-2" htmlFor={`checkbox-${index}`}>
           {`${label}`}
         </label>
       </div>
@@ -57,9 +57,9 @@ export default class CheckboxGroup extends Component {
     options: PropTypes.arrayOf(
       PropTypes.shape({
         label: PropTypes.string.isRequired,
-        value: PropTypes.string.isRequired
+        value: PropTypes.string.isRequired,
       })
-    ).isRequired
+    ).isRequired,
   };
 
   render() {

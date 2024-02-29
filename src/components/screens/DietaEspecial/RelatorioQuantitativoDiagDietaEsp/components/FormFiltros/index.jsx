@@ -7,7 +7,7 @@ import { OnChange } from "react-final-form-listeners";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
@@ -20,7 +20,7 @@ import { TIPO_PERFIL } from "constants/shared";
 import {
   formFiltrosObtemDreEEscolasNovo,
   getDadosIniciais,
-  validateFormDreEscola
+  validateFormDreEscola,
 } from "helpers/dietaEspecial";
 
 import { getAlergiasIntoleranciasAxios } from "services/dietaEspecial.service";
@@ -29,13 +29,13 @@ import "./styles.scss";
 
 export default ({ onSubmit, loading, setLoading }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] = useState([
-    { value: "", label: "Carregando..." }
+    { value: "", label: "Carregando..." },
   ]);
   const [escolas, setEscolas] = useState([
-    { value: "", label: "Carregando...", dre: { uuid: "" } }
+    { value: "", label: "Carregando...", dre: { uuid: "" } },
   ]);
   const [diagnosticos, setDiagnosticos] = useState([
-    { value: "", label: "Carregando..." }
+    { value: "", label: "Carregando..." },
   ]);
   const [dadosIniciais, setDadosIniciais] = useState({});
 
@@ -57,10 +57,10 @@ export default ({ onSubmit, loading, setLoading }) => {
       setDadosIniciais(responseDadosIniciais);
       if (responseDiagnosticos.status === HTTP_STATUS.OK) {
         setDiagnosticos(
-          responseDiagnosticos.data.map(d => {
+          responseDiagnosticos.data.map((d) => {
             return {
               value: d.id,
-              label: d.descricao
+              label: d.descricao,
             };
           })
         );
@@ -72,7 +72,7 @@ export default ({ onSubmit, loading, setLoading }) => {
     effect();
   }, []);
 
-  const getEscolasFiltrado = dre => {
+  const getEscolasFiltrado = (dre) => {
     if (
       tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
       tipoUsuario === TIPO_PERFIL.ESCOLA
@@ -82,7 +82,7 @@ export default ({ onSubmit, loading, setLoading }) => {
       if (dre.length === 0) {
         return escolas;
       } else {
-        return escolas.filter(e => dre.includes(e.dre.uuid));
+        return escolas.filter((e) => dre.includes(e.dre.uuid));
       }
     }
     return escolas;
@@ -111,9 +111,12 @@ export default ({ onSubmit, loading, setLoading }) => {
                   name="somente_dietas_ativas"
                 />
                 <OnChange name="somente_dietas_ativas">
-                  {value => {
+                  {(value) => {
                     if (value) {
-                      form.change("dre", diretoriasRegionais.map(v => v.value));
+                      form.change(
+                        "dre",
+                        diretoriasRegionais.map((v) => v.value)
+                      );
                       form.change("status", "ativas");
                     } else {
                       if (
@@ -208,7 +211,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                     { uuid: "", nome: "Todos" },
                     { uuid: "ativas", nome: "Ativa" },
                     { uuid: "inativas", nome: "Inativa" },
-                    { uuid: "pendentes", nome: "Pendente de aprovação" }
+                    { uuid: "pendentes", nome: "Pendente de aprovação" },
                   ]}
                   naoDesabilitarPrimeiraOpcao
                 />
@@ -259,7 +262,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                 <Botao
                   style={BUTTON_STYLE.GREEN}
                   texto="Consultar"
-                  className="ml-3"
+                  className="ms-3"
                   type={BUTTON_TYPE.SUBMIT}
                   disabled={loading || submitting}
                 />

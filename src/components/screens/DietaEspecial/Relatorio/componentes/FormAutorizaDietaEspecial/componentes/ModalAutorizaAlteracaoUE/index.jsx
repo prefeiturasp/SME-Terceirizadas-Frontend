@@ -3,11 +3,11 @@ import { Modal } from "react-bootstrap";
 import Botao from "../../../../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "../../../../../../../Shareable/Botao/constants";
 import { Spin } from "antd";
 
-export default props => (
+export default (props) => (
   <Modal show={props.showModal} onHide={props.closeModal} size="lg">
     <Modal.Header className="pb-1" closeButton>
       <Modal.Title>
@@ -72,7 +72,7 @@ export default props => (
       </Modal.Body>
       <Modal.Footer className="row">
         <div className="col-12" style={{ alignItems: "flex-end" }}>
-          <div className="mr-2 float-left">
+          <div className="me-2 float-start">
             <p>
               <b>Deseja continuar?</b>
             </p>
@@ -82,13 +82,13 @@ export default props => (
             type={BUTTON_TYPE.BUTTON}
             onClick={props.handleSubmit}
             style={BUTTON_STYLE.GREEN}
-            className="ml-3 float-right"
+            className="ms-3 float-end"
           />
           <Botao
             texto="Cancelar"
             onClick={props.closeModal}
             style={BUTTON_STYLE.DARK_OUTLINE}
-            className="ml-3 float-right"
+            className="ms-3 float-end"
           />
         </div>
       </Modal.Footer>

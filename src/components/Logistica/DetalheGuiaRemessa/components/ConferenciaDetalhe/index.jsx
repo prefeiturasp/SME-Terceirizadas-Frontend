@@ -3,14 +3,14 @@ import "./styles.scss";
 
 export default ({ conferencia, reposicaoFlag, guia }) => {
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
-    const embalagensFiltradas = embalagens.filter(value => {
+    const embalagensFiltradas = embalagens.filter((value) => {
       return value.tipo_embalagem.toUpperCase() === tipo;
     });
     if (embalagensFiltradas.length) return embalagensFiltradas[0];
     else return false;
   };
 
-  const getClassStatus = item => {
+  const getClassStatus = (item) => {
     switch (item.status_alimento) {
       case "Recebido":
         return "green";
@@ -23,8 +23,8 @@ export default ({ conferencia, reposicaoFlag, guia }) => {
     }
   };
 
-  const existeOcorrencia = conf =>
-    conf.some(item => item.embalagens[0].ocorrencia);
+  const existeOcorrencia = (conf) =>
+    conf.some((item) => item.embalagens[0].ocorrencia);
 
   const titulo = reposicaoFlag
     ? "Reposição de itens faltantes"
@@ -101,13 +101,13 @@ export default ({ conferencia, reposicaoFlag, guia }) => {
           </tr>
         </thead>
         <tbody>
-          {conferencia.conferencia_dos_alimentos.map(item => {
+          {conferencia.conferencia_dos_alimentos.map((item) => {
             const fracionada = filtraEmbalagemPorTipo(
               item.embalagens,
               "FRACIONADA"
             );
             const fechada = filtraEmbalagemPorTipo(item.embalagens, "FECHADA");
-            let celEmbalagem = embalagem => (
+            let celEmbalagem = (embalagem) => (
               <td className="embalagem">
                 {embalagem ? <>{embalagem.capacidade_completa}</> : "--"}
               </td>
@@ -202,7 +202,7 @@ export default ({ conferencia, reposicaoFlag, guia }) => {
           </p>
         )}
 
-        {conferencia.conferencia_dos_alimentos.map(item => {
+        {conferencia.conferencia_dos_alimentos.map((item) => {
           const conf = item.embalagens[0];
 
           return conf.ocorrencia ? (

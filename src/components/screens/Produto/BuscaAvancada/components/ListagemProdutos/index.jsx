@@ -20,9 +20,7 @@ const ListagemProdutos = ({ produtos, ativos, setAtivos }) => {
         </div>
         {produtos.map((produto, index) => {
           const terceirizada = produto.ultima_homologacao.rastro_terceirizada;
-          const urlDetalhes = `/pesquisa-desenvolvimento/relatorio-produto?uuid=${
-            produto.uuid
-          }`;
+          const urlDetalhes = `/pesquisa-desenvolvimento/relatorio-produto?uuid=${produto.uuid}`;
           const status = produto.ultima_homologacao.status;
           const bordas =
             ativos && ativos.includes(produto.uuid) ? "desativar-borda" : "";
@@ -48,7 +46,7 @@ const ListagemProdutos = ({ produtos, ativos, setAtivos }) => {
                     className={`fas fa-${icone}`}
                     onClick={() => {
                       ativos && ativos.includes(produto.uuid)
-                        ? setAtivos(ativos.filter(el => el !== produto.uuid))
+                        ? setAtivos(ativos.filter((el) => el !== produto.uuid))
                         : setAtivos(
                             ativos ? [...ativos, produto.uuid] : [produto.uuid]
                           );
@@ -98,7 +96,6 @@ const ListagemProdutos = ({ produtos, ativos, setAtivos }) => {
                   </div>
                   <div className="grid-do-produto botao-produto-visualizar">
                     <NavLink
-                      activeClassName="active"
                       className="botao-visualizar-produto"
                       to={urlDetalhes}
                     >

@@ -14,11 +14,11 @@ const {
   UE_RESPONDEU_RECLAMACAO,
   NUTRISUPERVISOR_RESPONDEU_RECLAMACAO,
   AGUARDANDO_ANALISE_SENSORIAL,
-  ANALISE_SENSORIAL_RESPONDIDA
+  ANALISE_SENSORIAL_RESPONDIDA,
 } = RECLAMACAO_PRODUTO_STATUS_EXPLICACAO;
 
 const Reclamacao = ({ reclamacao }) => {
-  const blocoQuestionamentoCodae = log => {
+  const blocoQuestionamentoCodae = (log) => {
     return (
       <>
         <div className="row">
@@ -31,7 +31,7 @@ const Reclamacao = ({ reclamacao }) => {
             <div
               className="value-item value-uppercase"
               dangerouslySetInnerHTML={{
-                __html: log.justificativa
+                __html: log.justificativa,
               }}
             />
           </div>
@@ -51,7 +51,7 @@ const Reclamacao = ({ reclamacao }) => {
     );
   };
 
-  const blocoQuestionamentoUE = log => {
+  const blocoQuestionamentoUE = (log) => {
     return (
       <div className="row mb-4">
         <div className="col-4">
@@ -65,7 +65,7 @@ const Reclamacao = ({ reclamacao }) => {
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
-              __html: log.justificativa
+              __html: log.justificativa,
             }}
           />
         </div>
@@ -73,7 +73,7 @@ const Reclamacao = ({ reclamacao }) => {
     );
   };
 
-  const blocoQuestionamentoNutrisupervisor = log => {
+  const blocoQuestionamentoNutrisupervisor = (log) => {
     return (
       <div className="row mb-4">
         <div className="col-4">
@@ -87,7 +87,7 @@ const Reclamacao = ({ reclamacao }) => {
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
-              __html: log.justificativa
+              __html: log.justificativa,
             }}
           />
         </div>
@@ -95,7 +95,7 @@ const Reclamacao = ({ reclamacao }) => {
     );
   };
 
-  const blocoRespostaTerceirizada = log => {
+  const blocoRespostaTerceirizada = (log) => {
     return (
       <>
         <div className="row mb-4">
@@ -108,7 +108,7 @@ const Reclamacao = ({ reclamacao }) => {
             <div
               className="value-item value-uppercase"
               dangerouslySetInnerHTML={{
-                __html: log.justificativa
+                __html: log.justificativa,
               }}
             />
           </div>
@@ -140,7 +140,7 @@ const Reclamacao = ({ reclamacao }) => {
     );
   };
 
-  const blocoRespostaUE = log => {
+  const blocoRespostaUE = (log) => {
     return (
       <div className="row mb-4">
         <div className="col-4">
@@ -152,7 +152,7 @@ const Reclamacao = ({ reclamacao }) => {
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
-              __html: log.justificativa
+              __html: log.justificativa,
             }}
           />
         </div>
@@ -160,7 +160,7 @@ const Reclamacao = ({ reclamacao }) => {
     );
   };
 
-  const blocoRespostaNutrisupervisor = log => {
+  const blocoRespostaNutrisupervisor = (log) => {
     return (
       <div className="row mb-4">
         <div className="col-4">
@@ -172,7 +172,7 @@ const Reclamacao = ({ reclamacao }) => {
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
-              __html: log.justificativa
+              __html: log.justificativa,
             }}
           />
         </div>
@@ -180,7 +180,7 @@ const Reclamacao = ({ reclamacao }) => {
     );
   };
 
-  const blocoAceiteOuRecusa = log => {
+  const blocoAceiteOuRecusa = (log) => {
     return (
       <div className="row mb-4">
         <div className="col-4">
@@ -192,7 +192,7 @@ const Reclamacao = ({ reclamacao }) => {
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
-              __html: log.justificativa
+              __html: log.justificativa,
             }}
           />
         </div>
@@ -200,7 +200,7 @@ const Reclamacao = ({ reclamacao }) => {
     );
   };
 
-  const blocoRespostaCodae = log => {
+  const blocoRespostaCodae = (log) => {
     return (
       <div className="row mb-4">
         <div />
@@ -213,7 +213,7 @@ const Reclamacao = ({ reclamacao }) => {
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
-              __html: log.justificativa
+              __html: log.justificativa,
             }}
           />
         </div>
@@ -221,7 +221,7 @@ const Reclamacao = ({ reclamacao }) => {
     );
   };
 
-  const blocoCodaePediuAnalise = log => {
+  const blocoCodaePediuAnalise = (log) => {
     return (
       <div className="row mb-4">
         <div className="col-4">
@@ -237,7 +237,7 @@ const Reclamacao = ({ reclamacao }) => {
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
-              __html: log.justificativa
+              __html: log.justificativa,
             }}
           />
         </div>
@@ -245,7 +245,7 @@ const Reclamacao = ({ reclamacao }) => {
     );
   };
 
-  const blocoRespostaAnalise = log => {
+  const blocoRespostaAnalise = (log) => {
     return (
       <div className="row mb-4">
         <div className="col-4">
@@ -257,7 +257,7 @@ const Reclamacao = ({ reclamacao }) => {
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
-              __html: log.justificativa
+              __html: log.justificativa,
             }}
           />
         </div>
@@ -265,7 +265,7 @@ const Reclamacao = ({ reclamacao }) => {
     );
   };
 
-  const blocoMensagem = log => {
+  const blocoMensagem = (log) => {
     if (log.status_evento_explicacao === CODAE_QUESTIONOU_TERCEIRIZADA) {
       return blocoQuestionamentoCodae(log);
     } else if (log.status_evento_explicacao === CODAE_QUESTIONOU_UE) {
@@ -357,7 +357,7 @@ const Reclamacao = ({ reclamacao }) => {
           />
         </div>
       </div>
-      {reclamacao.logs.map(log => {
+      {reclamacao.logs.map((log) => {
         return blocoMensagem(log);
       })}
     </>

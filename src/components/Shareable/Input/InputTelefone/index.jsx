@@ -9,7 +9,7 @@ class TelefoneOuCelular extends Component {
     super(props);
     this.state = {
       ehCelular: false,
-      contato: null
+      contato: null,
     };
   }
 
@@ -28,7 +28,7 @@ class TelefoneOuCelular extends Component {
         /\d/,
         /\d/,
         /\d/,
-        /\d/
+        /\d/,
       ];
     }
     if (quantidadeInput > 12) {
@@ -45,12 +45,12 @@ class TelefoneOuCelular extends Component {
         /\d/,
         /\d/,
         /\d/,
-        /\d/
+        /\d/,
       ];
     }
   }
 
-  setaContato = valor => {
+  setaContato = (valor) => {
     this.setState({ contato: valor });
   };
 
@@ -68,7 +68,7 @@ class TelefoneOuCelular extends Component {
       required,
       helpText,
       meta,
-      className
+      className,
     } = this.props;
     return (
       <div className="input">
@@ -80,22 +80,24 @@ class TelefoneOuCelular extends Component {
           ),
           <label key={1} htmlFor={name} className={`col-form-label`}>
             {label}
-          </label>
+          </label>,
         ]}
         <MaskedInput
           {...input}
           name={name}
           id={id}
-          mask={valor => this.verificaCampo(valor)}
-          className={`form-control ${className} ${meta &&
+          mask={(valor) => this.verificaCampo(valor)}
+          className={`form-control ${className} ${
+            meta &&
             meta.touched &&
             (meta.error || meta.warning) &&
-            "invalid-field"}`}
+            "invalid-field"
+          }`}
           guide={false}
           required={required}
           onChange={
             cenario !== "distribuidor"
-              ? event => {
+              ? (event) => {
                   cenario === "contatoEmpresa"
                     ? setaContatosEmpresa(
                         "telefone",

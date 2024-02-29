@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 import { HOME } from "constants/config";
 
@@ -8,20 +9,21 @@ import Page from "components/Shareable/Page/Page";
 import UpdateProtocoloPadrao from "components/screens/DietaEspecial/CadastroProtocoloPadraoDietaEsp";
 import {
   DIETA_ESPECIAL,
-  CONSULTA_PROTOCOLO_PADRAO_DIETA
+  CONSULTA_PROTOCOLO_PADRAO_DIETA,
 } from "configs/constants";
 
-export default ({ match }) => {
-  const uuid = match.params.uuid;
+export default () => {
+  const location = useLocation();
+  const uuid = location.pathname.split("/")[3];
   const atual = {
     href: `/${DIETA_ESPECIAL}/protocolo-padrao/${uuid}/editar`,
-    titulo: "Atualização de Protocolo Padrão de Dieta Especial"
+    titulo: "Atualização de Protocolo Padrão de Dieta Especial",
   };
   const anteriores = [
     {
       href: `/${DIETA_ESPECIAL}/${CONSULTA_PROTOCOLO_PADRAO_DIETA}`,
-      titulo: "Consultar Protocolo Padrão"
-    }
+      titulo: "Consultar Protocolo Padrão",
+    },
   ];
 
   return (

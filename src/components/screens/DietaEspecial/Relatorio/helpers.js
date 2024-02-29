@@ -14,7 +14,7 @@ const DESCRICAO_SOLICITACAO = {
     "Cancelamento para aluno não matriculado na Unidade Educacional",
   CANCELADO_ALUNO_NAO_PERTENCE_REDE:
     "Cancelamento para aluno não matriculado na rede municipal",
-  CODAE_NEGOU_CANCELAMENTO: "Negado o Cancelamento"
+  CODAE_NEGOU_CANCELAMENTO: "Negado o Cancelamento",
 };
 
 export const cabecalhoDieta = (dietaEspecial, card) => {
@@ -42,16 +42,16 @@ export const cabecalhoDieta = (dietaEspecial, card) => {
   return `Dieta Especial - ${descricao}`;
 };
 
-export const ehSolicitacaoDeCancelamento = status => {
+export const ehSolicitacaoDeCancelamento = (status) => {
   return [
     "ESCOLA_CANCELOU",
     "TERMINADA_AUTOMATICAMENTE_SISTEMA",
     "CANCELADO_ALUNO_MUDOU_ESCOLA",
-    "CANCELADO_ALUNO_NAO_PERTENCE_REDE"
+    "CANCELADO_ALUNO_NAO_PERTENCE_REDE",
   ].includes(status);
 };
 
-export const formataJustificativa = dietaEspecial => {
+export const formataJustificativa = (dietaEspecial) => {
   let justificativa = null;
   if (dietaEspecial.status_solicitacao === "ESCOLA_CANCELOU") {
     if (dietaEspecial.logs.length === 2) {
@@ -66,7 +66,7 @@ export const formataJustificativa = dietaEspecial => {
     )
   ) {
     justificativa = dietaEspecial.logs.filter(
-      log => log.status_evento_explicacao === "Escola solicitou cancelamento"
+      (log) => log.status_evento_explicacao === "Escola solicitou cancelamento"
     )[0].justificativa;
   }
   if (
@@ -87,13 +87,13 @@ export const formataJustificativa = dietaEspecial => {
   return justificativa;
 };
 
-export const mostrarFormulário = status => {
+export const mostrarFormulário = (status) => {
   return [
     "ESCOLA_CANCELOU",
     "TERMINADA_AUTOMATICAMENTE_SISTEMA",
     "CANCELADO_ALUNO_MUDOU_ESCOLA",
     "CANCELADO_ALUNO_NAO_PERTENCE_REDE",
-    "CODAE_A_AUTORIZAR"
+    "CODAE_A_AUTORIZAR",
   ].includes(status);
 };
 
@@ -109,7 +109,7 @@ export const mostrarFormUsuarioEscola = (perfil, dieta) => {
   }
 };
 
-export const ehCanceladaSegundoStep = dieta => {
+export const ehCanceladaSegundoStep = (dieta) => {
   if (
     dieta.logs.length === 2 &&
     dieta.logs[1].status_evento_explicacao === "Escola cancelou"
@@ -121,11 +121,15 @@ export const ehCanceladaSegundoStep = dieta => {
 };
 // (dietaEspecial && dietaEspecial.logs.length === 2 && status === "ESCOLA_CANCELOU")? true : false;
 
-export const solicitacaoEhDoCardAutorizadas = status => {
+export const solicitacaoEhDoCardAutorizadas = (status) => {
   return [
     statusEnum.CODAE_AUTORIZADO,
     statusEnum.TERCEIRIZADA_TOMOU_CIENCIA,
     statusEnum.CODAE_AUTORIZOU_INATIVACAO,
-    statusEnum.TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO
+    statusEnum.TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO,
   ].includes(status);
+};
+
+export const ehAlunoNaoMatriculado = (tipoSolicitacao) => {
+  return tipoSolicitacao === "ALUNO_NAO_MATRICULADO";
 };

@@ -7,10 +7,10 @@ const TODAS_SOLICITACOES_NUTRISUPERVISAO_URL = `${API_URL}/nutrisupervisao-solic
 const SOLICITACOES_NUTRIMANIFESTACAO_URL = `${API_URL}/nutrimanifestacao-solicitacoes`;
 
 // TODO: colocar essa função num arquivo separado, está sendo copiada/colada
-const retornoBase = async url => {
+const retornoBase = async (url) => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   try {
     const result = await fetch(url, OBJ_REQUEST);
@@ -25,7 +25,7 @@ const retornoBase = async url => {
   }
 };
 
-export const getSolicitacaoDietaEspecial = async uuid => {
+export const getSolicitacaoDietaEspecial = async (uuid) => {
   const url = `${SOLICITACOES_DIETA}/${uuid}/`;
   return retornoBase(url);
 };
@@ -55,10 +55,8 @@ export const getMotivosNegacaoDietaEspecial = async () => {
   return retornoBase(url);
 };
 
-export const getSolicitacoesAutorizadasNutrisupervisao = async params => {
-  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${
-    SOLICITACOES.AUTORIZADOS
-  }/`;
+export const getSolicitacoesAutorizadasNutrisupervisao = async (params) => {
+  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.AUTORIZADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -66,10 +64,8 @@ export const getSolicitacoesAutorizadasNutrisupervisao = async params => {
   }
 };
 
-export const getSolicitacoesCanceladasNutrisupervisao = async params => {
-  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${
-    SOLICITACOES.CANCELADOS
-  }/`;
+export const getSolicitacoesCanceladasNutrisupervisao = async (params) => {
+  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.CANCELADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -77,10 +73,8 @@ export const getSolicitacoesCanceladasNutrisupervisao = async params => {
   }
 };
 
-export const getSolicitacoesNegadasNutrisupervisao = async params => {
-  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${
-    SOLICITACOES.NEGADOS
-  }/`;
+export const getSolicitacoesNegadasNutrisupervisao = async (params) => {
+  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.NEGADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -88,34 +82,14 @@ export const getSolicitacoesNegadasNutrisupervisao = async params => {
   }
 };
 
-export const getSolicitacoesPendentesAutorizacaoNutrisupervisao = async filtro => {
-  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${
-    SOLICITACOES.PENDENTES
-  }/${filtro}/`;
-
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const json = await result.json();
-    return json.results;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const getSolicitacoesPendentesAutorizacaoNutrisupervisaoSecaoPendencias = async (
-  filtroAplicado,
-  tipoVisao
+export const getSolicitacoesPendentesAutorizacaoNutrisupervisao = async (
+  filtro
 ) => {
-  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${
-    SOLICITACOES.PENDENTES
-  }/${filtroAplicado}/${tipoVisao}/`;
+  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.PENDENTES}/${filtro}/`;
+
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   try {
     const result = await fetch(url, OBJ_REQUEST);
@@ -126,10 +100,26 @@ export const getSolicitacoesPendentesAutorizacaoNutrisupervisaoSecaoPendencias =
   }
 };
 
-export const getSolicitacoesComQuestionamentoNutrisupervisao = async params => {
-  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${
-    SOLICITACOES.QUESTIONAMENTOS
-  }/`;
+export const getSolicitacoesPendentesAutorizacaoNutrisupervisaoSecaoPendencias =
+  async (filtroAplicado, tipoVisao) => {
+    const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.PENDENTES}/${filtroAplicado}/${tipoVisao}/`;
+    const OBJ_REQUEST = {
+      headers: AUTH_TOKEN,
+      method: "GET",
+    };
+    try {
+      const result = await fetch(url, OBJ_REQUEST);
+      const json = await result.json();
+      return json.results;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const getSolicitacoesComQuestionamentoNutrisupervisao = async (
+  params
+) => {
+  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.QUESTIONAMENTOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -137,10 +127,20 @@ export const getSolicitacoesComQuestionamentoNutrisupervisao = async params => {
   }
 };
 
-export const getSolicitacoesPendentesAutorizacaoNutrisupervisaoSemFiltro = async params => {
-  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${
-    SOLICITACOES.PENDENTES
-  }/`;
+export const getSolicitacoesPendentesAutorizacaoNutrisupervisaoSemFiltro =
+  async (params) => {
+    const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.PENDENTES}/`;
+    const response = await axios
+      .get(url, { params })
+      .catch(ErrorHandlerFunction);
+    if (response) {
+      const data = { data: response.data, status: response.status };
+      return data;
+    }
+  };
+
+export const getSolicitacoesAutorizadasNutrimanifestacao = async (params) => {
+  const url = `${SOLICITACOES_NUTRIMANIFESTACAO_URL}/${SOLICITACOES.AUTORIZADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -148,10 +148,8 @@ export const getSolicitacoesPendentesAutorizacaoNutrisupervisaoSemFiltro = async
   }
 };
 
-export const getSolicitacoesAutorizadasNutrimanifestacao = async params => {
-  const url = `${SOLICITACOES_NUTRIMANIFESTACAO_URL}/${
-    SOLICITACOES.AUTORIZADOS
-  }/`;
+export const getSolicitacoesCanceladasNutrimanifestacao = async (params) => {
+  const url = `${SOLICITACOES_NUTRIMANIFESTACAO_URL}/${SOLICITACOES.CANCELADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -159,22 +157,27 @@ export const getSolicitacoesAutorizadasNutrimanifestacao = async params => {
   }
 };
 
-export const getSolicitacoesCanceladasNutrimanifestacao = async params => {
-  const url = `${SOLICITACOES_NUTRIMANIFESTACAO_URL}/${
-    SOLICITACOES.CANCELADOS
-  }/`;
-  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
-  if (response) {
-    const data = { data: response.data, status: response.status };
-    return data;
-  }
-};
-
-export const getSolicitacoesNegadasNutrimanifestacao = async params => {
+export const getSolicitacoesNegadasNutrimanifestacao = async (params) => {
   const url = `${SOLICITACOES_NUTRIMANIFESTACAO_URL}/${SOLICITACOES.NEGADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
+  }
+};
+
+export const buscaAnosComDietas = async () => {
+  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.ANOS_COM_DIETAS}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    return response.data;
+  }
+};
+
+export const buscaTotaisRelatorioGerencialDietas = async (params) => {
+  const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${SOLICITACOES.TOTAIS_GERENCIAL_DIETAS}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    return response.data;
   }
 };

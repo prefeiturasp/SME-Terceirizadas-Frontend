@@ -2,7 +2,7 @@ import React from "react";
 import { Field } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 
-const MotivoAlteracao = motivo => {
+const MotivoAlteracao = (motivo) => {
   return (
     <div className="row mt-3">
       <div className="col-6">

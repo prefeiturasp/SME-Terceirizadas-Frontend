@@ -5,7 +5,7 @@ import Tabela from "./componentes/Tabela";
 import HTTP_STATUS from "http-status-codes";
 import {
   filtrosVincularProdutoEdital,
-  filtrarPorEditalNomeTipo
+  filtrarPorEditalNomeTipo,
 } from "services/produto.service";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { Paginacao } from "components/Shareable/Paginacao";
@@ -28,7 +28,7 @@ export default () => {
         setListaEditais(responseFiltros.data.editais);
         setListaTipos([
           { nome: "Comum", key: "Comum" },
-          { nome: "Dieta Especial", key: "Dieta especial" }
+          { nome: "Dieta Especial", key: "Dieta especial" },
         ]);
       }
     } catch (e) {
@@ -43,7 +43,7 @@ export default () => {
     fetchData();
   }, []);
 
-  const changePage = async page => {
+  const changePage = async (page) => {
     try {
       setCarregando(true);
       let payload = filtros;
@@ -61,7 +61,7 @@ export default () => {
   };
 
   return (
-    <div className="card mt-3 card-cadastro-geral pl-3 pr-3">
+    <div className="card mt-3 card-cadastro-geral ps-3 pe-3">
       <Spin tip="Carregando..." spinning={carregando}>
         <Filtros
           setResultado={setResultado}
@@ -82,7 +82,7 @@ export default () => {
               current={page || 1}
               total={total}
               showSizeChanger={false}
-              onChange={page => {
+              onChange={(page) => {
                 setPage(page);
                 changePage(page);
               }}

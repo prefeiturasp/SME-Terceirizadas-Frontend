@@ -3,7 +3,7 @@ import { Field } from "redux-form";
 import { Modal } from "react-bootstrap";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "./../../../../Shareable/Botao/constants";
 import Botao from "../../../../Shareable/Botao";
 import { InfoSenhaServidorMunicipal } from "../../../../Shareable/InfoSenhaServidorMunicipal";
@@ -17,7 +17,7 @@ export class ModalAlterarSenha extends Component {
     this.state = {
       letra: false,
       numero: false,
-      tamanho: false
+      tamanho: false,
     };
   }
 
@@ -27,7 +27,7 @@ export class ModalAlterarSenha extends Component {
     this.setState({
       numero: value.match(numbers),
       tamanho: value.length >= 8,
-      letra: value.match(letters)
+      letra: value.match(letters),
     });
   }
 
@@ -60,7 +60,9 @@ export class ModalAlterarSenha extends Component {
                     label="Nova Senha"
                     name="senha"
                     type="password"
-                    onChange={event => this.onSenhaChanged(event.target.value)}
+                    onChange={(event) =>
+                      this.onSenhaChanged(event.target.value)
+                    }
                     required
                     validate={required}
                   />
@@ -93,13 +95,13 @@ export class ModalAlterarSenha extends Component {
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Confirmar"
             type={BUTTON_TYPE.SUBMIT}
             style={BUTTON_STYLE.GREEN}
-            className="ml-3"
+            className="ms-3"
             onClick={() => onSubmit(letra && numero && tamanho)}
           />
         </Modal.Footer>

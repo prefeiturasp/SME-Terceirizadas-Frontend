@@ -8,17 +8,17 @@ import { email } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   toastSuccess,
-  toastError
+  toastError,
 } from "components/Shareable/Toast/dialogs.js";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { InputText } from "components/Shareable/Input/InputText";
 import { createEmailsTerceirizadasPorModulo } from "services/terceirizada.service.js";
 
-export default props => {
+export default (props) => {
   const [showModal, setShowModal] = useState(false);
   const [empresaSelect, setEmpresaSelect] = useState();
 
@@ -30,7 +30,7 @@ export default props => {
     const payload = {
       email: values.email,
       terceirizada: empresaSelect,
-      modulo: props.modulo
+      modulo: props.modulo,
     };
     try {
       const resultado = await createEmailsTerceirizadasPorModulo(payload);
@@ -60,7 +60,7 @@ export default props => {
     }
   };
 
-  const resetForm = async form => {
+  const resetForm = async (form) => {
     await form.change("empresa", null);
     await form.change("email", null);
   };
@@ -78,7 +78,7 @@ export default props => {
                     texto="Adicionar E-mails"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     onClick={() => {
                       handleAdicionarEmail();
                     }}
@@ -124,7 +124,7 @@ export default props => {
                             name="empresa"
                             options={props.empresas}
                             className="input-add-emails"
-                            onChange={e => {
+                            onChange={(e) => {
                               setEmpresaSelect(e);
                             }}
                           />
@@ -152,7 +152,7 @@ export default props => {
                         resetForm(form);
                       }}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Adicionar"
@@ -161,7 +161,7 @@ export default props => {
                         CadastrarEmail(form, values);
                       }}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-2"
+                      className="ms-2"
                     />
                   </Modal.Footer>
                 </Spin>

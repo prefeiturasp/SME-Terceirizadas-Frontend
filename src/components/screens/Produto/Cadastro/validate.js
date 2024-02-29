@@ -1,4 +1,4 @@
-const validate = values => {
+const validate = (values) => {
   const errors = {};
   if (
     !values.especificacoes ||
@@ -6,7 +6,7 @@ const validate = values => {
       !Object.keys(values.especificacoes[0]).length)
   ) {
     errors.especificacoes = {
-      _error: "Os campos de especificações são obrigatórios"
+      _error: "Os campos de especificações são obrigatórios",
     };
   } else {
     const especificacoesArrayErrors = [];

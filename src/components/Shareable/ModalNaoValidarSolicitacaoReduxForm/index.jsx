@@ -18,7 +18,7 @@ export const ModalNaoValidarSolicitacao = ({ ...props }) => {
     motivosDREnaoValida,
     tipoSolicitacao,
     endpoint,
-    loadSolicitacao
+    loadSolicitacao,
   } = props;
 
   const onSubmit = () => {};
@@ -37,9 +37,9 @@ export const ModalNaoValidarSolicitacao = ({ ...props }) => {
       {
         justificativa: `${
           motivosDREnaoValida.find(
-            motivo => motivo.uuid === values.motivo_cancelamento
+            (motivo) => motivo.uuid === values.motivo_cancelamento
           ).nome
-        } - ${values.justificativa}`
+        } - ${values.justificativa}`,
       },
       tipoSolicitacao
     );
@@ -93,7 +93,7 @@ export const ModalNaoValidarSolicitacao = ({ ...props }) => {
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto="Sim"
@@ -102,7 +102,7 @@ export const ModalNaoValidarSolicitacao = ({ ...props }) => {
                   naoValidarSolicitacao(uuid, values);
                 }}
                 style={BUTTON_STYLE.GREEN}
-                className="ml-3"
+                className="ms-3"
               />
             </Modal.Footer>
           </form>

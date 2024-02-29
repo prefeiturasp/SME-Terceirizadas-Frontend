@@ -7,7 +7,7 @@ import {
   SUSPENSAO_ALIMENTACAO,
   ESCOLA,
   DRE,
-  CODAE
+  CODAE,
 } from "configs/constants";
 import { usuarioEhDRE, usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 
@@ -27,7 +27,7 @@ if (usuarioEhEmpresaTerceirizada()) {
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 
 export default () => (

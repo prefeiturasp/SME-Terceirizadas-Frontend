@@ -1,13 +1,13 @@
 import React, { useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { useNavigationType } from "react-router-dom";
 
 import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 
@@ -17,14 +17,14 @@ import {
   getAvaliarReclamacaoNomesFabricantes,
   getNovaReclamacaoNomesProdutos,
   getNovaReclamacaoNomesMarcas,
-  getNovaReclamacaoNomesFabricantes
+  getNovaReclamacaoNomesFabricantes,
 } from "services/produto.service";
 
 const initialState = {
   dados: {},
   produtos: [],
   marcas: [],
-  fabricantes: []
+  fabricantes: [],
 };
 
 function reducer(state, { type: actionType, payload }) {
@@ -40,12 +40,13 @@ function reducer(state, { type: actionType, payload }) {
 
 const FormBuscaProduto = ({
   onSubmit,
-  history,
   initialValues,
   formName,
-  novaReclamacao
+  novaReclamacao,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const navigationType = useNavigationType();
 
   useEffect(() => {
     async function fetchData() {
@@ -54,23 +55,23 @@ const FormBuscaProduto = ({
         endpoints = [
           getNovaReclamacaoNomesProdutos(),
           getNovaReclamacaoNomesMarcas(),
-          getNovaReclamacaoNomesFabricantes()
+          getNovaReclamacaoNomesFabricantes(),
         ];
       } else {
         endpoints = [
           getAvaliarReclamacaoNomesProdutos(),
           getAvaliarReclamacaoNomesMarcas(),
-          getAvaliarReclamacaoNomesFabricantes()
+          getAvaliarReclamacaoNomesFabricantes(),
         ];
       }
       Promise.all(endpoints).then(([produtos, marcas, fabricantes]) => {
         dispatch({
           type: "popularDados",
           payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome)
-          }
+            produtos: produtos.data.results.map((el) => el.nome),
+            marcas: marcas.data.results.map((el) => el.nome),
+            fabricantes: fabricantes.data.results.map((el) => el.nome),
+          },
         });
       });
     }
@@ -80,7 +81,7 @@ const FormBuscaProduto = ({
   return (
     <Form
       onSubmit={onSubmit}
-      initialValues={history.action === "POP" && initialValues}
+      initialValues={navigationType === "POP" && initialValues}
       render={({ form, handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-formulario">
           <FinalFormToRedux form={formName} />
@@ -110,7 +111,7 @@ const FormBuscaProduto = ({
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
             <Botao
@@ -121,10 +122,10 @@ const FormBuscaProduto = ({
                 form.reset({
                   nome_fabricante: undefined,
                   nome_marca: undefined,
-                  nome_produto: undefined
+                  nome_produto: undefined,
                 })
               }
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
           </div>
@@ -136,8 +137,8 @@ const FormBuscaProduto = ({
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    initialValues: state.finalForm[ownProps.formName]
+    initialValues: state.finalForm[ownProps.formName],
   };
 };
 
-export default withRouter(connect(mapStateToProps)(FormBuscaProduto));
+export default connect(mapStateToProps)(FormBuscaProduto);

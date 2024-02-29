@@ -6,7 +6,7 @@ import { CODAE, SOLICITACOES_NEGADAS } from "../../../configs/constants";
 import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getSolicitacoesNegadasCodae } from "services/painelCODAE.service";
 import CardLegendas from "components/Shareable/CardLegendas";
@@ -14,7 +14,7 @@ import { PAGINACAO_DEFAULT } from "constants/shared";
 
 const atual = {
   href: `/${CODAE}/${SOLICITACOES_NEGADAS}`,
-  titulo: "Solicitações Negadas"
+  titulo: "Solicitações Negadas",
 };
 
 export default () => (

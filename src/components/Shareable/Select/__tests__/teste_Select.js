@@ -6,7 +6,7 @@ import { required } from "../../../../helpers/fieldValidators";
 let options = [
   { uuid: "v1", nome: "op1", disable: false },
   { uuid: "v2", nome: "op2", selected: true },
-  { uuid: "v3", nome: "op3", selected: false }
+  { uuid: "v3", nome: "op3", selected: false },
 ];
 
 describe("teste Select", () => {
@@ -18,8 +18,8 @@ describe("teste Select", () => {
     const props = {
       meta: {
         touched: true,
-        error: "This field is required"
-      }
+        error: "This field is required",
+      },
     };
     wrapper = mount(
       <Select

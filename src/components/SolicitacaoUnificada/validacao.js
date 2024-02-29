@@ -1,7 +1,7 @@
-export const validateSubmit = values => {
+export const validateSubmit = (values) => {
   let peloMenosUmaEscola = false;
   let error = false;
-  values.escolas.forEach(function(escola) {
+  values.escolas.forEach(function (escola) {
     if (escola.checked) {
       peloMenosUmaEscola = true;
       if (values.pedido_multiplo) {
@@ -16,9 +16,7 @@ export const validateSubmit = values => {
           parseInt(escola.total_alunos) <
           values[`school_${escola.codigo_eol}`].nro_alunos
         ) {
-          error = `Escola ${escola.nome} possui apenas ${
-            escola.total_alunos
-          } alunos`;
+          error = `Escola ${escola.nome} possui apenas ${escola.total_alunos} alunos`;
         }
       }
     }

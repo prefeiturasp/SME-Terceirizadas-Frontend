@@ -10,3 +10,22 @@
     margin-bottom: 0px;
   }
 }
+
+.field-values-input {
+  position: relative;
+
+  .icone-info-error {
+    position: absolute;
+    background-color: #a50e05;
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+    border-radius: 50%;
+    font-size: 9px;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    top: 24px;
+    right: 4px;
+  }
+}

@@ -7,13 +7,13 @@ import { HOME } from "../constants";
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 const anteriores = [
   {
     href: `/${CODAE}/${ALTERACAO_TIPO_ALIMENTACAO}`,
-    titulo: "Alterações de Cardápio"
-  }
+    titulo: "Alterações de Cardápio",
+  },
 ];
 
 export default () => (

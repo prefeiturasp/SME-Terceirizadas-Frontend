@@ -10,7 +10,7 @@ export const field = ({ input, meta, options }) => {
   const inputValue = input.value;
 
   const radioes = options.map(({ label, value }, index) => {
-    const handleChange = event => {
+    const handleChange = (event) => {
       let selected = "";
       if (event.target.checked) {
         selected = value;
@@ -33,7 +33,7 @@ export const field = ({ input, meta, options }) => {
           onChange={handleChange}
           onFocus={onFocus}
         />
-        <label className="form-check-label ml-2" htmlFor={`radio-${index}`}>
+        <label className="form-check-label ms-2" htmlFor={`radio-${index}`}>
           {`${label}`}
         </label>
       </div>
@@ -53,9 +53,9 @@ export default class RadioboxGroup extends Component {
     options: PropTypes.arrayOf(
       PropTypes.shape({
         value: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired
+        label: PropTypes.string.isRequired,
       })
-    ).isRequired
+    ).isRequired,
   };
 
   render() {

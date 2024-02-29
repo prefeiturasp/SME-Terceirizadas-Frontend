@@ -3,24 +3,24 @@ import {
   PEDIDOS,
   FLUXO,
   AUTH_TOKEN,
-  URL_KIT_LANCHES
+  URL_KIT_LANCHES,
 } from "services/constants";
 import { getPath } from "./helper";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { ErrorHandlerFunction } from "services/service-helpers";
 
-export const atualizarKitLanche = async values => {
+export const atualizarKitLanche = async (values) => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "PUT",
-    body: JSON.stringify(values)
+    body: JSON.stringify(values),
   };
 
   return await fetch(`${URL_KIT_LANCHES}/${values.id}/`, OBJ_REQUEST)
-    .then(response => {
+    .then((response) => {
       return response.json();
     })
-    .catch(erro => {
+    .catch((erro) => {
       console.log("Atualizar Kit Lanche: ", erro);
     });
 };
@@ -29,18 +29,18 @@ export const removeKitLanche = async (uuid, tipoSolicitacao) => {
   //TODO: conferir params
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "DELETE"
+    method: "DELETE",
   };
   let status = 0;
   return await fetch(`${getPath(tipoSolicitacao)}/${uuid}/`, OBJ_REQUEST)
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return { data: error, status: status };
     });
 };
@@ -55,21 +55,21 @@ export const inicioPedido = (uuid, tipoSolicitacao) => {
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: AUTH_TOKEN
+    headers: AUTH_TOKEN,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const getSolicitacoesKitLanche = async tipoSolicitacao => {
+export const getSolicitacoesKitLanche = async (tipoSolicitacao) => {
   const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.MEUS}/`;
 
   if (tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI) {
@@ -78,15 +78,15 @@ export const getSolicitacoesKitLanche = async tipoSolicitacao => {
 
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
 
   return await fetch(url, OBJ_REQUEST)
-    .then(response => {
+    .then((response) => {
       const resp = response.json();
       return resp;
     })
-    .catch(erro => {
+    .catch((erro) => {
       console.log(erro);
     });
 };
@@ -94,14 +94,14 @@ export const getSolicitacoesKitLanche = async tipoSolicitacao => {
 export const getRefeicoes = async () => {
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
 
   return await fetch(`${URL_KIT_LANCHES}`, OBJ_REQUEST)
-    .then(response => {
+    .then((response) => {
       return response.json();
     })
-    .catch(erro => {
+    .catch((erro) => {
       return erro;
     });
 };
@@ -119,18 +119,18 @@ export const getDetalheKitLancheAvulsa = (uuid, tipoSolicitacao) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
 
-export const getKitsLanche = async params => {
+export const getKitsLanche = async (params) => {
   const url = `/kit-lanches/consulta-kits/`;
   return await axios.get(url, { params });
 };

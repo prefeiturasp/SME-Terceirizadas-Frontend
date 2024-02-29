@@ -5,7 +5,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
 import SelectSelecione from "components/Shareable/SelectSelecione";
@@ -18,19 +18,22 @@ export default ({
   visoes,
   perfis,
   visaoUnica,
-  desabilitaCadastro
+  desabilitaCadastro,
+  qtdLimiteCadastro,
+  somenteLeitura,
 }) => {
   const initialValues = visaoUnica
     ? {
-        visao: visaoUnica
+        visao: visaoUnica,
       }
     : {};
   const inicioResultado = useRef();
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
+
   return (
     <div className="filtros-gestao-acesso">
       <Form
@@ -85,25 +88,27 @@ export default ({
             </div>
 
             <div className="mt-4 mb-4" ref={inicioResultado}>
-              <Botao
-                texto="Adicionar Acesso"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.GREEN}
-                className="float-left"
-                onClick={() => setShowCadastro(true)}
-                disabled={desabilitaCadastro}
-                tooltipExterno={
-                  desabilitaCadastro
-                    ? "É possível manter até 4 usuários utilizando o SIGPAE em sua UE."
-                    : ""
-                }
-              />
+              {!somenteLeitura && (
+                <Botao
+                  texto="Adicionar Acesso"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN}
+                  className="float-start"
+                  onClick={() => setShowCadastro(true)}
+                  disabled={desabilitaCadastro()}
+                  tooltipExterno={
+                    desabilitaCadastro()
+                      ? `É possível manter até ${qtdLimiteCadastro} usuários utilizando o SIGPAE em sua UE.`
+                      : ""
+                  }
+                />
+              )}
 
               <Botao
                 texto="Filtrar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting}
                 onClick={() => inicioResultado.current.scrollIntoView()}
               />
@@ -112,7 +117,7 @@ export default ({
                 texto="Limpar"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset(initialValues);
                   setFiltros(initialValues);

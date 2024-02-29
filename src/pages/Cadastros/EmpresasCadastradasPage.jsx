@@ -6,23 +6,23 @@ import {
   CADASTROS,
   CONFIGURACOES,
   EMPRESA,
-  EMPRESAS_CADASTRADAS
+  EMPRESAS_CADASTRADAS,
 } from "../../configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${EMPRESAS_CADASTRADAS}`,
-  titulo: "Empresas Cadastradas"
+  titulo: "Empresas Cadastradas",
 };
 
 const anteriores = [
   {
     href: `/${CONFIGURACOES}/${CADASTROS}`,
-    titulo: "Cadastros"
+    titulo: "Cadastros",
   },
   {
     href: `/${CONFIGURACOES}/${CADASTROS}/${EMPRESA}`,
-    titulo: "Empresa"
-  }
+    titulo: "Empresa",
+  },
 ];
 
 export default () => (

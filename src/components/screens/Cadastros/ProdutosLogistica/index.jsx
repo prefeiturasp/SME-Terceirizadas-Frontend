@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import {
   getListaProdutosLogistica,
-  getNomesProdutosLogistica
+  getNomesProdutosLogistica,
 } from "services/produto.service";
 import Filtros from "./componentes/Filtros";
 import Tabela from "./componentes/Tabela";
@@ -19,7 +19,7 @@ export default () => {
   const [filtros, setFiltros] = useState();
   const [page, setPage] = useState(1);
 
-  const buscarProdutos = async page => {
+  const buscarProdutos = async (page) => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     const res = await getListaProdutosLogistica(params);
@@ -44,14 +44,14 @@ export default () => {
     buscarNomes();
   }, []);
 
-  const changePage = page => {
+  const changePage = (page) => {
     buscarProdutos(page);
     setPage(page);
   };
 
   return (
-    <div className="card mt-3 card-cadastro-geral">
-      <div className="card-body">
+    <div className="card mt-3 card-produtos-logistica">
+      <div className="card-body produtos-logistica">
         <Spin tip="Carregando..." spinning={carregando}>
           <Filtros
             setResultado={setResultado}
@@ -67,7 +67,7 @@ export default () => {
                 current={page || 1}
                 total={total}
                 showSizeChanger={false}
-                onChange={page => {
+                onChange={(page) => {
                   setPage(page);
                   changePage(page);
                 }}

@@ -1,15 +1,15 @@
 const montaObjetoFaixasEtarias = (faixas_etarias, alunosPorFaixaEtaria) => {
   if ([faixas_etarias, alunosPorFaixaEtaria].includes(undefined)) return [];
   const lista = [];
-  Object.entries(faixas_etarias).forEach(dadosFaixa => {
+  Object.entries(faixas_etarias).forEach((dadosFaixa) => {
     const [faixa_etaria, quantidade] = dadosFaixa;
     const matriculados_quando_criado = alunosPorFaixaEtaria.find(
-      f => f.faixa_etaria.uuid === faixa_etaria
+      (f) => f.faixa_etaria.uuid === faixa_etaria
     );
     lista.push({
       faixa_etaria: faixa_etaria,
       quantidade: quantidade,
-      matriculados_quando_criado: parseInt(matriculados_quando_criado.count)
+      matriculados_quando_criado: parseInt(matriculados_quando_criado.count),
     });
   });
   return lista;
@@ -21,7 +21,7 @@ export const montaObjetoRequisicao = (values, alunosPorFaixaEtaria) => {
       kits: values.kit_lanche,
       descricao: values.observacao,
       data: values.evento_data,
-      tempo_passeio: values.tempo_passeio
+      tempo_passeio: values.tempo_passeio,
     },
     faixas_etarias: montaObjetoFaixasEtarias(
       values.faixas_etarias,
@@ -29,28 +29,30 @@ export const montaObjetoRequisicao = (values, alunosPorFaixaEtaria) => {
     ),
     escola: values.escola,
     local: values.local,
+    evento: values.evento,
     quantidade_alunos: values.quantidade_alunos,
-    alunos_com_dieta_especial_participantes: values.alunos_com_dieta_especial_participantes
-      ? Object.keys(values.alunos_com_dieta_especial_participantes)
-      : []
+    alunos_com_dieta_especial_participantes:
+      values.alunos_com_dieta_especial_participantes
+        ? Object.keys(values.alunos_com_dieta_especial_participantes)
+        : [],
   };
   return kit_lanche_avulso;
 };
 
-export const filtraPrioritarios = pedidos => {
-  return pedidos.filter(pedido => {
+export const filtraPrioritarios = (pedidos) => {
+  return pedidos.filter((pedido) => {
     return pedido.prioridade === "PRIORITARIO";
   });
 };
 
-export const filtraNoLimite = pedidos => {
-  return pedidos.filter(pedido => {
+export const filtraNoLimite = (pedidos) => {
+  return pedidos.filter((pedido) => {
     return pedido.prioridade === "LIMITE";
   });
 };
 
-export const filtraRegular = pedidos => {
-  return pedidos.filter(pedido => {
+export const filtraRegular = (pedidos) => {
+  return pedidos.filter((pedido) => {
     return pedido.prioridade === "REGULAR";
   });
 };

@@ -15,4 +15,19 @@
   .input-data {
     height: 40px !important;
   }
+
+  .multi-select {
+    height: 40px !important;
+
+    .dropdown,
+    .dropdown-heading {
+      height: 100% !important;
+    }
+
+    .dropdown-heading-dropdown-arrow {
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }

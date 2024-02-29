@@ -3,9 +3,11 @@ import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
+  assinarEnviarNotificacao,
   criarEditarNotificacao,
   enviarNotificacao,
-  getNotificacao
+  getNotificacao,
+  solicitarAlteracaoNotificacao,
 } from "services/logistica.service";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -16,24 +18,36 @@ import { TIPOS_OCORRENCIAS_OPTIONS } from "constants/shared";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import ModalConfirmarEnvio from "./components/ModalConfirmarEnvio";
-import { GUIAS_NOTIFICACAO, LOGISTICA } from "configs/constants";
-import { useHistory } from "react-router-dom";
+import {
+  GUIAS_NOTIFICACAO,
+  GUIAS_NOTIFICACAO_FISCAL,
+  LOGISTICA,
+} from "configs/constants";
+import { useNavigate } from "react-router-dom";
 import ModalCancelarEnvio from "./components/ModalCancelarEnvio";
+import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
+import ModalSolicitaAlteracao from "./components/ModalSolicitaAlteracao";
+import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
+import moment from "moment";
+import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 
-export default () => {
-  const history = useHistory();
+export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
+  const navigate = useNavigate();
   const [carregando, setCarregando] = useState(false);
+  const [aprovacoes, setAprovacoes] = useState([]);
   const [notificacao, setNotificacao] = useState({});
   const [initialValues, setInitialValues] = useState({});
   const [guiaModal, setGuiaModal] = useState();
   const [modalConfirmacao, setModalConfirmacao] = useState(false);
   const [modalCancelar, setModalCancelar] = useState(false);
+  const [modalAlteracao, setModalAlteracao] = useState(false);
+  const [modalAssinatura, setModalAssinatura] = useState(false);
 
   useEffect(() => {
-    const carregarNotificacao = async uuid => {
+    const carregarNotificacao = async (uuid) => {
       let response;
       try {
         setCarregando(true);
@@ -44,10 +58,12 @@ export default () => {
           response.data.previsoes_contratuais,
           notificacao.lista_ocorrencias
         );
+
         setInitialValues({
-          nome_empresa: response.data.empresa.nome_fantasia,
-          processo_sei: response.data.processo_sei,
-          ...previsoes_contratuais
+          numero_notificacao: notificacao.numero,
+          nome_empresa: notificacao.empresa.nome_fantasia,
+          processo_sei: notificacao.processo_sei,
+          ...previsoes_contratuais,
         });
 
         setCarregando(false);
@@ -66,29 +82,47 @@ export default () => {
     }
   }, []);
 
-  const labelOcorrencia = id =>
-    TIPOS_OCORRENCIAS_OPTIONS.find(x => x.value === id).label;
+  const abriModalGuia = (guia) => {
+    guia.conferencias.map((conferencia) => {
+      conferencia.conferencia_dos_alimentos.map((conferenciaAlimento) => {
+        if (conferenciaAlimento.ocorrencia) {
+          conferenciaAlimento.ocorrencia =
+            conferenciaAlimento.ocorrencia.reduce(
+              (texto, ocorrencia, index) => {
+                let virgula = index === 0 ? "" : ", ";
+                return texto + virgula + labelOcorrencia(ocorrencia);
+              },
+              ""
+            );
+        }
+      });
+    });
+    setGuiaModal(guia);
+  };
+
+  const labelOcorrencia = (id) =>
+    TIPOS_OCORRENCIAS_OPTIONS.find((x) => x.value === id).label;
 
   const getPrevisoesContratuais = (previsoes, ocorrencias) => {
     let values = {};
-    previsoes.forEach(prev => {
+    previsoes.forEach((prev) => {
       let index = Object.keys(ocorrencias).findIndex(
-        x => x === prev.motivo_ocorrencia
+        (x) => x === prev.motivo_ocorrencia
       );
       values[`previsao_contratual_${index}`] = prev.previsao_contratual;
     });
     return values;
   };
 
-  const organizaOcorrencias = notificacao => {
+  const organizaOcorrencias = (notificacao) => {
     let guias = notificacao.guias_notificadas;
 
     let ocorrencias = {};
 
-    guias.forEach(guia => {
-      guia.conferencias.map(c =>
-        c.conferencia_dos_alimentos.forEach(conf => {
-          conf.ocorrencia.forEach(ocorrencia => {
+    guias.forEach((guia) => {
+      guia.conferencias.map((c) =>
+        c.conferencia_dos_alimentos.forEach((conf) => {
+          conf.ocorrencia.forEach((ocorrencia) => {
             if (ocorrencias[ocorrencia]) {
               if (!ocorrencias[ocorrencia].includes(guia)) {
                 ocorrencias[ocorrencia].push(guia);
@@ -106,7 +140,7 @@ export default () => {
     return notificacao;
   };
 
-  const montaPayload = values => {
+  const montaPayload = (values) => {
     let payload = {};
     payload.processo_sei = values.processo_sei;
     payload.previsoes = [];
@@ -115,7 +149,7 @@ export default () => {
       if (values[`previsao_contratual_${index}`]) {
         let prev = {
           motivo_ocorrencia: occ,
-          previsao_contratual: values[`previsao_contratual_${index}`]
+          previsao_contratual: values[`previsao_contratual_${index}`],
         };
         payload.previsoes.push(prev);
       }
@@ -124,7 +158,7 @@ export default () => {
     return payload;
   };
 
-  const salvarNotificacao = async values => {
+  const salvarNotificacao = async (values) => {
     setCarregando(true);
     let payload = montaPayload(values);
     let response = await criarEditarNotificacao(notificacao.uuid, payload);
@@ -136,9 +170,12 @@ export default () => {
     }
   };
 
-  const voltarPagina = () => history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
+  const voltarPagina = () => navigate(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
 
-  const salvarEnviarNotificacao = async values => {
+  const voltarPaginaFiscal = () =>
+    navigate(`/${LOGISTICA}/${GUIAS_NOTIFICACAO_FISCAL}`);
+
+  const salvarEnviarNotificacao = async (values) => {
     setCarregando(true);
     let payload = montaPayload(values);
     let response = await enviarNotificacao(notificacao.uuid, payload);
@@ -152,7 +189,7 @@ export default () => {
       toastError("Erro ao enviar Notificação");
     }
   };
-  const validaForm = values => {
+  const validaForm = (values) => {
     let processosIncompletos = false;
 
     if (notificacao.lista_ocorrencias) {
@@ -164,6 +201,78 @@ export default () => {
     }
 
     return !values.processo_sei || processosIncompletos;
+  };
+
+  const aprovaPrevisao = (index) => {
+    let newAprovacoes = [...aprovacoes];
+    newAprovacoes[index] = {
+      aprovado: true,
+      justificativa_alteracao: `Aprovado em ${moment().format(
+        "DD/MM/YYYY - HH:mm"
+      )}`,
+    };
+    setAprovacoes(newAprovacoes);
+  };
+
+  const confereAprovacoes = () => {
+    let contador = aprovacoes.filter((x) => x).length;
+    return (
+      notificacao.lista_ocorrencias &&
+      Object.keys(notificacao.lista_ocorrencias).length === contador
+    );
+  };
+
+  const confereAssinar = () =>
+    aprovacoes.filter((x) => x.aprovado !== true).length === 0;
+
+  const handleClickVoltar = () => {
+    voltarPara ? navigate(voltarPara) : navigate(-1);
+  };
+
+  const assinarNotificacao = async (password) => {
+    setCarregando(true);
+    let payload = montaPayloadFiscal();
+    payload["password"] = password;
+    let response = await assinarEnviarNotificacao(notificacao.uuid, payload);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Notificação assinada com sucesso!");
+      setCarregando(false);
+      voltarPaginaFiscal();
+    } else if (response.status === HTTP_STATUS.UNAUTHORIZED) {
+      toastError(MSG_SENHA_INVALIDA);
+      setCarregando(false);
+    } else {
+      toastError("Erro ao assinar notificação");
+      setCarregando(false);
+    }
+  };
+
+  const solicitaAlteracao = async () => {
+    setCarregando(true);
+    let payload = montaPayloadFiscal();
+    let response = await solicitarAlteracaoNotificacao(
+      notificacao.uuid,
+      payload
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Solicitação de Alteração enviada com sucesso!");
+      setCarregando(false);
+      voltarPaginaFiscal();
+    } else {
+      toastError("Erro ao solicitar alteração");
+      setCarregando(false);
+    }
+  };
+
+  const montaPayloadFiscal = () => {
+    let payload = {};
+
+    payload.previsoes = aprovacoes.map((aprovacao, index) => ({
+      motivo_ocorrencia: Object.keys(notificacao.lista_ocorrencias)[index],
+      ...aprovacao,
+    }));
+
+    return payload;
   };
 
   return (
@@ -183,6 +292,21 @@ export default () => {
         handleClose={() => setModalCancelar(false)}
         voltarPagina={voltarPagina}
       />
+      <ModalSolicitaAlteracao
+        index={modalAlteracao}
+        handleClose={() => setModalAlteracao(false)}
+        aprovacoes={aprovacoes}
+        setAprovacoes={setAprovacoes}
+      />
+      <ModalAssinaturaUsuario
+        titulo="Assinar Notificação"
+        texto={`Você confirma a assinatura digital desta Notificação e envio para análise da Diretoria DILOG?`}
+        textoBotao={`Sim, Assinar Notificação`}
+        show={modalAssinatura}
+        loading={carregando}
+        handleClose={() => setModalAssinatura(false)}
+        handleSim={assinarNotificacao}
+      />
       <div className="card mt-3 card-notificar-empresa">
         <div className="card-body notificar-empresa">
           <Form
@@ -195,8 +319,8 @@ export default () => {
                   <div className="col-6">
                     <Field
                       component={InputText}
-                      label="Empresa"
-                      name="nome_empresa"
+                      label="Nº da Notificação"
+                      name="numero_notificacao"
                       className="input-busca-produto"
                       disabled
                     />
@@ -204,21 +328,33 @@ export default () => {
                   <div className="col-6">
                     <Field
                       component={InputText}
-                      label="Nº do Processo SEI"
-                      name="processo_sei"
+                      label="Empresa"
+                      name="nome_empresa"
                       className="input-busca-produto"
-                      placeholder="Digite o Nº do Processo SEI"
-                      required
+                      disabled
                     />
                   </div>
+                </div>
+                <div className="row mt-2">
                   <div className="col-6">
-                    Link do Processo SEI: Clique&nbsp;
+                    <Field
+                      component={InputText}
+                      label="Nº do Processo SEI"
+                      name="processo_sei"
+                      placeholder="Digite o Nº do Processo SEI"
+                      className="input-busca-produto"
+                      required
+                      disabled={naoEditavel}
+                    />
+                  </div>
+                  <div className="col-6 align-self-end pb-2">
+                    Acesso ao Processo SEI:&nbsp;
                     <a
                       target="_blank"
                       rel="noopener noreferrer"
                       href="https://processos.prefeitura.sp.gov.br/Forms/consultarProcessos.aspx#"
                     >
-                      aqui
+                      Clique aqui
                     </a>
                   </div>
                 </div>
@@ -228,10 +364,66 @@ export default () => {
                     (ocorrencia, index) => {
                       return (
                         <>
-                          {index !== 0 && <hr />}
+                          <hr />
                           <div className="ocorrencia" key={index}>
                             <div className="titulo-verde">
                               {labelOcorrencia(ocorrencia)}
+                              <div className="row float-end">
+                                {fiscal && !aprovacoes[index] && (
+                                  <div className="col-12">
+                                    <Botao
+                                      texto="Solicitar Alteração"
+                                      className="ms-3 botao-menor"
+                                      onClick={() => {
+                                        setModalAlteracao(index);
+                                      }}
+                                      type={BUTTON_TYPE.BUTTON}
+                                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                                    />
+                                    <Botao
+                                      texto="Aprovar"
+                                      type={BUTTON_TYPE.BUTTON}
+                                      onClick={() => {
+                                        aprovaPrevisao(index);
+                                      }}
+                                      style={BUTTON_STYLE.GREEN}
+                                      className="ms-3 botao-menor"
+                                      icon="fas fa-check"
+                                    />
+                                  </div>
+                                )}
+
+                                {fiscal &&
+                                  aprovacoes[index] &&
+                                  aprovacoes[index].aprovado && (
+                                    <div className="col-12">
+                                      <div className="texto-aprovacao">
+                                        <i className="fas fa-check me-2" />
+                                        {
+                                          aprovacoes[index]
+                                            .justificativa_alteracao
+                                        }
+                                      </div>
+                                    </div>
+                                  )}
+
+                                {fiscal &&
+                                  aprovacoes[index] &&
+                                  aprovacoes[index].aprovado === false && (
+                                    <div className="col-12">
+                                      <Botao
+                                        texto="Solicitação Justificada"
+                                        className="botao-menor"
+                                        onClick={() => {
+                                          setModalAlteracao(index);
+                                        }}
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={BUTTON_STYLE.RED_OUTLINE}
+                                        icon="fas fa-exclamation"
+                                      />
+                                    </div>
+                                  )}
+                              </div>
                             </div>
                             <div className="subtitulo">
                               Guias com Notificações
@@ -241,7 +433,7 @@ export default () => {
                                 (guia, index) => (
                                   <div
                                     key={index}
-                                    onClick={() => setGuiaModal(guia)}
+                                    onClick={() => abriModalGuia(guia)}
                                     className="numero-guia"
                                   >
                                     {guia.numero_guia}
@@ -256,6 +448,7 @@ export default () => {
                               className="input-busca-produto"
                               placeholder="Descreva a Previsão contratual"
                               required
+                              disabled={naoEditavel}
                             />
                           </div>
                         </>
@@ -263,37 +456,65 @@ export default () => {
                     }
                   )}
 
-                <div className="row float-right mt-4">
-                  <div className="col-12">
-                    <Botao
-                      texto="Cancelar"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        setModalCancelar(true);
-                      }}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
-                    />
-                    <Botao
-                      texto="Salvar Notificação"
-                      className="ml-3"
-                      onClick={() => {
-                        salvarNotificacao(values);
-                      }}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto="Salvar e Enviar Notificação"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        setModalConfirmacao(values);
-                      }}
-                      disabled={validaForm(values)}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </div>
+                <div className="row float-end mt-4">
+                  {botaoVoltar && <BotaoVoltar onClick={handleClickVoltar} />}
+                  {naoEditavel === false && (
+                    <div className="col-12">
+                      <Botao
+                        texto="Cancelar"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          setModalCancelar(true);
+                        }}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        className="ms-3"
+                      />
+                      <Botao
+                        texto="Salvar Notificação"
+                        className="ms-3"
+                        onClick={() => {
+                          salvarNotificacao(values);
+                        }}
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                      <Botao
+                        texto="Salvar e Enviar Notificação"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          setModalConfirmacao(values);
+                        }}
+                        disabled={validaForm(values)}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ms-3"
+                      />
+                    </div>
+                  )}
+                  {fiscal && (
+                    <>
+                      <Botao
+                        texto="Enviar Solicitação"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          solicitaAlteracao();
+                        }}
+                        disabled={!confereAprovacoes() || confereAssinar()}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ms-3"
+                      />
+
+                      <Botao
+                        texto="Assinar e Enviar Notificação"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          setModalAssinatura(true);
+                        }}
+                        disabled={!confereAprovacoes() || !confereAssinar()}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ms-3"
+                      />
+                    </>
+                  )}
                 </div>
               </form>
             )}

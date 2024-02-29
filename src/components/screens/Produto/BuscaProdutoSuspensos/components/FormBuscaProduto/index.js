@@ -5,17 +5,18 @@ import { dateDelta } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import {
   getNomesProdutos,
   getNomesMarcas,
   getNomesFabricantes,
   getNomesTerceirizadas,
-  getNomesUnicosEditais
+  getNomesUnicosEditais,
 } from "services/produto.service";
 import { InputComData } from "components/Shareable/DatePicker";
 import "./style.scss";
+import { required } from "helpers/fieldValidators";
 
 const initialState = {
   dados: {},
@@ -24,7 +25,7 @@ const initialState = {
   marcas: [],
   fabricantes: [],
   tipos: ["Comum", "Dieta especial"],
-  editais: []
+  editais: [],
 };
 
 function reducer(state, { type: actionType, payload }) {
@@ -36,7 +37,7 @@ function reducer(state, { type: actionType, payload }) {
         return { ...state, [payload.filtro]: [] };
       }
       const reg = new RegExp(payload.searchText, "i");
-      const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
+      const filtrado = state.dados[payload.filtro].filter((el) => reg.test(el));
       return { ...state, [payload.filtro]: filtrado };
     }
 
@@ -58,20 +59,20 @@ const FormBuscaProduto = ({ onSubmit, bloquearEdital, initialStateForm }) => {
         getNomesMarcas(),
         getNomesFabricantes(),
         getNomesTerceirizadas(),
-        getNomesUnicosEditais()
+        getNomesUnicosEditais(),
       ]).then(([produtos, marcas, fabricantes, terceirizadas, editais]) => {
         dispatch({
           type: "popularDados",
           payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome),
+            produtos: produtos.data.results.map((el) => el.nome),
+            marcas: marcas.data.results.map((el) => el.nome),
+            fabricantes: fabricantes.data.results.map((el) => el.nome),
             terceirizadas: terceirizadas.data.results.map(
-              el => el.nome_fantasia
+              (el) => el.nome_fantasia
             ),
             tipos: ["Comum", "Dieta especial"],
-            editais: editais.data.results
-          }
+            editais: editais.data.results,
+          },
         });
       });
     }
@@ -83,8 +84,8 @@ const FormBuscaProduto = ({ onSubmit, bloquearEdital, initialStateForm }) => {
       type: "atualizarFiltro",
       payload: {
         filtro,
-        searchText
-      }
+        searchText,
+      },
     });
   };
 
@@ -102,9 +103,11 @@ const FormBuscaProduto = ({ onSubmit, bloquearEdital, initialStateForm }) => {
                 label="Edital"
                 placeholder="Digite edital"
                 className="input-busca-produto"
-                onSearch={v => onSearch("editais", v)}
+                onSearch={(v) => onSearch("editais", v)}
                 name="nome_edital"
                 disabled={bloquearEdital}
+                validate={required}
+                required
               />
             </div>
             <div className="col-md-6 col-xl-6">
@@ -114,7 +117,7 @@ const FormBuscaProduto = ({ onSubmit, bloquearEdital, initialStateForm }) => {
                 label="Nome do Produto"
                 placeholder="Digite nome do produto"
                 className="input-busca-produto"
-                onSearch={v => onSearch("produtos", v)}
+                onSearch={(v) => onSearch("produtos", v)}
                 name="nome_produto"
               />
             </div>
@@ -127,7 +130,7 @@ const FormBuscaProduto = ({ onSubmit, bloquearEdital, initialStateForm }) => {
                 className="input-busca-produto"
                 label="Marca do Produto"
                 placeholder="Digite marca do produto"
-                onSearch={v => onSearch("marcas", v)}
+                onSearch={(v) => onSearch("marcas", v)}
                 name="nome_marca"
               />
             </div>
@@ -137,7 +140,7 @@ const FormBuscaProduto = ({ onSubmit, bloquearEdital, initialStateForm }) => {
                 dataSource={state.fabricantes}
                 label="Fabricante do Produto"
                 placeholder="Digite fabricante do produto"
-                onSearch={v => onSearch("fabricantes", v)}
+                onSearch={(v) => onSearch("fabricantes", v)}
                 name="nome_fabricante"
               />
             </div>
@@ -150,7 +153,7 @@ const FormBuscaProduto = ({ onSubmit, bloquearEdital, initialStateForm }) => {
                 label="Tipo"
                 placeholder="Selecione um tipo"
                 className="input-busca-produto"
-                onSearch={v => onSearch("tipos", v)}
+                onSearch={(v) => onSearch("tipos", v)}
                 name="tipo"
               />
             </div>
@@ -170,7 +173,7 @@ const FormBuscaProduto = ({ onSubmit, bloquearEdital, initialStateForm }) => {
               texto="Consultar"
               type={BUTTON_TYPE.SUBMIT}
               style={BUTTON_STYLE.GREEN}
-              className="float-right ml-3"
+              className="float-end ms-3"
               disabled={submitting}
             />
 
@@ -178,7 +181,7 @@ const FormBuscaProduto = ({ onSubmit, bloquearEdital, initialStateForm }) => {
               texto="Limpar Filtros"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-right ml-3"
+              className="float-end ms-3"
               onClick={() => form.reset()}
               disabled={submitting}
             />

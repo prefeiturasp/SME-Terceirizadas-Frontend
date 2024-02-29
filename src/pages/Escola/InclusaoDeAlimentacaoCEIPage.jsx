@@ -7,14 +7,14 @@ import { HOME } from "./constants";
 
 const atual = {
   href: `/${ESCOLA}/${INCLUSAO_ALIMENTACAO_CEI}`,
-  titulo: "Inclusão de Alimentação"
+  titulo: "Inclusão de Alimentação",
 };
 
 const anteriores = [
   {
     href: `#`,
-    titulo: "Gestão de Alimentação"
-  }
+    titulo: "Gestão de Alimentação",
+  },
 ];
 
 export default () => (

@@ -6,15 +6,15 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import {
   getAvaliarReclamacaoNomesProdutos,
   getAvaliarReclamacaoNomesMarcas,
-  getAvaliarReclamacaoNomesFabricantes
+  getAvaliarReclamacaoNomesFabricantes,
 } from "services/produto.service";
 import { SelectWithHideOptions } from "components/Shareable/SelectWithHideOptions";
 import { STATUS_RECLAMACAO_PRODUTO } from "constants/shared";
@@ -25,7 +25,7 @@ const initialState = {
   marcas: [],
   fabricantes: [],
   status: "",
-  inicio: ""
+  inicio: "",
 };
 
 function reducer(state, { type: actionType, payload }) {
@@ -39,7 +39,7 @@ function reducer(state, { type: actionType, payload }) {
         return { ...state, [payload.filtro]: [] };
       }
       const reg = new RegExp(payload.searchText, "i");
-      const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
+      const filtrado = state.dados[payload.filtro].filter((el) => reg.test(el));
       return { ...state, [payload.filtro]: filtrado };
     }
     case "resetar":
@@ -52,26 +52,26 @@ function reducer(state, { type: actionType, payload }) {
 export const FormBuscaProduto = ({
   onSubmit,
   exibirBotaoVoltar,
-  naoExibirLimparFiltros
+  naoExibirLimparFiltros,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
     const endpoints = [
       getAvaliarReclamacaoNomesProdutos("?filtrar_por=reclamacoes"),
       getAvaliarReclamacaoNomesMarcas("?filtrar_por=reclamacoes"),
-      getAvaliarReclamacaoNomesFabricantes("?filtrar_por=reclamacoes")
+      getAvaliarReclamacaoNomesFabricantes("?filtrar_por=reclamacoes"),
     ];
     async function fetchData() {
       Promise.all(endpoints).then(([produtos, marcas, fabricantes]) => {
         dispatch({
           type: "popularDados",
           payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome),
-            status: STATUS_RECLAMACAO_PRODUTO
-          }
+            produtos: produtos.data.results.map((el) => el.nome),
+            marcas: marcas.data.results.map((el) => el.nome),
+            fabricantes: fabricantes.data.results.map((el) => el.nome),
+            status: STATUS_RECLAMACAO_PRODUTO,
+          },
         });
       });
     }
@@ -83,8 +83,8 @@ export const FormBuscaProduto = ({
       type: "atualizarFiltro",
       payload: {
         filtro,
-        searchText
-      }
+        searchText,
+      },
     });
   };
 
@@ -103,7 +103,7 @@ export const FormBuscaProduto = ({
                 dataSource={state.produtos}
                 label="Nome do Produto"
                 className="input-busca-produto"
-                onSearch={v => onSearch("produtos", v)}
+                onSearch={(v) => onSearch("produtos", v)}
                 name="nome_produto"
               />
             </Col>
@@ -115,7 +115,7 @@ export const FormBuscaProduto = ({
                 dataSource={state.marcas}
                 className="input-busca-produto"
                 label="Marca do Produto"
-                onSearch={v => onSearch("marcas", v)}
+                onSearch={(v) => onSearch("marcas", v)}
                 name="nome_marca"
               />
             </Col>
@@ -124,7 +124,7 @@ export const FormBuscaProduto = ({
                 component={AutoCompleteField}
                 dataSource={state.fabricantes}
                 label="Fabricante do Produto"
-                onSearch={v => onSearch("fabricantes", v)}
+                onSearch={(v) => onSearch("fabricantes", v)}
                 name="nome_fabricante"
               />
             </Col>
@@ -137,28 +137,28 @@ export const FormBuscaProduto = ({
                 mode="default"
                 options={STATUS_RECLAMACAO_PRODUTO}
                 name="status"
-                handleChange={v => onSearch("status", v)}
+                handleChange={(v) => onSearch("status", v)}
                 selectedItems={state.status}
               />
             </Col>
           </Row>
           <div className="row">
-            <div className="col-12 text-right">
+            <div className="col-12 text-end">
               {!!exibirBotaoVoltar && (
                 <Botao
                   type={BUTTON_TYPE.BUTTON}
                   texto={"Voltar"}
-                  className="mr-3"
+                  className="me-3"
                   style={BUTTON_STYLE.BLUE_OUTLINE}
                   icon={BUTTON_ICON.ARROW_LEFT}
-                  onClick={() => history.goBack()}
+                  onClick={() => navigate(-1)}
                 />
               )}
               {!naoExibirLimparFiltros && (
                 <Botao
                   texto="Limpar Filtros"
                   type={BUTTON_TYPE.BUTTON}
-                  className="mr-3"
+                  className="me-3"
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={() => form.reset()}
                   disabled={submitting}

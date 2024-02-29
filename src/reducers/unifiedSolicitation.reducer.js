@@ -14,9 +14,10 @@ export default function reducer(state = {}, action) {
           action.data.kit_lanche = extrairKitsLanche(
             action.data.solicitacao_kit_lanche.kits
           );
-          action.data.tempo_passeio = action.data.solicitacao_kit_lanche.tempo_passeio.toString();
+          action.data.tempo_passeio =
+            action.data.solicitacao_kit_lanche.tempo_passeio.toString();
         }
-        action.data.escolas_quantidades.forEach(function(escola_quantidade) {
+        action.data.escolas_quantidades.forEach(function (escola_quantidade) {
           action.data[`school_${escola_quantidade.escola.codigo_eol}`] = {
             check: true,
             codigo_eol: escola_quantidade.escola.codigo_eol,
@@ -31,19 +32,19 @@ export default function reducer(state = {}, action) {
               : [],
             tempo_passeio: !action.data.lista_kit_lanche_igual
               ? escola_quantidade.tempo_passeio.toString()
-              : null
+              : null,
           };
         });
       }
       return {
         data: {
-          ...action.data
-        }
+          ...action.data,
+        },
       };
     default:
       return state;
   }
 }
 
-export const loadUnifiedSolicitation = data => dispatch =>
+export const loadUnifiedSolicitation = (data) => (dispatch) =>
   dispatch({ type: LOAD_UNIFIED_SOLICITATION, data });

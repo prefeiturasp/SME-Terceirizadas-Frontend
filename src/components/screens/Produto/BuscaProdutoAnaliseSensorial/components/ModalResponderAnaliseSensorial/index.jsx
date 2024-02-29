@@ -1,22 +1,21 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { connect } from "react-redux";
-import { Field, formValueSelector, reduxForm } from "redux-form";
 import { Modal } from "react-bootstrap";
 import {
   required,
   length,
-  numericInteger
-} from "../../../../../../helpers/fieldValidators";
+  numericInteger,
+  composeValidators,
+} from "helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import InputFile from "components/Shareable/Input/InputFile";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
-import { withRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { InputComData } from "components/Shareable/DatePicker";
 
 import "./styles.scss";
@@ -24,42 +23,29 @@ import { formataData, DATA_MINIMA, DATA_MAXIMA } from "./helper";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import { deepCopy, getError } from "helpers/utilities";
 import { respostaAnaliseSensorial } from "services/produto.service";
-import { ATimePicker } from "../../../../../Shareable/MakeField";
+import { Field, Form } from "react-final-form";
+import { ATimePicker } from "components/Shareable/MakeField";
 
-const length7 = length(7);
+export const ModalResponderAnaliseSensorial = ({ ...props }) => {
+  const [arquivos, SetArquivos] = useState([]);
 
-class ModalResponderAnaliseSensorial extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      arquivos: [],
-      hora: null,
-      texto: null
-    };
-    this.setFiles = this.setFiles.bind(this);
-    this.removeFile = this.removeFile.bind(this);
-    this.resetForm = this.resetForm.bind(this);
-  }
+  const { homologacao, closeModal, onSend, showModal } = props;
 
-  removeFile(index) {
-    let { arquivos } = this.state;
+  const navigate = useNavigate();
+
+  const removeFile = (index) => {
     arquivos.splice(index, 1);
-    this.setState({ arquivos });
-  }
-
-  setFiles(files) {
-    let { arquivos } = this.state;
-    arquivos = files;
-    this.setState({ arquivos });
-  }
-
-  setHora = value => {
-    this.setState({ hora: value });
+    SetArquivos(arquivos);
   };
 
-  onSubmit = values => {
-    const { arquivos } = this.state;
-    const { uuid } = this.props.homologacao;
+  const resetForm = (form) => {
+    form.reset();
+    SetArquivos([]);
+    onSend();
+    closeModal();
+  };
+
+  const onSubmit = async (values, form) => {
     const values_ = deepCopy(values);
 
     if (arquivos.length <= 0) {
@@ -68,178 +54,150 @@ class ModalResponderAnaliseSensorial extends Component {
       values_["hora"] = new Date(values_.hora_min).toTimeString().split(" ")[0];
       values_["data"] = formataData(values_.data_resp);
 
-      values_["anexos"] = arquivos.map(anexo => {
+      values_["anexos"] = arquivos.map((anexo) => {
         return {
           nome: anexo.nome,
-          base64: anexo.arquivo
+          base64: anexo.arquivo,
         };
       });
-      values_["homologacao_de_produto"] = uuid;
+      values_["homologacao_de_produto"] = homologacao.uuid;
 
       delete values_["hora_min"];
       delete values_["data_resp"];
 
-      respostaAnaliseSensorial(values_).then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Resposta para análise sensorial enviada com sucesso.");
-          this.props.history.push(
-            "/pesquisa-desenvolvimento/busca-produto-analise-sensorial"
-          );
-          this.resetForm();
-        } else {
-          toastError(getError(response.data));
-        }
-      });
+      const response = await respostaAnaliseSensorial(values_);
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Resposta para análise sensorial enviada com sucesso.");
+        navigate("/pesquisa-desenvolvimento/busca-produto-analise-sensorial");
+        resetForm(form);
+      } else {
+        toastError(getError(response.data));
+      }
     }
   };
 
-  resetForm = () => {
-    const { closeModal, onSend } = this.props;
-    onSend();
-    closeModal();
-    this.setState({ arquivos: [] });
-  };
+  return (
+    <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>Responder análise sensorial</Modal.Title>
+      </Modal.Header>
+      <Form onSubmit={onSubmit}>
+        {({ handleSubmit, form }) => (
+          <form onSubmit={handleSubmit}>
+            <Modal.Body>
+              <section>
+                <article>
+                  <label>
+                    Pessoa que recebeu produto{" "}
+                    <span className="obrigatorio">*</span>
+                  </label>
+                  <Field
+                    component={InputText}
+                    name="responsavel_produto"
+                    validate={required}
+                  />
+                </article>
+              </section>
 
-  render() {
-    const { showModal, closeModal, handleSubmit } = this.props;
-    return (
-      <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Responder análise sensorial</Modal.Title>
-        </Modal.Header>
-        <form onSubmit={handleSubmit}>
-          <Modal.Body>
-            <section>
-              <article>
-                <label>
-                  Pessoa que recebeu produto{" "}
-                  <span className="obrigatorio">*</span>
-                </label>
-                <Field
-                  component={InputText}
-                  name="responsavel_produto"
-                  validate={required}
-                />
-              </article>
-            </section>
+              <section className="tres-colunas-modal">
+                <article>
+                  <label>
+                    RF: <span className="obrigatorio">*</span>
+                  </label>
+                  <Field
+                    component={InputText}
+                    name="registro_funcional"
+                    validate={composeValidators(
+                      required,
+                      length(7),
+                      numericInteger
+                    )}
+                    maxlength="10"
+                  />
+                </article>
 
-            <section className="tres-colunas-modal">
-              <article>
-                <label>
-                  RF: <span className="obrigatorio">*</span>
-                </label>
-                <Field
-                  component={InputText}
-                  name="registro_funcional"
-                  validate={[required, length7, numericInteger]}
-                  maxlength="10"
-                />
-              </article>
+                <article>
+                  <label>
+                    Data <span className="obrigatorio">*</span>
+                  </label>
+                  <Field
+                    component={InputComData}
+                    name="data_resp"
+                    validate={required}
+                    minDate={DATA_MINIMA}
+                    maxDate={DATA_MAXIMA}
+                  />
+                </article>
 
-              <article>
-                <label>
-                  Data <span className="obrigatorio">*</span>
-                </label>
-                <Field
-                  component={InputComData}
-                  name="data_resp"
-                  validate={required}
-                  minDate={DATA_MINIMA}
-                  maxDate={DATA_MAXIMA}
-                />
-              </article>
+                <article>
+                  <label>
+                    Hora <span className="obrigatorio">*</span>
+                  </label>
+                  <Field
+                    component={ATimePicker}
+                    form={form}
+                    className="campo-hora"
+                    name="hora_min"
+                    validate={required}
+                    placeholder=""
+                    allowClear={false}
+                  />
+                </article>
+              </section>
 
-              <article>
-                <label>
-                  Hora <span className="obrigatorio">*</span>
-                </label>
-                <Field
-                  component={ATimePicker}
-                  className="campo-hora"
-                  name="hora_min"
-                  validate={required}
-                  placeholder=""
-                  allowClear={false}
-                />
-              </article>
-            </section>
+              <hr />
 
-            <hr />
+              <section>
+                <article>
+                  <label>Observação</label>
+                  <Field component={TextArea} name="observacao" required />
+                </article>
+              </section>
 
-            <section>
-              <article>
-                <label>Observação</label>
-                <Field component={TextArea} name="observacao" required />
-              </article>
-            </section>
-
-            <div className="row pt-3 pb-3">
-              <article className="col-6 produto">
-                <label>
-                  <span className="obrigatorio">* </span>Anexar
-                </label>
-                <label className="explicacao pt-2">
-                  Anexar documento de entrega ou laudo relacionado ao produto
-                </label>
-              </article>
-              <div className="col-6 btn">
-                <Field
-                  component={InputFile}
-                  className="inputfile"
-                  texto="Anexar"
-                  name="files"
-                  accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
-                  setFiles={this.setFiles}
-                  removeFile={this.removeFile}
-                  toastSuccess={"Anexo do documento incluído com sucesso!"}
-                  multiple
-                />
+              <div className="row pt-3 pb-3">
+                <article className="col-6 produto">
+                  <label>
+                    <span className="obrigatorio">* </span>Anexar
+                  </label>
+                  <label className="explicacao pt-2">
+                    Anexar documento de entrega ou laudo relacionado ao produto
+                  </label>
+                </article>
+                <div className="col-6 btn">
+                  <Field
+                    component={InputFile}
+                    className="inputfile"
+                    texto="Anexar"
+                    name="files"
+                    accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
+                    setFiles={SetArquivos}
+                    removeFile={removeFile}
+                    toastSuccess={"Anexo do documento incluído com sucesso!"}
+                    multiple
+                  />
+                </div>
               </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <section className="rodape-botoes">
-              <Botao
-                texto="Voltar"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE_OUTLINE}
-                onClick={() => {
-                  this.resetForm();
-                }}
-              />
-              <Botao
-                texto="Enviar"
-                type={BUTTON_TYPE.SUBMIT}
-                onClick={handleSubmit(values => this.onSubmit(values))}
-                style={BUTTON_STYLE.GREEN}
-              />
-            </section>
-          </Modal.Footer>
-        </form>
-      </Modal>
-    );
-  }
-}
-
-const RespostaAnaliseSensorialForm = reduxForm({
-  form: "analiseSensorial",
-  enableReinitialize: true
-})(withRouter(ModalResponderAnaliseSensorial));
-
-const selector = formValueSelector("analiseSensorial");
-
-const mapStateToProps = state => {
-  return {
-    responsavel_produto: selector(state, "responsavel_produto"),
-    registro_funcional: selector(state, "registro_funcional"),
-    data: selector(state, "data"),
-    hora: selector(state, "hora"),
-    observacao: selector(state, "observacao"),
-    arquivos: selector(state, "arquivos")
-  };
+            </Modal.Body>
+            <Modal.Footer>
+              <section className="rodape-botoes">
+                <Botao
+                  texto="Voltar"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.BLUE_OUTLINE}
+                  onClick={() => {
+                    resetForm(form);
+                  }}
+                />
+                <Botao
+                  texto="Enviar"
+                  type={BUTTON_TYPE.SUBMIT}
+                  style={BUTTON_STYLE.GREEN}
+                />
+              </section>
+            </Modal.Footer>
+          </form>
+        )}
+      </Form>
+    </Modal>
+  );
 };
-
-export default connect(
-  mapStateToProps,
-  null
-)(RespostaAnaliseSensorialForm);

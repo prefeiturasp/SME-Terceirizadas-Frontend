@@ -3,6 +3,7 @@ import React from "react";
 export const IconeDietaEspecial = () => {
   return (
     <svg
+      className="fill-white"
       width="86"
       height="86"
       viewBox="0 0 86 86"

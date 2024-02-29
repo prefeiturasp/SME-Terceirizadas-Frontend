@@ -7,18 +7,18 @@ import {
   length,
   required,
   rfOuCpfOuCodOperador,
-  semCaracteresEspeciais
+  semCaracteresEspeciais,
 } from "helpers/fieldValidators";
 import authService from "services/auth";
 import {
   atualizarSenhaLogado,
   recuperaSenha,
-  setUsuario
+  setUsuario,
 } from "services/perfil.service";
 import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { InputText } from "components/Shareable/Input/InputText";
 import { InputPassword } from "components/Shareable/Input/InputPassword";
@@ -30,10 +30,11 @@ import "./style.scss";
 import { validarForm } from "./validar";
 import {
   fieldCnpj,
-  fieldCpf
+  fieldCpf,
 } from "components/screens/Cadastros/CadastroEmpresa/helper";
 import { composeValidators, deepCopy } from "helpers/utilities";
 import { Form, Field as FieldFF } from "react-final-form";
+import { getError } from "../../helpers/utilities";
 
 const TOOLTIP_CPF = `Somente números`;
 const TOOLTIP_CNPJ = `Somente números`;
@@ -52,7 +53,7 @@ export class Login extends Component {
       width: null,
       componenteAtivo: this.COMPONENTE.LOGIN,
       tab: TABS.ESCOLA,
-      showModal: false
+      showModal: false,
     };
     this.emailInput = React.createRef();
   }
@@ -63,7 +64,7 @@ export class Login extends Component {
     CADASTRAR: 2,
     RECUPERACAO_SENHA_OK: 3,
     RECUPERACAO_SENHA_NAO_OK: 4,
-    PRIMEIRO_ACESSO: 5
+    PRIMEIRO_ACESSO: 5,
   };
 
   componentDidMount() {
@@ -76,7 +77,7 @@ export class Login extends Component {
           ? this.COMPONENTE.CADASTRAR
           : tab === TABS.PRIMEIRO_ACESSO
           ? this.COMPONENTE.PRIMEIRO_ACESSO
-          : this.COMPONENTE.LOGIN
+          : this.COMPONENTE.LOGIN,
     });
   }
 
@@ -93,14 +94,14 @@ export class Login extends Component {
     this.setState({ termos });
   }
 
-  handleSubmit = async values => {
+  handleSubmit = async (values) => {
     const { login, password } = values;
     if (login && password) {
       await authService.login(login, password);
     }
   };
 
-  handleAtualizarSenhaPrimeiroAcesso = async values => {
+  handleAtualizarSenhaPrimeiroAcesso = async (values) => {
     if (values.senha !== values.confirmar_senha) {
       return;
     }
@@ -116,22 +117,22 @@ export class Login extends Component {
     }
   };
 
-  handleRecuperaSenha = values => {
-    recuperaSenha(values.recuperar_login).then(resp => {
+  handleRecuperaSenha = (values) => {
+    recuperaSenha(values.recuperar_login).then((resp) => {
       if (resp.status === HTTP_STATUS.OK) {
         this.setState({
           componenteAtivo: this.COMPONENTE.RECUPERACAO_SENHA_OK,
-          email_recuperacao: resp.data.email
+          email_recuperacao: resp.data.email,
         });
       } else {
         this.setState({
-          componenteAtivo: this.COMPONENTE.RECUPERACAO_SENHA_NAO_OK
+          componenteAtivo: this.COMPONENTE.RECUPERACAO_SENHA_NAO_OK,
         });
       }
     });
   };
 
-  handleSubmitCadastro = values => {
+  handleSubmitCadastro = (values) => {
     const erro = validarForm(values, this.state);
     if (erro) {
       toastError(erro);
@@ -146,7 +147,7 @@ export class Login extends Component {
           newValues["email"] = newValues["email"] + "@prefeitura.sp.gov.br";
         }
       }
-      setUsuario(newValues).then(response => {
+      setUsuario(newValues).then((response) => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(
             `Cadastro efetuado com sucesso!${
@@ -158,10 +159,10 @@ export class Login extends Component {
           );
           this.setState({
             bloquearBotao: false,
-            componenteAtivo: this.COMPONENTE.LOGIN
+            componenteAtivo: this.COMPONENTE.LOGIN,
           });
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(response.data.detail);
+        } else {
+          toastError(getError(response.data.detail));
           this.setState({ bloquearBotao: false });
         }
       });
@@ -242,7 +243,7 @@ export class Login extends Component {
           </Modal.Body>
         </Modal>
         <form className="login" onSubmit={handleSubmit(this.handleSubmit)}>
-          <p className="como-acessar text-right">
+          <p className="como-acessar text-end">
             <span onClick={() => this.openModal()}>Como Acessar?</span>
           </p>
           <Field
@@ -281,7 +282,7 @@ export class Login extends Component {
               data-cy="esqueci-senha"
               onClick={() =>
                 this.setState({
-                  componenteAtivo: this.COMPONENTE.RECUPERAR_SENHA
+                  componenteAtivo: this.COMPONENTE.RECUPERAR_SENHA,
                 })
               }
             >
@@ -333,16 +334,16 @@ export class Login extends Component {
             label="Tipo de Cadastro"
             options={[
               {
-                nome: "ESCOLA"
+                nome: "ESCOLA",
               },
               {
-                nome: "DRE/CODAE"
+                nome: "DRE/CODAE",
               },
               {
-                nome: "EMPRESA"
-              }
+                nome: "EMPRESA",
+              },
             ]}
-            onChange={evt => {
+            onChange={(evt) => {
               this.switchTab(evt.target.value);
             }}
             naoDesabilitarPrimeiraOpcao
@@ -476,11 +477,11 @@ export class Login extends Component {
                 />
               </div>
             </div>
-            <div className="alinha-direita mt-3 ml-4">
+            <div className="alinha-direita mt-3 ms-4">
               <Botao
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 texto="Cancelar"
-                className="col-md-2 ml-3"
+                className="col-md-2 ms-3"
                 disabled={bloquearBotao}
                 onClick={() =>
                   this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
@@ -490,7 +491,7 @@ export class Login extends Component {
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 texto="Cadastrar"
-                className="col-md-2 ml-3"
+                className="col-md-2 ms-3"
                 disabled={bloquearBotao}
               />
             </div>
@@ -564,19 +565,19 @@ export class Login extends Component {
     return (
       <div className="form">
         <div className="texto-simples mt-3">
-          <span className="texto-simples-verde font-weight-bold">
+          <span className="texto-simples-verde fw-bold">
             Servidor Municipal: &nbsp;
           </span>
           Digite seu <strong>RF</strong>.
         </div>
         <div className="texto-simples mt-3">
-          <span className="texto-simples-verde font-weight-bold">
+          <span className="texto-simples-verde fw-bold">
             Fornecedor ou Distribuidor: &nbsp;
           </span>
           Digite seu <strong>CPF</strong>.
         </div>
         <div className="texto-simples mt-3">
-          <span className="texto-simples-verde font-weight-bold">
+          <span className="texto-simples-verde fw-bold">
             Rede Parceira: &nbsp;
           </span>
           Digite seu <strong>CPF</strong>.
@@ -605,7 +606,7 @@ export class Login extends Component {
 
                 <div className="alinha-direita">
                   <Botao
-                    className="col-md-3 ml-3"
+                    className="col-md-3 ms-3"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     texto="Cancelar"
                     type={BUTTON_TYPE.SUBMIT}
@@ -614,7 +615,7 @@ export class Login extends Component {
                     }
                   />
                   <Botao
-                    className="col-md-3 ml-3"
+                    className="col-md-3 ms-3"
                     style={BUTTON_STYLE.GREEN}
                     texto="Continuar"
                     type={BUTTON_TYPE.SUBMIT}
@@ -662,9 +663,7 @@ export class Login extends Component {
                   Seja bem-vindo(a) ao <strong>SIGPAE</strong>
                 </p>
                 <p>SISTEMA DE GESTÂO DO PROGRAMA DE ALIMENTAÇÂO ESCOLAR!</p>
-                <p className="font-weight-bold">
-                  Atualize sua senha de acesso:
-                </p>
+                <p className="fw-bold">Atualize sua senha de acesso:</p>
                 <div className="row">
                   <div className="col-12">
                     <FieldFF
@@ -672,7 +671,7 @@ export class Login extends Component {
                       label="Nova Senha"
                       name="senha"
                       placeholder={"Digite uma nova senha de acesso"}
-                      onChange={event =>
+                      onChange={(event) =>
                         this.onSenhaChanged(event.target.value)
                       }
                     />
@@ -792,7 +791,7 @@ export class Login extends Component {
 Login = reduxForm({
   form: "login",
   destroyOnUnmount: false,
-  initialValues: { tipo_email: 0 }
+  initialValues: { tipo_email: 0 },
 })(Login);
 
 export default Login;

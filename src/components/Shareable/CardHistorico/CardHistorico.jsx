@@ -11,7 +11,7 @@ export class CardHistorico extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collapsed: true
+      collapsed: true,
     };
     this.selecionarTodos = this.selecionarTodos.bind(this);
   }
@@ -22,7 +22,7 @@ export class CardHistorico extends Component {
 
   selecionarTodos() {
     if (this.props.pedidos) {
-      this.props.pedidos.forEach(pedido => {
+      this.props.pedidos.forEach((pedido) => {
         this.props.change(`check_${pedido.uuid}`, !this.props.selecionar_todos);
       });
     }
@@ -36,10 +36,10 @@ export class CardHistorico extends Component {
         <div className="card-header">
           <div className="row">
             <div className="col-11">
-              <i className="fas fa-history mr-2" />
+              <i className="fas fa-history me-2" />
               {titulo}
             </div>
-            <div className="pl-5 col-1">
+            <div className="ps-5 col-1">
               <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
                 ativo={!collapsed}
@@ -64,13 +64,13 @@ export class CardHistorico extends Component {
                     />
                     Selecionar todos
                   </label>
-                  <div className="float-right">
+                  <div className="float-end">
                     <Botao
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.BLUE}
                       title="Imprimir solicitações selecionadas"
                       icon={BUTTON_ICON.PRINT}
-                      className="float-right"
+                      className="float-end"
                     />
                   </div>
                 </div>
@@ -131,13 +131,13 @@ export class CardHistorico extends Component {
 
 const CardHistoricoForm = reduxForm({
   form: "cardHistoricoForm",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(CardHistorico);
 
 const selector = formValueSelector("cardHistoricoForm");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    selecionar_todos: selector(state, "selecionar_todos")
+    selecionar_todos: selector(state, "selecionar_todos"),
   };
 };
 

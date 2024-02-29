@@ -8,7 +8,8 @@ export const BUTTON_STYLE = {
   RED_OUTLINE: "red-button-outline",
   GRAY_OUTLINE: "gray-button-outline",
   GRAY: "gray-button",
-  DARK_OUTLINE: "dark-button-outline"
+  DARK_OUTLINE: "dark-button-outline",
+  ORANGE_OUTLINE: "orange-button-outline",
 };
 
 export const BUTTON_ICON = {
@@ -37,12 +38,12 @@ export const BUTTON_ICON = {
   TRASH: "fas fa-trash-alt",
   EYE: "fas fa-eye",
   PEN: "fas fa-pen",
-  PAPER_CLIP: "fas fa-paperclip"
+  PAPER_CLIP: "fas fa-paperclip",
 };
 
 export const BUTTON_TYPE = {
   SUBMIT: "submit",
   BUTTON: "button",
   RESET: "reset",
-  FILE: "file"
+  FILE: "file",
 };

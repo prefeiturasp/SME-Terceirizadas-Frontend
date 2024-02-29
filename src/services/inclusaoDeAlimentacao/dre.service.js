@@ -9,25 +9,34 @@ export const dreListarSolicitacoesDeInclusaoDeAlimentacao = async (
   paramsFromPrevPage
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.DRE}/${filtroAplicado}/`;
-  const response = await axios.get(url, { params: paramsFromPrevPage });
-  const results = response.data.results;
-  const status = response.status;
-  return { results: results, status };
+  const response = await axios
+    .get(url, { params: paramsFromPrevPage })
+    .catch(ErrorHandlerFunction);
+  if (response?.data?.results) {
+    const results = response.data.results;
+    const status = response.status;
+    return { results: results, status };
+  } else {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const dreListarSolicitacoesDeInclusaoDeAlimentacaoReprovados = tipoSolicitacao => {
+export const dreListarSolicitacoesDeInclusaoDeAlimentacaoReprovados = (
+  tipoSolicitacao
+) => {
   const url = `${getPath(
     tipoSolicitacao
   )}/pedidos-reprovados-diretoria-regional/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };

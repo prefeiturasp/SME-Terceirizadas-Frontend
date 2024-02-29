@@ -3,26 +3,23 @@ import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
   justificativaAoNegarSolicitacao,
-  stringSeparadaPorVirgulas
+  stringSeparadaPorVirgulas,
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "../../../Shareable/Botao/constants";
 
 import { getDetalheInversaoCardapio } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import { statusEnum } from "constants/shared";
 
-export const CorpoRelatorio = props => {
+export const CorpoRelatorio = (props) => {
   const [imprimindo, setimprimindo] = useState(false);
-  const {
-    inversaoDiaCardapio,
-    prazoDoPedidoMensagem,
-    escolaDaInversao
-  } = props;
+  const { inversaoDiaCardapio, prazoDoPedidoMensagem, escolaDaInversao } =
+    props;
 
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     inversaoDiaCardapio.logs
@@ -49,7 +46,7 @@ export const CorpoRelatorio = props => {
             style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
             icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
             disabled={imprimindo}
-            className="float-right"
+            className="float-end"
             onClick={() => btnImprimirRelatorio()}
           />
         </p>
@@ -62,7 +59,7 @@ export const CorpoRelatorio = props => {
             <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="pl-2 my-auto offset-1 col-5">
+        <div className="ps-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
@@ -124,7 +121,7 @@ export const CorpoRelatorio = props => {
         <div className="row">
           <div className="col-12 report-label-value">
             <p>Tipos de Alimentação para inversão:</p>
-            <p className="font-weight-bold">
+            <p className="fw-bold">
               {stringSeparadaPorVirgulas(
                 inversaoDiaCardapio.tipos_alimentacao,
                 "nome"
@@ -141,7 +138,7 @@ export const CorpoRelatorio = props => {
         </tr>
         <tr>
           <td />
-          <td className="pr-5">
+          <td className="pe-5">
             {inversaoDiaCardapio.cardapio_de
               ? inversaoDiaCardapio.cardapio_de.data
               : inversaoDiaCardapio.data_de_inversao}
@@ -155,7 +152,7 @@ export const CorpoRelatorio = props => {
         {inversaoDiaCardapio.data_de_inversao_2 && (
           <tr>
             <td />
-            <td className="pr-5">{inversaoDiaCardapio.data_de_inversao_2}</td>
+            <td className="pe-5">{inversaoDiaCardapio.data_de_inversao_2}</td>
             <td>{inversaoDiaCardapio.data_para_inversao_2}</td>
           </tr>
         )}
@@ -164,9 +161,9 @@ export const CorpoRelatorio = props => {
         <div className="col-12 report-label-value">
           <p>Motivo</p>
           <p
-            className="value font-weight-bold"
+            className="value fw-bold"
             dangerouslySetInnerHTML={{
-              __html: inversaoDiaCardapio.motivo
+              __html: inversaoDiaCardapio.motivo,
             }}
           />
         </div>
@@ -176,9 +173,9 @@ export const CorpoRelatorio = props => {
           <div className="col-12 report-label-value">
             <p>Observações</p>
             <p
-              className="font-weight-bold value"
+              className="fw-bold value"
               dangerouslySetInnerHTML={{
-                __html: inversaoDiaCardapio.observacao
+                __html: inversaoDiaCardapio.observacao,
               }}
             />
           </div>
@@ -207,7 +204,7 @@ export const CorpoRelatorio = props => {
                     __html:
                       inversaoDiaCardapio.logs[
                         inversaoDiaCardapio.logs.length - 1
-                      ].justificativa
+                      ].justificativa,
                   }}
                 />
               ) : (
@@ -223,7 +220,7 @@ export const CorpoRelatorio = props => {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaNegacao
+                __html: justificativaNegacao,
               }}
             />
           </div>

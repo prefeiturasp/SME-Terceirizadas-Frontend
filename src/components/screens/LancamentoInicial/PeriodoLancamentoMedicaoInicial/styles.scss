@@ -16,6 +16,9 @@
       color: $green !important;
     }
   }
+  .ant-tabs-tab:hover {
+    color: #000000e0 !important;
+  }
 }
 
 .default-color-first-semana:first-child {
@@ -27,6 +30,35 @@
       text-shadow: 0 0 0.25px currentColor;
       .ant-tabs-tab-btn:hover {
         color: $white !important;
+      }
+    }
+  }
+}
+
+.alunos-tabs {
+  .ant-tabs-tab.ant-tabs-tab-active {
+    background: #ffe69e !important;
+    .ant-tabs-tab-btn {
+      color: $blackSubtle !important;
+    }
+    .ant-tabs-tab-btn:hover {
+      color: $blackSubtle !important;
+    }
+  }
+  .ant-tabs-tab,
+  .ant-tabs-tab:hover {
+    color: $blackSubtle !important;
+  }
+}
+
+.default-color-first-aluno:first-child {
+  .ant-tabs-nav {
+    .ant-tabs-tab:first-child {
+      background-color: #ffe69e;
+      color: $blackSubtle;
+      text-shadow: 0 0 0.25px currentColor;
+      .ant-tabs-tab-btn:hover {
+        color: $blackSubtle !important;
       }
     }
   }
@@ -223,11 +255,16 @@
   margin-bottom: 15px;
 }
 
+.mes-lancamento,
+.semanas {
+  padding-left: 0 !important;
+}
+
 .legenda-tooltips {
   border: 2px solid $grayDisabled;
   border-radius: 5px;
   position: absolute;
-  right: 12px;
+  right: 0px;
   padding: 10px 16px 0px 16px;
 
   i {
@@ -271,4 +308,23 @@
 
 .mt-legenda {
   margin-top: 50px !important;
+}
+
+.input-alimentacao-permissao-lancamento-especial {
+  background-color: #fdf7e9;
+}
+
+.legenda-lancamentos-especiais {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 12px;
+
+  .legenda-cor {
+    width: 12px;
+    height: 12px;
+    background-color: #fdf7e9;
+    margin-right: 8px;
+    border: 1px solid #e9eaea;
+  }
 }

@@ -12,14 +12,14 @@ export class Cards extends Component {
       unCheckedList: [],
       all: this.props.options.map(({ value }) => {
         return value;
-      })
+      }),
     };
   }
 
   static getDerivedStateFromProps(nextProps, state) {
     const {
       checkAll,
-      input: { onBlur, onChange }
+      input: { onBlur, onChange },
     } = nextProps;
     // marca tudo e atualiza o estado interno
     if (checkAll) {
@@ -43,7 +43,7 @@ export class Cards extends Component {
     const { name, onChange, onBlur, onFocus } = input;
     const inputValue = input.value;
     const checkboxes = options.map(({ label, value, foodList }, index) => {
-      const handleChange = event => {
+      const handleChange = (event) => {
         const arr = [...inputValue];
         if (event.target.checked) {
           arr.push(value);
@@ -53,7 +53,7 @@ export class Cards extends Component {
         this.setState({
           ...this.state,
           checkedList: arr,
-          unCheckedList: this.state.all.filter(val => !arr.includes(val))
+          unCheckedList: this.state.all.filter((val) => !arr.includes(val)),
         });
         onBlur(arr);
         return onChange(arr);
@@ -61,14 +61,14 @@ export class Cards extends Component {
       const checked = inputValue.includes(value);
       const checkStyle = {
         width: "1em",
-        height: "1em"
+        height: "1em",
       };
       const headerStyle = {
         fontStyle: "normal",
         fontWeight: "bold",
         fontSize: "18px",
         lineHeight: "normal",
-        color: "#035D96"
+        color: "#035D96",
       };
 
       let borderSucess = "";
@@ -93,12 +93,12 @@ export class Cards extends Component {
               width: "22rem",
               height: "16rem",
               border: "solid",
-              opacity: opacity
+              opacity: opacity,
             }}
           >
             <div className="card-header" style={headerStyle}>
               {label}
-              <div className="form-check float-right">
+              <div className="form-check float-end">
                 <input
                   className="compare_items form-check-input"
                   type="checkbox"
@@ -147,11 +147,11 @@ export default class CheckboxWithCards extends Component {
       PropTypes.shape({
         label: PropTypes.string.isRequired,
         value: PropTypes.string.isRequired,
-        foodList: PropTypes.array.isRequired
+        foodList: PropTypes.array.isRequired,
       })
     ).isRequired,
     choicesNumberLimit: PropTypes.number.isRequired,
-    checkAll: PropTypes.bool
+    checkAll: PropTypes.bool,
   };
 
   render() {

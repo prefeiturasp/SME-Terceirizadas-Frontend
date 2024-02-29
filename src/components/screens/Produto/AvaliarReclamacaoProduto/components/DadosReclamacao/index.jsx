@@ -55,7 +55,7 @@ export const DadosReclamacaoProduto = ({ produto, paginaInteira }) => {
             dangerouslySetInnerHTML={{
               __html:
                 produto.ultima_homologacao.reclamacoes &&
-                produto.ultima_homologacao.reclamacoes[0].reclamacao
+                produto.ultima_homologacao.reclamacoes[0].reclamacao,
             }}
           />
         </div>
@@ -72,7 +72,7 @@ export const DadosReclamacaoProduto = ({ produto, paginaInteira }) => {
                       rel="noopener noreferrer"
                       target="_blank"
                       href={anexo.arquivo}
-                      className="link font-weight-bold"
+                      className="link fw-bold"
                     >
                       {`Anexo ${key + 1}`}
                     </a>

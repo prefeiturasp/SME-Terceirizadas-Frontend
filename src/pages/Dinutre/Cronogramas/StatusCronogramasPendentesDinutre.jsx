@@ -1,43 +1,38 @@
 import React from "react";
 import Page from "components/Shareable/Page/Page";
 import Breadcrumb from "components/Shareable/Breadcrumb";
-import {
-  DINUTRE,
-  PAINEL_APROVACOES,
-  PRE_RECEBIMENTO,
-  SOLICITACOES_PENDENTES
-} from "configs/constants";
+import { PAINEL_APROVACOES, PRE_RECEBIMENTO } from "configs/constants";
 import {
   getDashboardCronograma,
-  getDashboardCronogramaComFiltros
+  getDashboardCronogramaComFiltros,
 } from "services/cronograma.service";
 import { CARD_PENDENTES_ASSINATURA } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
 
 import { SolicitacoesCronogramaStatusGenerico } from "components/screens/SolicitacoesCronogramaStatusGenerico";
 
 const atual = {
-  href: `/${DINUTRE}/${SOLICITACOES_PENDENTES}`,
-  titulo: "Cronogramas Pendentes de Assinatura"
+  href: CARD_PENDENTES_ASSINATURA.href,
+  titulo: CARD_PENDENTES_ASSINATURA.titulo,
 };
 
 const limit = 10;
 
 const paramsDefault = {
-  status: "ASSINADO_FORNECEDOR",
+  status: CARD_PENDENTES_ASSINATURA.incluir_status,
   offset: 0,
-  limit: limit
+  limit: limit,
 };
 
 export default () => {
   const anteriores = [
     {
       href: `#`,
-      titulo: "Pré-Recebimento"
+      titulo: "Pré-Recebimento",
     },
     {
-      href: `/pre-recebimento/painel-aprovacoes`,
-      titulo: "Painel de Aprovações"
-    }
+      href: `/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`,
+      titulo: "Painel de Aprovações",
+    },
   ];
 
   return (

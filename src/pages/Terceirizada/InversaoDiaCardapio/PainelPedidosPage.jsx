@@ -7,7 +7,7 @@ import { INVERSAO_CARDAPIO, TERCEIRIZADA } from "../../../configs/constants";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${INVERSAO_CARDAPIO}`,
-  titulo: "Inversão de dia de Cardápio - Pendente Ciência"
+  titulo: "Inversão de dia de Cardápio - Pendente Ciência",
 };
 
 export default () => (

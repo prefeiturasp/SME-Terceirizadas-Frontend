@@ -6,7 +6,7 @@ import { TextArea } from "components/Shareable/TextArea/TextArea";
 
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { Field, Form } from "react-final-form";
 import { useState } from "react";
@@ -16,7 +16,7 @@ export default ({ show, setShow, handleClose, loading, handleSim }) => {
   const [podeEnviar, setPodeEnviar] = useState(false);
   return (
     <Form
-      onSubmit={async values => {
+      onSubmit={async (values) => {
         handleSim(values);
       }}
       render={({ handleSubmit }) => (
@@ -36,7 +36,7 @@ export default ({ show, setShow, handleClose, loading, handleSim }) => {
                 />
 
                 <OnChange name="justificativa_cronograma">
-                  {value => {
+                  {(value) => {
                     if (value.length > 0) {
                       setPodeEnviar(true);
                     } else {
@@ -54,13 +54,13 @@ export default ({ show, setShow, handleClose, loading, handleSim }) => {
                     setPodeEnviar(false);
                   }}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="ml-3"
+                  className="ms-3"
                 />
                 <Botao
                   texto="Enviar"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
-                  className="ml-3"
+                  className="ms-3"
                   disabled={!podeEnviar}
                   onClick={() => {
                     setConfirmar(true);
@@ -96,13 +96,13 @@ export default ({ show, setShow, handleClose, loading, handleSim }) => {
                     setPodeEnviar(false);
                   }}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="ml-3"
+                  className="ms-3"
                 />
                 <Botao
                   texto="Sim"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
-                  className="ml-3"
+                  className="ms-3"
                   onClick={handleSubmit}
                 />
               </Modal.Footer>

@@ -4,7 +4,8 @@ import {
   DIETA_ESPECIAL,
   CANCELAMENTO,
   CONSULTA_PROTOCOLO_PADRAO_DIETA,
-  RELATORIO_DIETA_ESPECIAL
+  RELATORIO_DIETA_ESPECIAL,
+  RELATORIO_GERENCIAL_DIETAS,
 } from "configs/constants";
 import {
   usuarioEhEmpresaTerceirizada,
@@ -18,7 +19,10 @@ import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhAdministradorNutriCODAE,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhCoordenadorNutriCODAE
+  usuarioEhCoordenadorNutriCODAE,
+  usuarioEscolaEhGestaoDireta,
+  usuarioEscolaEhGestaoParceira,
+  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
@@ -32,9 +36,15 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhEscolaTerceirizada() ||
     usuarioEhMedicao() ||
     usuarioEhEmpresaTerceirizada() ||
-    usuarioEhNutricionistaSupervisao();
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEscolaEhGestaoDireta() ||
+    usuarioEscolaEhGestaoParceira() ||
+    usuarioEhCODAEGabinete();
   const exibeNovaSolicitacao =
-    usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
+    usuarioEhEscolaTerceirizadaDiretor() ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEscolaEhGestaoDireta() ||
+    usuarioEscolaEhGestaoParceira();
   const exibeConsultaDieta =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -42,8 +52,13 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhEscolaTerceirizada() ||
-    usuarioEhDRE();
-  usuarioEhMedicao() || usuarioEhCODAEDietaEspecial() || usuarioEhDRE();
+    usuarioEhDRE() ||
+    usuarioEhMedicao() ||
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhDRE() ||
+    usuarioEscolaEhGestaoDireta() ||
+    usuarioEscolaEhGestaoParceira() ||
+    usuarioEhCODAEGabinete();
   const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
   const exibeRelatorioDietasEspeciais =
     usuarioEhEmpresaTerceirizada() ||
@@ -55,7 +70,8 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCoordenadorNutriSupervisao() ||
     usuarioEhAdministradorNutriCODAE() ||
     usuarioEhCoordenadorNutriCODAE() ||
-    usuarioEhMedicao();
+    usuarioEhMedicao() ||
+    usuarioEhCODAEGabinete();
 
   return (
     <Menu id="DietaEspecial" icon="fa-apple-alt" title={"Dieta Especial"}>
@@ -81,7 +97,9 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
         </LeafItem>
       )}
       {(usuarioEhEscolaTerceirizadaDiretor() ||
-        usuarioEhEscolaTerceirizada()) && (
+        usuarioEhEscolaTerceirizada() ||
+        usuarioEscolaEhGestaoDireta() ||
+        usuarioEscolaEhGestaoParceira()) && (
         <LeafItem to={`/${DIETA_ESPECIAL}/${CANCELAMENTO}`}>
           Cancel. Dieta Especial
         </LeafItem>
@@ -101,6 +119,12 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
           <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_DIETA_ESPECIAL}`}>
             Relatório de Dietas Especiais
           </LeafItem>
+          {(usuarioEhAdministradorNutriCODAE() ||
+            usuarioEhCoordenadorNutriCODAE()) && (
+            <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_GERENCIAL_DIETAS}`}>
+              Relatório Gerencial de Dietas
+            </LeafItem>
+          )}
         </SubMenu>
       )}
     </Menu>

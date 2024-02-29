@@ -9,11 +9,11 @@ export function Websocket(url, onmessage, onclose, onopen) {
 
   this.socket = new WebSocket(ws_url);
 
-  this.socket.onmessage = function(e) {
+  this.socket.onmessage = function (e) {
     if (onmessage !== undefined) onmessage(e);
   };
 
-  this.socket.onclose = function() {
+  this.socket.onclose = function () {
     console.error(
       "Error while connecting in websocket! Trying to connect again in 5 seconds"
     );
@@ -25,7 +25,7 @@ export function Websocket(url, onmessage, onclose, onopen) {
     }, 5000);
   };
 
-  this.socket.onopen = function(e) {
+  this.socket.onopen = function (e) {
     if (onopen !== undefined) onopen(e);
   };
 }

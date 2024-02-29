@@ -9,7 +9,7 @@ import Botao from "../../../../../Shareable/Botao";
 import { ASelect } from "components/Shareable/MakeField";
 import {
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "../../../../../Shareable/Botao/constants";
 import { Tooltip } from "antd";
 
@@ -18,7 +18,7 @@ import StatefulMultiSelect from "@khanacademy/react-multi-select";
 
 const { Option } = SelectAntd;
 
-const SelectSelecione = props => {
+const SelectSelecione = (props) => {
   const {
     input: { onChange, value },
     options,
@@ -46,17 +46,17 @@ const SubstituicoesField = ({
   input: { name },
   form,
   values,
-  deveHabilitarApagar
+  deveHabilitarApagar,
 }) => {
   const [valoresSelecionados, setValoresSelecionados] = useState([]);
   const [open, setOpen] = useState(false);
 
-  const produtosSelcionados = values => {
+  const produtosSelcionados = (values) => {
     let listaSelecionados = [];
     values &&
-      values.forEach(value => {
+      values.forEach((value) => {
         const produtoSelecionado = produtos.find(
-          al => String(al.uuid) === value
+          (al) => String(al.uuid) === value
         );
         listaSelecionados.push(`${produtoSelecionado.nome}, `);
         setValoresSelecionados(listaSelecionados);
@@ -82,7 +82,7 @@ const SubstituicoesField = ({
                 .indexOf(input.toLowerCase()) >= 0
             }
           >
-            {alimentos.map(a => {
+            {alimentos.map((a) => {
               return <Option key={a.id.toString()}>{a.nome}</Option>;
             })}
           </Field>
@@ -92,7 +92,7 @@ const SubstituicoesField = ({
             component={SelectSelecione}
             options={[
               { uuid: "I", nome: "Isento" },
-              { uuid: "S", nome: "Substituir" }
+              { uuid: "S", nome: "Substituir" },
             ]}
             name={`${name}.tipo`}
             validate={required}
@@ -116,11 +116,11 @@ const SubstituicoesField = ({
                     values.substituicoes[chave].substitutos) ||
                   []
                 }
-                options={produtos.map(produto => ({
+                options={produtos.map((produto) => ({
                   value: produto.uuid,
-                  label: produto.nome
+                  label: produto.nome,
                 }))}
-                onSelectedChanged={values_ =>
+                onSelectedChanged={(values_) =>
                   form.change(
                     `substituicoes[
                   ${chave}].substitutos`,
@@ -133,11 +133,11 @@ const SubstituicoesField = ({
                   selectSomeItems: "Selecione",
                   allItemsAreSelected: "Todos os itens estão selecionados",
                   selectAll: "Todos",
-                  Search: "Buscar"
+                  Search: "Buscar",
                 }}
               />
               <OnChange name={`${name}.substitutos`}>
-                {values => {
+                {(values) => {
                   produtosSelcionados(values);
                 }}
               </OnChange>

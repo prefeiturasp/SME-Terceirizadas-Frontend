@@ -4,22 +4,22 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { CONFERIR_ENTREGA, LOGISTICA } from "configs/constants";
 import {
   recebeGuiaSemOcorrencia,
-  editaGuiaComOcorrencia
+  editaGuiaComOcorrencia,
 } from "services/logistica.service";
 import { Spin } from "antd";
 import moment from "moment";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 export default ({ values, disabled, uuidEdicao }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -42,7 +42,7 @@ export default ({ values, disabled, uuidEdicao }) => {
           setLoading(false);
           goToConferir();
         })
-        .catch(e => {
+        .catch((e) => {
           toastError(e.response.data.detail);
           setLoading(false);
         });
@@ -65,7 +65,7 @@ export default ({ values, disabled, uuidEdicao }) => {
   };
 
   const goToConferir = () => {
-    history.push(`/${LOGISTICA}/${CONFERIR_ENTREGA}`);
+    navigate(`/${LOGISTICA}/${CONFERIR_ENTREGA}`);
   };
 
   return (
@@ -76,7 +76,7 @@ export default ({ values, disabled, uuidEdicao }) => {
         style={BUTTON_STYLE.GREEN}
         icon={BUTTON_ICON.ARROW_RIGHT}
         iconPosition="right"
-        className="float-right ml-3"
+        className="float-end ms-3"
         onClick={handleShow}
         disabled={disabled}
       />
@@ -108,7 +108,7 @@ export default ({ values, disabled, uuidEdicao }) => {
               type={BUTTON_TYPE.BUTTON}
               onClick={handleClose}
               style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
+              className="ms-3"
             />
             <Botao
               texto={
@@ -116,7 +116,7 @@ export default ({ values, disabled, uuidEdicao }) => {
               }
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               onClick={handleSim}
             />
           </Modal.Footer>

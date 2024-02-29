@@ -1,7 +1,7 @@
 import React from "react";
 import "./style.scss";
 
-export const InputErroMensagem = props => {
+export const InputErroMensagem = (props) => {
   const { meta, visitedError, dirtyValidation } = props;
 
   return (

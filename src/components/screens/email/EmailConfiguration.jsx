@@ -4,7 +4,7 @@ import { email, required } from "../../../helpers/fieldValidators";
 import {
   getEmailConfiguration,
   setEmailConfiguration,
-  testEmailConfiguration
+  testEmailConfiguration,
 } from "../../../services/email";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import IsVisible from "../../Shareable/layout";
@@ -24,9 +24,9 @@ class EmailConfiguration extends Component {
       showTest: false,
       response: {
         error: "",
-        default: ""
+        default: "",
       },
-      showModal: false
+      showModal: false,
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -41,7 +41,7 @@ class EmailConfiguration extends Component {
   }
 
   onSubmit(values) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       switch (values.security) {
         case SECURITY_OPTIONS.TLS:
           values.use_tls = true;
@@ -62,7 +62,7 @@ class EmailConfiguration extends Component {
           );
           resolve();
         })
-        .catch(error => {
+        .catch((error) => {
           toastError(getError(error));
           resolve();
         });
@@ -71,7 +71,7 @@ class EmailConfiguration extends Component {
 
   onTestConfiguration(toEmail) {
     const prom = testEmailConfiguration(toEmail);
-    prom.then(resp => {
+    prom.then((resp) => {
       this.setState({ response: resp });
       this.emailAlert();
     });
@@ -90,7 +90,7 @@ class EmailConfiguration extends Component {
   componentDidMount() {
     const conf = getEmailConfiguration();
     conf
-      .then(resp => {
+      .then((resp) => {
         this.props.reset();
         this.props.change("username", resp.username);
         this.props.change("from_email", resp.from_email);
@@ -184,7 +184,7 @@ class EmailConfiguration extends Component {
                   options={generateOptions([
                     "",
                     SECURITY_OPTIONS.SSL,
-                    SECURITY_OPTIONS.TLS
+                    SECURITY_OPTIONS.TLS,
                   ])}
                   label="Segurança"
                   name="security"
@@ -209,7 +209,7 @@ class EmailConfiguration extends Component {
               <Botao
                 texto="Cancelar"
                 type={BUTTON_TYPE.BUTTON}
-                className="mr-2"
+                className="me-2"
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 onClick={this.showModal}
               />
@@ -218,7 +218,7 @@ class EmailConfiguration extends Component {
                 type={BUTTON_TYPE.SUBMIT}
                 disabled={pristine || submitting}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                onClick={handleSubmit(values =>
+                onClick={handleSubmit((values) =>
                   this.onTestConfiguration(values.testEmail)
                 )}
               />
@@ -226,10 +226,10 @@ class EmailConfiguration extends Component {
                 texto="Salvar"
                 type={BUTTON_TYPE.SUBMIT}
                 disabled={pristine || submitting}
-                className="ml-2"
-                onClick={handleSubmit(values =>
+                className="ms-2"
+                onClick={handleSubmit((values) =>
                   this.onSubmit({
-                    ...values
+                    ...values,
                   })
                 )}
                 style={BUTTON_STYLE.GREEN}
@@ -242,7 +242,7 @@ class EmailConfiguration extends Component {
   }
 }
 
-export default (EmailConfiguration = reduxForm({
+export default EmailConfiguration = reduxForm({
   form: "emailConfiguration",
-  destroyOnUnmount: false
-})(EmailConfiguration));
+  destroyOnUnmount: false,
+})(EmailConfiguration);

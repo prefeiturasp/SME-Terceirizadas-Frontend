@@ -7,7 +7,7 @@ import "../style.scss";
 import {
   ALTERACAO_TIPO_ALIMENTACAO,
   RELATORIO,
-  DRE
+  DRE,
 } from "../../../configs/constants";
 import { ToggleExpandir } from "../ToggleExpandir";
 
@@ -16,7 +16,7 @@ export class CardPendenteAcao extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: this.props.pedidos
+      pedidosFiltrados: this.props.pedidos,
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
   }
@@ -24,7 +24,7 @@ export class CardPendenteAcao extends Component {
   filtrarPedidos(event) {
     if (event === undefined) event = { target: { value: "" } };
     let pedidosFiltrados = this.props.pedidos;
-    pedidosFiltrados = pedidosFiltrados.filter(function(item) {
+    pedidosFiltrados = pedidosFiltrados.filter(function (item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.escola.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
@@ -93,7 +93,7 @@ export class CardPendenteAcao extends Component {
               />
               <i className="fas fa-search inside-input" />
             </div>
-            <table className="orders-table mt-4 ml-3 mr-3">
+            <table className="orders-table mt-4 ms-3 me-3">
               <thead>
                 <tr>
                   <th>Código do Pedido</th>
@@ -111,8 +111,9 @@ export class CardPendenteAcao extends Component {
                       key={key}
                       to={`/${DRE}/${ALTERACAO_TIPO_ALIMENTACAO}/${RELATORIO}?uuid=${
                         pedido.uuid
-                      }&ehInclusaoContinua=${pedido.data_inicial !==
-                        undefined}`}
+                      }&ehInclusaoContinua=${
+                        pedido.data_inicial !== undefined
+                      }`}
                     >
                       <tr>
                         <td>{pedido.id_externo}</td>

@@ -10,7 +10,7 @@ const ClassificacaoDaDieta = ({ classificacoesDieta }) => {
 
   const { Option } = SelectAntd;
 
-  const opcoes = classificacoesDieta.map(classificacao => {
+  const opcoes = classificacoesDieta.map((classificacao) => {
     return <Option key={classificacao.uuid}>{classificacao.nome}</Option>;
   });
 

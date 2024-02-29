@@ -1,16 +1,18 @@
 import axios from "./_base";
 import { saveAs } from "file-saver";
+import { getMensagemDeErro } from "../helpers/statusErrors";
+import { toastError } from "../components/Shareable/Toast/dialogs";
 
 export const getEtapas = async () =>
   await axios.get("/cronogramas/opcoes-etapas/");
 
-export const getCronograma = async uuid =>
+export const getCronograma = async (uuid) =>
   await axios.get(`/cronogramas/${uuid}/`);
 
-export const getCronogramaDetalhar = async uuid =>
+export const getCronogramaDetalhar = async (uuid) =>
   await axios.get(`/cronogramas/${uuid}/detalhar-com-log/`);
 
-export const cadastraCronograma = async payload =>
+export const cadastraCronograma = async (payload) =>
   await axios.post("/cronogramas/", payload);
 
 export const editaCronograma = async (payload, uuid) =>
@@ -19,19 +21,22 @@ export const editaCronograma = async (payload, uuid) =>
 export const getRascunhos = async () =>
   await axios.get("/cronogramas/rascunhos/");
 
-export const getListagemCronogramas = async params => {
+export const getListagemCronogramas = async (params) => {
   const url = `/cronogramas/`;
   return await axios.get(url, { params });
 };
 
+export const getListaCronogramasPraCadastro = async () =>
+  await axios.get("/cronogramas/lista-cronogramas-cadastro/");
+
 export const fornecedorAssinaCronograma = async (uuid, password) => {
   const url = `/cronogramas/${uuid}/fornecedor-assina-cronograma/`;
   return await axios.patch(url, {
-    password: password
+    password: password,
   });
 };
 
-export const cadastraSolicitacaoAlteracaoCronograma = async payload => {
+export const cadastraSolicitacaoAlteracaoCronograma = async (payload) => {
   return await axios.post("solicitacao-de-alteracao-de-cronograma/", payload);
 };
 
@@ -65,12 +70,12 @@ export const analiseDilogSolicitacaoAlteracaoCronograma = async (
   );
 };
 
-export const getListagemSolicitacaoAlteracaoCronograma = async params => {
+export const getListagemSolicitacaoAlteracaoCronograma = async (params) => {
   const url = `/solicitacao-de-alteracao-de-cronograma/`;
   return await axios.get(url, { params });
 };
 
-export const getSolicitacaoAlteracaoCronograma = async uuid => {
+export const getSolicitacaoAlteracaoCronograma = async (uuid) => {
   const url = `/solicitacao-de-alteracao-de-cronograma/${uuid}/`;
   return await axios.get(url);
 };
@@ -78,33 +83,39 @@ export const getSolicitacaoAlteracaoCronograma = async uuid => {
 export const cronogramaAssina = async (uuid, password) => {
   const url = `/cronogramas/${uuid}/cronograma-assina/`;
   return await axios.patch(url, {
-    password: password
+    password: password,
   });
 };
 
 export const dinutreAssinaCronograma = async (uuid, password) => {
   const url = `/cronogramas/${uuid}/dinutre-assina/`;
   return await axios.patch(url, {
-    password: password
+    password: password,
   });
 };
 
 export const codaeAssinaCronograma = async (uuid, password) => {
   const url = `/cronogramas/${uuid}/codae-assina/`;
   return await axios.patch(url, {
-    password: password
+    password: password,
   });
+};
+
+export const fornecedorCienteAlteracaoCodae = async (uuid) => {
+  return await axios.patch(
+    `solicitacao-de-alteracao-de-cronograma/${uuid}/fornecedor-ciente/`
+  );
 };
 
 export const getDashboardCronograma = async (params = null) =>
   await axios.get(`/cronogramas/dashboard/`, { params });
 
-export const getDashboardCronogramaComFiltros = async params =>
+export const getDashboardCronogramaComFiltros = async (params) =>
   await axios.get(`/cronogramas/dashboard-com-filtro/`, { params });
 
 export const getDashboardSolicitacoesAlteracao = async (params = null) =>
   await axios.get(`/solicitacao-de-alteracao-de-cronograma/dashboard/`, {
-    params
+    params,
   });
 
 export const getDashboardSolicitacoesAlteracaoComFiltros = async (
@@ -113,7 +124,7 @@ export const getDashboardSolicitacoesAlteracaoComFiltros = async (
   await axios.get(
     `/solicitacao-de-alteracao-de-cronograma/dashboard-com-filtro/`,
     {
-      params
+      params,
     }
   );
 
@@ -125,4 +136,12 @@ export const imprimirCronograma = async (uuid, numero) => {
 
 export const getUnidadesDeMedidaLogistica = async () => {
   return await axios.get(`/unidades-medida-logistica/lista-nomes-abreviacoes/`);
+};
+
+export const getCalendarioCronogramas = async (params) => {
+  try {
+    return await axios.get("/calendario-cronogramas/", { params });
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
 };

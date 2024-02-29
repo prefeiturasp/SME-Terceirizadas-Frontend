@@ -1,7 +1,7 @@
 import authService, {
   calculateTokenSecondsLeft,
   isTokenExpired,
-  TOKEN_ALIAS
+  TOKEN_ALIAS,
 } from "../auth";
 
 if (typeof localStorage === "undefined" || localStorage === null) {

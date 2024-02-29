@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 .alinha-centro {
   display: flex;
   justify-content: center;
@@ -12,4 +14,9 @@
 
 .mh-70 {
   min-height: 70vh;
+}
+
+.text-logo-sigpae-loader {
+  font-size: 10px;
+  color: $green;
 }

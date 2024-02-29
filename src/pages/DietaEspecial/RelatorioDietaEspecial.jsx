@@ -10,7 +10,7 @@ import { DIETA_ESPECIAL, RELATORIO_DIETA_ESPECIAL } from "configs/constants";
 
 const atual = {
   href: `/${DIETA_ESPECIAL}/${RELATORIO_DIETA_ESPECIAL}`,
-  titulo: "Relatório de Dietas Especiais"
+  titulo: "Relatório de Dietas Especiais",
 };
 
 export default () => (

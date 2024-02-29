@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import {
   getFiltros,
-  filtrarAlunosMatriculados
+  filtrarAlunosMatriculados,
 } from "services/alunosMatriculados.service";
 import { formataOpcoes } from "./helpers";
 import { Filtros } from "./componentes/Filtros";
@@ -17,12 +17,12 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import {
   gerarPDFRelatorioAlunosMatriculados,
-  gerarXLSRelatorioAlunosMatriculados
+  gerarXLSRelatorioAlunosMatriculados,
 } from "services/relatorios.service";
 import "./style.scss";
 
@@ -40,10 +40,8 @@ export const AlunosMatriculados = () => {
   const [filtros, setFiltros] = useState(undefined);
   const [faixasEtarias, setFaixasEtarias] = useState(undefined);
   const [showPeridosFaixas, setShowPeriodosFaixas] = useState([]);
-  const [
-    exibirModalCentralDownloads,
-    setExibirModalCentralDownloads
-  ] = useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
 
   const getOpcoesFiltros = async () => {
     const response = await getFiltros();
@@ -124,12 +122,12 @@ export const AlunosMatriculados = () => {
             tiposUnidades={tiposUnidades}
             unidadesEducacionais={unidadesEducacionais}
             listaOpcoes={listaOpcoes}
-            setFiltrando={value => setFiltrando(value)}
-            setPage={value => setPage(value)}
-            setFiltros={value => setFiltros(value)}
-            setResultado={value => setResultado(value)}
-            setTotal={value => setTotal(value)}
-            setShowPeriodosFaixas={lista => setShowPeriodosFaixas(lista)}
+            setFiltrando={(value) => setFiltrando(value)}
+            setPage={(value) => setPage(value)}
+            setFiltros={(value) => setFiltros(value)}
+            setResultado={(value) => setResultado(value)}
+            setTotal={(value) => setTotal(value)}
+            setShowPeriodosFaixas={(lista) => setShowPeriodosFaixas(lista)}
           />
         </Spin>
         <Spin tip="Filtrando..." spinning={filtrando}>
@@ -139,18 +137,18 @@ export const AlunosMatriculados = () => {
                 resultado={resultado}
                 faixasEtarias={faixasEtarias}
                 showPeridosFaixas={showPeridosFaixas}
-                setShowPeriodosFaixas={lista => setShowPeriodosFaixas(lista)}
+                setShowPeriodosFaixas={(lista) => setShowPeriodosFaixas(lista)}
               />
               <Paginacao
-                onChange={page => onPageChanged(page, filtros)}
+                onChange={(page) => onPageChanged(page, filtros)}
                 total={total}
                 pageSize={10}
                 current={page}
               />
               <div className="row">
-                <div className="col-12 text-right">
+                <div className="col-12 text-end">
                   <Botao
-                    className="mr-2"
+                    className="me-2"
                     texto="Baixar XLSX"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     icon={BUTTON_ICON.FILE_EXCEL}

@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export const getConfigCabecario = filtros => {
+export const getConfigCabecario = (filtros) => {
   const qtde_filtros = Object.keys(filtros).length;
   const qtde_filtro_status = filtros.status_reclamacao.length;
 
@@ -69,7 +69,7 @@ export const getConfigCabecario = filtros => {
   }
 };
 
-const retornaStatusFrontend = status => {
+const retornaStatusFrontend = (status) => {
   switch (status) {
     case "AGUARDANDO_AVALIACAO":
       return "Aguardando avaliação da CODAE";

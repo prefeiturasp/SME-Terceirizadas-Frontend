@@ -6,7 +6,7 @@ import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import SelectSelecione from "components/Shareable/SelectSelecione";
@@ -18,12 +18,12 @@ import { CADASTRO_NOTIFICACAO, LOGISTICA } from "configs/constants";
 
 const FORM_NAME = "guiasOcorrencias";
 
-export default ({ setFiltros, setNotificacoes, fiscal }) => {
+export default ({ setFiltros, setNotificacoes, fiscal, somenteLeitura }) => {
   const [distribuidores, setDistribuidores] = useState([]);
 
   const initialValues = {};
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
@@ -32,9 +32,9 @@ export default ({ setFiltros, setNotificacoes, fiscal }) => {
     const buscaDistribuidores = async () => {
       const response = await getNomesDistribuidores();
       setDistribuidores(
-        response.data.results.map(distribuidor => ({
+        response.data.results.map((distribuidor) => ({
           nome: distribuidor.nome_fantasia,
-          uuid: distribuidor.uuid
+          uuid: distribuidor.uuid,
         }))
       );
     };
@@ -84,8 +84,8 @@ export default ({ setFiltros, setNotificacoes, fiscal }) => {
                   options={[
                     {
                       value: "RASCUNHO",
-                      label: "Rascunho"
-                    }
+                      label: "Rascunho",
+                    },
                   ]}
                   placeholder="Selecione o Status da Notificação"
                   className="input-numero-notificacao"
@@ -103,14 +103,14 @@ export default ({ setFiltros, setNotificacoes, fiscal }) => {
             </div>
 
             <div className="mt-4 mb-4">
-              {fiscal === false && (
+              {fiscal === false && somenteLeitura === false && (
                 <NavLink to={`/${LOGISTICA}/${CADASTRO_NOTIFICACAO}`}>
                   <Botao
                     texto="Nova Notificação"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN}
                     onClick={() => {}}
-                    className="float-left"
+                    className="float-start"
                   />
                 </NavLink>
               )}
@@ -119,14 +119,14 @@ export default ({ setFiltros, setNotificacoes, fiscal }) => {
                 texto="Filtrar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
               />
 
               <Botao
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset({});
                   setNotificacoes(undefined);

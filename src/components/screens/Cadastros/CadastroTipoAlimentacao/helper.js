@@ -1,11 +1,11 @@
-export const montaTipoUnidadeEscolar = tiposUnidades => {
+export const montaTipoUnidadeEscolar = (tiposUnidades) => {
   let unidadesEscolares = [{ nome: "Selecione a unidade", uuid: "" }];
 
   tiposUnidades &&
-    tiposUnidades.forEach(tipoUnidade => {
+    tiposUnidades.forEach((tipoUnidade) => {
       unidadesEscolares.push({
         nome: tipoUnidade.iniciais,
-        uuid: tipoUnidade.uuid
+        uuid: tipoUnidade.uuid,
       });
     });
 
@@ -19,7 +19,7 @@ export const adicionarComboVazio = (combosAtuaisTemp, uuidVinculo) => {
       label: "",
       tipos_alimentacao: [],
       vinculo: uuidVinculo,
-      adicionar: true
+      adicionar: true,
     });
     return combo;
   }
@@ -28,7 +28,7 @@ export const adicionarComboVazio = (combosAtuaisTemp, uuidVinculo) => {
 
 export const podeAdicionarElementoSubstituicao = (combo, alimentacao) => {
   let condicao = true;
-  combo.tipos_alimentacao.forEach(tipo_alimentacao => {
+  combo.tipos_alimentacao.forEach((tipo_alimentacao) => {
     if (tipo_alimentacao.uuid === alimentacao.uuid) {
       condicao = false;
     }
@@ -38,7 +38,7 @@ export const podeAdicionarElementoSubstituicao = (combo, alimentacao) => {
 
 export const podeAdicionarElemento = (combo, alimentacao) => {
   let condicao = true;
-  combo.tipos_alimentacao.forEach(tipo_alimentacao => {
+  combo.tipos_alimentacao.forEach((tipo_alimentacao) => {
     if (tipo_alimentacao === alimentacao.uuid) {
       condicao = false;
     }
@@ -55,23 +55,23 @@ export const montaLabelCombo = (combo, nome) => {
 };
 
 // novas modificacoes
-const verificaSeComboPossuiSubstituicoes = combo => {
+const verificaSeComboPossuiSubstituicoes = (combo) => {
   if (combo.substituicoes.length === 0) {
     combo.substituicoes.push({
       uuid: null,
       tipos_alimentacao: [],
       combo: combo.uuid,
       label: "",
-      adicionar: true
+      adicionar: true,
     });
   } else {
-    combo.substituicoes.forEach(substituicao => {
+    combo.substituicoes.forEach((substituicao) => {
       substituicao["adicionar"] = false;
     });
   }
 };
 
-const verificaSeVinculoTipoAlimentacaoPossuiTiposDeAlimentacoes = combo => {
+const verificaSeVinculoTipoAlimentacaoPossuiTiposDeAlimentacoes = (combo) => {
   if (combo.tipos_alimentacao.length === 0) {
     return false;
   } else {
@@ -80,7 +80,7 @@ const verificaSeVinculoTipoAlimentacaoPossuiTiposDeAlimentacoes = combo => {
   }
 };
 
-const verificaCombosDoTipoDeAlimentacao = vinculoTipoAlimentacao => {
+const verificaCombosDoTipoDeAlimentacao = (vinculoTipoAlimentacao) => {
   if (vinculoTipoAlimentacao.combos.length === 0) {
     vinculoTipoAlimentacao.combos.push({
       uuid: null,
@@ -92,35 +92,36 @@ const verificaCombosDoTipoDeAlimentacao = vinculoTipoAlimentacao => {
           tipos_alimentacao: [],
           combo: vinculoTipoAlimentacao.uuid,
           label: "",
-          adicionar: true
-        }
+          adicionar: true,
+        },
       ],
       label: "",
-      adicionar: true
+      adicionar: true,
     });
     vinculoTipoAlimentacao.periodo_escolar["editado"] = false;
   } else {
-    vinculoTipoAlimentacao.combos.forEach(combo => {
+    vinculoTipoAlimentacao.combos.forEach((combo) => {
       combo["adicionar"] = false;
       combo["completo"] = false;
-      vinculoTipoAlimentacao.periodo_escolar[
-        "editado"
-      ] = verificaSeVinculoTipoAlimentacaoPossuiTiposDeAlimentacoes(combo);
+      vinculoTipoAlimentacao.periodo_escolar["editado"] =
+        verificaSeVinculoTipoAlimentacaoPossuiTiposDeAlimentacoes(combo);
     });
   }
 };
 
-export const estruturarDadosTiposDeAlimentacao = vinculosTiposAlimentacao => {
-  vinculosTiposAlimentacao.forEach(vinculoTipoAlimentacao => {
+export const estruturarDadosTiposDeAlimentacao = (vinculosTiposAlimentacao) => {
+  vinculosTiposAlimentacao.forEach((vinculoTipoAlimentacao) => {
     vinculoTipoAlimentacao.periodo_escolar["ativo"] = false;
     verificaCombosDoTipoDeAlimentacao(vinculoTipoAlimentacao);
   });
   return vinculosTiposAlimentacao;
 };
 
-export const verificaSeFormularioOuRelatorioEhApresentado = vinculosTiposAlimentacao => {
+export const verificaSeFormularioOuRelatorioEhApresentado = (
+  vinculosTiposAlimentacao
+) => {
   let arrayComparar = vinculosTiposAlimentacao.filter(
-    vinculo => vinculo.periodo_escolar.editado === true
+    (vinculo) => vinculo.periodo_escolar.editado === true
   );
   if (arrayComparar.length === vinculosTiposAlimentacao.length) {
     return true;

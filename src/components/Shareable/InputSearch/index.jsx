@@ -3,7 +3,7 @@ import { Botao } from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE, BUTTON_ICON } from "../Botao/constants";
 import "./style.scss";
 
-export const InputSearch = props => (
+export const InputSearch = (props) => (
   <div className="div-input-search row">
     <div className="col-12">
       <span>
@@ -14,7 +14,7 @@ export const InputSearch = props => (
         />
         <i className="fas fa-search" />
       </span>
-      <div className="float-right">
+      <div className="float-end">
         {!props.esconderImprimir && (
           <Botao
             icon={BUTTON_ICON.PRINT}

@@ -10,18 +10,20 @@ export const obterSolicitacaoDeInclusaoDeAlimentacao = (
   const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
 
-export const obterMinhasSolicitacoesDeInclusaoDeAlimentacao = async tipoSolicitacao => {
+export const obterMinhasSolicitacoesDeInclusaoDeAlimentacao = async (
+  tipoSolicitacao
+) => {
   const url = `${getPath(tipoSolicitacao)}/minhas-solicitacoes/`;
   const response = await axios.get(url).catch(ErrorHandlerFunction);
   if (response) {
@@ -35,16 +37,16 @@ export const inicioPedido = (uuid, tipoSolicitacao) => {
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: AUTH_TOKEN
+    headers: AUTH_TOKEN,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };

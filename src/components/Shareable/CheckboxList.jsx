@@ -18,7 +18,7 @@ export function CheckBox(props) {
   );
 }
 
-export const CheckBoxListDefault = props => {
+export const CheckBoxListDefault = (props) => {
   const permissions = [
     "Visualização de Fluxo",
     `Cadastro de ${props.typeOfFeature}`,
@@ -31,9 +31,9 @@ export const CheckBoxListDefault = props => {
     `Notificação de Cadastro de ${props.typeOfFeature}`,
     `Notificação de Cancelamento de ${props.typeOfFeature}`,
     `Ciência de ${props.typeOfFeature}`,
-    `Ciência de Cancelamento de ${props.typeOfFeature}`
+    `Ciência de Cancelamento de ${props.typeOfFeature}`,
   ];
-  const listPermissions = permissions.map(text => (
+  const listPermissions = permissions.map((text) => (
     <CheckBox key={text} inputText={text} />
   ));
   return listPermissions;
@@ -43,9 +43,9 @@ export const CheckBoxListDashboard = () => {
   const permissions = [
     "Visualização de Todos e/ou Parte dos Pedidos",
     `Filtragem dos Pedidos`,
-    `Impressão de Todos e/ou Parte dos Pedidos`
+    `Impressão de Todos e/ou Parte dos Pedidos`,
   ];
-  const listPermissions = permissions.map(text => (
+  const listPermissions = permissions.map((text) => (
     <CheckBox key={text} inputText={text} />
   ));
   return listPermissions;

@@ -3,7 +3,7 @@ import HTTP_STATUS from "http-status-codes";
 import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
@@ -31,26 +31,27 @@ class Relatorio extends Component {
       solicitacaoUnificada: null,
       prazoDoPedidoMensagem: null,
       resposta_sim_nao: null,
-      showModalMarcarConferencia: false
+      showModalMarcarConferencia: false,
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
-    this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
-      this
-    );
+    this.closeModalMarcarConferencia =
+      this.closeModalMarcarConferencia.bind(this);
   }
 
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      getSolicitacaoUnificada(uuid).then(response => {
+      getSolicitacaoUnificada(uuid).then((response) => {
         this.setState({
           solicitacaoUnificada: response.data,
           uuid,
-          prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.data.prioridade)
+          prazoDoPedidoMensagem: prazoDoPedidoMensagem(
+            response.data.prioridade
+          ),
         });
       });
     }
@@ -96,9 +97,9 @@ class Relatorio extends Component {
   }
 
   loadSolicitacao(uuid) {
-    getSolicitacaoUnificada(uuid || this.state.uuid).then(response => {
+    getSolicitacaoUnificada(uuid || this.state.uuid).then((response) => {
       this.setState({
-        solicitacaoUnificada: response.data
+        solicitacaoUnificada: response.data,
       });
     });
   }
@@ -107,7 +108,7 @@ class Relatorio extends Component {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
     this.props.endpointAprovaSolicitacao(uuid).then(
-      response => {
+      (response) => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
           this.loadSolicitacao(uuid);
@@ -115,7 +116,7 @@ class Relatorio extends Component {
           toastError(toastAprovaMensagemErro);
         }
       },
-      function() {
+      function () {
         toastError(toastAprovaMensagemErro);
       }
     );
@@ -130,7 +131,7 @@ class Relatorio extends Component {
       showQuestionamentoModal,
       uuid,
       showAutorizarModal,
-      showModalMarcarConferencia
+      showModalMarcarConferencia,
     } = this.state;
     const {
       visao,
@@ -141,7 +142,7 @@ class Relatorio extends Component {
       endpointNaoAprovaSolicitacao,
       endpointQuestionamento,
       ModalNaoAprova,
-      ModalQuestionamento
+      ModalQuestionamento,
     } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const nomeEscola = localStorage.getItem("nome_instituicao");
@@ -153,27 +154,27 @@ class Relatorio extends Component {
         textoBotaoNaoAprova);
     if (solicitacaoUnificada && visao === ESCOLA) {
       const escolaQuantidade = solicitacaoUnificada.escolas_quantidades.filter(
-        eq => `"${eq.escola.nome}"` === nomeEscola
+        (eq) => `"${eq.escola.nome}"` === nomeEscola
       )[0];
       EXIBIR_BOTAO_NAO_APROVAR = !escolaQuantidade.cancelado;
     }
     const EXIBIR_BOTAO_APROVAR =
       (![
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-        TIPO_PERFIL.TERCEIRIZADA
+        TIPO_PERFIL.TERCEIRIZADA,
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
       (solicitacaoUnificada &&
         (solicitacaoUnificada.prioridade === "REGULAR" ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
-            statusEnum.CODAE_AUTORIZADO
+            statusEnum.CODAE_AUTORIZADO,
           ].includes(solicitacaoUnificada.status)) &&
         textoBotaoAprova);
     const EXIBIR_BOTAO_QUESTIONAMENTO =
       [
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-        TIPO_PERFIL.TERCEIRIZADA
+        TIPO_PERFIL.TERCEIRIZADA,
       ].includes(tipoPerfil) &&
       solicitacaoUnificada &&
       (solicitacaoUnificada.prioridade !== "REGULAR" ||
@@ -193,7 +194,7 @@ class Relatorio extends Component {
       [
         statusEnum.CODAE_AUTORIZADO,
         statusEnum.ESCOLA_CANCELOU,
-        statusEnum.DRE_CANCELOU
+        statusEnum.DRE_CANCELOU,
       ].includes(solicitacaoUnificada.status);
 
     const BotaoMarcarConferencia = () => {
@@ -202,7 +203,7 @@ class Relatorio extends Component {
           texto="Marcar Conferência"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
-          className="ml-3"
+          className="ms-3"
           onClick={() => {
             this.showModalMarcarConferencia();
           }}
@@ -262,9 +263,7 @@ class Relatorio extends Component {
                 uuid={uuid}
               />
             )}
-            <span className="page-title">{`Solicitação Unificada - Solicitação # ${
-              solicitacaoUnificada.id_externo
-            }`}</span>
+            <span className="page-title">{`Solicitação Unificada - Solicitação # ${solicitacaoUnificada.id_externo}`}</span>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
@@ -283,37 +282,37 @@ class Relatorio extends Component {
                 {visualizaBotoesDoFluxoSolicitacaoUnificada(
                   solicitacaoUnificada
                 ) && (
-                  <div className="form-group row float-right mt-4">
+                  <div className="form-group row float-end justify-content-end mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
                         texto={textoBotaoNaoAprova}
-                        className="ml-3 mr-3 mt-4"
+                        className="ms-3 me-3 mt-4"
                         onClick={() => this.showNaoAprovaModal("Não")}
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                     )}
                     {EXIBIR_BOTAO_APROVAR &&
-                      (textoBotaoAprova !== "Ciente" &&
-                        (visao === CODAE &&
-                        solicitacaoUnificada.logs.filter(
-                          log =>
-                            log.status_evento_explicacao ===
-                              "Terceirizada respondeu questionamento" &&
-                            !log.resposta_sim_nao
-                        ).length > 0 ? null : (
-                          <Botao
-                            texto={textoBotaoAprova}
-                            type={BUTTON_TYPE.SUBMIT}
-                            onClick={() =>
-                              EXIBIR_MODAL_AUTORIZACAO
-                                ? this.showAutorizarModal()
-                                : this.handleSubmit()
-                            }
-                            style={BUTTON_STYLE.GREEN}
-                            className="ml-3 mr-3 mt-4"
-                          />
-                        )))}
+                      textoBotaoAprova !== "Ciente" &&
+                      (visao === CODAE &&
+                      solicitacaoUnificada.logs.filter(
+                        (log) =>
+                          log.status_evento_explicacao ===
+                            "Terceirizada respondeu questionamento" &&
+                          !log.resposta_sim_nao
+                      ).length > 0 ? null : (
+                        <Botao
+                          texto={textoBotaoAprova}
+                          type={BUTTON_TYPE.SUBMIT}
+                          onClick={() =>
+                            EXIBIR_MODAL_AUTORIZACAO
+                              ? this.showAutorizarModal()
+                              : this.handleSubmit()
+                          }
+                          style={BUTTON_STYLE.GREEN}
+                          className="ms-3 me-3 mt-4"
+                        />
+                      ))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={
@@ -325,14 +324,14 @@ class Relatorio extends Component {
                         type={BUTTON_TYPE.BUTTON}
                         onClick={() => this.showQuestionamentoModal("Sim")}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3 mr-3 mt-4"
+                        className="ms-3 me-3 mt-4"
                       />
                     )}
                     {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
-                      <div className="form-group float-right mt-4">
+                      <div className="form-group float-end mt-4">
                         {solicitacaoUnificada.terceirizada_conferiu_gestao ? (
-                          <label className="ml-3 conferido">
-                            <i className="fas fa-check mr-2" />
+                          <label className="ms-3 conferido">
+                            <i className="fas fa-check me-2" />
                             Solicitação Conferida
                           </label>
                         ) : (
@@ -356,16 +355,16 @@ class Relatorio extends Component {
 const formName = "relatorioSolicitacaoUnificada";
 const RelatorioForm = reduxForm({
   form: formName,
-  enableReinitialize: true
+  enableReinitialize: true,
 })(Relatorio);
 
 const selector = formValueSelector(formName);
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     justificativa: selector(state, "justificativa"),
     escolas: selector(state, "escolas"),
-    motivo_cancelamento: selector(state, "motivo_cancelamento")
+    motivo_cancelamento: selector(state, "motivo_cancelamento"),
   };
 };
 

@@ -2,17 +2,17 @@ import React from "react";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoMedicaoInicial } from "components/Shareable/FluxoDeStatus/helper";
 
-export default ({ solicitacaoMedicaoInicial }) => {
+export const FluxoDeStatusMedicaoInicial = ({ solicitacaoMedicaoInicial }) => {
   const logs = () => {
     if (solicitacaoMedicaoInicial && solicitacaoMedicaoInicial.logs.length) {
       if (
-        solicitacaoMedicaoInicial.logs.find(log =>
+        solicitacaoMedicaoInicial.logs.find((log) =>
           ["Aprovado pela DRE", "Correção solicitada"].includes(
             log.status_evento_explicacao
           )
         )
       ) {
-        return solicitacaoMedicaoInicial.logs.slice(1);
+        return solicitacaoMedicaoInicial.logs;
       }
       return solicitacaoMedicaoInicial.logs;
     } else {

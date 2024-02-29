@@ -15,6 +15,7 @@ import {
   usuarioEhEmpresaDistribuidora,
   usuarioComAcessoTelaEntregasDilog,
   usuarioEscolaEhGestaoDireta,
+  usuarioEscolaEhGestaoParceira,
   usuarioEhMedicao,
   exibirGA,
   usuarioEhDilogQualidadeOuCronograma,
@@ -29,9 +30,13 @@ import {
   exibirModuloMedicaoInicial,
   usuarioEhCodaeDilog,
   usuarioEhDilog,
-  usuarioEhDilogQualidade
-} from "helpers/utilities";
+  usuarioEhDilogQualidade,
+  usuarioEhCoordenadorGpCODAE,
+  usuarioEhOrgaoFiscalizador,
+  usuarioEhCODAEGabinete,
+} from "../../../helpers/utilities";
 import { ListItem } from "./menus/shared";
+import { ENVIRONMENT } from "constants/config";
 import {
   MenuGestaoDeAlimentacao,
   MenuDietaEspecial,
@@ -41,22 +46,23 @@ import {
   MenuLancamentoInicial,
   MenuRelatorios,
   MenuLogistica,
-  MenuPreRecebimento
+  MenuPreRecebimento,
 } from "./menus";
 
 export const SidebarContent = () => {
   const [activeMenu, setActiveMenu] = useState("");
   const [activeMenuCadastros, setActiveMenuCadastros] = useState("");
+  const [activeSubmenu, setActiveSubMenu] = useState("");
 
   const onSubmenuClick = useCallback(
-    clickedMenu => {
+    (clickedMenu) => {
       setActiveMenu(clickedMenu === activeMenu ? "" : clickedMenu);
     },
     [activeMenu]
   );
 
   const onSubmenuCadastroClick = useCallback(
-    clickedMenu => {
+    (clickedMenu) => {
       setActiveMenuCadastros(
         clickedMenu === activeMenuCadastros ? "" : clickedMenu
       );
@@ -64,14 +70,26 @@ export const SidebarContent = () => {
     [activeMenuCadastros]
   );
 
+  const onSubmenuLancamentoClick = useCallback(
+    (clickedMenu) => {
+      setActiveSubMenu(clickedMenu === activeSubmenu ? "" : clickedMenu);
+    },
+    [activeSubmenu]
+  );
+
   // NOTE: essas condicoes consideram apenas codae e terceirizada.
   // Para utilizar esse componente com outros perfis precisa atualizar os
   // criterios de exibicao abaixo
   const exibeMenuValidandoAmbiente = exibirGA();
+
+  const usuarioEscolaEhGestaoDiretaParceira =
+    (usuarioEscolaEhGestaoDireta() || usuarioEscolaEhGestaoParceira()) &&
+    !["production"].includes(ENVIRONMENT);
+
   const exibirPainelInicial =
-    !usuarioEhEscolaAbastecimento() &&
+    (!usuarioEhEscolaAbastecimento() || usuarioEscolaEhGestaoDiretaParceira) &&
     !usuarioEhEscolaAbastecimentoDiretor() &&
-    !usuarioComAcessoTelaEntregasDilog() &&
+    (!usuarioComAcessoTelaEntregasDilog() || usuarioEhCODAEGabinete()) &&
     !usuarioEhLogistica() &&
     !usuarioEhEmpresaDistribuidora();
   const exibirGestaoAlimentacao =
@@ -83,7 +101,8 @@ export const SidebarContent = () => {
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEmpresaTerceirizada() ||
-      usuarioEhNutricionistaSupervisao());
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhCODAEGabinete());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -93,7 +112,9 @@ export const SidebarContent = () => {
     usuarioEhEscolaTerceirizada() ||
     usuarioEhDRE() ||
     usuarioEhEmpresaTerceirizada() ||
-    usuarioEhMedicao();
+    usuarioEhMedicao() ||
+    usuarioEhCODAEGabinete() ||
+    usuarioEscolaEhGestaoDiretaParceira;
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -103,7 +124,9 @@ export const SidebarContent = () => {
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhEscolaTerceirizada() ||
     usuarioEhDRE() ||
-    usuarioEhEmpresaTerceirizada();
+    usuarioEhEmpresaTerceirizada() ||
+    usuarioEhOrgaoFiscalizador() ||
+    usuarioEhCODAEGabinete();
   const exibirCadastros =
     usuarioEhCodaeDilog() ||
     usuarioEhMedicao() ||
@@ -118,7 +141,7 @@ export const SidebarContent = () => {
     !usuarioEhEscolaAbastecimento() &&
     !usuarioEhEscolaAbastecimentoDiretor() &&
     !usuarioEhEscolaAbastecimentoDiretor() &&
-    !usuarioComAcessoTelaEntregasDilog() &&
+    !(usuarioComAcessoTelaEntregasDilog() && !usuarioEhCODAEGabinete()) &&
     !usuarioEhLogistica() &&
     !usuarioEhEmpresaDistribuidora() &&
     !usuarioEhEmpresaFornecedor() &&
@@ -135,7 +158,8 @@ export const SidebarContent = () => {
     !usuarioEhOutrosDilog() &&
     !usuarioEhPreRecebimentoSemLogistica() &&
     !usuarioEhQualquerUsuarioEmpresa() &&
-    !usuarioEhDilog();
+    !usuarioEhDilog() &&
+    !usuarioEhOrgaoFiscalizador();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
@@ -144,16 +168,22 @@ export const SidebarContent = () => {
     usuarioEhEscolaAbastecimento() ||
     usuarioEhEscolaAbastecimentoDiretor() ||
     usuarioComAcessoTelaEntregasDilog() ||
-    usuarioEhDilogQualidade();
+    usuarioEhDilogQualidade() ||
+    usuarioEhCODAEGabinete();
 
   const exibirMenuPreRecebimento =
-    usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor();
+    usuarioEhPreRecebimento() ||
+    usuarioEhEmpresaFornecedor() ||
+    usuarioEhCoordenadorGpCODAE() ||
+    usuarioEhCODAEGabinete();
 
   const _props = {
     activeMenu,
     onSubmenuClick: onSubmenuClick,
     activeMenuCadastros,
-    onSubmenuCadastroClick: onSubmenuCadastroClick
+    onSubmenuCadastroClick: onSubmenuCadastroClick,
+    activeSubmenu,
+    onSubmenuLancamentoClick: onSubmenuLancamentoClick,
   };
 
   return [
@@ -166,10 +196,12 @@ export const SidebarContent = () => {
     exibirDietaEspecial && <MenuDietaEspecial key={2} {..._props} />,
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
     exibirCadastros && <MenuCadastros key={5} />,
-    exibirModuloMedicaoInicial() && <MenuLancamentoInicial key={6} />,
-    exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
+    exibirModuloMedicaoInicial() && (
+      <MenuLancamentoInicial key={6} {..._props} />
+    ),
     exibirRelatorios && <MenuRelatorios key={8} />,
+    exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
+    exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />,
     exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
-    exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />
   ];
 };

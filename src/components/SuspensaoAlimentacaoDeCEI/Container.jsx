@@ -1,53 +1,80 @@
-import React, { Component } from "react";
-import { getMotivosSuspensaoCardapio } from "../../services/suspensaoDeAlimentacao.service";
-import { meusDados } from "../../services/perfil.service";
-import { getDiasUteis } from "../../services/diasUteis.service";
-import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
+import React, { useContext, useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
+import { getMotivosSuspensaoCardapio } from "services/suspensaoDeAlimentacao.service";
+import { getDiasUteis } from "services/diasUteis.service";
+import { agregarDefault, dataParaUTC } from "helpers/utilities";
 import SuspensaoAlimentacaoDeCEI from "./Index";
+import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
+import MeusDadosContext from "context/MeusDadosContext";
 
-class Container extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      meusDados: null,
-      motivos: [],
-      periodos: [],
-      proximos_dois_dias_uteis: null,
-      proximos_cinco_dias_uteis: null
-    };
-  }
+export const Container = () => {
+  const { meusDados } = useContext(MeusDadosContext);
 
-  componentDidMount() {
-    meusDados().then(response => {
-      this.setState({
-        meusDados: response,
-        periodos: response.vinculo_atual.instituicao.periodos_escolares
-      });
-    });
+  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState();
+  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState();
+  const [motivos, setMotivos] = useState();
+  const [periodos, setPeriodos] = useState();
 
-    getMotivosSuspensaoCardapio().then(response => {
-      this.setState({
-        motivos: agregarDefault(response.results)
-      });
-    });
+  const [erro, setErro] = useState("");
 
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_cinco_dias_uteis)
+  const getMotivosSuspensaoCardapioAsync = async () => {
+    const response = await getMotivosSuspensaoCardapio();
+    if (response.status === HTTP_STATUS.OK) {
+      setMotivos(agregarDefault(response.data.results));
+    } else {
+      setErro(
+        "Erro ao carregar motivos de suspensão. Tente novamente mais tarde."
       );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_dois_dias_uteis)
-      );
-      this.setState({
-        proximos_dois_dias_uteis,
-        proximos_cinco_dias_uteis
-      });
+    }
+  };
+
+  const getDiasUteisAsync = async () => {
+    const response = await getDiasUteis({
+      escola_uuid: meusDados.vinculo_atual.instituicao.uuid,
     });
-  }
+    if (response.status === HTTP_STATUS.OK) {
+      setProximosDoisDiasUteis(
+        dataParaUTC(new Date(response.data.proximos_dois_dias_uteis))
+      );
+      setProximosCincoDiasUteis(
+        dataParaUTC(new Date(response.data.proximos_cinco_dias_uteis))
+      );
+    } else {
+      setErro("Erro ao carregar dias úteis. Tente novamente mais tarde.");
+    }
+  };
 
-  render() {
-    return <SuspensaoAlimentacaoDeCEI {...this.state} />;
-  }
-}
+  useEffect(() => {
+    getMotivosSuspensaoCardapioAsync();
+  }, []);
 
-export default Container;
+  useEffect(() => {
+    if (meusDados) {
+      getDiasUteisAsync();
+      setPeriodos(meusDados.vinculo_atual.instituicao.periodos_escolares);
+    }
+  }, [meusDados]);
+
+  const LOADING =
+    !meusDados ||
+    !proximosCincoDiasUteis ||
+    !proximosDoisDiasUteis ||
+    !motivos ||
+    !periodos;
+
+  return (
+    <>
+      {LOADING && !erro && <SigpaeLogoLoader />}
+      {!!erro && <div>{erro}</div>}
+      {!LOADING && !erro && (
+        <SuspensaoAlimentacaoDeCEI
+          meusDados={meusDados}
+          motivos={motivos}
+          periodos={periodos}
+          proximos_dois_dias_uteis={proximosDoisDiasUteis}
+          proximos_cinco_dias_uteis={proximosCincoDiasUteis}
+        />
+      )}
+    </>
+  );
+};

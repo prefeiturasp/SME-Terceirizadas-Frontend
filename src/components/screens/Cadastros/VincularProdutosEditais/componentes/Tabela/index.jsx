@@ -7,7 +7,7 @@ export default ({ resultado, changePage }) => {
   const [selecionado, setSelecionado] = useState(undefined);
   const [showModal, setShowModal] = useState(false);
 
-  const openModal = item => {
+  const openModal = (item) => {
     setSelecionado(item);
     setShowModal(true);
   };
@@ -52,10 +52,10 @@ export default ({ resultado, changePage }) => {
                         <td>{item.ativo ? "Ativo" : "Inativo"}</td>
                         <td className="acoes">
                           <button
-                            className="botaoExcluir ml-2"
+                            className="botaoExcluir ms-2"
                             onClick={() => openModal(item)}
                           >
-                            <ReloadOutlined className="mr-1" />
+                            <ReloadOutlined className="me-1" />
                             {item.ativo ? "Inativar" : "Ativar"}
                           </button>
                         </td>

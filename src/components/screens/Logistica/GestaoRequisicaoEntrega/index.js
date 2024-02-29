@@ -6,7 +6,7 @@ import {
   gerarPDFDistribuidorSolicitacao,
   gerarPDFDistribuidorSolicitacoes,
   gerarExcelSolicitacoes,
-  confirmaCancelamento
+  confirmaCancelamento,
 } from "../../../../services/logistica.service.js";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
 import "./styles.scss";
@@ -14,7 +14,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import Filtros from "./components/Filtros";
 import { gerarParametrosConsulta } from "helpers/utilities";
@@ -25,9 +25,8 @@ import { Paginacao } from "components/Shareable/Paginacao/index.jsx";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
-  const [carregandoPDFConfirmados, setCarregandoPDFConfirmados] = useState(
-    false
-  );
+  const [carregandoPDFConfirmados, setCarregandoPDFConfirmados] =
+    useState(false);
   const [carregandoExcel, setCarregandoExcel] = useState(false);
   const [solicitacoes, setSolicitacoes] = useState();
   const [filtros, setFiltros] = useState();
@@ -42,7 +41,7 @@ export default () => {
 
   const inicioResultado = useRef();
 
-  const buscarSolicitacoes = async page => {
+  const buscarSolicitacoes = async (page) => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     try {
@@ -87,8 +86,8 @@ export default () => {
   ) => {
     setCarregando(true);
     let guias = solicitacao.guias
-      .filter(x => x.status === "Aguardando cancelamento")
-      .map(x => x.numero_guia);
+      .filter((x) => x.status === "Aguardando cancelamento")
+      .map((x) => x.numero_guia);
     let numero_requisicao = solicitacao.numero_solicitacao;
     const payload = { guias, numero_requisicao };
     let textoToast = "Guia(s) de Remessa cancelada(s) com sucesso";
@@ -103,7 +102,7 @@ export default () => {
     setCarregando(false);
   };
 
-  const imprimirRequisicao = async uuid => {
+  const imprimirRequisicao = async (uuid) => {
     await gerarPDFDistribuidorSolicitacao(uuid);
     setShowDownload(true);
     centralDownloadContext.getQtdeDownloadsNaoLidas();
@@ -136,7 +135,7 @@ export default () => {
       const urlParams = new URLSearchParams(window.location.search);
       const codigo = urlParams.get("numero_requisicao");
       const filtro = {
-        numero_requisicao: codigo
+        numero_requisicao: codigo,
       };
       setFiltros({ ...filtro });
       setInitialValues({ ...filtro });
@@ -150,7 +149,7 @@ export default () => {
     }
   }, [filtros]);
 
-  const nextPage = page => {
+  const nextPage = (page) => {
     buscarSolicitacoes(page);
     setPage(page);
   };
@@ -212,7 +211,7 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       icon={BUTTON_ICON.FILE_EXCEL}
-                      className="ml-2 mr-2"
+                      className="ms-2 me-2"
                       onClick={solicitaExcelGuias}
                     />
                   </Spin>

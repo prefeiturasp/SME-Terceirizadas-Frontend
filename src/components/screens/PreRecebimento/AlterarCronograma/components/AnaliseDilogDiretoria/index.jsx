@@ -4,7 +4,7 @@ import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { Field } from "react-final-form";
 
 export default ({ aprovacaoDilog, setAprovacaoDilog }) => {
-  const onChangeCampos = e => {
+  const onChangeCampos = (e) => {
     setAprovacaoDilog(e.target.value);
   };
 
@@ -27,7 +27,7 @@ export default ({ aprovacaoDilog, setAprovacaoDilog }) => {
       {aprovacaoDilog === false && (
         <div className="mt-4">
           <>
-            <label className="label font-weight-normal">
+            <label className="label fw-normal">
               <span>* </span>Justificativa
             </label>
             <Field

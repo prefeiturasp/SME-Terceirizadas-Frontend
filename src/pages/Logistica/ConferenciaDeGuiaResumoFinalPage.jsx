@@ -6,7 +6,7 @@ import {
   CONFERIR_ENTREGA,
   CONFERENCIA_GUIA,
   CONFERENCIA_GUIA_COM_OCORRENCIA,
-  LOGISTICA
+  LOGISTICA,
 } from "configs/constants";
 import ConferenciaDeGuiaResumoFinal from "components/screens/Logistica/ConferenciaDeGuiaResumoFinal";
 
@@ -14,22 +14,22 @@ export default () => {
   const [uuid, setUuid] = useState();
   const atual = {
     href: `/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}`,
-    titulo: "Conferência individual de itens"
+    titulo: "Conferência individual de itens",
   };
 
   const anteriores = [
     {
       href: `/`,
-      titulo: "Abastecimento"
+      titulo: "Abastecimento",
     },
     {
       href: `/${LOGISTICA}/${CONFERIR_ENTREGA}`,
-      titulo: "Conferir Entrega"
+      titulo: "Conferir Entrega",
     },
     {
       href: `/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${uuid}`,
-      titulo: "Conferência da guia"
-    }
+      titulo: "Conferência da guia",
+    },
   ];
 
   useEffect(() => {

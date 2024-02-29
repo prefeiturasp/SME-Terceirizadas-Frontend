@@ -11,7 +11,7 @@ import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaAbastecimento,
   usuarioEhEscolaAbastecimentoDiretor,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhEmpresaTerceirizada,
 } from "./utilities";
 
 export default () => {

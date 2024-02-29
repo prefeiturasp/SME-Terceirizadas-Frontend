@@ -5,7 +5,7 @@ import { Field, Form } from "react-final-form";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import ConfirmarAlteracao from "./ConfirmarAlteracao";
 import "./styles.scss";
@@ -31,7 +31,7 @@ export default ({ solicitacao, updatePage, acao }) => {
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         onClick={handleShow}
-        className="float-right ml-3"
+        className="float-end ms-3"
       />
 
       <Modal
@@ -49,7 +49,7 @@ export default ({ solicitacao, updatePage, acao }) => {
           <Form
             onSubmit={onSubmit}
             subscription={{ submitting: true, values: true }}
-            validate={values => {
+            validate={(values) => {
               const errors = {};
               if (!values.justificativa) {
                 errors.justificativa = "Campo obrigatório";
@@ -96,7 +96,7 @@ export default ({ solicitacao, updatePage, acao }) => {
                           type={BUTTON_TYPE.BUTTON}
                           onClick={handleClose}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
-                          className="float-right ml-3"
+                          className="float-end ms-3"
                         />
                       </div>
                     </div>

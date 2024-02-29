@@ -6,9 +6,9 @@ import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular,
-  ordenarPedidosDataMaisRecente
-} from "../../../../helpers/painelPedidos";
-import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
+  ordenarPedidosDataMaisRecente,
+} from "helpers/painelPedidos";
+import { dataAtualDDMMYYYY, getError, safeConcatOn } from "helpers/utilities";
 import { dreListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import { formatarOpcoesLote } from "helpers/utilities";
@@ -17,6 +17,7 @@ import HTTP_STATUS from "http-status-codes";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
 import { meusDados } from "services/perfil.service";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -28,9 +29,9 @@ class PainelPedidos extends Component {
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: [],
       filtros: this.props.filtros || {
-        lote: undefined
+        lote: undefined,
       },
-      lotes: []
+      lotes: [],
     };
   }
 
@@ -39,14 +40,14 @@ class PainelPedidos extends Component {
   }
 
   async componentDidMount() {
-    meusDados().then(response => {
+    meusDados().then((response) => {
       if (response) {
         this.setState({ meusDados: response });
         this.getLotesAsync(response.vinculo_atual.instituicao.uuid);
       }
     });
     const paramsFromPrevPage = this.props.filtros || {
-      lote: undefined
+      lote: undefined,
     };
     const filtro = FiltroEnum.SEM_FILTRO;
     this.atualizarDadosDasInclusoes(filtro, paramsFromPrevPage);
@@ -77,8 +78,25 @@ class PainelPedidos extends Component {
         filtro,
         TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
         paramsFromPrevPage
-      )
+      ),
     ]);
+    if (avulsas.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError(
+        "Erro ao carregar inclusões normais (EMEI, EMEF, etc.): " +
+          getError(avulsas.data)
+      );
+    }
+    if (continuas.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError(
+        "Erro ao carregar inclusões contínuas: " + getError(continuas.data)
+      );
+    }
+    if (cei.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError("Erro ao carregar inclusões CEI: " + getError(cei.data));
+    }
+    if (cemei.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError("Erro ao carregar inclusões CEMEI: " + getError(cemei.data));
+    }
     const inclusoes = safeConcatOn("results", avulsas, continuas, cei, cemei);
     const pedidosPrioritarios = ordenarPedidosDataMaisRecente(
       filtraPrioritarios(inclusoes)
@@ -96,7 +114,7 @@ class PainelPedidos extends Component {
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular,
-      loading: false
+      loading: false,
     });
   }
 
@@ -104,15 +122,15 @@ class PainelPedidos extends Component {
     const response = await getLotesSimples({ diretoria_regional__uuid: uuid });
     if (response.status === HTTP_STATUS.OK) {
       const { Option } = SelectAntd;
-      const lotes_ = formatarOpcoesLote(response.data.results).map(lote => {
+      const lotes_ = formatarOpcoesLote(response.data.results).map((lote) => {
         return <Option key={lote.value}>{lote.label}</Option>;
       });
       this.setState({
         lotes: [
           <Option value="" key={0}>
             Filtrar por Lote
-          </Option>
-        ].concat(lotes_)
+          </Option>,
+        ].concat(lotes_),
       });
     }
   }
@@ -127,7 +145,7 @@ class PainelPedidos extends Component {
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
       pedidosNoPrazoRegular,
-      lotes
+      lotes,
     } = this.state;
     const { valorDoFiltro } = this.props;
     return (
@@ -146,14 +164,14 @@ class PainelPedidos extends Component {
                     <Field
                       component={ASelect}
                       showSearch
-                      onChange={value => {
+                      onChange={(value) => {
                         const filtros_ = {
-                          lote: value || undefined
+                          lote: value || undefined,
                         };
                         this.setFiltros(filtros_);
                         this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
                       }}
-                      onBlur={e => {
+                      onBlur={(e) => {
                         e.preventDefault();
                       }}
                       name="lote"
@@ -176,7 +194,7 @@ class PainelPedidos extends Component {
                       }
                       tipoDeCard={"priority"}
                       pedidos={pedidosPrioritarios}
-                      ultimaColunaLabel={"Data da Inclusão"}
+                      colunaDataLabel={"Data da Inclusão"}
                     />
                   </div>
                 </div>
@@ -187,7 +205,7 @@ class PainelPedidos extends Component {
                         titulo={"Solicitações no prazo limite"}
                         tipoDeCard={"on-limit"}
                         pedidos={pedidosNoPrazoLimite}
-                        ultimaColunaLabel={"Data da Inclusão"}
+                        colunaDataLabel={"Data da Inclusão"}
                       />
                     </div>
                   </div>
@@ -199,7 +217,7 @@ class PainelPedidos extends Component {
                         titulo={"Solicitações no prazo regular"}
                         tipoDeCard={"regular"}
                         pedidos={pedidosNoPrazoRegular}
-                        ultimaColunaLabel={"Data da Inclusão"}
+                        colunaDataLabel={"Data da Inclusão"}
                       />
                     </div>
                   </div>
@@ -215,12 +233,12 @@ class PainelPedidos extends Component {
 
 const PainelPedidosForm = reduxForm({
   form: "painelPedidos",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(PainelPedidos);
 const selector = formValueSelector("painelPedidos");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    valorDoFiltro: selector(state, "visao_por")
+    valorDoFiltro: selector(state, "visao_por"),
   };
 };
 

@@ -5,14 +5,10 @@ import { formataNome } from "../../helpers";
 import { Tooltip } from "antd";
 
 export const TabelaResultado = ({ ...props }) => {
-  const {
-    resultado,
-    faixasEtarias,
-    showPeridosFaixas,
-    setShowPeriodosFaixas
-  } = props;
+  const { resultado, faixasEtarias, showPeridosFaixas, setShowPeriodosFaixas } =
+    props;
 
-  const changeToActive = index => {
+  const changeToActive = (index) => {
     let lista = deepCopy(showPeridosFaixas);
     lista[index].active = !lista[index].active;
     setShowPeriodosFaixas(lista);
@@ -26,9 +22,9 @@ export const TabelaResultado = ({ ...props }) => {
             Relação de alunos matriculados
           </p>
         </div>
-        <div className="col-7 text-right">
+        <div className="col-7 text-end">
           <p className="helper-grid-alunos-matriculados">
-            <i className="fa fa-info-circle mr-2" />
+            <i className="fa fa-info-circle me-2" />
             Veja o nome da Unid. Educacional passando o mouse sobre o nome.
           </p>
         </div>
@@ -88,7 +84,7 @@ export const TabelaResultado = ({ ...props }) => {
                           overlayStyle={{
                             maxWidth: "320px",
                             fontSize: "12px",
-                            fontWeight: "700"
+                            fontWeight: "700",
                           }}
                           title={item.escola.nome}
                         >

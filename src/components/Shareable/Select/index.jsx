@@ -5,7 +5,7 @@ import { InputErroMensagem } from "../Input/InputErroMensagem";
 import { HelpText } from "../../Shareable/HelpText";
 import TooltipIcone from "components/Shareable/TooltipIcone";
 
-export const Select = props => {
+export const Select = (props) => {
   const {
     className,
     labelClassName,
@@ -21,7 +21,8 @@ export const Select = props => {
     tooltipText,
     required,
     width,
-    usarDirty
+    usarDirty,
+    onChangeEffect,
   } = props;
   return (
     <div className="select">
@@ -38,18 +39,25 @@ export const Select = props => {
         >
           {label}
         </label>,
-        tooltipText && <TooltipIcone key={2} tooltipText={tooltipText} />
+        tooltipText && <TooltipIcone key={2} tooltipText={tooltipText} />,
       ]}
       <select
         {...input}
-        className={`form-control ${className} ${meta &&
-          (usarDirty ? meta.dirty : meta.touched) &&
+        className={`form-control ${className} ${
+          meta &&
+          (usarDirty ? meta.dirty || meta.touched : meta.touched) &&
           meta.error &&
-          "invalid-field"}`}
+          "invalid-field"
+        }`}
         disabled={disabled}
         data-cy={label}
         required={required}
-        onChange={input ? input.onChange : onChange}
+        onChange={(e) => {
+          if (input) input.onChange(e);
+          else onChange(e);
+
+          if (onChangeEffect) onChangeEffect(e);
+        }}
         name={name}
         style={width && { width: width - 12 }}
       >
@@ -82,15 +90,15 @@ Select.propTypes = {
       nome: PropTypes.string,
       uuid: PropTypes.string,
       disable: PropTypes.bool,
-      selected: PropTypes.bool
+      selected: PropTypes.bool,
     })
   ),
-  name: PropTypes.string
+  name: PropTypes.string,
 };
 Select.defaultProps = {
   naoDesabilitarPrimeiraOpcao: false,
   options: [{ nome: "Selecione", uuid: "" }],
-  disabled: false
+  disabled: false,
 };
 
 export default Select;

@@ -4,7 +4,7 @@ import {
   corDaMensagem,
   deepCopy,
   ehInclusaoCei,
-  justificativaAoAprovarSolicitacao
+  justificativaAoAprovarSolicitacao,
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
@@ -12,11 +12,11 @@ import { SolicitacoesSimilaresKitLanche } from "components/Shareable/Solicitacoe
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "../../../Shareable/Botao/constants";
 import {
   stringSeparadaPorVirgulas,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
 } from "../../../../helpers/utilities";
 import { getDetalheKitLancheAvulso } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
@@ -24,12 +24,9 @@ import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 import "./style.scss";
 import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
 
-export const CorpoRelatorio = props => {
-  const {
-    tipoSolicitacao,
-    solicitacaoKitLanche,
-    prazoDoPedidoMensagem
-  } = props;
+export const CorpoRelatorio = (props) => {
+  const { tipoSolicitacao, solicitacaoKitLanche, prazoDoPedidoMensagem } =
+    props;
 
   const [solicitacoesSimilares, setSolicitacoesSimilares] = useState(
     props.solicitacoesSimilares
@@ -47,11 +44,10 @@ export const CorpoRelatorio = props => {
     solicitacaoKitLanche.prioridade !== "REGULAR" &&
     existeLogDeQuestionamentoDaCODAE(solicitacaoKitLanche.logs);
 
-  const collapseSolicitacaoSimilar = idxSolicitacaoSimilar => {
+  const collapseSolicitacaoSimilar = (idxSolicitacaoSimilar) => {
     let _solicitacoesSimilares = deepCopy(solicitacoesSimilares);
-    _solicitacoesSimilares[idxSolicitacaoSimilar][
-      "collapsed"
-    ] = !_solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"];
+    _solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"] =
+      !_solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"];
     setSolicitacoesSimilares(_solicitacoesSimilares);
   };
 
@@ -64,7 +60,7 @@ export const CorpoRelatorio = props => {
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
-            className="float-right"
+            className="float-end"
             onClick={() => {
               getDetalheKitLancheAvulso(
                 solicitacaoKitLanche.uuid,
@@ -82,7 +78,7 @@ export const CorpoRelatorio = props => {
             <span className="number-of-order-label">Nº DA SOLICITAÇÃO</span>
           </span>
         </div>
-        <div className="pl-2 my-auto offset-1 col-5">
+        <div className="ps-2 my-auto offset-1 col-5">
           <span className="requester">Escola Solicitante</span>
           <br />
           <span className="dre-name">
@@ -184,9 +180,13 @@ export const CorpoRelatorio = props => {
               solicitacaoKitLanche.solicitacao_kit_lanche.data}
           </p>
         </div>
-        <div className="col-8 report-label-value">
+        <div className="col-4 report-label-value">
           <p>Local do passeio</p>
           <p className="value">{solicitacaoKitLanche.local}</p>
+        </div>
+        <div className="col-4 report-label-value">
+          <p>Evento/Atividade</p>
+          <p className="value">{solicitacaoKitLanche.evento}</p>
         </div>
       </div>
       <table className="table-report">
@@ -231,7 +231,9 @@ export const CorpoRelatorio = props => {
           <Fragment>
             <div className="row report-label-value">
               <div className="col-12 report-label-value">
-                <p>Alunos com dieta especial</p>
+                <p>
+                  <b>Alunos com dieta especial</b>
+                </p>
               </div>
             </div>
             <section className="table-report-dieta-especial">
@@ -261,7 +263,7 @@ export const CorpoRelatorio = props => {
             dangerouslySetInnerHTML={{
               __html:
                 solicitacaoKitLanche.solicitacao_kit_lanche &&
-                solicitacaoKitLanche.solicitacao_kit_lanche.descricao
+                solicitacaoKitLanche.solicitacao_kit_lanche.descricao,
             }}
           />
         </div>
@@ -273,7 +275,7 @@ export const CorpoRelatorio = props => {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaNegacao
+                __html: justificativaNegacao,
               }}
             />
           </div>
@@ -287,13 +289,13 @@ export const CorpoRelatorio = props => {
             </p>
             <p>{`${
               solicitacaoKitLanche.logs.find(
-                log => log.status_evento_explicacao === "CODAE autorizou"
+                (log) => log.status_evento_explicacao === "CODAE autorizou"
               ).criado_em
             } - Informações da CODAE`}</p>
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: justificativaAprovacao
+                __html: justificativaAprovacao,
               }}
             />
           </div>

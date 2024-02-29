@@ -1,0 +1,121 @@
+@import "../../../styles/variables.scss";
+
+.progressbar-main-title {
+  font-size: 10px;
+  color: #353535;
+  margin-right: -15%;
+  margin-left: 2%;
+}
+
+.progressbar-titles {
+  color: $grayPlaceholder;
+  display: inline-flex;
+  font-size: 9px;
+  font-weight: bold;
+  list-style-type: none;
+  margin-bottom: 0;
+  text-align: center;
+  width: 100%;
+  li {
+    width: 33.3%;
+  }
+}
+
+.fluxos {
+  display: flex;
+  justify-content: space-around;
+}
+
+.progressbar-dados {
+  li {
+    color: $grayPlaceholder;
+    list-style-type: none;
+    font-weight: bold;
+    font-size: 9px;
+    float: left;
+    text-align: center;
+    position: relative;
+    &:before {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      display: block;
+      font-weight: 900;
+      text-align: center;
+      margin: 0 auto 10px auto;
+      border-radius: 50%;
+      background-color: #a4a4a4;
+      font-family: "Font Awesome 5 Free";
+      font-size: 18px;
+      font-weight: 900;
+      color: $white;
+      position: relative;
+      z-index: 1;
+    }
+    &:after {
+      content: "";
+      width: 100%;
+      height: 5px;
+      top: 15px;
+      left: -50%;
+      position: absolute;
+      z-index: 0;
+    }
+  }
+
+  .active {
+    &:before {
+      content: "\f00c";
+      background-color: $green;
+    }
+    &:after {
+      background-color: $green;
+    }
+  }
+
+  .disapproved {
+    &:before {
+      content: "\f05e";
+      background-color: $red;
+    }
+    &:after {
+      background-color: $red;
+    }
+  }
+
+  .cancelled {
+    &:before {
+      content: "\f057";
+      background-color: $black;
+    }
+    &:after {
+      background-color: $black;
+    }
+  }
+
+  .questioned {
+    &:before {
+      content: "\f12a";
+      background-color: $yellow;
+    }
+    &:after {
+      background-color: $yellow;
+    }
+  }
+
+  .pending {
+    &:before {
+      font-family: "Font Awesome 5 Free";
+      font-size: 10px;
+      color: $white;
+      content: "\f04d";
+    }
+    &:after {
+      background-color: #a4a4a4;
+    }
+  }
+
+  li:first-child:after {
+    content: none;
+  }
+}

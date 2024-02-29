@@ -6,7 +6,7 @@ import InputText from "components/Shareable/Input/InputText";
 import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhEmpresaTerceirizada,
 } from "helpers/utilities";
 import { Spin } from "antd";
 import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
@@ -14,7 +14,7 @@ import { InputComData } from "./DatePicker";
 
 // Para usar este componente é necessário remover o redux-form do dashboard
 
-const CardBodySemRedux = props => {
+const CardBodySemRedux = (props) => {
   const ehTerceirizada = usuarioEhEmpresaTerceirizada();
   const ehEscola =
     usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor();
@@ -26,7 +26,7 @@ const CardBodySemRedux = props => {
   return (
     <div className="card mt-3">
       <div className="card-body dash-terc">
-        <div className="card-title font-weight-bold dashboard-card-title">
+        <div className="card-title fw-bold dashboard-card-title">
           <div className="row">
             <div
               className={`${
@@ -86,7 +86,7 @@ const CardBodySemRedux = props => {
               <>
                 <div
                   className={`${
-                    ehEscola ? "offset-3 col-3 pl-0" : "col-3 pl-0"
+                    ehEscola ? "offset-3 col-3 ps-0" : "col-3 ps-0"
                   }`}
                 >
                   <Field
@@ -102,7 +102,7 @@ const CardBodySemRedux = props => {
                     props.onChange(props.values);
                   }}
                 </OnChange>
-                <div className="col-3 pl-0">
+                <div className="col-3 ps-0">
                   <Field
                     name="data_evento"
                     minDate={null}

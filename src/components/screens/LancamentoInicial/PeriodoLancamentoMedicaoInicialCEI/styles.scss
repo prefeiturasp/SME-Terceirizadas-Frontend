@@ -1,0 +1,298 @@
+@import "styles/variables.scss";
+
+.weeks-tabs {
+  .ant-tabs-tab.ant-tabs-tab-active {
+    background: $green !important;
+    font-weight: 700;
+    .ant-tabs-tab-btn {
+      color: $white !important;
+    }
+    .ant-tabs-tab-btn:hover {
+      color: $white !important;
+    }
+  }
+  .ant-tabs-tab {
+    .ant-tabs-tab-btn:hover {
+      color: $green !important;
+    }
+  }
+  .ant-tabs-tab:hover {
+    color: #000000e0 !important;
+  }
+}
+
+.default-color-first-semana:first-child {
+  .ant-tabs-nav {
+    .ant-tabs-tab:first-child {
+      background-color: #198459;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 0.25px currentColor;
+      .ant-tabs-tab-btn:hover {
+        color: $white !important;
+      }
+    }
+  }
+}
+
+.tabela-tipos-alimentacao {
+  margin-top: 10px;
+  margin-bottom: 32px;
+
+  header {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+  }
+
+  article {
+    border-radius: 4px 4px 0px 0px;
+    border: 1px solid #e9eaea;
+    box-sizing: border-box;
+    margin: 10px 0 15px 0;
+
+    .grid-table-tipos-alimentacao {
+      min-height: 24px;
+      font-size: 16px;
+      display: flex;
+      line-height: 24px;
+      align-items: center;
+      text-align: center;
+      display: grid;
+      grid-template-columns: 15% 12.15% 12.15% 12.15% 12.15% 12.15% 12.15% 12.15%;
+
+      .dia-nao-letivo-header {
+        background-color: $grayHeader !important;
+      }
+
+      .dia-nao-letivo {
+        background-color: $grayCard !important;
+      }
+    }
+
+    .header-table {
+      background-color: $green !important;
+      color: #ffffff !important;
+      font-weight: bold;
+      div {
+        border: 0.05px solid $white;
+        border-top: 0;
+        text-align: center;
+        display: grid;
+        align-items: center;
+        height: 100%;
+        border-right: none !important;
+      }
+    }
+
+    .body-table-alimentacao {
+      font-weight: 500;
+      color: $blackSubtle;
+
+      div {
+        padding: 0 !important;
+        border: 0 !important;
+      }
+
+      .linha-cei {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
+
+        .nome-linha-cei {
+          margin-top: 5px;
+          margin-bottom: -5px;
+        }
+
+        .faixa-etaria {
+          font-size: 13px;
+          color: $green;
+        }
+      }
+
+      .input-desabilitado {
+        border: 0 !important;
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
+        div.input input {
+          font-size: 11px !important;
+          height: 35px;
+        }
+      }
+
+      .input-habilitado {
+        border: 0 !important;
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
+        display: flex;
+        justify-content: center;
+      }
+
+      .tooltip-input {
+        div.input input {
+          border-color: $red !important;
+        }
+      }
+
+      .input-habilitado-observacoes {
+        display: flex;
+        justify-content: center;
+        border: 0 !important;
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
+
+        button {
+          margin: 8px;
+          display: flex;
+          align-items: center;
+          align-self: center;
+          height: 28px;
+        }
+      }
+
+      .flex-container {
+        display: flex;
+        justify-content: space-evenly;
+        padding-left: 0;
+      }
+
+      div {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #e9eaea;
+        text-align: left;
+        padding-left: 8px;
+        &:not(:last-child) {
+          border-right: 1px solid #e9eaea;
+        }
+      }
+
+      div:last-child {
+        border-right: 0px solid #e9eaea;
+      }
+
+      .data_lancamento_modal {
+        &::placeholder {
+          color: red !important;
+        }
+      }
+
+      .field-values-input {
+        position: relative;
+
+        .icone-info-error {
+          position: absolute;
+          background-color: $red;
+          height: 16px;
+          width: 16px;
+          line-height: 16px;
+          border-radius: 50%;
+          font-size: 9px;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+          top: 4px;
+          right: 4px;
+        }
+
+        .icone-info-success {
+          position: absolute;
+          background-color: $green;
+          height: 16px;
+          width: 16px;
+          line-height: 16px;
+          border-radius: 50%;
+          font-size: 9px;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+          top: 4px;
+          right: 4px;
+        }
+
+        .icone-info-warning {
+          position: absolute;
+          background-color: $orange;
+          height: 16px;
+          width: 16px;
+          line-height: 16px;
+          border-radius: 50%;
+          font-size: 9px;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+          top: 4px;
+          right: 4px;
+        }
+      }
+
+      .border-warning {
+        border-color: $orange !important;
+      }
+
+      .nao-eh-dia-letivo {
+        background-color: #dadada;
+      }
+    }
+  }
+}
+
+.botao-voltar-lancamento-medicao {
+  margin-top: -35px;
+  margin-bottom: 15px;
+}
+
+.legenda-tooltips {
+  border: 2px solid $grayDisabled;
+  border-radius: 5px;
+  position: absolute;
+  right: 0px;
+  padding: 10px 16px 0px 16px;
+
+  i {
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+    border-radius: 50%;
+    font-size: 9px;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+
+  div {
+    &:first-child {
+      margin-bottom: 0px;
+    }
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+    margin-bottom: 16px;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .icone-legenda-error {
+    background-color: $red;
+  }
+
+  .icone-legenda-warning {
+    background-color: $orange;
+  }
+
+  .icone-legenda-success {
+    background-color: $green;
+  }
+}
+
+.mt-legenda {
+  margin-top: 50px !important;
+}

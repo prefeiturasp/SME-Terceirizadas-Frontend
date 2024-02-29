@@ -2,7 +2,7 @@ import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorSta
 import CardLegendas from "components/Shareable/CardLegendas";
 import {
   CARD_TYPE_ENUM,
-  ICON_CARD_TYPE_ENUM
+  ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { PAGINACAO_DEFAULT } from "constants/shared";
 import React from "react";
@@ -14,7 +14,7 @@ import { HOME } from "../constants";
 
 const atual = {
   href: `/${ESCOLA}/${SOLICITACOES_PENDENTES}`,
-  titulo: "Solicitações Pendentes"
+  titulo: "Solicitações Pendentes",
 };
 
 export default () => (

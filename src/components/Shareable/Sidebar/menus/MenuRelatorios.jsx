@@ -2,6 +2,7 @@ import React from "react";
 import { Menu, LeafItem } from "./shared";
 import {
   usuarioEhCODAEDietaEspecial,
+  usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoProduto,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
@@ -9,7 +10,8 @@ import {
   usuarioEhEmpresaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
-  usuarioEhDRE
+  usuarioEhDRE,
+  usuarioEhOrgaoFiscalizador,
 } from "helpers/utilities";
 import * as constants from "configs/constants";
 
@@ -23,7 +25,9 @@ const MenuRelatorios = () => {
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEmpresaTerceirizada() ||
     usuarioEhCODAENutriManifestacao() ||
-    usuarioEhDRE();
+    usuarioEhDRE() ||
+    usuarioEhOrgaoFiscalizador() ||
+    usuarioEhCODAEGabinete();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
   const exibirRelatorioAnaliseSensorial =
@@ -38,7 +42,9 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAENutriManifestacao() ||
     usuarioEhCODAEGestaoAlimentacao() ||
-    usuarioEhDRE();
+    usuarioEhDRE() ||
+    usuarioEhOrgaoFiscalizador() ||
+    usuarioEhCODAEGabinete();
 
   const exibirProdutosSuspensos =
     usuarioEhCODAEGestaoProduto() ||
@@ -49,7 +55,9 @@ const MenuRelatorios = () => {
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAENutriManifestacao() ||
-    usuarioEhCODAEGestaoAlimentacao();
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhOrgaoFiscalizador() ||
+    usuarioEhCODAEGabinete();
 
   const exibirRelatorioQuantitativoSolicDietaEsp =
     usuarioEhCODAEDietaEspecial() ||
@@ -69,9 +77,7 @@ const MenuRelatorios = () => {
       )}
       {exibirQuantitativoPorTerceirizada && (
         <LeafItem
-          to={`/${
-            constants.GESTAO_PRODUTO
-          }/relatorios/quantitativo-por-terceirizada`}
+          to={`/${constants.GESTAO_PRODUTO}/relatorios/quantitativo-por-terceirizada`}
         >
           Quantitativo Por Terceirizada
         </LeafItem>
@@ -94,45 +100,35 @@ const MenuRelatorios = () => {
 
       {exibirMenuTodosPerfis && (
         <LeafItem
-          to={`/${constants.GESTAO_PRODUTO}/${
-            constants.RELATORIO_RECLAMACAO_PRODUTO
-          }`}
+          to={`/${constants.GESTAO_PRODUTO}/${constants.RELATORIO_RECLAMACAO_PRODUTO}`}
         >
           Relatório de reclamação de produto
         </LeafItem>
       )}
       {exibirRelatorioQuantitativoSolicDietaEsp && (
         <LeafItem
-          to={`/${constants.DIETA_ESPECIAL}/${
-            constants.RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP
-          }`}
+          to={`/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP}`}
         >
           Relatório quant. solic. dieta esp.
         </LeafItem>
       )}
       {exibirRelatorioQuantitativoSolicDietaEsp && (
         <LeafItem
-          to={`/${constants.DIETA_ESPECIAL}/${
-            constants.RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP
-          }`}
+          to={`/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP}`}
         >
           Relatório quant. diag. dieta esp.
         </LeafItem>
       )}
       {exibirRelatorioQuantitativoSolicDietaEsp && (
         <LeafItem
-          to={`/${constants.DIETA_ESPECIAL}/${
-            constants.RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP
-          }`}
+          to={`/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP}`}
         >
           Relatório quant. class. dieta esp.
         </LeafItem>
       )}
       {exibirRelatorioQuantitativoSolicDietaEsp && (
         <LeafItem
-          to={`/${constants.DIETA_ESPECIAL}/${
-            constants.RELATORIO_GESTAO_DIETA_ESPECIAL
-          }`}
+          to={`/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GESTAO_DIETA_ESPECIAL}`}
         >
           Relatório de gestão de dieta esp.
         </LeafItem>

@@ -9,7 +9,7 @@ test.skip("test parseFormValues", () => {
       tipo_alimentacao_para: "11a2766f-4b3f-46ed-a49a-111a923d6131",
       "qtde-faixa-e37d05fa-b4a1-4a5c-a3f6-acc527bc3b45": "23",
       "qtde-faixa-7880d70b-f55d-4e2d-8278-0c63642aa939": "34",
-      alunosPorFaixaEtaria: []
+      alunosPorFaixaEtaria: [],
     },
     substituicoes_PARCIAL: {
       periodo: "74a49ddf-b2f5-494a-b130-73d266d28dec",
@@ -18,12 +18,12 @@ test.skip("test parseFormValues", () => {
       tipo_alimentacao_para: "11a2766f-4b3f-46ed-a49a-111a923d6131",
       "qtde-faixa-e37d05fa-b4a1-4a5c-a3f6-acc527bc3b45": "23",
       "qtde-faixa-7880d70b-f55d-4e2d-8278-0c63642aa939": "34",
-      alunosPorFaixaEtaria: []
+      alunosPorFaixaEtaria: [],
     },
     observacao: "<p>Que dia feio...</p>↵",
     motivo: "509cb115-bcc1-46ad-aee2-5b84c0b3c302",
     data_alteracao: "02/04/2020",
-    status: "DRE_A_VALIDAR"
+    status: "DRE_A_VALIDAR",
   };
   const parseFormValuesOutput = {
     observacao: "<p>Que dia feio...</p>↵",
@@ -37,15 +37,15 @@ test.skip("test parseFormValues", () => {
         faixas_etarias: [
           {
             faixa_etaria: "e37d05fa-b4a1-4a5c-a3f6-acc527bc3b45",
-            quantidade: 23
+            quantidade: 23,
           },
           {
             faixa_etaria: "7880d70b-f55d-4e2d-8278-0c63642aa939",
-            quantidade: 34
-          }
-        ]
-      }
-    ]
+            quantidade: 34,
+          },
+        ],
+      },
+    ],
   };
   expect(parseFormValues(parseFormValuesInput)).toEqual(parseFormValuesOutput);
 });

@@ -13,13 +13,13 @@ import { toastError, toastSuccess } from "./Toast/dialogs";
 
 export const ORIGEM_SOLICITACAO = {
   ESCOLA: 0,
-  DRE: 1
+  DRE: 1,
 };
 export class ModalCancelarSolicitacao extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      justificativa: ""
+      justificativa: "",
     };
   }
 
@@ -50,7 +50,7 @@ export class ModalCancelarSolicitacao extends Component {
       closeModal,
       uuid,
       solicitacaoKitLanche,
-      origemSolicitacao
+      origemSolicitacao,
     } = this.props;
     const { justificativa } = this.state;
     return (
@@ -71,13 +71,17 @@ export class ModalCancelarSolicitacao extends Component {
             </div>
             <div className="col-12 label--gray margin-fix">
               <b>Resumo</b>
-              <p>{`Solicitação nº #${solicitacaoKitLanche &&
-                solicitacaoKitLanche.id_externo}`}</p>
+              <p>{`Solicitação nº #${
+                solicitacaoKitLanche && solicitacaoKitLanche.id_externo
+              }`}</p>
               <p>{`Solicitante: AGUARDANDO DEFINIÇÃO DE PERFIL`}</p>
-              <p>{`Data: ${solicitacaoKitLanche &&
-                solicitacaoKitLanche.data}`}</p>
-              <p>{`Quantidade de Alimentações: ${solicitacaoKitLanche &&
-                solicitacaoKitLanche.quantidade_alimentacoes}`}</p>
+              <p>{`Data: ${
+                solicitacaoKitLanche && solicitacaoKitLanche.data
+              }`}</p>
+              <p>{`Quantidade de Alimentações: ${
+                solicitacaoKitLanche &&
+                solicitacaoKitLanche.quantidade_alimentacoes
+              }`}</p>
             </div>
             <div className="form-group col-12">
               <Field
@@ -96,7 +100,7 @@ export class ModalCancelarSolicitacao extends Component {
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
             style={BUTTON_STYLE.BLUE_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           <Botao
             texto="Sim"
@@ -106,7 +110,7 @@ export class ModalCancelarSolicitacao extends Component {
             }}
             style={BUTTON_STYLE.BLUE}
             disabled={justificativa === "" || justificativa === undefined}
-            className="ml-3"
+            className="ms-3"
           />
         </Modal.Footer>
       </Modal>

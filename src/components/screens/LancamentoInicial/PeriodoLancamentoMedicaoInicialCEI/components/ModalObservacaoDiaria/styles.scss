@@ -1,0 +1,15 @@
+@import "styles/variables.scss";
+
+.data_lancamento_modal {
+  &::placeholder {
+    color: $blackInput !important;
+  }
+}
+
+.botoes-modal-footer {
+  justify-content: space-between !important;
+
+  .botoes-right {
+    justify-content: flex-end !important;
+  }
+}

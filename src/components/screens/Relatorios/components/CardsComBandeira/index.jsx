@@ -5,14 +5,14 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_PENDENTES,
-  SOLICITACOES_NEGADAS
+  SOLICITACOES_NEGADAS,
 } from "../../../../../configs/constants";
 import { getRelatorioResumoMesAno } from "../../../../../services/relatorios";
 import Botao from "../../../../Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "../../../../Shareable/Botao/constants";
 import "./style.scss";
 
@@ -20,14 +20,14 @@ export const ICON_CARD_TYPE_ENUM = {
   CANCELADO: "fa-times-circle",
   PENDENTE: "fa-exclamation-triangle",
   AUTORIZADO: "fa-check",
-  NEGADO: "fa-ban"
+  NEGADO: "fa-ban",
 };
 
 const TIPO_CARD = {
   CANCELADO: 0,
   PENDENTE: 1,
   AUTORIZADO: 2,
-  NEGADO: 3
+  NEGADO: 3,
 };
 
 function CardTotalSolicitacaoPorStatus(props) {
@@ -90,13 +90,13 @@ class CardsComBandeira extends Component {
         total_autorizados_mes_passado: "...",
         total_negados_mes_passado: "...",
         total_cancelados_mes_passado: "...",
-        total_pendentes_mes_passado: "..."
-      }
+        total_pendentes_mes_passado: "...",
+      },
     };
   }
 
   componentDidMount() {
-    this.props.getResumoTotaisPorMes().then(totais => {
+    this.props.getResumoTotaisPorMes().then((totais) => {
       this.setState({ totais_tipo_solicitacao: totais.data });
     });
   }
@@ -108,9 +108,9 @@ class CardsComBandeira extends Component {
       <div className="cards-with-flag">
         <div className="row p-4">
           <div className="col-12">
-            <p className="float-right">
+            <p className="float-end">
               <Botao
-                className="ml-2"
+                className="ms-2"
                 style={BUTTON_STYLE.BLUE_OUTLINE}
                 icon={BUTTON_ICON.PRINT}
                 texto={"Imprimir"}

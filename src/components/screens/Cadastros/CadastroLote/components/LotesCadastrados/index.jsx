@@ -12,24 +12,24 @@ class LotesCadastrados extends Component {
     this.state = {
       lotes: null,
       lotesFiltrados: null,
-      loading: true
+      loading: true,
     };
     this.filtrarLotes = this.filtrarLotes.bind(this);
   }
 
   componentDidMount() {
-    getLotes().then(response => {
+    getLotes().then((response) => {
       this.setState({
         lotes: adicionarParametroAtivo(response.results),
         lotesFiltrados: adicionarParametroAtivo(response.results),
-        loading: false
+        loading: false,
       });
     });
   }
 
   filtrarLotes(event) {
     let lotesFiltrados = this.state.lotes;
-    lotesFiltrados = lotesFiltrados.filter(function(item) {
+    lotesFiltrados = lotesFiltrados.filter(function (item) {
       const palavraAFiltrar = event.target.value.toLowerCase();
       return (
         item.nome.toLowerCase().search(palavraAFiltrar) !== -1 ||
@@ -100,12 +100,10 @@ class LotesCadastrados extends Component {
                           (lote.terceirizada !== null ||
                             lote.escolas.length > 0) && (
                             <NavLink
-                              to={{
-                                pathname: `/configuracoes/cadastros/lote`,
-                                state: {
-                                  prevPath: window.location.pathname,
-                                  uuid: lote.uuid
-                                }
+                              to={`/configuracoes/cadastros/lote?uuid=${lote.uuid}`}
+                              state={{
+                                prevPath: window.location.pathname,
+                                uuid: lote.uuid,
                               }}
                             >
                               <i className="fas fa-pen" />
@@ -146,14 +144,12 @@ class LotesCadastrados extends Component {
                           return (
                             <tr key={indice} className="relationed-companies">
                               <td className="pt-0 pb-0 link" colSpan="4">
-                                {`${escola.codigo_eol} - ${escola.nome} - ${
-                                  escola.lote.nome
-                                }`}
+                                {`${escola.codigo_eol} - ${escola.nome} - ${escola.lote.nome}`}
                               </td>
                             </tr>
                           );
-                        })
-                    ]
+                        }),
+                    ],
                   ];
                 })}
               </table>

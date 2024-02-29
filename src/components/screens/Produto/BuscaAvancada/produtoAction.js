@@ -3,7 +3,7 @@ import {
   getNomesProdutos,
   getNomesMarcas,
   getNomesFabricantes,
-  getInformacoesGrupo
+  getInformacoesGrupo,
 } from "../../../../services/produto.service";
 import { retornaProdutosComUltimaHomolagacao } from "./helpers";
 
@@ -12,7 +12,7 @@ export const buscaProdutos = async () => {
   const produtos = retornaProdutosComUltimaHomolagacao(response);
   return {
     type: "PRODUTOS_SEARCH",
-    payload: produtos
+    payload: produtos,
   };
 };
 
@@ -20,7 +20,7 @@ export const buscaNomesProduto = async () => {
   const response = await getNomesProdutos();
   return {
     type: "NOMES_PRODUTOS",
-    payload: response
+    payload: response,
   };
 };
 
@@ -28,7 +28,7 @@ export const buscaNomesMarcas = async () => {
   const response = await getNomesMarcas();
   return {
     type: "NOMES_MARCAS",
-    payload: response
+    payload: response,
   };
 };
 
@@ -36,21 +36,21 @@ export const buscaNomesFabricantes = async () => {
   const response = await getNomesFabricantes();
   return {
     type: "NOMES_FABRICANTES",
-    payload: response
+    payload: response,
   };
 };
 
-export const setaProdutoRelatorio = async produto => {
+export const setaProdutoRelatorio = async (produto) => {
   return {
     type: "PRODUTO_RELATORIO",
-    payload: produto
+    payload: produto,
   };
 };
 
-export const setaProdutosFiltrados = async retornoProdutos => {
+export const setaProdutosFiltrados = async (retornoProdutos) => {
   return {
     type: "PRODUTO_FILTRADO",
-    payload: retornoProdutos
+    payload: retornoProdutos,
   };
 };
 
@@ -58,6 +58,6 @@ export const buscaInformacoesNutricionais = async () => {
   const response = getInformacoesGrupo();
   return {
     type: "INFORMACOES_NUTRICIONAIS",
-    payload: response
+    payload: response,
   };
 };

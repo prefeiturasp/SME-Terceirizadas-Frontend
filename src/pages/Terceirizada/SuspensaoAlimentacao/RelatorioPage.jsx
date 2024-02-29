@@ -13,7 +13,7 @@ if (usuarioEhEmpresaTerceirizada())
 
 const atual = {
   href: "#",
-  titulo: "Relatório"
+  titulo: "Relatório",
 };
 
 export default () => (

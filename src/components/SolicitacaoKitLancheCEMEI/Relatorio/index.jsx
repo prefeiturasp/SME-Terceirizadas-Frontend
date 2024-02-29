@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
 import { CorpoRelatorio } from "./components/CorpoRelatorio";
@@ -7,7 +7,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
 import "./style.scss";
@@ -15,7 +15,7 @@ import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
 import { deepCopy } from "helpers/utilities";
 
 export const Relatorio = ({ ...props }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(false);
   const [solicitacoesSimilares, setSolicitacoesSimilares] = useState([]);
@@ -34,10 +34,12 @@ export const Relatorio = ({ ...props }) => {
           response.data
         );
         let _response = deepCopy(response.data);
-        let solicitacoes_similares = _response.solicitacoes_similares.map(s => {
-          s["collapsed"] = true;
-          return s;
-        });
+        let solicitacoes_similares = _response.solicitacoes_similares.map(
+          (s) => {
+            s["collapsed"] = true;
+            return s;
+          }
+        );
         setSolicitacoesSimilares(solicitacoes_similares);
       } else {
         setErro(true);
@@ -72,8 +74,8 @@ export const Relatorio = ({ ...props }) => {
                 texto="Voltar"
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 icon={BUTTON_ICON.ARROW_LEFT}
-                onClick={() => history.push("/painel-gestao-alimentacao")}
-                className="float-right"
+                onClick={() => navigate("/painel-gestao-alimentacao")}
+                className="float-end"
               />
             </div>
           </div>

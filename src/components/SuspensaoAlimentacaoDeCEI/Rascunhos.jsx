@@ -5,7 +5,7 @@ export class Rascunhos extends Component {
     const {
       suspensoesDeAlimentacaoList,
       OnDeleteButtonClicked,
-      OnEditButtonClicked
+      OnEditButtonClicked,
     } = this.props;
     const allDaysInfo = suspensoesDeAlimentacaoList.map(
       (suspensaoDeAlimentacao, key) => {
@@ -15,15 +15,15 @@ export class Rascunhos extends Component {
         return (
           <div key={key} className="bg-white draft border rounded mt-1 p-2">
             <div className="mt-2">
-              <label className="bold ml-3">{`Suspensão de Alimentação # ${id_externo}`}</label>
+              <label className="bold ms-3">{`Suspensão de Alimentação # ${id_externo}`}</label>
               <span
-                className="ml-3 p-1 border rounded"
+                className="ms-3 p-1 border rounded"
                 style={{ background: backgroundColor }}
               >
                 {suspensaoDeAlimentacao.status}
               </span>
             </div>
-            <div className="icon-draft-card float-right">
+            <div className="icon-draft-card float-end">
               Criado em: {suspensaoDeAlimentacao.criado_em}
               <span
                 onClick={() => OnDeleteButtonClicked(suspensaoDeAlimentacao)}
@@ -33,14 +33,14 @@ export class Rascunhos extends Component {
               <span
                 onClick={() =>
                   OnEditButtonClicked({
-                    suspensaoDeAlimentacao
+                    suspensaoDeAlimentacao,
                   })
                 }
               >
                 <i className="fas fa-edit" />
               </span>
             </div>
-            <div className="ml-3">
+            <div className="ms-3">
               <p>{suspensaoDeAlimentacao.data}</p>
             </div>
           </div>

@@ -2,51 +2,49 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
-import { Collapse, Input, Select } from "antd";
+import { Collapse, Input } from "antd";
 import Botao from "components/Shareable/Botao";
-import { CaretDownOutlined } from "@ant-design/icons";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   BUTTON_ICON,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { DETALHAMENTO_DO_LANCAMENTO } from "configs/constants";
 import {
   getTiposDeContagemAlimentacao,
   setSolicitacaoMedicaoInicial,
-  updateSolicitacaoMedicaoInicial
+  updateSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 
 export default ({
   periodoSelecionado,
   escolaInstituicao,
   nomeTerceirizada,
   solicitacaoMedicaoInicial,
-  onClickInfoBasicas
+  onClickInfoBasicas,
 }) => {
   const [tiposDeContagem, setTiposDeContagem] = useState([]);
   const [tipoDeContagemSelecionada, setTipoDeContagemSelecionada] = useState(
-    null
+    []
   );
   const [responsaveis, setResponsaveis] = useState([
     {
       nome: "",
-      rf: ""
+      rf: "",
     },
     {
       nome: "",
-      rf: ""
+      rf: "",
     },
     {
       nome: "",
-      rf: ""
-    }
+      rf: "",
+    },
   ]);
   const [emEdicao, setEmEdicao] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { Option } = Select;
   const { Panel } = Collapse;
-  const [openSelect, setOpenSelect] = useState(false);
 
   const location = useLocation();
 
@@ -63,7 +61,7 @@ export default ({
       });
       setResponsaveis(resps);
       setTipoDeContagemSelecionada(
-        solicitacaoMedicaoInicial.tipo_contagem_alimentacoes.uuid
+        solicitacaoMedicaoInicial.tipos_contagem_alimentacao.map((t) => t.uuid)
       );
     }
     if (!solicitacaoMedicaoInicial) {
@@ -76,8 +74,8 @@ export default ({
   }, []);
 
   const opcoesContagem = tiposDeContagem
-    ? tiposDeContagem.map(tipo => {
-        return <Option key={tipo.uuid}>{tipo.nome}</Option>;
+    ? tiposDeContagem.map((tipo) => {
+        return { value: tipo.uuid, label: tipo.nome };
       })
     : [];
 
@@ -98,25 +96,25 @@ export default ({
     let component = [];
     for (let responsavel = 0; responsavel <= 2; responsavel++) {
       component.push(
-        <div className="row col-12 pr-0 mt-2" key={responsavel}>
+        <div className="row col-12 pe-0 mt-2" key={responsavel}>
           <div className="col-8">
             <Input
               className="mt-2"
               name={`responsavel_nome_${responsavel}`}
               defaultValue={responsaveis[responsavel]["nome"]}
-              onChange={event =>
+              onChange={(event) =>
                 setaResponsavel("nome", event.target.value, responsavel)
               }
               disabled={!emEdicao}
             />
           </div>
-          <div className="col-4 pr-0">
+          <div className="col-4 pe-0">
             <Input
               maxLength={7}
               className="mt-2"
               name={`responsavel_rf_${responsavel}`}
-              onKeyPress={event => verificarInput(event, responsavel)}
-              onChange={event => verificarInput(event, responsavel)}
+              onKeyPress={(event) => verificarInput(event, responsavel)}
+              onChange={(event) => verificarInput(event, responsavel)}
               defaultValue={responsaveis[responsavel]["rf"]}
               disabled={!emEdicao}
             />
@@ -128,25 +126,25 @@ export default ({
     return component;
   };
 
-  const handleChangeTipoContagem = value => {
-    setTipoDeContagemSelecionada(value);
+  const handleChangeTipoContagem = (values) => {
+    setTipoDeContagemSelecionada(values);
   };
 
   const handleClickEditar = () => {
     setEmEdicao(true);
     !solicitacaoMedicaoInicial &&
       opcoesContagem.length > 0 &&
-      setTipoDeContagemSelecionada(tiposDeContagem[0].uuid);
+      setTipoDeContagemSelecionada([tiposDeContagem[0].uuid]);
   };
 
   const handleClickSalvar = async () => {
-    if (!responsaveis.some(resp => resp.nome !== "" && resp.rf !== "")) {
+    if (!responsaveis.some((resp) => resp.nome !== "" && resp.rf !== "")) {
       toastError("Pelo menos um responsável deve ser cadastrado");
       return;
     }
     if (
       responsaveis.some(
-        resp =>
+        (resp) =>
           (resp.nome !== "" && resp.rf === "") ||
           (resp.nome === "" && resp.rf !== "")
       )
@@ -155,19 +153,21 @@ export default ({
       return;
     }
     const responsaveisPayload = responsaveis.filter(
-      resp => resp.nome !== "" && resp.rf !== ""
+      (resp) => resp.nome !== "" && resp.rf !== ""
     );
-    if (responsaveisPayload.some(resp => resp.rf.length !== 7)) {
+    if (responsaveisPayload.some((resp) => resp.rf.length !== 7)) {
       toastError("O campo de RF deve conter 7 números");
       return;
     }
     if (solicitacaoMedicaoInicial) {
       let data = new FormData();
       data.append("escola", String(escolaInstituicao.uuid));
-      data.append(
-        "tipo_contagem_alimentacoes",
-        String(tipoDeContagemSelecionada)
-      );
+      for (let index = 0; index < tipoDeContagemSelecionada.length; index++) {
+        data.append(
+          "tipos_contagem_alimentacao[]",
+          tipoDeContagemSelecionada[index]
+        );
+      }
       data.append("responsaveis", JSON.stringify(responsaveisPayload));
       const response = await updateSolicitacaoMedicaoInicial(
         solicitacaoMedicaoInicial.uuid,
@@ -211,15 +211,15 @@ export default ({
     } else {
       const payload = {
         escola: escolaInstituicao.uuid,
-        tipo_contagem_alimentacoes: tipoDeContagemSelecionada,
+        tipos_contagem_alimentacao: tipoDeContagemSelecionada,
         responsaveis: responsaveisPayload,
         mes: format(new Date(periodoSelecionado), "MM").toString(),
-        ano: getYear(new Date(periodoSelecionado)).toString()
+        ano: getYear(new Date(periodoSelecionado)).toString(),
       };
       const response = await setSolicitacaoMedicaoInicial(payload);
       if (response.status === HTTP_STATUS.CREATED) {
         setIsOpen(false);
-        toastSuccess("Solicitação de Medição Inicial criada com sucesso!");
+        toastSuccess("Medição Inicial criada com sucesso!");
       } else {
         const errorMessage = Object.values(response.data).join("; ");
         toastError(`Erro: ${errorMessage}`);
@@ -231,14 +231,16 @@ export default ({
 
   const getDefaultValueSelectTipoContagem = () => {
     if (solicitacaoMedicaoInicial)
-      return solicitacaoMedicaoInicial.tipo_contagem_alimentacoes.nome;
+      return solicitacaoMedicaoInicial.tipos_contagem_alimentacao.map(
+        (t) => t.nome
+      );
     if (opcoesContagem.length) return tiposDeContagem[0].nome;
   };
 
   return (
     <div className="row mt-4 info-med-inicial collapse-adjustments">
       <div className="col-12 panel-med-inicial">
-        <div className="pl-0 label-adjustments">
+        <div className="ps-0 label-adjustments">
           <Collapse
             expandIconPosition="end"
             activeKey={isOpen ? ["1"] : []}
@@ -251,22 +253,20 @@ export default ({
                     Método de Contagem das Alimentações Servidas
                   </b>
                   {opcoesContagem.length > 0 && (
-                    <Select
-                      suffixIcon={
-                        <CaretDownOutlined
-                          onClick={() => setOpenSelect(!openSelect)}
-                        />
-                      }
+                    <StatefulMultiSelect
                       name="contagem_refeicoes"
-                      open={openSelect}
-                      onClick={() => setOpenSelect(!openSelect)}
-                      defaultValue={getDefaultValueSelectTipoContagem()}
-                      onChange={value => handleChangeTipoContagem(value)}
-                      className="mt-2"
+                      selected={tipoDeContagemSelecionada}
+                      options={opcoesContagem || []}
+                      onSelectedChanged={(values) =>
+                        handleChangeTipoContagem(values)
+                      }
+                      hasSelectAll={false}
+                      overrideStrings={{
+                        selectSomeItems: "Selecione os métodos de contagem",
+                        allItemsAreSelected: "Todos os métodos selecionados",
+                      }}
                       disabled={!emEdicao}
-                    >
-                      {opcoesContagem}
-                    </Select>
+                    />
                   )}
                 </div>
                 <div className="col-7 info-label">
@@ -276,14 +276,14 @@ export default ({
                   <p className="value-label">{nomeTerceirizada}</p>
                 </div>
               </div>
-              <div className="row mt-2 mr-0">
+              <div className="row mt-2 me-0">
                 <div className="col-8">
                   <label>
                     Responsáveis por acompanhar a prestação de serviços
                   </label>
                   <label className="asterisk-label">*</label>
                 </div>
-                <div className="col-4 pl-0">
+                <div className="col-4 ps-0">
                   <label>RF</label>
                   <label className="asterisk-label">*</label>
                 </div>
@@ -291,11 +291,11 @@ export default ({
                 {(!location.state ||
                   location.state.status !== "Aprovado pela DRE") &&
                   !location.pathname.includes(DETALHAMENTO_DO_LANCAMENTO) && (
-                    <div className="mt-3 pr-2">
+                    <div className="mt-3 pe-2">
                       <Botao
                         texto="Salvar"
                         style={BUTTON_STYLE.GREEN}
-                        className="float-right ml-3"
+                        className="float-end ms-3"
                         onClick={() => handleClickSalvar()}
                         disabled={!emEdicao}
                       />
@@ -303,7 +303,7 @@ export default ({
                         texto="Editar"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         icon={BUTTON_ICON.PEN}
-                        className="float-right ml-3"
+                        className="float-end ms-3"
                         onClick={() => handleClickEditar()}
                         disabled={emEdicao}
                       />

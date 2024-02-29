@@ -79,12 +79,14 @@ export const SuspensaoAlimentacaoCEIBody = ({ ...props }) => {
               <div className="col-3" />
             </div>
             {solicitacao.periodos_escolares.map((periodo, idxPeriodo) => {
-              let tiposAlimentacaoPeriodo = solicitacao.escola.periodos_escolares.find(
-                pe => pe.nome === periodo.nome
-              );
-              tiposAlimentacaoPeriodo = tiposAlimentacaoPeriodo.tipos_alimentacao
-                .map(ta => ta.nome)
-                .join(", ");
+              let tiposAlimentacaoPeriodo =
+                solicitacao.escola.periodos_escolares.find(
+                  (pe) => pe.nome === periodo.nome
+                );
+              tiposAlimentacaoPeriodo =
+                tiposAlimentacaoPeriodo.tipos_alimentacao
+                  .map((ta) => ta.nome)
+                  .join(", ");
               return (
                 <div className="row mt-3" key={idxPeriodo}>
                   <div className="col-3">
@@ -109,7 +111,7 @@ export const SuspensaoAlimentacaoCEIBody = ({ ...props }) => {
                     <p
                       className="observacao-negrito"
                       dangerouslySetInnerHTML={{
-                        __html: solicitacao.observacao
+                        __html: solicitacao.observacao,
                       }}
                     />
                   </b>
@@ -119,6 +121,6 @@ export const SuspensaoAlimentacaoCEIBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

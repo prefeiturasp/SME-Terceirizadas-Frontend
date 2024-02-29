@@ -1,7 +1,7 @@
 import { deepCopy } from "./utilities";
 
-export const formatarPedidos = pedidos => {
-  return pedidos.map(pedido => {
+export const formatarPedidos = (pedidos) => {
+  return pedidos.map((pedido) => {
     let novoPedido = pedido;
     novoPedido["checked"] = false;
     return novoPedido;
@@ -9,7 +9,7 @@ export const formatarPedidos = pedidos => {
 };
 
 export const filtraPrioritarios = (pedidos, filtro = null) => {
-  return pedidos.filter(pedido => {
+  return pedidos.filter((pedido) => {
     const prioridade = filtro
       ? pedido[filtro]["prioridade"]
       : pedido["prioridade"];
@@ -19,7 +19,7 @@ export const filtraPrioritarios = (pedidos, filtro = null) => {
 };
 
 export const filtraNoLimite = (pedidos, filtro = null) => {
-  return pedidos.filter(pedido => {
+  return pedidos.filter((pedido) => {
     const prioridade = filtro
       ? pedido[filtro]["prioridade"]
       : pedido["prioridade"];
@@ -28,7 +28,7 @@ export const filtraNoLimite = (pedidos, filtro = null) => {
   });
 };
 export const filtraRegular = (pedidos, filtro = null) => {
-  return pedidos.filter(pedido => {
+  return pedidos.filter((pedido) => {
     const prioridade = filtro
       ? pedido[filtro]["prioridade"]
       : pedido["prioridade"];
@@ -37,8 +37,8 @@ export const filtraRegular = (pedidos, filtro = null) => {
   });
 };
 
-export const ordenarPedidosDataMaisRecente = pedidos => {
-  const pedidosFiltradosCopy = deepCopy(pedidos).map(obj => {
+export const ordenarPedidosDataMaisRecente = (pedidos) => {
+  const pedidosFiltradosCopy = deepCopy(pedidos).map((obj) => {
     const dataMaisProxima = obj.inclusoes
       ? obj.inclusoes[0].data
       : obj.dias_motivos_da_inclusao_cemei
@@ -55,7 +55,7 @@ export const ordenarPedidosDataMaisRecente = pedidos => {
     ).split("/");
     return {
       ...obj,
-      date: new Date(arrayData[2], arrayData[1] - 1, arrayData[0])
+      date: new Date(arrayData[2], arrayData[1] - 1, arrayData[0]),
     };
   });
 
@@ -67,18 +67,18 @@ export const ordenarPedidosDataMaisRecente = pedidos => {
 };
 
 // de informativo
-export const filtraCiencia = informacoes => {
-  return informacoes.filter(pedido => {
+export const filtraCiencia = (informacoes) => {
+  return informacoes.filter((pedido) => {
     return pedido.status === "TERCEIRIZADA_TOMA_CIENCIA";
   });
 };
 
-export const filtraInformados = informacoes => {
-  return informacoes.filter(pedido => {
+export const filtraInformados = (informacoes) => {
+  return informacoes.filter((pedido) => {
     return pedido.status === "INFORMADO";
   });
 };
 
-export const obtemDataSolicitacao = solicitacao => {
+export const obtemDataSolicitacao = (solicitacao) => {
   return solicitacao.logs[1].criado_em;
 };

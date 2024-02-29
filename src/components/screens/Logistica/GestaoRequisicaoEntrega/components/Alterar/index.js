@@ -10,7 +10,7 @@ import TabelaAlimentoConsolidado from "components/Logistica/TabelaAlimentoConsol
 import { required, requiredMultiselectKhan } from "helpers/fieldValidators";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import ConfirmarEnvio from "./ConfirmarEnvio";
 import { Spin } from "antd";
@@ -29,12 +29,12 @@ export default ({ solicitacao, updatePage }) => {
   };
 
   const getAlimentos = () => {
-    getConsolidadoAlimentos(solicitacao.uuid).then(res => {
+    getConsolidadoAlimentos(solicitacao.uuid).then((res) => {
       setAlimentosConsolidado(res.data);
     });
   };
 
-  const getDiferencaDiasUteis = dataEntrega => {
+  const getDiferencaDiasUteis = (dataEntrega) => {
     const firstDay = moment(new Date(), "DD/MM/YYYY");
     const lastDay = moment(dataEntrega, "DD/MM/YYYY");
 
@@ -87,7 +87,7 @@ export default ({ solicitacao, updatePage }) => {
         <Modal.Body>
           Confira a visão geral da Requisição de Entrega:{" "}
           <b>{solicitacao.numero_solicitacao}</b>.
-          <label className="float-right">
+          <label className="float-end">
             Data de entrega: <b>{solicitacao.guias[0].data_entrega}</b>
           </label>
           <div className="text-center">
@@ -105,7 +105,7 @@ export default ({ solicitacao, updatePage }) => {
           <Form
             onSubmit={onSubmit}
             subscription={{ submitting: true, values: true }}
-            validate={values => {
+            validate={(values) => {
               const errors = {};
               if (
                 values.motivo &&
@@ -138,17 +138,17 @@ export default ({ solicitacao, updatePage }) => {
                           options={[
                             {
                               value: "ALTERAR_DATA_ENTREGA",
-                              label: "Alterar data de entrega"
+                              label: "Alterar data de entrega",
                             },
                             {
                               value: "ALTERAR_QTD_ALIMENTO",
-                              label: "Alterar quantidade de alimento"
+                              label: "Alterar quantidade de alimento",
                             },
                             {
                               value: "ALTERAR_ALIMENTO",
-                              label: "Alterar alimento"
+                              label: "Alterar alimento",
                             },
-                            { value: "OUTROS", label: "Outros" }
+                            { value: "OUTROS", label: "Outros" },
                           ]}
                         />
                       </div>
@@ -182,7 +182,7 @@ export default ({ solicitacao, updatePage }) => {
                           type={BUTTON_TYPE.BUTTON}
                           onClick={handleClose}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
-                          className="float-right ml-3"
+                          className="float-end ms-3"
                         />
                       </div>
                     </div>

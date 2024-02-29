@@ -1,49 +1,43 @@
 import React, { useEffect, useState } from "react";
-import HTTP_STATUS from "http-status-codes";
-
-import {
-  getVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
-  updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
-  getTiposDeAlimentacao
-} from "services/cadastroTipoAlimentacao.service";
-
 import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
-
-import { ASelect } from "components/Shareable/MakeField";
+import { Link } from "react-router-dom";
+import HTTP_STATUS from "http-status-codes";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Select as SelectAntd } from "antd";
-
+import { Spin } from "antd";
+import { ASelect } from "components/Shareable/MakeField";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { Spin } from "antd";
 import "./style.scss";
+import {
+  getVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
+  updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
+  getTiposDeAlimentacao,
+} from "services/cadastroTipoAlimentacao.service";
 
 export default ({ tiposUnidadesEscolar }) => {
   const { Option } = SelectAntd;
   const opcoesTiposUnidades = tiposUnidadesEscolar
-    ? tiposUnidadesEscolar.map(tipo => {
+    ? tiposUnidadesEscolar.map((tipo) => {
         return <Option key={tipo.uuid}>{tipo.iniciais}</Option>;
       })
     : undefined;
 
   const [tiposDeAlimentacao, setTiposDeAlimentacao] = useState(undefined);
-  const [
-    alterandoTiposDeAlimentacao,
-    setAlterandoTiposDeAlimentacao
-  ] = useState(false);
+  const [alterandoTiposDeAlimentacao, setAlterandoTiposDeAlimentacao] =
+    useState(false);
   const [vinculos, setVinculos] = useState(undefined);
   const [carregando, setCarregando] = useState(undefined);
   const [open, setOpen] = useState(false);
 
   async function fetchData() {
     setCarregando(true);
-    await getTiposDeAlimentacao().then(response => {
+    await getTiposDeAlimentacao().then((response) => {
       setTiposDeAlimentacao(response.results);
     });
     setCarregando(false);
@@ -53,11 +47,11 @@ export default ({ tiposUnidadesEscolar }) => {
     fetchData();
   }, []);
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     setCarregando(true);
     await updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar(
       formValues
-    ).then(async response => {
+    ).then(async (response) => {
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Tipo de Alimentação salvo com sucesso");
         setVinculos(response.results);
@@ -69,25 +63,25 @@ export default ({ tiposUnidadesEscolar }) => {
     setAlterandoTiposDeAlimentacao(false);
   };
 
-  const setInitialValues = vinculos => {
-    let vinculosFormatados = vinculos.map(vinculo => {
+  const setInitialValues = (vinculos) => {
+    let vinculosFormatados = vinculos.map((vinculo) => {
       let tipos_alimentacao = vinculo.tipos_alimentacao.map(
-        tipo_alimentacao => tipo_alimentacao.uuid
+        (tipo_alimentacao) => tipo_alimentacao.uuid
       );
       return {
         tipos_alimentacao: tipos_alimentacao,
         uuid: vinculo.uuid,
         periodo_escolar: vinculo.periodo_escolar.uuid,
-        tipo_unidade_escolar: vinculo.tipo_unidade_escolar.uuid
+        tipo_unidade_escolar: vinculo.tipo_unidade_escolar.uuid,
       };
     });
     return { vinculos: vinculosFormatados };
   };
 
-  const getPeriodosEscolares = async uuid => {
+  const getPeriodosEscolares = async (uuid) => {
     setCarregando(true);
     await getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(uuid).then(
-      response => {
+      (response) => {
         if (response.results.length === 0) {
           toastError(
             "Nenhum período escolar está associado ao tipo de unidade escolar selecionado"
@@ -112,33 +106,46 @@ export default ({ tiposUnidadesEscolar }) => {
                 <form onSubmit={handleSubmit}>
                   <section className="tipos-de-unidade">
                     <header>Tipos de Unidades</header>
-                    <article>
-                      <Field
-                        component={ASelect}
-                        suffixIcon={
-                          <CaretDownOutlined onClick={() => setOpen(!open)} />
+                    <div className="d-flex justify-content-between">
+                      <article>
+                        <Field
+                          component={ASelect}
+                          suffixIcon={
+                            <CaretDownOutlined onClick={() => setOpen(!open)} />
+                          }
+                          open={open}
+                          onBlur={() => setOpen(false)}
+                          onClick={() => setOpen(!open)}
+                          showSearch
+                          name="tipo_unidade_escolar"
+                          filterOption={(inputValue, option) =>
+                            option.props.children
+                              .toString()
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          }
+                          disabled={alterandoTiposDeAlimentacao}
+                        >
+                          {opcoesTiposUnidades}
+                        </Field>
+                        <OnChange name="tipo_unidade_escolar">
+                          {(value) => {
+                            getPeriodosEscolares(value);
+                          }}
+                        </OnChange>
+                      </article>
+                      <Link
+                        to={
+                          "/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais"
                         }
-                        open={open}
-                        onBlur={() => setOpen(false)}
-                        onClick={() => setOpen(!open)}
-                        showSearch
-                        name="tipo_unidade_escolar"
-                        filterOption={(inputValue, option) =>
-                          option.props.children
-                            .toString()
-                            .toLowerCase()
-                            .includes(inputValue.toLowerCase())
-                        }
-                        disabled={alterandoTiposDeAlimentacao}
+                        style={{ display: "contents" }}
                       >
-                        {opcoesTiposUnidades}
-                      </Field>
-                      <OnChange name="tipo_unidade_escolar">
-                        {value => {
-                          getPeriodosEscolares(value);
-                        }}
-                      </OnChange>
-                    </article>
+                        <Botao
+                          texto="Permissão de Lançamentos Especiais"
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                      </Link>
+                    </div>
                   </section>
                 </form>
               )}
@@ -159,9 +166,10 @@ export default ({ tiposUnidadesEscolar }) => {
                       </div>
                       <div className="col-2 mb-3">
                         <Botao
+                          className="float-end"
                           texto="Salvar"
                           type={BUTTON_TYPE.SUBMIT}
-                          style={`${BUTTON_STYLE.GREEN} w-100`}
+                          style={`${BUTTON_STYLE.GREEN}`}
                           disabled={pristine || submitting}
                         />
                       </div>
@@ -196,15 +204,11 @@ export default ({ tiposUnidadesEscolar }) => {
                                               type="checkbox"
                                               value={tipoAlimentacao.uuid}
                                               className="custom-control-input"
-                                              id={`${
-                                                vinculo.periodo_escolar.nome
-                                              }-${tipoAlimentacao.uuid}`}
+                                              id={`${vinculo.periodo_escolar.nome}-${tipoAlimentacao.uuid}`}
                                             />
                                             <label
                                               className="custom-control-label"
-                                              htmlFor={`${
-                                                vinculo.periodo_escolar.nome
-                                              }-${tipoAlimentacao.uuid}`}
+                                              htmlFor={`${vinculo.periodo_escolar.nome}-${tipoAlimentacao.uuid}`}
                                             >
                                               {tipoAlimentacao.nome}
                                             </label>
@@ -220,9 +224,10 @@ export default ({ tiposUnidadesEscolar }) => {
                       })}
                       <div className="offset-10 col-2 mt-3 mb-3">
                         <Botao
+                          className="float-end"
                           texto="Salvar"
                           type={BUTTON_TYPE.SUBMIT}
-                          style={`${BUTTON_STYLE.GREEN} w-100`}
+                          style={`${BUTTON_STYLE.GREEN}`}
                           disabled={pristine || submitting}
                         />
                       </div>

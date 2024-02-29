@@ -16,11 +16,11 @@ export const SubMenu = ({
   title,
   onClick,
   activeMenu,
-  children
+  children,
 }) => (
   <>
     <div
-      onClick={e => {
+      onClick={(e) => {
         e.stopPropagation();
         onClick(path);
       }}
@@ -34,7 +34,7 @@ export const SubMenu = ({
 );
 
 export const LeafItem = ({ to, children }) => (
-  <NavLink activeClassName="active" className="collapse-item" to={to}>
+  <NavLink className="collapse-item" to={to}>
     {" "}
     {children}
   </NavLink>
@@ -48,10 +48,14 @@ export const Menu = ({ id, title, icon, children }) => (
       data-target={`#collapse${id}`}
       aria-expanded="false"
       aria-controls={`collapse${id}`}
-      onClick={e => {
+      onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
         const currentElement = document.querySelector(`#collapse${id}`);
+        const otherElements = document.querySelectorAll(".nav-item .show");
+        otherElements.forEach((element) => {
+          if (element !== currentElement) element.classList.remove("show");
+        });
         currentElement.classList.toggle("show");
       }}
     >

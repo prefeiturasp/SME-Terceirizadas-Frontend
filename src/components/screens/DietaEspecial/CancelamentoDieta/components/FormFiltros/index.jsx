@@ -3,7 +3,7 @@ import { Form, Field } from "react-final-form";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import InputText from "components/Shareable/Input/InputText";
 import Select from "components/Shareable/Select";
@@ -18,7 +18,7 @@ import { TIPO_PERFIL } from "constants/shared";
 
 import {
   formFiltrosObtemDreEEscolasNovo,
-  getDadosIniciais
+  getDadosIniciais,
 } from "helpers/dietaEspecial";
 
 import { meusDados } from "services/perfil.service";
@@ -53,18 +53,18 @@ export default ({ setLoading, setFiltros }) => {
     fetch();
   }, []);
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     setFiltros({ ...formValues });
   };
 
-  const getAlunos = async dadosIniciais => {
+  const getAlunos = async (dadosIniciais) => {
     const response = await getAlunosListagem({
-      escola: dadosIniciais.escola[0]
+      escola: dadosIniciais.escola[0],
     });
-    setAlunos(response.data.results.map(aluno => aluno.nome));
+    setAlunos(response.data.results.map((aluno) => aluno.nome));
   };
 
-  const getEscolasFiltrado = dre => {
+  const getEscolasFiltrado = (dre) => {
     if (
       tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
       tipoUsuario === TIPO_PERFIL.ESCOLA
@@ -74,16 +74,16 @@ export default ({ setLoading, setFiltros }) => {
       if (dre.length === 0) {
         return escolas;
       } else {
-        return escolas.filter(escola => dre.includes(escola.dre.uuid));
+        return escolas.filter((escola) => dre.includes(escola.dre.uuid));
       }
     }
     return [];
   };
 
-  const getAlunosFiltrado = nomeAluno => {
+  const getAlunosFiltrado = (nomeAluno) => {
     if (nomeAluno) {
       const reg = new RegExp(nomeAluno, "i");
-      return alunos.filter(a => reg.test(a));
+      return alunos.filter((a) => reg.test(a));
     }
     return [];
   };
@@ -103,7 +103,7 @@ export default ({ setLoading, setFiltros }) => {
     } else {
       const alunoResponse = await getAlunosListagem({
         codigo_eol: codigoEol,
-        nao_tem_dieta_especial: false
+        nao_tem_dieta_especial: false,
       });
 
       if (!alunoResponse.data.count) {
@@ -120,7 +120,7 @@ export default ({ setLoading, setFiltros }) => {
         } else {
           setDadosIniciais({
             ...values,
-            nome_aluno: alunoResponse.data.results[0].nome
+            nome_aluno: alunoResponse.data.results[0].nome,
           });
           setDesabilitarAluno(true);
         }
@@ -146,7 +146,7 @@ export default ({ setLoading, setFiltros }) => {
                 className="input-busca-dre form-control"
                 name="dre"
                 options={[{ uuid: "", nome: "Todas" }].concat(
-                  diretoriasRegionais.map(dre => {
+                  diretoriasRegionais.map((dre) => {
                     return { uuid: dre.value, nome: dre.label };
                   })
                 )}
@@ -164,7 +164,7 @@ export default ({ setLoading, setFiltros }) => {
                 name="escola"
                 className="input-busca-escola form-control"
                 options={[{ uuid: "", nome: "Todas" }].concat(
-                  getEscolasFiltrado(values.dre).map(escola => {
+                  getEscolasFiltrado(values.dre).map((escola) => {
                     return { uuid: escola.value, nome: escola.label };
                   })
                 )}
@@ -185,7 +185,7 @@ export default ({ setLoading, setFiltros }) => {
                 disabled={carregandoAluno}
               />
               <OnChange name="codigo_eol_aluno">
-                {value => {
+                {(value) => {
                   getAlunoPorEol(value, values);
                 }}
               </OnChange>
@@ -207,13 +207,13 @@ export default ({ setLoading, setFiltros }) => {
               <div className="mt-4">
                 <Botao
                   texto="Consultar"
-                  className="float-right ml-3"
+                  className="float-end ms-3"
                   type={BUTTON_TYPE.SUBMIT}
                   style={BUTTON_STYLE.GREEN}
                 />
                 <Botao
                   texto="Limpar Filtros"
-                  className="float-right ml-3"
+                  className="float-end ms-3"
                   onClick={() => {
                     form.reset({ dre: values.dre, escola: values.escola });
                   }}

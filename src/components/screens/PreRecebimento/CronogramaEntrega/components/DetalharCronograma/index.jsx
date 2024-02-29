@@ -1,19 +1,21 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Spin } from "antd";
 import {
   getCronogramaDetalhar,
-  imprimirCronograma
+  imprimirCronograma,
 } from "services/cronograma.service";
 import AcoesDetalhar from "../AcoesDetalhar";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
-import AcoesDetalharCronograma from "../AcoesDetalharCronograma";
 import AcoesDetalharDinutreDiretoria from "../AcoesDetalharDinutreDiretoria";
 import AcoesDetalharDilogDiretoria from "../AcoesDetalharDilogDiretoria";
 import {
   usuarioEhCronograma,
   usuarioEhDilogDiretoria,
-  usuarioEhDinutreDiretoria
+  usuarioEhDinutreDiretoria,
+  usuarioEhCodaeDilog,
+  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
@@ -22,9 +24,14 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCronograma";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
+
+const TIPO_CARGA_MAP = {
+  PALETIZADA: "Paletizada",
+  ESTIVADA_BATIDA: "Estivada/Batida",
+};
 
 export default () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -32,9 +39,11 @@ export default () => {
   const [cronograma, setCronograma] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
-  const esconderLogFornecedor = logs => {
+  const navigate = useNavigate();
+
+  const esconderLogFornecedor = (logs) => {
     return logs.filter(
-      log => !["Assinado DINUTRE"].includes(log.status_evento_explicacao)
+      (log) => !["Assinado DINUTRE"].includes(log.status_evento_explicacao)
     );
   };
 
@@ -52,14 +61,6 @@ export default () => {
     }
   };
 
-  const converte_tipo_carga = tipo => {
-    if (tipo === "PALETIZADA") {
-      return "Paletizada";
-    } else if (tipo === "ESTIVADA_BATIDA") {
-      return "Estivada/Batida";
-    }
-  };
-
   const baixarPDFCronograma = () => {
     setCarregando(true);
     let uuid = cronograma.uuid;
@@ -68,8 +69,8 @@ export default () => {
       .then(() => {
         setCarregando(false);
       })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
   };
@@ -80,10 +81,15 @@ export default () => {
         texto="Baixar PDF Cronograma"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN_OUTLINE}
-        className="float-right ml-3"
+        className="float-end ms-3"
         onClick={() => baixarPDFCronograma()}
       />
     );
+
+  const handleBack = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate(-1);
+  };
 
   useEffect(() => {
     getDetalhes();
@@ -91,48 +97,52 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={!cronograma || carregando}>
-      <div className="card mt-3">
+      <div className="card mt-3 card-detalhar-cronograma">
         <div className="card-body">
           {cronograma && (
             <>
               {cronograma.logs && (
                 <>
                   <div className="row pb-3">
-                    <p className="head-green mt-3 ml-3 mb-5">
-                      Status do Cronograma
-                    </p>
-                    <FluxoDeStatusCronograma listaDeStatus={cronograma.logs} />
+                    <p className="head-green mt-3 mb-5">Status do Cronograma</p>
+                    <FluxoDeStatusPreRecebimento
+                      listaDeStatus={cronograma.logs}
+                      itensClicaveisCronograma
+                    />
                   </div>
                   <hr className="hr-detalhar" />
                 </>
               )}
+
               <DadosCronograma cronograma={cronograma} />
+
               <hr className="hr-detalhar" />
-              <p className="head-green mt-3">Dados do Recebimento</p>
-              <br />
+
+              <div className="row mt-3">
+                <div className="col">
+                  <p className="head-green">Dados do Recebimento</p>
+                </div>
+              </div>
+
               {cronograma.programacoes_de_recebimento.length > 0 &&
                 cronograma.programacoes_de_recebimento
                   .reverse()
                   .map((programacao, key) => {
                     return (
-                      <>
-                        <div key={key} className="row mb-3">
-                          <div className="col-3">
-                            <p>Data Programada:</p>
-                            <p>
-                              <b>{programacao.data_programada}</b>
-                            </p>
-                          </div>
-                          <div className="col-3">
-                            <p>Tipo de Carga:</p>
-                            <p>
-                              <b>
-                                {converte_tipo_carga(programacao.tipo_carga)}
-                              </b>
-                            </p>
-                          </div>
+                      <div key={key} className="row mb-3">
+                        <div className="col-3">
+                          <p>Data Programada:</p>
+                          <p>
+                            <b>{programacao.data_programada}</b>
+                          </p>
                         </div>
-                      </>
+                        <div className="col-3">
+                          <p>Tipo de Carga:</p>
+                          <p>
+                            <b>{TIPO_CARGA_MAP[programacao.tipo_carga]}</b>
+                          </p>
+                        </div>
+                      </div>
                     );
                   })}
               <br />
@@ -144,7 +154,13 @@ export default () => {
               )}
               {usuarioEhCronograma() && (
                 <div className="mt-4 mb-4">
-                  <AcoesDetalharCronograma cronograma={cronograma} />
+                  <Botao
+                    texto="Voltar"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    className="float-end ms-3"
+                    onClick={() => handleBack()}
+                  />
                   {botaoImprimir}
                 </div>
               )}
@@ -160,6 +176,10 @@ export default () => {
                   {botaoImprimir}
                 </>
               )}
+              {usuarioEhCodaeDilog() ||
+                (usuarioEhCODAEGabinete && (
+                  <div className="mt-4 mb-4">{botaoImprimir}</div>
+                ))}
             </>
           )}
         </div>

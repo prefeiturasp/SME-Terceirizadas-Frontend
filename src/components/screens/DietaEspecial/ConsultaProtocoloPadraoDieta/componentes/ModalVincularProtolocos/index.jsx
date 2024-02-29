@@ -6,12 +6,12 @@ import CKEditorField from "components/Shareable/CKEditorField";
 import Select from "components/Shareable/Select";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   getNomesProtocolosValidosPorEdital,
-  vincularProtocolosEditais
+  vincularProtocolosEditais,
 } from "services/dietaEspecial.service";
 import HTTP_STATUS from "http-status-codes";
 import { OnChange } from "react-final-form-listeners";
@@ -22,14 +22,14 @@ export const ModalVincularProtocolos = ({
   closeModal,
   showModal,
   editais,
-  buscar
+  buscar,
 }) => {
   const [protocolosPadrao, setProtocolosPadrao] = useState([]);
 
-  const getProtocolosPadraoPorEditalAsync = async uuid => {
+  const getProtocolosPadraoPorEditalAsync = async (uuid) => {
     try {
       const response = await getNomesProtocolosValidosPorEdital({
-        edital_uuid: uuid
+        edital_uuid: uuid,
       });
       if (response.status === HTTP_STATUS.OK) {
         setProtocolosPadrao(response.data.results);
@@ -39,7 +39,7 @@ export const ModalVincularProtocolos = ({
     }
   };
 
-  const vincularProtocolosAsync = async values => {
+  const vincularProtocolosAsync = async (values) => {
     try {
       const response = await vincularProtocolosEditais(values);
       if (response.status === HTTP_STATUS.OK) {
@@ -56,18 +56,18 @@ export const ModalVincularProtocolos = ({
     <Modal dialogClassName="modal-50w" show={showModal} backdrop={"static"}>
       <Modal.Header>
         <Modal.Title>
-          <h5 className="font-weight-bold text-dark">
+          <h5 className="fw-bold text-dark">
             Selecionar protocolos padrão aos editais
           </h5>
         </Modal.Title>
       </Modal.Header>
       <Form
-        onSubmit={values => vincularProtocolosAsync(values)}
+        onSubmit={(values) => vincularProtocolosAsync(values)}
         initialValues={{
           edital_origem: undefined,
           protocolos_padrao: undefined,
           editais_destino: undefined,
-          outras_informacoes: undefined
+          outras_informacoes: undefined,
         }}
         render={({ submitting, handleSubmit, form, values }) => (
           <form onSubmit={handleSubmit}>
@@ -81,9 +81,9 @@ export const ModalVincularProtocolos = ({
                     options={
                       editais &&
                       [{ uuid: "", nome: "Selecione um edital" }].concat(
-                        editais.map(edital => ({
+                        editais.map((edital) => ({
                           nome: edital.numero,
-                          uuid: edital.uuid
+                          uuid: edital.uuid,
                         }))
                       )
                     }
@@ -91,7 +91,7 @@ export const ModalVincularProtocolos = ({
                     validate={required}
                   />
                   <OnChange name="edital_origem">
-                    {async value => {
+                    {async (value) => {
                       if (value) {
                         getProtocolosPadraoPorEditalAsync(value);
                       }
@@ -104,12 +104,14 @@ export const ModalVincularProtocolos = ({
                     label="Protocolos Padrão"
                     name="protocolos_padrao"
                     selected={values.protocolos_padrao || []}
-                    options={protocolosPadrao.map(protocolo => ({
+                    options={protocolosPadrao.map((protocolo) => ({
                       label: protocolo.nome_protocolo,
-                      value: protocolo.uuid
+                      value: protocolo.uuid,
                     }))}
                     nomeDoItemNoPlural="Protocolos Padrão"
-                    onChange={value => form.change(`protocolos_padrao`, value)}
+                    onChange={(value) =>
+                      form.change(`protocolos_padrao`, value)
+                    }
                     placeholder={
                       !values.edital_origem
                         ? "Selecione o edital de origem"
@@ -130,14 +132,16 @@ export const ModalVincularProtocolos = ({
                     options={
                       editais &&
                       editais
-                        .map(edital => ({
+                        .map((edital) => ({
                           label: edital.numero,
-                          value: edital.uuid
+                          value: edital.uuid,
                         }))
-                        .filter(edital => edital.value !== values.edital_origem)
+                        .filter(
+                          (edital) => edital.value !== values.edital_origem
+                        )
                     }
                     nomeDoItemNoPlural="Editais"
-                    onChange={value => form.change(`editais_destino`, value)}
+                    onChange={(value) => form.change(`editais_destino`, value)}
                     placeholder="Selecione os editais"
                     required
                     multiple
@@ -159,13 +163,13 @@ export const ModalVincularProtocolos = ({
                 type={BUTTON_TYPE.BUTTON}
                 onClick={() => closeModal(false)}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right mr-3"
+                className="float-end me-3"
               />
               <Botao
                 texto="Vincular"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right"
+                className="float-end"
                 disabled={
                   submitting ||
                   !values.editais_destino ||

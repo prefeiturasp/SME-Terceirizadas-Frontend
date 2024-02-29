@@ -6,7 +6,7 @@ import { HOME } from "./constants";
 
 const atual = {
   href: "/escola/alteracao-do-tipo-de-alimentacao",
-  titulo: "Alteração do Tipo de Alimentação"
+  titulo: "Alteração do Tipo de Alimentação",
 };
 
 export default () => (

@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import DetalheGuiaRemessa from "components/Logistica/DetalheGuiaRemessa";
 import "./style.scss";
@@ -21,8 +21,8 @@ export default ({ guia, handleClose, botaoAcao }) => {
       .then(() => {
         setCarregando(false);
       })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
   };
@@ -49,7 +49,7 @@ export default ({ guia, handleClose, botaoAcao }) => {
             type={BUTTON_TYPE.BUTTON}
             onClick={() => baixarPDFGuiaRemessa()}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ml-3"
+            className="ms-3"
           />
           {botaoAcao(guia)}
         </Modal.Footer>

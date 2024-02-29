@@ -1,7 +1,7 @@
 import React from "react";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
-import Container from "components/SolicitacaoDeKitLanche/Container";
+import { Container } from "components/SolicitacaoDeKitLanche/Container";
 import { Container as ContainerCEMEI } from "components/SolicitacaoKitLancheCEMEI/componentes/Container";
 import PainelPedidosKitLancheDRE from "components/SolicitacaoDeKitLanche/DRE/PainelPedidos/Container";
 import PainelPedidosKitLancheCODAE from "components/SolicitacaoDeKitLanche/CODAE/PainelPedidos/Container";
@@ -13,7 +13,7 @@ import {
   ESCOLA,
   DRE,
   CODAE,
-  TERCEIRIZADA
+  TERCEIRIZADA,
 } from "../../configs/constants";
 import { escolaEhCEMEI } from "helpers/utilities";
 import { useLocation } from "react-router-dom";
@@ -23,12 +23,12 @@ export class PainelPedidosBase extends React.Component {
     super(props);
     this.state = {
       meusDados: null,
-      quantidade_alunos: 0
+      quantidade_alunos: 0,
     };
   }
 
   componentDidMount() {
-    meusDados().then(response => {
+    meusDados().then((response) => {
       let meusDados = response;
 
       switch (this.props.VISAO) {
@@ -44,7 +44,7 @@ export class PainelPedidosBase extends React.Component {
           return "";
       }
       this.setState({
-        meusDados
+        meusDados,
       });
     });
   }
@@ -53,7 +53,7 @@ export class PainelPedidosBase extends React.Component {
     const { meusDados } = this.state;
     const atual = {
       href: `/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`,
-      titulo: "Kit Lanche Passeio"
+      titulo: "Kit Lanche Passeio",
     };
     return (
       <Page titulo={atual.titulo} botaoVoltar>

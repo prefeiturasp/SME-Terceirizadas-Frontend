@@ -8,7 +8,7 @@ const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 export const codaeListarSolicitacoesDeInclusaoDeAlimentacao = async (
@@ -19,20 +19,34 @@ export const codaeListarSolicitacoesDeInclusaoDeAlimentacao = async (
   const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
 
   if (tipoSolicitacao === SOLICITACAO_CEI) {
-    const response = await axios.get(url, { params: paramsFromPrevPage });
-    const results = response.data.results;
-    return {
-      results: results.map(el => ({
-        ...el,
-        tipoSolicitacao: SOLICITACAO_CEI
-      })),
-      status: response.status
-    };
+    const response = await axios
+      .get(url, { params: paramsFromPrevPage })
+      .catch(ErrorHandlerFunction);
+    if (response?.data?.results) {
+      const results = response.data.results;
+      return {
+        results: results.map((el) => ({
+          ...el,
+          tipoSolicitacao: SOLICITACAO_CEI,
+        })),
+        status: response.status,
+      };
+    } else {
+      const data = { data: response.data, status: response.status };
+      return data;
+    }
   } else {
-    const response = await axios.get(url, { params: paramsFromPrevPage });
-    const results = response.data.results;
-    const status = response.status;
-    return { results: results, status };
+    const response = await axios
+      .get(url, { params: paramsFromPrevPage })
+      .catch(ErrorHandlerFunction);
+    if (response?.data?.results) {
+      const results = response.data.results;
+      const status = response.status;
+      return { results: results, status };
+    } else {
+      const data = { data: response.data, status: response.status };
+      return data;
+    }
   }
 };
 
@@ -46,16 +60,16 @@ export const codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao = (
   return fetch(url, {
     method: "PATCH",
     body: JSON.stringify({ justificativa: justificativa }),
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };

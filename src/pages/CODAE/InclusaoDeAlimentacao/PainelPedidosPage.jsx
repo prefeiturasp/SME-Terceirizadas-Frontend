@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 
 const atual = {
   href: `/${CODAE}/${INCLUSAO_ALIMENTACAO}`,
-  titulo: "Inclusão de Alimentação - Pendente Autorização"
+  titulo: "Inclusão de Alimentação - Pendente Autorização",
 };
 
 export default () => {

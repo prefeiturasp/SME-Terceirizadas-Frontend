@@ -7,7 +7,7 @@ export default ({ solicitacao }) => {
   const [alimentosConsolidado, setAlimentosConsolidado] = useState();
 
   const getAlimentos = () => {
-    getConsolidadoAlimentos(solicitacao.requisicao.uuid).then(res => {
+    getConsolidadoAlimentos(solicitacao.requisicao.uuid).then((res) => {
       setAlimentosConsolidado(res.data);
     });
   };

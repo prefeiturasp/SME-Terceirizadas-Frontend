@@ -1,16 +1,17 @@
 import React from "react";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
-import { RELATORIO_SOLICITACOES_ALIMENTACAO } from "../../configs/constants";
+import { RELATORIO_SOLICITACOES_ALIMENTACAO } from "configs/constants";
 import { RelatorioSolicitacoesAlimentacao } from "components/screens/Relatorios/SolicitacoesAlimentacao";
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhDRE,
   usuarioEhMedicao,
   usuarioEhEmpresaTerceirizada,
+  usuarioEhCODAEGabinete,
   usuarioEhCODAENutriManifestacao,
   usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaTerceirizadaDiretor
+  usuarioEhEscolaTerceirizadaDiretor,
 } from "helpers/utilities";
 import {
   filtrarSolicitacoesAlimentacaoCODAE,
@@ -24,23 +25,23 @@ import {
   gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas,
   filtrarSolicitacoesAlimentacaoEscola,
   gerarExcelRelatorioSolicitacoesAlimentacaoEscola,
-  gerarPDFRelatorioSolicitacoesAlimentacaoEscola
+  gerarPDFRelatorioSolicitacoesAlimentacaoEscola,
 } from "services/relatorios.service";
 
 const atual = {
   href: `/${RELATORIO_SOLICITACOES_ALIMENTACAO}`,
-  titulo: "Solicitações de Alimentações"
+  titulo: "Solicitações de Alimentações",
 };
 
 const anteriores = [
   {
     href: `/painel-gestao-alimentacao`,
-    titulo: "Gestão de Alimentação"
+    titulo: "Gestão de Alimentação",
   },
   {
     href: `/`,
-    titulo: "Relatórios"
-  }
+    titulo: "Relatórios",
+  },
 ];
 
 const endpointPorPerfil = () => {
@@ -49,7 +50,8 @@ const endpointPorPerfil = () => {
   } else if (
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhMedicao() ||
-    usuarioEhCODAENutriManifestacao()
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhCODAEGabinete()
   ) {
     return filtrarSolicitacoesAlimentacaoCODAE;
   } else if (
@@ -75,7 +77,8 @@ const endpointGerarExcel = () => {
   } else if (
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhMedicao() ||
-    usuarioEhCODAENutriManifestacao()
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhCODAEGabinete()
   ) {
     return gerarExcelRelatorioSolicitacoesAlimentacaoCODAE;
   } else if (usuarioEhEmpresaTerceirizada()) {
@@ -96,7 +99,8 @@ const endpointGerarPDF = () => {
   } else if (
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhMedicao() ||
-    usuarioEhCODAENutriManifestacao()
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhCODAEGabinete()
   ) {
     return gerarPDFRelatorioSolicitacoesAlimentacaoCODAE;
   } else if (usuarioEhEmpresaTerceirizada()) {
@@ -106,7 +110,7 @@ const endpointGerarPDF = () => {
   }
 };
 
-export default props => (
+export default (props) => (
   <Page
     titulo="Relatório de Solicitações de Alimentação"
     botaoVoltar

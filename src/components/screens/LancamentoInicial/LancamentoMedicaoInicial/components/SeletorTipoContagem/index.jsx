@@ -15,9 +15,9 @@ export default ({ escola }) => {
   const [tiposDeContagem, setTiposDeContagem] = useState([]);
   const [dadosIniciais, setDadosIniciais] = useState({});
 
-  const onFormUpdate = async tiposContagem => {
+  const onFormUpdate = async (tiposContagem) => {
     const resposta = await updateEscolaSimples(escola.uuid, {
-      tipos_contagem: tiposContagem
+      tipos_contagem: tiposContagem,
     });
     if (resposta.status !== OK) {
       toastError("Erro ao atualizar o tipo de contagem");
@@ -31,8 +31,8 @@ export default ({ escola }) => {
       setDadosIniciais(
         escola.tipos_contagem && {
           tipos_contagem: escola.tipos_contagem.map(
-            tipoContagem => tipoContagem.uuid
-          )
+            (tipoContagem) => tipoContagem.uuid
+          ),
         }
       );
     }

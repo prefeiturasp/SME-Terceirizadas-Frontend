@@ -1,8 +1,8 @@
-export const formataOpcoes = data => {
-  return data.map(obj => obj.nome);
+export const formataOpcoes = (data) => {
+  return data.map((obj) => obj.nome);
 };
 
-export const formataPayload = formValues => {
+export const formataPayload = (formValues) => {
   let params = `?`;
   const formKeys = Object.keys(formValues);
   if (formKeys.includes("nome_produto")) {

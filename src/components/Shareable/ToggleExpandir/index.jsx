@@ -1,7 +1,7 @@
 import React from "react";
 import "./style.scss";
 
-export const ToggleExpandir = props => {
+export const ToggleExpandir = (props) => {
   const { onClick, ativo, className } = props;
   return (
     <span

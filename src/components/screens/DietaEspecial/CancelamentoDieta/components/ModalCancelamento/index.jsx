@@ -7,7 +7,7 @@ import { getError } from "helpers/utilities";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import CKEditorField from "components/Shareable/CKEditorField";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
@@ -16,14 +16,14 @@ import { escolaInativaDietaEspecial } from "services/dietaEspecial.service";
 import {
   peloMenosUmCaractere,
   required,
-  textAreaRequired
+  textAreaRequired,
 } from "helpers/fieldValidators";
 import { composeValidators } from "helpers/utilities";
 import "./styles.scss";
 
 export default ({ dieta, showModal, setShowModal, filtros, setFiltros }) => {
-  const onSubmit = values => {
-    escolaInativaDietaEspecial(dieta.uuid, values).then(response => {
+  const onSubmit = (values) => {
+    escolaInativaDietaEspecial(dieta.uuid, values).then((response) => {
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Solicitação de cancelamento realizada com sucesso.");
         setShowModal(false);
@@ -57,7 +57,7 @@ export default ({ dieta, showModal, setShowModal, filtros, setFiltros }) => {
             <Modal.Body>
               <section className="row attachments">
                 <div className="col-9">
-                  <div className="card-title font-weight-bold cinza-escuro mt-4">
+                  <div className="card-title fw-bold cinza-escuro mt-4">
                     <span className="required-asterisk">*</span>Laudo
                   </div>
                   <div className="text">
@@ -114,7 +114,7 @@ export default ({ dieta, showModal, setShowModal, filtros, setFiltros }) => {
                     key={1}
                     type={BUTTON_TYPE.BUTTON}
                     texto="Não"
-                    className="ml-2"
+                    className="ms-2"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     onClick={() => setShowModal(false)}
                   />

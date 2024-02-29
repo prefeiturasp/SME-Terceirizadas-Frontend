@@ -1,34 +1,34 @@
 //actions
 export const UPDATE_STATUS = "UPDATE_STATUS";
-export const UPDATE_TITULO = "UPDATE_TITULO";
+export const UPDATE_TITULO_DIETA = "UPDATE_TITULO_DIETA";
 export const UPDATE_LOTE = "UPDATE_LOTE";
 export const RESET_CAMPOS = "RESET_CAMPOS";
 
-export const updateStatusDieta = status => ({
+export const updateStatusDieta = (status) => ({
   type: UPDATE_STATUS,
-  payload: status
+  payload: status,
 });
 
-export const updateTituloDieta = titulo => ({
-  type: UPDATE_TITULO,
-  payload: titulo
+export const updateTituloDieta = (titulo) => ({
+  type: UPDATE_TITULO_DIETA,
+  payload: titulo,
 });
 
-export const updateLoteDieta = lote => ({
+export const updateLoteDieta = (lote) => ({
   type: UPDATE_LOTE,
-  payload: lote
+  payload: lote,
 });
 
 export const resetCamposDieta = () => {
   return {
-    type: RESET_CAMPOS
+    type: RESET_CAMPOS,
   };
 };
 
 const initialState = {
   statusDieta: "",
   tituloDieta: "",
-  loteDieta: ""
+  loteDieta: "",
 };
 
 //reducer
@@ -37,24 +37,24 @@ export const filtersDietaReducer = (state = initialState, action) => {
     case UPDATE_STATUS:
       return {
         ...state,
-        statusDieta: action.payload
+        statusDieta: action.payload,
       };
-    case UPDATE_TITULO:
+    case UPDATE_TITULO_DIETA:
       return {
         ...state,
-        tituloDieta: action.payload
+        tituloDieta: action.payload,
       };
     case UPDATE_LOTE:
       return {
         ...state,
-        loteDieta: action.payload
+        loteDieta: action.payload,
       };
     case RESET_CAMPOS:
       return {
         ...state,
         statusDieta: "",
         tituloDieta: "",
-        loteDieta: ""
+        loteDieta: "",
       };
     default:
       return state;

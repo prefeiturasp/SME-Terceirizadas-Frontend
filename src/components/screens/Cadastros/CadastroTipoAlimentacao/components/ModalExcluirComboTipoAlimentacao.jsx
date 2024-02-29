@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "../../../../Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "../../../../Shareable/Botao/constants";
 
 export default class ModalExcluirComboTipoAlimentacao extends Component {
@@ -13,13 +13,8 @@ export default class ModalExcluirComboTipoAlimentacao extends Component {
   }
 
   render() {
-    const {
-      showModal,
-      closeModal,
-      deletaComboTipoAlimentacao,
-      combo,
-      indice
-    } = this.props;
+    const { showModal, closeModal, deletaComboTipoAlimentacao, combo, indice } =
+      this.props;
     return (
       <Modal dialogClassName="modal-50w" show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
@@ -41,7 +36,7 @@ export default class ModalExcluirComboTipoAlimentacao extends Component {
             />
             <Botao
               texto={"Confirmar"}
-              className="ml-3"
+              className="ms-3"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
               onClick={() => {

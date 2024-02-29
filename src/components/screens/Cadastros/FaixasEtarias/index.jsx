@@ -4,7 +4,7 @@ import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 
 import {
   criarFaixasEtarias,
-  getFaixasEtarias
+  getFaixasEtarias,
 } from "../../../../services/faixaEtaria.service";
 
 import FaixasEtariasEditar from "./Editar";
@@ -22,18 +22,15 @@ export default class FaixasEtarias extends Component {
       redefinir: false,
       justificativa: undefined,
       mostrarModalJustificativa: false,
-      mostrarModalAvisoRedefinicao: false
+      mostrarModalAvisoRedefinicao: false,
     };
     this.onCancelarRedefinicao = this.onCancelarRedefinicao.bind(this);
-    this.onFecharModalAvisoRedefinicao = this.onFecharModalAvisoRedefinicao.bind(
-      this
-    );
-    this.onFecharModalJustificativa = this.onFecharModalJustificativa.bind(
-      this
-    );
-    this.onFinalizarComJustificativa = this.onFinalizarComJustificativa.bind(
-      this
-    );
+    this.onFecharModalAvisoRedefinicao =
+      this.onFecharModalAvisoRedefinicao.bind(this);
+    this.onFecharModalJustificativa =
+      this.onFecharModalJustificativa.bind(this);
+    this.onFinalizarComJustificativa =
+      this.onFinalizarComJustificativa.bind(this);
     this.onFinalizarEdicao = this.onFinalizarEdicao.bind(this);
     this.onRedefinir = this.onRedefinir.bind(this);
   }
@@ -42,15 +39,13 @@ export default class FaixasEtarias extends Component {
     const resposta = await getFaixasEtarias();
     if (resposta.status !== 200) {
       toastError(
-        `Não foi possível carregar as faixas etárias: ${resposta.status} - ${
-          resposta.data
-        }`
+        `Não foi possível carregar as faixas etárias: ${resposta.status} - ${resposta.data}`
       );
     }
     this.setState({
       carregando: false,
       faixasEtarias: resposta.data.results,
-      editar: resposta.data.results.length === 0
+      editar: resposta.data.results.length === 0,
     });
   };
 
@@ -67,13 +62,11 @@ export default class FaixasEtarias extends Component {
       this.setState({
         editar: false,
         redefinir: false,
-        mostrarModalJustificativa: false
+        mostrarModalJustificativa: false,
       });
     } else {
       toastError(
-        `Erro ao enviar os dados para o servidor: ${resposta.status} - ${
-          resposta.data
-        }`
+        `Erro ao enviar os dados para o servidor: ${resposta.status} - ${resposta.data}`
       );
     }
   };
@@ -82,19 +75,19 @@ export default class FaixasEtarias extends Component {
     this.setState({
       mostrarModalAvisoRedefinicao: false,
       editar: false,
-      redefinir: false
+      redefinir: false,
     });
   }
 
   onFecharModalAvisoRedefinicao() {
     this.setState({
-      mostrarModalAvisoRedefinicao: false
+      mostrarModalAvisoRedefinicao: false,
     });
   }
 
   onFecharModalJustificativa() {
     this.setState({
-      mostrarModalJustificativa: false
+      mostrarModalJustificativa: false,
     });
   }
 
@@ -115,7 +108,7 @@ export default class FaixasEtarias extends Component {
     this.setState({
       mostrarModalAvisoRedefinicao: true,
       editar: true,
-      redefinir: true
+      redefinir: true,
     });
   }
 
@@ -125,7 +118,7 @@ export default class FaixasEtarias extends Component {
       editar,
       faixasEtarias,
       mostrarModalAvisoRedefinicao,
-      mostrarModalJustificativa
+      mostrarModalJustificativa,
     } = this.state;
     if (carregando) return "";
     return (

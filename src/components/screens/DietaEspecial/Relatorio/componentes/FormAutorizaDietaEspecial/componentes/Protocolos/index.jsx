@@ -20,17 +20,18 @@ const Protocolos = ({ protocolos, setProtocoloPadrao, form }) => {
       if (respProtocoloPadrao.status === HTTP_STATUS.OK) {
         setProtocoloPadrao(respProtocoloPadrao.data);
         const substituicoes = respProtocoloPadrao.data.substituicoes.map(
-          substituicao => {
-            const alimentos_substitutos = substituicao.alimentos_substitutos.map(
-              alimento => alimento.uuid
-            );
+          (substituicao) => {
+            const alimentos_substitutos =
+              substituicao.alimentos_substitutos.map(
+                (alimento) => alimento.uuid
+              );
             const substitutos = substituicao.substitutos.map(
-              alimento => alimento.uuid
+              (alimento) => alimento.uuid
             );
             return {
               alimento: String(substituicao.alimento.id),
               tipo: substituicao.tipo === "Substituir" ? "S" : "I",
-              substitutos: alimentos_substitutos.concat(substitutos)
+              substitutos: alimentos_substitutos.concat(substitutos),
             };
           }
         );
@@ -73,14 +74,14 @@ const Protocolos = ({ protocolos, setProtocoloPadrao, form }) => {
             0
           }
         >
-          {protocolos.map(protocolo => {
+          {protocolos.map((protocolo) => {
             return (
               <Option key={protocolo.uuid}>{protocolo.nome_protocolo}</Option>
             );
           })}
         </Field>
         <OnChange name="protocolo_padrao">
-          {value => {
+          {(value) => {
             getProtocolo(value, form);
           }}
         </OnChange>

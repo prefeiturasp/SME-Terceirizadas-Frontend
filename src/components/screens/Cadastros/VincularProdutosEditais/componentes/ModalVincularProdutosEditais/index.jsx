@@ -12,15 +12,17 @@ import { TreeSelect, Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import {
   getListaProdutos,
-  criarVinculoProdutosEditais
+  criarVinculoProdutosEditais,
 } from "services/produto.service";
 import HTTP_STATUS from "http-status-codes";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { formatarOpcoes, validatePayload } from "./helper";
+import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
+
 import "./style.scss";
 
 export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
@@ -35,36 +37,32 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
   const [openSelect1, setOpenSelect1] = useState(false);
   const [openSelect2, setOpenSelect2] = useState(false);
   const [openSelect3, setOpenSelect3] = useState(false);
-  const [
-    produtosEditaisSelecionados,
-    setProdutosEditaisSelecionados
-  ] = useState([]);
-  const [
-    qtdProdutosGetListaProdutos,
-    setQtdProdutosGetListaProdutos
-  ] = useState(0);
+  const [produtosEditaisSelecionados, setProdutosEditaisSelecionados] =
+    useState([]);
+  const [qtdProdutosGetListaProdutos, setQtdProdutosGetListaProdutos] =
+    useState(0);
   const [erros, setErros] = useState({
     editalOrigem: false,
     editaisDestino: false,
     tipoProduto: false,
-    produtos: false
+    produtos: false,
   });
 
   const { SHOW_PARENT } = TreeSelect;
   const { Option } = SelectAntd;
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     let payload = formValues;
     if (produtosEditaisSelecionados.length !== 0) {
       const produtos_editais = produtosEditaisSelecionados.filter(
-        prod => prod !== "todos"
+        (prod) => prod !== "todos"
       );
       payload["produtos_editais"] = produtos_editais;
     }
     let resultadoValidacao = await validatePayload(payload);
     setErros(resultadoValidacao);
     let temErros = Object.keys(resultadoValidacao).find(
-      k => resultadoValidacao[k] === true
+      (k) => resultadoValidacao[k] === true
     );
     if (temErros === undefined) {
       try {
@@ -91,8 +89,8 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
         setProdutosEditaisSelecionados([]);
       } else {
         opcoesProdutosEditais
-          .filter(op => op.key !== "todos")
-          .map(op => op.children.map(ch => checked.push(ch.key)));
+          .filter((op) => op.key !== "todos")
+          .map((op) => op.children.map((ch) => checked.push(ch.key)));
         checked.push("todos");
         setProdutosEditaisSelecionados(checked);
       }
@@ -102,28 +100,28 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
     if (extra.triggerNode && extra.triggerNode.props.todos) {
       let uuids;
       if (extra.triggerNode.props.children.length) {
-        uuids = extra.triggerNode.props.children.map(pe => pe.key);
+        uuids = extra.triggerNode.props.children.map((pe) => pe.key);
       } else {
         uuids = opcoesProdutosEditais
-          .find(op => op.title === extra.triggerValue)
-          .children.map(child => child.value);
+          .find((op) => op.title === extra.triggerValue)
+          .children.map((child) => child.value);
       }
       if (extra.checked) {
         resultado = resultado.concat(uuids);
       } else {
-        resultado = resultado.filter(uuid => !uuids.includes(uuid));
+        resultado = resultado.filter((uuid) => !uuids.includes(uuid));
       }
     } else {
       if (extra.checked) {
         resultado = resultado.concat([extra.triggerValue]);
       } else {
         resultado = resultado.filter(
-          uuid => !extra.triggerValue.includes(uuid)
+          (uuid) => !extra.triggerValue.includes(uuid)
         );
       }
     }
-    if (extra.preValue.find(v => v.value === "todos")) {
-      resultado = resultado.filter(prod => prod !== "todos");
+    if (extra.preValue.find((v) => v.value === "todos")) {
+      resultado = resultado.filter((prod) => prod !== "todos");
     }
     resultado = [...new Set(resultado)];
     if (qtdProdutosGetListaProdutos === resultado.length) {
@@ -135,7 +133,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
   useEffect(() => {
     setCarregando(true);
     if (listaEditais) {
-      const opcoes = listaEditais.map(edital => {
+      const opcoes = listaEditais.map((edital) => {
         return <Option key={edital.uuid}>{edital.numero}</Option>;
       });
       setOpcoesEditaisOrigem(opcoes);
@@ -147,13 +145,13 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
     form.change("edital_origem", value);
     setErros({
       ...erros,
-      editalOrigem: value && value.length > 0 ? false : true
+      editalOrigem: value && value.length > 0 ? false : true,
     });
 
     return;
   };
 
-  const onChangeFormSpy = async changes => {
+  const onChangeFormSpy = async (changes) => {
     if (
       changes.values["edital_origem"] &&
       changes.values["tipo_produto_edital_origem"] &&
@@ -173,9 +171,11 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
       setTipoProdEditalOrigem(changes.values["tipo_produto_edital_origem"]);
       let opcoesDestino = listaEditais
         .filter(
-          edital => !changes.values["edital_origem"].includes(edital.uuid)
+          (edital) =>
+            !changes.values["edital_origem"].includes(edital.uuid) &&
+            !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
         )
-        .map(edital => {
+        .map((edital) => {
           return { nome: edital.numero, uuid: edital.uuid };
         });
       setOpcoesEditaisDestino(opcoesDestino);
@@ -183,7 +183,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
         const response = await getListaProdutos({
           editais: changes.values["edital_origem"],
           tipo_produto_edital_origem:
-            changes.values["tipo_produto_edital_origem"]
+            changes.values["tipo_produto_edital_origem"],
         });
         if (response.status === HTTP_STATUS.OK) {
           let t = [];
@@ -193,14 +193,14 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                 <span
                   style={{
                     display: "inline-block",
-                    cursor: "pointer"
+                    cursor: "pointer",
                   }}
                 >
                   Todos
                 </span>
               ),
               value: "todos",
-              key: "todos"
+              key: "todos",
             });
           }
           t.push(...formatarOpcoes(response.data));
@@ -239,7 +239,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
               <Modal.Body>
                 <FormSpy
                   subscription={{ values: true, active: true }}
-                  onChange={changes => onChangeFormSpy(changes)}
+                  onChange={(changes) => onChangeFormSpy(changes)}
                 />
                 <div className="row">
                   <div className="col-4">
@@ -259,7 +259,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       onClick={() => setOpenSelect1(!openSelect1)}
                       onBlur={() => setOpenSelect1(false)}
                       name="edital_origem"
-                      onChange={value =>
+                      onChange={(value) =>
                         onChangeEditalDeOrigem(value, form, values)
                       }
                       filterOption={(inputValue, option) =>
@@ -294,12 +294,12 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       onClick={() => setOpenSelect2(!openSelect2)}
                       onBlur={() => setOpenSelect2(false)}
                       name="tipo_produto_edital_origem"
-                      onChange={value => {
+                      onChange={(value) => {
                         form.change("tipo_produto_edital_origem", value);
                         setErros({
                           ...erros,
                           tipoProdutoEditalOrigem:
-                            value && value.length > 0 ? false : true
+                            value && value.length > 0 ? false : true,
                         });
                       }}
                       filterOption={(inputValue, option) =>
@@ -356,11 +356,11 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       onClick={() => setOpenSelect3(!openSelect3)}
                       onBlur={() => setOpenSelect3(false)}
                       name="tipo_produto"
-                      onChange={value => {
+                      onChange={(value) => {
                         form.change("tipo_produto", value);
                         setErros({
                           ...erros,
-                          tipoProduto: value && value.length > 0 ? false : true
+                          tipoProduto: value && value.length > 0 ? false : true,
                         });
                       }}
                       filterOption={(inputValue, option) =>
@@ -389,11 +389,11 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       name="editais_destino"
                       selected={values.editais_destino_selecionados || []}
                       options={formatarParaMultiselect(opcoesEditaisDestino)}
-                      onSelectedChanged={values_ => {
+                      onSelectedChanged={(values_) => {
                         form.change(`editais_destino_selecionados`, values_);
                         setErros({
                           ...erros,
-                          editaisDestino: values_.length === 0
+                          editaisDestino: values_.length === 0,
                         });
                       }}
                       disableSearch={true}
@@ -401,7 +401,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                         selectSomeItems: "Selecione um edital",
                         allItemsAreSelected:
                           "Todos os itens estão selecionados",
-                        selectAll: "Todos"
+                        selectAll: "Todos",
                       }}
                       disabled={desabilitarCampos}
                     />
@@ -436,13 +436,13 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                         closeModal();
                       }}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Vincular"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                     />
                   </div>

@@ -5,13 +5,13 @@ export default function reducer(state = {}, action) {
     case LOAD_FILTRO_BUSCA:
       return {
         data: {
-          ...action.data
-        }
+          ...action.data,
+        },
       };
     default:
       return state;
   }
 }
 
-export const loadFiltroBusca = data => dispatch =>
+export const loadFiltroBusca = (data) => (dispatch) =>
   dispatch({ type: LOAD_FILTRO_BUSCA, data });

@@ -5,7 +5,7 @@ import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
-  CARD_TYPE_ENUM
+  CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { FILTRO_VISAO, PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { FILTRO } from "../const";
@@ -15,7 +15,7 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS,
-  SOLICITACOES_COM_QUESTIONAMENTO
+  SOLICITACOES_COM_QUESTIONAMENTO,
 } from "configs/constants";
 import { ajustarFormatoLog } from "../helper";
 import {
@@ -24,7 +24,7 @@ import {
   getSolicitacoesAutorizadasCodae,
   getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias,
   getSolicitacoesComQuestionamentoCodae,
-  getSolicitacoesPendentesAutorizacaoCodaeSemFiltro
+  getSolicitacoesPendentesAutorizacaoCodaeSemFiltro,
 } from "services/painelCODAE.service";
 import corrigeResumo from "helpers/corrigeDadosDoDashboard";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -35,13 +35,19 @@ import "./style.scss";
 import {
   updateDREAlimentacao,
   updateLoteAlimentacao,
-  updateTituloAlimentacao
+  updateTituloAlimentacao,
 } from "reducers/filtersAlimentacaoReducer";
 import { connect } from "react-redux";
 import { Spin } from "antd";
 import CardBody from "components/Shareable/CardBody";
+import {
+  JS_DATE_DEZEMBRO,
+  JS_DATE_FEVEREIRO,
+  JS_DATE_JANEIRO,
+  JS_DATE_JULHO,
+} from "constants/shared";
 
-export const DashboardCODAE = props => {
+export const DashboardCODAE = (props) => {
   const { cards, lotes, diretoriasRegionais, handleSubmit, meusDados } = props;
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
   const filtroPorVencimento = FILTRO.SEM_FILTRO;
@@ -52,9 +58,9 @@ export const DashboardCODAE = props => {
     ? [
         <Option key={0} value={""}>
           Filtrar por DRE
-        </Option>
+        </Option>,
       ].concat(
-        diretoriasRegionais.map(dre => {
+        diretoriasRegionais.map((dre) => {
           return (
             <Option key={dre.value} value={dre.value}>
               {dre.label}
@@ -68,9 +74,9 @@ export const DashboardCODAE = props => {
     ? [
         <Option key={0} value={""}>
           Filtrar por Lote
-        </Option>
+        </Option>,
       ].concat(
-        lotes.map(lote => {
+        lotes.map((lote) => {
           return (
             <Option value={lote.value} key={lote.value}>
               {lote.label}
@@ -83,12 +89,11 @@ export const DashboardCODAE = props => {
   const [collapsed, setCollapsed] = useState(true);
   const [filtros, setFiltros] = useState({});
   const [resumo, setResumo] = useState([]);
-  const [loadingPainelSolicitacoes, setLoadingPainelSolicitacoes] = useState(
-    false
-  );
+  const [loadingPainelSolicitacoes, setLoadingPainelSolicitacoes] =
+    useState(false);
   const [
     loadingAcompanhamentoSolicitacoes,
-    setLoadingAcompanhamentoSolicitacoes
+    setLoadingAcompanhamentoSolicitacoes,
   ] = useState(false);
 
   const [solicitacoesFiltradas, setSolicitacoesFiltradas] = useState({
@@ -96,48 +101,57 @@ export const DashboardCODAE = props => {
     questionadas: [],
     autorizadas: [],
     negadas: [],
-    canceladas: []
+    canceladas: [],
   });
 
+  const params_periodo = (params) => {
+    let parametros = { ...params };
+    let isAllUndefined = true;
+    for (let key in parametros) {
+      if (
+        key !== "limit" &&
+        key !== "offset" &&
+        parametros[key] !== undefined
+      ) {
+        isAllUndefined = false;
+        break;
+      }
+    }
+    if (isAllUndefined) {
+      parametros.periodo = [
+        JS_DATE_JANEIRO,
+        JS_DATE_FEVEREIRO,
+        JS_DATE_JULHO,
+        JS_DATE_DEZEMBRO,
+      ].includes(new Date().getMonth())
+        ? 30
+        : 7;
+    }
+    return parametros;
+  };
   const getSolicitacoesAsync = async (params = null) => {
-    let pendentesAutorizacaoListSolicitacao = [];
-    let canceladasListSolicitacao = [];
-    let negadasListSolicitacao = [];
-    let autorizadasListSolicitacao = [];
-    let questionamentosListSolicitacao = [];
-
     setLoadingAcompanhamentoSolicitacoes(true);
 
-    await getSolicitacoesPendentesAutorizacaoCodaeSemFiltro(params).then(
-      response => {
-        pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(
-          response.data.results
-        );
-      }
-    );
-
-    await getSolicitacoesCanceladasCodae(params).then(response => {
-      canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
-    });
-
-    await getSolicitacoesNegadasCodae(params).then(response => {
-      negadasListSolicitacao = ajustarFormatoLog(response.data.results);
-    });
-
-    await getSolicitacoesAutorizadasCodae(params).then(response => {
-      autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
-    });
-
-    await getSolicitacoesComQuestionamentoCodae(params).then(response => {
-      questionamentosListSolicitacao = ajustarFormatoLog(response.data.results);
-    });
+    const [
+      responsePendentesAutorizacao,
+      responseAutorizadas,
+      responseCanceladas,
+      responseNegadas,
+      responseQuestionamentos,
+    ] = await Promise.all([
+      getSolicitacoesPendentesAutorizacaoCodaeSemFiltro(params),
+      getSolicitacoesAutorizadasCodae(params_periodo(params)),
+      getSolicitacoesCanceladasCodae(params_periodo(params)),
+      getSolicitacoesNegadasCodae(params_periodo(params)),
+      getSolicitacoesComQuestionamentoCodae(params),
+    ]);
 
     setSolicitacoesFiltradas({
-      pendentes: pendentesAutorizacaoListSolicitacao,
-      questionadas: questionamentosListSolicitacao,
-      autorizadas: autorizadasListSolicitacao,
-      negadas: negadasListSolicitacao,
-      canceladas: canceladasListSolicitacao
+      pendentes: ajustarFormatoLog(responsePendentesAutorizacao.data.results),
+      autorizadas: ajustarFormatoLog(responseAutorizadas.data.results),
+      negadas: ajustarFormatoLog(responseNegadas.data.results),
+      canceladas: ajustarFormatoLog(responseCanceladas.data.results),
+      questionadas: ajustarFormatoLog(responseQuestionamentos.data.results),
     });
 
     setLoadingAcompanhamentoSolicitacoes(false);
@@ -149,11 +163,8 @@ export const DashboardCODAE = props => {
       filtroPorVencimento,
       visao,
       prepararParametros(values)
-    ).then(response => {
+    ).then((response) => {
       const resumo = response.data.results;
-      // // TODO melhorar essas duas linhas abaixo
-      resumo["Kit Lanche Unificado"] = resumo["Kit Lanche Passeio Unificado"];
-      delete resumo["Kit Lanche Passeio Unificado"];
       const correcaoOk = corrigeResumo(resumo);
       if (!correcaoOk) toastError("Erro na inclusão de dados da CEI");
       setResumo(resumo);
@@ -161,13 +172,13 @@ export const DashboardCODAE = props => {
     setLoadingPainelSolicitacoes(false);
   };
 
-  const onPesquisaChanged = values => {
+  const onPesquisaChanged = (values) => {
     carregaResumoPendencias(values);
     if (values.titulo && values.titulo.length > 2) {
       setTimeout(async () => {
         getSolicitacoesAsync({
           busca: values.titulo,
-          ...prepararParametros(values)
+          ...prepararParametros(values),
         });
       }, 500);
     } else {
@@ -177,29 +188,19 @@ export const DashboardCODAE = props => {
     }
   };
 
-  const linkTo = link => {
+  const linkTo = (link) => {
     let url =
       visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO ? `/${CODAE}/${link}` : "/";
 
-    return {
-      pathname: url,
-      state: {
-        prevPath: window.location.pathname,
-        filtros: filtros
-      }
-    };
+    return url;
   };
 
-  const prepararParametros = values => {
+  const prepararParametros = (values) => {
     setFiltros(values);
     const params = PARAMS;
     params["tipo_solicitacao"] = values.tipo_solicitacao;
     params["data_evento"] =
-      values.data_evento &&
-      values.data_evento
-        .split("/")
-        .reverse()
-        .join("-");
+      values.data_evento && values.data_evento.split("/").reverse().join("-");
     params["diretoria_regional"] = values.diretoria_regional;
     params["lote"] = values.lote;
     return params;
@@ -232,14 +233,14 @@ export const DashboardCODAE = props => {
             />
             <div className="card mt-3">
               <div className="card-body">
-                <div className="card-title font-weight-bold dashboard-card-title">
+                <div className="card-title fw-bold dashboard-card-title">
                   <div className="row">
                     <div className="col-3 mt-3 color-black">Pendências</div>
                     <div className="offset-3 col-3 my-auto">
                       <Field
                         component={ASelect}
                         showSearch
-                        onChange={value => {
+                        onChange={(value) => {
                           form.change(`diretoria_regional`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                           props.updateDREAlimentacao(value);
@@ -259,7 +260,7 @@ export const DashboardCODAE = props => {
                       <Field
                         component={ASelect}
                         showSearch
-                        onChange={value => {
+                        onChange={(value) => {
                           form.change(`lote`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                           props.updateLoteAlimentacao(value);
@@ -282,7 +283,13 @@ export const DashboardCODAE = props => {
                   {cards.map((card, key) => {
                     return resumo[card.titulo] ? (
                       <div key={key} className="col-6 pb-3">
-                        <Link to={linkTo(card.link)}>
+                        <Link
+                          to={linkTo(card.link)}
+                          state={{
+                            prevPath: window.location.pathname,
+                            filtros: filtros,
+                          }}
+                        >
                           <CardPendencia
                             cardTitle={card.titulo}
                             totalOfOrders={resumo[card.titulo]["TOTAL"] || 0}
@@ -297,7 +304,13 @@ export const DashboardCODAE = props => {
                       </div>
                     ) : (
                       <div key={key} className="col-6 pb-3">
-                        <Link to={linkTo(card.link)}>
+                        <Link
+                          to={linkTo(card.link)}
+                          state={{
+                            prevPath: window.location.pathname,
+                            filtros: filtros,
+                          }}
+                        >
                           <CardPendencia
                             cardTitle={card.titulo}
                             totalOfOrders={0}
@@ -316,8 +329,9 @@ export const DashboardCODAE = props => {
             <CardBody
               exibirFiltrosDataEventoETipoSolicitacao={true}
               titulo={"Acompanhamento solicitações"}
+              filtrosDesabilitados={loadingAcompanhamentoSolicitacoes}
               dataAtual={dataAtual()}
-              onChange={value => {
+              onChange={(value) => {
                 clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(async () => {
                   onPesquisaChanged(value);
@@ -390,19 +404,16 @@ export const DashboardCODAE = props => {
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  updateDREAlimentacao: dreAlimentacao => {
+const mapDispatchToProps = (dispatch) => ({
+  updateDREAlimentacao: (dreAlimentacao) => {
     dispatch(updateDREAlimentacao(dreAlimentacao));
   },
-  updateLoteAlimentacao: loteAlimentacao => {
+  updateLoteAlimentacao: (loteAlimentacao) => {
     dispatch(updateLoteAlimentacao(loteAlimentacao));
   },
-  updateTituloAlimentacao: tituloAlimentacao => {
+  updateTituloAlimentacao: (tituloAlimentacao) => {
     dispatch(updateTituloAlimentacao(tituloAlimentacao));
-  }
+  },
 });
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(DashboardCODAE);
+export default connect(null, mapDispatchToProps)(DashboardCODAE);

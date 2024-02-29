@@ -4,7 +4,7 @@ import Page from "components/Shareable/Page/Page";
 import { Container } from "components/screens/DashboardTerceirizada/DashboardTerceirizadaContainer";
 import { HOME } from "./constants";
 
-export default props => (
+export default (props) => (
   <div>
     <Page>
       <Breadcrumb home={HOME} />

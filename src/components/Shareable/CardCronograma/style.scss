@@ -1,4 +1,4 @@
-@import "../../../styles/variables.scss";
+@import "styles/variables.scss";
 
 .card-title-status {
   font-weight: 600;
@@ -14,7 +14,7 @@
   }
 }
 
-.card-panel {
+.card-panel-cronograma {
   border-left: 10px solid !important;
   i {
     padding: 0 10px;
@@ -25,8 +25,8 @@
   p.data {
     padding: 0 10px;
     font-weight: bold;
-    font-size: 12px;
-    color: #707683;
+    font-size: 13px;
+    color: #42474a;
     margin-bottom: 0.3rem;
     span {
       font-weight: normal;
@@ -81,6 +81,13 @@
     border-left-color: $redCard !important;
     i {
       color: $redCard;
+    }
+  }
+
+  &.card-alteracoes-codae {
+    border-left-color: $orangeLight !important;
+    i {
+      color: $orangeLight;
     }
   }
 }

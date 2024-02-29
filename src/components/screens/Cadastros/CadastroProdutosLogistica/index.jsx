@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   cadastrarProdutoEdital,
-  atualizarProdutoEdital
+  atualizarProdutoEdital,
 } from "services/produto.service";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -11,24 +11,24 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   required,
   alphaNumericAndSingleSpaceBetweenCharacters,
-  noSpaceStartOrEnd
+  noSpaceStartOrEnd,
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { composeValidators, statusProdutos } from "helpers/utilities";
 import "./style.scss";
 import { CADASTROS, CONFIGURACOES, PRODUTOS } from "configs/constants";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
 export default () => {
   const [produto, setProduto] = useState();
   const [carregando, setCarregando] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -38,16 +38,14 @@ export default () => {
   }, [location]);
 
   const voltarParaProdutos = () =>
-    history.push({
-      pathname: `/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`
-    });
+    navigate(`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`);
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues) => {
     setCarregando(true);
     const payload = {
       nome: formValues.nome,
       ativo: formValues.status,
-      tipo_produto: "LOGISTICA"
+      tipo_produto: "LOGISTICA",
     };
     if (produto) {
       await atualizarProdutoEdital(payload, produto.uuid)
@@ -55,7 +53,7 @@ export default () => {
           toastSuccess("Produto atualizado com sucesso!");
           voltarParaProdutos();
         })
-        .catch(error => {
+        .catch((error) => {
           toastError(error.response.data[0]);
         });
     } else {
@@ -64,7 +62,7 @@ export default () => {
           toastSuccess("Produto cadastrado com sucesso!");
           voltarParaProdutos();
         })
-        .catch(error => {
+        .catch((error) => {
           toastError(error.response.data[0]);
         });
     }
@@ -134,14 +132,14 @@ export default () => {
                       texto="Salvar"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="float-right ml-3"
+                      className="float-end ms-3"
                       disabled={submitting}
                     />
                     <Botao
                       texto="Cancelar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-right ml-3"
+                      className="float-end ms-3"
                       onClick={() => voltarParaProdutos()}
                     />
                   </div>

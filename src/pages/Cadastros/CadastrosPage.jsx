@@ -6,7 +6,7 @@ import { CADASTROS, CONFIGURACOES } from "../../configs/constants";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}`,
-  titulo: "Cadastros"
+  titulo: "Cadastros",
 };
 
 export default () => (

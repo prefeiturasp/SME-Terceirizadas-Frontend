@@ -11,30 +11,30 @@ export const Container = () => {
   const [visaoPor] = useState([
     {
       nome: "Tipo de Solicitação",
-      uuid: "tipo_solicitacao"
+      uuid: "tipo_solicitacao",
     },
     {
       nome: "DRE",
-      uuid: "dre"
+      uuid: "dre",
     },
     {
       nome: "Lote",
-      uuid: "lote"
-    }
+      uuid: "lote",
+    },
   ]);
   const [filtroPor] = useState([
     {
       nome: "Sem filtro",
-      uuid: "sem_filtro"
+      uuid: "sem_filtro",
     },
     {
       nome: "Semana",
-      uuid: "daqui_a_7_dias"
+      uuid: "daqui_a_7_dias",
     },
     {
       nome: "Mês",
-      uuid: "daqui_a_30_dias"
-    }
+      uuid: "daqui_a_30_dias",
+    },
   ]);
 
   const [lotes, setLotes] = useState(null);

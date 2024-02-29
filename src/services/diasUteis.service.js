@@ -1,20 +1,25 @@
 import axios from "./_base";
 import { API_URL } from "../constants/config";
+import { ErrorHandlerFunction } from "./service-helpers";
 
-export const getDiasUteis = async params => {
+export const getDiasUteis = async (params) => {
   const url = `${API_URL}/dias-uteis/`;
-  try {
-    return await axios.get(url, { params });
-  } catch (error) {
-    console.log(error);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 
 export const getFeriadosAno = async () => {
   const url = `${API_URL}/feriados-ano/`;
-  try {
-    return await axios.get(url);
-  } catch (error) {
-    console.log(error);
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
+};
+
+export const getFeriadosAnoAtualEProximo = async () => {
+  return await axios.get(`/feriados-ano/ano-atual-e-proximo/`);
 };

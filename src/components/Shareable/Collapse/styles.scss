@@ -1,0 +1,100 @@
+@import "styles/variables.scss";
+
+.accordionComponent > .card {
+  border-radius: 5px !important;
+}
+
+.accordionComponent > .card > .card-header {
+  border-radius: 5px !important;
+  margin-bottom: 0 !important;
+  background-color: #fff;
+}
+
+.accordionComponent .card-header,
+.accordionComponent .card-body {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.accordionComponent {
+  .card-header {
+    height: 50px;
+    border-left: #198459 solid 8px;
+
+    .card-header-content {
+      height: 100%;
+      align-content: center;
+      justify-content: space-between;
+      color: #42474a;
+
+      .flex {
+        display: flex;
+      }
+
+      .flex-end {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .texto-obrigatorio {
+        font-size: 12px;
+        margin: auto 0;
+        color: #686868;
+        font-weight: normal;
+      }
+
+      .titulo {
+        margin: auto 0;
+        padding: 0;
+      }
+
+      .text-end {
+        padding: 0;
+      }
+    }
+  }
+
+  .span-icone-toogle {
+    color: #42474a;
+  }
+
+  .card {
+    overflow: visible !important;
+  }
+
+  .required-asterisk {
+    color: $red !important;
+    padding-right: 5px;
+  }
+
+  .tags {
+    .tag {
+      border: 1px solid;
+      border-radius: 16px;
+      text-align: center;
+      padding: 4px 12px;
+
+      i {
+        padding-right: 6px;
+      }
+    }
+
+    .pendente {
+      color: $grayPlaceholder;
+      border-color: $grayPlaceholder;
+      font-size: 13px;
+    }
+
+    .correcao {
+      color: $orange;
+      border-color: $orange;
+      font-size: 13px;
+    }
+
+    .collapse-conferido {
+      color: $white;
+      border-color: $greenDark;
+      background-color: $greenDark;
+      font-size: 13px;
+    }
+  }
+}

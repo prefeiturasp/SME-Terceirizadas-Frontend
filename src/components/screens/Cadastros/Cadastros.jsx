@@ -13,7 +13,7 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhEmpresaTerceirizada,
 } from "../../../helpers/utilities";
 
 class Cadastros extends Component {
@@ -23,7 +23,7 @@ class Cadastros extends Component {
       hoverLotes: false,
       hoverEmpresas: false,
       hoverEdital: false,
-      hoverHorarios: false
+      hoverHorarios: false,
     };
     this.cardEdital = React.createRef();
   }
@@ -34,7 +34,7 @@ class Cadastros extends Component {
       hoverEmpresas,
       hoverTipoAlimentacao,
       hoverLotes,
-      hoverHorarios
+      hoverHorarios,
     } = this.state;
     const USUARIO_CODAE =
       usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAEDietaEspecial();

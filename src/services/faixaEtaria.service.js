@@ -8,7 +8,7 @@ export const criarFaixasEtarias = async (
 ) => {
   return await axios.post(`/${ENDPOINT.FAIXAS_ETARIAS}/`, {
     faixas_etarias_ativadas,
-    justificativa
+    justificativa,
   });
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-const ObservacoesAlteracao = observacoes => {
+const ObservacoesAlteracao = (observacoes) => {
   return (
     <div className="row">
       <div className="col-md-12">
@@ -8,7 +8,7 @@ const ObservacoesAlteracao = observacoes => {
         <div
           className="orientacoes"
           dangerouslySetInnerHTML={{
-            __html: observacoes.observacoes
+            __html: observacoes.observacoes,
           }}
         />
       </div>

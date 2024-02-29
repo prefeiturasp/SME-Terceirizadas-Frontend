@@ -6,7 +6,7 @@ import Botao from "components/Shareable/Botao";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
@@ -17,10 +17,10 @@ export const ModalAprovarSolicitacaoAlteracao = ({ ...props }) => {
     solicitacao,
     endpoint,
     loadSolicitacao,
-    tipoSolicitacao
+    tipoSolicitacao,
   } = props;
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     values.justificativa =
       values.justificativa && values.justificativa.length > 0
         ? values.justificativa
@@ -74,14 +74,14 @@ export const ModalAprovarSolicitacaoAlteracao = ({ ...props }) => {
                   closeModal();
                 }}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
+                className="ms-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.BUTTON}
                 onClick={() => onSubmit(values)}
                 style={BUTTON_STYLE.GREEN}
-                className="ml-3"
+                className="ms-3"
               />
             </Modal.Footer>
           </Modal>

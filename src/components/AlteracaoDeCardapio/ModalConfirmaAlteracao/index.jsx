@@ -3,7 +3,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../Shareable/Botao/constants";
 
-export default props => (
+export default (props) => (
   <Modal show={props.showModal} onHide={props.closeModal}>
     <Modal.Header closeButton>
       <Modal.Title>Atenção</Modal.Title>
@@ -22,14 +22,14 @@ export default props => (
           props.closeModal();
         }}
         style={BUTTON_STYLE.BLUE}
-        className="ml-3"
+        className="ms-3"
       />
       <Botao
         texto="NÃO"
         type={BUTTON_TYPE.BUTTON}
         onClick={props.closeModal}
         style={BUTTON_STYLE.BLUE}
-        className="ml-3"
+        className="ms-3"
       />
     </Modal.Footer>
   </Modal>

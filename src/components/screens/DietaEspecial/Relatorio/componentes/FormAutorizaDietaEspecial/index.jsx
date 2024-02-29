@@ -7,7 +7,7 @@ import { TIPO_SOLICITACAO_DIETA } from "constants/shared";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
 import { ESCOLA, CODAE } from "configs/constants";
@@ -22,7 +22,7 @@ import {
   atualizaDietaEspecial,
   getSolicitacoesDietaEspecial,
   CODAEAutorizaDietaEspecial,
-  CODAEAtualizaProtocoloDietaEspecial
+  CODAEAtualizaProtocoloDietaEspecial,
 } from "services/dietaEspecial.service";
 import { getSubstitutos } from "services/produto.service";
 import { getMotivosNegacaoDietaEspecial } from "services/painelNutricionista.service";
@@ -43,11 +43,11 @@ import ModalAutorizaAlteracaoUE from "./componentes/ModalAutorizaAlteracaoUE";
 import {
   formataOpcoesClassificacaoDieta,
   formataSubstituicoes,
-  formataAlergias
+  formataAlergias,
 } from "./helper";
 import {
   obtemIdentificacaoNutricionista,
-  gerarParametrosConsulta
+  gerarParametrosConsulta,
 } from "helpers/utilities";
 import { getStatusSolicitacoesVigentes } from "helpers/dietaEspecial";
 import { formatarSolicitacoesVigentes } from "../../../Escola/helper";
@@ -59,7 +59,7 @@ const FormAutorizaDietaEspecial = ({
   visao,
   dietaCancelada,
   editar,
-  cancelar
+  cancelar,
 }) => {
   const [diagnosticos, setDiagnosticos] = useState(undefined);
   const [alergiasError, setAlergiasError] = useState(false);
@@ -70,16 +70,14 @@ const FormAutorizaDietaEspecial = ({
   const [alimentos, setAlimentos] = useState(undefined);
   const [produtos, setProdutos] = useState(undefined);
   const [showModalNegaDieta, setShowModalNegaDieta] = useState(false);
-  const [
-    showAutorizarAlteracaoUEModal,
-    setShowAutorizarAlteracaoUEModal
-  ] = useState(false);
+  const [showAutorizarAlteracaoUEModal, setShowAutorizarAlteracaoUEModal] =
+    useState(false);
   const [showAutorizarModal, setShowAutorizarModal] = useState(false);
   const [solicitacoesVigentes, setSolicitacoesVigentes] = useState(undefined);
   const [diagnosticosSelecionados, setDiagnosticosSelecionados] = useState([]);
   const tipoUsuario = localStorage.getItem("tipo_perfil");
 
-  const fetchData = async dietaEspecial => {
+  const fetchData = async (dietaEspecial) => {
     const respAlergiasIntolerancias = await getAlergiasIntolerancias();
     if (respAlergiasIntolerancias.status === HTTP_STATUS.OK) {
       setDiagnosticos(respAlergiasIntolerancias.results);
@@ -102,8 +100,8 @@ const FormAutorizaDietaEspecial = ({
       let optionsProtocolo = [
         {
           nome_protocolo: "Selecione um protocolo",
-          uuid: "selecione"
-        }
+          uuid: "selecione",
+        },
       ];
       optionsProtocolo = optionsProtocolo.concat(
         respNomesProtocolos.data.results
@@ -113,16 +111,14 @@ const FormAutorizaDietaEspecial = ({
       toastError("Houve um erro ao carregar Nomes dos Protocolos da Dieta");
     }
 
-    const respAlimentos = await getAlimentos({
-      tipo: dietaEspecial.escola.tipo_gestao.nome === "TERC TOTAL" ? "E" : "P"
-    });
+    const respAlimentos = await getAlimentos();
     if (respAlimentos.status === HTTP_STATUS.OK) {
       setAlimentos(respAlimentos.data);
     } else {
       toastError("Houve um erro ao carregar Alimentos");
     }
 
-    if (dietaEspecial.escola.tipo_gestao.nome === "TERC TOTAL") {
+    if (!respAlimentos) {
       const respSubstitutos = await getSubstitutos();
       if (respSubstitutos.status === HTTP_STATUS.OK) {
         setProdutos(respSubstitutos.data.results);
@@ -130,11 +126,11 @@ const FormAutorizaDietaEspecial = ({
         toastError("Houve um erro ao carregar Alimentos Substitutos");
       }
     } else {
-      const substitutos = respAlimentos.data.map(alimento =>
+      const substitutos = respAlimentos.data.map((alimento) =>
         Object.assign({}, alimento, {
           nome: alimento.marca
             ? `${alimento.nome} (${alimento.marca.nome})`
-            : `${alimento.nome}`
+            : `${alimento.nome}`,
         })
       );
       setProdutos(substitutos);
@@ -142,13 +138,13 @@ const FormAutorizaDietaEspecial = ({
 
     const params = gerarParametrosConsulta({
       aluno: dietaEspecial.aluno.uuid,
-      status: getStatusSolicitacoesVigentes()
+      status: getStatusSolicitacoesVigentes(),
     });
     const respSolicitacoesVigentes = await getSolicitacoesDietaEspecial(params);
     if (respSolicitacoesVigentes.status === HTTP_STATUS.OK) {
       const resultado = formatarSolicitacoesVigentes(
         respSolicitacoesVigentes.data.results.filter(
-          solicitacaoVigente => solicitacaoVigente.uuid !== dietaEspecial.uuid
+          (solicitacaoVigente) => solicitacaoVigente.uuid !== dietaEspecial.uuid
         )
       );
       setSolicitacoesVigentes(resultado);
@@ -161,7 +157,7 @@ const FormAutorizaDietaEspecial = ({
     setAlergias(formataAlergias(dietaEspecial));
   };
 
-  const salvaRascunho = async values => {
+  const salvaRascunho = async (values) => {
     values.alergias_intolerancias = diagnosticosSelecionados;
     if (protocoloPadrao) {
       values.nome_protocolo = protocoloPadrao.nome_protocolo;
@@ -186,7 +182,7 @@ const FormAutorizaDietaEspecial = ({
     onAutorizarOuNegar();
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     values.alergias_intolerancias = diagnosticosSelecionados;
     if (!diagnosticosSelecionados.length) {
       return;
@@ -219,13 +215,16 @@ const FormAutorizaDietaEspecial = ({
     let { nome_protocolo, data_termino } = values;
     if (nome_protocolo)
       if (nome_protocolo[0] === "") nome_protocolo.splice(0, 1);
-    if (
+    if (!data_termino) {
+      delete values.data_termino;
+    } else if (
       data_termino &&
+      data_termino.includes("/") &&
       dietaEspecial.tipo_solicitacao ===
         TIPO_SOLICITACAO_DIETA.ALUNO_NAO_MATRICULADO
     ) {
       let data = moment(data_termino, "DD/MM/YYYY");
-      data_termino = moment(data).format("YYYY-MM-DD");
+      values.data_termino = moment(data).format("YYYY-MM-DD");
     }
     const response = editar
       ? await CODAEAtualizaProtocoloDietaEspecial(dietaEspecial.uuid, values)
@@ -244,11 +243,14 @@ const FormAutorizaDietaEspecial = ({
     }
     if (editar) {
       cancelar();
+      onAutorizarOuNegar(true);
+    } else {
+      onAutorizarOuNegar(false);
     }
-    onAutorizarOuNegar();
   };
 
   const getInitialValues = () => {
+    if (!dietaEspecial) return {};
     const substituicoes = formataSubstituicoes(dietaEspecial);
     let data_termino_formatada = undefined;
     if (
@@ -269,7 +271,7 @@ const FormAutorizaDietaEspecial = ({
       data_termino:
         data_termino_formatada || dietaEspecial.data_termino || undefined,
       informacoes_adicionais: dietaEspecial.informacoes_adicionais,
-      registro_funcional_nutricionista: obtemIdentificacaoNutricionista()
+      registro_funcional_nutricionista: obtemIdentificacaoNutricionista(),
     };
   };
 
@@ -288,14 +290,14 @@ const FormAutorizaDietaEspecial = ({
 
   const setDiagnosticosDaDieta = () => {
     const diagnosticosDieta = dietaEspecial.alergias_intolerancias.map(
-      alergia => {
+      (alergia) => {
         return alergia.id.toString();
       }
     );
     setDiagnosticosSelecionados(diagnosticosDieta);
   };
 
-  const validaAlergias = form => {
+  const validaAlergias = (form) => {
     if (diagnosticosSelecionados.length) {
       setAlergiasError(false);
     } else {
@@ -390,7 +392,7 @@ const FormAutorizaDietaEspecial = ({
                   visao === ESCOLA &&
                   tipoUsuario === '"dieta_especial"' && (
                     <EscolaCancelaDietaEspecial
-                      uuid={dietaEspecial.uuid}
+                      uuid={dietaEspecial?.uuid}
                       onCancelar={() => onAutorizarOuNegar()}
                     />
                   )}
@@ -404,7 +406,7 @@ const FormAutorizaDietaEspecial = ({
                         type={BUTTON_TYPE.BUTTON}
                         onClick={() => validaAlergias(form)}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3 float-right"
+                        className="ms-3 float-end"
                         disabled={submitting}
                       />
                       <Botao
@@ -412,7 +414,7 @@ const FormAutorizaDietaEspecial = ({
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.RED_OUTLINE}
                         onClick={() => setShowModalNegaDieta(true)}
-                        className="ml-3 float-right"
+                        className="ms-3 float-end"
                         disabled={submitting}
                       />
                     </>
@@ -428,7 +430,7 @@ const FormAutorizaDietaEspecial = ({
                         type={BUTTON_TYPE.BUTTON}
                         onClick={() => validaAlergias(form)}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3 float-right"
+                        className="ms-3 float-end"
                         disabled={submitting}
                       />
                       <Botao
@@ -436,7 +438,7 @@ const FormAutorizaDietaEspecial = ({
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.RED_OUTLINE}
                         onClick={() => cancelar()}
-                        className="ml-3 float-right"
+                        className="ms-3 float-end"
                         disabled={submitting}
                       />
                     </>
@@ -463,7 +465,7 @@ const FormAutorizaDietaEspecial = ({
         showModal={showModalNegaDieta}
         closeModal={() => setShowModalNegaDieta(false)}
         onNegar={onAutorizarOuNegar}
-        uuid={dietaEspecial.uuid}
+        uuid={dietaEspecial?.uuid}
         getMotivos={() => getMotivosNegacaoDietaEspecial()}
         submitModal={(uuid, values) => CODAENegaDietaEspecial(uuid, values)}
         fieldJustificativa={"justificativa_negacao"}

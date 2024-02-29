@@ -8,7 +8,7 @@ import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 
@@ -18,7 +18,7 @@ export default ({ filtros, setFiltros }) => {
   const initialValues = {};
   const inicioResultado = useRef();
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     const filtros = { ...values };
     if (filtros.data_inicial)
       filtros.data_inicial = moment(filtros.data_inicial).format("DD/MM/YYYY");
@@ -27,7 +27,7 @@ export default ({ filtros, setFiltros }) => {
     setFiltros({ ...filtros });
   };
 
-  const handleClickBtnCategorias = async e => {
+  const handleClickBtnCategorias = async (e) => {
     const filtrosNovo = { ...filtros };
     if (e === "todos") {
       delete filtrosNovo.lido;
@@ -94,16 +94,16 @@ export default ({ filtros, setFiltros }) => {
                   options={[
                     {
                       value: "ALERTA",
-                      label: "Alerta"
+                      label: "Alerta",
                     },
                     {
                       value: "AVISO",
-                      label: "Aviso"
+                      label: "Aviso",
                     },
                     {
                       value: "PENDENCIA",
-                      label: "Pendência"
-                    }
+                      label: "Pendência",
+                    },
                   ]}
                 />
               </div>
@@ -149,7 +149,7 @@ export default ({ filtros, setFiltros }) => {
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 disabled={submitting}
                 onClick={() => inicioResultado.current.scrollIntoView()}
               />
@@ -158,7 +158,7 @@ export default ({ filtros, setFiltros }) => {
                 texto="Limpar Filtros"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3"
+                className="float-end ms-3"
                 onClick={() => {
                   form.reset(initialValues);
                   setFiltros(initialValues);

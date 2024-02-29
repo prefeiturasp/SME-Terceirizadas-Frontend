@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import { Collapse } from "react-collapse";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import {
   stringSeparadaPorVirgulas,
-  gerarLinkRelatorio
+  gerarLinkRelatorio,
 } from "helpers/utilities";
 import "./style.scss";
 
@@ -13,7 +13,7 @@ import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "../../../Shareable/Botao/constants";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 
@@ -23,14 +23,14 @@ export class CardHistorico extends Component {
     this.state = {
       collapsed: true,
       redirect: false,
-      pedidos: []
+      pedidos: [],
     };
     this.selecionarTodos = this.selecionarTodos.bind(this);
   }
 
   componentDidMount() {
     this.setState({
-      pedidos: this.props.pedidos
+      pedidos: this.props.pedidos,
     });
   }
 
@@ -58,7 +58,7 @@ export class CardHistorico extends Component {
   redirectTo(pedido) {
     if (this.state.redirect) {
       return (
-        <Redirect to={gerarLinkRelatorio("inclusao-de-alimentacao", pedido)} />
+        <Navigate to={gerarLinkRelatorio("inclusao-de-alimentacao", pedido)} />
       );
     }
   }
@@ -71,10 +71,10 @@ export class CardHistorico extends Component {
         <div className="card-header">
           <div className="row">
             <div className="col-11">
-              <i className="fas fa-history mr-2" />
+              <i className="fas fa-history me-2" />
               {titulo}
             </div>
-            <div className="pl-5 col-1">
+            <div className="ps-5 col-1">
               <ToggleExpandir
                 onClick={() => this.setState({ collapsed: !collapsed })}
                 ativo={!collapsed}
@@ -107,7 +107,7 @@ export class CardHistorico extends Component {
                     titulo="imprimir"
                     style={BUTTON_STYLE.BLUE}
                     icon={BUTTON_ICON.PRINT}
-                    className="float-right"
+                    className="float-end"
                   />
                 </div>
               </div>
@@ -177,13 +177,13 @@ export class CardHistorico extends Component {
 
 const CardHistoricoForm = reduxForm({
   form: "cardHistoricoForm",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(CardHistorico);
 
 const selector = formValueSelector("cardHistoricoForm");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    selecionar_todos: selector(state, "selecionar_todos")
+    selecionar_todos: selector(state, "selecionar_todos"),
   };
 };
 

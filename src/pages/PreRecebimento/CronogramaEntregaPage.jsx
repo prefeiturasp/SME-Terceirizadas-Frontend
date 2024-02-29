@@ -7,14 +7,14 @@ import CronogramaEntrega from "components/screens/PreRecebimento/CronogramaEntre
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`,
-  titulo: "Cronograma de Entrega"
+  titulo: "Cronograma de Entrega",
 };
 
 const anteriores = [
   {
     href: `/`,
-    titulo: "Pré-Recebimento"
-  }
+    titulo: "Pré-Recebimento",
+  },
 ];
 
 export default () => (

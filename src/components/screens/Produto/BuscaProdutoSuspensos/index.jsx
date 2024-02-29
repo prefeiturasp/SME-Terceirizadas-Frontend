@@ -10,7 +10,7 @@ import ContadorResultado from "./components/ContadorResultado";
 import TabelaResultado from "./components/TabelaResultado";
 import {
   STATUS_CODAE_SUSPENDEU,
-  STATUS_CODAE_AUTORIZOU_RECLAMACAO
+  STATUS_CODAE_AUTORIZOU_RECLAMACAO,
 } from "configs/constants";
 import "./styles.scss";
 import { getMeusDados } from "services/perfil.service";
@@ -47,7 +47,7 @@ const BuscaProdutoSuspensos = () => {
         const paramsConsultaTotal = gerarParametrosConsulta({
           status: [STATUS_CODAE_SUSPENDEU, STATUS_CODAE_AUTORIZOU_RECLAMACAO],
           page: page,
-          page_size: PAGE_SIZE
+          page_size: PAGE_SIZE,
         });
         const responseTotalSuspensos = await getProdutosRelatorioSuspenso(
           paramsConsultaTotal
@@ -63,11 +63,12 @@ const BuscaProdutoSuspensos = () => {
       const params = gerarParametrosConsulta({
         ...filtros,
         page: page,
-        page_size: PAGE_SIZE
+        page_size: PAGE_SIZE,
       });
       const response = await getProdutosRelatorioSuspenso(params);
       setProdutos(response.data.results);
       setProdutosCount(response.data.count);
+      setTotalSuspensos(response.data.count);
       setCarregando(false);
     }
 
@@ -75,11 +76,11 @@ const BuscaProdutoSuspensos = () => {
     if (filtros) fetchData();
   }, [filtros, meusDados]);
 
-  const onSubmitForm = formValues => {
+  const onSubmitForm = (formValues) => {
     setPage(1);
     setFiltros({
       ...formValues,
-      status: [STATUS_CODAE_SUSPENDEU, STATUS_CODAE_AUTORIZOU_RECLAMACAO]
+      status: [STATUS_CODAE_SUSPENDEU, STATUS_CODAE_AUTORIZOU_RECLAMACAO],
     });
   };
 

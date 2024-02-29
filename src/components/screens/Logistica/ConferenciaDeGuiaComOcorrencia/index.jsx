@@ -16,21 +16,21 @@ import {
   apenasLetras,
   alphaNumeric,
   peloMenosUmNumeroEUmaLetra,
-  numericInteger
+  numericInteger,
 } from "../../../../helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import {
   CONFERENCIA_GUIA,
   CONFERENCIA_GUIA_RESUMO_FINAL,
-  LOGISTICA
+  LOGISTICA,
 } from "configs/constants";
 import { composeValidators } from "../../../../helpers/utilities";
 import { toastError } from "components/Shareable/Toast/dialogs";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import "./styles.scss";
 
@@ -58,20 +58,20 @@ export default () => {
   const inputFile = useRef([]);
   const autoFillButton = useRef(null);
   const editarButton = useRef(null);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [flagAtraso, setFlagAtraso] = useState(false);
   const [flagAlimento, setFlagAlimento] = useState([]);
 
-  const filtrarAlimentos = guia => {
+  const filtrarAlimentos = (guia) => {
     let listaAlimentos = localStorage.alimentosConferencia;
-    guia.alimentos = guia.alimentos.filter(item =>
+    guia.alimentos = guia.alimentos.filter((item) =>
       listaAlimentos.includes(item.nome_alimento)
     );
     return guia;
   };
 
-  const carregarGuia = async uuid => {
+  const carregarGuia = async (uuid) => {
     let response;
     try {
       setCarregando(true);
@@ -81,7 +81,7 @@ export default () => {
       setInitialValues({
         numero_guia: response.data.numero_guia,
         data_entrega: response.data.data_entrega,
-        hora_recebimento: "00:00:00"
+        hora_recebimento: "00:00:00",
       });
       setCarregando(false);
     } catch (e) {
@@ -90,7 +90,7 @@ export default () => {
     }
   };
 
-  const escolherHora = hora => {
+  const escolherHora = (hora) => {
     if (hora) {
       const horario = moment(hora).format("HH:mm:ss");
       setHoraRecebimento(horario);
@@ -101,7 +101,7 @@ export default () => {
     }
   };
 
-  const onSubmit = async values => {
+  const onSubmit = async (values) => {
     values.guia = uuid;
     values.arquivo = arquivoAtual;
 
@@ -126,12 +126,10 @@ export default () => {
     }
     localStorage.setItem("valoresConferencia", JSON.stringify(valoresForm));
     localStorage.setItem("guiaConferencia", JSON.stringify(guia));
-    history.push(
-      `/${LOGISTICA}/${CONFERENCIA_GUIA_RESUMO_FINAL}?editar=${edicao}`
-    );
+    navigate(`/${LOGISTICA}/${CONFERENCIA_GUIA_RESUMO_FINAL}?editar=${edicao}`);
   };
 
-  const validaDataEntrega = value => {
+  const validaDataEntrega = (value) => {
     if (value === null) return "Digite uma data válida";
     if (guia.status === "Insucesso de entrega") return undefined;
   };
@@ -152,7 +150,7 @@ export default () => {
         "Selecionar ocorrência que justifique o recebimento menor que o previsto.";
   };
 
-  const validaObservacoes = (values, index) => value => {
+  const validaObservacoes = (values, index) => (value) => {
     if (
       !values[`ocorrencias_${index}`] ||
       !values[`ocorrencias_${index}`].length
@@ -181,46 +179,46 @@ export default () => {
     } else {
       if (values[`ocorrencias_${index}`] && flagAtraso) {
         values[`ocorrencias_${index}`] = values[`ocorrencias_${index}`].filter(
-          o => o !== "ATRASO_ENTREGA"
+          (o) => o !== "ATRASO_ENTREGA"
         );
         setFlagAtraso(false);
       }
     }
   };
 
-  const comparaDataEntrega = value => {
+  const comparaDataEntrega = (value) => {
     let dataPrevista = moment(guia.data_entrega, "DD/MM/YYYY");
     let dataReal = moment(value, "DD/MM/YYYY");
     if (moment(dataReal).isAfter(dataPrevista)) return true;
     else return false;
   };
 
-  const validaHoraRecebimento = value => {
+  const validaHoraRecebimento = (value) => {
     value = HoraRecebimentoAlterada ? HoraRecebimento : undefined;
     return value !== undefined ? "" : "Campo obrigatório";
   };
 
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
-    const embalagensFiltradas = embalagens.filter(value => {
+    const embalagensFiltradas = embalagens.filter((value) => {
       return value.tipo_embalagem.toUpperCase() === tipo;
     });
     if (embalagensFiltradas.length) return embalagensFiltradas[0];
     else return false;
   };
 
-  const removeFile = index => () => {
+  const removeFile = (index) => () => {
     let arquivos = arquivoAtual;
     arquivos[index] = null;
     setArquivoAtual(arquivos);
   };
 
-  const setFiles = index => files => {
+  const setFiles = (index) => (files) => {
     let arquivos = arquivoAtual;
     arquivos[index] = files;
     setArquivoAtual(arquivos);
   };
 
-  const validaStatus = values => {
+  const validaStatus = (values) => {
     if (guia.alimentos)
       guia.alimentos.forEach((item, index) => {
         let recebidos_fechada = parseInt(values[`recebidos_fechada_${index}`]);
@@ -292,7 +290,7 @@ export default () => {
               : [];
             ocorrenciasApagadas[index] = [
               ...oldOcorrenciasApagadas,
-              ...values[`ocorrencias_${index}`]
+              ...values[`ocorrencias_${index}`],
             ];
           }
 
@@ -318,7 +316,7 @@ export default () => {
       });
   };
 
-  const carregarLocalStorage = values => {
+  const carregarLocalStorage = (values) => {
     setCarregando(true);
 
     let valoresConf = JSON.parse(localStorage.getItem("valoresConferencia"));
@@ -355,7 +353,7 @@ export default () => {
     setCarregando(false);
   };
 
-  const carregarLocalStorageEdicao = values => {
+  const carregarLocalStorageEdicao = (values) => {
     setCarregando(true);
     let conferencia = JSON.parse(localStorage.getItem("conferenciaEdicao"));
 
@@ -374,8 +372,8 @@ export default () => {
         item.arquivo = [
           {
             nome: "imagem.png",
-            arquivo: item.arquivo
-          }
+            arquivo: item.arquivo,
+          },
         ];
         let arquivos = arquivoAtual;
         arquivos[index] = item.arquivo;
@@ -407,7 +405,7 @@ export default () => {
     if (arquivoAtual[index])
       inputFile.current[index].setState({ files: arquivoAtual[index] });
     setCollapseAlimentos({
-      [uuid]: !collapseAlimentos[uuid]
+      [uuid]: !collapseAlimentos[uuid],
     });
   };
 
@@ -417,14 +415,15 @@ export default () => {
       `recebidos_fracionada_${index}`,
       `ocorrencias_${index}`,
       `observacoes_${index}`,
-      `status_${index}`
+      `status_${index}`,
     ];
-    if (errorsNameList.some(r => Object.keys(errors).includes(r))) return "red";
+    if (errorsNameList.some((r) => Object.keys(errors).includes(r)))
+      return "red";
     else return "green";
   };
 
   const cancelarConferencia = () => {
-    history.push(`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`);
+    navigate(`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`);
   };
 
   useEffect(() => {
@@ -516,7 +515,7 @@ export default () => {
                       name="hora_recebimento"
                       placeholder="Selecione a Hora"
                       horaAtual={HoraRecebimento}
-                      onChangeFunction={data => {
+                      onChangeFunction={(data) => {
                         escolherHora(data);
                       }}
                       writable={false}
@@ -582,18 +581,16 @@ export default () => {
                           id={`heading_${alimento.uuid}`}
                         >
                           <div className="row card-header-content">
-                            <span className="nome-alimento">{`${
-                              alimento.nome_alimento
-                            }`}</span>
+                            <span className="col-11 nome-alimento">{`${alimento.nome_alimento}`}</span>
                             <div className="col-1 align-self-center">
                               <button
                                 onClick={() =>
                                   toggleBtnAlimentos(alimento.uuid, index)
                                 }
-                                className="btn btn-link btn-block text-left px-0"
+                                className="btn btn-link btn-block text-start px-0"
                                 type="button"
-                                data-toggle="collapse"
-                                data-target={`#collapse_${alimento.uuid}`}
+                                data-bs-toggle="collapse"
+                                data-bs-target={`#collapse_${alimento.uuid}`}
                                 aria-expanded="true"
                                 aria-controls={`collapse_${alimento.uuid}`}
                               >
@@ -615,7 +612,7 @@ export default () => {
                           id={`collapse_${alimento.uuid}`}
                           className="collapse"
                           aria-labelledby="headingOne"
-                          data-parent="#accordionAlimentos"
+                          data-bs-parent="#accordionAlimentos"
                         >
                           <div className="card-body">
                             <div className="row">
@@ -822,7 +819,7 @@ export default () => {
                                     </span>
                                   </label>
                                   <InputFile
-                                    ref={ref =>
+                                    ref={(ref) =>
                                       (inputFile.current[index] = ref)
                                     }
                                     className="inputfile"
@@ -880,7 +877,7 @@ export default () => {
                 <hr />
                 <div>
                   <button
-                    onClick={event => {
+                    onClick={(event) => {
                       event.preventDefault();
                       carregarLocalStorage(values);
                     }}
@@ -888,19 +885,19 @@ export default () => {
                     ref={autoFillButton}
                   />
                   <button
-                    onClick={event => {
+                    onClick={(event) => {
                       event.preventDefault();
                       carregarLocalStorageEdicao(values);
                     }}
                     style={{ display: "none" }}
                     ref={editarButton}
                   />
-                  <span className="float-right tooltip-botao">
+                  <span className="float-end tooltip-botao">
                     <Botao
                       texto="Cancelar"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="mr-3"
+                      className="me-3"
                       onClick={() => cancelarConferencia(values)}
                     />
                     <Botao

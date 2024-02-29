@@ -6,7 +6,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { HelpText } from "../HelpText";
 import InputErroMensagemCKEditor from "../Input/InputErroMensagemCKEditor";
 
-const CKEditorField = props => {
+const CKEditorField = (props) => {
   const {
     helpText,
     label,
@@ -33,21 +33,21 @@ const CKEditorField = props => {
       "insertTable",
       "|",
       "undo",
-      "redo"
-    ]
+      "redo",
+    ],
   };
 
   return (
     <div className="select">
       {label && [
         required && (
-          <span key={1} className="required-asterisk float-left">
+          <span key={1} className="required-asterisk">
             *
           </span>
         ),
         <label key={2} htmlFor={name} className="col-form-label">
           {label}
-        </label>
+        </label>,
       ]}
       <CKEditor
         editor={ClassicEditor}

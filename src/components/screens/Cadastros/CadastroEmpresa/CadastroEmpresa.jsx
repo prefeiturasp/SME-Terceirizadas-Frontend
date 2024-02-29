@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import moment from "moment";
 import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
 import { useState } from "react";
 import { Field, Form } from "react-final-form";
 import Select from "components/Shareable/Select";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Botao } from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import { DadosEmpresa } from "./components/Form/DadosEmpresa";
@@ -20,7 +20,8 @@ import {
   createNaoTerceirizada,
   getTerceirizadaUUID,
   updateNaoTerceirizada,
-  updateTerceirizada
+  updateTerceirizada,
+  obterNumeroContratosCadastrados,
 } from "services/terceirizada.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { formatarCPFouCNPJ, getError } from "helpers/utilities";
@@ -45,7 +46,7 @@ const verificarUsuarioEhDistribuidor = () => {
 };
 
 export const CadastroEmpresa = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [lotesSelecionados, setLotesSelecionados] = useState([]);
   const [initialValuesForm, setInitialValuesForm] = useState({
     data_cadastro: moment().format("DD/MM/YYYY"),
@@ -56,28 +57,28 @@ export const CadastroEmpresa = () => {
     representante_legal: undefined,
     email_representante_legal: undefined,
     telefone_representante: undefined,
-    bairro: undefined
+    bairro: undefined,
   });
-  const [carregando, setCarregando] = useState(false);
+  const [carregando, setCarregando] = useState(true);
   const [ehDistribuidor, setEhDistribuidor] = useState(false);
   const [superUser, setSuperUser] = useState({
     email: null,
     nome: null,
     cpf: null,
     telefone: null,
-    cargo: null
+    cargo: null,
   });
   const [contatosEmpresaForm, setContatosEmpresaForm] = useState([
-    "contatoEmpresa_0"
+    "contatoEmpresa_0",
   ]);
   const [contatosTerceirizadaForm, setContatosTerceirizadaForm] = useState([
-    "contatoTerceirizada_0"
+    "contatoTerceirizada_0",
   ]);
   const [contatosEmpresa, setContatosEmpresa] = useState([
     {
       telefone: null,
-      email: ""
-    }
+      email: "",
+    },
   ]);
   const [contatosNutricionista, setContatosNutricionista] = useState([
     {
@@ -86,16 +87,20 @@ export const CadastroEmpresa = () => {
       responsavel: null,
       crn: null,
       email: null,
-      super_admin_terceirizadas: false
-    }
+      super_admin_terceirizadas: false,
+    },
   ]);
   const [contratos, setContratos] = useState([
     {
       numero_processo: null,
       numero_contrato: null,
+      modalidade: null,
+      numero_ata: null,
+      numero_pregao: null,
+      numero_chamada_publica: null,
       vigencia_de: null,
-      vigencia_ate: null
-    }
+      vigencia_ate: null,
+    },
   ]);
   const [terceirizada, setTerceirizada] = useState(undefined);
   const [uuid, setUuid] = useState(null);
@@ -105,19 +110,22 @@ export const CadastroEmpresa = () => {
     {
       nome: "",
       telefone: null,
-      email: ""
-    }
+      email: "",
+    },
   ]);
-  const atribuiContatosEmpresaForm = data => {
+
+  const numerosContratosCadastrados = useRef([]);
+
+  const atribuiContatosEmpresaForm = (data) => {
     const { contatos } = data;
     contatos
-      .filter(contato => !contato.nome)
+      .filter((contato) => !contato.nome)
       .forEach((contato, indice) => {
         if (indice !== 0 && contatos.length > contatosEmpresaForm.length) {
           contatosEmpresaForm.push(`contatoEmpresa_${indice}`);
           contatosEmpresa.push({
             telefone: null,
-            email: null
+            email: null,
           });
         }
         setContatosEmpresaForm(contatosEmpresaForm);
@@ -134,16 +142,16 @@ export const CadastroEmpresa = () => {
     return data;
   };
 
-  const atribuiContatosPessoaEmpresaForm = data => {
+  const atribuiContatosPessoaEmpresaForm = (data) => {
     const { contatos } = data;
 
     contatos
-      .filter(contato => contato.nome)
+      .filter((contato) => contato.nome)
       .forEach((contato, indice) => {
         if (indice !== 0 && contatos.length > contatosPessoaEmpresa.length) {
           contatosPessoaEmpresa.push({
             telefone: null,
-            email: null
+            email: null,
           });
         }
 
@@ -158,7 +166,7 @@ export const CadastroEmpresa = () => {
     return data;
   };
 
-  const atribuiNutricionistaEmpresaForm = data => {
+  const atribuiNutricionistaEmpresaForm = (data) => {
     const { contatos, nutricionistas } = data;
     const antigosUsuariosNutri = nutricionistas;
     if (antigosUsuariosNutri.length) {
@@ -172,7 +180,7 @@ export const CadastroEmpresa = () => {
             telefone: null,
             responsavel: null,
             crn: null,
-            email: null
+            email: null,
           });
         }
         contatosNutricionista[indice]["telefone"] =
@@ -195,7 +203,7 @@ export const CadastroEmpresa = () => {
       });
     } else {
       contatos
-        .filter(contato => contato.eh_nutricionista)
+        .filter((contato) => contato.eh_nutricionista)
         .forEach((nutri, indice) => {
           if (indice !== 0 && contatos.length > contatosNutricionista.length) {
             contatosTerceirizadaForm.push(`contatoTerceirizada_${indice}`);
@@ -203,7 +211,7 @@ export const CadastroEmpresa = () => {
               telefone: null,
               responsavel: null,
               crn: null,
-              email: null
+              email: null,
             });
           }
           contatosNutricionista[indice]["telefone"] = nutri.telefone;
@@ -226,7 +234,7 @@ export const CadastroEmpresa = () => {
     }
   };
 
-  const setaValoresForm = data => {
+  const setaValoresForm = (data) => {
     data.cnpj = formatarCPFouCNPJ(data.cnpj);
     data.numero_contrato = data.numero;
     data.email_representante_legal = data.representante_email;
@@ -251,20 +259,25 @@ export const CadastroEmpresa = () => {
       cpf: data.superuser_cpf,
       cargo: data.superuser_cargo,
       telefone: data.superuser_telefone,
-      email: data.superuser_email
+      email: data.superuser_email,
     });
 
     setInitialValuesForm(data);
     setTerceirizada(data);
   };
 
-  const atribuiContratosForm = data => {
+  const atribuiContratosForm = (data) => {
     setContratos(data.contratos);
-    data.contratos.forEach((contato, indice) => {
-      data[`numero_contrato_${indice}`] = contato.numero;
-      data[`numero_processo_${indice}`] = contato.processo;
-      data[`vigencia_de_${indice}`] = contato.vigencias[0].data_inicial;
-      data[`vigencia_ate_${indice}`] = contato.vigencias[0].data_final;
+    data.contratos.forEach((contrato, indice) => {
+      data[`numero_contrato_${indice}`] = contrato.numero;
+      data[`numero_processo_${indice}`] = contrato.processo;
+      data[`modalidade_${indice}`] = contrato.modalidade;
+      data[`numero_ata_${indice}`] = contrato.ata;
+      data[`numero_pregao_${indice}`] = contrato.numero_pregao;
+      data[`numero_chamada_publica_${indice}`] =
+        contrato.numero_chamada_publica;
+      data[`vigencia_de_${indice}`] = contrato.vigencias[0].data_inicial;
+      data[`vigencia_ate_${indice}`] = contrato.vigencias[0].data_final;
     });
 
     return data;
@@ -278,239 +291,231 @@ export const CadastroEmpresa = () => {
     setExibirModal(false);
   };
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
-    if (uuid) {
-      setUuid(uuid);
-      setCarregando(true);
-      setTituloModal("Confirma atualização de Empresa?");
-      getTerceirizadaUUID(uuid).then(response => {
-        if (response.status !== HTTP_STATUS.NOT_FOUND) {
-          let lotesNomesSelecionados = [];
-          let lotesSelecionados = [];
-          response.data.lotes.forEach(lote => {
-            lotesNomesSelecionados.push(lote.nome);
-            lotesSelecionados.push(lote.uuid);
-          });
-          setLotesSelecionados(lotesSelecionados);
-        }
-        setaValoresForm(response.data);
-        setCarregando(false);
-      });
-    }
-    setEhDistribuidor(verificarUsuarioEhDistribuidor());
-  }, []);
+  const atualizarEmpresa = (uuid, dados, ehDistribuidor) => {
+    const service = ehDistribuidor ? updateNaoTerceirizada : updateTerceirizada;
 
-  const onSubmit = async values => {
+    service(uuid, dados).then((response) => {
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Empresa atualizada com sucesso!");
+        navigate("/configuracoes/cadastros/empresas-cadastradas");
+      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        toastError(
+          `Erro ao atualizar cadastro de empresa: ${getError(response.data)}.`
+        );
+      } else {
+        toastError(`Erro ao atualizar cadastro de empresa`);
+      }
+    });
+  };
+
+  const cadastrarEmpresa = (dados, ehDistribuidor) => {
+    const service = ehDistribuidor ? createNaoTerceirizada : createTerceirizada;
+
+    service(dados).then((response) => {
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess("Empresa cadastrada com sucesso!");
+        navigate("/configuracoes/cadastros/empresas-cadastradas");
+      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        toastError(`Erro ao cadastrar empresa: ${getError(response.data)}.`);
+      } else {
+        toastError(`Erro ao cadastrar empresa`);
+      }
+    });
+  };
+
+  const onSubmit = async (values) => {
     const dados = {
       ehDistribuidor: ehDistribuidor,
       contatosPessoaEmpresa: contatosPessoaEmpresa,
       contratos: contratos,
       contatosEmpresa: contatosEmpresa,
       contatosNutricionista: contatosNutricionista,
-      lotesSelecionados: lotesSelecionados
+      lotesSelecionados: lotesSelecionados,
     };
+
     const data = formataJsonParaEnvio(values, dados);
+
     if (uuid !== null) {
-      if (!ehDistribuidor) {
-        updateTerceirizada(uuid, data).then(response => {
-          if (response.status === HTTP_STATUS.OK) {
-            toastSuccess("Empresa atualizada com sucesso!");
-            history.push("/configuracoes/cadastros/empresas-cadastradas");
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(
-              `Erro ao atualizar cadastro de empresa: ${getError(
-                response.data
-              )}.`
-            );
-          } else {
-            toastError(`Erro ao atualizar cadastro de empresa`);
-          }
-        });
-      } else {
-        updateNaoTerceirizada(uuid, data).then(response => {
-          if (response.status === HTTP_STATUS.OK) {
-            toastSuccess("Empresa atualizada com sucesso!");
-            history.push("/configuracoes/cadastros/empresas-cadastradas");
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(
-              `Erro ao atualizar cadastro de empresa: ${getError(
-                response.data
-              )}.`
-            );
-          } else {
-            toastError(`Erro ao atualizar cadastro de empresa`);
-          }
-        });
-      }
+      atualizarEmpresa(uuid, data, ehDistribuidor);
     } else {
-      if (!ehDistribuidor) {
-        createTerceirizada(data).then(response => {
-          if (response.status === HTTP_STATUS.CREATED) {
-            toastSuccess("Empresa cadastrada com sucesso!");
-            history.push("/configuracoes/cadastros/empresas-cadastradas");
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(
-              `Erro ao cadastrar empresa: ${getError(response.data)}.`
-            );
-          } else {
-            toastError(`Erro ao cadastrar empresa`);
-          }
-        });
-      } else {
-        createNaoTerceirizada(data).then(response => {
-          if (response.status === HTTP_STATUS.CREATED) {
-            toastSuccess("Empresa cadastrada com sucesso!");
-            history.push("/configuracoes/cadastros/empresas-cadastradas");
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(
-              `Erro ao cadastrar empresa: ${getError(response.data)}.`
-            );
-          } else {
-            toastError(`Erro ao cadastrar empresa`);
-          }
-        });
-      }
+      cadastrarEmpresa(data, ehDistribuidor);
     }
   };
 
+  const carregarDados = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    if (uuid) {
+      setUuid(uuid);
+      setTituloModal("Confirma atualização de Empresa?");
+
+      const response = await getTerceirizadaUUID(uuid);
+
+      if (response.status !== HTTP_STATUS.NOT_FOUND) {
+        let lotesNomesSelecionados = [];
+        let lotesSelecionados = [];
+
+        response.data.lotes.forEach((lote) => {
+          lotesNomesSelecionados.push(lote.nome);
+          lotesSelecionados.push(lote.uuid);
+        });
+
+        setLotesSelecionados(lotesSelecionados);
+        setaValoresForm(response.data);
+      }
+    }
+
+    const response = await obterNumeroContratosCadastrados();
+    numerosContratosCadastrados.current =
+      response.data.numeros_contratos_cadastrados;
+
+    setEhDistribuidor(verificarUsuarioEhDistribuidor());
+
+    setCarregando(false);
+  };
+
+  useEffect(() => {
+    carregarDados();
+  }, []);
+
   return (
-    <Spin tip="Carregando..." spinning={carregando}>
+    <Spin spinning={carregando}>
       <div className="cadastro cadastro-empresa pt-3">
         <div className="card">
           <div>
             <div>
-              {!carregando && (
-                <Form
-                  initialValues={initialValuesForm}
-                  onSubmit={onSubmit}
-                  render={({ form, handleSubmit, values }) => (
-                    <form onSubmit={handleSubmit}>
-                      <DadosEmpresa ehDistribuidor={ehDistribuidor} />
-                      <EnderecoEmpresa
-                        values={values}
-                        ehDistribuidor={ehDistribuidor}
-                        contatosEmpresaForm={contatosEmpresaForm}
-                        setContatosEmpresaForm={setContatosEmpresaForm}
-                        contatosEmpresa={contatosEmpresa}
-                        setContatosEmpresa={setContatosEmpresa}
-                      />
-                      <AdministradorSistemaFormSet
-                        ehDistribuidor={ehDistribuidor}
-                        superUser={superUser}
-                        setSuperUser={setSuperUser}
-                      />
-                      <UsuarioResponsavel ehDistribuidor={ehDistribuidor} />
-                      <ContatoFormSet
-                        ehDistribuidor={ehDistribuidor}
-                        values={values}
-                        contatosPessoaEmpresa={contatosPessoaEmpresa}
-                        setContatosPessoaEmpresa={setContatosPessoaEmpresa}
-                      />
-                      <NutricionistaFormSet
-                        ehDistribuidor={ehDistribuidor}
-                        contatosTerceirizadaForm={contatosTerceirizadaForm}
-                        setContatosTerceirizadaForm={
-                          setContatosTerceirizadaForm
-                        }
-                        contatosNutricionista={contatosNutricionista}
-                        setContatosNutricionista={setContatosNutricionista}
-                      />
-                      <ContratosFormSet
-                        ehDistribuidor={ehDistribuidor}
-                        contratos={contratos}
-                        setContratos={setContratos}
-                        terceirizada={terceirizada}
-                      />
-                      <LotesFormSet
-                        ehDistribuidor={ehDistribuidor}
-                        lotesSelecionados={lotesSelecionados}
-                        setLotesSelecionados={setLotesSelecionados}
-                        terceirizada={terceirizada}
-                      />
-                      <ModalCadastroEmpresa
-                        titulo={tituloModal}
-                        values={values}
-                        onSubmit={() => handleSubmit()}
-                        closeModal={fecharModal}
-                        showModal={exibirModal}
-                      />
-                      {/* Situação */}
-                      {ehDistribuidor && (
-                        <div className="card-body">
-                          <div className="w-25">
-                            <Field
-                              component={Select}
-                              label="Situação"
-                              name="situacao"
-                              required
-                              options={[
-                                {
-                                  nome: "Selecione...",
-                                  uuid: ""
-                                },
-                                {
-                                  nome: "Ativo",
-                                  uuid: true
-                                },
-                                {
-                                  nome: "Inativo",
-                                  uuid: false
-                                }
-                              ]}
-                            />
-                          </div>
-                        </div>
-                      )}
-                      {/* /Situação */}
+              <Form
+                initialValues={initialValuesForm}
+                onSubmit={onSubmit}
+                render={({ form, handleSubmit, values }) => (
+                  <form onSubmit={handleSubmit}>
+                    <DadosEmpresa ehDistribuidor={ehDistribuidor} />
+                    <EnderecoEmpresa
+                      values={values}
+                      ehDistribuidor={ehDistribuidor}
+                      contatosEmpresaForm={contatosEmpresaForm}
+                      setContatosEmpresaForm={setContatosEmpresaForm}
+                      contatosEmpresa={contatosEmpresa}
+                      setContatosEmpresa={setContatosEmpresa}
+                    />
+                    <AdministradorSistemaFormSet
+                      ehDistribuidor={ehDistribuidor}
+                      superUser={superUser}
+                      setSuperUser={setSuperUser}
+                    />
+                    <UsuarioResponsavel ehDistribuidor={ehDistribuidor} />
+                    <ContatoFormSet
+                      ehDistribuidor={ehDistribuidor}
+                      values={values}
+                      contatosPessoaEmpresa={contatosPessoaEmpresa}
+                      setContatosPessoaEmpresa={setContatosPessoaEmpresa}
+                    />
+                    <NutricionistaFormSet
+                      ehDistribuidor={ehDistribuidor}
+                      contatosTerceirizadaForm={contatosTerceirizadaForm}
+                      setContatosTerceirizadaForm={setContatosTerceirizadaForm}
+                      contatosNutricionista={contatosNutricionista}
+                      setContatosNutricionista={setContatosNutricionista}
+                    />
+                    <ContratosFormSet
+                      ehDistribuidor={ehDistribuidor}
+                      contratos={contratos}
+                      setContratos={setContratos}
+                      terceirizada={terceirizada}
+                      values={values}
+                      numerosContratosCadastrados={
+                        numerosContratosCadastrados.current
+                      }
+                      form={form}
+                    />
+                    <LotesFormSet
+                      ehDistribuidor={ehDistribuidor}
+                      lotesSelecionados={lotesSelecionados}
+                      setLotesSelecionados={setLotesSelecionados}
+                      terceirizada={terceirizada}
+                    />
+                    <ModalCadastroEmpresa
+                      titulo={tituloModal}
+                      values={values}
+                      onSubmit={() => handleSubmit()}
+                      closeModal={fecharModal}
+                      showModal={exibirModal}
+                    />
+                    {/* Situação */}
+                    {ehDistribuidor && (
                       <div className="card-body">
-                        <div className="row mt-5">
-                          {uuid === null ? (
-                            <div className="col-12 text-right">
-                              <Botao
-                                texto="Cancelar"
-                                onClick={() => form.restart()}
-                                type={BUTTON_TYPE.BUTTON}
-                                style={BUTTON_STYLE.GREEN_OUTLINE}
-                              />
-                              <Botao
-                                texto={"Salvar"}
-                                className="ml-3"
-                                onClick={e => {
-                                  e.preventDefault();
-                                  abrirModal();
-                                }}
-                                type={BUTTON_TYPE.SUBMIT}
-                                style={BUTTON_STYLE.GREEN}
-                              />
-                            </div>
-                          ) : (
-                            <div className="col-12 text-right">
-                              <Link to="/configuracoes/cadastros/empresas-cadastradas">
-                                <Botao
-                                  texto="Cancelar"
-                                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                                />
-                              </Link>
-                              <Botao
-                                texto={"Atualizar"}
-                                onClick={e => {
-                                  e.preventDefault();
-                                  abrirModal();
-                                }}
-                                className="ml-3"
-                                type={BUTTON_TYPE.SUBMIT}
-                                style={BUTTON_STYLE.GREEN}
-                              />
-                            </div>
-                          )}
+                        <div className="w-25">
+                          <Field
+                            component={Select}
+                            label="Situação"
+                            name="situacao"
+                            required
+                            options={[
+                              {
+                                nome: "Selecione...",
+                                uuid: "",
+                              },
+                              {
+                                nome: "Ativo",
+                                uuid: true,
+                              },
+                              {
+                                nome: "Inativo",
+                                uuid: false,
+                              },
+                            ]}
+                          />
                         </div>
                       </div>
-                    </form>
-                  )}
-                />
-              )}
+                    )}
+                    {/* /Situação */}
+                    <div className="card-body">
+                      <div className="row mt-5">
+                        {uuid === null ? (
+                          <div className="col-12 text-end">
+                            <Botao
+                              texto="Cancelar"
+                              onClick={() => form.restart()}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto={"Salvar"}
+                              className="ms-3"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                abrirModal();
+                              }}
+                              type={BUTTON_TYPE.SUBMIT}
+                              style={BUTTON_STYLE.GREEN}
+                            />
+                          </div>
+                        ) : (
+                          <div className="col-12 text-end">
+                            <Link to="/configuracoes/cadastros/empresas-cadastradas">
+                              <Botao
+                                texto="Cancelar"
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                              />
+                            </Link>
+                            <Botao
+                              texto={"Atualizar"}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                abrirModal();
+                              }}
+                              className="ms-3"
+                              type={BUTTON_TYPE.SUBMIT}
+                              style={BUTTON_STYLE.GREEN}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </form>
+                )}
+              />
             </div>
           </div>
         </div>

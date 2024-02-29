@@ -18,21 +18,21 @@ const ListagemSolicitacoes = ({
   updatePage,
   confirmaCancelamentoGuias,
   imprimirRequisicao,
-  setShowDownload
+  setShowDownload,
 }) => {
   const [carregando, setCarregando] = useState(false);
   const centralDownloadContext = useContext(CentralDeDownloadContext);
 
-  const baixarPDF = async solicitacao => {
+  const baixarPDF = async (solicitacao) => {
     setCarregando(true);
     await imprimirRequisicao(solicitacao.uuid);
     setCarregando(false);
   };
 
-  const baixarExcel = solicitacao => {
+  const baixarExcel = (solicitacao) => {
     setCarregando(true);
     const params = gerarParametrosConsulta({
-      numero_requisicao: solicitacao.numero_solicitacao
+      numero_requisicao: solicitacao.numero_solicitacao,
     });
     gerarExcelSolicitacoes(params)
       .then(() => {
@@ -40,8 +40,8 @@ const ListagemSolicitacoes = ({
         setShowDownload(true);
         centralDownloadContext.getQtdeDownloadsNaoLidas();
       })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
   };
@@ -67,7 +67,7 @@ const ListagemSolicitacoes = ({
             <div>Exportar Requisição</div>
             <div />
           </div>
-          {solicitacoes.map(solicitacao => {
+          {solicitacoes.map((solicitacao) => {
             const bordas =
               ativos && ativos.includes(solicitacao.uuid)
                 ? "desativar-borda"
@@ -98,7 +98,7 @@ const ListagemSolicitacoes = ({
                       solicitacao={solicitacao}
                       updatePage={updatePage}
                     />
-                    <span className="pr-3 pl-3">|</span>
+                    <span className="pe-3 ps-3">|</span>
                     <Alterar
                       className="acoes alterar"
                       solicitacao={solicitacao}
@@ -131,7 +131,7 @@ const ListagemSolicitacoes = ({
                       onClick={() => {
                         ativos && ativos.includes(solicitacao.uuid)
                           ? setAtivos(
-                              ativos.filter(el => el !== solicitacao.uuid)
+                              ativos.filter((el) => el !== solicitacao.uuid)
                             )
                           : setAtivos(
                               ativos

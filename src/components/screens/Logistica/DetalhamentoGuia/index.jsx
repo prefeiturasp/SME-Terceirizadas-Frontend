@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { Spin } from "antd";
 import {
   getGuiaDetalhe,
-  imprimirGuiaRemessa
+  imprimirGuiaRemessa,
 } from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
@@ -12,13 +12,13 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
 import {
   CONFERENCIA_GUIA,
   LOGISTICA,
-  REPOSICAO_GUIA
+  REPOSICAO_GUIA,
 } from "configs/constants.js";
 import DetalheGuiaRemessa from "components/Logistica/DetalheGuiaRemessa/index.jsx";
 
@@ -29,7 +29,7 @@ export default () => {
   const [carregando, setCarregando] = useState(false);
   const [initialValues, setInitialValues] = useState({});
 
-  const baixarPDFGuiaRemessa = guia => {
+  const baixarPDFGuiaRemessa = (guia) => {
     setCarregando(true);
     let uuid = guia.uuid;
     let numero = guia.numero_guia;
@@ -37,16 +37,16 @@ export default () => {
       .then(() => {
         setCarregando(false);
       })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
         setCarregando(false);
       });
   };
 
-  const checaReposicao = guia => {
-    let alimentosPendentes = guia.alimentos.filter(alimento => {
+  const checaReposicao = (guia) => {
+    let alimentosPendentes = guia.alimentos.filter((alimento) => {
       return (
-        alimento.embalagens.filter(embalagem => embalagem.qtd_a_receber !== 0)
+        alimento.embalagens.filter((embalagem) => embalagem.qtd_a_receber !== 0)
           .length > 0
       );
     });
@@ -65,7 +65,7 @@ export default () => {
             texto={`Realizar reposição`}
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="float-right ml-3"
+            className="float-end ms-3"
           />
         </NavLink>
       );
@@ -81,7 +81,7 @@ export default () => {
             texto={`Realizar conferência`}
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="float-right ml-3"
+            className="float-end ms-3"
           />
         </NavLink>
       );
@@ -89,7 +89,7 @@ export default () => {
   };
 
   useEffect(() => {
-    const carregarGuia = async uuid => {
+    const carregarGuia = async (uuid) => {
       let response;
       try {
         setCarregando(true);
@@ -98,7 +98,7 @@ export default () => {
         setInitialValues({
           numero_guia: response.data.numero_guia,
           data_entrega: response.data.data_entrega,
-          status: response.data.status
+          status: response.data.status,
         });
         setCarregando(false);
       } catch (e) {
@@ -169,7 +169,7 @@ export default () => {
                     texto="Imprimir Guia"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
+                    className="float-end ms-3"
                     onClick={() => baixarPDFGuiaRemessa(guia)}
                   />
                 </div>

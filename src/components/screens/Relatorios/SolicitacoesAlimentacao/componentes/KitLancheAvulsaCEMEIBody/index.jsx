@@ -6,7 +6,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
   const [showDetail, setShowDetail] = useState(false);
 
   const total_CEI = solicitacao.solicitacao_cei
-    ? solicitacao.solicitacao_cei.faixas_quantidades.reduce(function(acc, v) {
+    ? solicitacao.solicitacao_cei.faixas_quantidades.reduce(function (acc, v) {
         return acc + (v.quantidade || v.quantidade_alunos);
       }, 0)
     : 0;
@@ -15,7 +15,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
     : 0;
 
   const total_matriculados_CEI = solicitacao.solicitacao_cei
-    ? solicitacao.solicitacao_cei.faixas_quantidades.reduce(function(acc, v) {
+    ? solicitacao.solicitacao_cei.faixas_quantidades.reduce(function (acc, v) {
         return acc + v.matriculados_quando_criado || 0;
       }, 0)
     : 0;
@@ -67,7 +67,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
         <td colSpan={6}>
           <div className="container-fluid">
             <div className="row mt-3">
-              <div className="col-3">
+              <div className="col-2">
                 <p>ID da Solicitação:</p>
                 <p>
                   <b># {solicitacao.id_externo}</b>
@@ -80,12 +80,18 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
                 </p>
               </div>
               <div className="col-3">
+                <p>Evento/Passeio:</p>
+                <p>
+                  <b>{solicitacao.evento || "- -"}</b>
+                </p>
+              </div>
+              <div className="col-2">
                 <p>No Total de Kits:</p>
                 <p>
                   <b>{numero_total_kits}</b>
                 </p>
               </div>
-              <div className="col-3">
+              <div className="col-2">
                 <p>{labelData}</p>
                 <p>
                   <b>{log && log.criado_em.split(" ")[0]}</b>
@@ -118,7 +124,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
                         Opção desejada:{" "}
                         <b>
                           {solicitacao.solicitacao_cei.kits
-                            .map(kit => kit.nome)
+                            .map((kit) => kit.nome)
                             .join(", ")}
                         </b>
                       </p>
@@ -202,7 +208,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
                           Opção desejada:{" "}
                           <b>
                             {solicitacao.solicitacao_emei.kits
-                              .map(kit => kit.nome)
+                              .map((kit) => kit.nome)
                               .join(", ")}
                           </b>
                         </p>
@@ -239,7 +245,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
                     <p
                       className="observacao-negrito"
                       dangerouslySetInnerHTML={{
-                        __html: solicitacao.observacao
+                        __html: solicitacao.observacao,
                       }}
                     />
                   </b>
@@ -249,6 +255,6 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

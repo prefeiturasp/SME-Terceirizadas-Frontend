@@ -5,8 +5,8 @@ import { AUTH_TOKEN } from "../constants";
 import axios from "../_base";
 
 describe("test getAxios", () => {
-  it("requer URL terminando em '/'", async done => {
-    axios.get("endpoint").catch(error => {
+  it("requer URL terminando em '/'", async (done) => {
+    axios.get("endpoint").catch((error) => {
       expect(error.message).toEqual(
         "URLs devem obrigatoriamente terminar em '/': endpoint"
       );
@@ -23,7 +23,7 @@ describe("test getAxios", () => {
     expect(response.config.headers).toEqual(
       Object.assign(
         {
-          Accept: "application/json, text/plain, */*"
+          Accept: "application/json, text/plain, */*",
         },
         AUTH_TOKEN
       )

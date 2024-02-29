@@ -4,7 +4,7 @@ import { Tooltip } from "antd";
 import { conferidaClass } from "helpers/terceirizadas";
 
 const TooltipProdutos = ({ solicitacao, cardTitulo }) => {
-  const renderSolicitation = solicitation => {
+  const renderSolicitation = (solicitation) => {
     let conferida = conferidaClass(solicitation, cardTitulo);
     const text = (
       <span>
@@ -21,7 +21,7 @@ const TooltipProdutos = ({ solicitacao, cardTitulo }) => {
             overlayStyle={{
               maxWidth: "320px",
               fontSize: "12px",
-              fontWeight: "700"
+              fontWeight: "700",
             }}
             title={text}
           >

@@ -5,7 +5,7 @@ import { required } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { OnChange } from "react-final-form-listeners";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
@@ -16,12 +16,10 @@ export const NutricionistaFormSet = ({
   contatosTerceirizadaForm,
   setContatosTerceirizadaForm,
   contatosNutricionista,
-  setContatosNutricionista
+  setContatosNutricionista,
 }) => {
   const nomeFormContatoTerceirizada = () => {
-    const indiceDoFormAtual = `contatoTerceirizada_${
-      contatosTerceirizadaForm.length
-    }`;
+    const indiceDoFormAtual = `contatoTerceirizada_${contatosTerceirizadaForm.length}`;
     let contatosTerceirizadaFormArray = [...contatosTerceirizadaForm];
     contatosTerceirizadaFormArray.push(indiceDoFormAtual);
     setContatosTerceirizadaForm(contatosTerceirizadaFormArray);
@@ -33,7 +31,7 @@ export const NutricionistaFormSet = ({
       telefone: null,
       responsavel: null,
       crn: null,
-      email: null
+      email: null,
     });
     setContatosNutricionista(contatosNutricionistaArray);
   };
@@ -91,7 +89,7 @@ export const NutricionistaFormSet = ({
                               <OnChange
                                 name={`nutricionista_nome_${indiceTerceirizada}`}
                               >
-                                {value =>
+                                {(value) =>
                                   setaContatosNutricionista(
                                     "responsavel",
                                     value,
@@ -112,7 +110,7 @@ export const NutricionistaFormSet = ({
                               <OnChange
                                 name={`nutricionista_crn_${indiceTerceirizada}`}
                               >
-                                {value =>
+                                {(value) =>
                                   setaContatosNutricionista(
                                     "crn",
                                     value,
@@ -153,7 +151,7 @@ export const NutricionistaFormSet = ({
                               <OnChange
                                 name={`telefone_terceirizada_${indiceTerceirizada}`}
                               >
-                                {value =>
+                                {(value) =>
                                   setaContatosNutricionista(
                                     "telefone",
                                     value,
@@ -175,7 +173,7 @@ export const NutricionistaFormSet = ({
                               <OnChange
                                 name={`email_terceirizada_${indiceTerceirizada}`}
                               >
-                                {value =>
+                                {(value) =>
                                   setaContatosNutricionista(
                                     "email",
                                     value,

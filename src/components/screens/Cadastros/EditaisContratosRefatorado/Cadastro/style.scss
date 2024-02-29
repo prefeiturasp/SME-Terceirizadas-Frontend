@@ -1,0 +1,90 @@
+@import "styles/variables.scss";
+
+div.form-editais-contratos {
+  div.title {
+    color: $green;
+    font-size: 16px;
+    font-weight: bold;
+    overflow: hidden;
+
+    span.com-linha {
+      &.w-100::after {
+        content: "";
+        display: inline-block;
+        height: 0.5em;
+        vertical-align: bottom;
+        width: 100%;
+        margin-right: -100%;
+        margin-left: 10px;
+        border-top: 1px solid $grayDisabled;
+      }
+
+      &.w-78::after {
+        content: "";
+        display: inline-block;
+        height: 0.5em;
+        vertical-align: bottom;
+        width: 78%;
+        margin-right: -100%;
+        margin-left: 10px;
+        border-top: 1px solid $grayDisabled;
+      }
+    }
+
+    span.remover {
+      color: $red;
+      cursor: pointer;
+    }
+  }
+
+  span.required-asterisk {
+    color: $red;
+  }
+
+  div.lotes-selecionados {
+    font-size: 14px;
+
+    .value-selected-unities {
+      font-weight: bold;
+    }
+  }
+
+  div.aviso {
+    padding: 1em;
+    border-radius: 4px;
+
+    &.vencido {
+      border: 1px solid $orange;
+      color: $orange;
+    }
+
+    &.encerrado {
+      border: 1px solid $red;
+      color: $red;
+    }
+  }
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1400px) {
+  div.form-editais-contratos {
+    div.title {
+      span.com-linha {
+        &.w-78::after {
+          width: 66%;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1401px) and (max-width: 1700px) {
+  div.form-editais-contratos {
+    div.title {
+      span.com-linha {
+        &.w-78::after {
+          width: 70%;
+        }
+      }
+    }
+  }
+}

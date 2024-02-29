@@ -21,14 +21,14 @@ export const formataSubmit = (values, faixasEtariasCEI) => {
     delete values.solicitacao_cei.solicitacao_kit_lanche_cemei;
     const faixasQuantidades = [];
     Object.keys(values.solicitacao_cei.faixas_quantidades).forEach(
-      faixa_uuid => {
+      (faixa_uuid) => {
         faixasQuantidades.push({
           faixa_etaria: faixa_uuid,
           quantidade_alunos:
             values.solicitacao_cei.faixas_quantidades[faixa_uuid],
           matriculados_quando_criado: faixasEtariasCEI.find(
-            faixa => faixa.faixa_etaria.uuid === faixa_uuid
-          ).count
+            (faixa) => faixa.faixa_etaria.uuid === faixa_uuid
+          ).count,
         });
       }
     );
@@ -52,13 +52,13 @@ export const getNumeroTotalKits = (values, ehRelatorio = false) => {
   if (values.solicitacao_cei && values.solicitacao_cei.faixas_quantidades) {
     if (ehRelatorio) {
       Object.values(values.solicitacao_cei.faixas_quantidades).forEach(
-        faixa => {
+        (faixa) => {
           totalCEI += parseInt(faixa.quantidade_alunos);
         }
       );
     } else {
       Object.values(values.solicitacao_cei.faixas_quantidades).forEach(
-        valor => {
+        (valor) => {
           totalCEI += parseInt(valor);
         }
       );
@@ -79,34 +79,34 @@ export const getNumeroTotalKits = (values, ehRelatorio = false) => {
   return totalCEI + totalEMEI;
 };
 
-export const totalAlunosCEI = solicitacao => {
+export const totalAlunosCEI = (solicitacao) => {
   let totalQuantidadeAlunos = 0;
   let totalMatriculados = 0;
   if (
     solicitacao.solicitacao_cei &&
     solicitacao.solicitacao_cei.faixas_quantidades
   ) {
-    solicitacao.solicitacao_cei.faixas_quantidades.forEach(valor => {
+    solicitacao.solicitacao_cei.faixas_quantidades.forEach((valor) => {
       totalQuantidadeAlunos += parseInt(valor.quantidade_alunos);
       totalMatriculados += parseInt(valor.matriculados_quando_criado);
     });
   }
   return {
     totalQuantidadeAlunos: totalQuantidadeAlunos,
-    totalMatriculados: totalMatriculados
+    totalMatriculados: totalMatriculados,
   };
 };
 
-export const tempoPasseio = solicitacao => {
+export const tempoPasseio = (solicitacao) => {
   const tempo = {
     0: "até 4 horas (1 Kit)",
     1: "de 5 a 7 horas (2 Kits)",
-    2: "8 horas ou mais (3 Kits)"
+    2: "8 horas ou mais (3 Kits)",
   };
   return tempo[Number(solicitacao.tempo_passeio)];
 };
 
-export const checaPrazo = prioridade => {
+export const checaPrazo = (prioridade) => {
   let texto = "Solicitação perto do prazo de vencimento";
   if (prioridade === "REGULAR") {
     texto = "Solicitação no prazo regular";
@@ -122,7 +122,7 @@ export const filtraAlunosCEIcomDietaEspecial = (
 ) => {
   let alunosCEIfiltrados = [];
   if (solicitacaoKitLancheCEMEI.solicitacao_cei) {
-    alunosCEIfiltrados = alunosComDietaEspecial.filter(aluno =>
+    alunosCEIfiltrados = alunosComDietaEspecial.filter((aluno) =>
       solicitacaoKitLancheCEMEI.solicitacao_cei.alunos_com_dieta_especial_participantes.includes(
         aluno.uuid
       )
@@ -137,7 +137,7 @@ export const filtraAlunosEMEIcomDietaEspecial = (
 ) => {
   let alunosEMEIfiltrados = [];
   if (solicitacaoKitLancheCEMEI.solicitacao_emei) {
-    alunosEMEIfiltrados = alunosComDietaEspecial.filter(aluno =>
+    alunosEMEIfiltrados = alunosComDietaEspecial.filter((aluno) =>
       solicitacaoKitLancheCEMEI.solicitacao_emei.alunos_com_dieta_especial_participantes.includes(
         aluno.uuid
       )

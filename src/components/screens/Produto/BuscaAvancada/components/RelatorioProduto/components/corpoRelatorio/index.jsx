@@ -7,7 +7,7 @@ import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { STATUS_CODAE_AUTORIZOU_RECLAMACAO } from "configs/constants";
 import MotivoDaCorrecaoDeHomologacao from "components/Shareable/MotivoDaCorrecaoDeHomologacao";
@@ -28,25 +28,25 @@ export default class CorpoRelatorio extends Component {
       informacoes: [],
       visible: false,
       logs: [],
-      logSelecionado: null
+      logSelecionado: null,
     };
   }
 
   showModal = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
   };
 
   handleOk = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
   handleCancel = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
@@ -55,20 +55,20 @@ export default class CorpoRelatorio extends Component {
     const { informacoes } = this.state;
 
     let informacoesFormatadas = [];
-    informacoesNutricionais.forEach(item => {
+    informacoesNutricionais.forEach((item) => {
       let dict = {
         nome: item.nome,
         ativo: item.ativo,
-        informacoes: []
+        informacoes: [],
       };
-      item.informacoes_nutricionais.forEach(info => {
-        produto.informacoes_nutricionais.forEach(prodInfo => {
+      item.informacoes_nutricionais.forEach((info) => {
+        produto.informacoes_nutricionais.forEach((prodInfo) => {
           if (info.uuid === prodInfo.informacao_nutricional.uuid) {
             dict.informacoes.push({
               nome: info.nome,
               uuid: info.uuid,
               medida: `${prodInfo.quantidade_porcao} ${info.medida}`,
-              valor: `${prodInfo.valor_diario} %`
+              valor: `${prodInfo.valor_diario} %`,
             });
           }
         });
@@ -92,7 +92,7 @@ export default class CorpoRelatorio extends Component {
 
   itemLogAtivo = (index, ativo) => {
     let { logs, logSelecionado } = this.state;
-    logs.forEach(log => {
+    logs.forEach((log) => {
       log.ativo = false;
     });
     if (!ativo) {
@@ -105,7 +105,7 @@ export default class CorpoRelatorio extends Component {
     this.setState({ logs, logSelecionado });
   };
 
-  retornaIniciais = log => {
+  retornaIniciais = (log) => {
     const nome = log.usuario.nome.split(" ");
     let iniciais = "";
     nome.forEach((n, index) => {
@@ -123,7 +123,8 @@ export default class CorpoRelatorio extends Component {
     const logsAnaliseSensorial =
       produto.ultima_homologacao.logs &&
       produto.ultima_homologacao.logs.filter(
-        log => log.status_evento_explicacao === "CODAE pediu análise sensorial"
+        (log) =>
+          log.status_evento_explicacao === "CODAE pediu análise sensorial"
       );
     const logAnaliseSensorial =
       logsAnaliseSensorial &&
@@ -143,10 +144,10 @@ export default class CorpoRelatorio extends Component {
         )}
         <article className="flex-botoes-relatorio">
           <div className="row col-12">
-            <div className="row col-10 ml-0">
+            <div className="row col-10 ms-0">
               {logAnaliseSensorial && (
                 <>
-                  <div className="col-6 pl-0">
+                  <div className="col-6 ps-0">
                     <p className="text-muted">
                       Solicitação de análise sensorial
                     </p>
@@ -163,11 +164,11 @@ export default class CorpoRelatorio extends Component {
               )}
 
               {logAnaliseSensorial && (
-                <section className="texto-wysiwyg row col-12 ml-0">
+                <section className="texto-wysiwyg row col-12 ms-0">
                   <div className="col-12">
                     <p
                       dangerouslySetInnerHTML={{
-                        __html: logAnaliseSensorial.justificativa
+                        __html: logAnaliseSensorial.justificativa,
                       }}
                     />
                   </div>
@@ -178,12 +179,12 @@ export default class CorpoRelatorio extends Component {
             <div className="col-2 d-flex" style={{ alignItems: "flex-end" }}>
               <Botao
                 type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE}
+                style={BUTTON_STYLE.GREEN}
                 icon={BUTTON_ICON.PRINT}
                 onClick={() => {
                   getRelatorioProduto(produto);
                 }}
-                className="mr-2"
+                className="me-2"
               />
               <Botao
                 type={BUTTON_TYPE.BUTTON}
@@ -537,7 +538,7 @@ export default class CorpoRelatorio extends Component {
                                 <div>Justificativa:</div>
                                 <div
                                   dangerouslySetInnerHTML={{
-                                    __html: logSelecionado.justificativa
+                                    __html: logSelecionado.justificativa,
                                   }}
                                 />
                               </>

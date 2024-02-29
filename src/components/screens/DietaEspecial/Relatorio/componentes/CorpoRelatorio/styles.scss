@@ -10,10 +10,6 @@
   font-style: normal;
 }
 
-.form-control {
-  font-weight: bold !important;
-}
-
 .observacoes {
   background: #dadada;
   border: 1px solid #d1d3e2;
@@ -41,4 +37,7 @@
   img {
     height: 1rem;
   }
+}
+.custom-col-width {
+  width: auto;
 }

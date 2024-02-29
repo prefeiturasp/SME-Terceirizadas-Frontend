@@ -50,17 +50,13 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
                 </p>
               </div>
               <div className="col-3">
-                <p>Opção Desejada:</p>
+                <p>Evento/Passeio:</p>
                 <p>
-                  <b>
-                    {solicitacao.solicitacao_kit_lanche.kits
-                      .map(kit => kit.nome)
-                      .join(", ")}
-                  </b>
+                  <b>{solicitacao.evento || "- -"}</b>
                 </p>
               </div>
               <div className="col-3">
-                <p>{labelData}</p>
+                <p>{labelData}:</p>
                 <p>
                   <b>{log && log.criado_em.split(" ")[0]}</b>
                 </p>
@@ -75,6 +71,16 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
                       solicitacao.solicitacao_kit_lanche
                         .tempo_passeio_explicacao
                     }
+                  </b>
+                </p>
+              </div>
+              <div className="col-3">
+                <p>Opção Desejada:</p>
+                <p>
+                  <b>
+                    {solicitacao.solicitacao_kit_lanche.kits
+                      .map((kit) => kit.nome)
+                      .join(", ")}
                   </b>
                 </p>
               </div>
@@ -95,7 +101,7 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
                       <p
                         className="observacao-negrito"
                         dangerouslySetInnerHTML={{
-                          __html: solicitacao.solicitacao_kit_lanche.descricao
+                          __html: solicitacao.solicitacao_kit_lanche.descricao,
                         }}
                       />
                     </b>
@@ -105,6 +111,6 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
           </div>
         </td>
       </tr>
-    )
+    ),
   ];
 };

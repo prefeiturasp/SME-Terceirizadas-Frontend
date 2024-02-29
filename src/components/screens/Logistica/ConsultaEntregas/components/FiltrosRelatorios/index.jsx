@@ -3,13 +3,13 @@ import { Modal, Button } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { Spin } from "antd";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   gerarExcelEntregas,
-  imprimirGuiasDaSolicitacao
+  imprimirGuiasDaSolicitacao,
 } from "services/logistica.service.js";
 import { Switch, Checkbox } from "antd";
 
@@ -39,8 +39,8 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
     centralDownloadContext.getQtdeDownloadsNaoLidas();
   };
 
-  const catchDownload = error => {
-    error.response.data.text().then(text => toastError(text));
+  const catchDownload = (error) => {
+    error.response.data.text().then((text) => toastError(text));
     setLoading(false);
   };
 
@@ -50,9 +50,7 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
     let payload = montaPayload(uuid);
     if (excel) {
       const params = gerarParametrosConsulta({ uuid, ...payload });
-      gerarExcelEntregas(params)
-        .then(thenDownload)
-        .catch(catchDownload);
+      gerarExcelEntregas(params).then(thenDownload).catch(catchDownload);
     } else if (pdf) {
       const params = gerarParametrosConsulta(payload);
       imprimirGuiasDaSolicitacao(uuid, params)
@@ -84,7 +82,7 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
         STATUS_GUIA.PARCIAL,
         STATUS_GUIA.NAO_RECEBIDO,
         STATUS_GUIA.REPOSICAO_TOTAL,
-        STATUS_GUIA.REPOSICAO_PARCIAL
+        STATUS_GUIA.REPOSICAO_PARCIAL,
       ];
     }
 
@@ -115,11 +113,15 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
   const validaCampos = () => {
     return (
       conferidas &&
-      (!recebidas && !parciais && !naoRecebidas && !repoParcial && !repoTotal)
+      !recebidas &&
+      !parciais &&
+      !naoRecebidas &&
+      !repoParcial &&
+      !repoTotal
     );
   };
 
-  const checkAllConferidas = e => {
+  const checkAllConferidas = (e) => {
     setRecebidas(e.target.checked);
     setParciais(e.target.checked);
     setNaoRecebidas(e.target.checked);
@@ -248,7 +250,7 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
               texto="Exportar"
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
-              className="ml-3"
+              className="ms-3"
               onClick={handleDownload}
               disabled={validaCampos()}
             />

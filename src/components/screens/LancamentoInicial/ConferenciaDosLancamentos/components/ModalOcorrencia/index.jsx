@@ -4,7 +4,7 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
 import { Field, Form } from "react-final-form";
@@ -14,7 +14,7 @@ import {
   drePedeCorrecaoOcorrencia,
   drePedeAprovacaoOcorrencia,
   codaePedeCorrecaoOcorrencia,
-  codaePedeAprovacaoOcorrencia
+  codaePedeAprovacaoOcorrencia,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { usuarioEhDRE } from "helpers/utilities";
 
@@ -28,10 +28,10 @@ export const ModalOcorrencia = ({ ...props }) => {
     descricao,
     temJustificativa,
     ehCorrecao,
-    tituloBotoes
+    tituloBotoes,
   } = props;
 
-  const solicitarCorrecao = async values => {
+  const solicitarCorrecao = async (values) => {
     const response = usuarioEhDRE()
       ? await drePedeCorrecaoOcorrencia(ocorrencia.uuid, values)
       : await codaePedeCorrecaoOcorrencia(ocorrencia.uuid, values);
@@ -78,7 +78,7 @@ export const ModalOcorrencia = ({ ...props }) => {
       </Modal.Header>
 
       <Form
-        onSubmit={values =>
+        onSubmit={(values) =>
           ehCorrecao ? solicitarCorrecao(values) : aprovarOcorrencia()
         }
         initialValues={{}}
@@ -96,10 +96,10 @@ export const ModalOcorrencia = ({ ...props }) => {
                       label="Descrição da Correção"
                       name="justificativa"
                       required
-                      validate={value => {
+                      validate={(value) => {
                         for (let validator of [
                           peloMenosUmCaractere,
-                          required
+                          required,
                         ]) {
                           const erro = validator(value);
                           if (erro) return erro;
@@ -118,13 +118,13 @@ export const ModalOcorrencia = ({ ...props }) => {
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => setShowModal(false)}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="ml-3"
+                    className="ms-3"
                   />
                   <Botao
                     texto={tituloBotoes[1]}
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
+                    className="ms-3"
                     disabled={
                       ehCorrecao
                         ? submitting ||

@@ -5,7 +5,7 @@ import { HelpText } from "../../../Shareable/HelpText";
 import "../style.scss";
 import TooltipIcone from "../../TooltipIcone";
 
-export const InputPassword = props => {
+export const InputPassword = (props) => {
   const {
     className,
     disabled,
@@ -22,7 +22,7 @@ export const InputPassword = props => {
     tooltipText,
     maxlength,
     pattern,
-    toUppercaseActive
+    toUppercaseActive,
   } = props;
 
   const [passwordShown, setPasswordShown] = useState(false);
@@ -43,15 +43,17 @@ export const InputPassword = props => {
           className={`col-form-label ${labelClassName}`}
         >
           {label}
-        </label>
+        </label>,
       ]}
       {tooltipText && <TooltipIcone tooltipText={tooltipText} />}
       <input
         {...input}
-        className={`form-control ${className} ${meta &&
+        className={`form-control ${className} ${
+          meta &&
           meta.touched &&
           (meta.error || meta.warning) &&
-          "invalid-field"}`}
+          "invalid-field"
+        }`}
         disabled={disabled}
         name={name}
         data-cy={input.name}
@@ -61,7 +63,7 @@ export const InputPassword = props => {
         pattern={pattern}
         title={title}
         maxLength={maxlength}
-        onInput={e => {
+        onInput={(e) => {
           e.target.value = toUppercaseActive
             ? e.target.value.toUpperCase()
             : e.target.value;
@@ -92,7 +94,7 @@ InputPassword.propTypes = {
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   type: PropTypes.string,
-  contador: PropTypes.number
+  contador: PropTypes.number,
 };
 
 InputPassword.defaultProps = {
@@ -107,7 +109,7 @@ InputPassword.defaultProps = {
   name: "",
   placeholder: "",
   required: false,
-  type: "password"
+  type: "password",
 };
 
 export default InputPassword;

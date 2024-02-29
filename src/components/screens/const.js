@@ -1,13 +1,13 @@
 export const VENCIMENTO = {
   SEMANA: "Nesta semana",
   MES: "Neste mês",
-  SEM_FILTRO: "Sem filtro"
+  SEM_FILTRO: "Sem filtro",
 };
 
 export const FILTRO = {
   DAQUI_A_30_DIAS: "daqui_a_30_dias",
   DAQUI_A_7_DIAS: "daqui_a_7_dias",
-  SEM_FILTRO: "sem_filtro"
+  SEM_FILTRO: "sem_filtro",
 };
 
 export const STATUS = {
@@ -15,13 +15,13 @@ export const STATUS = {
   PENDENTES: "PENDENTES",
   CANCELADAS: "CANCELADAS",
   RECUSADAS: "RECUSADAS",
-  QUESTIONADAS: "QUESTIONADAS"
+  QUESTIONADAS: "QUESTIONADAS",
 };
 
 export const STATUS_ALIMENTO = {
   RECEBIDO: "RECEBIDO",
   PARCIAL: "PARCIAL",
-  NAO_RECEBIDO: "NAO_RECEBIDO"
+  NAO_RECEBIDO: "NAO_RECEBIDO",
 };
 
 export const STATUS_GUIA = {
@@ -30,5 +30,5 @@ export const STATUS_GUIA = {
   PARCIAL: "RECEBIMENTO_PARCIAL",
   NAO_RECEBIDO: "NAO_RECEBIDA",
   REPOSICAO_PARCIAL: "REPOSICAO_PARCIAL",
-  REPOSICAO_TOTAL: "REPOSICAO_TOTAL"
+  REPOSICAO_TOTAL: "REPOSICAO_TOTAL",
 };

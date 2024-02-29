@@ -4,13 +4,13 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import {
   FiltroEnum,
   TIPODECARD,
-  TIPO_SOLICITACAO
+  TIPO_SOLICITACAO,
 } from "../../../../constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular,
-  ordenarPedidosDataMaisRecente
+  ordenarPedidosDataMaisRecente,
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { getCodaePedidosDeKitLanche } from "services/kitLanche";
@@ -18,7 +18,7 @@ import Select from "../../../Shareable/Select";
 import {
   formatarOpcoesLote,
   formatarOpcoesDRE,
-  usuarioEhCODAEGestaoAlimentacao
+  usuarioEhCODAEGestaoAlimentacao,
 } from "helpers/utilities";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getLotesSimples } from "services/lote.service";
@@ -37,10 +37,10 @@ class PainelPedidos extends Component {
       pedidosNoPrazoRegular: [],
       filtros: this.props.filtros || {
         lote: undefined,
-        diretoria_regional: undefined
+        diretoria_regional: undefined,
       },
       lotes: [],
-      diretoriasRegionais: []
+      diretoriasRegionais: [],
     };
     this.setFiltros = this.setFiltros.bind(this);
   }
@@ -66,7 +66,7 @@ class PainelPedidos extends Component {
         filtro,
         TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
         paramsFromPrevPage
-      )
+      ),
     ]).then(([response, responseCei, responseCEMEI]) => {
       const results = safeConcatOn(
         "results",
@@ -87,7 +87,7 @@ class PainelPedidos extends Component {
         pedidosPrioritarios,
         pedidosNoPrazoLimite,
         pedidosNoPrazoRegular,
-        pedidosCarregados: this.state.pedidosCarregados + 1
+        pedidosCarregados: this.state.pedidosCarregados + 1,
       });
     });
   }
@@ -97,7 +97,7 @@ class PainelPedidos extends Component {
     this.getDiretoriasRegionaisAsync();
     const paramsFromPrevPage = this.props.filtros || {
       lote: [],
-      diretoria_regional: []
+      diretoria_regional: [],
     };
     this.filtrar(FiltroEnum.SEM_FILTRO, paramsFromPrevPage);
     if (this.props.filtros) {
@@ -113,15 +113,15 @@ class PainelPedidos extends Component {
     const response = await getLotesSimples();
     if (response.status === HTTP_STATUS.OK) {
       const { Option } = SelectAntd;
-      const lotes_ = formatarOpcoesLote(response.data.results).map(lote => {
+      const lotes_ = formatarOpcoesLote(response.data.results).map((lote) => {
         return <Option key={lote.value}>{lote.label}</Option>;
       });
       this.setState({
         lotes: [
           <Option value="" key={0}>
             Filtrar por Lote
-          </Option>
-        ].concat(lotes_)
+          </Option>,
+        ].concat(lotes_),
       });
     }
   }
@@ -130,15 +130,15 @@ class PainelPedidos extends Component {
     const response = await getDiretoriaregionalSimplissima();
     if (response.status === HTTP_STATUS.OK) {
       const { Option } = SelectAntd;
-      const dres = formatarOpcoesDRE(response.data.results).map(dre => {
+      const dres = formatarOpcoesDRE(response.data.results).map((dre) => {
         return <Option key={dre.value}>{dre.label}</Option>;
       });
       this.setState({
         diretoriasRegionais: [
           <Option value="" key={0}>
             Filtrar por DRE
-          </Option>
-        ].concat(dres)
+          </Option>,
+        ].concat(dres),
       });
     }
   }
@@ -167,7 +167,7 @@ class PainelPedidos extends Component {
       pedidosNoPrazoRegular,
       diretoriasRegionais,
       lotes,
-      filtros
+      filtros,
     } = this.state;
     const { visaoPorCombo, valorDoFiltro } = this.props;
     const todosOsPedidosForamCarregados = pedidosCarregados;
@@ -189,15 +189,15 @@ class PainelPedidos extends Component {
                         <Field
                           component={ASelect}
                           showSearch
-                          onChange={value => {
+                          onChange={(value) => {
                             const filtros_ = {
                               diretoria_regional: value || undefined,
-                              lote: filtros.lote
+                              lote: filtros.lote,
                             };
                             this.setFiltros(filtros_);
                             this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
                           }}
-                          onBlur={e => {
+                          onBlur={(e) => {
                             e.preventDefault();
                           }}
                           name="diretoria_regional"
@@ -215,15 +215,15 @@ class PainelPedidos extends Component {
                         <Field
                           component={ASelect}
                           showSearch
-                          onChange={value => {
+                          onChange={(value) => {
                             const filtros_ = {
                               diretoria_regional: filtros.diretoria_regional,
-                              lote: value || undefined
+                              lote: value || undefined,
                             };
                             this.setFiltros(filtros_);
                             this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
                           }}
-                          onBlur={e => {
+                          onBlur={(e) => {
                             e.preventDefault();
                           }}
                           name="lote"
@@ -239,12 +239,12 @@ class PainelPedidos extends Component {
                       </div>
                     </>
                   ) : (
-                    <div className="offset-6 col-3 text-right">
+                    <div className="offset-6 col-3 text-end">
                       <Field
                         component={Select}
                         name="visao_por"
                         naoDesabilitarPrimeiraOpcao
-                        onChange={event =>
+                        onChange={(event) =>
                           this.onFiltroSelected(event.target.value)
                         }
                         placeholder={"Filtro por"}
@@ -300,12 +300,12 @@ class PainelPedidos extends Component {
 
 const PainelPedidosForm = reduxForm({
   form: "painelPedidos",
-  enableReinitialize: true
+  enableReinitialize: true,
 })(PainelPedidos);
 const selector = formValueSelector("painelPedidos");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    valorDoFiltro: selector(state, "visao_por")
+    valorDoFiltro: selector(state, "visao_por"),
   };
 };
 

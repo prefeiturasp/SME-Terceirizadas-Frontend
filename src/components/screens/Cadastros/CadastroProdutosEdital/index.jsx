@@ -4,7 +4,7 @@ import HTTP_STATUS from "http-status-codes";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   getNomesProdutosEdital,
-  getCadastroProdutosEdital
+  getCadastroProdutosEdital,
 } from "services/produto.service";
 import Filtros from "./componentes/Filtros";
 import Tabela from "./componentes/Tabela";
@@ -35,7 +35,7 @@ export default () => {
     fetchData();
   }, []);
 
-  const changePage = async page => {
+  const changePage = async (page) => {
     try {
       setCarregando(true);
       let payload = filtros;
@@ -52,7 +52,7 @@ export default () => {
   };
 
   return (
-    <div className="card mt-3 card-cadastro-geral pl-3 pr-3">
+    <div className="card mt-3 card-cadastro-geral ps-3 pe-3">
       <Spin tip="Carregando..." spinning={carregando}>
         <Filtros
           setResultado={setResultado}
@@ -72,7 +72,7 @@ export default () => {
               current={page || 1}
               total={total}
               showSizeChanger={false}
-              onChange={page => {
+              onChange={(page) => {
                 setPage(page);
                 changePage(page);
               }}

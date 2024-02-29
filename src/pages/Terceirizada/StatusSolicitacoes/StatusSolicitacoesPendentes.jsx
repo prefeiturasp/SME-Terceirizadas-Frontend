@@ -4,7 +4,7 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import {
   SOLICITACOES_PENDENTES,
-  TERCEIRIZADA
+  TERCEIRIZADA,
 } from "../../../configs/constants";
 import { HOME } from "../constants";
 import { getSolicitacoesPendentesTerceirizada } from "services/painelTerceirizada.service";
@@ -14,7 +14,7 @@ import { ajustarFormatoLog } from "components/screens/helper";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${SOLICITACOES_PENDENTES}`,
-  titulo: "Solicitações Pendentes"
+  titulo: "Solicitações Pendentes",
 };
 
 export default () => (

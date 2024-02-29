@@ -95,7 +95,7 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
       <div className="label mt-3">Selecione a opção desejada</div>
       <div className="row mt-3">
         {kits
-          .filter(kit => kit.status === "Ativo")
+          .filter((kit) => kit.status === "Ativo")
           .map((kit, indice) => {
             const CARD_DISABLED =
               !valuesTempoPasseio ||
@@ -110,8 +110,9 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
                 key={indice}
               >
                 <div
-                  className={`card card-kits w-100 ${CARD_DISABLED &&
-                    "card-disabled"}`}
+                  className={`card card-kits w-100 ${
+                    CARD_DISABLED && "card-disabled"
+                  }`}
                 >
                   <div className="card-body p-2">
                     <div className="row">
@@ -125,7 +126,7 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
                           required
                           validate={required}
                           value={kit.uuid}
-                          className="float-right"
+                          className="float-end"
                           name={name}
                           disabled={CARD_DISABLED}
                         />
@@ -134,7 +135,7 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
                       <div className="col-12 kit-itens mt-3">
                         <div
                           dangerouslySetInnerHTML={{
-                            __html: kit.descricao
+                            __html: kit.descricao,
                           }}
                         />
                       </div>
@@ -165,7 +166,7 @@ export const QuantidadeAlunosEMEI = ({ meusDados }) => {
               name="solicitacao_emei.matriculados_quando_criado"
             />
             Alunos matriculados:{" "}
-            <span className="font-weight-normal">
+            <span className="fw-normal">
               {
                 meusDados.vinculo_atual.instituicao
                   .quantidade_alunos_emei_da_cemei
@@ -175,7 +176,7 @@ export const QuantidadeAlunosEMEI = ({ meusDados }) => {
           <th className="col-4 d-flex justify-content-center">
             <span className="my-auto">Quantidade</span>
             <Field
-              className="ml-3"
+              className="ms-3"
               component={InputText}
               type="number"
               name="solicitacao_emei.quantidade_alunos"
@@ -203,7 +204,7 @@ export const QuantidadeAlunosEMEI = ({ meusDados }) => {
 
 export const AlunosDietaEspecial = ({
   alunosComDietaEspecial,
-  solicitacao
+  solicitacao,
 }) => {
   const [collapseAlunos, setCollapseAlunos] = useState(false);
 
@@ -215,7 +216,7 @@ export const AlunosDietaEspecial = ({
           <div className="row">
             <div className="col-2">{"Código EOL"}</div>
             <div className="col-8">{"Nome do Aluno"}</div>
-            <div className="pl-5 col-1 toggle-right">
+            <div className="ps-5 col-1 toggle-right">
               <ToggleExpandir
                 onClick={() => setCollapseAlunos(!collapseAlunos)}
                 ativo={collapseAlunos}
@@ -274,9 +275,7 @@ export const TabelaFaixasEtariasCEI = ({ faixasEtariasCEI, values }) => {
                   <Field
                     component={InputText}
                     type="number"
-                    name={`solicitacao_cei.faixas_quantidades.${
-                      faixa.faixa_etaria.uuid
-                    }`}
+                    name={`solicitacao_cei.faixas_quantidades.${faixa.faixa_etaria.uuid}`}
                     validate={composeValidators(
                       naoPodeSerZero,
                       maxValue(faixa.count)
@@ -291,17 +290,17 @@ export const TabelaFaixasEtariasCEI = ({ faixasEtariasCEI, values }) => {
           );
         })}
         <tr className="row">
-          <td className="col-8 font-weight-bold">Total</td>
+          <td className="col-8 fw-bold">Total</td>
           <td className="col-2 text-center">
             {faixasEtariasCEI
-              .filter(faixa => faixa.faixa_etaria.inicio > 11)
-              .reduce(function(total, faixa) {
+              .filter((faixa) => faixa.faixa_etaria.inicio > 11)
+              .reduce(function (total, faixa) {
                 return total + faixa.count;
               }, totalMatriculados)}
           </td>
           <td className="col-2 text-center">
             {Object.values(values.solicitacao_cei.faixas_quantidades).reduce(
-              function(total, faixa) {
+              function (total, faixa) {
                 return total + (faixa ? parseInt(faixa) : 0);
               },
               totalQuantidadeAlunos

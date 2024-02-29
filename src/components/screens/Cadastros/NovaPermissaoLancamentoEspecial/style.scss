@@ -1,0 +1,18 @@
+.titulo-permissoes-lancamentos {
+  color: #686868;
+}
+
+.diretoria-regional-select {
+  padding-right: 5% !important;
+}
+
+.check-boxes-lancamentos-especiais {
+  margin-left: 12px;
+  display: grid;
+  grid-template-rows: 25% 25% 25% 25%;
+  grid-auto-flow: column;
+
+  .ck-lancamentos-especiais {
+    min-width: 200px;
+  }
+}

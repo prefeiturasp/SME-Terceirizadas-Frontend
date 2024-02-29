@@ -66,10 +66,6 @@
     right: 0;
   }
   .status-card-periodo-grupo {
-    position: absolute;
-    top: 0;
-    right: 0;
-
     background-color: $grayLightHeader;
     color: #198459;
     font-family: "Roboto";
@@ -78,6 +74,11 @@
     font-size: 14px;
     border-radius: 24px;
     padding: 5px 12px;
+  }
+
+  .mensagem-erro {
+    font-size: 11px;
+    color: $red;
   }
 
   .red {
@@ -100,5 +101,33 @@
   }
   .erros-formulario {
     color: red;
+  }
+}
+
+.wraper-periodo-status {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.wraper-contadores-alimentacao {
+  display: grid;
+}
+
+/* Regra base para telas menores ou iguais a 1024px */
+.wraper-contadores-alimentacao {
+  grid-template-columns: 25% 75%;
+}
+
+/* Media query para telas entre 1025px e 1366px */
+@media only screen and (min-width: 1024px) and (max-width: 1365px) {
+  .wraper-contadores-alimentacao div:nth-child(3) {
+    grid-column: span 2; /* A terceira coluna ocupa duas colunas */
+  }
+}
+
+/* Media query para telas maiores ou iguais a 1366px */
+@media only screen and (min-width: 1366px) {
+  .wraper-contadores-alimentacao {
+    grid-template-columns: 16% 58% 26%;
   }
 }

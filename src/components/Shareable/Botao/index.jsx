@@ -4,7 +4,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "./constants";
 import { Tooltip } from "antd";
 import "./style.scss";
 
-export const Botao = props => {
+export const Botao = (props) => {
   const {
     accept,
     className,
@@ -21,9 +21,11 @@ export const Botao = props => {
     tooltipTitulo,
     classTooltip,
     tooltipExterno,
-    tabindex
+    tabindex,
   } = props;
+
   const [exibeMensagem, setExibeMensagem] = useState(false);
+
   return (
     <button
       type={type}
@@ -31,8 +33,12 @@ export const Botao = props => {
       data-cy={texto}
       className={`general-button ${style} ${className}`}
       onClick={onClick}
-      onMouseOver={() => setExibeMensagem(true)}
-      onMouseOut={() => setExibeMensagem(false)}
+      onMouseOver={() =>
+        (tooltipExterno || exibirTooltip) && setExibeMensagem(true)
+      }
+      onMouseOut={() =>
+        (tooltipExterno || exibirTooltip) && setExibeMensagem(false)
+      }
       disabled={disabled}
       accept={accept}
       tabIndex={tabindex}
@@ -74,7 +80,7 @@ Botao.propTypes = {
   type: PropTypes.string,
   exibirTooltip: PropTypes.bool,
   tooltipTitulo: PropTypes.string,
-  classTooltip: PropTypes.string
+  classTooltip: PropTypes.string,
 };
 
 Botao.defaultProps = {
@@ -86,7 +92,7 @@ Botao.defaultProps = {
   type: BUTTON_TYPE.BUTTON,
   exibirTooltip: false,
   tooltipTitulo: "",
-  classTooltip: ""
+  classTooltip: "",
 };
 
 export default Botao;

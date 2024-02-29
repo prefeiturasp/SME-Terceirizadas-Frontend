@@ -1,0 +1,103 @@
+@import "styles/variables.scss";
+
+.lancamento-por-periodo-card {
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin: 0px;
+  padding: 14px 22px 14px 22px;
+  .row {
+    margin: 0px;
+  }
+  .periodo-cabecalho {
+    font-family: Roboto;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 21px;
+  }
+  .total-alimentacoes {
+    border: 0.5px solid #e8e8e8;
+    box-sizing: border-box;
+    border-radius: 4px;
+    text-align: center;
+    color: #ffffff;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    span:nth-child(1) {
+      font-size: 34px;
+      line-height: 40px;
+    }
+    span:nth-child(2) {
+      padding: 6px;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 10px;
+    }
+  }
+  .alimentacoes-por-tipo {
+    font-size: 16px;
+    line-height: 19px;
+    color: $blackSubtle;
+    display: flex;
+    flex-direction: column;
+    span {
+      margin-top: 6px;
+    }
+    padding-left: 32px;
+  }
+  .botao-editar-visualizar-card {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  .status-card-periodo-grupo {
+    background-color: $grayLightHeader;
+    color: #198459;
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 24px;
+    padding: 5px 12px;
+  }
+
+  .red {
+    color: $red;
+  }
+
+  .blue {
+    color: $blue;
+  }
+}
+
+.wraper-periodo-status {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.wraper-contadores-alimentacao {
+  display: grid;
+}
+
+/* Regra base para telas menores ou iguais a 1024px */
+.wraper-contadores-alimentacao {
+  grid-template-columns: 25% 75%;
+}
+
+/* Media query para telas entre 1025px e 1366px */
+@media only screen and (min-width: 1024px) and (max-width: 1365px) {
+  .wraper-contadores-alimentacao div:nth-child(3) {
+    grid-column: span 2; /* A terceira coluna ocupa duas colunas */
+  }
+}
+
+/* Media query para telas maiores ou iguais a 1366px */
+@media only screen and (min-width: 1366px) {
+  .wraper-contadores-alimentacao {
+    grid-template-columns: 16% 58% 26%;
+  }
+}

@@ -7,7 +7,7 @@ const InformativoReclamacao = ({ homologacao }) => {
 
   useEffect(() => {
     const { uuid } = homologacao;
-    getReclamacaoDeProduto(uuid).then(response => {
+    getReclamacaoDeProduto(uuid).then((response) => {
       setReclamacao(response.data);
     });
   }, []);

@@ -4,13 +4,13 @@ import { STATUS_RECLAMACAO } from "configs/constants";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import ModalResponderReclamacao from "../ModalResponderReclamacao";
 import { RECLAMACAO_PRODUTO_STATUS_EXPLICACAO } from "constants/shared";
 import { getReclamacoesTerceirizadaPorFiltro } from "services/produto.service";
 
-const obterTituloLog = status_evento => {
+const obterTituloLog = (status_evento) => {
   switch (status_evento) {
     case "Terceirizada respondeu a reclamação":
       return "Resposta terceirizada";
@@ -23,7 +23,7 @@ const obterTituloLog = status_evento => {
   }
 };
 
-const obterRotuloDataLog = log => {
+const obterRotuloDataLog = (log) => {
   if (
     log.status_evento_explicacao ===
     RECLAMACAO_PRODUTO_STATUS_EXPLICACAO.CODAE_QUESTIONOU_TERCEIRIZADA
@@ -61,7 +61,7 @@ const Reclamacao = ({
   produto,
   setProdutos,
   setCarregando,
-  rastro_terceirizada
+  rastro_terceirizada,
 }) => {
   const [exibirModal, setExibirModal] = useState(null);
 
@@ -71,7 +71,7 @@ const Reclamacao = ({
       setCarregando(true);
       const uuid = produtos[indexProduto].ultima_homologacao.uuid;
       const response = await getReclamacoesTerceirizadaPorFiltro({
-        uuid: uuid
+        uuid: uuid,
       });
       if (response.data.results.length)
         produtos[indexProduto] = response.data.results[0];
@@ -82,7 +82,7 @@ const Reclamacao = ({
     fetchData();
   };
 
-  const responder_deve_aparecer = reclamacao_status => {
+  const responder_deve_aparecer = (reclamacao_status) => {
     if (rastro_terceirizada === null) {
       return true;
     } else if (
@@ -163,13 +163,13 @@ const Reclamacao = ({
           return <LogReclamacao key={index} log={log} />;
         })}
       </div>
-      <div className="text-right">
+      <div className="text-end">
         <Botao
           texto="Responder"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
           onClick={() => setExibirModal(true)}
-          className="ml-3 mr-3"
+          className="ms-3 me-3"
           disabled={responder_deve_aparecer(reclamacao.status)}
         />
       </div>

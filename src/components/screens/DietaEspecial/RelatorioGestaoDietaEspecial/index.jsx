@@ -13,10 +13,8 @@ const RelatorioGestaoDietaEspecial = () => {
   const [page, setPage] = useState(1);
   const [totalResultados, setTotalResultados] = useState(0);
   const [exibirModal, setExibirModal] = useState(false);
-  const [
-    exibirModalCentralDownloads,
-    setExibirModalCentralDownloads
-  ] = useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
   const [dadosRelatorio, setDadosRelatorio] = useState();
   const [filtros, setFiltros] = useState();
   const tipoUsuario = localStorage.getItem("tipo_perfil");
@@ -28,7 +26,7 @@ const RelatorioGestaoDietaEspecial = () => {
       setDadosRelatorio(null);
       const params = gerarParametrosConsulta({
         ...filtros,
-        page: page
+        page: page,
       });
       params.delete("diagnostico");
       params.delete("escola");
@@ -48,7 +46,7 @@ const RelatorioGestaoDietaEspecial = () => {
     return ["CODAE_AUTORIZADO", "CODAE_NEGOU_PEDIDO", "CODAE_A_AUTORIZAR"];
   };
 
-  const onSubmit = values => {
+  const onSubmit = (values) => {
     setPage(1);
     let filtros = { ...values };
     if (!filtros.status) filtros.status = getTodosStatus();

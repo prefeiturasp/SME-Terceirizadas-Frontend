@@ -4,14 +4,14 @@ import axios from "./_base";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
 export const getTotalAlunos = async () => {
   const url = `${API_URL}/codae/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   try {
     const result = await fetch(url, OBJ_REQUEST);
@@ -22,13 +22,13 @@ export const getTotalAlunos = async () => {
   }
 };
 
-export const getKitLanches = async uuid =>
+export const getKitLanches = async (uuid) =>
   await axios.get(`/kit-lanches/${uuid}/`);
 
-export const checaNomeKitLanche = async payload =>
+export const checaNomeKitLanche = async (payload) =>
   await axios.get(`/kit-lanches/nome-existe/`, { params: payload });
 
-export const createKitLanche = async payload =>
+export const createKitLanche = async (payload) =>
   await axios.post(`/kit-lanches/`, payload);
 
 export const updateKitLanche = async (payload, uuid) =>

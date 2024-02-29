@@ -10,7 +10,7 @@ import {
   STATUS_CODAE_SUSPENDEU,
   STATUS_CODAE_QUESTIONADO,
   STATUS_CODAE_AUTORIZOU_RECLAMACAO,
-  STATUS_TERCEIRIZADA_CANCELOU_SOLICITACAO
+  STATUS_TERCEIRIZADA_CANCELOU_SOLICITACAO,
 } from "configs/constants";
 import WizardFormPrimeiraPagina from "./components/WizardFormPrimeiraPagina";
 import WizardFormSegundaPagina from "./components/WizardFormSegundaPagina";
@@ -24,7 +24,7 @@ import {
   getMarcasProdutos,
   getFabricantesProdutos,
   getInformacoesGrupo,
-  TerceirizadaCancelaSoliticaoCorrecao
+  TerceirizadaCancelaSoliticaoCorrecao,
 } from "../../../../services/produto.service";
 import { connect } from "react-redux";
 import { getFormValues } from "redux-form";
@@ -67,20 +67,20 @@ class AtualizacaoProdutoForm extends Component {
       wizardSteps: [
         {
           step: {
-            nome: "Identificação"
-          }
+            nome: "Identificação",
+          },
         },
         {
           step: {
-            nome: "Informação Nutricional"
-          }
+            nome: "Informação Nutricional",
+          },
         },
         {
           step: {
-            nome: "Informação do Produto"
-          }
-        }
-      ]
+            nome: "Informação do Produto",
+          },
+        },
+      ],
     };
   }
 
@@ -88,15 +88,15 @@ class AtualizacaoProdutoForm extends Component {
     values["informacoes_nutricionais"] = [];
     const arrayKeys = Object.keys(values);
     let informacoes = [];
-    arrayKeys.forEach(item => {
+    arrayKeys.forEach((item) => {
       item.includes("informacao=") && informacoes.push(item);
     });
-    informacoes.forEach(informacao => {
+    informacoes.forEach((informacao) => {
       const uuid = informacao.split("=")[1];
       values["informacoes_nutricionais"].push({
         informacao_nutricional: uuid,
         quantidade_porcao: values[`${informacao}`].porcao,
-        valor_diario: values[`${informacao}`].valor_diario
+        valor_diario: values[`${informacao}`].valor_diario,
       });
     });
 
@@ -116,9 +116,9 @@ class AtualizacaoProdutoForm extends Component {
     this.setState({ terceiroStep: true, valoresterceiroForm: valuesForm });
   }
 
-  montaOptions = options => {
+  montaOptions = (options) => {
     let optionsArray = [];
-    options.forEach(option => {
+    options.forEach((option) => {
       optionsArray.push(<Option key={option.uuid}>{`${option.nome}`}</Option>);
     });
     return optionsArray;
@@ -126,31 +126,31 @@ class AtualizacaoProdutoForm extends Component {
 
   showModalHistorico = () => {
     this.setState({
-      visible: true
+      visible: true,
     });
   };
 
   handleOk = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
   handleCancel = () => {
     this.setState({
-      visible: false
+      visible: false,
     });
   };
 
   showModal = () => {
     this.setState({
-      showModal: true
+      showModal: true,
     });
   };
 
   closeModal = () => {
     this.setState({
-      showModal: false
+      showModal: false,
     });
   };
 
@@ -167,7 +167,7 @@ class AtualizacaoProdutoForm extends Component {
     } catch {
       this.setState({
         loading: false,
-        erro: true
+        erro: true,
       });
     }
     let marcas = await getMarcasProdutos();
@@ -175,7 +175,7 @@ class AtualizacaoProdutoForm extends Component {
     let response = await getInformacoesGrupo();
     let arrayMarcas = this.montaOptions(marcas.data.results);
     let arrayFabricantes = this.montaOptions(fabricantes.data.results);
-    informacoesNutricionais = response.data.results.map(item => {
+    informacoesNutricionais = response.data.results.map((item) => {
       item["ativo"] = false;
       return item;
     });
@@ -185,18 +185,13 @@ class AtualizacaoProdutoForm extends Component {
       produto,
       homologacao,
       logs,
-      informacoesNutricionais
+      informacoesNutricionais,
     });
   };
 
   componentDidUpdate() {
-    const {
-      produto,
-      erro,
-      loading,
-      arrayMarcas,
-      arrayFabricantes
-    } = this.state;
+    const { produto, erro, loading, arrayMarcas, arrayFabricantes } =
+      this.state;
     if (
       arrayMarcas.length > 0 &&
       arrayFabricantes.length > 0 &&
@@ -238,7 +233,7 @@ class AtualizacaoProdutoForm extends Component {
       segundoStep,
       valoresterceiroForm,
       terceiroStep,
-      logs
+      logs,
     } = this.state;
     const status = produto ? produto.homologacao.status : null;
 
@@ -288,7 +283,7 @@ class AtualizacaoProdutoForm extends Component {
                     texto="Histórico"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     onClick={this.showModalHistorico}
-                    className="float-right"
+                    className="float-end"
                   />
                 </div>
               </div>
@@ -376,11 +371,11 @@ class AtualizacaoProdutoForm extends Component {
 }
 
 AtualizacaoProdutoForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  values: getFormValues("atualizacaoProduto")(state) || {}
+const mapStateToProps = (state) => ({
+  values: getFormValues("atualizacaoProduto")(state) || {},
 });
 
 export default connect(mapStateToProps)(AtualizacaoProdutoForm);

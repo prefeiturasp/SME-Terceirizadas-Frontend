@@ -11,7 +11,7 @@ const DetalheDoProduto = ({
   status,
   reclamacao,
   questionamento,
-  suspenso
+  suspenso,
 }) => {
   const [ativos, setAtivos] = useState([]);
   const infoNutri = formataInformacoesNutricionais(produto);
@@ -54,7 +54,7 @@ const DetalheDoProduto = ({
                       dangerouslySetInnerHTML={{
                         __html: suspenso
                           ? ultimoLog.justificativa.split("<br>")[0]
-                          : ultimoLog.justificativa
+                          : ultimoLog.justificativa,
                       }}
                     />
                   </p>
@@ -104,7 +104,7 @@ const DetalheDoProduto = ({
       <div className="mb-4 mt-4">
         <hr />
       </div>
-      <div className="report-label-value pl-0">
+      <div className="report-label-value ps-0">
         <p>
           {status === "suspenso" || suspenso
             ? "Produto Suspenso nos Editais"
@@ -112,12 +112,12 @@ const DetalheDoProduto = ({
         </p>
         <p className="value">
           {produto.vinculos_produto_edital
-            .filter(vinculo =>
+            .filter((vinculo) =>
               status === "suspenso" || suspenso
                 ? vinculo.suspenso
                 : !vinculo.suspenso
             )
-            .map(vinculo => vinculo.edital.numero)
+            .map((vinculo) => vinculo.edital.numero)
             .join(", ")}
         </p>
       </div>
@@ -209,18 +209,18 @@ const DetalheDoProduto = ({
         infoNutri.map((informacao, index) => {
           return (
             <div className="pb-2" key={index}>
-              <div className="school-container col-md-12 mr-4">
+              <div className="school-container col-md-12 me-4">
                 <div className="row pt-2 pb-2 title">
                   <div className="title col-4">{informacao.nome}</div>
-                  <div className="col-8 text-right">
+                  <div className="col-8 text-end">
                     <ToggleExpandir
                       onClick={() => {
                         ativos.includes(index)
-                          ? setAtivos(ativos.filter(el => el !== index))
+                          ? setAtivos(ativos.filter((el) => el !== index))
                           : setAtivos([...ativos, index]);
                       }}
                       ativo={ativos.includes(index)}
-                      className="float-right"
+                      className="float-end"
                     />
                   </div>
                 </div>

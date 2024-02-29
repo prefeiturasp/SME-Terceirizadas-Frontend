@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import {
   meusDados,
-  atualizarSenhaLogado
+  atualizarSenhaLogado,
 } from "../../../services/perfil.service";
 import { TIPO_PERFIL, ENTER } from "../../../constants/shared";
 import { formataCPFCensurado } from "../../../helpers/utilities";
@@ -19,7 +19,7 @@ class Perfil extends Component {
     super(props);
     this.state = {
       meusDados: null,
-      showModal: false
+      showModal: false,
     };
     this.abrirModal = this.abrirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
@@ -27,7 +27,7 @@ class Perfil extends Component {
   }
 
   componentDidMount() {
-    meusDados().then(meusDados => {
+    meusDados().then((meusDados) => {
       this.setState({ meusDados });
       this.props.change("email", meusDados.email);
       this.props.change("tipo_email", meusDados.tipo_email);
@@ -50,9 +50,9 @@ class Perfil extends Component {
       const values = {
         senha_atual: senha_atual,
         senha: senha,
-        confirmar_senha: confirmar_senha
+        confirmar_senha: confirmar_senha,
       };
-      atualizarSenhaLogado(values).then(response => {
+      atualizarSenhaLogado(values).then((response) => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Senha atualizada com sucesso!");
           this.props.change("senha_atual", "");
@@ -159,17 +159,17 @@ class Perfil extends Component {
 
 Perfil = reduxForm({
   form: "perfil",
-  destroyOnUnmount: false
+  destroyOnUnmount: false,
 })(Perfil);
 
 const selector = formValueSelector("perfil");
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     email: selector(state, "email"),
     tipo_email: selector(state, "tipo_email"),
     senha_atual: selector(state, "senha_atual"),
     senha: selector(state, "senha"),
-    confirmar_senha: selector(state, "confirmar_senha")
+    confirmar_senha: selector(state, "confirmar_senha"),
   };
 };
 

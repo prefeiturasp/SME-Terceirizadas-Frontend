@@ -6,41 +6,41 @@ import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 const URL_SUSPENSAO_ALIMENTACAO = `${API_URL}/grupos-suspensoes-alimentacao`;
 
-export const createSuspensaoDeAlimentacao = payload => {
+export const createSuspensaoDeAlimentacao = (payload) => {
   const url = `${URL_SUSPENSAO_ALIMENTACAO}/`;
 
   let status = 0;
   return fetch(url, {
     method: "POST",
     body: payload,
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const deleteSuspensaoDeAlimentacao = uuid => {
+export const deleteSuspensaoDeAlimentacao = (uuid) => {
   const url = `${URL_SUSPENSAO_ALIMENTACAO}/${uuid}/`;
   return fetch(url, {
     method: "DELETE",
-    headers: authToken
+    headers: authToken,
   })
-    .then(result => {
+    .then((result) => {
       return result.status;
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -49,47 +49,41 @@ export const getSuspensoesDeAlimentacaoSalvas = () => {
   const url = `${URL_SUSPENSAO_ALIMENTACAO}/meus_rascunhos/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
 
-export const getMotivosSuspensaoCardapio = () => {
+export const getMotivosSuspensaoCardapio = async () => {
   const url = `${API_URL}/motivos-suspensao-cardapio/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const enviarSuspensaoDeAlimentacao = uuid => {
+export const enviarSuspensaoDeAlimentacao = (uuid) => {
   const url = `${URL_SUSPENSAO_ALIMENTACAO}/${uuid}/informa-suspensao/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -110,16 +104,16 @@ export const updateSuspensaoDeAlimentacao = (uuid, payload) => {
   return fetch(url, {
     method: "PUT",
     body: payload,
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -128,53 +122,51 @@ export const getSuspensoesDeAlimentacaoInformadas = () => {
   const url = `${URL_SUSPENSAO_ALIMENTACAO}/informadas/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };
 
-export const getSuspensaoDeAlimentacaoUUID = uuid => {
+export const getSuspensaoDeAlimentacaoUUID = (uuid) => {
   const url = `${URL_SUSPENSAO_ALIMENTACAO}/${uuid}/`;
   let status = 0;
   return fetch(url, {
     method: "get",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const terceirizadaTomaCienciaSuspensaoDeAlimentacao = uuid => {
-  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${uuid}/${
-    FLUXO.TERCEIRIZADA_TOMA_CIENCIA
-  }/`;
+export const terceirizadaTomaCienciaSuspensaoDeAlimentacao = (uuid) => {
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${uuid}/${FLUXO.TERCEIRIZADA_TOMA_CIENCIA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -184,50 +176,46 @@ export const getSuspensaoDeAlimentacaoTomadaCiencia = () => {
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const getSuspensaoDeAlimentacaoCODAE = filtro_aplicado => {
-  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${
-    PEDIDOS.CODAE
-  }/${filtro_aplicado}/`;
+export const getSuspensaoDeAlimentacaoCODAE = (filtro_aplicado) => {
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${PEDIDOS.CODAE}/${filtro_aplicado}/`;
 
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       return res.json();
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const getTerceirizadasSuspensoesDeAlimentacao = filtroAplicado => {
-  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${
-    PEDIDOS.TERCEIRIZADA
-  }/${filtroAplicado}/`;
+export const getTerceirizadasSuspensoesDeAlimentacao = (filtroAplicado) => {
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${PEDIDOS.TERCEIRIZADA}/${filtroAplicado}/`;
   const OBJ_REQUEST = {
     headers: authToken,
-    method: "GET"
+    method: "GET",
   };
   return fetch(url, OBJ_REQUEST)
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
 };

@@ -7,11 +7,11 @@ import Botao from "components/Shareable/Botao";
 import {
   getNomeDeProdutosEdital,
   getMarcasProdutos,
-  getFabricantesProdutos
+  getFabricantesProdutos,
 } from "services/produto.service";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
 import "./styles.scss";
@@ -22,7 +22,7 @@ import {
   STATUS_CODAE_QUESTIONADO,
   STATUS_CODAE_HOMOLOGADO,
   STATUS_ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
-  STATUS_TERCEIRIZADA_RESPONDEU_RECLAMACAO
+  STATUS_TERCEIRIZADA_RESPONDEU_RECLAMACAO,
 } from "configs/constants";
 
 const maxLength5000 = maxLengthProduto(5000);
@@ -47,7 +47,7 @@ class WizardFormPrimeiraPagina extends React.Component {
       showModalCadastrarItem: false,
       desabilitarNomeDoProdutoField: true,
       desabilitarEhParaAlunosComDietaField: true,
-      status_codae_questionado: false
+      status_codae_questionado: false,
     };
   }
 
@@ -59,7 +59,7 @@ class WizardFormPrimeiraPagina extends React.Component {
       if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO) {
         this.setState({
           desabilitarNomeDoProdutoField: false,
-          status_codae_questionado: true
+          status_codae_questionado: true,
         });
       }
       if (
@@ -67,11 +67,11 @@ class WizardFormPrimeiraPagina extends React.Component {
           STATUS_CODAE_QUESTIONADO,
           STATUS_CODAE_HOMOLOGADO,
           STATUS_ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
-          STATUS_TERCEIRIZADA_RESPONDEU_RECLAMACAO
+          STATUS_TERCEIRIZADA_RESPONDEU_RECLAMACAO,
         ].includes(produto.homologacao.status)
       ) {
         this.setState({
-          desabilitarEhParaAlunosComDietaField: false
+          desabilitarEhParaAlunosComDietaField: false,
         });
       }
     }
@@ -86,15 +86,11 @@ class WizardFormPrimeiraPagina extends React.Component {
       completo,
       marcasArray,
       fabricantesArray,
-      loading
+      loading,
     } = this.state;
 
-    const {
-      change,
-      protocolos,
-      primeiroStep,
-      valoresPrimeiroForm
-    } = this.props;
+    const { change, protocolos, primeiroStep, valoresPrimeiroForm } =
+      this.props;
 
     let listaNomeDeProdutosEdital = [];
     let listaMarcas = [];
@@ -105,17 +101,17 @@ class WizardFormPrimeiraPagina extends React.Component {
       const responseMarcas = await getMarcasProdutos();
       const responseFabricantes = await getFabricantesProdutos();
 
-      responseNomeDeProdutosEdital.data.results.forEach(produtoEdital => {
+      responseNomeDeProdutosEdital.data.results.forEach((produtoEdital) => {
         listaNomeDeProdutosEdital.push(
           <Option key={`${produtoEdital.uuid}`}>{produtoEdital.nome}</Option>
         );
       });
 
-      responseMarcas.data.results.forEach(marca => {
+      responseMarcas.data.results.forEach((marca) => {
         listaMarcas.push(<Option key={`${marca.uuid}`}>{marca.nome}</Option>);
       });
 
-      responseFabricantes.data.results.forEach(fabricante => {
+      responseFabricantes.data.results.forEach((fabricante) => {
         listaFabricantes.push(
           <Option key={`${fabricante.uuid}`}>{fabricante.nome}</Option>
         );
@@ -127,7 +123,7 @@ class WizardFormPrimeiraPagina extends React.Component {
         listNomesProdutos: responseNomeDeProdutosEdital.data.results,
         listaMarcas: responseMarcas.data.results,
         listaFabricantes: responseFabricantes.data.results,
-        loading: false
+        loading: false,
       });
     }
 
@@ -205,13 +201,13 @@ class WizardFormPrimeiraPagina extends React.Component {
 
   showModalCadastrarItem = () => {
     this.setState({
-      showModalCadastrarItem: true
+      showModalCadastrarItem: true,
     });
   };
 
   closeModalCadastrarItem = () => {
     this.setState({
-      showModalCadastrarItem: false
+      showModalCadastrarItem: false,
     });
   };
 
@@ -222,11 +218,11 @@ class WizardFormPrimeiraPagina extends React.Component {
     let listaMarcas = [];
     let listaFabricantes = [];
 
-    responseMarcas.data.results.forEach(marca => {
+    responseMarcas.data.results.forEach((marca) => {
       listaMarcas.push(<Option key={`${marca.uuid}`}>{marca.nome}</Option>);
     });
 
-    responseFabricantes.data.results.forEach(fabricante => {
+    responseFabricantes.data.results.forEach((fabricante) => {
       listaFabricantes.push(
         <Option key={`${fabricante.uuid}`}>{fabricante.nome}</Option>
       );
@@ -237,11 +233,11 @@ class WizardFormPrimeiraPagina extends React.Component {
       fabricantesArray: listaFabricantes,
       listaMarcas: responseMarcas.data.results,
       listaFabricantes: responseFabricantes.data.results,
-      loading: false
+      loading: false,
     });
   };
 
-  dietaEspecialCheck = valor => {
+  dietaEspecialCheck = (valor) => {
     let { produtoForm } = this.state;
     produtoForm.eh_para_alunos_com_dieta = valor === "1" ? true : false;
     if (valor === "0") {
@@ -251,7 +247,7 @@ class WizardFormPrimeiraPagina extends React.Component {
     }
   };
 
-  alergenicosCheck = valor => {
+  alergenicosCheck = (valor) => {
     let { produtoForm } = this.state;
     const { change } = this.props;
     produtoForm.tem_aditivos_alergenicos = valor === "1" ? true : false;
@@ -263,7 +259,7 @@ class WizardFormPrimeiraPagina extends React.Component {
     }
   };
 
-  temGlutemCheck = valor => {
+  temGlutemCheck = (valor) => {
     let { produtoForm } = this.state;
     const { change } = this.props;
     produtoForm.tem_gluten = valor === "1" ? true : false;
@@ -275,35 +271,35 @@ class WizardFormPrimeiraPagina extends React.Component {
     }
   };
 
-  addNome = valor => {
+  addNome = (valor) => {
     let { produtoForm, listNomesProdutos } = this.state;
     const { change } = this.props;
-    let nome = listNomesProdutos.filter(nome => valor === nome.uuid)[0].nome;
+    let nome = listNomesProdutos.filter((nome) => valor === nome.uuid)[0].nome;
     produtoForm.nome = nome;
     change("nome", nome);
     this.setState({ produtoForm });
   };
 
-  addMarca = valor => {
+  addMarca = (valor) => {
     let { produtoForm, listaMarcas } = this.state;
     const { change } = this.props;
-    produtoForm.marca = listaMarcas.filter(marca => valor === marca.uuid)[0];
+    produtoForm.marca = listaMarcas.filter((marca) => valor === marca.uuid)[0];
     change("marca", valor);
     this.setState({ produtoForm });
   };
 
-  addFabricante = valor => {
+  addFabricante = (valor) => {
     let { produtoForm, listaFabricantes } = this.state;
     const { change } = this.props;
     produtoForm.fabricante = listaFabricantes.filter(
-      fabricante => valor === fabricante.uuid
+      (fabricante) => valor === fabricante.uuid
     )[0];
     change("fabricante", valor);
     this.setState({ produtoForm });
   };
 
   render() {
-    const { handleSubmit, valuesForm } = this.props;
+    const { handleSubmit, valuesForm, produto } = this.props;
 
     const {
       produtoForm,
@@ -312,7 +308,7 @@ class WizardFormPrimeiraPagina extends React.Component {
       fabricantesArray,
       desabilitarNomeDoProdutoField,
       desabilitarEhParaAlunosComDietaField,
-      status_codae_questionado
+      status_codae_questionado,
     } = this.state;
 
     return (
@@ -326,7 +322,7 @@ class WizardFormPrimeiraPagina extends React.Component {
             </label>
             <Field
               component={ASelect}
-              onBlur={e => {
+              onBlur={(e) => {
                 e.preventDefault();
               }}
               className={"select-form-produto"}
@@ -347,9 +343,10 @@ class WizardFormPrimeiraPagina extends React.Component {
               </label>
               <Field
                 component={ASelect}
-                onBlur={e => {
+                onBlur={(e) => {
                   e.preventDefault();
                 }}
+                disabled={produto}
                 className={"select-form-produto"}
                 showSearch
                 name="marca"
@@ -371,7 +368,7 @@ class WizardFormPrimeiraPagina extends React.Component {
               </label>
               <Field
                 component={ASelect}
-                onBlur={e => {
+                onBlur={(e) => {
                   e.preventDefault();
                 }}
                 className={"select-form-produto"}
@@ -385,21 +382,24 @@ class WizardFormPrimeiraPagina extends React.Component {
                 }}
                 onSelect={this.addFabricante}
                 validate={required}
+                disabled={produto}
               >
                 {fabricantesArray}
               </Field>
             </div>
-            <div className="mt-4 adicionar-marca-fornecedor">
-              <Botao
-                texto="Cadastrar Item"
-                className={"botao-adicionar-marca-fabricante"}
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                onClick={() => {
-                  this.showModalCadastrarItem();
-                }}
-              />
-            </div>
+            {!produto && (
+              <div className="mt-4 adicionar-marca-fornecedor">
+                <Botao
+                  texto="Cadastrar Item"
+                  className={"botao-adicionar-marca-fabricante"}
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  onClick={() => {
+                    this.showModalCadastrarItem();
+                  }}
+                />
+              </div>
+            )}
           </section>
 
           <section className="dieta-especial-form">
@@ -556,7 +556,7 @@ class WizardFormPrimeiraPagina extends React.Component {
             <Botao
               texto={"Cancelar"}
               type={BUTTON_TYPE.BUTTON}
-              className="ml-3"
+              className="ms-3"
               style={BUTTON_STYLE.GREEN_OUTLINE}
               onClick={() => {
                 this.props.showModal(true);
@@ -566,7 +566,7 @@ class WizardFormPrimeiraPagina extends React.Component {
           <Botao
             texto={"Próximo"}
             type={BUTTON_TYPE.SUBMIT}
-            className="ml-3"
+            className="ms-3"
             style={BUTTON_STYLE.GREEN_OUTLINE}
             onClick={() => {
               this.props.passouPrimeiroStep(valuesForm, produtoForm);
@@ -587,5 +587,5 @@ class WizardFormPrimeiraPagina extends React.Component {
 export default reduxForm({
   form: "atualizacaoProduto",
   destroyOnUnmount: false,
-  forceUnregisterOnUnmount: true
+  forceUnregisterOnUnmount: true,
 })(WizardFormPrimeiraPagina);

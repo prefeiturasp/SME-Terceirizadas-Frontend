@@ -4,13 +4,15 @@ import axios from "./_base";
 import { AUTH_TOKEN } from "./constants";
 import Cookies from "js-cookie";
 import { ErrorHandlerFunction } from "./service-helpers";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { getMensagemDeErro } from "helpers/statusErrors";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
 };
 
-export const setUsuario = payload => {
+export const setUsuario = (payload) => {
   const url = `${API_URL}/cadastro/`;
   let status = 0;
 
@@ -19,36 +21,36 @@ export const setUsuario = payload => {
     body: JSON.stringify(payload),
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": Cookies.get("csrftoken")
-    }
+      "X-CSRFToken": Cookies.get("csrftoken"),
+    },
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return console.log(error);
     });
 };
 
-export const recuperaSenha = registro_funcional => {
+export const recuperaSenha = (registro_funcional) => {
   const url = `${API_URL}/cadastro/recuperar-senha/${registro_funcional}/`;
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: { "Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json" },
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return console.log(error);
     });
 };
@@ -59,16 +61,16 @@ export const atualizarSenha = (uuid, confirmationKey, payLoad) => {
   return fetch(url, {
     method: "POST",
     body: JSON.stringify(payLoad),
-    headers: { "Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json" },
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
@@ -77,12 +79,12 @@ export const meusDados = () => {
   const url = `${API_URL}/usuarios/meus-dados/`;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 };
@@ -100,38 +102,38 @@ export const atualizarCargo = () => {
   const url = `${API_URL}/usuarios/atualizar-cargo/`;
   return fetch(url, {
     method: "GET",
-    headers: authToken
+    headers: authToken,
   })
-    .then(result => {
+    .then((result) => {
       return result.json();
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
       return error;
     });
 };
 
-export const atualizarEmail = payload => {
+export const atualizarEmail = (payload) => {
   const url = `${API_URL}/usuarios/atualizar-email/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
     body: JSON.stringify(payload),
-    headers: authToken
+    headers: authToken,
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const atualizarSenhaLogado = async payload => {
+export const atualizarSenhaLogado = async (payload) => {
   const url = `${API_URL}/usuarios/atualizar-senha/`;
   const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -145,25 +147,25 @@ export const confirmarEmail = (uuid, confirmationKey) => {
   let status = 0;
   return fetch(url, {
     method: "GET",
-    headers: { "Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json" },
   })
-    .then(res => {
+    .then((res) => {
       status = res.status;
       return res.json();
     })
-    .then(data => {
+    .then((data) => {
       return { data: data, status: status };
     })
-    .catch(error => {
+    .catch((error) => {
       return error.json();
     });
 };
 
-export const obtemDadosAlunoPeloEOL = async codEOL => {
+export const obtemDadosAlunoPeloEOL = async (codEOL) => {
   const url = `${API_URL}/dados-alunos-eol/${codEOL}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
-    method: "GET"
+    method: "GET",
   };
   try {
     const result = await fetch(url, OBJ_REQUEST);
@@ -175,37 +177,34 @@ export const obtemDadosAlunoPeloEOL = async codEOL => {
   }
 };
 
-export const dadosDoAluno = codigoEol => {
+export const dadosDoAluno = async (codigoEol) => {
   const url = `${API_URL}/alunos/${codigoEol}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "GET",
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getAlunosListagem = async params =>
+export const getAlunosListagem = async (params) =>
   await axios.get(`/alunos/`, { params });
 
-export const getPerfilListagem = async params =>
+export const getPerfilListagem = async (params) =>
   await axios.get(`/perfis/`, { params });
 
-export const getVisoesListagem = async params =>
+export const getVisoesListagem = async (params) =>
   await axios.get(`/perfis/visoes/`, { params });
 
-export const getPerfisSubordinados = async params => {
+export const getPerfisSubordinados = async (params) => {
   const perfil = localStorage.getItem("perfil").replace(/['"]+/g, "");
-  return await axios.get(`/perfis-vinculados/${perfil}/perfis-subordinados/`, {
-    params
-  });
+  try {
+    return await axios.get(
+      `/perfis-vinculados/${perfil}/perfis-subordinados/`,
+      {
+        params,
+      }
+    );
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
 };

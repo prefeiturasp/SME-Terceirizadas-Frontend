@@ -1,32 +1,25 @@
 import HTTP_STATUS from "http-status-codes";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { dataParaUTC } from "helpers/utilities";
 import { getDiasUteis } from "services/diasUteis.service";
-import { getMeusDados } from "services/perfil.service";
 import { SolicitacaoKitLancheCEMEI } from "..";
 import { getKitsLanche } from "services/kitLanche";
 import { getDietasAtivasInativasPorAluno } from "services/dietaEspecial.service";
+import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
+import MeusDadosContext from "context/MeusDadosContext";
 
 export const Container = () => {
-  const [dados, setDados] = useState(null);
+  const { meusDados } = useContext(MeusDadosContext);
+
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
   const [kits, setKits] = useState(null);
   const [erro, setErro] = useState(false);
   const [alunosComDietaEspecial, setAlunosComDietaEspecial] = useState(null);
 
-  const getMeusDadosAsync = async () => {
-    const response = await getMeusDados();
-    if (response.status === HTTP_STATUS.OK) {
-      setDados(response.data);
-    } else {
-      setErro(true);
-    }
-  };
-
   const getDietasAtivasInativasPorAlunoAsync = async () => {
     const response = await getDietasAtivasInativasPorAluno({
-      incluir_alteracao_ue: true
+      incluir_alteracao_ue: true,
     });
     if (response.status === HTTP_STATUS.OK) {
       setAlunosComDietaEspecial(response.data.solicitacoes);
@@ -45,7 +38,9 @@ export const Container = () => {
   };
 
   const getDiasUteisAsync = async () => {
-    const response = await getDiasUteis();
+    const response = await getDiasUteis({
+      escola_uuid: meusDados.vinculo_atual.instituicao.uuid,
+    });
     if (response.status === HTTP_STATUS.OK) {
       setProximosCincoDiasUteis(
         dataParaUTC(new Date(response.data.proximos_cinco_dias_uteis))
@@ -59,14 +54,18 @@ export const Container = () => {
   };
 
   useEffect(() => {
-    getMeusDadosAsync();
-    getDiasUteisAsync();
+    if (meusDados) {
+      getDiasUteisAsync();
+    }
+  }, [meusDados]);
+
+  useEffect(() => {
     getKitsAsync();
     getDietasAtivasInativasPorAlunoAsync();
   }, []);
 
   const REQUISICOES_CONCLUIDAS =
-    dados &&
+    meusDados &&
     proximosDoisDiasUteis &&
     proximosCincoDiasUteis &&
     kits &&
@@ -74,13 +73,13 @@ export const Container = () => {
 
   return (
     <div>
-      {!REQUISICOES_CONCLUIDAS && !erro && <div>Carregando...</div>}
+      {!REQUISICOES_CONCLUIDAS && !erro && <SigpaeLogoLoader />}
       {erro && (
         <div>Erro ao carregar informações. Tente novamente mais tarde.</div>
       )}
       {REQUISICOES_CONCLUIDAS && (
         <SolicitacaoKitLancheCEMEI
-          meusDados={dados}
+          meusDados={meusDados}
           kits={kits}
           alunosComDietaEspecial={alunosComDietaEspecial}
           proximosCincoDiasUteis={proximosCincoDiasUteis}

@@ -10,7 +10,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { ModalOcorrencia } from "./components/ModalOcorrencia";
 import { BUTTON_ICON } from "components/Shareable/Botao/constants";
@@ -18,7 +18,7 @@ import { TabelaLancamentosPeriodo } from "./components/TabelaLancamentosPeriodo"
 import {
   medicaoInicialExportarOcorrenciasPDF,
   medicaoInicialExportarOcorrenciasXLSX,
-  relatorioMedicaoInicialPDF
+  relatorioMedicaoInicialPDF,
 } from "services/relatorios";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import {
@@ -29,18 +29,32 @@ import {
   dreSolicitaCorrecaoUE,
   codaeAprovaSolicitacaoMedicao,
   codaeSolicitaCorrecaoUE,
-  codaeAprovaPeriodo
+  codaeAprovaPeriodo,
+  updateSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
+  getFeriadosNoMesComNome,
+  getDiasCalendario,
+  getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola,
+} from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
+import {
   MEDICAO_STATUS_DE_PROGRESSO,
-  OCORRENCIA_STATUS_DE_PROGRESSO
+  OCORRENCIA_STATUS_DE_PROGRESSO,
 } from "./constants";
 import "./style.scss";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { ModalEnviarParaCodaeECodaeAprovar } from "./components/ModalEnviarParaCodaeECodaeAprovar";
 import { ModalSolicitarCorrecaoUE } from "./components/ModalSolicitarCorrecaoUE";
+import { ModalHistoricoCorrecoesPeriodo } from "./components/ModalHistoricoCorrecoesPeriodo";
 import ModalHistorico from "components/Shareable/ModalHistorico";
-import { usuarioEhDRE, usuarioEhMedicao } from "helpers/utilities";
+import {
+  ehEscolaTipoCEI,
+  usuarioEhDRE,
+  usuarioEhMedicao,
+  getError,
+  getISOLocalDatetimeString,
+} from "helpers/utilities";
 
 export const ConferenciaDosLancamentos = () => {
   const location = useLocation();
@@ -56,42 +70,73 @@ export const ConferenciaDosLancamentos = () => {
   const [historico, setHistorico] = useState([]);
   const [ocorrencia, setOcorrencia] = useState(null);
   const [ocorrenciaExpandida, setOcorrenciaExpandida] = useState(false);
-  const [showModalSalvarOcorrencia, setShowModalSalvarOcorrencia] = useState(
-    false
-  );
-  const [showModalAprovarOcorrencia, setShowModalAprovarOcorrencia] = useState(
-    false
-  );
+  const [showModalSalvarOcorrencia, setShowModalSalvarOcorrencia] =
+    useState(false);
+  const [showModalAprovarOcorrencia, setShowModalAprovarOcorrencia] =
+    useState(false);
   const [
     showModalEnviarParaCodaeECodaeAprovar,
-    setShowModalEnviarParaCodaeECodaeAprovar
+    setShowModalEnviarParaCodaeECodaeAprovar,
   ] = useState(false);
+  const [showModalSolicitarCorrecaoUE, setShowModalSolicitarCorrecaoUE] =
+    useState(false);
   const [
-    showModalSolicitarCorrecaoUE,
-    setShowModalSolicitarCorrecaoUE
+    showModalHistoricoCorrecoesPeriodo,
+    setShowModalHistoricoCorrecoesPeriodo,
   ] = useState(false);
   const [logCorrecaoOcorrencia, setLogCorrecaoOcorrencia] = useState(null);
-  const [logCorrecaoOcorrenciaCODAE, setLogCorrecaoOcorrenciaCODAE] = useState(
-    null
-  );
-  const [
-    exibirModalCentralDownloads,
-    setExibirModalCentralDownloads
-  ] = useState(false);
+  const [logCorrecaoOcorrenciaCODAE, setLogCorrecaoOcorrenciaCODAE] =
+    useState(null);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
   const [textoOcorrencia, setTextoOcorrencia] = useState("");
   const [
     desabilitarEnviarParaCodaeECodaeAprovar,
-    setDesabilitarEnviarParaCodaeECodaeAprovar
+    setDesabilitarEnviarParaCodaeECodaeAprovar,
   ] = useState(true);
-  const [
-    desabilitarSolicitarCorrecao,
-    setDesabilitarSolicitarCorrecao
-  ] = useState(true);
+  const [desabilitarSolicitarCorrecao, setDesabilitarSolicitarCorrecao] =
+    useState(true);
   const [showModal, setShowModal] = useState(false);
+
+  const [feriadosNoMes, setFeriadosNoMes] = useState();
+  const [diasCalendario, setDiasCalendario] = useState();
+  const [diasSobremesaDoce, setDiasSobremesaDoce] = useState();
 
   const visualizarModal = () => {
     setShowModal(true);
   };
+
+  const getFeriadosNoMesAsync = async (mes, ano) => {
+    const params_feriados_no_mes = {
+      mes: mes,
+      ano: ano,
+    };
+    const response = await getFeriadosNoMesComNome(params_feriados_no_mes);
+    if (response.status === HTTP_STATUS.OK) {
+      setFeriadosNoMes(response.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar feriados do mês para esta escola. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const getDiasCalendarioAsync = async (mes, ano) => {
+    const params_dias_calendario = {
+      escola_uuid: location.state.escolaUuid,
+      mes: mes,
+      ano: ano,
+    };
+    const response = await getDiasCalendario(params_dias_calendario);
+    if (response.status === HTTP_STATUS.OK) {
+      setDiasCalendario(response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar dias do calendário escolar para esta escola. Tente novamente mais tarde."
+      );
+    }
+  };
+
   const getPeriodosGruposMedicaoAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
@@ -128,7 +173,7 @@ export const ConferenciaDosLancamentos = () => {
       "MEDICAO_ENVIADA_PELA_UE",
       "MEDICAO_CORRECAO_SOLICITADA",
       "MEDICAO_APROVADA_PELA_DRE",
-      "MEDICAO_CORRIGIDA_PELA_UE"
+      "MEDICAO_CORRIGIDA_PELA_UE",
     ].includes(solicitacao.ocorrencia.status);
 
   const desabilitarSolicitarCorrecaoOcorrenciaCODAE =
@@ -139,7 +184,7 @@ export const ConferenciaDosLancamentos = () => {
       "MEDICAO_APROVADA_PELA_DRE",
       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
       "MEDICAO_APROVADA_PELA_CODAE",
-      "MEDICAO_CORRIGIDA_PARA_CODAE"
+      "MEDICAO_CORRIGIDA_PARA_CODAE",
     ].includes(solicitacao.ocorrencia.status);
 
   const desabilitarAprovarOcorrenciaCODAE =
@@ -149,7 +194,7 @@ export const ConferenciaDosLancamentos = () => {
     ![
       "MEDICAO_APROVADA_PELA_DRE",
       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-      "MEDICAO_CORRIGIDA_PARA_CODAE"
+      "MEDICAO_CORRIGIDA_PARA_CODAE",
     ].includes(solicitacao.ocorrencia.status);
 
   const desabilitarAprovarOcorrenciaDRE =
@@ -159,8 +204,55 @@ export const ConferenciaDosLancamentos = () => {
     ![
       "MEDICAO_ENVIADA_PELA_UE",
       "MEDICAO_CORRIGIDA_PELA_UE",
-      "MEDICAO_CORRECAO_SOLICITADA"
+      "MEDICAO_CORRECAO_SOLICITADA",
     ].includes(solicitacao.ocorrencia.status);
+
+  const desabilitaBotaoExportarPDF = () => {
+    if (
+      usuarioEhDRE() &&
+      solicitacao &&
+      solicitacao.status === "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE"
+    ) {
+      return true;
+    }
+
+    return (
+      (usuarioEhDRE() || usuarioEhMedicao()) &&
+      solicitacao &&
+      solicitacao.status === "MEDICAO_CORRIGIDA_PARA_CODAE" &&
+      !solicitacao.dre_ciencia_correcao_data
+    );
+  };
+
+  const habilitaBotaoCienteCorrecoes = () => {
+    const todosPeriodosGruposAprovadosCODAE = !periodosGruposMedicao.some(
+      (periodoGrupo) => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_CODAE"
+    );
+    return (
+      usuarioEhDRE() &&
+      solicitacao &&
+      solicitacao.status === "MEDICAO_CORRIGIDA_PARA_CODAE" &&
+      !solicitacao.dre_ciencia_correcao_data &&
+      todosPeriodosGruposAprovadosCODAE &&
+      (!solicitacao.ocorrencia ||
+        solicitacao.ocorrencia.status === "MEDICAO_APROVADA_PELA_CODAE")
+    );
+  };
+
+  const atualizaSolicitacaoMedicaoInicial = async () => {
+    let payload = new FormData();
+    payload.append("dre_ciencia_correcao_data", getISOLocalDatetimeString());
+    const response = await updateSolicitacaoMedicaoInicial(
+      solicitacao.uuid,
+      payload
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Assinatura confirmada com sucesso!");
+      await getSolMedInicialAsync();
+    } else {
+      toastError(getError(response.data));
+    }
+  };
 
   const getSolMedInicialAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -176,13 +268,13 @@ export const ConferenciaDosLancamentos = () => {
       ano = response.data.ano;
       const data = new Date(`${mes}/01/${ano}`);
       mesString = format(data, "LLLL", {
-        locale: ptBR
+        locale: ptBR,
       }).toString();
       mesString = mesString.charAt(0).toUpperCase() + mesString.slice(1);
       escola = response.data.escola;
       dados_iniciais = {
         mes_lancamento: `${mesString} / ${ano}`,
-        unidade_educacional: escola
+        unidade_educacional: escola,
       };
       setSolicitacao(response.data);
       setHistorico(response.data.ocorrencia && response.data.ocorrencia.logs);
@@ -190,12 +282,12 @@ export const ConferenciaDosLancamentos = () => {
       setAnoSolicitacao(ano);
       if (response.data.com_ocorrencias) {
         const arquivoPdfOcorrencia = response.data.ocorrencia;
-        const logOcorrencia = arquivoPdfOcorrencia.logs.find(log =>
+        const logOcorrencia = arquivoPdfOcorrencia.logs.find((log) =>
           ["Correção solicitada", "Aprovado pela DRE"].includes(
             log.status_evento_explicacao
           )
         );
-        const logOcorrenciaCODAE = arquivoPdfOcorrencia.logs.find(log =>
+        const logOcorrenciaCODAE = arquivoPdfOcorrencia.logs.find((log) =>
           ["Correção solicitada pela CODAE", "Aprovado pela CODAE"].includes(
             log.status_evento_explicacao
           )
@@ -222,13 +314,37 @@ export const ConferenciaDosLancamentos = () => {
       setErroAPI("Erro ao carregar Medição Inicial.");
     }
     dados_iniciais && setDadosIniciais(dados_iniciais);
-    setLoading(false);
   };
+
+  const getListaDiasSobremesaDoceAsync = async () => {
+    const escola_uuid = location.state.escolaUuid;
+    const params = {
+      mes: Number(mesSolicitacao),
+      ano: Number(anoSolicitacao),
+      escola_uuid,
+    };
+    const response = await getListaDiasSobremesaDoce(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setDiasSobremesaDoce(response.data);
+    } else {
+      toastError("Erro ao carregar dias de sobremesa doce");
+    }
+  };
+
+  useEffect(() => {
+    if (mesSolicitacao && anoSolicitacao) {
+      !feriadosNoMes && getFeriadosNoMesAsync(mesSolicitacao, anoSolicitacao);
+      !diasCalendario && getDiasCalendarioAsync(mesSolicitacao, anoSolicitacao);
+      !ehEscolaTipoCEI({ nome: solicitacao.escola }) &&
+        getListaDiasSobremesaDoceAsync();
+    }
+  }, [mesSolicitacao, anoSolicitacao]);
 
   const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
     const escolaUuid = location.state.escolaUuid;
     const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
-      escolaUuid
+      escolaUuid,
+      { ano: anoSolicitacao }
     );
     if (response_vinculos.status === HTTP_STATUS.OK) {
       setPeriodosSimples(response_vinculos.data.results);
@@ -237,28 +353,70 @@ export const ConferenciaDosLancamentos = () => {
         "Erro ao carregar períodos simples. Tente novamente mais tarde."
       );
     }
+    await getPeriodosComEventoEspecificoAsync(response_vinculos.data.results);
   };
 
-  const getHistorico = () => {
-    return historico;
+  const getPeriodosComEventoEspecificoAsync = async (
+    periodosSimplesVinculos
+  ) => {
+    const escola_uuid = location.state.escolaUuid;
+    const tipo_solicitacao = "Inclusão de";
+    const mes = Number(location.state.mes);
+    const ano = Number(location.state.ano);
+    const response =
+      await getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola({
+        escola_uuid,
+        mes,
+        ano,
+        tipo_solicitacao,
+      });
+    if (response.status === HTTP_STATUS.OK) {
+      const data = response.data.map((vinculo) => {
+        vinculo.periodo_escolar.eh_periodo_especifico = true;
+        return vinculo;
+      });
+      const nomesPeriodosNormais = periodosSimplesVinculos.map(
+        (vinculo) => vinculo.periodo_escolar.nome
+      );
+      const pEspecificos = data.filter(
+        (vinculo) =>
+          !nomesPeriodosNormais.includes(vinculo.periodo_escolar.nome)
+      );
+      let periodos = periodosSimplesVinculos.concat(pEspecificos);
+      periodos = periodos.sort((obj1, obj2) =>
+        obj1.periodo_escolar.posicao > obj2.periodo_escolar.posicao ? 1 : -1
+      );
+      setPeriodosSimples(periodos);
+    } else {
+      setErroAPI(
+        "Erro ao carregar Inclusões Autorizadas com Evento Específico. Tente novamente mais tarde."
+      );
+    }
   };
 
   useEffect(() => {
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+    ]).then(() => {
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
     if (solicitacao && periodosGruposMedicao) {
       const todosPeriodosGruposAprovadosDRE = !periodosGruposMedicao.some(
-        periodoGrupo => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_DRE"
+        (periodoGrupo) => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_DRE"
       );
       const todosPeriodosGruposAprovadosCODAE = !periodosGruposMedicao.some(
-        periodoGrupo => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_CODAE"
+        (periodoGrupo) => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_CODAE"
       );
       if (
-        (solicitacao.status === "MEDICAO_APROVADA_PELA_DRE" &&
+        ([
+          "MEDICAO_APROVADA_PELA_DRE",
+          "MEDICAO_CORRIGIDA_PARA_CODAE",
+          "MEDICAO_APROVADA_PELA_CODAE",
+        ].includes(solicitacao.status) &&
           usuarioEhDRE()) ||
         (solicitacao.status === "MEDICAO_APROVADA_PELA_CODAE" &&
           usuarioEhMedicao())
@@ -291,34 +449,35 @@ export const ConferenciaDosLancamentos = () => {
 
       const statusPermitidosSolicitarCorrecaoPelaDRE = [
         "MEDICAO_CORRECAO_SOLICITADA",
-        "MEDICAO_APROVADA_PELA_DRE"
+        "MEDICAO_APROVADA_PELA_DRE",
       ];
 
       const statusPermitidosSolicitarCorrecaoPelaCODAE = [
         "MEDICAO_CORRECAO_SOLICITADA_CODAE",
-        "MEDICAO_APROVADA_PELA_CODAE"
+        "MEDICAO_APROVADA_PELA_CODAE",
       ];
 
       const algumPeriodoGrupoParaCorrigirPelaDRE = periodosGruposMedicao.some(
-        periodoGrupo => periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
+        (periodoGrupo) => periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
       );
 
       const algumPeriodoGrupoParaCorrigirPelaCODAE = periodosGruposMedicao.some(
-        periodoGrupo =>
+        (periodoGrupo) =>
           periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE"
       );
 
       const todosPeriodosGruposAnalisadosPelaDRE = periodosGruposMedicao.every(
-        periodoGrupo =>
+        (periodoGrupo) =>
           periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ||
           periodoGrupo.status === "MEDICAO_APROVADA_PELA_DRE"
       );
 
-      const todosPeriodosGruposAnalisadosPelaCODAE = periodosGruposMedicao.every(
-        periodoGrupo =>
-          periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE" ||
-          periodoGrupo.status === "MEDICAO_APROVADA_PELA_CODAE"
-      );
+      const todosPeriodosGruposAnalisadosPelaCODAE =
+        periodosGruposMedicao.every(
+          (periodoGrupo) =>
+            periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE" ||
+            periodoGrupo.status === "MEDICAO_APROVADA_PELA_CODAE"
+        );
 
       if (
         (usuarioEhDRE() &&
@@ -380,9 +539,12 @@ export const ConferenciaDosLancamentos = () => {
         `Erro ao aprovar Período ${nomePeridoFormatado}. Tente novamente mais tarde.`
       );
     }
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+    ]).then(() => {
+      setLoading(false);
+    });
   };
 
   const aprovarSolicitacaoMedicao = async () => {
@@ -405,9 +567,12 @@ export const ConferenciaDosLancamentos = () => {
         setErroAPI(msgErro);
       }
     }
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+    ]).then(() => {
+      setLoading(false);
+    });
   };
 
   const solicitarCorrecaoMedicao = async () => {
@@ -425,10 +590,19 @@ export const ConferenciaDosLancamentos = () => {
     } else {
       setErroAPI(msgErro);
     }
-    getSolMedInicialAsync();
-    getVinculosTipoAlimentacaoPorEscolaAsync();
-    getPeriodosGruposMedicaoAsync();
+    Promise.all([
+      getPeriodosGruposMedicaoAsync(),
+      getSolMedInicialAsync(),
+    ]).then(() => {
+      setLoading(false);
+    });
   };
+
+  useEffect(() => {
+    if (anoSolicitacao) {
+      getVinculosTipoAlimentacaoPorEscolaAsync();
+    }
+  }, [anoSolicitacao]);
 
   const handleClickDownload = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -439,6 +613,10 @@ export const ConferenciaDosLancamentos = () => {
     } else {
       toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
     }
+  };
+
+  const getHistorico = () => {
+    return historico;
   };
 
   return (
@@ -533,13 +711,13 @@ export const ConferenciaDosLancamentos = () => {
                             </div>
                             {solicitacao.com_ocorrencias ? (
                               <Fragment>
-                                <div className="col-6 text-right">
-                                  <span className="status-ocorrencia text-center mr-3">
+                                <div className="col-6 text-end">
+                                  <span className="status-ocorrencia text-center me-3">
                                     <b
                                       className={
                                         [
                                           "MEDICAO_CORRECAO_SOLICITADA",
-                                          "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                                          "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                                         ].includes(ocorrencia.status)
                                           ? "red"
                                           : ""
@@ -555,7 +733,7 @@ export const ConferenciaDosLancamentos = () => {
                                   </span>
                                   {ocorrencia && ocorrenciaExpandida ? (
                                     <span
-                                      className="download-ocorrencias mr-0"
+                                      className="download-ocorrencias me-0"
                                       onClick={() => {
                                         medicaoInicialExportarOcorrenciasPDF(
                                           ocorrencia.ultimo_arquivo
@@ -567,9 +745,7 @@ export const ConferenciaDosLancamentos = () => {
                                       }}
                                     >
                                       <i
-                                        className={`${
-                                          BUTTON_ICON.DOWNLOAD
-                                        } mr-2`}
+                                        className={`${BUTTON_ICON.DOWNLOAD} me-2`}
                                       />
                                       Download de Ocorrências
                                     </span>
@@ -595,16 +771,12 @@ export const ConferenciaDosLancamentos = () => {
                                 <div className="col-5 mt-3">
                                   {usuarioEhDRE() &&
                                     logCorrecaoOcorrencia &&
-                                    `${textoOcorrencia} ${
-                                      logCorrecaoOcorrencia.criado_em
-                                    }`}
+                                    `${textoOcorrencia} ${logCorrecaoOcorrencia.criado_em}`}
                                   {usuarioEhMedicao() &&
                                     logCorrecaoOcorrenciaCODAE &&
-                                    `${textoOcorrencia} ${
-                                      logCorrecaoOcorrenciaCODAE.criado_em
-                                    }`}
+                                    `${textoOcorrencia} ${logCorrecaoOcorrenciaCODAE.criado_em}`}
                                 </div>
-                                <div className="col-7 text-right mt-3">
+                                <div className="col-7 text-end mt-3">
                                   <Botao
                                     texto="Histórico"
                                     type={BUTTON_TYPE.BUTTON}
@@ -649,58 +821,87 @@ export const ConferenciaDosLancamentos = () => {
                       </div>
                     </div>
                     <hr />
-                    <div>
-                      <p className="section-title-conf-lancamentos">
-                        Acompanhamento do lançamento
-                      </p>
-                      {periodosGruposMedicao.map((periodoGrupo, index) => {
-                        return (
-                          <TabelaLancamentosPeriodo
-                            key={index}
-                            periodoGrupo={periodoGrupo}
-                            periodosSimples={periodosSimples}
-                            mesSolicitacao={mesSolicitacao}
-                            anoSolicitacao={anoSolicitacao}
-                            form={form}
-                            aprovarPeriodo={(
-                              periodoGrupo,
-                              nomePeridoFormatado
-                            ) =>
-                              aprovarPeriodo(periodoGrupo, nomePeridoFormatado)
-                            }
-                            values={values}
-                            getPeriodosGruposMedicaoAsync={() =>
-                              getPeriodosGruposMedicaoAsync()
-                            }
-                            setOcorrenciaExpandida={() =>
-                              setOcorrenciaExpandida(false)
-                            }
-                            solicitacao={solicitacao}
-                          />
-                        );
-                      })}
+                    <div className="row">
+                      <div className="col-6">
+                        <p className="section-title-conf-lancamentos">
+                          Acompanhamento do lançamento
+                        </p>
+                      </div>
+                      <div className="col-6">
+                        {solicitacao.historico &&
+                          solicitacao.historico !== "" && (
+                            <Botao
+                              className="float-end"
+                              texto="Histórico de correções"
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              onClick={() =>
+                                setShowModalHistoricoCorrecoesPeriodo(true)
+                              }
+                            />
+                          )}
+                      </div>
+                      <div className="col-12 mt-3">
+                        {periodosGruposMedicao.map((periodoGrupo, index) => {
+                          return [
+                            <TabelaLancamentosPeriodo
+                              key={index}
+                              periodoGrupo={periodoGrupo}
+                              periodosSimples={periodosSimples}
+                              mesSolicitacao={mesSolicitacao}
+                              anoSolicitacao={anoSolicitacao}
+                              form={form}
+                              aprovarPeriodo={(
+                                periodoGrupo,
+                                nomePeridoFormatado
+                              ) =>
+                                aprovarPeriodo(
+                                  periodoGrupo,
+                                  nomePeridoFormatado
+                                )
+                              }
+                              values={values}
+                              getPeriodosGruposMedicaoAsync={() =>
+                                getPeriodosGruposMedicaoAsync()
+                              }
+                              periodosGruposMedicao={periodosGruposMedicao}
+                              setOcorrenciaExpandida={() =>
+                                setOcorrenciaExpandida(false)
+                              }
+                              solicitacao={solicitacao}
+                              feriadosNoMes={feriadosNoMes}
+                              diasCalendario={diasCalendario}
+                              diasSobremesaDoce={diasSobremesaDoce}
+                            />,
+                          ];
+                        })}
+                      </div>
                     </div>
-                    <div className="float-right">
+                    <div className="float-end">
                       <Botao
                         texto="Exportar PDF"
                         style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
                         onClick={() => handleClickDownload()}
+                        disabled={desabilitaBotaoExportarPDF()}
+                        tooltipExterno={
+                          desabilitaBotaoExportarPDF() &&
+                          "Só será possível exportar o PDF com as assinaturas, após a Ciência das Correções pela DRE."
+                        }
                       />
                       {((![
                         "MEDICAO_APROVADA_PELA_DRE",
                         "MEDICAO_CORRECAO_SOLICITADA",
                         "MEDICAO_APROVADA_PELA_CODAE",
-                        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
                       ].includes(solicitacao.status) &&
                         usuarioEhDRE()) ||
                         ([
                           "MEDICAO_APROVADA_PELA_DRE",
-                          "MEDICAO_CORRIGIDA_PARA_CODAE"
+                          "MEDICAO_CORRIGIDA_PARA_CODAE",
                         ].includes(solicitacao.status) &&
                           usuarioEhMedicao())) && (
                         <>
                           <Botao
-                            className="ml-3"
+                            className="ms-3"
                             texto="Solicitar Correção"
                             style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
                             onClick={() =>
@@ -709,7 +910,7 @@ export const ConferenciaDosLancamentos = () => {
                             disabled={desabilitarSolicitarCorrecao}
                           />
                           <Botao
-                            className="ml-3"
+                            className="ms-3"
                             texto={
                               usuarioEhMedicao()
                                 ? "Aprovar Medição"
@@ -719,9 +920,31 @@ export const ConferenciaDosLancamentos = () => {
                             onClick={() =>
                               setShowModalEnviarParaCodaeECodaeAprovar(true)
                             }
-                            disabled={desabilitarEnviarParaCodaeECodaeAprovar}
+                            disabled={
+                              desabilitarEnviarParaCodaeECodaeAprovar ||
+                              ((usuarioEhMedicao() || usuarioEhDRE()) &&
+                                desabilitaBotaoExportarPDF())
+                            }
+                            tooltipExterno={
+                              usuarioEhMedicao() &&
+                              desabilitaBotaoExportarPDF() &&
+                              "Só será possível Aprovar Medição com as assinaturas, após a Ciência das Correções pela DRE."
+                            }
                           />
                         </>
+                      )}
+                      {usuarioEhDRE() && (
+                        <Botao
+                          className="ms-3"
+                          texto="Ciente das Correções"
+                          style={BUTTON_STYLE.GREEN}
+                          onClick={async () => {
+                            setLoading(true);
+                            await atualizaSolicitacaoMedicaoInicial();
+                            setLoading(false);
+                          }}
+                          disabled={loading || !habilitaBotaoCienteCorrecoes()}
+                        />
                       )}
                     </div>
                   </div>
@@ -732,9 +955,12 @@ export const ConferenciaDosLancamentos = () => {
         )}
         <ModalOcorrencia
           showModal={showModalSalvarOcorrencia}
-          setShowModal={value => setShowModalSalvarOcorrencia(value)}
+          setShowModal={(value) => setShowModalSalvarOcorrencia(value)}
           ocorrencia={ocorrencia}
-          atualizarDados={() => getSolMedInicialAsync()}
+          atualizarDados={async () => {
+            await getSolMedInicialAsync();
+            setLoading(false);
+          }}
           titulo={"Solicitar correção no formulário de ocorrências"}
           descricao={
             "Informe quais os pontos necessários de correção no Formulário de Ocorrências"
@@ -745,9 +971,12 @@ export const ConferenciaDosLancamentos = () => {
         />
         <ModalOcorrencia
           showModal={showModalAprovarOcorrencia}
-          setShowModal={value => setShowModalAprovarOcorrencia(value)}
+          setShowModal={(value) => setShowModalAprovarOcorrencia(value)}
           ocorrencia={ocorrencia}
-          atualizarDados={() => getSolMedInicialAsync()}
+          atualizarDados={async () => {
+            await getSolMedInicialAsync();
+            setLoading(false);
+          }}
           titulo={"Aprovar Formulário de Ocorrências"}
           descricao={"Deseja aprovar o Formulário de Ocorrências?"}
           temJustificativa={false}
@@ -760,7 +989,7 @@ export const ConferenciaDosLancamentos = () => {
         />
         <ModalEnviarParaCodaeECodaeAprovar
           showModal={showModalEnviarParaCodaeECodaeAprovar}
-          setShowModal={value =>
+          setShowModal={(value) =>
             setShowModalEnviarParaCodaeECodaeAprovar(value)
           }
           aprovarSolicitacaoMedicao={() => {
@@ -769,11 +998,21 @@ export const ConferenciaDosLancamentos = () => {
         />
         <ModalSolicitarCorrecaoUE
           showModal={showModalSolicitarCorrecaoUE}
-          setShowModal={value => setShowModalSolicitarCorrecaoUE(value)}
+          setShowModal={(value) => setShowModalSolicitarCorrecaoUE(value)}
           endpoint={() => {
             solicitarCorrecaoMedicao();
           }}
         />
+        {solicitacao && solicitacao.historico && (
+          <ModalHistoricoCorrecoesPeriodo
+            showModal={showModalHistoricoCorrecoesPeriodo}
+            setShowModal={(value) =>
+              setShowModalHistoricoCorrecoesPeriodo(value)
+            }
+            solicitacao={solicitacao}
+            historicos={solicitacao.historico}
+          />
+        )}
       </Spin>
     </div>
   );

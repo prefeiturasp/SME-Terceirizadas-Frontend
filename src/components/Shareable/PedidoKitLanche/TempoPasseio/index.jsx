@@ -6,12 +6,8 @@ import { escolaEhCei } from "helpers/utilities";
 
 export class TempoPasseio extends Component {
   render() {
-    const {
-      mostrarExplicacao,
-      nameTempoPasseio,
-      onTempoPasseioChanged,
-      meta
-    } = this.props;
+    const { mostrarExplicacao, nameTempoPasseio, onTempoPasseioChanged, meta } =
+      this.props;
     const ehCei = escolaEhCei();
     return (
       <div className="tour-time">

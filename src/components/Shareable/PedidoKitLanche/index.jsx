@@ -7,7 +7,7 @@ export class PedidoKitLanche extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tempoPasseio: ""
+      tempoPasseio: "",
     };
     this.onTempoPasseioChanged = this.onTempoPasseioChanged.bind(this);
   }
@@ -15,7 +15,7 @@ export class PedidoKitLanche extends Component {
   onTempoPasseioChanged(event) {
     this.setState({
       tempoPasseio: event.target.value,
-      meta: { touched: true }
+      meta: { touched: true },
     });
     this.props.onPasseioChanged && this.props.onPasseioChanged(event);
   }
@@ -34,11 +34,11 @@ export class PedidoKitLanche extends Component {
 }
 
 PedidoKitLanche.propTypes = {
-  onPasseioChanged: PropTypes.func
+  onPasseioChanged: PropTypes.func,
 };
 
 PedidoKitLanche.defaultProps = {
-  onPasseioChanged: null
+  onPasseioChanged: null,
 };
 
 export default PedidoKitLanche;

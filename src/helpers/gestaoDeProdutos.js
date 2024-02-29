@@ -19,7 +19,7 @@ const {
   CODAE_AUTORIZOU_RECLAMACAO,
   ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
   TERCEIRIZADA_RESPONDEU_RECLAMACAO,
-  TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO
+  TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO,
 } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 const CARD_PRODUTOS_SUSPENSOS = {
@@ -28,7 +28,7 @@ const CARD_PRODUTOS_SUSPENSOS = {
   icon: "fa-hand-paper",
   style: "card-cancelled",
   rota: ROTA.PRODUTOS_SUSPENSOS,
-  incluir_status: [CODAE_SUSPENDEU, CODAE_AUTORIZOU_RECLAMACAO]
+  incluir_status: [CODAE_SUSPENDEU, CODAE_AUTORIZOU_RECLAMACAO],
 };
 const CARD_HOMOLOGADOS = {
   id: CARD_ID.HOMOLOGADOS,
@@ -36,7 +36,7 @@ const CARD_HOMOLOGADOS = {
   icon: "fa-check",
   style: "card-authorized",
   rota: ROTA.SOLICITACOES_HOMOLOGADAS,
-  incluir_status: [CODAE_HOMOLOGADO]
+  incluir_status: [CODAE_HOMOLOGADO],
 };
 const CARD_NAO_HOMOLOGADOS = {
   id: CARD_ID.NAO_HOMOLOGADOS,
@@ -46,8 +46,8 @@ const CARD_NAO_HOMOLOGADOS = {
   rota: ROTA.SOLICITACOES_NAO_HOMOLOGADAS,
   incluir_status: [
     CODAE_NAO_HOMOLOGADO,
-    TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO
-  ]
+    TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO,
+  ],
 };
 export const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
   id: CARD_ID.AGUARDANDO_ANALISE_RECLAMACAO,
@@ -62,8 +62,8 @@ export const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
     CODAE_QUESTIONOU_UE,
     UE_RESPONDEU_QUESTIONAMENTO,
     CODAE_QUESTIONOU_NUTRISUPERVISOR,
-    NUTRISUPERVISOR_RESPONDEU_QUESTIONAMENTO
-  ]
+    NUTRISUPERVISOR_RESPONDEU_QUESTIONAMENTO,
+  ],
 };
 const CARD_AGUARDANDO_ANALISE_SENSORIAL = {
   id: CARD_ID.AGUARDANDO_ANALISE_SENSORIAL,
@@ -72,7 +72,7 @@ const CARD_AGUARDANDO_ANALISE_SENSORIAL = {
   icon: "fa-search",
   style: "card-awaiting-sensory",
   rota: ROTA.AGUARDANDO_ANALISE_SENSORIAL,
-  incluir_status: [CODAE_PEDIU_ANALISE_SENSORIAL]
+  incluir_status: [CODAE_PEDIU_ANALISE_SENSORIAL],
 };
 const CARD_PENDENTE_HOMOLOGACAO = {
   id: CARD_ID.PENDENTE_HOMOLOGACAO,
@@ -80,7 +80,7 @@ const CARD_PENDENTE_HOMOLOGACAO = {
   icon: "fa-exclamation-triangle",
   style: "card-pending",
   rota: ROTA.SOLICITACOES_PENDENTE_HOMOLOGACAO,
-  incluir_status: [CODAE_PENDENTE_HOMOLOGACAO]
+  incluir_status: [CODAE_PENDENTE_HOMOLOGACAO],
 };
 
 const CARD_CORRECAO_DE_PRODUTO = {
@@ -89,7 +89,7 @@ const CARD_CORRECAO_DE_PRODUTO = {
   icon: "fa-pencil-alt",
   style: "card-product-correction",
   rota: ROTA.CORRECAO_DE_PRODUTO,
-  incluir_status: [CODAE_QUESTIONADO]
+  incluir_status: [CODAE_QUESTIONADO],
 };
 
 export const CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE = {
@@ -106,8 +106,8 @@ export const CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE = {
   incluir_status: [
     CODAE_QUESTIONOU_UE,
     CODAE_PEDIU_ANALISE_RECLAMACAO,
-    CODAE_QUESTIONOU_NUTRISUPERVISOR
-  ]
+    CODAE_QUESTIONOU_NUTRISUPERVISOR,
+  ],
 };
 
 export const TODOS_OS_CARDS = [
@@ -118,7 +118,7 @@ export const TODOS_OS_CARDS = [
   CARD_PENDENTE_HOMOLOGACAO,
   CARD_HOMOLOGADOS,
   CARD_NAO_HOMOLOGADOS,
-  CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
+  CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE,
 ];
 
 export const listarCardsPermitidos = () => {
@@ -147,7 +147,7 @@ export const listarCardsPermitidos = () => {
       CARD_PRODUTOS_SUSPENSOS,
       CARD_HOMOLOGADOS,
       CARD_NAO_HOMOLOGADOS,
-      cardAguardandoAnaliseReclamacao
+      cardAguardandoAnaliseReclamacao,
     ];
   } else if ([TIPO_PERFIL.TERCEIRIZADA].includes(perfil)) {
     const cardAguardandoAnaliseReclamacao = Object.assign(
@@ -169,7 +169,7 @@ export const listarCardsPermitidos = () => {
       CARD_PENDENTE_HOMOLOGACAO,
       CARD_HOMOLOGADOS,
       CARD_NAO_HOMOLOGADOS,
-      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
+      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE,
     ];
   } else if (
     [TIPO_PERFIL.SUPERVISAO_NUTRICAO, TIPO_PERFIL.ESCOLA].includes(perfil)
@@ -194,13 +194,15 @@ export const listarCardsPermitidos = () => {
       CARD_PRODUTOS_SUSPENSOS,
       CARD_NAO_HOMOLOGADOS,
       CARD_HOMOLOGADOS,
-      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
+      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE,
     ];
   } else if (
     [
       TIPO_PERFIL.DIRETORIA_REGIONAL,
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-      TIPO_PERFIL.NUTRICAO_MANIFESTACAO
+      TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
+      TIPO_PERFIL.ORGAO_FISCALIZADOR,
+      TIPO_PERFIL.CODAE_GABINETE,
     ].includes(perfil)
   ) {
     const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
@@ -212,14 +214,17 @@ export const listarCardsPermitidos = () => {
     cardAguardandoAnaliseReclamacao.incluir_status.push(
       ESCOLA_OU_NUTRICIONISTA_RECLAMOU
     );
-
-    return [
+    const listaDeCards = [
       CARD_PRODUTOS_SUSPENSOS,
       CARD_NAO_HOMOLOGADOS,
       cardHomologados,
       cardAguardandoAnaliseReclamacao,
-      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
     ];
+    if (perfil !== TIPO_PERFIL.ORGAO_FISCALIZADOR) {
+      listaDeCards.push(CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE);
+    }
+
+    return listaDeCards;
   }
 
   const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
@@ -233,20 +238,22 @@ export const listarCardsPermitidos = () => {
 
 export const CADASTRO_GERAL = {
   titulo: "Cadastro Geral",
-  rota: "cadastro-geral"
+  rota: "cadastro-geral",
 };
 export const CADASTRO_PRODUTOS_PROVINIENTES_EDITAL = {
   titulo: "Cadastro de Produtos                 Provenientes do Edital",
-  rota: "cadastro-produtos-provinientes-edital"
+  rota: "cadastro-produtos-provinientes-edital",
 };
 export const VINCULAR_PRODUTOS_EDITAIS = {
   titulo: "Vincular Produtos aos Editais",
-  rota: "vincular-produto-edital"
+  rota: "vincular-produto-edital",
 };
 
 export const CADASTROS = usuarioEhCODAEGestaoProduto()
   ? [CADASTRO_GERAL].concat([
       CADASTRO_PRODUTOS_PROVINIENTES_EDITAL,
-      VINCULAR_PRODUTOS_EDITAIS
+      VINCULAR_PRODUTOS_EDITAIS,
     ])
   : [CADASTRO_GERAL];
+
+export const EDITAIS_INVALIDOS = ["78/SME/2016", "41/SME/2017"];
