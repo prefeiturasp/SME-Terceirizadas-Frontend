@@ -598,10 +598,16 @@ const gerarCamposProponenteFabricante = (
 const gerarCamposDetalhesProduto = (values: Record<string, any>) => {
   return {
     prazo_validade: values.prazo_validade,
-    numero_registro: values.numero_registro,
+    numero_registro: retornaValorSeCategoriaPereciveis(
+      values,
+      "numero_registro"
+    ),
     agroecologico: stringToBoolean(values.agroecologico as string),
     organico: stringToBoolean(values.organico as string),
-    mecanismo_controle: values.mecanismo_controle,
+    mecanismo_controle: retornaValorSeCategoriaPereciveis(
+      values,
+      "mecanismo_controle"
+    ),
     componentes_produto: values.componentes_produto,
     alergenicos: stringToBoolean(values.alergenicos as string),
     ingredientes_alergenicos: values.ingredientes_alergenicos,
@@ -623,7 +629,10 @@ const gerarCamposInformacoesNutricionais = (values: Record<string, any>) => {
 
 const gerarCamposConservacao = (values: Record<string, any>) => {
   return {
-    prazo_validade_descongelamento: values.prazo_validade_descongelamento,
+    prazo_validade_descongelamento: retornaValorSeCategoriaPereciveis(
+      values,
+      "prazo_validade_descongelamento"
+    ),
     condicoes_de_conservacao: values.condicoes_de_conservacao,
   };
 };
@@ -634,7 +643,10 @@ const gerarCamposTemperaturaTransporte = (values: Record<string, any>) => {
       values.temperatura_congelamento
     ),
     temperatura_veiculo: stringDecimalToNumber(values.temperatura_veiculo),
-    condicoes_de_transporte: values.condicoes_de_transporte,
+    condicoes_de_transporte: retornaValorSeCategoriaPereciveis(
+      values,
+      "condicoes_de_transporte"
+    ),
   };
 };
 
@@ -701,6 +713,11 @@ const gerarCamposOutrasInformacoes = (values: Record<string, any>) => {
     informacoes_adicionais: values.informacoes_adicionais,
   };
 };
+
+const retornaValorSeCategoriaPereciveis = (
+  values: Record<string, any>,
+  campo: string
+) => (values.categoria === "PERECIVEIS" ? values[campo] : undefined);
 
 export const formataInformacoesNutricionais = (values: Record<string, any>) => {
   const uuids_informacoes = Object.keys(values)
