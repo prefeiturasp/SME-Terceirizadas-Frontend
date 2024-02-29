@@ -12,6 +12,7 @@ import {
   parseDataHoraBrToMoment,
   comparaObjetosMoment,
   truncarString,
+  usuarioEhDilogQualidade,
 } from "helpers/utilities";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -26,7 +27,6 @@ import {
   FiltrosDashboardDocumentos,
 } from "interfaces/pre_recebimento.interface";
 import { ResponseDocumentosRecebimentoDashboard } from "interfaces/responses.interface";
-import { PERFIL } from "constants/shared";
 
 export default () => {
   const [carregando, setCarregando] = useState<boolean>(false);
@@ -65,10 +65,8 @@ export default () => {
   };
 
   const gerarLinkDocumento = (item: DocumentosRecebimentoDashboard): string => {
-    const perfilLogado = localStorage.getItem("perfil");
-
     if (item.status === "Enviado para Análise") {
-      if (perfilLogado === PERFIL.DILOG_QUALIDADE) {
+      if (usuarioEhDilogQualidade()) {
         return `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
       }
 
