@@ -210,18 +210,20 @@ export const AcompanhamentoDeLancamentos = () => {
     );
   };
 
-  useEffect(() => {
-    const getMesesAnosSolicitacoesMedicaoinicialAsync = async () => {
-      const response = await getMesesAnosSolicitacoesMedicaoinicial();
-      if (response.status === HTTP_STATUS.OK) {
-        setMesesAnos(response.data.results);
-      } else {
-        setErroAPI(
-          "Erro ao carregar meses/anos das solicitações de medição inicial. Tente novamente mais tarde."
-        );
-      }
-    };
+  const getMesesAnosSolicitacoesMedicaoinicialAsync = async () => {
+    const response = await getMesesAnosSolicitacoesMedicaoinicial({
+      dre: diretoriaRegional,
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setMesesAnos(response.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar meses/anos das solicitações de medição inicial. Tente novamente mais tarde."
+      );
+    }
+  };
 
+  useEffect(() => {
     const getTiposUnidadeEscolarAsync = async () => {
       const response = await getTiposUnidadeEscolar();
       if (response.status === HTTP_STATUS.OK) {
@@ -281,6 +283,7 @@ export const AcompanhamentoDeLancamentos = () => {
     }
     if (diretoriaRegional) {
       getDashboardMedicaoInicialAsync();
+      getMesesAnosSolicitacoesMedicaoinicialAsync();
     }
   }, [meusDados, diretoriaRegional]);
 
