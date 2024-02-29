@@ -30,6 +30,10 @@ export interface ResponseInterface {
   status: number;
 }
 
+export interface ResponseSemDadosInterface {
+  status: number;
+}
+
 export interface ListagemPaginada<T> {
   count: number;
   next: string | null;
@@ -155,7 +159,8 @@ export interface ResponseFichaTecnicaDetalhada extends ResponseInterface {
   data: FichaTecnicaDetalhada;
 }
 
-export interface ResponseFichaTecnicaPraAnalise extends ResponseInterface {
+export interface ResponseFichaTecnicaDetalhadaComAnalise
+  extends ResponseInterface {
   data: FichaTecnicaDetalhadaComAnalise;
 }
 
