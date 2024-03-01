@@ -1136,7 +1136,7 @@ export default () => {
               .forEach((obj) => {
                 dadosValoresMatriculados[
                   `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
-                ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : null;
+                ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : `${0}`;
               });
         } else {
           matriculados &&
