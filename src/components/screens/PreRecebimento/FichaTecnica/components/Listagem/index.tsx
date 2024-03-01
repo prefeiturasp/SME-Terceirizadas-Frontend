@@ -1,23 +1,33 @@
 import React, { ReactElement } from "react";
 import { NavLink } from "react-router-dom";
-import "./styles.scss";
-import { FichaTecnica } from "interfaces/pre_recebimento.interface";
+
 import {
   PRE_RECEBIMENTO,
-  CADASTRO_FICHA_TECNICA,
+  CADASTRAR_FICHA_TECNICA,
   DETALHAR_FICHA_TECNICA,
+  ALTERAR_FICHA_TECNICA,
 } from "configs/constants";
+import { FichaTecnica } from "interfaces/pre_recebimento.interface";
+
+import "./styles.scss";
 
 interface Props {
   objetos: Array<FichaTecnica>;
 }
 
 const Listagem: React.FC<Props> = ({ objetos }) => {
+  const renderizarStatus = (status: string) =>
+    status === "Enviada para Correção" ? (
+      <span className="orange">Solicitação de Alteração</span>
+    ) : (
+      status
+    );
+
   const renderizarAcoes = (objeto: FichaTecnica): ReactElement => {
     const botaoContinuarCadastro = (
       <NavLink
         className="float-start"
-        to={`/${PRE_RECEBIMENTO}/${CADASTRO_FICHA_TECNICA}?uuid=${objeto.uuid}`}
+        to={`/${PRE_RECEBIMENTO}/${CADASTRAR_FICHA_TECNICA}?uuid=${objeto.uuid}`}
       >
         <span className="link-acoes px-2">
           <i title="Continuar Cadastro" className="fas fa-edit green" />
@@ -36,10 +46,22 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
       </NavLink>
     );
 
+    const botaoAlterar = (
+      <NavLink
+        className="float-start"
+        to={`/${PRE_RECEBIMENTO}/${ALTERAR_FICHA_TECNICA}?uuid=${objeto.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i title="Alterar" className="fas fa-edit orange" />
+        </span>
+      </NavLink>
+    );
+
     return (
       <>
         {objeto.status === "Rascunho" && botaoContinuarCadastro}
         {["Enviada para Análise"].includes(objeto.status) && botaoDetalhar}
+        {objeto.status === "Enviada para Correção" && botaoAlterar}
       </>
     );
   };
@@ -66,7 +88,7 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
                 <div>{objeto.nome_produto}</div>
                 <div>{objeto.pregao_chamada_publica}</div>
                 <div>{objeto.criado_em}</div>
-                <div>{objeto.status}</div>
+                <div>{renderizarStatus(objeto.status)}</div>
                 <div>{renderizarAcoes(objeto)}</div>
               </div>
             </>

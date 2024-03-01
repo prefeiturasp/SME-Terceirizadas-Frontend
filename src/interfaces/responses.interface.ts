@@ -18,7 +18,7 @@ import {
   FichaTecnicaDashboard,
   FichaTecnicaSimples,
   DadosCronogramaFichaTecnica,
-  FichaTecnicaPraAnalise,
+  FichaTecnicaDetalhadaComAnalise,
 } from "./pre_recebimento.interface";
 import { InformacaoNutricional } from "./produto.interface";
 import { LoteRascunhosInterface } from "./rascunhos.interface";
@@ -27,6 +27,10 @@ import { EditalContratoInterface } from "components/screens/Cadastros/EditaisCon
 
 export interface ResponseInterface {
   data: Object;
+  status: number;
+}
+
+export interface ResponseSemDadosInterface {
   status: number;
 }
 
@@ -155,8 +159,9 @@ export interface ResponseFichaTecnicaDetalhada extends ResponseInterface {
   data: FichaTecnicaDetalhada;
 }
 
-export interface ResponseFichaTecnicaPraAnalise extends ResponseInterface {
-  data: FichaTecnicaPraAnalise;
+export interface ResponseFichaTecnicaDetalhadaComAnalise
+  extends ResponseInterface {
+  data: FichaTecnicaDetalhadaComAnalise;
 }
 
 export interface ResponseInformacoesNutricionais extends ResponseInterface {

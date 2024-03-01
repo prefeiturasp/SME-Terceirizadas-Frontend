@@ -48,13 +48,14 @@ import InfoAcondicionamentoNaoPereciveis from "./components/InfoAcondicionamento
 import { FichaTecnicaPayload } from "../../interfaces";
 import {
   assinarEnviarFichaTecnica,
-  carregarDados,
+  carregaListaCompletaInformacoesNutricionais,
+  carregarDadosCadastrar,
   carregarFabricantes,
   carregarMarcas,
   carregarProdutos,
   carregarUnidadesMedida,
   cepCalculator,
-  formataPayload,
+  formataPayloadCadastroFichaTecnica,
   gerenciaModalCadastroExterno,
   salvarRascunho,
   validaAssinarEnviar,
@@ -126,8 +127,10 @@ export default () => {
       await carregarMarcas(setMarcasOptions);
       await carregarFabricantes(setFabricantesOptions);
       await carregarUnidadesMedida(setUnidadesMedidaOptions);
-      await carregarDados(
-        listaCompletaInformacoesNutricionais,
+      await carregaListaCompletaInformacoesNutricionais(
+        listaCompletaInformacoesNutricionais
+      );
+      await carregarDadosCadastrar(
         listaInformacoesNutricionaisFichaTecnica,
         meusDados,
         setFicha,
@@ -588,7 +591,7 @@ export default () => {
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     className="float-end ms-3"
                     onClick={() => {
-                      const payload = formataPayload(
+                      const payload = formataPayloadCadastroFichaTecnica(
                         values,
                         proponente,
                         produtosOptions,
@@ -627,7 +630,7 @@ export default () => {
                   show={showModalAssinatura}
                   handleClose={() => setShowModalAssinatura(false)}
                   handleSim={(password: string) => {
-                    const payload = formataPayload(
+                    const payload = formataPayloadCadastroFichaTecnica(
                       values,
                       proponente,
                       produtosOptions,
