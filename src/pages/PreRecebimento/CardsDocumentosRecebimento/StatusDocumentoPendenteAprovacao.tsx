@@ -5,7 +5,9 @@ import {
   PAINEL_DOCUMENTOS_RECEBIMENTO,
   PRE_RECEBIMENTO,
   ANALISAR_DOCUMENTO_RECEBIMENTO,
+  DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO,
 } from "configs/constants";
+import { usuarioEhDilogQualidade } from "helpers/utilities";
 import { getDashboardDocumentosRecebimentoPorStatus } from "services/documentosRecebimento.service";
 import { SolicitacoesDocumentoStatusGenerico } from "components/screens/SolicitacoesDocumentoStatusGenerico";
 import { CARD_PENDENTES_APROVACAO } from "../../../components/screens/PreRecebimento/PainelDocumentosRecebimento/constants";
@@ -35,6 +37,10 @@ export default () => {
     },
   ];
 
+  const urlBaseItem = usuarioEhDilogQualidade()
+    ? `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}`
+    : `/${PRE_RECEBIMENTO}/${DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO}`;
+
   return (
     <Page
       titulo={atual.titulo}
@@ -49,7 +55,7 @@ export default () => {
         getSolicitacoes={getDashboardDocumentosRecebimentoPorStatus}
         params={paramsDefault}
         limit={limit}
-        urlBaseItem={`/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}`}
+        urlBaseItem={urlBaseItem}
       />
     </Page>
   );
