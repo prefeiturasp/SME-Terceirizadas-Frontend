@@ -3,7 +3,7 @@ import { HOME } from "constants/config";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
 import {
-  ANALISE_FICHA_TECNICA,
+  ANALISAR_FICHA_TECNICA,
   PAINEL_FICHAS_TECNICAS,
   PRE_RECEBIMENTO,
 } from "configs/constants";
@@ -11,7 +11,7 @@ import Analisar from "components/screens/PreRecebimento/FichaTecnica/components/
 import { usuarioEhCODAEGabinete } from "helpers/utilities";
 
 const atual = {
-  href: `/${PRE_RECEBIMENTO}/${ANALISE_FICHA_TECNICA}`,
+  href: `/${PRE_RECEBIMENTO}/${ANALISAR_FICHA_TECNICA}`,
   titulo: "Analisar Ficha Técnica",
 };
 

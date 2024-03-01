@@ -1,17 +1,18 @@
 import React from "react";
+
 import { HOME } from "constants/config";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
 import {
-  CADASTRAR_FICHA_TECNICA,
+  ALTERAR_FICHA_TECNICA,
   FICHA_TECNICA,
   PRE_RECEBIMENTO,
 } from "configs/constants";
-import Cadastrar from "components/screens/PreRecebimento/FichaTecnica/components/Cadastrar";
+import Alterar from "components/screens/PreRecebimento/FichaTecnica/components/Alterar";
 
 const atual = {
-  href: `/${PRE_RECEBIMENTO}/${CADASTRAR_FICHA_TECNICA}`,
-  titulo: "Cadastrar Ficha Técnica",
+  href: `/${PRE_RECEBIMENTO}/${ALTERAR_FICHA_TECNICA}`,
+  titulo: "Alterar Ficha Técnica",
 };
 
 const anteriores = [
@@ -28,13 +29,10 @@ const anteriores = [
 export default () => (
   <Page
     botaoVoltar
-    temModalVoltar
-    textoModalVoltar="Existem informações não salvas na Ficha Técnica. Ao voltar à tela anterior, as informações inseridas serão perdidas."
-    voltarPara={`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`}
+    voltarPara={anteriores[anteriores.length - 1].href}
     titulo={atual.titulo}
   >
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-
-    <Cadastrar />
+    <Alterar />
   </Page>
 );

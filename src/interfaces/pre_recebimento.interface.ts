@@ -2,7 +2,6 @@ import { AnaliseFichaTecnicaPayload } from "components/screens/PreRecebimento/Fi
 import { LogSolicitacoesUsuarioSimples } from "./dados_comuns.interface";
 import { InformacaoNutricional } from "./produto.interface";
 import { TerceirizadaSimplesInterface } from "./terceirizada.interface";
-import { Modify } from "./utils";
 
 export interface DocumentosRecebimento {
   criado_em: string;
@@ -245,22 +244,7 @@ export interface AnaliseFichaTecnica extends AnaliseFichaTecnicaPayload {
   aprovada: boolean;
 }
 
-export interface FichaTecnicaPraAnalise
-  extends Modify<
-    FichaTecnicaDetalhada,
-    {
-      marca: string;
-      categoria: string;
-      produto: string;
-      fabricante: string;
-      unidade_medida_porcao: string;
-      unidade_medida_volume_primaria: string;
-      unidade_medida_primaria: string;
-      unidade_medida_secundaria: string;
-      unidade_medida_primaria_vazia: string;
-      unidade_medida_secundaria_vazia: string;
-    }
-  > {
+export interface FichaTecnicaDetalhadaComAnalise extends FichaTecnicaDetalhada {
   analise: AnaliseFichaTecnica;
   log_mais_recente: string;
 }
