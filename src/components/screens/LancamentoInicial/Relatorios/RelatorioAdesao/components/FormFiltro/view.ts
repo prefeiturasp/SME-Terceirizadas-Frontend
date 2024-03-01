@@ -91,9 +91,17 @@ export default ({ form, onChange }: Args) => {
 
         let escolas = responseEscolas.filter(
           (escola) =>
-            !["CEI", "CCI", "CEU CEI", "CEU CEMEI", "CEMEI"].includes(
-              escola.tipo_unidade.iniciais
-            )
+            ![
+              "CEI",
+              "CEI DIRET",
+              "CEI CEI INDIR",
+              "CEI CEU",
+              "CCI",
+              "CCI/CIPS",
+              "CEU CEI",
+              "CEU CEMEI",
+              "CEMEI",
+            ].includes(escola.tipo_unidade.iniciais)
         );
         setUnidadesEducacionais(escolas);
         setUnidadesEducacionaisOpcoes(
