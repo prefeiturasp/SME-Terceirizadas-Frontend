@@ -479,10 +479,11 @@ export const desabilitarField = (
     grupoLocation === "Programas e Projetos" &&
     dadosValoresInclusoesAutorizadasState
   ) {
+    if (feriadosNoMes.includes(dia)) {
+      return true;
+    }
     if (nomeCategoria === "ALIMENTAÇÃO") {
-      if (feriadosNoMes.includes(dia)) {
-        return true;
-      } else if (rowName === "numero_de_alunos") {
+      if (rowName === "numero_de_alunos") {
         return true;
       } else if (validacaoSemana(dia)) {
         return true;
