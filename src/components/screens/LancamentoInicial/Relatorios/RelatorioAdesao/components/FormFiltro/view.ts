@@ -6,6 +6,8 @@ import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.serv
 import { getLotesSimples } from "services/lote.service";
 import {
   getEscolasParaFiltros,
+  getEscolaPeriodosEscolares,
+  getEscolaTiposAlimentacao,
   buscaPeriodosEscolares,
 } from "services/escola.service";
 import { getTiposDeAlimentacao } from "services/cadastroTipoAlimentacao.service";
@@ -87,7 +89,7 @@ export default ({ form, onChange }: Args) => {
         setLotes(lotes);
         setLotesOpcoes(formatarOpcoesLote(lotes));
 
-        let escolas = responseEscolas.results.filter(
+        let escolas = responseEscolas.filter(
           (escola) =>
             !["CEI", "CCI", "CEU CEI", "CEU CEMEI", "CEMEI"].includes(
               escola.tipo_unidade.iniciais
@@ -244,7 +246,7 @@ export default ({ form, onChange }: Args) => {
     }
   };
 
-  const onChangeUnidadeEducacional = (escolaLabel: string) => {
+  const onChangeUnidadeEducacional = async (escolaLabel: string) => {
     limpaCampos(["periodos", "tipos_alimentacao"]);
 
     onChange({
@@ -262,17 +264,30 @@ export default ({ form, onChange }: Args) => {
     );
 
     if (escola) {
+      setBuscandoOpcoes((prev) => ({
+        ...prev,
+        buscandoPeriodosEscolares: true,
+        buscandoTiposAlimentacao: true,
+      }));
+
+      const [periodosEscolares, tiposAlimentacao] = await Promise.all([
+        getEscolaPeriodosEscolares(escola.uuid),
+        getEscolaTiposAlimentacao(escola.uuid),
+      ]);
+
       setPeriodosEscolaresOpcoes(
-        periodosEscolares.filter((periodo) =>
-          escola.periodos_escolares.some((p) => p.uuid === periodo.value)
-        )
+        formataPeriodosEscolaresOpcoes(periodosEscolares)
       );
 
       setTiposAlimentacaoOpcoes(
-        tiposAlimentacao.filter((alimentacao) =>
-          escola.tipos_alimentacao.some((t) => t.uuid === alimentacao.value)
-        )
+        formataTiposAlimentacoesOpcoes(tiposAlimentacao)
       );
+
+      setBuscandoOpcoes((prev) => ({
+        ...prev,
+        buscandoPeriodosEscolares: false,
+        buscandoTiposAlimentacao: false,
+      }));
     }
   };
 
