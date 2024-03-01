@@ -516,18 +516,21 @@ export const formataPayloadCadastroFichaTecnica = (
   produtosOptions: OptionsGenerico[],
   fabricantesOptions: OptionsGenerico[],
   arquivo: ArquivoForm[],
-  ehPereciveis: boolean,
   password?: string
 ) => {
+  const ehPereciveis = values.categoria === "PERECIVEIS";
+
   let payload: FichaTecnicaPayload = {
     ...gerarCamposObrigatoriosRascunho(values, produtosOptions),
     ...gerarCamposProponenteFabricante(values, proponente, fabricantesOptions),
     ...gerarCamposDetalhesProduto(values, ehPereciveis),
     ...gerarCamposInformacoesNutricionais(values),
     ...gerarCamposConservacao(values, ehPereciveis),
-    ...gerarCamposTemperaturaTransporte(values, ehPereciveis),
+    ...(ehPereciveis
+      ? gerarCamposTemperaturaTransporte(values, ehPereciveis)
+      : {}),
     ...gerarCamposArmazenamento(values),
-    ...gerarCamposEmbalagemRotulagem(values),
+    ...gerarCamposEmbalagemRotulagem(values, ehPereciveis),
     ...gerarCamposResponsavelTecnico(values, arquivo),
     ...gerarCamposModoPreparo(values),
     ...gerarCamposOutrasInformacoes(values),
@@ -558,7 +561,7 @@ export const formataPayloadCorrecaoFichaTecnica = (
       : {}),
     ...(!conferidos.armazenamento ? gerarCamposArmazenamento(values) : {}),
     ...(!conferidos.embalagem_e_rotulagem
-      ? gerarCamposEmbalagemRotulagem(values)
+      ? gerarCamposEmbalagemRotulagem(values, ehPereciveis)
       : {}),
     password: password,
   };
@@ -587,16 +590,17 @@ const gerarCamposProponenteFabricante = (
     empresa: proponente.uuid,
     fabricante: fabricantesOptions.find((p) => p.nome === values.fabricante)
       ?.uuid,
-    cnpj_fabricante: removeCaracteresEspeciais(values.cnpj_fabricante),
-    cep_fabricante: removeCaracteresEspeciais(values.cep_fabricante),
-    endereco_fabricante: values.endereco_fabricante,
-    numero_fabricante: values.numero_fabricante,
-    complemento_fabricante: values.complemento_fabricante,
-    bairro_fabricante: values.bairro_fabricante,
-    cidade_fabricante: values.cidade_fabricante,
-    estado_fabricante: values.estado_fabricante,
-    email_fabricante: values.email_fabricante,
-    telefone_fabricante: removeCaracteresEspeciais(values.telefone_fabricante),
+    cnpj_fabricante: removeCaracteresEspeciais(values.cnpj_fabricante) || "",
+    cep_fabricante: removeCaracteresEspeciais(values.cep_fabricante) || "",
+    endereco_fabricante: values.endereco_fabricante || "",
+    numero_fabricante: values.numero_fabricante || "",
+    complemento_fabricante: values.complemento_fabricante || "",
+    bairro_fabricante: values.bairro_fabricante || "",
+    cidade_fabricante: values.cidade_fabricante || "",
+    estado_fabricante: values.estado_fabricante || "",
+    email_fabricante: values.email_fabricante || "",
+    telefone_fabricante:
+      removeCaracteresEspeciais(values.telefone_fabricante) || "",
   };
 };
 
@@ -605,34 +609,31 @@ const gerarCamposDetalhesProduto = (
   ehPereciveis: boolean
 ) => {
   return {
-    prazo_validade: values.prazo_validade,
-    numero_registro: retornaValorSeCategoriaPereciveis(
-      values,
-      ehPereciveis,
-      "numero_registro"
-    ),
+    prazo_validade: values.prazo_validade || "",
+    numero_registro: ehPereciveis ? values.numero_registro || "" : undefined,
     agroecologico: stringToBoolean(values.agroecologico as string),
     organico: stringToBoolean(values.organico as string),
-    mecanismo_controle: retornaValorSeCategoriaPereciveis(
-      values,
-      ehPereciveis,
-      "mecanismo_controle"
-    ),
-    componentes_produto: values.componentes_produto,
+    mecanismo_controle:
+      retornaValorSeCategoriaPereciveis(
+        values,
+        ehPereciveis,
+        "mecanismo_controle"
+      ) || undefined,
+    componentes_produto: values.componentes_produto || "",
     alergenicos: stringToBoolean(values.alergenicos as string),
-    ingredientes_alergenicos: values.ingredientes_alergenicos,
+    ingredientes_alergenicos: values.ingredientes_alergenicos || "",
     gluten: stringToBoolean(values.gluten as string),
     lactose: stringToBoolean(values.lactose as string),
-    lactose_detalhe: values.lactose_detalhe,
+    lactose_detalhe: values.lactose_detalhe || "",
   };
 };
 
 const gerarCamposInformacoesNutricionais = (values: Record<string, any>) => {
   return {
     porcao: stringDecimalToNumber(values.porcao),
-    unidade_medida_porcao: values.unidade_medida_porcao,
+    unidade_medida_porcao: values.unidade_medida_porcao || null,
     valor_unidade_caseira: stringDecimalToNumber(values.valor_unidade_caseira),
-    unidade_medida_caseira: values.unidade_medida_caseira,
+    unidade_medida_caseira: values.unidade_medida_caseira || "",
     informacoes_nutricionais: formataInformacoesNutricionais(values),
   };
 };
@@ -642,12 +643,10 @@ const gerarCamposConservacao = (
   ehPereciveis: boolean
 ) => {
   return {
-    prazo_validade_descongelamento: retornaValorSeCategoriaPereciveis(
-      values,
-      ehPereciveis,
-      "prazo_validade_descongelamento"
-    ),
-    condicoes_de_conservacao: values.condicoes_de_conservacao,
+    prazo_validade_descongelamento: ehPereciveis
+      ? values.prazo_validade_descongelamento || ""
+      : undefined,
+    condicoes_de_conservacao: values.condicoes_de_conservacao || "",
   };
 };
 
@@ -670,40 +669,48 @@ const gerarCamposTemperaturaTransporte = (
 
 const gerarCamposArmazenamento = (values: Record<string, any>) => {
   return {
-    embalagem_primaria: values.embalagem_primaria,
-    embalagem_secundaria: values.embalagem_secundaria,
+    embalagem_primaria: values.embalagem_primaria || "",
+    embalagem_secundaria: values.embalagem_secundaria || "",
   };
 };
 
-const gerarCamposEmbalagemRotulagem = (values: Record<string, any>) => {
+const gerarCamposEmbalagemRotulagem = (
+  values: Record<string, any>,
+  ehPereciveis: boolean
+) => {
   return {
     embalagens_de_acordo_com_anexo:
       values.embalagens_de_acordo_com_anexo || false,
-    material_embalagem_primaria: values.material_embalagem_primaria,
+    material_embalagem_primaria: values.material_embalagem_primaria || "",
     produto_eh_liquido: stringToBoolean(values.produto_eh_liquido as string),
-    volume_embalagem_primaria: stringDecimalToNumber(
-      values.volume_embalagem_primaria
-    ),
-    unidade_medida_volume_primaria: values.unidade_medida_volume_primaria,
+    volume_embalagem_primaria: !ehPereciveis
+      ? stringDecimalToNumber(values.volume_embalagem_primaria)
+      : undefined,
+    unidade_medida_volume_primaria: !ehPereciveis
+      ? values.unidade_medida_volume_primaria || null
+      : undefined,
     peso_liquido_embalagem_primaria: stringDecimalToNumber(
       values.peso_liquido_embalagem_primaria
     ),
-    unidade_medida_primaria: values.unidade_medida_primaria,
+    unidade_medida_primaria: values.unidade_medida_primaria || null,
     peso_liquido_embalagem_secundaria: stringDecimalToNumber(
       values.peso_liquido_embalagem_secundaria
     ),
-    unidade_medida_secundaria: values.unidade_medida_secundaria,
+    unidade_medida_secundaria: values.unidade_medida_secundaria || null,
     peso_embalagem_primaria_vazia: stringDecimalToNumber(
       values.peso_embalagem_primaria_vazia
     ),
-    unidade_medida_primaria_vazia: values.unidade_medida_primaria_vazia,
+    unidade_medida_primaria_vazia: values.unidade_medida_primaria_vazia || null,
     peso_embalagem_secundaria_vazia: stringDecimalToNumber(
       values.peso_embalagem_secundaria_vazia
     ),
-    unidade_medida_secundaria_vazia: values.unidade_medida_secundaria_vazia,
-    variacao_percentual: stringDecimalToNumber(values.variacao_percentual),
+    unidade_medida_secundaria_vazia:
+      values.unidade_medida_secundaria_vazia || null,
+    variacao_percentual: ehPereciveis
+      ? stringDecimalToNumber(values.variacao_percentual)
+      : undefined,
     sistema_vedacao_embalagem_secundaria:
-      values.sistema_vedacao_embalagem_secundaria,
+      values.sistema_vedacao_embalagem_secundaria || "",
     rotulo_legivel: values.rotulo_legivel || false,
   };
 };
@@ -713,22 +720,22 @@ const gerarCamposResponsavelTecnico = (
   arquivo: ArquivoForm[]
 ) => {
   return {
-    nome_responsavel_tecnico: values.nome_responsavel_tecnico,
-    habilitacao: values.habilitacao,
-    numero_registro_orgao: values.numero_registro_orgao,
-    arquivo: arquivo[0]?.base64,
+    nome_responsavel_tecnico: values.nome_responsavel_tecnico || "",
+    habilitacao: values.habilitacao || "",
+    numero_registro_orgao: values.numero_registro_orgao || "",
+    arquivo: arquivo[0]?.base64 || "",
   };
 };
 
 const gerarCamposModoPreparo = (values: Record<string, any>) => {
   return {
-    modo_de_preparo: values.modo_de_preparo,
+    modo_de_preparo: values.modo_de_preparo || "",
   };
 };
 
 const gerarCamposOutrasInformacoes = (values: Record<string, any>) => {
   return {
-    informacoes_adicionais: values.informacoes_adicionais,
+    informacoes_adicionais: values.informacoes_adicionais || "",
   };
 };
 

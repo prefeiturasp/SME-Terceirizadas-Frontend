@@ -11,7 +11,7 @@ export const numberToStringDecimalMonetario = (num: number) =>
   num?.toFixed(2).replace(".", ",");
 
 export const stringDecimalToNumber = (str: string) =>
-  str === "0" ? Number(str) : Number(str?.replace(",", ".")) || undefined;
+  str === "0" ? Number(str) : Number(str?.replace(",", ".")) || null;
 
 export const stringNaoVaziaOuUndefined = (value: string) => {
   let valor = value ? value.toString() : undefined;

@@ -596,8 +596,7 @@ export default () => {
                         proponente,
                         produtosOptions,
                         fabricantesOptions,
-                        arquivo,
-                        ficha.categoria === "PERECIVEIS"
+                        arquivo
                       );
 
                       salvarRascunho(payload, ficha, setFicha, setCarregando);
@@ -637,7 +636,6 @@ export default () => {
                       produtosOptions,
                       fabricantesOptions,
                       arquivo,
-                      ficha.categoria === "PERECIVEIS",
                       password
                     );
 
