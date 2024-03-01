@@ -14,21 +14,17 @@ export default (props: Props) => {
   return (
     <div className="container-fluid mt-4">
       <h2 className="text-start texto-simples-verde">
-        <b>Adesão das Alimentações Servidas</b>
         {temFiltros && (
           <>
-            {filtros.mes && (
-              <>
-                <b className="mx-2">-</b>
-                <b className="text-dark">{filtros.mes}</b>
-              </>
-            )}
-            {filtros.dre && <b className="text-dark"> | {filtros.dre}</b>}
+            <b>Adesão das Alimentações Servidas</b>
+            <b className="mx-2">-</b>
+            {filtros.mes && <b className="text-dark">{filtros.mes} |</b>}
+            {filtros.dre && <b className="text-dark">{filtros.dre} |</b>}
             {filtros.lotes && (
-              <b className="text-dark"> | {filtros.lotes.join(", ")}</b>
+              <b className="text-dark">{filtros.lotes.join(", ")} |</b>
             )}
             {filtros.unidade_educacional && (
-              <b className="text-dark"> | {filtros.unidade_educacional}</b>
+              <b className="text-dark">{filtros.unidade_educacional}</b>
             )}
           </>
         )}
