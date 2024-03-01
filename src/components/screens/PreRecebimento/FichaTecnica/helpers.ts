@@ -516,15 +516,16 @@ export const formataPayloadCadastroFichaTecnica = (
   produtosOptions: OptionsGenerico[],
   fabricantesOptions: OptionsGenerico[],
   arquivo: ArquivoForm[],
+  ehPereciveis: boolean,
   password?: string
 ) => {
   let payload: FichaTecnicaPayload = {
     ...gerarCamposObrigatoriosRascunho(values, produtosOptions),
     ...gerarCamposProponenteFabricante(values, proponente, fabricantesOptions),
-    ...gerarCamposDetalhesProduto(values),
+    ...gerarCamposDetalhesProduto(values, ehPereciveis),
     ...gerarCamposInformacoesNutricionais(values),
-    ...gerarCamposConservacao(values),
-    ...gerarCamposTemperaturaTransporte(values),
+    ...gerarCamposConservacao(values, ehPereciveis),
+    ...gerarCamposTemperaturaTransporte(values, ehPereciveis),
     ...gerarCamposArmazenamento(values),
     ...gerarCamposEmbalagemRotulagem(values),
     ...gerarCamposResponsavelTecnico(values, arquivo),
@@ -539,17 +540,21 @@ export const formataPayloadCadastroFichaTecnica = (
 export const formataPayloadCorrecaoFichaTecnica = (
   values: Record<string, any>,
   conferidos: StateConferidosAnalise,
-  password?: string
+  ehPereciveis: boolean,
+  password: string
 ) => {
   let payload: FichaTecnicaPayload = {
-    ...(!conferidos.detalhes_produto ? gerarCamposDetalhesProduto(values) : {}),
+    ...(!conferidos.detalhes_produto
+      ? gerarCamposDetalhesProduto(values, ehPereciveis)
+      : {}),
     ...(!conferidos.informacoes_nutricionais
       ? gerarCamposInformacoesNutricionais(values)
       : {}),
-    ...(!conferidos.conservacao ? gerarCamposConservacao(values) : {}),
-    ...(!conferidos.temperatura_e_transporte &&
-    values.categoria === "PERECIVEIS"
-      ? gerarCamposTemperaturaTransporte(values)
+    ...(!conferidos.conservacao
+      ? gerarCamposConservacao(values, ehPereciveis)
+      : {}),
+    ...(!conferidos.temperatura_e_transporte && ehPereciveis
+      ? gerarCamposTemperaturaTransporte(values, ehPereciveis)
       : {}),
     ...(!conferidos.armazenamento ? gerarCamposArmazenamento(values) : {}),
     ...(!conferidos.embalagem_e_rotulagem
@@ -595,17 +600,22 @@ const gerarCamposProponenteFabricante = (
   };
 };
 
-const gerarCamposDetalhesProduto = (values: Record<string, any>) => {
+const gerarCamposDetalhesProduto = (
+  values: Record<string, any>,
+  ehPereciveis: boolean
+) => {
   return {
     prazo_validade: values.prazo_validade,
     numero_registro: retornaValorSeCategoriaPereciveis(
       values,
+      ehPereciveis,
       "numero_registro"
     ),
     agroecologico: stringToBoolean(values.agroecologico as string),
     organico: stringToBoolean(values.organico as string),
     mecanismo_controle: retornaValorSeCategoriaPereciveis(
       values,
+      ehPereciveis,
       "mecanismo_controle"
     ),
     componentes_produto: values.componentes_produto,
@@ -627,17 +637,24 @@ const gerarCamposInformacoesNutricionais = (values: Record<string, any>) => {
   };
 };
 
-const gerarCamposConservacao = (values: Record<string, any>) => {
+const gerarCamposConservacao = (
+  values: Record<string, any>,
+  ehPereciveis: boolean
+) => {
   return {
     prazo_validade_descongelamento: retornaValorSeCategoriaPereciveis(
       values,
+      ehPereciveis,
       "prazo_validade_descongelamento"
     ),
     condicoes_de_conservacao: values.condicoes_de_conservacao,
   };
 };
 
-const gerarCamposTemperaturaTransporte = (values: Record<string, any>) => {
+const gerarCamposTemperaturaTransporte = (
+  values: Record<string, any>,
+  ehPereciveis: boolean
+) => {
   return {
     temperatura_congelamento: stringDecimalToNumber(
       values.temperatura_congelamento
@@ -645,6 +662,7 @@ const gerarCamposTemperaturaTransporte = (values: Record<string, any>) => {
     temperatura_veiculo: stringDecimalToNumber(values.temperatura_veiculo),
     condicoes_de_transporte: retornaValorSeCategoriaPereciveis(
       values,
+      ehPereciveis,
       "condicoes_de_transporte"
     ),
   };
@@ -716,8 +734,9 @@ const gerarCamposOutrasInformacoes = (values: Record<string, any>) => {
 
 const retornaValorSeCategoriaPereciveis = (
   values: Record<string, any>,
+  ehPereciveis: boolean,
   campo: string
-) => (values.categoria === "PERECIVEIS" ? values[campo] : undefined);
+) => (ehPereciveis ? values[campo] : undefined);
 
 export const formataInformacoesNutricionais = (values: Record<string, any>) => {
   const uuids_informacoes = Object.keys(values)

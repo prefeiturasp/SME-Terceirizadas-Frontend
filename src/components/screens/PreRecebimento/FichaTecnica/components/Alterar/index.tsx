@@ -1085,6 +1085,7 @@ export default () => {
                       const payload = formataPayloadCorrecaoFichaTecnica(
                         values,
                         conferidos,
+                        ficha.categoria === "PERECIVEIS",
                         password
                       );
 
