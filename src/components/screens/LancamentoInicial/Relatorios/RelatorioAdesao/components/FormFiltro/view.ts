@@ -94,7 +94,7 @@ export default ({ form, onChange }: Args) => {
             ![
               "CEI",
               "CEI DIRET",
-              "CEI CEI INDIR",
+              "CEI INDIR",
               "CEI CEU",
               "CCI",
               "CCI/CIPS",
