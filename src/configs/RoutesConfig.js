@@ -1901,7 +1901,7 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_DOCUMENTO_RECEBIMENTO}`,
     component: AnalisarDocumentosRecebimentoPage,
-    tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
+    tipoUsuario: usuarioEhDilogQualidade(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CORRIGIR_DOCUMENTOS_RECEBIMENTO}`,
