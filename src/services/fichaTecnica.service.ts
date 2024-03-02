@@ -101,13 +101,5 @@ export const cadastraAnaliseFichaTecnica = async (
 export const corrigirFichaTecnica = async (
   payload: FichaTecnicaPayload,
   uuid: string
-): Promise<ResponseSemDadosInterface> => {
-  try {
-    return await axios.patch(
-      `/ficha-tecnica/${uuid}/correcao-fornecedor/`,
-      payload
-    );
-  } catch (error) {
-    toastError(getMensagemDeErro(error.response.status));
-  }
-};
+): Promise<ResponseSemDadosInterface> =>
+  await axios.patch(`/ficha-tecnica/${uuid}/correcao-fornecedor/`, payload);
