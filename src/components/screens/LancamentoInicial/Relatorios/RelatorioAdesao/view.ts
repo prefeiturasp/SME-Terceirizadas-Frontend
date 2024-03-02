@@ -9,12 +9,17 @@ import { Filtros } from "./types";
 
 export default () => {
   const [loading, setLoading] = useState(false);
+  const [exibirTitulo, setExibirTitulo] = useState(false);
 
   const [filtros, setFiltros] = useState<Filtros | null>(null);
+  const [filtrosSelecionados, setFiltrosSelecionados] =
+    useState<Filtros | null>(null);
   const [resultado, setResultado] = useState<RelatorioAdesaoResponse>(null);
 
   const filtrar = async (values: Filtros) => {
     setLoading(true);
+    setFiltros(filtrosSelecionados);
+    setExibirTitulo(true);
 
     try {
       const dados = await RelatorioService.getRelatorioAdesao({
@@ -37,10 +42,11 @@ export default () => {
   const limparFiltro = () => {
     setFiltros(null);
     setResultado(null);
+    setExibirTitulo(false);
   };
 
-  const atualizaFiltros = (values: Filtros) => {
-    setFiltros((prev) => {
+  const atualizaFiltrosSelecionados = (values: Filtros) => {
+    setFiltrosSelecionados((prev) => {
       if (prev) return { ...prev, ...values };
       return values;
     });
@@ -52,6 +58,8 @@ export default () => {
     resultado,
     filtrar,
     limparFiltro,
-    atualizaFiltros,
+    atualizaFiltrosSelecionados,
+    exibirTitulo,
+    setExibirTitulo,
   };
 };
