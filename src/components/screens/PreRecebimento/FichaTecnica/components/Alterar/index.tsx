@@ -160,7 +160,7 @@ export default () => {
                     </div>
                     <div className="status correcao">
                       <i className="fas fa-exclamation-triangle" />
-                      Solicitada correção em {ficha.log_mais_recente}
+                      Solicitada Alteração em {ficha.log_mais_recente}
                     </div>
                   </div>
 
