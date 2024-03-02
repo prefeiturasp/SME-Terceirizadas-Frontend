@@ -20,7 +20,10 @@ export default () => {
           titulo="Filtrar Resultados"
         >
           {(_, form) => (
-            <FormFiltro form={form} onChange={view.atualizaFiltros} />
+            <FormFiltro
+              form={form}
+              onChange={view.atualizaFiltrosSelecionados}
+            />
           )}
         </CollapseFiltros>
 
@@ -31,6 +34,7 @@ export default () => {
             <TabelaResultado
               filtros={view.filtros}
               resultado={view.resultado}
+              exibirTitulo={view.exibirTitulo}
             />
           </div>
         )}
