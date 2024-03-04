@@ -41,6 +41,7 @@ export default () => {
 
   const limparFiltro = () => {
     setFiltros(null);
+    setFiltrosSelecionados(null);
     setResultado(null);
     setExibirTitulo(false);
   };
