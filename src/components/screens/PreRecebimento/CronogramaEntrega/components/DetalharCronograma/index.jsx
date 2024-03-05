@@ -14,6 +14,8 @@ import {
   usuarioEhCronograma,
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
+  usuarioEhCodaeDilog,
+  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
@@ -25,7 +27,6 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
-import { usuarioEhCodaeDilog } from "../../../../../../helpers/utilities";
 
 const TIPO_CARGA_MAP = {
   PALETIZADA: "Paletizada",
@@ -175,9 +176,10 @@ export default () => {
                   {botaoImprimir}
                 </>
               )}
-              {usuarioEhCodaeDilog() && (
-                <div className="mt-4 mb-4">{botaoImprimir}</div>
-              )}
+              {usuarioEhCodaeDilog() ||
+                (usuarioEhCODAEGabinete && (
+                  <div className="mt-4 mb-4">{botaoImprimir}</div>
+                ))}
             </>
           )}
         </div>

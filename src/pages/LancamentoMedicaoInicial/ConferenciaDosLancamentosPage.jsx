@@ -11,7 +11,6 @@ import {
   CONFERENCIA_DOS_LANCAMENTOS,
   MEDICAO_INICIAL,
 } from "configs/constants";
-import { usuarioEhMedicao } from "helpers/utilities";
 
 const atual = {
   href: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
@@ -23,7 +22,7 @@ const anteriores = [
     href: `/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`,
     titulo: "Medição Inicial",
   },
-  usuarioEhMedicao() && {
+  {
     href: `/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`,
     titulo: "Acompanhamento de Lançamentos",
   },

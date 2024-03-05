@@ -14,6 +14,7 @@ import {
   BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
+import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
 import { vinculosAtivosProdutoEditais } from "services/produto.service";
 import { meusDados } from "services/perfil.service";
 import { usuarioEhEscolaTerceirizadaQualquerPerfil } from "helpers/utilities";
@@ -70,7 +71,9 @@ const ModalSuspensaoProdutoEdital = ({
 
     if (vinculos_produto_edital) {
       vinculos_produto_edital = vinculos_produto_edital.filter(
-        (vinculo) => !vinculo.suspenso
+        (vinculo) =>
+          !vinculo.suspenso &&
+          !EDITAIS_INVALIDOS.includes(vinculo.edital.numero.toUpperCase())
       );
 
       return vinculos_produto_edital.map((vinculo) => ({

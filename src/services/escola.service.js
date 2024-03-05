@@ -65,6 +65,58 @@ export const getEscolasSimplissima = (params = {}) => {
     });
 };
 
+export const getEscolasParaFiltros = (params = {}) => {
+  let url = new URL(`${API_URL}/escolas-para-filtros/`);
+  Object.keys(params).forEach((key) =>
+    url.searchParams.append(key, params[key])
+  );
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET",
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then((result) => {
+      return result.json();
+    })
+    .catch((error) => {
+      return error.json();
+    });
+};
+
+export const getEscolaPeriodosEscolares = (uuid) => {
+  let url = new URL(
+    `${API_URL}/escolas-para-filtros/${uuid}/periodos-escolares/`
+  );
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET",
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then((result) => {
+      return result.json();
+    })
+    .catch((error) => {
+      return error.json();
+    });
+};
+
+export const getEscolaTiposAlimentacao = (uuid) => {
+  let url = new URL(
+    `${API_URL}/escolas-para-filtros/${uuid}/tipos-alimentacao/`
+  );
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET",
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then((result) => {
+      return result.json();
+    })
+    .catch((error) => {
+      return error.json();
+    });
+};
+
 export const getEscolasSimplissimaComDRE = () => {
   const url = `${API_URL}/escolas-simplissima-com-dre/`;
   const OBJ_REQUEST = {

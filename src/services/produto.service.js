@@ -254,103 +254,49 @@ export const criarFabricanteProduto = async (data) => {
   return await axios.post(`/fabricantes/`, data);
 };
 
-export const getHomologacaoProduto = (uuid) => {
+export const getHomologacaoProduto = async (uuid, params) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "GET",
-    headers: authToken,
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error;
-    });
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const CODAEHomologaProduto = (uuid, editais) => {
+export const CODAEHomologaProduto = async (uuid, payload) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-homologa/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify({ editais }),
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error;
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const CODAEPedeAnaliseReclamacao = (uuid, payload) => {
+export const CODAEPedeAnaliseReclamacao = async (uuid, payload) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-pede-analise-reclamacao/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify(payload),
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error;
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const CODAERecusaReclamacao = (uuid, payload) => {
+export const CODAERecusaReclamacao = async (uuid, payload) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-recusa-reclamacao/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify(payload),
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error;
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const CODAEAceitaReclamacao = (uuid, payload) => {
+export const CODAEAceitaReclamacao = async (uuid, payload) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-aceita-reclamacao/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify(payload),
-  })
-    .then((res) => {
-      status = res.status;
-      return res.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error;
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const CODAEPedeAnaliseSensorialProduto = (
