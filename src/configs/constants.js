@@ -102,6 +102,7 @@ export const GESTAO_PRODUTO_CARDS = {
 
 export const SOLICITACOES_CODAE = "codae-solicitacoes";
 
+export const RELATORIO_ADESAO = "relatorio-adesao";
 export const RELATORIO = "relatorio";
 export const RELATORIOS = "relatorios";
 export const HISTORICO = "historico";
@@ -248,16 +249,21 @@ export const ENVIADOS_PARA_CORRECAO = "enviados-para-correcao";
 export const DOCUMENTOS_RECEBIMENTO = "documentos-recebimento";
 export const CADASTRO_DOCUMENTOS_RECEBIMENTO =
   "cadastro-documentos-recebimento";
-export const DETALHAR_DOCUMENTO_RECEBIMENTO = "detalhe-documento-recebimento";
+export const DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO =
+  "detalhe-fornecedor-documento-recebimento";
+export const DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO =
+  "detalhe-codae-documento-recebimento";
 export const ANALISAR_DOCUMENTO_RECEBIMENTO = "analise-documento-recebimento";
 export const PAINEL_DOCUMENTOS_RECEBIMENTO = "painel-documentos-recebimento";
 export const CORRIGIR_DOCUMENTOS_RECEBIMENTO =
   "corrigir-documentos-recebimento";
 
 export const FICHA_TECNICA = "ficha-tecnica";
-export const CADASTRO_FICHA_TECNICA = "cadastro-ficha-tecnica";
+export const CADASTRAR_FICHA_TECNICA = "cadastrar-ficha-tecnica";
 export const PAINEL_FICHAS_TECNICAS = "painel-fichas-tecnicas";
-export const ANALISE_FICHA_TECNICA = "analise-ficha-tecnica";
+export const ANALISAR_FICHA_TECNICA = "analisar-ficha-tecnica";
+export const DETALHAR_FICHA_TECNICA = "detalhar-ficha-tecnica";
+export const ALTERAR_FICHA_TECNICA = "alterar-ficha-tecnica";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";

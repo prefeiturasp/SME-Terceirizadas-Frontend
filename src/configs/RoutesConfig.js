@@ -256,6 +256,7 @@ import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/Detalha
 import EmpenhosPage from "pages/LancamentoMedicaoInicial/EmpenhosPage";
 import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
 import EditarEmpenhoPage from "pages/LancamentoMedicaoInicial/EditarEmpenhoPage";
+import RelatorioAdesao from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesao";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
@@ -278,7 +279,8 @@ import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutE
 import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayoutEmbalagemPage";
 import DocumentosRecebimentoPage from "../pages/PreRecebimento/DocumentosRecebimentoPage";
 import CadastroDocumentosRecebimentoPage from "../pages/PreRecebimento/CadastroDocumentosRecebimentoPage";
-import DetalharDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharDocumentosRecebimentoPage";
+import DetalharFornecedorDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharFornecedorDocumentosRecebimentoPage";
+import DetalharCodaeDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharCodaeDocumentosRecebimentoPage";
 import PainelDocumentosRecebimentoPage from "../pages/PreRecebimento/PainelDocumentosRecebimentoPage";
 import StatusDocumentoPendenteAprovacao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoPendenteAprovacao";
 import StatusDocumentoAprovados from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoAprovados";
@@ -289,6 +291,8 @@ import FichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/FichaTecnicaP
 import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/CadastroFichaTecnicaPage";
 import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
 import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
+import DetalharFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/DetalharFichaTecnicaPage";
+import AlterarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AlterarFichaTecnicaPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
 import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
@@ -837,7 +841,10 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_MASTER}`,
     component: GestaoAcessoMasterPage,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_DIRETOR_ESCOLA}`,
@@ -1367,7 +1374,8 @@ const routesConfig = [
       usuarioEhCoordenadorNutriSupervisao() ||
       usuarioEhAdministradorNutriCODAE() ||
       usuarioEhCoordenadorNutriCODAE() ||
-      usuarioEhMedicao(),
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GERENCIAL_DIETAS}`,
@@ -1487,6 +1495,11 @@ const routesConfig = [
     tipoUsuario: usuarioEhMedicao(),
   },
   {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.RELATORIOS}/${constants.RELATORIO_ADESAO}`,
+    component: RelatorioAdesao,
+    tipoUsuario: usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao(),
+  },
+  {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,
     component: DisponibilizacaoDeSolicitacoesPage,
     tipoUsuario: usuarioEhLogistica(),
@@ -1499,7 +1512,7 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.ENVIO_REQUISICOES_ENTREGA_AVANCADO}`,
     component: ConsultaRequisicaoEntregaDilog,
-    tipoUsuario: usuarioEhLogistica(),
+    tipoUsuario: usuarioEhLogistica() || usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_REQUISICAO_ENTREGA}`,
@@ -1509,7 +1522,7 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_SOLICITACAO_ALTERACAO}`,
     component: GestaoSolicitacaoAlteracaoPage,
-    tipoUsuario: usuarioEhLogistica(),
+    tipoUsuario: usuarioEhLogistica() || usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CONSULTA_SOLICITACAO_ALTERACAO}`,
@@ -1591,7 +1604,10 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO}`,
     component: GuiasNotificacoesPage,
-    tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico(),
+    tipoUsuario:
+      usuarioEhCodaeDilog() ||
+      usuarioEhDilogJuridico() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO_FISCAL}`,
@@ -1636,7 +1652,10 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
     component: CronogramaEntregaPage,
-    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor(),
+    tipoUsuario:
+      usuarioEhPreRecebimento() ||
+      usuarioEhEmpresaFornecedor() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.SOLICITACAO_ALTERACAO_CRONOGRAMA}`,
@@ -1654,7 +1673,10 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
     component: DetalharCronogramaPage,
-    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor(),
+    tipoUsuario:
+      usuarioEhPreRecebimento() ||
+      usuarioEhEmpresaFornecedor() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ALTERACAO_CRONOGRAMA}`,
@@ -1672,27 +1694,18 @@ const routesConfig = [
       usuarioEhDinutreDiretoria() ||
       usuarioEhDilogDiretoria() ||
       usuarioEhEmpresaFornecedor() ||
-      usuarioEhCodaeDilog(),
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
-    /*
-    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
-    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
-    permissionamento deve se remover usuarioEhLogistica() desta rota.
-    */
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}`,
     component: CadastroCronogramaPage,
-    tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica(),
+    tipoUsuario: usuarioEhCronograma(),
   },
   {
-    /*
-    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
-    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
-    permissionamento deve se remover usuarioEhLogistica() desta rota.
-    */
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}/${constants.EDITAR}`,
     component: EditarCronogramaPage,
-    tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica(),
+    tipoUsuario: usuarioEhCronograma(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_APROVACOES}`,
@@ -1740,7 +1753,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhDilogDiretoria() ||
       usuarioEhCronograma() ||
-      usuarioEhCodaeDilog(),
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.DILOG}/${constants.ALTERACOES_REPROVADAS}`,
@@ -1748,12 +1762,16 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhDilogDiretoria() ||
       usuarioEhCronograma() ||
-      usuarioEhCodaeDilog(),
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.CRONOGRAMA}/${constants.AGUARDANDO_ASSINATURAS}`,
     component: StatusAguardandoAssinaturasCronograma,
-    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.ASSINADO_CODAE}`,
@@ -1762,12 +1780,16 @@ const routesConfig = [
       usuarioEhDinutreDiretoria() ||
       usuarioEhDilogDiretoria() ||
       usuarioEhCodaeDilog() ||
-      usuarioEhCronograma(),
+      usuarioEhCronograma() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.CRONOGRAMA}/${constants.SOLICITACOES_ALTERACOES}`,
     component: StatusSolicitacoesAlteracoesCronograma,
-    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.CRONOGRAMA}/${constants.ALTERACOES_CODAE}`,
@@ -1776,7 +1798,8 @@ const routesConfig = [
       usuarioEhCronograma() ||
       usuarioEhDilogDiretoria() ||
       usuarioEhCodaeDilog() ||
-      usuarioEhDinutreDiretoria(),
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhCODAEGabinete(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.LAYOUT_EMBALAGEM}`,
@@ -1845,10 +1868,16 @@ const routesConfig = [
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_DOCUMENTO_RECEBIMENTO}`,
-    component: DetalharDocumentosRecebimentoPage,
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO}`,
+    component: DetalharFornecedorDocumentosRecebimentoPage,
     tipoUsuario:
-      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelEmbalagens(),
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelDocumentos(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO}`,
+    component: DetalharCodaeDocumentosRecebimentoPage,
+    tipoUsuario:
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelDocumentos(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_DOCUMENTOS_RECEBIMENTO}`,
@@ -1873,7 +1902,7 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_DOCUMENTO_RECEBIMENTO}`,
     component: AnalisarDocumentosRecebimentoPage,
-    tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
+    tipoUsuario: usuarioEhDilogQualidade(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CORRIGIR_DOCUMENTOS_RECEBIMENTO}`,
@@ -1886,7 +1915,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_FICHA_TECNICA}`,
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRAR_FICHA_TECNICA}`,
     component: CadastroFichaTecnicaPage,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
@@ -1915,15 +1944,26 @@ const routesConfig = [
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
-    component: CalendarioCronogramaPage,
-    tipoUsuario: usuarioComAcessoAoCalendarioCronograma(),
-  },
-  {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_FICHA_TECNICA}`,
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_FICHA_TECNICA}`,
     component: AnalisarFichaTecnicaPage,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHAR_FICHA_TECNICA}/`,
+    component: DetalharFichaTecnicaPage,
+    tipoUsuario:
+      usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ALTERAR_FICHA_TECNICA}/`,
+    component: AlterarFichaTecnicaPage,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
+    component: CalendarioCronogramaPage,
+    tipoUsuario: usuarioComAcessoAoCalendarioCronograma(),
   },
 ];
 

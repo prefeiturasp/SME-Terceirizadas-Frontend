@@ -475,7 +475,6 @@ export const usuarioComAcessoTelaEntregasDilog = () => {
 
 export const usuarioEhOutrosDilog = () => {
   return [
-    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
   ].includes(localStorage.getItem("perfil"));
@@ -491,6 +490,7 @@ export const usuarioComAcessoTelaDetalharNotificacaoOcorrencia = () => {
   return [
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -501,6 +501,7 @@ export const usuarioComAcessoAoCalendarioCronograma = () => {
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.DINUTRE_DIRETORIA,
     PERFIL.DILOG_DIRETORIA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -510,6 +511,7 @@ export const usuarioComAcessoAoPainelAprovacoes = () => {
     PERFIL.DINUTRE_DIRETORIA,
     PERFIL.DILOG_CRONOGRAMA,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -518,6 +520,7 @@ export const usuarioComAcessoAoPainelEmbalagens = () => {
     PERFIL.DILOG_QUALIDADE,
     PERFIL.COORDENADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -525,6 +528,8 @@ export const usuarioComAcessoAoPainelDocumentos = () => {
   return [
     PERFIL.DILOG_QUALIDADE,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -532,6 +537,7 @@ export const usuarioComAcessoAoPainelFichasTecnicas = () => {
   return [
     PERFIL.COORDENADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -539,14 +545,6 @@ export const usuarioEhLogistica = () => {
   return [
     PERFIL.COORDENADOR_LOGISTICA,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
-  ].includes(localStorage.getItem("perfil"));
-};
-
-export const usuarioEhCronogramaCriacaoEdicao = () => {
-  return [
-    PERFIL.DILOG_CRONOGRAMA,
-    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
-    PERFIL.COORDENADOR_LOGISTICA,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -560,15 +558,6 @@ export const usuarioEhDilogQualidadeOuCronograma = () => {
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
   ].includes(localStorage.getItem("perfil"));
 };
-
-/*
-  TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
-  temporariamente ao Pré Recebimento. Após finalização da definição de
-  permissionamento deve se remover usuarioEhLogistica() desta regra.
-  Quando essa mudança for realizada, apagar o usuarioEhPreRecebimentoSemLogistica,
-  ele é uma solucao temporaria pro menu de configurações aparecer pros usuarios
-  de Logistica
-  */
 
 export const usuarioEhPreRecebimento = () => {
   return (
@@ -1040,11 +1029,12 @@ export const exibirModuloMedicaoInicial = () => {
 
 export const exibirModuloOcorrencias = () => {
   return (
-    !["production"].includes(ENVIRONMENT) &&
-    (usuarioEhCodaeDilog() ||
-      usuarioEhDilogJuridico() ||
-      usuarioEhDilogQualidade() ||
-      usuarioEhDilog())
+    (!["production"].includes(ENVIRONMENT) &&
+      (usuarioEhCodaeDilog() ||
+        usuarioEhDilogJuridico() ||
+        usuarioEhDilogQualidade() ||
+        usuarioEhDilog())) ||
+    usuarioEhCODAEGabinete()
   );
 };
 

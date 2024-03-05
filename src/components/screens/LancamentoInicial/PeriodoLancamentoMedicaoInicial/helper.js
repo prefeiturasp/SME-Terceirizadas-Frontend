@@ -103,13 +103,19 @@ export const formatarPayloadPeriodoLancamento = (
   return { ...values, valores_medicao: valoresMedicao };
 };
 
-export const formatarPayloadParaCorrecao = (payload) => {
+export const formatarPayloadParaCorrecao = (payload, escolaEhEMEBS = false) => {
   let payloadParaCorrecao = payload.valores_medicao.filter(
     (valor) =>
       !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
         valor.nome_campo
       )
   );
+  if (escolaEhEMEBS) {
+    payloadParaCorrecao.forEach((objValueParaCorrecao) => {
+      objValueParaCorrecao.infantil_ou_fundamental =
+        payload?.infantil_ou_fundamental;
+    });
+  }
   return payloadParaCorrecao;
 };
 
@@ -265,7 +271,9 @@ export const desabilitarField = (
   diasParaCorrecao,
   ehPeriodoEscolarSimples,
   permissoesLancamentosEspeciaisPorDia,
-  alimentacoesLancamentosEspeciais
+  alimentacoesLancamentosEspeciais,
+  escolaEhEMEBS = false,
+  alunosTabSelecionada = null
 ) => {
   const EH_INCLUSAO_SOMENTE_SOBREMESA =
     inclusoesAutorizadas.length &&
@@ -273,7 +281,7 @@ export const desabilitarField = (
   if (nomeCategoria.includes("DIETA") && EH_INCLUSAO_SOMENTE_SOBREMESA) {
     return true;
   }
-  const valorField = valoresPeriodosLancamentos.some(
+  const valorFieldParaCorrecao = valoresPeriodosLancamentos.some(
     (valor) =>
       String(valor.categoria_medicao) === String(categoria) &&
       String(valor.dia) === String(dia) &&
@@ -290,7 +298,7 @@ export const desabilitarField = (
     ];
   }
   if (
-    (valorField ||
+    (valorFieldParaCorrecao ||
       (diasParaCorrecao &&
         diasParaCorrecao.find(
           (diaParaCorrecao) =>
@@ -318,6 +326,34 @@ export const desabilitarField = (
     ) {
       return true;
     }
+    if (escolaEhEMEBS) {
+      if (
+        ehDiaParaCorrigir(
+          dia,
+          categoria,
+          valoresPeriodosLancamentos,
+          diasParaCorrecao
+        ) &&
+        diasParaCorrecao.find(
+          (diaParaCorrecao) =>
+            String(diaParaCorrecao.dia) === String(dia) &&
+            String(diaParaCorrecao.categoria_medicao) === String(categoria) &&
+            diaParaCorrecao.habilitado_correcao === true &&
+            ALUNOS_EMEBS[diaParaCorrecao.infantil_ou_fundamental].key ===
+              alunosTabSelecionada
+        )
+      ) {
+        if (
+          grupoLocation === "Programas e Projetos" &&
+          !valorFieldParaCorrecao
+        ) {
+          return true;
+        }
+        return false;
+      } else {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -332,7 +368,7 @@ export const desabilitarField = (
           "MEDICAO_CORRIGIDA_PELA_UE",
           "MEDICAO_CORRIGIDA_PARA_CODAE",
         ].includes(location.state.status_periodo) &&
-          !valorField))) ||
+          !valorFieldParaCorrecao))) ||
     ["matriculados", "numero_de_alunos", "dietas_autorizadas"].includes(rowName)
   ) {
     return true;
@@ -443,10 +479,11 @@ export const desabilitarField = (
     grupoLocation === "Programas e Projetos" &&
     dadosValoresInclusoesAutorizadasState
   ) {
+    if (feriadosNoMes.includes(dia)) {
+      return true;
+    }
     if (nomeCategoria === "ALIMENTAÇÃO") {
-      if (feriadosNoMes.includes(dia)) {
-        return true;
-      } else if (rowName === "numero_de_alunos") {
+      if (rowName === "numero_de_alunos") {
         return true;
       } else if (validacaoSemana(dia)) {
         return true;
@@ -495,7 +532,8 @@ export const desabilitarField = (
       !["Mês anterior", "Mês posterior"].includes(
         values[`${rowName}__dia_${dia}__categoria_${categoria}`]
       ) &&
-      values[`matriculados__dia_${dia}__categoria_${categoria}`]
+      values[`matriculados__dia_${dia}__categoria_${categoria}`] &&
+      Number(values[`matriculados__dia_${dia}__categoria_${categoria}`]) !== 0
     ) {
       return false;
     } else {
@@ -559,7 +597,9 @@ export const desabilitarField = (
       rowName === "matriculados" ||
       rowName === "numero_de_alunos" ||
       rowName === "dietas_autorizadas" ||
-      (!values[`matriculados__dia_${dia}__categoria_${categoria}`] &&
+      ((!values[`matriculados__dia_${dia}__categoria_${categoria}`] ||
+        Number(values[`matriculados__dia_${dia}__categoria_${categoria}`]) ===
+          0) &&
         !nomeCategoria.includes("DIETA ESPECIAL")) ||
       Number(
         values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
@@ -1017,7 +1057,8 @@ export const defaultValue = (
   categoria,
   form,
   periodoGrupo,
-  solicitacao
+  solicitacao,
+  alunosTabSelecionada = null
 ) => {
   let result = null;
   let valorLancamento = null;
@@ -1036,12 +1077,24 @@ export const defaultValue = (
         valor.faixa_etaria === row.uuid
     );
   } else {
-    valorLancamento = valoresLancamentos.find(
-      (valor) =>
-        Number(valor.categoria_medicao) === Number(categoria.id) &&
-        Number(valor.dia) === Number(column.dia) &&
-        valor.nome_campo === row.name
-    );
+    if (solicitacao?.escola_eh_emebs === true) {
+      valorLancamento = valoresLancamentos.find(
+        (valor) =>
+          Number(valor.categoria_medicao) === Number(categoria.id) &&
+          Number(valor.dia) === Number(column.dia) &&
+          valor.nome_campo === row.name &&
+          valor.infantil_ou_fundamental !== "N/A" &&
+          ALUNOS_EMEBS[valor.infantil_ou_fundamental].key ===
+            alunosTabSelecionada
+      );
+    } else {
+      valorLancamento = valoresLancamentos.find(
+        (valor) =>
+          Number(valor.categoria_medicao) === Number(categoria.id) &&
+          Number(valor.dia) === Number(column.dia) &&
+          valor.nome_campo === row.name
+      );
+    }
   }
 
   if (valorLancamento) {
@@ -1234,20 +1287,18 @@ export const tabAlunosEmebs = (
   if (escolaEhEMEBS) {
     let itemsAlunosEmebs = [];
     if (
-      (response_matriculados.data &&
-        response_matriculados.data
-          .filter(
-            (matriculado) => matriculado.infantil_ou_fundamental === "INFANTIL"
-          )
-          .some((matriculado) => matriculado.quantidade_alunos !== 0)) ||
-      (response_log_dietas_autorizadas.data &&
-        response_log_dietas_autorizadas.data
-          .filter(
-            (log) =>
-              log.infantil_ou_fundamental === "INFANTIL" &&
-              log.classificacao.toUpperCase() !== "TIPO C"
-          )
-          .some((log) => log.quantidade !== 0))
+      response_matriculados?.data
+        .filter(
+          (matriculado) => matriculado.infantil_ou_fundamental === "INFANTIL"
+        )
+        .some((matriculado) => matriculado.quantidade_alunos !== 0) ||
+      response_log_dietas_autorizadas?.data
+        .filter(
+          (log) =>
+            log.infantil_ou_fundamental === "INFANTIL" &&
+            log.classificacao.toUpperCase() !== "TIPO C"
+        )
+        .some((log) => log.quantidade !== 0)
     ) {
       itemsAlunosEmebs.push({
         key: INFANTIL_EMEBS.key,
@@ -1260,5 +1311,31 @@ export const tabAlunosEmebs = (
       label: FUNDAMENTAL_EMEBS.label,
     });
     setTabItemsAlunosEmebs(itemsAlunosEmebs);
+  }
+};
+
+export const desabilitarBotaoObservacoesConferenciaLancamentos = (
+  valoresLancamentos,
+  column,
+  categoria,
+  solicitacao,
+  alunosTabSelecionada
+) => {
+  if (solicitacao?.escola_eh_emebs === true) {
+    return !valoresLancamentos.find(
+      (valor) =>
+        valor.nome_campo === "observacoes" &&
+        Number(valor.dia) === Number(column.dia) &&
+        Number(valor.categoria_medicao) === Number(categoria.id) &&
+        valor.infantil_ou_fundamental !== "N/A" &&
+        ALUNOS_EMEBS[valor.infantil_ou_fundamental].key === alunosTabSelecionada
+    );
+  } else {
+    return !valoresLancamentos.find(
+      (valor) =>
+        valor.nome_campo === "observacoes" &&
+        Number(valor.dia) === Number(column.dia) &&
+        Number(valor.categoria_medicao) === Number(categoria.id)
+    );
   }
 };

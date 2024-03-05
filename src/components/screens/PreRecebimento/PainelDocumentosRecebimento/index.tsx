@@ -4,13 +4,15 @@ import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
 import { cardsPainel } from "./constants";
 import {
   ANALISAR_DOCUMENTO_RECEBIMENTO,
-  DETALHAR_DOCUMENTO_RECEBIMENTO,
+  DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO,
+  DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO,
   PRE_RECEBIMENTO,
 } from "configs/constants";
 import {
   parseDataHoraBrToMoment,
   comparaObjetosMoment,
   truncarString,
+  usuarioEhDilogQualidade,
 } from "helpers/utilities";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -63,11 +65,15 @@ export default () => {
   };
 
   const gerarLinkDocumento = (item: DocumentosRecebimentoDashboard): string => {
-    return ["Aprovado", "Enviado para Correção"].includes(item.status)
-      ? `/${PRE_RECEBIMENTO}/${DETALHAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
-      : item.status === "Enviado para Análise"
-      ? `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`
-      : ``;
+    if (item.status === "Enviado para Análise") {
+      if (usuarioEhDilogQualidade()) {
+        return `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
+      }
+
+      return `/${PRE_RECEBIMENTO}/${DETALHAR_FORNECEDOR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
+    }
+
+    return `/${PRE_RECEBIMENTO}/${DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
   };
 
   const agruparCardsPorStatus = (

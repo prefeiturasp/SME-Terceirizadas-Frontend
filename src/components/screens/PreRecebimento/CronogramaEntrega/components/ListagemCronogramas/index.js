@@ -11,7 +11,6 @@ import {
 } from "configs/constants";
 import {
   usuarioEhCronograma,
-  usuarioEhCronogramaCriacaoEdicao,
   usuarioEhEmpresaFornecedor,
   formataMilhar,
 } from "helpers/utilities";
@@ -105,10 +104,10 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                         fontSize: "12px",
                         fontWeight: "700",
                       }}
-                      title={cronograma.produto && cronograma.produto.nome}
+                      title={cronograma.ficha_tecnica?.produto?.nome}
                     >
-                      {cronograma.produto &&
-                        formataNome(cronograma.produto.nome)}
+                      {cronograma.ficha_tecnica?.produto?.nome &&
+                        formataNome(cronograma.ficha_tecnica?.produto?.nome)}
                     </Tooltip>
                   </div>
                   <div className={`${bordas}`}>
@@ -167,7 +166,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                         </>
                       ) : (
                         <>
-                          {usuarioEhCronogramaCriacaoEdicao() && (
+                          {usuarioEhCronograma() && (
                             <NavLink
                               className="float-start"
                               to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${cronograma.uuid}`}

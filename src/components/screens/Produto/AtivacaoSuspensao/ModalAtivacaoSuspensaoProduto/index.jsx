@@ -15,6 +15,7 @@ import {
   BUTTON_ICON,
 } from "components/Shareable/Botao/constants";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
+import { EDITAIS_INVALIDOS } from "helpers/gestaoDeProdutos";
 import { ativarProduto, suspenderProduto } from "services/produto.service";
 import { meusDados } from "services/perfil.service";
 import "./style.scss";
@@ -105,16 +106,25 @@ const ModalAtivacaoSuspensaoProduto = ({
             (vinculo) => !vinculo.suspenso
           );
         }
-        options = vinculos_produto_edital.map((vinculo) => ({
-          value: vinculo.edital.uuid,
-          label: vinculo.edital.numero,
-        }));
+        options = vinculos_produto_edital
+          .filter(
+            ({ edital }) =>
+              !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
+          )
+          .map((vinculo) => ({
+            value: vinculo.edital.uuid,
+            label: vinculo.edital.numero,
+          }));
       }
       if (acao === "ativação" && editais?.length > 0) {
-        options = editais.map((edital) => ({
-          label: edital.numero,
-          value: edital.uuid,
-        }));
+        options = editais
+          .filter(
+            (edital) => !EDITAIS_INVALIDOS.includes(edital.numero.toUpperCase())
+          )
+          .map((edital) => ({
+            label: edital.numero,
+            value: edital.uuid,
+          }));
       }
     }
     return options;

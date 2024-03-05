@@ -271,7 +271,7 @@ export default ({
                         {cronograma.empresa && cronograma.empresa.nome_fantasia}
                       </td>
                       <td className="borda-crono">
-                        {cronograma.produto && cronograma.produto.nome}
+                        {cronograma.ficha_tecnica?.produto?.nome}
                       </td>
                       <td className="borda-crono">{etapa.data_programada}</td>
                       <td className="borda-crono">{etapa.etapa}</td>

@@ -3,14 +3,14 @@ import { HOME } from "constants/config";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
 import {
-  CADASTRO_FICHA_TECNICA,
+  CADASTRAR_FICHA_TECNICA,
   FICHA_TECNICA,
   PRE_RECEBIMENTO,
 } from "configs/constants";
 import Cadastrar from "components/screens/PreRecebimento/FichaTecnica/components/Cadastrar";
 
 const atual = {
-  href: `/${PRE_RECEBIMENTO}/${CADASTRO_FICHA_TECNICA}`,
+  href: `/${PRE_RECEBIMENTO}/${CADASTRAR_FICHA_TECNICA}`,
   titulo: "Cadastrar Ficha Técnica",
 };
 

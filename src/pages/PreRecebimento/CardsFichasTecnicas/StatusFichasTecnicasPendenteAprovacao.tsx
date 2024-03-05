@@ -4,7 +4,7 @@ import Breadcrumb from "components/Shareable/Breadcrumb";
 import {
   PAINEL_FICHAS_TECNICAS,
   PRE_RECEBIMENTO,
-  ANALISE_FICHA_TECNICA,
+  ANALISAR_FICHA_TECNICA,
 } from "configs/constants";
 import { CARD_PENDENTES_APROVACAO } from "components/screens/PreRecebimento/PainelFichasTecnicas/constants";
 import { getDashboardFichasTecnicasPorStatus } from "services/fichaTecnica.service";
@@ -49,7 +49,7 @@ export default () => {
         getSolicitacoes={getDashboardFichasTecnicasPorStatus}
         params={paramsDefault}
         limit={limit}
-        urlBaseItem={`/${PRE_RECEBIMENTO}/${ANALISE_FICHA_TECNICA}`}
+        urlBaseItem={`/${PRE_RECEBIMENTO}/${ANALISAR_FICHA_TECNICA}`}
       />
     </Page>
   );

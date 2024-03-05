@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import moment from "moment";
 import { Field } from "react-final-form";
 import { NavLink } from "react-router-dom";
@@ -13,11 +13,11 @@ import CollapseFiltros from "components/Shareable/CollapseFiltros";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { InputText } from "components/Shareable/Input/InputText";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
-import MeusDadosContext from "context/MeusDadosContext";
 import { CADASTRO_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants.js";
 
 import { montarOptionsStatus } from "./utils";
 import "./style.scss";
+import { usuarioEhCronograma } from "../../../../../../helpers/utilities";
 
 export default ({
   setFiltros,
@@ -26,22 +26,6 @@ export default ({
   inicioResultado,
   armazens,
 }) => {
-  const { meusDados } = useContext(MeusDadosContext);
-
-  const podeCadastrar = (item) => {
-    /*
-    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
-    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
-    permissionamento deve se remover os perfis de logistica desta função.
-    */
-    const perfis = [
-      "DILOG_CRONOGRAMA",
-      "COORDENADOR_LOGISTICA",
-      "COORDENADOR_CODAE_DILOG_LOGISTICA",
-    ];
-    return perfis.includes(item);
-  };
-
   const onSubmit = async (values) => {
     const filtros = { ...values };
     if (filtros.status) filtros.status = filtros.status.flat();
@@ -159,7 +143,7 @@ export default ({
       </CollapseFiltros>
 
       <div className="botoes pt-4" ref={inicioResultado}>
-        {meusDados && podeCadastrar(meusDados.vinculo_atual.perfil.nome) && (
+        {usuarioEhCronograma() && (
           <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}`}>
             <Botao
               texto="Cadastrar Cronograma"

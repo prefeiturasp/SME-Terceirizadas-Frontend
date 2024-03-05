@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import HTTP_STATUS from "http-status-codes";
@@ -62,6 +62,8 @@ import ModalRelatorioUnificado from "./components/ModalRelatorioUnificado";
 
 export const AcompanhamentoDeLancamentos = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const { meusDados } = useContext(MeusDadosContext);
   const DEFAULT_STATE = usuarioEhEscolaTerceirizadaQualquerPerfil() ? [] : null;
 
@@ -69,14 +71,18 @@ export const AcompanhamentoDeLancamentos = () => {
   const [carreandoLotes, setCarregandoLotes] = useState(false);
 
   const [dadosDashboard, setDadosDashboard] = useState(null);
-  const [statusSelecionado, setStatusSelecionado] = useState(null);
+  const [statusSelecionado, setStatusSelecionado] = useState(
+    searchParams.get("status")
+  );
   const [resultados, setResultados] = useState(null);
   const [mesesAnos, setMesesAnos] = useState(null);
   const [lotes, setLotes] = useState([]);
   const [tiposUnidades, setTiposUnidades] = useState(DEFAULT_STATE);
   const [nomesEscolas, setNomesEscolas] = useState(DEFAULT_STATE);
   const [diretoriasRegionais, setDiretoriasRegionais] = useState(null);
-  const [diretoriaRegional, setDiretoriaRegional] = useState(null);
+  const [diretoriaRegional, setDiretoriaRegional] = useState(
+    searchParams.get("diretoria_regional")
+  );
   const [mudancaDre, setMudancaDre] = useState(false);
 
   const [erroAPI, setErroAPI] = useState("");
@@ -88,6 +94,16 @@ export const AcompanhamentoDeLancamentos = () => {
   const [exibirModalRelatorioUnificado, setExibirModalRelatorioUnificado] =
     useState(false);
 
+  const [initialValues, setInitialValues] = useState({
+    diretoria_regional: diretoriaRegional,
+    mes_ano: searchParams.get("mes_ano"),
+    lotes_selecionados: searchParams.get("lotes")
+      ? searchParams.get("lotes").split(",")
+      : null,
+    tipo_unidade: searchParams.get("tipo_unidade"),
+    escola: searchParams.get("escola"),
+  });
+
   const PAGE_SIZE = 10;
   const LOADING =
     carreandoLotes ||
@@ -98,13 +114,20 @@ export const AcompanhamentoDeLancamentos = () => {
     loading;
 
   const getDashboardMedicaoInicialAsync = async (params = {}) => {
+    if (Object.keys(params).length === 0) {
+      params = initialValues;
+    }
+
     setLoadingComFiltros(true);
     if (diretoriaRegional) {
       params = { ...params, dre: diretoriaRegional };
     }
-    const response = await getDashboardMedicaoInicial(params);
+    const [responseDre, response] = await Promise.all([
+      getDashboardMedicaoInicial({ dre: diretoriaRegional }),
+      getDashboardMedicaoInicial(params),
+    ]);
     if (response.status === HTTP_STATUS.OK) {
-      const dashboardResults = response.data.results;
+      const dashboardResults = responseDre.data.results;
       if (
         (!usuarioEhMedicao() &&
           !usuarioEhCODAENutriManifestacao() &&
@@ -131,7 +154,11 @@ export const AcompanhamentoDeLancamentos = () => {
           );
         }
 
-        if (!dadosDashboard || (diretoriaRegional && !params.mes_ano)) {
+        if (
+          mudancaDre ||
+          !dadosDashboard ||
+          (diretoriaRegional && !params.mes_ano)
+        ) {
           setDadosDashboard(NovoDashboardResults);
         }
       }
@@ -183,18 +210,20 @@ export const AcompanhamentoDeLancamentos = () => {
     );
   };
 
-  useEffect(() => {
-    const getMesesAnosSolicitacoesMedicaoinicialAsync = async () => {
-      const response = await getMesesAnosSolicitacoesMedicaoinicial();
-      if (response.status === HTTP_STATUS.OK) {
-        setMesesAnos(response.data.results);
-      } else {
-        setErroAPI(
-          "Erro ao carregar meses/anos das solicitações de medição inicial. Tente novamente mais tarde."
-        );
-      }
-    };
+  const getMesesAnosSolicitacoesMedicaoinicialAsync = async () => {
+    const response = await getMesesAnosSolicitacoesMedicaoinicial({
+      dre: diretoriaRegional,
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setMesesAnos(response.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar meses/anos das solicitações de medição inicial. Tente novamente mais tarde."
+      );
+    }
+  };
 
+  useEffect(() => {
     const getTiposUnidadeEscolarAsync = async () => {
       const response = await getTiposUnidadeEscolar();
       if (response.status === HTTP_STATUS.OK) {
@@ -205,8 +234,10 @@ export const AcompanhamentoDeLancamentos = () => {
         );
       }
     };
+    setCurrentPage(1);
 
-    getDashboardMedicaoInicialAsync();
+    onPageChanged(1, { status: statusSelecionado, ...initialValues });
+
     getMesesAnosSolicitacoesMedicaoinicialAsync();
 
     if (!usuarioEhEscolaTerceirizadaQualquerPerfil()) {
@@ -253,16 +284,22 @@ export const AcompanhamentoDeLancamentos = () => {
       meusDados && uuid && getEscolasTrecTotalAsync();
     }
     if (diretoriaRegional) {
-      getDashboardMedicaoInicialAsync();
+      onPageChanged(currentPage, {
+        status: statusSelecionado,
+        ...initialValues,
+      });
+      getMesesAnosSolicitacoesMedicaoinicialAsync();
     }
   }, [meusDados, diretoriaRegional]);
 
-  const onPageChanged = async (page) => {
-    setLoadingComFiltros(true);
-    const params = { limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE };
+  const onPageChanged = async (page, filtros) => {
+    const params = {
+      limit: PAGE_SIZE,
+      offset: (page - 1) * PAGE_SIZE,
+      ...filtros,
+    };
     setCurrentPage(page);
     await getDashboardMedicaoInicialAsync(params);
-    setLoadingComFiltros(false);
   };
 
   const getNomesItemsFiltrado = (value) => {
@@ -297,7 +334,8 @@ export const AcompanhamentoDeLancamentos = () => {
 
   const onSubmit = (values) => {
     setCurrentPage(1);
-    getDashboardMedicaoInicialAsync({ status: statusSelecionado, ...values });
+    const filtros = { status: statusSelecionado, ...values };
+    onPageChanged(1, filtros);
   };
 
   const resetForm = (form) => {
@@ -305,6 +343,10 @@ export const AcompanhamentoDeLancamentos = () => {
       "diretoria_regional" || undefined
     );
     form.reset();
+    resetURL(["mes_ano", "lotes", "tipo_unidade", "escola"]);
+    setInitialValues({
+      diretoria_regional: diretoria_regional?.value,
+    });
     setResultados(undefined);
     diretoria_regional &&
       form.change("diretoria_regional", diretoria_regional.value);
@@ -412,15 +454,35 @@ export const AcompanhamentoDeLancamentos = () => {
     return "";
   };
 
+  const resetURL = (nomes) => {
+    setSearchParams((prev) => {
+      nomes.forEach((nome) => {
+        prev.delete(nome);
+      });
+      return prev;
+    });
+  };
+
+  const adicionaFiltroNaURL = (nome, valor) => {
+    setSearchParams((prev) => {
+      if (
+        (typeof valor !== "object" && valor) ||
+        (Array.isArray(valor) && valor.length > 0)
+      ) {
+        prev.set(nome, valor);
+      } else {
+        prev.delete(nome);
+      }
+      return prev;
+    });
+  };
+
   return (
     <div className="acompanhamento-de-lancamentos">
       {erroAPI && <div>{erroAPI}</div>}
       <Spin tip="Carregando..." spinning={LOADING}>
         {!erroAPI && !LOADING && (
-          <Form
-            onSubmit={onSubmit}
-            initialValues={{ diretoria_regional: diretoriaRegional }}
-          >
+          <Form onSubmit={onSubmit} initialValues={initialValues}>
             {({ handleSubmit, form, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card mt-3">
@@ -439,6 +501,11 @@ export const AcompanhamentoDeLancamentos = () => {
                           setStatusSelecionado(null);
                           setResultados(null);
                           setMudancaDre(true);
+                          adicionaFiltroNaURL("diretoria_regional", value);
+                          setInitialValues((prev) => ({
+                            ...prev,
+                            diretoria_regional: value,
+                          }));
                         }}
                         name="diretoria_regional"
                         filterOption={(inputValue, option) =>
@@ -466,9 +533,17 @@ export const AcompanhamentoDeLancamentos = () => {
                               form={form}
                               resetForm={resetForm}
                               page={currentPage}
-                              onPageChanged={onPageChanged}
+                              onPageChanged={() =>
+                                onPageChanged(1, {
+                                  status: statusSelecionado,
+                                  ...values,
+                                })
+                              }
                               setResultados={setResultados}
-                              setStatusSelecionado={setStatusSelecionado}
+                              setStatusSelecionado={(status) => {
+                                setStatusSelecionado(status);
+                                adicionaFiltroNaURL("status", status);
+                              }}
                               statusSelecionado={statusSelecionado}
                               total={dadosPorStatus.total}
                               classeCor={
@@ -534,6 +609,12 @@ export const AcompanhamentoDeLancamentos = () => {
                                 naoDesabilitarPrimeiraOpcao
                                 validate={required}
                                 required
+                                onChangeEffect={(e) => {
+                                  adicionaFiltroNaURL(
+                                    "mes_ano",
+                                    e.target.value
+                                  );
+                                }}
                               />
                             </div>
                             <div className="col-4">
@@ -548,6 +629,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                 }))}
                                 onSelectedChanged={(values_) => {
                                   form.change(`lotes_selecionados`, values_);
+                                  adicionaFiltroNaURL("lotes", values_);
                                 }}
                                 disableSearch={true}
                                 overrideStrings={{
@@ -572,6 +654,12 @@ export const AcompanhamentoDeLancamentos = () => {
                                   }))
                                 )}
                                 naoDesabilitarPrimeiraOpcao
+                                onChangeEffect={(e) => {
+                                  adicionaFiltroNaURL(
+                                    "tipo_unidade",
+                                    e.target.value
+                                  );
+                                }}
                               />
                             </div>
                           </div>
@@ -588,6 +676,9 @@ export const AcompanhamentoDeLancamentos = () => {
                                 label="Unidade Educacional"
                                 placeholder={"Digite um nome"}
                                 className="input-busca-nome-item"
+                                onSelect={(value) => {
+                                  adicionaFiltroNaURL("escola", value);
+                                }}
                               />
                             </div>
                             <div className="col-4 mt-auto text-end">
@@ -747,7 +838,12 @@ export const AcompanhamentoDeLancamentos = () => {
                                 </tbody>
                               </table>
                               <Paginacao
-                                onChange={(page) => onPageChanged(page)}
+                                onChange={(page) =>
+                                  onPageChanged(page, {
+                                    status: statusSelecionado,
+                                    ...values,
+                                  })
+                                }
                                 total={resultados.total}
                                 pageSize={PAGE_SIZE}
                                 current={currentPage}

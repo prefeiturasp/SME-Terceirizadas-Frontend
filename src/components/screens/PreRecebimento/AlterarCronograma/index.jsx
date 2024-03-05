@@ -45,6 +45,7 @@ import FormRecebimento from "components/PreRecebimento/FormRecebimento";
 import { fornecedorCienteAlteracaoCodae } from "../../../../services/cronograma.service";
 import { SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR } from "../../../../configs/constants";
 import { setFieldTouched } from "../../../../configs/mutators";
+import { numberToStringDecimal } from "helpers/parsers";
 
 export default ({ analiseSolicitacao }) => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -143,7 +144,9 @@ export default ({ analiseSolicitacao }) => {
       values[`data_programada_${index}`] = etapa.data_programada;
       values[`quantidade_${index}`] = formataMilhar(etapa.quantidade);
       values[`total_embalagens_${index}`] = etapa.total_embalagens;
-      values[`qtd_total_empenho_${index}`] = etapa.qtd_total_empenho;
+      values[`qtd_total_empenho_${index}`] = numberToStringDecimal(
+        etapa.qtd_total_empenho
+      );
     });
     values.quantidade_total = formataMilhar(cronograma.qtd_total_programada);
     values.unidade_medida = cronograma.unidade_medida;
