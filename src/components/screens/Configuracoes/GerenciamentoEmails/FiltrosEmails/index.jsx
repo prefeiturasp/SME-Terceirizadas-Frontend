@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Spin, Select } from "antd";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { BAD_REQUEST, CREATED } from "http-status-codes";
 import { email } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
@@ -92,13 +91,9 @@ export default (props) => {
                     placeholder="Buscar Empresa ou E-mail cadastrado"
                     className="input-consulta-emails"
                     icone={`${BUTTON_ICON.SEARCH} fa-lg`}
+                    inputOnChange={() => props.onChange(values)}
                   />
                 </div>
-                <OnChange name="buscar">
-                  {() => {
-                    props.onChange(values);
-                  }}
-                </OnChange>
               </div>
 
               <Modal

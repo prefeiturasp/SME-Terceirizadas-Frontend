@@ -31,7 +31,6 @@ import {
 import React from "react";
 import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
-import { OnChange } from "react-final-form-listeners";
 import "./style.scss";
 
 export const DatasInclusaoContinua = ({ ...props }) => {
@@ -50,14 +49,8 @@ export const DatasInclusaoContinua = ({ ...props }) => {
               validate={required}
               minDate={proximosDoisDiasUteis}
               maxDate={fimDoCalendario()}
+              inputOnChange={(value) => onDataChanged(value)}
             />
-            <OnChange name={`${name}.data_inicial`}>
-              {(value) => {
-                if (value) {
-                  onDataChanged(value);
-                }
-              }}
-            </OnChange>
           </div>
           <div className="col-6">
             <Field

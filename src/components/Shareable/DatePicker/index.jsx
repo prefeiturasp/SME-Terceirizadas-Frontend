@@ -56,7 +56,8 @@ export class InputComData extends Component {
   }
 
   handleChange(date) {
-    this.props.input.onChange(
+    const { input, inputOnChange } = this.props;
+    input.onChange(
       date
         ? this.props.writable
           ? date
@@ -65,6 +66,16 @@ export class InputComData extends Component {
             )
         : null
     );
+    inputOnChange &&
+      inputOnChange(
+        date
+          ? this.props.writable
+            ? date
+            : moment(date).format(
+                this.props.dateFormat || this.defaultProps.dateFormat
+              )
+          : null
+      );
   }
 
   openDatepicker = () => {
@@ -111,6 +122,7 @@ export class InputComData extends Component {
       excludeDates,
       filterDate,
     } = this.props;
+
     return (
       <div className="datepicker">
         {label && [

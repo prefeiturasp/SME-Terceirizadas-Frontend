@@ -37,7 +37,17 @@ export const InputText = (props) => {
     proibeNumeros,
     agrupadorMilhar,
     valorInicial,
+    inputOnChange,
   } = props;
+
+  const inputProps = {
+    ...input,
+    onChange: (e) => {
+      input.onChange(e);
+      inputOnChange && inputOnChange(e);
+    },
+  };
+
   return (
     <div className={`input ${icone && "icon"}`}>
       {label && [
@@ -57,6 +67,7 @@ export const InputText = (props) => {
       {tooltipText && <TooltipIcone tooltipText={tooltipText} />}
       <input
         {...input}
+        {...inputProps}
         className={`form-control ${className} ${
           meta &&
           meta.touched &&
