@@ -3,6 +3,7 @@ FROM node:20.11.1-alpine as builder
 ENV IS_DOCKER_ENVIRONMENT=true
 WORKDIR /app
 COPY . ./
+RUN apk add --no-cache python3 make g++
 RUN npm install --legacy-peer-deps
 RUN npm rebuild node-sass
 RUN npm run-script build --expose-gc --max-old-space-size=8192
