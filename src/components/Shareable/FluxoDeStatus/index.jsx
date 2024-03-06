@@ -67,6 +67,12 @@ export const FluxoDeStatus = (props) => {
         }
         if (
           log.status_evento_explicacao === "Escola cancelou" &&
+          log.usuario.tipo_usuario === "escola"
+        ) {
+          return "Escola cancelou";
+        }
+        if (
+          log.status_evento_explicacao === "Escola cancelou" &&
           !eh_gestao_alimentacao
         ) {
           return "CODAE autorizou cancelamento";
