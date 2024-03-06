@@ -128,7 +128,10 @@ const Relatorio = ({ visao }) => {
     const responseDietasVigentes = await getDietasEspeciaisVigentesDeUmAluno(
       codigo_eol
     );
-    if (responseDietasVigentes.status === HTTP_STATUS.OK) {
+    if (
+      responseDietasVigentes &&
+      responseDietasVigentes.status === HTTP_STATUS.OK
+    ) {
       setSolicitacaoVigenteAtiva(responseDietasVigentes.data.results);
     } else {
       toastError("Houve um erro ao carregar Solicitação");
