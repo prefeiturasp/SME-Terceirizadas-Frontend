@@ -364,10 +364,12 @@ const Relatorio = ({ visao }) => {
                 solicitacaoVigenteAtiva={solicitacaoVigenteAtiva}
                 editar={editar}
               />
-              {status === statusEnum.CODAE_A_AUTORIZAR &&
+              {[
+                statusEnum.CODAE_A_AUTORIZAR,
+                statusEnum.ESCOLA_SOLICITOU_INATIVACAO,
+              ].includes(status) &&
                 visao === ESCOLA &&
                 !dietaCancelada &&
-                dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" &&
                 ![
                   TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
                   TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
