@@ -316,11 +316,11 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     });
   };
 
-  const carregarRascunhoContinuo = (
+  const carregarRascunhoContinuo = async (
     form: FormApi<any, Partial<any>>,
     values: ValuesFormInclusaoDeAlimentacaoInterface,
     inclusao_: any
-  ): void => {
+  ): Promise<void> => {
     const quantidades_periodo_ = deepCopy(inclusao_.quantidades_periodo);
     if (inclusao_.motivo.nome === "ETEC") {
       quantidades_periodo_.forEach((qp) => {
@@ -347,14 +347,14 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       });
     }
 
-    form.change("inclusoes", [
+    await form.change("inclusoes", [
       {
         motivo: inclusao_.motivo.uuid,
         data_inicial: inclusao_.data_inicial,
         data_final: inclusao_.data_final,
       },
     ]);
-    form.change("quantidades_periodo", quantidades_periodo_);
+    await form.change("quantidades_periodo", quantidades_periodo_);
   };
 
   const refresh = (form: FormApi<any, Partial<any>>): void => {
