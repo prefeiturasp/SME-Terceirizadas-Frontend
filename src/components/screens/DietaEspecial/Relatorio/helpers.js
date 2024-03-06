@@ -54,10 +54,11 @@ export const ehSolicitacaoDeCancelamento = (status) => {
 export const formataJustificativa = (dietaEspecial) => {
   let justificativa = null;
   if (dietaEspecial.status_solicitacao === "ESCOLA_CANCELOU") {
-    if (dietaEspecial.logs.length === 2) {
-      justificativa = dietaEspecial.logs[0].justificativa;
-    } else {
-      justificativa = dietaEspecial.logs[2].justificativa;
+    const log = dietaEspecial.logs.find(
+      (l) => l.status_evento_explicacao === "Escola cancelou"
+    );
+    if (log) {
+      justificativa = log.justificativa;
     }
   }
   if (
