@@ -12,7 +12,7 @@ import {
 } from "helpers/utilities";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Field, Form } from "react-final-form";
+import { Field } from "react-final-form";
 import { getLotesSimples } from "services/lote.service";
 import { Spin } from "antd";
 import { lotesToOptions } from "../../helpers";
@@ -22,13 +22,9 @@ import { STATUS_SOLICITACOES, TIPOS_SOLICITACAO } from "../../constants";
 import { getEscolaSimples, getEscolasTercTotal } from "services/escola.service";
 import { InputComData } from "components/Shareable/DatePicker";
 import { getNomesTerceirizadas } from "services/produto.service";
-import Botao from "components/Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_TYPE,
-} from "components/Shareable/Botao/constants";
 import { OnChange } from "react-final-form-listeners";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import CollapseFiltros from "components/Shareable/CollapseFiltros";
 
 export const Filtros = ({ ...props }) => {
   const [lotes, setLotes] = useState([]);
@@ -182,9 +178,19 @@ export const Filtros = ({ ...props }) => {
   return (
     <Spin tip="Carregando..." spinning={LOADING && !erroAPI}>
       {!erroAPI && (
-        <Form onSubmit={onSubmit}>
-          {({ form, handleSubmit, values }) => (
-            <form onSubmit={handleSubmit}>
+        <CollapseFiltros
+          onSubmit={onSubmit}
+          onClear={() => {
+            setFiltros(undefined);
+            setTotalBusca(undefined);
+            setSolicitacoes(undefined);
+            setResultadoPaginado(undefined);
+            setPage(1);
+          }}
+          titulo="Filtrar Resultados"
+        >
+          {(values, form) => (
+            <>
               <div className="row">
                 <div className="col-lg-3 col-xl-4">
                   <Field
@@ -332,7 +338,7 @@ export const Filtros = ({ ...props }) => {
                     <label>Período do Evento</label>
                   </div>
                   <div className="row">
-                    <div className="col-6">
+                    <div className="col-6 ps-0">
                       <Field
                         component={InputComData}
                         placeholder="De"
@@ -355,32 +361,9 @@ export const Filtros = ({ ...props }) => {
                   </div>
                 </div>
               </div>
-              <div className="row mt-3">
-                <div className="col-12 text-end">
-                  <Botao
-                    texto="Limpar Filtros"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    onClick={() => {
-                      form.reset();
-                      setFiltros(undefined);
-                      setTotalBusca(undefined);
-                      setSolicitacoes(undefined);
-                      setResultadoPaginado(undefined);
-                      setPage(1);
-                    }}
-                  />
-                  <Botao
-                    texto="Consultar"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    className="ms-3"
-                  />
-                </div>
-              </div>
-            </form>
+            </>
           )}
-        </Form>
+        </CollapseFiltros>
       )}
     </Spin>
   );
