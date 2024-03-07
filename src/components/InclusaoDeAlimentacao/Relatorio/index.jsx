@@ -239,12 +239,9 @@ class Relatorio extends Component {
       );
     };
 
-    const renderModalCancelamentoContinuo = (inclusao) => {
+    const renderModalCancelamentoContinuo = () => {
       return (
         usuarioEhEscolaTerceirizadaQualquerPerfil() &&
-        inclusao &&
-        inclusao.motivo &&
-        !inclusao.motivo.nome.includes("ETEC") &&
         tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
       );
     };

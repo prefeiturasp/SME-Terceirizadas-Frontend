@@ -15,6 +15,7 @@ import { Field, Form } from "react-final-form";
 import moment from "moment";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import HTTP_STATUS from "http-status-codes";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 
 export const ModalCancelarInclusaoContinua = ({ ...props }) => {
   const {
@@ -79,7 +80,9 @@ export const ModalCancelarInclusaoContinua = ({ ...props }) => {
                     <div key={key} className="row fw-bold">
                       <div className="col-1">De</div>
                       <div className="col-1">Até</div>
-                      <div className="col-3">Repetir</div>
+                      {solicitacao.motivo.nome !== "ETEC" && (
+                        <div className="col-3">Repetir</div>
+                      )}
                       <div className="col-2">Período</div>
                       <div className="col-3">Tipos de alimentação</div>
                       <div className="col-1">Nº de alunos</div>
@@ -106,28 +109,30 @@ export const ModalCancelarInclusaoContinua = ({ ...props }) => {
                         {solicitacao.data_inicial}
                       </div>
                       <div className="col-1">{solicitacao.data_final}</div>
-                      <div className="col-3">
-                        <td className="weekly">
-                          {WEEK.map((day, key_) => {
-                            return (
-                              <span
-                                key={key_}
-                                className={
-                                  quantidade_periodo.dias_semana
-                                    .map(String)
-                                    .includes(day.value)
-                                    ? "week-circle-clicked green"
-                                    : "week-circle"
-                                }
-                                data-cy={`dia-${key}`}
-                                value={day.value}
-                              >
-                                {day.label}
-                              </span>
-                            );
-                          })}
-                        </td>
-                      </div>
+                      {solicitacao.motivo.nome !== "ETEC" && (
+                        <div className="col-3">
+                          <td className="weekly">
+                            {WEEK.map((day, key_) => {
+                              return (
+                                <span
+                                  key={key_}
+                                  className={
+                                    quantidade_periodo.dias_semana
+                                      .map(String)
+                                      .includes(day.value)
+                                      ? "week-circle-clicked green"
+                                      : "week-circle"
+                                  }
+                                  data-cy={`dia-${key}`}
+                                  value={day.value}
+                                >
+                                  {day.label}
+                                </span>
+                              );
+                            })}
+                          </td>
+                        </div>
+                      )}
                       <div className="col-2">
                         {quantidade_periodo.periodo_escolar.nome}
                       </div>
@@ -146,14 +151,13 @@ export const ModalCancelarInclusaoContinua = ({ ...props }) => {
                 }
               )}
               <div className="row ps-3 pe-3">
-                <span className="required-asterisk">*</span>
-                <label>Justificativa</label>
                 <Field
-                  className="col-12 pb-5"
-                  component="textarea"
+                  component={TextArea}
+                  label="Justificativa"
                   name="justificativa"
-                  validate={required}
                   required
+                  validate={required}
+                  height="100"
                 />
               </div>
             </Modal.Body>
