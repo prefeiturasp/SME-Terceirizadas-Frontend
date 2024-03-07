@@ -24,7 +24,7 @@ export const BUTTON_ICON = {
   DOWNLOAD: "fas fa-download",
   EDIT: "fas fa-edit",
   FILE_EXCEL: "fas fa-file-excel",
-  FILE_PDF: "far fa-file-pdf",
+  FILE_PDF: "fas fa-file-pdf",
   FILE_ALT: "far fa-file-alt",
   FILTER: "fas fa-filter",
   LOADING: "fas fa-spinner fa-spin",
