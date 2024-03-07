@@ -4,12 +4,9 @@ import { Modal } from "react-bootstrap";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import Botao from "../Botao";
 import { CENTRAL_DOWNLOADS } from "configs/constants";
-import { useNavigate } from "react-router-dom";
 import "./styles.scss";
 
 const ModalSolicitacaoDownload = ({ show, setShow }) => {
-  const navigate = useNavigate();
-
   const handleClose = () => {
     setShow(false);
   };
@@ -33,15 +30,19 @@ const ModalSolicitacaoDownload = ({ show, setShow }) => {
           style={BUTTON_STYLE.GREEN_OUTLINE}
           className="ms-3"
         />
-        <Botao
-          texto="Ir para a Central de Downloads"
-          type={BUTTON_TYPE.BUTTON}
-          onClick={() => {
-            navigate(`/${CENTRAL_DOWNLOADS}`);
-          }}
-          style={BUTTON_STYLE.GREEN}
-          className="ms-3"
-        />
+        <a
+          href={`/${CENTRAL_DOWNLOADS}`}
+          target="_blank"
+          rel="noreferrer"
+          onClick={handleClose}
+        >
+          <Botao
+            texto="Ir para a Central de Downloads"
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN}
+            className="ms-3"
+          />
+        </a>
       </Modal.Footer>
     </Modal>
   );
