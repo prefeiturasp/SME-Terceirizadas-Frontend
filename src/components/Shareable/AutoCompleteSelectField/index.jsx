@@ -21,6 +21,7 @@ export default ({
   apenasNumeros,
   proibeLetras,
   proibeNumeros,
+  onChange,
   ...props
 }) => {
   const handleInput = (e) => {
@@ -51,6 +52,7 @@ export default ({
       <AutoComplete
         {...props}
         {...input}
+        onChange={onChange}
         className="autocomplete-select"
         options={options}
         onInput={handleInput}
