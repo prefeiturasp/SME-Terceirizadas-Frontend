@@ -55,11 +55,7 @@ export default ({ setFiltros, setLayoutsEmbalagens, setConsultaRealizada }) => {
 
   return (
     <div className="filtros-layouts-embalagens">
-      <CollapseFiltros
-        onSubmit={onSubmit}
-        onClear={onClear}
-        titulo={"Filtrar Resultados"}
-      >
+      <CollapseFiltros onSubmit={onSubmit} onClear={onClear}>
         {(values) => (
           <div className="row">
             <div className="col-6 mt-2">
