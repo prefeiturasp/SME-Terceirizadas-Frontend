@@ -60,7 +60,7 @@ export default () => {
               </div>
             ) : (
               <>
-                <Listagem objetos={fichas} />
+                <Listagem objetos={fichas} setCarregando={setCarregando} />
                 <div className="row">
                   <div className="col">
                     <Paginacao
