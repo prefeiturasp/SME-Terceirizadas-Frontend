@@ -17,6 +17,7 @@ import { MEDICAO_INICIAL, CLAUSULAS_PARA_DESCONTOS } from "configs/constants";
 import "./styles.scss";
 import { ClausulaParaDescontoInterface } from "interfaces/clausulas_para_descontos.interface";
 import { cadastraClausulaParaDesconto } from "services/medicaoInicial/clausulasParaDescontos.service";
+import { formataValorDecimal, parserValorDecimal } from "../../helper.js";
 
 const VALORES_INICIAIS: ClausulaParaDescontoInterface = {
   edital: null,
@@ -80,20 +81,6 @@ export function CadastroDeClausulas() {
     } finally {
       setCarregando(false);
     }
-  };
-
-  const formataValor = (value: string) => {
-    if (!value) return "";
-    return `${value}`
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-      .replace(/\.(?=\d{0,2}$)/g, ",");
-  };
-
-  const parserValor = (value: string) => {
-    if (!value) return "";
-    return Number.parseFloat(
-      value.replace(/\$\s?|(\.*)/g, "").replace(/(,{1})/g, ".")
-    ).toFixed(2);
   };
 
   const voltarPagina = () =>
@@ -182,8 +169,12 @@ export function CadastroDeClausulas() {
                             placeholder="Apenas números"
                             component={AInputNumber}
                             min={0}
-                            formatter={(value: string) => formataValor(value)}
-                            parser={(value: string) => parserValor(value)}
+                            formatter={(value: string) =>
+                              formataValorDecimal(value)
+                            }
+                            parser={(value: string) =>
+                              parserValorDecimal(value)
+                            }
                             validate={required}
                             style={{ width: "100%" }}
                           />

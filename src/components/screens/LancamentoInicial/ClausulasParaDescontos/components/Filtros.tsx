@@ -3,6 +3,7 @@ import { Select as SelectAntd } from "antd";
 import { Field } from "react-final-form";
 import CollapseFiltros from "components/Shareable/CollapseFiltros";
 import { ASelect, AInput, AInputNumber } from "components/Shareable/MakeField";
+import { formataValorDecimal, parserValorDecimal } from "../../../helper.js";
 
 type FiltrosProps = {
   onSubmit: (_values: any) => void;
@@ -14,20 +15,6 @@ type FiltrosProps = {
 };
 
 export function Filtros({ onSubmit, onClear, editais }: FiltrosProps) {
-  const formataValor = (value: string) => {
-    if (!value) return "";
-    return `${value}`
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-      .replace(/\.(?=\d{0,2}$)/g, ",");
-  };
-
-  const parserValor = (value: string) => {
-    if (!value) return "";
-    return Number.parseFloat(
-      value.replace(/\$\s?|(\.*)/g, "").replace(/(,{1})/g, ".")
-    ).toFixed(2);
-  };
-
   return (
     <CollapseFiltros
       onSubmit={onSubmit}
@@ -73,8 +60,8 @@ export function Filtros({ onSubmit, onClear, editais }: FiltrosProps) {
               placeholder="Digite uma porcentagem"
               component={AInputNumber}
               min={0}
-              formatter={(value: string) => formataValor(value)}
-              parser={(value: string) => parserValor(value)}
+              formatter={(value: string) => formataValorDecimal(value)}
+              parser={(value: string) => parserValorDecimal(value)}
               style={{ width: "100%" }}
             />
           </div>
