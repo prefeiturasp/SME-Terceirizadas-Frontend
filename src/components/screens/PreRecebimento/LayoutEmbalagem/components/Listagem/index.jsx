@@ -70,9 +70,9 @@ export default ({ objetos, perfilFornecedor = false }) => {
 
       <article>
         <div className="grid-table header-table">
-          <div>Ficha Tecnica</div>
-          <div>Nº do Pregão/Chamada Pública</div>
+          <div>Nº da Ficha Tecnica</div>
           <div>Nome do Produto</div>
+          <div>Nº do Pregão/Chamada Pública</div>
           <div>Status</div>
           <div>Data de Cadastro</div>
           <div>Ações</div>
@@ -83,8 +83,8 @@ export default ({ objetos, perfilFornecedor = false }) => {
             <>
               <div key={objeto.uuid} className="grid-table body-table">
                 <div>{objeto.numero_ficha_tecnica}</div>
-                <div>{objeto.pregao_chamada_publica}</div>
                 <div>{objeto.nome_produto}</div>
+                <div>{objeto.pregao_chamada_publica}</div>
                 <div>{renderizarStatus(objeto.status, perfilFornecedor)}</div>
                 <div>{objeto.criado_em.slice(0, 10)}</div>
                 <div>{renderizarAcoes(objeto)}</div>
