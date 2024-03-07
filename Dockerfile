@@ -1,9 +1,11 @@
 # just to create `build` directory
-FROM node:14.15.5-alpine as builder
+FROM node:20.11.1-alpine as builder
 ENV IS_DOCKER_ENVIRONMENT=true
 WORKDIR /app
 COPY . ./
-RUN npm install
+RUN apk add --no-cache python3 make g++
+RUN npm install --legacy-peer-deps
+RUN npm rebuild node-sass
 RUN npm run-script build --expose-gc --max-old-space-size=8192
 
 # replace strings, this way we can pass parameters to static files.
