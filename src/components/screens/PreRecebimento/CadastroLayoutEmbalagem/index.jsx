@@ -1,22 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spin } from "antd";
 import { Field, Form } from "react-final-form";
-
-import { formatarNumeroEProdutoFichaTecnica } from "helpers/preRecebimento";
-import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
-import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
-import { required } from "../../../../helpers/fieldValidators";
-import InputText from "../../../Shareable/Input/InputText";
-import { getListaFichasTecnicasSimplesSemLayoutEmbalagem } from "services/fichaTecnica.service";
-import { cadastraLayoutEmbalagem } from "../../../../services/layoutEmbalagem.service";
-import Botao from "../../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
-import { TextArea } from "components/Shareable/TextArea/TextArea";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
-import { exibeError } from "helpers/utilities";
-import { LAYOUT_EMBALAGEM, PRE_RECEBIMENTO } from "configs/constants";
-import ModalConfirmar from "./components/ModalConfirmar";
 import { useNavigate } from "react-router-dom";
+
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "components/Shareable/Botao/constants";
+import Botao from "components/Shareable/Botao";
+import InputText from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
+import { getListaFichasTecnicasSimplesSemLayoutEmbalagem } from "services/fichaTecnica.service";
+import { cadastraLayoutEmbalagem } from "services/layoutEmbalagem.service";
+import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
+import { required } from "helpers/fieldValidators";
+import { exibeError } from "helpers/utilities";
+import { formatarNumeroEProdutoFichaTecnica } from "helpers/preRecebimento";
+import { LAYOUT_EMBALAGEM, PRE_RECEBIMENTO } from "configs/constants";
+
+import ModalConfirmar from "./components/ModalConfirmar";
 import ModalCancelar from "./components/ModalCancelar";
 import InserirArquivo from "../LayoutEmbalagem/components/InserirArquivo";
 
@@ -26,6 +30,7 @@ export default () => {
   const navigate = useNavigate();
   const [carregando, setCarregando] = useState(true);
   const [fichasTecnicas, setFichasTecnicas] = useState([]);
+  const fichaTecnicaSelecionada = useRef("");
   const [primaria, setPrimaria] = useState([]);
   const [secundaria, setSecundaria] = useState([]);
   const [terciaria, setTerciaria] = useState([]);
@@ -64,7 +69,7 @@ export default () => {
 
   const formataPayload = (values) => {
     let payload = {};
-    payload.ficha_tecnica = values.uuid_ficha_tecnica;
+    payload.ficha_tecnica = fichaTecnicaSelecionada.current;
     payload.observacoes = values.observacoes;
 
     payload.tipos_de_embalagens = [];
@@ -203,11 +208,11 @@ export default () => {
                       esconderIcone
                       onChange={(value) => {
                         const ficha = fichasTecnicas.find(
-                          ({ numero }) => numero === value.split("-")[0].trim()
+                          ({ numero }) => numero === value?.split("-")[0].trim()
                         );
 
                         values.ficha_tecnica = value;
-                        values.uuid_ficha_tecnica = ficha?.uuid;
+                        fichaTecnicaSelecionada.current = ficha?.uuid;
 
                         form.change(
                           "pregao_chamada_publica",

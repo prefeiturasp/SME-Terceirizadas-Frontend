@@ -52,7 +52,10 @@ export default ({
       <AutoComplete
         {...props}
         {...input}
-        onChange={onChange}
+        onChange={(value) => {
+          input.onChange(value);
+          onChange && onChange(value);
+        }}
         className="autocomplete-select"
         options={options}
         onInput={handleInput}
