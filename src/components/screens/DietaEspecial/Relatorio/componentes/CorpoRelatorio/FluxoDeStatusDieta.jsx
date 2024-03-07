@@ -20,6 +20,7 @@ const FluxoDeStatusDieta = ({ logs, eh_importado = false }) => {
               : fluxoDietaEspecialPartindoEscola
           }
           eh_importado={eh_importado}
+          eh_dieta_especial={true}
         />
       </div>
     </div>
