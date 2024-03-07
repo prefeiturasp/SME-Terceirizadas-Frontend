@@ -118,15 +118,13 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
             <div className="row">
               <div className="col-12 mt-3">
                 <p className="quantitativo">
-                  QUANTITATIVO GERAL DE SOLICITAÇÕES{" "}
-                  {STATUS_SOLICITACOES.find(
-                    (obj) => obj.uuid === filtros.status
-                  ).nome.toUpperCase()}
-                </p>
-              </div>
-              <div className="col-12 mt-1">
-                <p className="totalHomologadosValor">
-                  Total de solicitações: <b>{totalBusca}</b>
+                  TOTAL DE SOLICITAÇÕES{" "}
+                  <b>
+                    {STATUS_SOLICITACOES.find(
+                      (obj) => obj.uuid === filtros.status
+                    ).nome.toUpperCase()}
+                  </b>{" "}
+                  - ATÉ {new Date().toLocaleDateString("pt-BR")}
                 </p>
               </div>
             </div>
