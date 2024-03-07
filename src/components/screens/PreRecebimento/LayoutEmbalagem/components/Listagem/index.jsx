@@ -1,12 +1,14 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import "./styles.scss";
+
 import {
   DETALHAR_LAYOUT_EMBALAGEM,
   CORRIGR_LAYOUT_EMBALAGEM,
   PRE_RECEBIMENTO,
   ATUALIZAR_LAYOUT_EMBALAGEM,
-} from "../../../../../../configs/constants";
+} from "configs/constants";
+
+import "./styles.scss";
 
 export default ({ objetos, perfilFornecedor = false }) => {
   const renderizarStatus = (status, perfilFornecedor) => {
@@ -68,7 +70,7 @@ export default ({ objetos, perfilFornecedor = false }) => {
 
       <article>
         <div className="grid-table header-table">
-          <div>Nº do Cronograma</div>
+          <div>Ficha Tecnica</div>
           <div>Nº do Pregão/Chamada Pública</div>
           <div>Nome do Produto</div>
           <div>Status</div>
@@ -80,7 +82,7 @@ export default ({ objetos, perfilFornecedor = false }) => {
           return (
             <>
               <div key={objeto.uuid} className="grid-table body-table">
-                <div>{objeto.numero_cronograma}</div>
+                <div>{objeto.numero_ficha_tecnica}</div>
                 <div>{objeto.pregao_chamada_publica}</div>
                 <div>{objeto.nome_produto}</div>
                 <div>{renderizarStatus(objeto.status, perfilFornecedor)}</div>
