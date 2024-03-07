@@ -71,9 +71,34 @@ export const getDashboardFichasTecnicasPorStatus = async (
   }
 };
 
+export const getListaFichasTecnicasSimples =
+  async (): Promise<ResponseFichasTecnicasSimples> => {
+    try {
+      return await axios.get(`/ficha-tecnica/lista-simples/`);
+    } catch (error) {
+      toastError(getMensagemDeErro(error.response.status));
+    }
+  };
+
 export const getListaFichasTecnicasSimplesSemCronograma =
-  async (): Promise<ResponseFichasTecnicasSimples> =>
-    await axios.get(`/ficha-tecnica/lista-simples-sem-cronograma/`);
+  async (): Promise<ResponseFichasTecnicasSimples> => {
+    try {
+      return await axios.get(`/ficha-tecnica/lista-simples-sem-cronograma/`);
+    } catch (error) {
+      toastError(getMensagemDeErro(error.response.status));
+    }
+  };
+
+export const getListaFichasTecnicasSimplesSemLayoutEmbalagem =
+  async (): Promise<ResponseFichasTecnicasSimples> => {
+    try {
+      return await axios.get(
+        `/ficha-tecnica/lista-simples-sem-layout-embalagem/`
+      );
+    } catch (error) {
+      toastError(getMensagemDeErro(error.response.status));
+    }
+  };
 
 export const getDadosCronogramaFichaTecnica = async (
   uuid: string
