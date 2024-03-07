@@ -1,6 +1,7 @@
 import moment from "moment";
 
 import { stringDecimalToNumber } from "helpers/parsers";
+import { formatarNumeroEProdutoFichaTecnica } from "helpers/preRecebimento";
 
 export const getOpcoesContrato = (empresaSelecionada) => {
   if (!empresaSelecionada) return [];
@@ -19,14 +20,14 @@ export const geraOptionsFichasTecnicas = (
     .filter((ficha) => ficha.uuid_empresa === empresaSelecionada?.uuid)
     .map((ficha) => {
       return {
-        nome: ficha.numero_e_produto,
+        nome: formatarNumeroEProdutoFichaTecnica(ficha),
         uuid: ficha.uuid,
       };
     });
 
   fichaTecnicaSelecionada &&
     options.unshift({
-      nome: fichaTecnicaSelecionada.numero_e_produto,
+      nome: formatarNumeroEProdutoFichaTecnica(fichaTecnicaSelecionada),
       uuid: fichaTecnicaSelecionada.uuid,
     });
 
