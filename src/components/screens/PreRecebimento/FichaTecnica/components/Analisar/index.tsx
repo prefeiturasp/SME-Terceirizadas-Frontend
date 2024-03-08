@@ -1088,8 +1088,9 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             texto="Ficha em PDF"
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
-                            className="float-end ms-3"
+                            className="float-end me-3"
                             onClick={() => imprimirFicha()}
+                            icon="fas fa-print"
                           />
                         )}
                       </>
