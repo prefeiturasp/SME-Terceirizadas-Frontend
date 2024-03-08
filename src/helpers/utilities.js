@@ -1029,12 +1029,13 @@ export const exibirModuloMedicaoInicial = () => {
 
 export const exibirModuloOcorrencias = () => {
   return (
-    (!["production"].includes(ENVIRONMENT) &&
-      (usuarioEhCodaeDilog() ||
-        usuarioEhDilogJuridico() ||
-        usuarioEhDilogQualidade() ||
-        usuarioEhDilog())) ||
-    usuarioEhCODAEGabinete()
+    !["production"].includes(ENVIRONMENT) &&
+    (usuarioEhCodaeDilog() ||
+      usuarioEhDilogJuridico() ||
+      usuarioEhDilogQualidade() ||
+      usuarioEhDilog() ||
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria())
   );
 };
 
