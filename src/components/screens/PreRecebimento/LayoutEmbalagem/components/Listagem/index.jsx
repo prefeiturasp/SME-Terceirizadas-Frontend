@@ -70,7 +70,7 @@ export default ({ objetos, perfilFornecedor = false }) => {
 
       <article>
         <div className="grid-table header-table">
-          <div>Nº da Ficha Tecnica</div>
+          <div>Nº da Ficha Técnica</div>
           <div>Nome do Produto</div>
           <div>Nº do Pregão/Chamada Pública</div>
           <div>Status</div>
