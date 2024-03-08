@@ -25,6 +25,7 @@ import { getNomesTerceirizadas } from "services/produto.service";
 import { OnChange } from "react-final-form-listeners";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import CollapseFiltros from "components/Shareable/CollapseFiltros";
+import { getTotalizadoresRelatorioSolicitacoesAlimentacao } from "../../../../../../services/relatorios.service";
 
 export const Filtros = ({ ...props }) => {
   const [lotes, setLotes] = useState([]);
@@ -45,6 +46,7 @@ export const Filtros = ({ ...props }) => {
     getSolicitacoesDetalhadasAsync,
     setCarregando,
     setResultadoPaginado,
+    setTotalizadores,
   } = props;
 
   const getLotesSimplesAsync = async () => {
@@ -116,6 +118,17 @@ export const Filtros = ({ ...props }) => {
     }
   };
 
+  const getTotalizadoresAsync = async (values) => {
+    const response = await getTotalizadoresRelatorioSolicitacoesAlimentacao(
+      values
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setTotalizadores(response.data.results);
+    } else {
+      setErroAPI("Erro ao carregar totalizadores. Tente novamente mais tarde.");
+    }
+  };
+
   useEffect(() => {
     Promise.all([
       getLotesSimplesAsync(),
@@ -157,6 +170,8 @@ export const Filtros = ({ ...props }) => {
     setPage(1);
 
     const response = await endpoint(_values);
+    await getTotalizadoresAsync(_values);
+
     if (response.status === HTTP_STATUS.OK) {
       setResultadoPaginado(response.data.results);
       setTotalBusca(response.data.count);
