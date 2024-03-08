@@ -6,6 +6,7 @@ import {
 } from "./helper";
 import "./style.scss";
 import { deepCopy } from "../../../helpers/utilities";
+import { TIPO_PERFIL } from "../../../constants/shared";
 
 export const FluxoDeStatus = (props) => {
   const {
@@ -13,6 +14,7 @@ export const FluxoDeStatus = (props) => {
     fluxo,
     eh_gestao_alimentacao = false,
     eh_medicao_inicial = false,
+    eh_dieta_especial = false,
   } = props;
   let cloneListaDeStatus = deepCopy(listaDeStatus);
   cloneListaDeStatus = formatarLogs(cloneListaDeStatus);
@@ -96,6 +98,8 @@ export const FluxoDeStatus = (props) => {
       : "";
   };
 
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
+
   return (
     <div className="w-100">
       <ul className={`progressbar-titles fluxos`}>
@@ -126,13 +130,26 @@ export const FluxoDeStatus = (props) => {
             >
               {novoStatus.criado_em}
               <br />
-              {novoStatus.usuario && (
-                <span>
-                  {RFouCPF(key, novoStatus)}
-                  {RFouCPF(key, novoStatus) && <br />}
-                  {novoStatus.usuario && novoStatus.usuario.nome}
-                </span>
-              )}
+              {!(
+                eh_dieta_especial &&
+                status.status_evento_explicacao === "CODAE negou" &&
+                [
+                  TIPO_PERFIL.ESCOLA,
+                  TIPO_PERFIL.DRE,
+                  TIPO_PERFIL.TERCEIRIZADA,
+                  TIPO_PERFIL.SUPERVISAO_NUTRICAO,
+                  TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
+                  TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+                  TIPO_PERFIL.CODAE_GABINETE,
+                ].includes(tipoPerfil)
+              ) &&
+                novoStatus.usuario && (
+                  <span>
+                    {RFouCPF(key, novoStatus)}
+                    {RFouCPF(key, novoStatus) && <br />}
+                    {novoStatus.usuario && novoStatus.usuario.nome}
+                  </span>
+                )}
             </li>
           );
         })}

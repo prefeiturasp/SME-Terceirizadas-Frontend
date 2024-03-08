@@ -297,3 +297,17 @@ export const MSG_SENHA_INVALIDA = () => (
     a recuperação e tente novamente.
   </>
 );
+
+export const formataValorDecimal = (value) => {
+  if (!value) return "";
+  return `${value}`
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    .replace(/\.(?=\d{0,2}$)/g, ",");
+};
+
+export const parserValorDecimal = (value) => {
+  if (!value) return "";
+  return Number.parseFloat(
+    value.replace(/\$\s?|(\.*)/g, "").replace(/(,{1})/g, ".")
+  ).toFixed(2);
+};

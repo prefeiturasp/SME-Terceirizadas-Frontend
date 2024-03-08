@@ -7,7 +7,6 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { Select as SelectAntd, Spin } from "antd";
 import { required } from "helpers/fieldValidators";
 import { getNumerosEditais } from "services/edital.service";
-import HTTP_STATUS from "http-status-codes";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
@@ -17,6 +16,8 @@ import { MEDICAO_INICIAL, CLAUSULAS_PARA_DESCONTOS } from "configs/constants";
 import "./styles.scss";
 import { ClausulaParaDescontoInterface } from "interfaces/clausulas_para_descontos.interface";
 import { cadastraClausulaParaDesconto } from "services/medicaoInicial/clausulasParaDescontos.service";
+import { formataValorDecimal, parserValorDecimal } from "../../helper.js";
+import { getError } from "helpers/utilities";
 
 const VALORES_INICIAIS: ClausulaParaDescontoInterface = {
   edital: null,
@@ -25,12 +26,6 @@ const VALORES_INICIAIS: ClausulaParaDescontoInterface = {
   porcentagem_desconto: null,
   descricao: null,
 };
-
-const MENSAGEM_ERRO_EDITAIS =
-  "Erro ao carregar editais. Tente novamente mais tarde.";
-
-const MENSAGEM_ERRO_CADASTRO_CLAUSULA =
-  "Ocorreu um erro ao cadastrar a cláusula. Tente novamente mais tarde.";
 
 type Edital = {
   uuid: string;
@@ -48,13 +43,9 @@ export function CadastroDeClausulas() {
     setCarregando(true);
     try {
       const response = await getNumerosEditais();
-      if (response.status === HTTP_STATUS.OK) {
-        setEditais(response.data.results);
-      } else {
-        setErroAPI(MENSAGEM_ERRO_EDITAIS);
-      }
+      setEditais(response.data.results);
     } catch (error) {
-      setErroAPI(MENSAGEM_ERRO_EDITAIS);
+      setErroAPI("Erro ao carregar editais. Tente novamente mais tarde.");
     } finally {
       setCarregando(false);
     }
@@ -65,35 +56,14 @@ export function CadastroDeClausulas() {
   ) => {
     setCarregando(true);
     try {
-      const response = await cadastraClausulaParaDesconto(values);
-      if (
-        response.status === HTTP_STATUS.CREATED ||
-        response.status === HTTP_STATUS.OK
-      ) {
-        toastSuccess("Cláusula cadastrada com sucesso!");
-        voltarPagina();
-      } else {
-        toastError(MENSAGEM_ERRO_CADASTRO_CLAUSULA);
-      }
-    } catch (error) {
-      toastError(MENSAGEM_ERRO_CADASTRO_CLAUSULA);
+      await cadastraClausulaParaDesconto(values);
+      toastSuccess("Cláusula cadastrada com sucesso!");
+      voltarPagina();
+    } catch ({ response }) {
+      toastError(getError(response.data));
     } finally {
       setCarregando(false);
     }
-  };
-
-  const formataValor = (value: string) => {
-    if (!value) return "";
-    return `${value}`
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-      .replace(/\.(?=\d{0,2}$)/g, ",");
-  };
-
-  const parserValor = (value: string) => {
-    if (!value) return "";
-    return Number.parseFloat(
-      value.replace(/\$\s?|(\.*)/g, "").replace(/(,{1})/g, ".")
-    ).toFixed(2);
   };
 
   const voltarPagina = () =>
@@ -182,8 +152,12 @@ export function CadastroDeClausulas() {
                             placeholder="Apenas números"
                             component={AInputNumber}
                             min={0}
-                            formatter={(value: string) => formataValor(value)}
-                            parser={(value: string) => parserValor(value)}
+                            formatter={(value: string) =>
+                              formataValorDecimal(value)
+                            }
+                            parser={(value: string) =>
+                              parserValorDecimal(value)
+                            }
                             validate={required}
                             style={{ width: "100%" }}
                           />
