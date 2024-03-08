@@ -17,6 +17,7 @@ export default ({ fiscal = false }) => {
 
   const somenteLeitura = useSomenteLeitura([
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ]);
 
   useEffect(() => {

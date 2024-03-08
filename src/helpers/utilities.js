@@ -491,6 +491,7 @@ export const usuarioComAcessoTelaDetalharNotificacaoOcorrencia = () => {
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ].includes(localStorage.getItem("perfil"));
 };
 
