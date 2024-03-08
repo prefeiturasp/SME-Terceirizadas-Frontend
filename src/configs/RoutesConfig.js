@@ -1537,7 +1537,10 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_SOLICITACAO_ALTERACAO}`,
     component: GestaoSolicitacaoAlteracaoPage,
-    tipoUsuario: usuarioEhLogistica() || usuarioEhCODAEGabinete(),
+    tipoUsuario:
+      usuarioEhLogistica() ||
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CONSULTA_SOLICITACAO_ALTERACAO}`,

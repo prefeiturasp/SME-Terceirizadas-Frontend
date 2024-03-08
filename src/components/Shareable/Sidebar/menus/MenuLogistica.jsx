@@ -61,7 +61,9 @@ const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
         </LeafItem>
       )}
 
-      {(usuarioEhLogistica() || usuarioEhCODAEGabinete()) && (
+      {(usuarioEhLogistica() ||
+        usuarioEhCODAEGabinete() ||
+        usuarioEhDilogDiretoria()) && (
         <LeafItem to={`/${LOGISTICA}/${GESTAO_SOLICITACAO_ALTERACAO}`}>
           Alteração da Requisição
         </LeafItem>

@@ -16,7 +16,9 @@ const ListagemSolicitacoes = ({
 }) => {
   const somenteLeitura = useSomenteLeitura([
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ]);
+
   return (
     <section className="resultado-gestao-solicitacao-alteracao">
       <header>Solicitações Disponibilizadas</header>
