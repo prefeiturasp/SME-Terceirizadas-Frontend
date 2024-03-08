@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
@@ -34,9 +35,11 @@ import {
   usuarioEhCoordenadorGpCODAE,
   usuarioEhOrgaoFiscalizador,
   usuarioEhCODAEGabinete,
-} from "../../../helpers/utilities";
-import { ListItem } from "./menus/shared";
+  usuarioEhDilogDiretoria,
+} from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
+
+import { ListItem } from "./menus/shared";
 import {
   MenuGestaoDeAlimentacao,
   MenuDietaEspecial,
@@ -169,7 +172,8 @@ export const SidebarContent = () => {
     usuarioEhEscolaAbastecimentoDiretor() ||
     usuarioComAcessoTelaEntregasDilog() ||
     usuarioEhDilogQualidade() ||
-    usuarioEhCODAEGabinete();
+    usuarioEhCODAEGabinete() ||
+    usuarioEhDilogDiretoria();
 
   const exibirMenuPreRecebimento =
     usuarioEhPreRecebimento() ||
