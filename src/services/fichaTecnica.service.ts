@@ -16,6 +16,7 @@ import {
 import { FiltrosDashboardFichasTecnicas } from "interfaces/pre_recebimento.interface";
 import { getMensagemDeErro } from "../helpers/statusErrors";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { saveAs } from "file-saver";
 
 export const cadastraRascunhoFichaTecnica = async (
   payload: FichaTecnicaPayload
@@ -128,3 +129,9 @@ export const corrigirFichaTecnica = async (
   uuid: string
 ): Promise<ResponseSemDadosInterface> =>
   await axios.patch(`/ficha-tecnica/${uuid}/correcao-fornecedor/`, payload);
+
+export const imprimirFichaTecnica = async (uuid: string, numero: string) => {
+  const url = `/ficha-tecnica/${uuid}/gerar-pdf-ficha/`;
+  const { data } = await axios.get(url, { responseType: "blob" });
+  saveAs(data, "ficha_tecnica_" + numero + ".pdf");
+};

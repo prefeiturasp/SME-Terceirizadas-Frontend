@@ -45,7 +45,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getMensagemDeErro } from "helpers/statusErrors";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
-
+import { imprimirFichaTecnica } from "services/fichaTecnica.service";
 import "./styles.scss";
 
 const idCollapse = "collapseAnalisarFichaTecnica";
@@ -90,6 +90,20 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
       );
     })();
   }, []);
+
+  const imprimirFicha = () => {
+    setCarregando(true);
+    let uuid = ficha.uuid;
+    let numero = ficha.numero;
+    imprimirFichaTecnica(uuid, numero)
+      .then(() => {
+        setCarregando(false);
+      })
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
+        setCarregando(false);
+      });
+  };
 
   const fechaCollapses = () => {
     const otherElements = document.querySelectorAll(`#${idCollapse} .show`);
@@ -1065,7 +1079,21 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
 
                   <div className="mt-4 mb-4">
                     {somenteLeitura ? (
-                      <BotaoVoltar onClick={voltarPagina} />
+                      <>
+                        <BotaoVoltar onClick={voltarPagina} />
+                        {["Enviada para Análise", "Aprovada"].includes(
+                          ficha.status
+                        ) && (
+                          <Botao
+                            texto="Ficha em PDF"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            className="float-end me-3"
+                            onClick={() => imprimirFicha()}
+                            icon="fas fa-print"
+                          />
+                        )}
+                      </>
                     ) : (
                       <>
                         <Botao
