@@ -25,6 +25,7 @@ import {
 } from "configs/constants";
 import "./styles.scss";
 import { Filtros } from "./components/Filtros";
+import { formataValorDecimal } from "../../helper.js";
 
 type Edital = {
   uuid: string;
@@ -80,12 +81,6 @@ export function Empenhos() {
     await Promise.all([getEmpenhosAsync(), getContratosAsync()]).then(() => {
       setCarregando(false);
     });
-  };
-
-  const formataValor = (value: number) => {
-    return `R$ ${value}`
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-      .replace(/\.(?=\d{0,2}$)/g, ",");
   };
 
   const capitalize = (value: string) => {
@@ -167,7 +162,7 @@ export function Empenhos() {
                               {capitalize(empenho.tipo_empenho)}
                             </td>
                             <td className="col-2">
-                              {formataValor(empenho.valor_total)}
+                              {formataValorDecimal(empenho.valor_total)}
                             </td>
                             <td className="col-1">
                               {capitalize(empenho.status)}

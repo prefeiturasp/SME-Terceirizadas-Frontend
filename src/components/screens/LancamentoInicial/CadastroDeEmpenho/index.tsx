@@ -21,6 +21,7 @@ import { ASelect, AInput, AInputNumber } from "components/Shareable/MakeField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { Select as SelectAntd, Spin } from "antd";
 import { required } from "helpers/fieldValidators";
+import { formataValorDecimal, parserValorDecimal } from "../../helper.js";
 import "./styles.scss";
 import { useNavigate } from "react-router-dom";
 
@@ -106,20 +107,6 @@ export function CadastroDeEmpenho() {
     }
     getContratos();
   }, []);
-
-  const formataValor = (value: string) => {
-    if (!value) return "";
-    return `${value}`
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-      .replace(/\.(?=\d{0,2}$)/g, ",");
-  };
-
-  const parserValor = (value: string) => {
-    if (!value) return "";
-    return Number.parseFloat(
-      value.replace(/\$\s?|(\.*)/g, "").replace(/(,{1})/g, ".")
-    ).toFixed(2);
-  };
 
   const cadastrarEmpenho = async (values: NovoEmpenho) => {
     setCarregando(true);
@@ -330,8 +317,12 @@ export function CadastroDeEmpenho() {
                             prefix="R$"
                             component={AInputNumber}
                             min={0}
-                            formatter={(value: string) => formataValor(value)}
-                            parser={(value: string) => parserValor(value)}
+                            formatter={(value: string) =>
+                              formataValorDecimal(value)
+                            }
+                            parser={(value: string) =>
+                              parserValorDecimal(value)
+                            }
                             validate={required}
                             style={{ width: "100%" }}
                           />
