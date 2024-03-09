@@ -34,6 +34,7 @@ export default () => {
   const { meusDados } = useContext(MeusDadosContext);
   const somenteLeitura = useSomenteLeitura([
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ]);
 
   const [carregando, setCarregando] = useState(true);
