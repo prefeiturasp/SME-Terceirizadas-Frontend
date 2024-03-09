@@ -522,6 +522,7 @@ export const usuarioComAcessoAoPainelEmbalagens = () => {
     PERFIL.COORDENADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ].includes(localStorage.getItem("perfil"));
 };
 
