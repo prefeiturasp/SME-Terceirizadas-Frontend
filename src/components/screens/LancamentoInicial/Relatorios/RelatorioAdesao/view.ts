@@ -11,6 +11,7 @@ export default () => {
   const [loading, setLoading] = useState(false);
   const [exibirTitulo, setExibirTitulo] = useState(false);
 
+  const [params, setParams] = useState<Filtros | null>(null);
   const [filtros, setFiltros] = useState<Filtros | null>(null);
   const [filtrosSelecionados, setFiltrosSelecionados] =
     useState<Filtros | null>(null);
@@ -19,6 +20,7 @@ export default () => {
   const filtrar = async (values: Filtros) => {
     setLoading(true);
     setFiltros(filtrosSelecionados);
+    setParams(values);
     setExibirTitulo(true);
 
     try {
@@ -55,6 +57,7 @@ export default () => {
 
   return {
     loading,
+    params,
     filtros,
     resultado,
     filtrar,

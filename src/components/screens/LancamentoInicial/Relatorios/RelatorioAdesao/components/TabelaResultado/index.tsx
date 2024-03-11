@@ -2,11 +2,12 @@ import React from "react";
 
 import TabelaResultadoPeriodo from "./components/TabelaResultadoPeriodo";
 import { TotalAlimentacao } from "./components/TabelaResultadoPeriodo/types";
+import ExportarResultado from "./components/ExportarResultado";
 
 import { Props } from "./types";
 
 export default (props: Props) => {
-  const { filtros, resultado, exibirTitulo } = props;
+  const { params, filtros, resultado, exibirTitulo } = props;
 
   const temFiltros = filtros && Object.keys(filtros).length > 0;
   const resultadoVazio = resultado && Object.keys(resultado).length === 0;
@@ -30,23 +31,29 @@ export default (props: Props) => {
         )}
       </h2>
       {resultado && (
-        <div>
-          {Object.entries(resultado).map(([periodo, dados], index) => (
-            <TabelaResultadoPeriodo
-              className="mt-4"
-              key={index}
-              periodo={periodo}
-              dados={Object.entries(dados).map(
-                ([tipoAlimentacao, d]): TotalAlimentacao => ({
-                  tipo_alimentacao: tipoAlimentacao,
-                  total_servido: d.total_servido,
-                  total_frequencia: d.total_frequencia,
-                  total_adesao: d.total_adesao,
-                })
-              )}
-            />
-          ))}
-        </div>
+        <>
+          <div>
+            {Object.entries(resultado).map(([periodo, dados]) => (
+              <TabelaResultadoPeriodo
+                className="mt-4"
+                key={periodo}
+                periodo={periodo}
+                dados={Object.entries(dados).map(
+                  ([tipoAlimentacao, d]): TotalAlimentacao => ({
+                    tipo_alimentacao: tipoAlimentacao,
+                    total_servido: d.total_servido,
+                    total_frequencia: d.total_frequencia,
+                    total_adesao: d.total_adesao,
+                  })
+                )}
+              />
+            ))}
+          </div>
+          <ExportarResultado
+            className="d-flex justify-content-end mt-5"
+            params={params}
+          />
+        </>
       )}
       {resultadoVazio && (
         <div>
