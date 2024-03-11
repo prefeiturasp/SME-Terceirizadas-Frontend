@@ -16,4 +16,16 @@ export default class RelatorioService {
     });
     return response.data;
   }
+
+  static async exportarRelatorioAdesaoParaXLSX(
+    params: RelatorioAdesaoParams
+  ): Promise<RelatorioAdesaoResponse> {
+    const response = await axios.get(
+      `${BASE_URL}/relatorio-adesao/exportar-xlsx/`,
+      {
+        params,
+      }
+    );
+    return response.data;
+  }
 }

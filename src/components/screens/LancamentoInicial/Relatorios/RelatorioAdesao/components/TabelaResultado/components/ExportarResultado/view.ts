@@ -1,30 +1,32 @@
 import { useState } from "react";
-import HTTP_STATUS from "http-status-codes";
 
 import { toastError } from "components/Shareable/Toast/dialogs";
 
-export default () => {
+import RelatorioService from "services/medicaoInicial/relatorio.service";
+import { Filtros } from "../../../../types";
+
+type Args = {
+  params: Filtros;
+};
+
+export default ({ params }: Args) => {
   const [exportando, setExportando] = useState(false);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
 
-  const exportarPDF = async () => {
-    setExportando(true);
-    const response = undefined;
-    if (response.status === HTTP_STATUS.OK) {
-      setExibirModalCentralDownloads(true);
-    } else {
-      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
-    }
-    setExportando(false);
-  };
-
   const exportarXLSX = async () => {
     setExportando(true);
-    const response = undefined;
-    if (response.status === HTTP_STATUS.OK) {
+    try {
+      await RelatorioService.exportarRelatorioAdesaoParaXLSX({
+        mes_ano: params.mes,
+        diretoria_regional: params.dre,
+        lotes: params.lotes,
+        escola: params.unidade_educacional,
+        periodos_escolares: params.periodos,
+        tipos_alimentacao: params.tipos_alimentacao,
+      });
       setExibirModalCentralDownloads(true);
-    } else {
+    } catch (e) {
       toastError("Erro ao exportar xlsx. Tente novamente mais tarde.");
     }
     setExportando(false);
@@ -34,7 +36,6 @@ export default () => {
     exportando,
     exibirModalCentralDownloads,
     setExibirModalCentralDownloads,
-    exportarPDF,
     exportarXLSX,
   };
 };
