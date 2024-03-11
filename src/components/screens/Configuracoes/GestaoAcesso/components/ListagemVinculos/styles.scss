@@ -77,6 +77,11 @@
         outline: none;
       }
 
+      button:disabled {
+        color: #42474a;
+        opacity: 0.6;
+      }
+
       .flex-container {
         display: flex;
         justify-content: space-evenly;
