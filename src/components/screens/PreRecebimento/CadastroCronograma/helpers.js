@@ -76,7 +76,7 @@ export const formataPayload = (
         )
       : undefined,
     quantidade: values[`quantidade_${index}`]?.replaceAll(".", ""),
-    total_embalagens: values[`total_embalagens_${index}`],
+    total_embalagens: values[`total_embalagens_${index}`]?.replaceAll(".", ""),
   }));
 
   payload.programacoes_de_recebimento = recebimentos.map((etapa, index) => ({
