@@ -38,6 +38,7 @@ export const InputText = (props) => {
     agrupadorMilhar,
     valorInicial,
     inputOnChange,
+    prefix,
   } = props;
 
   const inputProps = {
@@ -65,53 +66,56 @@ export const InputText = (props) => {
         </label>,
       ]}
       {tooltipText && <TooltipIcone tooltipText={tooltipText} />}
-      <input
-        {...input}
-        {...inputProps}
-        className={`form-control ${className} ${
-          meta &&
-          meta.touched &&
-          (meta.error || meta.warning) &&
-          "invalid-field"
-        }`}
-        id={id}
-        disabled={disabled}
-        min={min}
-        max={max}
-        step={step}
-        name={name}
-        data-cy={input.name}
-        placeholder={placeholder}
-        required={required}
-        type={input.type || "text"}
-        title={title}
-        pattern={pattern}
-        maxLength={maxlength}
-        value={valorInicial || input.value}
-        onInput={(e) => {
-          e.target.value = toUppercaseActive
-            ? e.target.value.toUpperCase()
-            : e.target.value;
-          e.target.value = toLowerCaseActive
-            ? e.target.value.toLowerCase()
-            : e.target.value;
-          e.target.value = apenasNumeros
-            ? e.target.value.replace(/\D/g, "")
-            : e.target.value;
-          e.target.value = proibeLetras
-            ? e.target.value.replace(/[A-Za-z]/, "")
-            : e.target.value;
-          e.target.value = proibeNumeros
-            ? e.target.value.replace(/[0-9]/, "")
-            : e.target.value;
-          e.target.value = agrupadorMilhar
-            ? e.target.value
-                .toString()
-                .replace(/\D/g, "")
-                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-            : e.target.value;
-        }}
-      />
+      <div className={`${prefix && "input-com-prefixo"}`}>
+        {prefix && <span className="prefix">{prefix}</span>}
+        <input
+          {...input}
+          {...inputProps}
+          className={`form-control ${className} ${
+            meta &&
+            meta.touched &&
+            (meta.error || meta.warning) &&
+            "invalid-field"
+          }`}
+          id={id}
+          disabled={disabled}
+          min={min}
+          max={max}
+          step={step}
+          name={name}
+          data-cy={input.name}
+          placeholder={placeholder}
+          required={required}
+          type={input.type || "text"}
+          title={title}
+          pattern={pattern}
+          maxLength={maxlength}
+          value={valorInicial || input.value}
+          onInput={(e) => {
+            e.target.value = toUppercaseActive
+              ? e.target.value.toUpperCase()
+              : e.target.value;
+            e.target.value = toLowerCaseActive
+              ? e.target.value.toLowerCase()
+              : e.target.value;
+            e.target.value = apenasNumeros
+              ? e.target.value.replace(/\D/g, "")
+              : e.target.value;
+            e.target.value = proibeLetras
+              ? e.target.value.replace(/[A-Za-z]/, "")
+              : e.target.value;
+            e.target.value = proibeNumeros
+              ? e.target.value.replace(/[0-9]/, "")
+              : e.target.value;
+            e.target.value = agrupadorMilhar
+              ? e.target.value
+                  .toString()
+                  .replace(/\D/g, "")
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+              : e.target.value;
+          }}
+        />
+      </div>
       {acrescentarAppend && (
         <div className="input-group-append">
           <span className="input-group-text" id="basic-addon1">
