@@ -32,6 +32,7 @@ export default () => {
         ) : (
           <div className="d-flex gap-2 mt-4">
             <TabelaResultado
+              params={view.params}
               filtros={view.filtros}
               resultado={view.resultado}
               exibirTitulo={view.exibirTitulo}
