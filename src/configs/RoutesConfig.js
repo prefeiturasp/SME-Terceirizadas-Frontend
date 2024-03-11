@@ -846,7 +846,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCoordenadorCODAE() ||
       usuarioEhCodaeDilog() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_DIRETOR_ESCOLA}`,

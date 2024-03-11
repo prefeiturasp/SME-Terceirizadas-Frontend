@@ -571,7 +571,10 @@ export const usuarioEhPreRecebimento = () => {
 };
 
 export const usuarioEhPreRecebimentoSemLogistica = () => {
-  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO;
+  return (
+    localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO &&
+    !usuarioEhDilogDiretoria()
+  );
 };
 
 export const usuarioEhDinutreDiretoria = () =>
