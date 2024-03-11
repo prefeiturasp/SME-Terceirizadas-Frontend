@@ -158,6 +158,7 @@ const ModalCadastroVinculo = ({
         ? formatarCPFouCNPJ(usuarioEOL.cpf)
         : undefined;
       values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
+      values.nome_escola = usuarioEOL.nome_escola;
 
       let t = document.getElementById("inputCPF");
       t.blur();
@@ -543,7 +544,7 @@ const ModalCadastroVinculo = ({
                             validate={composeValidators(required, validaCPF)}
                           />
                         </div>
-                        <div className="col-6 ps-0">
+                        <div className="col-1 ps-0">
                           <Botao
                             texto=""
                             icon="fas fa-search"
@@ -553,6 +554,15 @@ const ModalCadastroVinculo = ({
                             }
                             style={BUTTON_STYLE.GREEN}
                             className="botao-rf"
+                          />
+                        </div>
+                        <div className="col-5">
+                          <Field
+                            component={InputText}
+                            label="UE"
+                            name="nome_escola"
+                            className="input-busca-produto"
+                            disabled={true}
                           />
                         </div>
                       </div>
