@@ -32,6 +32,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
   const [submitting, setSubmitting] = useState(false);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
+  const [totalizadores, setTotalizadores] = useState(undefined);
 
   const getSolicitacoesDetalhadasAsync = async (solicitacoes) => {
     const payloadSolicitacoesDetalhadas = solicitacoes.map((solicitacao) => {
@@ -111,26 +112,48 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
             getSolicitacoesDetalhadasAsync={getSolicitacoesDetalhadasAsync}
             setCarregando={setCarregando}
             setResultadoPaginado={setResultadoPaginado}
+            setTotalizadores={setTotalizadores}
           />
         )}
         <Spin tip="Carregando..." spinning={carregando}>
-          {totalBusca !== undefined && filtros !== undefined && (
-            <div className="row">
-              <div className="col-12 mt-3">
-                <p className="quantitativo">
-                  QUANTITATIVO GERAL DE SOLICITAÇÕES{" "}
-                  {STATUS_SOLICITACOES.find(
-                    (obj) => obj.uuid === filtros.status
-                  ).nome.toUpperCase()}
-                </p>
-              </div>
-              <div className="col-12 mt-1">
-                <p className="totalHomologadosValor">
-                  Total de solicitações: <b>{totalBusca}</b>
-                </p>
-              </div>
-            </div>
-          )}
+          {totalBusca !== undefined &&
+            filtros !== undefined &&
+            totalizadores && (
+              <>
+                <div className="row">
+                  <div className="col-12 mt-3">
+                    <p className="quantitativo">
+                      TOTAL DE SOLICITAÇÕES{" "}
+                      <b>
+                        {STATUS_SOLICITACOES.find(
+                          (obj) => obj.uuid === filtros.status
+                        ).nome.toUpperCase()}
+                      </b>{" "}
+                      - ATÉ {new Date().toLocaleDateString("pt-BR")}
+                    </p>
+                  </div>
+                </div>
+                <div className="row">
+                  {totalizadores.map((totalizador, key) => {
+                    return (
+                      <div key={key} className="col-4 mt-3">
+                        <div className="totalizador ps-3 pe-3">
+                          <div className="d-flex justify-content-between">
+                            <div className="titulo">
+                              {Object.keys(totalizador)[0]}
+                            </div>
+                            <div className="valor">
+                              {Object.values(totalizador)[0]}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
           {solicitacoes && filtros && !carregando && (
             <TabelaResultado
               solicitacoes={solicitacoes}
