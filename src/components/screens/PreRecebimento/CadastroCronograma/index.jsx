@@ -668,6 +668,7 @@ export default () => {
                                   placeholder="Informe o Custo Unitário"
                                   required
                                   proibeLetras
+                                  prefix="R$"
                                   validate={composeValidators(
                                     required,
                                     decimalMonetario
