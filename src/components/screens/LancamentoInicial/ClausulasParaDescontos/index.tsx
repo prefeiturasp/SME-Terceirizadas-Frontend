@@ -12,9 +12,10 @@ import {
   MEDICAO_INICIAL,
   CLAUSULAS_PARA_DESCONTOS,
   CADASTRO_DE_CLAUSULA,
+  EDITAR_CLAUSULA,
 } from "configs/constants";
 import {
-  ClausulaParaDescontoInterface,
+  ClausulaInterface,
   FiltrosInterface,
   ResponseClausulasInterface,
 } from "interfaces/clausulas_para_descontos.interface";
@@ -28,9 +29,7 @@ type Edital = {
 };
 
 export function ClausulasParaDescontos() {
-  const [clausulas, setClausulas] = useState<ClausulaParaDescontoInterface[]>(
-    []
-  );
+  const [clausulas, setClausulas] = useState<ClausulaInterface[]>([]);
   const [responseClausulas, setResponseClausulas] =
     useState<ResponseClausulasInterface>();
   const [editais, setEditais] = useState<Edital[]>([]);
@@ -139,19 +138,32 @@ export function ClausulasParaDescontos() {
                         <th className="col-2">Cláusula</th>
                         <th className="col-1">Item</th>
                         <th className="col-4">Descrição</th>
-                        <th className="col-2">% de Desconto</th>
+                        <th className="col-1">% de Desconto</th>
+                        <th className="col-1 text-center">Ações</th>
                       </tr>
                     </thead>
 
                     <tbody>
                       {clausulas.map((clausula) => (
                         <tr className="row" key={clausula.uuid}>
-                          <td className="col-3">{clausula.edital}</td>
+                          <td className="col-3">{clausula.edital.numero}</td>
                           <td className="col-2">{clausula.numero_clausula}</td>
                           <td className="col-1">{clausula.item_clausula}</td>
                           <td className="col-4">{clausula.descricao}</td>
-                          <td className="col-2">
+                          <td className="col-1">
                             {formataValor(clausula.porcentagem_desconto)}
+                          </td>
+                          <td className="col-1 d-flex justify-content-center align-items-center">
+                            <Link
+                              to={`/${MEDICAO_INICIAL}/${CLAUSULAS_PARA_DESCONTOS}/${EDITAR_CLAUSULA}/?uuid=${clausula.uuid}`}
+                            >
+                              <span className="px-2">
+                                <i
+                                  title="Editar Cláusula"
+                                  className="verde fas fa-edit"
+                                />
+                              </span>
+                            </Link>
                           </td>
                         </tr>
                       ))}
