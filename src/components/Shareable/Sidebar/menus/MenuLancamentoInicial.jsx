@@ -24,7 +24,7 @@ import {
 const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
   const exibeCadastros = usuarioEhMedicao();
   const exibeRelatorios =
-    usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao();
+    usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhDRE();
 
   return (
     exibirModuloMedicaoInicial() && (
