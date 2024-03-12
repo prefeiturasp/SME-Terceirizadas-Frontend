@@ -18,7 +18,7 @@ export default () => {
           onSubmit={view.filtrar}
           onClear={view.limparFiltro}
           titulo="Filtrar Resultados"
-          manterFiltros={["dre"]}
+          manterFiltros={["dre", "unidade_educacional"]}
         >
           {(_, form) => (
             <FormFiltro
