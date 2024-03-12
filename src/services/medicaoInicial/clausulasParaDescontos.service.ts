@@ -37,3 +37,7 @@ export const editaClausulaParaDesconto = async (
     payload
   );
 };
+
+export const deletaClausulaParaDesconto = async (uuid: string) => {
+  return await axios.delete(`/medicao-inicial/clausulas-de-descontos/${uuid}/`);
+};
