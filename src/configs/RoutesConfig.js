@@ -1509,7 +1509,8 @@ const routesConfig = [
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.RELATORIOS}/${constants.RELATORIO_ADESAO}`,
     component: RelatorioAdesao,
-    tipoUsuario: usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao(),
+    tipoUsuario:
+      usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhDRE(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,

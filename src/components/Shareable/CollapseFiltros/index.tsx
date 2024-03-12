@@ -8,11 +8,14 @@ import {
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
+import { usuarioEhDRE } from "helpers/utilities";
+
 type Props = {
   titulo?: string;
   children: (_values: any, _form: FormApi) => ReactNode;
   onSubmit: (_values: Record<string, any>) => void;
   onClear: () => void;
+  manterFiltros?: Array<string>;
 };
 
 const CollapseFiltros: React.FC<Props> = ({
@@ -20,6 +23,7 @@ const CollapseFiltros: React.FC<Props> = ({
   children,
   onSubmit,
   onClear,
+  manterFiltros,
 }) => {
   const id = "collapseFiltros";
   const [collapse, setCollapse] = useState(true);
@@ -28,6 +32,15 @@ const CollapseFiltros: React.FC<Props> = ({
     setCollapse(!collapse);
     const element = document.getElementById("heading");
     element.classList.toggle("open");
+  };
+
+  const limparFiltros = (form: FormApi, values: Record<string, any>) => {
+    if (usuarioEhDRE() && manterFiltros.includes("dre")) {
+      form.reset({ dre: values["dre"] });
+    } else {
+      form.reset({});
+    }
+    onClear();
   };
 
   return (
@@ -89,10 +102,7 @@ const CollapseFiltros: React.FC<Props> = ({
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="float-end ms-3"
-                      onClick={() => {
-                        form.reset({});
-                        onClear();
-                      }}
+                      onClick={() => limparFiltros(form, values)}
                     />
                   </div>
                 </form>
