@@ -256,6 +256,7 @@ import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/Detalha
 import EmpenhosPage from "pages/LancamentoMedicaoInicial/EmpenhosPage";
 import ClausulasParaDescontosPage from "pages/LancamentoMedicaoInicial/ClausulasParaDescontosPage";
 import CadastroDeClausulasPage from "pages/LancamentoMedicaoInicial/CadastroDeClausulasPage";
+import EditarClausulaPage from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
 import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
 import EditarEmpenhoPage from "pages/LancamentoMedicaoInicial/EditarEmpenhoPage";
 import RelatorioAdesao from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesao";
@@ -1505,6 +1506,11 @@ const routesConfig = [
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}/${constants.CADASTRO_DE_CLAUSULA}`,
     component: CadastroDeClausulasPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}/${constants.EDITAR_CLAUSULA}`,
+    component: EditarClausulaPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
