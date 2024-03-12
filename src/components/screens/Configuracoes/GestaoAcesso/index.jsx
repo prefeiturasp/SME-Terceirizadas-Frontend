@@ -41,6 +41,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
 
   const somenteLeitura = useSomenteLeitura([
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ]);
 
   const buscaFiltros = async () => {

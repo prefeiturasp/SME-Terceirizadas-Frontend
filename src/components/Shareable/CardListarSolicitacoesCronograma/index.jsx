@@ -27,7 +27,11 @@ export default ({
                   <div key={key} className="row">
                     <div className="col-9">
                       {exibirTooltip ? (
-                        <Tooltip key={key} title={value.textoCompleto}>
+                        <Tooltip
+                          placement="topLeft"
+                          key={key}
+                          title={value.textoCompleto}
+                        >
                           <NavLink key={key} to={value.link}>
                             <p className={`data ms-4`}>{`${value.texto}`}</p>
                           </NavLink>
