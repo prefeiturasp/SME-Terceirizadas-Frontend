@@ -3,24 +3,31 @@ import { Link } from "react-router-dom";
 import { Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
+  BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { Filtros } from "./components/Filtros";
+import { Filtros } from "./components/Filtros/";
 import { Paginacao } from "components/Shareable/Paginacao";
 import {
   MEDICAO_INICIAL,
   CLAUSULAS_PARA_DESCONTOS,
   CADASTRO_DE_CLAUSULA,
+  EDITAR_CLAUSULA,
 } from "configs/constants";
 import {
-  ClausulaParaDescontoInterface,
+  ClausulaInterface,
   FiltrosInterface,
   ResponseClausulasInterface,
 } from "interfaces/clausulas_para_descontos.interface";
-import { getClausulasParaDescontos } from "services/medicaoInicial/clausulasParaDescontos.service";
+import {
+  deletaClausulaParaDesconto,
+  getClausulasParaDescontos,
+} from "services/medicaoInicial/clausulasParaDescontos.service";
 import { getNumerosEditais } from "services/edital.service";
 import "./styles.scss";
+import { ModalExcluirClausula } from "./components/ModalExcluirClausula";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 type Edital = {
   uuid: string;
@@ -28,9 +35,7 @@ type Edital = {
 };
 
 export function ClausulasParaDescontos() {
-  const [clausulas, setClausulas] = useState<ClausulaParaDescontoInterface[]>(
-    []
-  );
+  const [clausulas, setClausulas] = useState<ClausulaInterface[]>([]);
   const [responseClausulas, setResponseClausulas] =
     useState<ResponseClausulasInterface>();
   const [editais, setEditais] = useState<Edital[]>([]);
@@ -38,6 +43,9 @@ export function ClausulasParaDescontos() {
   const [erroAPI, setErroAPI] = useState("");
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [filtros, setFiltros] = useState<FiltrosInterface>();
+  const [exibirModal, setExibirModal] = useState(false);
+  const [uuidClausula, setUuidClausula] = useState("");
+  const [carregandoExclusao, setCarregandoExclusao] = useState(false);
 
   const getClausulasAsync = async (
     page: number = null,
@@ -61,6 +69,22 @@ export function ClausulasParaDescontos() {
       setEditais(data.results);
     } catch (error) {
       setErroAPI("Erro ao carregar editais. Tente novamente mais tarde.");
+    }
+  };
+
+  const excluirClausula = async (uuid: string) => {
+    setCarregandoExclusao(true);
+    try {
+      await deletaClausulaParaDesconto(uuid);
+      setClausulas((prevState) =>
+        prevState.filter((clausula) => clausula.uuid !== uuid)
+      );
+      toastSuccess("Cláusula excluída com sucesso!");
+    } catch (error) {
+      toastError("Erro ao excluir cláusula. Tente novamente mais tarde.");
+    } finally {
+      setCarregandoExclusao(false);
+      setExibirModal(false);
     }
   };
 
@@ -96,6 +120,14 @@ export function ClausulasParaDescontos() {
       {erroAPI && <div>{erroAPI}</div>}
 
       <Spin tip="Carregando..." spinning={carregando}>
+        <ModalExcluirClausula
+          uuid={uuidClausula}
+          show={exibirModal}
+          carregando={carregandoExclusao}
+          handleClose={() => setExibirModal(false)}
+          handleConfirm={excluirClausula}
+        />
+
         <div className="card mt-3">
           <div className="card-body">
             <Filtros
@@ -139,19 +171,43 @@ export function ClausulasParaDescontos() {
                         <th className="col-2">Cláusula</th>
                         <th className="col-1">Item</th>
                         <th className="col-4">Descrição</th>
-                        <th className="col-2">% de Desconto</th>
+                        <th className="col-1">% de Desconto</th>
+                        <th className="col-1 text-center">Ações</th>
                       </tr>
                     </thead>
 
                     <tbody>
                       {clausulas.map((clausula) => (
                         <tr className="row" key={clausula.uuid}>
-                          <td className="col-3">{clausula.edital}</td>
+                          <td className="col-3">{clausula.edital.numero}</td>
                           <td className="col-2">{clausula.numero_clausula}</td>
                           <td className="col-1">{clausula.item_clausula}</td>
                           <td className="col-4">{clausula.descricao}</td>
-                          <td className="col-2">
+                          <td className="col-1">
                             {formataValor(clausula.porcentagem_desconto)}
+                          </td>
+                          <td className="col-1 d-flex justify-content-center">
+                            <Link
+                              to={`/${MEDICAO_INICIAL}/${CLAUSULAS_PARA_DESCONTOS}/${EDITAR_CLAUSULA}/?uuid=${clausula.uuid}`}
+                            >
+                              <span className="px-2">
+                                <i
+                                  title="Editar Cláusula"
+                                  className="verde fas fa-edit"
+                                />
+                              </span>
+                            </Link>
+
+                            <Botao
+                              titulo="Excluir Cláusula"
+                              type={BUTTON_TYPE.BUTTON}
+                              icon={BUTTON_ICON.TRASH}
+                              onClick={() => {
+                                setUuidClausula(clausula.uuid);
+                                setExibirModal(true);
+                              }}
+                              className="botao-excluir"
+                            />
                           </td>
                         </tr>
                       ))}

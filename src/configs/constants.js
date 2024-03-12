@@ -209,6 +209,7 @@ export const EDITAR_EMPENHO = "editar-empenho";
 export const EMPENHOS = "empenhos";
 export const CLAUSULAS_PARA_DESCONTOS = "clausulas-para-descontos";
 export const CADASTRO_DE_CLAUSULA = "cadastro-de-clausula";
+export const EDITAR_CLAUSULA = "editar-clausula";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
