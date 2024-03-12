@@ -163,7 +163,7 @@ export default ({ analise }) => {
       );
     } else if (aprovacoes[index] === false) {
       return (
-        <div className="col-7 d-flex align-items-center">
+        <div className="col-7">
           <Field
             component={TextArea}
             label="Correções Necessárias"
@@ -412,7 +412,7 @@ export default ({ analise }) => {
                 >
                   Embalagem Primária
                 </div>
-                <div className="row">
+                <div className="row d-flex align-items-center">
                   <div className="col-5">
                     {embalagemPrimaria.map((e) => (
                       <div className="w-75" key={e.arquivo}>
@@ -436,7 +436,7 @@ export default ({ analise }) => {
                 >
                   Embalagem Secundária
                 </div>
-                <div className="row">
+                <div className="row d-flex align-items-center">
                   <div className="col-5">
                     {embalagemSecundaria.map((e) => (
                       <div className="w-75" key={e.arquivo}>
@@ -462,7 +462,7 @@ export default ({ analise }) => {
                     >
                       Embalagem Terciária
                     </div>
-                    <div className="row">
+                    <div className="row d-flex align-items-center">
                       <div className="col-5">
                         {embalagemTerciaria.map((e) => (
                           <div className="w-75" key={e.arquivo}>
