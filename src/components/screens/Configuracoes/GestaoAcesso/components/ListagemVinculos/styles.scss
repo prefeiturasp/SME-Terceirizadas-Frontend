@@ -78,8 +78,7 @@
       }
 
       button:disabled {
-        color: #42474a;
-        opacity: 0.6;
+        color: $grayDisabled;
       }
 
       .flex-container {
