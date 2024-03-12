@@ -33,6 +33,8 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
   const [totalizadores, setTotalizadores] = useState(undefined);
+  const [renderGraficosOuTabela, setRenderGraficosOuTabela] =
+    useState("Tabela");
 
   const getSolicitacoesDetalhadasAsync = async (solicitacoes) => {
     const payloadSolicitacoesDetalhadas = solicitacoes.map((solicitacao) => {
@@ -120,8 +122,8 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
             filtros !== undefined &&
             totalizadores && (
               <>
-                <div className="row">
-                  <div className="col-12 mt-3">
+                <div className="row mt-3">
+                  <div className="col-8">
                     <p className="quantitativo">
                       TOTAL DE SOLICITAÇÕES{" "}
                       <b>
@@ -131,6 +133,25 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
                       </b>{" "}
                       - ATÉ {new Date().toLocaleDateString("pt-BR")}
                     </p>
+                  </div>
+                  <div className="col-4 text-end">
+                    <Botao
+                      texto={renderGraficosOuTabela}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      icon={
+                        renderGraficosOuTabela === "Gráficos"
+                          ? BUTTON_ICON.CHART_BAR
+                          : BUTTON_ICON.TABLE
+                      }
+                      onClick={() =>
+                        setRenderGraficosOuTabela(
+                          renderGraficosOuTabela === "Tabela"
+                            ? "Gráficos"
+                            : "Tabela"
+                        )
+                      }
+                    />
                   </div>
                 </div>
                 <div className="row">
