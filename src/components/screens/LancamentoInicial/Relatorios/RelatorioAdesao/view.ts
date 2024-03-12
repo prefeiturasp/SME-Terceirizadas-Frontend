@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { toastError } from "components/Shareable/Toast/dialogs";
 
+import { usuarioEhDRE } from "helpers/utilities";
+
 import RelatorioService from "services/medicaoInicial/relatorio.service";
 import { RelatorioAdesaoResponse } from "services/medicaoInicial/relatorio.interface";
 
@@ -42,8 +44,17 @@ export default () => {
   };
 
   const limparFiltro = () => {
-    setFiltros(null);
-    setFiltrosSelecionados(null);
+    if (usuarioEhDRE()) {
+      setFiltrosSelecionados({
+        dre: localStorage.getItem("nome_instituicao"),
+      });
+      setFiltros({
+        dre: localStorage.getItem("nome_instituicao"),
+      });
+    } else {
+      setFiltrosSelecionados(null);
+      setFiltros(null);
+    }
     setResultado(null);
     setExibirTitulo(false);
   };

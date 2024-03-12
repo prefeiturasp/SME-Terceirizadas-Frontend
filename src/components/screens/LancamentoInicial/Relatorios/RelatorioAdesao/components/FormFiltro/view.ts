@@ -1,6 +1,9 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 
-import { formatarOpcoesLote } from "helpers/utilities";
+import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
+
+import { formatarOpcoesLote, usuarioEhDRE } from "helpers/utilities";
 
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getLotesSimples } from "services/lote.service";
@@ -18,6 +21,7 @@ import { MESES } from "constants/shared";
 import { Args, SelectOption, MultiSelectOption, Option } from "./types";
 
 export default ({ form, onChange }: Args) => {
+  const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
   const [mesesAnosOpcoes, setMesesAnosOpcoes] = useState<Array<SelectOption>>(
     []
   );
@@ -145,6 +149,29 @@ export default ({ form, onChange }: Args) => {
       }
     );
   }, []);
+
+  useEffect(() => {
+    if (usuarioEhDRE()) {
+      const dreUuidMeusDados = meusDados?.vinculo_atual?.instituicao.uuid;
+      if (dreUuidMeusDados && lotes && unidadesEducacionais) {
+        form.change("dre", dreUuidMeusDados);
+        setLotesOpcoes(
+          formatarOpcoesLote(
+            lotes?.filter(
+              (lote) => lote.diretoria_regional.uuid === dreUuidMeusDados
+            )
+          )
+        );
+        setUnidadesEducacionaisOpcoes(
+          formataUnidadesEducacionaisOpcoes(
+            unidadesEducacionais?.filter(
+              (escola) => escola.diretoria_regional.uuid === dreUuidMeusDados
+            )
+          )
+        );
+      }
+    }
+  }, [meusDados, lotes, unidadesEducacionais]);
 
   const formataMesesAnosOpcoes = (mesesAnos) => {
     return [{ nome: "Selecione o mês de referência", uuid: "" }].concat(
