@@ -847,7 +847,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCoordenadorCODAE() ||
       usuarioEhCodaeDilog() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_DIRETOR_ESCOLA}`,
@@ -1515,7 +1516,8 @@ const routesConfig = [
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.RELATORIOS}/${constants.RELATORIO_ADESAO}`,
     component: RelatorioAdesao,
-    tipoUsuario: usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao(),
+    tipoUsuario:
+      usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhDRE(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,
@@ -1530,7 +1532,10 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.ENVIO_REQUISICOES_ENTREGA_AVANCADO}`,
     component: ConsultaRequisicaoEntregaDilog,
-    tipoUsuario: usuarioEhLogistica() || usuarioEhCODAEGabinete(),
+    tipoUsuario:
+      usuarioEhLogistica() ||
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_REQUISICAO_ENTREGA}`,
@@ -1540,7 +1545,10 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_SOLICITACAO_ALTERACAO}`,
     component: GestaoSolicitacaoAlteracaoPage,
-    tipoUsuario: usuarioEhLogistica() || usuarioEhCODAEGabinete(),
+    tipoUsuario:
+      usuarioEhLogistica() ||
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CONSULTA_SOLICITACAO_ALTERACAO}`,
@@ -1625,7 +1633,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCodaeDilog() ||
       usuarioEhDilogJuridico() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO_FISCAL}`,

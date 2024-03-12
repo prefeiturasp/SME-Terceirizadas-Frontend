@@ -28,6 +28,7 @@ import {
   usuarioEhCodaeDilog,
   usuarioEhDiretorUE,
   usuarioEhCODAEGabinete,
+  usuarioEhDilogDiretoria,
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
@@ -48,7 +49,8 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCoordenadorGpCODAE() ||
     usuarioEhCoordenadorNutriSupervisao();
 
-  const exibirGestaoAcessoSomenteLeitura = usuarioEhCODAEGabinete();
+  const exibirGestaoAcessoSomenteLeitura =
+    usuarioEhCODAEGabinete() || usuarioEhDilogDiretoria();
 
   return (
     <Menu id="Configuracoes" icon="fa-cog" title={"Configurações"}>
