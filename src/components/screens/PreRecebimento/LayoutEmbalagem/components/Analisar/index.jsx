@@ -34,6 +34,7 @@ export default () => {
   const { meusDados } = useContext(MeusDadosContext);
   const somenteLeitura = useSomenteLeitura([
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ]);
 
   const [carregando, setCarregando] = useState(true);
@@ -134,7 +135,7 @@ export default () => {
   const retornaBotoesAprovacao = (index, form) => {
     const textoAprovacao = `Embalagem Aprovada em ${moment().format(
       "DD/MM/YYYY - HH:mm"
-    )}\n|Por: ${meusDados.nome}`;
+    )}\n|Por: ${meusDados?.nome}`;
 
     return (
       <div className="mt-4">
@@ -172,10 +173,10 @@ export default () => {
         values[`justificativa_${index}`].split("|");
 
       return (
-        <div className="col-7">
-          <div className="subtitulo d-flex ms-5">
+        <div className="col-7 d-flex align-items-center">
+          <div className="subtitulo d-flex align-items-center ms-5">
             <div className="w-5">
-              <i className="fas fa-check me-2" />
+              <i className="fas fa-check me-3 fa-2x" />
             </div>
             <div className="w-95">
               <div>{dataHoraAprovacao}</div>

@@ -49,6 +49,7 @@ export default () => {
   const inicioResultado = useRef();
   const somenteLeitura = useSomenteLeitura([
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ]);
 
   const buscarSolicitacoes = async (page) => {

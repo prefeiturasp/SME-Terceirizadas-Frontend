@@ -491,6 +491,7 @@ export const usuarioComAcessoTelaDetalharNotificacaoOcorrencia = () => {
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -521,6 +522,7 @@ export const usuarioComAcessoAoPainelEmbalagens = () => {
     PERFIL.COORDENADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -530,6 +532,7 @@ export const usuarioComAcessoAoPainelDocumentos = () => {
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.DILOG_CRONOGRAMA,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -538,6 +541,7 @@ export const usuarioComAcessoAoPainelFichasTecnicas = () => {
     PERFIL.COORDENADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -567,7 +571,10 @@ export const usuarioEhPreRecebimento = () => {
 };
 
 export const usuarioEhPreRecebimentoSemLogistica = () => {
-  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO;
+  return (
+    localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO &&
+    !usuarioEhDilogDiretoria()
+  );
 };
 
 export const usuarioEhDinutreDiretoria = () =>
@@ -1029,12 +1036,13 @@ export const exibirModuloMedicaoInicial = () => {
 
 export const exibirModuloOcorrencias = () => {
   return (
-    (!["production"].includes(ENVIRONMENT) &&
-      (usuarioEhCodaeDilog() ||
-        usuarioEhDilogJuridico() ||
-        usuarioEhDilogQualidade() ||
-        usuarioEhDilog())) ||
-    usuarioEhCODAEGabinete()
+    !["production"].includes(ENVIRONMENT) &&
+    (usuarioEhCodaeDilog() ||
+      usuarioEhDilogJuridico() ||
+      usuarioEhDilogQualidade() ||
+      usuarioEhDilog() ||
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria())
   );
 };
 

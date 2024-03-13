@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import { ASelect, AInput, AInputNumber } from "components/Shareable/MakeField";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
@@ -14,12 +14,16 @@ import {
 import Botao from "components/Shareable/Botao";
 import { MEDICAO_INICIAL, CLAUSULAS_PARA_DESCONTOS } from "configs/constants";
 import "./styles.scss";
-import { ClausulaParaDescontoInterface } from "interfaces/clausulas_para_descontos.interface";
-import { cadastraClausulaParaDesconto } from "services/medicaoInicial/clausulasParaDescontos.service";
+import { ClausulaPayload } from "interfaces/clausulas_para_descontos.interface";
+import {
+  cadastraClausulaParaDesconto,
+  getClausulaParaDesconto,
+  editaClausulaParaDesconto,
+} from "services/medicaoInicial/clausulasParaDescontos.service";
 import { formataValorDecimal, parserValorDecimal } from "../../helper.js";
 import { getError } from "helpers/utilities";
 
-const VALORES_INICIAIS: ClausulaParaDescontoInterface = {
+const VALORES_INICIAIS: ClausulaPayload = {
   edital: null,
   numero_clausula: null,
   item_clausula: null,
@@ -34,10 +38,15 @@ type Edital = {
 
 export function CadastroDeClausulas() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [editais, setEditais] = useState<Edital[]>([]);
   const [carregando, setCarregando] = useState(false);
   const [erroAPI, setErroAPI] = useState("");
+  const [valoresIniciais, setValoresInicias] =
+    useState<ClausulaPayload>(VALORES_INICIAIS);
+
+  const uuidClausula = searchParams.get("uuid");
 
   const getEditaisAsync = async () => {
     setCarregando(true);
@@ -51,9 +60,7 @@ export function CadastroDeClausulas() {
     }
   };
 
-  const cadastrarClausulaParaDesconto = async (
-    values: ClausulaParaDescontoInterface
-  ) => {
+  const cadastrarClausulaParaDesconto = async (values: ClausulaPayload) => {
     setCarregando(true);
     try {
       await cadastraClausulaParaDesconto(values);
@@ -66,10 +73,53 @@ export function CadastroDeClausulas() {
     }
   };
 
+  const editarClausulaParaDesconto = async (
+    uuid: string,
+    values: ClausulaPayload
+  ) => {
+    setCarregando(true);
+    try {
+      await editaClausulaParaDesconto(uuid, values);
+      toastSuccess("Cláusula atualizada com sucesso!");
+      voltarPagina();
+    } catch ({ response }) {
+      toastError(getError(response.data));
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const getClausulaParaDescontoAsync = async (uuid: string) => {
+    setCarregando(true);
+    try {
+      const { data } = await getClausulaParaDesconto(uuid);
+
+      const dadosClausula = {
+        edital: data.edital.uuid,
+        numero_clausula: data.numero_clausula,
+        item_clausula: data.item_clausula,
+        porcentagem_desconto: data.porcentagem_desconto,
+        descricao: data.descricao,
+      };
+
+      setValoresInicias(dadosClausula);
+    } catch (error) {
+      setErroAPI(
+        "Erro ao carregar dados da cláusula. Tente novamente mais tarde."
+      );
+    } finally {
+      setCarregando(false);
+    }
+  };
+
   const voltarPagina = () =>
     navigate(`/${MEDICAO_INICIAL}/${CLAUSULAS_PARA_DESCONTOS}`);
 
   useEffect(() => {
+    if (uuidClausula) {
+      getClausulaParaDescontoAsync(uuidClausula);
+    }
+
     getEditaisAsync();
   }, []);
 
@@ -82,10 +132,12 @@ export function CadastroDeClausulas() {
           <div className="card mt-3">
             <div className="card-body">
               <Form
-                onSubmit={(values: ClausulaParaDescontoInterface) =>
-                  cadastrarClausulaParaDesconto(values)
+                onSubmit={(values: ClausulaPayload) =>
+                  uuidClausula
+                    ? editarClausulaParaDesconto(uuidClausula, values)
+                    : cadastrarClausulaParaDesconto(values)
                 }
-                initialValues={VALORES_INICIAIS}
+                initialValues={valoresIniciais}
                 render={({ submitting, handleSubmit, form }) => {
                   return (
                     <form onSubmit={handleSubmit}>
