@@ -8,7 +8,10 @@ import Select from "components/Shareable/Select";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 
-import { usuarioEhDRE } from "helpers/utilities";
+import {
+  usuarioEhDRE,
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
+} from "helpers/utilities";
 
 import useView from "./view";
 
@@ -57,7 +60,9 @@ export default (props: Props) => {
             options={view.diretoriasRegionaisOpcoes}
             naoDesabilitarPrimeiraOpcao
             onChangeEffect={view.onChangeDRE}
-            disabled={usuarioEhDRE()}
+            disabled={
+              usuarioEhDRE() || usuarioEhEscolaTerceirizadaQualquerPerfil()
+            }
           />
         )}
       </div>
@@ -91,6 +96,7 @@ export default (props: Props) => {
             options={view.unidadesEducacionaisOpcoes}
             filterOption={view.filtraUnidadesEducacionaisOpcoes}
             onSelect={view.onChangeUnidadeEducacional}
+            disabled={usuarioEhEscolaTerceirizadaQualquerPerfil()}
           />
         )}
       </div>
