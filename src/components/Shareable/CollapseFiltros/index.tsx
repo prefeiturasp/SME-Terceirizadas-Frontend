@@ -8,7 +8,10 @@ import {
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
-import { usuarioEhDRE } from "helpers/utilities";
+import {
+  usuarioEhDRE,
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
+} from "helpers/utilities";
 
 type Props = {
   titulo?: string;
@@ -37,6 +40,14 @@ const CollapseFiltros: React.FC<Props> = ({
   const limparFiltros = (form: FormApi, values: Record<string, any>) => {
     if (usuarioEhDRE() && manterFiltros.includes("dre")) {
       form.reset({ dre: values["dre"] });
+    } else if (
+      usuarioEhEscolaTerceirizadaQualquerPerfil() &&
+      manterFiltros.includes("unidade_educacional")
+    ) {
+      form.reset({
+        dre: values["dre"],
+        unidade_educacional: values["unidade_educacional"],
+      });
     } else {
       form.reset({});
     }

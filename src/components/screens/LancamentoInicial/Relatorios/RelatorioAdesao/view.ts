@@ -2,7 +2,10 @@ import { useState } from "react";
 
 import { toastError } from "components/Shareable/Toast/dialogs";
 
-import { usuarioEhDRE } from "helpers/utilities";
+import {
+  usuarioEhDRE,
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
+} from "helpers/utilities";
 
 import RelatorioService from "services/medicaoInicial/relatorio.service";
 import { RelatorioAdesaoResponse } from "services/medicaoInicial/relatorio.interface";
@@ -50,6 +53,15 @@ export default () => {
       });
       setFiltros({
         dre: localStorage.getItem("nome_instituicao"),
+      });
+    } else if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      setFiltrosSelecionados({
+        dre: localStorage.getItem("dre_nome"),
+        unidade_educacional: filtrosSelecionados["unidade_educacional"],
+      });
+      setFiltros({
+        dre: localStorage.getItem("dre_nome"),
+        unidade_educacional: filtrosSelecionados["unidade_educacional"],
       });
     } else {
       setFiltrosSelecionados(null);
