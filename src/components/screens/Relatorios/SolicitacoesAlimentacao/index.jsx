@@ -17,6 +17,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { Graficos } from "./componentes/Graficos";
 
 export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
   const { endpoint, endpointGerarExcel, endpointGerarPDF } = props;
@@ -34,7 +35,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
     useState(false);
   const [totalizadores, setTotalizadores] = useState(undefined);
   const [renderGraficosOuTabela, setRenderGraficosOuTabela] =
-    useState("Tabela");
+    useState("Gráficos");
 
   const getSolicitacoesDetalhadasAsync = async (solicitacoes) => {
     const payloadSolicitacoesDetalhadas = solicitacoes.map((solicitacao) => {
@@ -175,52 +176,63 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
               </>
             )}
 
-          {solicitacoes && filtros && !carregando && (
-            <TabelaResultado
-              solicitacoes={solicitacoes}
-              filtros={filtros}
-              resultadoPaginado={resultadoPaginado}
-            />
-          )}
-          {solicitacoes && solicitacoes.length && filtros ? (
-            <>
-              <Paginacao
-                onChange={(page) => onPageChanged(page, filtros)}
-                total={totalBusca}
-                pageSize={10}
-                current={page}
+          {solicitacoes &&
+            filtros &&
+            !carregando &&
+            renderGraficosOuTabela === "Gráficos" && (
+              <TabelaResultado
+                solicitacoes={solicitacoes}
+                filtros={filtros}
+                resultadoPaginado={resultadoPaginado}
               />
-              <div className="row">
-                <div className="col-12 text-end">
-                  <Botao
-                    texto="Baixar PDF"
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    icon={BUTTON_ICON.FILE_PDF}
-                    type={BUTTON_TYPE.BUTTON}
-                    disabled={submitting}
-                    onClick={() => exportarPDF()}
-                  />
-                  <Botao
-                    texto="Baixar Excel"
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    icon={BUTTON_ICON.FILE_EXCEL}
-                    type={BUTTON_TYPE.BUTTON}
-                    disabled={submitting}
-                    onClick={() => exportarXLSX()}
-                    className="ms-3"
-                  />
-                  {exibirModalCentralDownloads && (
-                    <ModalSolicitacaoDownload
-                      show={exibirModalCentralDownloads}
-                      setShow={setExibirModalCentralDownloads}
+            )}
+
+          {solicitacoes &&
+            solicitacoes.length &&
+            filtros &&
+            renderGraficosOuTabela === "Gráficos" && (
+              <>
+                <Paginacao
+                  onChange={(page) => onPageChanged(page, filtros)}
+                  total={totalBusca}
+                  pageSize={10}
+                  current={page}
+                />
+                <div className="row">
+                  <div className="col-12 text-end">
+                    <Botao
+                      texto="Baixar PDF"
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      icon={BUTTON_ICON.FILE_PDF}
+                      type={BUTTON_TYPE.BUTTON}
+                      disabled={submitting}
+                      onClick={() => exportarPDF()}
                     />
-                  )}
+                    <Botao
+                      texto="Baixar Excel"
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      icon={BUTTON_ICON.FILE_EXCEL}
+                      type={BUTTON_TYPE.BUTTON}
+                      disabled={submitting}
+                      onClick={() => exportarXLSX()}
+                      className="ms-3"
+                    />
+                    {exibirModalCentralDownloads && (
+                      <ModalSolicitacaoDownload
+                        show={exibirModalCentralDownloads}
+                        setShow={setExibirModalCentralDownloads}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-            </>
-          ) : (
-            <></>
-          )}
+              </>
+            )}
+          {solicitacoes &&
+            filtros &&
+            !carregando &&
+            renderGraficosOuTabela === "Tabela" && (
+              <Graficos values={filtros} />
+            )}
         </Spin>
       </div>
     </div>
