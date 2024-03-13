@@ -4,8 +4,6 @@ import { Transfer } from "antd";
 import Label from "components/Shareable/Label";
 import TooltipIcone from "components/Shareable/TooltipIcone";
 
-import "./style.scss";
-
 export default ({
   dataSource,
   showSearch,

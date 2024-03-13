@@ -35,37 +35,43 @@ export default ({
       key: "RASCUNHO",
       title: "Rascunho",
       chosen: false,
-      disabled: true,
+      disabled: false,
     },
     {
       key: "ASSINADO_E_ENVIADO_AO_FORNECEDOR",
       title: "Assinado e Enviado ao Fornecedor",
       chosen: false,
+      disabled: false,
     },
     {
       key: "ASSINADO_FORNECEDOR",
       title: "Assinado Fornecedor",
       chosen: false,
+      disabled: false,
     },
     {
       key: "ASSINADO_DINUTRE",
       title: "Assinado DINUTRE",
       chosen: false,
+      disabled: false,
     },
     {
       key: "ASSINADO_CODAE",
       title: "Assinado CODAE",
       chosen: false,
+      disabled: false,
     },
     {
       key: "ALTERACAO_CODAE",
       title: "Alteração CODAE",
       chosen: false,
+      disabled: false,
     },
     {
       key: "SOLICITADO_ALTERACAO",
       title: "Solicitado Alteração",
       chosen: false,
+      disabled: false,
     },
   ];
 
