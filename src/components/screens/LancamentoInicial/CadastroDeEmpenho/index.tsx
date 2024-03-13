@@ -30,7 +30,6 @@ type NovoEmpenho = {
   contrato: string | null;
   edital: string | null;
   tipo_empenho: string | null;
-  tipo_reajuste: string | null;
   status: string | null;
   valor_total: number | null;
 };
@@ -45,17 +44,12 @@ const VALORES_INICIAIS: EmpenhoInterface = {
   contrato: null,
   edital: null,
   tipo_empenho: null,
-  tipo_reajuste: null,
   status: null,
   valor_total: null,
 };
 
 const OPCOES_STATUS = ["Ativo", "Inativo"];
 const TIPOS_EMPENHOS = ["Principal", "Reajuste"];
-const OPCOES_REAJUSTE = [
-  { label: "Alimentações", value: "ALIMENTACOES" },
-  { label: "Dietas", value: "DIETAS" },
-];
 
 export function CadastroDeEmpenho() {
   const navigate = useNavigate();
@@ -134,7 +128,6 @@ export function CadastroDeEmpenho() {
     try {
       const payload = {
         tipo_empenho: values.tipo_empenho,
-        tipo_reajuste: values.tipo_reajuste,
         status: values.status,
         valor_total: values.valor_total,
       };
@@ -175,7 +168,7 @@ export function CadastroDeEmpenho() {
                     : cadastrarEmpenho(values)
                 }
                 initialValues={valoresIniciais}
-                render={({ submitting, handleSubmit, form, values }) => {
+                render={({ submitting, handleSubmit, form }) => {
                   const selecionaEdital = (value: string) => {
                     form.change("contrato", value);
 
@@ -192,9 +185,6 @@ export function CadastroDeEmpenho() {
                     form.change("tipo_empenho", value);
                     form.change("valor_total", null);
                     form.change("status", null);
-
-                    if (value === "PRINCIPAL")
-                      form.change("tipo_reajuste", null);
                   };
 
                   return (
@@ -285,28 +275,6 @@ export function CadastroDeEmpenho() {
                             ))}
                           </Field>
                         </div>
-
-                        {values.tipo_empenho === "REAJUSTE" ? (
-                          <div className="col-4 d-flex">
-                            <span className="required-asterisk">*</span>
-                            <Field
-                              name="tipo_reajuste"
-                              label="Aplicar Reajuste em"
-                              component={ASelect}
-                              validate={required}
-                            >
-                              <SelectAntd.Option value="">
-                                Selecione uma tabela
-                              </SelectAntd.Option>
-
-                              {OPCOES_REAJUSTE.map((tipo) => (
-                                <SelectAntd.Option key={tipo.value}>
-                                  {tipo.label}
-                                </SelectAntd.Option>
-                              ))}
-                            </Field>
-                          </div>
-                        ) : null}
 
                         <div className="col-4 d-flex">
                           <span className="required-asterisk">*</span>
