@@ -38,11 +38,11 @@ const CollapseFiltros: React.FC<Props> = ({
   };
 
   const limparFiltros = (form: FormApi, values: Record<string, any>) => {
-    if (usuarioEhDRE() && manterFiltros.includes("dre")) {
+    if (usuarioEhDRE() && manterFiltros?.includes("dre")) {
       form.reset({ dre: values["dre"] });
     } else if (
       usuarioEhEscolaTerceirizadaQualquerPerfil() &&
-      manterFiltros.includes("unidade_educacional")
+      manterFiltros?.includes("unidade_educacional")
     ) {
       form.reset({
         dre: values["dre"],
