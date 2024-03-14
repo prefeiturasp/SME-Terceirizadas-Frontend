@@ -16,6 +16,7 @@ import {
 } from "../../configs/constants";
 import {
   truncarString,
+  usuarioEhCoordenadorNutriCODAE,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
 } from "../../helpers/utilities";
@@ -205,6 +206,11 @@ export const ajustarFormatoLog = (logs, card) => {
       return date;
     };
 
+    const card_ =
+      card === "pendente" && usuarioEhCoordenadorNutriCODAE()
+        ? "pendentes-aut"
+        : card;
+
     return {
       text:
         usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada()
@@ -216,7 +222,7 @@ export const ajustarFormatoLog = (logs, card) => {
       date: getDate(),
       link: `/${solicitacao}/${RELATORIO}?uuid=${log.uuid}&ehInclusaoContinua=${
         log.tipo_doc === INC_ALIMENTA_CONTINUA
-      }&tipoSolicitacao=${tipo}&card=${card}`,
+      }&tipoSolicitacao=${tipo}&card=${card_}`,
     };
   });
 };
