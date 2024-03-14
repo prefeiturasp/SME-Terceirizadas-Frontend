@@ -19,7 +19,7 @@ const DESCRICAO_SOLICITACAO = {
 
 export const cabecalhoDieta = (dietaEspecial, card) => {
   let descricao = null;
-  if (card && card === "inativas") {
+  if (card && ["inativas", "inativo"].includes(card)) {
     descricao = "Inativa";
   } else if (card && card === "inativas-temp") {
     descricao = "Inativa Temporariamente";
