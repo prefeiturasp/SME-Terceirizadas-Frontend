@@ -62,8 +62,13 @@ export default () => {
     const response = await detalharLayoutEmabalagem(uuid);
 
     const layoutDeEmbalagem = definirLayoutDeEmbalagem(response);
+    setLayoutDeEmbalagem(layoutDeEmbalagem);
+
     const aprovacoes = definirAprovacoes(layoutDeEmbalagem);
-    definirInitialValues(layoutDeEmbalagem, aprovacoes);
+    setAprovacoes(aprovacoes);
+
+    const initialValues = definirInitialValues(layoutDeEmbalagem, aprovacoes);
+    setInitialValues(initialValues);
   };
 
   const definirLayoutDeEmbalagem = (response) => {
@@ -72,8 +77,6 @@ export default () => {
     layoutDeEmbalagem.tipos_de_embalagens = ordenaTiposDeEmbalagem(
       layoutDeEmbalagem.tipos_de_embalagens
     );
-
-    setLayoutDeEmbalagem(layoutDeEmbalagem);
 
     return layoutDeEmbalagem;
   };
@@ -88,12 +91,11 @@ export default () => {
     });
   };
 
-  const definirAprovacoes = (objeto) => {
-    const aprovacoes = objeto.tipos_de_embalagens.map((tipoEmbalagem) =>
-      tipoEmbalagem.status === "APROVADO" ? true : undefined
+  const definirAprovacoes = (layoutDeEmbalagem) => {
+    const aprovacoes = layoutDeEmbalagem.tipos_de_embalagens.map(
+      (tipoEmbalagem) =>
+        tipoEmbalagem.status === "APROVADO" ? true : undefined
     );
-
-    setAprovacoes(aprovacoes);
 
     return aprovacoes;
   };
@@ -117,7 +119,7 @@ export default () => {
             justificativa_2: "",
           };
 
-    setInitialValues(initialValues);
+    return initialValues;
   };
 
   const atualizaModalCancelarCorrecao = (index, value) => {
@@ -126,7 +128,7 @@ export default () => {
     setModaisCancelarCorrecao(newModais);
   };
 
-  const atualizaAprovacoes = (index, value) => {
+  const atualizarAprovacoes = (index, value) => {
     let newAprovacoes = [...aprovacoes];
     newAprovacoes[index] = value;
     setAprovacoes(newAprovacoes);
@@ -145,7 +147,7 @@ export default () => {
           style={BUTTON_STYLE.GREEN}
           icon="fas fa-check"
           onClick={() => {
-            atualizaAprovacoes(index, true);
+            atualizarAprovacoes(index, true);
             form.change(`justificativa_${index}`, textoAprovacao);
           }}
           disabled={aprovacoes[index] !== undefined}
@@ -158,7 +160,7 @@ export default () => {
           icon="fas fa-times"
           className="ms-4"
           onClick={() => {
-            atualizaAprovacoes(index, false);
+            atualizarAprovacoes(index, false);
             form.change(`justificativa_${index}`, "");
           }}
           disabled={aprovacoes[index] === false}
@@ -168,81 +170,90 @@ export default () => {
   };
 
   const retornaTextoAprovacaoOuCampoCorrecao = (index, values, form) => {
-    if (aprovacoes[index] === true) {
-      const [dataHoraAprovacao, usuarioAprovacao] =
-        values[`justificativa_${index}`].split("|");
+    if (aprovacoes[index] === true)
+      return renderizarTextoAprovacao(values, index);
 
-      return (
-        <div className="col-7 d-flex align-items-center">
-          <div className="subtitulo d-flex align-items-center ms-5">
-            <div className="w-5">
-              <i className="fas fa-check me-3 fa-2x" />
-            </div>
-            <div className="w-95">
-              <div>{dataHoraAprovacao}</div>
-              <div>{usuarioAprovacao}</div>
-            </div>
-          </div>
-        </div>
-      );
-    } else if (aprovacoes[index] === false) {
-      return (
-        <div className="col-7">
-          <Field
-            component={TextArea}
-            label="Correções Necessárias"
-            name={`justificativa_${index}`}
-            placeholder="Qual a sua observação para essa decisão?"
-            required
-            validate={textAreaRequired}
-          />
+    if (aprovacoes[index] === false)
+      return renderizarCampoCorrecao(index, form);
 
-          {layoutDeEmbalagem.status !== "Solicitado Correção" && (
-            <Botao
-              texto="Cancelar"
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-end ms-3"
-              onClick={() => {
-                atualizaModalCancelarCorrecao(index, true);
-              }}
-            />
-          )}
-
-          <ModalCancelarCorrecao
-            show={modaisCancelarCorrecao[index]}
-            handleClose={() => {
-              atualizaModalCancelarCorrecao(index, false);
-            }}
-            cancelar={() => {
-              atualizaAprovacoes(index, undefined);
-              form.change(
-                `justificativa_${index}`,
-                layoutDeEmbalagem.tipos_de_embalagens[index]
-                  .complemento_do_status
-              );
-            }}
-          />
-        </div>
-      );
-    } else if (aprovacoes[index] === undefined) {
-      return (
-        !layoutDeEmbalagem.primeira_analise && (
-          <div className="col-7">
-            <Field
-              component={TextArea}
-              label="Correções Necessárias"
-              name={`justificativa_${index}`}
-              placeholder="Qual a sua observação para essa decisão?"
-              required
-              validate={textAreaRequired}
-              disabled
-            />
-          </div>
-        )
-      );
-    }
+    if (aprovacoes[index] === undefined && !layoutDeEmbalagem.primeira_analise)
+      return renderizarCampoCorrecaoBloqueado(index);
   };
+
+  const renderizarTextoAprovacao = (values, index) => {
+    const [dataHoraAprovacao, usuarioAprovacao] =
+      values[`justificativa_${index}`].split("|");
+
+    return (
+      <div className="col-7 d-flex align-items-center">
+        <div className="subtitulo d-flex align-items-center ms-5">
+          <div className="w-5">
+            <i className="fas fa-check me-3 fa-2x" />
+          </div>
+          <div className="w-95">
+            <div>{dataHoraAprovacao}</div>
+            <div>{usuarioAprovacao}</div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderizarCampoCorrecao = (index, form) => (
+    <div className="col-7">
+      <Field
+        component={TextArea}
+        label="Correções Necessárias"
+        name={`justificativa_${index}`}
+        placeholder="Qual a sua observação para essa decisão?"
+        required
+        validate={textAreaRequired}
+      />
+
+      {layoutDeEmbalagem.status !== "Solicitado Correção" && (
+        <Botao
+          texto="Cancelar"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
+          className="float-end ms-3"
+          onClick={() => {
+            atualizaModalCancelarCorrecao(index, true);
+          }}
+        />
+      )}
+
+      <ModalCancelarCorrecao
+        show={modaisCancelarCorrecao[index]}
+        handleClose={() => {
+          atualizaModalCancelarCorrecao(index, false);
+        }}
+        cancelar={() => {
+          atualizarAprovacoes(
+            index,
+            definirAprovacoes(layoutDeEmbalagem)[index]
+          );
+          form.change(
+            `justificativa_${index}`,
+            layoutDeEmbalagem.tipos_de_embalagens[index].complemento_do_status
+          );
+        }}
+      />
+    </div>
+  );
+
+  const renderizarCampoCorrecaoBloqueado = (index) => (
+    <div className="col-7">
+      <Field
+        component={TextArea}
+        label="Correções Necessárias"
+        name={`justificativa_${index}`}
+        placeholder="Qual a sua observação para essa decisão?"
+        required
+        validate={textAreaRequired}
+        disabled
+      />
+    </div>
+  );
 
   const onSubmit = () => {
     setModalEnviar(true);
