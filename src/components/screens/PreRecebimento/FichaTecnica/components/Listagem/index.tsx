@@ -86,7 +86,8 @@ const Listagem: React.FC<Props> = ({ objetos, setCarregando }) => {
     return (
       <div className="d-flex">
         {objeto.status === "Rascunho" && botaoContinuarCadastro}
-        {["Enviada para Análise"].includes(objeto.status) && botaoDetalhar}
+        {["Enviada para Análise", "Aprovada"].includes(objeto.status) &&
+          botaoDetalhar}
         {objeto.status === "Enviada para Correção" && botaoAlterar}
         {["Enviada para Análise", "Aprovada"].includes(objeto.status) &&
           botaoImprimir}
