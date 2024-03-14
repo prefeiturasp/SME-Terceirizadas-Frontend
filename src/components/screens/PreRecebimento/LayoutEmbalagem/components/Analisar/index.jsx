@@ -423,10 +423,7 @@ export default () => {
                           </div>
                         )
                       )}
-                      {!somenteLeitura &&
-                        layoutDeEmbalagem.tipos_de_embalagens[0].status !==
-                          "APROVADO" &&
-                        retornaBotoesAprovacao(0, form)}
+                      {!somenteLeitura && retornaBotoesAprovacao(0, form)}
                     </div>
                     {retornaTextoAprovacaoOuCampoCorrecao(0, values, form)}
                   </div>
@@ -452,10 +449,7 @@ export default () => {
                           </div>
                         )
                       )}
-                      {!somenteLeitura &&
-                        layoutDeEmbalagem.tipos_de_embalagens[1].status !==
-                          "APROVADO" &&
-                        retornaBotoesAprovacao(1, form)}
+                      {!somenteLeitura && retornaBotoesAprovacao(1, form)}
                     </div>
                     {retornaTextoAprovacaoOuCampoCorrecao(1, values, form)}
                   </div>
@@ -483,10 +477,7 @@ export default () => {
                               </div>
                             )
                           )}
-                          {!somenteLeitura &&
-                            layoutDeEmbalagem.tipos_de_embalagens[2].status !==
-                              "APROVADO" &&
-                            retornaBotoesAprovacao(2, form)}
+                          {!somenteLeitura && retornaBotoesAprovacao(2, form)}
                         </div>
                         {retornaTextoAprovacaoOuCampoCorrecao(2, values, form)}
                       </div>
