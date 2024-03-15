@@ -321,13 +321,8 @@ export default () => {
     return payload;
   };
 
-  const getAprovacao = (index) => {
-    if (aprovacoes[index] === true) {
-      return "APROVADO";
-    } else if (aprovacoes[index] === false) {
-      return "REPROVADO";
-    }
-  };
+  const getAprovacao = (index) =>
+    aprovacoes[index] ? "APROVADO" : "REPROVADO";
 
   const voltarPaginaPainel = () =>
     navigate(`/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`);
