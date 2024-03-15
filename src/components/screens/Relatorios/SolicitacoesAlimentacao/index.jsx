@@ -188,7 +188,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
             )}
 
           {solicitacoes &&
-            solicitacoes.length &&
+            solicitacoes.length > 0 &&
             filtros &&
             renderGraficosOuTabela === "Gráficos" && (
               <>
