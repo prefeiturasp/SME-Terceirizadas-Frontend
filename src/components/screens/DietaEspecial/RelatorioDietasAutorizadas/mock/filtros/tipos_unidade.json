@@ -1,0 +1,120 @@
+{
+  "results": [
+    {
+      "id": 1,
+      "tipo_unidade": "CCA"
+    },
+    {
+      "id": 2,
+      "tipo_unidade": "CCI"
+    },
+    {
+      "id": 3,
+      "tipo_unidade": "CCI/CIPS"
+    },
+    {
+      "id": 4,
+      "tipo_unidade": "CECI"
+    },
+    {
+      "id": 5,
+      "tipo_unidade": "CEI"
+    },
+    {
+      "id": 6,
+      "tipo_unidade": "CEI CEU"
+    },
+    {
+      "id": 7,
+      "tipo_unidade": "CEI DIRET"
+    },
+    {
+      "id": 8,
+      "tipo_unidade": "CEI INDIR"
+    },
+    {
+      "id": 9,
+      "tipo_unidade": "CEMEI"
+    },
+    {
+      "id": 10,
+      "tipo_unidade": "CEU"
+    },
+    {
+      "id": 11,
+      "tipo_unidade": "CEU AT COMPL"
+    },
+    {
+      "id": 12,
+      "tipo_unidade": "CEU CEI"
+    },
+    {
+      "id": 13,
+      "tipo_unidade": "CEU CEMEI"
+    },
+    {
+      "id": 14,
+      "tipo_unidade": "CEU EMEF"
+    },
+    {
+      "id": 15,
+      "tipo_unidade": "CEU EMEI"
+    },
+    {
+      "id": 16,
+      "tipo_unidade": "CEU GESTAO"
+    },
+    {
+      "id": 17,
+      "tipo_unidade": "CIEJA"
+    },
+    {
+      "id": 18,
+      "tipo_unidade": "CMCT"
+    },
+    {
+      "id": 19,
+      "tipo_unidade": "CR.P.CONV"
+    },
+    {
+      "id": 20,
+      "tipo_unidade": "EMEBS"
+    },
+    {
+      "id": 21,
+      "tipo_unidade": "EMEF"
+    },
+    {
+      "id": 22,
+      "tipo_unidade": "EMEFM"
+    },
+    {
+      "id": 23,
+      "tipo_unidade": "EMEF P FOM"
+    },
+    {
+      "id": 24,
+      "tipo_unidade": "EMEI"
+    },
+    {
+      "id": 25,
+      "tipo_unidade": "EMEI P FOM"
+    },
+    {
+      "id": 26,
+      "tipo_unidade": "ESC.PART."
+    },
+    {
+      "id": 27,
+      "tipo_unidade": "ESP CONV"
+    },
+    {
+      "id": 28,
+      "tipo_unidade": "E TEC"
+    },
+    {
+      "id": 29,
+      "tipo_unidade": "MOVA"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "results": [
+    {
+      "id": 1,
+      "dre": "Butanta"
+    },
+    {
+      "id": 2,
+      "dre": "Campo Limpo"
+    },
+    {
+      "id": 3,
+      "dre": "Capela do Socorro"
+    },
+    {
+      "id": 4,
+      "dre": "Freguesia/Brasilândia"
+    },
+    {
+      "id": 5,
+      "dre": "Guaianases"
+    },
+    {
+      "id": 6,
+      "dre": "Ipiranga"
+    },
+    {
+      "id": 7,
+      "dre": "Itaquera"
+    },
+    {
+      "id": 8,
+      "dre": "Jaçanã/Tremenbé"
+    },
+    {
+      "id": 9,
+      "dre": "Penha"
+    },
+    {
+      "id": 10,
+      "dre": "Pirituba/Jaraguá"
+    },
+    {
+      "id": 11,
+      "dre": "Santo Amaro"
+    },
+    {
+      "id": 12,
+      "dre": "São Matheus"
+    },
+    {
+      "id": 13,
+      "dre": "São Miguel"
+    }
+  ]
+}

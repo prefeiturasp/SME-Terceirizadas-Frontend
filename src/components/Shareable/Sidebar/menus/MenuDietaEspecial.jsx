@@ -6,6 +6,7 @@ import {
   CONSULTA_PROTOCOLO_PADRAO_DIETA,
   RELATORIO_DIETA_ESPECIAL,
   RELATORIO_GERENCIAL_DIETAS,
+  RELATORIO_DIETAS_AUTORIZADAS,
 } from "configs/constants";
 import {
   usuarioEhEmpresaTerceirizada,
@@ -121,9 +122,16 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
           {(usuarioEhAdministradorNutriCODAE() ||
             usuarioEhCoordenadorNutriCODAE()) && (
-            <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_GERENCIAL_DIETAS}`}>
-              Relatório Gerencial de Dietas
-            </LeafItem>
+            <>
+              <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_GERENCIAL_DIETAS}`}>
+                Relatório Gerencial de Dietas
+              </LeafItem>
+              <LeafItem
+                to={`/${DIETA_ESPECIAL}/${RELATORIO_DIETAS_AUTORIZADAS}`}
+              >
+                Relatório de Dietas Autorizadas
+              </LeafItem>
+            </>
           )}
         </SubMenu>
       )}

@@ -1,0 +1,20 @@
+{
+  "results": [
+    {
+      "id": 1,
+      "tipo_gestao": "PARCEIRA"
+    },
+    {
+      "id": 2,
+      "tipo_gestao": "DIRETA"
+    },
+    {
+      "id": 3,
+      "tipo_gestao": "MISTA"
+    },
+    {
+      "id": 4,
+      "tipo_gestao": "TERC TOTAL"
+    }
+  ]
+}
