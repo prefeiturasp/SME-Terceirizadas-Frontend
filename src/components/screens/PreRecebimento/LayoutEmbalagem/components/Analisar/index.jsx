@@ -276,15 +276,15 @@ export default () => {
         payload
       );
       if (response.status === 201 || response.status === 200) {
-        setCarregando(false);
         toastSuccess("Sua avaliação foi enviada com sucesso!");
         voltarPaginaPainel();
       } else {
         toastError("Ocorreu um erro ao analisar o Layout da Embalagem");
-        setCarregando(false);
       }
     } catch (error) {
       toastError(error, "Ocorreu um erro ao analisar o Layout da Embalagem");
+    } finally {
+      setCarregando(false);
     }
   };
 
