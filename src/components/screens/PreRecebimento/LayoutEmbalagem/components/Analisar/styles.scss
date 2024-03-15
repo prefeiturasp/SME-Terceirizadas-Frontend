@@ -30,4 +30,13 @@
     font-size: 20px;
     color: $greenDark;
   }
+
+  .aviso-embalagem-terciaria {
+    border: 1px solid $green;
+    border-radius: 5px;
+  }
+
+  hr {
+    margin: 25px 0;
+  }
 }

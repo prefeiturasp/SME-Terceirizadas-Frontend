@@ -48,6 +48,8 @@ export default () => {
     false,
     false,
   ]);
+  const [embalagemTerciariaSolicitada, setEmbalagemTerciariaSolicitada] =
+    useState(false);
 
   useEffect(() => {
     (async () => {
@@ -232,10 +234,15 @@ export default () => {
             index,
             definirAprovacoes(layoutDeEmbalagem)[index]
           );
+
           form.change(
             `justificativa_${index}`,
-            layoutDeEmbalagem.tipos_de_embalagens[index].complemento_do_status
+            layoutDeEmbalagem.tipos_de_embalagens[index]
+              ?.complemento_do_status || ""
           );
+
+          !layoutDeEmbalagem.tipos_de_embalagens[index] &&
+            setEmbalagemTerciariaSolicitada(false);
         }}
       />
     </div>
@@ -465,32 +472,59 @@ export default () => {
                     {retornaTextoAprovacaoOuCampoCorrecao(1, values, form)}
                   </div>
 
-                  {layoutDeEmbalagem.tipos_de_embalagens[2] && (
-                    <>
-                      <hr />
+                  <hr />
 
-                      <div
-                        className={`${
-                          layoutDeEmbalagem.tipos_de_embalagens[2].status !==
-                            "APROVADO" && !layoutDeEmbalagem.primeira_analise
-                            ? "subtitulo-laranja"
-                            : "subtitulo"
-                        }  mb-3`}
-                      >
-                        Embalagem Terciária
+                  <div
+                    className={`${
+                      layoutDeEmbalagem.tipos_de_embalagens[2]?.status !==
+                        "APROVADO" && !layoutDeEmbalagem.primeira_analise
+                        ? "subtitulo-laranja"
+                        : "subtitulo"
+                    }  mb-3`}
+                  >
+                    Embalagem Terciária
+                  </div>
+
+                  {layoutDeEmbalagem.tipos_de_embalagens[2] ? (
+                    <div className="row">
+                      <div className="col-5">
+                        {layoutDeEmbalagem.tipos_de_embalagens[2].imagens.map(
+                          (e) => (
+                            <div className="w-75" key={e.arquivo}>
+                              <BotaoAnexo urlAnexo={e.arquivo} />
+                            </div>
+                          )
+                        )}
+                        {!somenteLeitura && retornaBotoesAprovacao(2, form)}
                       </div>
+                      {retornaTextoAprovacaoOuCampoCorrecao(2, values, form)}
+                    </div>
+                  ) : (
+                    <>
                       <div className="row">
-                        <div className="col-5">
-                          {layoutDeEmbalagem.tipos_de_embalagens[2].imagens.map(
-                            (e) => (
-                              <div className="w-75" key={e.arquivo}>
-                                <BotaoAnexo urlAnexo={e.arquivo} />
-                              </div>
-                            )
-                          )}
-                          {!somenteLeitura && retornaBotoesAprovacao(2, form)}
+                        <div className="col aviso-embalagem-terciaria px-3 py-3">
+                          <strong>Lembrete!</strong>
+                          <br />
+                          Foi identificado que não consta Embalagem Terciária.
+                          Caso necessário, solicite a correção clicando no botão
+                          abaixo:
                         </div>
-                        {retornaTextoAprovacaoOuCampoCorrecao(2, values, form)}
+                      </div>
+                      <div className="row mt-4">
+                        <div className="col px-0">
+                          <Botao
+                            texto="Solicitar Embalagem"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN}
+                            onClick={() => {
+                              form.change(`justificativa_${2}`, "");
+                              setEmbalagemTerciariaSolicitada(true);
+                            }}
+                            disabled={embalagemTerciariaSolicitada}
+                          />
+                        </div>
+                        {embalagemTerciariaSolicitada &&
+                          renderizarCampoCorrecao(2, form)}
                       </div>
                     </>
                   )}
