@@ -293,26 +293,24 @@ export default () => {
 
     payload.tipos_de_embalagens = [];
 
-    layoutDeEmbalagem.tipos_de_embalagens[0].status === "EM_ANALISE" &&
-      payload.tipos_de_embalagens.push({
-        uuid: layoutDeEmbalagem.tipos_de_embalagens[0].uuid,
-        tipo_embalagem: "PRIMARIA",
-        status: getAprovacao(0),
-        complemento_do_status: values[`justificativa_${0}`],
-      });
+    payload.tipos_de_embalagens.push({
+      uuid: layoutDeEmbalagem.tipos_de_embalagens[0].uuid,
+      tipo_embalagem: "PRIMARIA",
+      status: getAprovacao(0),
+      complemento_do_status: values[`justificativa_${0}`],
+    });
 
-    layoutDeEmbalagem.tipos_de_embalagens[1].status === "EM_ANALISE" &&
-      payload.tipos_de_embalagens.push({
-        uuid: layoutDeEmbalagem.tipos_de_embalagens[1].uuid,
-        tipo_embalagem: "SECUNDARIA",
-        status: getAprovacao(1),
-        complemento_do_status: values[`justificativa_${1}`],
-      });
+    payload.tipos_de_embalagens.push({
+      uuid: layoutDeEmbalagem.tipos_de_embalagens[1].uuid,
+      tipo_embalagem: "SECUNDARIA",
+      status: getAprovacao(1),
+      complemento_do_status: values[`justificativa_${1}`],
+    });
 
-    layoutDeEmbalagem.tipos_de_embalagens[2] &&
-      layoutDeEmbalagem.tipos_de_embalagens[2].status === "EM_ANALISE" &&
+    (layoutDeEmbalagem.tipos_de_embalagens[2] ||
+      embalagemTerciariaSolicitada) &&
       payload.tipos_de_embalagens.push({
-        uuid: layoutDeEmbalagem.tipos_de_embalagens[2].uuid,
+        uuid: layoutDeEmbalagem.tipos_de_embalagens[2]?.uuid,
         tipo_embalagem: "TERCIARIA",
         status: getAprovacao(2),
         complemento_do_status: values[`justificativa_${2}`],
