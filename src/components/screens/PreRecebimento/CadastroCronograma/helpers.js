@@ -13,8 +13,7 @@ export const getOpcoesContrato = (empresaSelecionada) => {
 
 export const geraOptionsFichasTecnicas = (
   fichasTecnicas,
-  empresaSelecionada,
-  fichaTecnicaSelecionada
+  empresaSelecionada
 ) => {
   const options = fichasTecnicas
     .filter((ficha) => ficha.uuid_empresa === empresaSelecionada?.uuid)
@@ -23,12 +22,6 @@ export const geraOptionsFichasTecnicas = (
         nome: formatarNumeroEProdutoFichaTecnica(ficha),
         uuid: ficha.uuid,
       };
-    });
-
-  fichaTecnicaSelecionada &&
-    options.unshift({
-      nome: formatarNumeroEProdutoFichaTecnica(fichaTecnicaSelecionada),
-      uuid: fichaTecnicaSelecionada.uuid,
     });
 
   return options;
