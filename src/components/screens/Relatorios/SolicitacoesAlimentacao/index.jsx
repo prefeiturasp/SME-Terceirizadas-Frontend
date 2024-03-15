@@ -135,25 +135,27 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
                       - ATÉ {new Date().toLocaleDateString("pt-BR")}
                     </p>
                   </div>
-                  <div className="col-4 text-end">
-                    <Botao
-                      texto={renderGraficosOuTabela}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      icon={
-                        renderGraficosOuTabela === "Gráficos"
-                          ? BUTTON_ICON.CHART_BAR
-                          : BUTTON_ICON.TABLE
-                      }
-                      onClick={() =>
-                        setRenderGraficosOuTabela(
-                          renderGraficosOuTabela === "Tabela"
-                            ? "Gráficos"
-                            : "Tabela"
-                        )
-                      }
-                    />
-                  </div>
+                  {filtros.status === "AUTORIZADOS" && (
+                    <div className="col-4 text-end">
+                      <Botao
+                        texto={renderGraficosOuTabela}
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        icon={
+                          renderGraficosOuTabela === "Gráficos"
+                            ? BUTTON_ICON.CHART_BAR
+                            : BUTTON_ICON.TABLE
+                        }
+                        onClick={() =>
+                          setRenderGraficosOuTabela(
+                            renderGraficosOuTabela === "Tabela"
+                              ? "Gráficos"
+                              : "Tabela"
+                          )
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="row">
                   {totalizadores.map((totalizador, key) => {
