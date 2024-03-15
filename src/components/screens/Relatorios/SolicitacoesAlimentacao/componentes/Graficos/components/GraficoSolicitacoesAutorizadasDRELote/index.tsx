@@ -9,6 +9,7 @@ import {
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { GraficoBarra } from "components/Shareable/Graficos/GraficoBarra";
+import { ChartData } from "components/Shareable/Graficos/interfaces";
 import React from "react";
 
 ChartJS.register(
@@ -21,7 +22,13 @@ ChartJS.register(
   ChartDataLabels
 );
 
-export const GraficoSolicitacoesAutorizadasDRELote = ({ ...props }) => {
+type PropsType = {
+  chartData: boolean | ChartData;
+};
+
+export const GraficoSolicitacoesAutorizadasDRELote = ({
+  ...props
+}: PropsType) => {
   const { chartData } = props;
 
   const plugin = {

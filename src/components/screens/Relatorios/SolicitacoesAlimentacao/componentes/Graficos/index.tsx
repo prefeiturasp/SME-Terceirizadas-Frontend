@@ -1,21 +1,40 @@
-import React, { useEffect, useState } from "react";
+import { Spin } from "antd";
+import { ChartData } from "components/Shareable/Graficos/interfaces";
 import HTTP_STATUS from "http-status-codes";
+import React, { useEffect, useState } from "react";
 import { getDatasetsGraficosRelatorioSolicitacoesAlimentacao } from "services/relatorios.service";
 import { GraficoSolicitacoesAutorizadasDRELote } from "./components/GraficoSolicitacoesAutorizadasDRELote";
-import { Spin } from "antd";
+import { ResponseDatasetsGraficosRelatorioSolicitacoesAlimentacaoInterface } from "./interfaces";
 import "./style.scss";
 
-export const Graficos = ({ ...props }) => {
+type ValuesType = {
+  status: string;
+  unidades_educacionais?: Array<string>;
+  lotes?: Array<string>;
+  tipos_unidade?: Array<string>;
+  tipos_solicitacao?: Array<string>;
+  de?: string;
+  ate?: string;
+  terceirizada?: string;
+};
+
+type PropsType = {
+  values: ValuesType;
+};
+
+export const Graficos = ({ ...props }: PropsType) => {
   const { values } = props;
 
-  const [datasGraficos, setDatasGraficos] = useState(undefined);
+  const [datasGraficos, setDatasGraficos] =
+    useState<Array<ChartData>>(undefined);
 
   const getDatasetsGraficosRelatorioSolicitacoesAlimentacaoAsync = async (
-    values
-  ) => {
-    const response = await getDatasetsGraficosRelatorioSolicitacoesAlimentacao(
-      values
-    );
+    values: ValuesType
+  ): Promise<void> => {
+    const response =
+      await getDatasetsGraficosRelatorioSolicitacoesAlimentacao<ResponseDatasetsGraficosRelatorioSolicitacoesAlimentacaoInterface>(
+        values
+      );
     if (response.status === HTTP_STATUS.OK) {
       setDatasGraficos(response.data);
     }
@@ -25,7 +44,7 @@ export const Graficos = ({ ...props }) => {
     getDatasetsGraficosRelatorioSolicitacoesAlimentacaoAsync(values);
   }, []);
 
-  const graficoTotalPorDRELote = () => {
+  const graficoTotalPorDRELote = (): boolean | ChartData => {
     return (
       datasGraficos &&
       datasGraficos.find((datagrafico) =>
