@@ -387,145 +387,149 @@ export default ({ analise }) => {
 
           <hr />
 
-          <Form
-            onSubmit={onSubmit}
-            initialValues={initialValues}
-            render={({ handleSubmit, values, errors }) => (
-              <form onSubmit={handleSubmit}>
-                <ModalCancelarAnalise
-                  show={modalCancelar}
-                  handleClose={() => setModalCancelar(false)}
-                  cancelar={voltarPaginaPainel}
-                />
-                <ModalEnviarAnalise
-                  show={modalEnviar}
-                  handleClose={() => setModalEnviar(false)}
-                  enviar={() => enviarAnalise(values)}
-                />
-                <div
-                  className={`${
-                    Object.keys(objeto).length !== 0 &&
-                    objeto.tipos_de_embalagens[0].status === "REPROVADO"
-                      ? "subtitulo-laranja"
-                      : "subtitulo"
-                  }  mb-3`}
-                >
-                  Embalagem Primária
-                </div>
-                <div className="row d-flex align-items-center">
-                  <div className="col-5">
-                    {embalagemPrimaria.map((e) => (
-                      <div className="w-75" key={e.arquivo}>
-                        <BotaoAnexo urlAnexo={e.arquivo} />
-                      </div>
-                    ))}
-                    {analise && retornaBotoesAprovacao(0, values)}
-                  </div>
-                  {(analise || visaoCODAE) && retornaTextoAprovacao(0, values)}
-                </div>
-
-                <hr />
-
-                <div
-                  className={`${
-                    Object.keys(objeto).length !== 0 &&
-                    objeto.tipos_de_embalagens[1].status === "REPROVADO"
-                      ? "subtitulo-laranja"
-                      : "subtitulo"
-                  }  mb-3`}
-                >
-                  Embalagem Secundária
-                </div>
-                <div className="row d-flex align-items-center">
-                  <div className="col-5">
-                    {embalagemSecundaria.map((e) => (
-                      <div className="w-75" key={e.arquivo}>
-                        <BotaoAnexo urlAnexo={e.arquivo} />
-                      </div>
-                    ))}
-                    {analise && retornaBotoesAprovacao(1, values)}
-                  </div>
-                  {(analise || visaoCODAE) && retornaTextoAprovacao(1, values)}
-                </div>
-
-                {embalagemTerciaria.length > 0 && (
-                  <>
-                    <hr />
-
-                    <div
-                      className={`${
-                        Object.keys(objeto).length !== 0 &&
-                        objeto.tipos_de_embalagens[2].status === "REPROVADO"
-                          ? "subtitulo-laranja"
-                          : "subtitulo"
-                      }  mb-3`}
-                    >
-                      Embalagem Terciária
-                    </div>
-                    <div className="row d-flex align-items-center">
-                      <div className="col-5">
-                        {embalagemTerciaria.map((e) => (
-                          <div className="w-75" key={e.arquivo}>
-                            <BotaoAnexo urlAnexo={e.arquivo} />
-                          </div>
-                        ))}
-                        {analise && retornaBotoesAprovacao(2, values)}
-                      </div>
-                      {(analise || visaoCODAE) &&
-                        retornaTextoAprovacao(2, values)}
-                    </div>
-                  </>
-                )}
-
-                {!visaoCODAE && objeto.observacoes && (
-                  <>
-                    <hr />
-                    <div className="row mb-3">
-                      <div className="col-12">
-                        <TextArea
-                          label="Observações"
-                          input={{ value: objeto.observacoes }}
-                          disabled
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                <hr />
-
-                {analise ? (
-                  <>
-                    <Botao
-                      texto="Enviar para o Fornecedor"
-                      type={BUTTON_TYPE.SUBMIT}
-                      style={BUTTON_STYLE.GREEN}
-                      className="float-end ms-3"
-                      disabled={
-                        !validaAprovacoes || Object.keys(errors).length > 0
-                      }
-                      tooltipExterno={
-                        (!validaAprovacoes || Object.keys(errors).length > 0) &&
-                        "É necessário avaliar todas as embalagens antes de prosseguir."
-                      }
-                    />
-
-                    <Botao
-                      texto="Cancelar"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-end ms-3"
-                      onClick={() => setModalCancelar(true)}
-                    />
-                  </>
-                ) : (
-                  <BotaoVoltar
-                    onClick={visaoCODAE ? voltarPaginaPainel : voltarPaginaGrid}
+          {Object.keys(objeto).length !== 0 && (
+            <Form
+              onSubmit={onSubmit}
+              initialValues={initialValues}
+              render={({ handleSubmit, values, errors }) => (
+                <form onSubmit={handleSubmit}>
+                  <ModalCancelarAnalise
+                    show={modalCancelar}
+                    handleClose={() => setModalCancelar(false)}
+                    cancelar={voltarPaginaPainel}
                   />
-                )}
-              </form>
-            )}
-          />
+                  <ModalEnviarAnalise
+                    show={modalEnviar}
+                    handleClose={() => setModalEnviar(false)}
+                    enviar={() => enviarAnalise(values)}
+                  />
+                  <div
+                    className={`${
+                      objeto.tipos_de_embalagens[0].status === "REPROVADO"
+                        ? "subtitulo-laranja"
+                        : "subtitulo"
+                    }  mb-3`}
+                  >
+                    Embalagem Primária
+                  </div>
+                  <div className="row d-flex align-items-center">
+                    <div className="col-5">
+                      {embalagemPrimaria.map((e) => (
+                        <div className="w-75" key={e.arquivo}>
+                          <BotaoAnexo urlAnexo={e.arquivo} />
+                        </div>
+                      ))}
+                      {analise && retornaBotoesAprovacao(0, values)}
+                    </div>
+                    {(analise || visaoCODAE) &&
+                      retornaTextoAprovacao(0, values)}
+                  </div>
+
+                  <hr />
+
+                  <div
+                    className={`${
+                      objeto.tipos_de_embalagens[1].status === "REPROVADO"
+                        ? "subtitulo-laranja"
+                        : "subtitulo"
+                    }  mb-3`}
+                  >
+                    Embalagem Secundária
+                  </div>
+                  <div className="row d-flex align-items-center">
+                    <div className="col-5">
+                      {embalagemSecundaria.map((e) => (
+                        <div className="w-75" key={e.arquivo}>
+                          <BotaoAnexo urlAnexo={e.arquivo} />
+                        </div>
+                      ))}
+                      {analise && retornaBotoesAprovacao(1, values)}
+                    </div>
+                    {(analise || visaoCODAE) &&
+                      retornaTextoAprovacao(1, values)}
+                  </div>
+
+                  {objeto.tipos_de_embalagens[2] && (
+                    <>
+                      <hr />
+
+                      <div
+                        className={`${
+                          objeto.tipos_de_embalagens[2].status === "REPROVADO"
+                            ? "subtitulo-laranja"
+                            : "subtitulo"
+                        }  mb-3`}
+                      >
+                        Embalagem Terciária
+                      </div>
+                      <div className="row d-flex align-items-center">
+                        <div className="col-5">
+                          {embalagemTerciaria.map((e) => (
+                            <div className="w-75" key={e.arquivo}>
+                              <BotaoAnexo urlAnexo={e.arquivo} />
+                            </div>
+                          ))}
+                          {analise && retornaBotoesAprovacao(2, values)}
+                        </div>
+                        {(analise || visaoCODAE) &&
+                          retornaTextoAprovacao(2, values)}
+                      </div>
+                    </>
+                  )}
+
+                  {!visaoCODAE && objeto.observacoes && (
+                    <>
+                      <hr />
+                      <div className="row mb-3">
+                        <div className="col-12">
+                          <TextArea
+                            label="Observações"
+                            input={{ value: objeto.observacoes }}
+                            disabled
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  <hr />
+
+                  {analise ? (
+                    <>
+                      <Botao
+                        texto="Enviar para o Fornecedor"
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN}
+                        className="float-end ms-3"
+                        disabled={
+                          !validaAprovacoes || Object.keys(errors).length > 0
+                        }
+                        tooltipExterno={
+                          (!validaAprovacoes ||
+                            Object.keys(errors).length > 0) &&
+                          "É necessário avaliar todas as embalagens antes de prosseguir."
+                        }
+                      />
+
+                      <Botao
+                        texto="Cancelar"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        className="float-end ms-3"
+                        onClick={() => setModalCancelar(true)}
+                      />
+                    </>
+                  ) : (
+                    <BotaoVoltar
+                      onClick={
+                        visaoCODAE ? voltarPaginaPainel : voltarPaginaGrid
+                      }
+                    />
+                  )}
+                </form>
+              )}
+            />
+          )}
         </div>
       </div>
     </Spin>
