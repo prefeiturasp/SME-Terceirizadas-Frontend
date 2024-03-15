@@ -148,7 +148,13 @@ export default ({ form, onChange }: Args) => {
         form.subscribe(
           (values) => {
             if (!values.dirty) {
-              setLotesOpcoes(formatarOpcoesLote(lotes));
+              let lotes_ = lotes;
+              if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+                lotes_ = lotes?.filter(
+                  (lote) => localStorage.getItem("escolaLoteUuid") === lote.uuid
+                );
+              }
+              setLotesOpcoes(formatarOpcoesLote(lotes_));
               setUnidadesEducacionaisOpcoes(
                 formataUnidadesEducacionaisOpcoes(escolas)
               );
@@ -208,9 +214,7 @@ export default ({ form, onChange }: Args) => {
         form.change("dre", dreUuidMeusDados);
         setLotesOpcoes(
           formatarOpcoesLote(
-            lotes?.filter(
-              (lote) => lote.diretoria_regional.uuid === dreUuidMeusDados
-            )
+            lotes?.filter((lote) => escola?.lote?.uuid === lote.uuid)
           )
         );
         setUnidadesEducacionaisOpcoes(
@@ -225,6 +229,8 @@ export default ({ form, onChange }: Args) => {
         }`;
         form.change("unidade_educacional", labelEscola);
         labelEscola && onChangeUnidadeEducacional(labelEscola);
+        labelEscola && localStorage.setItem("labelEscolaLote", labelEscola);
+        localStorage.setItem("escolaLoteUuid", escola?.lote?.uuid);
       }
     }
   }, [meusDados, lotes, unidadesEducacionais]);
@@ -306,7 +312,9 @@ export default ({ form, onChange }: Args) => {
   };
 
   const onChangeLotes = (lotes: Array<string>) => {
-    limpaCampo("unidade_educacional");
+    if (!usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      limpaCampo("unidade_educacional");
+    }
 
     onChange({
       lotes: lotesOpcoes
