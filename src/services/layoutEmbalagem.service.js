@@ -31,11 +31,16 @@ export const corrigirLayoutEmbalagem = async (uuid, payload) =>
     payload
   );
 
-export const analiseCodaeLayoutEmbalagem = async (uuid, payload) =>
-  await axios.patch(
-    `/layouts-de-embalagem/${uuid}/codae-aprova-ou-solicita-correcao/`,
-    payload
-  );
+export const analiseCodaeLayoutEmbalagem = async (uuid, payload) => {
+  try {
+    return await axios.patch(
+      `/layouts-de-embalagem/${uuid}/codae-aprova-ou-solicita-correcao/`,
+      payload
+    );
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
 
 export const atualizacaoLayoutEmbalagem = async (uuid, payload) =>
   await axios.patch(`/layouts-de-embalagem/${uuid}/`, payload);
