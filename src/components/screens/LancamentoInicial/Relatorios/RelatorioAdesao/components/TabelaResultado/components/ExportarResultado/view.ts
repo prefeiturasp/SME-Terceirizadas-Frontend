@@ -32,10 +32,29 @@ export default ({ params }: Args) => {
     setExportando(false);
   };
 
+  const exportarPDF = async () => {
+    setExportando(true);
+    try {
+      await RelatorioService.exportarRelatorioAdesaoParaPDF({
+        mes_ano: params.mes,
+        diretoria_regional: params.dre,
+        lotes: params.lotes,
+        escola: params.unidade_educacional,
+        periodos_escolares: params.periodos,
+        tipos_alimentacao: params.tipos_alimentacao,
+      });
+      setExibirModalCentralDownloads(true);
+    } catch (e) {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
+    setExportando(false);
+  };
+
   return {
     exportando,
     exibirModalCentralDownloads,
     setExibirModalCentralDownloads,
     exportarXLSX,
+    exportarPDF,
   };
 };

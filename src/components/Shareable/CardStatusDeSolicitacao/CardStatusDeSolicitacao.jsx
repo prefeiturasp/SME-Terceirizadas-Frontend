@@ -12,6 +12,7 @@ import { Tooltip } from "antd";
 
 export const CARD_TYPE_ENUM = {
   CANCELADO: "card-cancelled",
+  INATIVO: "card-cancelled",
   PENDENTE: "card-pending",
   AUTORIZADO: "card-authorized",
   NEGADO: "card-denied",
@@ -24,6 +25,7 @@ export const CARD_TYPE_ENUM = {
 
 export const ICON_CARD_TYPE_ENUM = {
   CANCELADO: "fa-times-circle",
+  INATIVO: "fa-times-circle",
   PENDENTE: "fa-exclamation-triangle",
   AUTORIZADO: "fa-check",
   NEGADO: "fa-ban",

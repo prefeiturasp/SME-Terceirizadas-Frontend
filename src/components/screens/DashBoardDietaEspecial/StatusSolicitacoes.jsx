@@ -245,7 +245,7 @@ function StatusSolicitacoes(props) {
     let params = busca;
     params["offset"] = offset;
     const response = await getDietaEspecialInativas(instituicao.uuid, params);
-    updateSolicitacoesState(response, "cancelado", "Inativas");
+    updateSolicitacoesState(response, "inativo", "Inativas");
     updateSolicitacoesSemFiltro(response, "inativas");
   };
 

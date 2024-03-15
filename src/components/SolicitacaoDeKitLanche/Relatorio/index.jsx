@@ -72,7 +72,7 @@ const Relatorio = (props) => {
       }
       setEstado(newState);
     });
-  }, [closeNaoAprovaModal]);
+  }, []);
 
   const showQuestionamentoModal = (resposta_sim_nao) => {
     setEstado({ ...estado, resposta_sim_nao, showQuestionamentoModal: true });

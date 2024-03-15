@@ -73,8 +73,14 @@ export default () => {
 
   const atualizaFiltrosSelecionados = (values: Filtros) => {
     setFiltrosSelecionados((prev) => {
-      if (prev) return { ...prev, ...values };
-      return values;
+      let values_ = values;
+      if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+        values_["dre"] = localStorage.getItem("dre_nome");
+        values_["unidade_educacional"] =
+          localStorage.getItem("labelEscolaLote");
+      }
+      if (prev) return { ...prev, ...values_ };
+      return values_;
     });
   };
 
