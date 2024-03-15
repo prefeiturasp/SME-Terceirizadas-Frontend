@@ -522,7 +522,6 @@ export default () => {
                                 <Field
                                   className="input-cronograma"
                                   component={Select}
-                                  naoDesabilitarPrimeiraOpcao
                                   options={[
                                     {
                                       nome: "Selecione uma Ficha Técnica de Produto",
@@ -530,8 +529,7 @@ export default () => {
                                     },
                                     ...geraOptionsFichasTecnicas(
                                       fichasTecnicas,
-                                      empresaSelecionada,
-                                      fichaTecnicaSelecionada
+                                      empresaSelecionada
                                     ),
                                   ]}
                                   label="Ficha Técnica e Produto"
