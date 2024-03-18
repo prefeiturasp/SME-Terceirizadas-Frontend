@@ -465,18 +465,23 @@ export default () => {
                     {retornaTextoAprovacaoOuCampoCorrecao(1, values, form)}
                   </div>
 
-                  <hr />
+                  {(layoutDeEmbalagem.tipos_de_embalagens[2] ||
+                    !somenteLeitura) && (
+                    <>
+                      <hr />
 
-                  <div
-                    className={`${
-                      layoutDeEmbalagem.tipos_de_embalagens[2]?.status !==
-                        "APROVADO" && !layoutDeEmbalagem.primeira_analise
-                        ? "subtitulo-laranja"
-                        : "subtitulo"
-                    }  mb-3`}
-                  >
-                    Embalagem Terciária
-                  </div>
+                      <div
+                        className={`${
+                          layoutDeEmbalagem.tipos_de_embalagens[2]?.status !==
+                            "APROVADO" && !layoutDeEmbalagem.primeira_analise
+                            ? "subtitulo-laranja"
+                            : "subtitulo"
+                        }  mb-3`}
+                      >
+                        Embalagem Terciária
+                      </div>
+                    </>
+                  )}
 
                   {layoutDeEmbalagem.tipos_de_embalagens[2] ? (
                     <div className="row">
@@ -493,33 +498,35 @@ export default () => {
                       {retornaTextoAprovacaoOuCampoCorrecao(2, values, form)}
                     </div>
                   ) : (
-                    <>
-                      <div className="row">
-                        <div className="col aviso-embalagem-terciaria px-3 py-3">
-                          <strong>Lembrete!</strong>
-                          <br />
-                          Foi identificado que não consta Embalagem Terciária.
-                          Caso necessário, solicite a correção clicando no botão
-                          abaixo:
+                    !somenteLeitura && (
+                      <>
+                        <div className="row">
+                          <div className="col aviso-embalagem-terciaria px-3 py-3">
+                            <strong>Lembrete!</strong>
+                            <br />
+                            Foi identificado que não consta Embalagem Terciária.
+                            Caso necessário, solicite a correção clicando no
+                            botão abaixo:
+                          </div>
                         </div>
-                      </div>
-                      <div className="row mt-4">
-                        <div className="col px-0">
-                          <Botao
-                            texto="Solicitar Embalagem"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
-                            onClick={() => {
-                              form.change(`justificativa_${2}`, "");
-                              setEmbalagemTerciariaSolicitada(true);
-                            }}
-                            disabled={embalagemTerciariaSolicitada}
-                          />
+                        <div className="row mt-4">
+                          <div className="col px-0">
+                            <Botao
+                              texto="Solicitar Embalagem"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN}
+                              onClick={() => {
+                                form.change(`justificativa_${2}`, "");
+                                setEmbalagemTerciariaSolicitada(true);
+                              }}
+                              disabled={embalagemTerciariaSolicitada}
+                            />
+                          </div>
+                          {embalagemTerciariaSolicitada &&
+                            renderizarCampoCorrecao(2, form)}
                         </div>
-                        {embalagemTerciariaSolicitada &&
-                          renderizarCampoCorrecao(2, form)}
-                      </div>
-                    </>
+                      </>
+                    )
                   )}
 
                   <hr />
