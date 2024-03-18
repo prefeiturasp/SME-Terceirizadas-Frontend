@@ -46,6 +46,7 @@ export const Filtros = ({ ...props }) => {
     setCarregando,
     setResultadoPaginado,
     setTotalizadores,
+    setRenderGraficosOuTabela,
   } = props;
 
   const getLotesSimplesAsync = async () => {
@@ -167,6 +168,8 @@ export const Filtros = ({ ...props }) => {
     _values["limit"] = 10;
     _values["offset"] = (page - 1) * _values["limit"];
     setPage(1);
+
+    setRenderGraficosOuTabela("Gráficos");
 
     const response = await endpoint(_values);
     await getTotalizadoresAsync(_values);

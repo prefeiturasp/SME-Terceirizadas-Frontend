@@ -116,6 +116,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
             setCarregando={setCarregando}
             setResultadoPaginado={setResultadoPaginado}
             setTotalizadores={setTotalizadores}
+            setRenderGraficosOuTabela={setRenderGraficosOuTabela}
           />
         )}
         <Spin tip="Carregando..." spinning={carregando}>
