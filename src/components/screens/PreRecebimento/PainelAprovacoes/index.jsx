@@ -27,7 +27,6 @@ import {
 } from "configs/constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
-import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 import { useCallback } from "react";
 
@@ -221,29 +220,33 @@ export default () => {
                   }}
                   onSubmit={() => {}}
                 >
-                  {({ values }) => (
+                  {({ form }) => (
                     <div className="row text-end">
                       <div className="col-6">
                         <Field
                           component={InputText}
                           name="numero_cronograma"
                           placeholder="N° do Cronograma"
+                          inputOnChange={(e) =>
+                            filtrarCronogramas(
+                              e.target.value,
+                              form.getState().values
+                            )
+                          }
                         />
-
-                        <OnChange name="numero_cronograma">
-                          {(value) => filtrarCronogramas(value, values)}
-                        </OnChange>
                       </div>
                       <div className="col-6">
                         <Field
                           component={InputText}
                           name="nome_produto"
                           placeholder="Nome do Produto"
+                          inputOnChange={(e) =>
+                            filtrarCronogramas(
+                              e.target.value,
+                              form.getState().values
+                            )
+                          }
                         />
-
-                        <OnChange name="nome_produto">
-                          {(value) => filtrarCronogramas(value, values)}
-                        </OnChange>
                       </div>
                     </div>
                   )}
@@ -282,33 +285,33 @@ export default () => {
                   }}
                   onSubmit={() => {}}
                 >
-                  {({ values }) => (
+                  {({ form }) => (
                     <div className="row text-end">
                       <div className="col-6">
                         <Field
                           component={InputText}
                           name="numero_cronograma"
                           placeholder="N° do Cronograma"
-                        />
-
-                        <OnChange name="numero_cronograma">
-                          {(value) =>
-                            filtrarSolicitacoesAlteracao(value, values)
+                          inputOnChange={(e) =>
+                            filtrarSolicitacoesAlteracao(
+                              e.target.value,
+                              form.getState().values
+                            )
                           }
-                        </OnChange>
+                        />
                       </div>
                       <div className="col-6">
                         <Field
                           component={InputText}
                           name="nome_fornecedor"
                           placeholder="Nome do Fornecedor"
-                        />
-
-                        <OnChange name="nome_fornecedor">
-                          {(value) =>
-                            filtrarSolicitacoesAlteracao(value, values)
+                          inputOnChange={(e) =>
+                            filtrarSolicitacoesAlteracao(
+                              e.target.value,
+                              form.getState().values
+                            )
                           }
-                        </OnChange>
+                        />
                       </div>
                     </div>
                   )}

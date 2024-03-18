@@ -16,7 +16,6 @@ import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 import { getEscolaSimples, getEscolasTercTotal } from "services/escola.service";
 import { getLotesSimples } from "services/lote.service";
@@ -218,15 +217,15 @@ export const Filtros = ({ ...props }) => {
                     required
                     validate={required}
                     naoDesabilitarPrimeiraOpcao
-                  />
-                  <OnChange name="status">
-                    {async (value) => {
+                    onChangeEffect={async (e) => {
+                      const value = e.target.value;
+
                       if (value) {
                         form.reset();
                         form.change("status", value);
                       }
                     }}
-                  </OnChange>
+                  />
                 </div>
                 <div className="col-4">
                   <label>Lote</label>
