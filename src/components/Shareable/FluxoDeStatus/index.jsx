@@ -135,7 +135,7 @@ export const FluxoDeStatus = (props) => {
                 status.status_evento_explicacao === "CODAE negou" &&
                 [
                   TIPO_PERFIL.ESCOLA,
-                  TIPO_PERFIL.DRE,
+                  TIPO_PERFIL.DIRETORIA_REGIONAL,
                   TIPO_PERFIL.TERCEIRIZADA,
                   TIPO_PERFIL.SUPERVISAO_NUTRICAO,
                   TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
