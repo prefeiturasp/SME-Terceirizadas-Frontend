@@ -1,7 +1,6 @@
 import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import SSelect from "components/Shareable/Select";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -237,12 +236,12 @@ export default ({ onSubmit, setCarregando }) => {
                   type="number"
                   disabled={carregandoAluno}
                   validate={length7}
-                />
-                <OnChange name="codigo_eol_aluno">
-                  {(value) => {
-                    getAlunoPorEol(value, values);
+                  inputOnChange={(e) => {
+                    const value = e.target.value;
+                    const values_ = form.getState().values;
+                    getAlunoPorEol(value, values_);
                   }}
-                </OnChange>
+                />
               </div>
               <div className="col-8 pt-2">
                 <Field

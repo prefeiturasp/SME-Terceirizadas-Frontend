@@ -16,6 +16,7 @@ const MaskedInputText = ({
   placeholder,
   mask,
   disabled,
+  inputOnChange,
 }) => {
   return (
     <div className="input">
@@ -44,6 +45,10 @@ const MaskedInputText = ({
         required={required}
         placeholder={placeholder}
         disabled={disabled}
+        onChange={(e) => {
+          input.onChange(e);
+          inputOnChange && inputOnChange(e);
+        }}
       />
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />

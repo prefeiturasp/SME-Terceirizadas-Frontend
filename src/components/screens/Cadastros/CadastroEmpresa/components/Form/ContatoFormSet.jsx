@@ -6,7 +6,6 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { OnChange } from "react-final-form-listeners";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { telefoneMask } from "constants/shared";
 
@@ -74,9 +73,8 @@ export const ContatoFormSet = ({
                             component={InputText}
                             label="Nome"
                             maxlength="140"
-                          />
-                          <OnChange name={`nome_contato_${indiceEmpresa}`}>
-                            {(value) => {
+                            inputOnChange={(e) => {
+                              const value = e.target.value;
                               setaContatosPessoaEmpresa(
                                 "nome",
                                 value,
@@ -84,7 +82,7 @@ export const ContatoFormSet = ({
                                 contatosPessoaEmpresa
                               );
                             }}
-                          </OnChange>
+                          />
                         </div>
                         <div>
                           <Field
@@ -96,9 +94,8 @@ export const ContatoFormSet = ({
                             indice={indiceEmpresa}
                             cenario="contatoEmpresa"
                             maxlength="140"
-                          />
-                          <OnChange name={`telefone_contato_${indiceEmpresa}`}>
-                            {(value) => {
+                            inputOnChange={(e) => {
+                              const value = e.target.value;
                               setaContatosPessoaEmpresa(
                                 "telefone",
                                 value,
@@ -106,7 +103,7 @@ export const ContatoFormSet = ({
                                 contatosPessoaEmpresa
                               );
                             }}
-                          </OnChange>
+                          />
                         </div>
                         <div>
                           <Field
@@ -114,9 +111,8 @@ export const ContatoFormSet = ({
                             component={InputText}
                             label="E-mail"
                             maxlength="140"
-                          />
-                          <OnChange name={`email_contato_${indiceEmpresa}`}>
-                            {(value) => {
+                            inputOnChange={(e) => {
+                              const value = e.target.value;
                               setaContatosPessoaEmpresa(
                                 "email",
                                 value,
@@ -124,7 +120,7 @@ export const ContatoFormSet = ({
                                 contatosPessoaEmpresa
                               );
                             }}
-                          </OnChange>
+                          />
                         </div>
                         <div>
                           {indiceEmpresa !== 0 && (

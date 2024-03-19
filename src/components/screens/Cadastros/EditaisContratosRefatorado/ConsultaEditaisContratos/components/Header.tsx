@@ -1,11 +1,10 @@
+import React, { ChangeEvent } from "react";
+import { Field } from "react-final-form";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import InputText from "components/Shareable/Input/InputText";
-import React from "react";
-import { Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 
 export const Header = ({
   getEditaisContratosAsync,
@@ -17,7 +16,7 @@ export const Header = ({
 
   let typingTimeout = null;
 
-  const buscaEditalContrato = (value) => {
+  const buscaEditalContrato = (value: string) => {
     clearTimeout(typingTimeout);
     typingTimeout = setTimeout(async () => {
       setLoading(true);
@@ -42,10 +41,11 @@ export const Header = ({
           placeholder="Pesquisar"
           className={`${BUTTON_STYLE.GRAY}`}
           icone={`${BUTTON_ICON.SEARCH} fa-lg`}
+          inputOnChange={(e: ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value;
+            buscaEditalContrato(value);
+          }}
         />
-        <OnChange name="buscar">
-          {async (value) => buscaEditalContrato(value)}
-        </OnChange>
       </div>
     </div>
   );
