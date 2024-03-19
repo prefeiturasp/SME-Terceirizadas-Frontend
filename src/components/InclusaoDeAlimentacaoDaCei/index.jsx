@@ -36,7 +36,6 @@ import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 import InputText from "components/Shareable/Input/InputText";
 import { maxValue, naoPodeSerZero } from "helpers/fieldValidators";
 import { composeValidators } from "helpers/utilities";
-import { OnChange } from "react-final-form-listeners";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { Rascunhos } from "./Rascunhos";
 import { formataPayload, validarForm } from "./helper";
@@ -430,15 +429,9 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                                 height: "40px",
                               }}
                             >
-                              <Field
-                                component={"input"}
-                                type="checkbox"
-                                name={`periodos_e_faixas[${periodo_faixa_idx}].checked`}
-                              />
-                              <OnChange
-                                name={`periodos_e_faixas[${periodo_faixa_idx}].checked`}
-                              >
-                                {async (value) => {
+                              <span
+                                onClick={async (e) => {
+                                  const value = e.target.checked;
                                   let _periodos_e_faixas = deepCopy(
                                     values.periodos_e_faixas
                                   );
@@ -508,7 +501,13 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                                     _periodos_e_faixas
                                   );
                                 }}
-                              </OnChange>
+                              >
+                                <Field
+                                  component={"input"}
+                                  type="checkbox"
+                                  name={`periodos_e_faixas[${periodo_faixa_idx}].checked`}
+                                />
+                              </span>
                               <span
                                 className="checkbox-custom"
                                 data-cy={`checkbox-${periodo_faixa.nome}`}
@@ -640,15 +639,9 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                                           height: "40px",
                                         }}
                                       >
-                                        <Field
-                                          component={"input"}
-                                          type="checkbox"
-                                          name={`periodos_e_faixas[${periodo_faixa_idx}].periodos[${periodo_idx}].checked`}
-                                        />
-                                        <OnChange
-                                          name={`periodos_e_faixas[${periodo_faixa_idx}].periodos[${periodo_idx}].checked`}
-                                        >
-                                          {async (value) => {
+                                        <span
+                                          onClick={async (e) => {
+                                            const value = e.target.checked;
                                             let _periodos_e_faixas = deepCopy(
                                               values.periodos_e_faixas
                                             );
@@ -696,7 +689,13 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                                               _periodos_e_faixas
                                             );
                                           }}
-                                        </OnChange>
+                                        >
+                                          <Field
+                                            component={"input"}
+                                            type="checkbox"
+                                            name={`periodos_e_faixas[${periodo_faixa_idx}].periodos[${periodo_idx}].checked`}
+                                          />
+                                        </span>
                                         <span
                                           className="checkbox-custom"
                                           data-cy={`checkbox-${valoresIniciais.periodos_e_faixas[periodo_faixa_idx].periodos[periodo_idx].nome}`}
