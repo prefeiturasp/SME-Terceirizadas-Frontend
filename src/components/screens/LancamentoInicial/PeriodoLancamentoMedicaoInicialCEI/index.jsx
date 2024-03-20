@@ -202,6 +202,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     setAlimentacoesLancamentosEspeciais,
   ] = useState(null);
   const [dataInicioPermissoes, setDataInicioPermissoes] = useState(null);
+  const [previousValue, setPreviousValue] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -2320,10 +2321,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           categoria.nome,
                                                           null
                                                         )}
-                                                        inputOnChange={(e) =>
+                                                        inputOnChange={(e) => {
+                                                          const value =
+                                                            e.target.value;
+
                                                           onChangeInput(
-                                                            e.target.value,
-                                                            null,
+                                                            value,
+                                                            previousValue,
                                                             errors,
                                                             formValuesAtualizados,
                                                             column.dia,
@@ -2331,8 +2335,12 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                             column,
                                                             row,
                                                             form
-                                                          )
-                                                        }
+                                                          );
+
+                                                          setPreviousValue(
+                                                            value
+                                                          );
+                                                        }}
                                                       />
                                                     </>
                                                   ) : (
@@ -2417,10 +2425,13 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           categoria.nome,
                                                           row.uuid
                                                         )}
-                                                        inputOnChange={(e) =>
+                                                        inputOnChange={(e) => {
+                                                          const value =
+                                                            e.target.value;
+
                                                           onChangeInput(
-                                                            e.target.value,
-                                                            null,
+                                                            value,
+                                                            previousValue,
                                                             errors,
                                                             formValuesAtualizados,
                                                             column.dia,
@@ -2428,8 +2439,12 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                             column,
                                                             row,
                                                             form
-                                                          )
-                                                        }
+                                                          );
+
+                                                          setPreviousValue(
+                                                            value
+                                                          );
+                                                        }}
                                                       />
                                                     </>
                                                   )}
