@@ -26,11 +26,14 @@ import {
 } from "components/Shareable/Botao/constants";
 import { Spin } from "antd";
 import "./style.scss";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 
 export default ({ uuid }) => {
   const navigate = useNavigate();
   const [carregando, setCarregando] = useState(true);
   const [editais, setEditais] = useState([]);
+  const [tiposUnidades, setTiposUnidades] = useState([]);
   const [opcaoStatus] = useState([
     { uuid: "", nome: "Selecione uma opção" },
     { uuid: "ATIVO", nome: "Ativo" },
@@ -39,6 +42,7 @@ export default ({ uuid }) => {
   const [desabilitarBotao, setDesabilitarBotao] = useState(false);
   const [modeloKitLanche, setModeloKitLanche] = useState({
     edital: null,
+    tipos_unidades: null,
     nome: null,
     descricao: null,
     status: "ATIVO",
@@ -48,6 +52,7 @@ export default ({ uuid }) => {
     setCarregando(true);
     const payload = {
       edital: formValues.edital,
+      tipos_unidades: formValues.tipos_unidades,
       nome: formValues.nome,
       descricao: formValues.descricao,
       status: formValues.status,
@@ -80,6 +85,7 @@ export default ({ uuid }) => {
         if (res.status === HTTP_STATUS.OK) setModeloKitLanche(res.data);
       });
     }
+    await getTiposUnidadeEscolarAsync();
     setCarregando(false);
   };
 
@@ -104,6 +110,17 @@ export default ({ uuid }) => {
       } catch (error) {
         setDesabilitarBotao(false);
       }
+    }
+  };
+
+  const getTiposUnidadeEscolarAsync = async () => {
+    const response = await getTiposUnidadeEscolar({
+      pertence_relatorio_solicitacoes_alimentacao: true,
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setTiposUnidades(response.data.results);
+    } else {
+      toastError("Erro ao carregar tipos de unidades.");
     }
   };
 
@@ -141,6 +158,31 @@ export default ({ uuid }) => {
                     <OnBlur name="edital">
                       {() => checaNomeExiste(values)}
                     </OnBlur>
+                  </div>
+                  <div className="col-4">
+                    <label className="col-form-label mb-1">
+                      <span className="asterisco">* </span>
+                      Tipo de Unidade
+                    </label>
+                    <Field
+                      component={StatefulMultiSelect}
+                      name="tipos_unidades"
+                      selected={values.tipos_unidades || []}
+                      options={tiposUnidades.map((tipoUnidade) => ({
+                        label: tipoUnidade.iniciais,
+                        value: tipoUnidade.uuid,
+                      }))}
+                      onSelectedChanged={(values_) =>
+                        form.change(`tipos_unidades`, values_)
+                      }
+                      hasSelectAll
+                      overrideStrings={{
+                        selectSomeItems: "Selecione",
+                        allItemsAreSelected: "Todos os tipos de unidade",
+                        selectAll: "Todos",
+                      }}
+                      disabled={!!modeloKitLanche.uuid}
+                    />
                   </div>
                   <div className="col-12">
                     <label className="col-form-label mb-1">
