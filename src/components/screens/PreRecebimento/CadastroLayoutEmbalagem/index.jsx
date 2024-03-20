@@ -1,28 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spin } from "antd";
-import "./styles.scss";
 import { Field, Form } from "react-final-form";
-import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
-import { required } from "../../../../helpers/fieldValidators";
-import InputText from "../../../Shareable/Input/InputText";
-import { getListaCronogramasPraCadastro } from "../../../../services/cronograma.service";
-import { cadastraLayoutEmbalagem } from "../../../../services/layoutEmbalagem.service";
-import { OnChange } from "react-final-form-listeners";
-import Botao from "../../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
-import { TextArea } from "components/Shareable/TextArea/TextArea";
-import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
-import { exibeError } from "helpers/utilities";
-import { LAYOUT_EMBALAGEM, PRE_RECEBIMENTO } from "configs/constants";
-import ModalConfirmar from "./components/ModalConfirmar";
 import { useNavigate } from "react-router-dom";
+
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "components/Shareable/Botao/constants";
+import Botao from "components/Shareable/Botao";
+import InputText from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
+import { getListaFichasTecnicasSimplesSemLayoutEmbalagem } from "services/fichaTecnica.service";
+import { cadastraLayoutEmbalagem } from "services/layoutEmbalagem.service";
+import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
+import { required } from "helpers/fieldValidators";
+import { exibeError } from "helpers/utilities";
+import { formatarNumeroEProdutoFichaTecnica } from "helpers/preRecebimento";
+import { LAYOUT_EMBALAGEM, PRE_RECEBIMENTO } from "configs/constants";
+
+import ModalConfirmar from "./components/ModalConfirmar";
 import ModalCancelar from "./components/ModalCancelar";
 import InserirArquivo from "../LayoutEmbalagem/components/InserirArquivo";
+
+import "./styles.scss";
 
 export default () => {
   const navigate = useNavigate();
   const [carregando, setCarregando] = useState(true);
-  const [cronogramas, setCronogramas] = useState([]);
+  const [fichasTecnicas, setFichasTecnicas] = useState([]);
+  const fichaTecnicaSelecionada = useRef("");
   const [primaria, setPrimaria] = useState([]);
   const [secundaria, setSecundaria] = useState([]);
   const [terciaria, setTerciaria] = useState([]);
@@ -40,27 +48,28 @@ export default () => {
     }));
 
   const salvarLayoutEmbalagem = async (values) => {
-    setCarregando(true);
-    let payload = formataPayload(values);
     try {
+      setCarregando(true);
+
+      let payload = formataPayload(values);
       let response = await cadastraLayoutEmbalagem(payload);
       if (response.status === 201 || response.status === 200) {
-        setCarregando(false);
         toastSuccess("Layout enviado para análise com sucesso!");
         setShowModalConfirmar(false);
         voltarPagina();
       } else {
-        toastError("Ocorreu um erro ao salvar o Layout  da Embalagem");
-        setCarregando(false);
+        toastError("Ocorreu um erro ao salvar o Layout da Embalagem");
       }
     } catch (error) {
       exibeError(error, "Ocorreu um erro ao salvar o Layout da Embalagem");
+    } finally {
+      setCarregando(false);
     }
   };
 
   const formataPayload = (values) => {
     let payload = {};
-    payload.cronograma = values.cronograma_uuid;
+    payload.ficha_tecnica = fichaTecnicaSelecionada.current;
     payload.observacoes = values.observacoes;
 
     payload.tipos_de_embalagens = [];
@@ -69,10 +78,12 @@ export default () => {
       tipo_embalagem: "PRIMARIA",
       imagens_do_tipo_de_embalagem: gerarImagens(primaria),
     });
+
     payload.tipos_de_embalagens.push({
       tipo_embalagem: "SECUNDARIA",
       imagens_do_tipo_de_embalagem: gerarImagens(secundaria),
     });
+
     if (terciaria.length > 0) {
       payload.tipos_de_embalagens.push({
         tipo_embalagem: "TERCIARIA",
@@ -83,13 +94,14 @@ export default () => {
     return payload;
   };
 
-  const buscaCronogramas = async () => {
-    let response = await getListaCronogramasPraCadastro();
-    let lista = response.data.results.map((crono) => {
-      crono.value = crono.numero;
-      return crono;
+  const buscarFichasTecnicas = async () => {
+    let response = await getListaFichasTecnicasSimplesSemLayoutEmbalagem();
+    let lista = response.data.results.map((ficha) => {
+      ficha.value = ficha.numero;
+      return ficha;
     });
-    setCronogramas(lista);
+
+    setFichasTecnicas(lista);
   };
 
   const removeFile1 = (index) => {
@@ -146,18 +158,10 @@ export default () => {
   const voltarPagina = () =>
     navigate(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
 
-  const getCronogramasFiltrado = (numero_cronograma) => {
-    if (numero_cronograma) {
-      const reg = new RegExp(numero_cronograma, "iu");
-      return cronogramas.filter((a) => reg.test(a.value));
-    }
-    return cronogramas;
-  };
-
   useEffect(() => {
     setCarregando(true);
 
-    buscaCronogramas();
+    buscarFichasTecnicas();
 
     setCarregando(false);
   }, []);
@@ -170,7 +174,7 @@ export default () => {
             onSubmit={onSubmit}
             initialValues={{}}
             validate={() => {}}
-            render={({ handleSubmit, values, errors }) => (
+            render={({ handleSubmit, values, errors, form }) => (
               <form onSubmit={handleSubmit}>
                 <ModalConfirmar
                   show={showModalConfirmar}
@@ -185,47 +189,45 @@ export default () => {
                 />
                 <div className="subtitulo">Dados do Produto</div>
                 <div className="row">
-                  <div className="col-4">
+                  <div className="col">
                     <Field
                       component={AutoCompleteSelectField}
-                      options={getCronogramasFiltrado(values.cronograma)}
-                      label="Nº do Cronograma"
-                      name={`cronograma`}
+                      options={getListaFiltradaAutoCompleteSelect(
+                        fichasTecnicas.map((e) =>
+                          formatarNumeroEProdutoFichaTecnica(e)
+                        ),
+                        values.ficha_tecnica,
+                        true
+                      )}
+                      label="Ficha Técnica e Produto"
+                      name={`ficha_tecnica`}
                       className="input-busca-produto"
-                      placeholder="Digite o Nº do Cronograma"
+                      placeholder="Digite o Nº da Ficha Técnica ou nome do Produto"
                       required
                       validate={required}
                       esconderIcone
-                    />
-                    <OnChange name="cronograma">
-                      {(value) => {
-                        let cronograma = cronogramas.find(
-                          (c) => c.numero === value
+                      onChange={(value) => {
+                        const ficha = fichasTecnicas.find(
+                          ({ numero }) => numero === value?.split("-")[0].trim()
                         );
-                        if (cronograma) {
-                          values.cronograma_uuid = cronograma.uuid;
-                          values.pregao = cronograma.pregao_chamada_publica;
-                          values.nome_produto = cronograma.nome_produto;
-                        }
+
+                        values.ficha_tecnica = value;
+                        fichaTecnicaSelecionada.current = ficha?.uuid;
+
+                        form.change(
+                          "pregao_chamada_publica",
+                          ficha?.pregao_chamada_publica
+                        );
                       }}
-                    </OnChange>
+                    />
                   </div>
-                  <div className="col-4">
+
+                  <div className="col">
                     <Field
                       component={InputText}
                       label="Nº do Pregão/Chamada Pública"
-                      name={`pregao`}
+                      name={`pregao_chamada_publica`}
                       placeholder="Nº do Pregão/Chamada Pública"
-                      required
-                      disabled={true}
-                    />
-                  </div>
-                  <div className="col-4">
-                    <Field
-                      component={InputText}
-                      label="Nome do Produto"
-                      name={`nome_produto`}
-                      placeholder="Nome do Produto"
                       required
                       disabled={true}
                     />

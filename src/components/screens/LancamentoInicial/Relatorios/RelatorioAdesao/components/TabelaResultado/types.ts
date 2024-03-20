@@ -3,6 +3,7 @@ import { RelatorioAdesaoResponse } from "services/medicaoInicial/relatorio.inter
 import { Filtros } from "../../types";
 
 export type Props = {
+  params: Filtros;
   filtros: Filtros;
   resultado: RelatorioAdesaoResponse;
   exibirTitulo: boolean;

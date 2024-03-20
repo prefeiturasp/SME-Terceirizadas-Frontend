@@ -1,4 +1,6 @@
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import React, { useEffect, useState } from "react";
+import { Field } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -25,14 +27,12 @@ import {
   deepCopy,
   deepEqual,
   fimDoCalendario,
-  formatarParaMultiselect,
   getDataObj,
 } from "helpers/utilities";
-import React from "react";
-import { Field } from "react-final-form";
-import { FieldArray } from "react-final-form-arrays";
-import { OnChange } from "react-final-form-listeners";
 import "./style.scss";
+import { getTiposDeAlimentacao } from "services/cadastroTipoAlimentacao.service";
+
+const REFEICAO_E_SOBREMESA = "Refeição e Sobremesa";
 
 export const DatasInclusaoContinua = ({ ...props }) => {
   const { values, proximosDoisDiasUteis, onDataChanged, name, index } = props;
@@ -50,14 +50,8 @@ export const DatasInclusaoContinua = ({ ...props }) => {
               validate={required}
               minDate={proximosDoisDiasUteis}
               maxDate={fimDoCalendario()}
+              inputOnChange={(value) => onDataChanged(value)}
             />
-            <OnChange name={`${name}.data_inicial`}>
-              {(value) => {
-                if (value) {
-                  onDataChanged(value);
-                }
-              }}
-            </OnChange>
           </div>
           <div className="col-6">
             <Field
@@ -82,7 +76,7 @@ export const DatasInclusaoContinua = ({ ...props }) => {
 
 const limpaRecorrencia = (form) => {
   form.change("dias_semana", undefined);
-  form.change("tipos_alimentacao_selecionados", []);
+  form.change("tipos_alimentacao", []);
   form.change("periodo_escolar");
   form.change("numero_alunos", undefined);
   form.change("observacao", undefined);
@@ -98,6 +92,18 @@ export const Recorrencia = ({
   uuid,
   idExterno,
 }) => {
+  const [tiposDeAlimentacao, setTiposDeAlimentacao] = useState([]);
+
+  const getTiposDeAlimentacaoAsync = async () => {
+    await getTiposDeAlimentacao().then((response) => {
+      setTiposDeAlimentacao(response.results);
+    });
+  };
+
+  useEffect(() => {
+    getTiposDeAlimentacaoAsync();
+  }, []);
+
   form.change("uuid", uuid);
   form.change("id_externo", idExterno);
   const handleWeekly = async (value) => {
@@ -116,12 +122,24 @@ export const Recorrencia = ({
       meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais ===
       "CEU GESTAO";
 
+    let valueTipoAlimentacao = values.tipos_alimentacao;
+
+    if (valueTipoAlimentacao === REFEICAO_E_SOBREMESA) {
+      valueTipoAlimentacao = [
+        tiposDeAlimentacao?.find(
+          (tipoDeAlimentacao) => tipoDeAlimentacao.nome === "Refeição"
+        ).uuid,
+        tiposDeAlimentacao?.find(
+          (tipoDeAlimentacao) => tipoDeAlimentacao.nome === "Sobremesa"
+        ).uuid,
+      ];
+    }
+
     if (
       !values.dias_semana ||
       values.dias_semana.length === 0 ||
       !values.periodo_escolar ||
-      !values.tipos_alimentacao_selecionados ||
-      values.tipos_alimentacao_selecionados.length === 0 ||
+      !valueTipoAlimentacao ||
       !values.numero_alunos
     ) {
       toastError(
@@ -145,7 +163,7 @@ export const Recorrencia = ({
         (qp) =>
           deepEqual(qp.dias_semana, values.dias_semana) &&
           deepEqual(qp.periodo_escolar, values.periodo_escolar) &&
-          deepEqual(qp.tipos_alimentacao, values.tipos_alimentacao_selecionados)
+          deepEqual(qp.tipos_alimentacao, valueTipoAlimentacao)
       )
     ) {
       toastError(
@@ -159,7 +177,10 @@ export const Recorrencia = ({
         {
           dias_semana: deepCopy(values.dias_semana),
           periodo_escolar: deepCopy(values.periodo_escolar),
-          tipos_alimentacao: deepCopy(values.tipos_alimentacao_selecionados),
+          tipos_alimentacao:
+            typeof valueTipoAlimentacao === "string"
+              ? [deepCopy(valueTipoAlimentacao)]
+              : deepCopy(valueTipoAlimentacao),
           numero_alunos: deepCopy(values.numero_alunos),
           observacao: values.observacao ? deepCopy(values.observacao) : "",
         },
@@ -177,7 +198,9 @@ export const Recorrencia = ({
       );
       await form.change(
         `quantidades_periodo[${values.quantidades_periodo.length}].tipos_alimentacao`,
-        deepCopy(values.tipos_alimentacao_selecionados)
+        typeof valueTipoAlimentacao === "string"
+          ? [deepCopy(valueTipoAlimentacao)]
+          : deepCopy(valueTipoAlimentacao)
       );
       limpaRecorrencia(form);
     }
@@ -196,6 +219,42 @@ export const Recorrencia = ({
           )
         )
       : null;
+  };
+
+  const optionsTiposAlimentacao = () => {
+    let tiposAlimentacao =
+      values.periodo_escolar &&
+      agregarDefault(
+        periodos.find((p) => p.uuid === values.periodo_escolar)
+          ? periodos.find((p) => p.uuid === values.periodo_escolar)
+              .tipos_alimentacao
+          : []
+      );
+    const alimentacaoLanche4h = tiposDeAlimentacao?.find(
+      (tipoAlimentacao) => tipoAlimentacao.nome === "Lanche 4h"
+    );
+    if (
+      !tiposAlimentacao?.find(
+        (tipoAlimentacao) => tipoAlimentacao.uuid === alimentacaoLanche4h.uuid
+      )
+    ) {
+      tiposAlimentacao?.splice(1, 0, alimentacaoLanche4h);
+    }
+    if (
+      tiposAlimentacao?.find(
+        (tipoAlimentacao) => tipoAlimentacao.nome === "Refeição"
+      ) &&
+      tiposAlimentacao?.find(
+        (tipoAlimentacao) => tipoAlimentacao.nome === "Sobremesa"
+      )
+    ) {
+      tiposAlimentacao?.push({
+        nome: REFEICAO_E_SOBREMESA,
+        uuid: null,
+        posicao: null,
+      });
+    }
+    return tiposAlimentacao;
   };
 
   return (
@@ -227,33 +286,12 @@ export const Recorrencia = ({
             naoDesabilitarPrimeiraOpcao
           />
         </div>
-        <div
-          className={`col-4 multiselect-wrapper-${
-            values.periodo_escolar ? "enabled" : "disabled"
-          }`}
-        >
+        <div className="col-4">
           <Field
-            component={StatefulMultiSelect}
-            name="tipos_alimentacao"
-            selected={values.tipos_alimentacao_selecionados || []}
-            options={
-              values.periodo_escolar &&
-              periodos.find((p) => p.uuid === values.periodo_escolar)
-                ? formatarParaMultiselect(
-                    periodos.find((p) => p.uuid === values.periodo_escolar)
-                      .tipos_alimentacao
-                  )
-                : []
-            }
-            onSelectedChanged={(values_) => {
-              form.change(`tipos_alimentacao_selecionados`, values_);
-            }}
-            disableSearch={true}
-            overrideStrings={{
-              selectSomeItems: "Selecione",
-              allItemsAreSelected: "Todos os itens estão selecionados",
-              selectAll: "Todos",
-            }}
+            component={Select}
+            name={`tipos_alimentacao`}
+            options={optionsTiposAlimentacao()}
+            naoDesabilitarPrimeiraOpcao
           />
         </div>
         <div className="col-2">
@@ -297,6 +335,50 @@ export const Recorrencia = ({
 };
 
 export const RecorrenciaTabela = ({ form, values, periodos }) => {
+  const [tiposDeAlimentacao, setTiposDeAlimentacao] = useState([]);
+
+  const getTiposDeAlimentacaoAsync = async () => {
+    await getTiposDeAlimentacao().then((response) => {
+      setTiposDeAlimentacao(response.results);
+    });
+  };
+
+  useEffect(() => {
+    getTiposDeAlimentacaoAsync();
+  }, []);
+
+  const getAlimentacoesTabelaRecorrencia = (values, indice, periodos) => {
+    let alimentacoes = "";
+
+    if (
+      values.quantidades_periodo[indice].tipos_alimentacao &&
+      values.quantidades_periodo[indice].periodo_escolar
+    ) {
+      const periodo = periodos.find(
+        (p) => p.uuid === values.quantidades_periodo[indice].periodo_escolar
+      );
+      alimentacoes = periodo?.tipos_alimentacao
+        .filter((t) =>
+          values.quantidades_periodo[indice].tipos_alimentacao.includes(t.uuid)
+        )
+        .map((t) => t.nome)
+        .join(", ");
+
+      if (!alimentacoes) {
+        alimentacoes = tiposDeAlimentacao
+          ?.filter((t) =>
+            values.quantidades_periodo[indice].tipos_alimentacao.includes(
+              t.uuid
+            )
+          )
+          .map((t) => t.nome)
+          .join(", ");
+      }
+    }
+
+    return alimentacoes;
+  };
+
   return (
     <div className="recorrencia-e-detalhes">
       <table>
@@ -347,22 +429,11 @@ export const RecorrenciaTabela = ({ form, values, periodos }) => {
                           )?.nome}
                       </td>
                       <td className="col-3">
-                        {values.quantidades_periodo[indice].tipos_alimentacao &&
-                          values.quantidades_periodo[indice].periodo_escolar &&
+                        {getAlimentacoesTabelaRecorrencia(
+                          values,
+                          indice,
                           periodos
-                            .find(
-                              (p) =>
-                                p.uuid ===
-                                values.quantidades_periodo[indice]
-                                  .periodo_escolar
-                            )
-                            ?.tipos_alimentacao.filter((t) =>
-                              values.quantidades_periodo[
-                                indice
-                              ].tipos_alimentacao.includes(t.uuid)
-                            )
-                            .map((t) => t.nome)
-                            .join(", ")}
+                        )}
                       </td>
                       <td className="col-1">
                         {values.quantidades_periodo[indice].numero_alunos}

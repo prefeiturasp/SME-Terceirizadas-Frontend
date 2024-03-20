@@ -34,6 +34,7 @@ export default () => {
   const { meusDados } = useContext(MeusDadosContext);
   const somenteLeitura = useSomenteLeitura([
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.DILOG_DIRETORIA,
   ]);
 
   const [carregando, setCarregando] = useState(true);
@@ -47,6 +48,8 @@ export default () => {
     false,
     false,
   ]);
+  const [embalagemTerciariaSolicitada, setEmbalagemTerciariaSolicitada] =
+    useState(false);
 
   useEffect(() => {
     (async () => {
@@ -61,8 +64,13 @@ export default () => {
     const response = await detalharLayoutEmabalagem(uuid);
 
     const layoutDeEmbalagem = definirLayoutDeEmbalagem(response);
+    setLayoutDeEmbalagem(layoutDeEmbalagem);
+
     const aprovacoes = definirAprovacoes(layoutDeEmbalagem);
-    definirInitialValues(layoutDeEmbalagem, aprovacoes);
+    setAprovacoes(aprovacoes);
+
+    const initialValues = definirInitialValues(layoutDeEmbalagem, aprovacoes);
+    setInitialValues(initialValues);
   };
 
   const definirLayoutDeEmbalagem = (response) => {
@@ -71,8 +79,6 @@ export default () => {
     layoutDeEmbalagem.tipos_de_embalagens = ordenaTiposDeEmbalagem(
       layoutDeEmbalagem.tipos_de_embalagens
     );
-
-    setLayoutDeEmbalagem(layoutDeEmbalagem);
 
     return layoutDeEmbalagem;
   };
@@ -87,12 +93,11 @@ export default () => {
     });
   };
 
-  const definirAprovacoes = (objeto) => {
-    const aprovacoes = objeto.tipos_de_embalagens.map((tipoEmbalagem) =>
-      tipoEmbalagem.status === "APROVADO" ? true : undefined
+  const definirAprovacoes = (layoutDeEmbalagem) => {
+    const aprovacoes = layoutDeEmbalagem.tipos_de_embalagens.map(
+      (tipoEmbalagem) =>
+        tipoEmbalagem.status === "APROVADO" ? true : undefined
     );
-
-    setAprovacoes(aprovacoes);
 
     return aprovacoes;
   };
@@ -116,7 +121,7 @@ export default () => {
             justificativa_2: "",
           };
 
-    setInitialValues(initialValues);
+    return initialValues;
   };
 
   const atualizaModalCancelarCorrecao = (index, value) => {
@@ -125,7 +130,7 @@ export default () => {
     setModaisCancelarCorrecao(newModais);
   };
 
-  const atualizaAprovacoes = (index, value) => {
+  const atualizarAprovacoes = (index, value) => {
     let newAprovacoes = [...aprovacoes];
     newAprovacoes[index] = value;
     setAprovacoes(newAprovacoes);
@@ -134,7 +139,7 @@ export default () => {
   const retornaBotoesAprovacao = (index, form) => {
     const textoAprovacao = `Embalagem Aprovada em ${moment().format(
       "DD/MM/YYYY - HH:mm"
-    )}\n|Por: ${meusDados.nome}`;
+    )}\n|Por: ${meusDados?.nome}`;
 
     return (
       <div className="mt-4">
@@ -144,7 +149,7 @@ export default () => {
           style={BUTTON_STYLE.GREEN}
           icon="fas fa-check"
           onClick={() => {
-            atualizaAprovacoes(index, true);
+            atualizarAprovacoes(index, true);
             form.change(`justificativa_${index}`, textoAprovacao);
           }}
           disabled={aprovacoes[index] !== undefined}
@@ -157,7 +162,7 @@ export default () => {
           icon="fas fa-times"
           className="ms-4"
           onClick={() => {
-            atualizaAprovacoes(index, false);
+            atualizarAprovacoes(index, false);
             form.change(`justificativa_${index}`, "");
           }}
           disabled={aprovacoes[index] === false}
@@ -167,81 +172,95 @@ export default () => {
   };
 
   const retornaTextoAprovacaoOuCampoCorrecao = (index, values, form) => {
-    if (aprovacoes[index] === true) {
-      const [dataHoraAprovacao, usuarioAprovacao] =
-        values[`justificativa_${index}`].split("|");
+    if (aprovacoes[index] === true)
+      return renderizarTextoAprovacao(values, index);
 
-      return (
-        <div className="col-7">
-          <div className="subtitulo d-flex ms-5">
-            <div className="w-5">
-              <i className="fas fa-check me-2" />
-            </div>
-            <div className="w-95">
-              <div>{dataHoraAprovacao}</div>
-              <div>{usuarioAprovacao}</div>
-            </div>
-          </div>
-        </div>
-      );
-    } else if (aprovacoes[index] === false) {
-      return (
-        <div className="col-7">
-          <Field
-            component={TextArea}
-            label="Correções Necessárias"
-            name={`justificativa_${index}`}
-            placeholder="Qual a sua observação para essa decisão?"
-            required
-            validate={textAreaRequired}
-          />
+    if (aprovacoes[index] === false)
+      return renderizarCampoCorrecao(index, form);
 
-          {layoutDeEmbalagem.status !== "Solicitado Correção" && (
-            <Botao
-              texto="Cancelar"
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="float-end ms-3"
-              onClick={() => {
-                atualizaModalCancelarCorrecao(index, true);
-              }}
-            />
-          )}
-
-          <ModalCancelarCorrecao
-            show={modaisCancelarCorrecao[index]}
-            handleClose={() => {
-              atualizaModalCancelarCorrecao(index, false);
-            }}
-            cancelar={() => {
-              atualizaAprovacoes(index, undefined);
-              form.change(
-                `justificativa_${index}`,
-                layoutDeEmbalagem.tipos_de_embalagens[index]
-                  .complemento_do_status
-              );
-            }}
-          />
-        </div>
-      );
-    } else if (aprovacoes[index] === undefined) {
-      return (
-        !layoutDeEmbalagem.primeira_analise && (
-          <div className="col-7">
-            <Field
-              component={TextArea}
-              label="Correções Necessárias"
-              name={`justificativa_${index}`}
-              placeholder="Qual a sua observação para essa decisão?"
-              required
-              validate={textAreaRequired}
-              disabled
-            />
-          </div>
-        )
-      );
-    }
+    if (aprovacoes[index] === undefined && !layoutDeEmbalagem.primeira_analise)
+      return renderizarCampoCorrecaoBloqueado(index);
   };
+
+  const renderizarTextoAprovacao = (values, index) => {
+    const [dataHoraAprovacao, usuarioAprovacao] =
+      values[`justificativa_${index}`].split("|");
+
+    return (
+      <div className="col-7 d-flex align-items-center">
+        <div className="subtitulo d-flex align-items-center ms-5">
+          <div className="w-5">
+            <i className="fas fa-check me-3 fa-2x" />
+          </div>
+          <div className="w-95">
+            <div>{dataHoraAprovacao}</div>
+            <div>{usuarioAprovacao}</div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderizarCampoCorrecao = (index, form) => (
+    <div className="col-7">
+      <Field
+        component={TextArea}
+        label="Correções Necessárias"
+        name={`justificativa_${index}`}
+        placeholder="Qual a sua observação para essa decisão?"
+        required
+        validate={textAreaRequired}
+      />
+
+      {layoutDeEmbalagem.status !== "Solicitado Correção" && (
+        <Botao
+          texto="Cancelar"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
+          className="float-end ms-3"
+          onClick={() => {
+            atualizaModalCancelarCorrecao(index, true);
+          }}
+        />
+      )}
+
+      <ModalCancelarCorrecao
+        show={modaisCancelarCorrecao[index]}
+        handleClose={() => {
+          atualizaModalCancelarCorrecao(index, false);
+        }}
+        cancelar={() => {
+          atualizarAprovacoes(
+            index,
+            definirAprovacoes(layoutDeEmbalagem)[index]
+          );
+
+          form.change(
+            `justificativa_${index}`,
+            layoutDeEmbalagem.tipos_de_embalagens[index]
+              ?.complemento_do_status || ""
+          );
+
+          !layoutDeEmbalagem.tipos_de_embalagens[index] &&
+            setEmbalagemTerciariaSolicitada(false);
+        }}
+      />
+    </div>
+  );
+
+  const renderizarCampoCorrecaoBloqueado = (index) => (
+    <div className="col-7">
+      <Field
+        component={TextArea}
+        label="Correções Necessárias"
+        name={`justificativa_${index}`}
+        placeholder="Qual a sua observação para essa decisão?"
+        required
+        validate={textAreaRequired}
+        disabled
+      />
+    </div>
+  );
 
   const onSubmit = () => {
     setModalEnviar(true);
@@ -257,15 +276,15 @@ export default () => {
         payload
       );
       if (response.status === 201 || response.status === 200) {
-        setCarregando(false);
         toastSuccess("Sua avaliação foi enviada com sucesso!");
         voltarPaginaPainel();
       } else {
         toastError("Ocorreu um erro ao analisar o Layout da Embalagem");
-        setCarregando(false);
       }
     } catch (error) {
       toastError(error, "Ocorreu um erro ao analisar o Layout da Embalagem");
+    } finally {
+      setCarregando(false);
     }
   };
 
@@ -274,26 +293,24 @@ export default () => {
 
     payload.tipos_de_embalagens = [];
 
-    layoutDeEmbalagem.tipos_de_embalagens[0].status === "EM_ANALISE" &&
-      payload.tipos_de_embalagens.push({
-        uuid: layoutDeEmbalagem.tipos_de_embalagens[0].uuid,
-        tipo_embalagem: "PRIMARIA",
-        status: getAprovacao(0),
-        complemento_do_status: values[`justificativa_${0}`],
-      });
+    payload.tipos_de_embalagens.push({
+      uuid: layoutDeEmbalagem.tipos_de_embalagens[0].uuid,
+      tipo_embalagem: "PRIMARIA",
+      status: getAprovacao(0),
+      complemento_do_status: values[`justificativa_${0}`],
+    });
 
-    layoutDeEmbalagem.tipos_de_embalagens[1].status === "EM_ANALISE" &&
-      payload.tipos_de_embalagens.push({
-        uuid: layoutDeEmbalagem.tipos_de_embalagens[1].uuid,
-        tipo_embalagem: "SECUNDARIA",
-        status: getAprovacao(1),
-        complemento_do_status: values[`justificativa_${1}`],
-      });
+    payload.tipos_de_embalagens.push({
+      uuid: layoutDeEmbalagem.tipos_de_embalagens[1].uuid,
+      tipo_embalagem: "SECUNDARIA",
+      status: getAprovacao(1),
+      complemento_do_status: values[`justificativa_${1}`],
+    });
 
-    layoutDeEmbalagem.tipos_de_embalagens[2] &&
-      layoutDeEmbalagem.tipos_de_embalagens[2].status === "EM_ANALISE" &&
+    (layoutDeEmbalagem.tipos_de_embalagens[2] ||
+      embalagemTerciariaSolicitada) &&
       payload.tipos_de_embalagens.push({
-        uuid: layoutDeEmbalagem.tipos_de_embalagens[2].uuid,
+        uuid: layoutDeEmbalagem.tipos_de_embalagens[2]?.uuid,
         tipo_embalagem: "TERCIARIA",
         status: getAprovacao(2),
         complemento_do_status: values[`justificativa_${2}`],
@@ -302,13 +319,8 @@ export default () => {
     return payload;
   };
 
-  const getAprovacao = (index) => {
-    if (aprovacoes[index] === true) {
-      return "APROVADO";
-    } else if (aprovacoes[index] === false) {
-      return "REPROVADO";
-    }
-  };
+  const getAprovacao = (index) =>
+    aprovacoes[index] ? "APROVADO" : "REPROVADO";
 
   const voltarPaginaPainel = () =>
     navigate(`/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`);
@@ -422,10 +434,7 @@ export default () => {
                           </div>
                         )
                       )}
-                      {!somenteLeitura &&
-                        layoutDeEmbalagem.tipos_de_embalagens[0].status !==
-                          "APROVADO" &&
-                        retornaBotoesAprovacao(0, form)}
+                      {!somenteLeitura && retornaBotoesAprovacao(0, form)}
                     </div>
                     {retornaTextoAprovacaoOuCampoCorrecao(0, values, form)}
                   </div>
@@ -451,21 +460,19 @@ export default () => {
                           </div>
                         )
                       )}
-                      {!somenteLeitura &&
-                        layoutDeEmbalagem.tipos_de_embalagens[1].status !==
-                          "APROVADO" &&
-                        retornaBotoesAprovacao(1, form)}
+                      {!somenteLeitura && retornaBotoesAprovacao(1, form)}
                     </div>
                     {retornaTextoAprovacaoOuCampoCorrecao(1, values, form)}
                   </div>
 
-                  {layoutDeEmbalagem.tipos_de_embalagens[2] && (
+                  {(layoutDeEmbalagem.tipos_de_embalagens[2] ||
+                    !somenteLeitura) && (
                     <>
                       <hr />
 
                       <div
                         className={`${
-                          layoutDeEmbalagem.tipos_de_embalagens[2].status !==
+                          layoutDeEmbalagem.tipos_de_embalagens[2]?.status !==
                             "APROVADO" && !layoutDeEmbalagem.primeira_analise
                             ? "subtitulo-laranja"
                             : "subtitulo"
@@ -473,23 +480,53 @@ export default () => {
                       >
                         Embalagem Terciária
                       </div>
-                      <div className="row">
-                        <div className="col-5">
-                          {layoutDeEmbalagem.tipos_de_embalagens[2].imagens.map(
-                            (e) => (
-                              <div className="w-75" key={e.arquivo}>
-                                <BotaoAnexo urlAnexo={e.arquivo} />
-                              </div>
-                            )
-                          )}
-                          {!somenteLeitura &&
-                            layoutDeEmbalagem.tipos_de_embalagens[2].status !==
-                              "APROVADO" &&
-                            retornaBotoesAprovacao(2, form)}
-                        </div>
-                        {retornaTextoAprovacaoOuCampoCorrecao(2, values, form)}
-                      </div>
                     </>
+                  )}
+
+                  {layoutDeEmbalagem.tipos_de_embalagens[2] ? (
+                    <div className="row">
+                      <div className="col-5">
+                        {layoutDeEmbalagem.tipos_de_embalagens[2].imagens.map(
+                          (e) => (
+                            <div className="w-75" key={e.arquivo}>
+                              <BotaoAnexo urlAnexo={e.arquivo} />
+                            </div>
+                          )
+                        )}
+                        {!somenteLeitura && retornaBotoesAprovacao(2, form)}
+                      </div>
+                      {retornaTextoAprovacaoOuCampoCorrecao(2, values, form)}
+                    </div>
+                  ) : (
+                    !somenteLeitura && (
+                      <>
+                        <div className="row">
+                          <div className="col aviso-embalagem-terciaria px-3 py-3">
+                            <strong>Lembrete!</strong>
+                            <br />
+                            Foi identificado que não consta Embalagem Terciária.
+                            Caso necessário, solicite a correção clicando no
+                            botão abaixo:
+                          </div>
+                        </div>
+                        <div className="row mt-4">
+                          <div className="col px-0">
+                            <Botao
+                              texto="Solicitar Embalagem"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN}
+                              onClick={() => {
+                                form.change(`justificativa_${2}`, "");
+                                setEmbalagemTerciariaSolicitada(true);
+                              }}
+                              disabled={embalagemTerciariaSolicitada}
+                            />
+                          </div>
+                          {embalagemTerciariaSolicitada &&
+                            renderizarCampoCorrecao(2, form)}
+                        </div>
+                      </>
+                    )
                   )}
 
                   <hr />

@@ -2,6 +2,7 @@ import React from "react";
 import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   ACOMPANHAMENTO_DE_LANCAMENTOS,
+  CLAUSULAS_PARA_DESCONTOS,
   EMPENHOS,
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
@@ -23,7 +24,10 @@ import {
 const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
   const exibeCadastros = usuarioEhMedicao();
   const exibeRelatorios =
-    usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao();
+    usuarioEhMedicao() ||
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhDRE() ||
+    usuarioEhEscolaTerceirizadaQualquerPerfil();
 
   return (
     exibirModuloMedicaoInicial() && (
@@ -56,6 +60,9 @@ const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
             activeMenu={activeSubmenu}
           >
             <LeafItem to={`/${MEDICAO_INICIAL}/${EMPENHOS}`}>Empenhos</LeafItem>
+            <LeafItem to={`/${MEDICAO_INICIAL}/${CLAUSULAS_PARA_DESCONTOS}`}>
+              Cláusulas para Descontos
+            </LeafItem>
           </SubMenu>
         )}
         {exibeRelatorios && (

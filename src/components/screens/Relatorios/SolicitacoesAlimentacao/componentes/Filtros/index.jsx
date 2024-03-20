@@ -1,7 +1,9 @@
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import moment from "moment";
+import { Spin } from "antd";
+import CollapseFiltros from "components/Shareable/CollapseFiltros";
+import { InputComData } from "components/Shareable/DatePicker";
 import Select from "components/Shareable/Select";
-import HTTP_STATUS from "http-status-codes";
+import { toastError } from "components/Shareable/Toast/dialogs";
 import { required } from "helpers/fieldValidators";
 import {
   agregarDefault,
@@ -10,25 +12,19 @@ import {
   usuarioEhEmpresaTerceirizada,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
 } from "helpers/utilities";
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { Field, Form } from "react-final-form";
+import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { Field } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
+import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
+import { getEscolaSimples, getEscolasTercTotal } from "services/escola.service";
 import { getLotesSimples } from "services/lote.service";
-import { Spin } from "antd";
+import { getNomesTerceirizadas } from "services/produto.service";
+import { getTotalizadoresRelatorioSolicitacoesAlimentacao } from "services/relatorios.service";
+import { STATUS_SOLICITACOES, TIPOS_SOLICITACAO } from "../../constants";
 import { lotesToOptions } from "../../helpers";
 import "../../style.scss";
-import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
-import { STATUS_SOLICITACOES, TIPOS_SOLICITACAO } from "../../constants";
-import { getEscolaSimples, getEscolasTercTotal } from "services/escola.service";
-import { InputComData } from "components/Shareable/DatePicker";
-import { getNomesTerceirizadas } from "services/produto.service";
-import Botao from "components/Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_TYPE,
-} from "components/Shareable/Botao/constants";
-import { OnChange } from "react-final-form-listeners";
-import { toastError } from "components/Shareable/Toast/dialogs";
 
 export const Filtros = ({ ...props }) => {
   const [lotes, setLotes] = useState([]);
@@ -49,6 +45,8 @@ export const Filtros = ({ ...props }) => {
     getSolicitacoesDetalhadasAsync,
     setCarregando,
     setResultadoPaginado,
+    setTotalizadores,
+    setRenderGraficosOuTabela,
   } = props;
 
   const getLotesSimplesAsync = async () => {
@@ -120,6 +118,17 @@ export const Filtros = ({ ...props }) => {
     }
   };
 
+  const getTotalizadoresAsync = async (values) => {
+    const response = await getTotalizadoresRelatorioSolicitacoesAlimentacao(
+      values
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setTotalizadores(response.data.results);
+    } else {
+      setErroAPI("Erro ao carregar totalizadores. Tente novamente mais tarde.");
+    }
+  };
+
   useEffect(() => {
     Promise.all([
       getLotesSimplesAsync(),
@@ -160,7 +169,11 @@ export const Filtros = ({ ...props }) => {
     _values["offset"] = (page - 1) * _values["limit"];
     setPage(1);
 
+    setRenderGraficosOuTabela("Gráficos");
+
     const response = await endpoint(_values);
+    await getTotalizadoresAsync(_values);
+
     if (response.status === HTTP_STATUS.OK) {
       setResultadoPaginado(response.data.results);
       setTotalBusca(response.data.count);
@@ -182,9 +195,19 @@ export const Filtros = ({ ...props }) => {
   return (
     <Spin tip="Carregando..." spinning={LOADING && !erroAPI}>
       {!erroAPI && (
-        <Form onSubmit={onSubmit}>
-          {({ form, handleSubmit, values }) => (
-            <form onSubmit={handleSubmit}>
+        <CollapseFiltros
+          onSubmit={onSubmit}
+          onClear={() => {
+            setFiltros(undefined);
+            setTotalBusca(undefined);
+            setSolicitacoes(undefined);
+            setResultadoPaginado(undefined);
+            setPage(1);
+          }}
+          titulo="Filtrar Resultados"
+        >
+          {(values, form) => (
+            <>
               <div className="row">
                 <div className="col-lg-3 col-xl-4">
                   <Field
@@ -332,7 +355,7 @@ export const Filtros = ({ ...props }) => {
                     <label>Período do Evento</label>
                   </div>
                   <div className="row">
-                    <div className="col-6">
+                    <div className="col-6 ps-0">
                       <Field
                         component={InputComData}
                         placeholder="De"
@@ -355,32 +378,9 @@ export const Filtros = ({ ...props }) => {
                   </div>
                 </div>
               </div>
-              <div className="row mt-3">
-                <div className="col-12 text-end">
-                  <Botao
-                    texto="Limpar Filtros"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    onClick={() => {
-                      form.reset();
-                      setFiltros(undefined);
-                      setTotalBusca(undefined);
-                      setSolicitacoes(undefined);
-                      setResultadoPaginado(undefined);
-                      setPage(1);
-                    }}
-                  />
-                  <Botao
-                    texto="Consultar"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    className="ms-3"
-                  />
-                </div>
-              </div>
-            </form>
+            </>
           )}
-        </Form>
+        </CollapseFiltros>
       )}
     </Spin>
   );

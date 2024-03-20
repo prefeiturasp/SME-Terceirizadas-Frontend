@@ -251,12 +251,13 @@ export interface FichaTecnicaDetalhadaComAnalise extends FichaTecnicaDetalhada {
 
 export interface FichaTecnicaSimples {
   uuid: string;
-  numero_e_produto: string;
+  numero: string;
+  produto: ProdutoSimples;
   uuid_empresa: string;
+  pregao_chamada_publica: string;
 }
 
-export interface DadosCronogramaFichaTecnica {
-  uuid: string;
+export interface DadosCronogramaFichaTecnica extends FichaTecnicaSimples {
   marca: MarcaSimples;
   volume_embalagem_primaria: number;
   unidade_medida_volume_primaria: UnidadeMedidaSimples;

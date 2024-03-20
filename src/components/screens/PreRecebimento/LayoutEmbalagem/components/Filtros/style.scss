@@ -1,7 +1,8 @@
 @import "../../../../../../styles/variables.scss";
 
 .filtros-layouts-embalagens {
-  .autocomplete-select {
+  .autocomplete-select,
+  input {
     height: 40px;
   }
 
