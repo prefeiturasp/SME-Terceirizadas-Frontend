@@ -2684,8 +2684,10 @@ export default () => {
                                                           onChangeInput(
                                                             value,
                                                             previousValue,
-                                                            errors,
-                                                            formValuesAtualizados,
+                                                            form.getState()
+                                                              .errors,
+                                                            form.getState()
+                                                              .values,
                                                             column.dia,
                                                             categoria,
                                                             row.name,
@@ -3043,8 +3045,10 @@ export default () => {
                                                             onChangeInput(
                                                               value,
                                                               previousValue,
-                                                              errors,
-                                                              formValuesAtualizados,
+                                                              form.getState()
+                                                                .errors,
+                                                              form.getState()
+                                                                .values,
                                                               column.dia,
                                                               categoria,
                                                               row.name,

@@ -2328,8 +2328,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           onChangeInput(
                                                             value,
                                                             previousValue,
-                                                            errors,
-                                                            formValuesAtualizados,
+                                                            form.getState()
+                                                              .errors,
+                                                            form.getState()
+                                                              .values,
                                                             column.dia,
                                                             categoria,
                                                             column,
@@ -2432,8 +2434,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           onChangeInput(
                                                             value,
                                                             previousValue,
-                                                            errors,
-                                                            formValuesAtualizados,
+                                                            form.getState()
+                                                              .errors,
+                                                            form.getState()
+                                                              .values,
                                                             column.dia,
                                                             categoria,
                                                             column,

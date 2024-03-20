@@ -10,7 +10,6 @@ import {
   updateKitLanche,
 } from "services/codae.service";
 import { Field, Form } from "react-final-form";
-import { OnBlur } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
 import CKEditorField from "components/Shareable/CKEditorField";
@@ -120,7 +119,7 @@ export default ({ uuid }) => {
           <Form
             onSubmit={onSubmit}
             initialValues={() => modeloKitLanche}
-            render={({ handleSubmit, submitting, values, form }) => (
+            render={({ handleSubmit, submitting, form }) => (
               <form onSubmit={handleSubmit}>
                 <div className="row mb-3">
                   <div className="col-4">
@@ -137,10 +136,10 @@ export default ({ uuid }) => {
                       required
                       validate={selectValidate}
                       disabled={modeloKitLanche.uuid ? true : false}
+                      onChangeEffect={() =>
+                        checaNomeExiste(form.getState().values)
+                      }
                     />
-                    <OnBlur name="edital">
-                      {() => checaNomeExiste(values)}
-                    </OnBlur>
                   </div>
                   <div className="col-12">
                     <label className="col-form-label mb-1">
@@ -153,8 +152,8 @@ export default ({ uuid }) => {
                       required
                       disabled={modeloKitLanche.uuid ? true : false}
                       validate={required}
+                      onBlur={() => checaNomeExiste(form.getState().values)}
                     />
-                    <OnBlur name="nome">{() => checaNomeExiste(values)}</OnBlur>
                   </div>
                   <div className="col-12">
                     <label className="col-form-label mb-1">
