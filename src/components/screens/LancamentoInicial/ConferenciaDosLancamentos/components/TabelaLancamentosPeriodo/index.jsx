@@ -1190,8 +1190,9 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                 key={column.dia}
                               >
                                 <span
+                                  className="input-dias-semana-tabela"
                                   onClick={(e) => {
-                                    const value = e.target.value;
+                                    const value = e.target.checked;
                                     onChangeCheckBox(
                                       column,
                                       categoria,
@@ -1201,7 +1202,6 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                   }}
                                 >
                                   <Field
-                                    className="input-dias-semana-tabela"
                                     component={"input"}
                                     type="checkbox"
                                     name={`ckbox_dias_semana__dia_${

@@ -202,6 +202,7 @@ export default () => {
     FUNDAMENTAL_EMEBS.key
   );
   const [msgModalErro, setMsgModalErro] = useState(null);
+  const [previousValue, setPreviousValue] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -2676,19 +2677,27 @@ export default () => {
                                                           column.dia,
                                                           categoria.id
                                                         )}
-                                                        inputOnChange={(e) =>
+                                                        inputOnChange={(e) => {
+                                                          const value =
+                                                            e.target.value;
+
                                                           onChangeInput(
-                                                            e.target.value,
-                                                            null,
+                                                            value,
+                                                            previousValue,
                                                             errors,
                                                             formValuesAtualizados,
                                                             column.dia,
                                                             categoria,
+                                                            row.name,
+                                                            form,
                                                             column,
-                                                            row,
-                                                            form
-                                                          )
-                                                        }
+                                                            row
+                                                          );
+
+                                                          setPreviousValue(
+                                                            value
+                                                          );
+                                                        }}
                                                       />
                                                     </div>
                                                   )}
@@ -3025,19 +3034,29 @@ export default () => {
                                                             categoria.id,
                                                             categoria.nome
                                                           )}
-                                                          inputOnChange={(e) =>
+                                                          inputOnChange={(
+                                                            e
+                                                          ) => {
+                                                            const value =
+                                                              e.target.value;
+
                                                             onChangeInput(
-                                                              e.target.value,
-                                                              null,
+                                                              value,
+                                                              previousValue,
                                                               errors,
                                                               formValuesAtualizados,
                                                               column.dia,
                                                               categoria,
+                                                              row.name,
+                                                              form,
                                                               column,
-                                                              row,
-                                                              form
-                                                            )
-                                                          }
+                                                              row
+                                                            );
+
+                                                            setPreviousValue(
+                                                              value
+                                                            );
+                                                          }}
                                                         />
                                                       </div>
                                                     )}
