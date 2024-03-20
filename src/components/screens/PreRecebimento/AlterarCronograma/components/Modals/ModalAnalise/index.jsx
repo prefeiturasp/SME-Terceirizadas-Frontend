@@ -10,7 +10,6 @@ import {
 } from "components/Shareable/Botao/constants";
 import { Field, Form } from "react-final-form";
 import { useState } from "react";
-import { OnChange } from "react-final-form-listeners";
 export default ({ show, setShow, handleClose, loading, handleSim }) => {
   const [confirmar, setConfirmar] = useState(false);
   const [podeEnviar, setPodeEnviar] = useState(false);
@@ -33,17 +32,16 @@ export default ({ show, setShow, handleClose, loading, handleSim }) => {
                   name="justificativa_cronograma"
                   defaultValue=""
                   required
-                />
+                  inputOnChange={(e) => {
+                    const value = e.target.value;
 
-                <OnChange name="justificativa_cronograma">
-                  {(value) => {
                     if (value.length > 0) {
                       setPodeEnviar(true);
                     } else {
                       setPodeEnviar(false);
                     }
                   }}
-                </OnChange>
+                />
               </Modal.Body>
               <Modal.Footer>
                 <Botao

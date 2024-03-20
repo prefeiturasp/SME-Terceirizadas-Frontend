@@ -1,5 +1,4 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { OnChange } from "react-final-form-listeners";
 import { Field } from "react-final-form";
 import { Modal } from "react-bootstrap";
 import { Spin, Tabs } from "antd";
@@ -1190,19 +1189,31 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                 className="dias-semana-tabela"
                                 key={column.dia}
                               >
-                                <Field
+                                <span
                                   className="input-dias-semana-tabela"
-                                  component={"input"}
-                                  type="checkbox"
-                                  name={`ckbox_dias_semana__dia_${
-                                    column.dia
-                                  }__categoria_${
-                                    categoria.id
-                                  }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-                                    0,
-                                    5
-                                  )}`}
-                                />
+                                  onClick={(e) => {
+                                    const value = e.target.checked;
+                                    onChangeCheckBox(
+                                      column,
+                                      categoria,
+                                      periodoGrupo,
+                                      value
+                                    );
+                                  }}
+                                >
+                                  <Field
+                                    component={"input"}
+                                    type="checkbox"
+                                    name={`ckbox_dias_semana__dia_${
+                                      column.dia
+                                    }__categoria_${
+                                      categoria.id
+                                    }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                                      0,
+                                      5
+                                    )}`}
+                                  />
+                                </span>
                                 <div
                                   key={column.dia}
                                   className={`label-dias-semana-tabela ${
@@ -1216,25 +1227,6 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                     ? " *"
                                     : ""}
                                 </div>
-                                <OnChange
-                                  name={`ckbox_dias_semana__dia_${
-                                    column.dia
-                                  }__categoria_${
-                                    categoria.id
-                                  }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-                                    0,
-                                    5
-                                  )}`}
-                                >
-                                  {(value) =>
-                                    onChangeCheckBox(
-                                      column,
-                                      categoria,
-                                      periodoGrupo,
-                                      value
-                                    )
-                                  }
-                                </OnChange>
                               </div>
                             ) : (
                               <div

@@ -14,7 +14,6 @@ import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React from "react";
-import { OnChange } from "react-final-form-listeners";
 import {
   getFiltrosRelatorioDietasEspeciais,
   getUnidadesEducacionaisTercTotal,
@@ -75,9 +74,8 @@ export const Filtros = ({ ...props }) => {
             placeholder="Selecione o Status"
             name="status_selecionado"
             options={OPTIONS_STATUS_DIETA}
-          />
-          <OnChange name="status_selecionado">
-            {(value) => {
+            onChangeEffect={(e) => {
+              const value = e.target.value;
               const params = {
                 status_selecionado: value,
               };
@@ -87,7 +85,7 @@ export const Filtros = ({ ...props }) => {
               }
               getFiltrosRelatorioDietasEspeciaisAsync(params);
             }}
-          </OnChange>
+          />
         </div>
         {values.status_selecionado === "CANCELADAS" && (
           <>
@@ -134,19 +132,8 @@ export const Filtros = ({ ...props }) => {
                         value: lote.uuid,
                       }))}
                       selected={values.lotes_selecionados || []}
-                      onSelectedChanged={(value) =>
-                        form.change("lotes_selecionados", value)
-                      }
-                      overrideStrings={{
-                        search: "Busca",
-                        selectSomeItems: "Selecione lotes",
-                        allItemsAreSelected:
-                          "Todos os lotes estão selecionados",
-                        selectAll: "Todos",
-                      }}
-                    />
-                    <OnChange name="lotes_selecionados">
-                      {(value) => {
+                      onSelectedChanged={(value) => {
+                        form.change("lotes_selecionados", value);
                         if (value && value.length === 0) {
                           setUnidadesEducacionais([]);
                           form.change(
@@ -157,7 +144,14 @@ export const Filtros = ({ ...props }) => {
                           getUnidadesEducacionaisAsync(value);
                         }
                       }}
-                    </OnChange>
+                      overrideStrings={{
+                        search: "Busca",
+                        selectSomeItems: "Selecione lotes",
+                        allItemsAreSelected:
+                          "Todos os lotes estão selecionados",
+                        selectAll: "Todos",
+                      }}
+                    />
                   </div>
                   <div className="col-4">
                     <label className="label fw-normal pb-2 pt-2">

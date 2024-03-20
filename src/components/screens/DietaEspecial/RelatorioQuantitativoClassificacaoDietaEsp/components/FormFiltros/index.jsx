@@ -1,7 +1,6 @@
 import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 
 import Botao from "components/Shareable/Botao";
 import {
@@ -98,9 +97,6 @@ export default ({ onSubmit, loading, setLoading }) => {
             onSubmit={handleSubmit}
             className="form-filtros-rel-quant-diag-dieta-esp"
           >
-            {tipoUsuario !== TIPO_PERFIL.ESCOLA && (
-              <OnChange name="dre">{() => form.change("escola", [])}</OnChange>
-            )}
             <div className="row">
               <div className="col-5">
                 <Field
@@ -123,6 +119,10 @@ export default ({ onSubmit, loading, setLoading }) => {
                     tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL &&
                     tipoUsuario !== TIPO_PERFIL.ESCOLA
                   }
+                  onChangeEffect={() => {
+                    tipoUsuario !== TIPO_PERFIL.ESCOLA &&
+                      form.change("escola", []);
+                  }}
                 />
               </div>
               <div className="col-7">

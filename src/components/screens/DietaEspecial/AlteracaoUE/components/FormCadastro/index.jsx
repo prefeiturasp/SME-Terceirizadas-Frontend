@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import CKEditorField from "components/Shareable/CKEditorField";
 import SSelect from "components/Shareable/Select";
 import { InputComData } from "components/Shareable/DatePicker";
@@ -219,12 +218,12 @@ export default ({
                   required
                   disabled={carregandoAluno}
                   validate={composeValidators(required, length(7))}
-                />
-                <OnChange name="codigo_eol_aluno">
-                  {(value) => {
-                    getAlunoPorEol(value, values);
+                  inputOnChange={(e) => {
+                    const value = e.target.value;
+                    const values_ = form.getState().values;
+                    getAlunoPorEol(value, values_);
                   }}
-                </OnChange>
+                />
               </div>
               <div className="col-6">
                 <Field
@@ -339,12 +338,12 @@ export default ({
                   required
                   disabled={carregandoEscola}
                   validate={composeValidators(required, length(6))}
-                />
-                <OnChange name="codigo_eol_escola">
-                  {(value) => {
-                    getEscolaPorEol(value, values);
+                  inputOnChange={(e) => {
+                    const value = e.target.value;
+                    const values_ = form.getState().values;
+                    getEscolaPorEol(value, values_);
                   }}
-                </OnChange>
+                />
               </div>
               <div className="col-9">
                 <Field

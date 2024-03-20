@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 
 import { getTiposDeContagem } from "services/dietaEspecial.service";
 
@@ -53,26 +52,25 @@ export default ({ escola }) => {
           <div className="row">
             <div className="col-4">
               <form>
-                {dadosIniciais && (
-                  <OnChange name="tipos_contagem">
-                    {(value, previous) =>
-                      previous !== "" &&
-                      value.length !== previous.length &&
-                      onFormUpdate(value)
-                    }
-                  </OnChange>
-                )}
-                {tiposDeContagem.map((tipoContagem, index) => (
-                  <p key={index}>
-                    <Field
-                      component="input"
-                      name="tipos_contagem"
-                      type="checkbox"
-                      value={tipoContagem.uuid}
-                    />
-                    {tipoContagem.nome}
-                  </p>
-                ))}
+                {dadosIniciais &&
+                  tiposDeContagem.map((tipoContagem, index) => (
+                    <p key={index}>
+                      <span
+                        onClick={(e) => {
+                          const value = e.target.value;
+                          onFormUpdate(value);
+                        }}
+                      >
+                        <Field
+                          component={"input"}
+                          name="tipos_contagem"
+                          type="checkbox"
+                          value={tipoContagem.uuid}
+                        />
+                      </span>
+                      {tipoContagem.nome}
+                    </p>
+                  ))}
               </form>
             </div>
           </div>

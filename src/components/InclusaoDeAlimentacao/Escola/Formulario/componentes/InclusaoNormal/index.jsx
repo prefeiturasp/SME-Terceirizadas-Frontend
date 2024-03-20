@@ -1,7 +1,6 @@
 import React from "react";
 import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
-import { OnChange } from "react-final-form-listeners";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import Botao from "components/Shareable/Botao";
@@ -55,14 +54,12 @@ export const DataInclusaoNormal = ({ ...props }) => {
                 required,
                 dataDuplicada(values[nameFieldArray || "inclusoes"])
               )}
-            />
-            <OnChange name={`${name}.data`}>
-              {(value) => {
+              inputOnChange={(value) => {
                 if (value) {
                   onDataChanged(value);
                 }
               }}
-            </OnChange>
+            />
           </div>
           {index > 0 && (
             <div className="col-3 mt-auto mb-1">

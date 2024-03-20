@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import CardMatriculados from "components/Shareable/CardMatriculados";
 import HTTP_STATUS from "http-status-codes";
 import { TIPO_SOLICITACAO } from "constants/shared";
@@ -35,7 +35,6 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
-import { OnChange } from "react-final-form-listeners";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   validarSubmissaoNormal,
@@ -580,9 +579,11 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                               required
                               validate={required}
                               naoDesabilitarPrimeiraOpcao
-                            />
-                            <OnChange name={`${name}.motivo`}>
-                              {async (value: string) => {
+                              onChangeEffect={async (
+                                e: ChangeEvent<HTMLInputElement>
+                              ) => {
+                                const value = e.target.value;
+                                const values_ = form.getState().values;
                                 if (value) {
                                   if (
                                     motivosSimples.find(
@@ -594,9 +595,9 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                       "quantidades_periodo",
                                       undefined
                                     );
-                                    form.change("reload", !values.reload);
+                                    form.change("reload", !values_.reload);
                                     await checaMotivoInclusaoEspecifico(
-                                      values,
+                                      values_,
                                       form,
                                       value
                                     );
@@ -614,7 +615,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                       "quantidades_periodo",
                                       periodoNoite
                                     );
-                                    form.change("reload", !values.reload);
+                                    form.change("reload", !values_.reload);
                                   } else if (
                                     motivosContinuos.find(
                                       (motivo: MotivoContinuoInterface) =>
@@ -645,7 +646,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                   form.change("id_externo", idExterno);
                                 }
                               }}
-                            </OnChange>
+                            />
                           </div>
                           {motivoSimplesSelecionado(values) && (
                             <DataInclusaoNormal

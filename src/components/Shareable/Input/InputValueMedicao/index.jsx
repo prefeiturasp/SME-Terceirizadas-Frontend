@@ -54,7 +54,16 @@ export const InputText = (props) => {
     exibeTooltipSuspensaoAutorizadaAlimentacaoDreCodae,
     exibeTooltipInclusoesAutorizadasComZero,
     exibeTooltipDietasInclusaoDiaNaoLetivoCEI,
+    inputOnChange,
   } = props;
+
+  const inputProps = {
+    ...input,
+    onChange: (e) => {
+      input.onChange(e);
+      inputOnChange && inputOnChange(e);
+    },
+  };
 
   let msgTooltip = "";
 
@@ -324,6 +333,7 @@ export const InputText = (props) => {
 
       <input
         {...input}
+        {...inputProps}
         className={`form-control ${className} ${
           validacaoFrequencia() || validacaoLancheRefeicaoSobremesa1Oferta()
             ? "invalid-field"
