@@ -241,7 +241,10 @@ export default ({ uuid }) => {
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="ms-3 float-end"
-                      onClick={() => form.reset(modeloKitLanche)}
+                      onClick={() => {
+                        form.reset(modeloKitLanche);
+                        navigate(-1);
+                      }}
                     />
                   </div>
                 </div>
