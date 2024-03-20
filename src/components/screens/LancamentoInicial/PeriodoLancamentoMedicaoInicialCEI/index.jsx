@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Field, Form, FormSpy } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import arrayMutators from "final-form-arrays";
 import {
   addDays,
@@ -2321,14 +2320,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           categoria.nome,
                                                           null
                                                         )}
-                                                      />
-                                                      <OnChange
-                                                        name={`${row.name}__dia_${column.dia}__categoria_${categoria.id}`}
-                                                      >
-                                                        {(value, previous) => {
+                                                        inputOnChange={(e) =>
                                                           onChangeInput(
-                                                            value,
-                                                            previous,
+                                                            e.target.value,
+                                                            null,
                                                             errors,
                                                             formValuesAtualizados,
                                                             column.dia,
@@ -2336,9 +2331,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                             column,
                                                             row,
                                                             form
-                                                          );
-                                                        }}
-                                                      </OnChange>
+                                                          )
+                                                        }
+                                                      />
                                                     </>
                                                   ) : (
                                                     <>
@@ -2422,14 +2417,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           categoria.nome,
                                                           row.uuid
                                                         )}
-                                                      />
-                                                      <OnChange
-                                                        name={`${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`}
-                                                      >
-                                                        {(value, previous) => {
+                                                        inputOnChange={(e) =>
                                                           onChangeInput(
-                                                            value,
-                                                            previous,
+                                                            e.target.value,
+                                                            null,
                                                             errors,
                                                             formValuesAtualizados,
                                                             column.dia,
@@ -2437,9 +2428,9 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                             column,
                                                             row,
                                                             form
-                                                          );
-                                                        }}
-                                                      </OnChange>
+                                                          )
+                                                        }
+                                                      />
                                                     </>
                                                   )}
                                                 </div>

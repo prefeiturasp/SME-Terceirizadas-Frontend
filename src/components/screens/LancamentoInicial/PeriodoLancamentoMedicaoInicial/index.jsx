@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Field, Form, FormSpy } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import arrayMutators from "final-form-arrays";
 import {
   addDays,
@@ -2677,25 +2676,20 @@ export default () => {
                                                           column.dia,
                                                           categoria.id
                                                         )}
-                                                      />
-                                                      <OnChange
-                                                        name={`${row.name}__dia_${column.dia}__categoria_${categoria.id}`}
-                                                      >
-                                                        {(value, previous) => {
+                                                        inputOnChange={(e) =>
                                                           onChangeInput(
-                                                            value,
-                                                            previous,
+                                                            e.target.value,
+                                                            null,
                                                             errors,
                                                             formValuesAtualizados,
                                                             column.dia,
                                                             categoria,
-                                                            row.name,
-                                                            form,
                                                             column,
-                                                            row
-                                                          );
-                                                        }}
-                                                      </OnChange>
+                                                            row,
+                                                            form
+                                                          )
+                                                        }
+                                                      />
                                                     </div>
                                                   )}
                                                 </div>
@@ -3031,28 +3025,20 @@ export default () => {
                                                             categoria.id,
                                                             categoria.nome
                                                           )}
-                                                        />
-                                                        <OnChange
-                                                          name={`${row.name}__dia_${column.dia}__categoria_${categoria.id}`}
-                                                        >
-                                                          {(
-                                                            value,
-                                                            previous
-                                                          ) => {
+                                                          inputOnChange={(e) =>
                                                             onChangeInput(
-                                                              value,
-                                                              previous,
+                                                              e.target.value,
+                                                              null,
                                                               errors,
                                                               formValuesAtualizados,
                                                               column.dia,
                                                               categoria,
-                                                              row.name,
-                                                              form,
                                                               column,
-                                                              row
-                                                            );
-                                                          }}
-                                                        </OnChange>
+                                                              row,
+                                                              form
+                                                            )
+                                                          }
+                                                        />
                                                       </div>
                                                     )}
                                                   </div>
