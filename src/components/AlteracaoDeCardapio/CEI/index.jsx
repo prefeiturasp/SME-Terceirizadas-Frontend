@@ -35,7 +35,6 @@ import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
-import { OnChange } from "react-final-form-listeners";
 import {
   escolaAlterarSolicitacaoDeAlteracaoCardapio,
   escolaCriarSolicitacaoDeAlteracaoCardapio,
@@ -418,17 +417,16 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                               "Lanche emergencial".toUpperCase()
                           )}
                           validate={required}
-                        />
-                        <OnChange name="motivo">
-                          {async (value) => {
+                          onChangeEffect={async (e) => {
+                            const value = e.target.value;
                             if (value) {
-                              const data_ = values.data;
+                              const data_ = form.getState().values.data;
                               form.reset();
                               form.change("motivo", value);
                               form.change("data", data_);
                             }
                           }}
-                        </OnChange>
+                        />
                       </div>
                       <div className="col-12 col-sm-4">
                         <Field
@@ -443,16 +441,15 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                             ehDiaUtil(values, motivos, feriadosAno)
                           )}
                           usarDirty={true}
-                        />
-                        <OnChange name="data">
-                          {(value) => {
+                          inputOnChange={(value) => {
                             if (value) {
+                              const values_ = form.getState().values;
                               onAlterarDiaChanged(value);
-                              values.substituicoes.forEach(
+                              values_.substituicoes.forEach(
                                 (substituicao, indice) => {
                                   if (substituicao.checked) {
                                     getFaixasEtariasPorPeriodo(
-                                      values.substituicoes[indice].uuid,
+                                      values_.substituicoes[indice].uuid,
                                       value.split("/").reverse().join("-"),
                                       indice,
                                       form
@@ -462,7 +459,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                               );
                             }
                           }}
-                        </OnChange>
+                        />
                       </div>
                     </div>
                     {values.motivo && values.data && (
@@ -506,6 +503,35 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                                 ? "multiselect-wrapper-enabled"
                                                 : "multiselect-wrapper-disabled"
                                             );
+                                            if (
+                                              values.substituicoes[indice][
+                                                `checked`
+                                              ]
+                                            ) {
+                                              form.change(
+                                                `substituicoes[${indice}].tipos_alimentacao_de`,
+                                                undefined
+                                              );
+                                              form.change(
+                                                `substituicoes[${indice}].tipos_alimentacao_de_selecionados`,
+                                                undefined
+                                              );
+                                              form.change(
+                                                `substituicoes[${indice}].tipo_alimentacao_para`,
+                                                undefined
+                                              );
+                                            } else {
+                                              getFaixasEtariasPorPeriodo(
+                                                values.substituicoes[indice]
+                                                  .uuid,
+                                                values.data
+                                                  .split("/")
+                                                  .reverse()
+                                                  .join("-"),
+                                                indice,
+                                                form
+                                              );
+                                            }
                                           }}
                                           className="checkbox-custom"
                                           data-cy={`checkbox-${
@@ -520,34 +546,6 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                         />{" "}
                                         {getPeriodo(values, indice).nome}
                                       </label>
-                                      <OnChange name={`${name}.checked`}>
-                                        {(value) => {
-                                          if (!value) {
-                                            form.change(
-                                              `substituicoes[${indice}].tipos_alimentacao_de`,
-                                              undefined
-                                            );
-                                            form.change(
-                                              `substituicoes[${indice}].tipos_alimentacao_de_selecionados`,
-                                              undefined
-                                            );
-                                            form.change(
-                                              `substituicoes[${indice}].tipo_alimentacao_para`,
-                                              undefined
-                                            );
-                                          } else {
-                                            getFaixasEtariasPorPeriodo(
-                                              values.substituicoes[indice].uuid,
-                                              values.data
-                                                .split("/")
-                                                .reverse()
-                                                .join("-"),
-                                              indice,
-                                              form
-                                            );
-                                          }
-                                        }}
-                                      </OnChange>
                                     </div>
                                   </div>
                                   {ehMotivoRPL(values) && (

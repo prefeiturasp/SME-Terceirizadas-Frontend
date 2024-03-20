@@ -26,7 +26,6 @@ import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 import FormPereciveis from "./components/FormPereciveis";
 import FormNaoPereciveis from "./components/FormNaoPereciveis";
-import { OnChange } from "react-final-form-listeners";
 import TabelaNutricional from "components/Shareable/TabelaNutricional";
 import Select from "components/Shareable/Select";
 import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
@@ -180,14 +179,12 @@ export default () => {
                           tooltipText={
                             "Caso não localize o produto no seletor, faça o cadastro no botão Cadastrar Produto."
                           }
-                        />
-                        <OnChange name="produto">
-                          {(value) => {
+                          onChange={(value) => {
                             if (form.getState().dirty) {
                               form.restart({ produto: value });
                             }
                           }}
-                        </OnChange>
+                        />
                       </div>
                       <div className="col-2 cadastro-externo">
                         <Botao

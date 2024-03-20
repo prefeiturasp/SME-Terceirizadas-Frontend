@@ -7,7 +7,6 @@ import CardListarSolicitacoesCronograma from "components/Shareable/CardListarSol
 import { Paginacao } from "components/Shareable/Paginacao";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
-import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 import {
   DETALHAR_ALTERACAO_CRONOGRAMA,
@@ -120,39 +119,46 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
               }}
               onSubmit={() => {}}
             >
-              {({ values }) => (
+              {({ form }) => (
                 <div className="row">
                   <div className="col-4">
                     <Field
                       component={InputText}
                       name="numero_cronograma"
                       placeholder="Pesquisar por Nº do Cronograma"
+                      inputOnChange={(e) =>
+                        filtrarRequisicao(
+                          e.target.value,
+                          form.getState().values
+                        )
+                      }
                     />
-
-                    <OnChange name="numero_cronograma">
-                      {(value) => filtrarRequisicao(value, values)}
-                    </OnChange>
                   </div>
                   <div className="col-4">
                     <Field
                       component={InputText}
                       name="nome_produto"
                       placeholder="Pesquisar por Nome do Produto"
+                      inputOnChange={(e) =>
+                        filtrarRequisicao(
+                          e.target.value,
+                          form.getState().values
+                        )
+                      }
                     />
-
-                    <OnChange name="nome_produto">
-                      {(value) => filtrarRequisicao(value, values)}
-                    </OnChange>
                   </div>
                   <div className="col-4">
                     <Field
                       component={InputText}
                       name="nome_fornecedor"
                       placeholder="Pesquisar por Nome do Fornecedor"
+                      inputOnChange={(e) =>
+                        filtrarRequisicao(
+                          e.target.value,
+                          form.getState().values
+                        )
+                      }
                     />
-                    <OnChange name="nome_fornecedor">
-                      {(value) => filtrarRequisicao(value, values)}
-                    </OnChange>
                   </div>
                 </div>
               )}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import arrayMutators from "final-form-arrays";
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
@@ -335,7 +334,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
           subsEMEI.tipos_alimentacao_de.map((ta) => ta.uuid);
         substituicoes[periodoIndice]["emei"]["tipos_alimentacao_para"] =
           subsEMEI.tipos_alimentacao_para.map((ta) => ta.uuid);
-        substituicoes[periodoIndice]["emei"]["quantitade_alunos"] =
+        substituicoes[periodoIndice]["emei"]["quantidade_alunos"] =
           subsEMEI.qtd_alunos;
       }
     });
@@ -517,10 +516,12 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       ]}
                       validate={required}
                       required
+                      onChangeEffect={async (e) => {
+                        const value = e.target.value;
+                        const values_ = form.getState().values;
+                        checarLancheCampoAlunos(values_, value);
+                      }}
                     />
-                    <OnChange name="alunos_cei_e_ou_emei">
-                      {async (value) => checarLancheCampoAlunos(values, value)}
-                    </OnChange>
                   </div>
                   <div className="col-8">
                     <Field
@@ -531,15 +532,15 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       naoDesabilitarPrimeiraOpcao
                       validate={required}
                       required
-                    />
-                    <OnChange name="motivo">
-                      {async (value) => {
+                      onChangeEffect={async (e) => {
+                        const value = e.target.value;
                         let motivo = motivos.find((m) => m.uuid === value);
                         modificarOpcoesAlimentos(motivo);
                         limparCampos(motivo, form);
-                        checarLancheCampoTipoAlteracao(values, motivo);
+                        const values_ = form.getState().values;
+                        checarLancheCampoTipoAlteracao(values_, motivo);
                       }}
-                    </OnChange>
+                    />
                   </div>
                 </div>
                 <div className="row">
@@ -567,14 +568,12 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                             )
                       }
                       usarDirty={true}
-                    />
-                    <OnChange name="alterar_dia">
-                      {(value) => {
+                      inputOnChange={(value) => {
                         if (value) {
                           onDataChanged(value);
                         }
                       }}
-                    </OnChange>
+                    />
                   </div>
                   <div className="col-1 text-center date-options">
                     <span>ou</span>
@@ -591,14 +590,12 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                           : proximosDoisDiasUteis
                       }
                       maxDate={fimDoCalendario()}
-                    />
-                    <OnChange name="data_inicial">
-                      {(value) => {
+                      inputOnChange={(value) => {
                         if (value) {
                           onDataChanged(value);
                         }
                       }}
-                    </OnChange>
+                    />
                   </div>
                   <div className="col-3">
                     <Field
@@ -615,14 +612,12 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                         values.data_inicial && getDataObj(values.data_inicial)
                       }
                       maxDate={fimDoCalendario()}
-                    />
-                    <OnChange name="data_final">
-                      {(value) => {
+                      inputOnChange={(value) => {
                         if (value) {
                           onDataChanged(value);
                         }
                       }}
-                    </OnChange>
+                    />
                   </div>
                 </div>
                 {periodos.map((periodo, periodoIndice) => {

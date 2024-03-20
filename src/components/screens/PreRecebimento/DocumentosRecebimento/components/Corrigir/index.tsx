@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { Spin } from "antd";
 import "./styles.scss";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 import { required } from "../../../../../../helpers/fieldValidators";
@@ -413,13 +412,10 @@ export default () => {
                       placeholder="Selecione o documento"
                       required
                       validate={required}
+                      onChangeEffect={() => filtrarArquivosDocumentosForm}
                     />
                   </div>
                 </div>
-
-                <OnChange name="tipos_de_documentos">
-                  {filtrarArquivosDocumentosForm}
-                </OnChange>
 
                 {arquivosDocumentosForm &&
                   values.tipos_de_documentos?.map(

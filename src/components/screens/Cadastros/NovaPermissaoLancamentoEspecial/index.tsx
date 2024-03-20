@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import HTTP_STATUS from "http-status-codes";
 import { Checkbox, Spin } from "antd";
 import { FormApi } from "final-form";
@@ -423,10 +422,11 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                         validate={required}
                         required
                         disabled={values.uuid ? true : false}
+                        onChangeEffect={(e: ChangeEvent<HTMLInputElement>) => {
+                          const value = e.target.value;
+                          getEscolasTercTotalAsync(value);
+                        }}
                       />
-                      <OnChange name="diretoria_regional">
-                        {(value) => getEscolasTercTotalAsync(value)}
-                      </OnChange>
                     </div>
                     <div className="col-8">
                       <Field
@@ -449,10 +449,10 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                           carregandoEscolas ||
                           values.uuid
                         }
+                        inputOnChange={(value: string) => {
+                          getEscolaSimplesAsync(value);
+                        }}
                       />
-                      <OnChange name="escola">
-                        {(value) => getEscolaSimplesAsync(value)}
-                      </OnChange>
                     </div>
                   </div>
                   <div className="row">
@@ -490,15 +490,13 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                             dataInicio <= new Date())
                         }
                         placeholder="De"
-                      />
-                      <OnChange name="data_inicial">
-                        {(value) => {
+                        inputOnChange={(value: string) => {
                           if (value) {
                             const [dia, mes, ano] = value.split("/");
                             const dataInicioSelecionada = new Date(
-                              ano,
-                              mes - 1,
-                              dia
+                              Number(ano),
+                              Number(mes) - 1,
+                              Number(dia)
                             );
                             setDataInicio(dataInicioSelecionada);
                             if (dataFim && dataInicioSelecionada > dataFim) {
@@ -508,7 +506,7 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                             setDataInicio(null);
                           }
                         }}
-                      </OnChange>
+                      />
                     </div>
                     <div className="col-4">
                       <Field
@@ -526,17 +524,23 @@ export const NovaPermissaoLancamentoEspecial: React.FC = () => {
                             dataFim <= new Date())
                         }
                         placeholder="Até"
-                      />
-                      <OnChange name="data_final">
-                        {(value) => {
+                        inputOnChange={(value: string) => {
                           if (value) {
-                            const [dia, mes, ano] = value.split("/");
-                            setDataFim(new Date(ano, mes - 1, dia));
-                          } else {
-                            setDataFim(null);
+                            if (value) {
+                              const [dia, mes, ano] = value.split("/");
+                              setDataFim(
+                                new Date(
+                                  Number(ano),
+                                  Number(mes) - 1,
+                                  Number(dia)
+                                )
+                              );
+                            } else {
+                              setDataFim(null);
+                            }
                           }
                         }}
-                      </OnChange>
+                      />
                     </div>
                   </div>
                   <div className="row mt-3">

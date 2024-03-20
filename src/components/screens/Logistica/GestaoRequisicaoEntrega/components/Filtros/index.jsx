@@ -1,7 +1,6 @@
 import moment from "moment";
 import React, { useState } from "react";
 import { Form, Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { InputComData } from "components/Shareable/DatePicker";
 import Select from "components/Shareable/Select";
@@ -161,13 +160,13 @@ export default ({
                   name="codigo_unidade"
                   placeholder="Digite o Código"
                   className="input-busca-produto"
-                />
+                  inputOnChange={(e) => {
+                    const value = e.target.value;
+                    const values_ = form.getState().values;
 
-                <OnChange name="codigo_unidade">
-                  {(value) => {
-                    getNomeUnidadeEscola(value, values);
+                    getNomeUnidadeEscola(value, values_);
                   }}
-                </OnChange>
+                />
               </div>
               <div className="col-6">
                 <Field

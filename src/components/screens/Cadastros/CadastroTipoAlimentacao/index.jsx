@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { Link } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { CaretDownOutlined } from "@ant-design/icons";
@@ -125,14 +124,12 @@ export default ({ tiposUnidadesEscolar }) => {
                               .includes(inputValue.toLowerCase())
                           }
                           disabled={alterandoTiposDeAlimentacao}
+                          inputOnChange={(value) => {
+                            getPeriodosEscolares(value);
+                          }}
                         >
                           {opcoesTiposUnidades}
                         </Field>
-                        <OnChange name="tipo_unidade_escolar">
-                          {(value) => {
-                            getPeriodosEscolares(value);
-                          }}
-                        </OnChange>
                       </article>
                       <Link
                         to={

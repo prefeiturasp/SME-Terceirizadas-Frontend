@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { required } from "helpers/fieldValidators";
 import Select from "components/Shareable/Select";
 import { Select as SelectAntd } from "antd";
@@ -69,20 +68,18 @@ export default class SubstituicoesField extends Component {
                   .toLowerCase()
                   .indexOf(input.toLowerCase()) >= 0
               }
-            >
-              {alimentos.map((a) => {
-                return <Option key={a.id.toString()}>{a.nome}</Option>;
-              })}
-            </Field>
-            <OnChange name={`${name}.alimento`}>
-              {(value) => {
+              inputOnChange={(value) => {
                 this.setState({
                   valorSelecionado: alimentos.find(
                     (al) => String(al.id) === value
                   ),
                 });
               }}
-            </OnChange>
+            >
+              {alimentos.map((a) => {
+                return <Option key={a.id.toString()}>{a.nome}</Option>;
+              })}
+            </Field>
           </div>
           <div className="col-3">
             <Field

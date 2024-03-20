@@ -19,7 +19,17 @@ export const TextArea = (props) => {
     contador,
     valorInicial,
     height,
+    inputOnChange,
   } = props;
+
+  const inputProps = {
+    ...input,
+    onChange: (e) => {
+      input.onChange(e);
+      inputOnChange && inputOnChange(e);
+    },
+  };
+
   return (
     <div className="textarea">
       {label && [
@@ -35,6 +45,7 @@ export const TextArea = (props) => {
       <textarea
         style={height && { height: height + "px" }}
         {...input}
+        {...inputProps}
         className={`form-control ${className} ${
           meta.touched && meta.error && "invalid-field"
         }`}

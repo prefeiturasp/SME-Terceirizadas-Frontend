@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import "./styles.scss";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { required } from "../../../../../../helpers/fieldValidators";
@@ -196,9 +195,7 @@ export default () => {
                       required
                       validate={required}
                       esconderIcone
-                    />
-                    <OnChange name="cronograma">
-                      {(value: string) => {
+                      onChange={(value: string) => {
                         let cronograma = cronogramas.find(
                           (c) => c.numero === value
                         );
@@ -212,7 +209,7 @@ export default () => {
                           form.change("nome_produto", cronograma.nome_produto);
                         }
                       }}
-                    </OnChange>
+                    />
                   </div>
                   <div className="col-6">
                     <Field
