@@ -126,7 +126,8 @@ const MenuRelatorios = () => {
           Relatório quant. class. dieta esp.
         </LeafItem>
       )}
-      {exibirRelatorioQuantitativoSolicDietaEsp && (
+      {(exibirRelatorioQuantitativoSolicDietaEsp ||
+        usuarioEhCODAENutriManifestacao()) && (
         <LeafItem
           to={`/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GESTAO_DIETA_ESPECIAL}`}
         >
