@@ -42,10 +42,9 @@ export interface AnaliseDocumentoPayload {
   laboratorio: string;
   quantidade_laudo: string;
   unidade_medida: string;
-  data_fabricacao_lote: string;
-  validade_produto: string;
-  data_final_lote: string;
   saldo_laudo: string;
+  numero_lote_laudo: string;
+  data_final_lote: string;
   datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
   correcao_solicitada: string;
 }
