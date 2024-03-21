@@ -115,6 +115,7 @@ export default () => {
   ): void => {
     let listaChaves = [
       "data_fabricacao",
+      "data_validade",
       "prazo_maximo",
       "data_maxima",
       "justificativa",
@@ -170,12 +171,12 @@ export default () => {
       laboratorio: values.laboratorio,
       quantidade_laudo: values.quantidade_laudo?.split(".").join(""),
       unidade_medida: values.unidade_medida,
-      data_fabricacao_lote: values.data_fabricacao_lote,
-      validade_produto: values.validade_produto,
       data_final_lote: values.data_final_lote,
+      numero_lote_laudo: values.numero_lote_laudo,
       saldo_laudo: values.saldo_laudo?.split(".").join(""),
       datas_fabricacao_e_prazos: prazos.map((prazo, index) => ({
         data_fabricacao: values[`data_fabricacao_${index}`],
+        data_validade: values[`data_validade_${index}`],
         prazo_maximo_recebimento: values[`prazo_maximo_${index}`],
         justificativa: values[`justificativa_${index}`],
       })),
@@ -239,15 +240,15 @@ export default () => {
       laboratorio: doc.laboratorio?.uuid,
       quantidade_laudo: doc.quantidade_laudo?.toString(),
       unidade_medida: doc.unidade_medida?.uuid,
-      data_fabricacao_lote: doc.data_fabricacao_lote
-        ? doc.data_fabricacao_lote
-        : undefined,
-      validade_produto: doc.validade_produto ? doc.validade_produto : undefined,
       data_final_lote: doc.data_final_lote ? doc.data_final_lote : undefined,
+      numero_lote_laudo: doc.numero_lote_laudo
+        ? doc.numero_lote_laudo
+        : undefined,
       saldo_laudo: doc.saldo_laudo?.toString(),
     };
     doc.datas_fabricacao_e_prazos?.map((obj, index) => {
       iniciais[`data_fabricacao_${index}`] = obj.data_fabricacao;
+      iniciais[`data_validade_${index}`] = obj.data_validade;
       iniciais[`prazo_maximo_${index}`] = obj.prazo_maximo_recebimento;
       iniciais[`justificativa_${index}`] = obj.justificativa;
       newPrazos.push(true);
@@ -458,27 +459,13 @@ export default () => {
                   </div>
                   <div className="col-4">
                     <Field
-                      component={InputComData}
-                      label="Data Fabricação do Lote"
-                      name={`data_fabricacao_lote`}
-                      placeholder="Selecione uma Data"
-                      className="input-analise"
+                      component={InputText}
+                      label="Saldo do Laudo"
+                      name={`saldo_laudo`}
+                      placeholder="Digite o Saldo do Lote"
                       required
                       validate={required}
-                      minDate={null}
-                      maxDate={new Date()}
-                    />
-                  </div>
-                  <div className="col-4">
-                    <Field
-                      component={InputComData}
-                      label="Validade do Produto"
-                      name={`validade_produto`}
-                      placeholder="Selecione uma Data"
-                      className="input-analise"
-                      required
-                      validate={required}
-                      minDate={new Date()}
+                      agrupadorMilhar
                     />
                   </div>
                   <div className="col-4">
@@ -493,21 +480,20 @@ export default () => {
                       minDate={new Date()}
                     />
                   </div>
-                  <div className="col-4">
+                  <div className="col-8">
                     <Field
                       component={InputText}
-                      label="Saldo do Laudo"
-                      name={`saldo_laudo`}
-                      placeholder="Digite o Saldo do Lote"
+                      label="Nº do(s) Lote(s) do(s) Laudo(s)"
+                      name={`numero_lote_laudo`}
+                      placeholder="Digite o(s) nº do(s) lote(s)"
                       required
                       validate={required}
-                      agrupadorMilhar
                     />
                   </div>
 
                   {prazos.map((prazo, index) => (
                     <>
-                      <div className="col-4">
+                      <div className="col-3">
                         <Field
                           component={InputComData}
                           label="Data de Fabricação"
@@ -520,13 +506,25 @@ export default () => {
                           maxDate={new Date()}
                         />
                       </div>
-                      <div className="col-4">
+                      <div className="col-3">
+                        <Field
+                          component={InputComData}
+                          label="Data de Validade"
+                          name={`data_validade_${index}`}
+                          placeholder="Selecione uma Data"
+                          className="input-analise"
+                          required
+                          validate={required}
+                          minDate={new Date()}
+                        />
+                      </div>
+                      <div className="col-3">
                         <Field
                           component={SelectSelecione}
                           naoDesabilitarPrimeiraOpcao
                           options={PRAZO_RECEBIMENTO_OPTIONS}
                           className="input-analise"
-                          label="Prazo Máximo para Recebimento"
+                          label="Prazo Máximo de Recebimento"
                           name={`prazo_maximo_${index}`}
                           placeholder="Selecione um prazo"
                           required
@@ -535,7 +533,7 @@ export default () => {
                       </div>
 
                       {values[`prazo_maximo_${index}`] !== "OUTRO" && (
-                        <div className="col-3">
+                        <div className="col-2">
                           <InputText
                             label="Data Máxima de Recebimento"
                             placeholder="Selecione um prazo"

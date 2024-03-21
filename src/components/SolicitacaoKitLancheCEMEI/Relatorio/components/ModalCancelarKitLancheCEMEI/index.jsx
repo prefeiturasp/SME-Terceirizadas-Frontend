@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { Modal } from "react-bootstrap";
 import HTTP_STATUS from "http-status-codes";
 import { getError, mensagemCancelamento } from "helpers/utilities";
@@ -72,10 +71,13 @@ export const ModalCancelarKitLancheCEMEI = ({ ...props }) => {
                     name="justificativa"
                     required
                     validate={textAreaRequired}
+                    inputOnChange={(e) => {
+                      const value = e.target.value;
+                      if (value) {
+                        setJustificativa(value);
+                      }
+                    }}
                   />
-                  <OnChange name="justificativa">
-                    {(value) => setJustificativa(value)}
-                  </OnChange>
                 </div>
               </div>
             </Modal.Body>

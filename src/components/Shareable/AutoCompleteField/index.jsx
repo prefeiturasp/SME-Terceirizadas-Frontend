@@ -20,6 +20,7 @@ export default class AutoCompleteField extends Component {
       toLowerCaseActive,
       maxlength,
       proibeNumeros,
+      inputOnChange,
       ...props
     } = this.props;
     return (
@@ -50,6 +51,10 @@ export default class AutoCompleteField extends Component {
             e.target.value = proibeNumeros
               ? e.target.value.replace(/[0-9]/, "")
               : e.target.value;
+          }}
+          onChange={(e) => {
+            input.onChange(e);
+            inputOnChange && inputOnChange(e);
           }}
         >
           {esconderIcone ? (

@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Field, Form, FormSpy } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import arrayMutators from "final-form-arrays";
 import {
   addDays,
@@ -203,6 +202,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     setAlimentacoesLancamentosEspeciais,
   ] = useState(null);
   const [dataInicioPermissoes, setDataInicioPermissoes] = useState(null);
+  const [previousValue, setPreviousValue] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -2321,24 +2321,29 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           categoria.nome,
                                                           null
                                                         )}
-                                                      />
-                                                      <OnChange
-                                                        name={`${row.name}__dia_${column.dia}__categoria_${categoria.id}`}
-                                                      >
-                                                        {(value, previous) => {
+                                                        inputOnChange={(e) => {
+                                                          const value =
+                                                            e.target.value;
+
                                                           onChangeInput(
                                                             value,
-                                                            previous,
-                                                            errors,
-                                                            formValuesAtualizados,
+                                                            previousValue,
+                                                            form.getState()
+                                                              .errors,
+                                                            form.getState()
+                                                              .values,
                                                             column.dia,
                                                             categoria,
                                                             column,
                                                             row,
                                                             form
                                                           );
+
+                                                          setPreviousValue(
+                                                            value
+                                                          );
                                                         }}
-                                                      </OnChange>
+                                                      />
                                                     </>
                                                   ) : (
                                                     <>
@@ -2422,24 +2427,29 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                           categoria.nome,
                                                           row.uuid
                                                         )}
-                                                      />
-                                                      <OnChange
-                                                        name={`${row.name}__faixa_${row.uuid}__dia_${column.dia}__categoria_${categoria.id}`}
-                                                      >
-                                                        {(value, previous) => {
+                                                        inputOnChange={(e) => {
+                                                          const value =
+                                                            e.target.value;
+
                                                           onChangeInput(
                                                             value,
-                                                            previous,
-                                                            errors,
-                                                            formValuesAtualizados,
+                                                            previousValue,
+                                                            form.getState()
+                                                              .errors,
+                                                            form.getState()
+                                                              .values,
                                                             column.dia,
                                                             categoria,
                                                             column,
                                                             row,
                                                             form
                                                           );
+
+                                                          setPreviousValue(
+                                                            value
+                                                          );
                                                         }}
-                                                      </OnChange>
+                                                      />
                                                     </>
                                                   )}
                                                 </div>

@@ -13,7 +13,6 @@ import {
 } from "helpers/utilities";
 import React, { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import CKEditorField from "components/Shareable/CKEditorField";
 import Botao from "components/Shareable/Botao";
 import HTTP_STATUS from "http-status-codes";
@@ -254,24 +253,24 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                       maxDate={fimDoCalendario()}
                       required
                       validate={required}
-                    />
-                    <OnChange name={`data`}>
-                      {(value) => {
+                      inputOnChange={(value) => {
                         if (value) {
-                          if (!values.solicitacao_cei) {
-                            values.solicitacao_cei = {
+                          const values_ = form.getState().values;
+
+                          if (!values_.solicitacao_cei) {
+                            values_.solicitacao_cei = {
                               faixas_quantidades: {},
                             };
                           }
-                          if (!values.solicitacao_emei) {
-                            values.solicitacao_emei = {};
+                          if (!values_.solicitacao_emei) {
+                            values_.solicitacao_emei = {};
                           }
 
                           validaDiasUteis(value);
                           getAlunosPorFaixaEtariaNumaDataAsync(value);
                         }
                       }}
-                    </OnChange>
+                    />
                   </div>
                   <div className="col-9">
                     <Field

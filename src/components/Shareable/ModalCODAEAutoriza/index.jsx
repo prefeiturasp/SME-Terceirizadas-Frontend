@@ -2,7 +2,6 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import {
@@ -69,7 +68,7 @@ export class ModalCODAEAutoriza extends Component {
         <Form
           onSubmit={() => {}}
           initialValues={{}}
-          render={({ handleSubmit, values }) => (
+          render={({ form, handleSubmit, values }) => (
             <form onSubmit={handleSubmit}>
               <Modal.Header closeButton>
                 <Modal.Title>Deseja autorizar a solicitação?</Modal.Title>
@@ -89,12 +88,13 @@ export class ModalCODAEAutoriza extends Component {
                               maxLength1500
                             )
                       }
-                    />
-                    <OnChange name="justificativa_autorizacao">
-                      {(value) => {
-                        this.setDesabilitarSubmit(value);
+                      onChange={(_, editor) => {
+                        const value_ = editor.getData();
+
+                        form.change("justificativa_autorizacao", value_);
+                        this.setDesabilitarSubmit(value_);
                       }}
-                    </OnChange>
+                    />
                   </div>
                 </div>
               </Modal.Body>

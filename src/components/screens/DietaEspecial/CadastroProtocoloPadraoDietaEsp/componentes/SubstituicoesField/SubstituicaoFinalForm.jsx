@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { required } from "helpers/fieldValidators";
 import Select from "../../../../../Shareable/Select";
 import { CaretDownOutlined } from "@ant-design/icons";
@@ -51,7 +50,7 @@ const SubstituicoesField = ({
   const [valoresSelecionados, setValoresSelecionados] = useState([]);
   const [open, setOpen] = useState(false);
 
-  const produtosSelcionados = (values) => {
+  const produtosSelecionados = (values) => {
     let listaSelecionados = [];
     values &&
       values.forEach((value) => {
@@ -104,7 +103,7 @@ const SubstituicoesField = ({
               valoresSelecionados && valoresSelecionados.length > 0
                 ? valoresSelecionados
                 : values.substituicoes &&
-                  produtosSelcionados(values.substituicoes[chave].substitutos)
+                  produtosSelecionados(values.substituicoes[chave].substitutos)
             }
           >
             <span>
@@ -120,13 +119,10 @@ const SubstituicoesField = ({
                   value: produto.uuid,
                   label: produto.nome,
                 }))}
-                onSelectedChanged={(values_) =>
-                  form.change(
-                    `substituicoes[
-                  ${chave}].substitutos`,
-                    values_
-                  )
-                }
+                onSelectedChanged={(values_) => {
+                  form.change(`substituicoes[${chave}].substitutos`, values_);
+                  produtosSelecionados(values_);
+                }}
                 validate={required}
                 disableSearch={false}
                 overrideStrings={{
@@ -136,11 +132,6 @@ const SubstituicoesField = ({
                   Search: "Buscar",
                 }}
               />
-              <OnChange name={`${name}.substitutos`}>
-                {(values) => {
-                  produtosSelcionados(values);
-                }}
-              </OnChange>
             </span>
           </Tooltip>
         </div>

@@ -14,7 +14,6 @@ import {
   vincularProtocolosEditais,
 } from "services/dietaEspecial.service";
 import HTTP_STATUS from "http-status-codes";
-import { OnChange } from "react-final-form-listeners";
 import { required, requiredMultiselectKhan } from "helpers/fieldValidators";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 
@@ -89,14 +88,13 @@ export const ModalVincularProtocolos = ({
                     }
                     required
                     validate={required}
-                  />
-                  <OnChange name="edital_origem">
-                    {async (value) => {
+                    onChangeEffect={async (e) => {
+                      const value = e.target.value;
                       if (value) {
                         getProtocolosPadraoPorEditalAsync(value);
                       }
                     }}
-                  </OnChange>
+                  />
                 </div>
                 <div className="col-12">
                   <Field

@@ -14,7 +14,6 @@ import { ajustarFormatoLog } from "../helper";
 import { Paginacao } from "components/Shareable/Paginacao";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
-import { OnChange } from "react-final-form-listeners";
 import Select from "components/Shareable/Select";
 import { connect } from "react-redux";
 import { PERIODOS_OPTIONS, TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
@@ -183,7 +182,7 @@ function SolicitacoesPorStatusGenerico(props) {
           <Spin tip="Carregando..." spinning={loading}>
             {solicitacoes && (
               <Form onSubmit={onSubmit}>
-                {({ handleSubmit, values }) => (
+                {({ form, handleSubmit, values }) => (
                   <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-3">
@@ -195,28 +194,29 @@ function SolicitacoesPorStatusGenerico(props) {
                           disabled={props.disabled || loading}
                           initialValue={PERIODOS_OPTIONS[0].uuid}
                           options={PERIODOS_OPTIONS}
+                          onChangeEffect={async (e) => {
+                            const value = e.target.value;
+                            const values_ = form.getState().values;
+
+                            setLoading(true);
+                            await getSolicitacoesAsync({
+                              lote: values_.lote,
+                              status: values_.status,
+                              busca:
+                                values_.titulo && values_.titulo.length > 2
+                                  ? values_.titulo
+                                  : null,
+                              tipo_solicitacao: values_.tipo_solicitacao,
+                              data_evento: values_.data_evento,
+                              periodo: value,
+                              diretoria_regional: values_.diretoria_regional,
+                              ...PARAMS,
+                            });
+                            setLoading(false);
+                            setCurrentPage(1);
+                          }}
                         />
                       </div>
-                      <OnChange name="periodo">
-                        {async (value) => {
-                          setLoading(true);
-                          await getSolicitacoesAsync({
-                            lote: values.lote,
-                            status: values.status,
-                            busca:
-                              values.titulo && values.titulo.length > 2
-                                ? values.titulo
-                                : null,
-                            tipo_solicitacao: values.tipo_solicitacao,
-                            data_evento: values.data_evento,
-                            periodo: value,
-                            diretoria_regional: values.diretoria_regional,
-                            ...PARAMS,
-                          });
-                          setLoading(false);
-                          setCurrentPage(1);
-                        }}
-                      </OnChange>
                       <div className="ver-mais-titulo col-3">
                         <Field
                           component={InputText}
@@ -224,30 +224,31 @@ function SolicitacoesPorStatusGenerico(props) {
                           placeholder="Pesquisar"
                           disabled={props.disabled || loading}
                           initialValue={propsAlimentacaoRedux.tituloAlimentacao}
-                        />
-                        <div className="warning-num-charac">
-                          * mínimo de 3 caracteres
-                        </div>
-                        <OnChange name="titulo">
-                          {async (value) => {
+                          inputOnChange={async (e) => {
+                            const value = e.target.value;
+                            const values_ = form.getState().values;
+
                             clearTimeout(typingTimeout);
                             typingTimeout = setTimeout(async () => {
                               setLoading(true);
                               await getSolicitacoesAsync({
                                 busca: value && value.length > 2 ? value : null,
-                                status: values.status,
-                                periodo: values.periodo,
-                                lote: values.lote,
-                                tipo_solicitacao: values.tipo_solicitacao,
-                                data_evento: values.data_evento,
-                                diretoria_regional: values.diretoria_regional,
+                                status: values_.status,
+                                periodo: values_.periodo,
+                                lote: values_.lote,
+                                tipo_solicitacao: values_.tipo_solicitacao,
+                                data_evento: values_.data_evento,
+                                diretoria_regional: values_.diretoria_regional,
                                 ...PARAMS,
                               });
                               setLoading(false);
                               setCurrentPage(1);
                             }, 1000);
                           }}
-                        </OnChange>
+                        />
+                        <div className="warning-num-charac">
+                          * mínimo de 3 caracteres
+                        </div>
                       </div>
                       {listaStatus && (
                         <div className="col-3">
@@ -261,27 +262,28 @@ function SolicitacoesPorStatusGenerico(props) {
                             initialValue={
                               propsAlimentacaoRedux.statusAlimentacao
                             }
-                          />
-                          <OnChange name="status">
-                            {async (value) => {
+                            onChangeEffect={async (e) => {
+                              const value = e.target.value;
+                              const values_ = form.getState().values;
+
                               setLoading(true);
                               await getSolicitacoesAsync({
                                 status: value,
-                                lote: values.lote,
+                                lote: values_.lote,
                                 busca:
-                                  values.titulo && values.titulo.length > 2
-                                    ? values.titulo
+                                  values_.titulo && values_.titulo.length > 2
+                                    ? values_.titulo
                                     : null,
-                                periodo: values.periodo,
-                                tipo_solicitacao: values.tipo_solicitacao,
-                                data_evento: values.data_evento,
-                                diretoria_regional: values.diretoria_regional,
+                                periodo: values_.periodo,
+                                tipo_solicitacao: values_.tipo_solicitacao,
+                                data_evento: values_.data_evento,
+                                diretoria_regional: values_.diretoria_regional,
                                 ...PARAMS,
                               });
                               setLoading(false);
                               setCurrentPage(1);
                             }}
-                          </OnChange>
+                          />
                         </div>
                       )}
 
@@ -296,27 +298,28 @@ function SolicitacoesPorStatusGenerico(props) {
                           }
                           disabled={props.disabled || loading}
                           options={TIPOS_SOLICITACOES_OPTIONS}
-                        />
-                        <OnChange name="tipo_solicitacao">
-                          {async (value) => {
+                          onChangeEffect={async (e) => {
+                            const value = e.target.value;
+                            const values_ = form.getState().values;
+
                             setLoading(true);
                             await getSolicitacoesAsync({
-                              lote: values.lote,
-                              status: values.status,
+                              lote: values_.lote,
+                              status: values_.status,
                               busca:
-                                values.titulo && values.titulo.length > 2
-                                  ? values.titulo
+                                values_.titulo && values_.titulo.length > 2
+                                  ? values_.titulo
                                   : null,
                               tipo_solicitacao: value,
-                              periodo: values.periodo,
-                              data_evento: values.data_evento,
-                              diretoria_regional: values.diretoria_regional,
+                              periodo: values_.periodo,
+                              data_evento: values_.data_evento,
+                              diretoria_regional: values_.diretoria_regional,
                               ...PARAMS,
                             });
                             setLoading(false);
                             setCurrentPage(1);
                           }}
-                        </OnChange>
+                        />
                       </div>
 
                       <div className="col-3">
@@ -329,27 +332,27 @@ function SolicitacoesPorStatusGenerico(props) {
                           }
                           disabled={props.disabled || loading}
                           placeholder="Data do evento"
-                        />
-                        <OnChange name="data_evento">
-                          {async (value) => {
+                          inputOnChange={async (value) => {
+                            const values_ = form.getState().values;
+
                             setLoading(true);
                             await getSolicitacoesAsync({
-                              lote: values.lote,
-                              status: values.status,
+                              lote: values_.lote,
+                              status: values_.status,
                               busca:
-                                values.titulo && values.titulo.length > 2
-                                  ? values.titulo
+                                values_.titulo && values_.titulo.length > 2
+                                  ? values_.titulo
                                   : null,
-                              tipo_solicitacao: values.tipo_solicitacao,
+                              tipo_solicitacao: values_.tipo_solicitacao,
                               data_evento: value,
-                              periodo: values.periodo,
-                              diretoria_regional: values.diretoria_regional,
+                              periodo: values_.periodo,
+                              diretoria_regional: values_.diretoria_regional,
                               ...PARAMS,
                             });
                             setLoading(false);
                             setCurrentPage(1);
                           }}
-                        </OnChange>
+                        />
                       </div>
                       {ehCODAE && (
                         <div className="offset-6 col-3">
@@ -361,27 +364,28 @@ function SolicitacoesPorStatusGenerico(props) {
                             initialValue={propsAlimentacaoRedux.dreAlimentacao}
                             disabled={props.disabled || loading}
                             naoDesabilitarPrimeiraOpcao
-                          />
-                          <OnChange name="diretoria_regional">
-                            {async (value) => {
+                            onChangeEffect={async (e) => {
+                              const value = e.target.value;
+                              const values_ = form.getState().values;
+
                               setLoading(true);
                               await getSolicitacoesAsync({
-                                lote: values.lote,
-                                status: values.status,
+                                lote: values_.lote,
+                                status: values_.status,
                                 busca:
-                                  values.titulo && values.titulo.length > 2
-                                    ? values.titulo
+                                  values_.titulo && values_.titulo.length > 2
+                                    ? values_.titulo
                                     : null,
-                                tipo_solicitacao: values.tipo_solicitacao,
-                                data_evento: values.data_evento,
-                                periodo: values.periodo,
+                                tipo_solicitacao: values_.tipo_solicitacao,
+                                data_evento: values_.data_evento,
+                                periodo: values_.periodo,
                                 diretoria_regional: value,
                                 ...PARAMS,
                               });
                               setLoading(false);
                               setCurrentPage(1);
                             }}
-                          </OnChange>
+                          />
                         </div>
                       )}
 
@@ -401,27 +405,29 @@ function SolicitacoesPorStatusGenerico(props) {
                               }
                               disabled={props.disabled || loading}
                               naoDesabilitarPrimeiraOpcao
-                            />
-                            <OnChange name="lote">
-                              {async (value) => {
+                              onChangeEffect={async (e) => {
+                                const value = e.target.value;
+                                const values_ = form.getState().values;
+
                                 setLoading(true);
                                 await getSolicitacoesAsync({
                                   lote: value,
-                                  status: values.status,
+                                  status: values_.status,
                                   busca:
-                                    values.titulo && values.titulo.length > 2
-                                      ? values.titulo
+                                    values_.titulo && values_.titulo.length > 2
+                                      ? values_.titulo
                                       : null,
-                                  tipo_solicitacao: values.tipo_solicitacao,
-                                  data_evento: values.data_evento,
-                                  periodo: values.periodo,
-                                  diretoria_regional: values.diretoria_regional,
+                                  tipo_solicitacao: values_.tipo_solicitacao,
+                                  data_evento: values_.data_evento,
+                                  periodo: values_.periodo,
+                                  diretoria_regional:
+                                    values_.diretoria_regional,
                                   ...PARAMS,
                                 });
                                 setLoading(false);
                                 setCurrentPage(1);
                               }}
-                            </OnChange>
+                            />
                           </div>
                         )}
                     </div>
