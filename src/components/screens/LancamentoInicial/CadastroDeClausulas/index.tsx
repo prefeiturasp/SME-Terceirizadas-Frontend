@@ -150,7 +150,7 @@ export function CadastroDeClausulas() {
                             component={ASelect}
                             showSearch
                             validate={required}
-                            onChange={(value: string) =>
+                            inputOnChange={(value: string) =>
                               form.change("edital", value)
                             }
                             filterOption={(inputValue: string, option: any) =>

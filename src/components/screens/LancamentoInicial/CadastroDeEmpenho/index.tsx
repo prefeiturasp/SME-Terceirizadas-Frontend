@@ -211,7 +211,9 @@ export function CadastroDeEmpenho() {
                             component={ASelect}
                             showSearch
                             validate={required}
-                            onChange={(value: string) => selecionaEdital(value)}
+                            inputOnChange={(value: string) =>
+                              selecionaEdital(value)
+                            }
                             filterOption={(inputValue: string, option: any) =>
                               option.props.children
                                 .toString()
@@ -260,7 +262,7 @@ export function CadastroDeEmpenho() {
                             label="Tipo de Empenho"
                             component={ASelect}
                             validate={required}
-                            onChange={(value: string) =>
+                            inputOnChange={(value: string) =>
                               selecionaTipoEmpenho(value)
                             }
                           >

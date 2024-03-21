@@ -171,7 +171,7 @@ class PainelPedidos extends Component {
                         <Field
                           component={ASelect}
                           showSearch
-                          onChange={(value) => {
+                          inputOnChange={(value) => {
                             const filtros_ = {
                               diretoria_regional: value || undefined,
                               lote: filtros.lote,
@@ -197,7 +197,7 @@ class PainelPedidos extends Component {
                         <Field
                           component={ASelect}
                           showSearch
-                          onChange={(value) => {
+                          inputOnChange={(value) => {
                             const filtros_ = {
                               diretoria_regional: filtros.diretoria_regional,
                               lote: value || undefined,

@@ -259,7 +259,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       onClick={() => setOpenSelect1(!openSelect1)}
                       onBlur={() => setOpenSelect1(false)}
                       name="edital_origem"
-                      onChange={(value) =>
+                      inputOnChange={(value) =>
                         onChangeEditalDeOrigem(value, form, values)
                       }
                       filterOption={(inputValue, option) =>
@@ -294,7 +294,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       onClick={() => setOpenSelect2(!openSelect2)}
                       onBlur={() => setOpenSelect2(false)}
                       name="tipo_produto_edital_origem"
-                      onChange={(value) => {
+                      inputOnChange={(value) => {
                         form.change("tipo_produto_edital_origem", value);
                         setErros({
                           ...erros,
@@ -356,7 +356,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       onClick={() => setOpenSelect3(!openSelect3)}
                       onBlur={() => setOpenSelect3(false)}
                       name="tipo_produto"
-                      onChange={(value) => {
+                      inputOnChange={(value) => {
                         form.change("tipo_produto", value);
                         setErros({
                           ...erros,

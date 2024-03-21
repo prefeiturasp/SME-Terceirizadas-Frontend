@@ -240,7 +240,7 @@ export const DashboardCODAE = (props) => {
                       <Field
                         component={ASelect}
                         showSearch
-                        onChange={(value) => {
+                        inputOnChange={(value) => {
                           form.change(`diretoria_regional`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                           props.updateDREAlimentacao(value);
@@ -260,7 +260,7 @@ export const DashboardCODAE = (props) => {
                       <Field
                         component={ASelect}
                         showSearch
-                        onChange={(value) => {
+                        inputOnChange={(value) => {
                           form.change(`lote`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                           props.updateLoteAlimentacao(value);

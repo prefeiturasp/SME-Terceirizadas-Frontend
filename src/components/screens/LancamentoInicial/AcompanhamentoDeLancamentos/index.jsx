@@ -495,7 +495,7 @@ export const AcompanhamentoDeLancamentos = () => {
                         component={ASelect}
                         showSearch
                         className="seletor-dre"
-                        onChange={(value) => {
+                        inputOnChange={(value) => {
                           form.change(`diretoria_regional`, value || undefined);
                           setDiretoriaRegional(value || undefined);
                           setStatusSelecionado(null);

@@ -164,7 +164,7 @@ class PainelPedidos extends Component {
                     <Field
                       component={ASelect}
                       showSearch
-                      onChange={(value) => {
+                      inputOnChange={(value) => {
                         const filtros_ = {
                           lote: value || undefined,
                         };

@@ -96,7 +96,7 @@ const CardBody = (props) => {
                               )
                             : []
                         }
-                        onChange={(value) => {
+                        inputOnChange={(value) => {
                           form.change("edital", value);
                           props.updateEditalProduto(value);
                           props.onChange(form.getState().values);

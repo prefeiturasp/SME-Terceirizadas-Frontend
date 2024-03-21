@@ -209,7 +209,7 @@ export const DashboardDRE = (props) => {
                       <Field
                         component={ASelect}
                         showSearch
-                        onChange={(value) => {
+                        inputOnChange={(value) => {
                           form.change(`lote`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                           props.updateLoteAlimentacao(value);

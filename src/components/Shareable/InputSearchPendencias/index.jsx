@@ -78,7 +78,7 @@ export const InputSearchPendencias = (props) => {
                     options={[{ label: "Número do Edital", value: "" }].concat(
                       props.editais
                     )}
-                    onChange={(value) => {
+                    inputOnChange={(value) => {
                       form.change("edital", value);
                       props.filterList(form.getState().values);
                     }}
