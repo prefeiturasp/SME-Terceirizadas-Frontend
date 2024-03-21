@@ -24,7 +24,9 @@ const ListagemKits = ({ kits }) => {
                 <div>{kit.nome}</div>
                 <div dangerouslySetInnerHTML={{ __html: kit.descricao }} />
                 <div>{kit.edital ? kit.edital.numero : ""}</div>
-                <div>{kit.tipos_unidades.map((t) => t.iniciais).join(",")}</div>
+                <div>
+                  {kit.tipos_unidades.map((t) => t.iniciais).join(", ")}
+                </div>
                 <div>{kit.status}</div>
                 <div>
                   <button
