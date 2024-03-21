@@ -34,7 +34,7 @@ const MyPicker = (props) => {
 
 export const makeField =
   (Component) =>
-  ({ input, meta, children, hasFeedback, label, inputOnChange, ...rest }) => {
+  ({ input, meta, children, hasFeedback, label, ...rest }) => {
     const hasError = meta.touched && meta.invalid;
     return (
       <FormItem
@@ -55,10 +55,6 @@ export const makeField =
           {...input}
           {...rest}
           children={children}
-          onChange={(e) => {
-            input.onChange(e);
-            inputOnChange && inputOnChange(e);
-          }}
         />
       </FormItem>
     );

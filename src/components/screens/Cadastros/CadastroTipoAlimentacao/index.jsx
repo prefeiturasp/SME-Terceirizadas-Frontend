@@ -124,7 +124,7 @@ export default ({ tiposUnidadesEscolar }) => {
                               .includes(inputValue.toLowerCase())
                           }
                           disabled={alterandoTiposDeAlimentacao}
-                          inputOnChange={(value) => {
+                          onChange={(value) => {
                             getPeriodosEscolares(value);
                           }}
                         >
