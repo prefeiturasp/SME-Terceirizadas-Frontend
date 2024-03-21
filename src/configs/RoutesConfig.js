@@ -143,6 +143,7 @@ import {
   usuarioComAcessoAoPainelFichasTecnicas,
   usuarioEhCODAEGabinete,
   usuarioComAcessoAoCalendarioCronograma,
+  usuarioEhRecebimento,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -302,6 +303,7 @@ import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/Ca
 import StatusFichasTecnicasAprovadas from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasAprovadas";
 import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
 import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
+import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
 
 const routesConfig = [
   {
@@ -1995,6 +1997,11 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
     component: CalendarioCronogramaPage,
     tipoUsuario: usuarioComAcessoAoCalendarioCronograma(),
+  },
+  {
+    path: `/${constants.RECEBIMENTO}/${constants.QUESTOES_POR_PRODUTO}`,
+    component: QuestoesPorProdutoPage,
+    tipoUsuario: usuarioEhRecebimento(),
   },
 ];
 
