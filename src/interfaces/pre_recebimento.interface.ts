@@ -22,12 +22,11 @@ export interface DocumentosRecebimentoDetalhado extends DocumentosRecebimento {
 
 export interface DocumentosRecebimentoParaAnalise
   extends DocumentosRecebimentoDetalhado {
-  data_fabricacao_lote: string;
   data_final_lote: string;
   datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
   quantidade_laudo: number;
   saldo_laudo: number;
-  validade_produto: string;
+  numero_lote_laudo: string;
   numero_sei: string;
   fornecedor: string;
   unidade_medida: UnidadeMedidaSimples;
@@ -36,6 +35,7 @@ export interface DocumentosRecebimentoParaAnalise
 
 export interface DatasFabricacaoPrazos {
   data_fabricacao: string;
+  data_validade: string;
   prazo_maximo_recebimento: string;
   data_maxima_recebimento?: string;
   justificativa?: string;
