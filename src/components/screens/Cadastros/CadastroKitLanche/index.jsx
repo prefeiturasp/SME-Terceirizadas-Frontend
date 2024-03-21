@@ -97,6 +97,7 @@ export default ({ uuid }) => {
       const payload = {
         nome: values.nome,
         edital: values.edital,
+        tipos_unidades: values.tipos_unidades,
         uuid: modeloKitLanche.uuid,
       };
       try {
