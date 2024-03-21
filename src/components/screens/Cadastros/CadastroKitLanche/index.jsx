@@ -18,6 +18,7 @@ import {
   required,
   selectValidate,
   textAreaRequired,
+  requiredMultiselect,
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
@@ -182,6 +183,8 @@ export default ({ uuid }) => {
                         allItemsAreSelected: "Todos os tipos de unidade",
                         selectAll: "Todos",
                       }}
+                      required
+                      validate={requiredMultiselect}
                       disabled={!!modeloKitLanche.uuid}
                     />
                   </div>
