@@ -68,7 +68,7 @@ export default class SubstituicoesField extends Component {
                   .toLowerCase()
                   .indexOf(input.toLowerCase()) >= 0
               }
-              inputOnChange={(value) => {
+              onChange={(value) => {
                 this.setState({
                   valorSelecionado: alimentos.find(
                     (al) => String(al.id) === value

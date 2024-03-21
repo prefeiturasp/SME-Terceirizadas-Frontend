@@ -72,7 +72,7 @@ const Protocolos = ({ protocolos, setProtocoloPadrao, form }) => {
             option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
             0
           }
-          inputOnChange={(value) => {
+          onChange={(value) => {
             getProtocolo(value, form);
           }}
         >
