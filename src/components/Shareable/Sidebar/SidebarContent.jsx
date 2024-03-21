@@ -36,6 +36,7 @@ import {
   usuarioEhOrgaoFiscalizador,
   usuarioEhCODAEGabinete,
   usuarioEhDilogDiretoria,
+  usuarioEhRecebimento,
 } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
 
@@ -50,6 +51,7 @@ import {
   MenuRelatorios,
   MenuLogistica,
   MenuPreRecebimento,
+  MenuRecebimento,
 } from "./menus";
 
 export const SidebarContent = () => {
@@ -181,6 +183,8 @@ export const SidebarContent = () => {
     usuarioEhCoordenadorGpCODAE() ||
     usuarioEhCODAEGabinete();
 
+  const exibirMenuRecebimento = usuarioEhRecebimento();
+
   const _props = {
     activeMenu,
     onSubmenuClick: onSubmenuClick,
@@ -206,6 +210,7 @@ export const SidebarContent = () => {
     exibirRelatorios && <MenuRelatorios key={8} />,
     exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
     exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />,
+    exibirMenuRecebimento && <MenuRecebimento key={11} />,
     exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
   ];
 };

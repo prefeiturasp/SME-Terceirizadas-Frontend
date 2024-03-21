@@ -582,6 +582,10 @@ export const usuarioEhPreRecebimentoSemLogistica = () => {
   );
 };
 
+export const usuarioEhRecebimento = () => {
+  return [PERFIL.DILOG_QUALIDADE].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhDinutreDiretoria = () =>
   localStorage.getItem("perfil") === PERFIL.DINUTRE_DIRETORIA;
 
