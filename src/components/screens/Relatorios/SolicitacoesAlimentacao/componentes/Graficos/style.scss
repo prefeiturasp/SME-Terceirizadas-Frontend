@@ -1,5 +1,8 @@
 div.graficos-relatorio-ga {
-  canvas {
-    width: 100% !important;
+  .total-por-status {
+    canvas {
+      height: 450px !important;
+      width: 450px !important;
+    }
   }
 }

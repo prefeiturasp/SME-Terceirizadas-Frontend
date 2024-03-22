@@ -7,6 +7,7 @@ import { GraficoSolicitacoesAutorizadasDRELote } from "./components/GraficoSolic
 import { ResponseDatasetsGraficosRelatorioSolicitacoesAlimentacaoInterface } from "./interfaces";
 import "./style.scss";
 import { GraficoSolicitacoesAutorizadasTipoSolicitacao } from "./components/GraficoSolicitacoesAutorizadasTipoSolicitacao";
+import { GraficoSolicitacoesStatus } from "./components/GraficoSolicitacoesStatus";
 
 type ValuesType = {
   status: string;
@@ -67,6 +68,17 @@ export const Graficos = ({ ...props }: PropsType) => {
     );
   };
 
+  const graficoTotalPorStatus = (): boolean | ChartData => {
+    return (
+      datasGraficos &&
+      datasGraficos.find((datagrafico) =>
+        datagrafico.datasets.find((dataset) =>
+          dataset.label.includes("por Status")
+        )
+      )
+    );
+  };
+
   return (
     <div className="graficos-relatorio-ga text-center">
       <Spin tip="Carregando gráficos..." spinning={!datasGraficos}>
@@ -81,10 +93,15 @@ export const Graficos = ({ ...props }: PropsType) => {
         )}
         <div className="row">
           {graficoTotalPorTipoAlimentacao() && (
-            <div className="col-6">
+            <div className="col-8">
               <GraficoSolicitacoesAutorizadasTipoSolicitacao
                 chartData={graficoTotalPorTipoAlimentacao()}
               />
+            </div>
+          )}
+          {graficoTotalPorStatus() && (
+            <div className="col-4 total-por-status">
+              <GraficoSolicitacoesStatus chartData={graficoTotalPorStatus()} />
             </div>
           )}
         </div>
