@@ -304,6 +304,7 @@ import StatusFichasTecnicasAprovadas from "../pages/PreRecebimento/CardsFichasTe
 import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
 import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
 import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
+import AtribuirQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/AtribuirQuestoesPage";
 
 const routesConfig = [
   {
@@ -2001,6 +2002,11 @@ const routesConfig = [
   {
     path: `/${constants.RECEBIMENTO}/${constants.QUESTOES_POR_PRODUTO}`,
     component: QuestoesPorProdutoPage,
+    tipoUsuario: usuarioEhRecebimento(),
+  },
+  {
+    path: `/${constants.RECEBIMENTO}/${constants.ATRIBUIR_QUESTOES_CONFERENCIA}`,
+    component: AtribuirQuestoesPage,
     tipoUsuario: usuarioEhRecebimento(),
   },
 ];
