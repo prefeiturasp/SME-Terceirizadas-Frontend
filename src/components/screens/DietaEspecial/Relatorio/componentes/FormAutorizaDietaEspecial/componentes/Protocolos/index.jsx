@@ -74,6 +74,7 @@ const Protocolos = ({ protocolos, setProtocoloPadrao, form }) => {
           }
           onChange={(value) => {
             getProtocolo(value, form);
+            form.change("protocolo_padrao", value);
           }}
         >
           {protocolos.map((protocolo) => {
