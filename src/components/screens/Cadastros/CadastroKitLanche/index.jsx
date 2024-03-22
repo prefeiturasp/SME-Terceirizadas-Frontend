@@ -168,7 +168,7 @@ export default ({ uuid }) => {
                     <Field
                       component={StatefulMultiSelect}
                       name="tipos_unidades"
-                      selected={values.tipos_unidades || []}
+                      selected={form.getState().values.tipos_unidades || []}
                       options={tiposUnidades.map((tipoUnidade) => ({
                         label: tipoUnidade.iniciais,
                         value: tipoUnidade.uuid,
