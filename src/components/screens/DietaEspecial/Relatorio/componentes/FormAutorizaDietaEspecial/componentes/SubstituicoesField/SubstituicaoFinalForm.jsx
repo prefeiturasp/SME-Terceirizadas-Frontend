@@ -73,6 +73,7 @@ export default class SubstituicoesField extends Component {
                     (al) => String(al.id) === value
                   ),
                 });
+                form.change(`${name}.alimento`, value);
               }}
             >
               {alimentos.map((a) => {
