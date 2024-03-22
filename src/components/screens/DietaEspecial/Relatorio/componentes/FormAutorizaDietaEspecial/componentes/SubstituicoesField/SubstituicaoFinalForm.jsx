@@ -41,7 +41,6 @@ export default class SubstituicoesField extends Component {
 
   render() {
     const {
-      chave,
       alimentos,
       produtos,
       removeOption,
@@ -122,7 +121,7 @@ export default class SubstituicoesField extends Component {
               validate={required}
             />
           </div>
-          {deveHabilitarApagar && chave > 0 && (
+          {deveHabilitarApagar && (
             <div className="col-1">
               <Botao
                 icon={BUTTON_ICON.TRASH}
