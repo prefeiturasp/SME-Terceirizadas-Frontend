@@ -183,6 +183,12 @@ const FormAutorizaDietaEspecial = ({
   };
 
   const onSubmit = async (values) => {
+    if (!values.substituicoes || values.substituicoes.length === 0) {
+      toastError(
+        "É necessário ao menos um alimento na lista de substituições!"
+      );
+      return;
+    }
     values.alergias_intolerancias = diagnosticosSelecionados;
     if (!diagnosticosSelecionados.length) {
       return;
