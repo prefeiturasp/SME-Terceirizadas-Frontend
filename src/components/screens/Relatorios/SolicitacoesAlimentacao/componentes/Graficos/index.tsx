@@ -93,14 +93,14 @@ export const Graficos = ({ ...props }: PropsType) => {
         )}
         <div className="row">
           {graficoTotalPorTipoAlimentacao() && (
-            <div className="col-8">
+            <div className="col-7">
               <GraficoSolicitacoesAutorizadasTipoSolicitacao
                 chartData={graficoTotalPorTipoAlimentacao()}
               />
             </div>
           )}
           {graficoTotalPorStatus() && (
-            <div className="col-4 total-por-status">
+            <div className="col-5 total-por-status">
               <GraficoSolicitacoesStatus chartData={graficoTotalPorStatus()} />
             </div>
           )}
