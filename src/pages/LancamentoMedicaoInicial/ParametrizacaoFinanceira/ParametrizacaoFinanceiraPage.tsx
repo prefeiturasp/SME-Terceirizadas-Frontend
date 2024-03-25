@@ -3,12 +3,12 @@ import React from "react";
 import {
   PARAMETRIZACAO_FINANCEIRA,
   MEDICAO_INICIAL,
-} from "../../configs/constants";
+} from "../../../configs/constants";
 
-import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import Page from "../../components/Shareable/Page/Page";
+import Breadcrumb from "../../../components/Shareable/Breadcrumb";
+import Page from "../../../components/Shareable/Page/Page";
 
-import ParametrizacaoFinanceira from "components/screens/LancamentoInicial/ParametrizacaoFinanceira";
+import ParametrizacaoFinanceira from "components/screens/LancamentoInicial/ParametrizacaoFinanceira/ParametrizacaoFinanceira";
 
 const atual = {
   href: `/${MEDICAO_INICIAL}/${PARAMETRIZACAO_FINANCEIRA}/`,
