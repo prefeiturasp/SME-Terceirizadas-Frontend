@@ -50,6 +50,18 @@ const Filtros: React.FC<Props> = ({
       label: "Rascunho",
       value: "RASCUNHO",
     },
+    {
+      label: "Aprovada",
+      value: "APROVADA",
+    },
+    {
+      label: "Enviada para Análise",
+      value: "ENVIADA_PARA_ANALISE",
+    },
+    {
+      label: "Solicitação de Alteração",
+      value: "ENVIADA_PARA_CORRECAO",
+    },
   ];
 
   const onSubmit = async (values: Record<string, any>): Promise<void> => {
