@@ -474,7 +474,9 @@ export default ({ atualizar }) => {
           <div className="subtitulo mb-3">Dados do Produto</div>
           <div className="row mt-3">
             <div className="col-4">
-              <label className="label-dados-produto">Nº do Cronograma</label>
+              <label className="label-dados-produto">
+                Número da Ficha Técnica e nome do Produto
+              </label>
             </div>
             <div className="col-4">
               <label className="label-dados-produto">
@@ -488,7 +490,7 @@ export default ({ atualizar }) => {
           <div className="row mt-2">
             <div className="col-4">
               <span className="valor-dados-produto">
-                {objeto.numero_cronograma}
+                {objeto.numero_ficha_tecnica} - {objeto.nome_produto}
               </span>
             </div>
             <div className="col-4">

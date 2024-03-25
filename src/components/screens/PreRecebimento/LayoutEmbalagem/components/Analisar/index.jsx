@@ -104,12 +104,12 @@ export default () => {
 
   const definirInitialValues = (objeto, aprovacoes) => {
     const initialValues =
-      aprovacoes.length > 0
+      aprovacoes?.length > 0
         ? {
             justificativa_0:
-              objeto.tipos_de_embalagens[0].complemento_do_status,
+              objeto.tipos_de_embalagens[0]?.complemento_do_status,
             justificativa_1:
-              objeto.tipos_de_embalagens[1].complemento_do_status,
+              objeto.tipos_de_embalagens[1]?.complemento_do_status,
             justificativa_2:
               objeto.tipos_de_embalagens.length === 3
                 ? objeto.tipos_de_embalagens[2].complemento_do_status
@@ -344,7 +344,9 @@ export default () => {
           <div className="subtitulo mb-3">Dados do Produto</div>
           <div className="row mt-3">
             <div className="col-4">
-              <label className="label-dados-produto">Nº do Cronograma</label>
+              <label className="label-dados-produto">
+                Número da Ficha Técnica e nome do Produto
+              </label>
             </div>
             <div className="col-4">
               <label className="label-dados-produto">
@@ -359,7 +361,8 @@ export default () => {
             <div className="row mt-2">
               <div className="col-4">
                 <span className="valor-dados-produto">
-                  {layoutDeEmbalagem.numero_cronograma}
+                  {layoutDeEmbalagem.numero_ficha_tecnica} -{" "}
+                  {layoutDeEmbalagem.nome_produto}
                 </span>
               </div>
               <div className="col-4">
@@ -443,7 +446,7 @@ export default () => {
 
                   <div
                     className={`${
-                      layoutDeEmbalagem.tipos_de_embalagens[1].status !==
+                      layoutDeEmbalagem.tipos_de_embalagens[1]?.status !==
                         "APROVADO" && !layoutDeEmbalagem.primeira_analise
                         ? "subtitulo-laranja"
                         : "subtitulo"
@@ -453,7 +456,7 @@ export default () => {
                   </div>
                   <div className="row">
                     <div className="col-5">
-                      {layoutDeEmbalagem.tipos_de_embalagens[1].imagens.map(
+                      {layoutDeEmbalagem.tipos_de_embalagens[1]?.imagens.map(
                         (e) => (
                           <div className="w-75" key={e.arquivo}>
                             <BotaoAnexo urlAnexo={e.arquivo} />

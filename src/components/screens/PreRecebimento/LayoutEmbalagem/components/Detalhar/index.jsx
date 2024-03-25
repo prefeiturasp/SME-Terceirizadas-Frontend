@@ -114,10 +114,10 @@ export default ({ analise }) => {
   };
 
   const definirInitialValues = (objeto, aprovacoes) => {
-    return aprovacoes.length > 0 && !analise
+    return aprovacoes?.length > 0 && !analise
       ? {
-          justificativa_0: objeto.tipos_de_embalagens[0].complemento_do_status,
-          justificativa_1: objeto.tipos_de_embalagens[1].complemento_do_status,
+          justificativa_0: objeto.tipos_de_embalagens[0]?.complemento_do_status,
+          justificativa_1: objeto.tipos_de_embalagens[1]?.complemento_do_status,
           justificativa_2:
             objeto.tipos_de_embalagens[2]?.complemento_do_status || "",
         }
@@ -313,7 +313,9 @@ export default ({ analise }) => {
           <div className="subtitulo mb-3">Dados do Produto</div>
           <div className="row mt-3">
             <div className="col-4">
-              <label className="label-dados-produto">Nº do Cronograma</label>
+              <label className="label-dados-produto">
+                Número da Ficha Técnica e nome do Produto
+              </label>
             </div>
             <div className="col-4">
               <label className="label-dados-produto">
@@ -337,7 +339,7 @@ export default ({ analise }) => {
           <div className="row mt-2">
             <div className="col-4">
               <span className="valor-dados-produto">
-                {objeto.numero_cronograma}
+                {objeto.numero_ficha_tecnica} - {objeto.nome_produto}
               </span>
             </div>
             <div className="col-4">
