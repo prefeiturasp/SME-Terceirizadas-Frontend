@@ -3,6 +3,7 @@ import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   ACOMPANHAMENTO_DE_LANCAMENTOS,
   CLAUSULAS_PARA_DESCONTOS,
+  PARAMETRIZACAO_FINANCEIRA,
   EMPENHOS,
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
@@ -62,6 +63,9 @@ const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
             <LeafItem to={`/${MEDICAO_INICIAL}/${EMPENHOS}`}>Empenhos</LeafItem>
             <LeafItem to={`/${MEDICAO_INICIAL}/${CLAUSULAS_PARA_DESCONTOS}`}>
               Cláusulas para Descontos
+            </LeafItem>
+            <LeafItem to={`/${MEDICAO_INICIAL}/${PARAMETRIZACAO_FINANCEIRA}`}>
+              Parametrização Financeira
             </LeafItem>
           </SubMenu>
         )}
