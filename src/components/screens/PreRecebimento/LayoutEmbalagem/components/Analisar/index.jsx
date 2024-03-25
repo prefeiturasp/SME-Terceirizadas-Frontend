@@ -343,34 +343,34 @@ export default () => {
           )}
           <div className="subtitulo mb-3">Dados do Produto</div>
           <div className="row mt-3">
-            <div className="col-4">
+            <div className="col-6">
               <label className="label-dados-produto">
-                Número da Ficha Técnica e nome do Produto
+                Número da Ficha Técnica e Nome do Produto
               </label>
             </div>
-            <div className="col-4">
+            <div className="col-3">
               <label className="label-dados-produto">
                 Nº do Pregão/Chamada Pública
               </label>
             </div>
-            <div className="col-4">
+            <div className="col-3">
               <label className="label-dados-produto">Data do Cadastro</label>
             </div>
           </div>
           {Object.keys(layoutDeEmbalagem).length > 0 && (
             <div className="row mt-2">
-              <div className="col-4">
+              <div className="col-6">
                 <span className="valor-dados-produto">
                   {layoutDeEmbalagem.numero_ficha_tecnica} -{" "}
                   {layoutDeEmbalagem.nome_produto}
                 </span>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <span className="valor-dados-produto">
                   {layoutDeEmbalagem.pregao_chamada_publica}
                 </span>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <span className="valor-dados-produto">
                   {layoutDeEmbalagem.criado_em.split(" ")[0]}
                 </span>
@@ -381,8 +381,6 @@ export default () => {
           <hr />
           <p>Empresa:</p>
           <p className="fw-bold">{layoutDeEmbalagem.nome_empresa}</p>
-          <p>Produto:</p>
-          <p className="fw-bold">{layoutDeEmbalagem.nome_produto}</p>
 
           {layoutDeEmbalagem.observacoes && (
             <>

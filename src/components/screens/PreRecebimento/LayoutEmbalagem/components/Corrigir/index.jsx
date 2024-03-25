@@ -473,33 +473,27 @@ export default ({ atualizar }) => {
           )}
           <div className="subtitulo mb-3">Dados do Produto</div>
           <div className="row mt-3">
-            <div className="col-4">
+            <div className="col-6">
               <label className="label-dados-produto">
-                Número da Ficha Técnica e nome do Produto
+                Número da Ficha Técnica e Nome do Produto
               </label>
             </div>
-            <div className="col-4">
+            <div className="col-6">
               <label className="label-dados-produto">
                 Nº do Pregão/Chamada Pública
               </label>
             </div>
-            <div className="col-4">
-              <label className="label-dados-produto">Nome do Produto</label>
-            </div>
           </div>
           <div className="row mt-2">
-            <div className="col-4">
+            <div className="col-6">
               <span className="valor-dados-produto">
                 {objeto.numero_ficha_tecnica} - {objeto.nome_produto}
               </span>
             </div>
-            <div className="col-4">
+            <div className="col-6">
               <span className="valor-dados-produto">
                 {objeto.pregao_chamada_publica}
               </span>
-            </div>
-            <div className="col-4">
-              <span className="valor-dados-produto">{objeto.nome_produto}</span>
             </div>
           </div>
 

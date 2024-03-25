@@ -312,23 +312,23 @@ export default ({ analise }) => {
           )}
           <div className="subtitulo mb-3">Dados do Produto</div>
           <div className="row mt-3">
-            <div className="col-4">
+            <div className="col-6">
               <label className="label-dados-produto">
-                Número da Ficha Técnica e nome do Produto
+                Número da Ficha Técnica e Nome do Produto
               </label>
             </div>
-            <div className="col-4">
+            <div className="col-3">
               <label className="label-dados-produto">
                 Nº do Pregão/Chamada Pública
               </label>
             </div>
-            <div className="col-4">
+            <div className="col-3">
               <label className="label-dados-produto">
                 {visaoCODAE !== null ? (
                   visaoCODAE ? (
                     "Data do Cadastro"
                   ) : (
-                    "Nome do Produto"
+                    <></>
                   )
                 ) : (
                   <></>
@@ -337,23 +337,23 @@ export default ({ analise }) => {
             </div>
           </div>
           <div className="row mt-2">
-            <div className="col-4">
+            <div className="col-6">
               <span className="valor-dados-produto">
                 {objeto.numero_ficha_tecnica} - {objeto.nome_produto}
               </span>
             </div>
-            <div className="col-4">
+            <div className="col-3">
               <span className="valor-dados-produto">
                 {objeto.pregao_chamada_publica}
               </span>
             </div>
-            <div className="col-4">
+            <div className="col-3">
               <span className="valor-dados-produto">
                 {visaoCODAE !== null ? (
                   visaoCODAE && objeto.criado_em ? (
                     objeto.criado_em.split(" ")[0]
                   ) : (
-                    objeto.nome_produto
+                    <></>
                   )
                 ) : (
                   <></>
@@ -367,8 +367,6 @@ export default ({ analise }) => {
               <hr />
               <p>Empresa:</p>
               <p className="fw-bold">{objeto.nome_empresa}</p>
-              <p>Produto:</p>
-              <p className="fw-bold">{objeto.nome_produto}</p>
 
               {objeto.observacoes && (
                 <>
