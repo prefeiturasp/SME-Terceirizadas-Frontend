@@ -15,6 +15,8 @@ import {
   exibirModuloMedicaoInicial,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioEhDRE,
+  escolaEhCei,
+  escolaEhCEMEI,
   usuarioEhEscolaTerceirizada,
   usuarioEhMedicao,
   usuarioEhCODAEGabinete,
@@ -53,7 +55,7 @@ const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
             Acompanhamento de Lançamentos
           </LeafItem>
         )}
-        {usuarioEhEscolaTerceirizadaQualquerPerfil() && (
+        {(escolaEhCEMEI() || escolaEhCei()) && (
           <LeafItem to={`/${MEDICAO_INICIAL}/${CONTROLE_DE_FREQUENCIA}`}>
             Controle de Frequência de Alunos
           </LeafItem>
