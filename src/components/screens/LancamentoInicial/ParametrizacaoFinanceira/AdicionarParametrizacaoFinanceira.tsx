@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 
+import { Skeleton } from "antd";
+
 import { required } from "helpers/fieldValidators";
 
 import { getNumerosEditais } from "services/edital.service";
@@ -24,7 +26,6 @@ export default () => {
   const [editais, setEditais] = useState<SelectOption[]>([]);
   const [lotes, setLotes] = useState<SelectOption[]>([]);
   const [tiposUnidades, setTiposUnidades] = useState<SelectOption[]>([]);
-  // eslint-disable-next-line
   const [carregando, setCarregando] = useState(true);
   const [erroAPI, setErroAPI] = useState("");
 
@@ -136,41 +137,53 @@ export default () => {
               <form onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="col-4">
-                    <Field
-                      component={Select}
-                      name="edital"
-                      label="Nº do Edital"
-                      naoDesabilitarPrimeiraOpcao
-                      options={[
-                        { uuid: null, nome: "Selecione um edital" },
-                      ].concat(editais)}
-                      validate={required}
-                      required
-                    />
+                    {carregando ? (
+                      <Skeleton paragraph={false} active />
+                    ) : (
+                      <Field
+                        component={Select}
+                        name="edital"
+                        label="Nº do Edital"
+                        naoDesabilitarPrimeiraOpcao
+                        options={[
+                          { uuid: null, nome: "Selecione um edital" },
+                        ].concat(editais)}
+                        validate={required}
+                        required
+                      />
+                    )}
                   </div>
 
                   <div className="col-8">
-                    <Field
-                      component={Select}
-                      name="lote"
-                      label="Lote e DRE"
-                      naoDesabilitarPrimeiraOpcao
-                      options={lotes}
-                      validate={required}
-                      required
-                    />
+                    {carregando ? (
+                      <Skeleton paragraph={false} active />
+                    ) : (
+                      <Field
+                        component={Select}
+                        name="lote"
+                        label="Lote e DRE"
+                        naoDesabilitarPrimeiraOpcao
+                        options={lotes}
+                        validate={required}
+                        required
+                      />
+                    )}
                   </div>
 
                   <div className="col-4">
-                    <Field
-                      component={Select}
-                      name="tipos_unidades"
-                      label="Tipo de Unidade"
-                      naoDesabilitarPrimeiraOpcao
-                      options={tiposUnidades}
-                      validate={required}
-                      required
-                    />
+                    {carregando ? (
+                      <Skeleton paragraph={false} active />
+                    ) : (
+                      <Field
+                        component={Select}
+                        name="tipos_unidades"
+                        label="Tipo de Unidade"
+                        naoDesabilitarPrimeiraOpcao
+                        options={tiposUnidades}
+                        validate={required}
+                        required
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="d-flex justify-content-end gap-3">
