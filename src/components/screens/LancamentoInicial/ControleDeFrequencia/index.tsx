@@ -160,7 +160,11 @@ export function ControleDeFrequencia() {
                   setFiltros(values);
                   getAlunosMatriculados(values);
                 }}
-                onClear={() => setFiltros({})}
+                onClear={() => {
+                  setFiltros({});
+                  setTotalAlunosPorPeriodo(null);
+                  setTotalMatriculados(0);
+                }}
                 mesesAnos={mesesAnos}
                 periodos={periodos}
                 getOpcoesFiltros={getFiltrosAsync}
