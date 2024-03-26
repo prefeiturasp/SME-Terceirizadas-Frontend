@@ -45,8 +45,8 @@ export const GraficoSolicitacoesStatus = ({ ...props }: PropsType) => {
           const halfwidth = width / 2;
           const halfheight = height / 2;
 
-          const xLine = x >= halfwidth ? x + 10 : x - 10;
-          const yLine = y >= halfheight ? y + 10 : y - 10;
+          const xLine = x >= halfwidth ? x + 27 : x - 27;
+          const yLine = y >= halfheight ? y + 27 : y - 27;
           const extraLine = x >= halfwidth ? 10 : -10;
 
           ctx.beginPath();
