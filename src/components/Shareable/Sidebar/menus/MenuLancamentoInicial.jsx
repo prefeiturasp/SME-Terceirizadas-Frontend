@@ -3,6 +3,7 @@ import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   ACOMPANHAMENTO_DE_LANCAMENTOS,
   CLAUSULAS_PARA_DESCONTOS,
+  CONTROLE_DE_FREQUENCIA,
   EMPENHOS,
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
@@ -50,6 +51,11 @@ const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
           usuarioEhCODAEGabinete) && (
           <LeafItem to={`/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`}>
             Acompanhamento de Lançamentos
+          </LeafItem>
+        )}
+        {usuarioEhEscolaTerceirizadaQualquerPerfil() && (
+          <LeafItem to={`/${MEDICAO_INICIAL}/${CONTROLE_DE_FREQUENCIA}`}>
+            Controle de Frequência de Alunos
           </LeafItem>
         )}
         {exibeCadastros && (
