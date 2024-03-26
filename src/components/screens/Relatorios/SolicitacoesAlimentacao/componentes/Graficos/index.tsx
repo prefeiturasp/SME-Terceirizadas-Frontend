@@ -8,6 +8,7 @@ import { ResponseDatasetsGraficosRelatorioSolicitacoesAlimentacaoInterface } fro
 import "./style.scss";
 import { GraficoSolicitacoesAutorizadasTipoSolicitacao } from "./components/GraficoSolicitacoesAutorizadasTipoSolicitacao";
 import { GraficoSolicitacoesStatus } from "./components/GraficoSolicitacoesStatus";
+import { GraficoSolicitacoesAutorizadasTipoUnidade } from "./components/GraficoSolicitacoesAutorizadasTipoUnidade";
 
 type ValuesType = {
   status: string;
@@ -79,6 +80,17 @@ export const Graficos = ({ ...props }: PropsType) => {
     );
   };
 
+  const graficoTotalPorTipoUnidade = (): boolean | ChartData => {
+    return (
+      datasGraficos &&
+      datasGraficos.find((datagrafico) =>
+        datagrafico.datasets.find((dataset) =>
+          dataset.label.includes("por Tipo de Unidade")
+        )
+      )
+    );
+  };
+
   return (
     <div className="graficos-relatorio-ga text-center">
       <Spin tip="Carregando gráficos..." spinning={!datasGraficos}>
@@ -105,6 +117,15 @@ export const Graficos = ({ ...props }: PropsType) => {
             </div>
           )}
         </div>
+        {graficoTotalPorTipoUnidade() && (
+          <div className="row">
+            <div className="col-12">
+              <GraficoSolicitacoesAutorizadasTipoUnidade
+                chartData={graficoTotalPorTipoUnidade()}
+              />
+            </div>
+          </div>
+        )}
       </Spin>
     </div>
   );
