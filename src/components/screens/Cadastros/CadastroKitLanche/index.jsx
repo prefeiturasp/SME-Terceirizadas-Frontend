@@ -26,7 +26,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { Spin } from "antd";
 import "./style.scss";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 
 export default ({ uuid }) => {
@@ -92,7 +92,8 @@ export default ({ uuid }) => {
   const checaNomeExiste = async (values) => {
     if (
       ![null, undefined, ""].includes(values.nome) &&
-      ![null, undefined, ""].includes(values.edital)
+      ![null, undefined, ""].includes(values.edital) &&
+      ![null, undefined, []].includes(values.tipos_unidades)
     ) {
       const payload = {
         nome: values.nome,
@@ -104,7 +105,7 @@ export default ({ uuid }) => {
         const response = await checaNomeKitLanche(payload);
         if (response.status === HTTP_STATUS.OK) {
           toastError(
-            "Esse nome de kit lanche já existe para edital selecionado"
+            "Esse nome de kit lanche já existe para edital e tipo de unidade selecionados"
           );
           setDesabilitarBotao(true);
         }
@@ -166,25 +167,20 @@ export default ({ uuid }) => {
                       Tipo de Unidade
                     </label>
                     <Field
-                      component={StatefulMultiSelect}
+                      component={MultiSelect}
                       name="tipos_unidades"
                       selected={form.getState().values.tipos_unidades || []}
                       options={tiposUnidades.map((tipoUnidade) => ({
                         label: tipoUnidade.iniciais,
                         value: tipoUnidade.uuid,
                       }))}
-                      onSelectedChanged={(values_) =>
-                        form.change(`tipos_unidades`, values_)
-                      }
-                      hasSelectAll
-                      overrideStrings={{
-                        selectSomeItems: "Selecione",
-                        allItemsAreSelected: "Todos os tipos de unidade",
-                        selectAll: "Todos",
-                      }}
+                      nomeDoItemNoPlural="tipos de unidades"
                       required
                       validate={requiredMultiselect}
                       disabled={!!modeloKitLanche.uuid}
+                      onChangeEffect={() =>
+                        checaNomeExiste(form.getState().values)
+                      }
                     />
                   </div>
                   <div className="col-12">
