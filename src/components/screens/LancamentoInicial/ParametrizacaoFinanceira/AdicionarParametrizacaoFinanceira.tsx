@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 
@@ -22,10 +22,19 @@ type SelectOption = {
   nome: string;
 };
 
+type FormValues = {
+  edital: string;
+  lote: string;
+  tipos_unidades: string;
+};
+
 export default () => {
   const [editais, setEditais] = useState<SelectOption[]>([]);
   const [lotes, setLotes] = useState<SelectOption[]>([]);
-  const [tiposUnidades, setTiposUnidades] = useState<SelectOption[]>([]);
+  const [tiposUnidadesOpcoes, setTiposUnidadesOpcoes] = useState<
+    SelectOption[]
+  >([]);
+  const [tiposUnidades, setTiposUnidades] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erroAPI, setErroAPI] = useState("");
 
@@ -94,7 +103,8 @@ export default () => {
   const getTiposUnidadeEscolarAsync = async () => {
     const response = await getTiposUnidadeEscolar();
     if (response.status === 200) {
-      setTiposUnidades(
+      setTiposUnidades(response.data.results);
+      setTiposUnidadesOpcoes(
         [
           {
             uuid: null,
@@ -120,9 +130,40 @@ export default () => {
     });
   }, []);
 
-  const onSubmit = (values) => {
+  const onSubmit = (values: FormValues) => {
     // eslint-disable-next-line
     console.log(values);
+  };
+
+  const renderTabelas = (unidades: string) => {
+    const tiposAlimentacao: Array<{
+      uuid: string;
+      nome: string;
+    }> = unidades.split(",").reduce((acc, tipoUnidade) => {
+      acc.push(
+        ...tiposUnidades
+          .find((t) => t.uuid === tipoUnidade)
+          .periodos_escolares.reduce((acc, periodoEscolar) => {
+            acc.push(...periodoEscolar.tipos_alimentacao);
+            return acc;
+          }, [])
+      );
+      return acc;
+    }, []);
+
+    const tiposAlimentacaoUnicos = {};
+
+    tiposAlimentacao.forEach((tipoAlimentacao) => {
+      tiposAlimentacaoUnicos[tipoAlimentacao.uuid] = tipoAlimentacao.nome;
+    });
+
+    // eslint-disable-next-line
+    console.log(
+      Object.entries(tiposAlimentacaoUnicos).map(([uuid, nome]) => ({
+        uuid,
+        nome,
+      }))
+    );
   };
 
   return (
@@ -179,9 +220,12 @@ export default () => {
                         name="tipos_unidades"
                         label="Tipo de Unidade"
                         naoDesabilitarPrimeiraOpcao
-                        options={tiposUnidades}
+                        options={tiposUnidadesOpcoes}
                         validate={required}
                         required
+                        onChangeEffect={(e: ChangeEvent<HTMLInputElement>) =>
+                          renderTabelas(e.target.value)
+                        }
                       />
                     )}
                   </div>
