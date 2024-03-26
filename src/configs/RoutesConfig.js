@@ -259,6 +259,7 @@ import CadastroDeClausulasPage from "pages/LancamentoMedicaoInicial/CadastroDeCl
 import EditarClausulaPage from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
 import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
 import EditarEmpenhoPage from "pages/LancamentoMedicaoInicial/EditarEmpenhoPage";
+import ControleDeFrequenciaPage from "pages/LancamentoMedicaoInicial/ControleDeFrequenciaPage";
 import RelatorioAdesao from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesao";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
@@ -1513,6 +1514,11 @@ const routesConfig = [
     path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}/${constants.EDITAR_CLAUSULA}`,
     component: EditarClausulaPage,
     tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CONTROLE_DE_FREQUENCIA}`,
+    component: ControleDeFrequenciaPage,
+    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.RELATORIOS}/${constants.RELATORIO_ADESAO}`,
