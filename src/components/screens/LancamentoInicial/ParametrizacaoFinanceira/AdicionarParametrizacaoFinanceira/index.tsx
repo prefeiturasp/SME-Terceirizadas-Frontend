@@ -13,7 +13,7 @@ import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service
 
 import { Select } from "components/Shareable/Select";
 import { Botao } from "components/Shareable/Botao";
-import { AInput, AInputNumber } from "components/Shareable/MakeField";
+import { AInputNumber } from "components/Shareable/MakeField";
 
 import {
   BUTTON_STYLE,
@@ -28,7 +28,7 @@ import {
 import "./style.scss";
 
 type SelectOption = {
-  uuid: string | Array<string>;
+  uuid: string;
   nome: string;
 };
 
@@ -37,6 +37,26 @@ type FormValues = {
   lote: string;
   tipos_unidades: string;
 };
+
+const TIPOS_UNIDADES_GRUPO_1 = ["CEI", "CEI CEU", "CCI"];
+const TIPOS_UNIDADES_GRUPO_2 = ["CEMEI", "CEU CEMEI"];
+const TIPOS_UNIDADES_GRUPO_3 = [
+  "EMEF",
+  "CEU EMEF",
+  "EMEFM",
+  "CIEJA",
+  "CEU GESTAO",
+];
+const TIPOS_UNIDADES_GRUPO_4 = ["EMEBS"];
+const TIPOS_UNIDADES_GRUPO_5 = ["EMEI", "CEU EMEI"];
+
+const TIPOS_UNIDADES_GRUPOS = [
+  TIPOS_UNIDADES_GRUPO_1,
+  TIPOS_UNIDADES_GRUPO_2,
+  TIPOS_UNIDADES_GRUPO_3,
+  TIPOS_UNIDADES_GRUPO_4,
+  TIPOS_UNIDADES_GRUPO_5,
+];
 
 export default () => {
   const [editais, setEditais] = useState<SelectOption[]>([]);
@@ -91,18 +111,10 @@ export default () => {
   };
 
   const getGruposTiposUnidades = (tiposUnidades) => {
-    const grupos = [
-      ["CEI", "CEI CEU", "CCI"],
-      ["CEMEI", "CEU CEMEI"],
-      ["EMEF", "CEU EMEF", "EMEFM", "CIEJA", "CEU GESTAO"],
-      ["EMEBS"],
-      ["EMEI", "CEU EMEI"],
-    ];
-
-    const getTipoUnidadeUUID = (tipoUnidade) =>
+    const getTipoUnidadeUUID = (tipoUnidade: string): string =>
       tiposUnidades.find((t) => t.iniciais.toUpperCase() === tipoUnidade).uuid;
 
-    return grupos.map((grupo) => {
+    return TIPOS_UNIDADES_GRUPOS.map((grupo) => {
       const uuid = grupo.map(getTipoUnidadeUUID).join(",");
       const nome = grupo.join(", ");
       return {
@@ -147,11 +159,30 @@ export default () => {
     console.log(values);
   };
 
-  const renderTabelas = (unidades: string) => {
-    const tiposAlimentacao: Array<{
+  const trataTiposAlimentacaoGrupo3 = (tiposAlimentacao) => {
+    const refeicaoIndex = tiposAlimentacao.findIndex(
+      (t) => t.nome === "Refeição"
+    );
+    if (refeicaoIndex !== -1) {
+      tiposAlimentacao[refeicaoIndex] = {
+        ...tiposAlimentacao[refeicaoIndex],
+        grupo: "EMEF / CEUEMEF / EMEFM / EMEBS / CIEJA",
+      };
+
+      tiposAlimentacao.splice(refeicaoIndex + 1, 0, {
+        ...tiposAlimentacao[refeicaoIndex],
+        grupo: "EJA",
+      });
+    }
+  };
+
+  const trataTiposAlimentacao = (unidades: string) => {
+    const unidadesArray = unidades.split(",");
+
+    const tiposAlimentacaoUnidades: Array<{
       uuid: string;
       nome: string;
-    }> = unidades.split(",").reduce((acc, tipoUnidade) => {
+    }> = unidadesArray.reduce((acc, tipoUnidade) => {
       acc.push(
         ...tiposUnidades
           .find((t) => t.uuid === tipoUnidade)
@@ -165,16 +196,27 @@ export default () => {
 
     const tiposAlimentacaoUnicos = {};
 
-    tiposAlimentacao.forEach((tipoAlimentacao) => {
+    tiposAlimentacaoUnidades.forEach((tipoAlimentacao) => {
       tiposAlimentacaoUnicos[tipoAlimentacao.uuid] = tipoAlimentacao.nome;
     });
 
-    setTiposAlimentacao(
-      Object.entries(tiposAlimentacaoUnicos).map(([uuid, nome]) => ({
+    const tiposAlimentacao = Object.entries(tiposAlimentacaoUnicos).map(
+      ([uuid, nome]) => ({
         uuid,
         nome,
-      }))
+        grupo: null,
+      })
     );
+
+    const selecionouGrupo3 = unidadesArray
+      .map((unidade) => tiposUnidades.find((u) => u.uuid === unidade).iniciais)
+      .every((unidade) => TIPOS_UNIDADES_GRUPO_3.includes(unidade));
+
+    if (selecionouGrupo3) {
+      trataTiposAlimentacaoGrupo3(tiposAlimentacao);
+    }
+
+    setTiposAlimentacao(tiposAlimentacao);
   };
 
   return (
@@ -235,7 +277,7 @@ export default () => {
                         validate={required}
                         required
                         onChangeEffect={(e: ChangeEvent<HTMLInputElement>) =>
-                          renderTabelas(e.target.value)
+                          trataTiposAlimentacao(e.target.value)
                         }
                       />
                     )}
@@ -256,19 +298,23 @@ export default () => {
                           title="Tipo de Alimentação"
                           dataIndex="nome"
                           key="nome"
-                          render={(value, record: any) => {
+                          render={(value, record: any, index) => {
                             return (
-                              <div className="d-flex gap-4 justify-content-between align-items-center">
-                                <p className="fw-bold mb-0">{value}</p>
+                              <div>
+                                <p className="fw-bold mb-0">
+                                  {value} {record.grupo && `- ${record.grupo}`}
+                                </p>
                                 <Field
                                   component="input"
-                                  name={`tabelas.alimentacao.${value}.lanche`}
+                                  name={`tabelas.alimentacao.${value}_${index}.lanche`}
                                   type="hidden"
                                   defaultValue={record.uuid}
                                 />
                                 <Field
-                                  component={AInput}
-                                  name={`tabelas.alimentacao.${value}.grupo`}
+                                  component="input"
+                                  name={`tabelas.alimentacao.${value}_${index}.grupo`}
+                                  type="hidden"
+                                  defaultValue={record.grupo}
                                 />
                               </div>
                             );
@@ -278,10 +324,10 @@ export default () => {
                           title="Valor Unitário"
                           dataIndex="valor_unitario"
                           key="valor_unitario"
-                          render={(_, record: any) => (
+                          render={(_, record: any, index) => (
                             <Field
                               component={AInputNumber}
-                              name={`tabelas.alimentacao.${record.nome}.valor_unitario`}
+                              name={`tabelas.alimentacao.${record.nome}_${index}.valor_unitario`}
                               placeholder="0,00"
                               min={0}
                               formatter={(value: string) =>
@@ -297,10 +343,10 @@ export default () => {
                           title="Valor Unitário Reajuste"
                           dataIndex="valor_unitario_reajuste"
                           key="valor_unitario_reajuste"
-                          render={(_, record: any) => (
+                          render={(_, record: any, index) => (
                             <Field
                               component={AInputNumber}
-                              name={`tabelas.alimentacao.${record.nome}.valor_unitario_reajuste`}
+                              name={`tabelas.alimentacao.${record.nome}_${index}.valor_unitario_reajuste`}
                               placeholder="0,00"
                               min={0}
                               formatter={(value: string) =>
