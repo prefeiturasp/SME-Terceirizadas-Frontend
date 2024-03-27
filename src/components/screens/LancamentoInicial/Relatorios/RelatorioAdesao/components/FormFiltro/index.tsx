@@ -2,22 +2,31 @@ import React from "react";
 
 import { Field } from "react-final-form";
 import { FormApi } from "final-form";
+import { Skeleton } from "antd";
 
 import Select from "components/Shareable/Select";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 
+import {
+  usuarioEhDRE,
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
+} from "helpers/utilities";
+
 import useView from "./view";
-import { Skeleton } from "antd";
+
+import { Filtros } from "../../types";
 
 type Props = {
   form: FormApi;
+  // eslint-disable-next-line
+  onChange: (values: Filtros) => void;
 };
 
 export default (props: Props) => {
-  const { form } = props;
+  const { form, onChange } = props;
 
-  const view = useView({ form });
+  const view = useView({ form, onChange });
 
   return (
     <div className="row">
@@ -34,6 +43,7 @@ export default (props: Props) => {
             required
             naoDesabilitarPrimeiraOpcao
             validate={view.validaMesAno}
+            onChangeEffect={view.onChangeMesAno}
           />
         )}
       </div>
@@ -50,6 +60,9 @@ export default (props: Props) => {
             options={view.diretoriasRegionaisOpcoes}
             naoDesabilitarPrimeiraOpcao
             onChangeEffect={view.onChangeDRE}
+            disabled={
+              usuarioEhDRE() || usuarioEhEscolaTerceirizadaQualquerPerfil()
+            }
           />
         )}
       </div>
@@ -83,6 +96,7 @@ export default (props: Props) => {
             options={view.unidadesEducacionaisOpcoes}
             filterOption={view.filtraUnidadesEducacionaisOpcoes}
             onSelect={view.onChangeUnidadeEducacional}
+            disabled={usuarioEhEscolaTerceirizadaQualquerPerfil()}
           />
         )}
       </div>
@@ -111,7 +125,7 @@ export default (props: Props) => {
             component={MultiSelect}
             disableSearch
             label="Tipo de Alimentação"
-            name="tipo_alimentacao"
+            name="tipos_alimentacao"
             nomeDoItemNoPlural="alimentações"
             placeholder="Selecione os tipos de alimentação"
             options={view.tiposAlimentacaoOpcoes}

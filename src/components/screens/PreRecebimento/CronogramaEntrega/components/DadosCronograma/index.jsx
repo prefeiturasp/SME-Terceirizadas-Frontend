@@ -9,7 +9,7 @@ export default ({
   solicitacaoAlteracaoCronograma,
 }) => {
   const enderecoFormatado = (armazem) =>
-    armazem
+    armazem.endereco
       ? `${armazem.endereco} ${armazem.numero}, ${armazem.bairro}, ${armazem.estado} - CEP: ${armazem.cep}`
       : "";
 
@@ -152,6 +152,7 @@ export default ({
               <p>Custo Unitário do Produto:</p>
               <p>
                 <b>
+                  R$
                   {cronograma.custo_unitario_produto
                     ?.toFixed(2)
                     .replace(".", ",")}
@@ -271,7 +272,7 @@ export default ({
                         {cronograma.empresa && cronograma.empresa.nome_fantasia}
                       </td>
                       <td className="borda-crono">
-                        {cronograma.produto && cronograma.produto.nome}
+                        {cronograma.ficha_tecnica?.produto?.nome}
                       </td>
                       <td className="borda-crono">{etapa.data_programada}</td>
                       <td className="borda-crono">{etapa.etapa}</td>

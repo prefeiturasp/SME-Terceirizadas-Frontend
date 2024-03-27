@@ -10,7 +10,6 @@ import {
 import InputText from "components/Shareable/Input/InputText";
 import { OptionsGenerico } from "interfaces/pre_recebimento.interface";
 import SelectSelecione from "components/Shareable/SelectSelecione";
-import { OnChange } from "react-final-form-listeners";
 
 const TAXA_CONVERSAO_KCAL_KJ = 4.2;
 
@@ -193,11 +192,9 @@ const TabelaNutricional: React.FC<Props> = ({
                 placeholder="Selecione uma informação"
                 className="input-tabela-nutricional"
                 disabled={desabilitar}
-              />
-              <OnChange name={`informacao_adicional_${index}`}>
-                {(value) => {
+                onChangeEffect={(e) => {
                   const dadosInformacao = listaCompletaInformacoesNutricionais
-                    .filter(({ uuid }) => uuid === value)
+                    .filter(({ uuid }) => uuid === e.target.value)
                     .pop();
 
                   const informacoesAtualizadas = [
@@ -206,7 +203,7 @@ const TabelaNutricional: React.FC<Props> = ({
                   informacoesAtualizadas[index] = dadosInformacao;
                   setInformacoesNutricionaisAdicionais(informacoesAtualizadas);
                 }}
-              </OnChange>
+              />
             </div>
             {informacao.uuid ? (
               <>

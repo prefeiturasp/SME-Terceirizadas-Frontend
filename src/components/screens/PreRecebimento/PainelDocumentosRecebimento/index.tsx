@@ -12,10 +12,10 @@ import {
   parseDataHoraBrToMoment,
   comparaObjetosMoment,
   truncarString,
+  usuarioEhDilogQualidade,
 } from "helpers/utilities";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
-import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 import { useCallback } from "react";
 import { getDashboardDocumentosRecebimento } from "services/documentosRecebimento.service";
@@ -26,7 +26,6 @@ import {
   FiltrosDashboardDocumentos,
 } from "interfaces/pre_recebimento.interface";
 import { ResponseDocumentosRecebimentoDashboard } from "interfaces/responses.interface";
-import { PERFIL } from "constants/shared";
 
 export default () => {
   const [carregando, setCarregando] = useState<boolean>(false);
@@ -65,10 +64,8 @@ export default () => {
   };
 
   const gerarLinkDocumento = (item: DocumentosRecebimentoDashboard): string => {
-    const perfilLogado = localStorage.getItem("perfil");
-
     if (item.status === "Enviado para Análise") {
-      if (perfilLogado === PERFIL.DILOG_QUALIDADE) {
+      if (usuarioEhDilogQualidade()) {
         return `/${PRE_RECEBIMENTO}/${ANALISAR_DOCUMENTO_RECEBIMENTO}?uuid=${item.uuid}`;
       }
 
@@ -155,40 +152,37 @@ export default () => {
                 }}
                 onSubmit={() => {}}
               >
-                {({ values }) => (
+                {({ form }) => (
                   <div className="row text-end">
                     <div className="col-4">
                       <Field
                         component={InputText}
                         name="numero_cronograma"
                         placeholder="Filtrar por N° do Cronograma"
+                        inputOnChange={() =>
+                          filtrarDocumentos(form.getState().values)
+                        }
                       />
-
-                      <OnChange name="numero_cronograma">
-                        {() => filtrarDocumentos(values)}
-                      </OnChange>
                     </div>
                     <div className="col-4">
                       <Field
                         component={InputText}
                         name="nome_produto"
                         placeholder="Filtrar por Nome do Produto"
+                        inputOnChange={() =>
+                          filtrarDocumentos(form.getState().values)
+                        }
                       />
-
-                      <OnChange name="nome_produto">
-                        {() => filtrarDocumentos(values)}
-                      </OnChange>
                     </div>
                     <div className="col-4">
                       <Field
                         component={InputText}
                         name="nome_fornecedor"
                         placeholder="Filtrar por Nome do Fornecedor"
+                        inputOnChange={() =>
+                          filtrarDocumentos(form.getState().values)
+                        }
                       />
-
-                      <OnChange name="nome_fornecedor">
-                        {() => filtrarDocumentos(values)}
-                      </OnChange>
                     </div>
                   </div>
                 )}

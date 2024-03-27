@@ -17,6 +17,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { Graficos } from "./componentes/Graficos";
 
 export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
   const { endpoint, endpointGerarExcel, endpointGerarPDF } = props;
@@ -32,6 +33,9 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
   const [submitting, setSubmitting] = useState(false);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
+  const [totalizadores, setTotalizadores] = useState(undefined);
+  const [renderGraficosOuTabela, setRenderGraficosOuTabela] =
+    useState("Gráficos");
 
   const getSolicitacoesDetalhadasAsync = async (solicitacoes) => {
     const payloadSolicitacoesDetalhadas = solicitacoes.map((solicitacao) => {
@@ -111,72 +115,127 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
             getSolicitacoesDetalhadasAsync={getSolicitacoesDetalhadasAsync}
             setCarregando={setCarregando}
             setResultadoPaginado={setResultadoPaginado}
+            setTotalizadores={setTotalizadores}
+            setRenderGraficosOuTabela={setRenderGraficosOuTabela}
           />
         )}
         <Spin tip="Carregando..." spinning={carregando}>
-          {totalBusca !== undefined && filtros !== undefined && (
-            <div className="row">
-              <div className="col-12 mt-3">
-                <p className="quantitativo">
-                  QUANTITATIVO GERAL DE SOLICITAÇÕES{" "}
-                  {STATUS_SOLICITACOES.find(
-                    (obj) => obj.uuid === filtros.status
-                  ).nome.toUpperCase()}
-                </p>
-              </div>
-              <div className="col-12 mt-1">
-                <p className="totalHomologadosValor">
-                  Total de solicitações: <b>{totalBusca}</b>
-                </p>
-              </div>
-            </div>
-          )}
-          {solicitacoes && filtros && !carregando && (
-            <TabelaResultado
-              solicitacoes={solicitacoes}
-              filtros={filtros}
-              resultadoPaginado={resultadoPaginado}
-            />
-          )}
-          {solicitacoes && solicitacoes.length && filtros ? (
-            <>
-              <Paginacao
-                onChange={(page) => onPageChanged(page, filtros)}
-                total={totalBusca}
-                pageSize={10}
-                current={page}
-              />
-              <div className="row">
-                <div className="col-12 text-end">
-                  <Botao
-                    texto="Baixar PDF"
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    icon={BUTTON_ICON.FILE_PDF}
-                    type={BUTTON_TYPE.BUTTON}
-                    disabled={submitting}
-                    onClick={() => exportarPDF()}
-                  />
-                  <Botao
-                    texto="Baixar Excel"
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    icon={BUTTON_ICON.FILE_EXCEL}
-                    type={BUTTON_TYPE.BUTTON}
-                    disabled={submitting}
-                    onClick={() => exportarXLSX()}
-                    className="ms-3"
-                  />
-                  {exibirModalCentralDownloads && (
-                    <ModalSolicitacaoDownload
-                      show={exibirModalCentralDownloads}
-                      setShow={setExibirModalCentralDownloads}
-                    />
+          {totalBusca !== undefined &&
+            filtros !== undefined &&
+            totalizadores && (
+              <>
+                <div className="row mt-3">
+                  <div className="col-8">
+                    <p className="quantitativo">
+                      TOTAL DE SOLICITAÇÕES{" "}
+                      <b>
+                        {STATUS_SOLICITACOES.find(
+                          (obj) => obj.uuid === filtros.status
+                        ).nome.toUpperCase()}
+                      </b>{" "}
+                      - ATÉ {new Date().toLocaleDateString("pt-BR")}
+                    </p>
+                  </div>
+                  {filtros.status === "AUTORIZADOS" && (
+                    <div className="col-4 text-end">
+                      <Botao
+                        texto={renderGraficosOuTabela}
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        icon={
+                          renderGraficosOuTabela === "Gráficos"
+                            ? BUTTON_ICON.CHART_BAR
+                            : BUTTON_ICON.TABLE
+                        }
+                        onClick={() =>
+                          setRenderGraficosOuTabela(
+                            renderGraficosOuTabela === "Tabela"
+                              ? "Gráficos"
+                              : "Tabela"
+                          )
+                        }
+                      />
+                    </div>
                   )}
                 </div>
-              </div>
-            </>
-          ) : (
-            <></>
-          )}
+                <div className="row">
+                  {totalizadores.map((totalizador, key) => {
+                    return (
+                      <div key={key} className="col-4 mt-3">
+                        <div className="totalizador ps-3 pe-3">
+                          <div className="d-flex justify-content-between">
+                            <div className="titulo">
+                              {Object.keys(totalizador)[0]}
+                            </div>
+                            <div className="valor">
+                              {Object.values(totalizador)[0]}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+          {solicitacoes &&
+            filtros &&
+            !carregando &&
+            renderGraficosOuTabela === "Gráficos" && (
+              <TabelaResultado
+                solicitacoes={solicitacoes}
+                filtros={filtros}
+                resultadoPaginado={resultadoPaginado}
+              />
+            )}
+
+          {solicitacoes &&
+            solicitacoes.length > 0 &&
+            filtros &&
+            renderGraficosOuTabela === "Gráficos" && (
+              <>
+                <Paginacao
+                  onChange={(page) => onPageChanged(page, filtros)}
+                  total={totalBusca}
+                  pageSize={10}
+                  current={page}
+                />
+                <div className="row">
+                  <div className="col-12 text-end">
+                    <Botao
+                      texto="Baixar PDF"
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      icon={BUTTON_ICON.FILE_PDF}
+                      type={BUTTON_TYPE.BUTTON}
+                      disabled={submitting}
+                      onClick={() => exportarPDF()}
+                    />
+                    <Botao
+                      texto="Baixar Excel"
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      icon={BUTTON_ICON.FILE_EXCEL}
+                      type={BUTTON_TYPE.BUTTON}
+                      disabled={submitting}
+                      onClick={() => exportarXLSX()}
+                      className="ms-3"
+                    />
+                    {exibirModalCentralDownloads && (
+                      <ModalSolicitacaoDownload
+                        show={exibirModalCentralDownloads}
+                        setShow={setExibirModalCentralDownloads}
+                      />
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+          {solicitacoes &&
+            filtros &&
+            !carregando &&
+            renderGraficosOuTabela === "Tabela" && (
+              <Graficos values={filtros} />
+            )}
         </Spin>
       </div>
     </div>

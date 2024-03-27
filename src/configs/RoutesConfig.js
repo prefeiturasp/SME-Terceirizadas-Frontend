@@ -254,8 +254,12 @@ import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage
 import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 import EmpenhosPage from "pages/LancamentoMedicaoInicial/EmpenhosPage";
+import ClausulasParaDescontosPage from "pages/LancamentoMedicaoInicial/ClausulasParaDescontosPage";
+import CadastroDeClausulasPage from "pages/LancamentoMedicaoInicial/CadastroDeClausulasPage";
+import EditarClausulaPage from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
 import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
 import EditarEmpenhoPage from "pages/LancamentoMedicaoInicial/EditarEmpenhoPage";
+import ControleDeFrequenciaPage from "pages/LancamentoMedicaoInicial/ControleDeFrequenciaPage";
 import RelatorioAdesao from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesao";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
@@ -292,6 +296,7 @@ import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/Cadas
 import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
 import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
 import DetalharFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/DetalharFichaTecnicaPage";
+import AlterarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AlterarFichaTecnicaPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
 import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
@@ -843,7 +848,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCoordenadorCODAE() ||
       usuarioEhCodaeDilog() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_DIRETOR_ESCOLA}`,
@@ -1388,6 +1394,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor(),
@@ -1494,9 +1501,33 @@ const routesConfig = [
     tipoUsuario: usuarioEhMedicao(),
   },
   {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}`,
+    component: ClausulasParaDescontosPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}/${constants.CADASTRO_DE_CLAUSULA}`,
+    component: CadastroDeClausulasPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}/${constants.EDITAR_CLAUSULA}`,
+    component: EditarClausulaPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CONTROLE_DE_FREQUENCIA}`,
+    component: ControleDeFrequenciaPage,
+    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
+  },
+  {
     path: `/${constants.MEDICAO_INICIAL}/${constants.RELATORIOS}/${constants.RELATORIO_ADESAO}`,
     component: RelatorioAdesao,
-    tipoUsuario: usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao(),
+    tipoUsuario:
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhDRE() ||
+      usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,
@@ -1511,7 +1542,10 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.ENVIO_REQUISICOES_ENTREGA_AVANCADO}`,
     component: ConsultaRequisicaoEntregaDilog,
-    tipoUsuario: usuarioEhLogistica() || usuarioEhCODAEGabinete(),
+    tipoUsuario:
+      usuarioEhLogistica() ||
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_REQUISICAO_ENTREGA}`,
@@ -1521,7 +1555,10 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_SOLICITACAO_ALTERACAO}`,
     component: GestaoSolicitacaoAlteracaoPage,
-    tipoUsuario: usuarioEhLogistica() || usuarioEhCODAEGabinete(),
+    tipoUsuario:
+      usuarioEhLogistica() ||
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CONSULTA_SOLICITACAO_ALTERACAO}`,
@@ -1606,7 +1643,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCodaeDilog() ||
       usuarioEhDilogJuridico() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      usuarioEhDilogDiretoria(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO_FISCAL}`,
@@ -1901,7 +1939,7 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_DOCUMENTO_RECEBIMENTO}`,
     component: AnalisarDocumentosRecebimentoPage,
-    tipoUsuario: usuarioComAcessoAoPainelDocumentos(),
+    tipoUsuario: usuarioEhDilogQualidade(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CORRIGIR_DOCUMENTOS_RECEBIMENTO}`,
@@ -1914,7 +1952,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_FICHA_TECNICA}`,
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRAR_FICHA_TECNICA}`,
     component: CadastroFichaTecnicaPage,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
@@ -1943,7 +1981,7 @@ const routesConfig = [
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_FICHA_TECNICA}`,
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISAR_FICHA_TECNICA}`,
     component: AnalisarFichaTecnicaPage,
     exact: true,
     tipoUsuario: usuarioComAcessoAoPainelFichasTecnicas(),
@@ -1953,6 +1991,11 @@ const routesConfig = [
     component: DetalharFichaTecnicaPage,
     tipoUsuario:
       usuarioEhEmpresaFornecedor() || usuarioComAcessoAoPainelFichasTecnicas(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ALTERAR_FICHA_TECNICA}/`,
+    component: AlterarFichaTecnicaPage,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,

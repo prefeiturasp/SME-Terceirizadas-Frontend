@@ -1,11 +1,20 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 
-import { formatarOpcoesLote } from "helpers/utilities";
+import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
+
+import {
+  formatarOpcoesLote,
+  usuarioEhDRE,
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
+} from "helpers/utilities";
 
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getLotesSimples } from "services/lote.service";
 import {
   getEscolasParaFiltros,
+  getEscolaPeriodosEscolares,
+  getEscolaTiposAlimentacao,
   buscaPeriodosEscolares,
 } from "services/escola.service";
 import { getTiposDeAlimentacao } from "services/cadastroTipoAlimentacao.service";
@@ -15,7 +24,8 @@ import { MESES } from "constants/shared";
 
 import { Args, SelectOption, MultiSelectOption, Option } from "./types";
 
-export default ({ form }: Args) => {
+export default ({ form, onChange }: Args) => {
+  const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
   const [mesesAnosOpcoes, setMesesAnosOpcoes] = useState<Array<SelectOption>>(
     []
   );
@@ -57,15 +67,28 @@ export default ({ form }: Args) => {
       buscandoTiposAlimentacao: true,
     });
 
+    const uuidInstituicao = localStorage
+      .getItem("uuid_instituicao")
+      .replace(/"/g, "");
+    const endpointPeriodosEscolares =
+      usuarioEhEscolaTerceirizadaQualquerPerfil() && uuidInstituicao
+        ? getEscolaPeriodosEscolares(uuidInstituicao)
+        : buscaPeriodosEscolares();
+    const endpointTiposDeAlimentacao =
+      usuarioEhEscolaTerceirizadaQualquerPerfil() && uuidInstituicao
+        ? getEscolaTiposAlimentacao(uuidInstituicao)
+        : getTiposDeAlimentacao();
+
     Promise.all([
       getMesesAnosSolicitacoesMedicaoinicial({
         status: "MEDICAO_APROVADA_PELA_CODAE",
+        eh_relatorio_adesao: true,
       }),
       getDiretoriaregionalSimplissima(),
       getLotesSimples(),
       getEscolasParaFiltros(),
-      buscaPeriodosEscolares(),
-      getTiposDeAlimentacao(),
+      endpointPeriodosEscolares,
+      endpointTiposDeAlimentacao,
     ]).then(
       ([
         responseMesesAnos,
@@ -87,11 +110,19 @@ export default ({ form }: Args) => {
         setLotes(lotes);
         setLotesOpcoes(formatarOpcoesLote(lotes));
 
-        let escolas = responseEscolas.results.filter(
+        let escolas = responseEscolas.filter(
           (escola) =>
-            !["CEI", "CCI", "CEU CEI", "CEU CEMEI", "CEMEI"].includes(
-              escola.tipo_unidade.iniciais
-            )
+            ![
+              "CEI",
+              "CEI DIRET",
+              "CEI INDIR",
+              "CEI CEU",
+              "CCI",
+              "CCI/CIPS",
+              "CEU CEI",
+              "CEU CEMEI",
+              "CEMEI",
+            ].includes(escola.tipo_unidade.iniciais)
         );
         setUnidadesEducacionais(escolas);
         setUnidadesEducacionaisOpcoes(
@@ -99,13 +130,17 @@ export default ({ form }: Args) => {
         );
 
         const periodos = formataPeriodosEscolaresOpcoes(
-          responsePeriodos.data.results
+          usuarioEhEscolaTerceirizadaQualquerPerfil() && uuidInstituicao
+            ? responsePeriodos
+            : responsePeriodos.data.results
         );
         setPeriodosEscolares(periodos);
         setPeriodosEscolaresOpcoes(periodos);
 
         const tipos = formataTiposAlimentacoesOpcoes(
-          responseAlimentacoes.results
+          usuarioEhEscolaTerceirizadaQualquerPerfil() && uuidInstituicao
+            ? responseAlimentacoes
+            : responseAlimentacoes.results
         );
         setTiposAlimentacao(tipos);
         setTiposAlimentacaoOpcoes(tipos);
@@ -113,7 +148,13 @@ export default ({ form }: Args) => {
         form.subscribe(
           (values) => {
             if (!values.dirty) {
-              setLotesOpcoes(formatarOpcoesLote(lotes));
+              let lotes_ = lotes;
+              if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+                lotes_ = lotes?.filter(
+                  (lote) => localStorage.getItem("escolaLoteUuid") === lote.uuid
+                );
+              }
+              setLotesOpcoes(formatarOpcoesLote(lotes_));
               setUnidadesEducacionaisOpcoes(
                 formataUnidadesEducacionaisOpcoes(escolas)
               );
@@ -135,6 +176,64 @@ export default ({ form }: Args) => {
       }
     );
   }, []);
+
+  useEffect(() => {
+    if (usuarioEhDRE()) {
+      const dreUuidMeusDados = meusDados?.vinculo_atual?.instituicao.uuid;
+      if (dreUuidMeusDados && lotes && unidadesEducacionais) {
+        form.change("dre", dreUuidMeusDados);
+        setLotesOpcoes(
+          formatarOpcoesLote(
+            lotes?.filter(
+              (lote) => lote.diretoria_regional.uuid === dreUuidMeusDados
+            )
+          )
+        );
+        setUnidadesEducacionaisOpcoes(
+          formataUnidadesEducacionaisOpcoes(
+            unidadesEducacionais?.filter(
+              (escola) => escola.diretoria_regional.uuid === dreUuidMeusDados
+            )
+          )
+        );
+      }
+    } else if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      const escolaInstituicaoMeusDados = meusDados?.vinculo_atual?.instituicao;
+      const dreUuidMeusDados =
+        meusDados?.vinculo_atual?.instituicao?.diretoria_regional.uuid;
+      const escola = unidadesEducacionais.find(
+        (escola) => escola.codigo_eol === escolaInstituicaoMeusDados.codigo_eol
+      );
+      if (
+        escolaInstituicaoMeusDados &&
+        dreUuidMeusDados &&
+        escola &&
+        lotes &&
+        unidadesEducacionais
+      ) {
+        form.change("dre", dreUuidMeusDados);
+        setLotesOpcoes(
+          formatarOpcoesLote(
+            lotes?.filter((lote) => escola?.lote?.uuid === lote.uuid)
+          )
+        );
+        setUnidadesEducacionaisOpcoes(
+          formataUnidadesEducacionaisOpcoes(
+            unidadesEducacionais?.filter(
+              (escola) => escola.diretoria_regional.uuid === dreUuidMeusDados
+            )
+          )
+        );
+        const labelEscola = `${escola?.codigo_eol} - ${escola?.nome} - ${
+          escola?.lote ? escola?.lote?.nome : ""
+        }`;
+        form.change("unidade_educacional", labelEscola);
+        labelEscola && onChangeUnidadeEducacional(labelEscola);
+        labelEscola && localStorage.setItem("labelEscolaLote", labelEscola);
+        localStorage.setItem("escolaLoteUuid", escola?.lote?.uuid);
+      }
+    }
+  }, [meusDados, lotes, unidadesEducacionais]);
 
   const formataMesesAnosOpcoes = (mesesAnos) => {
     return [{ nome: "Selecione o mês de referência", uuid: "" }].concat(
@@ -163,10 +262,31 @@ export default ({ form }: Args) => {
     }));
   };
 
+  const onChangeMesAno = (e: ChangeEvent<HTMLInputElement>) => {
+    const mesAno = e.target.value;
+
+    onChange({
+      mes: mesAno
+        ? mesesAnosOpcoes
+            .find((m) => m.uuid === e.target.value)
+            .nome.replace("-", "")
+            .toUpperCase()
+        : undefined,
+    });
+  };
+
   const onChangeDRE = (e: ChangeEvent<HTMLInputElement>) => {
     limpaCampos(["lotes", "unidade_educacional"]);
 
     const dreUUID = e.target.value;
+
+    onChange({
+      dre: dreUUID
+        ? diretoriasRegionaisOpcoes.find((d) => d.uuid === dreUUID).nome
+        : undefined,
+      lotes: undefined,
+      unidade_educacional: undefined,
+    });
 
     if (!dreUUID) {
       setLotesOpcoes(formatarOpcoesLote(lotes));
@@ -192,7 +312,16 @@ export default ({ form }: Args) => {
   };
 
   const onChangeLotes = (lotes: Array<string>) => {
-    limpaCampo("unidade_educacional");
+    if (!usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      limpaCampo("unidade_educacional");
+    }
+
+    onChange({
+      lotes: lotesOpcoes
+        .filter((l) => lotes.includes(l.value.toString()))
+        .map((l) => l.label),
+      unidade_educacional: undefined,
+    });
 
     let escolas = unidadesEducacionais;
 
@@ -216,8 +345,12 @@ export default ({ form }: Args) => {
     }
   };
 
-  const onChangeUnidadeEducacional = (escolaLabel: string) => {
-    limpaCampos(["periodos", "tipo_alimentacao"]);
+  const onChangeUnidadeEducacional = async (escolaLabel: string) => {
+    limpaCampos(["periodos", "tipos_alimentacao"]);
+
+    onChange({
+      unidade_educacional: escolaLabel,
+    });
 
     if (!escolaLabel) {
       setPeriodosEscolaresOpcoes(periodosEscolares);
@@ -230,17 +363,30 @@ export default ({ form }: Args) => {
     );
 
     if (escola) {
+      setBuscandoOpcoes((prev) => ({
+        ...prev,
+        buscandoPeriodosEscolares: true,
+        buscandoTiposAlimentacao: true,
+      }));
+
+      const [periodosEscolares, tiposAlimentacao] = await Promise.all([
+        getEscolaPeriodosEscolares(escola.uuid),
+        getEscolaTiposAlimentacao(escola.uuid),
+      ]);
+
       setPeriodosEscolaresOpcoes(
-        periodosEscolares.filter((periodo) =>
-          escola.periodos_escolares.some((p) => p.uuid === periodo.value)
-        )
+        formataPeriodosEscolaresOpcoes(periodosEscolares)
       );
 
       setTiposAlimentacaoOpcoes(
-        tiposAlimentacao.filter((alimentacao) =>
-          escola.tipos_alimentacao.some((t) => t.uuid === alimentacao.value)
-        )
+        formataTiposAlimentacoesOpcoes(tiposAlimentacao)
       );
+
+      setBuscandoOpcoes((prev) => ({
+        ...prev,
+        buscandoPeriodosEscolares: false,
+        buscandoTiposAlimentacao: false,
+      }));
     }
   };
 
@@ -294,6 +440,7 @@ export default ({ form }: Args) => {
     unidadesEducacionaisOpcoes,
     periodosEscolaresOpcoes,
     tiposAlimentacaoOpcoes,
+    onChangeMesAno,
     onChangeDRE,
     onChangeLotes,
     onChangeUnidadeEducacional,

@@ -234,8 +234,10 @@ export const AcompanhamentoDeLancamentos = () => {
         );
       }
     };
+    setCurrentPage(1);
 
-    getDashboardMedicaoInicialAsync();
+    onPageChanged(1, { status: statusSelecionado, ...initialValues });
+
     getMesesAnosSolicitacoesMedicaoinicialAsync();
 
     if (!usuarioEhEscolaTerceirizadaQualquerPerfil()) {
@@ -282,17 +284,22 @@ export const AcompanhamentoDeLancamentos = () => {
       meusDados && uuid && getEscolasTrecTotalAsync();
     }
     if (diretoriaRegional) {
-      getDashboardMedicaoInicialAsync();
+      onPageChanged(currentPage, {
+        status: statusSelecionado,
+        ...initialValues,
+      });
       getMesesAnosSolicitacoesMedicaoinicialAsync();
     }
   }, [meusDados, diretoriaRegional]);
 
-  const onPageChanged = async (page) => {
-    setLoadingComFiltros(true);
-    const params = { limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE };
+  const onPageChanged = async (page, filtros) => {
+    const params = {
+      limit: PAGE_SIZE,
+      offset: (page - 1) * PAGE_SIZE,
+      ...filtros,
+    };
     setCurrentPage(page);
     await getDashboardMedicaoInicialAsync(params);
-    setLoadingComFiltros(false);
   };
 
   const getNomesItemsFiltrado = (value) => {
@@ -327,7 +334,8 @@ export const AcompanhamentoDeLancamentos = () => {
 
   const onSubmit = (values) => {
     setCurrentPage(1);
-    getDashboardMedicaoInicialAsync({ status: statusSelecionado, ...values });
+    const filtros = { status: statusSelecionado, ...values };
+    onPageChanged(1, filtros);
   };
 
   const resetForm = (form) => {
@@ -336,10 +344,9 @@ export const AcompanhamentoDeLancamentos = () => {
     );
     form.reset();
     resetURL(["mes_ano", "lotes", "tipo_unidade", "escola"]);
-    diretoria_regional &&
-      setInitialValues({
-        diretoria_regional: diretoria_regional.value,
-      });
+    setInitialValues({
+      diretoria_regional: diretoria_regional?.value,
+    });
     setResultados(undefined);
     diretoria_regional &&
       form.change("diretoria_regional", diretoria_regional.value);
@@ -526,7 +533,12 @@ export const AcompanhamentoDeLancamentos = () => {
                               form={form}
                               resetForm={resetForm}
                               page={currentPage}
-                              onPageChanged={onPageChanged}
+                              onPageChanged={() =>
+                                onPageChanged(1, {
+                                  status: statusSelecionado,
+                                  ...values,
+                                })
+                              }
                               setResultados={setResultados}
                               setStatusSelecionado={(status) => {
                                 setStatusSelecionado(status);
@@ -826,7 +838,12 @@ export const AcompanhamentoDeLancamentos = () => {
                                 </tbody>
                               </table>
                               <Paginacao
-                                onChange={(page) => onPageChanged(page)}
+                                onChange={(page) =>
+                                  onPageChanged(page, {
+                                    status: statusSelecionado,
+                                    ...values,
+                                  })
+                                }
                                 total={resultados.total}
                                 pageSize={PAGE_SIZE}
                                 current={currentPage}

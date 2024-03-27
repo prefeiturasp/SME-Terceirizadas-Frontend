@@ -1,6 +1,5 @@
 import React from "react";
 import { Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
 import {
@@ -71,15 +70,11 @@ const CardBodySemRedux = (props) => {
                   name="titulo"
                   placeholder={loadingDietas ? "" : "Pesquisar"}
                   disabled={loadingDietas || filtrosDesabilitados}
+                  inputOnChange={() => props.onChange(props.values)}
                 />
                 <div className="warning-num-charac">
                   * mínimo de 3 caracteres
                 </div>
-                <OnChange name="titulo">
-                  {(value, previous) => {
-                    props.onChange(props.values, previous);
-                  }}
-                </OnChange>
               </div>
             )}
             {exibirFiltrosDataEventoETipoSolicitacao && (
@@ -95,25 +90,17 @@ const CardBodySemRedux = (props) => {
                     naoDesabilitarPrimeiraOpcao
                     placeholder="Tipo de Solicitação"
                     options={TIPOS_SOLICITACOES_OPTIONS}
+                    onChangeEffect={() => props.onChange(props.values)}
                   />
                 </div>
-                <OnChange name="tipo_solicitacao">
-                  {() => {
-                    props.onChange(props.values);
-                  }}
-                </OnChange>
                 <div className="col-3 ps-0">
                   <Field
                     name="data_evento"
                     minDate={null}
                     component={InputComData}
                     placeholder="Data do evento"
+                    inputOnChange={() => props.onChange(props.values)}
                   />
-                  <OnChange name="data_evento">
-                    {() => {
-                      props.onChange(props.values);
-                    }}
-                  </OnChange>
                 </div>
               </>
             )}
@@ -124,15 +111,11 @@ const CardBodySemRedux = (props) => {
                   name="marca"
                   placeholder="Busca da Marca"
                   disabled={filtrosDesabilitados}
+                  inputOnChange={() => props.onChange(props.values)}
                 />
                 <div className="warning-num-charac">
                   * mínimo de 3 caracteres
                 </div>
-                <OnChange name="marca">
-                  {() => {
-                    props.onChange(props.values);
-                  }}
-                </OnChange>
               </div>
             )}
           </div>
@@ -146,12 +129,8 @@ const CardBodySemRedux = (props) => {
                     name="status"
                     placeholder="Conferência Status"
                     naoDesabilitarPrimeiraOpcao
+                    onChangeEffect={() => props.onChange(props.values)}
                   />
-                  <OnChange name="status">
-                    {() => {
-                      props.onChange(props.values);
-                    }}
-                  </OnChange>
                 </div>
               )}
               {props.listaLotes && (
@@ -162,12 +141,8 @@ const CardBodySemRedux = (props) => {
                     name="lote"
                     placeholder="Selecione um Lote"
                     naoDesabilitarPrimeiraOpcao
+                    onChangeEffect={() => props.onChange(props.values)}
                   />
-                  <OnChange name="lote">
-                    {() => {
-                      props.onChange(props.values);
-                    }}
-                  </OnChange>
                 </div>
               )}
               <div className="col-3">
@@ -176,12 +151,8 @@ const CardBodySemRedux = (props) => {
                   options={TIPOS_SOLICITACOES_OPTIONS}
                   name="tipo_solicitacao"
                   naoDesabilitarPrimeiraOpcao
+                  onChangeEffect={() => props.onChange(props.values)}
                 />
-                <OnChange name="tipo_solicitacao">
-                  {() => {
-                    props.onChange(props.values);
-                  }}
-                </OnChange>
               </div>
               <div className="col-3">
                 <Field
@@ -189,12 +160,8 @@ const CardBodySemRedux = (props) => {
                   minDate={null}
                   component={InputComData}
                   placeholder="Data do evento"
+                  inputOnChange={() => props.onChange(props.values)}
                 />
-                <OnChange name="data_evento">
-                  {() => {
-                    props.onChange(props.values);
-                  }}
-                </OnChange>
               </div>
             </div>
           )}

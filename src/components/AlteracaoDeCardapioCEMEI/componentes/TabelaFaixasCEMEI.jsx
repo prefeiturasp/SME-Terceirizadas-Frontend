@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import InputText from "components/Shareable/Input/InputText";
 import { maxValue, naoPodeSerZero, required } from "helpers/fieldValidators";
@@ -56,24 +55,25 @@ export const TabelaFaixasCEMEI = ({
                 height: "40px",
               }}
             >
-              <Field
-                component={"input"}
-                type="checkbox"
-                name={`substituicoes[${periodoIndice}][checked]`}
-                disabled={
-                  !values.alunos_cei_e_ou_emei ||
-                  !values.motivo ||
-                  !(values.alterar_dia || values.data_inicial)
-                }
-              />
-              <OnChange name={`substituicoes[${periodoIndice}][checked]`}>
-                {async () => {
-                  form.change(
+              <span
+                onClick={async () => {
+                  await form.change(
                     `substituicoes[${periodoIndice}][periodo_uuid]`,
                     periodoCEI.periodo_escolar.uuid
                   );
                 }}
-              </OnChange>
+              >
+                <Field
+                  component={"input"}
+                  type="checkbox"
+                  name={`substituicoes[${periodoIndice}][checked]`}
+                  disabled={
+                    !values.alunos_cei_e_ou_emei ||
+                    !values.motivo ||
+                    !(values.alterar_dia || values.data_inicial)
+                  }
+                />
+              </span>
               <span
                 className="checkbox-custom"
                 data-cy={`checkbox-${periodo.nome}`}
@@ -135,15 +135,11 @@ export const TabelaFaixasCEMEI = ({
                     nomeDoItemNoPlural="Alimentos"
                     validate={totalFrequenciaCEI > 0 && required}
                     required
+                    onChangeEffect={async (value) => {
+                      setAlimentoSelecionadoCEI(value);
+                    }}
                   />
                 )}
-                <OnChange
-                  name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
-                >
-                  {async (value) => {
-                    setAlimentoSelecionadoCEI(value);
-                  }}
-                </OnChange>
               </div>
               <div className="col-4">
                 {!ehMotivoRPL(values) && (
@@ -220,24 +216,21 @@ export const TabelaFaixasCEMEI = ({
                                 step="1"
                                 className="input-quantidades"
                                 required
-                              />
-                              <OnChange
-                                name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][quantidade_alunos]`}
-                              >
-                                {async () => {
-                                  form.change(
+                                inputOnChange={async () => {
+                                  await form.change(
                                     `substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][faixa_uuid]`,
                                     faixa.uuid
                                   );
-                                  form.change(
+                                  await form.change(
                                     `substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][matriculados_quando_criado]`,
                                     parseInt(faixa.quantidade_alunos)
                                   );
+                                  const values_ = form.getState().values;
                                   setTotalFrequenciaCEI(
-                                    totalSolicitacao(values, periodoCEI)
+                                    totalSolicitacao(values_, periodoCEI)
                                   );
                                 }}
-                              </OnChange>
+                              />
                               <Field
                                 component={"input"}
                                 type="hidden"
@@ -297,14 +290,10 @@ export const TabelaFaixasCEMEI = ({
                   nomeDoItemNoPlural="Alimentos"
                   validate={totalFrequenciaEMEI > 0 && required}
                   required
-                />
-                <OnChange
-                  name={`substituicoes[${periodoIndice}][emei][tipos_alimentacao_de]`}
-                >
-                  {async (value) => {
+                  onChangeEffect={async (value) => {
                     setAlimentoSelecionadoEMEI(value);
                   }}
-                </OnChange>
+                />
               </div>
               <div className="col-4">
                 <Field
@@ -344,7 +333,7 @@ export const TabelaFaixasCEMEI = ({
                             <Field
                               component={InputText}
                               type="number"
-                              name={`substituicoes[${periodoIndice}][emei][quantitade_alunos]`}
+                              name={`substituicoes[${periodoIndice}][emei][quantidade_alunos]`}
                               validate={composeValidators(
                                 required,
                                 naoPodeSerZero,
@@ -355,18 +344,18 @@ export const TabelaFaixasCEMEI = ({
                               step="1"
                               className="input-quantidades"
                               required
-                            />
-                            <OnChange
-                              name={`substituicoes[${periodoIndice}][emei][quantitade_alunos]`}
-                            >
-                              {async (value) => {
-                                form.change(
+                              inputOnChange={async () => {
+                                const value_ =
+                                  form.getState().values.substituicoes[
+                                    periodoIndice
+                                  ].emei.quantidade_alunos;
+                                await form.change(
                                   `substituicoes[${periodoIndice}][emei][matriculados_quando_criado]`,
                                   parseInt(periodo.EMEI)
                                 );
-                                setTotalFrequenciaEMEI(parseInt(value));
+                                setTotalFrequenciaEMEI(parseInt(value_));
                               }}
-                            </OnChange>
+                            />
                             <Field
                               component={"input"}
                               type="hidden"

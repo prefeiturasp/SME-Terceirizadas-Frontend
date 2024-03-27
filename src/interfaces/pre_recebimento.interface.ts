@@ -2,7 +2,6 @@ import { AnaliseFichaTecnicaPayload } from "components/screens/PreRecebimento/Fi
 import { LogSolicitacoesUsuarioSimples } from "./dados_comuns.interface";
 import { InformacaoNutricional } from "./produto.interface";
 import { TerceirizadaSimplesInterface } from "./terceirizada.interface";
-import { Modify } from "./utils";
 
 export interface DocumentosRecebimento {
   criado_em: string;
@@ -23,12 +22,11 @@ export interface DocumentosRecebimentoDetalhado extends DocumentosRecebimento {
 
 export interface DocumentosRecebimentoParaAnalise
   extends DocumentosRecebimentoDetalhado {
-  data_fabricacao_lote: string;
   data_final_lote: string;
   datas_fabricacao_e_prazos: DatasFabricacaoPrazos[];
   quantidade_laudo: number;
   saldo_laudo: number;
-  validade_produto: string;
+  numero_lote_laudo: string;
   numero_sei: string;
   fornecedor: string;
   unidade_medida: UnidadeMedidaSimples;
@@ -37,6 +35,7 @@ export interface DocumentosRecebimentoParaAnalise
 
 export interface DatasFabricacaoPrazos {
   data_fabricacao: string;
+  data_validade: string;
   prazo_maximo_recebimento: string;
   data_maxima_recebimento?: string;
   justificativa?: string;
@@ -245,34 +244,20 @@ export interface AnaliseFichaTecnica extends AnaliseFichaTecnicaPayload {
   aprovada: boolean;
 }
 
-export interface FichaTecnicaPraAnalise
-  extends Modify<
-    FichaTecnicaDetalhada,
-    {
-      marca: string;
-      categoria: string;
-      produto: string;
-      fabricante: string;
-      unidade_medida_porcao: string;
-      unidade_medida_volume_primaria: string;
-      unidade_medida_primaria: string;
-      unidade_medida_secundaria: string;
-      unidade_medida_primaria_vazia: string;
-      unidade_medida_secundaria_vazia: string;
-    }
-  > {
+export interface FichaTecnicaDetalhadaComAnalise extends FichaTecnicaDetalhada {
   analise: AnaliseFichaTecnica;
   log_mais_recente: string;
 }
 
 export interface FichaTecnicaSimples {
   uuid: string;
-  numero_e_produto: string;
+  numero: string;
+  produto: ProdutoSimples;
   uuid_empresa: string;
+  pregao_chamada_publica: string;
 }
 
-export interface DadosCronogramaFichaTecnica {
-  uuid: string;
+export interface DadosCronogramaFichaTecnica extends FichaTecnicaSimples {
   marca: MarcaSimples;
   volume_embalagem_primaria: number;
   unidade_medida_volume_primaria: UnidadeMedidaSimples;

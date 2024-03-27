@@ -19,7 +19,7 @@ const DESCRICAO_SOLICITACAO = {
 
 export const cabecalhoDieta = (dietaEspecial, card) => {
   let descricao = null;
-  if (card && card === "inativas") {
+  if (card && ["inativas", "inativo"].includes(card)) {
     descricao = "Inativa";
   } else if (card && card === "inativas-temp") {
     descricao = "Inativa Temporariamente";
@@ -54,10 +54,11 @@ export const ehSolicitacaoDeCancelamento = (status) => {
 export const formataJustificativa = (dietaEspecial) => {
   let justificativa = null;
   if (dietaEspecial.status_solicitacao === "ESCOLA_CANCELOU") {
-    if (dietaEspecial.logs.length === 2) {
-      justificativa = dietaEspecial.logs[0].justificativa;
-    } else {
-      justificativa = dietaEspecial.logs[2].justificativa;
+    const log = dietaEspecial.logs.find(
+      (l) => l.status_evento_explicacao === "Escola cancelou"
+    );
+    if (log) {
+      justificativa = log.justificativa;
     }
   }
   if (

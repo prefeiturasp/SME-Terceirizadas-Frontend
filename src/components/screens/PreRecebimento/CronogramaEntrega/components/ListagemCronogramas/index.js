@@ -104,10 +104,10 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                         fontSize: "12px",
                         fontWeight: "700",
                       }}
-                      title={cronograma.produto && cronograma.produto.nome}
+                      title={cronograma.ficha_tecnica?.produto?.nome}
                     >
-                      {cronograma.produto &&
-                        formataNome(cronograma.produto.nome)}
+                      {cronograma.ficha_tecnica?.produto?.nome &&
+                        formataNome(cronograma.ficha_tecnica?.produto?.nome)}
                     </Tooltip>
                   </div>
                   <div className={`${bordas}`}>

@@ -93,6 +93,10 @@ const login = async (login, password) => {
               JSON.stringify(result_.vinculo_atual.instituicao.nome)
             );
             localStorage.setItem(
+              "uuid_instituicao",
+              JSON.stringify(result_.vinculo_atual.instituicao.uuid)
+            );
+            localStorage.setItem(
               "tipo_servico",
               JSON.stringify(result_.vinculo_atual.instituicao.tipo_servico)
             );

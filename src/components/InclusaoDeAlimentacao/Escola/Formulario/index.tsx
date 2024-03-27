@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import CardMatriculados from "components/Shareable/CardMatriculados";
 import HTTP_STATUS from "http-status-codes";
 import { TIPO_SOLICITACAO } from "constants/shared";
@@ -35,7 +35,6 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
-import { OnChange } from "react-final-form-listeners";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   validarSubmissaoNormal,
@@ -316,11 +315,11 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     });
   };
 
-  const carregarRascunhoContinuo = (
+  const carregarRascunhoContinuo = async (
     form: FormApi<any, Partial<any>>,
     values: ValuesFormInclusaoDeAlimentacaoInterface,
     inclusao_: any
-  ): void => {
+  ): Promise<void> => {
     const quantidades_periodo_ = deepCopy(inclusao_.quantidades_periodo);
     if (inclusao_.motivo.nome === "ETEC") {
       quantidades_periodo_.forEach((qp) => {
@@ -347,14 +346,14 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       });
     }
 
-    form.change("inclusoes", [
+    await form.change("inclusoes", [
       {
         motivo: inclusao_.motivo.uuid,
         data_inicial: inclusao_.data_inicial,
         data_final: inclusao_.data_final,
       },
     ]);
-    form.change("quantidades_periodo", quantidades_periodo_);
+    await form.change("quantidades_periodo", quantidades_periodo_);
   };
 
   const refresh = (form: FormApi<any, Partial<any>>): void => {
@@ -580,9 +579,11 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                               required
                               validate={required}
                               naoDesabilitarPrimeiraOpcao
-                            />
-                            <OnChange name={`${name}.motivo`}>
-                              {async (value: string) => {
+                              onChangeEffect={async (
+                                e: ChangeEvent<HTMLInputElement>
+                              ) => {
+                                const value = e.target.value;
+                                const values_ = form.getState().values;
                                 if (value) {
                                   if (
                                     motivosSimples.find(
@@ -594,9 +595,9 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                       "quantidades_periodo",
                                       undefined
                                     );
-                                    form.change("reload", !values.reload);
+                                    form.change("reload", !values_.reload);
                                     await checaMotivoInclusaoEspecifico(
-                                      values,
+                                      values_,
                                       form,
                                       value
                                     );
@@ -614,7 +615,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                       "quantidades_periodo",
                                       periodoNoite
                                     );
-                                    form.change("reload", !values.reload);
+                                    form.change("reload", !values_.reload);
                                   } else if (
                                     motivosContinuos.find(
                                       (motivo: MotivoContinuoInterface) =>
@@ -645,7 +646,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                   form.change("id_externo", idExterno);
                                 }
                               }}
-                            </OnChange>
+                            />
                           </div>
                           {motivoSimplesSelecionado(values) && (
                             <DataInclusaoNormal

@@ -10,7 +10,6 @@ import {
   updateKitLanche,
 } from "services/codae.service";
 import { Field, Form } from "react-final-form";
-import { OnBlur } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
 import CKEditorField from "components/Shareable/CKEditorField";
@@ -18,6 +17,7 @@ import {
   required,
   selectValidate,
   textAreaRequired,
+  requiredMultiselect,
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
@@ -26,11 +26,14 @@ import {
 } from "components/Shareable/Botao/constants";
 import { Spin } from "antd";
 import "./style.scss";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 
 export default ({ uuid }) => {
   const navigate = useNavigate();
   const [carregando, setCarregando] = useState(true);
   const [editais, setEditais] = useState([]);
+  const [tiposUnidades, setTiposUnidades] = useState([]);
   const [opcaoStatus] = useState([
     { uuid: "", nome: "Selecione uma opção" },
     { uuid: "ATIVO", nome: "Ativo" },
@@ -39,6 +42,7 @@ export default ({ uuid }) => {
   const [desabilitarBotao, setDesabilitarBotao] = useState(false);
   const [modeloKitLanche, setModeloKitLanche] = useState({
     edital: null,
+    tipos_unidades: null,
     nome: null,
     descricao: null,
     status: "ATIVO",
@@ -48,6 +52,7 @@ export default ({ uuid }) => {
     setCarregando(true);
     const payload = {
       edital: formValues.edital,
+      tipos_unidades: formValues.tipos_unidades,
       nome: formValues.nome,
       descricao: formValues.descricao,
       status: formValues.status,
@@ -80,30 +85,44 @@ export default ({ uuid }) => {
         if (res.status === HTTP_STATUS.OK) setModeloKitLanche(res.data);
       });
     }
+    await getTiposUnidadeEscolarAsync();
     setCarregando(false);
   };
 
   const checaNomeExiste = async (values) => {
     if (
       ![null, undefined, ""].includes(values.nome) &&
-      ![null, undefined, ""].includes(values.edital)
+      ![null, undefined, ""].includes(values.edital) &&
+      ![null, undefined, []].includes(values.tipos_unidades)
     ) {
       const payload = {
         nome: values.nome,
         edital: values.edital,
+        tipos_unidades: values.tipos_unidades,
         uuid: modeloKitLanche.uuid,
       };
       try {
         const response = await checaNomeKitLanche(payload);
         if (response.status === HTTP_STATUS.OK) {
           toastError(
-            "Esse nome de kit lanche já existe para edital selecionado"
+            "Esse nome de kit lanche já existe para edital e tipo de unidade selecionados"
           );
           setDesabilitarBotao(true);
         }
       } catch (error) {
         setDesabilitarBotao(false);
       }
+    }
+  };
+
+  const getTiposUnidadeEscolarAsync = async () => {
+    const response = await getTiposUnidadeEscolar({
+      pertence_relatorio_solicitacoes_alimentacao: true,
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setTiposUnidades(response.data.results);
+    } else {
+      toastError("Erro ao carregar tipos de unidades.");
     }
   };
 
@@ -120,7 +139,7 @@ export default ({ uuid }) => {
           <Form
             onSubmit={onSubmit}
             initialValues={() => modeloKitLanche}
-            render={({ handleSubmit, submitting, values, form }) => (
+            render={({ handleSubmit, submitting, form }) => (
               <form onSubmit={handleSubmit}>
                 <div className="row mb-3">
                   <div className="col-4">
@@ -137,10 +156,32 @@ export default ({ uuid }) => {
                       required
                       validate={selectValidate}
                       disabled={modeloKitLanche.uuid ? true : false}
+                      onChangeEffect={() =>
+                        checaNomeExiste(form.getState().values)
+                      }
                     />
-                    <OnBlur name="edital">
-                      {() => checaNomeExiste(values)}
-                    </OnBlur>
+                  </div>
+                  <div className="col-4">
+                    <label className="col-form-label mb-1">
+                      <span className="asterisco">* </span>
+                      Tipo de Unidade
+                    </label>
+                    <Field
+                      component={MultiSelect}
+                      name="tipos_unidades"
+                      selected={form.getState().values.tipos_unidades || []}
+                      options={tiposUnidades.map((tipoUnidade) => ({
+                        label: tipoUnidade.iniciais,
+                        value: tipoUnidade.uuid,
+                      }))}
+                      nomeDoItemNoPlural="tipos de unidades"
+                      required
+                      validate={requiredMultiselect}
+                      disabled={!!modeloKitLanche.uuid}
+                      onChangeEffect={() =>
+                        checaNomeExiste(form.getState().values)
+                      }
+                    />
                   </div>
                   <div className="col-12">
                     <label className="col-form-label mb-1">
@@ -153,8 +194,8 @@ export default ({ uuid }) => {
                       required
                       disabled={modeloKitLanche.uuid ? true : false}
                       validate={required}
+                      onBlur={() => checaNomeExiste(form.getState().values)}
                     />
-                    <OnBlur name="nome">{() => checaNomeExiste(values)}</OnBlur>
                   </div>
                   <div className="col-12">
                     <label className="col-form-label mb-1">
@@ -199,7 +240,10 @@ export default ({ uuid }) => {
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="ms-3 float-end"
-                      onClick={() => form.reset(modeloKitLanche)}
+                      onClick={() => {
+                        form.reset(modeloKitLanche);
+                        navigate(-1);
+                      }}
                     />
                   </div>
                 </div>

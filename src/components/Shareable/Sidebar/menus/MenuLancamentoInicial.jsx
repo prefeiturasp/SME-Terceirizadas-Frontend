@@ -2,6 +2,8 @@ import React from "react";
 import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   ACOMPANHAMENTO_DE_LANCAMENTOS,
+  CLAUSULAS_PARA_DESCONTOS,
+  CONTROLE_DE_FREQUENCIA,
   EMPENHOS,
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
@@ -13,6 +15,8 @@ import {
   exibirModuloMedicaoInicial,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioEhDRE,
+  escolaEhCei,
+  escolaEhCEMEI,
   usuarioEhEscolaTerceirizada,
   usuarioEhMedicao,
   usuarioEhCODAEGabinete,
@@ -23,7 +27,10 @@ import {
 const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
   const exibeCadastros = usuarioEhMedicao();
   const exibeRelatorios =
-    usuarioEhMedicao() || usuarioEhCODAEGestaoAlimentacao();
+    usuarioEhMedicao() ||
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhDRE() ||
+    usuarioEhEscolaTerceirizadaQualquerPerfil();
 
   return (
     exibirModuloMedicaoInicial() && (
@@ -48,6 +55,11 @@ const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
             Acompanhamento de Lançamentos
           </LeafItem>
         )}
+        {(escolaEhCEMEI() || escolaEhCei()) && (
+          <LeafItem to={`/${MEDICAO_INICIAL}/${CONTROLE_DE_FREQUENCIA}`}>
+            Controle de Frequência de Alunos
+          </LeafItem>
+        )}
         {exibeCadastros && (
           <SubMenu
             icon="fa-chevron-down"
@@ -56,6 +68,9 @@ const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
             activeMenu={activeSubmenu}
           >
             <LeafItem to={`/${MEDICAO_INICIAL}/${EMPENHOS}`}>Empenhos</LeafItem>
+            <LeafItem to={`/${MEDICAO_INICIAL}/${CLAUSULAS_PARA_DESCONTOS}`}>
+              Cláusulas para Descontos
+            </LeafItem>
           </SubMenu>
         )}
         {exibeRelatorios && (

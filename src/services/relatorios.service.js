@@ -395,6 +395,36 @@ export const getSolicitacoesDetalhadas = async (params) => {
   }
 };
 
+export const getTotalizadoresRelatorioSolicitacoesAlimentacao = async (
+  payload
+) => {
+  const response = await axios
+    .post(
+      `${API_URL}/solicitacoes-genericas/filtrar-solicitacoes-ga-cards-totalizadores/`,
+      payload
+    )
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getDatasetsGraficosRelatorioSolicitacoesAlimentacao = async (
+  payload
+) => {
+  const response = await axios
+    .post(
+      `${API_URL}/solicitacoes-genericas/filtrar-solicitacoes-ga-graficos/`,
+      payload
+    )
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const gerarPDFRelatorioAlunosMatriculados = async (params) => {
   const url = `/relatorio-alunos-matriculados/gerar-pdf/`;
   const response = await axios

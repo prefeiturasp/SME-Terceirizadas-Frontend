@@ -8,7 +8,6 @@ import {
 import { Field } from "react-final-form";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { agregarDefault } from "helpers/utilities";
-import { OnChange } from "react-final-form-listeners";
 
 export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
   const [collapse, setCollapse] = useState(false);
@@ -113,12 +112,12 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
                       label="Data Programada"
                       name={`data_recebimento_${index}`}
                       placeholder={"Selecionar a Data"}
-                    />
-                    <OnChange name={`data_recebimento_${index}`}>
-                      {async (value) => {
+                      onChangeEffect={(e) => {
                         const index_ = datasProgramadas.findIndex(
                           (dp) => dp.index === index
                         );
+                        const values_ = form.getState().values;
+                        const value = e.target.value;
                         if (index_ !== -1) {
                           datasProgramadas.splice(index_, 1);
                         }
@@ -127,9 +126,9 @@ export default ({ values, form, etapas, recebimentos, setRecebimentos }) => {
                           index,
                         });
                         setDatasProgramadas(datasProgramadas);
-                        form.change("reload", !values.reload);
+                        form.change("reload", !values_.reload);
                       }}
-                    </OnChange>
+                    />
                   </div>
                   <div className="col-4">
                     <Field

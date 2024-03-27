@@ -190,18 +190,12 @@ export default () => {
             </div>
             <div className="col-4">
               <InputText
-                label="Data Fabricação do Lote"
-                valorInicial={objeto.data_fabricacao_lote}
+                label="Saldo do Laudo"
+                valorInicial={objeto.saldo_laudo}
                 disabled={true}
               />
             </div>
-            <div className="col-4">
-              <InputText
-                label="Validade do Produto"
-                valorInicial={objeto.validade_produto}
-                disabled={true}
-              />
-            </div>
+
             <div className="col-4">
               <InputText
                 label="Data Final do Laudo"
@@ -209,33 +203,41 @@ export default () => {
                 disabled={true}
               />
             </div>
-            <div className="col-4">
+
+            <div className="col-8">
               <InputText
-                label="Saldo do Laudo"
-                valorInicial={objeto.saldo_laudo}
+                label="Nº do(s) Lote(s) do(s) Laudo(s)"
+                valorInicial={objeto.numero_lote_laudo}
                 disabled={true}
               />
             </div>
 
             {objeto.datas_fabricacao_e_prazos?.map((prazo) => (
               <>
-                <div className="col-4">
+                <div className="col">
                   <InputText
                     label="Data de Fabricação"
                     valorInicial={prazo.data_fabricacao}
                     disabled={true}
                   />
                 </div>
-                <div className="col-4">
+                <div className="col">
                   <InputText
-                    label="Prazo Máximo para Recebimento"
+                    label="Data de Validade"
+                    valorInicial={prazo.data_validade}
+                    disabled={true}
+                  />
+                </div>
+                <div className="col">
+                  <InputText
+                    label="Prazo Máximo de Recebimento"
                     valorInicial={prazo.prazo_maximo_recebimento}
                     disabled={true}
                   />
                 </div>
 
                 {prazo.prazo_maximo_recebimento !== "OUTRO" && (
-                  <div className="col-4">
+                  <div className="col">
                     <InputText
                       label="Data Máxima de Recebimento"
                       valorInicial={prazo.data_maxima_recebimento}

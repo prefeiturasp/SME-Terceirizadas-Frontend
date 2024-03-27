@@ -63,9 +63,11 @@ export const InclusaoContinuaBody = ({ ...props }) => {
               </div>
             </div>
             <div className="row mt-3">
-              <div className="col-3">
-                <p>Repetir:</p>
-              </div>
+              {solicitacao.motivo.nome !== "ETEC" && (
+                <div className="col-3">
+                  <p>Repetir:</p>
+                </div>
+              )}
               <div className="col-3">
                 <p>Período:</p>
               </div>
@@ -90,26 +92,28 @@ export const InclusaoContinuaBody = ({ ...props }) => {
                   }`}
                   key={idx}
                 >
-                  <div className="col-3 weekly">
-                    {WEEK.map((day, key) => {
-                      return (
-                        <span
-                          key={key}
-                          className={
-                            quantidade_periodo.dias_semana
-                              .map(String)
-                              .includes(day.value)
-                              ? "week-circle-clicked green"
-                              : "week-circle"
-                          }
-                          data-cy={`dia-${key}`}
-                          value={day.value}
-                        >
-                          {day.label}
-                        </span>
-                      );
-                    })}
-                  </div>
+                  {solicitacao.motivo.nome !== "ETEC" && (
+                    <div className="col-3 weekly">
+                      {WEEK.map((day, key) => {
+                        return (
+                          <span
+                            key={key}
+                            className={
+                              quantidade_periodo.dias_semana
+                                .map(String)
+                                .includes(day.value)
+                                ? "week-circle-clicked green"
+                                : "week-circle"
+                            }
+                            data-cy={`dia-${key}`}
+                            value={day.value}
+                          >
+                            {day.label}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
                   <div className="col-3 nome-periodo-escolar-relatorio-sol-alim">
                     <p>
                       <b>{quantidade_periodo.periodo_escolar.nome}</b>

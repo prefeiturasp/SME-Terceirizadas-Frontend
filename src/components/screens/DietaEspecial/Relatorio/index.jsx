@@ -128,7 +128,10 @@ const Relatorio = ({ visao }) => {
     const responseDietasVigentes = await getDietasEspeciaisVigentesDeUmAluno(
       codigo_eol
     );
-    if (responseDietasVigentes.status === HTTP_STATUS.OK) {
+    if (
+      responseDietasVigentes &&
+      responseDietasVigentes.status === HTTP_STATUS.OK
+    ) {
       setSolicitacaoVigenteAtiva(responseDietasVigentes.data.results);
     } else {
       toastError("Houve um erro ao carregar Solicitação");
@@ -364,10 +367,12 @@ const Relatorio = ({ visao }) => {
                 solicitacaoVigenteAtiva={solicitacaoVigenteAtiva}
                 editar={editar}
               />
-              {status === statusEnum.CODAE_A_AUTORIZAR &&
+              {[
+                statusEnum.CODAE_A_AUTORIZAR,
+                statusEnum.ESCOLA_SOLICITOU_INATIVACAO,
+              ].includes(status) &&
                 visao === ESCOLA &&
                 !dietaCancelada &&
-                dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" &&
                 ![
                   TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
                   TIPO_PERFIL.NUTRICAO_MANIFESTACAO,

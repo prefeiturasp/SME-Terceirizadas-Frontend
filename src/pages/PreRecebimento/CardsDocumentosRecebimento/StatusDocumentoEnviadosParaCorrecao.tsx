@@ -4,6 +4,7 @@ import Breadcrumb from "components/Shareable/Breadcrumb";
 import {
   PAINEL_DOCUMENTOS_RECEBIMENTO,
   PRE_RECEBIMENTO,
+  DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO,
 } from "configs/constants";
 import { getDashboardDocumentosRecebimentoPorStatus } from "services/documentosRecebimento.service";
 import { SolicitacoesDocumentoStatusGenerico } from "components/screens/SolicitacoesDocumentoStatusGenerico";
@@ -48,7 +49,7 @@ export default () => {
         getSolicitacoes={getDashboardDocumentosRecebimentoPorStatus}
         params={paramsDefault}
         limit={limit}
-        urlBaseItem={``}
+        urlBaseItem={`/${PRE_RECEBIMENTO}/${DETALHAR_CODAE_DOCUMENTO_RECEBIMENTO}`}
       />
     </Page>
   );

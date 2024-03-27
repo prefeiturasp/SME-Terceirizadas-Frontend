@@ -479,10 +479,11 @@ export const desabilitarField = (
     grupoLocation === "Programas e Projetos" &&
     dadosValoresInclusoesAutorizadasState
   ) {
+    if (feriadosNoMes.includes(dia)) {
+      return true;
+    }
     if (nomeCategoria === "ALIMENTAÇÃO") {
-      if (feriadosNoMes.includes(dia)) {
-        return true;
-      } else if (rowName === "numero_de_alunos") {
+      if (rowName === "numero_de_alunos") {
         return true;
       } else if (validacaoSemana(dia)) {
         return true;
@@ -531,7 +532,8 @@ export const desabilitarField = (
       !["Mês anterior", "Mês posterior"].includes(
         values[`${rowName}__dia_${dia}__categoria_${categoria}`]
       ) &&
-      values[`matriculados__dia_${dia}__categoria_${categoria}`]
+      values[`matriculados__dia_${dia}__categoria_${categoria}`] &&
+      Number(values[`matriculados__dia_${dia}__categoria_${categoria}`]) !== 0
     ) {
       return false;
     } else {
@@ -595,7 +597,9 @@ export const desabilitarField = (
       rowName === "matriculados" ||
       rowName === "numero_de_alunos" ||
       rowName === "dietas_autorizadas" ||
-      (!values[`matriculados__dia_${dia}__categoria_${categoria}`] &&
+      ((!values[`matriculados__dia_${dia}__categoria_${categoria}`] ||
+        Number(values[`matriculados__dia_${dia}__categoria_${categoria}`]) ===
+          0) &&
         !nomeCategoria.includes("DIETA ESPECIAL")) ||
       Number(
         values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]

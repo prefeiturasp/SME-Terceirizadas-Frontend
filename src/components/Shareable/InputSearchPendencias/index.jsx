@@ -1,6 +1,5 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
 import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
@@ -62,7 +61,7 @@ export const InputSearchPendencias = (props) => {
     <Form
       onSubmit={() => {}}
       initialValues={{}}
-      render={({ handleSubmit, values }) => (
+      render={({ form, handleSubmit }) => (
         <form onSubmit={handleSubmit}>
           <div className="row">
             {ehURLGestaoProduto() && (
@@ -79,12 +78,11 @@ export const InputSearchPendencias = (props) => {
                     options={[{ label: "Número do Edital", value: "" }].concat(
                       props.editais
                     )}
-                  />
-                  <OnChange name="edital">
-                    {() => {
-                      props.filterList(values);
+                    onChange={(value) => {
+                      form.change("edital", value);
+                      props.filterList(form.getState().values);
                     }}
-                  </OnChange>
+                  />
                 </div>
               </>
             )}
@@ -98,12 +96,8 @@ export const InputSearchPendencias = (props) => {
                   (props.propsDieta && props.propsDieta.tituloDieta) ||
                   (props.propsProduto && props.propsProduto.nomeProduto)
                 }
+                inputOnChange={() => props.filterList(form.getState().values)}
               />
-              <OnChange name="titulo">
-                {() => {
-                  props.filterList(values);
-                }}
-              </OnChange>
               {ehURLGestaoProduto() && (
                 <div className="warning-num-charac">
                   * mínimo de 3 caracteres
@@ -123,12 +117,10 @@ export const InputSearchPendencias = (props) => {
                       initialValue={
                         props.propsDieta && props.propsDieta.statusDieta
                       }
+                      onChangeEffect={() =>
+                        props.filterList(form.getState().values)
+                      }
                     />
-                    <OnChange name="status">
-                      {() => {
-                        props.filterList(values);
-                      }}
-                    </OnChange>
                   </div>
                 )}
                 {props.listaLotes && verificaURLFiltros() && (
@@ -142,12 +134,10 @@ export const InputSearchPendencias = (props) => {
                       initialValue={
                         props.propsDieta && props.propsDieta.loteDieta
                       }
+                      onChangeEffect={() =>
+                        props.filterList(form.getState().values)
+                      }
                     />
-                    <OnChange name="lote">
-                      {() => {
-                        props.filterList(values);
-                      }}
-                    </OnChange>
                   </div>
                 )}
               </>
@@ -162,15 +152,13 @@ export const InputSearchPendencias = (props) => {
                     initialValue={
                       props.propsProduto && props.propsProduto.marcaProduto
                     }
+                    inputOnChange={() =>
+                      props.filterList(form.getState().values)
+                    }
                   />
                   <div className="warning-num-charac">
                     * mínimo de 3 caracteres
                   </div>
-                  <OnChange name="marca">
-                    {() => {
-                      props.filterList(values);
-                    }}
-                  </OnChange>
                 </div>
               </>
             )}

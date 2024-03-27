@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { Modal } from "react-bootstrap";
 import HTTP_STATUS from "http-status-codes";
 import { agregarDefault, getError } from "helpers/utilities";
@@ -77,7 +76,7 @@ export const ModalNaoValidarFinalForm = ({ ...props }) => {
       <Form
         onSubmit={onSubmit}
         initialValues={{}}
-        render={({ handleSubmit, values }) => (
+        render={({ form, handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Body>
               <div className="form-row">
@@ -91,10 +90,8 @@ export const ModalNaoValidarFinalForm = ({ ...props }) => {
                     options={agregarDefault(motivosDREnaoValida)}
                     validate={required}
                     required
+                    inputOnChange={() => onChangeForm(form.getState().values)}
                   />
-                  <OnChange name="motivo_nao_valida">
-                    {() => onChangeForm(values)}
-                  </OnChange>
                 </div>
                 <div className="form-group col-12">
                   <Field
@@ -104,10 +101,8 @@ export const ModalNaoValidarFinalForm = ({ ...props }) => {
                     name="justificativa"
                     validate={required}
                     required
+                    inputOnChange={() => onChangeForm(form.getState().values)}
                   />
-                  <OnChange name="justificativa">
-                    {() => onChangeForm(values)}
-                  </OnChange>
                 </div>
               </div>
             </Modal.Body>

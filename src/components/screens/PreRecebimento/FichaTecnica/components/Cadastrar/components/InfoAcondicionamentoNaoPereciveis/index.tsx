@@ -126,7 +126,9 @@ export default ({
       </section>
 
       <section id="formEmbalagemRotulagem">
-        <div className="subtitulo">Embalagem</div>
+        <div className="row">
+          <div className="subtitulo">Embalagem</div>
+        </div>
 
         <div className="row mt-3">
           <div className="col">
@@ -398,7 +400,9 @@ export default ({
 
         <hr />
 
-        <div className="subtitulo">Rotulagem</div>
+        <div className="row">
+          <div className="subtitulo">Rotulagem</div>
+        </div>
 
         <div className="row mt-3">
           <div className="col">

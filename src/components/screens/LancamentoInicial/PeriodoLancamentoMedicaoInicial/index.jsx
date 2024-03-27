@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Field, Form, FormSpy } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import arrayMutators from "final-form-arrays";
 import {
   addDays,
@@ -203,6 +202,7 @@ export default () => {
     FUNDAMENTAL_EMEBS.key
   );
   const [msgModalErro, setMsgModalErro] = useState(null);
+  const [previousValue, setPreviousValue] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -1136,7 +1136,7 @@ export default () => {
               .forEach((obj) => {
                 dadosValoresMatriculados[
                   `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
-                ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : null;
+                ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : `${0}`;
               });
         } else {
           matriculados &&
@@ -2677,16 +2677,17 @@ export default () => {
                                                           column.dia,
                                                           categoria.id
                                                         )}
-                                                      />
-                                                      <OnChange
-                                                        name={`${row.name}__dia_${column.dia}__categoria_${categoria.id}`}
-                                                      >
-                                                        {(value, previous) => {
+                                                        inputOnChange={(e) => {
+                                                          const value =
+                                                            e.target.value;
+
                                                           onChangeInput(
                                                             value,
-                                                            previous,
-                                                            errors,
-                                                            formValuesAtualizados,
+                                                            previousValue,
+                                                            form.getState()
+                                                              .errors,
+                                                            form.getState()
+                                                              .values,
                                                             column.dia,
                                                             categoria,
                                                             row.name,
@@ -2694,8 +2695,12 @@ export default () => {
                                                             column,
                                                             row
                                                           );
+
+                                                          setPreviousValue(
+                                                            value
+                                                          );
                                                         }}
-                                                      </OnChange>
+                                                      />
                                                     </div>
                                                   )}
                                                 </div>
@@ -3031,19 +3036,19 @@ export default () => {
                                                             categoria.id,
                                                             categoria.nome
                                                           )}
-                                                        />
-                                                        <OnChange
-                                                          name={`${row.name}__dia_${column.dia}__categoria_${categoria.id}`}
-                                                        >
-                                                          {(
-                                                            value,
-                                                            previous
+                                                          inputOnChange={(
+                                                            e
                                                           ) => {
+                                                            const value =
+                                                              e.target.value;
+
                                                             onChangeInput(
                                                               value,
-                                                              previous,
-                                                              errors,
-                                                              formValuesAtualizados,
+                                                              previousValue,
+                                                              form.getState()
+                                                                .errors,
+                                                              form.getState()
+                                                                .values,
                                                               column.dia,
                                                               categoria,
                                                               row.name,
@@ -3051,8 +3056,12 @@ export default () => {
                                                               column,
                                                               row
                                                             );
+
+                                                            setPreviousValue(
+                                                              value
+                                                            );
                                                           }}
-                                                        </OnChange>
+                                                        />
                                                       </div>
                                                     )}
                                                   </div>

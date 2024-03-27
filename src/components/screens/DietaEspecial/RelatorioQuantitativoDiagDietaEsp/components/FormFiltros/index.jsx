@@ -2,7 +2,6 @@ import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { useState, useEffect } from "react";
 import { Field, Form } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 
 import Botao from "components/Shareable/Botao";
 import {
@@ -100,18 +99,11 @@ export default ({ onSubmit, loading, setLoading }) => {
             onSubmit={handleSubmit}
             className="form-filtros-rel-quant-diag-dieta-esp"
           >
-            {tipoUsuario !== TIPO_PERFIL.ESCOLA && (
-              <OnChange name="dre">{() => form.change("escola", [])}</OnChange>
-            )}
             <div className="row">
               <div className="col-6">
-                <Field
-                  component={"input"}
-                  type="checkbox"
-                  name="somente_dietas_ativas"
-                />
-                <OnChange name="somente_dietas_ativas">
-                  {(value) => {
+                <span
+                  onClick={(e) => {
+                    const value = e.target.checked;
                     if (value) {
                       form.change(
                         "dre",
@@ -128,7 +120,13 @@ export default ({ onSubmit, loading, setLoading }) => {
                       }
                     }
                   }}
-                </OnChange>
+                >
+                  <Field
+                    component={"input"}
+                    type="checkbox"
+                    name="somente_dietas_ativas"
+                  />
+                </span>
                 <span className="checkbox-custom" />
                 <label
                   htmlFor="somente_dietas_ativas"
@@ -161,6 +159,10 @@ export default ({ onSubmit, loading, setLoading }) => {
                     tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL &&
                     tipoUsuario !== TIPO_PERFIL.ESCOLA
                   }
+                  onChangeEffect={() => {
+                    tipoUsuario !== TIPO_PERFIL.ESCOLA &&
+                      form.change("escola", []);
+                  }}
                 />
               </div>
               <div className="col-7">

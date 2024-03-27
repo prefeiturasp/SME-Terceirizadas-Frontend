@@ -1,0 +1,104 @@
+@import "styles/variables.scss";
+
+.alterar-ficha-tecnica {
+  .verde-escuro {
+    color: $greenDark;
+  }
+
+  .label-radio {
+    margin-bottom: 6px;
+  }
+
+  .container-radio {
+    display: inline-block;
+    margin-right: 16px;
+    padding-left: 28px;
+    padding-bottom: 16px;
+  }
+
+  .label-unidade-medida {
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 0;
+    color: #42474a;
+  }
+
+  .label-unidade-medida-bottom {
+    align-items: flex-end;
+    padding-bottom: 7.5px;
+  }
+
+  .label-unidade-medida-top {
+    align-items: flex-start;
+    padding-top: 7.5px;
+  }
+
+  .input-ficha-tecnica {
+    height: 35px;
+  }
+
+  .textarea-ficha-tecnica {
+    height: 150px;
+  }
+
+  .subtitulo {
+    color: $green;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  hr {
+    margin: 2rem 0;
+  }
+
+  .flex-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .status {
+    border-radius: 50px;
+    padding: 2px 8px;
+    height: 10%;
+    margin: auto 0;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 700;
+
+    &.aprovado {
+      background-color: $green;
+      border: 1px solid $greenDark;
+      color: white;
+    }
+
+    &.correcao {
+      background-color: white;
+      border: 1px solid $orange;
+      color: $orange;
+    }
+
+    &.analise {
+      background-color: white;
+      border: 1px solid $grayPlaceholder;
+      color: $grayPlaceholder;
+    }
+
+    i {
+      margin-right: 8px;
+    }
+  }
+
+  .campo-correcao {
+    label {
+      color: $orange !important;
+      font-weight: bold;
+    }
+
+    textarea {
+      resize: none;
+    }
+  }
+}

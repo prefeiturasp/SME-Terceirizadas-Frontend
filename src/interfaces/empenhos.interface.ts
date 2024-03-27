@@ -17,7 +17,6 @@ export interface EmpenhoInterface {
   contrato: string;
   edital: string;
   tipo_empenho: string;
-  tipo_reajuste?: string;
   status: string;
   valor_total: number;
 }
@@ -38,7 +37,6 @@ export interface FiltrosInterface {
 
 export interface EmpenhoPayload {
   tipo_empenho?: string;
-  tipo_reajuste?: string;
   status?: string;
   valor_total?: number;
 }

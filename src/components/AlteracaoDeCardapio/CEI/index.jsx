@@ -1,21 +1,20 @@
-import CardMatriculados from "components/Shareable/CardMatriculados";
-import HTTP_STATUS from "http-status-codes";
-import arrayMutators from "final-form-arrays";
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { Field, Form } from "react-final-form";
+import { Spin } from "antd";
+import Botao from "components/Shareable/Botao";
 import {
-  getRascunhosAlteracaoTipoAlimentacao,
-  getAlunosPorFaixaEtariaNumaData,
-  escolaCriarSolicitacaoDeAlteracaoCardapio,
-  escolaExcluirSolicitacaoDeAlteracaoCardapio,
-  escolaAlterarSolicitacaoDeAlteracaoCardapio,
-  escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
-} from "services/alteracaoDeCardapio";
-import { TIPO_SOLICITACAO } from "constants/shared";
-import { Rascunhos } from "../Rascunhos";
-import Select from "components/Shareable/Select";
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "components/Shareable/Botao/constants";
+import CKEditorField from "components/Shareable/CKEditorField";
+import CardMatriculados from "components/Shareable/CardMatriculados";
 import { InputComData } from "components/Shareable/DatePicker";
+import InputText from "components/Shareable/Input/InputText";
+import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
+import { MultiselectRaw } from "components/Shareable/MultiselectRaw";
+import Select from "components/Shareable/Select";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { STATUS_DRE_A_VALIDAR } from "configs/constants";
+import { TIPO_SOLICITACAO } from "constants/shared";
+import arrayMutators from "final-form-arrays";
 import {
   ehDiaUtil,
   maxValue,
@@ -32,27 +31,26 @@ import {
   fimDoCalendario,
   getError,
 } from "helpers/utilities";
-import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
-import { OnChange } from "react-final-form-listeners";
+import HTTP_STATUS from "http-status-codes";
+import React, { useEffect, useState } from "react";
+import { Field, Form } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import "./style.scss";
-import CKEditorField from "components/Shareable/CKEditorField";
-import InputText from "components/Shareable/Input/InputText";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { Spin } from "antd";
+import {
+  escolaAlterarSolicitacaoDeAlteracaoCardapio,
+  escolaCriarSolicitacaoDeAlteracaoCardapio,
+  escolaExcluirSolicitacaoDeAlteracaoCardapio,
+  escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
+  getAlunosPorFaixaEtariaNumaData,
+  getRascunhosAlteracaoTipoAlimentacao,
+} from "services/alteracaoDeCardapio";
+import { Rascunhos } from "../Rascunhos";
 import {
   formataPayload,
   totalAlunosInputPorPeriodo,
   totalAlunosPorPeriodo,
   validaForm,
 } from "./helper";
-import Botao from "components/Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_TYPE,
-} from "components/Shareable/Botao/constants";
-import { STATUS_DRE_A_VALIDAR } from "configs/constants";
+import "./style.scss";
 
 const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
@@ -419,17 +417,16 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                               "Lanche emergencial".toUpperCase()
                           )}
                           validate={required}
-                        />
-                        <OnChange name="motivo">
-                          {async (value) => {
+                          onChangeEffect={async (e) => {
+                            const value = e.target.value;
                             if (value) {
-                              const data_ = values.data;
+                              const data_ = form.getState().values.data;
                               form.reset();
                               form.change("motivo", value);
                               form.change("data", data_);
                             }
                           }}
-                        </OnChange>
+                        />
                       </div>
                       <div className="col-12 col-sm-4">
                         <Field
@@ -444,16 +441,15 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                             ehDiaUtil(values, motivos, feriadosAno)
                           )}
                           usarDirty={true}
-                        />
-                        <OnChange name="data">
-                          {(value) => {
+                          inputOnChange={(value) => {
                             if (value) {
+                              const values_ = form.getState().values;
                               onAlterarDiaChanged(value);
-                              values.substituicoes.forEach(
+                              values_.substituicoes.forEach(
                                 (substituicao, indice) => {
                                   if (substituicao.checked) {
                                     getFaixasEtariasPorPeriodo(
-                                      values.substituicoes[indice].uuid,
+                                      values_.substituicoes[indice].uuid,
                                       value.split("/").reverse().join("-"),
                                       indice,
                                       form
@@ -463,7 +459,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                               );
                             }
                           }}
-                        </OnChange>
+                        />
                       </div>
                     </div>
                     {values.motivo && values.data && (
@@ -507,6 +503,35 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                                 ? "multiselect-wrapper-enabled"
                                                 : "multiselect-wrapper-disabled"
                                             );
+                                            if (
+                                              values.substituicoes[indice][
+                                                `checked`
+                                              ]
+                                            ) {
+                                              form.change(
+                                                `substituicoes[${indice}].tipos_alimentacao_de`,
+                                                undefined
+                                              );
+                                              form.change(
+                                                `substituicoes[${indice}].tipos_alimentacao_de_selecionados`,
+                                                undefined
+                                              );
+                                              form.change(
+                                                `substituicoes[${indice}].tipo_alimentacao_para`,
+                                                undefined
+                                              );
+                                            } else {
+                                              getFaixasEtariasPorPeriodo(
+                                                values.substituicoes[indice]
+                                                  .uuid,
+                                                values.data
+                                                  .split("/")
+                                                  .reverse()
+                                                  .join("-"),
+                                                indice,
+                                                form
+                                              );
+                                            }
                                           }}
                                           className="checkbox-custom"
                                           data-cy={`checkbox-${
@@ -521,34 +546,6 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                         />{" "}
                                         {getPeriodo(values, indice).nome}
                                       </label>
-                                      <OnChange name={`${name}.checked`}>
-                                        {(value) => {
-                                          if (!value) {
-                                            form.change(
-                                              `substituicoes[${indice}].tipos_alimentacao_de`,
-                                              undefined
-                                            );
-                                            form.change(
-                                              `substituicoes[${indice}].tipos_alimentacao_de_selecionados`,
-                                              undefined
-                                            );
-                                            form.change(
-                                              `substituicoes[${indice}].tipo_alimentacao_para`,
-                                              undefined
-                                            );
-                                          } else {
-                                            getFaixasEtariasPorPeriodo(
-                                              values.substituicoes[indice].uuid,
-                                              values.data
-                                                .split("/")
-                                                .reverse()
-                                                .join("-"),
-                                              indice,
-                                              form
-                                            );
-                                          }
-                                        }}
-                                      </OnChange>
                                     </div>
                                   </div>
                                   {ehMotivoRPL(values) && (
@@ -573,7 +570,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                   {!ehMotivoRPL(values) && (
                                     <div className="col-4">
                                       <Field
-                                        component={StatefulMultiSelect}
+                                        component={MultiselectRaw}
                                         name={`${name}.tipos_alimentacao_de`}
                                         selected={
                                           values.substituicoes[indice]
@@ -584,17 +581,12 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                         onSelectedChanged={(values_) => {
                                           form.change(
                                             `substituicoes[${indice}].tipos_alimentacao_de_selecionados`,
-                                            values_
+                                            values_.map(
+                                              (value_) => value_.value
+                                            )
                                           );
                                         }}
-                                        disableSearch={true}
-                                        overrideStrings={{
-                                          selectSomeItems:
-                                            "Selecione um tipo de alimentação",
-                                          allItemsAreSelected:
-                                            "Todos os tipos de alimentação estão selecionados",
-                                          selectAll: "Todos",
-                                        }}
+                                        placeholder="Selecione tipos de alimentação"
                                       />
                                     </div>
                                   )}

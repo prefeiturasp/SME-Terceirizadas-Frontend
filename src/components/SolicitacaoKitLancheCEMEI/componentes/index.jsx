@@ -4,10 +4,15 @@ import { maxValue, naoPodeSerZero, required } from "helpers/fieldValidators";
 import { composeValidators } from "helpers/utilities";
 import React, { useState } from "react";
 import { Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { Collapse } from "react-collapse";
 
 export const TempoPasseio = ({ form, ehEMEI, name, nameKits }) => {
+  const selecionaTempoPasseio = (value) => {
+    if (value) {
+      form.change(nameKits || `kits`, undefined);
+    }
+  };
+
   return (
     <div className="tour-time">
       <div className="label mt-3 mb-3">Tempo previsto do passeio</div>
@@ -15,26 +20,32 @@ export const TempoPasseio = ({ form, ehEMEI, name, nameKits }) => {
         <label className="container-radio">
           até 4 horas (1 Kit)
           <Field
-            component="input"
+            component={"input"}
             type="radio"
             value="0"
             data-cy="radio-4h"
             name={name || `tempo_passeio`}
             validate={required}
           />
-          <span className="checkmark" />
+          <span
+            className="checkmark"
+            onClick={(e) => selecionaTempoPasseio(e.target.value)}
+          />
         </label>
         <label className="container-radio">
           de 5 a 7 horas (2 Kits)
           <Field
-            component="input"
+            component={"input"}
             type="radio"
             value="1"
             data-cy="radio-5-7h"
             name={name || `tempo_passeio`}
             validate={required}
           />
-          <span className="checkmark" />
+          <span
+            className="checkmark"
+            onClick={(e) => selecionaTempoPasseio(e.target.value)}
+          />
         </label>
         {ehEMEI && (
           <label className="container-radio">
@@ -47,17 +58,13 @@ export const TempoPasseio = ({ form, ehEMEI, name, nameKits }) => {
               name={name || `tempo_passeio`}
               validate={required}
             />
-            <span className="checkmark" />
+            <span
+              className="checkmark"
+              onClick={(e) => selecionaTempoPasseio(e.target.value)}
+            />
           </label>
         )}
       </div>
-      <OnChange name={name || `tempo_passeio`}>
-        {(value, previous) => {
-          if (value && previous && parseInt(value) < parseInt(previous)) {
-            form.change(nameKits || `kits`, undefined);
-          }
-        }}
-      </OnChange>
       <div className="row">
         <div className="col-12">
           <div className="explanation border rounded mt-3 p-3">

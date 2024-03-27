@@ -6,15 +6,17 @@ import axios from "./_base";
 import {
   ResponseDadosCronogramaFichaTecnica,
   ResponseFichaTecnicaDetalhada,
-  ResponseFichaTecnicaPraAnalise,
+  ResponseFichaTecnicaDetalhadaComAnalise,
   ResponseFichasTecnicas,
   ResponseFichasTecnicasDashboard,
   ResponseFichasTecnicasPorStatusDashboard,
   ResponseFichasTecnicasSimples,
+  ResponseSemDadosInterface,
 } from "interfaces/responses.interface";
 import { FiltrosDashboardFichasTecnicas } from "interfaces/pre_recebimento.interface";
 import { getMensagemDeErro } from "../helpers/statusErrors";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { saveAs } from "file-saver";
 
 export const cadastraRascunhoFichaTecnica = async (
   payload: FichaTecnicaPayload
@@ -32,9 +34,9 @@ export const getFichaTecnica = async (
 ): Promise<ResponseFichaTecnicaDetalhada> =>
   await axios.get(`/ficha-tecnica/${uuid}/`);
 
-export const getFichaTecnicaPraAnalise = async (
+export const getFichaTecnicaComAnalise = async (
   uuid: string
-): Promise<ResponseFichaTecnicaPraAnalise> =>
+): Promise<ResponseFichaTecnicaDetalhadaComAnalise> =>
   await axios.get(`/ficha-tecnica/${uuid}/detalhar-com-analise/`);
 
 export const listarFichastecnicas = async (
@@ -70,9 +72,34 @@ export const getDashboardFichasTecnicasPorStatus = async (
   }
 };
 
+export const getListaFichasTecnicasSimples =
+  async (): Promise<ResponseFichasTecnicasSimples> => {
+    try {
+      return await axios.get(`/ficha-tecnica/lista-simples/`);
+    } catch (error) {
+      toastError(getMensagemDeErro(error.response.status));
+    }
+  };
+
 export const getListaFichasTecnicasSimplesSemCronograma =
-  async (): Promise<ResponseFichasTecnicasSimples> =>
-    await axios.get(`/ficha-tecnica/lista-simples-sem-cronograma/`);
+  async (): Promise<ResponseFichasTecnicasSimples> => {
+    try {
+      return await axios.get(`/ficha-tecnica/lista-simples-sem-cronograma/`);
+    } catch (error) {
+      toastError(getMensagemDeErro(error.response.status));
+    }
+  };
+
+export const getListaFichasTecnicasSimplesSemLayoutEmbalagem =
+  async (): Promise<ResponseFichasTecnicasSimples> => {
+    try {
+      return await axios.get(
+        `/ficha-tecnica/lista-simples-sem-layout-embalagem/`
+      );
+    } catch (error) {
+      toastError(getMensagemDeErro(error.response.status));
+    }
+  };
 
 export const getDadosCronogramaFichaTecnica = async (
   uuid: string
@@ -82,17 +109,29 @@ export const getDadosCronogramaFichaTecnica = async (
 export const cadastraRascunhoAnaliseFichaTecnica = async (
   payload: AnaliseFichaTecnicaPayload,
   uuid: string
-): Promise<ResponseFichaTecnicaPraAnalise> =>
+): Promise<ResponseFichaTecnicaDetalhadaComAnalise> =>
   await axios.post(`/ficha-tecnica/${uuid}/rascunho-analise-gpcodae/`, payload);
 
 export const editaRascunhoAnaliseFichaTecnica = async (
   payload: AnaliseFichaTecnicaPayload,
   uuid: string
-): Promise<ResponseFichaTecnicaPraAnalise> =>
+): Promise<ResponseFichaTecnicaDetalhadaComAnalise> =>
   await axios.put(`/ficha-tecnica/${uuid}/rascunho-analise-gpcodae/`, payload);
 
 export const cadastraAnaliseFichaTecnica = async (
   payload: AnaliseFichaTecnicaPayload,
   uuid: string
-): Promise<ResponseFichaTecnicaPraAnalise> =>
+): Promise<ResponseSemDadosInterface> =>
   await axios.post(`/ficha-tecnica/${uuid}/analise-gpcodae/`, payload);
+
+export const corrigirFichaTecnica = async (
+  payload: FichaTecnicaPayload,
+  uuid: string
+): Promise<ResponseSemDadosInterface> =>
+  await axios.patch(`/ficha-tecnica/${uuid}/correcao-fornecedor/`, payload);
+
+export const imprimirFichaTecnica = async (uuid: string, numero: string) => {
+  const url = `/ficha-tecnica/${uuid}/gerar-pdf-ficha/`;
+  const { data } = await axios.get(url, { responseType: "blob" });
+  saveAs(data, "ficha_tecnica_" + numero + ".pdf");
+};

@@ -6,13 +6,16 @@ import InputText from "components/Shareable/Input/InputText";
 import Collapse, { CollapseControl } from "components/Shareable/Collapse";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
-import { FichaTecnicaPraAnalise } from "interfaces/pre_recebimento.interface";
+import { FichaTecnicaDetalhadaComAnalise } from "interfaces/pre_recebimento.interface";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
-import { carregarDadosAnalise } from "../../helpers";
+import {
+  carregaListaCompletaInformacoesNutricionais,
+  carregarDadosAnalisarDetalhar,
+} from "../../helpers";
 import FormPereciveis from "../Cadastrar/components/FormPereciveis";
 import FormNaoPereciveis from "../Cadastrar/components/FormNaoPereciveis";
 import { InformacaoNutricional } from "interfaces/produto.interface";
@@ -42,7 +45,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getMensagemDeErro } from "helpers/statusErrors";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
-
+import { imprimirFichaTecnica } from "services/fichaTecnica.service";
 import "./styles.scss";
 
 const idCollapse = "collapseAnalisarFichaTecnica";
@@ -56,8 +59,8 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
   const [carregando, setCarregando] = useState<boolean>(true);
   const [showModalCancelar, setShowModalCancelar] = useState<boolean>(false);
   const [collapse, setCollapse] = useState<CollapseControl>({});
-  const [ficha, setFicha] = useState<FichaTecnicaPraAnalise>(
-    {} as FichaTecnicaPraAnalise
+  const [ficha, setFicha] = useState<FichaTecnicaDetalhadaComAnalise>(
+    {} as FichaTecnicaDetalhadaComAnalise
   );
   const [initialValues, setInitialValues] = useState<Record<string, any>>({});
   const [conferidos, setConferidos] = useState<StateConferidosAnalise>({});
@@ -74,8 +77,10 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
 
   useEffect(() => {
     (async () => {
-      await carregarDadosAnalise(
-        listaCompletaInformacoesNutricionais,
+      await carregaListaCompletaInformacoesNutricionais(
+        listaCompletaInformacoesNutricionais
+      );
+      await carregarDadosAnalisarDetalhar(
         listaInformacoesNutricionaisFichaTecnica,
         setFicha,
         setConferidos,
@@ -85,6 +90,20 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
       );
     })();
   }, []);
+
+  const imprimirFicha = () => {
+    setCarregando(true);
+    let uuid = ficha.uuid;
+    let numero = ficha.numero;
+    imprimirFichaTecnica(uuid, numero)
+      .then(() => {
+        setCarregando(false);
+      })
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
+        setCarregando(false);
+      });
+  };
 
   const fechaCollapses = () => {
     const otherElements = document.querySelectorAll(`#${idCollapse} .show`);
@@ -704,7 +723,9 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                     </section>
 
                     <section id="embalagem_e_rotulagem">
-                      <div className="subtitulo">Embalagem</div>
+                      <div className="row">
+                        <div className="subtitulo">Embalagem</div>
+                      </div>
 
                       <div className="row mt-3">
                         <div className="col">
@@ -940,7 +961,9 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
 
                       <hr />
 
-                      <div className="subtitulo">Rotulagem</div>
+                      <div className="row">
+                        <div className="subtitulo">Rotulagem</div>
+                      </div>
 
                       <div className="row mt-3">
                         <div className="col">
@@ -1056,7 +1079,21 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
 
                   <div className="mt-4 mb-4">
                     {somenteLeitura ? (
-                      <BotaoVoltar onClick={voltarPagina} />
+                      <>
+                        <BotaoVoltar onClick={voltarPagina} />
+                        {["Enviada para Análise", "Aprovada"].includes(
+                          ficha.status
+                        ) && (
+                          <Botao
+                            texto="Ficha em PDF"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            className="float-end me-3"
+                            onClick={() => imprimirFicha()}
+                            icon="fas fa-print"
+                          />
+                        )}
+                      </>
                     ) : (
                       <>
                         <Botao

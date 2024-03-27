@@ -20,7 +20,6 @@ import { dateDelta, getDataObj } from "helpers/utilities";
 import { composeValidators } from "../../../../../../helpers/fieldValidators";
 import { deletaValues } from "../../../../../../helpers/formHelper";
 import { numeroChamadaPublicamMask } from "constants/shared";
-import { OnChange } from "react-final-form-listeners";
 
 const contratosEstadoInicial = {
   numero_processo: null,
@@ -200,15 +199,14 @@ export const ContratosFormSet = ({
                           validate={required}
                           naoDesabilitarPrimeiraOpcao
                           options={optionsModalidade}
-                        />
-                        <OnChange name={`modalidade_${index}`}>
-                          {(value) => {
+                          onChangeEffect={(e) => {
+                            const value = e.target.value;
                             form.change(`numero_pregao_${index}`, "");
                             form.change(`numero_ata_${index}`, "");
                             form.change(`numero_chamada_publica_${index}`, "");
                             form.change(`modalidade_${index}`, value);
                           }}
-                        </OnChange>
+                        />
                       </div>
                       {values[`modalidade_${index}`] ===
                         "PREGAO_ELETRONICO" && (

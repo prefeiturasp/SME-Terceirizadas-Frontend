@@ -156,7 +156,7 @@ const ModalHistorico = ({
             {logs.map((log, index) => {
               const { ativo } = log;
               const iniciais = retornaIniciais(log);
-              const tipoUsuario = (log.usuario.tipo_usuario = log.usuario.nome);
+              const tipoUsuario = log.usuario.nome;
 
               return (
                 <div

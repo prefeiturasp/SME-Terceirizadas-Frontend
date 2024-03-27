@@ -9,7 +9,6 @@ import InputText from "components/Shareable/Input/InputText";
 import Select from "components/Shareable/Select";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
-import { OnChange } from "react-final-form-listeners";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { obtemDadosAlunoPeloEOL } from "services/perfil.service";
 import { length } from "helpers/fieldValidators";
@@ -183,12 +182,12 @@ export default ({ setLoading, setFiltros }) => {
                 type="number"
                 validate={length(7)}
                 disabled={carregandoAluno}
-              />
-              <OnChange name="codigo_eol_aluno">
-                {(value) => {
-                  getAlunoPorEol(value, values);
+                inputOnChange={(e) => {
+                  const value = e.target.value;
+                  const values_ = form.getState().values;
+                  getAlunoPorEol(value, values_);
                 }}
-              </OnChange>
+              />
             </div>
             <div className="col-9 auto-complete-field">
               <Field

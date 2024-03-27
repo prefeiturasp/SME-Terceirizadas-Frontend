@@ -26,7 +26,6 @@ import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 import FormPereciveis from "./components/FormPereciveis";
 import FormNaoPereciveis from "./components/FormNaoPereciveis";
-import { OnChange } from "react-final-form-listeners";
 import TabelaNutricional from "components/Shareable/TabelaNutricional";
 import Select from "components/Shareable/Select";
 import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
@@ -48,13 +47,14 @@ import InfoAcondicionamentoNaoPereciveis from "./components/InfoAcondicionamento
 import { FichaTecnicaPayload } from "../../interfaces";
 import {
   assinarEnviarFichaTecnica,
-  carregarDados,
+  carregaListaCompletaInformacoesNutricionais,
+  carregarDadosCadastrar,
   carregarFabricantes,
   carregarMarcas,
   carregarProdutos,
   carregarUnidadesMedida,
   cepCalculator,
-  formataPayload,
+  formataPayloadCadastroFichaTecnica,
   gerenciaModalCadastroExterno,
   salvarRascunho,
   validaAssinarEnviar,
@@ -126,8 +126,10 @@ export default () => {
       await carregarMarcas(setMarcasOptions);
       await carregarFabricantes(setFabricantesOptions);
       await carregarUnidadesMedida(setUnidadesMedidaOptions);
-      await carregarDados(
-        listaCompletaInformacoesNutricionais,
+      await carregaListaCompletaInformacoesNutricionais(
+        listaCompletaInformacoesNutricionais
+      );
+      await carregarDadosCadastrar(
         listaInformacoesNutricionaisFichaTecnica,
         meusDados,
         setFicha,
@@ -177,14 +179,12 @@ export default () => {
                           tooltipText={
                             "Caso não localize o produto no seletor, faça o cadastro no botão Cadastrar Produto."
                           }
-                        />
-                        <OnChange name="produto">
-                          {(value) => {
+                          onChange={(value) => {
                             if (form.getState().dirty) {
                               form.restart({ produto: value });
                             }
                           }}
-                        </OnChange>
+                        />
                       </div>
                       <div className="col-2 cadastro-externo">
                         <Botao
@@ -588,7 +588,7 @@ export default () => {
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     className="float-end ms-3"
                     onClick={() => {
-                      const payload = formataPayload(
+                      const payload = formataPayloadCadastroFichaTecnica(
                         values,
                         proponente,
                         produtosOptions,
@@ -627,7 +627,7 @@ export default () => {
                   show={showModalAssinatura}
                   handleClose={() => setShowModalAssinatura(false)}
                   handleSim={(password: string) => {
-                    const payload = formataPayload(
+                    const payload = formataPayloadCadastroFichaTecnica(
                       values,
                       proponente,
                       produtosOptions,

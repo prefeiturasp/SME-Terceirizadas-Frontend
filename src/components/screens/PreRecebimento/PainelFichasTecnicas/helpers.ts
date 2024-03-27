@@ -4,7 +4,7 @@ import {
   VerMaisItem,
 } from "interfaces/pre_recebimento.interface";
 import {
-  ANALISE_FICHA_TECNICA,
+  ANALISAR_FICHA_TECNICA,
   PRE_RECEBIMENTO,
   DETALHAR_FICHA_TECNICA,
 } from "configs/constants";
@@ -23,7 +23,7 @@ export const formatarCards = (items: FichaTecnicaDashboard[]): CardItem[] => {
 const gerarLinkItem = (item: FichaTecnicaDashboard): string => {
   return ["Aprovada", "Enviada para Correção"].includes(item.status)
     ? `/${PRE_RECEBIMENTO}/${DETALHAR_FICHA_TECNICA}?uuid=${item.uuid}`
-    : `/${PRE_RECEBIMENTO}/${ANALISE_FICHA_TECNICA}?uuid=${item.uuid}`;
+    : `/${PRE_RECEBIMENTO}/${ANALISAR_FICHA_TECNICA}?uuid=${item.uuid}`;
 };
 
 export const formataItensVerMais = (
