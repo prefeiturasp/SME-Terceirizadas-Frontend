@@ -69,13 +69,13 @@ export default ({ form, tiposAlimentacao, tiposUnidades }: Props) => {
                   </p>
                   <Field
                     component="input"
-                    name={`tabelas.alimentacao.${value}_${index}.lanche`}
+                    name={`tabelas["Alimentações Convencionais"].${value}_${index}.tipo_alimentacao`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
                   <Field
                     component="input"
-                    name={`tabelas.alimentacao.${value}_${index}.grupo`}
+                    name={`tabelas["Alimentações Convencionais"].${value}_${index}.grupo`}
                     type="hidden"
                     defaultValue={record.grupo}
                   />
@@ -90,7 +90,7 @@ export default ({ form, tiposAlimentacao, tiposUnidades }: Props) => {
             render={(_, record: any, index) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas.alimentacao.${record.nome}_${index}.valor_unitario`}
+                name={`tabelas["Alimentações Convencionais"].${record.nome}_${index}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -105,7 +105,7 @@ export default ({ form, tiposAlimentacao, tiposUnidades }: Props) => {
             render={(_, record: any, index) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas.alimentacao.${record.nome}_${index}.valor_unitario_reajuste`}
+                name={`tabelas["Alimentações Convencionais"].${record.nome}_${index}.valor_unitario_reajuste`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}

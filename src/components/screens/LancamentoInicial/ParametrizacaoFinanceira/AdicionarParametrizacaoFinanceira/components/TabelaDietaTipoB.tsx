@@ -44,13 +44,13 @@ export default ({ form, tiposAlimentacao }: Props) => {
                   </p>
                   <Field
                     component="input"
-                    name={`tabelas.dieta_B.${value}.lanche`}
+                    name={`tabelas["Dietas Tipo B"].${value}.tipo_alimentacao`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
                   <Field
                     component="input"
-                    name={`tabelas.dieta_B.${value}.grupo`}
+                    name={`tabelas["Dietas Tipo B"].${value}.grupo`}
                     type="hidden"
                     defaultValue={record.grupo}
                   />
@@ -65,26 +65,26 @@ export default ({ form, tiposAlimentacao }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas.dieta_B.${record.nome}.valor_unitario`}
+                name={`tabelas["Dietas Tipo B"].${record.nome}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
                 parser={(value: string) => parserValorDecimal(value)}
                 onChange={(value: number) => {
                   const percentualAcrescimo =
-                    form.getState().values.tabelas.dieta_B[record.nome]
+                    form.getState().values.tabelas["Dietas Tipo B"][record.nome]
                       .percentual_acrescimo || 0;
                   const valorUnitarioTotal =
                     value * (1 + percentualAcrescimo / 100);
 
                   form.change(
-                    `tabelas.dieta_B.${record.nome}.valor_unitario_total`,
+                    `tabelas["Dietas Tipo B"].${record.nome}.valor_unitario_total`,
                     valorUnitarioTotal
-                      ? valorUnitarioTotal.toFixed(2)
+                      ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas.dieta_B.${record.nome}.valor_unitario`,
+                    `tabelas["Dietas Tipo B"].${record.nome}.valor_unitario`,
                     value
                   );
                 }}
@@ -98,25 +98,25 @@ export default ({ form, tiposAlimentacao }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas.dieta_B.${record.nome}.percentual_acrescimo`}
+                name={`tabelas["Dietas Tipo B"].${record.nome}.percentual_acrescimo`}
                 placeholder="%"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
                 parser={(value: string) => parserValorDecimal(value)}
                 onChange={(value: number) => {
                   const valorUnitario =
-                    form.getState().values.tabelas.dieta_B[record.nome]
+                    form.getState().values.tabelas["Dietas Tipo B"][record.nome]
                       .valor_unitario || 0;
                   const valorUnitarioTotal = valorUnitario * (1 + value / 100);
 
                   form.change(
-                    `tabelas.dieta_B.${record.nome}.valor_unitario_total`,
+                    `tabelas["Dietas Tipo B"].${record.nome}.valor_unitario_total`,
                     valorUnitarioTotal
-                      ? valorUnitarioTotal.toFixed(2)
+                      ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas.dieta_B.${record.nome}.percentual_acrescimo`,
+                    `tabelas["Dietas Tipo B"].${record.nome}.percentual_acrescimo`,
                     value
                   );
                 }}
@@ -130,7 +130,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas.dieta_B.${record.nome}.valor_unitario_total`}
+                name={`tabelas["Dietas Tipo B"].${record.nome}.valor_unitario_total`}
                 placeholder="0,00"
                 disabled
               />

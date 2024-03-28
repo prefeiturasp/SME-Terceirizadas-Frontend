@@ -22,6 +22,7 @@ type FormValues = {
   edital: string;
   lote: string;
   tipos_unidades: string;
+  tabelas: Record<string, any>;
 };
 
 export default () => {
@@ -32,8 +33,26 @@ export default () => {
   const navigate = useNavigate();
 
   const onSubmit = (values: FormValues) => {
+    const tabelas = Object.entries(values.tabelas).map(([tabela, valores]) => ({
+      nome: tabela,
+      valores: Object.values(valores).map((valor: any) => {
+        const { tipo_alimentacao, grupo, ...valor_colunas } = valor;
+        return {
+          tipo_alimentacao,
+          grupo,
+          valor_colunas,
+        };
+      }),
+    }));
+
+    const payload = {
+      ...values,
+      tabelas,
+      tipos_unidades: values.tipos_unidades.split(","),
+    };
+
     // eslint-disable-next-line
-    console.log(values);
+    console.log(payload);
   };
 
   return (
