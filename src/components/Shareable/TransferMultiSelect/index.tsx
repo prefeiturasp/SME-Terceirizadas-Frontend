@@ -28,18 +28,28 @@ export default ({
   showSelectAll,
   status,
   oneWay,
-  label,
+  labels,
   required,
-  tooltipText,
-  toggleTouched,
+  tooltipTexts,
+  transferContainerRef,
 }: TransferMultiSelectProps) => {
   return (
     <>
-      <Label content={label} required={required} />
-      {tooltipText && <TooltipIcone tooltipText={tooltipText} />}
+      {labels?.length && (
+        <div className="row">
+          <div className="col ps-0">
+            <Label content={labels[0]} required={required} />
+            {tooltipTexts && <TooltipIcone tooltipText={tooltipTexts[1]} />}
+          </div>
+          <div className="col ps-5">
+            <Label content={labels[1]} required={required} />
+            {tooltipTexts && <TooltipIcone tooltipText={tooltipTexts[1]} />}
+          </div>
+        </div>
+      )}
 
       <div
-        onBlur={() => toggleTouched()}
+        ref={transferContainerRef}
         className="transfer-multiselect-container"
       >
         <Transfer
