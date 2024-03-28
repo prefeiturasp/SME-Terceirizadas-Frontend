@@ -18,7 +18,7 @@ import Filtros from "./components/Filtros";
 import TabelaDietaTipoA from "./components/TabelaDietaTipoA";
 import TabelaDietaTipoB from "./components/TabelaDietaTipoB";
 import ParametrizacaoFinanceiraService from "services/medicaoInicial/parametrizacao_financeira.service";
-import { toastError } from "components/Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 type FormValues = {
   edital: string;
@@ -58,6 +58,7 @@ export default () => {
       await ParametrizacaoFinanceiraService.addParametrizacaoFinanceira(
         payload
       );
+      toastSuccess("Parametrização incluída com sucesso!");
     } catch (err) {
       toastError("Não foi possível finalizar inclusão da parametrização");
     }
