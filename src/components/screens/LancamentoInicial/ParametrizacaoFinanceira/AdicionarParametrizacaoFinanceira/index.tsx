@@ -17,12 +17,15 @@ import TabelaAlimentacao from "./components/TabelaAlimentacao";
 import Filtros from "./components/Filtros";
 import TabelaDietaTipoA from "./components/TabelaDietaTipoA";
 import TabelaDietaTipoB from "./components/TabelaDietaTipoB";
+import ParametrizacaoFinanceiraService from "services/medicaoInicial/parametrizacao_financeira.service";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 type FormValues = {
   edital: string;
   lote: string;
   tipos_unidades: string;
   tabelas: Record<string, any>;
+  legenda: string;
 };
 
 export default () => {
@@ -32,7 +35,7 @@ export default () => {
 
   const navigate = useNavigate();
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = async (values: FormValues) => {
     const tabelas = Object.entries(values.tabelas).map(([tabela, valores]) => ({
       nome: tabela,
       valores: Object.values(valores).map((valor: any) => {
@@ -51,8 +54,13 @@ export default () => {
       tipos_unidades: values.tipos_unidades.split(","),
     };
 
-    // eslint-disable-next-line
-    console.log(payload);
+    try {
+      await ParametrizacaoFinanceiraService.addParametrizacaoFinanceira(
+        payload
+      );
+    } catch (err) {
+      toastError("Não foi possível finalizar inclusão da parametrização");
+    }
   };
 
   return (
