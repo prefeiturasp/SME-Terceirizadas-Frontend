@@ -492,7 +492,7 @@ export default () => {
                   </div>
 
                   {prazos.map((prazo, index) => (
-                    <>
+                    <div className="row" key={index}>
                       <div className="col">
                         <Field
                           component={InputComData}
@@ -583,7 +583,7 @@ export default () => {
                           />
                         </div>
                       )}
-                    </>
+                    </div>
                   ))}
                 </div>
 
