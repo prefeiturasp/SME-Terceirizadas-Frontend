@@ -214,21 +214,21 @@ export default () => {
 
             {objeto.datas_fabricacao_e_prazos?.map((prazo) => (
               <>
-                <div className="col-3">
+                <div className="col">
                   <InputText
                     label="Data de Fabricação"
                     valorInicial={prazo.data_fabricacao}
                     disabled={true}
                   />
                 </div>
-                <div className="col-3">
+                <div className="col">
                   <InputText
                     label="Data de Validade"
                     valorInicial={prazo.data_validade}
                     disabled={true}
                   />
                 </div>
-                <div className="col-3">
+                <div className="col">
                   <InputText
                     label="Prazo Máximo de Recebimento"
                     valorInicial={prazo.prazo_maximo_recebimento}
@@ -237,7 +237,7 @@ export default () => {
                 </div>
 
                 {prazo.prazo_maximo_recebimento !== "OUTRO" && (
-                  <div className="col-3">
+                  <div className="col">
                     <InputText
                       label="Data Máxima de Recebimento"
                       valorInicial={prazo.data_maxima_recebimento}

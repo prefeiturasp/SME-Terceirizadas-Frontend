@@ -37,6 +37,7 @@ export const MEDICAO = "medicao";
 export const DINUTRE = "dinutre";
 export const DILOG = "dilog";
 export const CRONOGRAMA = "cronograma";
+export const USUARIO_RELATORIOS = "usuario-relatorios";
 
 export const AGUARDANDO_ASSINATURAS = "aguardando-assinaturas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
@@ -210,6 +211,7 @@ export const EMPENHOS = "empenhos";
 export const CLAUSULAS_PARA_DESCONTOS = "clausulas-para-descontos";
 export const CADASTRO_DE_CLAUSULA = "cadastro-de-clausula";
 export const EDITAR_CLAUSULA = "editar-clausula";
+export const CONTROLE_DE_FREQUENCIA = "controle-de-frequencia";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";

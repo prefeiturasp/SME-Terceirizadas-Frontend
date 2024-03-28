@@ -492,8 +492,8 @@ export default () => {
                   </div>
 
                   {prazos.map((prazo, index) => (
-                    <>
-                      <div className="col-3">
+                    <div className="row" key={index}>
+                      <div className="col">
                         <Field
                           component={InputComData}
                           label="Data de Fabricação"
@@ -506,7 +506,7 @@ export default () => {
                           maxDate={new Date()}
                         />
                       </div>
-                      <div className="col-3">
+                      <div className="col">
                         <Field
                           component={InputComData}
                           label="Data de Validade"
@@ -518,7 +518,7 @@ export default () => {
                           minDate={new Date()}
                         />
                       </div>
-                      <div className="col-3">
+                      <div className="col">
                         <Field
                           component={SelectSelecione}
                           naoDesabilitarPrimeiraOpcao
@@ -533,7 +533,7 @@ export default () => {
                       </div>
 
                       {values[`prazo_maximo_${index}`] !== "OUTRO" && (
-                        <div className="col-2">
+                        <div className="col">
                           <InputText
                             label="Data Máxima de Recebimento"
                             placeholder="Selecione um prazo"
@@ -583,7 +583,7 @@ export default () => {
                           />
                         </div>
                       )}
-                    </>
+                    </div>
                   ))}
                 </div>
 

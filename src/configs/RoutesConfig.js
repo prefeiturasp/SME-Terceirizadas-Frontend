@@ -142,6 +142,7 @@ import {
   usuarioComAcessoAoPainelDocumentos,
   usuarioComAcessoAoPainelFichasTecnicas,
   usuarioEhCODAEGabinete,
+  ehUsuarioRelatorios,
   usuarioComAcessoAoCalendarioCronograma,
   usuarioEhRecebimento,
 } from "../helpers/utilities";
@@ -260,6 +261,7 @@ import CadastroDeClausulasPage from "pages/LancamentoMedicaoInicial/CadastroDeCl
 import EditarClausulaPage from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
 import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
 import EditarEmpenhoPage from "pages/LancamentoMedicaoInicial/EditarEmpenhoPage";
+import ControleDeFrequenciaPage from "pages/LancamentoMedicaoInicial/ControleDeFrequenciaPage";
 import RelatorioAdesao from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesao";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
@@ -1280,7 +1282,8 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ATIVACAO_DE_PRODUTO}/consulta`,
@@ -1304,7 +1307,8 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE() ||
       usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
@@ -1382,13 +1386,16 @@ const routesConfig = [
       usuarioEhAdministradorNutriCODAE() ||
       usuarioEhCoordenadorNutriCODAE() ||
       usuarioEhMedicao() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GERENCIAL_DIETAS}`,
     component: RelatorioGerencialDietas,
     tipoUsuario:
-      usuarioEhAdministradorNutriCODAE() || usuarioEhCoordenadorNutriCODAE(),
+      usuarioEhAdministradorNutriCODAE() ||
+      usuarioEhCoordenadorNutriCODAE() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GESTAO_DIETA_ESPECIAL}`,
@@ -1399,7 +1406,8 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
@@ -1432,7 +1440,8 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
@@ -1444,7 +1453,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhMedicao() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}`,
@@ -1516,6 +1526,11 @@ const routesConfig = [
     path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}/${constants.EDITAR_CLAUSULA}`,
     component: EditarClausulaPage,
     tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CONTROLE_DE_FREQUENCIA}`,
+    component: ControleDeFrequenciaPage,
+    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.RELATORIOS}/${constants.RELATORIO_ADESAO}`,

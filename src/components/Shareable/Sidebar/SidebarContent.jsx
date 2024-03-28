@@ -37,6 +37,7 @@ import {
   usuarioEhCODAEGabinete,
   usuarioEhDilogDiretoria,
   usuarioEhRecebimento,
+  ehUsuarioRelatorios,
 } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
 
@@ -96,7 +97,8 @@ export const SidebarContent = () => {
     !usuarioEhEscolaAbastecimentoDiretor() &&
     (!usuarioComAcessoTelaEntregasDilog() || usuarioEhCODAEGabinete()) &&
     !usuarioEhLogistica() &&
-    !usuarioEhEmpresaDistribuidora();
+    !usuarioEhEmpresaDistribuidora() &&
+    !ehUsuarioRelatorios();
   const exibirGestaoAlimentacao =
     exibeMenuValidandoAmbiente &&
     (usuarioEhCODAEGestaoAlimentacao() ||
@@ -107,7 +109,8 @@ export const SidebarContent = () => {
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhCODAEGabinete());
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -119,7 +122,8 @@ export const SidebarContent = () => {
     usuarioEhEmpresaTerceirizada() ||
     usuarioEhMedicao() ||
     usuarioEhCODAEGabinete() ||
-    usuarioEscolaEhGestaoDiretaParceira;
+    usuarioEscolaEhGestaoDiretaParceira ||
+    ehUsuarioRelatorios();
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -164,7 +168,8 @@ export const SidebarContent = () => {
     !usuarioEhPreRecebimentoSemLogistica() &&
     !usuarioEhQualquerUsuarioEmpresa() &&
     !usuarioEhDilog() &&
-    !usuarioEhOrgaoFiscalizador();
+    !usuarioEhOrgaoFiscalizador() &&
+    !ehUsuarioRelatorios();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
