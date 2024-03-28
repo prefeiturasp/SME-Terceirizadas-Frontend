@@ -76,13 +76,16 @@ export default ({ form, tiposAlimentacao }: Props) => {
                 onChange={(value: number) => {
                   const percentualAcrescimo =
                     form.getState().values.tabelas.dieta_A[record.nome]
-                      .percentual_acrescimo;
-                  if (percentualAcrescimo) {
-                    form.change(
-                      `tabelas.dieta_A.${record.nome}.valor_unitario_total`,
-                      (value * (1 + percentualAcrescimo / 100)).toFixed(2)
-                    );
-                  }
+                      .percentual_acrescimo || 0;
+                  const valorUnitarioTotal =
+                    value * (1 + percentualAcrescimo / 100);
+
+                  form.change(
+                    `tabelas.dieta_A.${record.nome}.valor_unitario_total`,
+                    valorUnitarioTotal
+                      ? valorUnitarioTotal.toFixed(2)
+                      : undefined
+                  );
                   form.change(
                     `tabelas.dieta_A.${record.nome}.valor_unitario`,
                     value
@@ -106,13 +109,15 @@ export default ({ form, tiposAlimentacao }: Props) => {
                 onChange={(value: number) => {
                   const valorUnitario =
                     form.getState().values.tabelas.dieta_A[record.nome]
-                      .valor_unitario;
-                  if (valorUnitario) {
-                    form.change(
-                      `tabelas.dieta_A.${record.nome}.valor_unitario_total`,
-                      (valorUnitario * (1 + value / 100)).toFixed(2)
-                    );
-                  }
+                      .valor_unitario || 0;
+                  const valorUnitarioTotal = valorUnitario * (1 + value / 100);
+
+                  form.change(
+                    `tabelas.dieta_A.${record.nome}.valor_unitario_total`,
+                    valorUnitarioTotal
+                      ? valorUnitarioTotal.toFixed(2)
+                      : undefined
+                  );
                   form.change(
                     `tabelas.dieta_A.${record.nome}.percentual_acrescimo`,
                     value
