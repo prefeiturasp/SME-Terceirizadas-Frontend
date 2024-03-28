@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form } from "react-final-form";
+import { Field, Form } from "react-final-form";
+
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 
 import { Botao } from "components/Shareable/Botao";
 
@@ -65,6 +67,21 @@ export default () => {
                       form={form}
                       tiposAlimentacao={tiposAlimentacao}
                     />
+                  </div>
+                  <div className="row mt-5">
+                    <div className="col">
+                      <Field
+                        component={TextArea}
+                        label="Legenda"
+                        name="legenda"
+                        placeholder={
+                          "Insira uma Legenda para os lançamentos\n\n" +
+                          "Fonte: Relatório de Medição Inicial do Serviço de Alimentação e Nutrição Escolar realizada pela direção das unidades educacionais, conforme disposto no edital Pregão 78/2016 e nas Portarias Intersecretariais SMG/SME n° 005/2006 e 001/2008."
+                        }
+                        maxLength={1500}
+                        height="150"
+                      />
+                    </div>
                   </div>
                 </>
               )}
