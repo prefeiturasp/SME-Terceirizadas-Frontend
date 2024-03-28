@@ -95,6 +95,7 @@ export default ({ form, tiposAlimentacao, tiposUnidades }: Props) => {
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
                 parser={(value: string) => parserValorDecimal(value)}
+                defaultValue={null}
               />
             )}
           />
@@ -110,6 +111,7 @@ export default ({ form, tiposAlimentacao, tiposUnidades }: Props) => {
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
                 parser={(value: string) => parserValorDecimal(value)}
+                defaultValue={null}
               />
             )}
           />

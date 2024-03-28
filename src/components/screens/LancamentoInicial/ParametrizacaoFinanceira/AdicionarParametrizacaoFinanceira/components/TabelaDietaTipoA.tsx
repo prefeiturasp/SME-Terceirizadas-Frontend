@@ -73,6 +73,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
                 parser={(value: string) => parserValorDecimal(value)}
+                defaultValue={null}
                 onChange={(value: number) => {
                   const percentualAcrescimo =
                     form.getState().values.tabelas[
@@ -107,6 +108,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
                 parser={(value: string) => parserValorDecimal(value)}
+                defaultValue={null}
                 onChange={(value: number) => {
                   const valorUnitario =
                     form.getState().values.tabelas[
