@@ -117,7 +117,7 @@ export default ({
   }, []);
 
   const trataTiposAlimentacao = (unidades: string) => {
-    const unidadesArray = unidades.split(",");
+    const unidadesArray = unidades ? unidades.split(",") : [];
 
     const tiposAlimentacaoUnidades: Array<{
       uuid: string;
