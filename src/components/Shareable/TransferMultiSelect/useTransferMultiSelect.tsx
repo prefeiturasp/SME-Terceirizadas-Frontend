@@ -1,26 +1,44 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { TransferProps } from "antd";
 
 import { TransferMultiSelectProps, TransferOptions } from "./interfaces";
 
+const locale: TransferProps["locale"] = {
+  itemUnit: "item",
+  itemsUnit: "itens",
+  notFoundContent: null,
+  searchPlaceholder: "Pesquisar",
+  selectAll: "Selecionar todos",
+  selectInvert: "Inverter seleção",
+};
+
+const listStyle: TransferProps["listStyle"] = {
+  width: "100%",
+  overflow: "auto",
+  minHeight: "300px",
+};
+
 interface useTransferMultiSelectParams {
-  initialSelectedKeys: string[];
-  initialTargetKeys: string[];
-  required: boolean;
+  required?: boolean;
 }
 
 export const useTransferMultiSelect = ({
-  initialSelectedKeys,
-  initialTargetKeys,
-  required,
+  required = false,
 }: useTransferMultiSelectParams) => {
-  const [selectedKeys, setSelectedKeys] =
-    useState<string[]>(initialSelectedKeys);
-  const [targetKeys, setTargetKeys] = useState<string[]>(initialTargetKeys);
+  const [dataSource, setDataSource] = useState<TransferOptions[]>([]);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [targetKeys, setTargetKeys] = useState<string[]>([]);
   const [status, setStatus] = useState<TransferMultiSelectProps["status"]>("");
 
   const [touched, setTouched] = useState<boolean>(false);
+  const transferContainerRef = useRef<HTMLDivElement>();
+
+  const setInicialSelectedKeys = (initialSelectedKeys: string[]) =>
+    setSelectedKeys(initialSelectedKeys);
+
+  const setInitialTagetKeys = (initialTargetKeys: string[]) =>
+    setTargetKeys(initialTargetKeys);
 
   const defaultHandleSelectChange = (
     sourceSelectedKeys: string[],
@@ -50,29 +68,17 @@ export const useTransferMultiSelect = ({
     setTouched(false);
   };
 
-  const locale: TransferProps["locale"] = {
-    itemUnit: "item",
-    itemsUnit: "itens",
-    notFoundContent: null,
-    searchPlaceholder: "Pesquisar",
-    selectAll: "Selecionar todos",
-    selectInvert: "Inverter seleção",
-  };
+  const setToggleTouchedToTransferContainerClick = () =>
+    transferContainerRef.current &&
+    (transferContainerRef.current.onclick = toggleTouched);
 
-  const listStyle: TransferProps["listStyle"] = {
-    width: "100%",
-    minHeight: "300px",
-  };
-
-  const setToggleTouchedToItemsClick = () => {
-    document
+  const setToggleTouchedToItemsClick = () =>
+    transferContainerRef.current &&
+    transferContainerRef.current
       .querySelectorAll(".ant-transfer-list-content-item")
-      .forEach((item) => item.addEventListener("click", () => toggleTouched()));
-  };
+      .forEach((item: HTMLLIElement) => (item.onclick = toggleTouched));
 
-  const toggleTouched = () => {
-    if (!touched) setTouched(true);
-  };
+  const toggleTouched = () => !touched && setTouched(true);
 
   const setTransferValidateRequiredToDocument = () =>
     document.addEventListener("click", handleClickOutsideTransfer);
@@ -80,44 +86,45 @@ export const useTransferMultiSelect = ({
   const removeTransferValidateRequiredToDocument = () =>
     document.removeEventListener("click", handleClickOutsideTransfer);
 
-  const handleClickOutsideTransfer = (event: MouseEvent) =>
-    validateRequired(event, status, targetKeys);
+  const handleClickOutsideTransfer = (event: PointerEvent) =>
+    validateRequired(event);
 
-  const validateRequired = (
-    event: MouseEvent,
-    status: string,
-    targetKeys: string[]
-  ) => {
+  const validateRequired = (event: PointerEvent) => {
     if (!required || !touched) return;
 
     if (status === "error" && !targetKeys.length) return;
 
-    const transfer = document.querySelector(".transfer-multiselect-container");
-    const target = event.target as Element;
-    !transfer?.contains(target) && !targetKeys.length
+    !transferContainerRef.current?.contains(event.target as Element) &&
+    !targetKeys.length
       ? setStatus("error")
       : setStatus("");
   };
 
   useEffect(() => {
+    setToggleTouchedToTransferContainerClick();
     setToggleTouchedToItemsClick();
     setTransferValidateRequiredToDocument();
 
     return () => removeTransferValidateRequiredToDocument();
-  }, [touched, status, targetKeys]);
+  }, [transferContainerRef, dataSource, touched, status, targetKeys]);
 
   return {
-    selectedKeys: selectedKeys,
-    targetKeys: targetKeys,
-    status: status,
-    locale: locale,
-    listStyle: listStyle,
-    setStatus: setStatus,
+    dataSource,
+    setDataSource,
+    selectedKeys,
+    setInicialSelectedKeys,
+    targetKeys,
+    setInitialTagetKeys,
+    status,
+    locale,
+    listStyle,
+    setStatus,
+    clearTransfer,
+    toggleTouched,
     onSelectChange: defaultHandleSelectChange,
     onChange: defaultHandleChange,
     filterOption: defaultFilterOption,
     render: defaultRender,
-    clearTransfer: clearTransfer,
-    toggleTouched,
+    transferContainerRef,
   };
 };
