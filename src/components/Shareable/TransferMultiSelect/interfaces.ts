@@ -1,4 +1,5 @@
 import { TransferItem, TransferProps } from "antd/es/transfer";
+import { MutableRefObject, ReactNode } from "react";
 
 export interface TransferOptions extends TransferItem {
   key: string;
@@ -9,8 +10,8 @@ export interface TransferOptions extends TransferItem {
 
 export interface TransferMultiSelectProps
   extends TransferProps<TransferOptions> {
-  label: string;
-  required: boolean;
-  tooltipText: string;
-  toggleTouched: () => void;
+  labels?: ReactNode[];
+  required?: boolean;
+  tooltipTexts?: string[];
+  transferContainerRef: MutableRefObject<HTMLDivElement>;
 }
