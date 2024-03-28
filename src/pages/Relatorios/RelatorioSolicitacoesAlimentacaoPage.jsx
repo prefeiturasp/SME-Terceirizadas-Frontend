@@ -12,6 +12,7 @@ import {
   usuarioEhCODAENutriManifestacao,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
+  ehUsuarioRelatorios,
 } from "helpers/utilities";
 import {
   filtrarSolicitacoesAlimentacaoCODAE,
@@ -51,7 +52,8 @@ const endpointPorPerfil = () => {
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhMedicao() ||
     usuarioEhCODAENutriManifestacao() ||
-    usuarioEhCODAEGabinete()
+    usuarioEhCODAEGabinete() ||
+    ehUsuarioRelatorios()
   ) {
     return filtrarSolicitacoesAlimentacaoCODAE;
   } else if (
@@ -78,7 +80,8 @@ const endpointGerarExcel = () => {
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhMedicao() ||
     usuarioEhCODAENutriManifestacao() ||
-    usuarioEhCODAEGabinete()
+    usuarioEhCODAEGabinete() ||
+    ehUsuarioRelatorios()
   ) {
     return gerarExcelRelatorioSolicitacoesAlimentacaoCODAE;
   } else if (usuarioEhEmpresaTerceirizada()) {
@@ -100,7 +103,8 @@ const endpointGerarPDF = () => {
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhMedicao() ||
     usuarioEhCODAENutriManifestacao() ||
-    usuarioEhCODAEGabinete()
+    usuarioEhCODAEGabinete() ||
+    ehUsuarioRelatorios()
   ) {
     return gerarPDFRelatorioSolicitacoesAlimentacaoCODAE;
   } else if (usuarioEhEmpresaTerceirizada()) {

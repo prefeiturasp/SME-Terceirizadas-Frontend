@@ -142,6 +142,7 @@ import {
   usuarioComAcessoAoPainelDocumentos,
   usuarioComAcessoAoPainelFichasTecnicas,
   usuarioEhCODAEGabinete,
+  ehUsuarioRelatorios,
   usuarioComAcessoAoCalendarioCronograma,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
@@ -1278,7 +1279,8 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ATIVACAO_DE_PRODUTO}/consulta`,
@@ -1302,7 +1304,8 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE() ||
       usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
@@ -1380,13 +1383,16 @@ const routesConfig = [
       usuarioEhAdministradorNutriCODAE() ||
       usuarioEhCoordenadorNutriCODAE() ||
       usuarioEhMedicao() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GERENCIAL_DIETAS}`,
     component: RelatorioGerencialDietas,
     tipoUsuario:
-      usuarioEhAdministradorNutriCODAE() || usuarioEhCoordenadorNutriCODAE(),
+      usuarioEhAdministradorNutriCODAE() ||
+      usuarioEhCoordenadorNutriCODAE() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GESTAO_DIETA_ESPECIAL}`,
@@ -1397,7 +1403,8 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
@@ -1430,7 +1437,8 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
@@ -1442,7 +1450,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhMedicao() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}`,
