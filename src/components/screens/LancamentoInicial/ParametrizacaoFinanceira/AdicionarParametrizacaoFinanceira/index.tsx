@@ -85,7 +85,7 @@ export default () => {
                   </div>
                 </>
               )}
-              <div className="d-flex justify-content-end gap-3">
+              <div className="d-flex justify-content-end gap-3 mt-5">
                 <Botao
                   texto="Cancelar"
                   onClick={() => {

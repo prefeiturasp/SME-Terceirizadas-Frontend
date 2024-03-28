@@ -1,3 +1,10 @@
+@import "styles/variables.scss";
+
 table .ant-form-item {
   margin-bottom: 0;
+}
+
+table th {
+  background-color: $greenDark !important;
+  color: $white !important;
 }
