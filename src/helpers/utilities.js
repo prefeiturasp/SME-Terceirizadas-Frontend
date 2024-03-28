@@ -695,6 +695,10 @@ export const usuarioEhCODAEGestaoProduto = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.GESTAO_PRODUTO;
 };
 
+export const ehUsuarioRelatorios = () => {
+  return localStorage.getItem("perfil") === PERFIL.USUARIO_RELATORIOS;
+};
+
 export const usuarioEhQualquerCODAE = () => {
   return (
     usuarioEhCODAEGestaoAlimentacao() ||

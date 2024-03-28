@@ -12,6 +12,7 @@ import {
   usuarioEhEscolaTerceirizada,
   usuarioEhDRE,
   usuarioEhOrgaoFiscalizador,
+  ehUsuarioRelatorios,
 } from "helpers/utilities";
 import * as constants from "configs/constants";
 
@@ -27,7 +28,8 @@ const MenuRelatorios = () => {
     usuarioEhCODAENutriManifestacao() ||
     usuarioEhDRE() ||
     usuarioEhOrgaoFiscalizador() ||
-    usuarioEhCODAEGabinete();
+    usuarioEhCODAEGabinete() ||
+    ehUsuarioRelatorios();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
   const exibirRelatorioAnaliseSensorial =
@@ -57,7 +59,8 @@ const MenuRelatorios = () => {
     usuarioEhCODAENutriManifestacao() ||
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhOrgaoFiscalizador() ||
-    usuarioEhCODAEGabinete();
+    usuarioEhCODAEGabinete() ||
+    ehUsuarioRelatorios();
 
   const exibirRelatorioQuantitativoSolicDietaEsp =
     usuarioEhCODAEDietaEspecial() ||
@@ -127,7 +130,8 @@ const MenuRelatorios = () => {
         </LeafItem>
       )}
       {(exibirRelatorioQuantitativoSolicDietaEsp ||
-        usuarioEhCODAENutriManifestacao()) && (
+        usuarioEhCODAENutriManifestacao() ||
+        ehUsuarioRelatorios()) && (
         <LeafItem
           to={`/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GESTAO_DIETA_ESPECIAL}`}
         >
