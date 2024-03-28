@@ -8,6 +8,7 @@ import {
 } from "configs/constants";
 import Page from "components/Shareable/Page/Page";
 import Breadcrumb from "components/Shareable/Breadcrumb";
+import AtribuirQuestoes from "components/screens/Recebimento/QuestoesPorProduto/AtribuirQuestoes";
 
 const atual = {
   href: `/${RECEBIMENTO}/${ATRIBUIR_QUESTOES_CONFERENCIA}`,
@@ -32,6 +33,6 @@ export default () => (
     titulo={atual.titulo}
   >
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-    <></>
+    <AtribuirQuestoes />
   </Page>
 );
