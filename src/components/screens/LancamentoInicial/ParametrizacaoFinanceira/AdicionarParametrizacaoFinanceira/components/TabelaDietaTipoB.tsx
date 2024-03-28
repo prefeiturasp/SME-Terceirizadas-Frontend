@@ -99,7 +99,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
               <Field
                 component={AInputNumber}
                 name={`tabelas.dieta_B.${record.nome}.percentual_acrescimo`}
-                placeholder="0,00"
+                placeholder="%"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
                 parser={(value: string) => parserValorDecimal(value)}
