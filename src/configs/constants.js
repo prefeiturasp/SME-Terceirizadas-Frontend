@@ -37,6 +37,7 @@ export const MEDICAO = "medicao";
 export const DINUTRE = "dinutre";
 export const DILOG = "dilog";
 export const CRONOGRAMA = "cronograma";
+export const USUARIO_RELATORIOS = "usuario-relatorios";
 
 export const AGUARDANDO_ASSINATURAS = "aguardando-assinaturas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
