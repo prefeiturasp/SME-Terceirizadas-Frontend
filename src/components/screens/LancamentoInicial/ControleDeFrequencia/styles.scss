@@ -1,6 +1,11 @@
 @import "styles/variables.scss";
 
 .controle-de-frequencia {
+  .titulo-botao {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .container-titulo {
     display: flex;
     gap: 1rem;
