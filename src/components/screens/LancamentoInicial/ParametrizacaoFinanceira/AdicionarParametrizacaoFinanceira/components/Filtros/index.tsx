@@ -36,9 +36,7 @@ export default ({
             name="edital"
             label="Nº do Edital"
             naoDesabilitarPrimeiraOpcao
-            options={[{ uuid: null, nome: "Selecione um edital" }].concat(
-              view.editais
-            )}
+            options={view.editais}
             validate={required}
             required
           />

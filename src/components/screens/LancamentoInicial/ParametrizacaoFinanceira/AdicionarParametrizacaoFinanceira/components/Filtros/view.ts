@@ -35,10 +35,12 @@ export default ({
     try {
       const { data } = await getNumerosEditais();
       setEditais(
-        data.results.map((edital) => ({
-          uuid: edital.uuid,
-          nome: edital.numero,
-        }))
+        [{ uuid: "", nome: "Selecione um edital" }].concat(
+          data.results.map((edital) => ({
+            uuid: edital.uuid,
+            nome: edital.numero,
+          }))
+        )
       );
     } catch (error) {
       toastError("Erro ao carregar editais. Tente novamente mais tarde.");
@@ -55,7 +57,7 @@ export default ({
       setLotes(
         [
           {
-            uuid: null,
+            uuid: "",
             nome: "Selecione um lote e uma DRE",
           },
         ].concat(
@@ -91,7 +93,7 @@ export default ({
       setTiposUnidadesOpcoes(
         [
           {
-            uuid: null,
+            uuid: "",
             nome: "Selecione o tipo de unidade",
           },
         ].concat(getGruposTiposUnidades(response.data.results))
