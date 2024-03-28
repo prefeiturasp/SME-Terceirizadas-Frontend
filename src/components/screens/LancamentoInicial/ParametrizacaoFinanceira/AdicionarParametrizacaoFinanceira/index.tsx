@@ -13,6 +13,7 @@ import "./style.scss";
 import TabelaAlimentacao from "./components/TabelaAlimentacao";
 import Filtros from "./components/Filtros";
 import TabelaDietaTipoA from "./components/TabelaDietaTipoA";
+import TabelaDietaTipoB from "./components/TabelaDietaTipoB";
 
 type FormValues = {
   edital: string;
@@ -55,10 +56,16 @@ export default () => {
                     tiposAlimentacao={tiposAlimentacao}
                     tiposUnidades={tiposUnidades}
                   />
-                  <TabelaDietaTipoA
-                    form={form}
-                    tiposAlimentacao={tiposAlimentacao}
-                  />
+                  <div className="d-flex gap-4">
+                    <TabelaDietaTipoA
+                      form={form}
+                      tiposAlimentacao={tiposAlimentacao}
+                    />
+                    <TabelaDietaTipoB
+                      form={form}
+                      tiposAlimentacao={tiposAlimentacao}
+                    />
+                  </div>
                 </>
               )}
               <div className="d-flex justify-content-end gap-3">
