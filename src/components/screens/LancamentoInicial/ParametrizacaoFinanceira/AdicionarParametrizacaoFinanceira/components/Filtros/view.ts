@@ -72,20 +72,6 @@ export default ({
     }
   };
 
-  const getGruposTiposUnidades = (tiposUnidades) => {
-    const getTipoUnidadeUUID = (tipoUnidade: string): string =>
-      tiposUnidades.find((t) => t.iniciais.toUpperCase() === tipoUnidade).uuid;
-
-    return TIPOS_UNIDADES_GRUPOS.map((grupo) => {
-      const uuid = grupo.map(getTipoUnidadeUUID).join(",");
-      const nome = grupo.join(", ");
-      return {
-        uuid,
-        nome,
-      };
-    });
-  };
-
   const getTiposUnidadeEscolarAsync = async () => {
     const response = await getTiposUnidadeEscolar();
     if (response.status === 200) {
@@ -116,7 +102,21 @@ export default ({
     });
   }, []);
 
-  const trataTiposAlimentacao = (unidades: string) => {
+  const getGruposTiposUnidades = (tiposUnidades) => {
+    const getTipoUnidadeUUID = (tipoUnidade: string): string =>
+      tiposUnidades.find((t) => t.iniciais.toUpperCase() === tipoUnidade).uuid;
+
+    return TIPOS_UNIDADES_GRUPOS.map((grupo) => {
+      const uuid = grupo.map(getTipoUnidadeUUID).join(",");
+      const nome = grupo.join(", ");
+      return {
+        uuid,
+        nome,
+      };
+    });
+  };
+
+  const onChangeTiposUnidades = (unidades: string) => {
     const unidadesArray = unidades ? unidades.split(",") : [];
 
     const tiposAlimentacaoUnidades: Array<{
@@ -156,6 +156,6 @@ export default ({
     editais,
     lotes,
     tiposUnidadesOpcoes,
-    trataTiposAlimentacao,
+    onChangeTiposUnidades,
   };
 };

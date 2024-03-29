@@ -72,7 +72,7 @@ export default ({
             validate={required}
             required
             onChangeEffect={(e: ChangeEvent<HTMLInputElement>) =>
-              view.trataTiposAlimentacao(e.target.value)
+              view.onChangeTiposUnidades(e.target.value)
             }
           />
         )}
