@@ -163,11 +163,25 @@ export function ControleDeFrequencia() {
     setImprimindo(true);
     try {
       const periodos = validaPeriodos(filtros.periodos);
+      const dataInicial = () => {
+        if (!filtros.data_inicial && filtros.data_final) {
+          return filtros.data_final;
+        } else {
+          return filtros.data_inicial;
+        }
+      };
+      const dataFinal = () => {
+        if (filtros.data_inicial && !filtros.data_final) {
+          return filtros.data_inicial;
+        } else {
+          return filtros.data_final;
+        }
+      };
       const params = {
         periodos,
         mes_ano: mesAnoSelecionado,
-        data_inicial: filtros.data_inicial,
-        data_final: filtros.data_final,
+        data_inicial: dataInicial(),
+        data_final: dataFinal(),
       };
       await imprimirRelatorioControleFrequencia(params);
       setExibirModalCentralDownloads(true);
