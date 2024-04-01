@@ -52,7 +52,9 @@ export const formataPayload = (
   payload.empresa = empresaSelecionada.uuid;
   payload.ficha_tecnica = values.ficha_tecnica;
   payload.armazem = values.armazem;
-  payload.qtd_total_programada = values.quantidade_total?.replaceAll(".", "");
+  payload.qtd_total_programada = values.quantidade_total
+    ?.replaceAll(".", "")
+    .replace(",", ".");
   payload.unidade_medida = values.unidade_medida;
   payload.custo_unitario_produto =
     stringDecimalToNumber(values.custo_unitario_produto) || undefined;

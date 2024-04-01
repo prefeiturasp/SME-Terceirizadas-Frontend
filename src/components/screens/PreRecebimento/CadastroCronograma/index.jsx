@@ -35,7 +35,7 @@ import {
   composeValidators,
   decimalMonetario,
 } from "helpers/fieldValidators";
-import { exibeError, formataMilhar } from "helpers/utilities";
+import { exibeError, formataMilharDecimal } from "helpers/utilities";
 import { getEmpresasCronograma } from "services/terceirizada.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
@@ -226,7 +226,7 @@ export default () => {
       cronograma.contrato?.numero_pregao ||
       cronograma.contrato?.numero_chamada_publica;
     cronogramaValues["ata"] = cronograma.contrato?.ata;
-    cronogramaValues["quantidade_total"] = formataMilhar(
+    cronogramaValues["quantidade_total"] = formataMilharDecimal(
       cronograma.qtd_total_programada
     );
     cronogramaValues["unidade_medida"] = cronograma.unidade_medida?.uuid;
@@ -633,7 +633,7 @@ export default () => {
                                   label="Quantidade Total Programada"
                                   name="quantidade_total"
                                   disabled={false}
-                                  agrupadorMilhar
+                                  agrupadorMilharComDecimal
                                   required
                                   placeholder="Informe a Quantidade Total"
                                   validate={required}

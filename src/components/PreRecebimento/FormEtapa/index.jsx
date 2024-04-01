@@ -16,7 +16,7 @@ import { getEtapas } from "services/cronograma.service";
 import { getFeriadosAnoAtualEProximo } from "services/diasUteis.service";
 import { deletaValues } from "helpers/formHelper";
 import {
-  formataMilhar,
+  formataMilharDecimal,
   getAmanha,
   usuarioEhCronograma,
 } from "helpers/utilities";
@@ -74,13 +74,12 @@ export default ({
   };
 
   const textoFaltante = () => {
-    let qtdFaltante = restante;
     let textoPadrao = (
       <div>
         Faltam
         <span className="fw-bold">
           &nbsp;
-          {formataMilhar(qtdFaltante)}
+          {formataMilharDecimal(restante?.replace(",", "."))}
           &nbsp;
           {unidadeMedida && unidadeMedida.nome}
           &nbsp;
@@ -95,10 +94,10 @@ export default ({
       <div className="row">
         <div
           className={`col-12 texto-alimento-faltante ${
-            qtdFaltante === 0 ? "verde" : "vermelho"
+            restante === 0 ? "verde" : "vermelho"
           }`}
         >
-          {qtdFaltante < 0 ? textoAcima : textoPadrao}
+          {restante < 0 ? textoAcima : textoPadrao}
         </div>
       </div>
     );
@@ -323,7 +322,7 @@ export default ({
 
                   form.change(
                     `total_embalagens_${index}`,
-                    formataMilhar(totalEmbalagens)
+                    formataMilharDecimal(totalEmbalagens)
                   );
                 }}
               </OnChange>
