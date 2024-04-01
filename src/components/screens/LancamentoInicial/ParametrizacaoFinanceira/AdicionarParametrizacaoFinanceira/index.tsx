@@ -60,7 +60,18 @@ export default () => {
       toastSuccess("Parametrização incluída com sucesso!");
       navigate(-1);
     } catch (err) {
-      toastError("Não foi possível finalizar inclusão da parametrização");
+      const data = err.response.data;
+      if (data) {
+        if (data.non_field_errors) {
+          toastError(data.non_field_errors[0]);
+        } else {
+          toastError(
+            "Não foi possível finalizar inclusão da parametrização. Verifique se todos os campos da tabela foram preenchidos"
+          );
+        }
+      } else {
+        toastError("Ocorreu um erro inesperado");
+      }
     }
   };
 
