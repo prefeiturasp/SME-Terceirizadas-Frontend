@@ -61,7 +61,7 @@ export default ({ form, tiposAlimentacao, tiposUnidades }: Props) => {
             title="Tipo de Alimentação"
             dataIndex="nome"
             key="nome"
-            render={(value, record: any, index) => {
+            render={(value, record: any) => {
               return (
                 <div>
                   <p className="fw-bold mb-0">
@@ -69,13 +69,13 @@ export default ({ form, tiposAlimentacao, tiposUnidades }: Props) => {
                   </p>
                   <Field
                     component="input"
-                    name={`tabelas["Alimentações Convencionais"].${value}_${index}.tipo_alimentacao`}
+                    name={`tabelas["Alimentações Convencionais"].${value}_${record.grupo}.tipo_alimentacao`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
                   <Field
                     component="input"
-                    name={`tabelas["Alimentações Convencionais"].${value}_${index}.grupo`}
+                    name={`tabelas["Alimentações Convencionais"].${value}_${record.grupo}.grupo`}
                     type="hidden"
                     defaultValue={record.grupo}
                   />
@@ -87,10 +87,10 @@ export default ({ form, tiposAlimentacao, tiposUnidades }: Props) => {
             title="Valor Unitário"
             dataIndex="valor_unitario"
             key="valor_unitario"
-            render={(_, record: any, index) => (
+            render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Alimentações Convencionais"].${record.nome}_${index}.valor_unitario`}
+                name={`tabelas["Alimentações Convencionais"].${record.nome}_${record.grupo}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -103,10 +103,10 @@ export default ({ form, tiposAlimentacao, tiposUnidades }: Props) => {
             title="Valor Unitário Reajuste"
             dataIndex="valor_unitario_reajuste"
             key="valor_unitario_reajuste"
-            render={(_, record: any, index) => (
+            render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Alimentações Convencionais"].${record.nome}_${index}.valor_unitario_reajuste`}
+                name={`tabelas["Alimentações Convencionais"].${record.nome}_${record.grupo}.valor_unitario_reajuste`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}

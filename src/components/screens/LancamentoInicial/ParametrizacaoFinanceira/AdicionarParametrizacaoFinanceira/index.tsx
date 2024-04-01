@@ -54,6 +54,9 @@ export default () => {
       tipos_unidades: values.tipos_unidades.split(","),
     };
 
+    // eslint-disable-next-line
+    console.log(values);
+
     try {
       await ParametrizacaoFinanceiraService.addParametrizacaoFinanceira(
         payload
