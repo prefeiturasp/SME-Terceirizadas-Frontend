@@ -58,6 +58,7 @@ export default () => {
         payload
       );
       toastSuccess("Parametrização incluída com sucesso!");
+      navigate(-1);
     } catch (err) {
       toastError("Não foi possível finalizar inclusão da parametrização");
     }
