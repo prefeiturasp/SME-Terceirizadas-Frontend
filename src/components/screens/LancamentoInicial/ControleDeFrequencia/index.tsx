@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import { Filtros } from "./components/Filtros/Index";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "components/Shareable/Botao/constants";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import {
   getFiltros,
   getMesesAnos,
   getTotalAlunosMatriculados,
+  imprimirRelatorioControleFrequencia,
 } from "services/medicaoInicial/controleDeFrequencia.service";
 import { formataData, dataAtualDDMMYYYY } from "helpers/utilities";
 import { MESES } from "constants/shared";
@@ -38,6 +47,10 @@ export function ControleDeFrequencia() {
   const [totalAlunosPorPeriodo, setTotalAlunosPorPeriodo] =
     useState<Record<string, number>>(null);
   const [totalMatriculados, setTotalMatriculados] = useState(0);
+  const [mesAnoSelecionado, setMesAnoSelecionado] = useState("");
+  const [imprimindo, setImprimindo] = useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
 
   const getMesesAnosAsync = async () => {
     setCarregando(true);
@@ -54,6 +67,7 @@ export function ControleDeFrequencia() {
   };
 
   const getFiltrosAsync = async (mesSelecionado: string) => {
+    setMesAnoSelecionado(mesSelecionado);
     const [mes, ano] = mesSelecionado.split("_");
     setCarregando(true);
     try {
@@ -145,6 +159,38 @@ export function ControleDeFrequencia() {
     getMesesAnosAsync();
   }, []);
 
+  const imprimirPDF = async () => {
+    setImprimindo(true);
+    try {
+      const periodos = validaPeriodos(filtros.periodos);
+      const dataInicial = () => {
+        if (!filtros.data_inicial && filtros.data_final) {
+          return filtros.data_final;
+        } else {
+          return filtros.data_inicial;
+        }
+      };
+      const dataFinal = () => {
+        if (filtros.data_inicial && !filtros.data_final) {
+          return filtros.data_inicial;
+        } else {
+          return filtros.data_final;
+        }
+      };
+      const params = {
+        periodos,
+        mes_ano: mesAnoSelecionado,
+        data_inicial: dataInicial(),
+        data_final: dataFinal(),
+      };
+      await imprimirRelatorioControleFrequencia(params);
+      setExibirModalCentralDownloads(true);
+    } catch (e) {
+      toastError("Erro ao imprimir pdf. Tente novamente mais tarde.");
+    }
+    setImprimindo(false);
+  };
+
   return (
     <div className="controle-de-frequencia">
       {erroAPI && <div>{erroAPI}</div>}
@@ -178,9 +224,22 @@ export function ControleDeFrequencia() {
                 )}
                 {totalMatriculados !== 0 && (
                   <div className="mt-4 mb-4">
-                    <div className="container-titulo mt-4 mb-3">
-                      <p>{`TOTAL DE MATRICULADOS NA UNIDADE ${getTitulo()}:`}</p>
-                      <span className="card-total">{totalMatriculados}</span>
+                    <div className="titulo-botao mt-4 mb-3">
+                      <div className="container-titulo">
+                        <p>{`TOTAL DE MATRICULADOS NA UNIDADE ${getTitulo()}:`}</p>
+                        <span className="card-total">{totalMatriculados}</span>
+                      </div>
+                      <div>
+                        <Botao
+                          className="ms-3 float-end"
+                          texto="Imprimir"
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          icon={BUTTON_ICON.PRINT}
+                          type={BUTTON_TYPE.BUTTON}
+                          disabled={imprimindo}
+                          onClick={imprimirPDF}
+                        />
+                      </div>
                     </div>
 
                     {Object.entries(totalAlunosPorPeriodo).map(
@@ -212,6 +271,10 @@ export function ControleDeFrequencia() {
           </div>
         ) : null}
       </Spin>
+      <ModalSolicitacaoDownload
+        show={exibirModalCentralDownloads}
+        setShow={setExibirModalCentralDownloads}
+      />
     </div>
   );
 }

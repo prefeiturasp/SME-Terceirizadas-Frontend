@@ -8,3 +8,7 @@ export interface ResponseTotalAlunosMatriculados {
   periodos: Record<string, number>;
   total_matriculados: number;
 }
+
+export interface RelatorioControleFrequenciaResponse {
+  detail: string;
+}
