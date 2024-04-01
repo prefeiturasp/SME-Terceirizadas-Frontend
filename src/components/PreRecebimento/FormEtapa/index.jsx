@@ -16,7 +16,7 @@ import { getEtapas } from "services/cronograma.service";
 import { getFeriadosAnoAtualEProximo } from "services/diasUteis.service";
 import { deletaValues } from "helpers/formHelper";
 import {
-  formataMilhar,
+  formataMilharDecimal,
   getAmanha,
   usuarioEhCronograma,
 } from "helpers/utilities";
@@ -74,13 +74,12 @@ export default ({
   };
 
   const textoFaltante = () => {
-    let qtdFaltante = restante;
     let textoPadrao = (
       <div>
         Faltam
         <span className="fw-bold">
           &nbsp;
-          {formataMilhar(qtdFaltante)}
+          {formataMilharDecimal(restante?.toString().replace(",", "."))}
           &nbsp;
           {unidadeMedida && unidadeMedida.nome}
           &nbsp;
@@ -95,10 +94,10 @@ export default ({
       <div className="row">
         <div
           className={`col-12 texto-alimento-faltante ${
-            qtdFaltante === 0 ? "verde" : "vermelho"
+            restante === 0 ? "verde" : "vermelho"
           }`}
         >
-          {qtdFaltante < 0 ? textoAcima : textoPadrao}
+          {restante < 0 ? textoAcima : textoPadrao}
         </div>
       </div>
     );
@@ -305,14 +304,14 @@ export default ({
                   validate={required}
                   required
                   apenasNumeros
-                  agrupadorMilhar
+                  agrupadorMilharComDecimal
                   disabled={desabilitar[index]}
                 />
               </div>
               <OnChange name={`quantidade_${index}`}>
                 {(value) => {
                   const totalEmbalagens = calculaTotalEmbalagens(
-                    Number(value.replaceAll(".", "")),
+                    Number(value.replaceAll(".", "").replace(",", ".")),
                     Number(
                       values.peso_liquido_embalagem_secundaria?.replace(
                         ",",
@@ -323,7 +322,7 @@ export default ({
 
                   form.change(
                     `total_embalagens_${index}`,
-                    formataMilhar(totalEmbalagens)
+                    formataMilharDecimal(totalEmbalagens)
                   );
                 }}
               </OnChange>

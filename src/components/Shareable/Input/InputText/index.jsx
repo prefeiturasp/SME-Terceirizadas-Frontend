@@ -36,6 +36,7 @@ export const InputText = (props) => {
     proibeLetras,
     proibeNumeros,
     agrupadorMilhar,
+    agrupadorMilharComDecimal,
     valorInicial,
     inputOnChange,
     prefix,
@@ -111,6 +112,13 @@ export const InputText = (props) => {
               ? e.target.value
                   .toString()
                   .replace(/\D/g, "")
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+              : e.target.value;
+            e.target.value = agrupadorMilharComDecimal
+              ? e.target.value
+                  .toString()
+                  .replace(/\D/g, "")
+                  .replace(/(\d)(?=(\d{2})\b)/g, "$1,")
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
               : e.target.value;
           }}
