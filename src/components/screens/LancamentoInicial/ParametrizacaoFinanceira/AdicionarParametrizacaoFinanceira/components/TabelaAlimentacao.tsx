@@ -3,7 +3,6 @@ import React from "react";
 import { Table } from "antd";
 import Column from "antd/es/table/Column";
 
-import { FormApi } from "final-form";
 import { Field } from "react-final-form";
 
 import { AInputNumber } from "components/Shareable/MakeField";
@@ -12,42 +11,25 @@ import {
   formataValorDecimal,
   parserValorDecimal,
 } from "components/screens/helper";
-import { TIPOS_UNIDADES_GRUPO_3 } from "../const";
 
 type Props = {
-  form: FormApi<any, any>;
   tiposAlimentacao: Array<any>;
-  tiposUnidades: Array<any>;
 };
 
-export default ({ form, tiposAlimentacao, tiposUnidades }: Props) => {
+export default ({ tiposAlimentacao }: Props) => {
   const alimentacoes = tiposAlimentacao.map((t) => ({ ...t }));
 
-  const trataTiposAlimentacaoGrupo3 = () => {
-    const refeicaoIndex = alimentacoes.findIndex((t) => t.nome === "Refeição");
-    if (refeicaoIndex !== -1) {
-      alimentacoes[refeicaoIndex] = {
-        ...alimentacoes[refeicaoIndex],
-        grupo: "EMEF / CEUEMEF / EMEFM / EMEBS / CIEJA",
-      };
+  const refeicaoIndex = alimentacoes.findIndex((t) => t.nome === "Refeição");
+  if (refeicaoIndex !== -1) {
+    alimentacoes[refeicaoIndex] = {
+      ...alimentacoes[refeicaoIndex],
+      grupo: "EMEF / CEUEMEF / EMEFM / EMEBS / CIEJA",
+    };
 
-      alimentacoes.splice(refeicaoIndex + 1, 0, {
-        ...alimentacoes[refeicaoIndex],
-        grupo: "EJA",
-      });
-    }
-  };
-
-  const selecionouGrupo3 =
-    form.getState().values.tipos_unidades &&
-    form
-      .getState()
-      .values.tipos_unidades.split(",")
-      .map((unidade) => tiposUnidades.find((u) => u.uuid === unidade).iniciais)
-      .every((unidade) => TIPOS_UNIDADES_GRUPO_3.includes(unidade));
-
-  if (selecionouGrupo3) {
-    trataTiposAlimentacaoGrupo3();
+    alimentacoes.splice(refeicaoIndex + 1, 0, {
+      ...alimentacoes[refeicaoIndex],
+      grupo: "EJA",
+    });
   }
 
   return (

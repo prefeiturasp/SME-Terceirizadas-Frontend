@@ -29,7 +29,6 @@ type FormValues = {
 };
 
 export default () => {
-  const [tiposUnidades, setTiposUnidades] = useState([]);
   const [tiposAlimentacao, setTiposAlimentacao] = useState([]);
   const [showModalCancelar, setShowModalCancelar] = useState(false);
 
@@ -54,9 +53,6 @@ export default () => {
       tipos_unidades: values.tipos_unidades.split(","),
     };
 
-    // eslint-disable-next-line
-    console.log(values);
-
     try {
       await ParametrizacaoFinanceiraService.addParametrizacaoFinanceira(
         payload
@@ -80,18 +76,10 @@ export default () => {
             }}
             render={({ form, handleSubmit }) => (
               <form onSubmit={handleSubmit}>
-                <Filtros
-                  tiposUnidades={tiposUnidades}
-                  setTiposUnidades={setTiposUnidades}
-                  setTiposAlimentacao={setTiposAlimentacao}
-                />
+                <Filtros setTiposAlimentacao={setTiposAlimentacao} />
                 {tiposAlimentacao.length > 0 && (
                   <>
-                    <TabelaAlimentacao
-                      form={form}
-                      tiposAlimentacao={tiposAlimentacao}
-                      tiposUnidades={tiposUnidades}
-                    />
+                    <TabelaAlimentacao tiposAlimentacao={tiposAlimentacao} />
                     <div className="d-flex gap-4">
                       <TabelaDietaTipoA
                         form={form}

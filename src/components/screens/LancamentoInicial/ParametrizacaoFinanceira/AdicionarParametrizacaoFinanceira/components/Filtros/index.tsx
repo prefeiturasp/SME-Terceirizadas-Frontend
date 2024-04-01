@@ -9,19 +9,11 @@ import { Select } from "components/Shareable/Select";
 import useView from "./view";
 
 type Props = {
-  tiposUnidades: Array<any>;
   setTiposAlimentacao: Dispatch<SetStateAction<Array<any>>>;
-  setTiposUnidades: Dispatch<SetStateAction<Array<any>>>;
 };
 
-export default ({
-  tiposUnidades,
-  setTiposUnidades,
-  setTiposAlimentacao,
-}: Props) => {
+export default ({ setTiposAlimentacao }: Props) => {
   const view = useView({
-    tiposUnidades,
-    setTiposUnidades,
     setTiposAlimentacao,
   });
 

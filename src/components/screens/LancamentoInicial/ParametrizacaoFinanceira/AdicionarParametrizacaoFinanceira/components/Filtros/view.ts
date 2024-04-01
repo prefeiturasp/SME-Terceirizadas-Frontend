@@ -6,7 +6,7 @@ import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service
 
 import { toastError } from "components/Shareable/Toast/dialogs";
 
-import { TIPOS_UNIDADES_GRUPOS } from "../../const";
+import { TIPOS_UNIDADES_GRUPOS, TIPOS_UNIDADES_GRUPO_3 } from "../../const";
 
 type SelectOption = {
   uuid: string;
@@ -14,18 +14,13 @@ type SelectOption = {
 };
 
 type Props = {
-  tiposUnidades: Array<any>;
   setTiposAlimentacao: Dispatch<SetStateAction<Array<any>>>;
-  setTiposUnidades: Dispatch<SetStateAction<Array<any>>>;
 };
 
-export default ({
-  tiposUnidades,
-  setTiposAlimentacao,
-  setTiposUnidades,
-}: Props) => {
+export default ({ setTiposAlimentacao }: Props) => {
   const [editais, setEditais] = useState<SelectOption[]>([]);
   const [lotes, setLotes] = useState<SelectOption[]>([]);
+  const [tiposUnidades, setTiposUnidades] = useState([]);
   const [tiposUnidadesOpcoes, setTiposUnidadesOpcoes] = useState<
     SelectOption[]
   >([]);
@@ -117,6 +112,20 @@ export default ({
   };
 
   const onChangeTiposUnidades = (unidades: string) => {
+    const selecionouGrupo3 =
+      unidades &&
+      unidades
+        .split(",")
+        .map(
+          (unidade) => tiposUnidades.find((u) => u.uuid === unidade).iniciais
+        )
+        .every((unidade) => TIPOS_UNIDADES_GRUPO_3.includes(unidade));
+
+    if (!selecionouGrupo3) {
+      setTiposAlimentacao([]);
+      return;
+    }
+
     const unidadesArray = unidades ? unidades.split(",") : [];
 
     const tiposAlimentacaoUnidades: Array<{
