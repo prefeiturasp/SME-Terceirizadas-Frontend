@@ -66,7 +66,7 @@ export default () => {
 
   return (
     <>
-      <div className="card">
+      <div className="card mt-4">
         <div className="card-body">
           <Form
             onSubmit={onSubmit}
