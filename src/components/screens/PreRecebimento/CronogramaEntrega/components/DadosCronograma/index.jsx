@@ -1,5 +1,8 @@
 import { deParaStatusAltCronograma } from "components/screens/helper";
-import { usuarioEhEmpresaFornecedor, formataMilhar } from "helpers/utilities";
+import {
+  usuarioEhEmpresaFornecedor,
+  formataMilharDecimal,
+} from "helpers/utilities";
 import React from "react";
 import "./styles.scss";
 
@@ -145,7 +148,7 @@ export default ({
             <div className="col-4">
               <p>Quantidade Total Programada:</p>
               <p>
-                <b>{formataMilhar(cronograma.qtd_total_programada)}</b>
+                <b>{formataMilharDecimal(cronograma.qtd_total_programada)}</b>
               </p>
             </div>
             <div className="col-4">
@@ -220,10 +223,10 @@ export default ({
                             {etapa.data_programada}
                           </td>
                           <td className="borda-crono">
-                            {formataMilhar(etapa.quantidade)}
+                            {formataMilharDecimal(etapa.quantidade)}
                           </td>
                           <td className="borda-crono">
-                            {formataMilhar(etapa.total_embalagens)}
+                            {formataMilharDecimal(etapa.total_embalagens)}
                           </td>
                         </tr>
                       );
@@ -278,7 +281,7 @@ export default ({
                       <td className="borda-crono">{etapa.etapa}</td>
                       <td className="borda-crono">{etapa.parte}</td>
                       <td className="borda-crono">
-                        {formataMilhar(etapa.quantidade)}
+                        {formataMilharDecimal(etapa.quantidade)}
                       </td>
                       <td className="borda-crono">
                         {cronograma.armazem && cronograma.armazem.nome_fantasia}
