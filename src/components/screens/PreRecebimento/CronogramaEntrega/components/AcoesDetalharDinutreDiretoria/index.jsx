@@ -47,11 +47,6 @@ export default ({ cronograma }) => {
       });
   };
 
-  const handleBack = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    navigate(-1);
-  };
-
   return (
     <>
       {cronograma.status === "Assinado Fornecedor" && (
@@ -63,14 +58,6 @@ export default ({ cronograma }) => {
           onClick={() => handleShow()}
         />
       )}
-
-      <Botao
-        texto="Voltar"
-        type={BUTTON_TYPE.BUTTON}
-        style={BUTTON_STYLE.GREEN_OUTLINE}
-        className="float-end ms-3"
-        onClick={() => handleBack()}
-      />
 
       <ModalAssinaturaUsuario
         titulo="Assinar Cronograma"

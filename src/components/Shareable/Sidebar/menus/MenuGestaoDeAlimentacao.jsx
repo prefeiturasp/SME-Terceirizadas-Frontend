@@ -21,6 +21,7 @@ import {
   CADASTROS,
   CONSULTA_KITS,
   RELATORIO_SOLICITACOES_ALIMENTACAO,
+  USUARIO_RELATORIOS,
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -33,6 +34,7 @@ import {
   usuarioEhMedicao,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioEhCODAEGabinete,
+  ehUsuarioRelatorios,
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
@@ -40,7 +42,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhEscolaTerceirizada() ||
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhDRE();
-  const exibeMenuConsultaDeSolicitacoes = !usuarioEscolaEhGestaoDireta();
+  const exibeMenuConsultaDeSolicitacoes =
+    !usuarioEscolaEhGestaoDireta() && !ehUsuarioRelatorios();
   const PERFIL =
     usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
       ? ESCOLA
@@ -54,6 +57,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       ? NUTRIMANIFESTACAO
       : usuarioEhNutricionistaSupervisao()
       ? NUTRISUPERVISAO
+      : ehUsuarioRelatorios()
+      ? USUARIO_RELATORIOS
       : TERCEIRIZADA;
   return (
     <Menu
@@ -61,9 +66,11 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       icon="fa-utensils"
       title={"Gestão de Alimentação"}
     >
-      <LeafItem to="/painel-gestao-alimentacao">
-        Painel de Solicitações
-      </LeafItem>
+      {!ehUsuarioRelatorios() && (
+        <LeafItem to="/painel-gestao-alimentacao">
+          Painel de Solicitações
+        </LeafItem>
+      )}
       {exibeMenuNovasSolicitacoes && (
         <SubMenu
           icon="fa-chevron-down"
@@ -171,7 +178,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhEscolaTerceirizada() ||
         usuarioEhEscolaTerceirizadaDiretor() ||
-        usuarioEhCODAEGabinete()) && (
+        usuarioEhCODAEGabinete() ||
+        ehUsuarioRelatorios()) && (
         <SubMenu
           icon="fa-chevron-down"
           path="relatorios"

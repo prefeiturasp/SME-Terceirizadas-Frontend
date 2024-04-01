@@ -4,6 +4,7 @@ import {
   ACOMPANHAMENTO_DE_LANCAMENTOS,
   CLAUSULAS_PARA_DESCONTOS,
   PARAMETRIZACAO_FINANCEIRA,
+  CONTROLE_DE_FREQUENCIA,
   EMPENHOS,
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
@@ -15,6 +16,8 @@ import {
   exibirModuloMedicaoInicial,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioEhDRE,
+  escolaEhCei,
+  escolaEhCEMEI,
   usuarioEhEscolaTerceirizada,
   usuarioEhMedicao,
   usuarioEhCODAEGabinete,
@@ -51,6 +54,11 @@ const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
           usuarioEhCODAEGabinete) && (
           <LeafItem to={`/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`}>
             Acompanhamento de Lançamentos
+          </LeafItem>
+        )}
+        {(escolaEhCEMEI() || escolaEhCei()) && (
+          <LeafItem to={`/${MEDICAO_INICIAL}/${CONTROLE_DE_FREQUENCIA}`}>
+            Controle de Frequência de Alunos
           </LeafItem>
         )}
         {exibeCadastros && (
