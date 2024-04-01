@@ -120,7 +120,7 @@ export const formatarPayload = (values, meusDados) => {
       }
       if (substituicao.emei) {
         substituicoes_cemei_emei_periodo_escolar.push({
-          qtd_alunos: substituicao.emei.quantitade_alunos,
+          qtd_alunos: substituicao.emei.quantidade_alunos,
           matriculados_quando_criado:
             substituicao.emei.matriculados_quando_criado,
           periodo_escolar: substituicao.periodo_uuid,

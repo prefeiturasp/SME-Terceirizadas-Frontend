@@ -4,7 +4,6 @@ import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
 import { cardsPainel } from "./constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
-import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 import { useCallback } from "react";
 import {
@@ -95,40 +94,37 @@ export default () => {
                 }}
                 onSubmit={() => {}}
               >
-                {({ values }) => (
+                {({ form }) => (
                   <div className="row text-end">
                     <div className="col-4">
                       <Field
                         component={InputText}
                         name="numero_ficha"
                         placeholder="Filtrar por Nº da Ficha Técnica"
+                        inputOnChange={() =>
+                          filtrarItens(form.getState().values)
+                        }
                       />
-
-                      <OnChange name="numero_ficha">
-                        {() => filtrarItens(values)}
-                      </OnChange>
                     </div>
                     <div className="col-4">
                       <Field
                         component={InputText}
                         name="nome_produto"
                         placeholder="Filtrar por Nome do Produto"
+                        inputOnChange={() =>
+                          filtrarItens(form.getState().values)
+                        }
                       />
-
-                      <OnChange name="nome_produto">
-                        {() => filtrarItens(values)}
-                      </OnChange>
                     </div>
                     <div className="col-4">
                       <Field
                         component={InputText}
                         name="nome_empresa"
                         placeholder="Filtrar por Nome do Fornecedor"
+                        inputOnChange={() =>
+                          filtrarItens(form.getState().values)
+                        }
                       />
-
-                      <OnChange name="nome_empresa">
-                        {() => filtrarItens(values)}
-                      </OnChange>
                     </div>
                   </div>
                 )}

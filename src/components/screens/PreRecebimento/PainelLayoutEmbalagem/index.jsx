@@ -16,7 +16,6 @@ import {
 } from "configs/constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
-import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 import { useCallback } from "react";
 import { getDashboardLayoutEmbalagem } from "services/layoutEmbalagem.service";
@@ -144,40 +143,37 @@ export default () => {
                 }}
                 onSubmit={() => {}}
               >
-                {({ values }) => (
+                {({ form }) => (
                   <div className="row text-end">
                     <div className="col-4">
                       <Field
                         component={InputText}
                         name="numero_cronograma"
                         placeholder="Filtrar por N° do Cronograma"
+                        inputOnChange={(e) =>
+                          filtrarLayouts(e.target.value, form.getState().values)
+                        }
                       />
-
-                      <OnChange name="numero_cronograma">
-                        {(value) => filtrarLayouts(value, values)}
-                      </OnChange>
                     </div>
                     <div className="col-4">
                       <Field
                         component={InputText}
                         name="nome_produto"
                         placeholder="Filtrar por Nome do Produto"
+                        inputOnChange={(e) =>
+                          filtrarLayouts(e.target.value, form.getState().values)
+                        }
                       />
-
-                      <OnChange name="nome_produto">
-                        {(value) => filtrarLayouts(value, values)}
-                      </OnChange>
                     </div>
                     <div className="col-4">
                       <Field
                         component={InputText}
                         name="nome_fornecedor"
                         placeholder="Filtrar por Nome do Fornecedor"
+                        inputOnChange={(e) =>
+                          filtrarLayouts(e.target.value, form.getState().values)
+                        }
                       />
-
-                      <OnChange name="nome_fornecedor">
-                        {(value) => filtrarLayouts(value, values)}
-                      </OnChange>
                     </div>
                   </div>
                 )}

@@ -1,0 +1,99 @@
+@import "styles/variables.scss";
+
+.controle-de-frequencia {
+  .titulo-botao {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .container-titulo {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    p {
+      font-weight: bold;
+      font-size: 14px;
+      color: $greenDark;
+      margin: 0;
+    }
+  }
+
+  .card-total {
+    border: 0.5px solid $grayLight;
+    padding: 0.2rem 0.6rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 4px;
+    align-self: center;
+    background-color: $whiteBackground;
+  }
+
+  .container-cards {
+    justify-content: space-between;
+    align-items: center;
+
+    .card-total-matriculados-periodo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      width: 78%;
+
+      p {
+        margin: 0;
+      }
+    }
+    .mes-ano {
+      font-weight: bold;
+      font-size: 14px;
+      border: 1px solid #e8eaf3;
+      background-color: #f5f6f8;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20%;
+      height: 100%;
+      min-height: 50.4px;
+    }
+  }
+
+  .periodo-INTEGRAL {
+    border: 1px solid #ffe3ad;
+    background-color: #fff7cb;
+  }
+  .periodo-PARCIAL {
+    border: 1px solid #ffc296;
+    background-color: #fad1b4;
+  }
+  .periodo-MANHA {
+    border: 1px solid #d1e9fe;
+    background-color: #adddff;
+  }
+  .periodo-TARDE {
+    border: 1px solid #adffb5;
+    background-color: #e0ffe7;
+  }
+  .periodo-NOITE {
+    border: 1px solid #ceb0f1;
+    background-color: #f6d7ff;
+  }
+  .periodo-VESPERTINO {
+    border: 1px solid #f1a9b4;
+    background-color: #ffd0db;
+  }
+  .periodo-InfantilINTEGRAL {
+    border: 1px solid #97d3db;
+    background-color: #a5e1e9;
+  }
+  .periodo-InfantilMANHA {
+    border: 1px solid #c6deab;
+    background-color: #d5edb9;
+  }
+  .periodo-InfantilTARDE {
+    border: 1px solid #f8cadc;
+    background-color: #ffd8ea;
+  }
+}

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Modal } from "react-bootstrap";
 import { Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { Spin } from "antd";
 import { format, getYear } from "date-fns";
 import Botao from "components/Shareable/Botao";
@@ -245,6 +244,8 @@ export default ({
             (valor) => String(valor.categoria_medicao) === String(categoria)
           ).length > 0
       );
+
+      form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, value);
     } else {
       setDesabilitarBotaoSalvar(true);
     }
@@ -286,10 +287,11 @@ export default ({
                 ].includes(location.state.status_periodo)
               }
               validate={maxLengthSemTags(250)}
+              onChange={(_, editor) => {
+                const value_ = editor.getData();
+                onChangeTextAreaField(value_);
+              }}
             />
-            <OnChange name={`${rowName}__dia_${dia}__categoria_${categoria}`}>
-              {(value) => onChangeTextAreaField(value)}
-            </OnChange>
           </div>
         </Modal.Body>
         <Modal.Footer className="botoes-modal-footer">

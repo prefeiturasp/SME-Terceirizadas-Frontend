@@ -8,7 +8,6 @@ import CardListarSolicitacoesCronograma from "components/Shareable/CardListarSol
 import { Paginacao } from "components/Shareable/Paginacao";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
-import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 import { gerarParametrosConsulta } from "../../../helpers/utilities";
 import {
@@ -115,39 +114,37 @@ export const SolicitacoesDocumentoStatusGenerico: React.FC<Props> = ({
             }}
             onSubmit={() => {}}
           >
-            {({ values }) => (
+            {({ form }) => (
               <div className="row">
                 <div className="col-4">
                   <Field
                     component={InputText}
                     name="numero_cronograma"
                     placeholder="Filtrar por Nº do Cronograma"
+                    inputOnChange={() =>
+                      filtrarRequisicao(form.getState().values)
+                    }
                   />
-
-                  <OnChange name="numero_cronograma">
-                    {() => filtrarRequisicao(values)}
-                  </OnChange>
                 </div>
                 <div className="col-4">
                   <Field
                     component={InputText}
                     name="nome_produto"
                     placeholder="Filtrar por Nome do Produto"
+                    inputOnChange={() =>
+                      filtrarRequisicao(form.getState().values)
+                    }
                   />
-
-                  <OnChange name="nome_produto">
-                    {() => filtrarRequisicao(values)}
-                  </OnChange>
                 </div>
                 <div className="col-4">
                   <Field
                     component={InputText}
                     name="nome_fornecedor"
                     placeholder="Filtrar por Nome do Fornecedor"
+                    inputOnChange={() =>
+                      filtrarRequisicao(form.getState().values)
+                    }
                   />
-                  <OnChange name="nome_fornecedor">
-                    {() => filtrarRequisicao(values)}
-                  </OnChange>
                 </div>
               </div>
             )}

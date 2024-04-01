@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Form, Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
 import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
@@ -54,7 +53,7 @@ const CardBody = (props) => {
           <Form
             onSubmit={() => {}}
             initialValues={{}}
-            render={({ handleSubmit, values }) => (
+            render={({ form, handleSubmit }) => (
               <form onSubmit={handleSubmit}>
                 <div className="row">
                   <div
@@ -97,13 +96,12 @@ const CardBody = (props) => {
                               )
                             : []
                         }
-                      />
-                      <OnChange name="edital">
-                        {(edital) => {
-                          props.updateEditalProduto(edital);
-                          props.onChange(values);
+                        onChange={(value) => {
+                          form.change("edital", value);
+                          props.updateEditalProduto(value);
+                          props.onChange(form.getState().values);
                         }}
-                      </OnChange>
+                      />
                     </div>
                   )}
 
@@ -136,20 +134,21 @@ const CardBody = (props) => {
                       name="titulo"
                       placeholder={loadingDietas ? "" : "Pesquisar"}
                       disabled={loadingDietas || filtrosDesabilitados}
+                      inputOnChange={(e) => {
+                        const value = e.target.value;
+                        const values_ = form.getState().values;
+
+                        pathname === "/painel-dieta-especial" &&
+                          props.updateTituloDieta(value);
+                        pathname === "/painel-gestao-produto" &&
+                          props.updateNomeProduto(value);
+                        pathname === "/painel-gestao-alimentacao" &&
+                          props.updateTituloAlimentacao(value);
+                        props.onChange(values_);
+                      }}
                     />
                     <div className="warning-num-charac">
                       * mínimo de 3 caracteres
-                      <OnChange name="titulo">
-                        {(value, previous) => {
-                          pathname === "/painel-dieta-especial" &&
-                            props.updateTituloDieta(value);
-                          pathname === "/painel-gestao-produto" &&
-                            props.updateNomeProduto(value);
-                          pathname === "/painel-gestao-alimentacao" &&
-                            props.updateTituloAlimentacao(value);
-                          props.onChange(values, previous);
-                        }}
-                      </OnChange>
                     </div>
                   </div>
                   {exibirFiltrosDataEventoETipoSolicitacao && (
@@ -162,14 +161,15 @@ const CardBody = (props) => {
                           placeholder="Tipo de Solicitação"
                           disabled={props.filtrosDesabilitados}
                           options={TIPOS_SOLICITACOES_OPTIONS}
+                          onChangeEffect={(e) => {
+                            const value = e.target.value;
+                            const values_ = form.getState().values;
+
+                            props.updateTipoSolicitacaoAlimentacao(value);
+                            props.onChange(values_);
+                          }}
                         />
                       </div>
-                      <OnChange name="tipo_solicitacao">
-                        {(tipo) => {
-                          props.updateTipoSolicitacaoAlimentacao(tipo);
-                          props.onChange(values);
-                        }}
-                      </OnChange>
                       <div className="col-3 ps-0">
                         <Field
                           name="data_evento"
@@ -177,13 +177,12 @@ const CardBody = (props) => {
                           component={InputComData}
                           disabled={props.filtrosDesabilitados}
                           placeholder="Data do evento"
-                        />
-                        <OnChange name="data_evento">
-                          {(data) => {
-                            props.updateDataEventoAlimentacao(data);
-                            props.onChange(values);
+                          inputOnChange={(value) => {
+                            const values_ = form.getState().values;
+                            props.updateDataEventoAlimentacao(value);
+                            props.onChange(values_);
                           }}
-                        </OnChange>
+                        />
                       </div>
                     </>
                   )}
@@ -198,16 +197,17 @@ const CardBody = (props) => {
                         name="marca"
                         placeholder="Busca da Marca"
                         disabled={filtrosDesabilitados}
+                        inputOnChange={(e) => {
+                          const value = e.target.value;
+                          const values_ = form.getState().values;
+
+                          props.updateMarcaProduto(value);
+                          props.onChange(values_);
+                        }}
                       />
                       <div className="warning-num-charac">
                         * mínimo de 3 caracteres
                       </div>
-                      <OnChange name="marca">
-                        {(marca) => {
-                          props.updateMarcaProduto(marca);
-                          props.onChange(values);
-                        }}
-                      </OnChange>
                     </div>
                   )}
                 </div>
@@ -221,14 +221,15 @@ const CardBody = (props) => {
                           name="status"
                           placeholder="Conferência Status"
                           naoDesabilitarPrimeiraOpcao
-                        />
-                        <OnChange name="status">
-                          {(status) => {
-                            props.updateStatusAlimentacao(status);
-                            props.updateStatusDieta(status);
-                            props.onChange(values);
+                          onChangeEffect={(e) => {
+                            const value = e.target.value;
+                            const values_ = form.getState().values;
+
+                            props.updateStatusAlimentacao(value);
+                            props.updateStatusDieta(value);
+                            props.onChange(values_);
                           }}
-                        </OnChange>
+                        />
                       </div>
                     )}
                     {props.listaLotes && (
@@ -239,14 +240,15 @@ const CardBody = (props) => {
                           name="lote"
                           placeholder="Selecione um Lote"
                           naoDesabilitarPrimeiraOpcao
-                        />
-                        <OnChange name="lote">
-                          {(lote) => {
-                            props.updateLoteAlimentacao(lote);
-                            props.updateLoteDieta(lote);
-                            props.onChange(values);
+                          onChangeEffect={(e) => {
+                            const value = e.target.value;
+                            const values_ = form.getState().values;
+
+                            props.updateLoteAlimentacao(value);
+                            props.updateLoteDieta(value);
+                            props.onChange(values_);
                           }}
-                        </OnChange>
+                        />
                       </div>
                     )}
                     {pathname === "/painel-gestao-alimentacao" && (
@@ -258,13 +260,14 @@ const CardBody = (props) => {
                             name="tipo_solicitacao"
                             disabled={props.filtrosDesabilitados}
                             naoDesabilitarPrimeiraOpcao
-                          />
-                          <OnChange name="tipo_solicitacao">
-                            {(tipo) => {
-                              props.updateTipoSolicitacaoAlimentacao(tipo);
-                              props.onChange(values);
+                            onChangeEffect={(e) => {
+                              const value = e.target.value;
+                              const values_ = form.getState().values;
+
+                              props.updateTipoSolicitacaoAlimentacao(value);
+                              props.onChange(values_);
                             }}
-                          </OnChange>
+                          />
                         </div>
                         <div className="col-3">
                           <Field
@@ -273,13 +276,12 @@ const CardBody = (props) => {
                             component={InputComData}
                             placeholder="Data do evento"
                             disabled={props.filtrosDesabilitados}
-                          />
-                          <OnChange name="data_evento">
-                            {(data) => {
-                              props.updateDataEventoAlimentacao(data);
-                              props.onChange(values);
+                            inputOnChange={(value) => {
+                              const values_ = form.getState().values;
+                              props.updateDataEventoAlimentacao(value);
+                              props.onChange(values_);
                             }}
-                          </OnChange>
+                          />
                         </div>
                       </>
                     )}

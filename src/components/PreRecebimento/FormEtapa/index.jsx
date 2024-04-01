@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import moment from "moment";
 
 import Botao from "components/Shareable/Botao";
@@ -231,13 +230,11 @@ export default ({
                   validate={required}
                   esconderIcone
                   disabled={desabilitar[index]}
-                />
-                <OnChange name={`etapa_${index}`}>
-                  {() => {
+                  inputOnChange={() => {
                     ehAlteracao &&
                       form.mutators.setFieldTouched(`parte_${index}`, true);
                   }}
-                </OnChange>
+                />
               </div>
               <div className="col">
                 <Field
@@ -306,26 +303,25 @@ export default ({
                   apenasNumeros
                   agrupadorMilharComDecimal
                   disabled={desabilitar[index]}
+                  inputOnChange={(e) => {
+                    const value = e.target.value;
+                    const totalEmbalagens = calculaTotalEmbalagens(
+                      Number(value.replaceAll(".", "").replace(",", ".")),
+                      Number(
+                        values.peso_liquido_embalagem_secundaria?.replace(
+                          ",",
+                          "."
+                        )
+                      )
+                    );
+
+                    form.change(
+                      `total_embalagens_${index}`,
+                      formataMilharDecimal(totalEmbalagens)
+                    );
+                  }}
                 />
               </div>
-              <OnChange name={`quantidade_${index}`}>
-                {(value) => {
-                  const totalEmbalagens = calculaTotalEmbalagens(
-                    Number(value.replaceAll(".", "").replace(",", ".")),
-                    Number(
-                      values.peso_liquido_embalagem_secundaria?.replace(
-                        ",",
-                        "."
-                      )
-                    )
-                  );
-
-                  form.change(
-                    `total_embalagens_${index}`,
-                    formataMilharDecimal(totalEmbalagens)
-                  );
-                }}
-              </OnChange>
               <div className="col-4">
                 <Field
                   component={InputText}

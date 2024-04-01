@@ -6,6 +6,10 @@ import { getDatasetsGraficosRelatorioSolicitacoesAlimentacao } from "services/re
 import { GraficoSolicitacoesAutorizadasDRELote } from "./components/GraficoSolicitacoesAutorizadasDRELote";
 import { ResponseDatasetsGraficosRelatorioSolicitacoesAlimentacaoInterface } from "./interfaces";
 import "./style.scss";
+import { GraficoSolicitacoesAutorizadasTipoSolicitacao } from "./components/GraficoSolicitacoesAutorizadasTipoSolicitacao";
+import { GraficoSolicitacoesStatus } from "./components/GraficoSolicitacoesStatus";
+import { GraficoSolicitacoesAutorizadasTipoUnidade } from "./components/GraficoSolicitacoesAutorizadasTipoUnidade";
+import { GraficoSolicitacoesAutorizadasEmpresaTerceirizada } from "./components/GraficoSolicitacoesAutorizadasEmpresaTerceirizada";
 
 type ValuesType = {
   status: string;
@@ -55,6 +59,50 @@ export const Graficos = ({ ...props }: PropsType) => {
     );
   };
 
+  const graficoTotalPorTipoAlimentacao = (): boolean | ChartData => {
+    return (
+      datasGraficos &&
+      datasGraficos.find((datagrafico) =>
+        datagrafico.datasets.find((dataset) =>
+          dataset.label.includes("por Tipo")
+        )
+      )
+    );
+  };
+
+  const graficoTotalPorStatus = (): boolean | ChartData => {
+    return (
+      datasGraficos &&
+      datasGraficos.find((datagrafico) =>
+        datagrafico.datasets.find((dataset) =>
+          dataset.label.includes("por Status")
+        )
+      )
+    );
+  };
+
+  const graficoTotalPorTipoUnidade = (): boolean | ChartData => {
+    return (
+      datasGraficos &&
+      datasGraficos.find((datagrafico) =>
+        datagrafico.datasets.find((dataset) =>
+          dataset.label.includes("por Tipo de Unidade")
+        )
+      )
+    );
+  };
+
+  const graficoTotalPorEmpresaTerceirizada = (): boolean | ChartData => {
+    return (
+      datasGraficos &&
+      datasGraficos.find((datagrafico) =>
+        datagrafico.datasets.find((dataset) =>
+          dataset.label.includes("por Empresa Terceirizada")
+        )
+      )
+    );
+  };
+
   return (
     <div className="graficos-relatorio-ga text-center">
       <Spin tip="Carregando gráficos..." spinning={!datasGraficos}>
@@ -63,6 +111,38 @@ export const Graficos = ({ ...props }: PropsType) => {
             <div className="col-12">
               <GraficoSolicitacoesAutorizadasDRELote
                 chartData={graficoTotalPorDRELote()}
+              />
+            </div>
+          </div>
+        )}
+        <div className="row">
+          {graficoTotalPorTipoAlimentacao() && (
+            <div className="col-7">
+              <GraficoSolicitacoesAutorizadasTipoSolicitacao
+                chartData={graficoTotalPorTipoAlimentacao()}
+              />
+            </div>
+          )}
+          {graficoTotalPorStatus() && (
+            <div className="col-5 total-por-status">
+              <GraficoSolicitacoesStatus chartData={graficoTotalPorStatus()} />
+            </div>
+          )}
+        </div>
+        {graficoTotalPorTipoUnidade() && (
+          <div className="row">
+            <div className="col-12">
+              <GraficoSolicitacoesAutorizadasTipoUnidade
+                chartData={graficoTotalPorTipoUnidade()}
+              />
+            </div>
+          </div>
+        )}
+        {graficoTotalPorEmpresaTerceirizada() && (
+          <div className="row">
+            <div className="col-12">
+              <GraficoSolicitacoesAutorizadasEmpresaTerceirizada
+                chartData={graficoTotalPorEmpresaTerceirizada()}
               />
             </div>
           </div>

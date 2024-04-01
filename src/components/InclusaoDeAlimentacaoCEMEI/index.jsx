@@ -33,7 +33,6 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
-import { OnChange } from "react-final-form-listeners";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   AdicionarDia,
@@ -505,9 +504,9 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                               required
                               validate={required}
                               naoDesabilitarPrimeiraOpcao
-                            />
-                            <OnChange name={`${name}.motivo`}>
-                              {async (value) => {
+                              onChangeEffect={async (e) => {
+                                const value = e.target.value;
+                                const values_ = form.getState().values;
                                 if (
                                   value &&
                                   motivosSimples.find(
@@ -516,11 +515,11 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                                 ) {
                                   form.change("quantidades_periodo", undefined);
                                   checaMotivoInclusaoEspecifico(
-                                    values,
+                                    values_,
                                     form,
                                     value
                                   );
-                                  form.change("reload", !values.reload);
+                                  form.change("reload", !values_.reload);
                                 }
                                 if (
                                   value &&
@@ -529,10 +528,10 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                                   )
                                 ) {
                                   form.change("quantidades_periodo", undefined);
-                                  form.change("reload", !values.reload);
+                                  form.change("reload", !values_.reload);
                                 }
                               }}
-                            </OnChange>
+                            />
                           </div>
                           {motivoSimplesSelecionado(values) && (
                             <DataInclusaoNormal

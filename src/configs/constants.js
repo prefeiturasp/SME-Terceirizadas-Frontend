@@ -37,6 +37,7 @@ export const MEDICAO = "medicao";
 export const DINUTRE = "dinutre";
 export const DILOG = "dilog";
 export const CRONOGRAMA = "cronograma";
+export const USUARIO_RELATORIOS = "usuario-relatorios";
 
 export const AGUARDANDO_ASSINATURAS = "aguardando-assinaturas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
@@ -208,8 +209,12 @@ export const CADASTRO_DE_EMPENHO = "cadastro-de-empenho";
 export const EDITAR_EMPENHO = "editar-empenho";
 export const EMPENHOS = "empenhos";
 export const CLAUSULAS_PARA_DESCONTOS = "clausulas-para-descontos";
+export const PARAMETRIZACAO_FINANCEIRA = "parametrizacao-financeira";
+export const ADICIONAR_PARAMETRIZACAO_FINANCEIRA =
+  "adicionar-parametrizacao-financeira";
 export const CADASTRO_DE_CLAUSULA = "cadastro-de-clausula";
 export const EDITAR_CLAUSULA = "editar-clausula";
+export const CONTROLE_DE_FREQUENCIA = "controle-de-frequencia";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
@@ -290,6 +295,10 @@ export const ALTERACOES_CODAE = "alteracoes-codae";
 
 export const AGUARDANDO_DILOG = "aguardando-dilog";
 export const ASSINADO_CODAE = "assinado-codae";
+
+export const RECEBIMENTO = "recebimento";
+export const QUESTOES_POR_PRODUTO = "questoes-por-produto";
+export const ATRIBUIR_QUESTOES_CONFERENCIA = "atribuir-questoes-conferencia";
 
 // Status dos pedidos
 

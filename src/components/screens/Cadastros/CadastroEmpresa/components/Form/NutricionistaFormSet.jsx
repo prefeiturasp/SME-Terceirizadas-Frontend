@@ -7,7 +7,6 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { OnChange } from "react-final-form-listeners";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { telefoneMask } from "constants/shared";
 
@@ -85,18 +84,15 @@ export const NutricionistaFormSet = ({
                                 required
                                 validate={required}
                                 maxlength="140"
-                              />
-                              <OnChange
-                                name={`nutricionista_nome_${indiceTerceirizada}`}
-                              >
-                                {(value) =>
+                                inputOnChange={(e) => {
+                                  const value = e.target.value;
                                   setaContatosNutricionista(
                                     "responsavel",
                                     value,
                                     indiceTerceirizada
-                                  )
-                                }
-                              </OnChange>
+                                  );
+                                }}
+                              />
                             </div>
                             <div>
                               <Field
@@ -106,18 +102,15 @@ export const NutricionistaFormSet = ({
                                 required
                                 validate={required}
                                 maxlength="140"
-                              />
-                              <OnChange
-                                name={`nutricionista_crn_${indiceTerceirizada}`}
-                              >
-                                {(value) =>
+                                inputOnChange={(e) => {
+                                  const value = e.target.value;
                                   setaContatosNutricionista(
                                     "crn",
                                     value,
                                     indiceTerceirizada
-                                  )
-                                }
-                              </OnChange>
+                                  );
+                                }}
+                              />
                             </div>
                             {contatosNutricionista.length > 1 && (
                               <div className="trash">
@@ -147,18 +140,15 @@ export const NutricionistaFormSet = ({
                                 indice={indiceTerceirizada}
                                 required
                                 validate={required}
-                              />
-                              <OnChange
-                                name={`telefone_terceirizada_${indiceTerceirizada}`}
-                              >
-                                {(value) =>
+                                inputOnChange={(e) => {
+                                  const value = e.target.value;
                                   setaContatosNutricionista(
                                     "telefone",
                                     value,
                                     indiceTerceirizada
-                                  )
-                                }
-                              </OnChange>
+                                  );
+                                }}
+                              />
                             </div>
                             <div>
                               <Field
@@ -169,18 +159,15 @@ export const NutricionistaFormSet = ({
                                 required
                                 validate={required}
                                 maxlength="140"
-                              />
-                              <OnChange
-                                name={`email_terceirizada_${indiceTerceirizada}`}
-                              >
-                                {(value) =>
+                                inputOnChange={(e) => {
+                                  const value = e.target.value;
                                   setaContatosNutricionista(
                                     "email",
                                     value,
                                     indiceTerceirizada
-                                  )
-                                }
-                              </OnChange>
+                                  );
+                                }}
+                              />
                             </div>
                           </div>
                         </div>

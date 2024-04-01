@@ -31,7 +31,6 @@ import {
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { formatarSubmissao } from "./helper";
 import "./style.scss";
-import { OnChange } from "react-final-form-listeners";
 
 const SolicitacaoUnificada = ({
   dadosUsuario,
@@ -340,13 +339,9 @@ const SolicitacaoUnificada = ({
                         label="Dia"
                         className="form-control"
                         validate={required}
+                        inputOnChange={(value) => validaDiasUteis(value)}
                         required
                       />
-                      <OnChange name="data">
-                        {(value) => {
-                          validaDiasUteis(value);
-                        }}
-                      </OnChange>
                     </div>
                     <div className="col-5 pb-3">
                       <Field

@@ -104,12 +104,12 @@ export default () => {
 
   const definirInitialValues = (objeto, aprovacoes) => {
     const initialValues =
-      aprovacoes.length > 0
+      aprovacoes?.length > 0
         ? {
             justificativa_0:
-              objeto.tipos_de_embalagens[0].complemento_do_status,
+              objeto.tipos_de_embalagens[0]?.complemento_do_status,
             justificativa_1:
-              objeto.tipos_de_embalagens[1].complemento_do_status,
+              objeto.tipos_de_embalagens[1]?.complemento_do_status,
             justificativa_2:
               objeto.tipos_de_embalagens.length === 3
                 ? objeto.tipos_de_embalagens[2].complemento_do_status
@@ -343,31 +343,34 @@ export default () => {
           )}
           <div className="subtitulo mb-3">Dados do Produto</div>
           <div className="row mt-3">
-            <div className="col-4">
-              <label className="label-dados-produto">Nº do Cronograma</label>
+            <div className="col-6">
+              <label className="label-dados-produto">
+                Número da Ficha Técnica e Nome do Produto
+              </label>
             </div>
-            <div className="col-4">
+            <div className="col-3">
               <label className="label-dados-produto">
                 Nº do Pregão/Chamada Pública
               </label>
             </div>
-            <div className="col-4">
+            <div className="col-3">
               <label className="label-dados-produto">Data do Cadastro</label>
             </div>
           </div>
           {Object.keys(layoutDeEmbalagem).length > 0 && (
             <div className="row mt-2">
-              <div className="col-4">
+              <div className="col-6">
                 <span className="valor-dados-produto">
-                  {layoutDeEmbalagem.numero_cronograma}
+                  {layoutDeEmbalagem.numero_ficha_tecnica} -{" "}
+                  {layoutDeEmbalagem.nome_produto}
                 </span>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <span className="valor-dados-produto">
                   {layoutDeEmbalagem.pregao_chamada_publica}
                 </span>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <span className="valor-dados-produto">
                   {layoutDeEmbalagem.criado_em.split(" ")[0]}
                 </span>
@@ -378,8 +381,6 @@ export default () => {
           <hr />
           <p>Empresa:</p>
           <p className="fw-bold">{layoutDeEmbalagem.nome_empresa}</p>
-          <p>Produto:</p>
-          <p className="fw-bold">{layoutDeEmbalagem.nome_produto}</p>
 
           {layoutDeEmbalagem.observacoes && (
             <>
@@ -443,7 +444,7 @@ export default () => {
 
                   <div
                     className={`${
-                      layoutDeEmbalagem.tipos_de_embalagens[1].status !==
+                      layoutDeEmbalagem.tipos_de_embalagens[1]?.status !==
                         "APROVADO" && !layoutDeEmbalagem.primeira_analise
                         ? "subtitulo-laranja"
                         : "subtitulo"
@@ -453,7 +454,7 @@ export default () => {
                   </div>
                   <div className="row">
                     <div className="col-5">
-                      {layoutDeEmbalagem.tipos_de_embalagens[1].imagens.map(
+                      {layoutDeEmbalagem.tipos_de_embalagens[1]?.imagens.map(
                         (e) => (
                           <div className="w-75" key={e.arquivo}>
                             <BotaoAnexo urlAnexo={e.arquivo} />

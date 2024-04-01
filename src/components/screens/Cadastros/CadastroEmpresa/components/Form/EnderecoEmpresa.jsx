@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Field, useForm } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { buscaCep } from "../../helper";
 import { required } from "helpers/fieldValidators";
-import { OnChange } from "react-final-form-listeners";
-import { useState } from "react";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { cepMask, telefoneMask } from "constants/shared";
 import Botao from "components/Shareable/Botao";
@@ -73,9 +71,8 @@ export const EnderecoEmpresa = ({
               maxlength={qtdFieldCep}
               required
               validate={required}
-            />
-            <OnChange name="cep">
-              {async (value) => {
+              inputOnChange={async (e) => {
+                const value = e.target.value;
                 temTracos(value);
                 if (
                   value &&
@@ -96,7 +93,7 @@ export const EnderecoEmpresa = ({
                   setCamposEnderecoDesabilitado(true);
                 }
               }}
-            </OnChange>
+            />
           </div>
           <div className="col-9">
             <Field
@@ -179,16 +176,15 @@ export const EnderecoEmpresa = ({
                           validate={required}
                           required
                           maxlength="140"
-                        />
-                        <OnChange name={`telefone_empresa_${indiceEmpresa}`}>
-                          {(value) =>
+                          inputOnChange={(e) => {
+                            const value = e.target.value;
                             setaContatosEmpresa(
                               "telefone",
                               value,
                               indiceEmpresa
-                            )
-                          }
-                        </OnChange>
+                            );
+                          }}
+                        />
                       </div>
                       <div className="col-7">
                         <Field
@@ -196,12 +192,11 @@ export const EnderecoEmpresa = ({
                           component={InputText}
                           label="E-mail"
                           maxlength="140"
+                          inputOnChange={(e) => {
+                            const value = e.target.value;
+                            setaContatosEmpresa("email", value, indiceEmpresa);
+                          }}
                         />
-                        <OnChange name={`email_empresa_${indiceEmpresa}`}>
-                          {(value) =>
-                            setaContatosEmpresa("email", value, indiceEmpresa)
-                          }
-                        </OnChange>
                       </div>
                     </div>
                   </div>

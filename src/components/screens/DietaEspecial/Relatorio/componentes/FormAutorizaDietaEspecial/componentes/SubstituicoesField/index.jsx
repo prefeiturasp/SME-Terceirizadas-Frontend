@@ -14,35 +14,44 @@ export default class SubstituicoesField extends Component {
     const { alimentos, produtos, form, values } = this.props;
     return (
       <div className="substituicoes-field">
-        <div className="row">
-          <div className="col-4 substituicoes-label">Alimento</div>
-          <div className="col-3 substituicoes-label">Isenção/Substituição</div>
-          <div className="col-4 substituicoes-label">Alimento/Ingrediente</div>
-        </div>
         <FieldArray name="substituicoes">
-          {({ fields }) =>
-            fields.map((name, index) => (
-              <Field
-                component={Substituicao}
-                name={name}
-                key={index}
-                index={index}
-                values={values}
-                form={form}
-                chave={index}
-                alimentos={alimentos}
-                produtos={produtos}
-                addOption={() => fields.push({})}
-                removeOption={() => {
-                  fields.swap(index, fields.length - 1);
-                  fields.pop();
-                }}
-                validate={required}
-                deveHabilitarApagar={fields.length > 1}
-                required
-              />
-            ))
-          }
+          {({ fields }) => {
+            return (
+              fields.length > 0 && (
+                <>
+                  <div className="row">
+                    <div className="col-4 substituicoes-label">Alimento</div>
+                    <div className="col-3 substituicoes-label">
+                      Isenção/Substituição
+                    </div>
+                    <div className="col-4 substituicoes-label">
+                      Alimento/Ingrediente
+                    </div>
+                  </div>
+                  {fields.map((name, index) => (
+                    <Field
+                      component={Substituicao}
+                      name={name}
+                      key={index}
+                      index={index}
+                      values={values}
+                      form={form}
+                      alimentos={alimentos}
+                      produtos={produtos}
+                      addOption={() => fields.push({})}
+                      removeOption={() => {
+                        fields.swap(index, fields.length - 1);
+                        fields.pop();
+                      }}
+                      validate={required}
+                      deveHabilitarApagar
+                      required
+                    />
+                  ))}
+                </>
+              )
+            );
+          }}
         </FieldArray>
         <div className="row mt-2">
           <div className="col-2">
