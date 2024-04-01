@@ -79,7 +79,7 @@ export default ({
         Faltam
         <span className="fw-bold">
           &nbsp;
-          {formataMilharDecimal(restante?.replace(",", "."))}
+          {formataMilharDecimal(restante?.toString().replace(",", "."))}
           &nbsp;
           {unidadeMedida && unidadeMedida.nome}
           &nbsp;
@@ -304,14 +304,14 @@ export default ({
                   validate={required}
                   required
                   apenasNumeros
-                  agrupadorMilhar
+                  agrupadorMilharComDecimal
                   disabled={desabilitar[index]}
                 />
               </div>
               <OnChange name={`quantidade_${index}`}>
                 {(value) => {
                   const totalEmbalagens = calculaTotalEmbalagens(
-                    Number(value.replaceAll(".", "")),
+                    Number(value.replaceAll(".", "").replace(",", ".")),
                     Number(
                       values.peso_liquido_embalagem_secundaria?.replace(
                         ",",

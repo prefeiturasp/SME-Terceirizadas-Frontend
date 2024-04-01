@@ -237,7 +237,7 @@ export const formataMilhar = (value) => {
 };
 
 export const formataMilharDecimal = (value) => {
-  return value
+  return ![undefined, null].includes(value)
     ? Number(value)
         .toFixed(2)
         .replace(/\D/g, "")

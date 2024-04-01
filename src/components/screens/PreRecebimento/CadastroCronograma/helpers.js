@@ -70,8 +70,12 @@ export const formataPayload = (
           "YYYY-MM-DD"
         )
       : undefined,
-    quantidade: values[`quantidade_${index}`]?.replaceAll(".", ""),
-    total_embalagens: values[`total_embalagens_${index}`]?.replaceAll(".", ""),
+    quantidade: values[`quantidade_${index}`]
+      ?.replaceAll(".", "")
+      .replace(",", "."),
+    total_embalagens: values[`total_embalagens_${index}`]
+      ?.replaceAll(".", "")
+      .replace(",", "."),
   }));
 
   payload.programacoes_de_recebimento = recebimentos.map((etapa, index) => ({

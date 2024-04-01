@@ -269,9 +269,7 @@ export default () => {
       etapaValues[`data_programada_${i}`] = stringNaoVaziaOuUndefined(
         etapa.data_programada
       );
-      etapaValues[`quantidade_${i}`] = stringNaoVaziaOuUndefined(
-        etapa.quantidade
-      );
+      etapaValues[`quantidade_${i}`] = formataMilharDecimal(etapa.quantidade);
       etapaValues[`total_embalagens_${i}`] = stringNaoVaziaOuUndefined(
         etapa.total_embalagens
       );

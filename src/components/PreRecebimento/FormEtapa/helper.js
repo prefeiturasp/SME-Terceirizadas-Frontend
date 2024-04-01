@@ -6,19 +6,30 @@
 //                 setDuplicados: método set de um state indicando etapas/partes duplicadas
 
 export const onChangeEtapas = (changes, etapas, setRestante, setDuplicados) => {
-  let restante = changes.values.quantidade_total
-    ?.toString()
-    .replaceAll(".", "");
+  let restante = Number(
+    changes.values.quantidade_total
+      ?.toString()
+      .replaceAll(".", "")
+      .replace(",", ".")
+  );
+
   etapas.forEach((e, index) => {
     if (changes.values[`quantidade_${index}`]) {
-      let qtd = changes.values[`quantidade_${index}`]
-        .toString()
-        .replaceAll(".", "");
-      restante = restante - qtd;
+      let qtd = Number(
+        changes.values[`quantidade_${index}`]
+          .toString()
+          .replaceAll(".", "")
+          .replace(",", ".")
+      );
+
+      restante -= qtd;
     }
   });
+
   setRestante(restante);
+
   if (etapas.length < 2) return;
+
   const partes_etapas = [];
   etapas.forEach((_, i) => {
     partes_etapas.push({
@@ -27,6 +38,7 @@ export const onChangeEtapas = (changes, etapas, setRestante, setDuplicados) => {
       index: i,
     });
   });
+
   const duplicados = [];
   partes_etapas.forEach((pe) => {
     if (
@@ -37,10 +49,11 @@ export const onChangeEtapas = (changes, etapas, setRestante, setDuplicados) => {
       duplicados.push(pe.index);
     }
   });
+
   setDuplicados(duplicados);
 };
 
 export const calculaTotalEmbalagens = (quantidade, pesoEmbalagemSecundaria) =>
   quantidade && pesoEmbalagemSecundaria
-    ? Math.ceil(quantidade / pesoEmbalagemSecundaria)
+    ? (quantidade / pesoEmbalagemSecundaria).toFixed(2)
     : undefined;
