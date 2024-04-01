@@ -74,7 +74,7 @@ export default () => {
               lote: "",
               tipos_unidades: "",
             }}
-            render={({ form, handleSubmit }) => (
+            render={({ form, handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit}>
                 <Filtros setTiposAlimentacao={setTiposAlimentacao} />
                 {tiposAlimentacao.length > 0 && (
@@ -119,6 +119,7 @@ export default () => {
                     texto="Salvar"
                     style={BUTTON_STYLE.GREEN}
                     type={BUTTON_TYPE.SUBMIT}
+                    disabled={submitting}
                   />
                 </div>
               </form>
