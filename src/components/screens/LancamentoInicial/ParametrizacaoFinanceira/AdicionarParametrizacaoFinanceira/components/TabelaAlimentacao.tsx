@@ -23,12 +23,12 @@ export default ({ tiposAlimentacao }: Props) => {
   if (refeicaoIndex !== -1) {
     alimentacoes[refeicaoIndex] = {
       ...alimentacoes[refeicaoIndex],
-      grupo: "EMEF / CEUEMEF / EMEFM / EMEBS / CIEJA",
+      grupo: "EMEF / CEUEMEF / EMEFM / EMEBS",
     };
 
     alimentacoes.splice(refeicaoIndex + 1, 0, {
       ...alimentacoes[refeicaoIndex],
-      grupo: "EJA",
+      grupo: "CIEJA / EJA",
     });
   }
 
