@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { Dispatch, ReactElement, SetStateAction } from "react";
 import { NavLink } from "react-router-dom";
 
 import {
@@ -8,20 +8,37 @@ import {
   ALTERAR_FICHA_TECNICA,
 } from "configs/constants";
 import { FichaTecnica } from "interfaces/pre_recebimento.interface";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 import "./styles.scss";
+import { imprimirFichaTecnica } from "services/fichaTecnica.service";
 
 interface Props {
   objetos: Array<FichaTecnica>;
+  setCarregando: Dispatch<SetStateAction<boolean>>;
 }
 
-const Listagem: React.FC<Props> = ({ objetos }) => {
+const Listagem: React.FC<Props> = ({ objetos, setCarregando }) => {
   const renderizarStatus = (status: string) =>
     status === "Enviada para Correção" ? (
       <span className="orange">Solicitação de Alteração</span>
     ) : (
       status
     );
+
+  const baixarPDFFichaTecnica = (ficha: FichaTecnica) => {
+    setCarregando(true);
+    let uuid = ficha.uuid;
+    let numero = ficha.numero;
+    imprimirFichaTecnica(uuid, numero)
+      .then(() => {
+        setCarregando(false);
+      })
+      .catch((error) => {
+        error.response.data.text().then((text) => toastError(text));
+        setCarregando(false);
+      });
+  };
 
   const renderizarAcoes = (objeto: FichaTecnica): ReactElement => {
     const botaoContinuarCadastro = (
@@ -57,12 +74,24 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
       </NavLink>
     );
 
+    const botaoImprimir = (
+      <span
+        className="float-start ms-1 link-acoes green"
+        onClick={() => baixarPDFFichaTecnica(objeto)}
+      >
+        <i className="fas fa-print" title="Ficha em PDF" />
+      </span>
+    );
+
     return (
-      <>
+      <div className="d-flex">
         {objeto.status === "Rascunho" && botaoContinuarCadastro}
-        {["Enviada para Análise"].includes(objeto.status) && botaoDetalhar}
+        {["Enviada para Análise", "Aprovada"].includes(objeto.status) &&
+          botaoDetalhar}
         {objeto.status === "Enviada para Correção" && botaoAlterar}
-      </>
+        {["Enviada para Análise", "Aprovada"].includes(objeto.status) &&
+          botaoImprimir}
+      </div>
     );
   };
 
@@ -89,7 +118,7 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
                 <div>{objeto.pregao_chamada_publica}</div>
                 <div>{objeto.criado_em}</div>
                 <div>{renderizarStatus(objeto.status)}</div>
-                <div>{renderizarAcoes(objeto)}</div>
+                <div className="p-0">{renderizarAcoes(objeto)}</div>
               </div>
             </>
           );

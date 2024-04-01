@@ -21,6 +21,7 @@ import { ASelect, AInput, AInputNumber } from "components/Shareable/MakeField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { Select as SelectAntd, Spin } from "antd";
 import { required } from "helpers/fieldValidators";
+import { formataValorDecimal, parserValorDecimal } from "../../helper.js";
 import "./styles.scss";
 import { useNavigate } from "react-router-dom";
 
@@ -29,7 +30,6 @@ type NovoEmpenho = {
   contrato: string | null;
   edital: string | null;
   tipo_empenho: string | null;
-  tipo_reajuste: string | null;
   status: string | null;
   valor_total: number | null;
 };
@@ -44,17 +44,12 @@ const VALORES_INICIAIS: EmpenhoInterface = {
   contrato: null,
   edital: null,
   tipo_empenho: null,
-  tipo_reajuste: null,
   status: null,
   valor_total: null,
 };
 
 const OPCOES_STATUS = ["Ativo", "Inativo"];
 const TIPOS_EMPENHOS = ["Principal", "Reajuste"];
-const OPCOES_REAJUSTE = [
-  { label: "Alimentações", value: "ALIMENTACOES" },
-  { label: "Dietas", value: "DIETAS" },
-];
 
 export function CadastroDeEmpenho() {
   const navigate = useNavigate();
@@ -107,20 +102,6 @@ export function CadastroDeEmpenho() {
     getContratos();
   }, []);
 
-  const formataValor = (value: string) => {
-    if (!value) return "";
-    return `${value}`
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-      .replace(/\.(?=\d{0,2}$)/g, ",");
-  };
-
-  const parserValor = (value: string) => {
-    if (!value) return "";
-    return Number.parseFloat(
-      value.replace(/\$\s?|(\.*)/g, "").replace(/(,{1})/g, ".")
-    ).toFixed(2);
-  };
-
   const cadastrarEmpenho = async (values: NovoEmpenho) => {
     setCarregando(true);
     try {
@@ -147,7 +128,6 @@ export function CadastroDeEmpenho() {
     try {
       const payload = {
         tipo_empenho: values.tipo_empenho,
-        tipo_reajuste: values.tipo_reajuste,
         status: values.status,
         valor_total: values.valor_total,
       };
@@ -188,7 +168,7 @@ export function CadastroDeEmpenho() {
                     : cadastrarEmpenho(values)
                 }
                 initialValues={valoresIniciais}
-                render={({ submitting, handleSubmit, form, values }) => {
+                render={({ submitting, handleSubmit, form }) => {
                   const selecionaEdital = (value: string) => {
                     form.change("contrato", value);
 
@@ -205,9 +185,6 @@ export function CadastroDeEmpenho() {
                     form.change("tipo_empenho", value);
                     form.change("valor_total", null);
                     form.change("status", null);
-
-                    if (value === "PRINCIPAL")
-                      form.change("tipo_reajuste", null);
                   };
 
                   return (
@@ -299,28 +276,6 @@ export function CadastroDeEmpenho() {
                           </Field>
                         </div>
 
-                        {values.tipo_empenho === "REAJUSTE" ? (
-                          <div className="col-4 d-flex">
-                            <span className="required-asterisk">*</span>
-                            <Field
-                              name="tipo_reajuste"
-                              label="Aplicar Reajuste em"
-                              component={ASelect}
-                              validate={required}
-                            >
-                              <SelectAntd.Option value="">
-                                Selecione uma tabela
-                              </SelectAntd.Option>
-
-                              {OPCOES_REAJUSTE.map((tipo) => (
-                                <SelectAntd.Option key={tipo.value}>
-                                  {tipo.label}
-                                </SelectAntd.Option>
-                              ))}
-                            </Field>
-                          </div>
-                        ) : null}
-
                         <div className="col-4 d-flex">
                           <span className="required-asterisk">*</span>
                           <Field
@@ -330,8 +285,12 @@ export function CadastroDeEmpenho() {
                             prefix="R$"
                             component={AInputNumber}
                             min={0}
-                            formatter={(value: string) => formataValor(value)}
-                            parser={(value: string) => parserValor(value)}
+                            formatter={(value: string) =>
+                              formataValorDecimal(value)
+                            }
+                            parser={(value: string) =>
+                              parserValorDecimal(value)
+                            }
                             validate={required}
                             style={{ width: "100%" }}
                           />

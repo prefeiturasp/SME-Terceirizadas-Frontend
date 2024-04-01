@@ -8,7 +8,10 @@ import {
   PRE_RECEBIMENTO,
 } from "configs/constants";
 import Analisar from "components/screens/PreRecebimento/FichaTecnica/components/Analisar";
-import { usuarioEhCODAEGabinete } from "helpers/utilities";
+import {
+  usuarioEhCODAEGabinete,
+  usuarioEhDilogDiretoria,
+} from "helpers/utilities";
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${ANALISAR_FICHA_TECNICA}`,
@@ -25,7 +28,8 @@ const anteriores = [
     titulo: "Fichas Técnicas",
   },
 ];
-const somenteLeitura = usuarioEhCODAEGabinete() ? true : false;
+
+const somenteLeitura = usuarioEhCODAEGabinete() || usuarioEhDilogDiretoria();
 
 export default () => (
   <Page

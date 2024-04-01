@@ -303,9 +303,9 @@ export const DashboardDietaEspecial = ({ ...props }) => {
                   <div className="col-6">
                     <CardStatusDeSolicitacao
                       cardTitle={"Inativas"}
-                      cardType={CARD_TYPE_ENUM.CANCELADO}
+                      cardType={CARD_TYPE_ENUM.INATIVO}
                       solicitations={inativas}
-                      icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                      icon={ICON_CARD_TYPE_ENUM.INATIVO}
                       href={`/solicitacoes-dieta-especial/solicitacoes-inativas`}
                     />
                   </div>

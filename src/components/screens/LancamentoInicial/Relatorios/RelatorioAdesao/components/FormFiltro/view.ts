@@ -1,6 +1,13 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 
-import { formatarOpcoesLote } from "helpers/utilities";
+import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
+
+import {
+  formatarOpcoesLote,
+  usuarioEhDRE,
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
+} from "helpers/utilities";
 
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getLotesSimples } from "services/lote.service";
@@ -18,6 +25,7 @@ import { MESES } from "constants/shared";
 import { Args, SelectOption, MultiSelectOption, Option } from "./types";
 
 export default ({ form, onChange }: Args) => {
+  const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
   const [mesesAnosOpcoes, setMesesAnosOpcoes] = useState<Array<SelectOption>>(
     []
   );
@@ -59,15 +67,28 @@ export default ({ form, onChange }: Args) => {
       buscandoTiposAlimentacao: true,
     });
 
+    const uuidInstituicao = localStorage
+      .getItem("uuid_instituicao")
+      .replace(/"/g, "");
+    const endpointPeriodosEscolares =
+      usuarioEhEscolaTerceirizadaQualquerPerfil() && uuidInstituicao
+        ? getEscolaPeriodosEscolares(uuidInstituicao)
+        : buscaPeriodosEscolares();
+    const endpointTiposDeAlimentacao =
+      usuarioEhEscolaTerceirizadaQualquerPerfil() && uuidInstituicao
+        ? getEscolaTiposAlimentacao(uuidInstituicao)
+        : getTiposDeAlimentacao();
+
     Promise.all([
       getMesesAnosSolicitacoesMedicaoinicial({
         status: "MEDICAO_APROVADA_PELA_CODAE",
+        eh_relatorio_adesao: true,
       }),
       getDiretoriaregionalSimplissima(),
       getLotesSimples(),
       getEscolasParaFiltros(),
-      buscaPeriodosEscolares(),
-      getTiposDeAlimentacao(),
+      endpointPeriodosEscolares,
+      endpointTiposDeAlimentacao,
     ]).then(
       ([
         responseMesesAnos,
@@ -109,13 +130,17 @@ export default ({ form, onChange }: Args) => {
         );
 
         const periodos = formataPeriodosEscolaresOpcoes(
-          responsePeriodos.data.results
+          usuarioEhEscolaTerceirizadaQualquerPerfil() && uuidInstituicao
+            ? responsePeriodos
+            : responsePeriodos.data.results
         );
         setPeriodosEscolares(periodos);
         setPeriodosEscolaresOpcoes(periodos);
 
         const tipos = formataTiposAlimentacoesOpcoes(
-          responseAlimentacoes.results
+          usuarioEhEscolaTerceirizadaQualquerPerfil() && uuidInstituicao
+            ? responseAlimentacoes
+            : responseAlimentacoes.results
         );
         setTiposAlimentacao(tipos);
         setTiposAlimentacaoOpcoes(tipos);
@@ -123,7 +148,13 @@ export default ({ form, onChange }: Args) => {
         form.subscribe(
           (values) => {
             if (!values.dirty) {
-              setLotesOpcoes(formatarOpcoesLote(lotes));
+              let lotes_ = lotes;
+              if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+                lotes_ = lotes?.filter(
+                  (lote) => localStorage.getItem("escolaLoteUuid") === lote.uuid
+                );
+              }
+              setLotesOpcoes(formatarOpcoesLote(lotes_));
               setUnidadesEducacionaisOpcoes(
                 formataUnidadesEducacionaisOpcoes(escolas)
               );
@@ -145,6 +176,64 @@ export default ({ form, onChange }: Args) => {
       }
     );
   }, []);
+
+  useEffect(() => {
+    if (usuarioEhDRE()) {
+      const dreUuidMeusDados = meusDados?.vinculo_atual?.instituicao.uuid;
+      if (dreUuidMeusDados && lotes && unidadesEducacionais) {
+        form.change("dre", dreUuidMeusDados);
+        setLotesOpcoes(
+          formatarOpcoesLote(
+            lotes?.filter(
+              (lote) => lote.diretoria_regional.uuid === dreUuidMeusDados
+            )
+          )
+        );
+        setUnidadesEducacionaisOpcoes(
+          formataUnidadesEducacionaisOpcoes(
+            unidadesEducacionais?.filter(
+              (escola) => escola.diretoria_regional.uuid === dreUuidMeusDados
+            )
+          )
+        );
+      }
+    } else if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      const escolaInstituicaoMeusDados = meusDados?.vinculo_atual?.instituicao;
+      const dreUuidMeusDados =
+        meusDados?.vinculo_atual?.instituicao?.diretoria_regional.uuid;
+      const escola = unidadesEducacionais.find(
+        (escola) => escola.codigo_eol === escolaInstituicaoMeusDados.codigo_eol
+      );
+      if (
+        escolaInstituicaoMeusDados &&
+        dreUuidMeusDados &&
+        escola &&
+        lotes &&
+        unidadesEducacionais
+      ) {
+        form.change("dre", dreUuidMeusDados);
+        setLotesOpcoes(
+          formatarOpcoesLote(
+            lotes?.filter((lote) => escola?.lote?.uuid === lote.uuid)
+          )
+        );
+        setUnidadesEducacionaisOpcoes(
+          formataUnidadesEducacionaisOpcoes(
+            unidadesEducacionais?.filter(
+              (escola) => escola.diretoria_regional.uuid === dreUuidMeusDados
+            )
+          )
+        );
+        const labelEscola = `${escola?.codigo_eol} - ${escola?.nome} - ${
+          escola?.lote ? escola?.lote?.nome : ""
+        }`;
+        form.change("unidade_educacional", labelEscola);
+        labelEscola && onChangeUnidadeEducacional(labelEscola);
+        labelEscola && localStorage.setItem("labelEscolaLote", labelEscola);
+        localStorage.setItem("escolaLoteUuid", escola?.lote?.uuid);
+      }
+    }
+  }, [meusDados, lotes, unidadesEducacionais]);
 
   const formataMesesAnosOpcoes = (mesesAnos) => {
     return [{ nome: "Selecione o mês de referência", uuid: "" }].concat(
@@ -223,7 +312,9 @@ export default ({ form, onChange }: Args) => {
   };
 
   const onChangeLotes = (lotes: Array<string>) => {
-    limpaCampo("unidade_educacional");
+    if (!usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      limpaCampo("unidade_educacional");
+    }
 
     onChange({
       lotes: lotesOpcoes

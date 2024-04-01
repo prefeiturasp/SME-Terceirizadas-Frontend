@@ -54,4 +54,28 @@ div.input {
       background-color: $grayDisabled;
     }
   }
+  .input-com-prefixo {
+    display: flex;
+    align-items: center;
+    border: 1px solid $grayInputBorder;
+    border-radius: 4px;
+    padding-left: 0.5rem;
+    overflow: hidden;
+  }
+
+  .input-com-prefixo .prefix {
+    color: #999;
+  }
+
+  .input-com-prefixo input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: 0.5rem;
+  }
+
+  .input-com-prefixo:focus-within {
+    box-shadow: 0 0 0 0.2rem rgba(23, 100, 210, 0.23);
+  }
 }

@@ -69,6 +69,12 @@ export const FluxoDeStatus = (props) => {
         }
         if (
           log.status_evento_explicacao === "Escola cancelou" &&
+          log.usuario.tipo_usuario === "escola"
+        ) {
+          return "Escola cancelou";
+        }
+        if (
+          log.status_evento_explicacao === "Escola cancelou" &&
           !eh_gestao_alimentacao
         ) {
           return "CODAE autorizou cancelamento";
@@ -129,7 +135,7 @@ export const FluxoDeStatus = (props) => {
                 status.status_evento_explicacao === "CODAE negou" &&
                 [
                   TIPO_PERFIL.ESCOLA,
-                  TIPO_PERFIL.DRE,
+                  TIPO_PERFIL.DIRETORIA_REGIONAL,
                   TIPO_PERFIL.TERCEIRIZADA,
                   TIPO_PERFIL.SUPERVISAO_NUTRICAO,
                   TIPO_PERFIL.NUTRICAO_MANIFESTACAO,

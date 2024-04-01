@@ -6,6 +6,7 @@ import {
   parseDataHoraBrToMoment,
   comparaObjetosMoment,
   truncarString,
+  usuarioPodeAnalisarLayoutEmbalagem,
 } from "helpers/utilities";
 import {
   ANALISAR_LAYOUT_EMBALAGEM,
@@ -46,9 +47,13 @@ export default () => {
   };
 
   const gerarLinkLayout = (item) => {
-    return item.status === "Aprovado"
-      ? `/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`
-      : item.status === "Solicitado Correção"
+    if (item.status === "Aprovado") {
+      return usuarioPodeAnalisarLayoutEmbalagem()
+        ? `/${PRE_RECEBIMENTO}/${ANALISAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`
+        : `/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`;
+    }
+
+    return item.status === "Solicitado Correção"
       ? `/${PRE_RECEBIMENTO}/${DETALHAR_LAYOUT_EMBALAGEM_SOLICITACAO_ALTERACAO}?uuid=${item.uuid}`
       : `/${PRE_RECEBIMENTO}/${ANALISAR_LAYOUT_EMBALAGEM}?uuid=${item.uuid}`;
   };

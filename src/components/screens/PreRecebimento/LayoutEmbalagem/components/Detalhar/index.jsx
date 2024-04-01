@@ -1,10 +1,18 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Spin } from "antd";
-import "./styles.scss";
-import { LAYOUT_EMBALAGEM, PRE_RECEBIMENTO } from "configs/constants";
 import { useNavigate } from "react-router-dom";
+import { Field, Form } from "react-final-form";
+import moment from "moment";
+
+import {
+  LAYOUT_EMBALAGEM,
+  PRE_RECEBIMENTO,
+  PAINEL_LAYOUT_EMBALAGEM,
+} from "configs/constants";
+import { usuarioComAcessoAoPainelEmbalagens } from "helpers/utilities";
+import { textAreaRequired } from "helpers/fieldValidators";
+import MeusDadosContext from "context/MeusDadosContext";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
-import { detalharLayoutEmabalagem } from "services/layoutEmbalagem.service";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
 import Botao from "components/Shareable/Botao";
@@ -12,21 +20,17 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
-import { Field, Form } from "react-final-form";
-import MeusDadosContext from "context/MeusDadosContext";
-import moment from "moment";
-import { textAreaRequired } from "helpers/fieldValidators";
-import ModalCancelarCorrecao from "./components/ModalCancelarCorrecao";
-import { PAINEL_LAYOUT_EMBALAGEM } from "../../../../../../configs/constants";
+import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import {
+  analiseCodaeLayoutEmbalagem,
+  detalharLayoutEmabalagem,
+} from "services/layoutEmbalagem.service";
+
 import ModalCancelarAnalise from "./components/ModalCancelarAnalise";
 import ModalEnviarAnalise from "./components/ModalEnviarAnalise";
-import { analiseCodaeLayoutEmbalagem } from "../../../../../../services/layoutEmbalagem.service";
-import {
-  toastError,
-  toastSuccess,
-} from "../../../../../Shareable/Toast/dialogs";
-import { usuarioComAcessoAoPainelEmbalagens } from "../../../../../../helpers/utilities";
-import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
+import ModalCancelarCorrecao from "./components/ModalCancelarCorrecao";
+import "./styles.scss";
 
 export default ({ analise }) => {
   const navigate = useNavigate();
@@ -42,6 +46,7 @@ export default ({ analise }) => {
   const [modais, setModais] = useState([]);
   const [modalCancelar, setModalCancelar] = useState(false);
   const [modalEnviar, setModalEnviar] = useState(false);
+  const [initialValues, setInitialValues] = useState({});
 
   const [visaoCODAE, setVisaoCODAE] = useState(null);
 
@@ -52,37 +57,75 @@ export default ({ analise }) => {
     navigate(`/${PRE_RECEBIMENTO}/${PAINEL_LAYOUT_EMBALAGEM}`);
 
   const carregarDados = async () => {
-    setCarregando(true);
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
-    const response = await detalharLayoutEmabalagem(uuid);
+    try {
+      setCarregando(true);
+      const urlParams = new URLSearchParams(window.location.search);
+      const uuid = urlParams.get("uuid");
+      const response = await detalharLayoutEmabalagem(uuid);
 
-    const objeto = response.data;
-    objeto.tipos_de_embalagens = objeto.tipos_de_embalagens.sort((a, b) => {
+      const objeto = response.data;
+      objeto.tipos_de_embalagens = ordenarTiposDeEmbalagens(
+        objeto.tipos_de_embalagens
+      );
+      setObjeto(objeto);
+      setVisaoCODAE(usuarioComAcessoAoPainelEmbalagens());
+      setEmbalagemPrimaria(obterImagensEmbalagem(response, "PRIMARIA"));
+      setEmbalagemSecundaria(obterImagensEmbalagem(response, "SECUNDARIA"));
+      setEmbalagemTerciaria(obterImagensEmbalagem(response, "TERCIARIA"));
+
+      const aprovacoesAtualizadas = definirAprovacoes(objeto);
+      setInitialValues(definirInitialValues(objeto, aprovacoesAtualizadas));
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const ordenarTiposDeEmbalagens = (tiposDeEmbalagem) =>
+    tiposDeEmbalagem.sort((a, b) => {
       const embalagemA = a.tipo_embalagem.toUpperCase();
       const embalagemB = b.tipo_embalagem.toUpperCase();
+
       if (embalagemA < embalagemB) {
         return -1;
       }
       if (embalagemA > embalagemB) {
         return 1;
       }
+
       return 0;
     });
-
-    setObjeto(objeto);
-    setVisaoCODAE(usuarioComAcessoAoPainelEmbalagens());
-    setEmbalagemPrimaria(obterImagensEmbalagem(response, "PRIMARIA"));
-    setEmbalagemSecundaria(obterImagensEmbalagem(response, "SECUNDARIA"));
-    setEmbalagemTerciaria(obterImagensEmbalagem(response, "TERCIARIA"));
-    setCarregando(false);
-  };
 
   const obterImagensEmbalagem = (response, tipo_embalagem) => {
     return response.data.tipos_de_embalagens
       .filter((e) => e.tipo_embalagem === tipo_embalagem)
       .map((e) => e.imagens)
       .flat();
+  };
+
+  const definirAprovacoes = (objeto) => {
+    if (["Aprovado", "Solicitado Correção"].includes(objeto.status)) {
+      const aprovacoesAtualizadas = objeto.tipos_de_embalagens.map(
+        ({ status }) => (status === "APROVADO" ? true : false)
+      );
+
+      setAprovacoes(aprovacoesAtualizadas);
+      return aprovacoesAtualizadas;
+    }
+  };
+
+  const definirInitialValues = (objeto, aprovacoes) => {
+    return aprovacoes.length > 0 && !analise
+      ? {
+          justificativa_0: objeto.tipos_de_embalagens[0].complemento_do_status,
+          justificativa_1: objeto.tipos_de_embalagens[1].complemento_do_status,
+          justificativa_2:
+            objeto.tipos_de_embalagens[2]?.complemento_do_status || "",
+        }
+      : {
+          justificativa_0: "",
+          justificativa_1: "",
+          justificativa_2: "",
+        };
   };
 
   const changeModal = (index, value) => {
@@ -98,20 +141,25 @@ export default ({ analise }) => {
   };
 
   const retornaTextoAprovacao = (index, values) => {
+    if (!aprovacoes) return;
+
     if (aprovacoes[index] === true) {
-      let texto = values[`justificativa_${index}`].split("|");
+      let texto = values[`justificativa_${index}`]?.split("|");
+
       return (
-        <div className="col-7">
-          <div className="subtitulo d-flex ms-5">
-            <div className="w-5">
-              <i className="fas fa-check me-2" />
-            </div>
-            <div className="w-95">
-              <div>{texto[0]}</div>
-              <div>{texto[1]}</div>
+        texto && (
+          <div className="col-7 d-flex align-items-center">
+            <div className="subtitulo d-flex align-items-center ms-5">
+              <div className="w-5">
+                <i className="fas fa-check me-3 fa-2x" />
+              </div>
+              <div className="w-95">
+                <div>{texto[0]}</div>
+                <div>{texto[1]}</div>
+              </div>
             </div>
           </div>
-        </div>
+        )
       );
     } else if (aprovacoes[index] === false) {
       return (
@@ -250,43 +298,8 @@ export default ({ analise }) => {
     (embalagemTerciaria.length === 0 || aprovacoes[2] !== undefined);
 
   useEffect(() => {
-    setCarregando(true);
-
     carregarDados();
-
-    setCarregando(false);
   }, []);
-
-  useEffect(() => {
-    definirAprovacoes();
-    definirInitialValues();
-  }, [visaoCODAE, objeto, aprovacoes]);
-
-  const definirAprovacoes = () => {
-    if (objeto && ["Aprovado", "Solicitado Correção"].includes(objeto.status)) {
-      const aprovacoesAtualizadas = objeto.tipos_de_embalagens.map(
-        (tipoEmbalagem) => (tipoEmbalagem.status === "APROVADO" ? true : false)
-      );
-      setAprovacoes(aprovacoesAtualizadas);
-    }
-  };
-
-  const definirInitialValues = () => {
-    return aprovacoes.length > 0 && !analise
-      ? {
-          justificativa_0: objeto.tipos_de_embalagens[0].complemento_do_status,
-          justificativa_1: objeto.tipos_de_embalagens[1].complemento_do_status,
-          justificativa_2:
-            objeto.tipos_de_embalagens.length === 3
-              ? objeto.tipos_de_embalagens[2].complemento_do_status
-              : "",
-        }
-      : {
-          justificativa_0: "",
-          justificativa_1: "",
-          justificativa_2: "",
-        };
-  };
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
@@ -374,145 +387,149 @@ export default ({ analise }) => {
 
           <hr />
 
-          <Form
-            onSubmit={onSubmit}
-            initialValues={definirInitialValues()}
-            render={({ handleSubmit, values, errors }) => (
-              <form onSubmit={handleSubmit}>
-                <ModalCancelarAnalise
-                  show={modalCancelar}
-                  handleClose={() => setModalCancelar(false)}
-                  cancelar={voltarPaginaPainel}
-                />
-                <ModalEnviarAnalise
-                  show={modalEnviar}
-                  handleClose={() => setModalEnviar(false)}
-                  enviar={() => enviarAnalise(values)}
-                />
-                <div
-                  className={`${
-                    Object.keys(objeto).length !== 0 &&
-                    objeto.tipos_de_embalagens[0].status === "REPROVADO"
-                      ? "subtitulo-laranja"
-                      : "subtitulo"
-                  }  mb-3`}
-                >
-                  Embalagem Primária
-                </div>
-                <div className="row">
-                  <div className="col-5">
-                    {embalagemPrimaria.map((e) => (
-                      <div className="w-75" key={e.arquivo}>
-                        <BotaoAnexo urlAnexo={e.arquivo} />
-                      </div>
-                    ))}
-                    {analise && retornaBotoesAprovacao(0, values)}
-                  </div>
-                  {(analise || visaoCODAE) && retornaTextoAprovacao(0, values)}
-                </div>
-
-                <hr />
-
-                <div
-                  className={`${
-                    Object.keys(objeto).length !== 0 &&
-                    objeto.tipos_de_embalagens[1].status === "REPROVADO"
-                      ? "subtitulo-laranja"
-                      : "subtitulo"
-                  }  mb-3`}
-                >
-                  Embalagem Secundária
-                </div>
-                <div className="row">
-                  <div className="col-5">
-                    {embalagemSecundaria.map((e) => (
-                      <div className="w-75" key={e.arquivo}>
-                        <BotaoAnexo urlAnexo={e.arquivo} />
-                      </div>
-                    ))}
-                    {analise && retornaBotoesAprovacao(1, values)}
-                  </div>
-                  {(analise || visaoCODAE) && retornaTextoAprovacao(1, values)}
-                </div>
-
-                {embalagemTerciaria.length > 0 && (
-                  <>
-                    <hr />
-
-                    <div
-                      className={`${
-                        Object.keys(objeto).length !== 0 &&
-                        objeto.tipos_de_embalagens[2].status === "REPROVADO"
-                          ? "subtitulo-laranja"
-                          : "subtitulo"
-                      }  mb-3`}
-                    >
-                      Embalagem Terciária
-                    </div>
-                    <div className="row">
-                      <div className="col-5">
-                        {embalagemTerciaria.map((e) => (
-                          <div className="w-75" key={e.arquivo}>
-                            <BotaoAnexo urlAnexo={e.arquivo} />
-                          </div>
-                        ))}
-                        {analise && retornaBotoesAprovacao(2, values)}
-                      </div>
-                      {(analise || visaoCODAE) &&
-                        retornaTextoAprovacao(2, values)}
-                    </div>
-                  </>
-                )}
-
-                {!visaoCODAE && objeto.observacoes && (
-                  <>
-                    <hr />
-                    <div className="row mb-3">
-                      <div className="col-12">
-                        <TextArea
-                          label="Observações"
-                          input={{ value: objeto.observacoes }}
-                          disabled
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                <hr />
-
-                {analise ? (
-                  <>
-                    <Botao
-                      texto="Enviar para o Fornecedor"
-                      type={BUTTON_TYPE.SUBMIT}
-                      style={BUTTON_STYLE.GREEN}
-                      className="float-end ms-3"
-                      disabled={
-                        !validaAprovacoes || Object.keys(errors).length > 0
-                      }
-                      tooltipExterno={
-                        (!validaAprovacoes || Object.keys(errors).length > 0) &&
-                        "É necessário avaliar todas as embalagens antes de prosseguir."
-                      }
-                    />
-
-                    <Botao
-                      texto="Cancelar"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-end ms-3"
-                      onClick={() => setModalCancelar(true)}
-                    />
-                  </>
-                ) : (
-                  <BotaoVoltar
-                    onClick={visaoCODAE ? voltarPaginaPainel : voltarPaginaGrid}
+          {Object.keys(objeto).length !== 0 && (
+            <Form
+              onSubmit={onSubmit}
+              initialValues={initialValues}
+              render={({ handleSubmit, values, errors }) => (
+                <form onSubmit={handleSubmit}>
+                  <ModalCancelarAnalise
+                    show={modalCancelar}
+                    handleClose={() => setModalCancelar(false)}
+                    cancelar={voltarPaginaPainel}
                   />
-                )}
-              </form>
-            )}
-          />
+                  <ModalEnviarAnalise
+                    show={modalEnviar}
+                    handleClose={() => setModalEnviar(false)}
+                    enviar={() => enviarAnalise(values)}
+                  />
+                  <div
+                    className={`${
+                      objeto.tipos_de_embalagens[0].status === "REPROVADO"
+                        ? "subtitulo-laranja"
+                        : "subtitulo"
+                    }  mb-3`}
+                  >
+                    Embalagem Primária
+                  </div>
+                  <div className="row d-flex align-items-center">
+                    <div className="col-5">
+                      {embalagemPrimaria.map((e) => (
+                        <div className="w-75" key={e.arquivo}>
+                          <BotaoAnexo urlAnexo={e.arquivo} />
+                        </div>
+                      ))}
+                      {analise && retornaBotoesAprovacao(0, values)}
+                    </div>
+                    {(analise || visaoCODAE) &&
+                      retornaTextoAprovacao(0, values)}
+                  </div>
+
+                  <hr />
+
+                  <div
+                    className={`${
+                      objeto.tipos_de_embalagens[1].status === "REPROVADO"
+                        ? "subtitulo-laranja"
+                        : "subtitulo"
+                    }  mb-3`}
+                  >
+                    Embalagem Secundária
+                  </div>
+                  <div className="row d-flex align-items-center">
+                    <div className="col-5">
+                      {embalagemSecundaria.map((e) => (
+                        <div className="w-75" key={e.arquivo}>
+                          <BotaoAnexo urlAnexo={e.arquivo} />
+                        </div>
+                      ))}
+                      {analise && retornaBotoesAprovacao(1, values)}
+                    </div>
+                    {(analise || visaoCODAE) &&
+                      retornaTextoAprovacao(1, values)}
+                  </div>
+
+                  {objeto.tipos_de_embalagens[2] && (
+                    <>
+                      <hr />
+
+                      <div
+                        className={`${
+                          objeto.tipos_de_embalagens[2].status === "REPROVADO"
+                            ? "subtitulo-laranja"
+                            : "subtitulo"
+                        }  mb-3`}
+                      >
+                        Embalagem Terciária
+                      </div>
+                      <div className="row d-flex align-items-center">
+                        <div className="col-5">
+                          {embalagemTerciaria.map((e) => (
+                            <div className="w-75" key={e.arquivo}>
+                              <BotaoAnexo urlAnexo={e.arquivo} />
+                            </div>
+                          ))}
+                          {analise && retornaBotoesAprovacao(2, values)}
+                        </div>
+                        {(analise || visaoCODAE) &&
+                          retornaTextoAprovacao(2, values)}
+                      </div>
+                    </>
+                  )}
+
+                  {!visaoCODAE && objeto.observacoes && (
+                    <>
+                      <hr />
+                      <div className="row mb-3">
+                        <div className="col-12">
+                          <TextArea
+                            label="Observações"
+                            input={{ value: objeto.observacoes }}
+                            disabled
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  <hr />
+
+                  {analise ? (
+                    <>
+                      <Botao
+                        texto="Enviar para o Fornecedor"
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN}
+                        className="float-end ms-3"
+                        disabled={
+                          !validaAprovacoes || Object.keys(errors).length > 0
+                        }
+                        tooltipExterno={
+                          (!validaAprovacoes ||
+                            Object.keys(errors).length > 0) &&
+                          "É necessário avaliar todas as embalagens antes de prosseguir."
+                        }
+                      />
+
+                      <Botao
+                        texto="Cancelar"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        className="float-end ms-3"
+                        onClick={() => setModalCancelar(true)}
+                      />
+                    </>
+                  ) : (
+                    <BotaoVoltar
+                      onClick={
+                        visaoCODAE ? voltarPaginaPainel : voltarPaginaGrid
+                      }
+                    />
+                  )}
+                </form>
+              )}
+            />
+          )}
         </div>
       </div>
     </Spin>

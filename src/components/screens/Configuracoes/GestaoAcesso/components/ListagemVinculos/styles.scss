@@ -77,6 +77,10 @@
         outline: none;
       }
 
+      button:disabled {
+        color: $grayDisabled;
+      }
+
       .flex-container {
         display: flex;
         justify-content: space-evenly;

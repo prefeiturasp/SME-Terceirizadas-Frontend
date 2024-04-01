@@ -1,6 +1,8 @@
 @import "styles/variables.scss";
 
 div.select {
+  font-size: 14px;
+
   span.required-asterisk {
     color: $red;
     padding-right: 5px;
