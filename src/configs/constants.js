@@ -209,6 +209,9 @@ export const CADASTRO_DE_EMPENHO = "cadastro-de-empenho";
 export const EDITAR_EMPENHO = "editar-empenho";
 export const EMPENHOS = "empenhos";
 export const CLAUSULAS_PARA_DESCONTOS = "clausulas-para-descontos";
+export const PARAMETRIZACAO_FINANCEIRA = "parametrizacao-financeira";
+export const ADICIONAR_PARAMETRIZACAO_FINANCEIRA =
+  "adicionar-parametrizacao-financeira";
 export const CADASTRO_DE_CLAUSULA = "cadastro-de-clausula";
 export const EDITAR_CLAUSULA = "editar-clausula";
 export const CONTROLE_DE_FREQUENCIA = "controle-de-frequencia";
