@@ -293,6 +293,10 @@ export const ALTERACOES_CODAE = "alteracoes-codae";
 export const AGUARDANDO_DILOG = "aguardando-dilog";
 export const ASSINADO_CODAE = "assinado-codae";
 
+export const RECEBIMENTO = "recebimento";
+export const QUESTOES_POR_PRODUTO = "questoes-por-produto";
+export const ATRIBUIR_QUESTOES_CONFERENCIA = "atribuir-questoes-conferencia";
+
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";

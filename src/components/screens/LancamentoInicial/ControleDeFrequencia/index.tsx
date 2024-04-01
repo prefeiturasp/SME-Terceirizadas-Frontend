@@ -15,7 +15,7 @@ import {
   getTotalAlunosMatriculados,
   imprimirRelatorioControleFrequencia,
 } from "services/medicaoInicial/controleDeFrequencia.service";
-import { adicionaDias, formataData } from "helpers/utilities";
+import { formataData, dataAtualDDMMYYYY } from "helpers/utilities";
 import { MESES } from "constants/shared";
 import "./styles.scss";
 
@@ -98,12 +98,12 @@ export function ControleDeFrequencia() {
     } else if (data_inicial && !data_final) {
       return {
         data_inicial,
-        data_final: adicionaDias(data_inicial, "YYYY-MM-DD", 1),
+        data_final: data_inicial,
       };
     } else if (!data_inicial && data_final) {
       return {
         data_inicial: data_final,
-        data_final: adicionaDias(data_final, "YYYY-MM-DD", 1),
+        data_final,
       };
     } else {
       return {
@@ -135,23 +135,21 @@ export function ControleDeFrequencia() {
   };
 
   const getTitulo = () => {
-    const dataInicialFormatada = formataData(
-      filtros.data_inicial,
-      "YYYY-MM-DD",
-      "DD/MM/YYYY"
-    );
-    const dataFinalFormatada = formataData(
-      filtros.data_final,
-      "YYYY-MM-DD",
-      "DD/MM/YYYY"
-    );
+    const dataInicialFormatada = filtros.data_inicial
+      ? formataData(filtros.data_inicial, "YYYY-MM-DD", "DD/MM/YYYY")
+      : null;
+    const dataFinalFormatada = filtros.data_final
+      ? formataData(filtros.data_final, "YYYY-MM-DD", "DD/MM/YYYY")
+      : null;
 
     if (filtros.data_inicial && filtros.data_final) {
+      if (filtros.data_inicial === filtros.data_final)
+        return `EM ${dataInicialFormatada}`;
       return `ENTRE ${dataInicialFormatada} E ${dataFinalFormatada}`;
     } else if (filtros.data_inicial || filtros.data_final) {
       return `EM ${dataInicialFormatada || dataFinalFormatada}`;
     } else {
-      return "";
+      return `EM ${dataAtualDDMMYYYY()}`;
     }
   };
 

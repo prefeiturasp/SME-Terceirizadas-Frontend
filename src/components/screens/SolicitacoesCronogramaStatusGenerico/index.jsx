@@ -82,6 +82,11 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
     );
     if (podeFiltrar) {
       setLoading(true);
+      Object.keys(values).map((key) => {
+        if (!values[key]) {
+          delete values[key];
+        }
+      });
       let newParams = Object.assign({}, params, { ...values });
       setFiltrado(true);
       getSolicitacoesAsync(newParams, true);
