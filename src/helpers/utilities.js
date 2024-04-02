@@ -244,6 +244,16 @@ export const formataMilhar = (value) => {
   return valor?.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
+export const formataMilharDecimal = (value) => {
+  return ![undefined, null].includes(value)
+    ? Number(value)
+        .toFixed(2)
+        .replace(/\D/g, "")
+        .replace(/(\d)(?=(\d{2})\b)/g, "$1,")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    : value;
+};
+
 export const truncarString = (str, numeroMaximoChars) => {
   if (!str) return "";
 
