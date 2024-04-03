@@ -138,6 +138,10 @@ export const RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP =
   "relatorio-quantitativo-diag-dieta-esp";
 export const RELATORIO_SOLICITACOES_ALIMENTACAO = `${RELATORIO}/solicitacoes-alimentacao`;
 export const RELATORIO_ALUNOS_MATRICULADOS = `${RELATORIO}/alunos-matriculados`;
+export const CONTROLE_SOBRAS = "controle-sobras";
+export const RELATORIO_CONTROLE_SOBRAS = "relatorio-controle-sobras";
+export const CONTROLE_RESTOS = "controle-restos";
+export const RELATORIO_CONTROLE_RESTOS = "relatorio-controle-sobras";
 export const PANORAMA_ESCOLA = "panorama-escola";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
@@ -166,6 +170,8 @@ export const NOVA_PERMISSAO_LANCAMENTO_ESPECIAL =
   "nova-permissao-lancamento-especial";
 export const EDITAR_PERMISSAO_LANCAMENTO_ESPECIAL =
   "editar-permissao-lancamento-especial";
+export const TIPOS_RECIPIENTE = "tipos-recipiente";
+export const TIPOS_ALIMENTO = "tipos-alimento";
 export const DISPONIBILIZACAO_DE_SOLICITACOES =
   "disponibilizacao-de-solicitacoes";
 export const ENVIO_REQUISICOES_ENTREGA = "envio-requisicoes-entrega";

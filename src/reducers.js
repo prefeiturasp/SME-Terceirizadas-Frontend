@@ -24,6 +24,8 @@ import dietasAtivasInativasPorAlunoReducer from "./reducers/dietasAtivasInativas
 import { filtersDietaReducer } from "./reducers/filtersDietaReducer";
 import { filtersProdutoReducer } from "./reducers/filtersProdutoReducer";
 import { filtersAlimentacaoReducer } from "./reducers/filtersAlimentacaoReducer";
+import controleSobrasReducer from "reducers/controleSobrasReducer";
+import controleRestosReducer from "reducers/controleRestosReducer";
 
 // Junta todos os reducers do sistema! Vai pra store
 const rootReducer = combineReducers({
@@ -52,6 +54,8 @@ const rootReducer = combineReducers({
   filtersDieta: filtersDietaReducer,
   filtersProduto: filtersProdutoReducer,
   filtersAlimentacao: filtersAlimentacaoReducer,
+  controleSobras: controleSobrasReducer,
+  controleRestos: controleRestosReducer,
 });
 
 export default rootReducer;

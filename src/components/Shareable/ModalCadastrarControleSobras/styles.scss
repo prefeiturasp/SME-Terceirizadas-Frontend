@@ -1,0 +1,16 @@
+.input-controle-sobras[disabled],
+.input-controle-sobras input[disabled],
+.ant-picker-disabled {
+  color: #6e707e !important;
+  background-color: #eaecf4 !important;
+  background-image: none !important;
+  font-weight: bold;
+}
+
+.input-data-hora {
+  height: 35px !important;
+
+  .ant-picker {
+    height: 35px;
+  }
+}

@@ -27,6 +27,7 @@ export const InputHorario = (props) => {
     labelClassName,
     name,
     onChangeFunction,
+    onOk,
     functionComponent,
     tooltipText,
     writable,
@@ -55,6 +56,7 @@ export const InputHorario = (props) => {
           defaultOpenValue={moment("00:00", "HH:mm")}
           size={size}
           onChange={!functionComponent ? onChange : onChangeFunction}
+          onOk={onOk}
           placeholder={placeholder}
           onBlur={onBlur}
           disabled={disabled}

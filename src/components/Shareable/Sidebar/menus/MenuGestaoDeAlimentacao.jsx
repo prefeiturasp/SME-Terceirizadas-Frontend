@@ -21,6 +21,8 @@ import {
   CADASTROS,
   CONSULTA_KITS,
   RELATORIO_SOLICITACOES_ALIMENTACAO,
+  CONTROLE_SOBRAS,
+  CONTROLE_RESTOS,
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -33,6 +35,7 @@ import {
   usuarioEhMedicao,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioEhCODAEGabinete,
+  usuarioEhAdmQualquerEmpresa,
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
@@ -55,6 +58,7 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       : usuarioEhNutricionistaSupervisao()
       ? NUTRISUPERVISAO
       : TERCEIRIZADA;
+
   return (
     <Menu
       id="GestaoAlimentacao"
@@ -191,6 +195,14 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
             </LeafItem>
           )}
         </SubMenu>
+      )}
+
+      {usuarioEhAdmQualquerEmpresa() && (
+        <LeafItem to={`/${CONTROLE_SOBRAS}`}>Controle de Sobras</LeafItem>
+      )}
+
+      {usuarioEhNutricionistaSupervisao() && (
+        <LeafItem to={`/${CONTROLE_RESTOS}`}>Controle de Restos</LeafItem>
       )}
     </Menu>
   );
