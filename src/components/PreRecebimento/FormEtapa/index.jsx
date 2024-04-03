@@ -87,7 +87,9 @@ export default ({
       </div>
     );
 
-    let textoAcima = <div>Quantidade maior que a prevista em contrato</div>;
+    let textoQuantidadeMaior = (
+      <div>Quantidade maior que a prevista em contrato</div>
+    );
 
     return (
       <div className="row">
@@ -96,7 +98,7 @@ export default ({
             restante === 0 ? "verde" : "vermelho"
           }`}
         >
-          {restante < 0 ? textoAcima : textoPadrao}
+          {restante < 0 ? textoQuantidadeMaior : textoPadrao}
         </div>
       </div>
     );
