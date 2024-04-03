@@ -58,6 +58,7 @@ import {
   getOpcoesContrato,
   validaRascunho,
 } from "./helpers";
+import { formatarNumeroEProdutoFichaTecnica } from "helpers/preRecebimento";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -70,6 +71,10 @@ export default () => {
   const [contratoSelecionado, setContratoSelecionado] = useState(undefined);
   const [unidadeSelecionada, setUnidadeSelecionada] = useState({});
   const [fichaTecnicaSelecionada, setFichaTecnicaSelecionada] = useState();
+
+  const [fichaTecnicaAtualCronograma, setFichaTecnicaAtualCronograma] =
+    useState();
+
   const [etapas, setEtapas] = useState([{}]);
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
@@ -156,9 +161,11 @@ export default () => {
         buscaUnidadesMedida(),
         buscaRascunhos(),
       ]);
+
       if (uuid) {
         const responseCronograma = await getCronograma(uuid);
         setInitialValues(geraInitialValues(responseCronograma.data));
+        setFichaTecnicaAtualCronograma(responseCronograma.data.ficha_tecnica);
       }
     } catch (error) {
       exibeError(error, "Ocorreu um erro ao carregar o Cronograma");
@@ -377,6 +384,31 @@ export default () => {
     }
   };
 
+  const optionsFichaTecnica = () => {
+    const options = [
+      {
+        nome: "Selecione uma Ficha Técnica de Produto",
+        uuid: "",
+      },
+    ];
+
+    fichaTecnicaAtualCronograma &&
+      options.push({
+        nome: formatarNumeroEProdutoFichaTecnica(fichaTecnicaAtualCronograma),
+        uuid: fichaTecnicaAtualCronograma?.uuid,
+      });
+
+    options.push(
+      ...geraOptionsFichasTecnicas(
+        fichasTecnicas,
+        empresaSelecionada,
+        fichaTecnicaSelecionada
+      )
+    );
+
+    return options;
+  };
+
   return (
     <>
       {!edicao && <Rascunhos listaRascunhos={listaRascunhos} />}
@@ -520,16 +552,7 @@ export default () => {
                                 <Field
                                   className="input-cronograma"
                                   component={Select}
-                                  options={[
-                                    {
-                                      nome: "Selecione uma Ficha Técnica de Produto",
-                                      uuid: "",
-                                    },
-                                    ...geraOptionsFichasTecnicas(
-                                      fichasTecnicas,
-                                      empresaSelecionada
-                                    ),
-                                  ]}
+                                  options={optionsFichaTecnica()}
                                   label="Ficha Técnica e Produto"
                                   name="ficha_tecnica"
                                   required
