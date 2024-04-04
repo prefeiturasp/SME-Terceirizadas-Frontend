@@ -3,6 +3,7 @@ import { Spin } from "antd";
 import "./styles.scss";
 import { Field, Form } from "react-final-form";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
+import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { required } from "../../../../../../helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
@@ -34,6 +35,7 @@ import {
   TiposDocumentoChoices,
 } from "interfaces/pre_recebimento.interface";
 import { OUTROS_DOCUMENTOS_OPTIONS } from "../../constants";
+import { FormApi } from "final-form";
 
 export default () => {
   const navigate = useNavigate();
@@ -47,23 +49,15 @@ export default () => {
     setShowModal(true);
   };
 
-  const getCronogramasFiltrado = (
-    numero_cronograma: string
-  ): Array<CronogramaSimples> => {
-    if (numero_cronograma) {
-      const reg = new RegExp(numero_cronograma, "iu");
-      return cronogramas.filter((a) => reg.test(a.value));
-    }
-    return cronogramas;
-  };
-
   const buscaCronogramas = async (): Promise<void> => {
-    let response = await getListaCronogramasPraCadastro();
-    let lista = response.data.results.map((crono: CronogramaSimples) => {
-      crono.value = crono.numero;
-      return crono;
-    });
-    setCronogramas(lista);
+    setCarregando(true);
+
+    try {
+      let response = await getListaCronogramasPraCadastro();
+      setCronogramas(response.data.results);
+    } finally {
+      setCarregando(false);
+    }
   };
 
   const removeFileLaudo = (index: number): void => {
@@ -115,15 +109,19 @@ export default () => {
           };
         }
       );
+
     documentosPayload.push({
       tipo_documento: "LAUDO",
       arquivos_do_tipo_de_documento: laudo,
     });
+
     let payload: DocumentosRecebimentoPayload = {
-      cronograma: values.cronograma_uuid,
+      cronograma: cronogramas.find(({ numero }) => numero === values.cronograma)
+        .uuid,
       numero_laudo: values.numero_laudo,
       tipos_de_documentos: documentosPayload,
     };
+
     return payload;
   };
 
@@ -131,7 +129,9 @@ export default () => {
     values: Record<string, any>
   ): Promise<void> => {
     setCarregando(true);
+
     let payload: DocumentosRecebimentoPayload = formataPayload(values);
+
     try {
       let response = await cadastraDocumentoRecebimento(payload);
       if (response.status === 201 || response.status === 200) {
@@ -152,11 +152,7 @@ export default () => {
     navigate(`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`);
 
   useEffect(() => {
-    setCarregando(true);
-
     buscaCronogramas();
-
-    setCarregando(false);
   }, []);
 
   const validaArquivos = (values: Record<string, any>): boolean => {
@@ -165,6 +161,20 @@ export default () => {
       return documentos[valor]?.length > 0;
     });
     return laudoInvalido || !documentoValido;
+  };
+
+  const optionsCronograma = (values: Record<string, any>) =>
+    getListaFiltradaAutoCompleteSelect(
+      cronogramas.map(({ numero }) => numero),
+      values.cronograma,
+      true
+    );
+
+  const atualizarCamposDependentes = (value: string, form: FormApi) => {
+    let cronograma = cronogramas.find((c) => c.numero === value);
+
+    form.change("pregao", cronograma?.pregao_chamada_publica);
+    form.change("nome_produto", cronograma?.nome_produto);
   };
 
   return (
@@ -187,27 +197,15 @@ export default () => {
                   <div className="col-6">
                     <Field
                       component={AutoCompleteSelectField}
-                      options={getCronogramasFiltrado(values.cronograma)}
+                      options={optionsCronograma(values)}
                       label="Nº do Cronograma"
                       name={`cronograma`}
                       className="input-busca-produto"
                       placeholder="Digite o Nº do Cronograma"
                       required
                       validate={required}
-                      esconderIcone
                       onChange={(value: string) => {
-                        let cronograma = cronogramas.find(
-                          (c) => c.numero === value
-                        );
-
-                        if (cronograma) {
-                          values.cronograma_uuid = cronograma.uuid;
-                          form.change(
-                            "pregao",
-                            cronograma.pregao_chamada_publica
-                          );
-                          form.change("nome_produto", cronograma.nome_produto);
-                        }
+                        atualizarCamposDependentes(value, form);
                       }}
                     />
                   </div>
