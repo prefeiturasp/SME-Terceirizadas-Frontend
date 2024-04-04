@@ -3,7 +3,6 @@ import { get, set } from "lodash";
 import moment from "moment";
 import React, { useState } from "react";
 import { Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 
 import { InputComData } from "components/Shareable/DatePicker";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -244,8 +243,8 @@ export default ({
                 showFullMonthYearPicker
                 minDate={null}
                 maxDate={moment()._d}
+                inputOnChange={(value) => onMesLancamentoChange(value)}
               />
-              <OnChange name="mes_lancamento">{onMesLancamentoChange}</OnChange>
             </div>
           </div>
           {lancamentos.length > 0 && (

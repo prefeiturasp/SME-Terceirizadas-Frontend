@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { Link } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { CaretDownOutlined } from "@ant-design/icons";
@@ -102,7 +101,7 @@ export default ({ tiposUnidadesEscolar }) => {
             <Form
               onSubmit={() => {}}
               initialValues={{}}
-              render={({ handleSubmit }) => (
+              render={({ handleSubmit, form }) => (
                 <form onSubmit={handleSubmit}>
                   <section className="tipos-de-unidade">
                     <header>Tipos de Unidades</header>
@@ -125,14 +124,13 @@ export default ({ tiposUnidadesEscolar }) => {
                               .includes(inputValue.toLowerCase())
                           }
                           disabled={alterandoTiposDeAlimentacao}
+                          onChange={(value) => {
+                            getPeriodosEscolares(value);
+                            form.change("tipo_unidade_escolar", value);
+                          }}
                         >
                           {opcoesTiposUnidades}
                         </Field>
-                        <OnChange name="tipo_unidade_escolar">
-                          {(value) => {
-                            getPeriodosEscolares(value);
-                          }}
-                        </OnChange>
                       </article>
                       <Link
                         to={

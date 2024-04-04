@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Form, Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { connect } from "react-redux";
 import { useNavigationType } from "react-router-dom";
 import { Spin } from "antd";
@@ -179,9 +178,8 @@ const FormFiltros = ({
                     tipoUsuario === TIPO_PERFIL.ESCOLA
                   }
                   naoDesabilitarPrimeiraOpcao
-                />
-                <OnChange name="dre">
-                  {async (value) => {
+                  onChangeEffect={async (e) => {
+                    const value = e.target.value;
                     setNomeEscolas(
                       escolas
                         .filter((escola) => value.includes(escola.dre.uuid))
@@ -192,7 +190,7 @@ const FormFiltros = ({
                     tipoUsuario !== TIPO_PERFIL.ESCOLA &&
                       form.change("escola", undefined);
                   }}
-                </OnChange>
+                />
               </div>
               <div className="col-7">
                 <Field
@@ -217,12 +215,12 @@ const FormFiltros = ({
                   type="number"
                   validate={length(7)}
                   disabled={carregandoAluno}
-                />
-                <OnChange name="codigo_eol">
-                  {(value) => {
-                    getAlunoPorEol(value, values);
+                  inputOnChange={(e) => {
+                    const value = e.target.value;
+                    const values_ = form.getState().values;
+                    getAlunoPorEol(value, values_);
                   }}
-                </OnChange>
+                />
               </div>
               <div className="col-9">
                 <Field

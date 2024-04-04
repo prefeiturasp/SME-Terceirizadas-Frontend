@@ -141,6 +141,14 @@ export const getDataObj = (data) => {
   return moment(data, "DD/MM/YYYY")["_d"];
 };
 
+export const formataData = (data, padraoAtual, formato) => {
+  return moment(data, padraoAtual).format(formato);
+};
+
+export const adicionaDias = (data, formato, numeroDias = 0) => {
+  return moment(data, formato).add(numeroDias, "days")["_d"];
+};
+
 export const prazoDoPedidoMensagem = (prioridade) => {
   switch (prioridade) {
     case "REGULAR":
@@ -592,6 +600,10 @@ export const usuarioEhPreRecebimentoSemLogistica = () => {
   );
 };
 
+export const usuarioEhRecebimento = () => {
+  return [PERFIL.DILOG_QUALIDADE].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhDinutreDiretoria = () =>
   localStorage.getItem("perfil") === PERFIL.DINUTRE_DIRETORIA;
 
@@ -695,6 +707,10 @@ export const usuarioEhNutricionistaSupervisao = () => {
 
 export const usuarioEhCODAEGestaoProduto = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.GESTAO_PRODUTO;
+};
+
+export const ehUsuarioRelatorios = () => {
+  return localStorage.getItem("perfil") === PERFIL.USUARIO_RELATORIOS;
 };
 
 export const usuarioEhQualquerCODAE = () => {

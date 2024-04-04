@@ -3,7 +3,6 @@ import { Field, Form } from "react-final-form";
 import { Modal } from "react-bootstrap";
 import { Radio } from "antd";
 import HTTP_STATUS from "http-status-codes";
-import { OnChange } from "react-final-form-listeners";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -198,23 +197,24 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
                       textAreaRequired,
                       peloMenosUmCaractere
                     )}
-                  />
-                  <OnChange name="justificativa">
-                    {async (value) => {
-                      form.change("justificativa", value);
-                      setJustificativa(value);
+                    onChange={async (_, editor) => {
+                      const value_ = editor.getData();
+                      form.change("justificativa", value_);
+                      setJustificativa(value_);
                       if (
                         opcaoSelecionada ===
                         OPCOES_AVALIACAO_A_CONTENTO.SIM_SEM_OCORRENCIAS
                       ) {
-                        if (!["", undefined, "<p></p>", null].includes(value)) {
+                        if (
+                          !["", undefined, "<p></p>", null].includes(value_)
+                        ) {
                           setDisableFinalizarMedicao(false);
                         } else {
                           setDisableFinalizarMedicao(true);
                         }
                       } else {
                         if (
-                          !["", undefined, "<p></p>", null].includes(value) &&
+                          !["", undefined, "<p></p>", null].includes(value_) &&
                           Object.keys(validationFile).includes("pdf") &&
                           Object.keys(validationFile).includes("xls")
                         ) {
@@ -224,7 +224,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
                         }
                       }
                     }}
-                  </OnChange>
+                  />
                 </div>
               ) : null}
               <div className="row ps-2">

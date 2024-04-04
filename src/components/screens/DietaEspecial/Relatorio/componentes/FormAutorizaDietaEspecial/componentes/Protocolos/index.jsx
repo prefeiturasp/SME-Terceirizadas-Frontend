@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
@@ -73,6 +72,10 @@ const Protocolos = ({ protocolos, setProtocoloPadrao, form }) => {
             option.props.children.toLowerCase().indexOf(input.toLowerCase()) >=
             0
           }
+          onChange={(value) => {
+            getProtocolo(value, form);
+            form.change("protocolo_padrao", value);
+          }}
         >
           {protocolos.map((protocolo) => {
             return (
@@ -80,11 +83,6 @@ const Protocolos = ({ protocolos, setProtocoloPadrao, form }) => {
             );
           })}
         </Field>
-        <OnChange name="protocolo_padrao">
-          {(value) => {
-            getProtocolo(value, form);
-          }}
-        </OnChange>
       </div>
     </div>
   );

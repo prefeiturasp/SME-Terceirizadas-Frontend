@@ -12,7 +12,6 @@ import {
 import CKEditorField from "components/Shareable/CKEditorField";
 import InputText from "components/Shareable/Input/InputText";
 import { InputComData } from "components/Shareable/DatePicker";
-import { OnChange } from "react-final-form-listeners";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import moment from "moment";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
@@ -252,13 +251,11 @@ export default class ModalReclamacaoProduto extends Component {
                       name="produto_data_fabricacao"
                       minDate={null}
                       maxDate={moment().toDate()}
-                    />
-                    <OnChange name="produto_data_fabricacao">
-                      {(value) => {
+                      inputOnChange={(value) => {
                         form.change("produto_data_validade", undefined);
                         this.setState({ ...this.state, fabricacao: value });
                       }}
-                    </OnChange>
+                    />
                   </div>
                   <div className="col-4">
                     <Field
