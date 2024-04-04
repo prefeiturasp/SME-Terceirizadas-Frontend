@@ -174,6 +174,14 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     resetForm(form);
   };
 
+  const filtraKits = (tipoUnidadeSelecionada, kits) => {
+    return kits.filter((kit) =>
+      kit.tipos_unidades.some(
+        (tipo_unidade) => tipo_unidade.iniciais === tipoUnidadeSelecionada
+      )
+    );
+  };
+
   const resetForm = (form) => {
     form.change("data", undefined);
     form.change("local", undefined);
@@ -320,7 +328,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                       name="solicitacao_cei.kits"
                       nameTempoPasseio="solicitacao_cei.tempo_passeio"
                       form={form}
-                      kits={kits}
+                      kits={filtraKits("CEI DIRET", kits)}
                       values={values}
                     />
                     {faixasEtariasCEI &&
@@ -355,7 +363,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                       name="solicitacao_emei.kits"
                       nameTempoPasseio="solicitacao_emei.tempo_passeio"
                       form={form}
-                      kits={kits}
+                      kits={filtraKits("EMEI", kits)}
                       values={values}
                     />
                     <QuantidadeAlunosEMEI meusDados={meusDados} />
