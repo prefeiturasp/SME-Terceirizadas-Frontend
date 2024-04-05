@@ -88,7 +88,7 @@ export default () => {
             }}
             render={({ form, handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit}>
-                <Filtros setTiposAlimentacao={setTiposAlimentacao} />
+                <Filtros setTiposAlimentacao={setTiposAlimentacao} ehCadastro />
                 {tiposAlimentacao.length > 0 && (
                   <>
                     <TabelaAlimentacao tiposAlimentacao={tiposAlimentacao} />
