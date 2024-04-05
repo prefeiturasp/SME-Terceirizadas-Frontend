@@ -31,7 +31,6 @@ import {
   exibirModuloMedicaoInicial,
   usuarioEhCodaeDilog,
   usuarioEhDilog,
-  usuarioEhDilogQualidade,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhOrgaoFiscalizador,
   usuarioEhCODAEGabinete,
@@ -178,7 +177,6 @@ export const SidebarContent = () => {
     usuarioEhEscolaAbastecimento() ||
     usuarioEhEscolaAbastecimentoDiretor() ||
     usuarioComAcessoTelaEntregasDilog() ||
-    usuarioEhDilogQualidade() ||
     usuarioEhCODAEGabinete() ||
     usuarioEhDilogDiretoria();
 
