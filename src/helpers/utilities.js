@@ -1030,6 +1030,7 @@ export const exibirGA = () => {
     case `"supervisao_nutricao"`:
     case `"medicao"`:
     case `"codae_gabinete"`:
+    case `"usuario_relatorios"`:
       return true;
     default:
       return false;
