@@ -8,11 +8,21 @@ import { Select } from "components/Shareable/Select";
 
 import useView from "./view";
 
-type Props = {
+type Cadastro = {
   setTiposAlimentacao: Dispatch<SetStateAction<Array<any>>>;
+  ehCadastro: true;
 };
 
-export default ({ setTiposAlimentacao }: Props) => {
+type Filtro = {
+  ehCadastro?: false;
+};
+
+type Props = Cadastro | Filtro;
+
+export default ({ ...props }: Props) => {
+  const ehCadastro = props.ehCadastro;
+  const setTiposAlimentacao = props.ehCadastro && props.setTiposAlimentacao;
+
   const view = useView({
     setTiposAlimentacao,
   });
@@ -29,8 +39,8 @@ export default ({ setTiposAlimentacao }: Props) => {
             label="Nº do Edital"
             naoDesabilitarPrimeiraOpcao
             options={view.editais}
-            validate={required}
-            required
+            validate={ehCadastro && required}
+            required={ehCadastro}
           />
         )}
       </div>
@@ -45,8 +55,8 @@ export default ({ setTiposAlimentacao }: Props) => {
             label="Lote e DRE"
             naoDesabilitarPrimeiraOpcao
             options={view.lotes}
-            validate={required}
-            required
+            validate={ehCadastro && required}
+            required={ehCadastro}
           />
         )}
       </div>
@@ -61,10 +71,10 @@ export default ({ setTiposAlimentacao }: Props) => {
             label="Tipo de Unidade"
             naoDesabilitarPrimeiraOpcao
             options={view.tiposUnidadesOpcoes}
-            validate={required}
-            required
+            validate={ehCadastro && required}
+            required={ehCadastro}
             onChangeEffect={(e: ChangeEvent<HTMLInputElement>) =>
-              view.onChangeTiposUnidades(e.target.value)
+              ehCadastro && view.onChangeTiposUnidades(e.target.value)
             }
           />
         )}
