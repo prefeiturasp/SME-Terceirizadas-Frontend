@@ -77,7 +77,7 @@ export default () => {
 
   return (
     <>
-      <div className="card mt-4">
+      <div className="adicionar-parametrizacao card mt-4">
         <div className="card-body">
           <Form
             onSubmit={onSubmit}
