@@ -14,22 +14,25 @@ import {
 
 type Props = {
   tiposAlimentacao: Array<any>;
+  grupoSelecionado: string;
 };
 
-export default ({ tiposAlimentacao }: Props) => {
+export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
   const alimentacoes = tiposAlimentacao.map((t) => ({ ...t }));
 
-  const refeicaoIndex = alimentacoes.findIndex((t) => t.nome === "Refeição");
-  if (refeicaoIndex !== -1) {
-    alimentacoes[refeicaoIndex] = {
-      ...alimentacoes[refeicaoIndex],
-      grupo: "EMEF / CEUEMEF / EMEFM / EMEBS",
-    };
+  if (grupoSelecionado === "grupo_3") {
+    const refeicaoIndex = alimentacoes.findIndex((t) => t.nome === "Refeição");
+    if (refeicaoIndex !== -1) {
+      alimentacoes[refeicaoIndex] = {
+        ...alimentacoes[refeicaoIndex],
+        grupo: "EMEF / CEUEMEF / EMEFM / EMEBS",
+      };
 
-    alimentacoes.splice(refeicaoIndex + 1, 0, {
-      ...alimentacoes[refeicaoIndex],
-      grupo: "CIEJA / EJA",
-    });
+      alimentacoes.splice(refeicaoIndex + 1, 0, {
+        ...alimentacoes[refeicaoIndex],
+        grupo: "CIEJA / EJA",
+      });
+    }
   }
 
   return (

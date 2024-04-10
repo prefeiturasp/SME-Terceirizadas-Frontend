@@ -6,7 +6,7 @@ import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service
 
 import { toastError } from "components/Shareable/Toast/dialogs";
 
-import { TIPOS_UNIDADES_GRUPOS, TIPOS_UNIDADES_GRUPO_3 } from "../../const";
+import { TIPOS_UNIDADES_GRUPOS } from "../../const";
 
 type SelectOption = {
   uuid: string;
@@ -15,9 +15,10 @@ type SelectOption = {
 
 type Props = {
   setTiposAlimentacao: Dispatch<SetStateAction<Array<any>>>;
+  setGrupoSelecionado: Dispatch<SetStateAction<string>>;
 };
 
-export default ({ setTiposAlimentacao }: Props) => {
+export default ({ setTiposAlimentacao, setGrupoSelecionado }: Props) => {
   const [editais, setEditais] = useState<SelectOption[]>([]);
   const [lotes, setLotes] = useState<SelectOption[]>([]);
   const [tiposUnidades, setTiposUnidades] = useState([]);
@@ -111,17 +112,38 @@ export default ({ setTiposAlimentacao }: Props) => {
     });
   };
 
-  const onChangeTiposUnidades = (unidades: string) => {
-    const selecionouGrupo3 =
-      unidades &&
-      unidades
-        .split(",")
-        .map(
-          (unidade) => tiposUnidades.find((u) => u.uuid === unidade).iniciais
-        )
-        .every((unidade) => TIPOS_UNIDADES_GRUPO_3.includes(unidade));
+  const getGrupoSelecionado = (unidades: string) => {
+    let grupoSelecionado = "";
 
-    if (!selecionouGrupo3) {
+    if (unidades) {
+      const unidadesArray = unidades ? unidades.split(",") : [];
+
+      for (let i = 0; i < TIPOS_UNIDADES_GRUPOS.length; i++) {
+        const grupo = TIPOS_UNIDADES_GRUPOS[i];
+        const todasUnidadesNoGrupo = unidadesArray
+          .map(
+            (unidade) => tiposUnidades.find((u) => u.uuid === unidade).iniciais
+          )
+          .every((unidade) => grupo.includes(unidade));
+
+        if (todasUnidadesNoGrupo) {
+          grupoSelecionado = `grupo_${i + 1}`;
+          break;
+        }
+      }
+    }
+
+    setGrupoSelecionado(grupoSelecionado);
+    return grupoSelecionado;
+  };
+
+  const onChangeTiposUnidades = (unidades: string) => {
+    const grupoSelecionado = getGrupoSelecionado(unidades);
+
+    if (
+      !(grupoSelecionado === "grupo_3") &&
+      !(grupoSelecionado === "grupo_5")
+    ) {
       setTiposAlimentacao([]);
       return;
     }
