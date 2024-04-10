@@ -1,6 +1,6 @@
 const TIPOS_UNIDADES_GRUPO_1 = ["CEI", "CEI CEU", "CCI"];
 const TIPOS_UNIDADES_GRUPO_2 = ["CEMEI", "CEU CEMEI"];
-export const TIPOS_UNIDADES_GRUPO_3 = [
+const TIPOS_UNIDADES_GRUPO_3 = [
   "EMEF",
   "CEU EMEF",
   "EMEFM",
