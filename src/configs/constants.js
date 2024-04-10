@@ -131,7 +131,7 @@ export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
   "relatorio-quantitativo-solic-dieta-esp";
 export const RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP =
   "relatorio-quantitativo-classificacao-dieta-esp";
-export const RELATORIO_DIETA_ESPECIAL = "relatorio-dieta-especial";
+export const RELATORIO_DIETAS_AUTORIZADAS = "relatorio-dietas-autorizadas";
 export const RELATORIO_GERENCIAL_DIETAS = "relatorio-gerencial-dietas";
 export const RELATORIO_GESTAO_DIETA_ESPECIAL =
   "relatorio-gestao-dieta-especial";
