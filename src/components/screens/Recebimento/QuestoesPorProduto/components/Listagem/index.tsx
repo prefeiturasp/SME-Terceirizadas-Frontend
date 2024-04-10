@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 import { QuestoesPorProduto } from "interfaces/recebimento.interface";
+import Label from "components/Shareable/Label";
+import {
+  RECEBIMENTO,
+  EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA,
+} from "configs/constants";
 
 import "./styles.scss";
-import Label from "components/Shareable/Label";
 
 interface ListagemProps {
   questoesPorProdutos: QuestoesPorProduto[];
@@ -21,6 +26,21 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
     setQuestoesAbertas(-1);
   }, [questoesPorProdutos]);
 
+  const renderizarAcoes = (questoes: QuestoesPorProduto) => {
+    const botaoEditar = (
+      <NavLink
+        className="float-start"
+        to={`/${RECEBIMENTO}/${EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA}?uuid=${questoes.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i title="Editar" className="fas fa-edit green" />
+        </span>
+      </NavLink>
+    );
+
+    return botaoEditar;
+  };
+
   return (
     <div className="listagem-questoes-por-produtos">
       <div className="titulo-verde mt-2 mb-3">
@@ -32,37 +52,39 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
           <div>Ficha Técnica</div>
           <div>Produto</div>
           <div>Questões</div>
+          <div>Ações</div>
         </div>
 
         <div className="accordion accordion-flush" id="accordionQuestoes">
-          {questoesPorProdutos.map((questao, index) => (
-            <div className="accordion-item" key={questao.numero_ficha}>
+          {questoesPorProdutos.map((questoes, index) => (
+            <div className="accordion-item" key={questoes.uuid}>
               <div
                 className="grid-table body-table accordion-header"
-                id={`heading${questao.numero_ficha}`}
+                id={`heading${questoes.uuid}`}
               >
-                <div>{questao.numero_ficha}</div>
-                <div>{questao.nome_produto}</div>
+                <div>{questoes.numero_ficha}</div>
+                <div>{questoes.nome_produto}</div>
                 <div>
                   <span
                     className="botao-expandir-questoes collapsed"
                     onClick={() => toggleQuestoes(index)}
                     data-bs-toggle="collapse"
-                    data-bs-target={`#collapse${questao.numero_ficha}`}
+                    data-bs-target={`#collapse${questoes.uuid}`}
                     aria-expanded="false"
-                    aria-controls={`collapse${questao.numero_ficha}`}
+                    aria-controls={`collapse${questoes.uuid}`}
                   >
                     {questoesAbertas === index
                       ? "Fechar Questões Atribuídas"
                       : "Ver Questões Atribuídas"}
                   </span>
                 </div>
+                <div>{renderizarAcoes(questoes)}</div>
               </div>
 
               <div
-                id={`collapse${questao.numero_ficha}`}
+                id={`collapse${questoes.uuid}`}
                 className="accordion-collapse collapse"
-                aria-labelledby={`heading${questao.numero_ficha}`}
+                aria-labelledby={`heading${questoes.uuid}`}
                 data-bs-parent="#accordionQuestoes"
               >
                 <div className="row container-questoes pt-4 pb-5 px-4 accordion-body">
@@ -76,7 +98,7 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
                       }
                     />
                     <div className="questoes">
-                      {questao.questoes_primarias.map((e, index) => (
+                      {questoes.questoes_primarias.map((e, index) => (
                         <div className="p-1" key={index}>
                           {e}
                         </div>
@@ -96,7 +118,7 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
                       }
                     />
                     <div className="questoes">
-                      {questao.questoes_secundarias.map((e, index) => (
+                      {questoes.questoes_secundarias.map((e, index) => (
                         <div className="p-1" key={index}>
                           {e}
                         </div>
