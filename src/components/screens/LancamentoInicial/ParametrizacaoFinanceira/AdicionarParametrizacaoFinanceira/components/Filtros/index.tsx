@@ -10,6 +10,7 @@ import useView from "./view";
 
 type Cadastro = {
   setTiposAlimentacao: Dispatch<SetStateAction<Array<any>>>;
+  setGrupoSelecionado: Dispatch<SetStateAction<string>>;
   ehCadastro: true;
 };
 
@@ -22,9 +23,11 @@ type Props = Cadastro | Filtro;
 export default ({ ...props }: Props) => {
   const ehCadastro = props.ehCadastro;
   const setTiposAlimentacao = props.ehCadastro && props.setTiposAlimentacao;
+  const setGrupoSelecionado = props.ehCadastro && props.setGrupoSelecionado;
 
   const view = useView({
     setTiposAlimentacao,
+    setGrupoSelecionado,
   });
 
   return (
