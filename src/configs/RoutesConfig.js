@@ -309,6 +309,7 @@ import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialD
 import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
 import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
 import AtribuirQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/AtribuirQuestoesPage";
+import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/EditarAtribuicaoQuestoesPage";
 
 const routesConfig = [
   {
@@ -2034,6 +2035,11 @@ const routesConfig = [
   {
     path: `/${constants.RECEBIMENTO}/${constants.ATRIBUIR_QUESTOES_CONFERENCIA}`,
     component: AtribuirQuestoesPage,
+    tipoUsuario: usuarioEhRecebimento(),
+  },
+  {
+    path: `/${constants.RECEBIMENTO}/${constants.EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA}`,
+    component: EditarAtribuicaoQuestoesPage,
     tipoUsuario: usuarioEhRecebimento(),
   },
 ];
