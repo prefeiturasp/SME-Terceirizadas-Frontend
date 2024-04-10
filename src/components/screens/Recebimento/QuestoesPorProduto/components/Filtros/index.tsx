@@ -42,7 +42,6 @@ const Filtros = ({
     };
 
     setFiltros(filtros);
-    setConsultaRealizada(true);
   };
 
   const buscarFichaPeloNumero =

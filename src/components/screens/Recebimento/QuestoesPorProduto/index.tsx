@@ -69,6 +69,7 @@ export default () => {
       if (response?.status === 200) {
         setQuestoesPorProdutos(response.data.results);
         setTotalResultados(response.data.count);
+        setConsultaRealizada(true);
       }
     } finally {
       setCarregando(false);
