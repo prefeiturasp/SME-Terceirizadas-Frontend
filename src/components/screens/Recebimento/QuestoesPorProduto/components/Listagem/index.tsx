@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { QuestoesPorProduto } from "interfaces/recebimento.interface";
 
@@ -10,16 +10,44 @@ interface ListagemProps {
 }
 
 const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
-  const [questoesAbertas, setQuestoesAbertas] = useState(-1);
+  const [collapseAberto, setCollapseAberto] = useState(-1);
+  const accordionQuestoes = useRef<HTMLDivElement>();
 
-  const toggleQuestoes = (index: number) =>
-    questoesAbertas === index
-      ? setQuestoesAbertas(-1)
-      : setQuestoesAbertas(index);
+  const trocarCollapseAberto = (index: number) =>
+    collapseAberto === index ? setCollapseAberto(-1) : setCollapseAberto(index);
 
   useEffect(() => {
-    setQuestoesAbertas(-1);
+    setCollapseAberto(-1);
+    fecharCollapsesQuestoes();
   }, [questoesPorProdutos]);
+
+  const fecharCollapsesQuestoes = () => {
+    const collapses = Array.from(accordionQuestoes.current.children);
+    collapses.forEach((collapse) => {
+      collapse.querySelector(".show")?.classList.toggle("show");
+    });
+  };
+
+  const renderizarQuestoes = (questoes: string[]) =>
+    questoes.map((e, index) => (
+      <div className="p-1" key={index}>
+        {e}
+      </div>
+    ));
+
+  const labelQuestoesPrimarias = (
+    <span>
+      Questões Atribuídas a{" "}
+      <span className="bold-verde">Embalagem Primária</span>
+    </span>
+  );
+
+  const labelQuestoesSecundarias = (
+    <span>
+      Questões Atribuídas a{" "}
+      <span className="bold-verde">Embalagem Secundária</span>
+    </span>
+  );
 
   return (
     <div className="listagem-questoes-por-produtos">
@@ -34,7 +62,11 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
           <div>Questões</div>
         </div>
 
-        <div className="accordion accordion-flush" id="accordionQuestoes">
+        <div
+          className="accordion accordion-flush"
+          id="accordionQuestoes"
+          ref={accordionQuestoes}
+        >
           {questoesPorProdutos.map((questao, index) => (
             <div className="accordion-item" key={questao.numero_ficha}>
               <div
@@ -46,13 +78,13 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
                 <div>
                   <span
                     className="botao-expandir-questoes collapsed"
-                    onClick={() => toggleQuestoes(index)}
+                    onClick={() => trocarCollapseAberto(index)}
                     data-bs-toggle="collapse"
                     data-bs-target={`#collapse${questao.numero_ficha}`}
                     aria-expanded="false"
                     aria-controls={`collapse${questao.numero_ficha}`}
                   >
-                    {questoesAbertas === index
+                    {collapseAberto === index
                       ? "Fechar Questões Atribuídas"
                       : "Ver Questões Atribuídas"}
                   </span>
@@ -67,40 +99,16 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
               >
                 <div className="row container-questoes pt-4 pb-5 px-4 accordion-body">
                   <div className="col">
-                    <Label
-                      content={
-                        <span>
-                          Questões Atribuídas a{" "}
-                          <span className="bold-verde">Embalagem Primária</span>
-                        </span>
-                      }
-                    />
+                    <Label content={labelQuestoesPrimarias} />
                     <div className="questoes">
-                      {questao.questoes_primarias.map((e, index) => (
-                        <div className="p-1" key={index}>
-                          {e}
-                        </div>
-                      ))}
+                      {renderizarQuestoes(questao.questoes_primarias)}
                     </div>
                   </div>
 
                   <div className="col">
-                    <Label
-                      content={
-                        <span>
-                          Questões Atribuídas a{" "}
-                          <span className="bold-verde">
-                            Embalagem Secundária
-                          </span>
-                        </span>
-                      }
-                    />
+                    <Label content={labelQuestoesSecundarias} />
                     <div className="questoes">
-                      {questao.questoes_secundarias.map((e, index) => (
-                        <div className="p-1" key={index}>
-                          {e}
-                        </div>
-                      ))}
+                      {renderizarQuestoes(questao.questoes_secundarias)}
                     </div>
                   </div>
                 </div>
