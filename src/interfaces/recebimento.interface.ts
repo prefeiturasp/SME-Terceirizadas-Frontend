@@ -13,6 +13,7 @@ export interface QuestaoConferencia {
 }
 
 export interface QuestoesPorProduto {
+  uuid: string;
   numero_ficha: string;
   nome_produto: string;
   questoes_primarias: string[];
