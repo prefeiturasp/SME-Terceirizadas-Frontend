@@ -141,6 +141,12 @@ export const corrigirFichaTecnica = async (
 ): Promise<ResponseSemDadosInterface> =>
   await axios.patch(`/ficha-tecnica/${uuid}/correcao-fornecedor/`, payload);
 
+export const atualizarFichaTecnica = async (
+  payload: FichaTecnicaPayload,
+  uuid: string
+): Promise<ResponseSemDadosInterface> =>
+  await axios.patch(`/ficha-tecnica/${uuid}/atualizacao-fornecedor/`, payload);
+
 export const imprimirFichaTecnica = async (uuid: string, numero: string) => {
   const url = `/ficha-tecnica/${uuid}/gerar-pdf-ficha/`;
   const { data } = await axios.get(url, { responseType: "blob" });
