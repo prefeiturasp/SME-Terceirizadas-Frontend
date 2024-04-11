@@ -1378,7 +1378,6 @@ const routesConfig = [
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETAS_AUTORIZADAS}`,
     component: RelatorioDietasAutorizadas,
     tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
