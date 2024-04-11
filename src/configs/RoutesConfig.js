@@ -1673,7 +1673,7 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO_FISCAL}`,
     component: GuiasNotificacoesFiscalPage,
-    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhDilog(),
+    tipoUsuario: usuarioEhDilog(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CADASTRO_NOTIFICACAO}`,
