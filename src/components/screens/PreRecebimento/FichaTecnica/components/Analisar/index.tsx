@@ -1081,19 +1081,20 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                   <div className="mt-4 mb-4">
                     {somenteLeitura ? (
                       <>
-                        {ficha.status === "Aprovada" && (
-                          <Botao
-                            texto="Atualizar Ficha Técnica"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                            className="float-end ms-3"
-                            onClick={() =>
-                              navigate(
-                                `/${PRE_RECEBIMENTO}/${ATUALIZAR_FICHA_TECNICA}?uuid=${ficha.uuid}`
-                              )
-                            }
-                          />
-                        )}
+                        {ficha.status === "Aprovada" &&
+                          usuarioEhEmpresaFornecedor() && (
+                            <Botao
+                              texto="Atualizar Ficha Técnica"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              className="float-end ms-3"
+                              onClick={() =>
+                                navigate(
+                                  `/${PRE_RECEBIMENTO}/${ATUALIZAR_FICHA_TECNICA}?uuid=${ficha.uuid}`
+                                )
+                              }
+                            />
+                          )}
                         {["Enviada para Análise", "Aprovada"].includes(
                           ficha.status
                         ) && (
