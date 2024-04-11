@@ -30,6 +30,7 @@ type FormValues = {
 
 export default () => {
   const [tiposAlimentacao, setTiposAlimentacao] = useState([]);
+  const [grupoSelecionado, setGrupoSelecionado] = useState("");
   const [showModalCancelar, setShowModalCancelar] = useState(false);
 
   const navigate = useNavigate();
@@ -77,7 +78,7 @@ export default () => {
 
   return (
     <>
-      <div className="card mt-4">
+      <div className="parametrizacao-financeira card mt-4">
         <div className="card-body">
           <Form
             onSubmit={onSubmit}
@@ -88,10 +89,17 @@ export default () => {
             }}
             render={({ form, handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit}>
-                <Filtros setTiposAlimentacao={setTiposAlimentacao} />
+                <Filtros
+                  setTiposAlimentacao={setTiposAlimentacao}
+                  setGrupoSelecionado={setGrupoSelecionado}
+                  ehCadastro
+                />
                 {tiposAlimentacao.length > 0 && (
                   <>
-                    <TabelaAlimentacao tiposAlimentacao={tiposAlimentacao} />
+                    <TabelaAlimentacao
+                      tiposAlimentacao={tiposAlimentacao}
+                      grupoSelecionado={grupoSelecionado}
+                    />
                     <div className="d-flex gap-4">
                       <TabelaDietaTipoA
                         form={form}
@@ -108,9 +116,8 @@ export default () => {
                           component={TextArea}
                           label="Legenda"
                           name="legenda"
-                          placeholder={
-                            "Insira uma Legenda para os lançamentos\n\n" +
-                            "Fonte: Relatório de Medição Inicial do Serviço de Alimentação e Nutrição Escolar realizada pela direção das unidades educacionais, conforme disposto no edital Pregão 78/2016 e nas Portarias Intersecretariais SMG/SME n° 005/2006 e 001/2008."
+                          defaultValue={
+                            "Fonte: Relatório de Medição Inicial do Serviço de Alimentação e Nutrição Escolar realizada pela direção das unidades educacionais, conforme disposto no edital Pregão XXX/XXX e nas Portarias Intersecretariais SMG/SME n° 005/2006 e 001/2008."
                           }
                           maxLength={1500}
                           height="150"

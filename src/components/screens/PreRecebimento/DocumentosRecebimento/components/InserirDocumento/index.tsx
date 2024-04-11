@@ -66,7 +66,7 @@ const InserirDocumento: React.FC<Props> = ({
           accept={formatosAceitos}
           setFiles={setFiles}
           removeFile={removeFile}
-          toastSuccess={"Imagem incluída com sucesso!"}
+          toastSuccess={"Documento incluído com sucesso!"}
           alignLeft
           multiple={multiplosArquivos}
           limiteTamanho={DEZ_MB}

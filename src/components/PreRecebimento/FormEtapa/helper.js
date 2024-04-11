@@ -26,7 +26,7 @@ export const onChangeEtapas = (changes, etapas, setRestante, setDuplicados) => {
     }
   });
 
-  setRestante(restante);
+  setRestante(parseFloat(restante.toFixed(2)));
 
   if (etapas.length < 2) return;
 
