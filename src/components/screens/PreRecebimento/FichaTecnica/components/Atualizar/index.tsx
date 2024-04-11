@@ -1,21 +1,28 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import Label from "components/Shareable/Label";
 import { Spin } from "antd";
 import InputText from "components/Shareable/Input/InputText";
 import Collapse, { CollapseControl } from "components/Shareable/Collapse";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
-import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
-import { FichaTecnicaDetalhadaComAnalise } from "interfaces/pre_recebimento.interface";
+import {
+  ArquivoForm,
+  FichaTecnicaDetalhadaComAnalise,
+  OptionsGenerico,
+} from "interfaces/pre_recebimento.interface";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
+import Select from "components/Shareable/Select";
 import {
-  carregaListaCompletaInformacoesNutricionais,
-  carregarDadosAnalisarDetalhar,
-} from "../../helpers";
+  required,
+  composeValidators,
+  inteiroOuDecimalComVirgula,
+  inteiroOuDecimalPositivoOuNegativo,
+} from "helpers/fieldValidators";
 import FormPereciveis from "../Cadastrar/components/FormPereciveis";
 import FormNaoPereciveis from "../Cadastrar/components/FormNaoPereciveis";
 import { InformacaoNutricional } from "interfaces/produto.interface";
@@ -23,48 +30,39 @@ import { TerceirizadaComEnderecoInterface } from "interfaces/terceirizada.interf
 import FormProponente from "../Cadastrar/components/FormProponente";
 import TabelaNutricional from "components/Shareable/TabelaNutricional";
 import CheckboxComBorda from "components/Shareable/CheckboxComBorda";
-import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
-import FormAprovacao from "./components/FormAprovacao";
-import BotaoCiente from "./components/BotaoCiente";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import InputFile from "components/Shareable/Input/InputFile";
+import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
+import ModalVoltar from "components/Shareable/Page/ModalVoltar";
+import { PRE_RECEBIMENTO, FICHA_TECNICA } from "configs/constants";
 import {
-  AnaliseFichaTecnicaPayload,
-  StateConferidosAnalise,
-} from "../../interfaces";
+  carregarDadosAtualizar,
+  formataPayloadAtualizacaoFichaTecnica,
+  inserirArquivoFichaAssinadaRT,
+  removerArquivoFichaAssinadaRT,
+  atualizarAssinarFichaTecnica,
+} from "components/screens/PreRecebimento/FichaTecnica/helpers";
 import {
-  cadastraAnaliseFichaTecnica,
-  cadastraRascunhoAnaliseFichaTecnica,
-  editaRascunhoAnaliseFichaTecnica,
-} from "services/fichaTecnica.service";
-import ModalGenerico from "components/Shareable/ModalGenerico";
-import {
-  PRE_RECEBIMENTO,
-  PAINEL_FICHAS_TECNICAS,
-  FICHA_TECNICA,
-  ATUALIZAR_FICHA_TECNICA,
-} from "configs/constants";
-import { useNavigate } from "react-router-dom";
-import { getMensagemDeErro } from "helpers/statusErrors";
-import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
-import { imprimirFichaTecnica } from "services/fichaTecnica.service";
+  carregaListaCompletaInformacoesNutricionais,
+  carregarUnidadesMedida,
+} from "../../helpers";
+
 import "./styles.scss";
 
 const idCollapse = "collapseAnalisarFichaTecnica";
 
-interface AnalisarProps {
-  somenteLeitura?: boolean;
-}
-
-export default ({ somenteLeitura = false }: AnalisarProps) => {
+export default () => {
   const navigate = useNavigate();
   const [carregando, setCarregando] = useState<boolean>(true);
-  const [showModalCancelar, setShowModalCancelar] = useState<boolean>(false);
+  const [showModalAssinatura, setShowModalAssinatura] = useState(false);
+  const [showModalVoltar, setShowModalVoltar] = useState<boolean>(false);
+  const [unidadesMedidaOptions, setUnidadesMedidaOptions] = useState<
+    OptionsGenerico[]
+  >([]);
   const [collapse, setCollapse] = useState<CollapseControl>({});
   const [ficha, setFicha] = useState<FichaTecnicaDetalhadaComAnalise>(
     {} as FichaTecnicaDetalhadaComAnalise
   );
   const [initialValues, setInitialValues] = useState<Record<string, any>>({});
-  const [conferidos, setConferidos] = useState<StateConferidosAnalise>({});
   const listaCompletaInformacoesNutricionais = useRef<InformacaoNutricional[]>(
     []
   );
@@ -75,191 +73,83 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
     useState<TerceirizadaComEnderecoInterface>(
       {} as TerceirizadaComEnderecoInterface
     );
+  const [arquivo, setArquivo] = useState<ArquivoForm[]>([]);
 
   useEffect(() => {
     (async () => {
+      await carregarUnidadesMedida(setUnidadesMedidaOptions);
       await carregaListaCompletaInformacoesNutricionais(
         listaCompletaInformacoesNutricionais
       );
-      await carregarDadosAnalisarDetalhar(
+      await carregarDadosAtualizar(
         listaInformacoesNutricionaisFichaTecnica,
         setFicha,
-        setConferidos,
         setInitialValues,
+        setArquivo,
         setProponente,
         setCarregando
       );
     })();
   }, []);
 
-  const imprimirFicha = () => {
-    setCarregando(true);
-    let uuid = ficha.uuid;
-    let numero = ficha.numero;
-    imprimirFichaTecnica(uuid, numero)
-      .then(() => {
-        setCarregando(false);
-      })
-      .catch((error) => {
-        error.response.data.text().then((text) => toastError(text));
-        setCarregando(false);
-      });
-  };
-
-  const fechaCollapses = () => {
-    const otherElements = document.querySelectorAll(`#${idCollapse} .show`);
-    otherElements.forEach((element) => {
-      element.classList.remove("show");
-    });
-    setCollapse({});
-  };
-
-  const aprovaCollapse = (name: string) => {
-    fechaCollapses();
-    setConferidos({
-      ...conferidos,
-      [name]: true,
-    });
-  };
-
-  const reprovaCollapse = (name: string) => {
-    fechaCollapses();
-    setConferidos({
-      ...conferidos,
-      [name]: false,
-    });
-  };
-
-  const cancelaCollapse = (name: string) => {
-    setConferidos({
-      ...conferidos,
-      [name]: null,
-    });
-  };
-
-  const montarPayloadAnalise = (values: Record<string, any>) => {
-    const payload: AnaliseFichaTecnicaPayload = {
-      detalhes_produto_conferido: conferidos.detalhes_produto,
-      informacoes_nutricionais_conferido: conferidos.informacoes_nutricionais,
-      conservacao_conferido: conferidos.conservacao,
-      temperatura_e_transporte_conferido: conferidos.temperatura_e_transporte,
-      armazenamento_conferido: conferidos.armazenamento,
-      embalagem_e_rotulagem_conferido: conferidos.embalagem_e_rotulagem,
-      responsavel_tecnico_conferido: conferidos.responsavel_tecnico,
-      modo_preparo_conferido: conferidos.modo_preparo,
-      outras_informacoes_conferido: conferidos.outras_informacoes,
-      detalhes_produto_correcoes: values.detalhes_produto_correcoes,
-      informacoes_nutricionais_correcoes:
-        values.informacoes_nutricionais_correcoes,
-      conservacao_correcoes: values.conservacao_correcoes,
-      temperatura_e_transporte_correcoes:
-        values.temperatura_e_transporte_correcoes,
-      armazenamento_correcoes: values.armazenamento_correcoes,
-      embalagem_e_rotulagem_correcoes: values.embalagem_e_rotulagem_correcoes,
-    };
-
-    return payload;
-  };
-
-  const salvarRascunho = async (values: Record<string, any>) => {
-    try {
-      setCarregando(true);
-
-      const payload = montarPayloadAnalise(values);
-
-      const response = ficha.analise
-        ? await editaRascunhoAnaliseFichaTecnica(payload, ficha.uuid)
-        : await cadastraRascunhoAnaliseFichaTecnica(payload, ficha.uuid);
-
-      if (response.status === 201 || response.status === 200) {
-        toastSuccess("Rascunho salvo com sucesso!");
-        setFicha(response.data);
-      }
-    } catch (error) {
-      toastError(getMensagemDeErro(error.response.status));
-    } finally {
-      setCarregando(false);
-    }
-  };
-
-  const salvarAnalise = async (values: Record<string, any>) => {
-    try {
-      setCarregando(true);
-
-      const payload = montarPayloadAnalise(values);
-
-      const response = await cadastraAnaliseFichaTecnica(payload, ficha.uuid);
-
-      if (response.status === 201 || response.status === 200) {
-        toastSuccess("Análise da Ficha Técnica enviada com sucesso!");
-        voltarPagina();
-      }
-    } catch (error) {
-      toastError(getMensagemDeErro(error.response.status));
-    } finally {
-      setCarregando(false);
-    }
-  };
-
-  const voltarPagina = () => {
-    const link = usuarioEhEmpresaFornecedor()
-      ? `/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`
-      : `/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}`;
-
-    navigate(link);
-  };
-
-  const validaForm = (ehNaoPerecivel: boolean) => {
-    let conferidosFiltrados = conferidos;
-    if (ehNaoPerecivel) {
-      delete conferidos.temperatura_e_transporte;
-    }
-
-    return Object.values(conferidosFiltrados).some(
-      (conf) => conf !== true && conf !== false
-    );
-  };
-
-  const renderizarTag = () => {
-    const tagMap = {
-      "Enviada para Análise": (
-        <div className="status analise">
-          <i className="fas fa-exclamation-triangle" />
-          Enviada para Análise em {ficha.log_mais_recente}
-        </div>
+  const obterCollapseConfigs = (ehPerecivel: Boolean) => [
+    {
+      titulo: <span className="verde-escuro">Proponente e Fabricante</span>,
+    },
+    {
+      titulo: <span className="verde-escuro">Detalhes do Produto</span>,
+    },
+    {
+      titulo: <span className="verde-escuro">Informações Nutricionais</span>,
+    },
+    {
+      titulo: <span className="verde-escuro">Conservação</span>,
+    },
+    ...(ehPerecivel
+      ? [
+          {
+            titulo: (
+              <span className="verde-escuro">Temperatura e Transporte</span>
+            ),
+          },
+        ]
+      : []),
+    {
+      titulo: <span className="verde-escuro">Armazenamento</span>,
+    },
+    {
+      titulo: <span className="verde-escuro">Embalagem e Rotulagem</span>,
+    },
+    {
+      titulo: (
+        <span className="verde-escuro">Responsável Técnico e Anexos</span>
       ),
-      Aprovada: (
-        <div className="status aprovado">
-          <i className="fas fa-check-circle" />
-          Aprovada em {ficha.log_mais_recente}
-        </div>
-      ),
-      "Enviada para Correção": (
-        <div className="status correcao">
-          <i className="fas fa-exclamation-triangle" />
-          Solicitada correção em {ficha.log_mais_recente}
-        </div>
-      ),
-    };
-
-    return tagMap[ficha.status];
-  };
+    },
+    {
+      titulo: <span className="verde-escuro">Modo de Preparo</span>,
+    },
+    {
+      titulo: <span className="verde-escuro">Outras Informações</span>,
+    },
+  ];
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-analise-ficha-tecnica">
-        <div className="card-body analise-ficha-tecnica">
+      <div className="card mt-3 card-atualizar-ficha-tecnica">
+        <div className="card-body atualizar-ficha-tecnica">
           <Form
             onSubmit={() => {}}
             initialValues={initialValues}
-            render={({ handleSubmit, values }) => {
+            render={({ handleSubmit, values, errors }) => {
               const ehPerecivel = values["categoria"] === "Perecíveis";
               const ehNaoPerecivel = values["categoria"] === "Não Perecíveis";
+
               return (
                 <form onSubmit={handleSubmit}>
                   <div className="flex-header">
-                    <div className="subtitulo">Identificação do Produto</div>
-                    {somenteLeitura && renderizarTag()}
+                    <div className="subtitulo">
+                      Ficha Técnica {ficha.numero}
+                    </div>
                   </div>
 
                   <div className="row mt-4">
@@ -307,87 +197,8 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                   <Collapse
                     collapse={collapse}
                     setCollapse={setCollapse}
-                    collapseConfigs={[
-                      {
-                        titulo: (
-                          <span className="verde-escuro">
-                            Proponente e Fabricante
-                          </span>
-                        ),
-                      },
-                      {
-                        titulo: (
-                          <span className="verde-escuro">
-                            Detalhes do Produto
-                          </span>
-                        ),
-                        tag: true,
-                      },
-                      {
-                        titulo: (
-                          <span className="verde-escuro">
-                            Informações Nutricionais
-                          </span>
-                        ),
-                        tag: true,
-                      },
-                      {
-                        titulo: (
-                          <span className="verde-escuro">Conservação</span>
-                        ),
-                        tag: true,
-                      },
-                      ...(ehPerecivel
-                        ? [
-                            {
-                              titulo: (
-                                <span className="verde-escuro">
-                                  Temperatura e Transporte
-                                </span>
-                              ),
-                              tag: true,
-                            },
-                          ]
-                        : []),
-                      {
-                        titulo: (
-                          <span className="verde-escuro">Armazenamento</span>
-                        ),
-                        tag: true,
-                      },
-                      {
-                        titulo: (
-                          <span className="verde-escuro">
-                            Embalagem e Rotulagem
-                          </span>
-                        ),
-                        tag: true,
-                      },
-                      {
-                        titulo: (
-                          <span className="verde-escuro">
-                            Responsável Técnico e Anexos
-                          </span>
-                        ),
-                        tag: true,
-                      },
-                      {
-                        titulo: (
-                          <span className="verde-escuro">Modo de Preparo</span>
-                        ),
-                        tag: true,
-                      },
-                      {
-                        titulo: (
-                          <span className="verde-escuro">
-                            Outras Informações
-                          </span>
-                        ),
-                        tag: true,
-                      },
-                    ]}
+                    collapseConfigs={obterCollapseConfigs(ehPerecivel)}
                     id={idCollapse}
-                    state={conferidos}
                   >
                     <section id="proponenteFabricante">
                       <div className="row">
@@ -515,18 +326,18 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
 
                     <section id="detalhes_produto">
                       {ehPerecivel && (
-                        <FormPereciveis values={values} desabilitar={true} />
-                      )}
-                      {ehNaoPerecivel && (
-                        <FormNaoPereciveis values={values} desabilitar={true} />
-                      )}
-                      {!somenteLeitura && (
-                        <FormAprovacao
-                          name={"detalhes_produto"}
-                          aprovaCollapse={aprovaCollapse}
+                        <FormPereciveis
                           values={values}
-                          reprovaCollapse={reprovaCollapse}
-                          cancelaCollapse={cancelaCollapse}
+                          desabilitar={true}
+                          atualizacao={true}
+                        />
+                      )}
+
+                      {ehNaoPerecivel && (
+                        <FormNaoPereciveis
+                          values={values}
+                          desabilitar={true}
+                          atualizacao={true}
                         />
                       )}
                     </section>
@@ -546,32 +357,52 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                           <Field
                             component={InputText}
                             name={`porcao`}
+                            placeholder="Apenas Números"
                             className="input-ficha-tecnica"
-                            disabled
+                            required
+                            proibeLetras
+                            validate={composeValidators(
+                              required,
+                              inteiroOuDecimalComVirgula
+                            )}
                           />
                         </div>
                         <div className="col-3">
                           <Field
-                            component={InputText}
+                            component={Select}
+                            naoDesabilitarPrimeiraOpcao
+                            options={[
+                              { nome: "Unidade de Medida", uuid: "" },
+                              ...unidadesMedidaOptions,
+                            ]}
                             name={`unidade_medida_porcao`}
                             className="input-ficha-tecnica"
-                            disabled
+                            required
+                            validate={required}
                           />
                         </div>
                         <div className="col-3">
                           <Field
                             component={InputText}
                             name={`valor_unidade_caseira`}
+                            placeholder="Apenas Números"
                             className="input-ficha-tecnica"
-                            disabled
+                            required
+                            proibeLetras
+                            validate={composeValidators(
+                              required,
+                              inteiroOuDecimalComVirgula
+                            )}
                           />
                         </div>
                         <div className="col-3">
                           <Field
                             component={InputText}
                             name={`unidade_medida_caseira`}
+                            placeholder="Unidade de Medida"
                             className="input-ficha-tecnica"
-                            disabled
+                            required
+                            validate={required}
                           />
                         </div>
                       </div>
@@ -583,17 +414,7 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                         informacoesNutricionaisCarregadas={
                           listaInformacoesNutricionaisFichaTecnica.current
                         }
-                        desabilitar={true}
                       />
-                      {!somenteLeitura && (
-                        <FormAprovacao
-                          name={"informacoes_nutricionais"}
-                          aprovaCollapse={aprovaCollapse}
-                          values={values}
-                          reprovaCollapse={reprovaCollapse}
-                          cancelaCollapse={cancelaCollapse}
-                        />
-                      )}
                     </section>
 
                     <section id="conservacao">
@@ -604,8 +425,11 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                               component={InputText}
                               label="Prazo de Validade após o descongelamento e mantido sob refrigeração:"
                               name={`prazo_validade_descongelamento`}
+                              placeholder="Digite o prazo de validade"
                               className="input-ficha-tecnica"
-                              disabled
+                              required
+                              validate={required}
+                              disabled={true}
                             />
                           </div>
                         </div>
@@ -616,20 +440,13 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             component={TextArea}
                             label="Condições de conservação e Prazo máximo para consumo após a abertura da embalagem primária:"
                             name={`condicoes_de_conservacao`}
+                            placeholder="Descreva as condições de conservação e o prazo máximo de consumo"
                             className="textarea-ficha-tecnica"
-                            disabled
+                            required
+                            validate={required}
                           />
                         </div>
                       </div>
-                      {!somenteLeitura && (
-                        <FormAprovacao
-                          name={"conservacao"}
-                          aprovaCollapse={aprovaCollapse}
-                          values={values}
-                          reprovaCollapse={reprovaCollapse}
-                          cancelaCollapse={cancelaCollapse}
-                        />
-                      )}
                     </section>
 
                     {ehPerecivel && (
@@ -640,8 +457,15 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                               component={InputText}
                               label="Temperatura de Congelamento do Produto:"
                               name={`temperatura_congelamento`}
+                              placeholder="Digite a temperatura de congelamento"
                               className="input-ficha-tecnica"
-                              disabled
+                              tooltipText="No processo de fabricação"
+                              required
+                              validate={composeValidators(
+                                required,
+                                inteiroOuDecimalPositivoOuNegativo
+                              )}
+                              disabled={true}
                             />
                           </div>
                           <div className="col-1 label-unidade-medida label-unidade-medida-bottom">
@@ -652,8 +476,14 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                               component={InputText}
                               label="Temperatura Interna do Veículo para Transporte:"
                               name={`temperatura_veiculo`}
+                              placeholder="Digite a temperatura de transporte"
                               className="input-ficha-tecnica"
-                              disabled
+                              required
+                              validate={composeValidators(
+                                required,
+                                inteiroOuDecimalPositivoOuNegativo
+                              )}
+                              disabled={true}
                             />
                           </div>
                           <div className="col-1 label-unidade-medida label-unidade-medida-bottom">
@@ -667,19 +497,12 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                               label="Condições de Transporte:"
                               name={`condicoes_de_transporte`}
                               className="textarea-ficha-tecnica"
-                              disabled
+                              required
+                              validate={required}
+                              disabled={true}
                             />
                           </div>
                         </div>
-                        {!somenteLeitura && (
-                          <FormAprovacao
-                            name={"temperatura_e_transporte"}
-                            aprovaCollapse={aprovaCollapse}
-                            values={values}
-                            reprovaCollapse={reprovaCollapse}
-                            cancelaCollapse={cancelaCollapse}
-                          />
-                        )}
                       </section>
                     )}
 
@@ -697,7 +520,9 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             label="Embalagem Primária:"
                             name={`embalagem_primaria`}
                             className="textarea-ficha-tecnica"
-                            disabled
+                            placeholder="Digite as informações de armazenamento para embalagem primária"
+                            required
+                            validate={required}
                           />
                         </div>
                       </div>
@@ -708,19 +533,12 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             label="Embalagem Secundária:"
                             name={`embalagem_secundaria`}
                             className="textarea-ficha-tecnica"
-                            disabled
+                            placeholder="Digite as informações de armazenamento para embalagem secundária"
+                            required
+                            validate={required}
                           />
                         </div>
                       </div>
-                      {!somenteLeitura && (
-                        <FormAprovacao
-                          name={"armazenamento"}
-                          aprovaCollapse={aprovaCollapse}
-                          values={values}
-                          reprovaCollapse={reprovaCollapse}
-                          cancelaCollapse={cancelaCollapse}
-                        />
-                      )}
                     </section>
 
                     <section id="embalagem_e_rotulagem">
@@ -748,7 +566,10 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             label="Descreva o material de embalagem primária:"
                             name={`material_embalagem_primaria`}
                             className="textarea-ficha-tecnica"
-                            disabled
+                            placeholder="Digite as informações da embalagem primária"
+                            required
+                            validate={required}
+                            disabled={true}
                           />
                         </div>
                       </div>
@@ -769,7 +590,8 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                                     type="radio"
                                     value="0"
                                     name={`produto_eh_liquido`}
-                                    disabled
+                                    validate={required}
+                                    disabled={true}
                                   />
                                   <span className="checkmark" />
                                 </label>
@@ -782,7 +604,8 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                                     type="radio"
                                     value="1"
                                     name={`produto_eh_liquido`}
-                                    disabled
+                                    validate={required}
+                                    disabled={true}
                                   />
                                   <span className="checkmark" />
                                 </label>
@@ -800,18 +623,30 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                                   <Field
                                     component={InputText}
                                     name={`volume_embalagem_primaria`}
+                                    placeholder="Digite o Volume"
                                     className="input-ficha-tecnica"
-                                    disabled
+                                    required
+                                    validate={composeValidators(
+                                      required,
+                                      inteiroOuDecimalComVirgula
+                                    )}
+                                    disabled={true}
                                   />
                                 </div>
 
                                 <div className="col">
                                   <Field
-                                    component={InputText}
+                                    component={Select}
                                     naoDesabilitarPrimeiraOpcao
+                                    options={[
+                                      { nome: "Unidade de Medida", uuid: "" },
+                                      ...unidadesMedidaOptions,
+                                    ]}
                                     name={`unidade_medida_volume_primaria`}
                                     className="input-ficha-tecnica"
-                                    disabled
+                                    required
+                                    validate={required}
+                                    disabled={true}
                                   />
                                 </div>
                               </div>
@@ -836,17 +671,30 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             <Field
                               component={InputText}
                               name={`peso_liquido_embalagem_primaria`}
+                              placeholder="Digite o Peso"
                               className="input-ficha-tecnica"
-                              disabled
+                              required
+                              validate={composeValidators(
+                                required,
+                                inteiroOuDecimalComVirgula
+                              )}
+                              disabled={true}
                             />
                           </div>
 
                           <div className="col-3">
                             <Field
-                              component={InputText}
+                              component={Select}
+                              naoDesabilitarPrimeiraOpcao
+                              options={[
+                                { nome: "Unidade de Medida", uuid: "" },
+                                ...unidadesMedidaOptions,
+                              ]}
                               name={`unidade_medida_primaria`}
                               className="input-ficha-tecnica"
-                              disabled
+                              required
+                              validate={required}
+                              disabled={true}
                             />
                           </div>
 
@@ -854,17 +702,30 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             <Field
                               component={InputText}
                               name={`peso_liquido_embalagem_secundaria`}
+                              placeholder="Digite o Peso"
                               className="input-ficha-tecnica"
-                              disabled
+                              required
+                              validate={composeValidators(
+                                required,
+                                inteiroOuDecimalComVirgula
+                              )}
+                              disabled={true}
                             />
                           </div>
 
                           <div className="col-3">
                             <Field
-                              component={InputText}
+                              component={Select}
+                              naoDesabilitarPrimeiraOpcao
+                              options={[
+                                { nome: "Unidade de Medida", uuid: "" },
+                                ...unidadesMedidaOptions,
+                              ]}
                               name={`unidade_medida_secundaria`}
                               className="input-ficha-tecnica"
-                              disabled
+                              required
+                              validate={required}
+                              disabled={true}
                             />
                           </div>
                         </div>
@@ -886,17 +747,30 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             <Field
                               component={InputText}
                               name={`peso_embalagem_primaria_vazia`}
+                              placeholder="Digite o Peso"
                               className="input-ficha-tecnica"
-                              disabled
+                              required
+                              validate={composeValidators(
+                                required,
+                                inteiroOuDecimalComVirgula
+                              )}
+                              disabled={true}
                             />
                           </div>
 
                           <div className="col-3">
                             <Field
-                              component={InputText}
+                              component={Select}
+                              naoDesabilitarPrimeiraOpcao
+                              options={[
+                                { nome: "Unidade de Medida", uuid: "" },
+                                ...unidadesMedidaOptions,
+                              ]}
                               name={`unidade_medida_primaria_vazia`}
                               className="input-ficha-tecnica"
-                              disabled
+                              required
+                              validate={required}
+                              disabled={true}
                             />
                           </div>
 
@@ -904,17 +778,30 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             <Field
                               component={InputText}
                               name={`peso_embalagem_secundaria_vazia`}
+                              placeholder="Digite o Peso"
                               className="input-ficha-tecnica"
-                              disabled
+                              required
+                              validate={composeValidators(
+                                required,
+                                inteiroOuDecimalComVirgula
+                              )}
+                              disabled={true}
                             />
                           </div>
 
                           <div className="col-3">
                             <Field
-                              component={InputText}
+                              component={Select}
+                              naoDesabilitarPrimeiraOpcao
+                              options={[
+                                { nome: "Unidade de Medida", uuid: "" },
+                                ...unidadesMedidaOptions,
+                              ]}
                               name={`unidade_medida_secundaria_vazia`}
                               className="input-ficha-tecnica"
-                              disabled
+                              required
+                              validate={required}
+                              disabled={true}
                             />
                           </div>
                         </div>
@@ -936,8 +823,14 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                               <Field
                                 component={InputText}
                                 name={`variacao_percentual`}
+                                placeholder="Digite % do Peso"
                                 className="input-ficha-tecnica"
-                                disabled
+                                required
+                                validate={composeValidators(
+                                  required,
+                                  inteiroOuDecimalComVirgula
+                                )}
+                                disabled={true}
                               />
                             </div>
 
@@ -955,7 +848,10 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             label="Descrever o Sistema de Vedação da Embalagem Secundária:"
                             name={`sistema_vedacao_embalagem_secundaria`}
                             className="textarea-ficha-tecnica"
-                            disabled
+                            placeholder="Digite as informações da embalagem secundária"
+                            required
+                            validate={required}
+                            disabled={true}
                           />
                         </div>
                       </div>
@@ -978,15 +874,6 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                           />
                         </div>
                       </div>
-                      {!somenteLeitura && (
-                        <FormAprovacao
-                          name={"embalagem_e_rotulagem"}
-                          aprovaCollapse={aprovaCollapse}
-                          values={values}
-                          reprovaCollapse={reprovaCollapse}
-                          cancelaCollapse={cancelaCollapse}
-                        />
-                      )}
                     </section>
 
                     <section id="responsavel_tecnico">
@@ -996,8 +883,10 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             component={InputText}
                             label="Nome completo do Responsável Técnico:"
                             name={`nome_responsavel_tecnico`}
+                            placeholder="Digite o nome completo"
                             className="input-ficha-tecnica"
-                            disabled
+                            required
+                            validate={required}
                           />
                         </div>
                       </div>
@@ -1007,8 +896,10 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             component={InputText}
                             label="Habilitação:"
                             name={`habilitacao`}
+                            placeholder="Digite a habilitação"
                             className="input-ficha-tecnica"
-                            disabled
+                            required
+                            validate={required}
                           />
                         </div>
                         <div className="col-6">
@@ -1016,23 +907,32 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             component={InputText}
                             label="Nº do Registro em Órgão Competente:"
                             name={`numero_registro_orgao`}
+                            placeholder="Digite o número do registro"
                             className="input-ficha-tecnica"
-                            disabled
+                            required
+                            validate={required}
                           />
                         </div>
                       </div>
+                      {/* TODO: fazer o arquivo carregar */}
                       <div className="row mt-3">
-                        <div className="col-4">
-                          <BotaoAnexo urlAnexo={ficha.arquivo} />
-                        </div>
-                      </div>
-                      {!somenteLeitura && (
-                        <BotaoCiente
-                          name={"responsavel_tecnico"}
-                          aprovaCollapse={aprovaCollapse}
-                          desabilitar={conferidos.responsavel_tecnico}
+                        <Field
+                          component={InputFile}
+                          arquivosPreCarregados={arquivo}
+                          className="inputfile"
+                          texto="Anexar Ficha Assinada pelo RT"
+                          name={"arquivo"}
+                          accept="PDF"
+                          setFiles={(files: ArquivoForm[]) =>
+                            inserirArquivoFichaAssinadaRT(files, setArquivo)
+                          }
+                          removeFile={() =>
+                            removerArquivoFichaAssinadaRT(setArquivo)
+                          }
+                          toastSuccess={"Arquivo incluído com sucesso!"}
+                          alignLeft
                         />
-                      )}
+                      </div>
                     </section>
 
                     <section id="modo_preparo">
@@ -1043,17 +943,9 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             label="Descreva o modo de preparo do produto:"
                             name={`modo_de_preparo`}
                             className="textarea-ficha-tecnica"
-                            disabled
                           />
                         </div>
                       </div>
-                      {!somenteLeitura && (
-                        <BotaoCiente
-                          name={"modo_preparo"}
-                          aprovaCollapse={aprovaCollapse}
-                          desabilitar={conferidos.modo_preparo}
-                        />
-                      )}
                     </section>
 
                     <section id="outras_informacoes">
@@ -1064,92 +956,60 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             label="Informações Adicionais:"
                             name={`informacoes_adicionais`}
                             className="textarea-ficha-tecnica"
-                            disabled
                           />
                         </div>
                       </div>
-                      {!somenteLeitura && (
-                        <BotaoCiente
-                          name={"outras_informacoes"}
-                          aprovaCollapse={aprovaCollapse}
-                          desabilitar={conferidos.outras_informacoes}
-                        />
-                      )}
                     </section>
                   </Collapse>
 
-                  <div className="mt-4 mb-4">
-                    {somenteLeitura ? (
-                      <>
-                        {ficha.status === "Aprovada" &&
-                          usuarioEhEmpresaFornecedor() && (
-                            <Botao
-                              texto="Atualizar Ficha Técnica"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              className="float-end ms-3"
-                              onClick={() =>
-                                navigate(
-                                  `/${PRE_RECEBIMENTO}/${ATUALIZAR_FICHA_TECNICA}?uuid=${ficha.uuid}`
-                                )
-                              }
-                            />
-                          )}
-                        {["Enviada para Análise", "Aprovada"].includes(
-                          ficha.status
-                        ) && (
-                          <Botao
-                            texto="Ficha em PDF"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                            className="float-end ms-3"
-                            onClick={() => imprimirFicha()}
-                            icon="fas fa-print"
-                          />
-                        )}
-                        <BotaoVoltar onClick={voltarPagina} />
-                      </>
-                    ) : (
-                      <>
-                        <Botao
-                          texto="Enviar Análise"
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.GREEN}
-                          className="float-end ms-3"
-                          onClick={() => salvarAnalise(values)}
-                          disabled={validaForm(ehNaoPerecivel)}
-                        />
-                        <Botao
-                          texto="Salvar Rascunho"
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                          className="float-end ms-3"
-                          onClick={() => salvarRascunho(values)}
-                        />
-                        <Botao
-                          texto="Cancelar"
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                          className="float-end ms-3"
-                          onClick={() => {
-                            setShowModalCancelar(true);
-                          }}
-                        />
-                      </>
-                    )}
+                  <div className="my-5">
+                    <Botao
+                      texto="Salvar e Enviar"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN}
+                      className="float-end ms-3"
+                      onClick={() => setShowModalAssinatura(true)}
+                      disabled={Object.keys(errors).length !== 0}
+                    />
+                    <Botao
+                      texto="Voltar"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-end ms-3"
+                      onClick={() => {
+                        setShowModalVoltar(true);
+                      }}
+                    />
                   </div>
 
-                  <ModalGenerico
-                    show={showModalCancelar}
-                    handleSim={() => {
-                      navigate(`/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}`);
-                    }}
-                    handleClose={() => {
-                      setShowModalCancelar(false);
+                  <ModalAssinaturaUsuario
+                    show={showModalAssinatura}
+                    handleClose={() => setShowModalAssinatura(false)}
+                    handleSim={(password: string) => {
+                      const payload = formataPayloadAtualizacaoFichaTecnica(
+                        values,
+                        initialValues,
+                        arquivo[0],
+                        password
+                      );
+
+                      atualizarAssinarFichaTecnica(
+                        payload,
+                        ficha,
+                        setCarregando,
+                        navigate
+                      );
                     }}
                     loading={carregando}
-                    titulo={<>Cancelar Análise da Ficha Técnica</>}
-                    texto={<>Deseja cancelar a Análise da Ficha Técnica?</>}
+                    titulo="Assinar Ficha Técnica"
+                    texto={`Você confirma o preenchimento correto de todas as informações solicitadas na ficha técnica?`}
+                    textoBotao="Sim, Assinar Ficha"
+                  />
+
+                  <ModalVoltar
+                    modalVoltar={showModalVoltar}
+                    voltarPara={`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`}
+                    setModalVoltar={setShowModalVoltar}
                   />
                 </form>
               );

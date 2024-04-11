@@ -272,6 +272,7 @@ export const PAINEL_FICHAS_TECNICAS = "painel-fichas-tecnicas";
 export const ANALISAR_FICHA_TECNICA = "analisar-ficha-tecnica";
 export const DETALHAR_FICHA_TECNICA = "detalhar-ficha-tecnica";
 export const ALTERAR_FICHA_TECNICA = "alterar-ficha-tecnica";
+export const ATUALIZAR_FICHA_TECNICA = "atualizar-ficha-tecnica";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";

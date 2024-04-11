@@ -39,7 +39,7 @@ export default ({
         <div className="row">
           <div className="col ps-0">
             <Label content={labels[0]} required={required} />
-            {tooltipTexts && <TooltipIcone tooltipText={tooltipTexts[1]} />}
+            {tooltipTexts && <TooltipIcone tooltipText={tooltipTexts[0]} />}
           </div>
           <div className="col ps-5">
             <Label content={labels[1]} required={required} />

@@ -301,6 +301,7 @@ import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnic
 import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
 import DetalharFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/DetalharFichaTecnicaPage";
 import AlterarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AlterarFichaTecnicaPage";
+import AtualizarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AtualizarFichaTecnicaPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
 import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
@@ -2018,6 +2019,11 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ALTERAR_FICHA_TECNICA}/`,
     component: AlterarFichaTecnicaPage,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ATUALIZAR_FICHA_TECNICA}/`,
+    component: AtualizarFichaTecnicaPage,
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
   {
