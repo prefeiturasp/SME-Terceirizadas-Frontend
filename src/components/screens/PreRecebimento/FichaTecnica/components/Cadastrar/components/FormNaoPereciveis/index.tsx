@@ -6,11 +6,13 @@ import InputText from "components/Shareable/Input/InputText";
 interface Props {
   values: Record<string, any>;
   desabilitar?: boolean;
+  atualizacao?: boolean;
 }
 
 const FormNaoPereciveis: React.FC<Props> = ({
   values,
   desabilitar = false,
+  atualizacao = false,
 }) => {
   return (
     <div>
@@ -42,7 +44,7 @@ const FormNaoPereciveis: React.FC<Props> = ({
             tooltipText={
               "Caso utilizado aditivos alimentares, deverá ser declarada a função principal, nome completo e número INS de todos."
             }
-            disabled={desabilitar}
+            disabled={desabilitar && !atualizacao}
           />
         </div>
       </div>
@@ -60,7 +62,7 @@ const FormNaoPereciveis: React.FC<Props> = ({
               value="0"
               name={`alergenicos`}
               validate={required}
-              disabled={desabilitar}
+              disabled={desabilitar && !atualizacao}
             />
             <span className="checkmark" />
           </label>
@@ -72,7 +74,7 @@ const FormNaoPereciveis: React.FC<Props> = ({
               value="1"
               name={`alergenicos`}
               validate={required}
-              disabled={desabilitar}
+              disabled={desabilitar && !atualizacao}
             />
             <span className="checkmark" />
           </label>
@@ -88,7 +90,7 @@ const FormNaoPereciveis: React.FC<Props> = ({
               className="input-ficha-tecnica"
               required
               validate={required}
-              disabled={desabilitar}
+              disabled={desabilitar && !atualizacao}
             />
           </div>
         </div>
@@ -107,7 +109,7 @@ const FormNaoPereciveis: React.FC<Props> = ({
               value="0"
               name={`gluten`}
               validate={required}
-              disabled={desabilitar}
+              disabled={desabilitar && !atualizacao}
             />
             <span className="checkmark" />
           </label>
@@ -119,7 +121,7 @@ const FormNaoPereciveis: React.FC<Props> = ({
               value="1"
               name={`gluten`}
               validate={required}
-              disabled={desabilitar}
+              disabled={desabilitar && !atualizacao}
             />
             <span className="checkmark" />
           </label>
