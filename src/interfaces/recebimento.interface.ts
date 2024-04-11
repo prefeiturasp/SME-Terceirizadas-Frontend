@@ -1,3 +1,4 @@
+import { FichaTecnicaSimples } from "./pre_recebimento.interface";
 import {
   ListagemNaoPaginada,
   ListagemPaginada,
@@ -20,6 +21,13 @@ export interface QuestoesPorProduto {
   questoes_secundarias: string[];
 }
 
+export interface QuestoesPorProdutoSimples {
+  uuid: string;
+  ficha_tecnica: FichaTecnicaSimples;
+  questoes_primarias: string[];
+  questoes_secundarias: string[];
+}
+
 export interface ResponseListarQuestoesConferencia extends ResponseInterface {
   data: {
     results: {
@@ -38,8 +46,17 @@ export interface ResponseListarQuestoesPorProduto extends ResponseInterface {
   data: ListagemPaginada<QuestoesPorProduto>;
 }
 
+export interface ResponseDetalharQuestoesPorProduto extends ResponseInterface {
+  data: QuestoesPorProdutoSimples;
+}
+
 export interface PayloadAtribuirQuestoesPorProduto {
   ficha_tecnica: string;
+  questoes_primarias: string[];
+  questoes_secundarias: string[];
+}
+
+export interface PayloadEditarAtribuicaoQuestoesPorProduto {
   questoes_primarias: string[];
   questoes_secundarias: string[];
 }
