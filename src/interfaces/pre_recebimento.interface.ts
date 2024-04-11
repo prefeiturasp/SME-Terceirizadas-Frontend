@@ -58,6 +58,7 @@ export interface Arquivo {
 
 export interface ArquivoForm {
   nome: string;
+  arquivo?: string;
   base64: string;
 }
 
