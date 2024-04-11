@@ -993,8 +993,6 @@ export default () => {
                         password
                       );
 
-                      //console.log(payload)
-
                       atualizarAssinarFichaTecnica(
                         payload,
                         ficha,
