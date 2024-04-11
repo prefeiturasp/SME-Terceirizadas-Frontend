@@ -11,7 +11,6 @@ import {
 } from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import MeusDadosContext from "context/MeusDadosContext";
-import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 import {
   gerarExcelRelatorioDietaEspecial,
   getFiltrosRelatorioDietasEspeciais,
@@ -62,9 +61,6 @@ export const RelatorioDietasAutorizadas = () => {
   };
 
   const exportarXLSX = async (values) => {
-    if (usuarioEhEmpresaTerceirizada()) {
-      values["terceirizada"] = meusDados.vinculo_atual.instituicao.uuid;
-    }
     setImprimindoExcel(true);
     const response = await gerarExcelRelatorioDietaEspecial(
       ajustaParams(values)
@@ -78,9 +74,6 @@ export const RelatorioDietasAutorizadas = () => {
   };
 
   const exportarPDF = async (values) => {
-    if (usuarioEhEmpresaTerceirizada()) {
-      values["terceirizada"] = meusDados.vinculo_atual.instituicao.uuid;
-    }
     setImprimindoPdf(true);
     const response = await gerarPdfRelatorioDietaEspecial(ajustaParams(values));
     if (response.status === HTTP_STATUS.OK) {
@@ -105,11 +98,8 @@ export const RelatorioDietasAutorizadas = () => {
     const params = {
       status_selecionado: "AUTORIZADAS",
     };
-    if (usuarioEhEmpresaTerceirizada()) {
-      params["terceirizada"] = meusDados.vinculo_atual.instituicao.uuid;
-    }
     getFiltrosRelatorioDietasEspeciaisAsync(params);
-  }, [meusDados]);
+  }, []);
 
   return (
     <div className="card mt-3">
@@ -129,10 +119,16 @@ export const RelatorioDietasAutorizadas = () => {
                 unidadesEducacionais={unidadesEducacionais}
                 onClear={() => {
                   setDietasEspeciais(null);
+                  getFiltrosRelatorioDietasEspeciaisAsync({
+                    status_selecionado: "AUTORIZADAS",
+                  });
                 }}
                 setLoadingDietas={setLoadingDietas}
                 ajustaParams={ajustaParams}
                 setValuesForm={setValuesForm}
+                getFiltrosRelatorioDietasEspeciaisAsync={
+                  getFiltrosRelatorioDietasEspeciaisAsync
+                }
               />
               {dietasEspeciais && (
                 <>

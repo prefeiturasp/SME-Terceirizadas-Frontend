@@ -1,16 +1,17 @@
+import React from "react";
+import { Field } from "react-final-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Spin } from "antd";
+import HTTP_STATUS from "http-status-codes";
+import Select from "components/Shareable/Select";
 import CollapseFiltros from "components/Shareable/CollapseFiltros";
 import { toastError } from "components/Shareable/Toast/dialogs";
-import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
-import HTTP_STATUS from "http-status-codes";
-import React from "react";
+import { usuarioEhDRE } from "helpers/utilities";
 import {
-  getUnidadesEducacionaisTercTotal,
+  getUnidadesEducacionaisComCodEol,
   getSolicitacoesRelatorioDietasEspeciais,
 } from "services/dietaEspecial.service";
 import "./styles.scss";
-import { Field } from "react-final-form";
 
 export const Filtros = ({ ...props }) => {
   const {
@@ -24,12 +25,13 @@ export const Filtros = ({ ...props }) => {
     setLoadingDietas,
     ajustaParams,
     setValuesForm,
+    getFiltrosRelatorioDietasEspeciaisAsync,
   } = props;
 
   const getUnidadesEducacionaisAsync = async (values) => {
     setUnidadesEducacionais([]);
-    let data = { lotes: values };
-    const response = await getUnidadesEducacionaisTercTotal(data);
+    let data = values;
+    const response = await getUnidadesEducacionaisComCodEol(data);
     if (response.status === HTTP_STATUS.OK) {
       setUnidadesEducacionais(
         response.data.map((unidade) => ({
@@ -52,15 +54,15 @@ export const Filtros = ({ ...props }) => {
       ...values,
       status_selecionado: "AUTORIZADAS",
     };
+    if (usuarioEhDRE() && filtros.lotes.length === 1) {
+      filtrosValues["lote"] = filtros.lotes[0].uuid;
+    }
     setValuesForm(filtrosValues);
     setLoadingDietas(true);
     let params = {
       ...PARAMS,
       ...filtrosValues,
     };
-    if (usuarioEhEmpresaTerceirizada()) {
-      params["terceirizada"] = meusDados.vinculo_atual.instituicao.uuid;
-    }
     const response = await getSolicitacoesRelatorioDietasEspeciais(
       ajustaParams(params)
     );
@@ -87,17 +89,85 @@ export const Filtros = ({ ...props }) => {
             <>
               <div className="row">
                 <div className="col-4">
-                  <label className="label fw-normal pb-2 pt-2">Lote</label>
+                  <label className="label fw-normal pb-2 pt-2">
+                    Tipo de Gestão
+                  </label>
+                  <Field
+                    component={Select}
+                    name="tipo_gestao"
+                    placeholder="Selecione o tipo de gestão"
+                    options={[
+                      { nome: "Selecione o tipo de gestão", uuid: "" },
+                    ].concat(
+                      filtros.tipos_gestao.map((tipo_gestao) => ({
+                        nome: tipo_gestao.nome,
+                        uuid: tipo_gestao.uuid,
+                      }))
+                    )}
+                    naoDesabilitarPrimeiraOpcao
+                    onChangeEffect={async (e) => {
+                      const value = e.target.value;
+                      form.reset({
+                        tipo_gestao: value,
+                      });
+                      const values_ = form.getState().values;
+                      await getFiltrosRelatorioDietasEspeciaisAsync({
+                        ...values_,
+                        status_selecionado: "AUTORIZADAS",
+                      });
+                    }}
+                  />
+                </div>
+                <div className="col-4">
+                  <label className="label fw-normal pb-2 pt-2">
+                    Tipo de Unidade
+                  </label>
                   <Field
                     component={StatefulMultiSelect}
-                    name="lotes"
-                    options={filtros.lotes.map((lote) => ({
-                      label: lote.nome,
-                      value: lote.uuid,
+                    name="tipo_unidade"
+                    options={filtros.tipos_unidades.map((tipo_unidade) => ({
+                      label: tipo_unidade.nome,
+                      value: tipo_unidade.uuid,
                     }))}
-                    selected={values.lotes_selecionados || []}
-                    onSelectedChanged={(value) => {
-                      form.change("lotes_selecionados", value);
+                    selected={values.tipos_unidades_selecionadas || []}
+                    onSelectedChanged={(value) =>
+                      form.change("tipos_unidades_selecionadas", value)
+                    }
+                    overrideStrings={{
+                      search: "Busca",
+                      selectSomeItems: "Selecione o tipo de unidade",
+                      allItemsAreSelected:
+                        "Todos os tipos de unidades estão selecionadas",
+                      selectAll: "Todos",
+                    }}
+                  />
+                </div>
+                <div className="col-4">
+                  <label className="label fw-normal pb-2 pt-2">
+                    DRE e Lote
+                  </label>
+                  <Field
+                    component={Select}
+                    name="lote"
+                    placeholder="Selecione a DRE/Lote"
+                    options={
+                      filtros.lotes.length === 1
+                        ? [
+                            {
+                              nome: filtros.lotes[0].nome,
+                              uuid: filtros.lotes[0].uuid,
+                            },
+                          ]
+                        : [{ nome: "Selecione a DRE/Lote", uuid: "" }].concat(
+                            filtros.lotes.map((lote) => ({
+                              nome: lote.nome,
+                              uuid: lote.uuid,
+                            }))
+                          )
+                    }
+                    naoDesabilitarPrimeiraOpcao
+                    onChangeEffect={async (e) => {
+                      const value = e.target.value;
                       if (value && value.length === 0) {
                         setUnidadesEducacionais([]);
                         form.change(
@@ -105,17 +175,49 @@ export const Filtros = ({ ...props }) => {
                           undefined
                         );
                       } else {
-                        getUnidadesEducacionaisAsync(value);
+                        getUnidadesEducacionaisAsync(form.getState().values);
                       }
-                    }}
-                    overrideStrings={{
-                      search: "Busca",
-                      selectSomeItems: "Selecione lotes",
-                      allItemsAreSelected: "Todos os lotes estão selecionados",
-                      selectAll: "Todos",
                     }}
                   />
                 </div>
+              </div>
+              <div className="row mt-3">
+                <div className="col-12">
+                  <label className="label fw-normal pb-2 pt-2">
+                    Unidades Educacionais
+                  </label>
+                  <Spin
+                    tip="Carregando unidades educacionais..."
+                    spinning={
+                      values.lote !== undefined &&
+                      values.lote.length > 0 &&
+                      unidadesEducacionais.length === 0
+                    }
+                  >
+                    <Field
+                      component={StatefulMultiSelect}
+                      name="unidades_educacionais"
+                      options={unidadesEducacionais}
+                      selected={values.unidades_educacionais_selecionadas || []}
+                      onSelectedChanged={(value) => {
+                        form.change(
+                          "unidades_educacionais_selecionadas",
+                          value
+                        );
+                      }}
+                      overrideStrings={{
+                        search: "Busca",
+                        selectSomeItems: "Selecione unidades educacionais",
+                        allItemsAreSelected:
+                          "Todos as unidades estão selecionadas",
+                        selectAll: "Todas",
+                      }}
+                      disabled={!values.lote}
+                    />
+                  </Spin>
+                </div>
+              </div>
+              <div className="row mt-3">
                 <div className="col-4">
                   <label className="label fw-normal pb-2 pt-2">
                     Classificação da dieta
@@ -140,102 +242,57 @@ export const Filtros = ({ ...props }) => {
                     }}
                   />
                 </div>
-              </div>
-              <div className="row mt-3">
-                {!usuarioEhEmpresaTerceirizada() && (
-                  <div className="col-4">
-                    <label className="label fw-normal pb-2 pt-2">
-                      Relação por Diagnóstico
-                    </label>
-                    <Field
-                      component={StatefulMultiSelect}
-                      name="alergias_intolerancias"
-                      options={filtros.alergias_intolerancias.map(
-                        (alergia_intolerancia) => ({
-                          label: alergia_intolerancia.nome,
-                          value: alergia_intolerancia.id,
-                        })
-                      )}
-                      selected={
-                        values.alergias_intolerancias_selecionadas || []
-                      }
-                      onSelectedChanged={(value) =>
-                        form.change(
-                          "alergias_intolerancias_selecionadas",
-                          value
-                        )
-                      }
-                      overrideStrings={{
-                        search: "Busca",
-                        selectSomeItems: "Selecione diagnósticos",
-                        allItemsAreSelected:
-                          "Todos os diagnósticos estão selecionados",
-                        selectAll: "Todos",
-                      }}
-                    />
-                  </div>
-                )}
-                {usuarioEhEmpresaTerceirizada() && (
-                  <div className="col-4">
-                    <label className="label fw-normal pb-2 pt-2">
-                      Protocolo padrão
-                    </label>
-                    <Field
-                      component={StatefulMultiSelect}
-                      name="protocolos_padrao"
-                      options={filtros.protocolos_padrao.map(
-                        (protocolo_padrao) => ({
-                          label: protocolo_padrao.nome,
-                          value: protocolo_padrao.uuid,
-                        })
-                      )}
-                      selected={values.protocolos_padrao_selecionados || []}
-                      onSelectedChanged={(value) =>
-                        form.change("protocolos_padrao_selecionados", value)
-                      }
-                      overrideStrings={{
-                        search: "Busca",
-                        selectSomeItems: "Selecione protocolos padrão",
-                        allItemsAreSelected:
-                          "Todos os protocolos padrão estão selecionados",
-                        selectAll: "Todos",
-                      }}
-                    />
-                  </div>
-                )}
-                <div className="col-6">
+                <div className="col-8">
                   <label className="label fw-normal pb-2 pt-2">
-                    Unidades Educacionais
+                    Relação por Diagnóstico
                   </label>
-                  <Spin
-                    tip="Carregando unidades educacionais..."
-                    spinning={
-                      values.lotes_selecionados !== undefined &&
-                      values.lotes_selecionados.length > 0 &&
-                      unidadesEducacionais.length === 0
+                  <Field
+                    component={StatefulMultiSelect}
+                    name="alergias_intolerancias"
+                    options={filtros.alergias_intolerancias.map(
+                      (alergia_intolerancia) => ({
+                        label: alergia_intolerancia.nome,
+                        value: alergia_intolerancia.id,
+                      })
+                    )}
+                    selected={values.alergias_intolerancias_selecionadas || []}
+                    onSelectedChanged={(value) =>
+                      form.change("alergias_intolerancias_selecionadas", value)
                     }
-                  >
+                    overrideStrings={{
+                      search: "Busca",
+                      selectSomeItems: "Selecione diagnósticos",
+                      allItemsAreSelected:
+                        "Todos os diagnósticos estão selecionados",
+                      selectAll: "Todos",
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="mt-4 motivos-alteracao-ue col-12">
+                <div>
+                  <span>
                     <Field
-                      component={StatefulMultiSelect}
-                      name="unidades_educacionais"
-                      options={unidadesEducacionais}
-                      selected={values.unidades_educacionais_selecionadas || []}
-                      onSelectedChanged={(value) => {
-                        form.change(
-                          "unidades_educacionais_selecionadas",
-                          value
-                        );
-                      }}
-                      overrideStrings={{
-                        search: "Busca",
-                        selectSomeItems: "Selecione unidades educacionais",
-                        allItemsAreSelected:
-                          "Todos as unidades estão selecionadas",
-                        selectAll: "Todas",
-                      }}
-                      disabled={!values.lotes_selecionados}
+                      component={"input"}
+                      type="checkbox"
+                      name="cei_polo"
+                      className="ckbox-motivo-alteracao-ue"
                     />
-                  </Spin>
+                  </span>
+                  <span className="label-motivo-alteracao-ue">CEI POLO</span>
+                </div>
+                <div>
+                  <span>
+                    <Field
+                      component={"input"}
+                      type="checkbox"
+                      name="recreio_nas_ferias"
+                      className="ckbox-recreio-nas-ferias"
+                    />
+                  </span>
+                  <span className="label-motivo-alteracao-ue">
+                    RECREIO NAS FÉRIAS
+                  </span>
                 </div>
               </div>
             </>
