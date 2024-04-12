@@ -49,15 +49,11 @@ export const ListagemDietas = ({ ...props }) => {
         <div
           className={`grid-table-rel-dietas dietas-${values.status_selecionado.toLowerCase()} header-table`}
         >
-          <div>Cód. EOL do aluno</div>
-          <div>Nome do aluno</div>
-          <div>Nome da Escola</div>
-          <div>Classificação da dieta</div>
-          <div>
-            {usuarioEhEmpresaTerceirizada()
-              ? "Protocolo padrão"
-              : "Relação por Diagnóstico"}
-          </div>
+          <div>DRE/Lote</div>
+          <div>Unidade Escolar</div>
+          <div>Nome do Aluno</div>
+          <div>Classificação da Dieta</div>
+          <div>Relação por Diagnóstico</div>
           {values.status_selecionado === "CANCELADAS" && (
             <div>Data de cancelamento</div>
           )}
@@ -68,9 +64,11 @@ export const ListagemDietas = ({ ...props }) => {
               <div
                 className={`grid-table-rel-dietas dietas-${values.status_selecionado.toLowerCase()} body-table`}
               >
-                <div>{dietaEspecial.cod_eol_aluno || "--"}</div>
-                <div>{dietaEspecial.nome_aluno}</div>
+                <div>{dietaEspecial.dre}</div>
                 <div>{dietaEspecial.nome_escola}</div>
+                <div>
+                  {dietaEspecial.cod_eol_aluno} - {dietaEspecial.nome_aluno}
+                </div>
                 <div>
                   {dietaEspecial.classificacao
                     ? dietaEspecial.classificacao.nome
