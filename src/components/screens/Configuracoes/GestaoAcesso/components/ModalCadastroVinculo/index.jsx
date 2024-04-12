@@ -107,7 +107,7 @@ const ModalCadastroVinculo = ({
     setSubdivisoes(options_subs);
   };
 
-  const buscaEOL = async (form, values) => {
+  const buscaEOL = async (values) => {
     let response = await getDadosUsuarioEOLCompleto(values.registro_funcional);
 
     if (response.status === 200) {
@@ -119,25 +119,17 @@ const ModalCadastroVinculo = ({
           return toastError("RF não pertence a sua unidade!");
         }
       }
-      form.change(
-        "nome_servidor",
-        usuarioEOL.nome ? usuarioEOL.nome : undefined
-      );
-      form.change(
-        "cargo_servidor",
-        usuarioEOL.cargo ? usuarioEOL.cargo : undefined
-      );
-      form.change(
-        "email_servidor",
-        usuarioEOL.email ? usuarioEOL.email : setDesabilitaEmail(false)
-      );
-      form.change("cpf", usuarioEOL.cpf);
-      form.change(
-        "cpf_servidor",
-        usuarioEOL.cpf ? formataCPFCensurado(usuarioEOL.cpf) : undefined
-      );
-      form.change("codigo_eol_unidade", usuarioEOL.codigo_eol_unidade);
-      form.change("nome_escola", usuarioEOL.nome_escola);
+      values.nome_servidor = usuarioEOL.nome ? usuarioEOL.nome : undefined;
+      values.cargo_servidor = usuarioEOL.cargo ? usuarioEOL.cargo : undefined;
+      values.email_servidor = usuarioEOL.email
+        ? usuarioEOL.email
+        : setDesabilitaEmail(false);
+      values.cpf = usuarioEOL.cpf;
+      values.cpf_servidor = usuarioEOL.cpf
+        ? formataCPFCensurado(usuarioEOL.cpf)
+        : undefined;
+      values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
+      values.nome_escola = usuarioEOL.nome_escola;
 
       let t = document.getElementById("inputRF");
       t.blur();
@@ -186,12 +178,12 @@ const ModalCadastroVinculo = ({
     toggleShow(false, vinculo);
   };
 
-  const onKeyPress = (event, form, values) => {
+  const onKeyPress = (event, values) => {
     if (event.which === ENTER) {
       if (ehUEParceira) {
         buscaEOLFuncionarioUnidadeParceira(values);
       } else {
-        buscaEOL(form, values);
+        buscaEOL(values);
       }
     }
   };
@@ -261,13 +253,13 @@ const ModalCadastroVinculo = ({
         <Form
           onSubmit={onSubmit}
           initialValues={valoresEdicao}
-          render={({ form, handleSubmit, values, errors }) => (
+          render={({ handleSubmit, values, errors }) => (
             <>
               <Modal.Body>
                 <form
                   onSubmit={handleSubmit}
                   className=""
-                  onKeyPress={(event) => onKeyPress(event, form, values)}
+                  onKeyPress={(event) => onKeyPress(event, values)}
                 >
                   {diretor_escola ||
                     empresa ||
@@ -314,9 +306,7 @@ const ModalCadastroVinculo = ({
                             texto=""
                             icon="fas fa-search"
                             type={BUTTON_TYPE.BUTTON}
-                            onClick={() =>
-                              buscaEOL(form, form.getState().values)
-                            }
+                            onClick={() => buscaEOL(values)}
                             style={BUTTON_STYLE.GREEN}
                             className="botao-rf"
                           />
