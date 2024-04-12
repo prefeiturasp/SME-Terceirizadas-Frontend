@@ -14,7 +14,11 @@ import { toastSuccess } from "components/Shareable/Toast/dialogs";
 import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
 import { required } from "helpers/fieldValidators";
 import { FichaTecnicaSimples } from "interfaces/pre_recebimento.interface";
-import { QuestaoConferencia } from "interfaces/recebimento.interface";
+import {
+  QuestaoConferencia,
+  QuestoesPorProdutoSimples,
+  ResponseListarQuestoesConferencia,
+} from "interfaces/recebimento.interface";
 import { formatarNumeroEProdutoFichaTecnica } from "helpers/preRecebimento";
 import ModalGenerico, {
   ModalGenericoProps,
@@ -26,6 +30,8 @@ import { getListaFichasTecnicasSimplesSemQuestoesConferencia } from "services/fi
 import {
   listarQuestoesConferencia,
   atribuirQuestoesPorProduto,
+  detalharQuestoesPorProduto,
+  editarAtribuicaoQuestoesPorProduto,
 } from "services/recebimento/questoesConferencia.service";
 
 import "./styles.scss";
@@ -59,6 +65,12 @@ export default () => {
     []
   );
 
+  const [questoesEdicao, setQuestoesEdicao] =
+    useState<QuestoesPorProdutoSimples>();
+  const [initialValues, setInitialValues] = useState<Record<string, string>>();
+
+  const uuid = new URLSearchParams(window.location.search).get("uuid");
+
   const transferConfigPrimarias = useTransferMultiSelect({
     required: true,
   });
@@ -69,12 +81,12 @@ export default () => {
 
   const navigate = useNavigate();
 
-  const exibirModalConfirmacao = async (values: Record<string, any>) =>
+  const exibirModalConfirmacao = async (values: Record<string, string>) =>
     setModalConfig({
       show: true,
       handleClose: fecharModal,
-      handleSim: () => enviarParaAnalise(values),
-      titulo: "Salvar Cadastro",
+      handleSim: () => salvarOuEditarAtribuicao(values),
+      titulo: uuid ? "Salvar Edição" : "Salvar Cadastro",
       texto:
         "Deseja salvar a atribuição das questões de conferência para esse produto?",
     });
@@ -91,29 +103,44 @@ export default () => {
 
   const fecharModal = () => setModalConfig({ ...modalConfig, show: false });
 
-  const enviarParaAnalise = async (values: Record<string, any>) => {
-    setCarregando(true);
-
-    const payload = formatarPayload(
-      values,
-      transferConfigPrimarias.targetKeys,
-      transferConfigSecundarias.targetKeys
-    );
-
+  const salvarOuEditarAtribuicao = async (values: Record<string, string>) => {
     try {
-      const { status } = await atribuirQuestoesPorProduto(payload);
-
-      if (status === 201) {
-        voltarPagina();
-        toastSuccess("Atribuição Salva com sucesso!");
-      }
+      setCarregando(true);
+      uuid ? await editarAtribuicao(uuid) : await salvarAtribuicao(values);
     } finally {
       setCarregando(false);
     }
   };
 
-  const formatarPayload = (
-    values: Record<string, any>,
+  const editarAtribuicao = async (uuid: string) => {
+    const payload = formatarPayloadEdicao(
+      transferConfigPrimarias.targetKeys,
+      transferConfigSecundarias.targetKeys
+    );
+    const { status } = await editarAtribuicaoQuestoesPorProduto(uuid, payload);
+
+    if (status === 200) {
+      voltarPagina();
+      toastSuccess("Edição Salva com sucesso!");
+    }
+  };
+
+  const salvarAtribuicao = async (values: Record<string, string>) => {
+    const payload = formatarPayloadSalvamento(
+      values,
+      transferConfigPrimarias.targetKeys,
+      transferConfigSecundarias.targetKeys
+    );
+    const { status } = await atribuirQuestoesPorProduto(payload);
+
+    if (status === 201) {
+      voltarPagina();
+      toastSuccess("Atribuição Salva com sucesso!");
+    }
+  };
+
+  const formatarPayloadSalvamento = (
+    values: Record<string, string>,
     questoesPrimarias: string[],
     questoesSecundarias: string[]
   ) => {
@@ -124,8 +151,18 @@ export default () => {
     };
   };
 
+  const formatarPayloadEdicao = (
+    questoesPrimarias: string[],
+    questoesSecundarias: string[]
+  ) => {
+    return {
+      questoes_primarias: questoesPrimarias,
+      questoes_secundarias: questoesSecundarias,
+    };
+  };
+
   const buscarFichaPeloNumero =
-    (values: Record<string, any>) =>
+    (values: Record<string, string>) =>
     ({ numero }) =>
       numero === values.ficha_tecnica.split("-")[0].trim();
 
@@ -151,30 +188,13 @@ export default () => {
         transferDataSource(responseQuestoesConferencia.data.results.secundarias)
       );
 
-      transferConfigPrimarias.setInitialTagetKeys(
-        questoesObrigatorias(responseQuestoesConferencia.data.results.primarias)
-      );
-      transferConfigSecundarias.setInitialTagetKeys(
-        questoesObrigatorias(
-          responseQuestoesConferencia.data.results.secundarias
-        )
-      );
+      uuid
+        ? await carregarObjetoEmEdicao(uuid)
+        : carregarQuestoesObrigatoriasNoTransfer(responseQuestoesConferencia);
     } finally {
       setCarregando(false);
     }
   }, []);
-
-  const questoesObrigatorias = (questoes: QuestaoConferencia[]) =>
-    questoes
-      ?.filter(({ pergunta_obrigatoria }) => pergunta_obrigatoria)
-      .map(({ uuid }) => uuid);
-
-  const optionsFichasTecnicas = (values: Record<string, any>) =>
-    getListaFiltradaAutoCompleteSelect(
-      fichasTecnicas?.map((e) => formatarNumeroEProdutoFichaTecnica(e)),
-      values.ficha_tecnica,
-      true
-    );
 
   const transferDataSource = (
     questoes: QuestaoConferencia[]
@@ -183,7 +203,44 @@ export default () => {
       return { title: questao, key: uuid };
     });
 
-  const botaoSalvar = (values: Record<string, any>) =>
+  const carregarObjetoEmEdicao = async (uuid: string) => {
+    const questoes = (await detalharQuestoesPorProduto(uuid)).data;
+    setQuestoesEdicao(questoes);
+
+    setInitialValues({
+      ficha_tecnica: formatarNumeroEProdutoFichaTecnica(questoes.ficha_tecnica),
+    });
+
+    transferConfigPrimarias.setInitialTagetKeys(questoes.questoes_primarias);
+    transferConfigSecundarias.setInitialTagetKeys(
+      questoes.questoes_secundarias
+    );
+  };
+
+  const carregarQuestoesObrigatoriasNoTransfer = (
+    responseQuestoesConferencia: ResponseListarQuestoesConferencia
+  ) => {
+    transferConfigPrimarias.setInitialTagetKeys(
+      questoesObrigatorias(responseQuestoesConferencia.data.results.primarias)
+    );
+    transferConfigSecundarias.setInitialTagetKeys(
+      questoesObrigatorias(responseQuestoesConferencia.data.results.secundarias)
+    );
+  };
+
+  const questoesObrigatorias = (questoes: QuestaoConferencia[]) =>
+    questoes
+      ?.filter(({ pergunta_obrigatoria }) => pergunta_obrigatoria)
+      .map(({ uuid }) => uuid);
+
+  const optionsFichasTecnicas = (values: Record<string, string>) =>
+    getListaFiltradaAutoCompleteSelect(
+      fichasTecnicas?.map((e) => formatarNumeroEProdutoFichaTecnica(e)),
+      values.ficha_tecnica,
+      true
+    );
+
+  const botaoSalvarDesabilitado = (values: Record<string, string>) =>
     !values.ficha_tecnica ||
     !transferConfigPrimarias.targetKeys.length ||
     !transferConfigSecundarias.targetKeys.length;
@@ -197,6 +254,7 @@ export default () => {
       <div className="card mt-3 card-atribuir-questoes-conferencia">
         <div className="card-body atribuir-questoes-conferencia">
           <Form
+            initialValues={initialValues}
             onSubmit={exibirModalConfirmacao}
             render={({ handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
@@ -211,6 +269,7 @@ export default () => {
                       placeholder="Selecione uma ficha técnica e produto"
                       required
                       validate={required}
+                      disabled={!!questoesEdicao}
                     />
                   </div>
                 </div>
@@ -242,9 +301,9 @@ export default () => {
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                       className="float-end ms-3"
-                      disabled={botaoSalvar(values)}
+                      disabled={botaoSalvarDesabilitado(values)}
                       tooltipExterno={
-                        botaoSalvar(values) &&
+                        botaoSalvarDesabilitado(values) &&
                         "É necessário preencher todos os campos obrigatórios antes de prosseguir."
                       }
                     />

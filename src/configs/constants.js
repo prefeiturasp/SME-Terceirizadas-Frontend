@@ -300,6 +300,8 @@ export const ASSINADO_CODAE = "assinado-codae";
 export const RECEBIMENTO = "recebimento";
 export const QUESTOES_POR_PRODUTO = "questoes-por-produto";
 export const ATRIBUIR_QUESTOES_CONFERENCIA = "atribuir-questoes-conferencia";
+export const EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA =
+  "editar-atribuicao-questoes-conferencia";
 
 // Status dos pedidos
 
