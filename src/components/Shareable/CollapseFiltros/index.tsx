@@ -48,6 +48,8 @@ const CollapseFiltros: React.FC<Props> = ({
         dre: values["dre"],
         unidade_educacional: values["unidade_educacional"],
       });
+    } else if (manterFiltros?.includes("status_selecionado")) {
+      form.reset({ status_selecionado: values["status_selecionado"] });
     } else {
       form.reset({});
     }
