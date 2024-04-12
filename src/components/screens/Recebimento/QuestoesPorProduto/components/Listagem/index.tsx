@@ -1,9 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 import { QuestoesPorProduto } from "interfaces/recebimento.interface";
+import Label from "components/Shareable/Label";
+import {
+  RECEBIMENTO,
+  EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA,
+} from "configs/constants";
 
 import "./styles.scss";
-import Label from "components/Shareable/Label";
 
 interface ListagemProps {
   questoesPorProdutos: QuestoesPorProduto[];
@@ -20,6 +25,21 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
     setCollapseAberto(-1);
     fecharCollapsesQuestoes();
   }, [questoesPorProdutos]);
+
+  const renderizarAcoes = (questao: QuestoesPorProduto) => {
+    const botaoEditar = (
+      <NavLink
+        className="float-start"
+        to={`/${RECEBIMENTO}/${EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA}?uuid=${questao.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i title="Editar" className="fas fa-edit green" />
+        </span>
+      </NavLink>
+    );
+
+    return botaoEditar;
+  };
 
   const fecharCollapsesQuestoes = () => {
     const collapses = Array.from(accordionQuestoes.current.children);
@@ -60,6 +80,7 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
           <div>Ficha Técnica</div>
           <div>Produto</div>
           <div>Questões</div>
+          <div>Ações</div>
         </div>
 
         <div
@@ -71,7 +92,7 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
             <div className="accordion-item" key={questao.numero_ficha}>
               <div
                 className="grid-table body-table accordion-header"
-                id={`heading${questao.numero_ficha}`}
+                id={`heading${questao.uuid}`}
               >
                 <div>{questao.numero_ficha}</div>
                 <div>{questao.nome_produto}</div>
@@ -80,21 +101,22 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
                     className="botao-expandir-questoes collapsed"
                     onClick={() => trocarCollapseAberto(index)}
                     data-bs-toggle="collapse"
-                    data-bs-target={`#collapse${questao.numero_ficha}`}
+                    data-bs-target={`#collapse${questao.uuid}`}
                     aria-expanded="false"
-                    aria-controls={`collapse${questao.numero_ficha}`}
+                    aria-controls={`collapse${questao.uuid}`}
                   >
                     {collapseAberto === index
                       ? "Fechar Questões Atribuídas"
                       : "Ver Questões Atribuídas"}
                   </span>
                 </div>
+                <div>{renderizarAcoes(questao)}</div>
               </div>
 
               <div
-                id={`collapse${questao.numero_ficha}`}
+                id={`collapse${questao.uuid}`}
                 className="accordion-collapse collapse"
-                aria-labelledby={`heading${questao.numero_ficha}`}
+                aria-labelledby={`heading${questao.uuid}`}
                 data-bs-parent="#accordionQuestoes"
               >
                 <div className="row container-questoes pt-4 pb-5 px-4 accordion-body">
