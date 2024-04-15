@@ -4,7 +4,8 @@ import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
 import {
   ATUALIZAR_FICHA_TECNICA,
-  PAINEL_FICHAS_TECNICAS,
+  FICHA_TECNICA,
+  DETALHAR_FICHA_TECNICA,
   PRE_RECEBIMENTO,
 } from "configs/constants";
 import Atualizar from "components/screens/PreRecebimento/FichaTecnica/components/Atualizar";
@@ -20,15 +21,19 @@ const anteriores = [
     titulo: "Pré-Recebimento",
   },
   {
-    href: `/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}`,
+    href: `/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`,
     titulo: "Fichas Técnicas",
+  },
+  {
+    href: `/${PRE_RECEBIMENTO}/${DETALHAR_FICHA_TECNICA}`,
+    titulo: "Detalhar Ficha Técnica",
   },
 ];
 
 export default () => (
   <Page
     botaoVoltar
-    voltarPara={`/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}`}
+    voltarPara={`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`}
     titulo={atual.titulo}
   >
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
