@@ -142,7 +142,9 @@ import {
   usuarioComAcessoAoPainelDocumentos,
   usuarioComAcessoAoPainelFichasTecnicas,
   usuarioEhCODAEGabinete,
+  ehUsuarioRelatorios,
   usuarioComAcessoAoCalendarioCronograma,
+  usuarioEhRecebimento,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -172,7 +174,7 @@ import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
 import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoSolicDietaEspPage";
 import RelatorioQuantitativoClassificacaoDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoClassificacaoDietaEspPage";
 import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
-import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
+import RelatorioDietasAutorizadas from "pages/DietaEspecial/RelatorioDietasAutorizadas";
 import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
 import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
 import LancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/LancamentoMedicaoInicialPage";
@@ -255,6 +257,8 @@ import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 import EmpenhosPage from "pages/LancamentoMedicaoInicial/EmpenhosPage";
 import ClausulasParaDescontosPage from "pages/LancamentoMedicaoInicial/ClausulasParaDescontosPage";
+import ParametrizacaoFinanceiraPage from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/ParametrizacaoFinanceiraPage";
+import AdicionarParametrizacaoFinanceiraPage from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/AdicionarParametrizacaoFinanceiraPage";
 import CadastroDeClausulasPage from "pages/LancamentoMedicaoInicial/CadastroDeClausulasPage";
 import EditarClausulaPage from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
 import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
@@ -297,12 +301,16 @@ import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnic
 import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
 import DetalharFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/DetalharFichaTecnicaPage";
 import AlterarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AlterarFichaTecnicaPage";
+import AtualizarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AtualizarFichaTecnicaPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
 import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
 import StatusFichasTecnicasAprovadas from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasAprovadas";
 import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
 import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
+import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
+import AtribuirQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/AtribuirQuestoesPage";
+import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/EditarAtribuicaoQuestoesPage";
 
 const routesConfig = [
   {
@@ -1278,7 +1286,8 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ATIVACAO_DE_PRODUTO}/consulta`,
@@ -1302,7 +1311,8 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE() ||
       usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
@@ -1367,10 +1377,9 @@ const routesConfig = [
     tipoUsuario: podeAcessarRelatorioQuantSolicDietaEsp,
   },
   {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETA_ESPECIAL}`,
-    component: RelatorioDietaEspecial,
+    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETAS_AUTORIZADAS}`,
+    component: RelatorioDietasAutorizadas,
     tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
@@ -1380,13 +1389,16 @@ const routesConfig = [
       usuarioEhAdministradorNutriCODAE() ||
       usuarioEhCoordenadorNutriCODAE() ||
       usuarioEhMedicao() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GERENCIAL_DIETAS}`,
     component: RelatorioGerencialDietas,
     tipoUsuario:
-      usuarioEhAdministradorNutriCODAE() || usuarioEhCoordenadorNutriCODAE(),
+      usuarioEhAdministradorNutriCODAE() ||
+      usuarioEhCoordenadorNutriCODAE() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GESTAO_DIETA_ESPECIAL}`,
@@ -1397,7 +1409,8 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
@@ -1430,7 +1443,8 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
@@ -1442,7 +1456,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhMedicao() ||
-      usuarioEhCODAEGabinete(),
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios(),
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}`,
@@ -1503,6 +1518,16 @@ const routesConfig = [
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}`,
     component: ClausulasParaDescontosPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.PARAMETRIZACAO_FINANCEIRA}`,
+    component: ParametrizacaoFinanceiraPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.PARAMETRIZACAO_FINANCEIRA}/${constants.ADICIONAR_PARAMETRIZACAO_FINANCEIRA}`,
+    component: AdicionarParametrizacaoFinanceiraPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
@@ -1649,7 +1674,7 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO_FISCAL}`,
     component: GuiasNotificacoesFiscalPage,
-    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhDilog(),
+    tipoUsuario: usuarioEhDilog(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CADASTRO_NOTIFICACAO}`,
@@ -1998,9 +2023,29 @@ const routesConfig = [
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
   {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ATUALIZAR_FICHA_TECNICA}/`,
+    component: AtualizarFichaTecnicaPage,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
     component: CalendarioCronogramaPage,
     tipoUsuario: usuarioComAcessoAoCalendarioCronograma(),
+  },
+  {
+    path: `/${constants.RECEBIMENTO}/${constants.QUESTOES_POR_PRODUTO}`,
+    component: QuestoesPorProdutoPage,
+    tipoUsuario: usuarioEhRecebimento(),
+  },
+  {
+    path: `/${constants.RECEBIMENTO}/${constants.ATRIBUIR_QUESTOES_CONFERENCIA}`,
+    component: AtribuirQuestoesPage,
+    tipoUsuario: usuarioEhRecebimento(),
+  },
+  {
+    path: `/${constants.RECEBIMENTO}/${constants.EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA}`,
+    component: EditarAtribuicaoQuestoesPage,
+    tipoUsuario: usuarioEhRecebimento(),
   },
 ];
 

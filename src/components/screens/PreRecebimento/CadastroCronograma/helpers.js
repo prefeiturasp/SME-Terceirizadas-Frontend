@@ -52,8 +52,11 @@ export const formataPayload = (
   payload.empresa = empresaSelecionada.uuid;
   payload.ficha_tecnica = values.ficha_tecnica;
   payload.armazem = values.armazem;
-  payload.qtd_total_programada = values.quantidade_total?.replaceAll(".", "");
+  payload.qtd_total_programada = values.quantidade_total
+    ?.replaceAll(".", "")
+    .replace(",", ".");
   payload.unidade_medida = values.unidade_medida;
+  payload.tipo_embalagem_secundaria = values.tipo_embalagem_secundaria;
   payload.custo_unitario_produto =
     stringDecimalToNumber(values.custo_unitario_produto) || undefined;
 
@@ -68,8 +71,12 @@ export const formataPayload = (
           "YYYY-MM-DD"
         )
       : undefined,
-    quantidade: values[`quantidade_${index}`]?.replaceAll(".", ""),
-    total_embalagens: values[`total_embalagens_${index}`]?.replaceAll(".", ""),
+    quantidade: values[`quantidade_${index}`]
+      ?.replaceAll(".", "")
+      .replace(",", "."),
+    total_embalagens: values[`total_embalagens_${index}`]
+      ?.replaceAll(".", "")
+      .replace(",", "."),
   }));
 
   payload.programacoes_de_recebimento = recebimentos.map((etapa, index) => ({

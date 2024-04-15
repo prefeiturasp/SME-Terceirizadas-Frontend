@@ -1,0 +1,60 @@
+@import "styles/variables.scss";
+
+.parametrizacao-financeira {
+  .tabela {
+    .titulo-tabela {
+      font-weight: bold;
+      font-size: 14px;
+      color: $greenDark;
+    }
+
+    table {
+      width: 100%;
+      font-size: 14px;
+      color: $blackInput;
+
+      thead {
+        tr {
+          background-color: $grayLightHeader;
+          border: 1px solid $grayDisabled;
+          border-radius: 4px 4px 0 0;
+          font-weight: bold;
+
+          th {
+            padding: 0.5em;
+            &:not(:first-child) {
+              border-left: 1px solid $grayDisabled;
+            }
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          td {
+            padding: 0.5em;
+            border-left: 1px solid $grayDisabled;
+            border-bottom: 1px solid $grayDisabled;
+            i.verde {
+              cursor: pointer;
+              color: $green;
+            }
+            &:last-child {
+              border-right: 1px solid $grayDisabled;
+            }
+          }
+          &:last-child {
+            td {
+              &:first-child {
+                border-radius: 0 0 0 4px;
+              }
+              &:last-child {
+                border-radius: 0 0 4px 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

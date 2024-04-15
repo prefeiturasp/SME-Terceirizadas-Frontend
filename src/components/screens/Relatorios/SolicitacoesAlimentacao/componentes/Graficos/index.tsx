@@ -9,6 +9,7 @@ import "./style.scss";
 import { GraficoSolicitacoesAutorizadasTipoSolicitacao } from "./components/GraficoSolicitacoesAutorizadasTipoSolicitacao";
 import { GraficoSolicitacoesStatus } from "./components/GraficoSolicitacoesStatus";
 import { GraficoSolicitacoesAutorizadasTipoUnidade } from "./components/GraficoSolicitacoesAutorizadasTipoUnidade";
+import { GraficoSolicitacoesAutorizadasEmpresaTerceirizada } from "./components/GraficoSolicitacoesAutorizadasEmpresaTerceirizada";
 
 type ValuesType = {
   status: string;
@@ -91,6 +92,17 @@ export const Graficos = ({ ...props }: PropsType) => {
     );
   };
 
+  const graficoTotalPorEmpresaTerceirizada = (): boolean | ChartData => {
+    return (
+      datasGraficos &&
+      datasGraficos.find((datagrafico) =>
+        datagrafico.datasets.find((dataset) =>
+          dataset.label.includes("por Empresa Terceirizada")
+        )
+      )
+    );
+  };
+
   return (
     <div className="graficos-relatorio-ga text-center">
       <Spin tip="Carregando gráficos..." spinning={!datasGraficos}>
@@ -122,6 +134,15 @@ export const Graficos = ({ ...props }: PropsType) => {
             <div className="col-12">
               <GraficoSolicitacoesAutorizadasTipoUnidade
                 chartData={graficoTotalPorTipoUnidade()}
+              />
+            </div>
+          </div>
+        )}
+        {graficoTotalPorEmpresaTerceirizada() && (
+          <div className="row">
+            <div className="col-12">
+              <GraficoSolicitacoesAutorizadasEmpresaTerceirizada
+                chartData={graficoTotalPorEmpresaTerceirizada()}
               />
             </div>
           </div>

@@ -1,5 +1,6 @@
 import {
   FiltrosInterface,
+  RelatorioControleFrequenciaResponse,
   ResponseTotalAlunosMatriculados,
 } from "interfaces/controle_de_frequencia";
 import axios from "services/_base";
@@ -21,4 +22,16 @@ export const getTotalAlunosMatriculados = async (filtros: FiltrosInterface) => {
       params: filtros,
     }
   );
+};
+
+export const imprimirRelatorioControleFrequencia = async (
+  filtros: FiltrosInterface
+) => {
+  const response = await axios.get<RelatorioControleFrequenciaResponse>(
+    "relatorio-controle-frequencia/imprimir-pdf/",
+    {
+      params: filtros,
+    }
+  );
+  return response.data;
 };

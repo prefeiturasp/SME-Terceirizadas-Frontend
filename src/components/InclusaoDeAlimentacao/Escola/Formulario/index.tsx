@@ -722,10 +722,10 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                   !motivoETECSelecionado(values) && (
                     <>
                       <Recorrencia
-                        values={values}
+                        values={form.getState().values}
                         form={form}
                         periodos={
-                          ehMotivoInclusaoEspecifico(values) ||
+                          ehMotivoInclusaoEspecifico(form.getState().values) ||
                           (carregandoRascunho && motivoEspecifico)
                             ? periodosMotivoEspecifico
                             : periodos
@@ -733,7 +733,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                         push={push}
                         meusDados={meusDados}
                         ehMotivoInclusaoEspecifico={ehMotivoInclusaoEspecifico(
-                          values
+                          form.getState().values
                         )}
                         uuid={uuid}
                         idExterno={idExterno}

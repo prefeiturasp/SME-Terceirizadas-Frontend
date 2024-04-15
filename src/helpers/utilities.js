@@ -244,6 +244,16 @@ export const formataMilhar = (value) => {
   return valor?.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
+export const formataMilharDecimal = (value) => {
+  return ![undefined, null].includes(value)
+    ? Number(value)
+        .toFixed(2)
+        .replace(/\D/g, "")
+        .replace(/(\d)(?=(\d{2})\b)/g, "$1,")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    : value;
+};
+
 export const truncarString = (str, numeroMaximoChars) => {
   if (!str) return "";
 
@@ -590,6 +600,10 @@ export const usuarioEhPreRecebimentoSemLogistica = () => {
   );
 };
 
+export const usuarioEhRecebimento = () => {
+  return [PERFIL.DILOG_QUALIDADE].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhDinutreDiretoria = () =>
   localStorage.getItem("perfil") === PERFIL.DINUTRE_DIRETORIA;
 
@@ -693,6 +707,10 @@ export const usuarioEhNutricionistaSupervisao = () => {
 
 export const usuarioEhCODAEGestaoProduto = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.GESTAO_PRODUTO;
+};
+
+export const ehUsuarioRelatorios = () => {
+  return localStorage.getItem("perfil") === PERFIL.USUARIO_RELATORIOS;
 };
 
 export const usuarioEhQualquerCODAE = () => {
@@ -1012,6 +1030,7 @@ export const exibirGA = () => {
     case `"supervisao_nutricao"`:
     case `"medicao"`:
     case `"codae_gabinete"`:
+    case `"usuario_relatorios"`:
       return true;
     default:
       return false;

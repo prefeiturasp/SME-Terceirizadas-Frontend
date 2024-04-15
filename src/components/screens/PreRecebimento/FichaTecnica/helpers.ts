@@ -17,6 +17,7 @@ import {
   getFichaTecnica,
   getFichaTecnicaComAnalise,
   corrigirFichaTecnica,
+  atualizarFichaTecnica,
 } from "services/fichaTecnica.service";
 
 import { removeCaracteresEspeciais, exibeError } from "helpers/utilities";
@@ -194,6 +195,46 @@ export const carregarDadosCorrgir = async (
     setInitialValues(geraInitialValuesCorrigir(fichaTecnica));
     carregaTagsCollapses(fichaTecnica, setConferidos);
     setFicha(fichaTecnica);
+
+    listaInformacoesNutricionaisFichaTecnica.current =
+      fichaTecnica.informacoes_nutricionais.map(
+        ({ informacao_nutricional }) => informacao_nutricional
+      );
+
+    const response = await getTerceirizadaUUID(fichaTecnica.empresa.uuid);
+    setProponente(response.data);
+  } finally {
+    setCarregando(false);
+  }
+};
+
+export const carregarDadosAtualizar = async (
+  listaInformacoesNutricionaisFichaTecnica: MutableRefObject<
+    InformacaoNutricional[]
+  >,
+  setFicha: Dispatch<SetStateAction<FichaTecnicaDetalhadaComAnalise>>,
+  setInitialValues: Dispatch<SetStateAction<Record<string, any>>>,
+  setArquivo: Dispatch<SetStateAction<ArquivoForm[]>>,
+  setProponente: Dispatch<SetStateAction<TerceirizadaComEnderecoInterface>>,
+  setCarregando: Dispatch<SetStateAction<boolean>>
+) => {
+  try {
+    setCarregando(true);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    const responseFicha = await getFichaTecnicaComAnalise(uuid);
+    const fichaTecnica = responseFicha.data;
+
+    setInitialValues(geraInitialValuesCorrigir(fichaTecnica));
+
+    setFicha(fichaTecnica);
+
+    if (fichaTecnica.arquivo) {
+      const arquivo = await carregarArquivo(fichaTecnica.arquivo);
+      setArquivo(arquivo);
+    }
 
     listaInformacoesNutricionaisFichaTecnica.current =
       fichaTecnica.informacoes_nutricionais.map(
@@ -569,6 +610,48 @@ export const formataPayloadCorrecaoFichaTecnica = (
   return payload;
 };
 
+export const ehInformacaoNutricional = (key: string) => {
+  return (
+    key.startsWith(`quantidade_por_100g_`) ||
+    key.startsWith(`quantidade_porcao_`) ||
+    key.startsWith(`valor_diario_`)
+  );
+};
+
+export const formataPayloadAtualizacaoFichaTecnica = (
+  values: Record<string, any>,
+  initialValues: Record<string, any>,
+  arquivo: ArquivoForm,
+  password: string
+): FichaTecnicaPayload => {
+  let payload: FichaTecnicaPayload = {
+    password: password,
+  };
+  let infosNutricionais = {};
+
+  Object.keys(values).map((key) => {
+    if (initialValues[key] !== values[key]) {
+      if (key === "alergenicos" || key === "gluten") {
+        payload[key] = stringToBoolean(values[key] as string);
+      } else if (ehInformacaoNutricional(key)) {
+        infosNutricionais[key] = values[key];
+      } else {
+        payload[key] = values[key];
+      }
+    }
+  });
+
+  if (arquivo?.arquivo) {
+    payload["arquivo"] = arquivo[0].arquivo;
+  }
+
+  if (Object.keys(infosNutricionais).length > 0) {
+    payload.informacoes_nutricionais = formataInformacoesNutricionais(values);
+  }
+
+  return payload;
+};
+
 const gerarCamposObrigatoriosRascunho = (
   values: Record<string, any>,
   produtosOptions: OptionsGenerico[]
@@ -837,6 +920,30 @@ export const assinarCorrigirFichaTecnica = async (
     setCarregando(true);
 
     const response = await corrigirFichaTecnica(payload, ficha.uuid);
+
+    if (response.status === 200) {
+      toastSuccess("Ficha Técnica Assinada e Enviada com sucesso!");
+      navigate(`/${PRE_RECEBIMENTO}/${FICHA_TECNICA}`);
+    } else {
+      toastError("Ocorreu um erro ao assinar e enviar a Ficha Técnica");
+    }
+  } catch (error) {
+    exibeError(error, "Ocorreu um erro ao assinar e enviar a Ficha Técnica");
+  } finally {
+    setCarregando(false);
+  }
+};
+
+export const atualizarAssinarFichaTecnica = async (
+  payload: FichaTecnicaPayload,
+  ficha: FichaTecnicaDetalhadaComAnalise,
+  setCarregando: Dispatch<SetStateAction<boolean>>,
+  navigate: NavigateFunction
+) => {
+  try {
+    setCarregando(true);
+
+    const response = await atualizarFichaTecnica(payload, ficha.uuid);
 
     if (response.status === 200) {
       toastSuccess("Ficha Técnica Assinada e Enviada com sucesso!");

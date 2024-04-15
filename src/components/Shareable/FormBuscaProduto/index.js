@@ -15,6 +15,7 @@ import {
   usuarioEhDRE,
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
+  ehUsuarioRelatorios,
 } from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
@@ -65,7 +66,8 @@ const exibirFiltroNomeTerceirizada =
   !usuarioEhCODAEGestaoAlimentacao() &&
   !usuarioEhNutricionistaSupervisao() &&
   !usuarioEhCODAENutriManifestacao() &&
-  !usuarioEhCODAEGabinete();
+  !usuarioEhCODAEGabinete() &&
+  !ehUsuarioRelatorios();
 
 function reducer(state, { type: actionType, payload }) {
   switch (actionType) {
