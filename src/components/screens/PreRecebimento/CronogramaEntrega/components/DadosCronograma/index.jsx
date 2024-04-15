@@ -1,5 +1,8 @@
 import { deParaStatusAltCronograma } from "components/screens/helper";
-import { usuarioEhEmpresaFornecedor, formataMilhar } from "helpers/utilities";
+import {
+  usuarioEhEmpresaFornecedor,
+  formataMilharDecimal,
+} from "helpers/utilities";
 import React from "react";
 import "./styles.scss";
 
@@ -145,7 +148,10 @@ export default ({
             <div className="col-4">
               <p>Quantidade Total Programada:</p>
               <p>
-                <b>{formataMilhar(cronograma.qtd_total_programada)}</b>
+                <b>
+                  {formataMilharDecimal(cronograma.qtd_total_programada)}{" "}
+                  {cronograma.unidade_medida?.abreviacao}
+                </b>
               </p>
             </div>
             <div className="col-4">
@@ -166,7 +172,11 @@ export default ({
               <p>Peso da Embalagem Primária:</p>
               <p>
                 <b>
-                  {cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria}
+                  {cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria}{" "}
+                  {
+                    cronograma.ficha_tecnica?.unidade_medida_primaria
+                      ?.abreviacao
+                  }
                 </b>
               </p>
             </div>
@@ -174,7 +184,11 @@ export default ({
               <p>Peso da Embalagem Secundária:</p>
               <p>
                 <b>
-                  {cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria}
+                  {cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria}{" "}
+                  {
+                    cronograma.ficha_tecnica?.unidade_medida_secundaria
+                      ?.abreviacao
+                  }
                 </b>
               </p>
             </div>
@@ -212,7 +226,8 @@ export default ({
                             {etapa.numero_empenho}
                           </td>
                           <td className="borda-crono">
-                            {etapa.qtd_total_empenho}
+                            {etapa.qtd_total_empenho}{" "}
+                            {cronograma.unidade_medida?.abreviacao}
                           </td>
                           <td className="borda-crono">{etapa.etapa}</td>
                           <td className="borda-crono">{etapa.parte}</td>
@@ -220,10 +235,12 @@ export default ({
                             {etapa.data_programada}
                           </td>
                           <td className="borda-crono">
-                            {formataMilhar(etapa.quantidade)}
+                            {formataMilharDecimal(etapa.quantidade)}{" "}
+                            {cronograma.unidade_medida?.abreviacao}
                           </td>
                           <td className="borda-crono">
-                            {formataMilhar(etapa.total_embalagens)}
+                            {formataMilharDecimal(etapa.total_embalagens)}{" "}
+                            {cronograma.tipo_embalagem_secundaria?.abreviacao}
                           </td>
                         </tr>
                       );
@@ -278,7 +295,7 @@ export default ({
                       <td className="borda-crono">{etapa.etapa}</td>
                       <td className="borda-crono">{etapa.parte}</td>
                       <td className="borda-crono">
-                        {formataMilhar(etapa.quantidade)}
+                        {formataMilharDecimal(etapa.quantidade)}
                       </td>
                       <td className="borda-crono">
                         {cronograma.armazem && cronograma.armazem.nome_fantasia}

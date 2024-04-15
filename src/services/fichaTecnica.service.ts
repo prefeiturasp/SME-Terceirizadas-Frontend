@@ -101,6 +101,17 @@ export const getListaFichasTecnicasSimplesSemLayoutEmbalagem =
     }
   };
 
+export const getListaFichasTecnicasSimplesSemQuestoesConferencia =
+  async (): Promise<ResponseFichasTecnicasSimples> => {
+    try {
+      return await axios.get(
+        `/ficha-tecnica/lista-simples-sem-questoes-conferencia/`
+      );
+    } catch (error) {
+      toastError(getMensagemDeErro(error.response.status));
+    }
+  };
+
 export const getDadosCronogramaFichaTecnica = async (
   uuid: string
 ): Promise<ResponseDadosCronogramaFichaTecnica> =>
@@ -129,6 +140,12 @@ export const corrigirFichaTecnica = async (
   uuid: string
 ): Promise<ResponseSemDadosInterface> =>
   await axios.patch(`/ficha-tecnica/${uuid}/correcao-fornecedor/`, payload);
+
+export const atualizarFichaTecnica = async (
+  payload: FichaTecnicaPayload,
+  uuid: string
+): Promise<ResponseSemDadosInterface> =>
+  await axios.patch(`/ficha-tecnica/${uuid}/atualizacao-fornecedor/`, payload);
 
 export const imprimirFichaTecnica = async (uuid: string, numero: string) => {
   const url = `/ficha-tecnica/${uuid}/gerar-pdf-ficha/`;

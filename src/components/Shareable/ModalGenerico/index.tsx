@@ -7,19 +7,19 @@ import {
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
-interface Props {
+export interface ModalGenericoProps {
   show: boolean;
-  handleClose(): void;
-  loading: boolean;
-  handleSim(): void;
   titulo: ReactNode;
   texto: ReactNode;
+  loading?: boolean;
+  handleClose: () => void;
+  handleSim: () => void;
 }
 
-const ModalGenerico: React.FC<Props> = ({
+const ModalGenerico: React.FC<ModalGenericoProps> = ({
   show,
   handleClose,
-  loading,
+  loading = false,
   handleSim,
   titulo,
   texto,

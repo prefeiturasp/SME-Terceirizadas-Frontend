@@ -31,11 +31,12 @@ import {
   exibirModuloMedicaoInicial,
   usuarioEhCodaeDilog,
   usuarioEhDilog,
-  usuarioEhDilogQualidade,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhOrgaoFiscalizador,
   usuarioEhCODAEGabinete,
   usuarioEhDilogDiretoria,
+  usuarioEhRecebimento,
+  ehUsuarioRelatorios,
 } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
 
@@ -50,6 +51,7 @@ import {
   MenuRelatorios,
   MenuLogistica,
   MenuPreRecebimento,
+  MenuRecebimento,
 } from "./menus";
 
 export const SidebarContent = () => {
@@ -94,7 +96,8 @@ export const SidebarContent = () => {
     !usuarioEhEscolaAbastecimentoDiretor() &&
     (!usuarioComAcessoTelaEntregasDilog() || usuarioEhCODAEGabinete()) &&
     !usuarioEhLogistica() &&
-    !usuarioEhEmpresaDistribuidora();
+    !usuarioEhEmpresaDistribuidora() &&
+    !ehUsuarioRelatorios();
   const exibirGestaoAlimentacao =
     exibeMenuValidandoAmbiente &&
     (usuarioEhCODAEGestaoAlimentacao() ||
@@ -105,7 +108,8 @@ export const SidebarContent = () => {
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhCODAEGabinete());
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -117,7 +121,8 @@ export const SidebarContent = () => {
     usuarioEhEmpresaTerceirizada() ||
     usuarioEhMedicao() ||
     usuarioEhCODAEGabinete() ||
-    usuarioEscolaEhGestaoDiretaParceira;
+    usuarioEscolaEhGestaoDiretaParceira ||
+    ehUsuarioRelatorios();
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -162,7 +167,8 @@ export const SidebarContent = () => {
     !usuarioEhPreRecebimentoSemLogistica() &&
     !usuarioEhQualquerUsuarioEmpresa() &&
     !usuarioEhDilog() &&
-    !usuarioEhOrgaoFiscalizador();
+    !usuarioEhOrgaoFiscalizador() &&
+    !ehUsuarioRelatorios();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
@@ -171,7 +177,6 @@ export const SidebarContent = () => {
     usuarioEhEscolaAbastecimento() ||
     usuarioEhEscolaAbastecimentoDiretor() ||
     usuarioComAcessoTelaEntregasDilog() ||
-    usuarioEhDilogQualidade() ||
     usuarioEhCODAEGabinete() ||
     usuarioEhDilogDiretoria();
 
@@ -180,6 +185,8 @@ export const SidebarContent = () => {
     usuarioEhEmpresaFornecedor() ||
     usuarioEhCoordenadorGpCODAE() ||
     usuarioEhCODAEGabinete();
+
+  const exibirMenuRecebimento = usuarioEhRecebimento();
 
   const _props = {
     activeMenu,
@@ -206,6 +213,7 @@ export const SidebarContent = () => {
     exibirRelatorios && <MenuRelatorios key={8} />,
     exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
     exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />,
+    exibirMenuRecebimento && <MenuRecebimento key={11} />,
     exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
   ];
 };

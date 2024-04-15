@@ -301,9 +301,10 @@ export const apenasLetras = (value) =>
     ? "Não digite números ou caracteres especiais"
     : undefined;
 
-export const numericInteger = (value) =>
-  // value && /[^0-9 ]/i.test(value) ? "Somente números" : undefined;
-  value && !/\D/.test(value) ? undefined : "Somente números";
+export const numericInteger = (value) => {
+  if (!value) return undefined;
+  return value && !/\D/.test(value) ? undefined : "Somente números";
+};
 
 export const nonRequiredNumericInteger = (value) => {
   if (value !== undefined && !/^[0-9]+$/.test(value)) {

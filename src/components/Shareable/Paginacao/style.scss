@@ -28,6 +28,13 @@
   .ant-pagination-next,
   .ant-pagination-prev {
     border: 1px solid #dadada;
+
+    .anticon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     svg {
       fill: #999;
       stroke: #999;

@@ -37,6 +37,7 @@ export const MEDICAO = "medicao";
 export const DINUTRE = "dinutre";
 export const DILOG = "dilog";
 export const CRONOGRAMA = "cronograma";
+export const USUARIO_RELATORIOS = "usuario-relatorios";
 
 export const AGUARDANDO_ASSINATURAS = "aguardando-assinaturas";
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
@@ -130,7 +131,7 @@ export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
   "relatorio-quantitativo-solic-dieta-esp";
 export const RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP =
   "relatorio-quantitativo-classificacao-dieta-esp";
-export const RELATORIO_DIETA_ESPECIAL = "relatorio-dieta-especial";
+export const RELATORIO_DIETAS_AUTORIZADAS = "relatorio-dietas-autorizadas";
 export const RELATORIO_GERENCIAL_DIETAS = "relatorio-gerencial-dietas";
 export const RELATORIO_GESTAO_DIETA_ESPECIAL =
   "relatorio-gestao-dieta-especial";
@@ -214,6 +215,9 @@ export const CADASTRO_DE_EMPENHO = "cadastro-de-empenho";
 export const EDITAR_EMPENHO = "editar-empenho";
 export const EMPENHOS = "empenhos";
 export const CLAUSULAS_PARA_DESCONTOS = "clausulas-para-descontos";
+export const PARAMETRIZACAO_FINANCEIRA = "parametrizacao-financeira";
+export const ADICIONAR_PARAMETRIZACAO_FINANCEIRA =
+  "adicionar-parametrizacao-financeira";
 export const CADASTRO_DE_CLAUSULA = "cadastro-de-clausula";
 export const EDITAR_CLAUSULA = "editar-clausula";
 export const CONTROLE_DE_FREQUENCIA = "controle-de-frequencia";
@@ -274,6 +278,7 @@ export const PAINEL_FICHAS_TECNICAS = "painel-fichas-tecnicas";
 export const ANALISAR_FICHA_TECNICA = "analisar-ficha-tecnica";
 export const DETALHAR_FICHA_TECNICA = "detalhar-ficha-tecnica";
 export const ALTERAR_FICHA_TECNICA = "alterar-ficha-tecnica";
+export const ATUALIZAR_FICHA_TECNICA = "atualizar-ficha-tecnica";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";
@@ -297,6 +302,12 @@ export const ALTERACOES_CODAE = "alteracoes-codae";
 
 export const AGUARDANDO_DILOG = "aguardando-dilog";
 export const ASSINADO_CODAE = "assinado-codae";
+
+export const RECEBIMENTO = "recebimento";
+export const QUESTOES_POR_PRODUTO = "questoes-por-produto";
+export const ATRIBUIR_QUESTOES_CONFERENCIA = "atribuir-questoes-conferencia";
+export const EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA =
+  "editar-atribuicao-questoes-conferencia";
 
 // Status dos pedidos
 

@@ -101,7 +101,7 @@ export default ({ tiposUnidadesEscolar }) => {
             <Form
               onSubmit={() => {}}
               initialValues={{}}
-              render={({ handleSubmit }) => (
+              render={({ handleSubmit, form }) => (
                 <form onSubmit={handleSubmit}>
                   <section className="tipos-de-unidade">
                     <header>Tipos de Unidades</header>
@@ -126,6 +126,7 @@ export default ({ tiposUnidadesEscolar }) => {
                           disabled={alterandoTiposDeAlimentacao}
                           onChange={(value) => {
                             getPeriodosEscolares(value);
+                            form.change("tipo_unidade_escolar", value);
                           }}
                         >
                           {opcoesTiposUnidades}

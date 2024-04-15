@@ -7,15 +7,12 @@ import {
   imprimirCronograma,
 } from "services/cronograma.service";
 import AcoesDetalhar from "../AcoesDetalhar";
-import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
 import AcoesDetalharDinutreDiretoria from "../AcoesDetalharDinutreDiretoria";
 import AcoesDetalharDilogDiretoria from "../AcoesDetalharDilogDiretoria";
 import {
-  usuarioEhCronograma,
+  usuarioEhEmpresaFornecedor,
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
-  usuarioEhCodaeDilog,
-  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
@@ -146,40 +143,25 @@ export default () => {
                     );
                   })}
               <br />
-              {usuarioEhEmpresaFornecedor() && (
-                <div className="mt-4 mb-4">
-                  <AcoesDetalhar cronograma={cronograma} />
-                  {botaoImprimir}
-                </div>
-              )}
-              {usuarioEhCronograma() && (
-                <div className="mt-4 mb-4">
-                  <Botao
-                    texto="Voltar"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-end ms-3"
-                    onClick={() => handleBack()}
-                  />
-                  {botaoImprimir}
-                </div>
-              )}
-              {usuarioEhDinutreDiretoria() && (
-                <>
+              <div className="mt-4 mb-4">
+                {usuarioEhDinutreDiretoria() && (
                   <AcoesDetalharDinutreDiretoria cronograma={cronograma} />
-                  {botaoImprimir}
-                </>
-              )}
-              {usuarioEhDilogDiretoria() && (
-                <>
+                )}
+                {usuarioEhEmpresaFornecedor() && (
+                  <AcoesDetalhar cronograma={cronograma} />
+                )}
+                {usuarioEhDilogDiretoria() && (
                   <AcoesDetalharDilogDiretoria cronograma={cronograma} />
-                  {botaoImprimir}
-                </>
-              )}
-              {usuarioEhCodaeDilog() ||
-                (usuarioEhCODAEGabinete && (
-                  <div className="mt-4 mb-4">{botaoImprimir}</div>
-                ))}
+                )}
+                <Botao
+                  texto="Voltar"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  className="float-end ms-3"
+                  onClick={() => handleBack()}
+                />
+                {botaoImprimir}
+              </div>
             </>
           )}
         </div>

@@ -126,7 +126,7 @@ export function Filtros({
                 minDate={maxEntreDatas([
                   minDate,
                   values.data_inicial &&
-                    adicionaDias(values.data_inicial, "YYYY-MM-DD", 1),
+                    adicionaDias(values.data_inicial, "YYYY-MM-DD"),
                 ])}
                 maxDate={maxDate}
                 format={(data) =>
