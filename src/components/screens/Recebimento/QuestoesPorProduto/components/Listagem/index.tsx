@@ -6,6 +6,7 @@ import Label from "components/Shareable/Label";
 import {
   RECEBIMENTO,
   EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA,
+  COPIAR_ATRIBUICAO_QUESTOES_CONFERENCIA,
 } from "configs/constants";
 
 import "./styles.scss";
@@ -38,7 +39,23 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
       </NavLink>
     );
 
-    return botaoEditar;
+    const botaoCopiar = (
+      <NavLink
+        className="float-start"
+        to={`/${RECEBIMENTO}/${COPIAR_ATRIBUICAO_QUESTOES_CONFERENCIA}?uuid=${questao.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i title="Fazer Cópia" className="fas fa-copy green" />
+        </span>
+      </NavLink>
+    );
+
+    return (
+      <>
+        {botaoEditar}
+        {botaoCopiar}
+      </>
+    );
   };
 
   const fecharCollapsesQuestoes = () => {
@@ -110,7 +127,7 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
                       : "Ver Questões Atribuídas"}
                   </span>
                 </div>
-                <div>{renderizarAcoes(questao)}</div>
+                <div className="coluna-acoes">{renderizarAcoes(questao)}</div>
               </div>
 
               <div
