@@ -311,6 +311,7 @@ import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEdita
 import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
 import AtribuirQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/AtribuirQuestoesPage";
 import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/EditarAtribuicaoQuestoesPage";
+import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/CopiarAtribuicaoQuestoesPage";
 
 const routesConfig = [
   {
@@ -2045,6 +2046,11 @@ const routesConfig = [
   {
     path: `/${constants.RECEBIMENTO}/${constants.EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA}`,
     component: EditarAtribuicaoQuestoesPage,
+    tipoUsuario: usuarioEhRecebimento(),
+  },
+  {
+    path: `/${constants.RECEBIMENTO}/${constants.COPIAR_ATRIBUICAO_QUESTOES_CONFERENCIA}`,
+    component: CopiarAtribuicaoQuestoesPage,
     tipoUsuario: usuarioEhRecebimento(),
   },
 ];
