@@ -59,6 +59,7 @@ import {
   validaRascunho,
 } from "./helpers";
 import { formatarNumeroEProdutoFichaTecnica } from "helpers/preRecebimento";
+import { getListaTiposEmbalagens } from "../../../../services/qualidade.service";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -67,6 +68,7 @@ export default () => {
 
   const [fichasTecnicas, setFichasTecnicas] = useState([{}]);
   const [unidadesMedidaOptions, setUnidadesMedidaOptions] = useState([{}]);
+  const [tiposEmbalagemOptions, setTiposEmbalagemOptions] = useState([{}]);
   const [empresaSelecionada, setEmpresaSelecionada] = useState(undefined);
   const [contratoSelecionado, setContratoSelecionado] = useState(undefined);
   const [unidadeSelecionada, setUnidadeSelecionada] = useState({});
@@ -160,6 +162,7 @@ export default () => {
         buscaFichasTecnicas(),
         buscaUnidadesMedida(),
         buscaRascunhos(),
+        buscaTiposEmbalagens(),
       ]);
 
       if (uuid) {
@@ -203,6 +206,11 @@ export default () => {
   const buscaUnidadesMedida = async () => {
     const response = await getUnidadesDeMedidaLogistica();
     setUnidadesMedidaOptions(response.data.results);
+  };
+
+  const buscaTiposEmbalagens = async () => {
+    const response = await getListaTiposEmbalagens();
+    setTiposEmbalagemOptions(response.data.results);
   };
 
   const buscaRascunhos = async () => {
@@ -257,6 +265,8 @@ export default () => {
     );
     cronogramaValues["unidade_medida_volume_primaria"] =
       cronograma.ficha_tecnica?.unidade_medida_volume_primaria?.uuid;
+    cronogramaValues["tipo_embalagem_secundaria"] =
+      cronograma.tipo_embalagem_secundaria?.uuid;
     cronogramaValues["custo_unitario_produto"] = numberToStringDecimalMonetario(
       cronograma.custo_unitario_produto
     );
@@ -678,6 +688,21 @@ export default () => {
                             </div>
 
                             <div className="row mt-3">
+                              <div className="col-4">
+                                <Field
+                                  className="input-cronograma"
+                                  component={Select}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={[
+                                    { nome: "Selecione a Embalagem", uuid: "" },
+                                    ...tiposEmbalagemOptions,
+                                  ]}
+                                  label="Tipo de Embalagem Secundária"
+                                  name={`tipo_embalagem_secundaria`}
+                                  validate={required}
+                                  required
+                                />
+                              </div>
                               <div className="col-4">
                                 <Field
                                   className="input-cronograma"
