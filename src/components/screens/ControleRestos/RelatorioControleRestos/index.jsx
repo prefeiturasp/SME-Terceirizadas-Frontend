@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import FormFiltros from "./components/FormFiltros";
 import TabelaResultados from "./components/TabelaResultados";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 
 import { Spin } from "antd";
@@ -81,7 +80,6 @@ const RelatorioControleRestos = ({
 
       setLoading(false);
     } catch (error) {
-      console.error(error);
       toastError("Houve um erro ao consultar o relatório");
       setLoading(false);
     }
@@ -158,6 +156,7 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(RelatorioControleRestos)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RelatorioControleRestos);

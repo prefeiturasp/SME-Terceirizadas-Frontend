@@ -265,7 +265,7 @@ export const AcompanhamentoDeLancamentos = () => {
         setCarregandoLotes(false);
       };
 
-      const getEscolasTrecTotalAsync = async () => {
+      const getEscolasTercTotalAsync = async () => {
         setCarregandoEscolas(true);
         const response = await getEscolasTercTotal({ dre: uuid });
         if (response.status === HTTP_STATUS.OK) {
@@ -281,7 +281,7 @@ export const AcompanhamentoDeLancamentos = () => {
       };
 
       meusDados && uuid && getLotesAsync();
-      meusDados && uuid && getEscolasTrecTotalAsync();
+      meusDados && uuid && getEscolasTercTotalAsync();
     }
     if (diretoriaRegional) {
       onPageChanged(currentPage, {

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Field } from "react-final-form";
-import { OnChange } from "react-final-form-listeners";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import { Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
@@ -116,9 +114,8 @@ const FormFiltros = ({
                       tipoUsuario === TIPO_PERFIL.ESCOLA
                     }
                     naoDesabilitarPrimeiraOpcao
-                  />
-                  <OnChange name="dre">
-                    {async (value) => {
+                    onChangeEffect={async (e) => {
+                      const value = e.target.value;
                       setNomeEscolas(
                         escolas
                           .filter((escola) => value.includes(escola.dre.uuid))
@@ -129,7 +126,7 @@ const FormFiltros = ({
                       tipoUsuario !== TIPO_PERFIL.ESCOLA &&
                         form.change("escola", undefined);
                     }}
-                  </OnChange>
+                  />
                 </div>
                 <div className="col-7">
                   <Field
@@ -215,6 +212,4 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(FormFiltros)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(FormFiltros);

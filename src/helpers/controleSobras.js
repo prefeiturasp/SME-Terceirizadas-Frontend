@@ -3,12 +3,9 @@ import {
   getEscolasSimplissimaComDRE,
   getEscolasSimplissimaComDREUnpaginated,
   getEscolasSimplissimaPorDiretoriaRegional,
-  getEscolasTrecTotal,
+  getEscolasTercTotal,
 } from "services/escola.service";
-import {
-  getDiretoriaregionalSimplissima,
-  getDiretoriaregionalSimplissimaAxios,
-} from "services/diretoriaRegional.service";
+import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 
 export const formFiltrosObtemDreEEscolas = async (
   setEscolas,
@@ -89,7 +86,7 @@ export const formFiltrosObtemDreEEscolasNovo = async (
       setEscolas(formataUuidNomeParaMultiSelect(resposta2));
       setDiretoriasRegionais([{ value: uuid, label: nome }]);
     } else {
-      const respostaDre = await getDiretoriaregionalSimplissimaAxios();
+      const respostaDre = await getDiretoriaregionalSimplissima();
       const respostaEscola = await getEscolasSimplissimaComDREUnpaginated();
       setDiretoriasRegionais(
         formataUuidNomeParaMultiSelect(respostaDre.data.results)
@@ -137,7 +134,7 @@ export const formFiltrosObtemDreEEscolasControleSobras = async (
   } else {
     if (dadosUsuario.tipo_usuario === "diretoriaregional") {
       const { uuid, nome } = dadosUsuario.vinculo_atual.instituicao;
-      const resposta2 = await getEscolasTrecTotal({ dre: uuid });
+      const resposta2 = await getEscolasTercTotal({ dre: uuid });
       setDiretoriasRegionais([{ value: uuid, label: nome }]);
       setNomeEscolas([
         ...(habilitarUETodas ? [nomeEscolaTodas] : []),
@@ -148,8 +145,8 @@ export const formFiltrosObtemDreEEscolasControleSobras = async (
         ...formataUuidNomeComCodEolETipo(resposta2.data),
       ]);
     } else {
-      const respostaDre = await getDiretoriaregionalSimplissimaAxios();
-      const respostaEscola = await getEscolasTrecTotal();
+      const respostaDre = await getDiretoriaregionalSimplissima();
+      const respostaEscola = await getEscolasTercTotal();
       setDiretoriasRegionais(
         formataUuidNomeComCodEolETipo(respostaDre.data.results)
       );

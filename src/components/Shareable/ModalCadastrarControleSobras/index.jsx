@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { OnBlur, OnChange } from "react-final-form-listeners";
 import { Modal } from "react-bootstrap";
 import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 import { Field, Form } from "react-final-form";
@@ -30,7 +29,6 @@ import {
 } from "reducers/controleSobrasReducer";
 import { consultaTiposAlimento } from "services/tipoAlimento.service";
 import { consultaTiposRecipiente } from "services/tipoRecipiente.service";
-import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import "./styles.scss";
@@ -276,9 +274,8 @@ const ModalCadastrarControleSobras = ({
                         required
                         validate={required}
                         naoDesabilitarPrimeiraOpcao
-                      />
-                      <OnChange name="dre">
-                        {async (value) => {
+                        onChangeEffect={(e) => {
+                          const value = e.target.value;
                           setNomeEscolas(
                             escolas
                               .filter((escola) =>
@@ -292,7 +289,7 @@ const ModalCadastrarControleSobras = ({
                           tipoUsuario !== TIPO_PERFIL.ESCOLA &&
                             form.change("escola", undefined);
                         }}
-                      </OnChange>
+                      />
                     </div>
                     <div className="col-6">
                       <Field
@@ -316,10 +313,8 @@ const ModalCadastrarControleSobras = ({
                           required,
                           requiredSearchSelectUnidEducDietas(escolas)
                         )}
+                        inputOnChange={() => onBlurEscola(form, values)}
                       />
-                      <OnBlur name="escola">
-                        {() => onBlurEscola(form, values)}
-                      </OnBlur>
                     </div>
                   </div>
                   <div className="row">
@@ -522,6 +517,7 @@ const mapDispatchToProps = (dispatch) =>
     dispatch
   );
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ModalCadastrarControleSobras)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ModalCadastrarControleSobras);

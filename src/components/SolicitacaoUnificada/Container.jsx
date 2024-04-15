@@ -44,7 +44,7 @@ export const Container = () => {
     }
   };
 
-  const getEscolasTrecTotalAsync = async (dre_uuid) => {
+  const getEscolasTercTotalAsync = async (dre_uuid) => {
     const response = await getEscolasTercTotal({ dre: dre_uuid });
     if (response.status === HTTP_STATUS.OK) {
       setEscolas(response.data);
@@ -62,7 +62,7 @@ export const Container = () => {
     await Promise.all([
       getDiasUteisAsync(),
       setLotes(meusDados.vinculo_atual.instituicao.lotes),
-      getEscolasTrecTotalAsync(dre_uuid),
+      getEscolasTercTotalAsync(dre_uuid),
     ]);
   };
 

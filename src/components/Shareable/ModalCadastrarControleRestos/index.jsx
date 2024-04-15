@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { OnBlur, OnChange } from "react-final-form-listeners";
 import { Modal } from "react-bootstrap";
 import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 import { Field, Form } from "react-final-form";
@@ -25,7 +24,6 @@ import { composeValidators } from "helpers/utilities";
 import { formatarVinculosParaTiposAlimentacao } from "helpers/controleRestos";
 import { cadastrarControleRestos } from "services/controleRestos.service";
 import { toastError, toastSuccess } from "../Toast/dialogs";
-import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
 import { connect } from "react-redux";
 import "./styles.scss";
 import ManagedInputFileField from "../Input/InputFile/ManagedField";
@@ -269,9 +267,8 @@ const ModalCadastrarControleRestos = ({
                         required
                         validate={required}
                         naoDesabilitarPrimeiraOpcao
-                      />
-                      <OnChange name="dre">
-                        {async (value) => {
+                        onChangeEffect={(e) => {
+                          const value = e.target.value;
                           setNomeEscolas(
                             escolas
                               .filter((escola) =>
@@ -285,7 +282,7 @@ const ModalCadastrarControleRestos = ({
                           tipoUsuario !== TIPO_PERFIL.ESCOLA &&
                             form.change("escola", undefined);
                         }}
-                      </OnChange>
+                      />
                     </div>
                     <div className="col-6">
                       <Field
@@ -309,10 +306,8 @@ const ModalCadastrarControleRestos = ({
                           required,
                           requiredSearchSelectUnidEducDietas(escolas)
                         )}
+                        inputOnChange={() => onBlurEscola(form, values)}
                       />
-                      <OnBlur name="escola">
-                        {() => onBlurEscola(form, values)}
-                      </OnBlur>
                     </div>
                   </div>
                   <div className="row">
@@ -535,6 +530,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default withRouter(
-  connect(mapStateToProps)(ModalCadastrarControleRestos)
-);
+export default connect(mapStateToProps)(ModalCadastrarControleRestos);
