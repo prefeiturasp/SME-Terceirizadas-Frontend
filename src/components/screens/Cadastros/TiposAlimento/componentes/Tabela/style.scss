@@ -1,0 +1,85 @@
+.table-items {
+  font-family: Roboto;
+  font-style: normal;
+
+  .table-body-sem-resultado {
+    td {
+      font-weight: bold;
+      font-size: 16px;
+      background-color: #e5e5e5;
+      color: #42474a;
+    }
+  }
+
+  .table-head-items {
+    font-weight: bold;
+    font-size: 14px;
+    background: #e5e5e5;
+    color: #42474a;
+
+    .nome {
+      min-width: 400px;
+    }
+
+    .tipo {
+      min-width: 150px;
+    }
+
+    .acoes {
+      width: 185px;
+    }
+  }
+
+  .table-body-items {
+    font-size: 13px;
+    color: #42474a;
+
+    .acoes {
+      font-family: Font Awesome 5 Free;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 16px;
+
+      .botaoEditar {
+        background-color: #ffffff;
+        border: none;
+        outline: none;
+        color: #266397;
+      }
+
+      .botaoEditar:disabled {
+        color: #42474a;
+        opacity: 0.6;
+      }
+
+      .botaoExcluir {
+        background-color: #ffffff;
+        border: none;
+        outline: none;
+        color: #a61e0f;
+      }
+
+      .botaoExcluir:disabled {
+        color: #42474a;
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
+.data-title {
+  color: #198459;
+  font-weight: bold;
+  font-size: 14px;
+  font-family: Roboto;
+  font-style: normal;
+}
+
+p {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  color: #42474a;
+}

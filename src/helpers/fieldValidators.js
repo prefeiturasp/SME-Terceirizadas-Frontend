@@ -43,8 +43,8 @@ export const composeValidators =
       undefined
     );
 
-export const requiredOptionSearchSelect = (escolas) => (value) =>
-  escolas.find((escola) => escola.label === value)
+export const requiredOptionSearchSelect = (list, keyProp) => (value) =>
+  list.find((item) => (keyProp ? item[keyProp] : item.label) === value)
     ? undefined
     : "Selecione uma opção válida";
 

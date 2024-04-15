@@ -1,0 +1,91 @@
+.table-items {
+  font-family: Roboto;
+  font-style: normal;
+
+  .table-body-sem-resultado {
+    td {
+      font-weight: bold;
+      font-size: 16px;
+      background-color: #e5e5e5;
+      color: #42474a;
+    }
+  }
+
+  .table-head-items {
+    font-weight: bold;
+    font-size: 14px;
+    background: #e5e5e5;
+    color: #42474a;
+
+    .data_medicao {
+      min-width: 100px;
+    }
+
+    .escola {
+      min-width: 200px;
+    }
+
+    .quantidade_distribuida {
+      min-width: 80px;
+    }
+
+    .peso_resto {
+      min-width: 80px;
+    }
+
+    .num_refeicoes {
+      min-width: 80px;
+    }
+
+    .resto_per_capita {
+      min-width: 80px;
+    }
+
+    .percent_resto {
+      min-width: 80px;
+    }
+  }
+
+  .table-body-items {
+    font-size: 13px;
+    color: #42474a;
+
+    .acoes-visualizar-apenas {
+      font-family: Font Awesome 5 Free;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 16px;
+
+      .botaoVisualizar {
+        background-color: #ffffff;
+        border: none;
+        outline: none;
+        display: flex;
+        align-items: center;
+        color: #266397;
+      }
+
+      .botaoVisualizar:disabled {
+        color: #42474a;
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
+.data-title {
+  color: #198459;
+  font-weight: bold;
+  font-size: 14px;
+  font-family: Roboto;
+  font-style: normal;
+}
+
+p {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  color: #42474a;
+}

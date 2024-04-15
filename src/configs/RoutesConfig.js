@@ -308,6 +308,12 @@ import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/Ca
 import StatusFichasTecnicasAprovadas from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasAprovadas";
 import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
 import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
+import TiposRecipientePage from "../pages/Cadastros/TiposRecipientePage";
+import TiposAlimentoPage from "../pages/Cadastros/TiposAlimentoPage";
+import ControleSobrasPage from "pages/Cadastros/ControleSobrasPage";
+import ControleRestosPage from "pages/Cadastros/ControleRestosPage";
+import RelatorioControleRestosPage from "pages/Relatorios/RelatorioControleRestosPage";
+import RelatorioControleSobrasPage from "pages/Relatorios/RelatorioControleSobrasPage";
 import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
 import AtribuirQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/AtribuirQuestoesPage";
 import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/EditarAtribuicaoQuestoesPage";
@@ -730,6 +736,30 @@ const routesConfig = [
     path: `/configuracoes/cadastros/faixas-etarias`,
     component: FaixasEtariasPage,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.TIPOS_RECIPIENTE}`,
+    component: TiposRecipientePage,
+    exact: true,
+    tipoUsuario: usuarioEhCoordenadorNutriSupervisao(),
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.TIPOS_ALIMENTO}`,
+    component: TiposAlimentoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCoordenadorNutriSupervisao(),
+  },
+  {
+    path: `/${constants.CONTROLE_SOBRAS}`,
+    component: ControleSobrasPage,
+    exact: true,
+    tipoUsuario: usuarioEhAdmQualquerEmpresa(),
+  },
+  {
+    path: `/${constants.CONTROLE_RESTOS}`,
+    component: ControleRestosPage,
+    exact: true,
+    tipoUsuario: usuarioEhCoordenadorNutriSupervisao(),
   },
   {
     path: `/${constants.CODAE}/${constants.CADASTROS}/${constants.CONSULTA_KITS}`,
@@ -1411,6 +1441,18 @@ const routesConfig = [
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
       ehUsuarioRelatorios(),
+  },
+  {
+    path: `/${constants.CONTROLE_RESTOS}/${constants.RELATORIO_CONTROLE_RESTOS}`,
+    component: RelatorioControleRestosPage,
+    exact: true,
+    tipoUsuario: usuarioEhCoordenadorNutriSupervisao(),
+  },
+  {
+    path: `/${constants.CONTROLE_SOBRAS}/${constants.RELATORIO_CONTROLE_SOBRAS}`,
+    component: RelatorioControleSobrasPage,
+    exact: true,
+    tipoUsuario: usuarioEhAdmQualquerEmpresa(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
