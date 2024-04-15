@@ -42,7 +42,9 @@ const Listagem = ({ questoesPorProdutos }: ListagemProps) => {
     const botaoCopiar = (
       <NavLink
         className="float-start"
-        to={`/${RECEBIMENTO}/${COPIAR_ATRIBUICAO_QUESTOES_CONFERENCIA}?uuid=${questao.uuid}`}
+        to={`/${RECEBIMENTO}/${COPIAR_ATRIBUICAO_QUESTOES_CONFERENCIA}?uuid=${
+          questao.uuid
+        }&copia=${true}`}
       >
         <span className="link-acoes px-2">
           <i title="Fazer Cópia" className="fas fa-copy green" />
