@@ -226,7 +226,7 @@ export default ({
                             {etapa.numero_empenho}
                           </td>
                           <td className="borda-crono">
-                            {etapa.qtd_total_empenho}{" "}
+                            {formataMilharDecimal(etapa.qtd_total_empenho)}{" "}
                             {cronograma.unidade_medida?.abreviacao}
                           </td>
                           <td className="borda-crono">{etapa.etapa}</td>
