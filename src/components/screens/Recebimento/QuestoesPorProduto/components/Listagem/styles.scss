@@ -27,7 +27,7 @@
       display: grid;
       align-items: center;
       text-align: center;
-      grid-template-columns: 2fr 10fr 5fr 1fr;
+      grid-template-columns: 3fr 10fr 5fr 2fr;
     }
 
     .header-table {
@@ -59,8 +59,11 @@
         color: $green;
       }
 
-      .actions {
+      .coluna-acoes {
         display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0;
       }
 
       .link-acoes {
