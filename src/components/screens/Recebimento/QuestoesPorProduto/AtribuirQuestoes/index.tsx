@@ -16,7 +16,6 @@ import { required } from "helpers/fieldValidators";
 import { FichaTecnicaSimples } from "interfaces/pre_recebimento.interface";
 import {
   QuestaoConferencia,
-  QuestoesPorProdutoSimples,
   ResponseListarQuestoesConferencia,
 } from "interfaces/recebimento.interface";
 import { formatarNumeroEProdutoFichaTecnica } from "helpers/preRecebimento";
@@ -65,11 +64,11 @@ export default () => {
     []
   );
 
-  const [questoesEdicao, setQuestoesEdicao] =
-    useState<QuestoesPorProdutoSimples>();
   const [initialValues, setInitialValues] = useState<Record<string, string>>();
 
-  const uuid = new URLSearchParams(window.location.search).get("uuid");
+  const searchParams = new URLSearchParams(window.location.search);
+  const uuid = searchParams.get("uuid");
+  const copia = searchParams.get("copia");
 
   const transferConfigPrimarias = useTransferMultiSelect({
     required: true,
@@ -86,7 +85,7 @@ export default () => {
       show: true,
       handleClose: fecharModal,
       handleSim: () => salvarOuEditarAtribuicao(values),
-      titulo: uuid ? "Salvar Edição" : "Salvar Cadastro",
+      titulo: uuid && !copia ? "Salvar Edição" : "Salvar Cadastro",
       texto:
         "Deseja salvar a atribuição das questões de conferência para esse produto?",
     });
@@ -106,7 +105,9 @@ export default () => {
   const salvarOuEditarAtribuicao = async (values: Record<string, string>) => {
     try {
       setCarregando(true);
-      uuid ? await editarAtribuicao(uuid) : await salvarAtribuicao(values);
+      uuid && !copia
+        ? await editarAtribuicao(uuid)
+        : await salvarAtribuicao(values);
     } finally {
       setCarregando(false);
     }
@@ -205,11 +206,13 @@ export default () => {
 
   const carregarObjetoEmEdicao = async (uuid: string) => {
     const questoes = (await detalharQuestoesPorProduto(uuid)).data;
-    setQuestoesEdicao(questoes);
 
-    setInitialValues({
-      ficha_tecnica: formatarNumeroEProdutoFichaTecnica(questoes.ficha_tecnica),
-    });
+    !copia &&
+      setInitialValues({
+        ficha_tecnica: formatarNumeroEProdutoFichaTecnica(
+          questoes.ficha_tecnica
+        ),
+      });
 
     transferConfigPrimarias.setInitialTagetKeys(questoes.questoes_primarias);
     transferConfigSecundarias.setInitialTagetKeys(
@@ -269,7 +272,7 @@ export default () => {
                       placeholder="Selecione uma ficha técnica e produto"
                       required
                       validate={required}
-                      disabled={!!questoesEdicao}
+                      disabled={uuid && !copia}
                     />
                   </div>
                 </div>
