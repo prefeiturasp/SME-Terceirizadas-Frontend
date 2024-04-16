@@ -19,11 +19,7 @@ import {
   getAmanha,
   usuarioEhCronograma,
 } from "helpers/utilities";
-import {
-  required,
-  composeValidators,
-  inteiroOuDecimalComVirgula,
-} from "helpers/fieldValidators";
+import { required } from "helpers/fieldValidators";
 
 import "./styles.scss";
 import { calculaTotalEmbalagens } from "./helper";
@@ -211,10 +207,7 @@ export default ({
                       placeholder="Informe a quantidade"
                       required
                       agrupadorMilharComDecimal
-                      validate={composeValidators(
-                        required,
-                        inteiroOuDecimalComVirgula
-                      )}
+                      validate={required}
                       proibeLetras
                       disabled={desabilitar[index]}
                     />
