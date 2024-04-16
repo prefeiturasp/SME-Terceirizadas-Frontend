@@ -97,6 +97,7 @@ export default () => {
               lote: "",
               tipos_unidades: "",
             }}
+            destroyOnUnregister={true}
             render={({ form, handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit}>
                 <Filtros
@@ -107,7 +108,7 @@ export default () => {
                   ehCadastro
                 />
                 {exibeTabelasEMEFeEMEI ? (
-                  <>
+                  <div key={grupoSelecionado}>
                     <TabelaAlimentacao
                       tiposAlimentacao={tiposAlimentacao}
                       grupoSelecionado={grupoSelecionado}
@@ -122,7 +123,7 @@ export default () => {
                         tiposAlimentacao={tiposAlimentacao}
                       />
                     </div>
-                  </>
+                  </div>
                 ) : null}
                 {exibeTabelasCEI ? (
                   <div className="container-tabelas-cei">
