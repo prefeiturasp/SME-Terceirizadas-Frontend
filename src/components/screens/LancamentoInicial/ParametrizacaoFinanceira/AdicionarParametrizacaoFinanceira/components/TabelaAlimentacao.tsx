@@ -39,7 +39,7 @@ export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
     <div className="row mt-5">
       <div className="col-4">
         <h2 className="text-start texto-simples-verde fw-bold">
-          Preço das Alimentações Convencionais
+          Preço das Alimentações
         </h2>
         <Table pagination={false} bordered dataSource={alimentacoes}>
           <Column
@@ -54,13 +54,13 @@ export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
                   </p>
                   <Field
                     component="input"
-                    name={`tabelas["Alimentações Convencionais"].${value}_${record.grupo}.tipo_alimentacao`}
+                    name={`tabelas[Alimentações].${value}_${record.grupo}.tipo_alimentacao`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
                   <Field
                     component="input"
-                    name={`tabelas["Alimentações Convencionais"].${value}_${record.grupo}.grupo`}
+                    name={`tabelas[Alimentações].${value}_${record.grupo}.grupo`}
                     type="hidden"
                     defaultValue={record.grupo}
                   />
@@ -75,7 +75,7 @@ export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Alimentações Convencionais"].${record.nome}_${record.grupo}.valor_unitario`}
+                name={`tabelas[Alimentações].${record.nome}_${record.grupo}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -91,7 +91,7 @@ export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Alimentações Convencionais"].${record.nome}_${record.grupo}.valor_unitario_reajuste`}
+                name={`tabelas[Alimentações].${record.nome}_${record.grupo}.valor_unitario_reajuste`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}

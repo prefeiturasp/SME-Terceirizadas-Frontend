@@ -63,7 +63,7 @@ export default () => {
       await ParametrizacaoFinanceiraService.addParametrizacaoFinanceira(
         payload
       );
-      toastSuccess("Parametrização incluída com sucesso!");
+      toastSuccess("Parametrização Financeira salva com sucesso!");
       navigate(-1);
     } catch (err) {
       const data = err.response.data;
