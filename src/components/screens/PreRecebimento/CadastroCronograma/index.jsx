@@ -278,7 +278,7 @@ export default () => {
       etapaValues[`empenho_${i}`] = stringNaoVaziaOuUndefined(
         etapa.numero_empenho
       );
-      etapaValues[`qtd_total_empenho_${i}`] = numberToStringDecimal(
+      etapaValues[`qtd_total_empenho_${i}`] = formataMilharDecimal(
         etapa.qtd_total_empenho
       );
       etapaValues[`etapa_${i}`] = stringNaoVaziaOuUndefined(etapa.etapa);

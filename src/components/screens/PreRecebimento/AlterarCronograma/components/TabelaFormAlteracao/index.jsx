@@ -3,7 +3,7 @@ import { required } from "helpers/fieldValidators";
 import React from "react";
 import { Field } from "react-final-form";
 import "./styles.scss";
-import { formataMilhar } from "../../../../../../helpers/utilities";
+import { formataMilharDecimal } from "../../../../../../helpers/utilities";
 
 export default ({ solicitacao, somenteLeitura }) => {
   const pintaTabela = (campo, index) => {
@@ -72,7 +72,7 @@ export default ({ solicitacao, somenteLeitura }) => {
                       index
                     )}`}
                   >
-                    {formataMilhar(etapa.quantidade)}
+                    {formataMilharDecimal(etapa.quantidade)}
                   </td>
                   <td
                     className={`borda-crono ${pintaTabela(
@@ -80,7 +80,7 @@ export default ({ solicitacao, somenteLeitura }) => {
                       index
                     )}`}
                   >
-                    {formataMilhar(etapa.total_embalagens)}
+                    {formataMilharDecimal(etapa.total_embalagens)}
                   </td>
                 </tr>
               );

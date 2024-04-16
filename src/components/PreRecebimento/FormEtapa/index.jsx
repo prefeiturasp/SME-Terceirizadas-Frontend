@@ -210,6 +210,7 @@ export default ({
                       name={`qtd_total_empenho_${index}`}
                       placeholder="Informe a quantidade"
                       required
+                      agrupadorMilharComDecimal
                       validate={composeValidators(
                         required,
                         inteiroOuDecimalComVirgula
