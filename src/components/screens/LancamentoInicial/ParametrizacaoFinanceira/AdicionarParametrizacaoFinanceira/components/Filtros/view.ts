@@ -3,10 +3,13 @@ import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { getNumerosEditais } from "services/edital.service";
 import { getLotesSimples } from "services/lote.service";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
+import { getFaixasEtarias } from "services/faixaEtaria.service";
 
 import { toastError } from "components/Shareable/Toast/dialogs";
 
 import { TIPOS_UNIDADES_GRUPOS } from "../../const";
+
+import { FormApi } from "final-form";
 
 type SelectOption = {
   uuid: string;
@@ -16,9 +19,16 @@ type SelectOption = {
 type Props = {
   setTiposAlimentacao: Dispatch<SetStateAction<Array<any>>>;
   setGrupoSelecionado: Dispatch<SetStateAction<string>>;
+  setFaixasEtarias: Dispatch<SetStateAction<Array<any>>>;
+  form: FormApi<any, any>;
 };
 
-export default ({ setTiposAlimentacao, setGrupoSelecionado }: Props) => {
+export default ({
+  setTiposAlimentacao,
+  setGrupoSelecionado,
+  setFaixasEtarias,
+  form,
+}: Props) => {
   const [editais, setEditais] = useState<SelectOption[]>([]);
   const [lotes, setLotes] = useState<SelectOption[]>([]);
   const [tiposUnidades, setTiposUnidades] = useState([]);
@@ -87,12 +97,24 @@ export default ({ setTiposAlimentacao, setGrupoSelecionado }: Props) => {
     }
   };
 
+  const getFaixasEtariasAsync = async () => {
+    try {
+      const { data } = await getFaixasEtarias();
+      setFaixasEtarias(data.results);
+    } catch (error) {
+      toastError(
+        "Erro ao carregar faixas etárias. Tente novamente mais tarde."
+      );
+    }
+  };
+
   useEffect(() => {
     setCarregando(true);
     Promise.all([
       getEditaisAsync(),
       getLotesAsync(),
       getTiposUnidadeEscolarAsync(),
+      setFaixasEtarias && getFaixasEtariasAsync(),
     ]).then(() => {
       setCarregando(false);
     });
@@ -138,6 +160,11 @@ export default ({ setTiposAlimentacao, setGrupoSelecionado }: Props) => {
   };
 
   const onChangeTiposUnidades = (unidades: string) => {
+    const tabelas = form.getState().values?.tabelas;
+    if (tabelas) {
+      form.change("tabelas", {});
+    }
+
     const grupoSelecionado = getGrupoSelecionado(unidades);
 
     if (

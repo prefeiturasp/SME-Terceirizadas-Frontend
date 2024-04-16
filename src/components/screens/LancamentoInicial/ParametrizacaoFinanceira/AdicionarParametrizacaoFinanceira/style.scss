@@ -1,12 +1,37 @@
 @import "styles/variables.scss";
 
-div.parametrizacao-financeira {
-  table .ant-form-item {
-    margin-bottom: 0;
+div.adicionar-parametrizacao {
+  .titulo-tag {
+    padding: 0.4rem;
+    color: $blackInput;
   }
 
-  table th {
-    background-color: $greenDark !important;
-    color: $white !important;
+  .periodo-integral {
+    background-color: #ffd869;
+  }
+
+  .periodo-parcial {
+    background-color: #b7e487;
+  }
+
+  div.container-tabelas-cei {
+    display: grid;
+    grid-template-columns: 49% 49%;
+    gap: 0 2%;
+  }
+
+  table {
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+
+    th {
+      background-color: $green !important;
+      color: $white !important;
+    }
+
+    thead tr th:first-child {
+      background-color: $greenDark !important;
+    }
   }
 }
