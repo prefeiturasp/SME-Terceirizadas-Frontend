@@ -97,8 +97,7 @@ const ModalCadastrarControleRestos = ({
     }
   }, [showModal]);
 
-  const onBlurEscola = async (form, values) => {
-    const value = values.escola;
+  const onBlurEscola = async (form, value) => {
     if (!value) {
       if (tiposAlimentacao) {
         setTiposAlimentacao([]);
@@ -108,7 +107,8 @@ const ModalCadastrarControleRestos = ({
     }
 
     const escola = escolas.filter(
-      (e) => e?.codigo_eol === value.split(" - ")[0]
+      (e) => e?.codigo_eol === (typeof value === "string" ? value : value.escola)
+        .split(" - ")[0]
     )[0];
     if (escola) {
       if (escola?.codigo_eol !== escolaSelected?.codigo_eol) {
@@ -122,6 +122,7 @@ const ModalCadastrarControleRestos = ({
         setEscolaSelected(escola);
       }
     } else if (tiposAlimentacao) {
+      setEscolaSelected(undefined);
       setTiposAlimentacao([]);
     }
     form?.change("tipo_alimentacao", undefined);
@@ -214,7 +215,7 @@ const ModalCadastrarControleRestos = ({
   const escolherHora = (hora, form) => {
     setTimeout(() => {
       if (hora) {
-        const horario = moment(hora).format("HH:mm:ss");
+        const horario = moment(hora.toDate()).format("HH:mm:ss");
         setHoraMedicao(horario);
         setHoraMedicaoAlterada(true);
         form.change("hora_medicao", horario);
@@ -223,7 +224,7 @@ const ModalCadastrarControleRestos = ({
         setHoraMedicaoAlterada(false);
         form.change("hora_medicao", "00:00:00");
       }
-    }, 100);
+    }, 250);
   };
 
   const validaHora = (value) => {
@@ -306,7 +307,7 @@ const ModalCadastrarControleRestos = ({
                           required,
                           requiredSearchSelectUnidEducDietas(escolas)
                         )}
-                        inputOnChange={() => onBlurEscola(form, values)}
+                        inputOnChange={(value) => onBlurEscola(form, value)}
                       />
                     </div>
                   </div>
@@ -422,6 +423,7 @@ const ModalCadastrarControleRestos = ({
                         placeholder="Selecione a Hora"
                         horaAtual={HoraMedicao}
                         onOk={(hora) => escolherHora(hora, form)}
+                        onChangeFunction={(hora) => escolherHora(hora, form)}
                         writable={false}
                         className={
                           "input-data-hora" +
@@ -430,63 +432,68 @@ const ModalCadastrarControleRestos = ({
                         disabled={!!selecionado}
                         validate={validaHora}
                         required
+                        functionComponent
                       />
                     </div>
                   </div>
                   {!selecionado && (
-                    <section className="form-row attachments">
-                      <div className="col-6">
-                        <div className="card-title font-weight-bold cinza-escuro">
-                          Anexar
+                    <div className="row">
+                      <section className="form-row attachments">
+                        <div className="col-6">
+                          <div className="card-title font-weight-bold cinza-escuro">
+                            Anexar
+                          </div>
+                          <div className="text">Anexar fotos relacionadas.</div>
                         </div>
-                        <div className="text">Anexar fotos relacionadas.</div>
-                      </div>
-                      <div className="col-6 btn">
-                        <Field
-                          component={ManagedInputFileField}
-                          concatenarNovosArquivos
-                          className="inputfile"
-                          texto="Anexar"
-                          name="imagens"
-                          accept=".png, .jpeg, .jpg"
-                          icone={BUTTON_ICON.ATTACH}
-                          required
-                          validate={required}
-                          toastSuccessMessage="Anexo incluso com sucesso"
-                        />
-                      </div>
-                    </section>
+                        <div className="col-6 btn">
+                          <Field
+                            component={ManagedInputFileField}
+                            concatenarNovosArquivos
+                            className="inputfile"
+                            texto="Anexar"
+                            name="imagens"
+                            accept=".png, .jpeg, .jpg"
+                            icone={BUTTON_ICON.ATTACH}
+                            required
+                            validate={required}
+                            toastSuccessMessage="Anexo incluso com sucesso"
+                          />
+                        </div>
+                      </section>
+                    </div>
                   )}
                   {selecionado && (
-                    <div className="section-cards-imagens pb-3">
-                      {(selecionado.imagens?.length ?? []) > 0 && (
-                        <>
-                          {selecionado.imagens
-                            .filter((anexo) => anexo.arquivo.includes("media"))
-                            .map((anexo, key) => {
-                              return (
-                                <div
-                                  key={key}
-                                  className={`px-1 arquivos-anexados ${
-                                    key > 0 ? "mt-1" : ""
-                                  }`}
-                                >
-                                  <span onClick={() => openFile(anexo)}>
-                                    <i className="fas fa-paperclip" />
-                                  </span>
-                                  <a
-                                    rel="noopener noreferrer"
-                                    target="_blank"
-                                    href={anexo.arquivo}
-                                    className="link ml-1 mr-5"
+                    <div className="row">
+                      <div className="section-cards-imagens pb-3">
+                        {(selecionado.imagens?.length ?? []) > 0 && (
+                          <>
+                            {selecionado.imagens
+                              .filter((anexo) => anexo.arquivo.includes("media"))
+                              .map((anexo, key) => {
+                                return (
+                                  <div
+                                    key={key}
+                                    className={`px-1 arquivos-anexados ${
+                                      key > 0 ? "mt-1" : ""
+                                    }`}
                                   >
-                                    {anexo.nome}
-                                  </a>
-                                </div>
-                              );
-                            })}
-                        </>
-                      )}
+                                    <span onClick={() => openFile(anexo)}>
+                                      <i className="fas fa-paperclip" />
+                                    </span>
+                                    <a
+                                      rel="noopener noreferrer"
+                                      target="_blank"
+                                      href={anexo.arquivo}
+                                      className="link ml-1 mr-5"
+                                    >
+                                      {anexo.nome}
+                                    </a>
+                                  </div>
+                                );
+                              })}
+                          </>
+                        )}
+                      </div>
                     </div>
                   )}
                 </Modal.Body>
@@ -498,14 +505,14 @@ const ModalCadastrarControleRestos = ({
                         type={BUTTON_TYPE.BUTTON}
                         onClick={closeModal}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="ml-3"
+                        className="me-3"
                       />
                       {!selecionado && (
                         <Botao
                           texto="Salvar"
                           type={BUTTON_TYPE.SUBMIT}
                           style={BUTTON_STYLE.GREEN}
-                          className="ml-3"
+                          className="me-3"
                           disabled={submitting}
                         />
                       )}

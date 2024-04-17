@@ -29,10 +29,10 @@ import {
 import { meusDados } from "services/perfil.service";
 
 import "./styles.scss";
-import ModalCadastrarControleSobras from "components/Shareable/ModalCadastrarControleSobras";
 import { bindActionCreators } from "redux";
 import { InputComData } from "components/Shareable/DatePicker";
 import moment from "moment";
+import { useNavigationType } from "react-router-dom";
 
 const FORM_NAME = "buscaControleSobras";
 
@@ -40,17 +40,16 @@ const FormFiltros = ({
   setLoading,
   setFiltros,
   initialValues,
-  history,
   setDadosUsuario,
   diretoriasRegionais,
   setDiretoriasRegionais,
   escolas,
   setEscolas,
-  nextPage,
 }) => {
+  const navigationType = useNavigationType();
+
   const [dadosIniciais, setDadosIniciais] = useState({});
   const [nomeEscolas, setNomeEscolas] = useState([]);
-  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     async function fetch() {
@@ -69,7 +68,7 @@ const FormFiltros = ({
         dadosIniciais.escola = [`${codigo_eol} - ${nome}`];
       }
 
-      if (history.action === "POP" && initialValues)
+      if (navigationType === "POP" && initialValues)
         setDadosIniciais({ ...initialValues, ...dadosIniciais });
       else setDadosIniciais(dadosIniciais);
       setLoading(false);
@@ -188,20 +187,14 @@ const FormFiltros = ({
                 <div className="col-12 botoes-envio">
                   <div className="mt-4">
                     <Botao
-                      texto="Cadastrar Sobra"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN}
-                      onClick={() => setShowModal(true)}
-                    />
-                    <Botao
                       texto="Consultar"
-                      className="float-right ml-3"
+                      className="float-right me-3"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                     />
                     <Botao
                       texto="Limpar Filtros"
-                      className="float-right ml-3"
+                      className="float-right me-3"
                       onClick={() => {
                         if (tipoUsuario === TIPO_PERFIL.ESCOLA)
                           form.restart({
@@ -228,12 +221,6 @@ const FormFiltros = ({
           )}
         />
       </Spin>
-      <ModalCadastrarControleSobras
-        closeModal={() => setShowModal(false)}
-        showModal={showModal}
-        tipoUsuario={tipoUsuario}
-        changePage={nextPage}
-      />
     </>
   );
 };
