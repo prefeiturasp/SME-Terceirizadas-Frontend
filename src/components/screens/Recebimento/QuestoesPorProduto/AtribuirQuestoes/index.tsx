@@ -136,7 +136,7 @@ export default () => {
 
     if (status === 201) {
       voltarPagina();
-      toastSuccess("Atribuição Salva com sucesso!");
+      toastSuccess("Atribuição salva com sucesso!");
     }
   };
 
