@@ -1577,7 +1577,7 @@ export default () => {
     disableBotaoSalvarLancamentos,
   ]);
 
-  const onSubmitObservacao = async (values, dia, categoria, errors) => {
+  const onSubmitObservacao = async (values, dia, categoria, form, errors) => {
     let valoresMedicao = [];
     const valuesMesmoDiaDaObservacao = Object.fromEntries(
       Object.entries(values).filter(([key]) =>
@@ -1602,7 +1602,10 @@ export default () => {
         key.includes(`__dia_${dia}__categoria_${categoria}`)
       ).length
     ) {
-      toastError(`Existe(m) erro(s) na coluna do dia ${dia}.`);
+      toastError(
+        `Não foi possível salvar seu comentário, pois existe(m) erro(s) na coluna do dia ${dia}.`
+      );
+      form.change(`observacoes__dia_${dia}__categoria_${categoria}`, "");
       return;
     }
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
@@ -3157,6 +3160,7 @@ export default () => {
                           formValuesAtualizados,
                           showDiaObservacaoDiaria,
                           showCategoriaObservacaoDiaria,
+                          form,
                           errors
                         )
                       }
