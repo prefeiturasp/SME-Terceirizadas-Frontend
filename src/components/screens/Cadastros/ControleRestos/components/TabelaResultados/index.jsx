@@ -57,7 +57,7 @@ const TabelaControleRestos = ({ list, nextPage }) => {
                             className="botaoVisualizar"
                             onClick={() => openModal(item)}
                           >
-                            <EyeOutlined className="mr-1" />
+                            <EyeOutlined className="me-1" />
                             <span>Visualizar</span>
                           </button>
                         </td>

@@ -119,8 +119,7 @@ const ModalCadastrarControleSobras = ({
     }
   }, [showModal]);
 
-  async function onBlurEscola(form, values) {
-    const value = values.escola;
+  async function onBlurEscola(form, value) {
     if (!value) {
       if (tiposAlimentacao) {
         setTiposAlimentacao([]);
@@ -129,8 +128,16 @@ const ModalCadastrarControleSobras = ({
       return;
     }
 
+    // verificar se value é uma string
+    if (typeof value === "string") {
+      value = {
+        escola: value,
+      };
+    }
+
     const escola = escolas.filter(
-      (e) => e?.codigo_eol === value.split(" - ")[0]
+      (e) => e?.codigo_eol === (typeof value === "string" ? value : value.escola)
+        .split(" - ")[0]
     )[0];
     if (escola) {
       if (escola?.codigo_eol !== escolaSelected?.codigo_eol) {
@@ -144,6 +151,7 @@ const ModalCadastrarControleSobras = ({
         setEscolaSelected(escola);
       }
     } else if (tiposAlimentacao) {
+      setEscolaSelected(undefined);
       setTiposAlimentacao([]);
     }
     form?.change("tipo_alimentacao", undefined);
@@ -221,7 +229,7 @@ const ModalCadastrarControleSobras = ({
   const escolherHora = (hora, form) => {
     setTimeout(() => {
       if (hora) {
-        const horario = moment(hora).format("HH:mm:ss");
+        const horario = moment(hora.toDate()).format("HH:mm:ss");
         setHoraMedicao(horario);
         setHoraMedicaoAlterada(true);
         form.change("hora_medicao", horario);
@@ -230,7 +238,7 @@ const ModalCadastrarControleSobras = ({
         setHoraMedicaoAlterada(false);
         form.change("hora_medicao", "00:00:00");
       }
-    }, 100);
+    }, 250);
   };
 
   const validaHora = (value) => {
@@ -313,7 +321,7 @@ const ModalCadastrarControleSobras = ({
                           required,
                           requiredSearchSelectUnidEducDietas(escolas)
                         )}
-                        inputOnChange={() => onBlurEscola(form, values)}
+                        inputOnChange={(value) => onBlurEscola(form, value)}
                       />
                     </div>
                   </div>
@@ -456,6 +464,7 @@ const ModalCadastrarControleSobras = ({
                         placeholder="Selecione a Hora"
                         horaAtual={HoraMedicao}
                         onOk={(hora) => escolherHora(hora, form)}
+                        onChangeFunction={(hora) => escolherHora(hora, form)}
                         writable={false}
                         className={
                           "input-data-hora" +
@@ -464,6 +473,7 @@ const ModalCadastrarControleSobras = ({
                         validate={validaHora}
                         disabled={!!selecionado}
                         required
+                        functionComponent
                       />
                     </div>
                   </div>
@@ -476,14 +486,14 @@ const ModalCadastrarControleSobras = ({
                         type={BUTTON_TYPE.BUTTON}
                         onClick={closeModal}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="ml-3"
+                        className="me-3"
                       />
                       {!selecionado && (
                         <Botao
                           texto="Salvar"
                           type={BUTTON_TYPE.SUBMIT}
                           style={BUTTON_STYLE.GREEN}
-                          className="ml-3"
+                          className="me-3"
                           disabled={submitting}
                         />
                       )}
