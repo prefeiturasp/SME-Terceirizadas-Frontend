@@ -152,21 +152,28 @@ const ModalCadastroVinculo = ({
     }
   };
 
-  const buscaEOLFuncionarioUnidadeParceira = async (values) => {
+  const buscaEOLFuncionarioUnidadeParceira = async (values, form) => {
     let response = await getDadosUsuarioEOLCompleto(
       values.cpf_pesquisado.replace(/[^\w\s]/gi, "")
     );
 
     if (response.status === 200) {
       const usuarioEOL = response.data;
-      values.nome_parceira = usuarioEOL.nome ? usuarioEOL.nome : undefined;
-      values.cargo_parceira = usuarioEOL.cargo ? usuarioEOL.cargo : undefined;
-      values.cpf = usuarioEOL.cpf;
-      values.cpf_parceira = usuarioEOL.cpf
-        ? formatarCPFouCNPJ(usuarioEOL.cpf)
-        : undefined;
-      values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
-      values.nome_escola = usuarioEOL.nome_escola;
+      form.change(
+        "nome_parceira",
+        usuarioEOL.nome ? usuarioEOL.nome : undefined
+      );
+      form.change(
+        "cargo_parceira",
+        usuarioEOL.cargo ? usuarioEOL.cargo : undefined
+      );
+      form.change("cpf", usuarioEOL.cpf);
+      form.change(
+        "cpf_parceira",
+        usuarioEOL.cpf ? formatarCPFouCNPJ(usuarioEOL.cpf) : undefined
+      );
+      form.change("codigo_eol_unidade", usuarioEOL.codigo_eol_unidade);
+      form.change("nome_escola", usuarioEOL.nome_escola);
 
       let t = document.getElementById("inputCPF");
       t.blur();
@@ -189,7 +196,7 @@ const ModalCadastroVinculo = ({
   const onKeyPress = (event, form, values) => {
     if (event.which === ENTER) {
       if (ehUEParceira) {
-        buscaEOLFuncionarioUnidadeParceira(values);
+        buscaEOLFuncionarioUnidadeParceira(values, form);
       } else {
         buscaEOL(form, values);
       }
@@ -560,7 +567,7 @@ const ModalCadastroVinculo = ({
                             icon="fas fa-search"
                             type={BUTTON_TYPE.BUTTON}
                             onClick={() =>
-                              buscaEOLFuncionarioUnidadeParceira(values)
+                              buscaEOLFuncionarioUnidadeParceira(values, form)
                             }
                             style={BUTTON_STYLE.GREEN}
                             className="botao-rf"
