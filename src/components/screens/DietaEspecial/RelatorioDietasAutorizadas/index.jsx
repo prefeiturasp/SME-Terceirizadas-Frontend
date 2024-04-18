@@ -121,6 +121,7 @@ export const RelatorioDietasAutorizadas = () => {
                 onClear={() => {
                   setDietasEspeciais(null);
                   setTotalizadores(null);
+                  setUnidadesEducacionais([]);
                   getFiltrosRelatorioDietasEspeciaisAsync({
                     status_selecionado: "AUTORIZADAS",
                   });
