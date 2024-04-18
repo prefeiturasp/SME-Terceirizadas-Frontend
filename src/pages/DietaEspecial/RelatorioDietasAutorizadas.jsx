@@ -16,9 +16,20 @@ const atual = {
   titulo: "Relatório de Dietas Autorizadas",
 };
 
+const anteriores = [
+  {
+    href: "/painel-dieta-especial",
+    titulo: "Dieta Especial",
+  },
+  {
+    href: "#",
+    titulo: "Relatórios",
+  },
+];
+
 export default () => (
   <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
-    <Breadcrumb home={HOME} atual={atual} />
+    <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
     <RelatorioDietasAutorizadas />
   </Page>
 );
