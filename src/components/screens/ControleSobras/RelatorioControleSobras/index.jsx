@@ -34,14 +34,13 @@ const ControleSobras = ({
   setPage,
   setMeusDados,
   reset,
-  history,
 }) => {
   const [loading, setLoading] = useState(true);
   const [firstLoad, setFirstLoad] = useState(true);
 
   useEffect(() => {
     if (firstLoad) {
-      if (history && history.action === "PUSH") reset();
+      reset();
       setFirstLoad(false);
     } else if (filtros) fetchData({ ...filtros, page: 1 });
   }, [filtros]);

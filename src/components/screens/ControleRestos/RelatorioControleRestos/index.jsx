@@ -34,7 +34,6 @@ const RelatorioControleRestos = ({
   setPage,
   setMeusDados,
   reset,
-  history,
 }) => {
   const [loading, setLoading] = useState(true);
   const [firstLoad, setFirstLoad] = useState(true);
@@ -42,7 +41,6 @@ const RelatorioControleRestos = ({
   useEffect(() => {
     if (firstLoad) {
       reset();
-      if (history && history.action === "PUSH") reset();
       setFirstLoad(false);
     } else if (filtros) fetchData({ ...filtros, page: 1 });
   }, [filtros]);
