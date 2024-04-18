@@ -20,7 +20,7 @@ import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service
 import { getEscolaSimples, getEscolasTercTotal } from "services/escola.service";
 import { getLotesSimples } from "services/lote.service";
 import { getNomesTerceirizadas } from "services/produto.service";
-import { getTotalizadoresRelatorioSolicitacoesAlimentacao } from "services/relatorios.service";
+import { getTotalizadoresRelatorioSolicitacoes } from "services/relatorios.service";
 import { STATUS_SOLICITACOES, TIPOS_SOLICITACAO } from "../../constants";
 import { lotesToOptions } from "../../helpers";
 import "../../style.scss";
@@ -118,9 +118,7 @@ export const Filtros = ({ ...props }) => {
   };
 
   const getTotalizadoresAsync = async (values) => {
-    const response = await getTotalizadoresRelatorioSolicitacoesAlimentacao(
-      values
-    );
+    const response = await getTotalizadoresRelatorioSolicitacoes(values);
     if (response.status === HTTP_STATUS.OK) {
       setTotalizadores(response.data.results);
     } else {
