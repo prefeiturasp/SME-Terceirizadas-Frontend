@@ -32,6 +32,7 @@ export const RelatorioDietasAutorizadas = () => {
   const [imprimindoExcel, setImprimindoExcel] = useState(false);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
+  const [totalizadores, setTotalizadores] = useState(undefined);
 
   const ajustaParams = (params) => {
     if (
@@ -119,25 +120,55 @@ export const RelatorioDietasAutorizadas = () => {
                 unidadesEducacionais={unidadesEducacionais}
                 onClear={() => {
                   setDietasEspeciais(null);
+                  setTotalizadores(null);
                   getFiltrosRelatorioDietasEspeciaisAsync({
                     status_selecionado: "AUTORIZADAS",
                   });
                 }}
                 setLoadingDietas={setLoadingDietas}
-                ajustaParams={ajustaParams}
                 setValuesForm={setValuesForm}
                 getFiltrosRelatorioDietasEspeciaisAsync={
                   getFiltrosRelatorioDietasEspeciaisAsync
                 }
+                setTotalizadores={setTotalizadores}
               />
+              {totalizadores && (
+                <>
+                  <div className="row mt-3">
+                    <div className="col-8 quantitativo-dietas-autorizadas">
+                      <p>
+                        TOTAL DE DIETAS AUTORIZADAS - DIA{" "}
+                        {new Date().toLocaleDateString("pt-BR")}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="row">
+                    {totalizadores.map((totalizador, key) => {
+                      return (
+                        <div key={key} className="col-4 mt-3">
+                          <div className="totalizador-dietas-autorizadas ps-3 pe-3">
+                            <div className="d-flex justify-content-between">
+                              <div className="titulo">
+                                {Object.keys(totalizador)[0]}
+                              </div>
+                              <div className="valor">
+                                {Object.values(totalizador)[0]}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
               {dietasEspeciais && (
                 <>
                   <div className="row">
-                    <div className="total-dietas col-12 text-end">
-                      Total de dietas:
-                      <div className="numero-total-dietas">
-                        {dietasEspeciais.count}
-                      </div>
+                    <div className="mt-4 pl-0">
+                      <p className="mb-2">
+                        <b>Resultado Detalhado</b>
+                      </p>
                     </div>
                   </div>
 
