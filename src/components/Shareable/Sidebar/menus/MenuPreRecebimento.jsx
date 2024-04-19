@@ -49,14 +49,14 @@ const MenuPreRecebimento = () => {
         <LeafItem
           to={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`}
         >
-          Alteração de Cronograma
+          Verificar Alterações de Cronograma
         </LeafItem>
       )}
       {usuarioEhEmpresaFornecedor() && (
         <LeafItem
           to={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR}`}
         >
-          Alteração de Cronograma
+          Verificar Alterações de Cronograma
         </LeafItem>
       )}
       {usuarioComAcessoAoCalendarioCronograma() && (

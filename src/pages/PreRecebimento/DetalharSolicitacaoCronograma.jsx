@@ -27,7 +27,7 @@ const anteriores = [
         ? SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR
         : SOLICITACAO_ALTERACAO_CRONOGRAMA
     }`,
-    titulo: "Alteração do Cronograma",
+    titulo: "Verificar Alterações de Cronograma",
   },
 ];
 
