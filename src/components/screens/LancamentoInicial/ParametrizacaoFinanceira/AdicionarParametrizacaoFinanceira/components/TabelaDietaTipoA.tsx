@@ -13,16 +13,29 @@ import {
 } from "components/screens/helper";
 import { FormApi } from "final-form";
 
-const ALIMENTACOES = ["Refeição", "Lanche", "Lanche 4h"];
+const ALIMENTACOES_TIPOA = ["Lanche", "Lanche 4h"];
+const ALIMENTACOES_ENTERAL = ["Refeição", "Lanche", "Lanche 4h"];
 
 type Props = {
   form: FormApi<any, any>;
   tiposAlimentacao: Array<any>;
+  grupoSelecionado?: string;
+  nomeTabela: string;
 };
 
-export default ({ form, tiposAlimentacao }: Props) => {
+export default ({
+  form,
+  tiposAlimentacao,
+  grupoSelecionado,
+  nomeTabela,
+}: Props) => {
+  const ListaDeAlimentacoes =
+    grupoSelecionado === "grupo_2" && !nomeTabela.includes("Enteral")
+      ? ALIMENTACOES_TIPOA
+      : ALIMENTACOES_ENTERAL;
+
   const alimentacoes = tiposAlimentacao
-    .filter((t) => ALIMENTACOES.includes(t.nome))
+    .filter((t) => ListaDeAlimentacoes.includes(t.nome))
     .map((ta) => ({
       ...ta,
       grupo: ta.nome === "Refeição" ? "Dieta Enteral" : null,
@@ -31,9 +44,17 @@ export default ({ form, tiposAlimentacao }: Props) => {
   return (
     <div className="row mt-5">
       <div className="col">
-        <h2 className="text-start texto-simples-verde fw-bold">
-          Preço das Dietas Tipo A e Tipo A Enteral
-        </h2>
+        {grupoSelecionado === "grupo_2" ? (
+          <h2 className="text-start texto-simples-verde fw-bold mb-3">
+            Preço das {nomeTabela} -{" "}
+            <span className="titulo-tag turma-emei">EMEI</span>
+          </h2>
+        ) : (
+          <h2 className="text-start texto-simples-verde fw-bold">
+            Preço das Dietas Tipo A e Tipo A Enteral
+          </h2>
+        )}
+
         <Table pagination={false} bordered dataSource={alimentacoes}>
           <Column
             title="Tipo de Alimentação"
@@ -47,13 +68,13 @@ export default ({ form, tiposAlimentacao }: Props) => {
                   </p>
                   <Field
                     component="input"
-                    name={`tabelas["Dietas Tipo A e Tipo A Enteral"].${value}.tipo_alimentacao`}
+                    name={`tabelas[${nomeTabela}].${value}.tipo_alimentacao`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
                   <Field
                     component="input"
-                    name={`tabelas["Dietas Tipo A e Tipo A Enteral"].${value}.grupo`}
+                    name={`tabelas[${nomeTabela}].${value}.grupo`}
                     type="hidden"
                     defaultValue={record.grupo}
                   />
@@ -68,7 +89,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Dietas Tipo A e Tipo A Enteral"].${record.nome}.valor_unitario`}
+                name={`tabelas[${nomeTabela}].${record.nome}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -76,20 +97,19 @@ export default ({ form, tiposAlimentacao }: Props) => {
                 defaultValue={null}
                 onChange={(value: number) => {
                   const percentualAcrescimo =
-                    form.getState().values.tabelas[
-                      "Dietas Tipo A e Tipo A Enteral"
-                    ]?.[record.nome]?.percentual_acrescimo || 0;
+                    form.getState().values.tabelas[nomeTabela]?.[record.nome]
+                      ?.percentual_acrescimo || 0;
                   const valorUnitarioTotal =
                     value * (1 + percentualAcrescimo / 100);
 
                   form.change(
-                    `tabelas["Dietas Tipo A e Tipo A Enteral"].${record.nome}.valor_unitario_total`,
+                    `tabelas[${nomeTabela}].${record.nome}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas["Dietas Tipo A e Tipo A Enteral"].${record.nome}.valor_unitario`,
+                    `tabelas[${nomeTabela}].${record.nome}.valor_unitario`,
                     value
                   );
                 }}
@@ -103,7 +123,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Dietas Tipo A e Tipo A Enteral"].${record.nome}.percentual_acrescimo`}
+                name={`tabelas[${nomeTabela}].${record.nome}.percentual_acrescimo`}
                 placeholder="%"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -111,19 +131,18 @@ export default ({ form, tiposAlimentacao }: Props) => {
                 defaultValue={null}
                 onChange={(value: number) => {
                   const valorUnitario =
-                    form.getState().values.tabelas[
-                      "Dietas Tipo A e Tipo A Enteral"
-                    ]?.[record.nome]?.valor_unitario || 0;
+                    form.getState().values.tabelas[nomeTabela]?.[record.nome]
+                      ?.valor_unitario || 0;
                   const valorUnitarioTotal = valorUnitario * (1 + value / 100);
 
                   form.change(
-                    `tabelas["Dietas Tipo A e Tipo A Enteral"].${record.nome}.valor_unitario_total`,
+                    `tabelas[${nomeTabela}].${record.nome}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas["Dietas Tipo A e Tipo A Enteral"].${record.nome}.percentual_acrescimo`,
+                    `tabelas[${nomeTabela}].${record.nome}.percentual_acrescimo`,
                     value
                   );
                 }}
@@ -137,7 +156,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Dietas Tipo A e Tipo A Enteral"].${record.nome}.valor_unitario_total`}
+                name={`tabelas[${nomeTabela}].${record.nome}.valor_unitario_total`}
                 placeholder="0,00"
                 disabled
               />

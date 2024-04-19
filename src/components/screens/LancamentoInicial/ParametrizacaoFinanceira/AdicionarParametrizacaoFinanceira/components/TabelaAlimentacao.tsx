@@ -37,10 +37,18 @@ export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
 
   return (
     <div className="row mt-5">
-      <div className="col-4">
-        <h2 className="text-start texto-simples-verde fw-bold">
-          Preço das Alimentações
-        </h2>
+      <div className={`col${grupoSelecionado !== "grupo_2" ? "-4" : ""}`}>
+        {grupoSelecionado === "grupo_2" ? (
+          <h2 className="text-start texto-simples-verde fw-bold mb-3">
+            Preço das Alimentações -{" "}
+            <span className="titulo-tag turma-emei">EMEI</span>
+          </h2>
+        ) : (
+          <h2 className="text-start texto-simples-verde fw-bold">
+            Preço das Alimentações
+          </h2>
+        )}
+
         <Table pagination={false} bordered dataSource={alimentacoes}>
           <Column
             title="Tipo de Alimentação"

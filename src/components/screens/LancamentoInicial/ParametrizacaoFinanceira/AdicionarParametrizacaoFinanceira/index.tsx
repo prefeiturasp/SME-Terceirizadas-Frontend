@@ -82,9 +82,15 @@ export default () => {
   };
 
   const exibeTabelasCEI =
-    faixasEtarias.length > 0 && grupoSelecionado === "grupo_1";
+    faixasEtarias.length && grupoSelecionado === "grupo_1";
   const exibeTabelasEMEFeEMEI =
-    tiposAlimentacao.length > 0 && !(grupoSelecionado === "grupo_1");
+    tiposAlimentacao.length &&
+    !["grupo_1", "grupo_2"].includes(grupoSelecionado);
+
+  const exibeTabelasCEMEI =
+    faixasEtarias.length &&
+    tiposAlimentacao.length &&
+    grupoSelecionado === "grupo_2";
 
   return (
     <>
@@ -117,6 +123,7 @@ export default () => {
                       <TabelaDietaTipoA
                         form={form}
                         tiposAlimentacao={tiposAlimentacao}
+                        nomeTabela="Dietas Tipo A e Tipo A Enteral"
                       />
                       <TabelaDietaTipoB
                         form={form}
@@ -129,22 +136,26 @@ export default () => {
                   <div className="container-tabelas-cei">
                     <TabelaAlimentacaoCEI
                       faixasEtarias={faixasEtarias}
+                      grupoSelecionado={grupoSelecionado}
                       periodo="Integral"
                     />
                     <TabelaAlimentacaoCEI
                       faixasEtarias={faixasEtarias}
+                      grupoSelecionado={grupoSelecionado}
                       periodo="Parcial"
                     />
 
                     <TabelaDietasCEI
                       form={form}
                       faixasEtarias={faixasEtarias}
+                      grupoSelecionado={grupoSelecionado}
                       nomeTabela="Dietas Tipo A e Tipo A Enteral"
                       periodo="Integral"
                     />
                     <TabelaDietasCEI
                       form={form}
                       faixasEtarias={faixasEtarias}
+                      grupoSelecionado={grupoSelecionado}
                       nomeTabela="Dietas Tipo B"
                       periodo="Integral"
                     />
@@ -152,18 +163,90 @@ export default () => {
                     <TabelaDietasCEI
                       form={form}
                       faixasEtarias={faixasEtarias}
+                      grupoSelecionado={grupoSelecionado}
                       nomeTabela="Dietas Tipo A e Tipo A Enteral"
                       periodo="Parcial"
                     />
                     <TabelaDietasCEI
                       form={form}
                       faixasEtarias={faixasEtarias}
+                      grupoSelecionado={grupoSelecionado}
                       nomeTabela="Dietas Tipo B"
                       periodo="Parcial"
                     />
                   </div>
                 ) : null}
-                {(exibeTabelasEMEFeEMEI || exibeTabelasCEI) && (
+                {exibeTabelasCEMEI ? (
+                  <div className="container-tabelas-cei">
+                    <TabelaAlimentacaoCEI
+                      faixasEtarias={faixasEtarias}
+                      grupoSelecionado={grupoSelecionado}
+                      periodo="Integral"
+                    />
+                    <TabelaAlimentacaoCEI
+                      faixasEtarias={faixasEtarias}
+                      grupoSelecionado={grupoSelecionado}
+                      periodo="Parcial"
+                    />
+
+                    <TabelaAlimentacao
+                      tiposAlimentacao={tiposAlimentacao}
+                      grupoSelecionado={grupoSelecionado}
+                    />
+                    <div className="d-flex flex-column gap-4">
+                      <TabelaDietaTipoA
+                        form={form}
+                        tiposAlimentacao={tiposAlimentacao}
+                        grupoSelecionado={grupoSelecionado}
+                        nomeTabela="Dietas Tipo A"
+                      />
+                      <TabelaDietaTipoA
+                        form={form}
+                        tiposAlimentacao={tiposAlimentacao}
+                        grupoSelecionado={grupoSelecionado}
+                        nomeTabela="Dietas Tipo A Enteral"
+                      />
+                      <TabelaDietaTipoB
+                        form={form}
+                        tiposAlimentacao={tiposAlimentacao}
+                        grupoSelecionado={grupoSelecionado}
+                      />
+                    </div>
+
+                    <TabelaDietasCEI
+                      form={form}
+                      faixasEtarias={faixasEtarias}
+                      nomeTabela="Dietas Tipo A e Tipo A Enteral"
+                      periodo="Integral"
+                      grupoSelecionado={grupoSelecionado}
+                    />
+                    <TabelaDietasCEI
+                      form={form}
+                      faixasEtarias={faixasEtarias}
+                      grupoSelecionado={grupoSelecionado}
+                      nomeTabela="Dietas Tipo B"
+                      periodo="Integral"
+                    />
+
+                    <TabelaDietasCEI
+                      form={form}
+                      faixasEtarias={faixasEtarias}
+                      grupoSelecionado={grupoSelecionado}
+                      nomeTabela="Dietas Tipo A e Tipo A Enteral"
+                      periodo="Parcial"
+                    />
+                    <TabelaDietasCEI
+                      form={form}
+                      faixasEtarias={faixasEtarias}
+                      grupoSelecionado={grupoSelecionado}
+                      nomeTabela="Dietas Tipo B"
+                      periodo="Parcial"
+                    />
+                  </div>
+                ) : null}
+                {exibeTabelasEMEFeEMEI ||
+                exibeTabelasCEI ||
+                exibeTabelasCEMEI ? (
                   <div className="row mt-5">
                     <div className="col">
                       <Field
@@ -178,7 +261,7 @@ export default () => {
                       />
                     </div>
                   </div>
-                )}
+                ) : null}
                 <div className="d-flex justify-content-end gap-3 mt-5">
                   <Botao
                     texto="Cancelar"
