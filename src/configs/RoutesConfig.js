@@ -174,7 +174,7 @@ import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
 import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoSolicDietaEspPage";
 import RelatorioQuantitativoClassificacaoDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoClassificacaoDietaEspPage";
 import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
-import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
+import RelatorioDietasAutorizadas from "pages/DietaEspecial/RelatorioDietasAutorizadas";
 import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
 import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
 import LancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/LancamentoMedicaoInicialPage";
@@ -301,6 +301,7 @@ import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnic
 import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
 import DetalharFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/DetalharFichaTecnicaPage";
 import AlterarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AlterarFichaTecnicaPage";
+import AtualizarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AtualizarFichaTecnicaPage";
 import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
 import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
 import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
@@ -309,6 +310,8 @@ import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialD
 import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
 import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
 import AtribuirQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/AtribuirQuestoesPage";
+import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/EditarAtribuicaoQuestoesPage";
+import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/CopiarAtribuicaoQuestoesPage";
 
 const routesConfig = [
   {
@@ -1375,10 +1378,9 @@ const routesConfig = [
     tipoUsuario: podeAcessarRelatorioQuantSolicDietaEsp,
   },
   {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETA_ESPECIAL}`,
-    component: RelatorioDietaEspecial,
+    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETAS_AUTORIZADAS}`,
+    component: RelatorioDietasAutorizadas,
     tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
@@ -1673,7 +1675,7 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO_FISCAL}`,
     component: GuiasNotificacoesFiscalPage,
-    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhDilog(),
+    tipoUsuario: usuarioEhDilog(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CADASTRO_NOTIFICACAO}`,
@@ -2022,6 +2024,11 @@ const routesConfig = [
     tipoUsuario: usuarioEhEmpresaFornecedor(),
   },
   {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ATUALIZAR_FICHA_TECNICA}/`,
+    component: AtualizarFichaTecnicaPage,
+    tipoUsuario: usuarioEhEmpresaFornecedor(),
+  },
+  {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CALENDARIO_CRONOGRAMA}`,
     component: CalendarioCronogramaPage,
     tipoUsuario: usuarioComAcessoAoCalendarioCronograma(),
@@ -2034,6 +2041,16 @@ const routesConfig = [
   {
     path: `/${constants.RECEBIMENTO}/${constants.ATRIBUIR_QUESTOES_CONFERENCIA}`,
     component: AtribuirQuestoesPage,
+    tipoUsuario: usuarioEhRecebimento(),
+  },
+  {
+    path: `/${constants.RECEBIMENTO}/${constants.EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA}`,
+    component: EditarAtribuicaoQuestoesPage,
+    tipoUsuario: usuarioEhRecebimento(),
+  },
+  {
+    path: `/${constants.RECEBIMENTO}/${constants.COPIAR_ATRIBUICAO_QUESTOES_CONFERENCIA}`,
+    component: CopiarAtribuicaoQuestoesPage,
     tipoUsuario: usuarioEhRecebimento(),
   },
 ];

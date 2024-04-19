@@ -395,12 +395,10 @@ export const getSolicitacoesDetalhadas = async (params) => {
   }
 };
 
-export const getTotalizadoresRelatorioSolicitacoesAlimentacao = async (
-  payload
-) => {
+export const getTotalizadoresRelatorioSolicitacoes = async (payload) => {
   const response = await axios
     .post(
-      `${API_URL}/solicitacoes-genericas/filtrar-solicitacoes-ga-cards-totalizadores/`,
+      `${API_URL}/solicitacoes-genericas/filtrar-solicitacoes-cards-totalizadores/`,
       payload
     )
     .catch(ErrorHandlerFunction);

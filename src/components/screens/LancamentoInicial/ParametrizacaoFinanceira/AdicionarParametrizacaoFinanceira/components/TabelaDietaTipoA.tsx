@@ -78,7 +78,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
                   const percentualAcrescimo =
                     form.getState().values.tabelas[
                       "Dietas Tipo A e Tipo A Enteral"
-                    ][record.nome].percentual_acrescimo || 0;
+                    ]?.[record.nome]?.percentual_acrescimo || 0;
                   const valorUnitarioTotal =
                     value * (1 + percentualAcrescimo / 100);
 
@@ -113,7 +113,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
                   const valorUnitario =
                     form.getState().values.tabelas[
                       "Dietas Tipo A e Tipo A Enteral"
-                    ][record.nome].valor_unitario || 0;
+                    ]?.[record.nome]?.valor_unitario || 0;
                   const valorUnitarioTotal = valorUnitario * (1 + value / 100);
 
                   form.change(

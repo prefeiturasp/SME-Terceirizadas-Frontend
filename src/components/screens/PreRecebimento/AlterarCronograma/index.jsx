@@ -400,7 +400,7 @@ export default ({ analiseSolicitacao }) => {
                                 name="quantidade_total"
                                 className="input-busca-produto"
                                 disabled={false}
-                                agrupadorMilhar
+                                agrupadorMilharComDecimal
                                 required
                                 validate={required}
                                 placeholder="Informe a Quantidade Total"

@@ -15,7 +15,7 @@ import {
 
 type Props = {
   titulo?: string;
-  children: (_values: any, _form: FormApi) => ReactNode;
+  children: (_values?: Record<string, any>, _form?: FormApi) => ReactNode;
   onSubmit: (_values: Record<string, any>) => void;
   onClear: () => void;
   manterFiltros?: Array<string>;
@@ -48,6 +48,8 @@ const CollapseFiltros: React.FC<Props> = ({
         dre: values["dre"],
         unidade_educacional: values["unidade_educacional"],
       });
+    } else if (manterFiltros?.includes("status_selecionado")) {
+      form.reset({ status_selecionado: values["status_selecionado"] });
     } else {
       form.reset({});
     }

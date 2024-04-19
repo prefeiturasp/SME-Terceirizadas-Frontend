@@ -131,7 +131,7 @@ export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
   "relatorio-quantitativo-solic-dieta-esp";
 export const RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP =
   "relatorio-quantitativo-classificacao-dieta-esp";
-export const RELATORIO_DIETA_ESPECIAL = "relatorio-dieta-especial";
+export const RELATORIO_DIETAS_AUTORIZADAS = "relatorio-dietas-autorizadas";
 export const RELATORIO_GERENCIAL_DIETAS = "relatorio-gerencial-dietas";
 export const RELATORIO_GESTAO_DIETA_ESPECIAL =
   "relatorio-gestao-dieta-especial";
@@ -272,6 +272,7 @@ export const PAINEL_FICHAS_TECNICAS = "painel-fichas-tecnicas";
 export const ANALISAR_FICHA_TECNICA = "analisar-ficha-tecnica";
 export const DETALHAR_FICHA_TECNICA = "detalhar-ficha-tecnica";
 export const ALTERAR_FICHA_TECNICA = "alterar-ficha-tecnica";
+export const ATUALIZAR_FICHA_TECNICA = "atualizar-ficha-tecnica";
 
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";
@@ -299,6 +300,10 @@ export const ASSINADO_CODAE = "assinado-codae";
 export const RECEBIMENTO = "recebimento";
 export const QUESTOES_POR_PRODUTO = "questoes-por-produto";
 export const ATRIBUIR_QUESTOES_CONFERENCIA = "atribuir-questoes-conferencia";
+export const EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA =
+  "editar-atribuicao-questoes-conferencia";
+export const COPIAR_ATRIBUICAO_QUESTOES_CONFERENCIA =
+  "copiar-atribuicao-questoes-conferencia";
 
 // Status dos pedidos
 
