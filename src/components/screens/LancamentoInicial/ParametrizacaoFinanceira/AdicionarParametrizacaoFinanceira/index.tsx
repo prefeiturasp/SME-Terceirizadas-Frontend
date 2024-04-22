@@ -13,12 +13,10 @@ import {
 } from "components/Shareable/Botao/constants";
 
 import "./style.scss";
-import TabelaAlimentacao from "./components/TabelaAlimentacao";
-import { TabelaAlimentacaoCEI } from "./components/TabelaAlimentacaoCEI";
 import Filtros from "./components/Filtros";
-import TabelaDietaTipoA from "./components/TabelaDietaTipoA";
-import TabelaDietaTipoB from "./components/TabelaDietaTipoB";
-import TabelaDietasCEI from "./components/TabelaDietasCEI";
+import TabelasGruposEMEIeEMEF from "./components/TabelasGruposEMEIeEMEF";
+import TabelasGrupoCEI from "./components/TabelasGrupoCEI";
+import TabelasGrupoCEMEI from "./components/TabelasGrupoCEMEI";
 import ParametrizacaoFinanceiraService from "services/medicaoInicial/parametrizacao_financeira.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
@@ -114,135 +112,26 @@ export default () => {
                   ehCadastro
                 />
                 {exibeTabelasEMEFeEMEI ? (
-                  <div key={grupoSelecionado}>
-                    <TabelaAlimentacao
-                      tiposAlimentacao={tiposAlimentacao}
-                      grupoSelecionado={grupoSelecionado}
-                    />
-                    <div className="d-flex gap-4">
-                      <TabelaDietaTipoA
-                        form={form}
-                        tiposAlimentacao={tiposAlimentacao}
-                        nomeTabela="Dietas Tipo A e Tipo A Enteral"
-                      />
-                      <TabelaDietaTipoB
-                        form={form}
-                        tiposAlimentacao={tiposAlimentacao}
-                      />
-                    </div>
-                  </div>
+                  <TabelasGruposEMEIeEMEF
+                    form={form}
+                    tiposAlimentacao={tiposAlimentacao}
+                    grupoSelecionado={grupoSelecionado}
+                  />
                 ) : null}
                 {exibeTabelasCEI ? (
-                  <div className="container-tabelas-cei">
-                    <TabelaAlimentacaoCEI
-                      faixasEtarias={faixasEtarias}
-                      grupoSelecionado={grupoSelecionado}
-                      periodo="Integral"
-                    />
-                    <TabelaAlimentacaoCEI
-                      faixasEtarias={faixasEtarias}
-                      grupoSelecionado={grupoSelecionado}
-                      periodo="Parcial"
-                    />
-
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      grupoSelecionado={grupoSelecionado}
-                      nomeTabela="Dietas Tipo A e Tipo A Enteral"
-                      periodo="Integral"
-                    />
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      grupoSelecionado={grupoSelecionado}
-                      nomeTabela="Dietas Tipo B"
-                      periodo="Integral"
-                    />
-
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      grupoSelecionado={grupoSelecionado}
-                      nomeTabela="Dietas Tipo A e Tipo A Enteral"
-                      periodo="Parcial"
-                    />
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      grupoSelecionado={grupoSelecionado}
-                      nomeTabela="Dietas Tipo B"
-                      periodo="Parcial"
-                    />
-                  </div>
+                  <TabelasGrupoCEI
+                    form={form}
+                    faixasEtarias={faixasEtarias}
+                    grupoSelecionado={grupoSelecionado}
+                  />
                 ) : null}
                 {exibeTabelasCEMEI ? (
-                  <div className="container-tabelas-cei">
-                    <TabelaAlimentacaoCEI
-                      faixasEtarias={faixasEtarias}
-                      grupoSelecionado={grupoSelecionado}
-                      periodo="Integral"
-                    />
-                    <TabelaAlimentacaoCEI
-                      faixasEtarias={faixasEtarias}
-                      grupoSelecionado={grupoSelecionado}
-                      periodo="Parcial"
-                    />
-
-                    <TabelaAlimentacao
-                      tiposAlimentacao={tiposAlimentacao}
-                      grupoSelecionado={grupoSelecionado}
-                    />
-                    <div className="d-flex flex-column gap-4">
-                      <TabelaDietaTipoA
-                        form={form}
-                        tiposAlimentacao={tiposAlimentacao}
-                        grupoSelecionado={grupoSelecionado}
-                        nomeTabela="Dietas Tipo A"
-                      />
-                      <TabelaDietaTipoA
-                        form={form}
-                        tiposAlimentacao={tiposAlimentacao}
-                        grupoSelecionado={grupoSelecionado}
-                        nomeTabela="Dietas Tipo A Enteral"
-                      />
-                      <TabelaDietaTipoB
-                        form={form}
-                        tiposAlimentacao={tiposAlimentacao}
-                        grupoSelecionado={grupoSelecionado}
-                      />
-                    </div>
-
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      nomeTabela="Dietas Tipo A e Tipo A Enteral"
-                      periodo="Integral"
-                      grupoSelecionado={grupoSelecionado}
-                    />
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      grupoSelecionado={grupoSelecionado}
-                      nomeTabela="Dietas Tipo B"
-                      periodo="Integral"
-                    />
-
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      grupoSelecionado={grupoSelecionado}
-                      nomeTabela="Dietas Tipo A e Tipo A Enteral"
-                      periodo="Parcial"
-                    />
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      grupoSelecionado={grupoSelecionado}
-                      nomeTabela="Dietas Tipo B"
-                      periodo="Parcial"
-                    />
-                  </div>
+                  <TabelasGrupoCEMEI
+                    form={form}
+                    faixasEtarias={faixasEtarias}
+                    tiposAlimentacao={tiposAlimentacao}
+                    grupoSelecionado={grupoSelecionado}
+                  />
                 ) : null}
                 {exibeTabelasEMEFeEMEI ||
                 exibeTabelasCEI ||
