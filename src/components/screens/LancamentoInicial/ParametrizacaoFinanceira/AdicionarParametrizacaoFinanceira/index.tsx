@@ -13,12 +13,10 @@ import {
 } from "components/Shareable/Botao/constants";
 
 import "./style.scss";
-import TabelaAlimentacao from "./components/TabelaAlimentacao";
-import { TabelaAlimentacaoCEI } from "./components/TabelaAlimentacaoCEI";
 import Filtros from "./components/Filtros";
-import TabelaDietaTipoA from "./components/TabelaDietaTipoA";
-import TabelaDietaTipoB from "./components/TabelaDietaTipoB";
-import TabelaDietasCEI from "./components/TabelaDietasCEI";
+import TabelasGruposEMEIeEMEF from "./components/TabelasGruposEMEIeEMEF";
+import TabelasGrupoCEI from "./components/TabelasGrupoCEI";
+import TabelasGrupoCEMEI from "./components/TabelasGrupoCEMEI";
 import ParametrizacaoFinanceiraService from "services/medicaoInicial/parametrizacao_financeira.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
@@ -82,9 +80,15 @@ export default () => {
   };
 
   const exibeTabelasCEI =
-    faixasEtarias.length > 0 && grupoSelecionado === "grupo_1";
+    faixasEtarias.length && grupoSelecionado === "grupo_1";
   const exibeTabelasEMEFeEMEI =
-    tiposAlimentacao.length > 0 && !(grupoSelecionado === "grupo_1");
+    tiposAlimentacao.length &&
+    !["grupo_1", "grupo_2"].includes(grupoSelecionado);
+
+  const exibeTabelasCEMEI =
+    faixasEtarias.length &&
+    tiposAlimentacao.length &&
+    grupoSelecionado === "grupo_2";
 
   return (
     <>
@@ -108,62 +112,30 @@ export default () => {
                   ehCadastro
                 />
                 {exibeTabelasEMEFeEMEI ? (
-                  <div key={grupoSelecionado}>
-                    <TabelaAlimentacao
-                      tiposAlimentacao={tiposAlimentacao}
-                      grupoSelecionado={grupoSelecionado}
-                    />
-                    <div className="d-flex gap-4">
-                      <TabelaDietaTipoA
-                        form={form}
-                        tiposAlimentacao={tiposAlimentacao}
-                      />
-                      <TabelaDietaTipoB
-                        form={form}
-                        tiposAlimentacao={tiposAlimentacao}
-                      />
-                    </div>
-                  </div>
+                  <TabelasGruposEMEIeEMEF
+                    form={form}
+                    tiposAlimentacao={tiposAlimentacao}
+                    grupoSelecionado={grupoSelecionado}
+                  />
                 ) : null}
                 {exibeTabelasCEI ? (
-                  <div className="container-tabelas-cei">
-                    <TabelaAlimentacaoCEI
-                      faixasEtarias={faixasEtarias}
-                      periodo="Integral"
-                    />
-                    <TabelaAlimentacaoCEI
-                      faixasEtarias={faixasEtarias}
-                      periodo="Parcial"
-                    />
-
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      nomeTabela="Dietas Tipo A e Tipo A Enteral"
-                      periodo="Integral"
-                    />
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      nomeTabela="Dietas Tipo B"
-                      periodo="Integral"
-                    />
-
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      nomeTabela="Dietas Tipo A e Tipo A Enteral"
-                      periodo="Parcial"
-                    />
-                    <TabelaDietasCEI
-                      form={form}
-                      faixasEtarias={faixasEtarias}
-                      nomeTabela="Dietas Tipo B"
-                      periodo="Parcial"
-                    />
-                  </div>
+                  <TabelasGrupoCEI
+                    form={form}
+                    faixasEtarias={faixasEtarias}
+                    grupoSelecionado={grupoSelecionado}
+                  />
                 ) : null}
-                {(exibeTabelasEMEFeEMEI || exibeTabelasCEI) && (
+                {exibeTabelasCEMEI ? (
+                  <TabelasGrupoCEMEI
+                    form={form}
+                    faixasEtarias={faixasEtarias}
+                    tiposAlimentacao={tiposAlimentacao}
+                    grupoSelecionado={grupoSelecionado}
+                  />
+                ) : null}
+                {exibeTabelasEMEFeEMEI ||
+                exibeTabelasCEI ||
+                exibeTabelasCEMEI ? (
                   <div className="row mt-5">
                     <div className="col">
                       <Field
@@ -178,7 +150,7 @@ export default () => {
                       />
                     </div>
                   </div>
-                )}
+                ) : null}
                 <div className="d-flex justify-content-end gap-3 mt-5">
                   <Botao
                     texto="Cancelar"

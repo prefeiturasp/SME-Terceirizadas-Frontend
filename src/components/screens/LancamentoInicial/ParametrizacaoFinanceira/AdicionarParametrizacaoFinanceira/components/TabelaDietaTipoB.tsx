@@ -18,9 +18,10 @@ const ALIMENTACOES = ["Lanche", "Lanche 4h"];
 type Props = {
   form: FormApi<any, any>;
   tiposAlimentacao: Array<any>;
+  grupoSelecionado?: string;
 };
 
-export default ({ form, tiposAlimentacao }: Props) => {
+export default ({ form, tiposAlimentacao, grupoSelecionado }: Props) => {
   const alimentacoes = tiposAlimentacao.filter((t) =>
     ALIMENTACOES.includes(t.nome)
   );
@@ -28,9 +29,17 @@ export default ({ form, tiposAlimentacao }: Props) => {
   return (
     <div className="row mt-5">
       <div className="col">
-        <h2 className="text-start texto-simples-verde fw-bold">
-          Preço das Dietas Tipo B
-        </h2>
+        {grupoSelecionado === "grupo_2" ? (
+          <h2 className="text-start texto-simples-verde fw-bold mb-3">
+            Preço das Dietas Tipo B -{" "}
+            <span className="titulo-tag turma-emei">EMEI</span>
+          </h2>
+        ) : (
+          <h2 className="text-start texto-simples-verde fw-bold">
+            Preço das Dietas Tipo B
+          </h2>
+        )}
+
         <Table pagination={false} bordered dataSource={alimentacoes}>
           <Column
             title="Tipo de Alimentação"
