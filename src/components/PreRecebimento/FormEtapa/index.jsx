@@ -155,12 +155,13 @@ export default ({
           if (dataProgramada <= new Date().setHours(0, 0, 0, 0)) {
             arrayDesabilitar[index] = true;
           }
-          if (!usuarioEhEmpresaFornecedor()) {
-            let hoje = new Date();
-            hoje.setDate(hoje.getDate() - 8);
-            if (dataProgramada <= hoje.setHours(0, 0, 0, 0)) {
-              arrayData[index] = true;
-            }
+          let hoje = new Date();
+          hoje.setDate(hoje.getDate() - 8);
+          if (
+            dataProgramada <= hoje.setHours(0, 0, 0, 0) ||
+            usuarioEhEmpresaFornecedor()
+          ) {
+            arrayData[index] = true;
           }
         });
         setDesabilitar(arrayDesabilitar);
