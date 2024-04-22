@@ -14,19 +14,30 @@ import {
 
 type Props = {
   faixasEtarias: Array<any>;
+  grupoSelecionado: string;
   periodo: string;
 };
 
-export function TabelaAlimentacaoCEI({ faixasEtarias, periodo }: Props) {
+export function TabelaAlimentacaoCEI({
+  faixasEtarias,
+  grupoSelecionado,
+  periodo,
+}: Props) {
+  const labelTabela =
+    grupoSelecionado === "grupo_2"
+      ? `CEI - Período ${periodo}`
+      : `Período ${periodo}`;
+
   return (
     <div className="row mt-5">
       <div className="col">
         <h2 className="text-start texto-simples-verde fw-bold mb-3">
           Preço das Alimentações -{" "}
           <span className={`titulo-tag periodo-${periodo.toLowerCase()}`}>
-            Período {periodo}
+            {labelTabela}
           </span>
         </h2>
+
         <Table pagination={false} bordered dataSource={faixasEtarias}>
           <Column
             title="Faixas Etárias"
@@ -38,7 +49,7 @@ export function TabelaAlimentacaoCEI({ faixasEtarias, periodo }: Props) {
                   <p className="fw-bold mb-0">{value}</p>
                   <Field
                     component="input"
-                    name={`tabelas[Preço das Alimentações - Período ${periodo}].${value}.faixa_etaria`}
+                    name={`tabelas[Preço das Alimentações - ${labelTabela}].${value}.faixa_etaria`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
@@ -53,7 +64,7 @@ export function TabelaAlimentacaoCEI({ faixasEtarias, periodo }: Props) {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[Preço das Alimentações - Período ${periodo}].${record.__str__}.valor_unitario`}
+                name={`tabelas[Preço das Alimentações - ${labelTabela}].${record.__str__}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -69,7 +80,7 @@ export function TabelaAlimentacaoCEI({ faixasEtarias, periodo }: Props) {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[Preço das Alimentações - Período ${periodo}].${record.__str__}.valor_unitario_reajuste`}
+                name={`tabelas[Preço das Alimentações - ${labelTabela}].${record.__str__}.valor_unitario_reajuste`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
