@@ -170,7 +170,7 @@ export default ({
     };
 
     desativaCampos();
-  }, [values]);
+  }, []);
 
   return (
     <>
