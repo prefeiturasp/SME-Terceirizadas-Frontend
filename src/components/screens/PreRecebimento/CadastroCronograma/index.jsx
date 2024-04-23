@@ -128,7 +128,7 @@ export default () => {
         toastError("Ocorreu um erro ao salvar o Cronograma");
       }
     } catch (error) {
-      if (error.response.status === 401) {
+      if (error.response?.status === 401) {
         toastError(MSG_SENHA_INVALIDA);
       } else {
         exibeError(error, "Ocorreu um erro ao salvar o Cronograma");
@@ -248,13 +248,13 @@ export default () => {
       cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria
     );
     cronogramaValues["unidade_medida_primaria"] =
-      cronograma.ficha_tecnica?.unidade_medida_primaria.uuid;
+      cronograma.ficha_tecnica?.unidade_medida_primaria?.uuid;
     cronogramaValues["peso_liquido_embalagem_secundaria"] =
       numberToStringDecimal(
         cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria
       );
     cronogramaValues["unidade_medida_secundaria"] =
-      cronograma.ficha_tecnica?.unidade_medida_secundaria.uuid;
+      cronograma.ficha_tecnica?.unidade_medida_secundaria?.uuid;
     cronogramaValues["volume_embalagem_primaria"] = numberToStringDecimal(
       cronograma.ficha_tecnica?.volume_embalagem_primaria
     );
@@ -358,14 +358,14 @@ export default () => {
       const response = await getDadosCronogramaFichaTecnica(uuidFicha);
       const fichaTecnica = response.data;
 
-      form.change("marca", fichaTecnica.marca.nome);
+      form.change("marca", fichaTecnica.marca?.nome);
       form.change(
         "peso_liquido_embalagem_primaria",
         numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_primaria)
       );
       form.change(
         "unidade_medida_primaria",
-        fichaTecnica.unidade_medida_primaria.uuid
+        fichaTecnica.unidade_medida_primaria?.uuid
       );
       form.change(
         "peso_liquido_embalagem_secundaria",
@@ -373,7 +373,7 @@ export default () => {
       );
       form.change(
         "unidade_medida_secundaria",
-        fichaTecnica.unidade_medida_secundaria.uuid
+        fichaTecnica.unidade_medida_secundaria?.uuid
       );
       form.change(
         "volume_embalagem_primaria",
@@ -539,8 +539,7 @@ export default () => {
                                     },
                                     ...geraOptionsFichasTecnicas(
                                       fichasTecnicas,
-                                      empresaSelecionada,
-                                      fichaTecnicaSelecionada
+                                      empresaSelecionada
                                     ),
                                   ]}
                                   label="Ficha Técnica e Produto"
