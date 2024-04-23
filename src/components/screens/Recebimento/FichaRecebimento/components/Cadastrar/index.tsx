@@ -4,14 +4,13 @@ import "./styles.scss";
 import { Field, Form } from "react-final-form";
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
 import Select from "components/Shareable/Select";
-import { formataMilharDecimal } from "helpers/utilities";
 import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
 import { required } from "../../../../../../helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
 import { InputComData } from "components/Shareable/DatePicker";
 import {
-  getListaCronogramasPraCadastro,
-  getCronogramaDetalhar,
+  getListaCronogramasPraFichaRecebimento,
+  getCronogramaPraCadastroRecebimento,
 } from "../../../../../../services/cronograma.service";
 import {
   BUTTON_TYPE,
@@ -19,11 +18,20 @@ import {
 } from "../../../../../Shareable/Botao/constants";
 import Botao from "../../../../../Shareable/Botao";
 import { useNavigate } from "react-router-dom";
-import { DOCUMENTOS_RECEBIMENTO, PRE_RECEBIMENTO } from "configs/constants";
+import { FICHA_RECEBIMENTO, RECEBIMENTO } from "configs/constants";
 import { CronogramaSimples } from "interfaces/pre_recebimento.interface";
 import { FormApi } from "final-form";
 import StepsSigpae from "components/Shareable/StepsSigpae";
 import Collapse, { CollapseControl } from "components/Shareable/Collapse";
+import ModalGenerico from "components/Shareable/ModalGenerico";
+import { exibeError } from "helpers/utilities";
+import {
+  toastError,
+  toastSuccess,
+} from "../../../../../Shareable/Toast/dialogs";
+import { CronogramaFicha, FichaRecebimentoPayload } from "../../interfaces";
+import { cadastraRascunhoFichaRecebimento } from "services/fichaRecebimento.service";
+import moment from "moment";
 
 const ITENS_STEPS = [
   {
@@ -42,17 +50,18 @@ export default () => {
   const [carregando, setCarregando] = useState<boolean>(true);
   const [cronogramas, setCronogramas] = useState<Array<CronogramaSimples>>([]);
   const [collapse, setCollapse] = useState<CollapseControl>({});
-  const [cronograma, setCronograma] = useState<any>({});
+  const [cronograma, setCronograma] = useState<CronogramaFicha>(
+    {} as CronogramaFicha
+  );
+  const [showModal, setShowModal] = useState<boolean>(false);
 
-  const onSubmit = (): void => {
-    //setShowModal(true);
-  };
+  const onSubmit = (): void => {};
 
   const buscaCronogramas = async (): Promise<void> => {
     setCarregando(true);
 
     try {
-      let response = await getListaCronogramasPraCadastro();
+      let response = await getListaCronogramasPraFichaRecebimento();
       setCronogramas(response.data.results);
     } finally {
       setCarregando(false);
@@ -62,67 +71,53 @@ export default () => {
   const getOpcoesEtapas = () => {
     let options = [];
     cronograma.etapas?.forEach((etapa) => {
-      options.push({
-        uuid: etapa.uuid,
-        nome: `${etapa.etapa} - ${etapa.parte}`,
-      });
+      if (etapa.desvinculada_recebimento) {
+        options.push({
+          uuid: etapa.uuid,
+          nome: `${etapa.etapa} - ${etapa.parte}`,
+        });
+      }
     });
     return options;
   };
 
-  // const formataPayload = (values): any => {
-  //   let documentosPayload: Array<any> =
-  //     values.tipos_de_documentos?.map(
-  //       (valor: TiposDocumentoChoices): any => {
-  //         return {
-  //           tipo_documento: valor,
-  //           arquivos_do_tipo_de_documento: documentos[valor],
-  //           descricao_documento:
-  //             valor === "OUTROS" ? values.descricao_documento : undefined,
-  //         };
-  //       }
-  //     );
+  const formataPayload = (
+    values: FichaRecebimentoPayload
+  ): FichaRecebimentoPayload => {
+    let payload: FichaRecebimentoPayload = {
+      etapa: values.etapa,
+      data_entrega: values.data_entrega
+        ? moment(values.data_entrega, "DD/MM/YYYY").format("YYYY-MM-DD")
+        : undefined,
+    };
 
-  //   documentosPayload.push({
-  //     tipo_documento: "LAUDO",
-  //     arquivos_do_tipo_de_documento: laudo,
-  //   });
+    return payload;
+  };
 
-  //   let payload: any = {
-  //     cronograma: cronogramas.find(({ numero }) => numero === values.cronograma)
-  //       .uuid,
-  //     numero_laudo: values.numero_laudo,
-  //     tipos_de_documentos: documentosPayload,
-  //   };
+  const salvarRascunho = async (
+    values: FichaRecebimentoPayload
+  ): Promise<void> => {
+    setCarregando(true);
 
-  //   return payload;
-  // };
+    let payload: FichaRecebimentoPayload = formataPayload(values);
 
-  // const salvarDocumentosRecebimiento = async (
-  //   values: Record<string, any>
-  // ): Promise<void> => {
-  //   setCarregando(true);
+    try {
+      let response = await cadastraRascunhoFichaRecebimento(payload);
+      if (response.status === 201 || response.status === 200) {
+        toastSuccess("Documentos enviados com sucesso!");
+        voltarPagina();
+      } else {
+        toastError("Ocorreu um erro ao salvar o Documento de Recebimento");
+      }
+    } catch (error) {
+      exibeError(error, "Ocorreu um erro ao salvar o Documento de Recebimento");
+    } finally {
+      setShowModal(false);
+      setCarregando(false);
+    }
+  };
 
-  //   let payload: any = formataPayload(values);
-
-  //   try {
-  //     let response = await cadastraDocumentoRecebimento(payload);
-  //     if (response.status === 201 || response.status === 200) {
-  //       toastSuccess("Documentos enviados com sucesso!");
-  //       voltarPagina();
-  //     } else {
-  //       toastError("Ocorreu um erro ao salvar o Documento de Recebimento");
-  //     }
-  //   } catch (error) {
-  //     exibeError(error, "Ocorreu um erro ao salvar o Documento de Recebimento");
-  //   } finally {
-  //     setShowModal(false);
-  //     setCarregando(false);
-  //   }
-  // };
-
-  const voltarPagina = () =>
-    navigate(`/${PRE_RECEBIMENTO}/${DOCUMENTOS_RECEBIMENTO}`);
+  const voltarPagina = () => navigate(`/${RECEBIMENTO}/${FICHA_RECEBIMENTO}`);
 
   useEffect(() => {
     buscaCronogramas();
@@ -137,22 +132,22 @@ export default () => {
 
   const atualizarCamposCronograma = async (value: string, form: FormApi) => {
     setCarregando(true);
-    let cronograma = cronogramas.find((c) => c.numero === value);
-    if (cronograma?.uuid) {
-      let { data } = await getCronogramaDetalhar(cronograma.uuid);
-
-      setCronograma(data);
-
-      form.change("fornecedor", data?.empresa?.nome_fantasia);
-      form.change("numero_contrato", data?.contrato?.numero);
-      form.change("pregao", data?.contrato?.numero_chamada_publica);
-      form.change("numero_ata", data?.contrato?.ata);
-      form.change("produto", data?.ficha_tecnica?.produto?.nome);
-      form.change("marca", data?.ficha_tecnica?.marca?.nome);
-      form.change(
-        "qtd_total_programada",
-        `${data?.qtd_total_programada} ${data.unidade_medida?.abreviacao}`
+    let cronogramaLista = cronogramas.find((c) => c.numero === value);
+    if (cronogramaLista?.uuid) {
+      let { data } = await getCronogramaPraCadastroRecebimento(
+        cronogramaLista.uuid
       );
+      let cronograma = data.results;
+
+      setCronograma(cronograma);
+
+      form.change("fornecedor", cronograma.fornecedor);
+      form.change("numero_contrato", cronograma.contrato);
+      form.change("pregao", cronograma.pregao_chamada_publica);
+      form.change("numero_ata", cronograma.ata);
+      form.change("produto", cronograma.produto);
+      form.change("marca", cronograma.marca);
+      form.change("qtd_total_programada", cronograma.qtd_total_programada);
     }
 
     setCarregando(false);
@@ -163,6 +158,17 @@ export default () => {
     form.change("data_programada", etapa?.data_programada);
     form.change("qtd_programada", etapa?.quantidade);
     form.change("emb_programadas", etapa?.total_embalagens);
+
+    form.change("emb_primaria", cronograma.embalagem_primaria);
+    form.change("emb_secundaria", cronograma.embalagem_secundaria);
+    form.change(
+      "peso_emb_primaria",
+      cronograma.peso_liquido_embalagem_primaria
+    );
+    form.change(
+      "peso_emb_secundaria",
+      cronograma.peso_liquido_embalagem_secundaria
+    );
   };
 
   return (
@@ -172,14 +178,22 @@ export default () => {
           <Form
             onSubmit={onSubmit}
             initialValues={{}}
-            render={({ handleSubmit, values, errors, form }) => (
+            render={({ handleSubmit, values, form }) => (
               <form onSubmit={handleSubmit}>
-                {/* <ModalConfirmarEnvio
+                <ModalGenerico
                   show={showModal}
                   handleClose={() => setShowModal(false)}
                   loading={carregando}
-                  handleSim={() => salvarDocumentosRecebimiento(values)}
-                /> */}
+                  handleSim={() =>
+                    salvarRascunho(values as FichaRecebimentoPayload)
+                  }
+                  titulo={<span>Salvar Rascunho</span>}
+                  texto={
+                    <span>
+                      Deseja salvar o rascunho da Ficha de Recebimento?
+                    </span>
+                  }
+                />
                 <StepsSigpae current={0} items={ITENS_STEPS} />
 
                 <Collapse
@@ -303,10 +317,7 @@ export default () => {
                                       {etapa.numero_empenho}
                                     </td>
                                     <td className="borda-crono">
-                                      {formataMilharDecimal(
-                                        etapa.qtd_total_empenho
-                                      )}{" "}
-                                      {cronograma.unidade_medida?.abreviacao}
+                                      {etapa.qtd_total_empenho}
                                     </td>
                                     <td className="borda-crono">
                                       {etapa.etapa}
@@ -318,17 +329,10 @@ export default () => {
                                       {etapa.data_programada}
                                     </td>
                                     <td className="borda-crono">
-                                      {formataMilharDecimal(etapa.quantidade)}{" "}
-                                      {cronograma.unidade_medida?.abreviacao}
+                                      {etapa.quantidade}
                                     </td>
                                     <td className="borda-crono">
-                                      {formataMilharDecimal(
-                                        etapa.total_embalagens
-                                      )}{" "}
-                                      {
-                                        cronograma.tipo_embalagem_secundaria
-                                          ?.abreviacao
-                                      }
+                                      {etapa.total_embalagens}
                                     </td>
                                   </tr>
                                 );
@@ -447,18 +451,14 @@ export default () => {
 
                 <div className="mt-4 mb-4">
                   <Botao
-                    texto="Salvar e Enviar"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    className="float-end ms-3"
-                    disabled={Object.keys(errors).length > 0}
-                  />
-                  <Botao
-                    texto="Cancelar"
+                    texto="Salvar Rascunho"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     className="float-end ms-3"
-                    onClick={() => voltarPagina()}
+                    disabled={!values.cronograma || !values.etapa}
+                    onClick={(): void => {
+                      setShowModal(true);
+                    }}
                   />
                 </div>
               </form>

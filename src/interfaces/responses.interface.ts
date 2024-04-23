@@ -24,6 +24,7 @@ import { InformacaoNutricional } from "./produto.interface";
 import { LoteRascunhosInterface } from "./rascunhos.interface";
 import { TerceirizadaInterface } from "./terceirizada.interface";
 import { EditalContratoInterface } from "components/screens/Cadastros/EditaisContratosRefatorado/interfaces";
+import { FichaRecebimento } from "./recebimento.interface";
 
 export interface ResponseInterface {
   data: Object;
@@ -209,4 +210,8 @@ export interface ResponseEditalCotratoInterface extends ResponseInterface {
 
 export interface ResponseGetEditalCotratoInterface extends ResponseInterface {
   data: EditalContratoInterface;
+}
+
+export interface ResponseFichaRecebimento extends ResponseInterface {
+  data: FichaRecebimento;
 }
