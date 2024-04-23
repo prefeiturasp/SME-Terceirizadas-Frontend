@@ -13,7 +13,7 @@ type Props = {
 
 export default ({ form, faixasEtarias, grupoSelecionado }: Props) => {
   return (
-    <div className="container-tabelas-cei">
+    <div className="container-tabelas">
       <TabelaAlimentacaoCEI
         faixasEtarias={faixasEtarias}
         grupoSelecionado={grupoSelecionado}
