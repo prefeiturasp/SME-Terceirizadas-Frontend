@@ -49,7 +49,7 @@ export default () => {
   const navigate = useNavigate();
   const [carregando, setCarregando] = useState<boolean>(true);
   const [cronogramas, setCronogramas] = useState<Array<CronogramaSimples>>([]);
-  const [collapse, setCollapse] = useState<CollapseControl>({});
+  const [collapse, setCollapse] = useState<CollapseControl>({ 0: true });
   const [cronograma, setCronograma] = useState<CronogramaFicha>(
     {} as CronogramaFicha
   );
@@ -104,13 +104,13 @@ export default () => {
     try {
       let response = await cadastraRascunhoFichaRecebimento(payload);
       if (response.status === 201 || response.status === 200) {
-        toastSuccess("Documentos enviados com sucesso!");
+        toastSuccess("Rascunho salvo com sucesso!");
         voltarPagina();
       } else {
-        toastError("Ocorreu um erro ao salvar o Documento de Recebimento");
+        toastError("Ocorreu um erro ao salvar o Rascunho");
       }
     } catch (error) {
-      exibeError(error, "Ocorreu um erro ao salvar o Documento de Recebimento");
+      exibeError(error, "Ocorreu um erro ao salvar o Rascunho");
     } finally {
       setShowModal(false);
       setCarregando(false);
