@@ -17,6 +17,7 @@ import Filtros from "./components/Filtros";
 import TabelasGruposEMEIeEMEF from "./components/TabelasGruposEMEIeEMEF";
 import TabelasGrupoCEI from "./components/TabelasGrupoCEI";
 import TabelasGrupoCEMEI from "./components/TabelasGrupoCEMEI";
+import TabelasGrupoEMEBS from "./components/TabelasGrupoEMEBS";
 import ParametrizacaoFinanceiraService from "services/medicaoInicial/parametrizacao_financeira.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
@@ -81,14 +82,18 @@ export default () => {
 
   const exibeTabelasCEI =
     faixasEtarias.length && grupoSelecionado === "grupo_1";
+
   const exibeTabelasEMEFeEMEI =
     tiposAlimentacao.length &&
-    !["grupo_1", "grupo_2"].includes(grupoSelecionado);
+    ["grupo_3", "grupo_5"].includes(grupoSelecionado);
 
   const exibeTabelasCEMEI =
     faixasEtarias.length &&
     tiposAlimentacao.length &&
     grupoSelecionado === "grupo_2";
+
+  const exibeTabelasEMEBS =
+    tiposAlimentacao.length && grupoSelecionado === "grupo_4";
 
   return (
     <>
@@ -133,9 +138,17 @@ export default () => {
                     grupoSelecionado={grupoSelecionado}
                   />
                 ) : null}
+                {exibeTabelasEMEBS ? (
+                  <TabelasGrupoEMEBS
+                    form={form}
+                    tiposAlimentacao={tiposAlimentacao}
+                    grupoSelecionado={grupoSelecionado}
+                  />
+                ) : null}
                 {exibeTabelasEMEFeEMEI ||
                 exibeTabelasCEI ||
-                exibeTabelasCEMEI ? (
+                exibeTabelasCEMEI ||
+                exibeTabelasEMEBS ? (
                   <div className="row mt-5">
                     <div className="col">
                       <Field

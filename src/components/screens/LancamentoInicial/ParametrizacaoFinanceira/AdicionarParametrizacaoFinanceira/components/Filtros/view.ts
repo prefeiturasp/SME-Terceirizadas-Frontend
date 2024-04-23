@@ -167,7 +167,7 @@ export default ({
 
     const grupoSelecionado = getGrupoSelecionado(unidades);
 
-    if (["grupo_1", "grupo_4"].includes(grupoSelecionado)) {
+    if (grupoSelecionado === "grupo_1") {
       setTiposAlimentacao([]);
       return;
     }

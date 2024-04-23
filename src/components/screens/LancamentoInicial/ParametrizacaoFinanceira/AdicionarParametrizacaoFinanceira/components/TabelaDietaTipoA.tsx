@@ -21,6 +21,7 @@ type Props = {
   tiposAlimentacao: Array<any>;
   grupoSelecionado?: string;
   nomeTabela: string;
+  tipoTurma?: string;
 };
 
 export default ({
@@ -28,6 +29,7 @@ export default ({
   tiposAlimentacao,
   grupoSelecionado,
   nomeTabela,
+  tipoTurma = "",
 }: Props) => {
   const ListaDeAlimentacoes =
     grupoSelecionado === "grupo_2" && !nomeTabela.includes("Enteral")
@@ -41,13 +43,21 @@ export default ({
       grupo: ta.nome === "Refeição" ? "Dieta Enteral" : null,
     }));
 
+  const labelTabela = tipoTurma ? `${nomeTabela} - ${tipoTurma}` : nomeTabela;
+
   return (
     <div className="row mt-5">
       <div className="col">
-        {grupoSelecionado === "grupo_2" ? (
+        {["grupo_2", "grupo_4"].includes(grupoSelecionado) ? (
           <h2 className="text-start texto-simples-verde fw-bold mb-3">
             Preço das {nomeTabela} -{" "}
-            <span className="titulo-tag turma-emei">EMEI</span>
+            <span
+              className={`titulo-tag turma-${tipoTurma
+                .replace(/\s/g, "-")
+                .toLocaleLowerCase()}`}
+            >
+              {tipoTurma}
+            </span>
           </h2>
         ) : (
           <h2 className="text-start texto-simples-verde fw-bold">
@@ -68,13 +78,13 @@ export default ({
                   </p>
                   <Field
                     component="input"
-                    name={`tabelas[${nomeTabela}].${value}.tipo_alimentacao`}
+                    name={`tabelas[${labelTabela}].${value}.tipo_alimentacao`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
                   <Field
                     component="input"
-                    name={`tabelas[${nomeTabela}].${value}.grupo`}
+                    name={`tabelas[${labelTabela}].${value}.grupo`}
                     type="hidden"
                     defaultValue={record.grupo}
                   />
@@ -89,7 +99,7 @@ export default ({
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${nomeTabela}].${record.nome}.valor_unitario`}
+                name={`tabelas[${labelTabela}].${record.nome}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -97,19 +107,19 @@ export default ({
                 defaultValue={null}
                 onChange={(value: number) => {
                   const percentualAcrescimo =
-                    form.getState().values.tabelas[nomeTabela]?.[record.nome]
+                    form.getState().values.tabelas[labelTabela]?.[record.nome]
                       ?.percentual_acrescimo || 0;
                   const valorUnitarioTotal =
                     value * (1 + percentualAcrescimo / 100);
 
                   form.change(
-                    `tabelas[${nomeTabela}].${record.nome}.valor_unitario_total`,
+                    `tabelas[${labelTabela}].${record.nome}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas[${nomeTabela}].${record.nome}.valor_unitario`,
+                    `tabelas[${labelTabela}].${record.nome}.valor_unitario`,
                     value
                   );
                 }}
@@ -123,7 +133,7 @@ export default ({
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${nomeTabela}].${record.nome}.percentual_acrescimo`}
+                name={`tabelas[${labelTabela}].${record.nome}.percentual_acrescimo`}
                 placeholder="%"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -131,18 +141,18 @@ export default ({
                 defaultValue={null}
                 onChange={(value: number) => {
                   const valorUnitario =
-                    form.getState().values.tabelas[nomeTabela]?.[record.nome]
+                    form.getState().values.tabelas[labelTabela]?.[record.nome]
                       ?.valor_unitario || 0;
                   const valorUnitarioTotal = valorUnitario * (1 + value / 100);
 
                   form.change(
-                    `tabelas[${nomeTabela}].${record.nome}.valor_unitario_total`,
+                    `tabelas[${labelTabela}].${record.nome}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas[${nomeTabela}].${record.nome}.percentual_acrescimo`,
+                    `tabelas[${labelTabela}].${record.nome}.percentual_acrescimo`,
                     value
                   );
                 }}
@@ -156,7 +166,7 @@ export default ({
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${nomeTabela}].${record.nome}.valor_unitario_total`}
+                name={`tabelas[${labelTabela}].${record.nome}.valor_unitario_total`}
                 placeholder="0,00"
                 disabled
               />
