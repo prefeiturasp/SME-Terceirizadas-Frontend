@@ -22,7 +22,7 @@ export default ({
   grupoSelecionado,
 }: Props) => {
   return (
-    <div className="container-tabelas-cei">
+    <div className="container-tabelas">
       <TabelaAlimentacaoCEI
         faixasEtarias={faixasEtarias}
         grupoSelecionado={grupoSelecionado}
@@ -37,6 +37,7 @@ export default ({
       <TabelaAlimentacao
         tiposAlimentacao={tiposAlimentacao}
         grupoSelecionado={grupoSelecionado}
+        tipoTurma="EMEI"
       />
       <div className="d-flex flex-column gap-4">
         <TabelaDietaTipoA
@@ -44,17 +45,20 @@ export default ({
           tiposAlimentacao={tiposAlimentacao}
           grupoSelecionado={grupoSelecionado}
           nomeTabela="Dietas Tipo A"
+          tipoTurma="EMEI"
         />
         <TabelaDietaTipoA
           form={form}
           tiposAlimentacao={tiposAlimentacao}
           grupoSelecionado={grupoSelecionado}
           nomeTabela="Dietas Tipo A Enteral"
+          tipoTurma="EMEI"
         />
         <TabelaDietaTipoB
           form={form}
           tiposAlimentacao={tiposAlimentacao}
           grupoSelecionado={grupoSelecionado}
+          tipoTurma="EMEI"
         />
       </div>
 

@@ -6,11 +6,13 @@ div.adicionar-parametrizacao {
     color: $blackInput;
   }
 
-  .periodo-integral {
+  .periodo-integral,
+  .turma-emebs-fundamental {
     background-color: #ffd869;
   }
 
-  .periodo-parcial {
+  .periodo-parcial,
+  .turma-emebs-infantil {
     background-color: #b7e487;
   }
 
@@ -18,7 +20,7 @@ div.adicionar-parametrizacao {
     background-color: #9dc7ff;
   }
 
-  div.container-tabelas-cei {
+  div.container-tabelas {
     display: grid;
     grid-template-columns: 49% 49%;
     gap: 0 2%;
