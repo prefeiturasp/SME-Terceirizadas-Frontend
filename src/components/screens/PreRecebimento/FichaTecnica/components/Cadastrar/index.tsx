@@ -9,7 +9,7 @@ import {
   composeValidators,
   inteiroOuDecimalComVirgula,
 } from "helpers/fieldValidators";
-import { Spin, Steps } from "antd";
+import { Spin } from "antd";
 import { CATEGORIA_OPTIONS } from "../../constants";
 import InputText from "components/Shareable/Input/InputText";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
@@ -64,6 +64,7 @@ import {
 
 import "./styles.scss";
 import FormProponente from "./components/FormProponente";
+import StepsSigpae from "components/Shareable/StepsSigpae";
 
 const ITENS_STEPS = [
   {
@@ -151,9 +152,7 @@ export default () => {
             decorators={[cepCalculator(setDesabilitaEndereco)]}
             render={({ form, handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
-                <div className="steps">
-                  <Steps size="small" current={stepAtual} items={ITENS_STEPS} />
-                </div>
+                <StepsSigpae current={stepAtual} items={ITENS_STEPS} />
 
                 <hr />
 
