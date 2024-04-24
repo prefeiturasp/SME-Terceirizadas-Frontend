@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Field } from "react-final-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Spin } from "antd";
@@ -50,6 +50,12 @@ export const Filtros = ({ ...props }) => {
 
   const PAGE_SIZE = 10;
   const PARAMS = { limit: PAGE_SIZE, offset: 0 };
+
+  useEffect(() => {
+    if (filtros?.lotes.length === 1) {
+      getUnidadesEducacionaisAsync({ lote: filtros.lotes[0].uuid });
+    }
+  }, [filtros]);
 
   const getTotalizadoresAsync = async (values) => {
     const response = await getTotalizadoresRelatorioSolicitacoes(values);
@@ -223,7 +229,7 @@ export const Filtros = ({ ...props }) => {
                           "Todos as unidades estão selecionadas",
                         selectAll: "Todas",
                       }}
-                      disabled={!values.lote}
+                      disabled={filtros.lotes.length > 1 && !values.lote}
                     />
                   </Spin>
                 </div>
