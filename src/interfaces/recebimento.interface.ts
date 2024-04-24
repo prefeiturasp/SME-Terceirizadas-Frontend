@@ -75,3 +75,11 @@ export interface FiltrosQuestoesPorProduto {
   ficha_tecnica: string;
   questao: string;
 }
+
+export interface FichaRecebimento {
+  alterado_em: string;
+  criado_em: string;
+  data_entrega: string;
+  etapa: string;
+  uuid: string;
+}
