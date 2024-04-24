@@ -378,6 +378,13 @@ export const getSolicitacoesRelatorioDietasEspeciais = async (params) => {
   }
 };
 
+export const getUnidadesEducacionaisComCodEol = async (parametros) => {
+  return await axios.post(
+    `/escolas-simplissima-com-eol/escolas-com-cod-eol/`,
+    parametros
+  );
+};
+
 export const getUnidadesEducacionaisTercTotal = async (parametros) => {
   return await axios.post(
     `/escolas-simplissima-com-eol/terc-total/`,

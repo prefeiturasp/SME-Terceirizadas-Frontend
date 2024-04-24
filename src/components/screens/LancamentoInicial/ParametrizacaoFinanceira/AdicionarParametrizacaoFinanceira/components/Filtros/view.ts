@@ -3,10 +3,13 @@ import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { getNumerosEditais } from "services/edital.service";
 import { getLotesSimples } from "services/lote.service";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
+import { getFaixasEtarias } from "services/faixaEtaria.service";
 
 import { toastError } from "components/Shareable/Toast/dialogs";
 
-import { TIPOS_UNIDADES_GRUPOS, TIPOS_UNIDADES_GRUPO_3 } from "../../const";
+import { TIPOS_UNIDADES_GRUPOS } from "../../const";
+
+import { FormApi } from "final-form";
 
 type SelectOption = {
   uuid: string;
@@ -15,9 +18,17 @@ type SelectOption = {
 
 type Props = {
   setTiposAlimentacao: Dispatch<SetStateAction<Array<any>>>;
+  setGrupoSelecionado: Dispatch<SetStateAction<string>>;
+  setFaixasEtarias: Dispatch<SetStateAction<Array<any>>>;
+  form: FormApi<any, any>;
 };
 
-export default ({ setTiposAlimentacao }: Props) => {
+export default ({
+  setTiposAlimentacao,
+  setGrupoSelecionado,
+  setFaixasEtarias,
+  form,
+}: Props) => {
   const [editais, setEditais] = useState<SelectOption[]>([]);
   const [lotes, setLotes] = useState<SelectOption[]>([]);
   const [tiposUnidades, setTiposUnidades] = useState([]);
@@ -86,12 +97,24 @@ export default ({ setTiposAlimentacao }: Props) => {
     }
   };
 
+  const getFaixasEtariasAsync = async () => {
+    try {
+      const { data } = await getFaixasEtarias();
+      setFaixasEtarias(data.results);
+    } catch (error) {
+      toastError(
+        "Erro ao carregar faixas etárias. Tente novamente mais tarde."
+      );
+    }
+  };
+
   useEffect(() => {
     setCarregando(true);
     Promise.all([
       getEditaisAsync(),
       getLotesAsync(),
       getTiposUnidadeEscolarAsync(),
+      setFaixasEtarias && getFaixasEtariasAsync(),
     ]).then(() => {
       setCarregando(false);
     });
@@ -111,17 +134,43 @@ export default ({ setTiposAlimentacao }: Props) => {
     });
   };
 
-  const onChangeTiposUnidades = (unidades: string) => {
-    const selecionouGrupo3 =
-      unidades &&
-      unidades
-        .split(",")
-        .map(
-          (unidade) => tiposUnidades.find((u) => u.uuid === unidade).iniciais
-        )
-        .every((unidade) => TIPOS_UNIDADES_GRUPO_3.includes(unidade));
+  const getGrupoSelecionado = (unidades: string) => {
+    let grupoSelecionado = "";
 
-    if (!selecionouGrupo3) {
+    if (unidades) {
+      const unidadesArray = unidades ? unidades.split(",") : [];
+
+      for (let i = 0; i < TIPOS_UNIDADES_GRUPOS.length; i++) {
+        const grupo = TIPOS_UNIDADES_GRUPOS[i];
+        const todasUnidadesNoGrupo = unidadesArray
+          .map(
+            (unidade) => tiposUnidades.find((u) => u.uuid === unidade).iniciais
+          )
+          .every((unidade) => grupo.includes(unidade));
+
+        if (todasUnidadesNoGrupo) {
+          grupoSelecionado = `grupo_${i + 1}`;
+          break;
+        }
+      }
+    }
+
+    setGrupoSelecionado(grupoSelecionado);
+    return grupoSelecionado;
+  };
+
+  const onChangeTiposUnidades = (unidades: string) => {
+    const tabelas = form.getState().values?.tabelas;
+    if (tabelas) {
+      form.change("tabelas", {});
+    }
+
+    const grupoSelecionado = getGrupoSelecionado(unidades);
+
+    if (
+      !(grupoSelecionado === "grupo_3") &&
+      !(grupoSelecionado === "grupo_5")
+    ) {
       setTiposAlimentacao([]);
       return;
     }

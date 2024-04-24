@@ -56,6 +56,7 @@ export const formataPayload = (
     ?.replaceAll(".", "")
     .replace(",", ".");
   payload.unidade_medida = values.unidade_medida;
+  payload.tipo_embalagem_secundaria = values.tipo_embalagem_secundaria;
   payload.custo_unitario_produto =
     stringDecimalToNumber(values.custo_unitario_produto) || undefined;
 

@@ -41,6 +41,7 @@ import {
   PRE_RECEBIMENTO,
   PAINEL_FICHAS_TECNICAS,
   FICHA_TECNICA,
+  ATUALIZAR_FICHA_TECNICA,
 } from "configs/constants";
 import { useNavigate } from "react-router-dom";
 import { getMensagemDeErro } from "helpers/statusErrors";
@@ -1080,7 +1081,20 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                   <div className="mt-4 mb-4">
                     {somenteLeitura ? (
                       <>
-                        <BotaoVoltar onClick={voltarPagina} />
+                        {ficha.status === "Aprovada" &&
+                          usuarioEhEmpresaFornecedor() && (
+                            <Botao
+                              texto="Atualizar Ficha Técnica"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              className="float-end ms-3"
+                              onClick={() =>
+                                navigate(
+                                  `/${PRE_RECEBIMENTO}/${ATUALIZAR_FICHA_TECNICA}?uuid=${ficha.uuid}`
+                                )
+                              }
+                            />
+                          )}
                         {["Enviada para Análise", "Aprovada"].includes(
                           ficha.status
                         ) && (
@@ -1088,11 +1102,12 @@ export default ({ somenteLeitura = false }: AnalisarProps) => {
                             texto="Ficha em PDF"
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
-                            className="float-end me-3"
+                            className="float-end ms-3"
                             onClick={() => imprimirFicha()}
                             icon="fas fa-print"
                           />
                         )}
+                        <BotaoVoltar onClick={voltarPagina} />
                       </>
                     ) : (
                       <>

@@ -18,19 +18,29 @@ export default () => {
   const [carregando, setCarregando] = useState(false);
   const [rfBuscado, setRfBuscado] = useState(false);
 
-  const buscaEOL = async (values) => {
+  const buscaEOL = async (values, form) => {
     let response = await getDadosUsuarioEOLCompleto(values.registro_funcional);
 
     if (response.status === 200) {
       const usuarioEOL = response.data;
-      values.nome_servidor = usuarioEOL.nome ? usuarioEOL.nome : undefined;
-      values.cargo_servidor = usuarioEOL.cargo ? usuarioEOL.cargo : undefined;
-      values.email_servidor = usuarioEOL.email ? usuarioEOL.email : undefined;
-      values.cpf = usuarioEOL.cpf;
-      values.cpf_servidor = usuarioEOL.cpf
-        ? formataCPFCensurado(usuarioEOL.cpf)
-        : undefined;
-      values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
+      form.change(
+        "nome_servidor",
+        usuarioEOL.nome ? usuarioEOL.nome : undefined
+      );
+      form.change(
+        "cargo_servidor",
+        usuarioEOL.cargo ? usuarioEOL.cargo : undefined
+      );
+      form.change(
+        "email_servidor",
+        usuarioEOL.email ? usuarioEOL.email : undefined
+      );
+      form.change("cpf", usuarioEOL.cpf);
+      form.change(
+        "cpf_servidor",
+        usuarioEOL.cpf ? formataCPFCensurado(usuarioEOL.cpf) : undefined
+      );
+      form.change("codigo_eol_unidade", usuarioEOL.codigo_eol_unidade);
 
       let t = document.getElementById("inputRF");
       t.focus();
@@ -85,7 +95,7 @@ export default () => {
                         texto=""
                         icon="fas fa-search"
                         type={BUTTON_TYPE.BUTTON}
-                        onClick={() => buscaEOL(values)}
+                        onClick={() => buscaEOL(values, form)}
                         style={BUTTON_STYLE.GREEN}
                         className="botao-rf"
                       />

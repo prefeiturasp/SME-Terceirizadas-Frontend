@@ -1,4 +1,9 @@
-import { ResponseInterface } from "./responses.interface";
+import { FichaTecnicaSimples } from "./pre_recebimento.interface";
+import {
+  ListagemNaoPaginada,
+  ListagemPaginada,
+  ResponseInterface,
+} from "./responses.interface";
 
 export interface QuestaoConferencia {
   uuid: string;
@@ -6,6 +11,21 @@ export interface QuestaoConferencia {
   tipo_questao: string[];
   pergunta_obrigatoria: boolean;
   posicao?: number;
+}
+
+export interface QuestoesPorProduto {
+  uuid: string;
+  numero_ficha: string;
+  nome_produto: string;
+  questoes_primarias: string[];
+  questoes_secundarias: string[];
+}
+
+export interface QuestoesPorProdutoSimples {
+  uuid: string;
+  ficha_tecnica: FichaTecnicaSimples;
+  questoes_primarias: string[];
+  questoes_secundarias: string[];
 }
 
 export interface ResponseListarQuestoesConferencia extends ResponseInterface {
@@ -17,8 +37,26 @@ export interface ResponseListarQuestoesConferencia extends ResponseInterface {
   };
 }
 
+export interface ResponseListarQuestoesConferenciaSimples
+  extends ResponseInterface {
+  data: ListagemNaoPaginada<QuestaoConferencia>;
+}
+
+export interface ResponseListarQuestoesPorProduto extends ResponseInterface {
+  data: ListagemPaginada<QuestoesPorProduto>;
+}
+
+export interface ResponseDetalharQuestoesPorProduto extends ResponseInterface {
+  data: QuestoesPorProdutoSimples;
+}
+
 export interface PayloadAtribuirQuestoesPorProduto {
   ficha_tecnica: string;
+  questoes_primarias: string[];
+  questoes_secundarias: string[];
+}
+
+export interface PayloadEditarAtribuicaoQuestoesPorProduto {
   questoes_primarias: string[];
   questoes_secundarias: string[];
 }
@@ -31,4 +69,9 @@ export interface ResponseAtribuirQuestoesPorProduto extends ResponseInterface {
       questoes_secundarias: string[];
     };
   };
+}
+
+export interface FiltrosQuestoesPorProduto {
+  ficha_tecnica: string;
+  questao: string;
 }

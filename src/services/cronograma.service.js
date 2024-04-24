@@ -26,8 +26,13 @@ export const getListagemCronogramas = async (params) => {
   return await axios.get(url, { params });
 };
 
-export const getListaCronogramasPraCadastro = async () =>
-  await axios.get("/cronogramas/lista-cronogramas-cadastro/");
+export const getListaCronogramasPraCadastro = async () => {
+  try {
+    return await axios.get("/cronogramas/lista-cronogramas-cadastro/");
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
 
 export const fornecedorAssinaCronograma = async (uuid, password) => {
   const url = `/cronogramas/${uuid}/fornecedor-assina-cronograma/`;

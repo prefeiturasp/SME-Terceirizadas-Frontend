@@ -97,23 +97,31 @@ export default ({
 
   const onClickVoltar = () => {
     if (
-      !valoresPeriodosLancamentos
+      !valoresObservacoes
         .filter((valor) => valor.nome_campo === rowName)
         .filter((valor) => String(valor.dia) === String(dia))
         .filter(
           (valor) => String(valor.categoria_medicao) === String(categoria)
-        )[0]
+        )
     ) {
       form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
     } else {
+      let valueObs = valoresObservacoes.filter(
+        (valor) =>
+          valor.nome_campo === rowName &&
+          String(valor.dia) === String(dia) &&
+          String(valor.categoria_medicao) === String(categoria)
+      );
+      let valoresLancamentos = valoresPeriodosLancamentos.filter(
+        (valor) =>
+          valor.nome_campo === rowName &&
+          String(valor.dia) === String(dia) &&
+          String(valor.categoria_medicao) === String(categoria)
+      );
+
       form.change(
         `${rowName}__dia_${dia}__categoria_${categoria}`,
-        valoresPeriodosLancamentos
-          .filter((valor) => valor.nome_campo === rowName)
-          .filter((valor) => String(valor.dia) === String(dia))
-          .filter(
-            (valor) => String(valor.categoria_medicao) === String(categoria)
-          )[0].valor
+        valueObs[0]?.valor || valoresLancamentos[0]?.valor
       );
     }
     setDesabilitarBotaoSalvar(true);
@@ -121,13 +129,17 @@ export default ({
   };
 
   const onClickSalvar = async () => {
+    setDesabilitarBotaoSalvar(true);
     await onSubmit();
+
     valoresPeriodosLancamentos
       .filter((valor) => valor.nome_campo === rowName)
       .filter((valor) => String(valor.dia) === String(dia))
       .filter(
         (valor) => String(valor.categoria_medicao) === String(categoria)
       )[0] && setShowBotaoExcluir(true);
+
+    setDesabilitarBotaoSalvar(false);
     closeModal();
   };
 
