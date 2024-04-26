@@ -13,6 +13,7 @@ import { ModalConfirmarExclusao } from "components/Shareable/Calendario/componen
 import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
 import { toastSuccess } from "components/Shareable/Toast/dialogs";
 import "components/Shareable/Calendario/style.scss";
+import { getNumerosEditais } from "services/edital.service";
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 
@@ -24,6 +25,7 @@ export class Calendario extends React.Component {
       objetos: undefined,
       loadingDiasCalendario: false,
       tiposUnidades: undefined,
+      editais: [],
       erroAPI: false,
       showModalCadastrar: false,
       showModalEditar: false,
@@ -37,6 +39,7 @@ export class Calendario extends React.Component {
     this.handleSelectSlot = this.handleSelectSlot.bind(this);
     this.handleEvent = this.handleEvent.bind(this);
     this.getObjetosAsync = this.getObjetosAsync.bind(this);
+    this.getEditaisAsync = this.getEditaisAsync.bind(this);
     this.getTiposUnidadeEscolarAsync =
       this.getTiposUnidadeEscolarAsync.bind(this);
   }
@@ -44,6 +47,7 @@ export class Calendario extends React.Component {
   componentDidMount() {
     this.getObjetosAsync();
     this.getTiposUnidadeEscolarAsync();
+    this.getEditaisAsync();
   }
 
   async getObjetosAsync(params) {
@@ -55,7 +59,7 @@ export class Calendario extends React.Component {
     );
     if (response.status === HTTP_STATUS.OK) {
       this.setState({
-        objetos: formataComoEventos(response.data.results),
+        objetos: formataComoEventos(response.data),
       });
     }
     if (response) {
@@ -67,6 +71,15 @@ export class Calendario extends React.Component {
     const response = await getTiposUnidadeEscolar();
     if (response.status === HTTP_STATUS.OK) {
       this.setState({ tiposUnidades: response.data.results });
+    } else {
+      this.setState({ erroAPI: true });
+    }
+  }
+
+  async getEditaisAsync() {
+    const response = await getNumerosEditais();
+    if (response.status === HTTP_STATUS.OK) {
+      this.setState({ editais: response.data.results });
     } else {
       this.setState({ erroAPI: true });
     }
@@ -97,19 +110,33 @@ export class Calendario extends React.Component {
     const nextEvents = [...objetos];
     nextEvents.splice(idx, 1, updatedEvent);
 
+    const cadastros_sobremesa_doce_payload = [];
+    nextEvents
+      .filter((e) => e.data === getDDMMYYYfromDate(event.start))
+      .forEach((evento) =>
+        cadastros_sobremesa_doce_payload.push({
+          editais: evento.editais_uuids,
+          tipo_unidades: [evento.tipo_unidade.uuid],
+        })
+      );
     const payload = {
-      tipo_unidades: nextEvents
-        .filter((e) => e.data === getDDMMYYYfromDate(event.start))
-        .map((e) => e.tipo_unidade.uuid),
+      cadastros_sobremesa_doce: cadastros_sobremesa_doce_payload,
       data: getYYYYMMDDfromDate(event.start),
     };
 
     await setObjeto(payload);
 
+    const cadastros_sobremesa_doce_payload2 = [];
+    nextEvents
+      .filter((e) => e.data === getDDMMYYYfromDate(start))
+      .forEach((evento) =>
+        cadastros_sobremesa_doce_payload2.push({
+          editais: evento.editais_uuids,
+          tipo_unidades: [evento.tipo_unidade.uuid],
+        })
+      );
     const payload2 = {
-      tipo_unidades: nextEvents
-        .filter((e) => e.data === getDDMMYYYfromDate(start))
-        .map((e) => e.tipo_unidade.uuid),
+      cadastros_sobremesa_doce: cadastros_sobremesa_doce_payload2,
       data: getYYYYMMDDfromDate(start),
     };
 
@@ -147,6 +174,7 @@ export class Calendario extends React.Component {
       showModalCadastrar,
       showModalEditar,
       showModalConfirmarExclusao,
+      editais,
     } = this.state;
     const {
       nomeObjeto,
@@ -161,7 +189,7 @@ export class Calendario extends React.Component {
         <div className="card-body">
           <Spin
             tip="Carregando calendário..."
-            spinning={(!tiposUnidades || !objetos) && !erroAPI}
+            spinning={(!editais || !tiposUnidades || !objetos) && !erroAPI}
           >
             {erroAPI && (
               <div>
@@ -169,7 +197,7 @@ export class Calendario extends React.Component {
                 mais tarde.
               </div>
             )}
-            {tiposUnidades && objetos && (
+            {editais && tiposUnidades && objetos && (
               <>
                 <p>
                   Para cadastrar um dia para {nomeObjetoMinusculo}, clique sobre
@@ -180,6 +208,7 @@ export class Calendario extends React.Component {
                   spinning={loadingDiasCalendario}
                 >
                   <DragAndDropCalendar
+                    tooltipAccessor={(e) => e.editais_numeros}
                     style={{ height: 1000 }}
                     formats={{
                       weekdayFormat: (date, culture, localizer) =>
@@ -228,6 +257,7 @@ export class Calendario extends React.Component {
                       }
                       objetos={objetos}
                       tiposUnidades={tiposUnidades}
+                      editais={editais}
                       event={currentEvent}
                       getObjetosAsync={this.getObjetosAsync}
                       setObjetoAsync={setObjeto}
