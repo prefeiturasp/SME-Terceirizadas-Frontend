@@ -6,28 +6,25 @@ import { required } from "helpers/fieldValidators";
 export interface Props {
   name: string;
   label: string;
-  values: string[];
-  labels: string[];
+  options: {
+    value: string;
+    label: string;
+  }[];
 }
 
-const RadioButton: React.FC<Props> = ({
-  name,
-  label,
-  values = [],
-  labels = [],
-}) => {
+const RadioButton: React.FC<Props> = ({ name, label, options = [] }) => {
   return (
     <div className="radio-button-sigpae">
       <p className="label-radio">
         <span className="required-asterisk">*</span> {label}
       </p>
-      {labels.map((label, index) => (
+      {options.map((option, index) => (
         <label className="container-radio" key={index}>
-          {label}
+          {option.label}
           <Field
             component="input"
             type="radio"
-            value={values[index]}
+            value={option.value}
             name={name}
             validate={required}
           />

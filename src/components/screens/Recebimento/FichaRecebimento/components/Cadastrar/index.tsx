@@ -41,6 +41,7 @@ import moment from "moment";
 import { deletaValues } from "helpers/formHelper";
 import RadioButton from "components/Shareable/RadioButton";
 import { stringToBoolean } from "helpers/parsers";
+import Label from "components/Shareable/Label";
 
 const ITENS_STEPS = [
   {
@@ -64,7 +65,7 @@ export default () => {
     {} as CronogramaFicha
   );
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [stepAtual, setStepAtual] = useState(0);
+  const [stepAtual, setStepAtual] = useState(1);
   const [veiculos, setVeiculos] = useState([{}]);
 
   const onSubmit = (): void => {};
@@ -246,18 +247,18 @@ export default () => {
 
   const deletaVeiculo = (index: number, values: Record<string, any>) => {
     let listaChaves = [
-      "numero_veiculo",
-      "temperatura_area",
+      "numero",
+      "temperatura_recebimento",
       "temperatura_produto",
-      "placa_veiculo",
+      "placa",
       "lacre",
-      "numero_sif",
+      "numero_sif_sisbi_sisp",
       "numero_nota_fiscal",
-      "qtd_nota_fiscal",
-      "emb_nota_fiscal",
-      "numero_sif",
-      "emb_recebidas",
-      "estado_higienico",
+      "quantidade_nota_fiscal",
+      "embalagens_nota_fiscal",
+      "quantidade_recebida",
+      "embalagens_recebidas",
+      "estado_higienico_adequado",
       "termografo",
     ];
 
@@ -556,7 +557,7 @@ export default () => {
                         Veículos e Quantidades do Recebimento
                       </span>,
                     ]}
-                    id="collapseFichaRecebimentoStep1"
+                    id="collapseFichaRecebimentoStep2"
                   >
                     <section id="dadosValidacoes">
                       <div className="row">
@@ -624,8 +625,16 @@ export default () => {
                           <RadioButton
                             label="Lote(s) do Fabricante Observado(s)"
                             name={`lote_fabricante_de_acordo`}
-                            labels={["De acordo com o Laudo", "Divergente"]}
-                            values={["1", "0"]}
+                            options={[
+                              {
+                                value: "1",
+                                label: "De acordo com o Laudo",
+                              },
+                              {
+                                value: "0",
+                                label: "Divergente",
+                              },
+                            ]}
                           />
                         </div>
                         {values.lote_fabricante_de_acordo === "0" && (
@@ -649,8 +658,16 @@ export default () => {
                           <RadioButton
                             label="Data(s) de Fabricação Observada(s)"
                             name={`data_fabricacao_de_acordo`}
-                            labels={["De acordo com o Laudo", "Divergente"]}
-                            values={["1", "0"]}
+                            options={[
+                              {
+                                value: "1",
+                                label: "De acordo com o Laudo",
+                              },
+                              {
+                                value: "0",
+                                label: "Divergente",
+                              },
+                            ]}
                           />
                         </div>
                         {values.data_fabricacao_de_acordo === "0" && (
@@ -674,8 +691,16 @@ export default () => {
                           <RadioButton
                             label="Data(s) de Validade Observada(s)"
                             name={`data_validade_de_acordo`}
-                            labels={["De acordo com o Laudo", "Divergente"]}
-                            values={["1", "0"]}
+                            options={[
+                              {
+                                value: "1",
+                                label: "De acordo com o Laudo",
+                              },
+                              {
+                                value: "0",
+                                label: "Divergente",
+                              },
+                            ]}
                           />
                         </div>
                         {values.data_validade_de_acordo === "0" && (
@@ -718,10 +743,18 @@ export default () => {
                       </div>
 
                       <div className="row">
+                        <div className="col-12">
+                          <Label
+                            content="Peso da Embalagem Primária"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="row">
                         <div className="col">
                           <Field
                             component={InputText}
-                            label="Peso da Embalagem Primária"
                             name={`peso_embalagem_primaria_1`}
                             placeholder="Digite o peso"
                             required
@@ -734,7 +767,6 @@ export default () => {
                         <div className="col">
                           <Field
                             component={InputText}
-                            label="&nbsp;"
                             name={`peso_embalagem_primaria_2`}
                             placeholder="Digite o peso"
                             validate={required}
@@ -746,7 +778,6 @@ export default () => {
                         <div className="col">
                           <Field
                             component={InputText}
-                            label="&nbsp;"
                             name={`peso_embalagem_primaria_3`}
                             placeholder="Digite o peso"
                             validate={required}
@@ -758,7 +789,6 @@ export default () => {
                         <div className="col">
                           <Field
                             component={InputText}
-                            label="&nbsp;"
                             name={`peso_embalagem_primaria_4`}
                             placeholder="Digite o peso"
                             validate={required}
@@ -915,8 +945,16 @@ export default () => {
                               <RadioButton
                                 label="Estado Higiênico-Sanitário"
                                 name={`estado_higienico_adequado_${index}`}
-                                labels={["ADEQUADO", "INADEQUADO"]}
-                                values={["1", "0"]}
+                                options={[
+                                  {
+                                    value: "1",
+                                    label: "ADEQUADO",
+                                  },
+                                  {
+                                    value: "0",
+                                    label: "INADEQUADO",
+                                  },
+                                ]}
                               />
                             </div>
                             {cronograma.categoria === "PERECIVEIS" && (
@@ -924,8 +962,16 @@ export default () => {
                                 <RadioButton
                                   label="Termógrafo"
                                   name={`termografo_${index}`}
-                                  labels={["NÃO", "SIM"]}
-                                  values={["0", "1"]}
+                                  options={[
+                                    {
+                                      value: "0",
+                                      label: "NÃO",
+                                    },
+                                    {
+                                      value: "1",
+                                      label: "SIM",
+                                    },
+                                  ]}
                                 />
                               </div>
                             )}
