@@ -5,7 +5,12 @@ div.modal-cadastrar-sobremesa {
   }
 
   .botao-adicionar-excluir {
-    width: 85%;
+    width: 95%;
+
+    @media screen and (max-width: 1690px) {
+      width: 120%;
+      margin-left: -5px !important;
+    }
   }
 
   div.footer {

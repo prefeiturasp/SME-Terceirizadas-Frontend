@@ -94,3 +94,17 @@ div.consulta-editais-contratos {
     padding-left: 48px;
   }
 }
+
+.switch-imr-disabled {
+  display: flex;
+  align-items: center;
+  color: $green !important;
+  font-weight: bold;
+
+  .imr-nao {
+    margin-right: 10px;
+  }
+  .imr-sim {
+    margin-left: 10px;
+  }
+}

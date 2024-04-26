@@ -174,7 +174,7 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
                         <div className="col-2">
                           {index > 0 ? (
                             <Botao
-                              texto="Excluir"
+                              texto="Remover"
                               onClick={() =>
                                 form.change(
                                   "cadastros_sobremesa_doce",
