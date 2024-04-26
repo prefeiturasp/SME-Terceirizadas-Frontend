@@ -1,22 +1,25 @@
-import Botao from "components/Shareable/Botao";
+import React, { useEffect, useState } from "react";
+import { Field, Form } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
+import arrayMutators from "final-form-arrays";
+import HTTP_STATUS from "http-status-codes";
+import { Modal } from "react-bootstrap";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import Botao from "components/Shareable/Botao";
 import {
+  BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
-import React, { useState } from "react";
-import { Modal } from "react-bootstrap";
-import { Field, Form } from "react-final-form";
-import "./style.scss";
-import HTTP_STATUS from "http-status-codes";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { getError } from "helpers/utilities";
-import { useEffect } from "react";
+import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
+import "./style.scss";
 
 export const ModalCadastrarNoCalendario = ({ ...props }) => {
   const {
     tiposUnidades,
+    editais,
     event,
     showModal,
     closeModal,
@@ -27,24 +30,29 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
     nomeObjetoNoCalendarioMinusculo,
   } = props;
 
-  const [tipoUnidadesSalvoNoDia, setTipoUnidadesSalvoNoDia] = useState([]);
+  const [cadastrosSalvosNoDia, setCadastrosSalvosNoDia] = useState([]);
 
   useEffect(() => {
-    setTipoUnidadesSalvoNoDia(
-      objetos
-        .filter((obj) => obj.data === getDDMMYYYfromDate(event.start))
-        .map((obj) => obj.tipo_unidade.uuid)
-    );
+    const cadastros_sobremesa_doce = [];
+    objetos
+      .filter((obj) => obj.data === getDDMMYYYfromDate(event.start))
+      .forEach((obj) =>
+        cadastros_sobremesa_doce.push({
+          editais: obj.editais_uuids,
+          tipo_unidades: [obj.tipo_unidade.uuid],
+        })
+      );
+    setCadastrosSalvosNoDia(cadastros_sobremesa_doce);
   }, [event.start]);
 
   const onSubmit = async (values) => {
     const payload = {
-      tipo_unidades: values.tipo_unidades,
+      cadastros_sobremesa_doce: values.cadastros_sobremesa_doce,
       data: getYYYYMMDDfromDate(event.start),
     };
     const response = await setObjetoAsync(payload);
     if (response.status === HTTP_STATUS.CREATED) {
-      if (tipoUnidadesSalvoNoDia.length === 0) {
+      if (cadastrosSalvosNoDia.length === 0) {
         toastSuccess(`Dia de ${nomeObjetoNoCalendario} criado com sucesso`);
       } else {
         toastSuccess(`Dia de ${nomeObjetoNoCalendario} atualizado com sucesso`);
@@ -56,6 +64,11 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
     }
   };
 
+  const DEFAULT_CADASTROS_SOBREMESA_DOCE = {
+    editais: undefined,
+    tipo_unidades: undefined,
+  };
+
   return (
     <Modal
       dialogClassName="modal-cadastrar-sobremesa modal-50w"
@@ -64,41 +77,136 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
     >
       <Form
         initialValues={{
-          tipo_unidades: tipoUnidadesSalvoNoDia,
+          cadastros_sobremesa_doce: cadastrosSalvosNoDia.length
+            ? cadastrosSalvosNoDia
+            : [DEFAULT_CADASTROS_SOBREMESA_DOCE],
         }}
         onSubmit={onSubmit}
+        mutators={{
+          ...arrayMutators,
+        }}
       >
-        {({ handleSubmit, form, submitting, values }) => (
+        {({
+          handleSubmit,
+          form,
+          submitting,
+          values,
+          form: {
+            mutators: { push },
+          },
+        }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Header closeButton>
               <Modal.Title>{`${
-                tipoUnidadesSalvoNoDia.length ? "Atualizar" : "Cadastrar"
+                cadastrosSalvosNoDia.length ? "Atualizar" : "Cadastrar"
               } dia de ${nomeObjetoNoCalendario}`}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <p>
-                Cadastro de {nomeObjetoNoCalendarioMinusculo} para o dia{" "}
-                <strong>{getDDMMYYYfromDate(event.start)}</strong>, selecione o
-                tipo de unidade:
-              </p>
-              <Field
-                component={StatefulMultiSelect}
-                name="tipo_unidades"
-                selected={values.tipo_unidades || []}
-                options={tiposUnidades.map((tipoUnidade) => ({
-                  label: tipoUnidade.iniciais,
-                  value: tipoUnidade.uuid,
-                }))}
-                onSelectedChanged={(values_) => {
-                  form.change("tipo_unidades", values_);
-                }}
-                overrideStrings={{
-                  selectSomeItems: "Selecionar unidades",
-                  allItemsAreSelected:
-                    "Todos os tipos de unidade estão selecionados",
-                  selectAll: "Todos",
-                }}
-              />
+              <div className="row">
+                <p>
+                  Cadastro de {nomeObjetoNoCalendarioMinusculo} para o dia{" "}
+                  <strong>{getDDMMYYYfromDate(event.start)}</strong>, selecione
+                  o tipo de unidade:
+                </p>
+              </div>
+              <FieldArray name="cadastros_sobremesa_doce">
+                {({ fields }) =>
+                  fields.map((name, index) => (
+                    <div key={name}>
+                      <div className="row mb-3">
+                        <div className="col-5">
+                          <Field
+                            component={StatefulMultiSelect}
+                            name={`${name}.editais`}
+                            selected={
+                              (values.cadastros_sobremesa_doce &&
+                                values.cadastros_sobremesa_doce[index]
+                                  .editais) ||
+                              []
+                            }
+                            options={editais.map((edital) => ({
+                              label: edital.numero,
+                              value: edital.uuid,
+                            }))}
+                            onSelectedChanged={(values_) => {
+                              form.change(`${name}.editais`, values_);
+                            }}
+                            overrideStrings={{
+                              selectSomeItems: "Selecionar editais",
+                              allItemsAreSelected:
+                                "Todos os editais estão selecionados",
+                              selectAll: "Todos",
+                            }}
+                          />
+                        </div>
+                        <div className="col-5">
+                          <Field
+                            component={StatefulMultiSelect}
+                            name={`${name}.tipo_unidades`}
+                            selected={
+                              (values.cadastros_sobremesa_doce &&
+                                values.cadastros_sobremesa_doce[index]
+                                  .tipo_unidades) ||
+                              []
+                            }
+                            options={tiposUnidades.map((tipoUnidade) => ({
+                              label: tipoUnidade.iniciais,
+                              value: tipoUnidade.uuid,
+                            }))}
+                            onSelectedChanged={(values_) => {
+                              form.change(`${name}.tipo_unidades`, values_);
+                            }}
+                            overrideStrings={{
+                              selectSomeItems: "Selecionar unidades",
+                              allItemsAreSelected:
+                                "Todos os tipos de unidade estão selecionados",
+                              selectAll: "Todos",
+                            }}
+                            disabled={
+                              !(
+                                values.cadastros_sobremesa_doce &&
+                                values.cadastros_sobremesa_doce[index].editais
+                                  ?.length > 0
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="col-2">
+                          {index > 0 ? (
+                            <Botao
+                              texto="Excluir"
+                              onClick={() =>
+                                form.change(
+                                  "cadastros_sobremesa_doce",
+                                  values["cadastros_sobremesa_doce"].filter(
+                                    (_, i) => i !== index
+                                  )
+                                )
+                              }
+                              icon={BUTTON_ICON.TRASH}
+                              style={BUTTON_STYLE.RED_OUTLINE}
+                              className="ms-3 botao-adicionar-excluir"
+                            />
+                          ) : (
+                            <Botao
+                              texto="Adicionar"
+                              onClick={() =>
+                                push(
+                                  "cadastros_sobremesa_doce",
+                                  DEFAULT_CADASTROS_SOBREMESA_DOCE
+                                )
+                              }
+                              icon={BUTTON_ICON.PLUS}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              className="ms-3 botao-adicionar-excluir"
+                            />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                }
+              </FieldArray>
             </Modal.Body>
             <div className="footer">
               <Botao
@@ -109,9 +217,7 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
                 className="ms-3"
               />
               <Botao
-                texto={
-                  tipoUnidadesSalvoNoDia.length ? "Atualizar" : "Cadastrar"
-                }
+                texto={cadastrosSalvosNoDia.length ? "Atualizar" : "Cadastrar"}
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={submitting}
