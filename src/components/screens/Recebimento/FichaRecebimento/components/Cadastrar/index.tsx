@@ -65,7 +65,7 @@ export default () => {
     {} as CronogramaFicha
   );
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [stepAtual, setStepAtual] = useState(1);
+  const [stepAtual, setStepAtual] = useState(0);
   const [veiculos, setVeiculos] = useState([{}]);
 
   const onSubmit = (): void => {};
