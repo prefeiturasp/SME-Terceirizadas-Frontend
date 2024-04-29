@@ -20,6 +20,7 @@ import { formataNome } from "./helpers";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { imprimirCronograma } from "services/cronograma.service";
 import {
+  usuarioEhCodaeDilog,
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
 } from "../../../../../../helpers/utilities";
@@ -153,7 +154,8 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                           )}
                           {cronograma.status === "Assinado CODAE" &&
                             (usuarioEhEmpresaFornecedor() ||
-                              usuarioEhCronograma()) && (
+                              usuarioEhCronograma() ||
+                              usuarioEhCodaeDilog()) && (
                               <NavLink
                                 className="float-start ms-1"
                                 to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${cronograma.uuid}`}
@@ -166,16 +168,17 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                         </>
                       ) : (
                         <>
-                          {usuarioEhCronograma() && (
-                            <NavLink
-                              className="float-start"
-                              to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${cronograma.uuid}`}
-                            >
-                              <span className="link-acoes green">
-                                <i className="fas fa-edit" title="Editar" />
-                              </span>
-                            </NavLink>
-                          )}
+                          {usuarioEhCronograma() ||
+                            (usuarioEhCodaeDilog() && (
+                              <NavLink
+                                className="float-start"
+                                to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${cronograma.uuid}`}
+                              >
+                                <span className="link-acoes green">
+                                  <i className="fas fa-edit" title="Editar" />
+                                </span>
+                              </NavLink>
+                            ))}
                         </>
                       )}
                     </>

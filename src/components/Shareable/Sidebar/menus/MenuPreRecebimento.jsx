@@ -27,6 +27,7 @@ import {
   usuarioComAcessoAoCalendarioCronograma,
   usuarioEhCODAEGabinete,
 } from "helpers/utilities";
+import { usuarioEhCodaeDilog } from "../../../../helpers/utilities";
 
 const MenuPreRecebimento = () => {
   return (
@@ -45,6 +46,7 @@ const MenuPreRecebimento = () => {
       )}
       {(usuarioEhCronograma() ||
         usuarioEhDinutreDiretoria() ||
+        usuarioEhCodaeDilog() ||
         usuarioEhDilogDiretoria()) && (
         <LeafItem
           to={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`}
