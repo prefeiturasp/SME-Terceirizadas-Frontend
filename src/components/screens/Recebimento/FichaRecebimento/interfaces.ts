@@ -15,6 +15,7 @@ export interface FichaRecebimentoPayload {
   peso_embalagem_primaria_3?: string;
   peso_embalagem_primaria_4?: string;
   veiculos?: VeiculoPayload[];
+  sistema_vedacao_embalagem_secundaria?: string;
 }
 
 export interface VeiculoPayload {
@@ -69,4 +70,5 @@ export interface CronogramaFicha {
   produto: string;
   qtd_total_programada: string;
   uuid: string;
+  sistema_vedacao_embalagem_secundaria: string;
 }

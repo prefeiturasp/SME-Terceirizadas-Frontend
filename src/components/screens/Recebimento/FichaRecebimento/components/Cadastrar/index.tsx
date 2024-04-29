@@ -55,17 +55,33 @@ const ITENS_STEPS = [
   },
 ];
 
+const collapseConfigStep3 = [
+  {
+    titulo: "Sistema de Vedação da Embalagem Secundária",
+    camposObrigatorios: true,
+  },
+  {
+    titulo: "Conferência das Rotulagens",
+    camposObrigatorios: true,
+  },
+  {
+    titulo: "Observações",
+    camposObrigatorios: false,
+  },
+];
+
 export default () => {
   const navigate = useNavigate();
   const [carregando, setCarregando] = useState<boolean>(true);
   const [cronogramas, setCronogramas] = useState<Array<CronogramaSimples>>([]);
   const [collapse1, setCollapse1] = useState<CollapseControl>({ 0: true });
   const [collapse2, setCollapse2] = useState<CollapseControl>({ 0: true });
+  const [collapse3, setCollapse3] = useState<CollapseControl>({ 0: true });
   const [cronograma, setCronograma] = useState<CronogramaFicha>(
     {} as CronogramaFicha
   );
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [stepAtual, setStepAtual] = useState(0);
+  const [stepAtual, setStepAtual] = useState(2);
   const [veiculos, setVeiculos] = useState([{}]);
 
   const onSubmit = (): void => {};
@@ -134,7 +150,7 @@ export default () => {
       peso_embalagem_primaria_2: values.peso_embalagem_primaria_2,
       peso_embalagem_primaria_3: values.peso_embalagem_primaria_3,
       peso_embalagem_primaria_4: values.peso_embalagem_primaria_4,
-      veiculos: values[`numero_0`]
+      veiculos: values.numero_0
         ? veiculos.map(
             (v, index) =>
               ({
@@ -159,6 +175,10 @@ export default () => {
               } as VeiculoPayload)
           )
         : undefined,
+      sistema_vedacao_embalagem_secundaria:
+        values.sistema_vedacao_embalagem_secundaria === "0"
+          ? cronograma.sistema_vedacao_embalagem_secundaria
+          : values.sistema_vedacao_embalagem_secundaria_outra_opcao,
     };
 
     return payload;
@@ -202,25 +222,28 @@ export default () => {
 
   const atualizarCamposCronograma = async (value: string, form: FormApi) => {
     setCarregando(true);
-    let cronogramaLista = cronogramas.find((c) => c.numero === value);
-    if (cronogramaLista?.uuid) {
-      let { data } = await getCronogramaPraCadastroRecebimento(
-        cronogramaLista.uuid
-      );
-      let cronograma = data.results;
 
-      setCronograma(cronograma);
+    try {
+      let cronogramaSelecionado = cronogramas.find((c) => c.numero === value);
+      if (cronogramaSelecionado?.uuid) {
+        let { data } = await getCronogramaPraCadastroRecebimento(
+          cronogramaSelecionado.uuid
+        );
+        let cronograma = data.results;
 
-      form.change("fornecedor", cronograma.fornecedor);
-      form.change("numero_contrato", cronograma.contrato);
-      form.change("pregao", cronograma.pregao_chamada_publica);
-      form.change("numero_ata", cronograma.ata);
-      form.change("produto", cronograma.produto);
-      form.change("marca", cronograma.marca);
-      form.change("qtd_total_programada", cronograma.qtd_total_programada);
+        setCronograma(cronograma);
+
+        form.change("fornecedor", cronograma.fornecedor);
+        form.change("numero_contrato", cronograma.contrato);
+        form.change("pregao", cronograma.pregao_chamada_publica);
+        form.change("numero_ata", cronograma.ata);
+        form.change("produto", cronograma.produto);
+        form.change("marca", cronograma.marca);
+        form.change("qtd_total_programada", cronograma.qtd_total_programada);
+      }
+    } finally {
+      setCarregando(false);
     }
-
-    setCarregando(false);
   };
 
   const atualizarCamposEtapa = (value: string, form: FormApi) => {
@@ -988,6 +1011,54 @@ export default () => {
                         </>
                       ))}
                     </section>
+                  </Collapse>
+                )}
+
+                {stepAtual === 2 && (
+                  <Collapse
+                    collapse={collapse3}
+                    setCollapse={setCollapse3}
+                    id="collapseFichaRecebimentoStep3"
+                    collapseConfigs={collapseConfigStep3}
+                  >
+                    <section id="sistemaVedacaoSecundaria">
+                      <div className="row">
+                        <div className="col mt-3">
+                          <RadioButton
+                            name={`sistema_vedacao_embalagem_secundaria`}
+                            options={[
+                              {
+                                value: "0",
+                                label:
+                                  cronograma.sistema_vedacao_embalagem_secundaria,
+                              },
+                              {
+                                value: "1",
+                                label: "Outra Opção",
+                              },
+                            ]}
+                            className="radio-sistema-vedacao"
+                          />
+                        </div>
+                        {values.sistema_vedacao_embalagem_secundaria ===
+                          "1" && (
+                          <div className="row">
+                            <div className="col">
+                              <Field
+                                component={InputText}
+                                label="Qual?"
+                                name={`sistema_vedacao_embalagem_secundaria_outra_opcao`}
+                                placeholder="Descreva a outra opção"
+                                required
+                                validate={required}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+                    <section id="conferenciaRotulagens"></section>
+                    <section id="observacoes"></section>
                   </Collapse>
                 )}
 
