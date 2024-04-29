@@ -19,7 +19,11 @@ import {
 } from "../../../../../Shareable/Botao/constants";
 import Botao from "../../../../../Shareable/Botao";
 import { useNavigate } from "react-router-dom";
-import { FICHA_RECEBIMENTO, RECEBIMENTO } from "configs/constants";
+import {
+  FICHA_RECEBIMENTO,
+  RECEBIMENTO,
+  QUESTOES_POR_PRODUTO,
+} from "configs/constants";
 import { CronogramaSimples } from "interfaces/pre_recebimento.interface";
 import { FormApi } from "final-form";
 import StepsSigpae from "components/Shareable/StepsSigpae";
@@ -80,7 +84,8 @@ export default () => {
   const [cronograma, setCronograma] = useState<CronogramaFicha>(
     {} as CronogramaFicha
   );
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showModalAtribuir, setShowModalAtribuir] = useState(false);
   const [stepAtual, setStepAtual] = useState(2);
   const [veiculos, setVeiculos] = useState([{}]);
 
@@ -185,7 +190,8 @@ export default () => {
   };
 
   const salvarRascunho = async (
-    values: FichaRecebimentoPayload
+    values: FichaRecebimentoPayload,
+    redirecionarPara: () => void
   ): Promise<void> => {
     setCarregando(true);
 
@@ -195,7 +201,7 @@ export default () => {
       let response = await cadastraRascunhoFichaRecebimento(payload);
       if (response.status === 201 || response.status === 200) {
         toastSuccess("Rascunho salvo com sucesso!");
-        voltarPagina();
+        redirecionarPara();
       } else {
         toastError("Ocorreu um erro ao salvar o Rascunho");
       }
@@ -207,7 +213,10 @@ export default () => {
     }
   };
 
-  const voltarPagina = () => navigate(`/${RECEBIMENTO}/${FICHA_RECEBIMENTO}`);
+  const paginaAnterior = () => navigate(`/${RECEBIMENTO}/${FICHA_RECEBIMENTO}`);
+
+  const paginaQuestoesPorProduto = () =>
+    navigate(`/${RECEBIMENTO}/${QUESTOES_POR_PRODUTO}`);
 
   useEffect(() => {
     buscaCronogramas();
@@ -306,7 +315,10 @@ export default () => {
                   handleClose={() => setShowModal(false)}
                   loading={carregando}
                   handleSim={() =>
-                    salvarRascunho(values as FichaRecebimentoPayload)
+                    salvarRascunho(
+                      values as FichaRecebimentoPayload,
+                      paginaAnterior
+                    )
                   }
                   titulo={<span>Salvar Rascunho</span>}
                   texto={
@@ -315,6 +327,23 @@ export default () => {
                     </span>
                   }
                 />
+
+                <ModalGenerico
+                  show={showModalAtribuir}
+                  handleClose={() => setShowModalAtribuir(false)}
+                  loading={carregando}
+                  handleSim={() =>
+                    salvarRascunho(
+                      values as FichaRecebimentoPayload,
+                      paginaQuestoesPorProduto
+                    )
+                  }
+                  titulo="Salvar Rascunho e Atribuir Questões"
+                  texto="Deseja salvar o rascunho e ir para a página de Atribuição
+                  de Questões por Produto?"
+                  textoBotaoSim="Salvar e Ir para Página"
+                />
+
                 <StepsSigpae current={stepAtual} items={ITENS_STEPS} />
 
                 {stepAtual === 0 && (
@@ -1057,7 +1086,34 @@ export default () => {
                         )}
                       </div>
                     </section>
-                    <section id="conferenciaRotulagens"></section>
+                    <section id="conferenciaRotulagens">
+                      <div className="row">
+                        <div className="col mt-5 text-center">
+                          <p>
+                            Não há questões para conferência cadastradas para
+                            esse produto, por favor acesse a área de{" "}
+                            <strong>Questões por Produto</strong> e atribua
+                            questões.
+                          </p>
+                          <p>
+                            <strong>Salve o rascunho</strong> da Ficha de
+                            Recebimento para não perder as informações inseridas
+                            até o momento.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="row my-5">
+                        <div className="col d-flex justify-content-center">
+                          <Botao
+                            texto="Ir para Atribuição de Questões por Produto"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            onClick={() => setShowModalAtribuir(true)}
+                          />
+                        </div>
+                      </div>
+                    </section>
                     <section id="observacoes"></section>
                   </Collapse>
                 )}
