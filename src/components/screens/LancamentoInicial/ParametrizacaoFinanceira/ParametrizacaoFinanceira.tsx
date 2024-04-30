@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
-import { ADICIONAR_PARAMETRIZACAO_FINANCEIRA } from "configs/constants";
+import {
+  ADICIONAR_PARAMETRIZACAO_FINANCEIRA,
+  MEDICAO_INICIAL,
+  PARAMETRIZACAO_FINANCEIRA,
+  EDITAR_PARAMETRIZACAO_FINANCEIRA,
+} from "configs/constants";
 
 import Botao from "components/Shareable/Botao";
 import {
@@ -44,7 +49,7 @@ export default () => {
     setCarregando(true);
     try {
       const response =
-        await ParametrizacaoFinanceiraService.getParametrizacaoFinanceira(
+        await ParametrizacaoFinanceiraService.getParametrizacoesFinanceiras(
           page,
           filtros
         );
@@ -122,7 +127,8 @@ export default () => {
                         <th className="col-3">Edital</th>
                         <th className="col-4">DRE</th>
                         <th className="col-1">Lote</th>
-                        <th className="col-4">Tipo de Unidade</th>
+                        <th className="col-3">Tipo de Unidade</th>
+                        <th className="col-1"></th>
                       </tr>
                     </thead>
 
@@ -134,10 +140,22 @@ export default () => {
                           </td>
                           <td className="col-4">{parametrizacao.dre}</td>
                           <td className="col-1">{parametrizacao.lote.nome}</td>
-                          <td className="col-4">
+                          <td className="col-3">
                             {formataTiposUnidades(
                               parametrizacao.tipos_unidades
                             )}
+                          </td>
+                          <td className="col-1 d-flex justify-content-center align-item-center">
+                            <Link
+                              to={`/${MEDICAO_INICIAL}/${PARAMETRIZACAO_FINANCEIRA}/${EDITAR_PARAMETRIZACAO_FINANCEIRA}/?uuid=${parametrizacao.uuid}`}
+                            >
+                              <span className="px-2">
+                                <i
+                                  title="Editar Parametrização"
+                                  className="verde fas fa-edit"
+                                />
+                              </span>
+                            </Link>
                           </td>
                         </tr>
                       ))}
