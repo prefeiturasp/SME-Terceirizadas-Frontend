@@ -78,13 +78,13 @@ export default ({
                   </p>
                   <Field
                     component="input"
-                    name={`tabelas[${labelTabela}].${value}.tipo_alimentacao`}
+                    name={`tabelas[${labelTabela}].${value}_${record.grupo}.tipo_alimentacao`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
                   <Field
                     component="input"
-                    name={`tabelas[${labelTabela}].${value}.grupo`}
+                    name={`tabelas[${labelTabela}].${value}_${record.grupo}.grupo`}
                     type="hidden"
                     defaultValue={record.grupo}
                   />
@@ -99,7 +99,7 @@ export default ({
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${labelTabela}].${record.nome}.valor_unitario`}
+                name={`tabelas[${labelTabela}].${record.nome}_${record.grupo}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -107,19 +107,20 @@ export default ({
                 defaultValue={null}
                 onChange={(value: number) => {
                   const percentualAcrescimo =
-                    form.getState().values.tabelas[labelTabela]?.[record.nome]
-                      ?.percentual_acrescimo || 0;
+                    form.getState().values.tabelas[labelTabela]?.[
+                      `${record.nome}_${record.grupo}`
+                    ]?.percentual_acrescimo || 0;
                   const valorUnitarioTotal =
                     value * (1 + percentualAcrescimo / 100);
 
                   form.change(
-                    `tabelas[${labelTabela}].${record.nome}.valor_unitario_total`,
+                    `tabelas[${labelTabela}].${record.nome}_${record.grupo}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas[${labelTabela}].${record.nome}.valor_unitario`,
+                    `tabelas[${labelTabela}].${record.nome}_${record.grupo}.valor_unitario`,
                     value
                   );
                 }}
@@ -133,7 +134,7 @@ export default ({
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${labelTabela}].${record.nome}.percentual_acrescimo`}
+                name={`tabelas[${labelTabela}].${record.nome}_${record.grupo}.percentual_acrescimo`}
                 placeholder="%"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -141,18 +142,19 @@ export default ({
                 defaultValue={null}
                 onChange={(value: number) => {
                   const valorUnitario =
-                    form.getState().values.tabelas[labelTabela]?.[record.nome]
-                      ?.valor_unitario || 0;
+                    form.getState().values.tabelas[labelTabela]?.[
+                      `${record.nome}_${record.grupo}`
+                    ]?.valor_unitario || 0;
                   const valorUnitarioTotal = valorUnitario * (1 + value / 100);
 
                   form.change(
-                    `tabelas[${labelTabela}].${record.nome}.valor_unitario_total`,
+                    `tabelas[${labelTabela}].${record.nome}_${record.grupo}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas[${labelTabela}].${record.nome}.percentual_acrescimo`,
+                    `tabelas[${labelTabela}].${record.nome}_${record.grupo}.percentual_acrescimo`,
                     value
                   );
                 }}
@@ -166,7 +168,7 @@ export default ({
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${labelTabela}].${record.nome}.valor_unitario_total`}
+                name={`tabelas[${labelTabela}].${record.nome}_${record.grupo}.valor_unitario_total`}
                 placeholder="0,00"
                 disabled
               />

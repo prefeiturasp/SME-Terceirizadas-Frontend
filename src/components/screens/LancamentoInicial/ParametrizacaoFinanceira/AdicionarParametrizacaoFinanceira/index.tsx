@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import { Modal } from "react-bootstrap";
 
@@ -25,8 +25,17 @@ type FormValues = {
   edital: string;
   lote: string;
   tipos_unidades: string;
-  tabelas: Record<string, any>;
+  tabelas?: Record<string, any>;
   legenda: string;
+};
+
+const VALORES_INICIAIS: FormValues = {
+  edital: null,
+  lote: null,
+  tipos_unidades: null,
+  legenda:
+    "Fonte: Relatório de Medição Inicial do Serviço de Alimentação e Nutrição Escolar realizada pela direção das unidades educacionais, conforme disposto no edital Pregão XXX/XXX e nas Portarias Intersecretariais SMG/SME n° 005/2006 e 001/2008.",
+  tabelas: null,
 };
 
 export default () => {
@@ -34,10 +43,65 @@ export default () => {
   const [grupoSelecionado, setGrupoSelecionado] = useState("");
   const [faixasEtarias, setFaixasEtarias] = useState([]);
   const [showModalCancelar, setShowModalCancelar] = useState(false);
+  const [parametrizacao, setParametrizacao] = useState(VALORES_INICIAIS);
 
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+  const uuidParametrizacao = searchParams.get("uuid");
+
   const onSubmit = async (values: FormValues) => {
+    const payload = formataPayload(values);
+
+    try {
+      await ParametrizacaoFinanceiraService.addParametrizacaoFinanceira(
+        payload
+      );
+      toastSuccess("Parametrização Financeira salva com sucesso!");
+      navigate(-1);
+    } catch (err) {
+      const data = err.response.data;
+      if (data) {
+        if (data.non_field_errors) {
+          toastError(data.non_field_errors[0]);
+        } else {
+          toastError(
+            "Não foi possível finalizar a inclusão da parametrização. Verifique se todos os campos da tabela foram preenchidos"
+          );
+        }
+      } else {
+        toastError("Ocorreu um erro inesperado");
+      }
+    }
+  };
+
+  const editarParametrizacao = async (uuid: string, values: FormValues) => {
+    const payload = formataPayload(values);
+
+    try {
+      await ParametrizacaoFinanceiraService.editParametrizacaoFinanceira(
+        uuid,
+        payload
+      );
+      toastSuccess("Parametrização Financeira editada com sucesso!");
+      navigate(-1);
+    } catch (err) {
+      const data = err.response?.data;
+      if (data) {
+        if (data.non_field_errors) {
+          toastError(data.non_field_errors[0]);
+        } else {
+          toastError(
+            "Não foi possível finalizar a edição da parametrização. Verifique se todos os campos da tabela foram preenchidos"
+          );
+        }
+      } else {
+        toastError("Ocorreu um erro inesperado");
+      }
+    }
+  };
+
+  const formataPayload = (values: FormValues) => {
     const tabelas = Object.entries(values.tabelas).map(([tabela, valores]) => ({
       nome: tabela,
       valores: Object.values(valores).map((valor: any) => {
@@ -57,27 +121,7 @@ export default () => {
       tabelas,
       tipos_unidades: values.tipos_unidades.split(","),
     };
-
-    try {
-      await ParametrizacaoFinanceiraService.addParametrizacaoFinanceira(
-        payload
-      );
-      toastSuccess("Parametrização Financeira salva com sucesso!");
-      navigate(-1);
-    } catch (err) {
-      const data = err.response.data;
-      if (data) {
-        if (data.non_field_errors) {
-          toastError(data.non_field_errors[0]);
-        } else {
-          toastError(
-            "Não foi possível finalizar inclusão da parametrização. Verifique se todos os campos da tabela foram preenchidos"
-          );
-        }
-      } else {
-        toastError("Ocorreu um erro inesperado");
-      }
-    }
+    return payload;
   };
 
   const exibeTabelasCEI =
@@ -100,12 +144,12 @@ export default () => {
       <div className="adicionar-parametrizacao card mt-4">
         <div className="card-body">
           <Form
-            onSubmit={onSubmit}
-            initialValues={{
-              edital: "",
-              lote: "",
-              tipos_unidades: "",
-            }}
+            onSubmit={(values: FormValues) =>
+              uuidParametrizacao
+                ? editarParametrizacao(uuidParametrizacao, values)
+                : onSubmit(values)
+            }
+            initialValues={parametrizacao}
             destroyOnUnregister={true}
             render={({ form, handleSubmit, submitting }) => (
               <form onSubmit={handleSubmit}>
@@ -113,7 +157,9 @@ export default () => {
                   setTiposAlimentacao={setTiposAlimentacao}
                   setGrupoSelecionado={setGrupoSelecionado}
                   setFaixasEtarias={setFaixasEtarias}
+                  setParametrizacao={setParametrizacao}
                   form={form}
+                  uuidParametrizacao={uuidParametrizacao}
                   ehCadastro
                 />
                 {exibeTabelasEMEFeEMEI ? (
@@ -155,9 +201,6 @@ export default () => {
                         component={TextArea}
                         label="Legenda"
                         name="legenda"
-                        defaultValue={
-                          "Fonte: Relatório de Medição Inicial do Serviço de Alimentação e Nutrição Escolar realizada pela direção das unidades educacionais, conforme disposto no edital Pregão XXX/XXX e nas Portarias Intersecretariais SMG/SME n° 005/2006 e 001/2008."
-                        }
                         maxLength={1500}
                         height="150"
                       />
@@ -168,7 +211,9 @@ export default () => {
                   <Botao
                     texto="Cancelar"
                     onClick={() => {
-                      setShowModalCancelar(true);
+                      uuidParametrizacao
+                        ? navigate(-1)
+                        : setShowModalCancelar(true);
                     }}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                   />

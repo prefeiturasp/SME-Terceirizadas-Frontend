@@ -212,6 +212,8 @@ export const CLAUSULAS_PARA_DESCONTOS = "clausulas-para-descontos";
 export const PARAMETRIZACAO_FINANCEIRA = "parametrizacao-financeira";
 export const ADICIONAR_PARAMETRIZACAO_FINANCEIRA =
   "adicionar-parametrizacao-financeira";
+export const EDITAR_PARAMETRIZACAO_FINANCEIRA =
+  "editar-parametrizacao-financeira";
 export const CADASTRO_DE_CLAUSULA = "cadastro-de-clausula";
 export const EDITAR_CLAUSULA = "editar-clausula";
 export const CONTROLE_DE_FREQUENCIA = "controle-de-frequencia";
