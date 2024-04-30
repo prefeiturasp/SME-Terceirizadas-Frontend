@@ -15,4 +15,10 @@
     flex-direction: column;
     row-gap: 10px;
   }
+
+  #observacoes {
+    textarea {
+      min-height: 125px;
+    }
+  }
 }

@@ -8,6 +8,7 @@ import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { required } from "../../../../../../helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { InputComData } from "components/Shareable/DatePicker";
 import {
   getListaCronogramasPraFichaRecebimento,
@@ -24,7 +25,11 @@ import {
   RECEBIMENTO,
   QUESTOES_POR_PRODUTO,
 } from "configs/constants";
-import { CronogramaSimples } from "interfaces/pre_recebimento.interface";
+import {
+  Arquivo,
+  ArquivoForm,
+  CronogramaSimples,
+} from "interfaces/pre_recebimento.interface";
 import { FormApi } from "final-form";
 import StepsSigpae from "components/Shareable/StepsSigpae";
 import Collapse, { CollapseControl } from "components/Shareable/Collapse";
@@ -46,6 +51,7 @@ import { deletaValues } from "helpers/formHelper";
 import RadioButton from "components/Shareable/RadioButton";
 import { stringToBoolean } from "helpers/parsers";
 import Label from "components/Shareable/Label";
+import InputFileField from "components/Shareable/InputFileField";
 
 const ITENS_STEPS = [
   {
@@ -88,6 +94,7 @@ export default () => {
   const [showModalAtribuir, setShowModalAtribuir] = useState(false);
   const [stepAtual, setStepAtual] = useState(2);
   const [veiculos, setVeiculos] = useState([{}]);
+  const [arquivos, setArquivos] = useState<Arquivo[]>([]);
 
   const onSubmit = (): void => {};
 
@@ -184,6 +191,7 @@ export default () => {
         values.sistema_vedacao_embalagem_secundaria === "0"
           ? cronograma.sistema_vedacao_embalagem_secundaria
           : values.sistema_vedacao_embalagem_secundaria_outra_opcao,
+      arquivos: arquivos,
     };
 
     return payload;
@@ -299,6 +307,23 @@ export default () => {
     let veiculosNovo = [...veiculos];
     veiculosNovo.splice(index, 1);
     setVeiculos(veiculosNovo);
+  };
+
+  const setFiles = (files: Array<ArquivoForm>): void => {
+    const arquivosAtualizados = files.map((arquivo: ArquivoForm) => {
+      return {
+        nome: arquivo.nome,
+        arquivo: arquivo.base64,
+      };
+    });
+
+    setArquivos(arquivosAtualizados);
+  };
+
+  const removeFiles = (index: number): void => {
+    let newFiles = [...arquivos];
+    newFiles.splice(index, 1);
+    setArquivos(newFiles);
   };
 
   return (
@@ -1114,7 +1139,29 @@ export default () => {
                         </div>
                       </div>
                     </section>
-                    <section id="observacoes"></section>
+                    <section id="observacoes">
+                      <div className="row">
+                        <div className="col">
+                          <Field
+                            component={TextArea}
+                            label="Descreva as observações necessárias"
+                            name={`observacao`}
+                            placeholder="Descreva as observações necessárias"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="row">
+                        <InputFileField
+                          name="arquivo"
+                          setFiles={setFiles}
+                          removeFile={removeFiles}
+                          toastSuccess="Documento incluído com sucesso!"
+                          textoBotao="Anexar Documento"
+                          helpText="Envie arquivos nos formatos: PDF, PNG, JPG ou JPEG  com até 10MB."
+                        />
+                      </div>
+                    </section>
                   </Collapse>
                 )}
 

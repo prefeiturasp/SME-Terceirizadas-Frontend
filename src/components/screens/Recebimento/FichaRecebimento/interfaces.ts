@@ -1,3 +1,5 @@
+import { Arquivo } from "interfaces/pre_recebimento.interface";
+
 export interface FichaRecebimentoPayload {
   etapa: string;
   data_entrega: string;
@@ -16,6 +18,7 @@ export interface FichaRecebimentoPayload {
   peso_embalagem_primaria_4?: string;
   veiculos?: VeiculoPayload[];
   sistema_vedacao_embalagem_secundaria?: string;
+  arquivos: Arquivo[];
 }
 
 export interface VeiculoPayload {
