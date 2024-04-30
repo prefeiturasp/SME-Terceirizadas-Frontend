@@ -1,57 +1,57 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { Spin } from "antd";
-import "./styles.scss";
-import { Field, Form } from "react-final-form";
-import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
-import Select from "components/Shareable/Select";
-import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
-import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
-import { required } from "../../../../../../helpers/fieldValidators";
-import InputText from "components/Shareable/Input/InputText";
-import { TextArea } from "components/Shareable/TextArea/TextArea";
-import { InputComData } from "components/Shareable/DatePicker";
-import {
-  getListaCronogramasPraFichaRecebimento,
-  getCronogramaPraCadastroRecebimento,
-} from "../../../../../../services/cronograma.service";
-import {
-  BUTTON_TYPE,
-  BUTTON_STYLE,
-} from "../../../../../Shareable/Botao/constants";
-import Botao from "../../../../../Shareable/Botao";
 import { useNavigate } from "react-router-dom";
+import { Spin } from "antd";
+import { Field, Form } from "react-final-form";
+import { FormApi } from "final-form";
+import moment from "moment";
+
 import {
   FICHA_RECEBIMENTO,
   RECEBIMENTO,
   QUESTOES_POR_PRODUTO,
 } from "configs/constants";
 import {
+  getListaCronogramasPraFichaRecebimento,
+  getCronogramaPraCadastroRecebimento,
+} from "services/cronograma.service";
+import { cadastraRascunhoFichaRecebimento } from "services/fichaRecebimento.service";
+import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
+import Select from "components/Shareable/Select";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import InputText from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
+import { InputComData } from "components/Shareable/DatePicker";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+} from "components/Shareable/Botao/constants";
+import Botao from "components/Shareable/Botao";
+import StepsSigpae from "components/Shareable/StepsSigpae";
+import Collapse, { CollapseControl } from "components/Shareable/Collapse";
+import ModalGenerico from "components/Shareable/ModalGenerico";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import RadioButtonField from "components/Shareable/RadioButtonField";
+import Label from "components/Shareable/Label";
+import InputFileField from "components/Shareable/InputFileField";
+import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
+import { required } from "helpers/fieldValidators";
+import { exibeError } from "helpers/utilities";
+import { deletaValues } from "helpers/formHelper";
+import { stringToBoolean } from "helpers/parsers";
+import {
   Arquivo,
   ArquivoForm,
   CronogramaSimples,
 } from "interfaces/pre_recebimento.interface";
-import { FormApi } from "final-form";
-import StepsSigpae from "components/Shareable/StepsSigpae";
-import Collapse, { CollapseControl } from "components/Shareable/Collapse";
-import ModalGenerico from "components/Shareable/ModalGenerico";
-import { exibeError } from "helpers/utilities";
-import {
-  toastError,
-  toastSuccess,
-} from "../../../../../Shareable/Toast/dialogs";
+
 import {
   CronogramaFicha,
   DocumentoFicha,
   FichaRecebimentoPayload,
   VeiculoPayload,
 } from "../../interfaces";
-import { cadastraRascunhoFichaRecebimento } from "services/fichaRecebimento.service";
-import moment from "moment";
-import { deletaValues } from "helpers/formHelper";
-import RadioButtonField from "components/Shareable/RadioButtonField";
-import { stringToBoolean } from "helpers/parsers";
-import Label from "components/Shareable/Label";
-import InputFileField from "components/Shareable/InputFileField";
+
+import "./styles.scss";
 
 const ITENS_STEPS = [
   {
