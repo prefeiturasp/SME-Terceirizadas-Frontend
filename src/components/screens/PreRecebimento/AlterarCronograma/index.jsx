@@ -46,6 +46,7 @@ import { fornecedorCienteAlteracaoCodae } from "../../../../services/cronograma.
 import { SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR } from "../../../../configs/constants";
 import { setFieldTouched } from "../../../../configs/mutators";
 import { numberToStringDecimal } from "helpers/parsers";
+import { usuarioEhCodaeDilog } from "../../../../helpers/utilities";
 
 export default ({ analiseSolicitacao }) => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -163,8 +164,7 @@ export default ({ analiseSolicitacao }) => {
 
   const analiseCronograma = () =>
     solicitacaoAlteracaoCronograma.status === "Em análise" &&
-    usuarioEhCronograma();
-
+    (usuarioEhCronograma() || usuarioEhCodaeDilog());
   const cadastraAlteracao = async (values) => {
     const payload = prepararPayloadCronograma(
       cronograma,
@@ -391,7 +391,7 @@ export default ({ analiseSolicitacao }) => {
                         <div className="head-green">
                           Informe as Alterações Necessárias
                         </div>
-                        {usuarioEhCronograma() && (
+                        {(usuarioEhCronograma() || usuarioEhCodaeDilog()) && (
                           <div className="row">
                             <div className="col-4">
                               <Field
@@ -429,7 +429,7 @@ export default ({ analiseSolicitacao }) => {
                         component={TextArea}
                         name="justificativa"
                         placeholder={
-                          usuarioEhCronograma()
+                          usuarioEhCronograma() || usuarioEhCodaeDilog()
                             ? "Escreva o motivo da alteração"
                             : "Escreva o motivo da solicitação de alteração"
                         }
@@ -506,7 +506,8 @@ export default ({ analiseSolicitacao }) => {
                         )}
                       </>
                     )}
-                    {((!analiseSolicitacao && usuarioEhCronograma()) ||
+                    {((!analiseSolicitacao &&
+                      (usuarioEhCronograma() || usuarioEhCodaeDilog())) ||
                       (analiseSolicitacao && analiseCronograma())) && (
                       <div className="accordion mt-1" id="accordionCronograma">
                         <FormRecebimento

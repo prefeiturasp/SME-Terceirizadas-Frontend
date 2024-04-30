@@ -24,6 +24,7 @@ import { required } from "helpers/fieldValidators";
 import "./styles.scss";
 import { calculaTotalEmbalagens } from "./helper";
 import { usuarioEhEmpresaFornecedor } from "../../../helpers/utilities";
+import { usuarioEhCodaeDilog } from "../../../helpers/utilities";
 
 export default ({
   etapas,
@@ -197,7 +198,7 @@ export default ({
               </>
             )}
             <div className="row">
-              {usuarioEhCronograma() && (
+              {(usuarioEhCronograma() || usuarioEhCodaeDilog()) && (
                 <>
                   <div className="col">
                     <Field
