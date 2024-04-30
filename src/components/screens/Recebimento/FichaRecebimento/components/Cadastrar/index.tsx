@@ -92,7 +92,7 @@ export default () => {
   );
   const [showModal, setShowModal] = useState(false);
   const [showModalAtribuir, setShowModalAtribuir] = useState(false);
-  const [stepAtual, setStepAtual] = useState(2);
+  const [stepAtual, setStepAtual] = useState(0);
   const [veiculos, setVeiculos] = useState([{}]);
   const [arquivos, setArquivos] = useState<Arquivo[]>([]);
 
