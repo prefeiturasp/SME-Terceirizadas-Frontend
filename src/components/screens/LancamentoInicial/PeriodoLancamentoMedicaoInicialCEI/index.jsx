@@ -888,7 +888,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         dadosValoresMatriculadosFaixaEtariaDia[
           `matriculados__faixa_${objMatriculado.faixa_etaria.uuid}__dia_${objMatriculado.dia}__categoria_${idCategoriaAlimentacao}`
         ] = objMatriculado.quantidade
-          ? `${objMatriculado.quantidade - somaDietasMesmoDia}`
+          ? `${Math.max(objMatriculado.quantidade - somaDietasMesmoDia, 0)}`
           : null;
       });
 
