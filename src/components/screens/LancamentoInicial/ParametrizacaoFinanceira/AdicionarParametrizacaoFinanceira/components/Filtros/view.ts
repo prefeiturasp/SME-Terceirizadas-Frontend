@@ -1,5 +1,4 @@
 import { useEffect, useState, Dispatch, SetStateAction } from "react";
-import { useSearchParams } from "react-router-dom";
 
 import { getNumerosEditais } from "services/edital.service";
 import { getLotesSimples } from "services/lote.service";
@@ -36,6 +35,7 @@ type Props = {
   setGrupoSelecionado: Dispatch<SetStateAction<string>>;
   setFaixasEtarias: Dispatch<SetStateAction<Array<any>>>;
   setParametrizacao: Dispatch<SetStateAction<FormValues>>;
+  uuidParametrizacao: string;
   form: FormApi<any, any>;
 };
 
@@ -44,6 +44,7 @@ export default ({
   setGrupoSelecionado,
   setFaixasEtarias,
   setParametrizacao,
+  uuidParametrizacao,
   form,
 }: Props) => {
   const [editais, setEditais] = useState<SelectOption[]>([]);
@@ -53,10 +54,6 @@ export default ({
     SelectOption[]
   >([]);
   const [carregando, setCarregando] = useState(true);
-
-  const [searchParams] = useSearchParams();
-
-  const uuidParametrizacao = searchParams.get("uuid");
 
   const getEditaisAsync = async () => {
     try {

@@ -33,7 +33,8 @@ const VALORES_INICIAIS: FormValues = {
   edital: null,
   lote: null,
   tipos_unidades: null,
-  legenda: "",
+  legenda:
+    "Fonte: Relatório de Medição Inicial do Serviço de Alimentação e Nutrição Escolar realizada pela direção das unidades educacionais, conforme disposto no edital Pregão XXX/XXX e nas Portarias Intersecretariais SMG/SME n° 005/2006 e 001/2008.",
   tabelas: null,
 };
 
@@ -158,6 +159,7 @@ export default () => {
                   setFaixasEtarias={setFaixasEtarias}
                   setParametrizacao={setParametrizacao}
                   form={form}
+                  uuidParametrizacao={uuidParametrizacao}
                   ehCadastro
                 />
                 {exibeTabelasEMEFeEMEI ? (
@@ -199,9 +201,6 @@ export default () => {
                         component={TextArea}
                         label="Legenda"
                         name="legenda"
-                        defaultValue={
-                          "Fonte: Relatório de Medição Inicial do Serviço de Alimentação e Nutrição Escolar realizada pela direção das unidades educacionais, conforme disposto no edital Pregão XXX/XXX e nas Portarias Intersecretariais SMG/SME n° 005/2006 e 001/2008."
-                        }
                         maxLength={1500}
                         height="150"
                       />
