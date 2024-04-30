@@ -1729,6 +1729,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCronograma() ||
       usuarioEhDinutreDiretoria() ||
+      usuarioEhCodaeDilog() ||
       usuarioEhDilogDiretoria(),
   },
   {
@@ -1766,12 +1767,12 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}`,
     component: CadastroCronogramaPage,
-    tipoUsuario: usuarioEhCronograma(),
+    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}/${constants.EDITAR}`,
     component: EditarCronogramaPage,
-    tipoUsuario: usuarioEhCronograma(),
+    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_APROVACOES}`,
