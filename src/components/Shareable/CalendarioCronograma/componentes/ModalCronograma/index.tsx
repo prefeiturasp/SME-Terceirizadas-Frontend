@@ -8,7 +8,10 @@ import { Modal } from "react-bootstrap";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
 import { ALTERACAO_CRONOGRAMA } from "../../../../../configs/constants";
-import { usuarioEhCronograma } from "../../../../../helpers/utilities";
+import {
+  usuarioEhCronograma,
+  usuarioEhCodaeDilog,
+} from "../../../../../helpers/utilities";
 import { ItemCalendario } from "../../interfaces";
 import { EtapaCalendario } from "interfaces/pre_recebimento.interface";
 
@@ -81,19 +84,20 @@ export const ModalCronograma: React.FC<Props> = ({
         </div>
       </Modal.Body>
       <Modal.Footer>
-        {usuarioEhCronograma() && event.objeto.status === "Assinado CODAE" && (
-          <Botao
-            texto="Alterar"
-            type={BUTTON_TYPE.BUTTON}
-            onClick={() => {
-              navigate(
-                `${ALTERACAO_CRONOGRAMA}?uuid=${event.objeto.uuid_cronograma}`
-              );
-            }}
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="ms-3"
-          />
-        )}
+        {(usuarioEhCronograma() || usuarioEhCodaeDilog()) &&
+          event.objeto.status === "Assinado CODAE" && (
+            <Botao
+              texto="Alterar"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={() => {
+                navigate(
+                  `${ALTERACAO_CRONOGRAMA}?uuid=${event.objeto.uuid_cronograma}`
+                );
+              }}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              className="ms-3"
+            />
+          )}
         <Botao
           texto="Fechar"
           onClick={closeModal}

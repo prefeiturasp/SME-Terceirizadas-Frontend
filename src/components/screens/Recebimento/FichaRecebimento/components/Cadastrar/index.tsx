@@ -247,7 +247,6 @@ export default () => {
           cronogramaSelecionado.uuid
         );
         let cronograma = data.results;
-
         setCronograma(cronograma);
 
         form.change("fornecedor", cronograma.fornecedor);
@@ -257,6 +256,9 @@ export default () => {
         form.change("produto", cronograma.produto);
         form.change("marca", cronograma.marca);
         form.change("qtd_total_programada", cronograma.qtd_total_programada);
+      } else {
+        setCronograma({} as CronogramaFicha);
+        form.reset({});
       }
     } finally {
       setCarregando(false);
@@ -371,6 +373,8 @@ export default () => {
 
                 <StepsSigpae current={stepAtual} items={ITENS_STEPS} />
 
+                <hr />
+
                 {stepAtual === 0 && (
                   <Collapse
                     collapse={collapse1}
@@ -387,10 +391,10 @@ export default () => {
                           <Field
                             component={AutoCompleteSelectField}
                             options={optionsCronograma(values)}
-                            label="Nº do Cronograma"
+                            label="Cronograma"
                             name={`cronograma`}
                             className="input-busca-produto"
-                            placeholder="Digite o Nº do Cronograma"
+                            placeholder="Digite um cronograma "
                             required
                             validate={required}
                             onChange={(value: string) => {
@@ -880,7 +884,7 @@ export default () => {
                     <section id="dadosVeiculos">
                       {veiculos.map((v, index) => (
                         <>
-                          {index !== 0 && (
+                          {index === veiculos.length - 1 && (
                             <>
                               <hr />
                               <div className="row">

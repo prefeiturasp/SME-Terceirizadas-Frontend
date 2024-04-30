@@ -17,7 +17,10 @@ import { CADASTRO_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants.js";
 
 import { montarOptionsStatus } from "./utils";
 import "./style.scss";
-import { usuarioEhCronograma } from "../../../../../../helpers/utilities";
+import {
+  usuarioEhCodaeDilog,
+  usuarioEhCronograma,
+} from "../../../../../../helpers/utilities";
 
 export default ({
   setFiltros,
@@ -143,7 +146,7 @@ export default ({
       </CollapseFiltros>
 
       <div className="botoes pt-4" ref={inicioResultado}>
-        {usuarioEhCronograma() && (
+        {(usuarioEhCronograma() || usuarioEhCodaeDilog()) && (
           <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}`}>
             <Botao
               texto="Cadastrar Cronograma"
