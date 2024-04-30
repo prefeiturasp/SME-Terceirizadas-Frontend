@@ -48,7 +48,7 @@ import {
 import { cadastraRascunhoFichaRecebimento } from "services/fichaRecebimento.service";
 import moment from "moment";
 import { deletaValues } from "helpers/formHelper";
-import RadioButton from "components/Shareable/RadioButton";
+import RadioButtonField from "components/Shareable/RadioButtonField";
 import { stringToBoolean } from "helpers/parsers";
 import Label from "components/Shareable/Label";
 import InputFileField from "components/Shareable/InputFileField";
@@ -703,7 +703,7 @@ export default () => {
 
                       <div className="row">
                         <div className="col-12">
-                          <RadioButton
+                          <RadioButtonField
                             label="Lote(s) do Fabricante Observado(s)"
                             name={`lote_fabricante_de_acordo`}
                             options={[
@@ -736,7 +736,7 @@ export default () => {
 
                       <div className="row">
                         <div className="col-12">
-                          <RadioButton
+                          <RadioButtonField
                             label="Data(s) de Fabricação Observada(s)"
                             name={`data_fabricacao_de_acordo`}
                             options={[
@@ -769,7 +769,7 @@ export default () => {
 
                       <div className="row">
                         <div className="col-12">
-                          <RadioButton
+                          <RadioButtonField
                             label="Data(s) de Validade Observada(s)"
                             name={`data_validade_de_acordo`}
                             options={[
@@ -1023,7 +1023,7 @@ export default () => {
 
                           <div className="row">
                             <div className="col-6">
-                              <RadioButton
+                              <RadioButtonField
                                 label="Estado Higiênico-Sanitário"
                                 name={`estado_higienico_adequado_${index}`}
                                 options={[
@@ -1040,7 +1040,7 @@ export default () => {
                             </div>
                             {cronograma.categoria === "PERECIVEIS" && (
                               <div className="col-6">
-                                <RadioButton
+                                <RadioButtonField
                                   label="Termógrafo"
                                   name={`termografo_${index}`}
                                   options={[
@@ -1082,7 +1082,7 @@ export default () => {
                     <section id="sistemaVedacaoSecundaria">
                       <div className="row">
                         <div className="col mt-3">
-                          <RadioButton
+                          <RadioButtonField
                             name={`sistema_vedacao_embalagem_secundaria`}
                             options={[
                               {

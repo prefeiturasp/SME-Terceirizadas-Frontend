@@ -13,7 +13,7 @@ export interface Props {
   className?: string;
 }
 
-const RadioButton: React.FC<Props> = ({
+const RadioButtonField: React.FC<Props> = ({
   name,
   label,
   options = [],
@@ -43,4 +43,4 @@ const RadioButton: React.FC<Props> = ({
   );
 };
 
-export default RadioButton;
+export default RadioButtonField;
