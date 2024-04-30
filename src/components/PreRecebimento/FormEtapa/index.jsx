@@ -198,36 +198,35 @@ export default ({
               </>
             )}
             <div className="row">
-              {usuarioEhCronograma() ||
-                (usuarioEhCodaeDilog() && (
-                  <>
-                    <div className="col">
-                      <Field
-                        component={InputText}
-                        label="Nº do Empenho"
-                        name={`empenho_${index}`}
-                        placeholder="Informe o Nº do Empenho"
-                        required
-                        validate={required}
-                        proibeLetras
-                        disabled={desabilitar[index]}
-                      />
-                    </div>
-                    <div className="col">
-                      <Field
-                        component={InputText}
-                        label="Qtde. Total do Empenho"
-                        name={`qtd_total_empenho_${index}`}
-                        placeholder="Informe a quantidade"
-                        required
-                        agrupadorMilharComDecimal
-                        validate={required}
-                        proibeLetras
-                        disabled={desabilitar[index]}
-                      />
-                    </div>
-                  </>
-                ))}
+              {(usuarioEhCronograma() || usuarioEhCodaeDilog()) && (
+                <>
+                  <div className="col">
+                    <Field
+                      component={InputText}
+                      label="Nº do Empenho"
+                      name={`empenho_${index}`}
+                      placeholder="Informe o Nº do Empenho"
+                      required
+                      validate={required}
+                      proibeLetras
+                      disabled={desabilitar[index]}
+                    />
+                  </div>
+                  <div className="col">
+                    <Field
+                      component={InputText}
+                      label="Qtde. Total do Empenho"
+                      name={`qtd_total_empenho_${index}`}
+                      placeholder="Informe a quantidade"
+                      required
+                      agrupadorMilharComDecimal
+                      validate={required}
+                      proibeLetras
+                      disabled={desabilitar[index]}
+                    />
+                  </div>
+                </>
+              )}
               <div className="col">
                 <Field
                   component={AutoCompleteField}

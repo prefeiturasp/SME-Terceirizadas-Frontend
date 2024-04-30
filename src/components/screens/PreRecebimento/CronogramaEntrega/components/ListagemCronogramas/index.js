@@ -168,17 +168,16 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                         </>
                       ) : (
                         <>
-                          {usuarioEhCronograma() ||
-                            (usuarioEhCodaeDilog() && (
-                              <NavLink
-                                className="float-start"
-                                to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${cronograma.uuid}`}
-                              >
-                                <span className="link-acoes green">
-                                  <i className="fas fa-edit" title="Editar" />
-                                </span>
-                              </NavLink>
-                            ))}
+                          {(usuarioEhCronograma() || usuarioEhCodaeDilog()) && (
+                            <NavLink
+                              className="float-start"
+                              to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${cronograma.uuid}`}
+                            >
+                              <span className="link-acoes green">
+                                <i className="fas fa-edit" title="Editar" />
+                              </span>
+                            </NavLink>
+                          )}
                         </>
                       )}
                     </>

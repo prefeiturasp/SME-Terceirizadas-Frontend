@@ -163,10 +163,8 @@ export default ({ analiseSolicitacao }) => {
   };
 
   const analiseCronograma = () =>
-    (solicitacaoAlteracaoCronograma.status === "Em análise" &&
-      usuarioEhCronograma()) ||
-    usuarioEhCodaeDilog();
-
+    solicitacaoAlteracaoCronograma.status === "Em análise" &&
+    (usuarioEhCronograma() || usuarioEhCodaeDilog());
   const cadastraAlteracao = async (values) => {
     const payload = prepararPayloadCronograma(
       cronograma,
@@ -508,8 +506,8 @@ export default ({ analiseSolicitacao }) => {
                         )}
                       </>
                     )}
-                    {((!analiseSolicitacao && usuarioEhCronograma()) ||
-                      usuarioEhCodaeDilog() ||
+                    {((!analiseSolicitacao &&
+                      (usuarioEhCronograma() || usuarioEhCodaeDilog())) ||
                       (analiseSolicitacao && analiseCronograma())) && (
                       <div className="accordion mt-1" id="accordionCronograma">
                         <FormRecebimento

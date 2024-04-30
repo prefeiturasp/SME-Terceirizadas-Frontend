@@ -123,28 +123,27 @@ export default ({
             />
           </>
         )}
-      {usuarioEhCronograma() ||
-        (usuarioEhCodaeDilog() &&
-          solicitacaoAlteracaoCronograma &&
-          solicitacaoAlteracaoCronograma.status === "Em análise" && (
-            <>
-              <Botao
-                texto="Enviar DINUTRE"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.GREEN}
-                className="float-end ms-3"
-                onClick={() => handleShow()}
-                disabled={!podeSubmeter}
-              />
-              <ModalAnalise
-                show={show}
-                setShow={setShow}
-                handleClose={handleClose}
-                loading={loading}
-                handleSim={enviaAnaliseCronograma}
-              />
-            </>
-          ))}
+      {(usuarioEhCronograma() || usuarioEhCodaeDilog()) &&
+        solicitacaoAlteracaoCronograma &&
+        solicitacaoAlteracaoCronograma.status === "Em análise" && (
+          <>
+            <Botao
+              texto="Enviar DINUTRE"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              className="float-end ms-3"
+              onClick={() => handleShow()}
+              disabled={!podeSubmeter}
+            />
+            <ModalAnalise
+              show={show}
+              setShow={setShow}
+              handleClose={handleClose}
+              loading={loading}
+              handleSim={enviaAnaliseCronograma}
+            />
+          </>
+        )}
 
       {usuarioEhDinutreDiretoria() &&
         solicitacaoAlteracaoCronograma.status === "Cronograma ciente" && (
