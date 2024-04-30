@@ -7,7 +7,10 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
-import { ALTERACAO_CRONOGRAMA } from "../../../../../configs/constants";
+import {
+  ALTERACAO_CRONOGRAMA,
+  PRE_RECEBIMENTO,
+} from "../../../../../configs/constants";
 import {
   usuarioEhCronograma,
   usuarioEhCodaeDilog,
@@ -91,7 +94,7 @@ export const ModalCronograma: React.FC<Props> = ({
               type={BUTTON_TYPE.BUTTON}
               onClick={() => {
                 navigate(
-                  `${ALTERACAO_CRONOGRAMA}?uuid=${event.objeto.uuid_cronograma}`
+                  `/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${event.objeto.uuid_cronograma}`
                 );
               }}
               style={BUTTON_STYLE.GREEN_OUTLINE}
