@@ -191,6 +191,7 @@ export default () => {
         values.sistema_vedacao_embalagem_secundaria === "0"
           ? cronograma.sistema_vedacao_embalagem_secundaria
           : values.sistema_vedacao_embalagem_secundaria_outra_opcao,
+      observacao: values.observacao,
       arquivos: arquivos,
     };
 
@@ -1115,6 +1116,7 @@ export default () => {
                         )}
                       </div>
                     </section>
+
                     <section id="conferenciaRotulagens">
                       <div className="row">
                         <div className="col mt-5 text-center">
@@ -1143,6 +1145,7 @@ export default () => {
                         </div>
                       </div>
                     </section>
+
                     <section id="observacoes">
                       <div className="row">
                         <div className="col">

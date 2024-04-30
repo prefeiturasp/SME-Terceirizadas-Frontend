@@ -18,7 +18,8 @@ export interface FichaRecebimentoPayload {
   peso_embalagem_primaria_4?: string;
   veiculos?: VeiculoPayload[];
   sistema_vedacao_embalagem_secundaria?: string;
-  arquivos: Arquivo[];
+  observacao?: string;
+  arquivos?: Arquivo[];
 }
 
 export interface VeiculoPayload {
