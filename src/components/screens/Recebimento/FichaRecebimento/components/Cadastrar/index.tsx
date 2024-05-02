@@ -885,9 +885,9 @@ export default () => {
                     <section id="dadosVeiculos">
                       {veiculos.map((v, index) => (
                         <>
-                          {index === veiculos.length - 1 && (
+                          {index === veiculos.length - 1 && index > 0 && (
                             <>
-                              <hr />
+                              {index > 0 && <hr />}
                               <div className="row">
                                 <div className="w-100">
                                   <Botao
