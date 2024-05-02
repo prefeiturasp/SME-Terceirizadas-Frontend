@@ -26,7 +26,7 @@ export default ({ tiposAlimentacao, grupoSelecionado, tipoTurma }: Props) => {
     if (refeicaoIndex !== -1) {
       alimentacoes[refeicaoIndex] = {
         ...alimentacoes[refeicaoIndex],
-        grupo: "EMEF / CEUEMEF / EMEFM / EMEBS",
+        grupo: "EMEF / CEUEMEF / EMEFM",
       };
 
       alimentacoes.splice(refeicaoIndex + 1, 0, {
