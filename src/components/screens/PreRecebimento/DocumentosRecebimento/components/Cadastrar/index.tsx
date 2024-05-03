@@ -264,8 +264,6 @@ export default () => {
                       nomeDoItemNoPlural="documentos"
                       options={OUTROS_DOCUMENTOS_OPTIONS}
                       placeholder="Selecione o documento"
-                      required
-                      validate={required}
                     />
                   </div>
                 </div>
