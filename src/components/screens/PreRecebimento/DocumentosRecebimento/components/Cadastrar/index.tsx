@@ -157,10 +157,14 @@ export default () => {
 
   const validaArquivos = (values: Record<string, any>): boolean => {
     let laudoInvalido = laudo.length === 0;
-    let documentoValido = values.tipos_de_documentos?.every((valor: string) => {
-      return documentos[valor]?.length > 0;
-    });
-    return laudoInvalido || !documentoValido;
+
+    let documentosValidos = values.tipos_de_documentos
+      ? values.tipos_de_documentos?.every((valor: string) => {
+          return documentos[valor]?.length > 0;
+        })
+      : true;
+
+    return laudoInvalido || !documentosValidos;
   };
 
   const optionsCronograma = (values: Record<string, any>) =>
