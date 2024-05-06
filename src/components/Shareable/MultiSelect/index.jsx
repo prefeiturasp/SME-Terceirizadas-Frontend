@@ -15,9 +15,11 @@ export const MultiSelect = (props) => {
     onSelectedChange,
     required,
     selected,
+    overrideStrings,
+    disabled,
   } = props;
   return (
-    <div className="select">
+    <div className={`select ${meta.touched && meta.error && "erro-borda"}`}>
       {label && [
         required && (
           <span key={1} className="required-asterisk">
@@ -34,11 +36,14 @@ export const MultiSelect = (props) => {
         options={options}
         onSelectedChanged={onSelectedChange}
         disableSearch={disableSearch}
-        overrideStrings={{
-          selectSomeItems: "Selecione",
-          allItemsAreSelected: "Todos os itens estão selecionados",
-          selectAll: "Todos",
-        }}
+        overrideStrings={
+          overrideStrings || {
+            selectSomeItems: "Selecione",
+            allItemsAreSelected: "Todos os itens estão selecionados",
+            selectAll: "Todos",
+          }
+        }
+        disabled={disabled}
       />
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />

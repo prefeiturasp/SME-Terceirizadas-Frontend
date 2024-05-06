@@ -4,6 +4,7 @@ import { getNumerosEditais } from "services/edital.service";
 import { getLotesSimples } from "services/lote.service";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 import { getFaixasEtarias } from "services/faixaEtaria.service";
+import ParametrizacaoFinanceiraService from "services/medicaoInicial/parametrizacao_financeira.service";
 
 import { toastError } from "components/Shareable/Toast/dialogs";
 
@@ -16,10 +17,25 @@ type SelectOption = {
   nome: string;
 };
 
+type TipoUnidade = {
+  uuid: string;
+  iniciais: string;
+};
+
+type FormValues = {
+  edital: string;
+  lote: string;
+  tipos_unidades: string;
+  tabelas?: Record<string, any>;
+  legenda: string;
+};
+
 type Props = {
   setTiposAlimentacao: Dispatch<SetStateAction<Array<any>>>;
   setGrupoSelecionado: Dispatch<SetStateAction<string>>;
   setFaixasEtarias: Dispatch<SetStateAction<Array<any>>>;
+  setParametrizacao: Dispatch<SetStateAction<FormValues>>;
+  uuidParametrizacao: string;
   form: FormApi<any, any>;
 };
 
@@ -27,6 +43,8 @@ export default ({
   setTiposAlimentacao,
   setGrupoSelecionado,
   setFaixasEtarias,
+  setParametrizacao,
+  uuidParametrizacao,
   form,
 }: Props) => {
   const [editais, setEditais] = useState<SelectOption[]>([]);
@@ -108,17 +126,81 @@ export default ({
     }
   };
 
-  useEffect(() => {
+  const requisicoesPreRender = async (): Promise<void> => {
     setCarregando(true);
     Promise.all([
       getEditaisAsync(),
       getLotesAsync(),
       getTiposUnidadeEscolarAsync(),
       setFaixasEtarias && getFaixasEtariasAsync(),
+      uuidParametrizacao && getParametrizacao(uuidParametrizacao),
     ]).then(() => {
       setCarregando(false);
     });
+  };
+
+  const getParametrizacao = async (uuid: string) => {
+    try {
+      const response =
+        await ParametrizacaoFinanceiraService.getParametrizacaoFinanceira(uuid);
+
+      const parametrizacao = {
+        edital: response.edital.uuid,
+        lote: response.lote.uuid,
+        tipos_unidades: formataGrupoUnidades(response.tipos_unidades),
+        legenda: response.legenda,
+        tabelas: formataTabelaValores(response.tabelas),
+      };
+
+      setParametrizacao(parametrizacao);
+    } catch (error) {
+      toastError(
+        "Erro ao carregar parametrização financeira. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const formataTabelaValores = (tabelas) => {
+    const tabelasValores = Object.fromEntries(
+      tabelas.map((tabela) => {
+        const values = tabela.valores.reduce((acc, item: any) => {
+          const key = item.faixa_etaria
+            ? item.faixa_etaria.__str__
+            : `${item.tipo_alimentacao?.nome}_${item.grupo}`;
+
+          return {
+            ...acc,
+            [key]: {
+              tipo_alimentacao: item.tipo_alimentacao?.uuid,
+              faixa_etaria: item.faixa_etaria?.uuid,
+              grupo: item.grupo,
+              valor_unitario: item.valor_colunas.valor_unitario,
+              valor_unitario_reajuste:
+                item.valor_colunas.valor_unitario_reajuste,
+              percentual_acrescimo: item.valor_colunas?.percentual_acrescimo,
+              valor_unitario_total: item.valor_colunas?.valor_unitario_total,
+            },
+          };
+        }, {});
+
+        return [tabela.nome, values];
+      })
+    );
+    return tabelasValores;
+  };
+
+  useEffect(() => {
+    requisicoesPreRender();
   }, []);
+
+  const initialTiposUnidades =
+    uuidParametrizacao && form.getState().values?.tipos_unidades;
+
+  useEffect(() => {
+    if (initialTiposUnidades && uuidParametrizacao && !carregando) {
+      onChangeTiposUnidades(initialTiposUnidades);
+    }
+  }, [initialTiposUnidades, uuidParametrizacao, carregando]);
 
   const getGruposTiposUnidades = (tiposUnidades) => {
     const getTipoUnidadeUUID = (tipoUnidade: string): string =>
@@ -132,6 +214,21 @@ export default ({
         nome,
       };
     });
+  };
+
+  const formataGrupoUnidades = (unidades: TipoUnidade[]) => {
+    let unidadesUuid = "";
+
+    TIPOS_UNIDADES_GRUPOS.forEach((grupo) => {
+      grupo.forEach((tipoUnidade) => {
+        const item = unidades.find((item) => item.iniciais === tipoUnidade);
+        if (item) {
+          unidadesUuid += item.uuid + ",";
+        }
+      });
+    });
+
+    return unidadesUuid.slice(0, -1);
   };
 
   const getGrupoSelecionado = (unidades: string) => {
@@ -161,16 +258,13 @@ export default ({
 
   const onChangeTiposUnidades = (unidades: string) => {
     const tabelas = form.getState().values?.tabelas;
-    if (tabelas) {
+    if (tabelas && !uuidParametrizacao) {
       form.change("tabelas", {});
     }
 
     const grupoSelecionado = getGrupoSelecionado(unidades);
 
-    if (
-      !(grupoSelecionado === "grupo_3") &&
-      !(grupoSelecionado === "grupo_5")
-    ) {
+    if (grupoSelecionado === "grupo_1") {
       setTiposAlimentacao([]);
       return;
     }

@@ -27,6 +27,7 @@ import {
   usuarioComAcessoAoCalendarioCronograma,
   usuarioEhCODAEGabinete,
 } from "helpers/utilities";
+import { usuarioEhCodaeDilog } from "../../../../helpers/utilities";
 
 const MenuPreRecebimento = () => {
   return (
@@ -45,18 +46,19 @@ const MenuPreRecebimento = () => {
       )}
       {(usuarioEhCronograma() ||
         usuarioEhDinutreDiretoria() ||
+        usuarioEhCodaeDilog() ||
         usuarioEhDilogDiretoria()) && (
         <LeafItem
           to={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`}
         >
-          Alteração de Cronograma
+          Verificar Alterações de Cronograma
         </LeafItem>
       )}
       {usuarioEhEmpresaFornecedor() && (
         <LeafItem
           to={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR}`}
         >
-          Alteração de Cronograma
+          Verificar Alterações de Cronograma
         </LeafItem>
       )}
       {usuarioComAcessoAoCalendarioCronograma() && (

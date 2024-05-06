@@ -4,6 +4,7 @@ import {
   ParametrizacaoFinanceiraPayload,
   ParametrizacaoFinanceiraParams,
   ParametrizacaoFinanceiraResponse,
+  ParametrizacaoFinanceiraInterface,
 } from "./parametrizacao_financeira.interface";
 
 const BASE_URL = "medicao-inicial/parametrizacao-financeira";
@@ -15,7 +16,7 @@ export default class ParametrizacaoFinanceiraService {
     await axios.post(`${BASE_URL}/`, payload);
   }
 
-  static async getParametrizacaoFinanceira(
+  static async getParametrizacoesFinanceiras(
     page: number,
     filtros: ParametrizacaoFinanceiraParams
   ): Promise<ParametrizacaoFinanceiraResponse> {
@@ -23,5 +24,19 @@ export default class ParametrizacaoFinanceiraService {
 
     const response = await axios.get(`${BASE_URL}/`, { params });
     return response.data;
+  }
+
+  static async getParametrizacaoFinanceira(
+    uuid: string
+  ): Promise<ParametrizacaoFinanceiraInterface> {
+    const response = await axios.get(`${BASE_URL}/${uuid}/`);
+    return response.data;
+  }
+
+  static async editParametrizacaoFinanceira(
+    uuid: string,
+    payload: ParametrizacaoFinanceiraPayload
+  ): Promise<void> {
+    await axios.patch(`${BASE_URL}/${uuid}/`, payload);
   }
 }

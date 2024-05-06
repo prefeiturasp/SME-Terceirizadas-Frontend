@@ -6,15 +6,25 @@ div.adicionar-parametrizacao {
     color: $blackInput;
   }
 
-  .periodo-integral {
+  h2.texto-simples-verde {
+    line-height: 28px;
+  }
+
+  .periodo-integral,
+  .turma-emebs-fundamental {
     background-color: #ffd869;
   }
 
-  .periodo-parcial {
+  .periodo-parcial,
+  .turma-emebs-infantil {
     background-color: #b7e487;
   }
 
-  div.container-tabelas-cei {
+  .turma-emei {
+    background-color: #9dc7ff;
+  }
+
+  div.container-tabelas {
     display: grid;
     grid-template-columns: 49% 49%;
     gap: 0 2%;

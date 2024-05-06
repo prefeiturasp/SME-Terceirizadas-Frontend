@@ -66,6 +66,7 @@ export interface EditalContratoInterface {
   processo: string;
   tipo_contratacao: string;
   uuid: string;
+  eh_imr?: boolean;
 }
 
 export interface EditalContratoListadoInterface

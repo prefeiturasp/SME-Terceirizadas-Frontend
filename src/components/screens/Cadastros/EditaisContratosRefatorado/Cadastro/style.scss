@@ -63,6 +63,20 @@ div.form-editais-contratos {
       color: $red;
     }
   }
+
+  .switch-imr > div {
+    display: flex;
+    align-items: center;
+
+    label {
+      margin: 0 10px;
+    }
+
+    .green {
+      color: $green !important;
+      font-weight: bold;
+    }
+  }
 }
 
 @media only screen and (min-width: 1024px) and (max-width: 1400px) {

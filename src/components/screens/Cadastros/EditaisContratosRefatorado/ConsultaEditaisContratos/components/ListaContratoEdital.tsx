@@ -26,8 +26,9 @@ export const LinhaEditalContrato = ({
     let status = "";
     editalContrato.contratos.forEach((contrato) => {
       const vigencia = contrato.vigencias[contrato.vigencias.length - 1];
-      if (vigencia.status === VIGENCIA_STATUS.VENCIDO) status = vigencia.status;
-      if (status !== "vencido" && vigencia.status === "proximo_ao_vencimento")
+      if (vigencia?.status === VIGENCIA_STATUS.VENCIDO)
+        status = vigencia.status;
+      if (status !== "vencido" && vigencia?.status === "proximo_ao_vencimento")
         status = vigencia.status;
     });
     return status;

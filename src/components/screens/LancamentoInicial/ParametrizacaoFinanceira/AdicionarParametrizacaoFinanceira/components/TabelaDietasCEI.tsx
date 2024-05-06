@@ -18,18 +18,31 @@ type Props = {
   faixasEtarias: Array<any>;
   nomeTabela: string;
   periodo: string;
+  grupoSelecionado: string;
 };
 
-export default ({ form, faixasEtarias, nomeTabela, periodo }: Props) => {
+export default ({
+  form,
+  faixasEtarias,
+  nomeTabela,
+  periodo,
+  grupoSelecionado,
+}: Props) => {
+  const labelTabela =
+    grupoSelecionado === "grupo_2"
+      ? `CEI - Período ${periodo}`
+      : `Período ${periodo}`;
+
   return (
     <div className="row mt-5">
       <div className="col">
         <h2 className="text-start texto-simples-verde fw-bold mb-3">
           Preço das {nomeTabela} -{" "}
           <span className={`titulo-tag periodo-${periodo.toLowerCase()}`}>
-            Período {periodo}
+            {labelTabela}
           </span>
         </h2>
+
         <Table pagination={false} bordered dataSource={faixasEtarias}>
           <Column
             title="Faixas Etárias"
@@ -41,7 +54,7 @@ export default ({ form, faixasEtarias, nomeTabela, periodo }: Props) => {
                   <p className="fw-bold mb-0">{value}</p>
                   <Field
                     component="input"
-                    name={`tabelas[${nomeTabela} - Período ${periodo}].${value}.faixa_etaria`}
+                    name={`tabelas[${nomeTabela} - ${labelTabela}].${value}.faixa_etaria`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
@@ -56,7 +69,7 @@ export default ({ form, faixasEtarias, nomeTabela, periodo }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${nomeTabela} - Período ${periodo}].${record.__str__}.valor_unitario`}
+                name={`tabelas[${nomeTabela} - ${labelTabela}].${record.__str__}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -65,19 +78,19 @@ export default ({ form, faixasEtarias, nomeTabela, periodo }: Props) => {
                 onChange={(value: number) => {
                   const percentualAcrescimo =
                     form.getState().values.tabelas[
-                      `${nomeTabela} - Período ${periodo}`
+                      `${nomeTabela} - ${labelTabela}`
                     ]?.[record.__str__]?.percentual_acrescimo || 0;
                   const valorUnitarioTotal =
                     value * (1 + percentualAcrescimo / 100);
 
                   form.change(
-                    `tabelas[${nomeTabela} - Período ${periodo}].${record.__str__}.valor_unitario_total`,
+                    `tabelas[${nomeTabela} - ${labelTabela}].${record.__str__}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas[${nomeTabela} - Período ${periodo}].${record.__str__}.valor_unitario`,
+                    `tabelas[${nomeTabela} - ${labelTabela}].${record.__str__}.valor_unitario`,
                     value
                   );
                 }}
@@ -91,7 +104,7 @@ export default ({ form, faixasEtarias, nomeTabela, periodo }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${nomeTabela} - Período ${periodo}].${record.__str__}.percentual_acrescimo`}
+                name={`tabelas[${nomeTabela} - ${labelTabela}].${record.__str__}.percentual_acrescimo`}
                 placeholder="%"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -100,18 +113,18 @@ export default ({ form, faixasEtarias, nomeTabela, periodo }: Props) => {
                 onChange={(value: number) => {
                   const valorUnitario =
                     form.getState().values.tabelas[
-                      `${nomeTabela} - Período ${periodo}`
+                      `${nomeTabela} - ${labelTabela}`
                     ]?.[record.__str__]?.valor_unitario || 0;
                   const valorUnitarioTotal = valorUnitario * (1 + value / 100);
 
                   form.change(
-                    `tabelas[${nomeTabela} - Período ${periodo}].${record.__str__}.valor_unitario_total`,
+                    `tabelas[${nomeTabela} - ${labelTabela}].${record.__str__}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas[${nomeTabela} - Período ${periodo}].${record.__str__}.percentual_acrescimo`,
+                    `tabelas[${nomeTabela} - ${labelTabela}].${record.__str__}.percentual_acrescimo`,
                     value
                   );
                 }}
@@ -125,7 +138,7 @@ export default ({ form, faixasEtarias, nomeTabela, periodo }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${nomeTabela} - Período ${periodo}].${record.__str__}.valor_unitario_total`}
+                name={`tabelas[${nomeTabela} - ${labelTabela}].${record.__str__}.valor_unitario_total`}
                 placeholder="0,00"
                 disabled
               />
