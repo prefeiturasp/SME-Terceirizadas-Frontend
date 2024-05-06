@@ -98,7 +98,12 @@ export default () => {
   };
 
   const formataPayload = (values): DocumentosRecebimentoPayload => {
-    let documentosPayload: Array<TiposDocumentosPayload> =
+    let documentoLaudo = {
+      tipo_documento: "LAUDO",
+      arquivos_do_tipo_de_documento: laudo,
+    };
+
+    let outrosDocumentos =
       values.tipos_de_documentos?.map(
         (valor: TiposDocumentoChoices): TiposDocumentosPayload => {
           return {
@@ -108,12 +113,12 @@ export default () => {
               valor === "OUTROS" ? values.descricao_documento : undefined,
           };
         }
-      );
+      ) ?? [];
 
-    documentosPayload.push({
-      tipo_documento: "LAUDO",
-      arquivos_do_tipo_de_documento: laudo,
-    });
+    let documentosPayload: Array<TiposDocumentosPayload> = [
+      documentoLaudo,
+      ...outrosDocumentos,
+    ];
 
     let payload: DocumentosRecebimentoPayload = {
       cronograma: cronogramas.find(({ numero }) => numero === values.cronograma)
@@ -157,10 +162,14 @@ export default () => {
 
   const validaArquivos = (values: Record<string, any>): boolean => {
     let laudoInvalido = laudo.length === 0;
-    let documentoValido = values.tipos_de_documentos?.every((valor: string) => {
-      return documentos[valor]?.length > 0;
-    });
-    return laudoInvalido || !documentoValido;
+
+    let documentosValidos = values.tipos_de_documentos
+      ? values.tipos_de_documentos?.every((valor: string) => {
+          return documentos[valor]?.length > 0;
+        })
+      : true;
+
+    return laudoInvalido || !documentosValidos;
   };
 
   const optionsCronograma = (values: Record<string, any>) =>
@@ -264,8 +273,6 @@ export default () => {
                       nomeDoItemNoPlural="documentos"
                       options={OUTROS_DOCUMENTOS_OPTIONS}
                       placeholder="Selecione o documento"
-                      required
-                      validate={required}
                     />
                   </div>
                 </div>
