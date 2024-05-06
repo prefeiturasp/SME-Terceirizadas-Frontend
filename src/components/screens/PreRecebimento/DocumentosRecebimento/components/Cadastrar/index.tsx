@@ -98,7 +98,12 @@ export default () => {
   };
 
   const formataPayload = (values): DocumentosRecebimentoPayload => {
-    let documentosPayload: Array<TiposDocumentosPayload> =
+    let documentoLaudo = {
+      tipo_documento: "LAUDO",
+      arquivos_do_tipo_de_documento: laudo,
+    };
+
+    let outrosDocumentos =
       values.tipos_de_documentos?.map(
         (valor: TiposDocumentoChoices): TiposDocumentosPayload => {
           return {
@@ -108,12 +113,12 @@ export default () => {
               valor === "OUTROS" ? values.descricao_documento : undefined,
           };
         }
-      );
+      ) ?? [];
 
-    documentosPayload.push({
-      tipo_documento: "LAUDO",
-      arquivos_do_tipo_de_documento: laudo,
-    });
+    let documentosPayload: Array<TiposDocumentosPayload> = [
+      documentoLaudo,
+      ...outrosDocumentos,
+    ];
 
     let payload: DocumentosRecebimentoPayload = {
       cronograma: cronogramas.find(({ numero }) => numero === values.cronograma)
