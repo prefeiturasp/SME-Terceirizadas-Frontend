@@ -259,6 +259,7 @@ import EmpenhosPage from "pages/LancamentoMedicaoInicial/EmpenhosPage";
 import ClausulasParaDescontosPage from "pages/LancamentoMedicaoInicial/ClausulasParaDescontosPage";
 import ParametrizacaoFinanceiraPage from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/ParametrizacaoFinanceiraPage";
 import AdicionarParametrizacaoFinanceiraPage from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/AdicionarParametrizacaoFinanceiraPage";
+import EditarParametrizacaoFinanceiraPage from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/EditarParametrizacaoFinanceiraPage";
 import CadastroDeClausulasPage from "pages/LancamentoMedicaoInicial/CadastroDeClausulasPage";
 import EditarClausulaPage from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
 import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
@@ -312,6 +313,8 @@ import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/Ques
 import AtribuirQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/AtribuirQuestoesPage";
 import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/EditarAtribuicaoQuestoesPage";
 import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/CopiarAtribuicaoQuestoesPage";
+import FichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/FichaRecebimentoPage";
+import CadastroFichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/CadastroFichaRecebimentoPage";
 
 const routesConfig = [
   {
@@ -1533,6 +1536,11 @@ const routesConfig = [
     tipoUsuario: usuarioEhMedicao(),
   },
   {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.PARAMETRIZACAO_FINANCEIRA}/${constants.EDITAR_PARAMETRIZACAO_FINANCEIRA}`,
+    component: EditarParametrizacaoFinanceiraPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
     path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}/${constants.CADASTRO_DE_CLAUSULA}`,
     component: CadastroDeClausulasPage,
     tipoUsuario: usuarioEhMedicao(),
@@ -1727,6 +1735,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCronograma() ||
       usuarioEhDinutreDiretoria() ||
+      usuarioEhCodaeDilog() ||
       usuarioEhDilogDiretoria(),
   },
   {
@@ -1764,12 +1773,12 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}`,
     component: CadastroCronogramaPage,
-    tipoUsuario: usuarioEhCronograma(),
+    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}/${constants.EDITAR}`,
     component: EditarCronogramaPage,
-    tipoUsuario: usuarioEhCronograma(),
+    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_APROVACOES}`,
@@ -2052,6 +2061,16 @@ const routesConfig = [
   {
     path: `/${constants.RECEBIMENTO}/${constants.COPIAR_ATRIBUICAO_QUESTOES_CONFERENCIA}`,
     component: CopiarAtribuicaoQuestoesPage,
+    tipoUsuario: usuarioEhRecebimento(),
+  },
+  {
+    path: `/${constants.RECEBIMENTO}/${constants.FICHA_RECEBIMENTO}`,
+    component: FichaRecebimentoPage,
+    tipoUsuario: usuarioEhRecebimento(),
+  },
+  {
+    path: `/${constants.RECEBIMENTO}/${constants.CADASTRO_FICHA_RECEBIMENTO}`,
+    component: CadastroFichaRecebimentoPage,
     tipoUsuario: usuarioEhRecebimento(),
   },
 ];

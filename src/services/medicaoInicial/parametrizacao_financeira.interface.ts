@@ -32,13 +32,19 @@ export interface ParametrizacaoFinanceiraResponse {
 }
 
 export interface ParametrizacaoFinanceiraInterface {
-  uuid: string;
+  uuid?: string;
   edital: Edital;
   dre: string;
   lote: Lote;
   tipos_unidades: TipoUnidade[];
   legenda: string;
+  tabelas: Tabela[];
 }
+
+type Tabela = {
+  nome: string;
+  valores: [];
+};
 
 type Edital = {
   uuid: string;

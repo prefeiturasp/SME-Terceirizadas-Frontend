@@ -10,7 +10,7 @@ import SolicitacaoAlteracaoCronograma from "components/screens/PreRecebimento/So
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`,
-  titulo: "Alteração do Cronograma",
+  titulo: "Verificar Alterações de Cronograma",
 };
 
 const anteriores = [

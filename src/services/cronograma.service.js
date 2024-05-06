@@ -150,3 +150,21 @@ export const getCalendarioCronogramas = async (params) => {
     toastError(getMensagemDeErro(error.response.status));
   }
 };
+
+export const getListaCronogramasPraFichaRecebimento = async () => {
+  try {
+    return await axios.get("/cronogramas/lista-cronogramas-ficha-recebimento/");
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
+
+export const getCronogramaPraCadastroRecebimento = async (uuid) => {
+  try {
+    return await axios.get(
+      `/cronogramas/${uuid}/dados-cronograma-ficha-recebimento/`
+    );
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};

@@ -23,6 +23,8 @@ import { required } from "helpers/fieldValidators";
 
 import "./styles.scss";
 import { calculaTotalEmbalagens } from "./helper";
+import { usuarioEhEmpresaFornecedor } from "../../../helpers/utilities";
+import { usuarioEhCodaeDilog } from "../../../helpers/utilities";
 
 export default ({
   etapas,
@@ -37,6 +39,7 @@ export default ({
 }) => {
   const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [desabilitar, setDesabilitar] = useState([]);
+  const [desabilitarData, setDesabilitarData] = useState([]);
   const [feriados, setFeriados] = useState([{}]);
 
   const getEtapasFiltrado = (etapa) => {
@@ -143,22 +146,32 @@ export default ({
   useEffect(() => {
     const desativaCampos = () => {
       if (ehAlteracao) {
-        let array = [];
+        let arrayDesabilitar = [];
+        let arrayData = [];
         etapas.forEach((etapa, index) => {
           let dataProgramada = moment(
             values[`data_programada_${index}`],
             "DD/MM/YYYY"
           ).toDate();
           if (dataProgramada <= new Date().setHours(0, 0, 0, 0)) {
-            array[index] = true;
+            arrayDesabilitar[index] = true;
+          }
+          let hoje = new Date();
+          hoje.setDate(hoje.getDate() - 8);
+          if (
+            dataProgramada <= hoje.setHours(0, 0, 0, 0) ||
+            usuarioEhEmpresaFornecedor()
+          ) {
+            arrayData[index] = true;
           }
         });
-        setDesabilitar(array);
+        setDesabilitar(arrayDesabilitar);
+        setDesabilitarData(arrayData);
       }
     };
 
     desativaCampos();
-  }, [values]);
+  }, []);
 
   return (
     <>
@@ -185,7 +198,7 @@ export default ({
               </>
             )}
             <div className="row">
-              {usuarioEhCronograma() && (
+              {(usuarioEhCronograma() || usuarioEhCodaeDilog()) && (
                 <>
                   <div className="col">
                     <Field
@@ -283,7 +296,7 @@ export default ({
                   validate={required}
                   writable={false}
                   minDate={getAmanha()}
-                  disabled={desabilitar[index]}
+                  disabled={desabilitar[index] && desabilitarData[index]}
                   filterDate={isWeekday}
                   excludeDates={feriados}
                 />

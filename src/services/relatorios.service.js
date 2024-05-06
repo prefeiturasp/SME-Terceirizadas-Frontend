@@ -408,12 +408,10 @@ export const getTotalizadoresRelatorioSolicitacoes = async (payload) => {
   }
 };
 
-export const getDatasetsGraficosRelatorioSolicitacoesAlimentacao = async (
-  payload
-) => {
+export const getDatasetsGraficos = async (payload) => {
   const response = await axios
     .post(
-      `${API_URL}/solicitacoes-genericas/filtrar-solicitacoes-ga-graficos/`,
+      `${API_URL}/solicitacoes-genericas/filtrar-solicitacoes-graficos/`,
       payload
     )
     .catch(ErrorHandlerFunction);

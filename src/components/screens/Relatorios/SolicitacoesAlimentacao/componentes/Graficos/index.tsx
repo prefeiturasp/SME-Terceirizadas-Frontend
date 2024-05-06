@@ -2,9 +2,9 @@ import { Spin } from "antd";
 import { ChartData } from "components/Shareable/Graficos/interfaces";
 import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
-import { getDatasetsGraficosRelatorioSolicitacoesAlimentacao } from "services/relatorios.service";
+import { getDatasetsGraficos } from "services/relatorios.service";
 import { GraficoSolicitacoesAutorizadasDRELote } from "./components/GraficoSolicitacoesAutorizadasDRELote";
-import { ResponseDatasetsGraficosRelatorioSolicitacoesAlimentacaoInterface } from "./interfaces";
+import { ResponseDatasetsGraficos } from "./interfaces";
 import "./style.scss";
 import { GraficoSolicitacoesAutorizadasTipoSolicitacao } from "./components/GraficoSolicitacoesAutorizadasTipoSolicitacao";
 import { GraficoSolicitacoesStatus } from "./components/GraficoSolicitacoesStatus";
@@ -32,20 +32,19 @@ export const Graficos = ({ ...props }: PropsType) => {
   const [datasGraficos, setDatasGraficos] =
     useState<Array<ChartData>>(undefined);
 
-  const getDatasetsGraficosRelatorioSolicitacoesAlimentacaoAsync = async (
+  const getDatasetsGraficosAsync = async (
     values: ValuesType
   ): Promise<void> => {
-    const response =
-      await getDatasetsGraficosRelatorioSolicitacoesAlimentacao<ResponseDatasetsGraficosRelatorioSolicitacoesAlimentacaoInterface>(
-        values
-      );
+    const response = await getDatasetsGraficos<ResponseDatasetsGraficos>(
+      values
+    );
     if (response.status === HTTP_STATUS.OK) {
       setDatasGraficos(response.data);
     }
   };
 
   useEffect(() => {
-    getDatasetsGraficosRelatorioSolicitacoesAlimentacaoAsync(values);
+    getDatasetsGraficosAsync(values);
   }, []);
 
   const graficoTotalPorDRELote = (): boolean | ChartData => {

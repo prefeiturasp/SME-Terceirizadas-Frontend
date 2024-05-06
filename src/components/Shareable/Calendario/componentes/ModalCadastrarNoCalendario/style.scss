@@ -1,11 +1,30 @@
 div.modal-cadastrar-sobremesa {
   div.modal-content {
     margin-top: 25%;
-    min-height: 55vh;
+    .modal-body {
+      min-height: 45vh;
+      max-height: 45vh;
+      overflow: auto;
+    }
+
+    div.footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-right: 16px;
+      margin-bottom: 16px;
+    }
   }
-  div.footer {
-    position: absolute;
-    right: 1em;
-    bottom: 1em;
+
+  .botao-adicionar {
+    align-self: center;
+  }
+
+  .botao-excluir {
+    width: 95%;
+
+    @media screen and (max-width: 1690px) {
+      width: 120%;
+      margin-left: -5px !important;
+    }
   }
 }

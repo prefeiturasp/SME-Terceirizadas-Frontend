@@ -212,6 +212,8 @@ export const CLAUSULAS_PARA_DESCONTOS = "clausulas-para-descontos";
 export const PARAMETRIZACAO_FINANCEIRA = "parametrizacao-financeira";
 export const ADICIONAR_PARAMETRIZACAO_FINANCEIRA =
   "adicionar-parametrizacao-financeira";
+export const EDITAR_PARAMETRIZACAO_FINANCEIRA =
+  "editar-parametrizacao-financeira";
 export const CADASTRO_DE_CLAUSULA = "cadastro-de-clausula";
 export const EDITAR_CLAUSULA = "editar-clausula";
 export const CONTROLE_DE_FREQUENCIA = "controle-de-frequencia";
@@ -304,7 +306,8 @@ export const EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA =
   "editar-atribuicao-questoes-conferencia";
 export const COPIAR_ATRIBUICAO_QUESTOES_CONFERENCIA =
   "copiar-atribuicao-questoes-conferencia";
-
+export const FICHA_RECEBIMENTO = "ficha-recebimento";
+export const CADASTRO_FICHA_RECEBIMENTO = "cadastro-ficha-recebimento";
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";

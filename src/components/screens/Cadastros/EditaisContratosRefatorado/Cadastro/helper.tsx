@@ -1,8 +1,10 @@
+import React from "react";
 import { EditalContratoListadoInterface } from "../interfaces";
 import { deepCopy } from "helpers/utilities";
 
 export const formataEditalContratoParaForm = (
-  editalContrato: EditalContratoListadoInterface
+  editalContrato: EditalContratoListadoInterface,
+  setSwitchAtivoImrl: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   const editalContratoFormatado = deepCopy(editalContrato);
   editalContratoFormatado.contratos.forEach((contrato) => {
@@ -13,5 +15,6 @@ export const formataEditalContratoParaForm = (
     contrato.lotes = contrato.lotes.map((lote) => lote.uuid);
     delete contrato.edital;
   });
+  setSwitchAtivoImrl(editalContratoFormatado.eh_imr);
   return editalContratoFormatado;
 };

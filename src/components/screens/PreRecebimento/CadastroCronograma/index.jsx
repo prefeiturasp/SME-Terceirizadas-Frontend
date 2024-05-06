@@ -43,7 +43,7 @@ import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
 import {
-  getListaFichasTecnicasSimplesSemCronograma,
+  getListaFichasTecnicasSimples,
   getDadosCronogramaFichaTecnica,
 } from "services/fichaTecnica.service";
 import {
@@ -58,7 +58,6 @@ import {
   getOpcoesContrato,
   validaRascunho,
 } from "./helpers";
-import { formatarNumeroEProdutoFichaTecnica } from "helpers/preRecebimento";
 import { getListaTiposEmbalagens } from "../../../../services/qualidade.service";
 
 export default () => {
@@ -73,9 +72,6 @@ export default () => {
   const [contratoSelecionado, setContratoSelecionado] = useState(undefined);
   const [unidadeSelecionada, setUnidadeSelecionada] = useState({});
   const [fichaTecnicaSelecionada, setFichaTecnicaSelecionada] = useState();
-
-  const [fichaTecnicaAtualCronograma, setFichaTecnicaAtualCronograma] =
-    useState();
 
   const [etapas, setEtapas] = useState([{}]);
   const [recebimentos, setRecebimentos] = useState([{}]);
@@ -132,7 +128,7 @@ export default () => {
         toastError("Ocorreu um erro ao salvar o Cronograma");
       }
     } catch (error) {
-      if (error.response.status === 401) {
+      if (error.response?.status === 401) {
         toastError(MSG_SENHA_INVALIDA);
       } else {
         exibeError(error, "Ocorreu um erro ao salvar o Cronograma");
@@ -168,7 +164,6 @@ export default () => {
       if (uuid) {
         const responseCronograma = await getCronograma(uuid);
         setInitialValues(geraInitialValues(responseCronograma.data));
-        setFichaTecnicaAtualCronograma(responseCronograma.data.ficha_tecnica);
       }
     } catch (error) {
       exibeError(error, "Ocorreu um erro ao carregar o Cronograma");
@@ -199,7 +194,7 @@ export default () => {
   };
 
   const buscaFichasTecnicas = async () => {
-    const response = await getListaFichasTecnicasSimplesSemCronograma();
+    const response = await getListaFichasTecnicasSimples();
     setFichasTecnicas(response.data.results);
   };
 
@@ -253,13 +248,13 @@ export default () => {
       cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria
     );
     cronogramaValues["unidade_medida_primaria"] =
-      cronograma.ficha_tecnica?.unidade_medida_primaria.uuid;
+      cronograma.ficha_tecnica?.unidade_medida_primaria?.uuid;
     cronogramaValues["peso_liquido_embalagem_secundaria"] =
       numberToStringDecimal(
         cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria
       );
     cronogramaValues["unidade_medida_secundaria"] =
-      cronograma.ficha_tecnica?.unidade_medida_secundaria.uuid;
+      cronograma.ficha_tecnica?.unidade_medida_secundaria?.uuid;
     cronogramaValues["volume_embalagem_primaria"] = numberToStringDecimal(
       cronograma.ficha_tecnica?.volume_embalagem_primaria
     );
@@ -363,14 +358,14 @@ export default () => {
       const response = await getDadosCronogramaFichaTecnica(uuidFicha);
       const fichaTecnica = response.data;
 
-      form.change("marca", fichaTecnica.marca.nome);
+      form.change("marca", fichaTecnica.marca?.nome);
       form.change(
         "peso_liquido_embalagem_primaria",
         numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_primaria)
       );
       form.change(
         "unidade_medida_primaria",
-        fichaTecnica.unidade_medida_primaria.uuid
+        fichaTecnica.unidade_medida_primaria?.uuid
       );
       form.change(
         "peso_liquido_embalagem_secundaria",
@@ -378,7 +373,7 @@ export default () => {
       );
       form.change(
         "unidade_medida_secundaria",
-        fichaTecnica.unidade_medida_secundaria.uuid
+        fichaTecnica.unidade_medida_secundaria?.uuid
       );
       form.change(
         "volume_embalagem_primaria",
@@ -392,31 +387,6 @@ export default () => {
       setFichaTecnicaSelecionada(fichaTecnica);
       setCarregando(false);
     }
-  };
-
-  const optionsFichaTecnica = () => {
-    const options = [
-      {
-        nome: "Selecione uma Ficha Técnica de Produto",
-        uuid: "",
-      },
-    ];
-
-    fichaTecnicaAtualCronograma &&
-      options.push({
-        nome: formatarNumeroEProdutoFichaTecnica(fichaTecnicaAtualCronograma),
-        uuid: fichaTecnicaAtualCronograma?.uuid,
-      });
-
-    options.push(
-      ...geraOptionsFichasTecnicas(
-        fichasTecnicas,
-        empresaSelecionada,
-        fichaTecnicaSelecionada
-      )
-    );
-
-    return options;
   };
 
   return (
@@ -562,7 +532,16 @@ export default () => {
                                 <Field
                                   className="input-cronograma"
                                   component={Select}
-                                  options={optionsFichaTecnica()}
+                                  options={[
+                                    {
+                                      nome: "Selecione uma Ficha Técnica de Produto",
+                                      uuid: "",
+                                    },
+                                    ...geraOptionsFichasTecnicas(
+                                      fichasTecnicas,
+                                      empresaSelecionada
+                                    ),
+                                  ]}
                                   label="Ficha Técnica e Produto"
                                   name="ficha_tecnica"
                                   required
