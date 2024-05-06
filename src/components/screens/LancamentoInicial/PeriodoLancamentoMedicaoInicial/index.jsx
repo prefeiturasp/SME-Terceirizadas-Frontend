@@ -399,7 +399,7 @@ export default () => {
           periodos_escolares.find(
             (periodo) =>
               periodo.periodo_escolar.nome ===
-              (location.state ? location.state.periodo : "MANHA")
+              (location.state?.periodo || "INTEGRAL")
           ) || periodos_escolares[0];
       }
 
@@ -459,7 +459,6 @@ export default () => {
           uuid: null,
         });
       }
-
       const tiposAlimentacaoProgramasProjetosOuCEUGESTAO = deepCopy(
         tiposAlimentacaoFormatadas
       );
