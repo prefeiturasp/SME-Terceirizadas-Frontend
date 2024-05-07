@@ -315,8 +315,9 @@ import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProdut
 import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/CopiarAtribuicaoQuestoesPage";
 import FichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/FichaRecebimentoPage";
 import CadastroFichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/CadastroFichaRecebimentoPage";
+import { rotasSupervisao } from "./rotas/rotasSupervisao/index.js";
 
-const routesConfig = [
+let routesConfig = [
   {
     path: `/${constants.ALUNO}/${constants.DIETA_ESPECIAL}`,
     component: DietaEspecialAluno,
@@ -2074,5 +2075,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhRecebimento(),
   },
 ];
+
+routesConfig = routesConfig.concat(rotasSupervisao);
 
 export default routesConfig;
