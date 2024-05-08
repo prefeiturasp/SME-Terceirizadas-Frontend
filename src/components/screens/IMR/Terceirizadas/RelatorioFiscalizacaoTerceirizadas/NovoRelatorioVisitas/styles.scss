@@ -11,5 +11,19 @@ div.novo-relatorio-visitas {
     .ant-select-selection-placeholder {
       font-weight: normal !important;
     }
+
+    section.nutri-acompanhou-visita {
+      font-size: 14px;
+      color: $gray;
+
+      input[type="radio"] {
+        accent-color: $green;
+      }
+
+      label {
+        color: $blackInput;
+        margin-left: 0.5em;
+      }
+    }
   }
 }

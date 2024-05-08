@@ -223,6 +223,37 @@ export const Cabecalho = ({ ...props }) => {
                   />
                 </div>
               </div>
+              <section className="nutri-acompanhou-visita">
+                <div className="row mt-3 mb-3">
+                  <div className="col-12">
+                    Nutricionista RT da Empresa acompanhou a Visita?
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-2">
+                    <Field
+                      name="acompanhou_visita"
+                      component="input"
+                      type="radio"
+                      value="sim"
+                      id="sim"
+                      required
+                    />
+                    <label htmlFor="sim">Sim</label>
+                  </div>
+                  <div className="col-2">
+                    <Field
+                      name="acompanhou_visita"
+                      component="input"
+                      type="radio"
+                      value="nao"
+                      id="nao"
+                      required
+                    />
+                    <label htmlFor="nao">Não estava presente</label>
+                  </div>
+                </div>
+              </section>
             </div>
           )}
         </Spin>
