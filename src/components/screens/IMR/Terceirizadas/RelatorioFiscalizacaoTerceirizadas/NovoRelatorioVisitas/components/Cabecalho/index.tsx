@@ -1,4 +1,5 @@
 import Select from "components/Shareable/Select";
+import moment from "moment";
 import { Spin } from "antd";
 import { required } from "helpers/fieldValidators";
 import React, { ChangeEvent, useEffect, useState } from "react";
@@ -8,6 +9,8 @@ import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.serv
 import { getEscolasTercTotal } from "services/escola.service";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { InputText } from "components/Shareable/Input/InputText";
+import { getPeriodosVisita } from "services/imr/relatorioFiscalizacaoTerceirizadas";
+import { InputComData } from "components/Shareable/DatePicker";
 
 export const Cabecalho = ({ ...props }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] =
@@ -21,8 +24,9 @@ export const Cabecalho = ({ ...props }) => {
       uuid: string;
     }[]
   >([]);
+  const [periodosVisita, setPeriodosVisita] =
+    useState<{ nome: string; uuid: string }[]>();
 
-  const [loadingDREs, setLoadingDREs] = useState(true);
   const [loadingEscolas, setLoadingEscolas] = useState(false);
 
   const [erroAPI, setErroAPI] = useState("");
@@ -30,7 +34,6 @@ export const Cabecalho = ({ ...props }) => {
   const { form, values } = props;
 
   const getDiretoriasRegionaisAsync = async () => {
-    setLoadingDREs(true);
     const response = await getDiretoriaregionalSimplissima();
     if (response.status === HTTP_STATUS.OK) {
       setDiretoriasRegionais(
@@ -44,7 +47,6 @@ export const Cabecalho = ({ ...props }) => {
     } else {
       setErroAPI("Erro ao carregar DREs. Tente novamente mais tarde.");
     }
-    setLoadingDREs(false);
   };
 
   const getEscolasTercTotalAsync = async (dreUuid: string) => {
@@ -76,16 +78,35 @@ export const Cabecalho = ({ ...props }) => {
     setLoadingEscolas(false);
   };
 
+  const getPeriodosVisitaAsync = async () => {
+    const response = await getPeriodosVisita();
+    /*if (response.status === HTTP_STATUS.OK) {
+      setPeriodosVisita(response.data.results);
+    } else {
+      setErroAPI("Erro ao carregar DREs. Tente novamente mais tarde.");
+    }*/
+    setPeriodosVisita(response);
+  };
+
+  const requisicoesPreRender = async () => {
+    await Promise.all([
+      getDiretoriasRegionaisAsync(),
+      getPeriodosVisitaAsync(),
+    ]);
+  };
+
   useEffect(() => {
-    getDiretoriasRegionaisAsync();
+    requisicoesPreRender();
   }, []);
+
+  const LOADING = !diretoriasRegionais || !periodosVisita;
 
   return (
     <>
       {erroAPI && <div>{erroAPI}</div>}
       {!erroAPI && (
-        <Spin tip="Carregando..." spinning={loadingDREs}>
-          {diretoriasRegionais && (
+        <Spin tip="Carregando..." spinning={LOADING}>
+          {!LOADING && (
             <div className="cabecalho">
               <div className="row">
                 <div className="col-12">
@@ -95,7 +116,6 @@ export const Cabecalho = ({ ...props }) => {
               <div className="row">
                 <div className="col-5">
                   <Field
-                    className="diretoria-regional-select"
                     component={Select}
                     options={[
                       { nome: "Selecione uma DRE", uuid: "" },
@@ -129,7 +149,7 @@ export const Cabecalho = ({ ...props }) => {
                       }
                       name="escola"
                       label="Unidade Educacional"
-                      placeholder={"Selecione uma unidade educacional"}
+                      placeholder={"Selecione uma Unidade"}
                       required
                       disabled={!values.diretoria_regional || loadingEscolas}
                       inputOnChange={(value: string) => {
@@ -152,6 +172,7 @@ export const Cabecalho = ({ ...props }) => {
                     component={InputText}
                     label="Lote"
                     name="lote"
+                    placeholder="Lote da Unidade"
                     required
                     validate={required}
                     disabled
@@ -164,6 +185,7 @@ export const Cabecalho = ({ ...props }) => {
                     name="terceirizada"
                     required
                     validate={required}
+                    placeholder="Nome da Empresa Prestadora de Serviço"
                     disabled
                   />
                 </div>
@@ -172,6 +194,33 @@ export const Cabecalho = ({ ...props }) => {
                 <div className="col-12">
                   <hr />
                   <h2 className="mt-2 mb-4">Dados da Visita</h2>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-4">
+                  <Field
+                    component={InputComData}
+                    name="data"
+                    label="Data da Visita"
+                    minDate={null}
+                    maxDate={moment().toDate()}
+                    required
+                    validate={required}
+                  />
+                </div>
+                <div className="col-4">
+                  <Field
+                    component={Select}
+                    options={[
+                      { nome: "Selecione um Período", uuid: "" },
+                      ...periodosVisita,
+                    ]}
+                    naoDesabilitarPrimeiraOpcao
+                    name="periodo_visita"
+                    label="Período de Visita"
+                    validate={required}
+                    required
+                  />
                 </div>
               </div>
             </div>
