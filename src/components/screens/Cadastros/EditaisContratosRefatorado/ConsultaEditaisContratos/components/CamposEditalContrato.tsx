@@ -1,8 +1,17 @@
 import React from "react";
+import { Switch } from "antd";
 
 export const CamposEditalContrato = ({ editalContrato }) => {
   return (
     <>
+      <div className="row mb-2">
+        <div className="col-2 title">Edital com IMR?</div>
+        <div className="col-10 switch-imr-disabled">
+          {!editalContrato.eh_imr && <div className="imr-nao">Não</div>}
+          <Switch size="small" disabled checked={editalContrato.eh_imr} />
+          {editalContrato.eh_imr && <div className="imr-sim">Sim</div>}
+        </div>
+      </div>
       <div className="row">
         <div className="col-2 title">Objeto resumido:</div>
         <div className="col-10">{editalContrato.objeto}</div>

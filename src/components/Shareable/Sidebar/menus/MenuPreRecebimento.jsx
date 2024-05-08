@@ -29,6 +29,7 @@ import {
 } from "helpers/utilities";
 import { usuarioComAcessoAoRelatorioCronogramas } from "../../../../helpers/utilities";
 import { RELATORIO_CRONOGRAMA } from "../../../../configs/constants";
+import { usuarioEhCodaeDilog } from "../../../../helpers/utilities";
 
 const MenuPreRecebimento = ({ activeMenu, onSubmenuClick }) => {
   return (
@@ -47,6 +48,7 @@ const MenuPreRecebimento = ({ activeMenu, onSubmenuClick }) => {
       )}
       {(usuarioEhCronograma() ||
         usuarioEhDinutreDiretoria() ||
+        usuarioEhCodaeDilog() ||
         usuarioEhDilogDiretoria()) && (
         <LeafItem
           to={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`}

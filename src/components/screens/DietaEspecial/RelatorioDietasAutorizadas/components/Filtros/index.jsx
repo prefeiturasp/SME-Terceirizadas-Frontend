@@ -28,6 +28,7 @@ export const Filtros = ({ ...props }) => {
     setValuesForm,
     getFiltrosRelatorioDietasEspeciaisAsync,
     setTotalizadores,
+    setRenderGraficosOuTabela,
   } = props;
 
   const getUnidadesEducacionaisAsync = async (values) => {
@@ -67,6 +68,7 @@ export const Filtros = ({ ...props }) => {
   };
 
   const onSubmit = async (values) => {
+    setRenderGraficosOuTabela("Gráficos");
     const filtrosValues = {
       ...values,
       status_selecionado: "AUTORIZADAS",

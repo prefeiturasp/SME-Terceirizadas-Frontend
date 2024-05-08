@@ -18,6 +18,7 @@ import ModalAnaliseDilog from "../Modals/ModalAnaliseDilog";
 import ModalEnviarAlteracao from "../Modals/ModalEnviarAlteracao";
 import ModalCienciaAlteracao from "../Modals/ModalCienciaAlteracao";
 import ModalVoltar from "../../../../../Shareable/Page/ModalVoltar";
+import { usuarioEhCodaeDilog } from "../../../../../../helpers/utilities";
 
 export default ({
   handleSubmit,
@@ -97,31 +98,32 @@ export default ({
         </>
       )}
 
-      {usuarioEhCronograma() && !solicitacaoAlteracaoCronograma && (
-        <>
-          <Botao
-            texto="Enviar Alteração"
-            type={BUTTON_TYPE.BUTTON}
-            disabled={!podeSubmeter}
-            style={BUTTON_STYLE.GREEN}
-            className="float-end ms-3"
-            onClick={() => {
-              if (!podeSubmeter) {
-                toastError("Selecione os campos obrigatórios");
-                return;
-              }
-              handleShow();
-            }}
-          />
-          <ModalEnviarAlteracao
-            show={show}
-            handleClose={handleClose}
-            loading={loading}
-            handleSim={handleSim}
-          />
-        </>
-      )}
-      {usuarioEhCronograma() &&
+      {(usuarioEhCronograma() || usuarioEhCodaeDilog()) &&
+        !solicitacaoAlteracaoCronograma && (
+          <>
+            <Botao
+              texto="Enviar Alteração"
+              type={BUTTON_TYPE.BUTTON}
+              disabled={!podeSubmeter}
+              style={BUTTON_STYLE.GREEN}
+              className="float-end ms-3"
+              onClick={() => {
+                if (!podeSubmeter) {
+                  toastError("Selecione os campos obrigatórios");
+                  return;
+                }
+                handleShow();
+              }}
+            />
+            <ModalEnviarAlteracao
+              show={show}
+              handleClose={handleClose}
+              loading={loading}
+              handleSim={handleSim}
+            />
+          </>
+        )}
+      {(usuarioEhCronograma() || usuarioEhCodaeDilog()) &&
         solicitacaoAlteracaoCronograma &&
         solicitacaoAlteracaoCronograma.status === "Em análise" && (
           <>

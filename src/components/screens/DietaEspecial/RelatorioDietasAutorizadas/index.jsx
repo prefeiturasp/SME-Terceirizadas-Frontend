@@ -7,6 +7,7 @@ import { ListagemDietas } from "./components/ListagemDietas";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
+  BUTTON_TYPE,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
@@ -17,6 +18,8 @@ import {
   gerarPdfRelatorioDietaEspecial,
 } from "services/dietaEspecial.service";
 import "./styles.scss";
+import { Graficos } from "./components/Graficos";
+import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 
 export const RelatorioDietasAutorizadas = () => {
   const { meusDados } = useContext(MeusDadosContext);
@@ -33,6 +36,8 @@ export const RelatorioDietasAutorizadas = () => {
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
   const [totalizadores, setTotalizadores] = useState(undefined);
+  const [renderGraficosOuTabela, setRenderGraficosOuTabela] =
+    useState("Gráficos");
 
   const ajustaParams = (params) => {
     if (
@@ -132,6 +137,7 @@ export const RelatorioDietasAutorizadas = () => {
                   getFiltrosRelatorioDietasEspeciaisAsync
                 }
                 setTotalizadores={setTotalizadores}
+                setRenderGraficosOuTabela={setRenderGraficosOuTabela}
               />
               {totalizadores && (
                 <>
@@ -142,6 +148,27 @@ export const RelatorioDietasAutorizadas = () => {
                         {new Date().toLocaleDateString("pt-BR")}
                       </p>
                     </div>
+                    {!usuarioEhEmpresaTerceirizada() && (
+                      <div className="col-4 text-end">
+                        <Botao
+                          texto={renderGraficosOuTabela}
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          icon={
+                            renderGraficosOuTabela === "Gráficos"
+                              ? BUTTON_ICON.CHART_BAR
+                              : BUTTON_ICON.TABLE
+                          }
+                          onClick={() =>
+                            setRenderGraficosOuTabela(
+                              renderGraficosOuTabela === "Tabela"
+                                ? "Gráficos"
+                                : "Tabela"
+                            )
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="row">
                     {totalizadores.map((totalizador, key) => {
@@ -163,7 +190,7 @@ export const RelatorioDietasAutorizadas = () => {
                   </div>
                 </>
               )}
-              {dietasEspeciais && (
+              {dietasEspeciais && renderGraficosOuTabela === "Gráficos" && (
                 <>
                   <div className="row">
                     <div className="mt-4 pl-0">
@@ -227,6 +254,9 @@ export const RelatorioDietasAutorizadas = () => {
                     </div>
                   </div>
                 </>
+              )}
+              {dietasEspeciais && renderGraficosOuTabela === "Tabela" && (
+                <Graficos valuesForm={valuesForm} values={filtros} />
               )}
             </Spin>
           </>

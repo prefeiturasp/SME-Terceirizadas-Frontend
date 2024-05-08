@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 div.multi-select {
   .multiselect-wrapper-disabled .dropdown-heading {
     pointer-events: none;
@@ -10,6 +12,11 @@ div.multi-select {
     .dropdown-heading-value
     span {
     color: #5d515b !important;
+  }
+}
+.erro-borda {
+  .dropdown-heading {
+    border-color: $red !important;
   }
 }
 label.select-item {

@@ -5,19 +5,27 @@ import { required } from "helpers/fieldValidators";
 
 export interface Props {
   name: string;
-  label: string;
+  label?: string;
   options: {
     value: string;
     label: string;
   }[];
+  className?: string;
 }
 
-const RadioButton: React.FC<Props> = ({ name, label, options = [] }) => {
+const RadioButtonField: React.FC<Props> = ({
+  name,
+  label,
+  options = [],
+  className,
+}) => {
   return (
-    <div className="radio-button-sigpae">
-      <p className="label-radio">
-        <span className="required-asterisk">*</span> {label}
-      </p>
+    <div className={`radio-button-sigpae ${className}`}>
+      {label && (
+        <p className="label-radio">
+          <span className="required-asterisk">*</span> {label}
+        </p>
+      )}
       {options.map((option, index) => (
         <label className="container-radio" key={index}>
           {option.label}
@@ -35,4 +43,4 @@ const RadioButton: React.FC<Props> = ({ name, label, options = [] }) => {
   );
 };
 
-export default RadioButton;
+export default RadioButtonField;

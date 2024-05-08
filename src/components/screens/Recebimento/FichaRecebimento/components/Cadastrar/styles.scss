@@ -9,4 +9,16 @@
     align-items: flex-end;
     padding-bottom: 7.5px;
   }
+
+  .radio-sistema-vedacao {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+  }
+
+  #observacoes {
+    textarea {
+      min-height: 125px;
+    }
+  }
 }

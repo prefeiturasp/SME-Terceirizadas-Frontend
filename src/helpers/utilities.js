@@ -753,6 +753,10 @@ export const usuarioEhCODAEGabinete = () => {
   return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_CODAE_GABINETE;
 };
 
+export const usuarioEhGticCODAE = () => {
+  return localStorage.getItem("perfil") === PERFIL.USUARIO_GTIC_CODAE;
+};
+
 export const acessoModuloMedicaoInicialEscola = () => {
   return (
     localStorage.getItem("acesso_modulo_medicao_inicial") === "true" ||

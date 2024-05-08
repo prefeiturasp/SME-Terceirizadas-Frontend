@@ -1,47 +1,57 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Spin } from "antd";
-import "./styles.scss";
 import { Field, Form } from "react-final-form";
-import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
-import Select from "components/Shareable/Select";
-import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
-import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
-import { required } from "../../../../../../helpers/fieldValidators";
-import InputText from "components/Shareable/Input/InputText";
-import { InputComData } from "components/Shareable/DatePicker";
+import { FormApi } from "final-form";
+import moment from "moment";
+
+import {
+  FICHA_RECEBIMENTO,
+  RECEBIMENTO,
+  QUESTOES_POR_PRODUTO,
+} from "configs/constants";
 import {
   getListaCronogramasPraFichaRecebimento,
   getCronogramaPraCadastroRecebimento,
-} from "../../../../../../services/cronograma.service";
+} from "services/cronograma.service";
+import { cadastraRascunhoFichaRecebimento } from "services/fichaRecebimento.service";
+import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
+import Select from "components/Shareable/Select";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import InputText from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
+import { InputComData } from "components/Shareable/DatePicker";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
-} from "../../../../../Shareable/Botao/constants";
-import Botao from "../../../../../Shareable/Botao";
-import { useNavigate } from "react-router-dom";
-import { FICHA_RECEBIMENTO, RECEBIMENTO } from "configs/constants";
-import { CronogramaSimples } from "interfaces/pre_recebimento.interface";
-import { FormApi } from "final-form";
+} from "components/Shareable/Botao/constants";
+import Botao from "components/Shareable/Botao";
 import StepsSigpae from "components/Shareable/StepsSigpae";
 import Collapse, { CollapseControl } from "components/Shareable/Collapse";
 import ModalGenerico from "components/Shareable/ModalGenerico";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import RadioButtonField from "components/Shareable/RadioButtonField";
+import Label from "components/Shareable/Label";
+import InputFileField from "components/Shareable/InputFileField";
+import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
+import { required } from "helpers/fieldValidators";
 import { exibeError } from "helpers/utilities";
+import { deletaValues } from "helpers/formHelper";
+import { stringToBoolean } from "helpers/parsers";
 import {
-  toastError,
-  toastSuccess,
-} from "../../../../../Shareable/Toast/dialogs";
+  Arquivo,
+  ArquivoForm,
+  CronogramaSimples,
+} from "interfaces/pre_recebimento.interface";
+
 import {
   CronogramaFicha,
   DocumentoFicha,
   FichaRecebimentoPayload,
   VeiculoPayload,
 } from "../../interfaces";
-import { cadastraRascunhoFichaRecebimento } from "services/fichaRecebimento.service";
-import moment from "moment";
-import { deletaValues } from "helpers/formHelper";
-import RadioButton from "components/Shareable/RadioButton";
-import { stringToBoolean } from "helpers/parsers";
-import Label from "components/Shareable/Label";
+
+import "./styles.scss";
 
 const ITENS_STEPS = [
   {
@@ -55,18 +65,36 @@ const ITENS_STEPS = [
   },
 ];
 
+const collapseConfigStep3 = [
+  {
+    titulo: "Sistema de Vedação da Embalagem Secundária",
+    camposObrigatorios: true,
+  },
+  {
+    titulo: "Conferência das Rotulagens",
+    camposObrigatorios: true,
+  },
+  {
+    titulo: "Observações",
+    camposObrigatorios: false,
+  },
+];
+
 export default () => {
   const navigate = useNavigate();
   const [carregando, setCarregando] = useState<boolean>(true);
   const [cronogramas, setCronogramas] = useState<Array<CronogramaSimples>>([]);
   const [collapse1, setCollapse1] = useState<CollapseControl>({ 0: true });
   const [collapse2, setCollapse2] = useState<CollapseControl>({ 0: true });
+  const [collapse3, setCollapse3] = useState<CollapseControl>({ 0: true });
   const [cronograma, setCronograma] = useState<CronogramaFicha>(
     {} as CronogramaFicha
   );
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showModalAtribuir, setShowModalAtribuir] = useState(false);
   const [stepAtual, setStepAtual] = useState(0);
   const [veiculos, setVeiculos] = useState([{}]);
+  const [arquivos, setArquivos] = useState<Arquivo[]>([]);
 
   const onSubmit = (): void => {};
 
@@ -134,7 +162,7 @@ export default () => {
       peso_embalagem_primaria_2: values.peso_embalagem_primaria_2,
       peso_embalagem_primaria_3: values.peso_embalagem_primaria_3,
       peso_embalagem_primaria_4: values.peso_embalagem_primaria_4,
-      veiculos: values[`numero_0`]
+      veiculos: values.numero_0
         ? veiculos.map(
             (v, index) =>
               ({
@@ -159,13 +187,20 @@ export default () => {
               } as VeiculoPayload)
           )
         : undefined,
+      sistema_vedacao_embalagem_secundaria:
+        values.sistema_vedacao_embalagem_secundaria === "0"
+          ? cronograma.sistema_vedacao_embalagem_secundaria
+          : values.sistema_vedacao_embalagem_secundaria_outra_opcao,
+      observacao: values.observacao,
+      arquivos: arquivos,
     };
 
     return payload;
   };
 
   const salvarRascunho = async (
-    values: FichaRecebimentoPayload
+    values: FichaRecebimentoPayload,
+    redirecionarPara: () => void
   ): Promise<void> => {
     setCarregando(true);
 
@@ -175,7 +210,7 @@ export default () => {
       let response = await cadastraRascunhoFichaRecebimento(payload);
       if (response.status === 201 || response.status === 200) {
         toastSuccess("Rascunho salvo com sucesso!");
-        voltarPagina();
+        redirecionarPara();
       } else {
         toastError("Ocorreu um erro ao salvar o Rascunho");
       }
@@ -187,7 +222,10 @@ export default () => {
     }
   };
 
-  const voltarPagina = () => navigate(`/${RECEBIMENTO}/${FICHA_RECEBIMENTO}`);
+  const paginaAnterior = () => navigate(`/${RECEBIMENTO}/${FICHA_RECEBIMENTO}`);
+
+  const paginaQuestoesPorProduto = () =>
+    navigate(`/${RECEBIMENTO}/${QUESTOES_POR_PRODUTO}`);
 
   useEffect(() => {
     buscaCronogramas();
@@ -202,28 +240,30 @@ export default () => {
 
   const atualizarCamposCronograma = async (value: string, form: FormApi) => {
     setCarregando(true);
-    let cronogramaLista = cronogramas.find((c) => c.numero === value);
-    if (cronogramaLista?.uuid) {
-      let { data } = await getCronogramaPraCadastroRecebimento(
-        cronogramaLista.uuid
-      );
-      let cronograma = data.results;
 
-      setCronograma(cronograma);
+    try {
+      let cronogramaSelecionado = cronogramas.find((c) => c.numero === value);
+      if (cronogramaSelecionado?.uuid) {
+        let { data } = await getCronogramaPraCadastroRecebimento(
+          cronogramaSelecionado.uuid
+        );
+        let cronograma = data.results;
+        setCronograma(cronograma);
 
-      form.change("fornecedor", cronograma.fornecedor);
-      form.change("numero_contrato", cronograma.contrato);
-      form.change("pregao", cronograma.pregao_chamada_publica);
-      form.change("numero_ata", cronograma.ata);
-      form.change("produto", cronograma.produto);
-      form.change("marca", cronograma.marca);
-      form.change("qtd_total_programada", cronograma.qtd_total_programada);
-    } else {
-      setCronograma({} as CronogramaFicha);
-      form.reset({});
+        form.change("fornecedor", cronograma.fornecedor);
+        form.change("numero_contrato", cronograma.contrato);
+        form.change("pregao", cronograma.pregao_chamada_publica);
+        form.change("numero_ata", cronograma.ata);
+        form.change("produto", cronograma.produto);
+        form.change("marca", cronograma.marca);
+        form.change("qtd_total_programada", cronograma.qtd_total_programada);
+      } else {
+        setCronograma({} as CronogramaFicha);
+        form.reset({});
+      }
+    } finally {
+      setCarregando(false);
     }
-
-    setCarregando(false);
   };
 
   const atualizarCamposEtapa = (value: string, form: FormApi) => {
@@ -272,6 +312,23 @@ export default () => {
     setVeiculos(veiculosNovo);
   };
 
+  const setFiles = (files: Array<ArquivoForm>): void => {
+    const arquivosAtualizados = files.map((arquivo: ArquivoForm) => {
+      return {
+        nome: arquivo.nome,
+        arquivo: arquivo.base64,
+      };
+    });
+
+    setArquivos(arquivosAtualizados);
+  };
+
+  const removeFiles = (index: number): void => {
+    let newFiles = [...arquivos];
+    newFiles.splice(index, 1);
+    setArquivos(newFiles);
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-cadastro-ficha-recebimento">
@@ -286,7 +343,10 @@ export default () => {
                   handleClose={() => setShowModal(false)}
                   loading={carregando}
                   handleSim={() =>
-                    salvarRascunho(values as FichaRecebimentoPayload)
+                    salvarRascunho(
+                      values as FichaRecebimentoPayload,
+                      paginaAnterior
+                    )
                   }
                   titulo={<span>Salvar Rascunho</span>}
                   texto={
@@ -295,6 +355,23 @@ export default () => {
                     </span>
                   }
                 />
+
+                <ModalGenerico
+                  show={showModalAtribuir}
+                  handleClose={() => setShowModalAtribuir(false)}
+                  loading={carregando}
+                  handleSim={() =>
+                    salvarRascunho(
+                      values as FichaRecebimentoPayload,
+                      paginaQuestoesPorProduto
+                    )
+                  }
+                  titulo="Salvar Rascunho e Atribuir Questões"
+                  texto="Deseja salvar o rascunho e ir para a página de Atribuição
+                  de Questões por Produto?"
+                  textoBotaoSim="Salvar e Ir para Página"
+                />
+
                 <StepsSigpae current={stepAtual} items={ITENS_STEPS} />
 
                 <hr />
@@ -627,7 +704,7 @@ export default () => {
 
                       <div className="row">
                         <div className="col-12">
-                          <RadioButton
+                          <RadioButtonField
                             label="Lote(s) do Fabricante Observado(s)"
                             name={`lote_fabricante_de_acordo`}
                             options={[
@@ -660,7 +737,7 @@ export default () => {
 
                       <div className="row">
                         <div className="col-12">
-                          <RadioButton
+                          <RadioButtonField
                             label="Data(s) de Fabricação Observada(s)"
                             name={`data_fabricacao_de_acordo`}
                             options={[
@@ -693,7 +770,7 @@ export default () => {
 
                       <div className="row">
                         <div className="col-12">
-                          <RadioButton
+                          <RadioButtonField
                             label="Data(s) de Validade Observada(s)"
                             name={`data_validade_de_acordo`}
                             options={[
@@ -947,7 +1024,7 @@ export default () => {
 
                           <div className="row">
                             <div className="col-6">
-                              <RadioButton
+                              <RadioButtonField
                                 label="Estado Higiênico-Sanitário"
                                 name={`estado_higienico_adequado_${index}`}
                                 options={[
@@ -964,7 +1041,7 @@ export default () => {
                             </div>
                             {cronograma.categoria === "PERECIVEIS" && (
                               <div className="col-6">
-                                <RadioButton
+                                <RadioButtonField
                                   label="Termógrafo"
                                   name={`termografo_${index}`}
                                   options={[
@@ -992,6 +1069,105 @@ export default () => {
                           </div>
                         </>
                       ))}
+                    </section>
+                  </Collapse>
+                )}
+
+                {stepAtual === 2 && (
+                  <Collapse
+                    collapse={collapse3}
+                    setCollapse={setCollapse3}
+                    id="collapseFichaRecebimentoStep3"
+                    collapseConfigs={collapseConfigStep3}
+                  >
+                    <section id="sistemaVedacaoSecundaria">
+                      <div className="row">
+                        <div className="col mt-3">
+                          <RadioButtonField
+                            name={`sistema_vedacao_embalagem_secundaria`}
+                            options={[
+                              {
+                                value: "0",
+                                label:
+                                  cronograma.sistema_vedacao_embalagem_secundaria,
+                              },
+                              {
+                                value: "1",
+                                label: "Outra Opção",
+                              },
+                            ]}
+                            className="radio-sistema-vedacao"
+                          />
+                        </div>
+                        {values.sistema_vedacao_embalagem_secundaria ===
+                          "1" && (
+                          <div className="row">
+                            <div className="col">
+                              <Field
+                                component={InputText}
+                                label="Qual?"
+                                name={`sistema_vedacao_embalagem_secundaria_outra_opcao`}
+                                placeholder="Descreva a outra opção"
+                                required
+                                validate={required}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </section>
+
+                    <section id="conferenciaRotulagens">
+                      <div className="row">
+                        <div className="col mt-5 text-center">
+                          <p>
+                            Não há questões para conferência cadastradas para
+                            esse produto, por favor acesse a área de{" "}
+                            <strong>Questões por Produto</strong> e atribua
+                            questões.
+                          </p>
+                          <p>
+                            <strong>Salve o rascunho</strong> da Ficha de
+                            Recebimento para não perder as informações inseridas
+                            até o momento.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="row my-5">
+                        <div className="col d-flex justify-content-center">
+                          <Botao
+                            texto="Ir para Atribuição de Questões por Produto"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            onClick={() => setShowModalAtribuir(true)}
+                          />
+                        </div>
+                      </div>
+                    </section>
+
+                    <section id="observacoes">
+                      <div className="row">
+                        <div className="col">
+                          <Field
+                            component={TextArea}
+                            label="Descreva as observações necessárias"
+                            name={`observacao`}
+                            placeholder="Descreva as observações necessárias"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="row">
+                        <InputFileField
+                          name="arquivo"
+                          setFiles={setFiles}
+                          removeFile={removeFiles}
+                          toastSuccess="Documento incluído com sucesso!"
+                          textoBotao="Anexar Documento"
+                          helpText="Envie arquivos nos formatos: PDF, PNG, JPG ou JPEG  com até 10MB."
+                        />
+                      </div>
                     </section>
                   </Collapse>
                 )}

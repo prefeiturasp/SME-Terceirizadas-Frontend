@@ -4,7 +4,6 @@ import { FieldArray } from "react-final-form-arrays";
 import arrayMutators from "final-form-arrays";
 import HTTP_STATUS from "http-status-codes";
 import { Modal } from "react-bootstrap";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -12,7 +11,9 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { MultiSelect } from "../../../MultiSelect";
 import { getError } from "helpers/utilities";
+import { requiredMultiselect } from "helpers/fieldValidators";
 import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
 import "./style.scss";
 
@@ -73,7 +74,6 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
     <Modal
       dialogClassName="modal-cadastrar-sobremesa modal-50w"
       show={showModal}
-      onHide={closeModal}
     >
       <Form
         initialValues={{
@@ -96,7 +96,7 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
           },
         }) => (
           <form onSubmit={handleSubmit}>
-            <Modal.Header closeButton>
+            <Modal.Header>
               <Modal.Title>{`${
                 cadastrosSalvosNoDia.length ? "Atualizar" : "Cadastrar"
               } dia de ${nomeObjetoNoCalendario}`}</Modal.Title>
@@ -105,8 +105,7 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
               <div className="row">
                 <p>
                   Cadastro de {nomeObjetoNoCalendarioMinusculo} para o dia{" "}
-                  <strong>{getDDMMYYYfromDate(event.start)}</strong>, selecione
-                  o tipo de unidade:
+                  <strong>{getDDMMYYYfromDate(event.start)}</strong>:
                 </p>
               </div>
               <FieldArray name="cadastros_sobremesa_doce">
@@ -116,7 +115,7 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
                       <div className="row mb-3">
                         <div className="col-5">
                           <Field
-                            component={StatefulMultiSelect}
+                            component={MultiSelect}
                             name={`${name}.editais`}
                             selected={
                               (values.cadastros_sobremesa_doce &&
@@ -128,7 +127,7 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
                               label: edital.numero,
                               value: edital.uuid,
                             }))}
-                            onSelectedChanged={(values_) => {
+                            onSelectedChange={(values_) => {
                               form.change(`${name}.editais`, values_);
                             }}
                             overrideStrings={{
@@ -137,11 +136,12 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
                                 "Todos os editais estão selecionados",
                               selectAll: "Todos",
                             }}
+                            validate={requiredMultiselect}
                           />
                         </div>
                         <div className="col-5">
                           <Field
-                            component={StatefulMultiSelect}
+                            component={MultiSelect}
                             name={`${name}.tipo_unidades`}
                             selected={
                               (values.cadastros_sobremesa_doce &&
@@ -153,7 +153,7 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
                               label: tipoUnidade.iniciais,
                               value: tipoUnidade.uuid,
                             }))}
-                            onSelectedChanged={(values_) => {
+                            onSelectedChange={(values_) => {
                               form.change(`${name}.tipo_unidades`, values_);
                             }}
                             overrideStrings={{
@@ -169,12 +169,13 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
                                   ?.length > 0
                               )
                             }
+                            validate={requiredMultiselect}
                           />
                         </div>
                         <div className="col-2">
-                          {index > 0 ? (
+                          {index > 0 && (
                             <Botao
-                              texto="Excluir"
+                              texto="Remover"
                               onClick={() =>
                                 form.change(
                                   "cadastros_sobremesa_doce",
@@ -185,20 +186,7 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
                               }
                               icon={BUTTON_ICON.TRASH}
                               style={BUTTON_STYLE.RED_OUTLINE}
-                              className="ms-3 botao-adicionar-excluir"
-                            />
-                          ) : (
-                            <Botao
-                              texto="Adicionar"
-                              onClick={() =>
-                                push(
-                                  "cadastros_sobremesa_doce",
-                                  DEFAULT_CADASTROS_SOBREMESA_DOCE
-                                )
-                              }
-                              icon={BUTTON_ICON.PLUS}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              className="ms-3 botao-adicionar-excluir"
+                              className="ms-3 botao-excluir"
                             />
                           )}
                         </div>
@@ -207,6 +195,20 @@ export const ModalCadastrarNoCalendario = ({ ...props }) => {
                   ))
                 }
               </FieldArray>
+              <div className="text-center">
+                <Botao
+                  texto="Adicionar"
+                  onClick={() =>
+                    push(
+                      "cadastros_sobremesa_doce",
+                      DEFAULT_CADASTROS_SOBREMESA_DOCE
+                    )
+                  }
+                  icon={BUTTON_ICON.PLUS}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  className="botao-adicionar"
+                />
+              </div>
             </Modal.Body>
             <div className="footer">
               <Botao

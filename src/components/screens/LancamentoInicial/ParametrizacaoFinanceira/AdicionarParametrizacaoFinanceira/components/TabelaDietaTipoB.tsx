@@ -69,13 +69,13 @@ export default ({
                   </p>
                   <Field
                     component="input"
-                    name={`tabelas[${nomeTabela}].${value}.tipo_alimentacao`}
+                    name={`tabelas[${nomeTabela}].${value}_${record.grupo}.tipo_alimentacao`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
                   <Field
                     component="input"
-                    name={`tabelas[${nomeTabela}].${value}.grupo`}
+                    name={`tabelas[${nomeTabela}].${value}_${record.grupo}.grupo`}
                     type="hidden"
                     defaultValue={record.grupo}
                   />
@@ -90,7 +90,7 @@ export default ({
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${nomeTabela}].${record.nome}.valor_unitario`}
+                name={`tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -98,19 +98,20 @@ export default ({
                 defaultValue={null}
                 onChange={(value: number) => {
                   const percentualAcrescimo =
-                    form.getState().values.tabelas[nomeTabela]?.[record.nome]
-                      ?.percentual_acrescimo || 0;
+                    form.getState().values.tabelas[nomeTabela]?.[
+                      `${record.nome}_${record.grupo}`
+                    ]?.percentual_acrescimo || 0;
                   const valorUnitarioTotal =
                     value * (1 + percentualAcrescimo / 100);
 
                   form.change(
-                    `tabelas[${nomeTabela}].${record.nome}.valor_unitario_total`,
+                    `tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas[${nomeTabela}].${record.nome}.valor_unitario`,
+                    `tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario`,
                     value
                   );
                 }}
@@ -124,7 +125,7 @@ export default ({
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${nomeTabela}].${record.nome}.percentual_acrescimo`}
+                name={`tabelas[${nomeTabela}].${record.nome}_${record.grupo}.percentual_acrescimo`}
                 placeholder="%"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -132,18 +133,19 @@ export default ({
                 defaultValue={null}
                 onChange={(value: number) => {
                   const valorUnitario =
-                    form.getState().values.tabelas[nomeTabela]?.[record.nome]
-                      ?.valor_unitario || 0;
+                    form.getState().values.tabelas[nomeTabela]?.[
+                      `${record.nome}_${record.grupo}`
+                    ]?.valor_unitario || 0;
                   const valorUnitarioTotal = valorUnitario * (1 + value / 100);
 
                   form.change(
-                    `tabelas[${nomeTabela}].${record.nome}.valor_unitario_total`,
+                    `tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas[${nomeTabela}].${record.nome}.percentual_acrescimo`,
+                    `tabelas[${nomeTabela}].${record.nome}_${record.grupo}.percentual_acrescimo`,
                     value
                   );
                 }}
@@ -157,7 +159,7 @@ export default ({
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas[${nomeTabela}].${record.nome}.valor_unitario_total`}
+                name={`tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario_total`}
                 placeholder="0,00"
                 disabled
               />

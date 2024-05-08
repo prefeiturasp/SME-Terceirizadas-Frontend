@@ -146,6 +146,7 @@ import {
   usuarioComAcessoAoCalendarioCronograma,
   usuarioEhRecebimento,
   usuarioComAcessoAoRelatorioCronogramas,
+  usuarioEhGticCODAE,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -260,6 +261,7 @@ import EmpenhosPage from "pages/LancamentoMedicaoInicial/EmpenhosPage";
 import ClausulasParaDescontosPage from "pages/LancamentoMedicaoInicial/ClausulasParaDescontosPage";
 import ParametrizacaoFinanceiraPage from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/ParametrizacaoFinanceiraPage";
 import AdicionarParametrizacaoFinanceiraPage from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/AdicionarParametrizacaoFinanceiraPage";
+import EditarParametrizacaoFinanceiraPage from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/EditarParametrizacaoFinanceiraPage";
 import CadastroDeClausulasPage from "pages/LancamentoMedicaoInicial/CadastroDeClausulasPage";
 import EditarClausulaPage from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
 import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
@@ -862,7 +864,8 @@ const routesConfig = [
       usuarioEhCoordenadorCODAE() ||
       usuarioEhCodaeDilog() ||
       usuarioEhCODAEGabinete() ||
-      usuarioEhDilogDiretoria(),
+      usuarioEhDilogDiretoria() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_DIRETOR_ESCOLA}`,
@@ -890,7 +893,10 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
@@ -900,7 +906,10 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.ATUALIZACAO_EMAIL_EOL}`,
     component: AtualizacaoEmailEOLPage,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/configuracoes`,
@@ -1395,6 +1404,7 @@ const routesConfig = [
       usuarioEhCoordenadorNutriCODAE() ||
       usuarioEhMedicao() ||
       usuarioEhCODAEGabinete() ||
+      usuarioEhEmpresaTerceirizada() ||
       ehUsuarioRelatorios(),
   },
   {
@@ -1533,6 +1543,11 @@ const routesConfig = [
   {
     path: `/${constants.MEDICAO_INICIAL}/${constants.PARAMETRIZACAO_FINANCEIRA}/${constants.ADICIONAR_PARAMETRIZACAO_FINANCEIRA}`,
     component: AdicionarParametrizacaoFinanceiraPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${constants.PARAMETRIZACAO_FINANCEIRA}/${constants.EDITAR_PARAMETRIZACAO_FINANCEIRA}`,
+    component: EditarParametrizacaoFinanceiraPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
@@ -1730,6 +1745,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCronograma() ||
       usuarioEhDinutreDiretoria() ||
+      usuarioEhCodaeDilog() ||
       usuarioEhDilogDiretoria(),
   },
   {
@@ -1767,12 +1783,12 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}`,
     component: CadastroCronogramaPage,
-    tipoUsuario: usuarioEhCronograma(),
+    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}/${constants.EDITAR}`,
     component: EditarCronogramaPage,
-    tipoUsuario: usuarioEhCronograma(),
+    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog(),
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_APROVACOES}`,
