@@ -254,6 +254,20 @@ export const Cabecalho = ({ ...props }) => {
                   </div>
                 </div>
               </section>
+              {values.acompanhou_visita === "sim" && (
+                <div className="row mt-3 mb-3">
+                  <div className="col-8">
+                    <Field
+                      component={InputText}
+                      label="Nome da Nutricionista RT da Empresa"
+                      name="nome_nutricionista_empresa"
+                      placeholder="Digite o Nome da Nutricionista da Empresa"
+                      required
+                      validate={required}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </Spin>
