@@ -186,7 +186,8 @@ export const SidebarContent = () => {
     usuarioEhPreRecebimento() ||
     usuarioEhEmpresaFornecedor() ||
     usuarioEhCoordenadorGpCODAE() ||
-    usuarioEhCODAEGabinete();
+    usuarioEhCODAEGabinete() ||
+    usuarioEhGticCODAE();
 
   const exibirMenuRecebimento = usuarioEhRecebimento();
 
