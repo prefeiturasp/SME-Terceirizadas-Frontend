@@ -29,6 +29,7 @@ import {
   usuarioEhDiretorUE,
   usuarioEhCODAEGabinete,
   usuarioEhDilogDiretoria,
+  usuarioEhGticCODAE,
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
@@ -42,7 +43,9 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCoordenadorGpCODAE();
 
   const exibirGestaoUsuarioMaster =
-    usuarioEhCodaeDilog() || usuarioEhCoordenadorCODAE();
+    usuarioEhCodaeDilog() ||
+    usuarioEhCoordenadorCODAE() ||
+    usuarioEhGticCODAE();
 
   const exibirGestaoAcesso =
     usuarioEhCoordenadorNutriCODAE() ||
