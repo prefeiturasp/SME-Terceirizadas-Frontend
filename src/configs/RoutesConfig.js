@@ -145,6 +145,7 @@ import {
   ehUsuarioRelatorios,
   usuarioComAcessoAoCalendarioCronograma,
   usuarioEhRecebimento,
+  usuarioEhGticCODAE,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -861,7 +862,8 @@ const routesConfig = [
       usuarioEhCoordenadorCODAE() ||
       usuarioEhCodaeDilog() ||
       usuarioEhCODAEGabinete() ||
-      usuarioEhDilogDiretoria(),
+      usuarioEhDilogDiretoria() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_DIRETOR_ESCOLA}`,
@@ -889,7 +891,10 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
@@ -899,7 +904,10 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.ATUALIZACAO_EMAIL_EOL}`,
     component: AtualizacaoEmailEOLPage,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/configuracoes`,

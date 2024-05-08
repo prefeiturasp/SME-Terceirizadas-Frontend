@@ -37,6 +37,7 @@ import {
   usuarioEhDilogDiretoria,
   usuarioEhRecebimento,
   ehUsuarioRelatorios,
+  usuarioEhGticCODAE,
 } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
 
@@ -156,7 +157,8 @@ export const SidebarContent = () => {
     !usuarioEscolaEhGestaoDireta() &&
     !usuarioEhMedicao() &&
     !usuarioEhPreRecebimento() &&
-    !usuarioEhAdministradorRepresentanteCodae();
+    !usuarioEhAdministradorRepresentanteCodae() &&
+    !usuarioEhGticCODAE();
 
   const exibirConfiguracoes =
     !usuarioEhEscolaTerceirizada() &&
