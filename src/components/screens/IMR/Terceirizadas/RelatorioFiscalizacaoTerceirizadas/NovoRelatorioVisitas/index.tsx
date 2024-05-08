@@ -12,7 +12,7 @@ export const NovoRelatorioVisitas = () => {
         <Form onSubmit={onSubmit}>
           {({ handleSubmit, form }) => (
             <form onSubmit={handleSubmit}>
-              <Cabecalho values={form.getState().values} />
+              <Cabecalho values={form.getState().values} form={form} />
             </form>
           )}
         </Form>

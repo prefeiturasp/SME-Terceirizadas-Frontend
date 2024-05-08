@@ -7,20 +7,27 @@ import HTTP_STATUS from "http-status-codes";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getEscolasTercTotal } from "services/escola.service";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import { InputText } from "components/Shareable/Input/InputText";
 
 export const Cabecalho = ({ ...props }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] =
     useState<{ nome: string; uuid: string }[]>();
-  const [escolas, setEscolas] = useState<{ label: string; value: string }[]>(
-    []
-  );
+  const [escolas, setEscolas] = useState<
+    {
+      label: string;
+      value: string;
+      lote_nome: string;
+      terceirizada: string;
+      uuid: string;
+    }[]
+  >([]);
 
   const [loadingDREs, setLoadingDREs] = useState(true);
   const [loadingEscolas, setLoadingEscolas] = useState(false);
 
   const [erroAPI, setErroAPI] = useState("");
 
-  const { values } = props;
+  const { form, values } = props;
 
   const getDiretoriasRegionaisAsync = async () => {
     setLoadingDREs(true);
@@ -46,10 +53,19 @@ export const Cabecalho = ({ ...props }) => {
     if (response.status === HTTP_STATUS.OK) {
       setEscolas(
         response.data.map(
-          (escola: { uuid: string; codigo_eol: string; nome: string }) => {
+          (escola: {
+            uuid: string;
+            codigo_eol: string;
+            nome: string;
+            lote_nome: string;
+            terceirizada: string;
+          }) => {
             return {
               label: `${escola.codigo_eol} - ${escola.nome}`,
               value: `${escola.codigo_eol} - ${escola.nome}`,
+              uuid: escola.uuid,
+              lote_nome: escola.lote_nome,
+              terceirizada: escola.terceirizada,
             };
           }
         )
@@ -71,7 +87,11 @@ export const Cabecalho = ({ ...props }) => {
         <Spin tip="Carregando..." spinning={loadingDREs}>
           {diretoriasRegionais && (
             <div className="cabecalho">
-              <h2>Dados da Unidade Educacional</h2>
+              <div className="row">
+                <div className="col-12">
+                  <h2 className="mt-2 mb-4">Dados da Unidade Educacional</h2>
+                </div>
+              </div>
               <div className="row">
                 <div className="col-5">
                   <Field
@@ -82,11 +102,14 @@ export const Cabecalho = ({ ...props }) => {
                       ...diretoriasRegionais,
                     ]}
                     name="diretoria_regional"
-                    label="Diretoria Regional"
+                    label="Diretoria Regional de Educação"
                     validate={required}
                     required
                     onChangeEffect={(e: ChangeEvent<HTMLInputElement>) => {
                       const value = e.target.value;
+                      form.change("escola", undefined);
+                      form.change("lote", undefined);
+                      form.change("terceirizada", undefined);
                       getEscolasTercTotalAsync(value);
                     }}
                   />
@@ -105,12 +128,50 @@ export const Cabecalho = ({ ...props }) => {
                           .indexOf(inputValue.toUpperCase()) !== -1
                       }
                       name="escola"
-                      label="Pesquisar por Código EOL e/ou Unidade Educacional"
+                      label="Unidade Educacional"
                       placeholder={"Selecione uma unidade educacional"}
                       required
                       disabled={!values.diretoria_regional || loadingEscolas}
+                      inputOnChange={(value: string) => {
+                        form.change(
+                          "lote",
+                          escolas.find((e) => e.value === value)?.lote_nome
+                        );
+                        form.change(
+                          "terceirizada",
+                          escolas.find((e) => e.value === value)?.terceirizada
+                        );
+                      }}
                     />
                   </Spin>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-4">
+                  <Field
+                    component={InputText}
+                    label="Lote"
+                    name="lote"
+                    required
+                    validate={required}
+                    disabled
+                  />
+                </div>
+                <div className="col-8">
+                  <Field
+                    component={InputText}
+                    label="Empresa Terceirizada"
+                    name="terceirizada"
+                    required
+                    validate={required}
+                    disabled
+                  />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-12">
+                  <hr />
+                  <h2 className="mt-2 mb-4">Dados da Visita</h2>
                 </div>
               </div>
             </div>
