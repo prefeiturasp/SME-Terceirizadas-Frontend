@@ -513,6 +513,17 @@ export const usuarioComAcessoTelaDetalharNotificacaoOcorrencia = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioComAcessoAoRelatorioCronogramas = () => {
+  return [
+    PERFIL.DILOG_DIRETORIA,
+    PERFIL.DINUTRE_DIRETORIA,
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    //TODO: incluir usuario relatorio
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioComAcessoAoCalendarioCronograma = () => {
   return [
     PERFIL.DILOG_CRONOGRAMA,

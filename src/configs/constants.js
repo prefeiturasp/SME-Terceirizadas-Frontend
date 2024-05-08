@@ -240,6 +240,7 @@ export const DETALHE_CRONOGRAMA = "detalhe-cronograma";
 export const ALTERACAO_CRONOGRAMA = "altera-cronograma";
 export const DETALHAR_ALTERACAO_CRONOGRAMA = "detalhe-alteracao-cronograma";
 export const CALENDARIO_CRONOGRAMA = "calendario-cronograma";
+export const RELATORIO_CRONOGRAMA = "relatorio-cronograma";
 
 export const LAYOUT_EMBALAGEM = "layout-embalagem";
 export const CADASTRO_LAYOUT_EMBALAGEM = "cadastro-layout-embalagem";

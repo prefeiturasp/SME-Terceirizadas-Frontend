@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, LeafItem } from "./shared";
+import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   PRE_RECEBIMENTO,
   CRONOGRAMA_ENTREGA,
@@ -27,8 +27,10 @@ import {
   usuarioComAcessoAoCalendarioCronograma,
   usuarioEhCODAEGabinete,
 } from "helpers/utilities";
+import { usuarioComAcessoAoRelatorioCronogramas } from "../../../../helpers/utilities";
+import { RELATORIO_CRONOGRAMA } from "../../../../configs/constants";
 
-const MenuPreRecebimento = () => {
+const MenuPreRecebimento = ({ activeMenu, onSubmenuClick }) => {
   return (
     <Menu id="PreRecebimento" icon="fa-calendar-check" title="Pré-Recebimento">
       {usuarioComAcessoAoPainelAprovacoes() && (
@@ -93,6 +95,20 @@ const MenuPreRecebimento = () => {
         <LeafItem to={`/${PRE_RECEBIMENTO}/${PAINEL_FICHAS_TECNICAS}`}>
           Fichas Técnicas
         </LeafItem>
+      )}
+      {usuarioComAcessoAoRelatorioCronogramas() && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Relatórios"
+          activeMenu={activeMenu}
+        >
+          {usuarioComAcessoAoRelatorioCronogramas() && (
+            <LeafItem to={`/${PRE_RECEBIMENTO}/${RELATORIO_CRONOGRAMA}/`}>
+              Cronogramas de Entregas
+            </LeafItem>
+          )}
+        </SubMenu>
       )}
     </Menu>
   );

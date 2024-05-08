@@ -212,7 +212,7 @@ export const SidebarContent = () => {
     ),
     exibirRelatorios && <MenuRelatorios key={8} />,
     exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
-    exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />,
+    exibirMenuPreRecebimento && <MenuPreRecebimento key={10} {..._props} />,
     exibirMenuRecebimento && <MenuRecebimento key={11} />,
     exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
   ];

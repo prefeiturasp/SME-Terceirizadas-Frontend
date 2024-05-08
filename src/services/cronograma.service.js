@@ -26,6 +26,14 @@ export const getListagemCronogramas = async (params) => {
   return await axios.get(url, { params });
 };
 
+export const getListagemRelatorioCronogramas = async (params) => {
+  try {
+    return axios.get(`/cronogramas/listagem-relatorio/`, { params });
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
+
 export const getListaCronogramasPraCadastro = async () => {
   try {
     return await axios.get("/cronogramas/lista-cronogramas-cadastro/");
