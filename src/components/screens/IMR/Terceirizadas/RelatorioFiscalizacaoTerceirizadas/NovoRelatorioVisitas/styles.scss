@@ -1,0 +1,11 @@
+@import "styles/variables.scss";
+
+div.novo-relatorio-visitas {
+  div.cabecalho {
+    h2 {
+      color: $green;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  }
+}
