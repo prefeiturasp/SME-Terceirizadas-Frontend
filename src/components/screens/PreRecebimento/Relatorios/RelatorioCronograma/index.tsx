@@ -10,7 +10,7 @@ import Listagem from "./components/Listagem";
 
 export default () => {
   const [carregando, setCarregando] = useState<boolean>(false);
-  const [filtros, setFiltros] = useState<FiltrosRelatorioCronograma>({});
+  const [filtros, setFiltros] = useState<FiltrosRelatorioCronograma>();
   const [page, setPage] = useState<number>(1);
   const [totalResultados, setTotalResultados] = useState<number>(0);
   const [consultaRealizada, setConsultaRealizada] = useState<boolean>(false);
