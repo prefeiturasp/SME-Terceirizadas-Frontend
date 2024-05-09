@@ -141,10 +141,10 @@ const Filtros: React.FC<Props> = ({
             <div className="col-3 mt-2">
               <Field
                 component={InputComData}
-                label="Filtrar por Período de Recebimento"
+                label="Filtrar por Período"
                 name="data_inicial"
                 className="data-field-cronograma"
-                placeholder="De"
+                placeholder="DE"
                 minDate={null}
                 maxDate={
                   values.data_final
@@ -160,7 +160,7 @@ const Filtros: React.FC<Props> = ({
                 name="data_final"
                 className="data-field-cronograma"
                 popperPlacement="bottom-end"
-                placeholder="Até"
+                placeholder="ATÉ"
                 minDate={
                   values.data_inicial
                     ? moment(values.data_inicial, "DD/MM/YYYY").toDate()
