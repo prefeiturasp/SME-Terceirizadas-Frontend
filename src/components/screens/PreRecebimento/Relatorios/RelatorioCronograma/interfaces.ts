@@ -1,10 +1,12 @@
 import { EtapaFicha } from "components/screens/Recebimento/FichaRecebimento/interfaces";
 
 export interface FiltrosRelatorioCronograma {
+  empresa?: string[];
   nome_produto?: string;
-  numero_cronograma?: string;
+  numero?: string;
   status?: string;
-  data_criacao?: string;
+  data_inicial?: string;
+  data_final?: string;
 }
 
 export interface EmpresaFiltros {

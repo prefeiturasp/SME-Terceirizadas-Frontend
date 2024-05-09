@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
-import "./styles.scss";
 import Filtros from "./components/Filtros";
 import { CronogramaRelatorio, FiltrosRelatorioCronograma } from "./interfaces";
 import { gerarParametrosConsulta } from "helpers/utilities";
@@ -22,7 +21,7 @@ import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownl
 
 export default () => {
   const [carregando, setCarregando] = useState<boolean>(false);
-  const [filtros, setFiltros] = useState<FiltrosRelatorioCronograma>({});
+  const [filtros, setFiltros] = useState<FiltrosRelatorioCronograma>();
   const [page, setPage] = useState<number>(1);
   const [totalResultados, setTotalResultados] = useState<number>(0);
   const [consultaRealizada, setConsultaRealizada] = useState<boolean>(false);
@@ -81,8 +80,8 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-documentos-recebimento">
-        <div className="card-body documentos-recebimento">
+      <div className="card mt-3 card-relatorio-cronograma">
+        <div className="card-body relatorio-cronograma">
           <Filtros
             setFiltros={setFiltros}
             setCronogramas={setCronogramas}

@@ -7,6 +7,7 @@ import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectFiel
 import { InputComData } from "components/Shareable/DatePicker";
 import { getListaCompletaProdutosLogistica } from "../../../../../../../services/produto.service";
 import { getListaFiltradaAutoCompleteSelect } from "../../../../../../../helpers/autoCompleteSelect";
+import { getListaCronogramasPraCadastro } from "../../../../../../../services/cronograma.service";
 import {
   CronogramaRelatorio,
   EmpresaFiltros,
@@ -16,6 +17,7 @@ import { getEmpresasCronograma } from "services/terceirizada.service";
 import CollapseFiltros from "components/Shareable/CollapseFiltros";
 import { ProdutoLogistica } from "interfaces/produto.interface";
 import { montarOptionsStatus } from "../../../../CronogramaEntrega/components/Filtros/utils";
+import { CronogramaSimples } from "interfaces/pre_recebimento.interface";
 
 interface Props {
   setFiltros: Dispatch<SetStateAction<FiltrosRelatorioCronograma>>;
@@ -32,6 +34,9 @@ const Filtros: React.FC<Props> = ({
   const [listaProdutos, setListaProdutos] = useState<Array<ProdutoLogistica>>(
     []
   );
+  const [dadosCronogramas, setDadosCronogramas] = useState<
+    Array<CronogramaSimples>
+  >([]);
 
   const buscaFornecedores = async () => {
     const response = await getEmpresasCronograma();
@@ -46,6 +51,11 @@ const Filtros: React.FC<Props> = ({
   const buscarListaProdutos = async (): Promise<void> => {
     const response = await getListaCompletaProdutosLogistica();
     setListaProdutos(response.data.results);
+  };
+
+  const buscarDadosCronogramas = async (): Promise<void> => {
+    const response = await getListaCronogramasPraCadastro();
+    setDadosCronogramas(response.data.results);
   };
 
   const onSubmit = (values: Record<string, any>): void => {
@@ -68,6 +78,7 @@ const Filtros: React.FC<Props> = ({
   useEffect(() => {
     buscaFornecedores();
     buscarListaProdutos();
+    buscarDadosCronogramas();
   }, []);
 
   return (
@@ -101,7 +112,21 @@ const Filtros: React.FC<Props> = ({
               />
             </div>
 
-            <div className="col-6 mt-2">
+            <div className="col-3 mt-2">
+              <Field
+                component={AutoCompleteSelectField}
+                options={getListaFiltradaAutoCompleteSelect(
+                  dadosCronogramas.map((e) => e.numero),
+                  values.numero,
+                  true
+                )}
+                label="Filtrar por Nº do Cronograma"
+                name="numero"
+                placeholder="Selecione um cronograma"
+              />
+            </div>
+
+            <div className="col-3 mt-2">
               <Field
                 component={MultiSelect}
                 disableSearch
@@ -116,10 +141,10 @@ const Filtros: React.FC<Props> = ({
             <div className="col-3 mt-2">
               <Field
                 component={InputComData}
-                label="Filtrar por Período de Recebimento"
+                label="Filtrar por Período"
                 name="data_inicial"
                 className="data-field-cronograma"
-                placeholder="De"
+                placeholder="DE"
                 minDate={null}
                 maxDate={
                   values.data_final
@@ -135,7 +160,7 @@ const Filtros: React.FC<Props> = ({
                 name="data_final"
                 className="data-field-cronograma"
                 popperPlacement="bottom-end"
-                placeholder="Até"
+                placeholder="ATÉ"
                 minDate={
                   values.data_inicial
                     ? moment(values.data_inicial, "DD/MM/YYYY").toDate()
