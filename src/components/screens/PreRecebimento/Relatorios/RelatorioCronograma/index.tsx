@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
-import "./styles.scss";
 import Filtros from "./components/Filtros";
 import { CronogramaRelatorio, FiltrosRelatorioCronograma } from "./interfaces";
 import { gerarParametrosConsulta } from "helpers/utilities";
@@ -49,8 +48,8 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-documentos-recebimento">
-        <div className="card-body documentos-recebimento">
+      <div className="card mt-3 card-relatorio-cronograma">
+        <div className="card-body relatorio-cronograma">
           <Filtros
             setFiltros={setFiltros}
             setCronogramas={setCronogramas}
