@@ -145,6 +145,8 @@ import {
   ehUsuarioRelatorios,
   usuarioComAcessoAoCalendarioCronograma,
   usuarioEhRecebimento,
+  usuarioComAcessoAoRelatorioCronogramas,
+  usuarioEhGticCODAE,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -315,6 +317,7 @@ import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProdut
 import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/CopiarAtribuicaoQuestoesPage";
 import FichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/FichaRecebimentoPage";
 import CadastroFichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/CadastroFichaRecebimentoPage";
+import RelatorioCronogramaPage from "../pages/PreRecebimento/Relatorios/RelatorioCronogramaPage";
 
 const routesConfig = [
   {
@@ -861,7 +864,8 @@ const routesConfig = [
       usuarioEhCoordenadorCODAE() ||
       usuarioEhCodaeDilog() ||
       usuarioEhCODAEGabinete() ||
-      usuarioEhDilogDiretoria(),
+      usuarioEhDilogDiretoria() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_DIRETOR_ESCOLA}`,
@@ -889,7 +893,10 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
@@ -899,7 +906,10 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.ATUALIZACAO_EMAIL_EOL}`,
     component: AtualizacaoEmailEOLPage,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/configuracoes`,
@@ -2072,6 +2082,11 @@ const routesConfig = [
     path: `/${constants.RECEBIMENTO}/${constants.CADASTRO_FICHA_RECEBIMENTO}`,
     component: CadastroFichaRecebimentoPage,
     tipoUsuario: usuarioEhRecebimento(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.RELATORIO_CRONOGRAMA}`,
+    component: RelatorioCronogramaPage,
+    tipoUsuario: usuarioComAcessoAoRelatorioCronogramas(),
   },
 ];
 

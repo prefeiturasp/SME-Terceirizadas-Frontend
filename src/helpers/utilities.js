@@ -513,6 +513,18 @@ export const usuarioComAcessoTelaDetalharNotificacaoOcorrencia = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioComAcessoAoRelatorioCronogramas = () => {
+  return [
+    PERFIL.DILOG_DIRETORIA,
+    PERFIL.DINUTRE_DIRETORIA,
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.USUARIO_RELATORIOS,
+    PERFIL.USUARIO_GTIC_CODAE,
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioComAcessoAoCalendarioCronograma = () => {
   return [
     PERFIL.DILOG_CRONOGRAMA,
@@ -740,6 +752,10 @@ export const usuarioEhOrgaoFiscalizador = () => {
 
 export const usuarioEhCODAEGabinete = () => {
   return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_CODAE_GABINETE;
+};
+
+export const usuarioEhGticCODAE = () => {
+  return localStorage.getItem("perfil") === PERFIL.USUARIO_GTIC_CODAE;
 };
 
 export const acessoModuloMedicaoInicialEscola = () => {
