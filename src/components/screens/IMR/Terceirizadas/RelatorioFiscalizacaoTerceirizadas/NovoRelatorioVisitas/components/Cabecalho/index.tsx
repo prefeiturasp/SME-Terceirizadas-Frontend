@@ -80,12 +80,13 @@ export const Cabecalho = ({ ...props }) => {
 
   const getPeriodosVisitaAsync = async () => {
     const response = await getPeriodosVisita();
-    /*if (response.status === HTTP_STATUS.OK) {
+    if (response.status === HTTP_STATUS.OK) {
       setPeriodosVisita(response.data.results);
     } else {
-      setErroAPI("Erro ao carregar DREs. Tente novamente mais tarde.");
-    }*/
-    setPeriodosVisita(response);
+      setErroAPI(
+        "Erro ao carregar Períodos de Visita. Tente novamente mais tarde."
+      );
+    }
   };
 
   const requisicoesPreRender = async () => {
@@ -238,6 +239,7 @@ export const Cabecalho = ({ ...props }) => {
                       value="sim"
                       id="sim"
                       required
+                      validate={required}
                     />
                     <label htmlFor="sim">Sim</label>
                   </div>
@@ -249,6 +251,7 @@ export const Cabecalho = ({ ...props }) => {
                       value="nao"
                       id="nao"
                       required
+                      validate={required}
                     />
                     <label htmlFor="nao">Não estava presente</label>
                   </div>
