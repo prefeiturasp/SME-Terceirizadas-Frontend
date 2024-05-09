@@ -3,9 +3,21 @@ import { Spin } from "antd";
 import Filtros from "./components/Filtros";
 import { CronogramaRelatorio, FiltrosRelatorioCronograma } from "./interfaces";
 import { gerarParametrosConsulta } from "helpers/utilities";
-import { getListagemRelatorioCronogramas } from "../../../../../services/cronograma.service.js";
+import {
+  getListagemRelatorioCronogramas,
+  baixarRelatorioCronogramasExcel,
+} from "../../../../../services/cronograma.service.js";
 import { Paginacao } from "components/Shareable/Paginacao";
 import Listagem from "./components/Listagem";
+
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "components/Shareable/Botao/constants";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 export default () => {
   const [carregando, setCarregando] = useState<boolean>(false);
@@ -17,6 +29,9 @@ export default () => {
   const [cronogramas, setCronogramas] = useState<Array<CronogramaRelatorio>>(
     []
   );
+  const [enviandoArquivo, setEnviandoArquivo] = useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
 
   const buscarResultados = async (page) => {
     setCarregando(true);
@@ -46,6 +61,23 @@ export default () => {
     }
   }, [filtros]);
 
+  const baixarRelatorioExcel = async () => {
+    setEnviandoArquivo(true);
+
+    try {
+      const params = gerarParametrosConsulta(filtros);
+      const response = await baixarRelatorioCronogramasExcel(params);
+
+      if (response.status === 200) {
+        setExibirModalCentralDownloads(true);
+      } else {
+        toastError("Erro ao exportar xlsx. Tente novamente mais tarde.");
+      }
+    } finally {
+      setEnviandoArquivo(false);
+    }
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-relatorio-cronograma">
@@ -74,6 +106,26 @@ export default () => {
                       total={totalResultados}
                       onChange={nextPage}
                     />
+                  </div>
+                </div>
+
+                <div className="row mt-4 mb-2">
+                  <div className="col p-0">
+                    <Botao
+                      texto="Baixar em Excel"
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      icon={BUTTON_ICON.FILE_EXCEL}
+                      type={BUTTON_TYPE.BUTTON}
+                      disabled={enviandoArquivo}
+                      onClick={baixarRelatorioExcel}
+                      className="float-end"
+                    />
+                    {exibirModalCentralDownloads && (
+                      <ModalSolicitacaoDownload
+                        show={exibirModalCentralDownloads}
+                        setShow={setExibirModalCentralDownloads}
+                      />
+                    )}
                   </div>
                 </div>
               </>
