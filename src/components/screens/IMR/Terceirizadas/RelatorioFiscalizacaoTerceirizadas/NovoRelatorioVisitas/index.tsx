@@ -16,7 +16,8 @@ import {
   EscolaLabelInterface,
   NovoRelatorioVisitasFormInterface,
 } from "./interfaces";
-import { createFormularioNutrisupervisao } from "services/imr/relatorioFiscalizacaoTerceirizadas";
+import { createFormularioSupervisao } from "services/imr/relatorioFiscalizacaoTerceirizadas";
+import { deepCopy } from "helpers/utilities";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
@@ -41,8 +42,11 @@ export const NovoRelatorioVisitas = () => {
       setShowModalSalvarRascunho(true);
       return;
     }
-    const response = await createFormularioNutrisupervisao(values);
-    if (response.status === HTTP_STATUS.OK) {
+    let values_ = deepCopy(values);
+    values_.escola = escolaSelecionada.uuid;
+    values_.acompanhou_visita = values.acompanhou_visita === "sim";
+    const response = await createFormularioSupervisao(values_);
+    if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Rascunho do Relatório de Fiscalização salvo com sucesso!");
       navigate(-1);
     } else {
