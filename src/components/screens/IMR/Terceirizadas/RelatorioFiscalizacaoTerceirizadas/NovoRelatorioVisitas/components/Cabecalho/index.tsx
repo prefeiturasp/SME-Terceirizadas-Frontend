@@ -31,7 +31,7 @@ export const Cabecalho = ({ ...props }) => {
 
   const [erroAPI, setErroAPI] = useState("");
 
-  const { form, values } = props;
+  const { form, values, setEscolaSelecionada } = props;
 
   const getDiretoriasRegionaisAsync = async () => {
     const response = await getDiretoriaregionalSimplissima();
@@ -161,6 +161,9 @@ export const Cabecalho = ({ ...props }) => {
                         form.change(
                           "terceirizada",
                           escolas.find((e) => e.value === value)?.terceirizada
+                        );
+                        setEscolaSelecionada(
+                          escolas.find((e) => e.value === value)
                         );
                       }}
                     />
