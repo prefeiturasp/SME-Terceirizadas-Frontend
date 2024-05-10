@@ -145,6 +145,7 @@ import {
   ehUsuarioRelatorios,
   usuarioComAcessoAoCalendarioCronograma,
   usuarioEhRecebimento,
+  usuarioComAcessoAoRelatorioCronogramas,
   usuarioEhGticCODAE,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
@@ -317,6 +318,7 @@ import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProdut
 import FichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/FichaRecebimentoPage";
 import CadastroFichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/CadastroFichaRecebimentoPage";
 import { rotasSupervisao } from "./rotas/rotasSupervisao/index.js";
+import RelatorioCronogramaPage from "../pages/PreRecebimento/Relatorios/RelatorioCronogramaPage";
 
 let routesConfig = [
   {
@@ -2081,6 +2083,11 @@ let routesConfig = [
     path: `/${constants.RECEBIMENTO}/${constants.CADASTRO_FICHA_RECEBIMENTO}`,
     component: CadastroFichaRecebimentoPage,
     tipoUsuario: usuarioEhRecebimento(),
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.RELATORIO_CRONOGRAMA}`,
+    component: RelatorioCronogramaPage,
+    tipoUsuario: usuarioComAcessoAoRelatorioCronogramas(),
   },
 ];
 

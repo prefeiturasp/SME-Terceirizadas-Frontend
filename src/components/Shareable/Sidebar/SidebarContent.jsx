@@ -187,7 +187,8 @@ export const SidebarContent = () => {
     usuarioEhPreRecebimento() ||
     usuarioEhEmpresaFornecedor() ||
     usuarioEhCoordenadorGpCODAE() ||
-    usuarioEhCODAEGabinete();
+    usuarioEhCODAEGabinete() ||
+    usuarioEhGticCODAE();
 
   const exibirMenuRecebimento = usuarioEhRecebimento();
 
@@ -218,7 +219,7 @@ export const SidebarContent = () => {
     exibirMenuSupervisao && <MenuSupervisao key={6} {..._props} />,
     exibirRelatorios && <MenuRelatorios key={7} />,
     exibirMenuLogistica && <MenuLogistica key={8} {..._props} />,
-    exibirMenuPreRecebimento && <MenuPreRecebimento key={9} />,
+    exibirMenuPreRecebimento && <MenuPreRecebimento key={9} {..._props} />,
     exibirMenuRecebimento && <MenuRecebimento key={10} />,
     exibirConfiguracoes && <MenuConfiguracoes key={11} {..._props} />,
   ];

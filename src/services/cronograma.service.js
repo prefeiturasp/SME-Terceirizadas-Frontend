@@ -26,6 +26,14 @@ export const getListagemCronogramas = async (params) => {
   return await axios.get(url, { params });
 };
 
+export const getListagemRelatorioCronogramas = async (params) => {
+  try {
+    return axios.get(`/cronogramas/listagem-relatorio/`, { params });
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
+
 export const getListaCronogramasPraCadastro = async () => {
   try {
     return await axios.get("/cronogramas/lista-cronogramas-cadastro/");
@@ -164,6 +172,16 @@ export const getCronogramaPraCadastroRecebimento = async (uuid) => {
     return await axios.get(
       `/cronogramas/${uuid}/dados-cronograma-ficha-recebimento/`
     );
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
+
+export const baixarRelatorioCronogramasExcel = async (params) => {
+  try {
+    return await axios.get("/cronogramas/gerar-relatorio-xlsx-async/", {
+      params,
+    });
   } catch (error) {
     toastError(getMensagemDeErro(error.response.status));
   }
