@@ -7,14 +7,8 @@ import {
 } from "components/Shareable/Botao/constants";
 
 export const ModalSalvarRascunho = ({ ...props }) => {
-  const {
-    show,
-    handleClose,
-    salvarRascunho,
-    values,
-    escolaSelecionada,
-    navigate,
-  } = props;
+  const { show, handleClose, salvarRascunho, values, escolaSelecionada } =
+    props;
 
   return (
     <Modal
@@ -45,7 +39,6 @@ export const ModalSalvarRascunho = ({ ...props }) => {
           onClick={async () => {
             await salvarRascunho(values);
             handleClose();
-            navigate(-1);
           }}
           style={BUTTON_STYLE.GREEN}
           className="ms-3"

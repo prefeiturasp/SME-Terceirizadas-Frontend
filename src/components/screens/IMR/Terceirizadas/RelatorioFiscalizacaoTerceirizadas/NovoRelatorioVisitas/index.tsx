@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Form } from "react-final-form";
 import { Cabecalho } from "./components/Cabecalho";
 import { NavigateFunction, useNavigate } from "react-router-dom";
@@ -15,6 +16,7 @@ import {
   EscolaLabelInterface,
   NovoRelatorioVisitasFormInterface,
 } from "./interfaces";
+import { createFormularioNutrisupervisao } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
@@ -39,13 +41,21 @@ export const NovoRelatorioVisitas = () => {
       setShowModalSalvarRascunho(true);
       return;
     }
-    toastSuccess("Rascunho do Relatório de Fiscalização salvo com sucesso!");
+    const response = await createFormularioNutrisupervisao(values);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Rascunho do Relatório de Fiscalização salvo com sucesso!");
+      navigate(-1);
+    } else {
+      toastError(
+        "Erro ao criar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
+      );
+    }
   };
 
   const onSubmit = async (
     values: NovoRelatorioVisitasFormInterface
   ): Promise<void> => {
-    console.log(values);
+    values;
   };
 
   return (
@@ -95,7 +105,6 @@ export const NovoRelatorioVisitas = () => {
                 show={showModalSalvarRascunho}
                 handleClose={() => setShowModalSalvarRascunho(false)}
                 values={form.getState().values}
-                navigate={navigate}
                 salvarRascunho={salvarRascunho}
                 escolaSelecionada={escolaSelecionada}
               />
