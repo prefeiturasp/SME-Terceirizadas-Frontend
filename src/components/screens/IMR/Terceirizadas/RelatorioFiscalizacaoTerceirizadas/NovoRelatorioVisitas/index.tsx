@@ -11,18 +11,24 @@ import "./styles.scss";
 import { ModalCancelaPreenchimento } from "./components/ModalCancelaPreenchimento";
 import { ModalSalvarRascunho } from "./components/ModalSalvarRascunho";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { NovoRelatorioVisitasFormInterface } from "./interfaces";
+import {
+  EscolaLabelInterface,
+  NovoRelatorioVisitasFormInterface,
+} from "./interfaces";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
     useState(false);
   const [showModalSalvarRascunho, setShowModalSalvarRascunho] = useState(false);
 
-  const [escolaSelecionada, setEscolaSelecionada] = useState();
+  const [escolaSelecionada, setEscolaSelecionada] =
+    useState<EscolaLabelInterface>();
 
   const navigate: NavigateFunction = useNavigate();
 
-  const salvarRascunho = (values: NovoRelatorioVisitasFormInterface) => {
+  const salvarRascunho = async (
+    values: NovoRelatorioVisitasFormInterface
+  ): Promise<void> => {
     if (!values.escola || !values.data) {
       toastError(
         "Os campos escola e data da visita são obrigatórios para salvar um rascunho."
@@ -36,7 +42,9 @@ export const NovoRelatorioVisitas = () => {
     toastSuccess("Rascunho do Relatório de Fiscalização salvo com sucesso!");
   };
 
-  const onSubmit = (values: NovoRelatorioVisitasFormInterface) => {
+  const onSubmit = async (
+    values: NovoRelatorioVisitasFormInterface
+  ): Promise<void> => {
     console.log(values);
   };
 

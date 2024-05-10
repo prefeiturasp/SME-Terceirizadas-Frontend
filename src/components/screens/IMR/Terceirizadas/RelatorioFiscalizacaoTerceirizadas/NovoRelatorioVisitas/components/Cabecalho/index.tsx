@@ -20,10 +20,20 @@ import {
   DiretoriaRegionalInterface,
   EscolaSimplissimaInterface,
 } from "interfaces/escola.interface";
-import { EscolaLabelInterface } from "../../interfaces";
+import {
+  EscolaLabelInterface,
+  NovoRelatorioVisitasFormInterface,
+} from "../../interfaces";
 import { PeriodoDeVisitaInterface } from "interfaces/imr.interface";
+import { FormApi } from "final-form";
 
-export const Cabecalho = ({ ...props }) => {
+type CabecahoType = {
+  form: FormApi<any, Partial<any>>;
+  values: NovoRelatorioVisitasFormInterface;
+  setEscolaSelecionada: (_escola: EscolaLabelInterface) => void;
+};
+
+export const Cabecalho = ({ ...props }: CabecahoType) => {
   const [diretoriasRegionais, setDiretoriasRegionais] =
     useState<{ nome: string; uuid: string }[]>();
   const [escolas, setEscolas] = useState<EscolaLabelInterface[]>([]);
