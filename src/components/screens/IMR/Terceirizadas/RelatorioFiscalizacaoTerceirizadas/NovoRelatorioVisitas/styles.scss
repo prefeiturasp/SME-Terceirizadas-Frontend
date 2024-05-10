@@ -1,0 +1,29 @@
+@import "styles/variables.scss";
+
+div.novo-relatorio-visitas {
+  div.cabecalho {
+    h2 {
+      color: $green;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .ant-select-selection-placeholder {
+      font-weight: normal !important;
+    }
+
+    section.nutri-acompanhou-visita {
+      font-size: 14px;
+      color: $gray;
+
+      input[type="radio"] {
+        accent-color: $green;
+      }
+
+      label {
+        color: $blackInput;
+        margin-left: 0.5em;
+      }
+    }
+  }
+}
