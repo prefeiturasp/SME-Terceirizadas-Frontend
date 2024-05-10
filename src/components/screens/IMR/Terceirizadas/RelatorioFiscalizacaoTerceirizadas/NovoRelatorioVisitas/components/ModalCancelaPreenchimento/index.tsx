@@ -5,8 +5,19 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
+import { FormApi } from "final-form";
+import { NavigateFunction } from "react-router-dom";
 
-export const ModalCancelaPreenchimento = ({ ...props }) => {
+type ModalCancelaPreenchimentoType = {
+  show: boolean;
+  handleClose: () => void;
+  form: FormApi<any, Partial<any>>;
+  navigate: NavigateFunction;
+};
+
+export const ModalCancelaPreenchimento = ({
+  ...props
+}: ModalCancelaPreenchimentoType) => {
   const { show, handleClose, form, navigate } = props;
 
   return (

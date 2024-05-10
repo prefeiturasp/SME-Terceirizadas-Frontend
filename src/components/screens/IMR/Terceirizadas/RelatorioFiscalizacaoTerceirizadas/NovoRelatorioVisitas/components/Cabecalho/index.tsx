@@ -164,14 +164,20 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       inputOnChange={(value: string) => {
                         form.change(
                           "lote",
-                          escolas.find((e) => e.value === value)?.lote_nome
+                          escolas.find(
+                            (e: EscolaLabelInterface) => e.value === value
+                          )?.lote_nome
                         );
                         form.change(
                           "terceirizada",
-                          escolas.find((e) => e.value === value)?.terceirizada
+                          escolas.find(
+                            (e: EscolaLabelInterface) => e.value === value
+                          )?.terceirizada
                         );
                         setEscolaSelecionada(
-                          escolas.find((e) => e.value === value)
+                          escolas.find(
+                            (e: EscolaLabelInterface) => e.value === value
+                          )
                         );
                       }}
                     />

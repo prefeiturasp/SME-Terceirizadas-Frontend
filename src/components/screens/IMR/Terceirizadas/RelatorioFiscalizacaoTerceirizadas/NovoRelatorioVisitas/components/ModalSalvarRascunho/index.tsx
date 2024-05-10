@@ -5,8 +5,20 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
+import {
+  EscolaLabelInterface,
+  NovoRelatorioVisitasFormInterface,
+} from "../../interfaces";
 
-export const ModalSalvarRascunho = ({ ...props }) => {
+type ModalSalvarRascunhoType = {
+  show: boolean;
+  handleClose: () => void;
+  salvarRascunho: (_values: NovoRelatorioVisitasFormInterface) => Promise<void>;
+  values: NovoRelatorioVisitasFormInterface;
+  escolaSelecionada: EscolaLabelInterface;
+};
+
+export const ModalSalvarRascunho = ({ ...props }: ModalSalvarRascunhoType) => {
   const { show, handleClose, salvarRascunho, values, escolaSelecionada } =
     props;
 
