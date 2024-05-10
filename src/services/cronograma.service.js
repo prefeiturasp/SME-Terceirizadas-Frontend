@@ -186,3 +186,13 @@ export const baixarRelatorioCronogramasExcel = async (params) => {
     toastError(getMensagemDeErro(error.response.status));
   }
 };
+
+export const baixarRelatorioCronogramasPdf = async (params) => {
+  try {
+    return await axios.get("/cronogramas/gerar-relatorio-pdf-async/", {
+      params,
+    });
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
