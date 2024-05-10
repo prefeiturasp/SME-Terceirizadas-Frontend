@@ -15,10 +15,10 @@ export const getPeriodosVisita = async () => {
   }
 };
 
-export const createFormularioNutrisupervisao = async (
+export const createFormularioSupervisao = async (
   params: NovoRelatorioVisitasFormInterface
 ) => {
-  const url = `${API_URL}/imr/formulario-nutricionista/`;
+  const url = `${API_URL}/imr/formulario-supervisao/`;
   const response = await axios.post(url, params).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
