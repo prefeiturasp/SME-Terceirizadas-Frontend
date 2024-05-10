@@ -11,6 +11,7 @@ import "./styles.scss";
 import { ModalCancelaPreenchimento } from "./components/ModalCancelaPreenchimento";
 import { ModalSalvarRascunho } from "./components/ModalSalvarRascunho";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { NovoRelatorioVisitasFormInterface } from "./interfaces";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
@@ -21,7 +22,7 @@ export const NovoRelatorioVisitas = () => {
 
   const navigate: NavigateFunction = useNavigate();
 
-  const salvarRascunho = (values) => {
+  const salvarRascunho = (values: NovoRelatorioVisitasFormInterface) => {
     if (!values.escola || !values.data) {
       toastError(
         "Os campos escola e data da visita são obrigatórios para salvar um rascunho."
@@ -35,7 +36,9 @@ export const NovoRelatorioVisitas = () => {
     toastSuccess("Rascunho do Relatório de Fiscalização salvo com sucesso!");
   };
 
-  const onSubmit = () => {};
+  const onSubmit = (values: NovoRelatorioVisitasFormInterface) => {
+    console.log(values);
+  };
 
   return (
     <div className="card novo-relatorio-visitas mt-3">

@@ -11,33 +11,37 @@ import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { InputText } from "components/Shareable/Input/InputText";
 import { getPeriodosVisita } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { InputComData } from "components/Shareable/DatePicker";
+import {
+  ResponseDiretoriasRegionaisSimplissimaInterface,
+  ResponseGetEscolasTercTotal,
+  ResponsePeriodosDeVisita,
+} from "interfaces/responses.interface";
+import {
+  DiretoriaRegionalInterface,
+  EscolaSimplissimaInterface,
+} from "interfaces/escola.interface";
+import { EscolaLabelInterface } from "../../interfaces";
+import { PeriodoDeVisitaInterface } from "interfaces/imr.interface";
 
 export const Cabecalho = ({ ...props }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] =
     useState<{ nome: string; uuid: string }[]>();
-  const [escolas, setEscolas] = useState<
-    {
-      label: string;
-      value: string;
-      lote_nome: string;
-      terceirizada: string;
-      uuid: string;
-    }[]
-  >([]);
+  const [escolas, setEscolas] = useState<EscolaLabelInterface[]>([]);
   const [periodosVisita, setPeriodosVisita] =
-    useState<{ nome: string; uuid: string }[]>();
+    useState<PeriodoDeVisitaInterface[]>();
 
   const [loadingEscolas, setLoadingEscolas] = useState(false);
 
-  const [erroAPI, setErroAPI] = useState("");
+  const [erroAPI, setErroAPI] = useState<string>("");
 
   const { form, values, setEscolaSelecionada } = props;
 
-  const getDiretoriasRegionaisAsync = async () => {
-    const response = await getDiretoriaregionalSimplissima();
+  const getDiretoriasRegionaisAsync = async (): Promise<void> => {
+    const response: ResponseDiretoriasRegionaisSimplissimaInterface =
+      await getDiretoriaregionalSimplissima();
     if (response.status === HTTP_STATUS.OK) {
       setDiretoriasRegionais(
-        response.data.results.map((dre: { nome: string; uuid: string }) => {
+        response.data.results.map((dre: DiretoriaRegionalInterface) => {
           return {
             nome: dre.nome,
             uuid: dre.uuid,
@@ -49,28 +53,22 @@ export const Cabecalho = ({ ...props }) => {
     }
   };
 
-  const getEscolasTercTotalAsync = async (dreUuid: string) => {
+  const getEscolasTercTotalAsync = async (dreUuid: string): Promise<void> => {
     setLoadingEscolas(true);
-    const response = await getEscolasTercTotal({ dre: dreUuid });
+    const response: ResponseGetEscolasTercTotal = await getEscolasTercTotal({
+      dre: dreUuid,
+    });
     if (response.status === HTTP_STATUS.OK) {
       setEscolas(
-        response.data.map(
-          (escola: {
-            uuid: string;
-            codigo_eol: string;
-            nome: string;
-            lote_nome: string;
-            terceirizada: string;
-          }) => {
-            return {
-              label: `${escola.codigo_eol} - ${escola.nome}`,
-              value: `${escola.codigo_eol} - ${escola.nome}`,
-              uuid: escola.uuid,
-              lote_nome: escola.lote_nome,
-              terceirizada: escola.terceirizada,
-            };
-          }
-        )
+        response.data.map((escola: EscolaSimplissimaInterface) => {
+          return {
+            label: `${escola.codigo_eol} - ${escola.nome}`,
+            value: `${escola.codigo_eol} - ${escola.nome}`,
+            uuid: escola.uuid,
+            lote_nome: escola.lote_nome,
+            terceirizada: escola.terceirizada,
+          };
+        })
       );
     } else {
       setErroAPI("Erro ao carregar escolas. Tente novamente mais tarde.");
@@ -78,8 +76,8 @@ export const Cabecalho = ({ ...props }) => {
     setLoadingEscolas(false);
   };
 
-  const getPeriodosVisitaAsync = async () => {
-    const response = await getPeriodosVisita();
+  const getPeriodosVisitaAsync = async (): Promise<void> => {
+    const response: ResponsePeriodosDeVisita = await getPeriodosVisita();
     if (response.status === HTTP_STATUS.OK) {
       setPeriodosVisita(response.data.results);
     } else {
@@ -89,7 +87,7 @@ export const Cabecalho = ({ ...props }) => {
     }
   };
 
-  const requisicoesPreRender = async () => {
+  const requisicoesPreRender = async (): Promise<void> => {
     await Promise.all([
       getDiretoriasRegionaisAsync(),
       getPeriodosVisitaAsync(),
