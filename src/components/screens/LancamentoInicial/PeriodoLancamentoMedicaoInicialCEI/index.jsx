@@ -46,7 +46,7 @@ import {
   validarCamposComInclusoesDeAlimentacaoSemObservacao,
   exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI,
   exibirTooltipSuspensoesAutorizadasCEI,
-  frequenciaComSuspensaoAutorizadaPreenchida,
+  frequenciaComSuspensaoAutorizadaPreenchidaESemObservacao,
   campoComInclusaoAutorizadaValorZeroESemObservacao,
   exibirTooltipErroQtdMaiorQueAutorizado,
   exibirTooltipDietasInclusaoDiaNaoLetivoCEI,
@@ -1490,7 +1490,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     if (
       ((categoria.nome.includes("ALIMENTAÇÃO") &&
         ((!ehEmeiDaCemeiLocation &&
-          frequenciaComSuspensaoAutorizadaPreenchida(
+          frequenciaComSuspensaoAutorizadaPreenchidaESemObservacao(
             formValuesAtualizados,
             column,
             categoria,
@@ -2070,7 +2070,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                         alteracoesAlimentacaoAutorizadas
                                                       ) ||
                                                       (!ehEmeiDaCemeiLocation &&
-                                                        frequenciaComSuspensaoAutorizadaPreenchida(
+                                                        frequenciaComSuspensaoAutorizadaPreenchidaESemObservacao(
                                                           formValuesAtualizados,
                                                           column,
                                                           categoria,
