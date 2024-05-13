@@ -21,12 +21,14 @@ import { CronogramaSimples } from "interfaces/pre_recebimento.interface";
 
 interface Props {
   setFiltros: Dispatch<SetStateAction<FiltrosRelatorioCronograma>>;
+  setCarregando: Dispatch<SetStateAction<boolean>>;
   setCronogramas: Dispatch<SetStateAction<CronogramaRelatorio[]>>;
   setConsultaRealizada?: Dispatch<SetStateAction<boolean>>;
 }
 
 const Filtros: React.FC<Props> = ({
   setFiltros,
+  setCarregando,
   setCronogramas,
   setConsultaRealizada,
 }) => {
@@ -76,9 +78,15 @@ const Filtros: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    buscaFornecedores();
-    buscarListaProdutos();
-    buscarDadosCronogramas();
+    (async () => {
+      setCarregando(true);
+      await Promise.all([
+        buscaFornecedores(),
+        buscarListaProdutos(),
+        buscarDadosCronogramas(),
+      ]);
+      setCarregando(false);
+    })();
   }, []);
 
   return (

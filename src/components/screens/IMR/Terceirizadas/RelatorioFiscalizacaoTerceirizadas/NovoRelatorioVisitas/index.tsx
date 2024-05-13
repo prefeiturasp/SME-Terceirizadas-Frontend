@@ -35,7 +35,7 @@ export const NovoRelatorioVisitas = () => {
   ): Promise<void> => {
     if (!values.escola || !values.data) {
       toastError(
-        "Os campos escola e data da visita são obrigatórios para salvar um rascunho."
+        "Os campos unidade educacional e data da visita são obrigatórios para salvar um rascunho."
       );
       return;
     }
