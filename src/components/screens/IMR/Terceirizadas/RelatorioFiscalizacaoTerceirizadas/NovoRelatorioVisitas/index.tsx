@@ -18,6 +18,7 @@ import {
 } from "./interfaces";
 import { createFormularioSupervisao } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { deepCopy } from "helpers/utilities";
+import { Formulario } from "./components/Formulario";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
@@ -78,6 +79,7 @@ export const NovoRelatorioVisitas = () => {
                   <hr />
                 </div>
               </div>
+              <Formulario />
               <div className="row float-end mt-4">
                 <div className="col-12">
                   <Botao
