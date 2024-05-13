@@ -220,6 +220,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                     component={InputComData}
                     name="data"
                     label="Data da Visita"
+                    placeholder="Selecione uma data"
                     minDate={null}
                     maxDate={moment().toDate()}
                     required
