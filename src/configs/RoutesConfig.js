@@ -317,9 +317,10 @@ import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProdut
 import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/CopiarAtribuicaoQuestoesPage";
 import FichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/FichaRecebimentoPage";
 import CadastroFichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/CadastroFichaRecebimentoPage";
+import { rotasSupervisao } from "./rotas/rotasSupervisao/index.js";
 import RelatorioCronogramaPage from "../pages/PreRecebimento/Relatorios/RelatorioCronogramaPage";
 
-const routesConfig = [
+let routesConfig = [
   {
     path: `/${constants.ALUNO}/${constants.DIETA_ESPECIAL}`,
     component: DietaEspecialAluno,
@@ -2089,5 +2090,7 @@ const routesConfig = [
     tipoUsuario: usuarioComAcessoAoRelatorioCronogramas(),
   },
 ];
+
+routesConfig = routesConfig.concat(rotasSupervisao);
 
 export default routesConfig;

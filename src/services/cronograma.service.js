@@ -176,3 +176,13 @@ export const getCronogramaPraCadastroRecebimento = async (uuid) => {
     toastError(getMensagemDeErro(error.response.status));
   }
 };
+
+export const baixarRelatorioCronogramasExcel = async (params) => {
+  try {
+    return await axios.get("/cronogramas/gerar-relatorio-xlsx-async/", {
+      params,
+    });
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};

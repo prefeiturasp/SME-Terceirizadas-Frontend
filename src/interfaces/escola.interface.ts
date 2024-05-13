@@ -64,3 +64,15 @@ export interface EnderecoInterface {
   bairro: string;
   cep: number;
 }
+
+export interface EscolaSimplissimaInterface {
+  codigo_eol: string;
+  diretoria_regional: DiretoriaRegionalInterface;
+  lote: string;
+  lote_nome: string;
+  nome: string;
+  quantidade_alunos: number;
+  terceirizada: string;
+  tipo_unidade: string;
+  uuid: string;
+}
