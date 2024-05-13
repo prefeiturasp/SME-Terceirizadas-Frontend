@@ -44,7 +44,7 @@ export default () => {
     if (response.data.count) {
       setCronogramas(response.data.results);
       setTotalizadores({
-        Total: response.data.count,
+        "Total de Cronogramas Criados": response.data.count,
         ...response.data.totalizadores,
       });
       setTotalResultados(response.data.count);
