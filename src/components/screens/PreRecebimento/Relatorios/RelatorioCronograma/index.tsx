@@ -9,6 +9,8 @@ import {
 } from "../../../../../services/cronograma.service.js";
 import { Paginacao } from "components/Shareable/Paginacao";
 import Listagem from "./components/Listagem";
+import "./styles.scss";
+import moment from "moment";
 
 import Botao from "components/Shareable/Botao";
 import {
@@ -29,6 +31,7 @@ export default () => {
   const [cronogramas, setCronogramas] = useState<Array<CronogramaRelatorio>>(
     []
   );
+  const [totalizadores, setTotalizadores] = useState<Record<string, number>>();
   const [enviandoArquivo, setEnviandoArquivo] = useState(false);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
@@ -40,6 +43,10 @@ export default () => {
     setAtivos([]);
     if (response.data.count) {
       setCronogramas(response.data.results);
+      setTotalizadores({
+        Total: response.data.count,
+        ...response.data.totalizadores,
+      });
       setTotalResultados(response.data.count);
       setConsultaRealizada(true);
     } else {
@@ -84,52 +91,78 @@ export default () => {
         <div className="card-body relatorio-cronograma">
           <Filtros
             setFiltros={setFiltros}
+            setCarregando={setCarregando}
             setCronogramas={setCronogramas}
             setConsultaRealizada={setConsultaRealizada}
           />
-          {consultaRealizada &&
-            (cronogramas.length === 0 ? (
-              <div className="text-center mt-4 mb-4">
-                Nenhum resultado encontrado
-              </div>
-            ) : (
-              <>
-                <Listagem
-                  objetos={cronogramas}
-                  ativos={ativos}
-                  setAtivos={setAtivos}
-                />
-                <div className="row">
-                  <div className="col">
-                    <Paginacao
-                      current={page}
-                      total={totalResultados}
-                      onChange={nextPage}
-                    />
-                  </div>
-                </div>
 
-                <div className="row mt-4 mb-2">
-                  <div className="col p-0">
-                    <Botao
-                      texto="Baixar em Excel"
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      icon={BUTTON_ICON.FILE_EXCEL}
-                      type={BUTTON_TYPE.BUTTON}
-                      disabled={enviandoArquivo}
-                      onClick={baixarRelatorioExcel}
-                      className="float-end"
-                    />
-                    {exibirModalCentralDownloads && (
-                      <ModalSolicitacaoDownload
-                        show={exibirModalCentralDownloads}
-                        setShow={setExibirModalCentralDownloads}
-                      />
-                    )}
+          {consultaRealizada && (
+            <>
+              {totalizadores && (
+                <div className="row mt-4">
+                  <div className="col-12 titulo-cards">
+                    TOTAL DE CRONOGRAMAS DE ENTREGAS - ATÉ{" "}
+                    {moment(new Date()).format("DD/MM/YYYY")}
                   </div>
+                  {Object.keys(totalizadores).map((totalizador, key) => {
+                    return (
+                      <div key={key} className="col-4 mt-3">
+                        <div className="totalizador ps-3 pe-3">
+                          <div className="d-flex justify-content-between">
+                            <div className="titulo">{totalizador}</div>
+                            <div className="valor">
+                              {totalizadores[totalizador]}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              </>
-            ))}
+              )}
+              {cronogramas.length === 0 ? (
+                <div className="text-center mt-4 mb-4">
+                  Nenhum resultado encontrado
+                </div>
+              ) : (
+                <>
+                  <Listagem
+                    objetos={cronogramas}
+                    ativos={ativos}
+                    setAtivos={setAtivos}
+                  />
+                  <div className="row">
+                    <div className="col">
+                      <Paginacao
+                        current={page}
+                        total={totalResultados}
+                        onChange={nextPage}
+                      />
+                    </div>
+                  </div>
+                  <div className="row mt-4 mb-2">
+                    <div className="col p-0">
+                      <Botao
+                        texto="Baixar em Excel"
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        icon={BUTTON_ICON.FILE_EXCEL}
+                        type={BUTTON_TYPE.BUTTON}
+                        disabled={enviandoArquivo}
+                        onClick={baixarRelatorioExcel}
+                        className="float-end"
+                      />
+                      {exibirModalCentralDownloads && (
+                        <ModalSolicitacaoDownload
+                          show={exibirModalCentralDownloads}
+                          setShow={setExibirModalCentralDownloads}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
+          )}
         </div>
       </div>
     </Spin>
