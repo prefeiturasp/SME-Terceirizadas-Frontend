@@ -26,7 +26,10 @@ import { LoteRascunhosInterface } from "./rascunhos.interface";
 import { TerceirizadaInterface } from "./terceirizada.interface";
 import { EditalContratoInterface } from "components/screens/Cadastros/EditaisContratosRefatorado/interfaces";
 import { FichaRecebimento } from "./recebimento.interface";
-import { PeriodoDeVisitaInterface } from "./imr.interface";
+import {
+  PeriodoDeVisitaInterface,
+  TipoOcorrenciaInterface,
+} from "./imr.interface";
 
 export interface ResponseInterface {
   data: Object;
@@ -213,10 +216,16 @@ export interface ResponseFichaRecebimento extends ResponseInterface {
   data: FichaRecebimento;
 }
 
-export interface ResponseGetEscolasTercTotal extends ResponseInterface {
+export interface ResponseGetEscolasTercTotalInterface
+  extends ResponseInterface {
   data: Array<EscolaSimplissimaInterface>;
 }
 
-export interface ResponsePeriodosDeVisita extends ResponseInterface {
+export interface ResponsePeriodosDeVisitaInterface extends ResponseInterface {
   data: ListagemNaoPaginada<PeriodoDeVisitaInterface>;
+}
+
+export interface ResponseFormularioSupervisaoTiposOcorrenciasInterface
+  extends ResponseInterface {
+  data: Array<TipoOcorrenciaInterface>;
 }

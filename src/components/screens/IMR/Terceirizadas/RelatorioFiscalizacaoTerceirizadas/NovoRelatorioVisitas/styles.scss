@@ -1,13 +1,17 @@
 @import "styles/variables.scss";
 
 div.novo-relatorio-visitas {
-  div.cabecalho {
-    h2 {
-      color: $green;
-      font-size: 14px;
-      font-weight: bold;
-    }
+  h2 {
+    color: $green;
+    font-size: 14px;
+    font-weight: bold;
+  }
 
+  input[type="radio"] {
+    accent-color: $green;
+  }
+
+  div.cabecalho {
     .ant-select-selection-placeholder {
       font-weight: normal !important;
     }
@@ -16,13 +20,49 @@ div.novo-relatorio-visitas {
       font-size: 14px;
       color: $gray;
 
-      input[type="radio"] {
-        accent-color: $green;
-      }
-
       label {
         color: $blackInput;
         margin-left: 0.5em;
+      }
+    }
+  }
+
+  div.formulario {
+    div.subtitle {
+      color: $grayHeader;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    table {
+      font-size: 14px;
+
+      tr {
+        border: 1px solid $grayIcon;
+
+        &:not(:last-child) {
+          border-bottom: none;
+        }
+
+        &.categoria {
+          background-color: $grayBackgroundTr;
+
+          th {
+            padding: 1em;
+
+            text-align: center;
+          }
+        }
+
+        &.tipo-ocorrencia {
+          td:not(:last-child) {
+            border-right: 1px solid $grayIcon;
+          }
+
+          td {
+            padding-top: 1em;
+          }
+        }
       }
     }
   }
