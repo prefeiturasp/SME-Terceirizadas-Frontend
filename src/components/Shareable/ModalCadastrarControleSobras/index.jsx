@@ -7,7 +7,6 @@ import { Spin } from "antd";
 import {
   required,
   requiredSearchSelectUnidEducDietas,
-  numeroDecimal,
   noSpaceStartOrEnd,
   requiredOptionSearchSelect,
 } from "helpers/fieldValidators";
@@ -35,6 +34,7 @@ import "./styles.scss";
 import { InputComData } from "../DatePicker";
 import { InputHorario } from "../Input/InputHorario";
 import moment from "moment";
+import { inteiroOuDecimal } from "../../../helpers/fieldValidators";
 
 const ModalCadastrarControleSobras = ({
   closeModal,
@@ -58,6 +58,8 @@ const ModalCadastrarControleSobras = ({
   const [HoraMedicao, setHoraMedicao] = useState("00:00");
   const [HoraMedicaoAlterada, setHoraMedicaoAlterada] = useState(false);
 
+  const [registroEdicao, setRegistroEdicao] = useState(selecionado);
+
   const fetchData = async () => {
     setCarregando(true);
     const resTiposAlimento = await consultaTiposAlimento();
@@ -70,6 +72,8 @@ const ModalCadastrarControleSobras = ({
 
   const checkInitialValues = async () => {
     if (selecionado) {
+      setRegistroEdicao(selecionado);
+
       const data_hora_medicao = selecionado.data_hora_medicao
         ? moment(selecionado.data_hora_medicao, "DD/MM/YYYY HH:mm")
         : null;
@@ -99,6 +103,8 @@ const ModalCadastrarControleSobras = ({
           selecionado?.escola.codigo_eol + " - " + selecionado.escola?.nome,
       });
     } else {
+      setRegistroEdicao(undefined);
+      
       setInitialValues({
         hora_medicao: "00:00",
       });
@@ -192,7 +198,7 @@ const ModalCadastrarControleSobras = ({
     await cadastrarControleSobras(payload)
       .then(() => {
         toastSuccess("Cadastro de Sobras efetuado com sucesso.");
-        closeModal();
+        setRegistroEdicao(payload);
         changePage();
       })
       .catch((error) => {
@@ -247,10 +253,10 @@ const ModalCadastrarControleSobras = ({
   };
 
   return (
-    <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
+    <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal} backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title>
-          {selecionado ? "Visualizar" : "Cadastrar"} Sobra
+          {registroEdicao ? "Visualizar" : "Cadastrar"} Sobra
         </Modal.Title>
       </Modal.Header>
       <Spin tip="Carregando..." spinning={carregando}>
@@ -275,7 +281,7 @@ const ModalCadastrarControleSobras = ({
                           })
                         )}
                         disabled={
-                          selecionado ||
+                          registroEdicao ||
                           tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
                           tipoUsuario === TIPO_PERFIL.ESCOLA
                         }
@@ -307,12 +313,12 @@ const ModalCadastrarControleSobras = ({
                         label="Unidade Educacional"
                         placeholder={"Digite um nome"}
                         className={
-                          selecionado
+                          registroEdicao
                             ? "input-controle-sobras"
                             : "input-busca-nome-item"
                         }
                         disabled={
-                          selecionado ||
+                          registroEdicao ||
                           tipoUsuario === TIPO_PERFIL.ESCOLA ||
                           !values.dre
                         }
@@ -328,118 +334,6 @@ const ModalCadastrarControleSobras = ({
                   <div className="row">
                     <div className="col-4">
                       <Field
-                        dataSource={tiposAlimentacao.map((tipo) => tipo.nome)}
-                        component={AutoCompleteField}
-                        name="tipo_alimentacao"
-                        label="Tipo de Alimentação"
-                        placeholder={"Digite um nome"}
-                        className={
-                          selecionado
-                            ? "input-controle-sobras"
-                            : "input-busca-nome-item"
-                        }
-                        required
-                        validate={composeValidators(
-                          required,
-                          requiredOptionSearchSelect(tiposAlimentacao, "nome")
-                        )}
-                        disabled={!!selecionado}
-                      />
-                    </div>
-                    <div className="col-4">
-                      <Field
-                        dataSource={tiposAlimento.map((tipo) => tipo.nome)}
-                        component={AutoCompleteField}
-                        name="tipo_alimento"
-                        label="Tipo de Alimento"
-                        placeholder={"Digite um nome"}
-                        className={
-                          selecionado
-                            ? "input-controle-sobras"
-                            : "input-busca-nome-item"
-                        }
-                        required
-                        validate={composeValidators(
-                          required,
-                          requiredOptionSearchSelect(tiposAlimento, "nome")
-                        )}
-                        disabled={!!selecionado}
-                      />
-                    </div>
-                    <div className="col-4">
-                      <Field
-                        label="Peso do Alimento Preparado (Kg)"
-                        name="peso_alimento"
-                        component={InputText}
-                        placeholder={"Digite um peso"}
-                        className={selecionado ? "input-controle-sobras" : ""}
-                        required
-                        validate={composeValidators(
-                          required,
-                          numeroDecimal,
-                          noSpaceStartOrEnd
-                        )}
-                        disabled={!!selecionado}
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-4">
-                      <Field
-                        dataSource={tiposRecipiente.map((tipo) => tipo.nome)}
-                        component={AutoCompleteField}
-                        name="tipo_recipiente"
-                        label="Tipo de Recipiente"
-                        placeholder={"Digite um nome"}
-                        className={
-                          selecionado
-                            ? "input-controle-sobras"
-                            : "input-busca-nome-item"
-                        }
-                        required
-                        validate={composeValidators(
-                          required,
-                          requiredOptionSearchSelect(tiposRecipiente, "nome")
-                        )}
-                        disabled={!!selecionado}
-                      />
-                    </div>
-                    <div className="col-4">
-                      <Field
-                        label="Peso do Recipiente (Kg)"
-                        name="peso_recipiente"
-                        component={InputText}
-                        placeholder={"Digite um peso"}
-                        required
-                        className={selecionado ? "input-controle-sobras" : ""}
-                        validate={composeValidators(
-                          required,
-                          numeroDecimal,
-                          noSpaceStartOrEnd
-                        )}
-                        disabled={!!selecionado}
-                      />
-                    </div>
-                    <div className="col-4">
-                      <Field
-                        label="Peso da Sobra"
-                        name="peso_sobra"
-                        component={InputText}
-                        placeholder={"Digite um peso"}
-                        required
-                        className={selecionado ? "input-controle-sobras" : ""}
-                        validate={composeValidators(
-                          required,
-                          numeroDecimal,
-                          noSpaceStartOrEnd
-                        )}
-                        disabled={!!selecionado}
-                      />
-                    </div>
-                  </div>
-                  <div className="row mb-3">
-                    <div className="col-4">
-                      <Field
                         component={InputComData}
                         name={"data_medicao"}
                         minDate={null}
@@ -448,9 +342,9 @@ const ModalCadastrarControleSobras = ({
                         placeholder="Selecione a Data"
                         className={
                           "input-data-hora" +
-                          (selecionado ? " input-controle-restos" : "")
+                          (registroEdicao ? " input-controle-restos" : "")
                         }
-                        disabled={!!selecionado}
+                        disabled={!!registroEdicao}
                         writable={false}
                         validate={required}
                         required
@@ -468,12 +362,124 @@ const ModalCadastrarControleSobras = ({
                         writable={false}
                         className={
                           "input-data-hora" +
-                          (selecionado ? " input-controle-restos" : "")
+                          (registroEdicao ? " input-controle-restos" : "")
                         }
                         validate={validaHora}
-                        disabled={!!selecionado}
+                        disabled={!!registroEdicao}
                         required
                         functionComponent
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4">
+                      <Field
+                        dataSource={tiposAlimentacao.map((tipo) => tipo.nome)}
+                        component={AutoCompleteField}
+                        name="tipo_alimentacao"
+                        label="Tipo de Alimentação"
+                        placeholder={"Digite um nome"}
+                        className={
+                          registroEdicao
+                            ? "input-controle-sobras"
+                            : "input-busca-nome-item"
+                        }
+                        required
+                        validate={composeValidators(
+                          required,
+                          requiredOptionSearchSelect(tiposAlimentacao, "nome")
+                        )}
+                        disabled={!!registroEdicao}
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        dataSource={tiposAlimento.map((tipo) => tipo.nome)}
+                        component={AutoCompleteField}
+                        name="tipo_alimento"
+                        label="Tipo de Alimento"
+                        placeholder={"Digite um nome"}
+                        className={
+                          registroEdicao
+                            ? "input-controle-sobras"
+                            : "input-busca-nome-item"
+                        }
+                        required
+                        validate={composeValidators(
+                          required,
+                          requiredOptionSearchSelect(tiposAlimento, "nome")
+                        )}
+                        disabled={!!registroEdicao}
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        dataSource={tiposRecipiente.map((tipo) => tipo.nome)}
+                        component={AutoCompleteField}
+                        name="tipo_recipiente"
+                        label="Tipo de Recipiente"
+                        placeholder={"Digite um nome"}
+                        className={
+                          registroEdicao
+                            ? "input-controle-sobras"
+                            : "input-busca-nome-item"
+                        }
+                        required
+                        validate={composeValidators(
+                          required,
+                          requiredOptionSearchSelect(tiposRecipiente, "nome")
+                        )}
+                        disabled={!!registroEdicao}
+                      />
+                    </div>
+                  </div>
+                  <div className="row mb-3">
+                    <div className="col-4">
+                      <Field
+                        label="Peso do Recipiente (Kg)"
+                        name="peso_recipiente"
+                        component={InputText}
+                        placeholder={"Digite um peso"}
+                        required
+                        className={registroEdicao ? "input-controle-sobras" : ""}
+                        validate={composeValidators(
+                          required,
+                          inteiroOuDecimal,
+                          noSpaceStartOrEnd
+                        )}
+                        disabled={!!registroEdicao}
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        label="Peso do Alimento Pronto (Kg)"
+                        name="peso_alimento"
+                        component={InputText}
+                        placeholder={"Digite um peso"}
+                        className={registroEdicao ? "input-controle-sobras" : ""}
+                        required
+                        validate={composeValidators(
+                          required,
+                          inteiroOuDecimal,
+                          noSpaceStartOrEnd
+                        )}
+                        disabled={!!registroEdicao}
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        label="Peso da Sobra (Kg)"
+                        name="peso_sobra"
+                        component={InputText}
+                        placeholder={"Digite um peso"}
+                        required
+                        className={registroEdicao ? "input-controle-sobras" : ""}
+                        validate={composeValidators(
+                          required,
+                          inteiroOuDecimal,
+                          noSpaceStartOrEnd
+                        )}
+                        disabled={!!registroEdicao}
                       />
                     </div>
                   </div>
@@ -488,7 +494,7 @@ const ModalCadastrarControleSobras = ({
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         className="me-3"
                       />
-                      {!selecionado && (
+                      {!registroEdicao && (
                         <Botao
                           texto="Salvar"
                           type={BUTTON_TYPE.SUBMIT}

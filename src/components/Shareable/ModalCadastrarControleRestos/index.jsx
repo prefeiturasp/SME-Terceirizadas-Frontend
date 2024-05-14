@@ -7,7 +7,6 @@ import { Spin } from "antd";
 import {
   required,
   requiredSearchSelectUnidEducDietas,
-  numeroDecimal,
   noSpaceStartOrEnd,
   requiredOptionSearchSelect,
 } from "helpers/fieldValidators";
@@ -30,6 +29,7 @@ import ManagedInputFileField from "../Input/InputFile/ManagedField";
 import { InputComData } from "../DatePicker";
 import moment from "moment";
 import { InputHorario } from "../Input/InputHorario";
+import { inteiroOuDecimal } from "../../../helpers/fieldValidators";
 
 const ModalCadastrarControleRestos = ({
   closeModal,
@@ -48,8 +48,12 @@ const ModalCadastrarControleRestos = ({
   const [HoraMedicao, setHoraMedicao] = useState("00:00");
   const [HoraMedicaoAlterada, setHoraMedicaoAlterada] = useState(false);
 
+  const [registroEdicao, setRegistroEdicao] = useState(selecionado);
+
   const checkInitialValues = async () => {
     if (selecionado) {
+      setRegistroEdicao(selecionado);
+
       const data_hora_medicao = selecionado.data_hora_medicao
         ? moment(selecionado.data_hora_medicao, "DD/MM/YYYY HH:mm")
         : null;
@@ -80,6 +84,8 @@ const ModalCadastrarControleRestos = ({
           selecionado?.escola.codigo_eol + " - " + selecionado.escola?.nome,
       });
     } else {
+      setRegistroEdicao(undefined);
+
       setHoraMedicao("00:00");
       setInitialValues({
         hora_medicao: "00:00",
@@ -162,7 +168,7 @@ const ModalCadastrarControleRestos = ({
     await cadastrarControleRestos(payload)
       .then(() => {
         toastSuccess("Cadastro de Resto efetuado com sucesso.");
-        closeModal();
+        setRegistroEdicao(payload);
         changePage();
       })
       .catch((error) => {
@@ -233,10 +239,10 @@ const ModalCadastrarControleRestos = ({
   };
 
   return (
-    <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
+    <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal} backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title>
-          {selecionado ? "Visualizar" : "Cadastrar"} Resto
+          {registroEdicao ? "Visualizar" : "Cadastrar"} Resto
         </Modal.Title>
       </Modal.Header>
       <Spin tip="Carregando..." spinning={carregando}>
@@ -261,7 +267,7 @@ const ModalCadastrarControleRestos = ({
                           })
                         )}
                         disabled={
-                          selecionado ||
+                          registroEdicao ||
                           tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
                           tipoUsuario === TIPO_PERFIL.ESCOLA
                         }
@@ -293,12 +299,12 @@ const ModalCadastrarControleRestos = ({
                         label="Unidade Educacional"
                         placeholder={"Digite um nome"}
                         className={
-                          selecionado
+                          registroEdicao
                             ? "input-controle-restos"
                             : "input-busca-nome-item"
                         }
                         disabled={
-                          selecionado ||
+                          registroEdicao ||
                           tipoUsuario === TIPO_PERFIL.ESCOLA ||
                           !values.dre
                         }
@@ -320,7 +326,7 @@ const ModalCadastrarControleRestos = ({
                         label="Tipo de Alimentação"
                         placeholder={"Digite um nome"}
                         className={
-                          selecionado
+                          registroEdicao
                             ? "input-controle-restos"
                             : "input-busca-nome-item"
                         }
@@ -329,23 +335,40 @@ const ModalCadastrarControleRestos = ({
                           required,
                           requiredOptionSearchSelect(tiposAlimentacao, "nome")
                         )}
-                        disabled={!!selecionado}
+                        disabled={!!registroEdicao}
                       />
                     </div>
-                    <div className="col-3">
+                    <div className="col-6">
                       <Field
-                        label="Peso do Resto(Kg)"
-                        name="peso_resto"
+                        label="Cardápio"
+                        name="cardapio"
                         component={InputText}
-                        placeholder={"Digite um peso"}
-                        className={selecionado ? "input-controle-restos" : ""}
+                        placeholder={"Digite o cardápio"}
+                        className={registroEdicao ? "input-controle-restos" : ""}
                         required
                         validate={composeValidators(
                           required,
-                          numeroDecimal,
                           noSpaceStartOrEnd
                         )}
-                        disabled={!!selecionado}
+                        disabled={!!registroEdicao}
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-3">
+                      <Field
+                        label="Peso do Resto (Kg)"
+                        name="peso_resto"
+                        component={InputText}
+                        placeholder={"Digite um peso"}
+                        className={registroEdicao ? "input-controle-restos" : ""}
+                        required
+                        validate={composeValidators(
+                          required,
+                          inteiroOuDecimal,
+                          noSpaceStartOrEnd
+                        )}
+                        disabled={!!registroEdicao}
                       />
                     </div>
                     <div className="col-3">
@@ -354,31 +377,14 @@ const ModalCadastrarControleRestos = ({
                         name="quantidade_distribuida"
                         component={InputText}
                         placeholder={"Digite uma quantidade distribuída"}
-                        className={selecionado ? "input-controle-restos" : ""}
+                        className={registroEdicao ? "input-controle-restos" : ""}
                         required
                         validate={composeValidators(
                           required,
-                          numeroDecimal,
+                          inteiroOuDecimal,
                           noSpaceStartOrEnd
                         )}
-                        disabled={!!selecionado}
-                      />
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-6">
-                      <Field
-                        label="Cardápio"
-                        name="cardapio"
-                        component={InputText}
-                        placeholder={"Digite o cardápio"}
-                        className={selecionado ? "input-controle-restos" : ""}
-                        required
-                        validate={composeValidators(
-                          required,
-                          noSpaceStartOrEnd
-                        )}
-                        disabled={!!selecionado}
+                        disabled={!!registroEdicao}
                       />
                     </div>
                     <div className="col-6">
@@ -386,13 +392,13 @@ const ModalCadastrarControleRestos = ({
                         label="Resto Predominante"
                         name="resto_predominante"
                         component={InputText}
-                        className={selecionado ? "input-controle-restos" : ""}
+                        className={registroEdicao ? "input-controle-restos" : ""}
                         required
                         validate={composeValidators(
                           required,
                           noSpaceStartOrEnd
                         )}
-                        disabled={!!selecionado}
+                        disabled={!!registroEdicao}
                       />
                     </div>
                   </div>
@@ -407,9 +413,9 @@ const ModalCadastrarControleRestos = ({
                         placeholder="Selecione a Data"
                         className={
                           "input-data-hora" +
-                          (selecionado ? " input-controle-restos" : "")
+                          (registroEdicao ? " input-controle-restos" : "")
                         }
-                        disabled={!!selecionado}
+                        disabled={!!registroEdicao}
                         writable={false}
                         validate={required}
                         required
@@ -427,16 +433,16 @@ const ModalCadastrarControleRestos = ({
                         writable={false}
                         className={
                           "input-data-hora" +
-                          (selecionado ? " input-controle-restos" : "")
+                          (registroEdicao ? " input-controle-restos" : "")
                         }
-                        disabled={!!selecionado}
+                        disabled={!!registroEdicao}
                         validate={validaHora}
                         required
                         functionComponent
                       />
                     </div>
                   </div>
-                  {!selecionado && (
+                  {!registroEdicao && (
                     <div className="row">
                       <section className="form-row attachments">
                         <div className="col-6">
@@ -454,20 +460,18 @@ const ModalCadastrarControleRestos = ({
                             name="imagens"
                             accept=".png, .jpeg, .jpg"
                             icone={BUTTON_ICON.ATTACH}
-                            required
-                            validate={required}
                             toastSuccessMessage="Anexo incluso com sucesso"
                           />
                         </div>
                       </section>
                     </div>
                   )}
-                  {selecionado && (
+                  {registroEdicao && (
                     <div className="row">
                       <div className="section-cards-imagens pb-3">
-                        {(selecionado.imagens?.length ?? []) > 0 && (
+                        {(registroEdicao.imagens?.length ?? []) > 0 && (
                           <>
-                            {selecionado.imagens
+                            {registroEdicao.imagens
                               .filter((anexo) => anexo.arquivo.includes("media"))
                               .map((anexo, key) => {
                                 return (
@@ -507,7 +511,7 @@ const ModalCadastrarControleRestos = ({
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         className="me-3"
                       />
-                      {!selecionado && (
+                      {!registroEdicao && (
                         <Botao
                           texto="Salvar"
                           type={BUTTON_TYPE.SUBMIT}
