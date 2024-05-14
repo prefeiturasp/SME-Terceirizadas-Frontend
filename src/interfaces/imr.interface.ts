@@ -23,10 +23,17 @@ export interface ParametrizacoesInterface {
   tipo_pergunta: TipoPerguntaInterface;
 }
 
+export interface PenalidadeInterface {
+  descricao: string;
+  numero_clausula: string;
+  obrigacoes: Array<string>;
+}
+
 export interface TipoOcorrenciaInterface {
   categoria: CategoriaTipoOcorrenciaInterface;
   descricao: string;
   parametrizacoes: Array<ParametrizacoesInterface>;
+  penalidade: PenalidadeInterface;
   posicao: number;
   titulo: string;
   uuid: string;

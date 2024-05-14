@@ -42,7 +42,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                     tipoOcorrencia.categoria.nome !==
                       tiposOcorrencia[index - 1].categoria.nome) && (
                     <tr className="row categoria">
-                      <th className="col-12" colSpan={3}>
+                      <th className="col-12 pb-3" colSpan={3}>
                         {tipoOcorrencia.categoria.nome}
                       </th>
                     </tr>
@@ -51,7 +51,19 @@ export const Formulario = ({ ...props }: FormularioType) => {
                     <td className="col-1 fw-bold text-center pb-3">
                       {index + 1}
                     </td>
-                    <td className="col-9">{tipoOcorrencia.descricao}</td>
+                    <td className="col-9 pb-3">
+                      <div>
+                        <b>{tipoOcorrencia.titulo}:</b>{" "}
+                        {tipoOcorrencia.descricao}
+                      </div>
+                      <div>
+                        <b>
+                          Penalidade:{" "}
+                          {tipoOcorrencia.penalidade.numero_clausula} Obrigação:{" "}
+                          {tipoOcorrencia.penalidade.obrigacoes.toString()}
+                        </b>
+                      </div>
+                    </td>
                     <td className="col-2">
                       <div className="row ms-3">
                         <div className="col-12">
