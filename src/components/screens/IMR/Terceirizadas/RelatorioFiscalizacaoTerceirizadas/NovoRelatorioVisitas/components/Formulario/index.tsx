@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Field } from "react-final-form";
 import { required } from "helpers/fieldValidators";
 import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
+import { FormApi } from "final-form";
 
 type FormularioType = {
   tiposOcorrencia: Array<TipoOcorrenciaInterface>;
+  form: FormApi<any, Partial<any>>;
 };
 
 export const Formulario = ({ ...props }: FormularioType) => {
-  const { tiposOcorrencia } = props;
+  const { tiposOcorrencia, form } = props;
+
+  useEffect(() => {
+    tiposOcorrencia.forEach((tipoOcorrencia) => {
+      form.change(`resposta_${tipoOcorrencia.uuid}`, "sim");
+    });
+  }, []);
 
   return (
     <div className="formulario">
@@ -40,13 +48,15 @@ export const Formulario = ({ ...props }: FormularioType) => {
                     </tr>
                   )}
                   <tr className="row tipo-ocorrencia">
-                    <td className="col-1 fw-bold text-center">{index + 1}</td>
+                    <td className="col-1 fw-bold text-center pb-3">
+                      {index + 1}
+                    </td>
                     <td className="col-9">{tipoOcorrencia.descricao}</td>
                     <td className="col-2">
-                      <div className="row">
+                      <div className="row ms-3">
                         <div className="col-12">
                           <Field
-                            name="resposta"
+                            name={`resposta_${tipoOcorrencia.uuid}`}
                             component="input"
                             type="radio"
                             value="sim"
@@ -54,7 +64,9 @@ export const Formulario = ({ ...props }: FormularioType) => {
                             required
                             validate={required}
                           />
-                          <label htmlFor="sim">Sim</label>
+                          <label className="ms-2" htmlFor="sim">
+                            Sim
+                          </label>
                         </div>
                       </div>
                     </td>
