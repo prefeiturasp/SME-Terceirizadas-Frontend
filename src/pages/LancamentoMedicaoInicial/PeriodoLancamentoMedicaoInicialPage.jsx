@@ -24,7 +24,7 @@ const atual = {
   titulo: "Lançamento Medição Inicial",
 };
 
-export default () => (
+export const PeriodoLancamentoMedicaoInicialPage = () => (
   <Page titulo={atual.titulo}>
     <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
     <PeriodoLancamentoMedicaoInicial />
