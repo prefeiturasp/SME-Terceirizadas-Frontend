@@ -1,8 +1,15 @@
 import React from "react";
 import { Field } from "react-final-form";
 import { required } from "helpers/fieldValidators";
+import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
 
-export const Formulario = () => {
+type FormularioType = {
+  tiposOcorrencia: Array<TipoOcorrenciaInterface>;
+};
+
+export const Formulario = ({ ...props }: FormularioType) => {
+  const { tiposOcorrencia } = props;
+
   return (
     <div className="formulario">
       <div className="row mt-3 mb-3">
@@ -20,37 +27,41 @@ export const Formulario = () => {
       <div className="row">
         <div className="col-12">
           <table>
-            <tr className="row categoria">
-              <th className="col-12" colSpan={3}>
-                FUNCIONÁRIOS
-              </th>
-            </tr>
-            <tr className="row tipo-ocorrencia">
-              <td className="col-1 fw-bold text-center">1</td>
-              <td className="col-9">
-                UNIFORME DOS MANIPULADORES: Funcionários utilizavam uniforme
-                completo? Se NÃO, detalhar qual item do uniforme faltou, o que
-                estava utilizando em substituição aos itens previstos e nome
-                completo do(s) funcionário(s). Penalidade: 10.7.41 Obrigação:
-                Anexo I, itens 1.9.4 e 3.1.c; Anexo V, itens 5 e 7
-              </td>
-              <td className="col-2">
-                <div className="row">
-                  <div className="col-12">
-                    <Field
-                      name="resposta"
-                      component="input"
-                      type="radio"
-                      value="sim"
-                      id="sim"
-                      required
-                      validate={required}
-                    />
-                    <label htmlFor="sim">Sim</label>
-                  </div>
-                </div>
-              </td>
-            </tr>
+            {tiposOcorrencia.map((tipoOcorrencia, index) => {
+              return (
+                <>
+                  {(index === 0 ||
+                    tipoOcorrencia.categoria.nome !==
+                      tiposOcorrencia[index - 1].categoria.nome) && (
+                    <tr className="row categoria">
+                      <th className="col-12" colSpan={3}>
+                        {tipoOcorrencia.categoria.nome}
+                      </th>
+                    </tr>
+                  )}
+                  <tr className="row tipo-ocorrencia">
+                    <td className="col-1 fw-bold text-center">{index + 1}</td>
+                    <td className="col-9">{tipoOcorrencia.descricao}</td>
+                    <td className="col-2">
+                      <div className="row">
+                        <div className="col-12">
+                          <Field
+                            name="resposta"
+                            component="input"
+                            type="radio"
+                            value="sim"
+                            id="sim"
+                            required
+                            validate={required}
+                          />
+                          <label htmlFor="sim">Sim</label>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </>
+              );
+            })}
           </table>
         </div>
       </div>

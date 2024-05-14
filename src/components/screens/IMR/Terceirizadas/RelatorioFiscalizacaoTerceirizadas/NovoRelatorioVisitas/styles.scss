@@ -30,11 +30,13 @@ div.novo-relatorio-visitas {
   div.formulario {
     div.subtitle {
       color: $grayHeader;
-      font-weight: 400;
       font-size: 14px;
+      font-weight: 400;
     }
 
     table {
+      font-size: 14px;
+
       tr {
         border: 1px solid $grayIcon;
 

@@ -24,6 +24,7 @@ import { deepCopy } from "helpers/utilities";
 import { Formulario } from "./components/Formulario";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
 import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
+import { Spin } from "antd";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
@@ -32,9 +33,10 @@ export const NovoRelatorioVisitas = () => {
 
   const [escolaSelecionada, setEscolaSelecionada] =
     useState<EscolaLabelInterface>();
-  const [tiposOcorrencia, setTiposOcorrencia] = useState(
-    Array<TipoOcorrenciaInterface>
-  );
+  const [tiposOcorrencia, setTiposOcorrencia] =
+    useState<Array<TipoOcorrenciaInterface>>();
+  const [loadingTiposOcorrencia, setLoadingTiposOcorrencia] = useState(false);
+  const [erroAPI, setErroAPI] = useState<string>("");
 
   const navigate: NavigateFunction = useNavigate();
 
@@ -65,17 +67,21 @@ export const NovoRelatorioVisitas = () => {
     }
   };
 
-  const getTiposOcorrenciaPorEditalAsync = async () => {
+  const getTiposOcorrenciaPorEditalAsync = async (): Promise<void> => {
+    setLoadingTiposOcorrencia(true);
     const response: ResponseFormularioSupervisaoTiposOcorrenciasInterface =
       await getTiposOcorrenciaPorEdital({
         edital_uuid: escolaSelecionada.edital,
       });
     if (response.status === HTTP_STATUS.OK) {
       setTiposOcorrencia(response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar tipos de ocorrência do edital da unidade educacional. Tente novamente mais tarde."
+      );
     }
+    setLoadingTiposOcorrencia(false);
   };
-
-  console.log(tiposOcorrencia);
 
   useEffect(() => {
     if (escolaSelecionada) {
@@ -105,7 +111,13 @@ export const NovoRelatorioVisitas = () => {
                   <hr />
                 </div>
               </div>
-              <Formulario />
+              {!erroAPI && (
+                <Spin spinning={loadingTiposOcorrencia}>
+                  {tiposOcorrencia && (
+                    <Formulario tiposOcorrencia={tiposOcorrencia} />
+                  )}
+                </Spin>
+              )}
               <div className="row float-end mt-4">
                 <div className="col-12">
                   <Botao
