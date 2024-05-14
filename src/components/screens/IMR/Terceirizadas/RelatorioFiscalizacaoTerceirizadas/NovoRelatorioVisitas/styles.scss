@@ -36,6 +36,7 @@ div.novo-relatorio-visitas {
 
     table {
       font-size: 14px;
+      width: 100%;
 
       tr {
         border: 1px solid $grayIcon;
@@ -49,7 +50,6 @@ div.novo-relatorio-visitas {
 
           th {
             padding: 1em;
-
             text-align: center;
           }
         }
@@ -61,6 +61,10 @@ div.novo-relatorio-visitas {
 
           td {
             padding-top: 1em;
+
+            &:first-child {
+              padding-top: 2.5em;
+            }
           }
         }
       }
