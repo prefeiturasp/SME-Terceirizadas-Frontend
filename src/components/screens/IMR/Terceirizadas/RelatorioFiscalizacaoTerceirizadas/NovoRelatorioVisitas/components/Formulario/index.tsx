@@ -1,4 +1,6 @@
 import React from "react";
+import { Field } from "react-final-form";
+import { required } from "helpers/fieldValidators";
 
 export const Formulario = () => {
   return (
@@ -32,7 +34,22 @@ export const Formulario = () => {
                 completo do(s) funcionário(s). Penalidade: 10.7.41 Obrigação:
                 Anexo I, itens 1.9.4 e 3.1.c; Anexo V, itens 5 e 7
               </td>
-              <td className="col-2">Sim</td>
+              <td className="col-2">
+                <div className="row">
+                  <div className="col-12">
+                    <Field
+                      name="resposta"
+                      component="input"
+                      type="radio"
+                      value="sim"
+                      id="sim"
+                      required
+                      validate={required}
+                    />
+                    <label htmlFor="sim">Sim</label>
+                  </div>
+                </div>
+              </td>
             </tr>
           </table>
         </div>

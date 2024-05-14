@@ -13,8 +13,8 @@ import { getPeriodosVisita } from "services/imr/relatorioFiscalizacaoTerceirizad
 import { InputComData } from "components/Shareable/DatePicker";
 import {
   ResponseDiretoriasRegionaisSimplissimaInterface,
-  ResponseGetEscolasTercTotal,
-  ResponsePeriodosDeVisita,
+  ResponseGetEscolasTercTotalInterface,
+  ResponsePeriodosDeVisitaInterface,
 } from "interfaces/responses.interface";
 import {
   DiretoriaRegionalInterface,
@@ -65,9 +65,10 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
 
   const getEscolasTercTotalAsync = async (dreUuid: string): Promise<void> => {
     setLoadingEscolas(true);
-    const response: ResponseGetEscolasTercTotal = await getEscolasTercTotal({
-      dre: dreUuid,
-    });
+    const response: ResponseGetEscolasTercTotalInterface =
+      await getEscolasTercTotal({
+        dre: dreUuid,
+      });
     if (response.status === HTTP_STATUS.OK) {
       setEscolas(
         response.data.map((escola: EscolaSimplissimaInterface) => {
@@ -75,7 +76,10 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
             label: `${escola.codigo_eol} - ${escola.nome}`,
             value: `${escola.codigo_eol} - ${escola.nome}`,
             uuid: escola.uuid,
-            lote_nome: escola.lote_nome,
+            lote_nome: escola.lote_obj?.nome,
+            edital: escola.lote_obj?.contratos_do_lote.find(
+              (lote) => !lote.encerrado
+            )?.edital,
             terceirizada: escola.terceirizada,
           };
         })
@@ -87,7 +91,8 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
   };
 
   const getPeriodosVisitaAsync = async (): Promise<void> => {
-    const response: ResponsePeriodosDeVisita = await getPeriodosVisita();
+    const response: ResponsePeriodosDeVisitaInterface =
+      await getPeriodosVisita();
     if (response.status === HTTP_STATUS.OK) {
       setPeriodosVisita(response.data.results);
     } else {

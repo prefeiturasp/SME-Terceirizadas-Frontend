@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Form } from "react-final-form";
 import { Cabecalho } from "./components/Cabecalho";
@@ -16,9 +16,14 @@ import {
   EscolaLabelInterface,
   NovoRelatorioVisitasFormInterface,
 } from "./interfaces";
-import { createFormularioSupervisao } from "services/imr/relatorioFiscalizacaoTerceirizadas";
+import {
+  createFormularioSupervisao,
+  getTiposOcorrenciaPorEdital,
+} from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { deepCopy } from "helpers/utilities";
 import { Formulario } from "./components/Formulario";
+import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
+import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
@@ -27,6 +32,9 @@ export const NovoRelatorioVisitas = () => {
 
   const [escolaSelecionada, setEscolaSelecionada] =
     useState<EscolaLabelInterface>();
+  const [tiposOcorrencia, setTiposOcorrencia] = useState(
+    Array<TipoOcorrenciaInterface>
+  );
 
   const navigate: NavigateFunction = useNavigate();
 
@@ -56,6 +64,24 @@ export const NovoRelatorioVisitas = () => {
       );
     }
   };
+
+  const getTiposOcorrenciaPorEditalAsync = async () => {
+    const response: ResponseFormularioSupervisaoTiposOcorrenciasInterface =
+      await getTiposOcorrenciaPorEdital({
+        edital_uuid: escolaSelecionada.edital,
+      });
+    if (response.status === HTTP_STATUS.OK) {
+      setTiposOcorrencia(response.data);
+    }
+  };
+
+  console.log(tiposOcorrencia);
+
+  useEffect(() => {
+    if (escolaSelecionada) {
+      getTiposOcorrenciaPorEditalAsync();
+    }
+  }, [escolaSelecionada]);
 
   const onSubmit = async (
     values: NovoRelatorioVisitasFormInterface

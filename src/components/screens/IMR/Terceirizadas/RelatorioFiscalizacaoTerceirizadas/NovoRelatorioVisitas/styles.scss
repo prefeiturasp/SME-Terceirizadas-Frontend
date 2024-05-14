@@ -7,6 +7,10 @@ div.novo-relatorio-visitas {
     font-weight: bold;
   }
 
+  input[type="radio"] {
+    accent-color: $green;
+  }
+
   div.cabecalho {
     .ant-select-selection-placeholder {
       font-weight: normal !important;
@@ -15,10 +19,6 @@ div.novo-relatorio-visitas {
     section.nutri-acompanhou-visita {
       font-size: 14px;
       color: $gray;
-
-      input[type="radio"] {
-        accent-color: $green;
-      }
 
       label {
         color: $blackInput;

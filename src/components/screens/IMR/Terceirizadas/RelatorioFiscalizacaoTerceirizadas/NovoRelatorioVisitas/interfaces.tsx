@@ -15,5 +15,6 @@ export interface EscolaLabelInterface {
   value: string;
   lote_nome: string;
   terceirizada: string;
+  edital: string;
   uuid: string;
 }
