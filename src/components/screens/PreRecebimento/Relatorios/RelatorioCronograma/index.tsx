@@ -6,6 +6,7 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   getListagemRelatorioCronogramas,
   baixarRelatorioCronogramasExcel,
+  baixarRelatorioCronogramasPdf,
 } from "../../../../../services/cronograma.service.js";
 import { Paginacao } from "components/Shareable/Paginacao";
 import Listagem from "./components/Listagem";
@@ -68,18 +69,19 @@ export default () => {
     }
   }, [filtros]);
 
-  const baixarRelatorioExcel = async () => {
+  const baixarRelatorio = async (formato: "xlsx" | "pdf") => {
     setEnviandoArquivo(true);
 
     try {
       const params = gerarParametrosConsulta(filtros);
-      const response = await baixarRelatorioCronogramasExcel(params);
+      const response =
+        formato === "xlsx"
+          ? await baixarRelatorioCronogramasExcel(params)
+          : await baixarRelatorioCronogramasPdf(params);
 
-      if (response.status === 200) {
-        setExibirModalCentralDownloads(true);
-      } else {
-        toastError("Erro ao exportar xlsx. Tente novamente mais tarde.");
-      }
+      response?.status === 200 && setExibirModalCentralDownloads(true);
+    } catch {
+      toastError(`Erro ao exportar ${formato}. Tente novamente mais tarde.`);
     } finally {
       setEnviandoArquivo(false);
     }
@@ -143,13 +145,22 @@ export default () => {
                   <div className="row mt-4 mb-2">
                     <div className="col p-0">
                       <Botao
+                        texto="Baixar em PDF"
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        icon={BUTTON_ICON.FILE_PDF}
+                        type={BUTTON_TYPE.BUTTON}
+                        disabled={enviandoArquivo}
+                        onClick={() => baixarRelatorio("pdf")}
+                        className="float-end"
+                      />
+                      <Botao
                         texto="Baixar em Excel"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         icon={BUTTON_ICON.FILE_EXCEL}
                         type={BUTTON_TYPE.BUTTON}
                         disabled={enviandoArquivo}
-                        onClick={baixarRelatorioExcel}
-                        className="float-end"
+                        onClick={() => baixarRelatorio("xlsx")}
+                        className="float-end me-3"
                       />
                       {exibirModalCentralDownloads && (
                         <ModalSolicitacaoDownload
