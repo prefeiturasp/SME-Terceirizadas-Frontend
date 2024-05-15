@@ -546,14 +546,15 @@ export default ({ analiseSolicitacao }) => {
                         />
                       </div>
                     )}
-                    {(usuarioEhDilogDiretoria() && analisadoPelaDinutre()) ||
-                      (usuarioEhCronogramaOuCodae() && analisadoPelaDilog() && (
-                        <AnaliseDilogDiretoria
-                          solicitacao={solicitacaoAlteracaoCronograma}
-                          aprovacaoDilog={aprovacaoDilog}
-                          setAprovacaoDilog={setAprovacaoDilog}
-                        />
-                      ))}
+                    {((usuarioEhDilogDiretoria() && analisadoPelaDinutre()) ||
+                      (usuarioEhCronogramaOuCodae() &&
+                        analisadoPelaDilog())) && (
+                      <AnaliseDilogDiretoria
+                        solicitacao={solicitacaoAlteracaoCronograma}
+                        aprovacaoDilog={aprovacaoDilog}
+                        setAprovacaoDilog={setAprovacaoDilog}
+                      />
+                    )}
 
                     <div className="mt-4 mb-4">
                       <AcoesAlterar
