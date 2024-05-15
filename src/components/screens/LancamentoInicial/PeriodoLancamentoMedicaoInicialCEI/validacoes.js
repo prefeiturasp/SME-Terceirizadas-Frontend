@@ -709,7 +709,7 @@ export const exibirTooltipSuspensoesAutorizadasCEI = (
   );
 };
 
-export const frequenciaComSuspensaoAutorizadaPreenchida = (
+export const frequenciaComSuspensaoAutorizadaPreenchidaESemObservacao = (
   formValuesAtualizados,
   column,
   categoria,
@@ -742,6 +742,9 @@ export const frequenciaComSuspensaoAutorizadaPreenchida = (
     suspensoesAutorizadas &&
     suspensoesAutorizadas.filter((suspensao) => suspensao.dia === column.dia)
       .length > 0 &&
-    Object.keys(errosMesmoDia).length === 0
+    Object.keys(errosMesmoDia).length === 0 &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ]
   );
 };

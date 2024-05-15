@@ -31,7 +31,7 @@ const anterior = [
   },
 ];
 
-export default () => (
+export const EditarParametrizacaoFinanceiraPage = () => (
   <Page titulo="Editar Parametrização Financeira" botaoVoltar>
     <Breadcrumb home={"/"} anteriores={anterior} atual={atual} />
     <AdicionarParametrizacaoFinanceira />

@@ -199,6 +199,12 @@ export const DETALHAR_NOTIFICACAO = "detalhar-notificacao";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
+export const SUPERVISAO = "supervisao";
+export const TERCEIRIZADAS = "terceirizadas";
+export const RELATORIO_FISCALIZACAO_TERCEIRIZADAS =
+  "relatorio-fiscalizacao-terceirizadas";
+export const NOVO_RELATORIO_VISITAS = "novo-relatorio-visitas";
+
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 export const PERIODO_LANCAMENTO = "periodo-lancamento";
 export const PERIODO_LANCAMENTO_CEI = "periodo-lancamento-cei";

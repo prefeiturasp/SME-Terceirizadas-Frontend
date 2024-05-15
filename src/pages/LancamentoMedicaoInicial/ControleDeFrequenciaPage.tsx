@@ -16,7 +16,7 @@ const anterior = [
   },
 ];
 
-export default () => (
+export const ControleDeFrequenciaPage = () => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={"/"}>
     <Breadcrumb home={"/"} anteriores={anterior} atual={atual} />
     <ControleDeFrequencia />

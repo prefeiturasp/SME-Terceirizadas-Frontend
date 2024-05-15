@@ -16,7 +16,7 @@ const atual = {
   titulo: "Medição Inicial",
 };
 
-export default () => (
+export const AcompanhamentoDeLancamentosPage = () => (
   <Page botaoVoltar voltarPara={HOME} titulo={"Acompanhamento de Lançamentos"}>
     <Breadcrumb home={HOME} atual={atual} />
     <AcompanhamentoDeLancamentos />

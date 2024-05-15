@@ -28,7 +28,7 @@ const anteriores = [
   },
 ];
 
-export default () => (
+export const ConferenciaDosLancamentosPage = () => (
   <Page botaoVoltar titulo={"Conferência dos Lançamentos"}>
     <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
     <ConferenciaDosLancamentos />
