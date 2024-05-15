@@ -598,6 +598,13 @@ export const usuarioEhDilogQualidadeOuCronograma = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEhCronogramaOuCodae = () => {
+  return [
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhPreRecebimento = () => {
   return (
     localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO ||
