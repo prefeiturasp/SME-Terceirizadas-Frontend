@@ -8,7 +8,7 @@ import { usuarioEhNutricionistaSupervisao } from "helpers/utilities";
 import { ListaRelatoriosFiscalizacaoTerceirizadasPage } from "pages/IMR/Terceirizadas/RelatorioFiscalizacaoTerceirizadas/ListaRelatoriosPage";
 import { NovoRelatorioVisitasPage } from "pages/IMR/Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitasPage";
 
-export const rotasSupervisao = [
+export const supervisao = [
   {
     path: `/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}`,
     component: ListaRelatoriosFiscalizacaoTerceirizadasPage,

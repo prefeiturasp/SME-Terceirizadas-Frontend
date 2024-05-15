@@ -28,7 +28,7 @@ const anterior = [
   },
 ];
 
-export default () => (
+export const CadastroDeClausulasPage = () => (
   <Page titulo={atual.titulo} botaoVoltar>
     <Breadcrumb home={"/"} anteriores={anterior} atual={atual} />
     <CadastroDeClausulas />
