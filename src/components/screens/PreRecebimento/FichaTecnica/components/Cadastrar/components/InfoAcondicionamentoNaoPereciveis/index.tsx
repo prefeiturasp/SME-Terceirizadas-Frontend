@@ -470,6 +470,10 @@ export default ({
             toastSuccess={"Arquivo incluído com sucesso!"}
             alignLeft
           />
+          <label className="col-12 label-input">
+            <span className="red">* Campo Obrigatório: &nbsp;</span>
+            Envie um arquivo no formato: PDF, com até 10MB
+          </label>
         </div>
       </section>
 
