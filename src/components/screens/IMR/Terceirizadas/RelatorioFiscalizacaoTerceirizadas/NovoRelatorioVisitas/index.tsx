@@ -105,6 +105,7 @@ export const NovoRelatorioVisitas = () => {
                 values={form.getState().values}
                 form={form}
                 setEscolaSelecionada={setEscolaSelecionada}
+                escolaSelecionada={escolaSelecionada}
               />
               <div className="row">
                 <div className="col-12">
