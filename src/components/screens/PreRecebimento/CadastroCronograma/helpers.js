@@ -84,5 +84,7 @@ export const formataPayload = (
     tipo_carga: values[`tipo_recebimento_${index}`],
   }));
 
+  payload.observacoes = values.observacoes;
+
   return payload;
 };
