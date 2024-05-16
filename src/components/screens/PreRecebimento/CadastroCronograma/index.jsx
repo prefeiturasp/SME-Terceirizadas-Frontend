@@ -9,6 +9,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { Field, Form, FormSpy } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { getNomesDistribuidores } from "services/logistica.service";
 import Select from "components/Shareable/Select";
@@ -267,6 +268,7 @@ export default () => {
     );
     cronogramaValues["numero"] = cronograma.numero;
     cronogramaValues["uuid"] = cronograma.uuid;
+    cronogramaValues["observacoes"] = cronograma.observacoes;
 
     const etapaValues = {};
     cronograma.etapas.forEach((etapa, i) => {
@@ -764,6 +766,16 @@ export default () => {
                       />
                     </div>
                   )}
+
+                  <div className="row mt-2">
+                    <div className="col-12">
+                      <Field
+                        component={TextArea}
+                        label="Observações"
+                        name="observacoes"
+                      />
+                    </div>
+                  </div>
 
                   <hr />
 

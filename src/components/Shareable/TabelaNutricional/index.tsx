@@ -173,8 +173,10 @@ const TabelaNutricional: React.FC<Props> = ({
                   name={`valor_diario_${informacao.uuid}`}
                   className="input-tabela-nutricional"
                   required
-                  validate={required}
-                  type="number"
+                  validate={composeValidators(
+                    required,
+                    inteiroOuDecimalComVirgula
+                  )}
                   disabled={desabilitar}
                 />
                 <span>%</span>
@@ -260,8 +262,10 @@ const TabelaNutricional: React.FC<Props> = ({
                     name={`valor_diario_${informacao.uuid}`}
                     className="input-tabela-nutricional"
                     required
-                    validate={required}
-                    apenasNumeros
+                    validate={composeValidators(
+                      required,
+                      inteiroOuDecimalComVirgula
+                    )}
                     disabled={desabilitar}
                   />
                   <span>%</span>
