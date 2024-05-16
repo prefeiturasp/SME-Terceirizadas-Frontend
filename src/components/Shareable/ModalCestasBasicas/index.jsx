@@ -21,7 +21,7 @@ const ModalCestasBasicas = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="row">
+          <div className="row py-2">
             <div className="col-2">
               <div className="text-center">
                 <img src="/assets/image/alimentos.svg" alt="Alimentos" />
@@ -39,7 +39,7 @@ const ModalCestasBasicas = () => {
             </div>
           </div>
 
-          <div className="row gray-bg">
+          <div className="row gray-bg py-2">
             <div className="col-12 ">
               O <span className="fw-bold">Cronograma de Entrega </span>e a{" "}
               <span className="fw-bold">lista dos alunos </span>
@@ -50,7 +50,7 @@ const ModalCestasBasicas = () => {
             </div>
           </div>
 
-          <div className="row">
+          <div className="row py-2">
             <div className="col-12">
               <span className="fw-bold">Você receberá um e-mail </span>
               com as datas de entrega e orientações para o recebimento,
@@ -58,7 +58,7 @@ const ModalCestasBasicas = () => {
             </div>
           </div>
 
-          <div className="row gray-bg">
+          <div className="row gray-bg py-2">
             <div className="col-12">
               Em caso de dúvidas, entre em contato com a{" "}
               <span className="fw-bold">DIAF - DRE </span>
