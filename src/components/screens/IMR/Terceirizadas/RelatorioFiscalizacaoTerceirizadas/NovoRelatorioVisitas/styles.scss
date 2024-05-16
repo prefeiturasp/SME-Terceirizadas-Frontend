@@ -60,10 +60,40 @@ div.novo-relatorio-visitas {
           }
 
           td {
-            padding-top: 1em;
-
             &:first-child {
-              padding-top: 2.5em;
+              width: 5%;
+            }
+
+            &:nth-child(2) {
+              width: 85%;
+            }
+            &:last-child {
+              width: 10%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1643px) {
+  div.novo-relatorio-visitas {
+    div.formulario {
+      table {
+        tr {
+          &.tipo-ocorrencia {
+            td {
+              &:first-child {
+                width: 10%;
+              }
+
+              &:nth-child(2) {
+                width: 70%;
+              }
+              &:last-child {
+                width: 20%;
+              }
             }
           }
         }

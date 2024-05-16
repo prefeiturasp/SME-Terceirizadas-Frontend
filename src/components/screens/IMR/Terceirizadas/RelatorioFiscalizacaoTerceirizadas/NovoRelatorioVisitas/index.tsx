@@ -20,11 +20,11 @@ import {
   createFormularioSupervisao,
   getTiposOcorrenciaPorEdital,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
-import { deepCopy } from "helpers/utilities";
 import { Formulario } from "./components/Formulario";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
 import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
 import { Spin } from "antd";
+import { formataPayload } from "./helpers";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
@@ -53,10 +53,10 @@ export const NovoRelatorioVisitas = () => {
       setShowModalSalvarRascunho(true);
       return;
     }
-    let values_ = deepCopy(values);
-    values_.escola = escolaSelecionada.uuid;
-    values_.acompanhou_visita = values.acompanhou_visita === "sim";
-    const response = await createFormularioSupervisao(values_);
+
+    const response = await createFormularioSupervisao(
+      formataPayload(values, escolaSelecionada)
+    );
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Rascunho do Relatório de Fiscalização salvo com sucesso!");
       navigate(-1);
@@ -114,7 +114,11 @@ export const NovoRelatorioVisitas = () => {
               {!erroAPI && (
                 <Spin spinning={loadingTiposOcorrencia}>
                   {tiposOcorrencia && (
-                    <Formulario form={form} tiposOcorrencia={tiposOcorrencia} />
+                    <Formulario
+                      form={form}
+                      tiposOcorrencia={tiposOcorrencia}
+                      values={form.getState().values}
+                    />
                   )}
                 </Spin>
               )}
