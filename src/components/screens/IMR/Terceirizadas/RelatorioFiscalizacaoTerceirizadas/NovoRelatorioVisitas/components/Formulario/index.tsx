@@ -82,11 +82,14 @@ export const Formulario = ({ ...props }: FormularioType) => {
                           component="input"
                           type="radio"
                           value="sim"
-                          id="sim"
+                          id={`sim_${tipoOcorrencia.uuid}`}
                           required
                           validate={required}
                         />
-                        <label className="ms-2" htmlFor="sim">
+                        <label
+                          className="ms-2"
+                          htmlFor={`sim_${tipoOcorrencia.uuid}`}
+                        >
                           Sim
                         </label>
                         <div className="mt-2">
@@ -95,11 +98,14 @@ export const Formulario = ({ ...props }: FormularioType) => {
                             component="input"
                             type="radio"
                             value="nao_se_aplica"
-                            id="nao_se_aplica"
+                            id={`nao_se_aplica_${tipoOcorrencia.uuid}`}
                             required
                             validate={required}
                           />
-                          <label className="ms-2" htmlFor="nao_se_aplica">
+                          <label
+                            className="ms-2"
+                            htmlFor={`nao_se_aplica_${tipoOcorrencia.uuid}`}
+                          >
                             Não se aplica
                           </label>
                         </div>
