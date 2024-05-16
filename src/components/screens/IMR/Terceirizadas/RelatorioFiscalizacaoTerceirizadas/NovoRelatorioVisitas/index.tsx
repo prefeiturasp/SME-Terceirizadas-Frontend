@@ -114,7 +114,11 @@ export const NovoRelatorioVisitas = () => {
               {!erroAPI && (
                 <Spin spinning={loadingTiposOcorrencia}>
                   {tiposOcorrencia && (
-                    <Formulario form={form} tiposOcorrencia={tiposOcorrencia} />
+                    <Formulario
+                      form={form}
+                      tiposOcorrencia={tiposOcorrencia}
+                      values={form.getState().values}
+                    />
                   )}
                 </Spin>
               )}

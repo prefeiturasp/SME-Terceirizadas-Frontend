@@ -3,14 +3,17 @@ import { Field } from "react-final-form";
 import { required } from "helpers/fieldValidators";
 import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
 import { FormApi } from "final-form";
+import { NovoRelatorioVisitasFormInterface } from "../../interfaces";
+import { OcorrenciaNaoSeAplica } from "./components/OcorrenciaNaoSeAplica";
 
 type FormularioType = {
   tiposOcorrencia: Array<TipoOcorrenciaInterface>;
   form: FormApi<any, Partial<any>>;
+  values: NovoRelatorioVisitasFormInterface;
 };
 
 export const Formulario = ({ ...props }: FormularioType) => {
-  const { tiposOcorrencia, form } = props;
+  const { tiposOcorrencia, form, values } = props;
 
   useEffect(() => {
     tiposOcorrencia.forEach((tipoOcorrencia) => {
@@ -41,17 +44,25 @@ export const Formulario = ({ ...props }: FormularioType) => {
                   {(index === 0 ||
                     tipoOcorrencia.categoria.nome !==
                       tiposOcorrencia[index - 1].categoria.nome) && (
-                    <tr className="row categoria">
-                      <th className="col-12 pb-3" colSpan={3}>
+                    <tr className="categoria">
+                      <th className="pb-3" colSpan={3}>
                         {tipoOcorrencia.categoria.nome}
                       </th>
                     </tr>
                   )}
-                  <tr className="row tipo-ocorrencia">
-                    <td className="col-1 fw-bold text-center pb-3">
+                  <tr className="tipo-ocorrencia">
+                    <td
+                      rowSpan={
+                        values[`resposta_${tipoOcorrencia.uuid}`] ===
+                        "nao_se_aplica"
+                          ? 2
+                          : 1
+                      }
+                      className="fw-bold text-center"
+                    >
                       {index + 1}
                     </td>
-                    <td className="col-9 pb-3">
+                    <td className="p-3">
                       <div>
                         <b>{tipoOcorrencia.titulo}:</b>{" "}
                         {tipoOcorrencia.descricao}
@@ -64,9 +75,9 @@ export const Formulario = ({ ...props }: FormularioType) => {
                         </b>
                       </div>
                     </td>
-                    <td className="col-2">
-                      <div className="row ms-3">
-                        <div className="col-12">
+                    <td>
+                      <div className="ms-3">
+                        <div className="">
                           <Field
                             name={`resposta_${tipoOcorrencia.uuid}`}
                             component="input"
@@ -80,9 +91,27 @@ export const Formulario = ({ ...props }: FormularioType) => {
                             Sim
                           </label>
                         </div>
+                        <div className="mt-2">
+                          <Field
+                            name={`resposta_${tipoOcorrencia.uuid}`}
+                            component="input"
+                            type="radio"
+                            value="nao_se_aplica"
+                            id="nao_se_aplica"
+                            required
+                            validate={required}
+                          />
+                          <label className="ms-2" htmlFor="nao_se_aplica">
+                            Não se aplica
+                          </label>
+                        </div>
                       </div>
                     </td>
                   </tr>
+                  {values[`resposta_${tipoOcorrencia.uuid}`] ===
+                    "nao_se_aplica" && (
+                    <OcorrenciaNaoSeAplica tipoOcorrencia={tipoOcorrencia} />
+                  )}
                 </>
               );
             })}
