@@ -17,7 +17,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
 
   useEffect(() => {
     tiposOcorrencia.forEach((tipoOcorrencia) => {
-      form.change(`resposta_${tipoOcorrencia.uuid}`, "sim");
+      form.change(`ocorrencia_${tipoOcorrencia.uuid}`, "sim");
     });
   }, []);
 
@@ -53,7 +53,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                   <tr className="tipo-ocorrencia">
                     <td
                       rowSpan={
-                        values[`resposta_${tipoOcorrencia.uuid}`] ===
+                        values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
                         "nao_se_aplica"
                           ? 2
                           : 1
@@ -79,7 +79,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                       <div className="ms-3">
                         <div className="">
                           <Field
-                            name={`resposta_${tipoOcorrencia.uuid}`}
+                            name={`ocorrencia_${tipoOcorrencia.uuid}`}
                             component="input"
                             type="radio"
                             value="sim"
@@ -93,7 +93,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                         </div>
                         <div className="mt-2">
                           <Field
-                            name={`resposta_${tipoOcorrencia.uuid}`}
+                            name={`ocorrencia_${tipoOcorrencia.uuid}`}
                             component="input"
                             type="radio"
                             value="nao_se_aplica"
@@ -108,7 +108,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                       </div>
                     </td>
                   </tr>
-                  {values[`resposta_${tipoOcorrencia.uuid}`] ===
+                  {values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
                     "nao_se_aplica" && (
                     <OcorrenciaNaoSeAplica tipoOcorrencia={tipoOcorrencia} />
                   )}
