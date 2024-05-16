@@ -139,4 +139,10 @@ div.acompanhamento-de-lancamentos {
       }
     }
   }
+
+  .botoes-relatorios {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+  }
 }
