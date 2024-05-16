@@ -77,20 +77,18 @@ export const Formulario = ({ ...props }: FormularioType) => {
                     </td>
                     <td>
                       <div className="ms-3">
-                        <div className="">
-                          <Field
-                            name={`ocorrencia_${tipoOcorrencia.uuid}`}
-                            component="input"
-                            type="radio"
-                            value="sim"
-                            id="sim"
-                            required
-                            validate={required}
-                          />
-                          <label className="ms-2" htmlFor="sim">
-                            Sim
-                          </label>
-                        </div>
+                        <Field
+                          name={`ocorrencia_${tipoOcorrencia.uuid}`}
+                          component="input"
+                          type="radio"
+                          value="sim"
+                          id="sim"
+                          required
+                          validate={required}
+                        />
+                        <label className="ms-2" htmlFor="sim">
+                          Sim
+                        </label>
                         <div className="mt-2">
                           <Field
                             name={`ocorrencia_${tipoOcorrencia.uuid}`}
