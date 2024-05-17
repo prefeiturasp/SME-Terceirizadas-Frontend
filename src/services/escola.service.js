@@ -235,7 +235,7 @@ export const getGrupoUnidadeEscolar = async () => {
 };
 
 export const getQuantidadeAlunosMatriculadosPorData = async (params) => {
-  const url = `${API_URL}/matriculados-no-mes/total-por-data/`;
+  const url = `${API_URL}/matriculados-no-mes/quantidade-por-data/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };

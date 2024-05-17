@@ -232,5 +232,5 @@ export interface ResponseFormularioSupervisaoTiposOcorrenciasInterface
 
 export interface ResponseGetQuantidadeAlunosMatriculadosPorDataInterface
   extends ResponseInterface {
-  data: { total: number };
+  data: number;
 }
