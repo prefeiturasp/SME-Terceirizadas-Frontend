@@ -294,46 +294,45 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                   />
                 </div>
               </div>
-              {values.data && (
-                <div className="row">
-                  <div className="col-4">
-                    <Spin
-                      tip="Carregando..."
-                      spinning={loadingTotalMatriculadosPorData}
-                    >
-                      <Field
-                        component={InputText}
-                        type="number"
-                        label="Nº de Matriculados da Unidade"
-                        name="total_matriculados_por_data"
-                        required
-                        validate={required}
-                        disabled
-                      />
-                    </Spin>
-                  </div>
-                  <div className="col-4">
+              <div className="row">
+                <div className="col-4">
+                  <Spin
+                    tip="Carregando..."
+                    spinning={loadingTotalMatriculadosPorData}
+                  >
                     <Field
                       component={InputText}
                       type="number"
-                      label="Maior Nº de Frequentes no Período"
-                      name="maior_frequencia_no_periodo"
+                      label="Nº de Matriculados da Unidade"
+                      name="total_matriculados_por_data"
                       required
-                      validate={composeValidators(
-                        required,
-                        maxValueMaiorFrequenciaNoPeriodoIMR(
-                          values.total_matriculados_por_data
-                        )
-                      )}
-                      placeholder="Informe a quantidade"
-                      disabled={
-                        !values.total_matriculados_por_data ||
-                        loadingTotalMatriculadosPorData
-                      }
+                      validate={required}
+                      disabled
                     />
-                  </div>
+                  </Spin>
                 </div>
-              )}
+                <div className="col-4">
+                  <Field
+                    component={InputText}
+                    type="number"
+                    label="Maior Nº de Frequentes no Período"
+                    name="maior_frequencia_no_periodo"
+                    tooltipText="Referência do mês anterior"
+                    required
+                    validate={composeValidators(
+                      required,
+                      maxValueMaiorFrequenciaNoPeriodoIMR(
+                        values.total_matriculados_por_data
+                      )
+                    )}
+                    placeholder="Informe a quantidade"
+                    disabled={
+                      !values.total_matriculados_por_data ||
+                      loadingTotalMatriculadosPorData
+                    }
+                  />
+                </div>
+              </div>
               <section className="nutri-acompanhou-visita">
                 <div className="row mt-3 mb-3">
                   <div className="col-12">
