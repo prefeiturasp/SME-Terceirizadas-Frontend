@@ -1,12 +1,22 @@
 import Select from "components/Shareable/Select";
 import moment from "moment";
 import { Spin } from "antd";
-import { required } from "helpers/fieldValidators";
+import {
+  required,
+  maxValueMaiorFrequenciaNoPeriodoIMR,
+} from "helpers/fieldValidators";
+import {
+  converterDDMMYYYYparaYYYYMMDD,
+  composeValidators,
+} from "helpers/utilities";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Field } from "react-final-form";
 import HTTP_STATUS from "http-status-codes";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
-import { getEscolasTercTotal } from "services/escola.service";
+import {
+  getEscolasTercTotal,
+  getQuantidadeAlunosMatriculadosPorData,
+} from "services/escola.service";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { InputText } from "components/Shareable/Input/InputText";
 import { getPeriodosVisita } from "services/imr/relatorioFiscalizacaoTerceirizadas";
@@ -15,6 +25,7 @@ import {
   ResponseDiretoriasRegionaisSimplissimaInterface,
   ResponseGetEscolasTercTotalInterface,
   ResponsePeriodosDeVisitaInterface,
+  ResponseGetQuantidadeAlunosMatriculadosPorDataInterface,
 } from "interfaces/responses.interface";
 import {
   DiretoriaRegionalInterface,
@@ -31,6 +42,7 @@ type CabecahoType = {
   form: FormApi<any, Partial<any>>;
   values: NovoRelatorioVisitasFormInterface;
   setEscolaSelecionada: (_escola: EscolaLabelInterface) => void;
+  escolaSelecionada: EscolaLabelInterface;
 };
 
 export const Cabecalho = ({ ...props }: CabecahoType) => {
@@ -41,6 +53,8 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
     useState<PeriodoDeVisitaInterface[]>();
 
   const [loadingEscolas, setLoadingEscolas] = useState(false);
+  const [loadingTotalMatriculadosPorData, setLoadingTotalMatriculadosPorData] =
+    useState(false);
 
   const [erroAPI, setErroAPI] = useState<string>("");
 
@@ -88,6 +102,26 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
       setErroAPI("Erro ao carregar escolas. Tente novamente mais tarde.");
     }
     setLoadingEscolas(false);
+  };
+
+  const getTotalAlunosMatriculadosPorData = async (
+    data: string,
+    escolaUUID: string
+  ): Promise<void> => {
+    setLoadingTotalMatriculadosPorData(true);
+    const response: ResponseGetQuantidadeAlunosMatriculadosPorDataInterface =
+      await getQuantidadeAlunosMatriculadosPorData({
+        escola_uuid: escolaUUID,
+        data: converterDDMMYYYYparaYYYYMMDD(data),
+      });
+    if (response.status === HTTP_STATUS.OK) {
+      form.change("total_matriculados_por_data", response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar quantidade alunos matriculados por data. Tente novamente mais tarde."
+      );
+    }
+    setLoadingTotalMatriculadosPorData(false);
   };
 
   const getPeriodosVisitaAsync = async (): Promise<void> => {
@@ -144,6 +178,8 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       form.change("escola", undefined);
                       form.change("lote", undefined);
                       form.change("terceirizada", undefined);
+                      form.change("total_matriculados_por_data", undefined);
+                      form.change("maior_frequencia_no_periodo", undefined);
                       getEscolasTercTotalAsync(value);
                     }}
                   />
@@ -167,23 +203,24 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       required
                       disabled={!values.diretoria_regional || loadingEscolas}
                       inputOnChange={(value: string) => {
-                        form.change(
-                          "lote",
-                          escolas.find(
-                            (e: EscolaLabelInterface) => e.value === value
-                          )?.lote_nome
+                        const _escola = escolas.find(
+                          (e: EscolaLabelInterface) => e.value === value
                         );
-                        form.change(
-                          "terceirizada",
-                          escolas.find(
-                            (e: EscolaLabelInterface) => e.value === value
-                          )?.terceirizada
-                        );
-                        setEscolaSelecionada(
-                          escolas.find(
-                            (e: EscolaLabelInterface) => e.value === value
-                          )
-                        );
+
+                        form.change("total_matriculados_por_data", undefined);
+                        form.change("maior_frequencia_no_periodo", undefined);
+
+                        form.change("lote", _escola?.lote_nome);
+                        form.change("terceirizada", _escola?.terceirizada);
+
+                        setEscolaSelecionada(_escola);
+
+                        if (values.data && _escola) {
+                          getTotalAlunosMatriculadosPorData(
+                            values.data,
+                            _escola.uuid
+                          );
+                        }
                       }}
                     />
                   </Spin>
@@ -230,6 +267,16 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                     maxDate={moment().toDate()}
                     required
                     validate={required}
+                    inputOnChange={(value) => {
+                      form.change("total_matriculados_por_data", undefined);
+                      form.change("maior_frequencia_no_periodo", undefined);
+                      if (props.escolaSelecionada) {
+                        getTotalAlunosMatriculadosPorData(
+                          value,
+                          props.escolaSelecionada.uuid
+                        );
+                      }
+                    }}
                   />
                 </div>
                 <div className="col-4">
@@ -247,6 +294,46 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                   />
                 </div>
               </div>
+              {values.data && (
+                <div className="row">
+                  <div className="col-4">
+                    <Spin
+                      tip="Carregando..."
+                      spinning={loadingTotalMatriculadosPorData}
+                    >
+                      <Field
+                        component={InputText}
+                        type="number"
+                        label="Nº de Matriculados da Unidade"
+                        name="total_matriculados_por_data"
+                        required
+                        validate={required}
+                        disabled
+                      />
+                    </Spin>
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      type="number"
+                      label="Maior Nº de Frequentes no Período"
+                      name="maior_frequencia_no_periodo"
+                      required
+                      validate={composeValidators(
+                        required,
+                        maxValueMaiorFrequenciaNoPeriodoIMR(
+                          values.total_matriculados_por_data
+                        )
+                      )}
+                      placeholder="Informe a quantidade"
+                      disabled={
+                        !values.total_matriculados_por_data ||
+                        loadingTotalMatriculadosPorData
+                      }
+                    />
+                  </div>
+                </div>
+              )}
               <section className="nutri-acompanhou-visita">
                 <div className="row mt-3 mb-3">
                   <div className="col-12">

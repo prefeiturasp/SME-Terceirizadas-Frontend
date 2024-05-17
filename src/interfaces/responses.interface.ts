@@ -229,3 +229,8 @@ export interface ResponseFormularioSupervisaoTiposOcorrenciasInterface
   extends ResponseInterface {
   data: Array<TipoOcorrenciaInterface>;
 }
+
+export interface ResponseGetQuantidadeAlunosMatriculadosPorDataInterface
+  extends ResponseInterface {
+  data: number;
+}
