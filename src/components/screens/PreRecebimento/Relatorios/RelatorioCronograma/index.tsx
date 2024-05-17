@@ -41,18 +41,13 @@ export default () => {
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     const response = await getListagemRelatorioCronogramas(params);
     setAtivos([]);
-    if (response.data.count) {
-      setCronogramas(response.data.results);
-      setTotalizadores({
-        "Total de Cronogramas Criados": response.data.count,
-        ...response.data.totalizadores,
-      });
-      setTotalResultados(response.data.count);
-      setConsultaRealizada(true);
-    } else {
-      setTotalResultados(response.data.count);
-      setCronogramas([]);
-    }
+    setCronogramas(response.data.results);
+    setTotalizadores({
+      "Total de Cronogramas Criados": response.data.count,
+      ...response.data.totalizadores,
+    });
+    setTotalResultados(response.data.count);
+    setConsultaRealizada(true);
     setCarregando(false);
   };
 
