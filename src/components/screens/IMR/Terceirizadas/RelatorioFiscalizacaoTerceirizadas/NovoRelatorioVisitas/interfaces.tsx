@@ -8,6 +8,8 @@ export interface NovoRelatorioVisitasFormInterface {
   periodo_visita?: string;
   acompanhou_visita?: string;
   nome_nutricionista_empresa?: string;
+  total_matriculados_por_data: number;
+  maior_frequencia_no_periodo: number;
 }
 
 export interface EscolaLabelInterface {
