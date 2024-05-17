@@ -384,12 +384,11 @@ export const relatorioMedicaoInicialPDF = async (uuid) => {
 export const relatorioUnificadoMedicaoInicialPDF = async (payload) => {
   const url =
     "medicao-inicial/solicitacao-medicao-inicial/relatorio-unificado/";
-  const response = await axios
-    .get(url, { params: payload })
-    .catch(ErrorHandlerFunction);
+  return await axios.get(url, { params: payload });
+};
 
-  if (response) {
-    const data = { data: response.data, status: response.status };
-    return data;
-  }
+export const relatorioConsolidadoMedicaoInicialXLSX = async (payload) => {
+  const url =
+    "medicao-inicial/solicitacao-medicao-inicial/relatorio-consolidado/exportar-xlsx/";
+  return await axios.get(url, { params: payload });
 };
