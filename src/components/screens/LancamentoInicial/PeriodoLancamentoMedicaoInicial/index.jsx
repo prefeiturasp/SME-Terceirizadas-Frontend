@@ -1198,7 +1198,7 @@ export default () => {
                     `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
                   ] = `${log.quantidade}`);
                 categoria.nome.includes("TIPO B") &&
-                  log.classificacao.toUpperCase().includes("TIPO B") &&
+                  log.classificacao.toUpperCase() === "TIPO B - LANCHE" &&
                   (dadosValoresDietasAutorizadas[
                     `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
                   ] = `${log.quantidade}`);
@@ -1234,7 +1234,7 @@ export default () => {
                   `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
                 ] = `${log.quantidade}`);
               categoria.nome.includes("TIPO B") &&
-                log.classificacao.toUpperCase().includes("TIPO B") &&
+                log.classificacao.toUpperCase() === "TIPO B - LANCHE" &&
                 (dadosValoresDietasAutorizadas[
                   `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
                 ] = `${log.quantidade}`);
