@@ -477,7 +477,8 @@ export default () => {
                       className="input-analise"
                       required
                       validate={required}
-                      minDate={new Date()}
+                      minDate={null}
+                      maxDate={null}
                     />
                   </div>
                   <div className="col-8">
