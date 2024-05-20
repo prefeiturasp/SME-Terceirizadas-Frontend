@@ -8,8 +8,6 @@ import {
   CORRIGIR_DOCUMENTOS_RECEBIMENTO,
 } from "../../../../../../configs/constants";
 import { downloadArquivoLaudoAssinado } from "services/documentosRecebimento.service";
-import { saveAs } from "file-saver";
-import { toastError } from "components/Shareable/Toast/dialogs";
 
 interface Props {
   objetos: Array<DocumentosRecebimento>;
@@ -72,10 +70,7 @@ const Listagem: React.FC<Props> = ({ objetos, setCarregando }) => {
   const baixarArquivoLaudo = async (objeto: DocumentosRecebimento) => {
     setCarregando(true);
     try {
-      const response = await downloadArquivoLaudoAssinado(objeto.uuid);
-      saveAs(response.data, `laudo_cronograma_${objeto.numero_cronograma}.pdf`);
-    } catch {
-      toastError("Houve um erro ao baixar o arquivo de Laudo.");
+      downloadArquivoLaudoAssinado(objeto.uuid, objeto.numero_cronograma);
     } finally {
       setCarregando(false);
     }
