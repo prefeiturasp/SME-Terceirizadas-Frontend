@@ -128,7 +128,10 @@ export default () => {
           <div className="subtitulo-documento">
             Laudo enviado pelo Fornecedor:
           </div>
-          <ArquivosTipoRecebimento lista={laudo} />
+          <ArquivosTipoRecebimento
+            lista={laudo}
+            textoBotoes="Laudo Analisado"
+          />
 
           <hr />
 

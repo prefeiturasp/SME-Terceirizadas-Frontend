@@ -3,9 +3,10 @@ import "./styles.scss";
 
 export interface Props {
   urlAnexo: string;
+  textoBotao?: string;
 }
 
-const BotaoAnexo: React.FC<Props> = ({ urlAnexo }) => {
+const BotaoAnexo: React.FC<Props> = ({ textoBotao, urlAnexo }) => {
   return (
     <a
       href={urlAnexo}
@@ -15,7 +16,7 @@ const BotaoAnexo: React.FC<Props> = ({ urlAnexo }) => {
     >
       <div className="botao-anexo mb-2">
         <i className="fas fa-eye green me-2" />
-        Visualizar Anexo
+        {textoBotao ?? "Visualizar Anexo"}
       </div>
     </a>
   );
