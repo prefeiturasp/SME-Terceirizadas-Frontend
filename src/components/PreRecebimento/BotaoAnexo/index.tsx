@@ -2,17 +2,19 @@ import React from "react";
 import "./styles.scss";
 
 export interface Props {
-  urlAnexo: string;
+  urlAnexo?: string;
   textoBotao?: string;
+  onClick?: () => void;
 }
 
-const BotaoAnexo: React.FC<Props> = ({ textoBotao, urlAnexo }) => {
+const BotaoAnexo: React.FC<Props> = ({ textoBotao, urlAnexo, onClick }) => {
   return (
     <a
       href={urlAnexo}
       target="_blank"
       rel="noreferrer"
       className="link-botao-anexo"
+      onClick={onClick}
     >
       <div className="botao-anexo mb-2">
         <i className="fas fa-eye green me-2" />
