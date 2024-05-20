@@ -101,7 +101,7 @@ const RelatorioControleRestos = ({
 
           {dadosResultados && !dadosResultados.results.length && (
             <div className="text-center mt-5">
-              Não existem dados para filtragem informada.
+              Não existem dados para os filtros informados.
             </div>
           )}
         </div>

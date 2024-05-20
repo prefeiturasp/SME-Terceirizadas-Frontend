@@ -103,13 +103,13 @@ const FormFiltros = ({
             <form onSubmit={handleSubmit}>
               <FinalFormToRedux form={FORM_NAME} />
               <div className="row">
-                <div className="col-5">
+                <div className="col-6">
                   <Field
                     label="Diretoria Regional de Educação"
                     component={Select}
                     className="input-busca-dre form-control"
                     name="dre"
-                    options={[{ uuid: "", nome: "Todas" }].concat(
+                    options={[{ uuid: "all", nome: "TODAS" }].concat(
                       diretoriasRegionais.map((dre) => {
                         return { uuid: dre.value, nome: dre.label };
                       })
@@ -121,19 +121,13 @@ const FormFiltros = ({
                     naoDesabilitarPrimeiraOpcao
                     onChangeEffect={(e) => {
                       const value = e.target.value;
-                      setNomeEscolas(
-                        escolas
-                          .filter((escola) => value.includes(escola.dre.uuid))
-                          .map(
-                            (escola) => `${escola.codigo_eol} - ${escola.label}`
-                          )
-                      );
-                      tipoUsuario !== TIPO_PERFIL.ESCOLA &&
-                        form.change("escola", undefined);
+                      const ueFiltro = value === "all" ? escolas : escolas.filter(ue => value.includes(ue.dre.uuid));
+                      setNomeEscolas(ueFiltro.map(ue => `${ue.codigo_eol} - ${ue.label}`));
+                      tipoUsuario !== TIPO_PERFIL.ESCOLA && form.change("escola", undefined);
                     }}
                   />
                 </div>
-                <div className="col-7">
+                <div className="col-6">
                   <Field
                     dataSource={getNomesItemsFiltrado(values.escola)}
                     component={AutoCompleteField}
@@ -141,7 +135,7 @@ const FormFiltros = ({
                     label="Unidade Educacional"
                     placeholder={"Digite um nome"}
                     className="input-busca-nome-item"
-                    disabled={tipoUsuario === TIPO_PERFIL.ESCOLA || !values.dre}
+                    disabled={tipoUsuario === TIPO_PERFIL.ESCOLA}
                     validate={requiredSearchSelectUnidEducDietas(escolas)}
                   />
                 </div>
@@ -188,13 +182,13 @@ const FormFiltros = ({
                   <div className="mt-4">
                     <Botao
                       texto="Consultar"
-                      className="float-right me-3"
+                      className="float-end ms-3"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                     />
                     <Botao
                       texto="Limpar Filtros"
-                      className="float-right me-3"
+                      className="float-end ms-3"
                       onClick={() => {
                         if (tipoUsuario === TIPO_PERFIL.ESCOLA)
                           form.restart({

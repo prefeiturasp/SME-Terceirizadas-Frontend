@@ -7,8 +7,8 @@ import { Spin } from "antd";
 import {
   required,
   requiredSearchSelectUnidEducDietas,
-  noSpaceStartOrEnd,
   requiredOptionSearchSelect,
+  inteiroOuDecimalComVirgula
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
@@ -34,12 +34,10 @@ import "./styles.scss";
 import { InputComData } from "../DatePicker";
 import { InputHorario } from "../Input/InputHorario";
 import moment from "moment";
-import { inteiroOuDecimal } from "../../../helpers/fieldValidators";
 
 const ModalCadastrarControleSobras = ({
   closeModal,
   showModal,
-  changePage,
   tipoUsuario,
   tiposAlimento,
   setTiposAlimento,
@@ -104,11 +102,11 @@ const ModalCadastrarControleSobras = ({
       });
     } else {
       setRegistroEdicao(undefined);
-      
+      setNomeEscolas(escolas.map(ue => `${ue.codigo_eol} - ${ue.label}`));
+      setHoraMedicao("00:00");
       setInitialValues({
         hora_medicao: "00:00",
       });
-      setHoraMedicao("00:00");
     }
   };
 
@@ -198,14 +196,28 @@ const ModalCadastrarControleSobras = ({
     await cadastrarControleSobras(payload)
       .then(() => {
         toastSuccess("Cadastro de Sobras efetuado com sucesso.");
-        setRegistroEdicao(payload);
-        changePage();
+        cleanForm(formValues);
       })
       .catch((error) => {
         toastError(error.response.data[0]);
       });
 
     setCarregando(false);
+  };
+
+  const cleanForm = (formValues) => {
+
+    const _initValues = {
+      ...formValues,
+      tipo_alimento: null,
+      tipo_recipiente: null,
+      peso_alimento: null,
+      peso_recipiente: null,
+      peso_sobra: null,
+    };
+
+    setInitialValues(_initValues);
+
   };
 
   const getNomesItemsFiltrado = (value) => {
@@ -273,9 +285,13 @@ const ModalCadastrarControleSobras = ({
                       <Field
                         label="Diretoria Regional de Educação"
                         component={Select}
-                        className="input-busca-dre form-control"
+                        className={
+                          registroEdicao
+                            ? "input-controle-sobras"
+                            : "input-busca-dre"
+                        }
                         name="dre"
-                        options={[{ uuid: "", nome: "Todas" }].concat(
+                        options={[{ uuid: "all", nome: "TODAS" }].concat(
                           diretoriasRegionais.map((dre) => {
                             return { uuid: dre.value, nome: dre.label };
                           })
@@ -285,23 +301,12 @@ const ModalCadastrarControleSobras = ({
                           tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
                           tipoUsuario === TIPO_PERFIL.ESCOLA
                         }
-                        required
-                        validate={required}
                         naoDesabilitarPrimeiraOpcao
                         onChangeEffect={(e) => {
                           const value = e.target.value;
-                          setNomeEscolas(
-                            escolas
-                              .filter((escola) =>
-                                value.includes(escola.dre.uuid)
-                              )
-                              .map(
-                                (escola) =>
-                                  `${escola.codigo_eol} - ${escola.label}`
-                              )
-                          );
-                          tipoUsuario !== TIPO_PERFIL.ESCOLA &&
-                            form.change("escola", undefined);
+                          const ueFiltro = value === "all" ? escolas : escolas.filter(ue => value.includes(ue.dre.uuid));
+                          setNomeEscolas(ueFiltro.map(ue => `${ue.codigo_eol} - ${ue.label}`));
+                          tipoUsuario !== TIPO_PERFIL.ESCOLA && form.change("escola", undefined);
                         }}
                       />
                     </div>
@@ -319,8 +324,7 @@ const ModalCadastrarControleSobras = ({
                         }
                         disabled={
                           registroEdicao ||
-                          tipoUsuario === TIPO_PERFIL.ESCOLA ||
-                          !values.dre
+                          tipoUsuario === TIPO_PERFIL.ESCOLA
                         }
                         required
                         validate={composeValidators(
@@ -332,7 +336,7 @@ const ModalCadastrarControleSobras = ({
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-4">
+                    <div className="col-3">
                       <Field
                         component={InputComData}
                         name={"data_medicao"}
@@ -350,7 +354,7 @@ const ModalCadastrarControleSobras = ({
                         required
                       />
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
                       <Field
                         component={InputHorario}
                         label="Hora da Medição"
@@ -370,15 +374,13 @@ const ModalCadastrarControleSobras = ({
                         functionComponent
                       />
                     </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-4">
+                    <div className="col-6">
                       <Field
                         dataSource={tiposAlimentacao.map((tipo) => tipo.nome)}
                         component={AutoCompleteField}
                         name="tipo_alimentacao"
                         label="Tipo de Alimentação"
-                        placeholder={"Digite um nome"}
+                        placeholder={"Digite um Tipo de Alimentação"}
                         className={
                           registroEdicao
                             ? "input-controle-sobras"
@@ -392,13 +394,15 @@ const ModalCadastrarControleSobras = ({
                         disabled={!!registroEdicao}
                       />
                     </div>
-                    <div className="col-4">
+                  </div>
+                  <div className="row">
+                    <div className="col-6">
                       <Field
                         dataSource={tiposAlimento.map((tipo) => tipo.nome)}
                         component={AutoCompleteField}
                         name="tipo_alimento"
                         label="Tipo de Alimento"
-                        placeholder={"Digite um nome"}
+                        placeholder={"Digite um Tipo de Alimento"}
                         className={
                           registroEdicao
                             ? "input-controle-sobras"
@@ -412,13 +416,13 @@ const ModalCadastrarControleSobras = ({
                         disabled={!!registroEdicao}
                       />
                     </div>
-                    <div className="col-4">
+                    <div className="col-6">
                       <Field
                         dataSource={tiposRecipiente.map((tipo) => tipo.nome)}
                         component={AutoCompleteField}
                         name="tipo_recipiente"
                         label="Tipo de Recipiente"
-                        placeholder={"Digite um nome"}
+                        placeholder={"Digite um Tipo de Recipiente"}
                         className={
                           registroEdicao
                             ? "input-controle-sobras"
@@ -439,13 +443,13 @@ const ModalCadastrarControleSobras = ({
                         label="Peso do Recipiente (Kg)"
                         name="peso_recipiente"
                         component={InputText}
-                        placeholder={"Digite um peso"}
+                        placeholder={"Digite o Peso do Recipiente"}
                         required
-                        className={registroEdicao ? "input-controle-sobras" : ""}
+                        proibeLetras
+                        className={registroEdicao ? "input-controle-sobras" : "input-busca-nome-item"}
                         validate={composeValidators(
                           required,
-                          inteiroOuDecimal,
-                          noSpaceStartOrEnd
+                          inteiroOuDecimalComVirgula,
                         )}
                         disabled={!!registroEdicao}
                       />
@@ -455,13 +459,13 @@ const ModalCadastrarControleSobras = ({
                         label="Peso do Alimento Pronto (Kg)"
                         name="peso_alimento"
                         component={InputText}
-                        placeholder={"Digite um peso"}
+                        placeholder={"Digite o Peso do Alimento Pronto"}
                         className={registroEdicao ? "input-controle-sobras" : ""}
                         required
+                        proibeLetras
                         validate={composeValidators(
                           required,
-                          inteiroOuDecimal,
-                          noSpaceStartOrEnd
+                          inteiroOuDecimalComVirgula,
                         )}
                         disabled={!!registroEdicao}
                       />
@@ -471,20 +475,20 @@ const ModalCadastrarControleSobras = ({
                         label="Peso da Sobra (Kg)"
                         name="peso_sobra"
                         component={InputText}
-                        placeholder={"Digite um peso"}
+                        placeholder={"Digite o Peso da Sobra"}
                         required
+                        proibeLetras
                         className={registroEdicao ? "input-controle-sobras" : ""}
                         validate={composeValidators(
                           required,
-                          inteiroOuDecimal,
-                          noSpaceStartOrEnd
+                          inteiroOuDecimalComVirgula,
                         )}
                         disabled={!!registroEdicao}
                       />
                     </div>
                   </div>
                 </Modal.Body>
-                <Modal.Footer>
+                {!registroEdicao && (<Modal.Footer>
                   <div className="row mt-4">
                     <div className="col-12">
                       <Botao
@@ -494,18 +498,17 @@ const ModalCadastrarControleSobras = ({
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         className="me-3"
                       />
-                      {!registroEdicao && (
-                        <Botao
-                          texto="Salvar"
-                          type={BUTTON_TYPE.SUBMIT}
-                          style={BUTTON_STYLE.GREEN}
-                          className="me-3"
-                          disabled={submitting}
-                        />
-                      )}
+                      <Botao
+                        texto="Salvar"
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN}
+                        className="me-3"
+                        disabled={submitting}
+                      />
                     </div>
                   </div>
                 </Modal.Footer>
+                )}
               </form>
             )}
           />
