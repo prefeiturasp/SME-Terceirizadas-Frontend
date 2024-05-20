@@ -99,14 +99,14 @@ const FormFiltros = ({
           render={({ form, handleSubmit, pristine, values }) => (
             <form onSubmit={handleSubmit}>
               <FinalFormToRedux form={FORM_NAME} />
-              <div className="row">
+              <div className="row mt-3 mb-3">
                 <div className="col-5">
                   <Field
                     label="Diretoria Regional de Educação"
                     component={Select}
                     className="input-busca-dre form-control"
                     name="dre"
-                    options={[{ uuid: "", nome: "Todas" }].concat(
+                    options={[{ uuid: "all", nome: "TODAS" }].concat(
                       diretoriasRegionais.map((dre) => {
                         return { uuid: dre.value, nome: dre.label };
                       })
@@ -118,15 +118,9 @@ const FormFiltros = ({
                     naoDesabilitarPrimeiraOpcao
                     onChangeEffect={async (e) => {
                       const value = e.target.value;
-                      setNomeEscolas(
-                        escolas
-                          .filter((escola) => value.includes(escola.dre.uuid))
-                          .map(
-                            (escola) => `${escola.codigo_eol} - ${escola.label}`
-                          )
-                      );
-                      tipoUsuario !== TIPO_PERFIL.ESCOLA &&
-                        form.change("escola", undefined);
+                      const ueFiltro = value === "all" ? escolas : escolas.filter(ue => value.includes(ue.dre.uuid));
+                      setNomeEscolas(ueFiltro.map(ue => `${ue.codigo_eol} - ${ue.label}`));
+                      tipoUsuario !== TIPO_PERFIL.ESCOLA && form.change("escola", undefined);
                     }}
                   />
                 </div>
@@ -138,50 +132,48 @@ const FormFiltros = ({
                     label="Unidade Educacional"
                     placeholder={"Digite um nome"}
                     className="input-busca-nome-item"
-                    disabled={tipoUsuario === TIPO_PERFIL.ESCOLA || !values.dre}
+                    disabled={tipoUsuario === TIPO_PERFIL.ESCOLA}
                     validate={requiredSearchSelectUnidEducDietas(escolas)}
                   />
                 </div>
               </div>
-              <div className="row">
-                <div className="col-12 botoes-envio">
-                  <div className="mt-4">
-                    <Botao
-                      texto="Cadastrar Resto"
-                      className="me-3"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN}
-                      onClick={() => setShowModal(true)}
-                    />
-                    <Botao
-                      texto="Consultar"
-                      className="float-right me-3"
-                      type={BUTTON_TYPE.SUBMIT}
-                      style={BUTTON_STYLE.GREEN}
-                    />
-                    <Botao
-                      texto="Limpar Filtros"
-                      className="float-right"
-                      onClick={() => {
-                        if (tipoUsuario === TIPO_PERFIL.ESCOLA)
-                          form.restart({
-                            ...dadosIniciais,
-                            nome_aluno: undefined,
-                            codigo_eol: undefined,
-                          });
-                        else if (tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL)
-                          form.restart({
-                            ...dadosIniciais,
-                            escolas: [],
-                            nome_aluno: undefined,
-                            codigo_eol: undefined,
-                          });
-                        else form.restart({});
-                      }}
-                      disabled={pristine}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                  </div>
+              <div className="row mb-3">
+                <div className="col-12">
+                  <Botao
+                    texto="Cadastrar Resto"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN}
+                    className="float-start"
+                    onClick={() => setShowModal(true)}
+                  />
+                  <Botao
+                    texto="Pesquisar"
+                    className="float-end ms-3"
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                  />
+                  <Botao
+                    texto="Limpar Filtros"
+                    className="float-end ms-3"
+                    onClick={() => {
+                      if (tipoUsuario === TIPO_PERFIL.ESCOLA)
+                        form.restart({
+                          ...dadosIniciais,
+                          nome_aluno: undefined,
+                          codigo_eol: undefined,
+                        });
+                      else if (tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL)
+                        form.restart({
+                          ...dadosIniciais,
+                          escolas: [],
+                          nome_aluno: undefined,
+                          codigo_eol: undefined,
+                        });
+                      else form.restart({});
+                    }}
+                    disabled={pristine}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                  />
                 </div>
               </div>
             </form>

@@ -39,7 +39,6 @@ export default ({ resultado, changePage }) => {
             <table className="table table-bordered table-items">
               <thead>
                 <tr className="table-head-items">
-                  <th className="id">Id</th>
                   <th className="nome">Nome</th>
                   <th className="acoes">Ações</th>
                 </tr>
@@ -49,36 +48,23 @@ export default ({ resultado, changePage }) => {
                   return (
                     <Fragment key={idx}>
                       <tr className="table-body-items">
-                        <td>{item.id}</td>
                         <td>{item.nome}</td>
                         <td className="acoes">
                           <button
-                            className="botaoEditar mr-2"
+                            className="botaoEditar me-2"
                             onClick={() => openModal(item)}
-                            disabled={
-                              (item.tipo === "UNIDADE_MEDIDA" ||
-                                item.tipo === "EMBALAGEM") &&
-                              permissao
-                                ? true
-                                : false
-                            }
+                            disabled={!permissao}
                           >
-                            <FormOutlined className="mr-1" />
+                            <FormOutlined className="me-1" />
                             Editar
                           </button>
                           |
                           <button
-                            className="botaoExcluir ml-2"
+                            className="botaoExcluir ms-2"
                             onClick={() => openModalExcluir(item)}
-                            disabled={
-                              (item.tipo === "UNIDADE_MEDIDA" ||
-                                item.tipo === "EMBALAGEM") &&
-                              permissao
-                                ? true
-                                : false
-                            }
+                            disabled={!permissao}
                           >
-                            <DeleteOutlined className="mr-1" />
+                            <DeleteOutlined className="me-1" />
                             Excluir
                           </button>
                         </td>

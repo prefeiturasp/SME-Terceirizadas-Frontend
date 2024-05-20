@@ -29,7 +29,7 @@ const TabelaControleRestos = ({ list, nextPage }) => {
         <div className="row">
           <div className="col-12">
             <p>
-              <b>Controles de Restos Cadastrados</b>
+              <b>Restos Cadastrados</b>
             </p>
           </div>
           <div className="col-12">

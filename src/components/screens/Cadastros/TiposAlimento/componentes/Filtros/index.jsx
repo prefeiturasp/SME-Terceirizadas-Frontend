@@ -70,27 +70,26 @@ export default ({
               </div>
             </div>
             <div className="row mb-3">
-              <div className="col-8">
+              <div className="col-12">
                 <Botao
                   texto="Cadastrar Item"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
+                  className="float-start"
                   onClick={() => setShowModal(true)}
                 />
-              </div>
-              <div className="col-4">
                 <Botao
                   texto="Pesquisar"
                   type={BUTTON_TYPE.SUBMIT}
                   style={BUTTON_STYLE.GREEN}
-                  className="float-right ml-3"
+                  className="float-end ms-3"
                   disabled={submitting}
                 />
                 <Botao
                   texto="Limpar Filtros"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="float-right ml-3"
+                  className="float-end ms-3"
                   onClick={() => {
                     form.reset(initialValues);
                     setResultado(undefined);

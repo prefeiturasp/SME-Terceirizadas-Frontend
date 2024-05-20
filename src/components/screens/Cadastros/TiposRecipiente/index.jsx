@@ -50,7 +50,7 @@ export default () => {
   };
 
   return (
-    <div className="card mt-3 card-cadastro-geral pl-3 pr-3">
+    <div className="card mt-3 card-cadastro-geral ps-3 pe-3">
       <Spin tip="Carregando..." spinning={carregando}>
         <Filtros
           setResultado={setResultado}

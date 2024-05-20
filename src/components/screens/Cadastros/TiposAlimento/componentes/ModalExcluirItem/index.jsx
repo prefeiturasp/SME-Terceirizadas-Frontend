@@ -17,7 +17,7 @@ export default ({ closeModal, showModal, item, changePage }) => {
     setCarregando(true);
     await deletarTipoAlimento(item.uuid)
       .then(() => {
-        toastSuccess("Cadastro de item excluído com sucesso");
+        toastSuccess("Tipo de alimento excluído com sucesso");
       })
       .catch((error) => {
         toastError(error.response.data.detail);
@@ -30,7 +30,7 @@ export default ({ closeModal, showModal, item, changePage }) => {
   return (
     <Modal dialogClassName="modal-50w" show={showModal} onHide={closeModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Excluir Item</Modal.Title>
+        <Modal.Title>Excluir Tipo de Alimento</Modal.Title>
       </Modal.Header>
       <Spin tip="Carregando..." spinning={carregando}>
         <Form
@@ -52,13 +52,13 @@ export default ({ closeModal, showModal, item, changePage }) => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
                       style={BUTTON_STYLE.DARK_OUTLINE}
-                      className="ml-3"
+                      className="ms-3"
                     />
                     <Botao
                       texto="Sim"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
+                      className="ms-3"
                       disabled={submitting}
                     />
                   </div>

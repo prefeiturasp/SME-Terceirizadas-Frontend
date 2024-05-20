@@ -29,7 +29,7 @@ const TabelaControleSobras = ({ list, nextPage }) => {
         <div className="row">
           <div className="col-12">
             <p>
-              <b>Controles de Sobras Cadastrados</b>
+              <b>Sobras Cadastradas</b>
             </p>
           </div>
           <div className="col-12">
