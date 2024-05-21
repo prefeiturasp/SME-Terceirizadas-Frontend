@@ -161,7 +161,7 @@ export default ({ analiseSolicitacao }) => {
   };
 
   const analisadoPelaDinutre = () => {
-    return solicitacaoAlteracaoCronograma.logs.some((l) =>
+    return solicitacaoAlteracaoCronograma?.logs.some((l) =>
       ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
         l.status_evento_explicacao
       )
@@ -169,13 +169,13 @@ export default ({ analiseSolicitacao }) => {
   };
 
   const reprovadoPelaDinutre = () => {
-    return solicitacaoAlteracaoCronograma.logs.some(
+    return solicitacaoAlteracaoCronograma?.logs.some(
       (l) => l.status_evento_explicacao === "Reprovado DINUTRE"
     );
   };
 
   const analisadoPelaDilog = () => {
-    return solicitacaoAlteracaoCronograma.logs.some((l) =>
+    return solicitacaoAlteracaoCronograma?.logs.some((l) =>
       ["Aprovado DILOG", "Reprovado DILOG"].includes(l.status_evento_explicacao)
     );
   };
@@ -457,7 +457,8 @@ export default ({ analiseSolicitacao }) => {
                         validate={textAreaRequired}
                       />
                     </div>
-                    {(usuarioEhCronogramaOuCodae() ||
+                    {((usuarioEhCronogramaOuCodae() &&
+                      solicitacaoAlteracaoCronograma) ||
                       (usuarioEhDinutreDiretoria() &&
                         solicitacaoAlteracaoCronograma.status !==
                           "Em análise" &&
