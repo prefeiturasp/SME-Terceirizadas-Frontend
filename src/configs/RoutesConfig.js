@@ -1285,7 +1285,8 @@ let routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhOrgaoFiscalizador() ||
       usuarioEhCODAEGabinete() ||
-      ehUsuarioRelatorios(),
+      ehUsuarioRelatorios() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.ATIVACAO_DE_PRODUTO}/consulta`,
@@ -1310,7 +1311,8 @@ let routesConfig = [
       usuarioEhDRE() ||
       usuarioEhOrgaoFiscalizador() ||
       usuarioEhCODAEGabinete() ||
-      ehUsuarioRelatorios(),
+      ehUsuarioRelatorios() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
@@ -1389,7 +1391,8 @@ let routesConfig = [
       usuarioEhMedicao() ||
       usuarioEhCODAEGabinete() ||
       usuarioEhEmpresaTerceirizada() ||
-      ehUsuarioRelatorios(),
+      ehUsuarioRelatorios() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GERENCIAL_DIETAS}`,
@@ -1397,7 +1400,8 @@ let routesConfig = [
     tipoUsuario:
       usuarioEhAdministradorNutriCODAE() ||
       usuarioEhCoordenadorNutriCODAE() ||
-      ehUsuarioRelatorios(),
+      ehUsuarioRelatorios() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GESTAO_DIETA_ESPECIAL}`,
@@ -1409,7 +1413,8 @@ let routesConfig = [
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      ehUsuarioRelatorios(),
+      ehUsuarioRelatorios() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
@@ -1443,7 +1448,8 @@ let routesConfig = [
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCODAEGabinete() ||
-      ehUsuarioRelatorios(),
+      ehUsuarioRelatorios() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
@@ -1456,7 +1462,8 @@ let routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhMedicao() ||
       usuarioEhCODAEGabinete() ||
-      ehUsuarioRelatorios(),
+      ehUsuarioRelatorios() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,
