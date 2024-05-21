@@ -32,7 +32,7 @@ export const SolicitacoesLayoutStatusGenerico = ({ ...props }) => {
 
   const formataCardLayout = (itens) => {
     return itens.map((item) => ({
-      texto: `${item.numero_cronograma} - ${item.nome_produto} - ${item.nome_empresa}`,
+      texto: `${item.numero_ficha_tecnica} - ${item.nome_produto} - ${item.nome_empresa}`,
       data: item.log_mais_recente.slice(0, 10),
       link: `${urlBaseItem}?uuid=${item.uuid}`,
     }));
