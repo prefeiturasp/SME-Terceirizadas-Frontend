@@ -8,15 +8,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
-import { detalharDocumentoParaAnalise } from "services/documentosRecebimento.service";
+import {
+  detalharDocumentoParaAnalise,
+  downloadArquivoLaudoAssinado,
+} from "services/documentosRecebimento.service";
 import InputText from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
-import {
-  DocumentosRecebimentoParaAnalise,
-  TiposDocumentos,
-} from "interfaces/pre_recebimento.interface";
-import ArquivosTipoRecebimento from "../ArquivosTipoDocumento";
+import { DocumentosRecebimentoParaAnalise } from "interfaces/pre_recebimento.interface";
 import OutrosDocumentos from "../OutrosDocumentos";
+import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
 
 export default () => {
   const navigate = useNavigate();
@@ -26,7 +26,6 @@ export default () => {
     {} as DocumentosRecebimentoParaAnalise
   );
   const [aprovado, setAprovado] = useState(true);
-  const [laudo, setLaudo] = useState<TiposDocumentos>();
 
   const voltarPaginaPainel = () =>
     navigate(`/${PRE_RECEBIMENTO}/${PAINEL_DOCUMENTOS_RECEBIMENTO}`);
@@ -41,9 +40,8 @@ export default () => {
     const laudoIndex = objeto.tipos_de_documentos.findIndex(
       (tipo) => tipo.tipo_documento === "LAUDO"
     );
-    const laudo = objeto.tipos_de_documentos.splice(laudoIndex, 1)[0];
+    objeto.tipos_de_documentos.splice(laudoIndex, 1)[0];
 
-    setLaudo(laudo);
     setObjeto(objeto);
     setAprovado(objeto.status === "Aprovado");
   };
@@ -55,6 +53,17 @@ export default () => {
       setCarregando(false);
     })();
   }, []);
+
+  const baixarArquivoLaudo = async (
+    objeto: DocumentosRecebimentoParaAnalise
+  ) => {
+    setCarregando(true);
+    try {
+      await downloadArquivoLaudoAssinado(objeto.uuid, objeto.numero_cronograma);
+    } finally {
+      setCarregando(false);
+    }
+  };
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
@@ -128,7 +137,18 @@ export default () => {
           <div className="subtitulo-documento">
             Laudo enviado pelo Fornecedor:
           </div>
-          <ArquivosTipoRecebimento lista={laudo} />
+          {/* <ArquivosTipoRecebimento
+            lista={laudo}
+            textoBotoes=
+          /> */}
+          <div className="row mt-2">
+            <div className="col-4">
+              <BotaoAnexo
+                textoBotao="Laudo Analisado"
+                onClick={() => baixarArquivoLaudo(objeto)}
+              />
+            </div>
+          </div>
 
           <hr />
 
