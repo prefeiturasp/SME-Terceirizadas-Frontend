@@ -44,6 +44,7 @@ export default () => {
   const [objectoPeriodos, setObjectoPeriodos] = useState([]);
   const [periodoSelecionado, setPeriodoSelecionado] = useState(null);
   const [escolaInstituicao, setEscolaInstituicao] = useState(null);
+  const [ehIMR, setEhIMR] = useState(false);
   const [loteEscolaSimples, setLoteEscolaSimples] = useState(null);
   const [periodosEscolaSimples, setPeriodosEscolaSimples] = useState(null);
   const [
@@ -124,6 +125,11 @@ export default () => {
       setPanoramaGeral(respostaPanorama.data);
       setEscolaInstituicao(escola);
       setLoteEscolaSimples(respostaEscolaSimples.data.lote.nome);
+      setEhIMR(
+        !!respostaEscolaSimples.data.lote.contratos_do_lote.find(
+          (contrato) => !contrato.encerrado && contrato.eh_imr
+        )
+      );
 
       let solicitacoesLancadas = [];
 
@@ -457,6 +463,7 @@ export default () => {
                 panoramaGeral={panoramaGeral}
                 mes={mes}
                 ano={ano}
+                ehIMR={ehIMR}
                 periodoSelecionado={periodoSelecionado}
                 escolaInstituicao={escolaInstituicao}
                 periodosEscolaSimples={periodosEscolaSimples}

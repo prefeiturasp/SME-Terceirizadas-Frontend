@@ -1,24 +1,27 @@
-import React, { useEffect, useState } from "react";
-import HTTP_STATUS from "http-status-codes";
-import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
-import { CardLancamento } from "./CardLancamento";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
+  ehEscolaTipoCEUGESTAO,
+  getError,
+  tiposAlimentacaoETEC,
+  usuarioEhEscolaTerceirizadaDiretor,
+} from "helpers/utilities";
+import HTTP_STATUS from "http-status-codes";
+import React, { useEffect, useState } from "react";
+import {
+  getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola,
   getPeriodosInclusaoContinua,
-  getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesInclusoesEtecAutorizadasEscola,
   getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola,
-  getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola,
+  getSolicitacoesKitLanchesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import {
   escolaEnviaCorrecaoMedicaoInicialCODAE,
   escolaEnviaCorrecaoMedicaoInicialDRE,
@@ -26,18 +29,16 @@ import {
   getQuantidadeAlimentacoesLancadasPeriodoGrupo,
   getSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { relatorioMedicaoInicialPDF } from "services/relatorios";
+import { BlocoOcorrencias } from "../BlocoOcorrencias";
+import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
+import { CardLancamento } from "./CardLancamento";
 import {
   CORES,
   removeObjetosDuplicados,
   renderBotaoEnviarCorrecao,
   verificaSeEnviarCorrecaoDisabled,
 } from "./helpers";
-import {
-  ehEscolaTipoCEUGESTAO,
-  getError,
-  usuarioEhEscolaTerceirizadaDiretor,
-} from "helpers/utilities";
-import { tiposAlimentacaoETEC } from "helpers/utilities";
 
 export const LancamentoPorPeriodo = ({
   escolaInstituicao,
@@ -53,6 +54,7 @@ export const LancamentoPorPeriodo = ({
   setSolicitacaoMedicaoInicial,
   naoPodeFinalizar,
   setFinalizandoMedicao,
+  ehIMR,
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
     useState(false);
@@ -87,6 +89,7 @@ export const LancamentoPorPeriodo = ({
     useState(false);
 
   const [periodosEspecificos, setPeriodosEspecificos] = useState([]);
+  // const [comOcorrencias, setComOcorrencias] = useState("");
   const [errosAoSalvar, setErrosAoSalvar] = useState([]);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
@@ -362,6 +365,7 @@ export const LancamentoPorPeriodo = ({
       {erroAPI && <div>{erroAPI}</div>}
       {!erroAPI && quantidadeAlimentacoesLancadas && (
         <>
+          {ehIMR && <BlocoOcorrencias />}
           <div className="pb-2">
             <b className="section-title">Períodos</b>
           </div>
