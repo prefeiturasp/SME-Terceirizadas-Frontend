@@ -137,10 +137,6 @@ export default () => {
           <div className="subtitulo-documento">
             Laudo enviado pelo Fornecedor:
           </div>
-          {/* <ArquivosTipoRecebimento
-            lista={laudo}
-            textoBotoes=
-          /> */}
           <div className="row mt-2">
             <div className="col-4">
               <BotaoAnexo
