@@ -4,13 +4,13 @@ import {
   CorrecaoDocumentoPayload,
 } from "components/screens/PreRecebimento/DocumentosRecebimento/interfaces";
 import axios from "./_base";
+import { saveAs } from "file-saver";
 import {
   ResponseDocumentosPorStatusDashboard,
   ResponseDocumentosRecebimento,
   ResponseDocumentosRecebimentoDashboard,
   ResponseDocumentosRecebimentoDetalhado,
   ResponseDocumentosRecebimentoParaAnalise,
-  ResponseDownloadArquivoLaudoAssinado,
 } from "interfaces/responses.interface";
 import { FiltrosDashboardDocumentos } from "interfaces/pre_recebimento.interface";
 import { getMensagemDeErro } from "../helpers/statusErrors";
@@ -100,9 +100,16 @@ export const corrigirDocumentoRecebimento = async (
   );
 
 export const downloadArquivoLaudoAssinado = async (
-  uuid: string
-): Promise<ResponseDownloadArquivoLaudoAssinado> =>
-  await axios.get(
-    `/documentos-de-recebimento/${uuid}/download-laudo-assinado/`,
-    { responseType: "blob" }
-  );
+  uuid: string,
+  numero_cronograma: string
+) => {
+  try {
+    const { data } = await axios.get(
+      `/documentos-de-recebimento/${uuid}/download-laudo-assinado/`,
+      { responseType: "blob" }
+    );
+    saveAs(data, `laudo_cronograma_${numero_cronograma}.pdf`);
+  } catch {
+    toastError("Houve um erro ao baixar o arquivo de Laudo.");
+  }
+};
