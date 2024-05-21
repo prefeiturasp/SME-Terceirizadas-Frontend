@@ -20,6 +20,7 @@ import {
   usuarioEhAdministradorNutriCODAE,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCoordenadorNutriCODAE,
+  usuarioEhGticCODAE,
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoParceira,
   usuarioEhCODAEGabinete,
@@ -73,7 +74,8 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCoordenadorNutriCODAE() ||
     usuarioEhMedicao() ||
     usuarioEhCODAEGabinete() ||
-    ehUsuarioRelatorios();
+    ehUsuarioRelatorios() ||
+    usuarioEhGticCODAE();
 
   return (
     <Menu id="DietaEspecial" icon="fa-apple-alt" title={"Dieta Especial"}>
@@ -123,7 +125,8 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
           {(usuarioEhAdministradorNutriCODAE() ||
             usuarioEhCoordenadorNutriCODAE() ||
-            ehUsuarioRelatorios()) && (
+            ehUsuarioRelatorios() ||
+            usuarioEhGticCODAE()) && (
             <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_GERENCIAL_DIETAS}`}>
               Relatório Gerencial de Dietas
             </LeafItem>
