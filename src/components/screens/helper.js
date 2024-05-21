@@ -223,6 +223,7 @@ export const ajustarFormatoLog = (logs, card) => {
       link: `/${solicitacao}/${RELATORIO}?uuid=${log.uuid}&ehInclusaoContinua=${
         log.tipo_doc === INC_ALIMENTA_CONTINUA
       }&tipoSolicitacao=${tipo}&card=${card_}`,
+      tipo_solicitacao_dieta: log?.tipo_solicitacao_dieta,
     };
   });
 };
