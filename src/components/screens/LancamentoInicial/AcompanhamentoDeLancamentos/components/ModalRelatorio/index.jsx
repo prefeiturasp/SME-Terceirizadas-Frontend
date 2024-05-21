@@ -13,7 +13,7 @@ import Botao from "../../../../../Shareable/Botao";
 import "./styles.scss";
 import { toastError } from "../../../../../Shareable/Toast/dialogs";
 
-const ModalRelatorioUnificado = ({ show, onClose, onSubmit }) => {
+const ModalRelatorio = ({ show, onClose, onSubmit, nomeRelatorio }) => {
   const [gruposUnidadeEscolar, setGruposUnidadeEscolar] = useState([]);
   const [grupoSelecionado, setGrupoSelecionado] = useState(null);
 
@@ -23,7 +23,13 @@ const ModalRelatorioUnificado = ({ show, onClose, onSubmit }) => {
   }
 
   function desabilitaRadioButton(grupo) {
-    return grupo.includes("1") || grupo.includes("2");
+    const gruposDesabilitados = ["Grupo 1", "Grupo 2", "Grupo 5"];
+
+    if (nomeRelatorio === "Relatório Consolidado") {
+      gruposDesabilitados.push("Grupo 3");
+    }
+
+    return gruposDesabilitados.includes(grupo);
   }
 
   const getGruposUnidades = async () => {
@@ -49,13 +55,11 @@ const ModalRelatorioUnificado = ({ show, onClose, onSubmit }) => {
       dialogClassName="modal-relatorio-unificado"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Impressão de Relatório Unificado</Modal.Title>
+        <Modal.Title>Impressão de {nomeRelatorio}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <p>
-          Selecione o grupo de Unidade para impressão do Relatório Unificado:
-        </p>
+        <p>Selecione o grupo de Unidade para impressão do {nomeRelatorio}:</p>
 
         <Radio.Group
           value={grupoSelecionado}
@@ -105,4 +109,4 @@ const ModalRelatorioUnificado = ({ show, onClose, onSubmit }) => {
   );
 };
 
-export default ModalRelatorioUnificado;
+export default ModalRelatorio;

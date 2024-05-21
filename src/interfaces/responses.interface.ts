@@ -1,5 +1,6 @@
 import {
   DiretoriaRegionalInterface,
+  EscolaSimplissimaInterface,
   QuantidadeAlunosEscolaInterface,
   VinculoTipoAlimentacaoPorEscolaInterface,
 } from "interfaces/escola.interface";
@@ -25,6 +26,10 @@ import { LoteRascunhosInterface } from "./rascunhos.interface";
 import { TerceirizadaInterface } from "./terceirizada.interface";
 import { EditalContratoInterface } from "components/screens/Cadastros/EditaisContratosRefatorado/interfaces";
 import { FichaRecebimento } from "./recebimento.interface";
+import {
+  PeriodoDeVisitaInterface,
+  TipoOcorrenciaInterface,
+} from "./imr.interface";
 
 export interface ResponseInterface {
   data: Object;
@@ -184,12 +189,7 @@ export interface ResponseLotesSimplesInterface extends ResponseInterface {
 
 export interface ResponseDiretoriasRegionaisSimplissimaInterface
   extends ResponseInterface {
-  data: {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: Array<DiretoriaRegionalInterface>;
-  };
+  data: ListagemPaginada<DiretoriaRegionalInterface>;
 }
 
 export interface ResponseTerceirizadaListaNomesInterface
@@ -214,4 +214,23 @@ export interface ResponseGetEditalCotratoInterface extends ResponseInterface {
 
 export interface ResponseFichaRecebimento extends ResponseInterface {
   data: FichaRecebimento;
+}
+
+export interface ResponseGetEscolasTercTotalInterface
+  extends ResponseInterface {
+  data: Array<EscolaSimplissimaInterface>;
+}
+
+export interface ResponsePeriodosDeVisitaInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<PeriodoDeVisitaInterface>;
+}
+
+export interface ResponseFormularioSupervisaoTiposOcorrenciasInterface
+  extends ResponseInterface {
+  data: Array<TipoOcorrenciaInterface>;
+}
+
+export interface ResponseGetQuantidadeAlunosMatriculadosPorDataInterface
+  extends ResponseInterface {
+  data: number;
 }

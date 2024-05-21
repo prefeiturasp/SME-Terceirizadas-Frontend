@@ -1,0 +1,103 @@
+@import "styles/variables.scss";
+
+div.novo-relatorio-visitas {
+  h2 {
+    color: $green;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  input[type="radio"] {
+    accent-color: $green;
+  }
+
+  div.cabecalho {
+    .ant-select-selection-placeholder {
+      font-weight: normal !important;
+    }
+
+    section.nutri-acompanhou-visita {
+      font-size: 14px;
+      color: $gray;
+
+      label {
+        color: $blackInput;
+        margin-left: 0.5em;
+      }
+    }
+  }
+
+  div.formulario {
+    div.subtitle {
+      color: $grayHeader;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    table {
+      font-size: 14px;
+      width: 100%;
+
+      tr {
+        border: 1px solid $grayIcon;
+
+        &:not(:last-child) {
+          border-bottom: none;
+        }
+
+        &.categoria {
+          background-color: $grayBackgroundTr;
+
+          th {
+            padding: 1em;
+            text-align: center;
+          }
+        }
+
+        &.tipo-ocorrencia {
+          td:not(:last-child) {
+            border-right: 1px solid $grayIcon;
+          }
+
+          td {
+            &:first-child {
+              width: 5%;
+            }
+
+            &:nth-child(2) {
+              width: 85%;
+            }
+            &:last-child {
+              width: 10%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1643px) {
+  div.novo-relatorio-visitas {
+    div.formulario {
+      table {
+        tr {
+          &.tipo-ocorrencia {
+            td {
+              &:first-child {
+                width: 10%;
+              }
+
+              &:nth-child(2) {
+                width: 70%;
+              }
+              &:last-child {
+                width: 20%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

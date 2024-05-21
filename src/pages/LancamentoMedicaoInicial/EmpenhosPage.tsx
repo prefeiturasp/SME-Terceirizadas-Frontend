@@ -20,7 +20,7 @@ const anterior = [
   },
 ];
 
-export default () => (
+export const EmpenhosPage = () => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={"/"}>
     <Breadcrumb home={"/"} anteriores={anterior} atual={atual} />
     <Empenhos />

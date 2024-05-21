@@ -23,7 +23,7 @@ const anterior = [
   },
 ];
 
-export default () => (
+export const ClausulasParaDescontosPage = () => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={"/"}>
     <Breadcrumb home={"/"} anteriores={anterior} atual={atual} />
     <ClausulasParaDescontos />
