@@ -111,7 +111,8 @@ export const SidebarContent = () => {
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAEGabinete() ||
-      ehUsuarioRelatorios());
+      ehUsuarioRelatorios() ||
+      usuarioEhGticCODAE());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -124,7 +125,8 @@ export const SidebarContent = () => {
     usuarioEhMedicao() ||
     usuarioEhCODAEGabinete() ||
     usuarioEscolaEhGestaoDiretaParceira ||
-    ehUsuarioRelatorios();
+    ehUsuarioRelatorios() ||
+    usuarioEhGticCODAE();
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -158,8 +160,7 @@ export const SidebarContent = () => {
     !usuarioEscolaEhGestaoDireta() &&
     !usuarioEhMedicao() &&
     !usuarioEhPreRecebimento() &&
-    !usuarioEhAdministradorRepresentanteCodae() &&
-    !usuarioEhGticCODAE();
+    !usuarioEhAdministradorRepresentanteCodae();
 
   const exibirConfiguracoes =
     !usuarioEhEscolaTerceirizada() &&
