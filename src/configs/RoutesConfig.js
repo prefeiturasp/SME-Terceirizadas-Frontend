@@ -136,7 +136,6 @@ import {
   usuarioEhDilog,
   usuarioComAcessoTelaDetalharNotificacaoOcorrencia,
   usuarioComAcessoAoPainelAprovacoes,
-  usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioComAcessoAoPainelEmbalagens,
   usuarioEhOrgaoFiscalizador,
   usuarioComAcessoAoPainelDocumentos,
@@ -145,6 +144,8 @@ import {
   ehUsuarioRelatorios,
   usuarioComAcessoAoCalendarioCronograma,
   usuarioEhRecebimento,
+  usuarioComAcessoAoRelatorioCronogramas,
+  usuarioEhGticCODAE,
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -177,9 +178,6 @@ import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/Relatorio
 import RelatorioDietasAutorizadas from "pages/DietaEspecial/RelatorioDietasAutorizadas";
 import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
 import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
-import LancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/LancamentoMedicaoInicialPage";
-import PeriodoLancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialPage";
-import PeriodoLancamentoMedicaoInicialCEIPage from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialCEIPage";
 import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
 import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
 import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEntregaDilog";
@@ -229,11 +227,9 @@ import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 import GestaoAcessoGeralPage from "pages/Configuracoes/GestaoAcessoGeralPage";
 import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
 import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
-import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
 import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
 import StatusCronogramasAssinadoCODAE from "pages/Dinutre/Cronogramas/StatusCronogramasAssinadoCODAE";
 import StatusSolicitacoesAlteracoesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDinutre";
-import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
 import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
 import GestaoAcessoCogestorPage from "pages/Configuracoes/GestaoAcessoCogestorPage";
 import AnaliseDilogCronogramaPage from "pages/PreRecebimento/DetalharSolicitacaoCronograma";
@@ -254,18 +250,6 @@ import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogistica
 import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
 import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
 import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
-import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
-import EmpenhosPage from "pages/LancamentoMedicaoInicial/EmpenhosPage";
-import ClausulasParaDescontosPage from "pages/LancamentoMedicaoInicial/ClausulasParaDescontosPage";
-import ParametrizacaoFinanceiraPage from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/ParametrizacaoFinanceiraPage";
-import AdicionarParametrizacaoFinanceiraPage from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/AdicionarParametrizacaoFinanceiraPage";
-import EditarParametrizacaoFinanceiraPage from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/EditarParametrizacaoFinanceiraPage";
-import CadastroDeClausulasPage from "pages/LancamentoMedicaoInicial/CadastroDeClausulasPage";
-import EditarClausulaPage from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
-import CadastroDeEmpenhoPage from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
-import EditarEmpenhoPage from "pages/LancamentoMedicaoInicial/EditarEmpenhoPage";
-import ControleDeFrequenciaPage from "pages/LancamentoMedicaoInicial/ControleDeFrequenciaPage";
-import RelatorioAdesao from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesao";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
@@ -315,8 +299,11 @@ import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProdut
 import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/CopiarAtribuicaoQuestoesPage";
 import FichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/FichaRecebimentoPage";
 import CadastroFichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/CadastroFichaRecebimentoPage";
+import { supervisao } from "./rotas/supervisao/index.js";
+import RelatorioCronogramaPage from "../pages/PreRecebimento/Relatorios/RelatorioCronogramaPage";
+import { medicaoInicial } from "./rotas/medicaoInicial/index.js";
 
-const routesConfig = [
+let routesConfig = [
   {
     path: `/${constants.ALUNO}/${constants.DIETA_ESPECIAL}`,
     component: DietaEspecialAluno,
@@ -861,7 +848,8 @@ const routesConfig = [
       usuarioEhCoordenadorCODAE() ||
       usuarioEhCodaeDilog() ||
       usuarioEhCODAEGabinete() ||
-      usuarioEhDilogDiretoria(),
+      usuarioEhDilogDiretoria() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_DIRETOR_ESCOLA}`,
@@ -889,7 +877,10 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
@@ -899,7 +890,10 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.ATUALIZACAO_EMAIL_EOL}`,
     component: AtualizacaoEmailEOLPage,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog(),
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhGticCODAE(),
   },
   {
     path: `/configuracoes`,
@@ -1465,106 +1459,6 @@ const routesConfig = [
       ehUsuarioRelatorios(),
   },
   {
-    path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}`,
-    component: LancamentoMedicaoInicialPage,
-    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
-  },
-  {
-    path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}/${constants.PERIODO_LANCAMENTO}`,
-    component: PeriodoLancamentoMedicaoInicialPage,
-    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
-  },
-  {
-    path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}/${constants.PERIODO_LANCAMENTO_CEI}`,
-    component: PeriodoLancamentoMedicaoInicialCEIPage,
-    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.ACOMPANHAMENTO_DE_LANCAMENTOS}`,
-    component: AcompanhamentoDeLancamentosPage,
-    tipoUsuario:
-      usuarioEhDRE() ||
-      usuarioEhMedicao() ||
-      usuarioEhEscolaTerceirizadaQualquerPerfil() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.CONFERENCIA_DOS_LANCAMENTOS}`,
-    component: ConferenciaDosLancamentosPage,
-    tipoUsuario:
-      usuarioEhDRE() ||
-      usuarioEhMedicao() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.DETALHAMENTO_DO_LANCAMENTO}`,
-    component: DetalhamentoDoLancamentoPage,
-    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}`,
-    component: EmpenhosPage,
-    tipoUsuario: usuarioEhMedicao(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}/${constants.CADASTRO_DE_EMPENHO}`,
-    component: CadastroDeEmpenhoPage,
-    tipoUsuario: usuarioEhMedicao(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}/${constants.EDITAR_EMPENHO}`,
-    component: EditarEmpenhoPage,
-    tipoUsuario: usuarioEhMedicao(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}`,
-    component: ClausulasParaDescontosPage,
-    tipoUsuario: usuarioEhMedicao(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.PARAMETRIZACAO_FINANCEIRA}`,
-    component: ParametrizacaoFinanceiraPage,
-    tipoUsuario: usuarioEhMedicao(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.PARAMETRIZACAO_FINANCEIRA}/${constants.ADICIONAR_PARAMETRIZACAO_FINANCEIRA}`,
-    component: AdicionarParametrizacaoFinanceiraPage,
-    tipoUsuario: usuarioEhMedicao(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.PARAMETRIZACAO_FINANCEIRA}/${constants.EDITAR_PARAMETRIZACAO_FINANCEIRA}`,
-    component: EditarParametrizacaoFinanceiraPage,
-    tipoUsuario: usuarioEhMedicao(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}/${constants.CADASTRO_DE_CLAUSULA}`,
-    component: CadastroDeClausulasPage,
-    tipoUsuario: usuarioEhMedicao(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}/${constants.EDITAR_CLAUSULA}`,
-    component: EditarClausulaPage,
-    tipoUsuario: usuarioEhMedicao(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.CONTROLE_DE_FREQUENCIA}`,
-    component: ControleDeFrequenciaPage,
-    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
-  },
-  {
-    path: `/${constants.MEDICAO_INICIAL}/${constants.RELATORIOS}/${constants.RELATORIO_ADESAO}`,
-    component: RelatorioAdesao,
-    tipoUsuario:
-      usuarioEhMedicao() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhDRE() ||
-      usuarioEhEscolaTerceirizadaQualquerPerfil(),
-  },
-  {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,
     component: DisponibilizacaoDeSolicitacoesPage,
     tipoUsuario: usuarioEhLogistica(),
@@ -2073,6 +1967,14 @@ const routesConfig = [
     component: CadastroFichaRecebimentoPage,
     tipoUsuario: usuarioEhRecebimento(),
   },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.RELATORIO_CRONOGRAMA}`,
+    component: RelatorioCronogramaPage,
+    tipoUsuario: usuarioComAcessoAoRelatorioCronogramas(),
+  },
 ];
+
+routesConfig = routesConfig.concat(medicaoInicial);
+routesConfig = routesConfig.concat(supervisao);
 
 export default routesConfig;

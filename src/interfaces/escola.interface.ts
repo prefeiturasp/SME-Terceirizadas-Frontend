@@ -64,3 +64,24 @@ export interface EnderecoInterface {
   bairro: string;
   cep: number;
 }
+
+export interface LoteComContratosInterface {
+  contratos_do_lote: Array<{
+    edital: string;
+    encerrado: boolean;
+  }>;
+  nome: string;
+  uuid: string;
+}
+
+export interface EscolaSimplissimaInterface {
+  codigo_eol: string;
+  diretoria_regional: DiretoriaRegionalInterface;
+  lote?: string;
+  lote_obj?: LoteComContratosInterface;
+  nome: string;
+  quantidade_alunos: number;
+  terceirizada: string;
+  tipo_unidade: string;
+  uuid: string;
+}

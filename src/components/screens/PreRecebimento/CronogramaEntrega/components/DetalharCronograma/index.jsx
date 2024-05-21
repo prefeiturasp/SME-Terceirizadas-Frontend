@@ -142,6 +142,24 @@ export default () => {
                       </div>
                     );
                   })}
+              {cronograma?.observacoes && (
+                <>
+                  <hr className="hr-detalhar" />
+
+                  <div className="row mt-3">
+                    <div className="col">
+                      <p className="head-green">Observações</p>
+                    </div>
+                  </div>
+
+                  <div className="row mb-3">
+                    <div className="col-12">
+                      <p>{cronograma.observacoes}</p>
+                    </div>
+                  </div>
+                </>
+              )}
+
               <br />
               <div className="mt-4 mb-4">
                 {usuarioEhDinutreDiretoria() && (

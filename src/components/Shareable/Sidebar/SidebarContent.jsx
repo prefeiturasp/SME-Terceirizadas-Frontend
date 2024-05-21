@@ -37,6 +37,7 @@ import {
   usuarioEhDilogDiretoria,
   usuarioEhRecebimento,
   ehUsuarioRelatorios,
+  usuarioEhGticCODAE,
 } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
 
@@ -53,6 +54,7 @@ import {
   MenuPreRecebimento,
   MenuRecebimento,
 } from "./menus";
+import { MenuSupervisao } from "./menus/MenuSupervisao";
 
 export const SidebarContent = () => {
   const [activeMenu, setActiveMenu] = useState("");
@@ -156,7 +158,8 @@ export const SidebarContent = () => {
     !usuarioEscolaEhGestaoDireta() &&
     !usuarioEhMedicao() &&
     !usuarioEhPreRecebimento() &&
-    !usuarioEhAdministradorRepresentanteCodae();
+    !usuarioEhAdministradorRepresentanteCodae() &&
+    !usuarioEhGticCODAE();
 
   const exibirConfiguracoes =
     !usuarioEhEscolaTerceirizada() &&
@@ -184,9 +187,12 @@ export const SidebarContent = () => {
     usuarioEhPreRecebimento() ||
     usuarioEhEmpresaFornecedor() ||
     usuarioEhCoordenadorGpCODAE() ||
-    usuarioEhCODAEGabinete();
+    usuarioEhCODAEGabinete() ||
+    usuarioEhGticCODAE();
 
   const exibirMenuRecebimento = usuarioEhRecebimento();
+
+  const exibirMenuSupervisao = usuarioEhNutricionistaSupervisao();
 
   const _props = {
     activeMenu,
@@ -206,14 +212,15 @@ export const SidebarContent = () => {
     exibirGestaoAlimentacao && <MenuGestaoDeAlimentacao key={1} {..._props} />,
     exibirDietaEspecial && <MenuDietaEspecial key={2} {..._props} />,
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
-    exibirCadastros && <MenuCadastros key={5} />,
+    exibirCadastros && <MenuCadastros key={4} />,
     exibirModuloMedicaoInicial() && (
-      <MenuLancamentoInicial key={6} {..._props} />
+      <MenuLancamentoInicial key={5} {..._props} />
     ),
-    exibirRelatorios && <MenuRelatorios key={8} />,
-    exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
-    exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />,
-    exibirMenuRecebimento && <MenuRecebimento key={11} />,
-    exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
+    exibirMenuSupervisao && <MenuSupervisao key={6} {..._props} />,
+    exibirRelatorios && <MenuRelatorios key={7} />,
+    exibirMenuLogistica && <MenuLogistica key={8} {..._props} />,
+    exibirMenuPreRecebimento && <MenuPreRecebimento key={9} {..._props} />,
+    exibirMenuRecebimento && <MenuRecebimento key={10} />,
+    exibirConfiguracoes && <MenuConfiguracoes key={11} {..._props} />,
   ];
 };

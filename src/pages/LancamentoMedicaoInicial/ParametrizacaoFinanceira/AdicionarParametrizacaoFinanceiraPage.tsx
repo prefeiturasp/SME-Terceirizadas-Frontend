@@ -2,12 +2,12 @@ import React from "react";
 
 import {
   ADICIONAR_PARAMETRIZACAO_FINANCEIRA,
-  PARAMETRIZACAO_FINANCEIRA,
   MEDICAO_INICIAL,
-} from "../../../configs/constants";
+  PARAMETRIZACAO_FINANCEIRA,
+} from "configs/constants";
 
-import Breadcrumb from "../../../components/Shareable/Breadcrumb";
-import Page from "../../../components/Shareable/Page/Page";
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import Page from "components/Shareable/Page/Page";
 
 import AdicionarParametrizacaoFinanceira from "components/screens/LancamentoInicial/ParametrizacaoFinanceira/AdicionarParametrizacaoFinanceira";
 
@@ -31,7 +31,7 @@ const anterior = [
   },
 ];
 
-export default () => (
+export const AdicionarParametrizacaoFinanceiraPage = () => (
   <Page titulo="Adicionar Parametrização Financeira" botaoVoltar>
     <Breadcrumb home={"/"} anteriores={anterior} atual={atual} />
     <AdicionarParametrizacaoFinanceira />

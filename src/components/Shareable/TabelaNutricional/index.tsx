@@ -101,7 +101,7 @@ const TabelaNutricional: React.FC<Props> = ({
       .replace(".", ",");
 
   return (
-    <div className="tabela-nutricional my-5">
+    <div className="tabela-nutricional">
       <article>
         <div className="grid-table header-table">
           <div>Informação Nutricional</div>
@@ -173,8 +173,10 @@ const TabelaNutricional: React.FC<Props> = ({
                   name={`valor_diario_${informacao.uuid}`}
                   className="input-tabela-nutricional"
                   required
-                  validate={required}
-                  apenasNumeros
+                  validate={composeValidators(
+                    required,
+                    inteiroOuDecimalComVirgula
+                  )}
                   disabled={desabilitar}
                 />
                 <span>%</span>
@@ -260,8 +262,10 @@ const TabelaNutricional: React.FC<Props> = ({
                     name={`valor_diario_${informacao.uuid}`}
                     className="input-tabela-nutricional"
                     required
-                    validate={required}
-                    apenasNumeros
+                    validate={composeValidators(
+                      required,
+                      inteiroOuDecimalComVirgula
+                    )}
                     disabled={desabilitar}
                   />
                   <span>%</span>
@@ -304,9 +308,7 @@ const TabelaNutricional: React.FC<Props> = ({
       </article>
 
       <p className="obs-tabela-nutricional">
-        * % Valores Diários com base em uma dieta de 2.000kcal ou 8.400kJ. Seus
-        Valores Diários podem ser maiores ou menores dependendo de suas
-        necessidades energéticas.
+        * Percentual de valores diários fornecidos pela porção.
         <br />
         ** VD não estabelecidos (valores com a informação &quot;0&quot; na
         tabela nutricional).

@@ -49,6 +49,10 @@ export const InputText = (props) => {
       input.onChange(e);
       inputOnChange && inputOnChange(e);
     },
+    onBlur: (e) => {
+      input.onBlur(e);
+      onBlur && onBlur(e);
+    },
   };
 
   return (
@@ -123,7 +127,6 @@ export const InputText = (props) => {
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
               : e.target.value;
           }}
-          onBlur={onBlur}
         />
       </div>
       {acrescentarAppend && (
