@@ -126,8 +126,12 @@ div.bloco-ocorrencias {
   font-size: 14px;
 
   div.box {
-    padding: 1em;
+    padding: 1em !important;
     border: 1px solid $grayDisabled;
     border-radius: 5px;
+
+    input[type="radio"] {
+      accent-color: $green;
+    }
   }
 }

@@ -89,7 +89,7 @@ export const LancamentoPorPeriodo = ({
     useState(false);
 
   const [periodosEspecificos, setPeriodosEspecificos] = useState([]);
-  // const [comOcorrencias, setComOcorrencias] = useState("");
+  const [comOcorrencias, setComOcorrencias] = useState("");
   const [errosAoSalvar, setErrosAoSalvar] = useState([]);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
@@ -365,7 +365,12 @@ export const LancamentoPorPeriodo = ({
       {erroAPI && <div>{erroAPI}</div>}
       {!erroAPI && quantidadeAlimentacoesLancadas && (
         <>
-          {ehIMR && <BlocoOcorrencias />}
+          {ehIMR && (
+            <BlocoOcorrencias
+              comOcorrencias={comOcorrencias}
+              setComOcorrencias={setComOcorrencias}
+            />
+          )}
           <div className="pb-2">
             <b className="section-title">Períodos</b>
           </div>
