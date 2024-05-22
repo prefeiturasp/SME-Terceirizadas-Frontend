@@ -19,6 +19,7 @@ export const Filtros = ({ ...props }) => {
     lotes,
     tiposUnidades,
     unidadesEducacionais,
+    tiposTurmas,
     listaOpcoes,
     setFiltrando,
     setFiltros,
@@ -72,7 +73,7 @@ export const Filtros = ({ ...props }) => {
             {usuarioEhDRE() ? (
               <>
                 <div className="row">
-                  <div className="col-3">
+                  <div className="col-2">
                     <label>Lote</label>
                     <Field
                       component={StatefulMultiSelect}
@@ -102,7 +103,7 @@ export const Filtros = ({ ...props }) => {
                       }}
                     />
                   </div>
-                  <div className="col-3">
+                  <div className="col-2">
                     <label>Tipo de Unidade</label>
                     <Field
                       component={StatefulMultiSelect}
@@ -116,6 +117,24 @@ export const Filtros = ({ ...props }) => {
                       overrideStrings={{
                         selectSomeItems: "Selecione",
                         allItemsAreSelected: "Todos os Tipos de Unidades",
+                        selectAll: "Todos",
+                      }}
+                    />
+                  </div>
+                  <div className="col-2">
+                    <label>Tipo de Turma</label>
+                    <Field
+                      component={StatefulMultiSelect}
+                      name="tipos_turmas"
+                      selected={values.tipos_turmas || []}
+                      options={tiposTurmas}
+                      onSelectedChanged={(values_) =>
+                        form.change("tipos_turmas", values_)
+                      }
+                      hasSelectAll
+                      overrideStrings={{
+                        selectSomeItems: "Selecione",
+                        allItemsAreSelected: "Todos os Tipos de Turmas",
                         selectAll: "Todos",
                       }}
                     />
@@ -169,7 +188,7 @@ export const Filtros = ({ ...props }) => {
                       }}
                     />
                   </div>
-                  <div className="col-4">
+                  <div className="col-2">
                     <label>Lote</label>
                     <Field
                       component={StatefulMultiSelect}
@@ -199,9 +218,7 @@ export const Filtros = ({ ...props }) => {
                       }}
                     />
                   </div>
-                </div>
-                <div className="row mt-3">
-                  <div className="col-4">
+                  <div className="col-2">
                     <label>Tipo de Unidade</label>
                     <Field
                       component={StatefulMultiSelect}
@@ -219,6 +236,8 @@ export const Filtros = ({ ...props }) => {
                       }}
                     />
                   </div>
+                </div>
+                <div className="row mt-3">
                   <div className="col-8">
                     <label>Unidade Educacional</label>
                     <Field
@@ -240,6 +259,24 @@ export const Filtros = ({ ...props }) => {
                         selectSomeItems: "Selecione",
                         allItemsAreSelected: "Todas as Unidades Educacionais",
                         selectAll: "Todas",
+                      }}
+                    />
+                  </div>
+                  <div className="col-4">
+                    <label>Tipo de Turma</label>
+                    <Field
+                      component={StatefulMultiSelect}
+                      name="tipos_turmas"
+                      selected={values.tipos_turmas || []}
+                      options={tiposTurmas}
+                      onSelectedChanged={(values_) =>
+                        form.change("tipos_turmas", values_)
+                      }
+                      hasSelectAll
+                      overrideStrings={{
+                        selectSomeItems: "Selecione",
+                        allItemsAreSelected: "Todos os Tipos de Turmas",
+                        selectAll: "Todos",
                       }}
                     />
                   </div>
