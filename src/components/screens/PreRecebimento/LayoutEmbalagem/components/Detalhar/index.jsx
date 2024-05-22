@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { Field, Form } from "react-final-form";
-import moment from "moment";
 
 import {
   LAYOUT_EMBALAGEM,
@@ -11,7 +10,6 @@ import {
 } from "configs/constants";
 import { usuarioComAcessoAoPainelEmbalagens } from "helpers/utilities";
 import { textAreaRequired } from "helpers/fieldValidators";
-import MeusDadosContext from "context/MeusDadosContext";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
@@ -32,10 +30,8 @@ import ModalEnviarAnalise from "./components/ModalEnviarAnalise";
 import ModalCancelarCorrecao from "./components/ModalCancelarCorrecao";
 import "./styles.scss";
 
-export default ({ analise }) => {
+export default () => {
   const navigate = useNavigate();
-
-  const { meusDados } = useContext(MeusDadosContext);
 
   const [carregando, setCarregando] = useState(true);
   const [objeto, setObjeto] = useState({});
@@ -48,7 +44,7 @@ export default ({ analise }) => {
   const [modalEnviar, setModalEnviar] = useState(false);
   const [initialValues, setInitialValues] = useState({});
 
-  const [visaoCODAE, setVisaoCODAE] = useState(null);
+  const visaoCODAE = usuarioComAcessoAoPainelEmbalagens();
 
   const voltarPaginaGrid = () =>
     navigate(`/${PRE_RECEBIMENTO}/${LAYOUT_EMBALAGEM}`);
@@ -68,7 +64,6 @@ export default ({ analise }) => {
         objeto.tipos_de_embalagens
       );
       setObjeto(objeto);
-      setVisaoCODAE(usuarioComAcessoAoPainelEmbalagens());
       setEmbalagemPrimaria(obterImagensEmbalagem(response, "PRIMARIA"));
       setEmbalagemSecundaria(obterImagensEmbalagem(response, "SECUNDARIA"));
       setEmbalagemTerciaria(obterImagensEmbalagem(response, "TERCIARIA"));
@@ -114,7 +109,7 @@ export default ({ analise }) => {
   };
 
   const definirInitialValues = (objeto, aprovacoes) => {
-    return aprovacoes?.length > 0 && !analise
+    return aprovacoes?.length > 0
       ? {
           justificativa_0: objeto.tipos_de_embalagens[0]?.complemento_do_status,
           justificativa_1: objeto.tipos_de_embalagens[1]?.complemento_do_status,
@@ -134,13 +129,7 @@ export default ({ analise }) => {
     setModais(newModais);
   };
 
-  const changeAprovacoes = (index, value) => {
-    let newAprovacoes = [...aprovacoes];
-    newAprovacoes[index] = value;
-    setAprovacoes(newAprovacoes);
-  };
-
-  const retornaTextoAprovacao = (index, values) => {
+  const textoAprovacao = (index, values) => {
     if (!aprovacoes) return;
 
     if (aprovacoes[index] === true) {
@@ -201,40 +190,12 @@ export default ({ analise }) => {
     }
   };
 
-  const retornaBotoesAprovacao = (index, values) => {
-    return (
-      <div className="mt-4">
-        <Botao
-          texto="Aprovar"
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN}
-          icon="fas fa-check"
-          onClick={() => {
-            changeAprovacoes(index, true);
-            values[
-              `justificativa_${index}`
-            ] = `Embalagem Aprovada em ${moment().format(
-              "DD/MM/YYYY - HH:mm"
-            )}\n|Por: ${meusDados.nome}`;
-          }}
-          disabled={aprovacoes[index] !== undefined}
-        />
-
-        <Botao
-          texto="Reprovar"
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN_OUTLINE}
-          icon="fas fa-times"
-          className="ms-4"
-          onClick={() => {
-            changeAprovacoes(index, false);
-            values[`justificativa_${index}`] = "";
-          }}
-          disabled={aprovacoes[index] === false}
-        />
+  const botoesArquivosAnexos = (arquivos) =>
+    arquivos.map((e) => (
+      <div className="w-75" key={e.arquivo}>
+        <BotaoAnexo urlAnexo={e.arquivo} />
       </div>
-    );
-  };
+    ));
 
   const onSubmit = () => {
     setModalEnviar(true);
@@ -292,11 +253,6 @@ export default ({ analise }) => {
     }
   };
 
-  const validaAprovacoes =
-    aprovacoes[0] !== undefined &&
-    aprovacoes[1] !== undefined &&
-    (embalagemTerciaria.length === 0 || aprovacoes[2] !== undefined);
-
   useEffect(() => {
     carregarDados();
   }, []);
@@ -322,19 +278,11 @@ export default ({ analise }) => {
                 Nº do Pregão/Chamada Pública
               </label>
             </div>
-            <div className="col-3">
-              <label className="label-dados-produto">
-                {visaoCODAE !== null ? (
-                  visaoCODAE ? (
-                    "Data do Cadastro"
-                  ) : (
-                    <></>
-                  )
-                ) : (
-                  <></>
-                )}
-              </label>
-            </div>
+            {visaoCODAE && (
+              <div className="col-3">
+                <label className="label-dados-produto">Data do Cadastro</label>
+              </div>
+            )}
           </div>
           <div className="row mt-2">
             <div className="col-6">
@@ -347,22 +295,16 @@ export default ({ analise }) => {
                 {objeto.pregao_chamada_publica}
               </span>
             </div>
-            <div className="col-3">
-              <span className="valor-dados-produto">
-                {visaoCODAE !== null ? (
-                  visaoCODAE && objeto.criado_em ? (
-                    objeto.criado_em.split(" ")[0]
-                  ) : (
-                    <></>
-                  )
-                ) : (
-                  <></>
-                )}
-              </span>
-            </div>
+            {visaoCODAE && (
+              <div className="col-3">
+                <span className="valor-dados-produto">
+                  {objeto.criado_em?.split(" ")[0]}
+                </span>
+              </div>
+            )}
           </div>
 
-          {(analise || visaoCODAE) && (
+          {visaoCODAE && (
             <>
               <hr />
               <p>Empresa:</p>
@@ -391,7 +333,7 @@ export default ({ analise }) => {
             <Form
               onSubmit={onSubmit}
               initialValues={initialValues}
-              render={({ handleSubmit, values, errors }) => (
+              render={({ handleSubmit, values }) => (
                 <form onSubmit={handleSubmit}>
                   <ModalCancelarAnalise
                     show={modalCancelar}
@@ -403,6 +345,7 @@ export default ({ analise }) => {
                     handleClose={() => setModalEnviar(false)}
                     enviar={() => enviarAnalise(values)}
                   />
+
                   <div
                     className={`${
                       objeto.tipos_de_embalagens[0].status === "REPROVADO"
@@ -414,15 +357,9 @@ export default ({ analise }) => {
                   </div>
                   <div className="row d-flex align-items-center">
                     <div className="col-5">
-                      {embalagemPrimaria.map((e) => (
-                        <div className="w-75" key={e.arquivo}>
-                          <BotaoAnexo urlAnexo={e.arquivo} />
-                        </div>
-                      ))}
-                      {analise && retornaBotoesAprovacao(0, values)}
+                      {botoesArquivosAnexos(embalagemPrimaria)}
                     </div>
-                    {(analise || visaoCODAE) &&
-                      retornaTextoAprovacao(0, values)}
+                    {visaoCODAE && textoAprovacao(0, values)}
                   </div>
 
                   <hr />
@@ -438,15 +375,9 @@ export default ({ analise }) => {
                   </div>
                   <div className="row d-flex align-items-center">
                     <div className="col-5">
-                      {embalagemSecundaria.map((e) => (
-                        <div className="w-75" key={e.arquivo}>
-                          <BotaoAnexo urlAnexo={e.arquivo} />
-                        </div>
-                      ))}
-                      {analise && retornaBotoesAprovacao(1, values)}
+                      {botoesArquivosAnexos(embalagemSecundaria)}
                     </div>
-                    {(analise || visaoCODAE) &&
-                      retornaTextoAprovacao(1, values)}
+                    {visaoCODAE && textoAprovacao(1, values)}
                   </div>
 
                   {objeto.tipos_de_embalagens[2] && (
@@ -469,10 +400,8 @@ export default ({ analise }) => {
                               <BotaoAnexo urlAnexo={e.arquivo} />
                             </div>
                           ))}
-                          {analise && retornaBotoesAprovacao(2, values)}
                         </div>
-                        {(analise || visaoCODAE) &&
-                          retornaTextoAprovacao(2, values)}
+                        {visaoCODAE && textoAprovacao(2, values)}
                       </div>
                     </>
                   )}
@@ -494,38 +423,9 @@ export default ({ analise }) => {
 
                   <hr />
 
-                  {analise ? (
-                    <>
-                      <Botao
-                        texto="Enviar para o Fornecedor"
-                        type={BUTTON_TYPE.SUBMIT}
-                        style={BUTTON_STYLE.GREEN}
-                        className="float-end ms-3"
-                        disabled={
-                          !validaAprovacoes || Object.keys(errors).length > 0
-                        }
-                        tooltipExterno={
-                          (!validaAprovacoes ||
-                            Object.keys(errors).length > 0) &&
-                          "É necessário avaliar todas as embalagens antes de prosseguir."
-                        }
-                      />
-
-                      <Botao
-                        texto="Cancelar"
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="float-end ms-3"
-                        onClick={() => setModalCancelar(true)}
-                      />
-                    </>
-                  ) : (
-                    <BotaoVoltar
-                      onClick={
-                        visaoCODAE ? voltarPaginaPainel : voltarPaginaGrid
-                      }
-                    />
-                  )}
+                  <BotaoVoltar
+                    onClick={visaoCODAE ? voltarPaginaPainel : voltarPaginaGrid}
+                  />
                 </form>
               )}
             />
