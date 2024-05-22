@@ -100,6 +100,7 @@ export default () => {
       values,
       rascunho,
       empresaSelecionada,
+      fichaTecnicaSelecionada,
       etapas,
       recebimentos
     );
@@ -243,7 +244,9 @@ export default () => {
     cronogramaValues["unidade_medida"] = cronograma.unidade_medida?.uuid;
     cronogramaValues["produto"] = cronograma.produto?.uuid;
     cronogramaValues["armazem"] = cronograma.armazem?.uuid;
-    cronogramaValues["ficha_tecnica"] = cronograma.ficha_tecnica?.uuid;
+    cronogramaValues[
+      "ficha_tecnica"
+    ] = `${cronograma.ficha_tecnica?.numero} - ${cronograma.ficha_tecnica?.produto.nome}`;
     cronogramaValues["marca"] = cronograma.ficha_tecnica?.marca.nome;
     cronogramaValues["peso_liquido_embalagem_primaria"] = numberToStringDecimal(
       cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria
@@ -319,9 +322,9 @@ export default () => {
     onChangeEtapas(changes, etapas, setRestante, setDuplicados);
   };
 
-  const selecionaEmpresa = (uuidEmpresa) => {
-    if (!empresaSelecionada || empresaSelecionada.uuid !== uuidEmpresa) {
-      let fornecedor = fornecedores.find((f) => f.value === uuidEmpresa);
+  const selecionaEmpresa = (nomeEmpresa) => {
+    if (!empresaSelecionada || empresaSelecionada.uuid !== nomeEmpresa) {
+      let fornecedor = fornecedores.find((f) => f.value === nomeEmpresa);
       setEmpresaSelecionada(fornecedor);
     }
   };
@@ -350,11 +353,15 @@ export default () => {
   };
 
   const selecionaFichaTecnica = async (values, form) => {
-    const uuidFicha = values.ficha_tecnica;
+    const numeroFicha = values.ficha_tecnica?.split("-")[0].trim();
     if (
       !fichaTecnicaSelecionada ||
-      fichaTecnicaSelecionada.uuid !== uuidFicha
+      fichaTecnicaSelecionada.uuid !== numeroFicha
     ) {
+      let uuidFicha = fichasTecnicas.find(
+        (f) => f.numero === numeroFicha
+      )?.uuid;
+
       setCarregando(true);
 
       const response = await getDadosCronogramaFichaTecnica(uuidFicha);
@@ -434,7 +441,6 @@ export default () => {
                         required
                         validate={required}
                         placeholder={"Selecione uma Empresa Cadastrada"}
-                        esconderIcone
                       />
                     </div>
                     <div className="col-4">
@@ -533,20 +539,21 @@ export default () => {
                               <div className="col-6">
                                 <Field
                                   className="input-cronograma"
-                                  component={Select}
-                                  options={[
-                                    {
-                                      nome: "Selecione uma Ficha Técnica de Produto",
-                                      uuid: "",
-                                    },
-                                    ...geraOptionsFichasTecnicas(
+                                  component={AutoCompleteField}
+                                  options={getEmpresaFiltrado(
+                                    geraOptionsFichasTecnicas(
                                       fichasTecnicas,
                                       empresaSelecionada
                                     ),
-                                  ]}
+                                    values.ficha_tecnica
+                                  )}
+                                  placeholder={
+                                    "Selecione uma Ficha Técnica de Produto"
+                                  }
                                   label="Ficha Técnica e Produto"
                                   name="ficha_tecnica"
                                   required
+                                  validate={required}
                                 />
                               </div>
                               <div className="col-6">
