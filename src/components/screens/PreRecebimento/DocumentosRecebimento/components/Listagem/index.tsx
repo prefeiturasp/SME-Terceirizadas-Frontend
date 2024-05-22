@@ -80,7 +80,19 @@ const Listagem: React.FC<Props> = ({ objetos, setCarregando }) => {
 
   return (
     <div className="listagem-documentos-recebimento">
-      <div className="titulo-verde mt-4 mb-3">Documentos Cadastrados</div>
+      <header>
+        <div className="row mt-3">
+          <div className="col-5 px-0">
+            <div className="titulo-verde">Documentos Cadastrados</div>
+          </div>
+          <div className="col-7 px-0 text-end">
+            <p className="mb-0">
+              <i className="fa fa-info-circle me-2" />
+              Veja a descrição do produto passando o mouse sobre o nome.
+            </p>
+          </div>
+        </div>
+      </header>
 
       <article>
         <div className="grid-table header-table">
