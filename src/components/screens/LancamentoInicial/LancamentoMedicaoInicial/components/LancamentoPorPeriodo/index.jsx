@@ -7,6 +7,7 @@ import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
+  deepCopy,
   ehEscolaTipoCEUGESTAO,
   getError,
   tiposAlimentacaoETEC,
@@ -369,6 +370,8 @@ export const LancamentoPorPeriodo = ({
             <BlocoOcorrencias
               comOcorrencias={comOcorrencias}
               setComOcorrencias={setComOcorrencias}
+              errosAoSalvar={errosAoSalvar}
+              setErrosAoSalvar={setErrosAoSalvar}
             />
           )}
           <div className="pb-2">
@@ -500,7 +503,20 @@ export const LancamentoPorPeriodo = ({
                 disabled={
                   !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
                 }
-                onClick={() => setShowModalFinalizarMedicao(true)}
+                onClick={() => {
+                  if (ehIMR) {
+                    if (!comOcorrencias && errosAoSalvar.length === 0) {
+                      const errosAoSalvar_ = deepCopy(errosAoSalvar);
+                      errosAoSalvar_.push({
+                        erro: "Faça avaliação do serviço prestado pela empresa.",
+                        periodo_escolar: "OCORRENCIAS",
+                      });
+                      setErrosAoSalvar(errosAoSalvar_);
+                    }
+                  } else {
+                    setShowModalFinalizarMedicao(true);
+                  }
+                }}
               />
             ) : (
               <div className="row">

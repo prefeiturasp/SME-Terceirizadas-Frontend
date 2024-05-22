@@ -133,5 +133,10 @@ div.bloco-ocorrencias {
     input[type="radio"] {
       accent-color: $green;
     }
+
+    .mensagem-erro {
+      font-size: 11px;
+      color: $red;
+    }
   }
 }

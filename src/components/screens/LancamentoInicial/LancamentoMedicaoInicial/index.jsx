@@ -253,8 +253,8 @@ export default () => {
     };
 
     const solicitacao = await getSolicitacaoMedicaoInicial(payload);
-    getDiasCalendarioAsync(payload);
-    setSolicitacaoMedicaoInicial(solicitacao.data[0]);
+    await getDiasCalendarioAsync(payload);
+    await setSolicitacaoMedicaoInicial(solicitacao.data[0]);
   };
 
   const { Option } = Select;
@@ -284,6 +284,8 @@ export default () => {
         } else {
           setNaoPodeFinalizar(true);
         }
+      } else {
+        setNaoPodeFinalizar(false);
       }
     } else {
       toastError(
