@@ -29,6 +29,7 @@ import {
   getCEUGESTAOFrequenciasDietas,
   getQuantidadeAlimentacoesLancadasPeriodoGrupo,
   getSolicitacaoMedicaoInicial,
+  updateSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import { BlocoOcorrencias } from "../BlocoOcorrencias";
@@ -96,6 +97,9 @@ export const LancamentoPorPeriodo = ({
   const [periodosEspecificos, setPeriodosEspecificos] = useState([]);
   const [comOcorrencias, setComOcorrencias] = useState("");
   const [errosAoSalvar, setErrosAoSalvar] = useState([]);
+
+  const [opcaoSelecionada, setOpcaoSelecionada] = useState(null);
+  const [arquivo, setArquivo] = useState([]);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
     const response = await getPeriodosInclusaoContinua({
@@ -365,7 +369,7 @@ export const LancamentoPorPeriodo = ({
     return removeObjetosDuplicados(tiposAlimentacao, "nome");
   };
 
-  const handleFinalizarMedicao = () => {
+  const onClickFinalizarMedicao = () => {
     if (!ehIMR) {
       setShowModalFinalizarMedicao(true);
       return;
@@ -382,6 +386,52 @@ export const LancamentoPorPeriodo = ({
     } else {
       setShowModalSemOcorrenciasIMR(true);
     }
+  };
+
+  const handleFinalizarMedicao = async () => {
+    setFinalizandoMedicao(true);
+
+    let data = new FormData();
+    data.append("escola", String(escolaInstituicao.uuid));
+
+    if (solicitacaoMedicaoInicial.tipo_contagem_alimentacoes) {
+      data.append(
+        "tipo_contagem_alimentacoes",
+        String(solicitacaoMedicaoInicial.tipo_contagem_alimentacoes?.uuid)
+      );
+    }
+    data.append(
+      "responsaveis",
+      JSON.stringify(solicitacaoMedicaoInicial.responsaveis)
+    );
+    data.append("com_ocorrencias", String(!opcaoSelecionada));
+
+    if (!opcaoSelecionada) {
+      let payloadAnexos = [];
+      arquivo.forEach((element) => {
+        payloadAnexos.push({
+          nome: String(element.nome),
+          base64: String(element.base64),
+        });
+      });
+      data.append("anexos", JSON.stringify(payloadAnexos));
+    }
+    data.append("finaliza_medicao", true);
+    const response = await updateSolicitacaoMedicaoInicial(
+      solicitacaoMedicaoInicial.uuid,
+      data
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Medição Inicial finalizada com sucesso!");
+      setObjSolicitacaoMIFinalizada(response.data);
+      setFinalizandoMedicao(false);
+      setErrosAoSalvar([]);
+    } else {
+      setErrosAoSalvar(response.data);
+      setFinalizandoMedicao(false);
+      toastError("Não foi possível finalizar as alterações!");
+    }
+    onClickInfoBasicas();
   };
 
   return (
@@ -528,7 +578,7 @@ export const LancamentoPorPeriodo = ({
                 disabled={
                   !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
                 }
-                onClick={() => handleFinalizarMedicao()}
+                onClick={() => onClickFinalizarMedicao()}
               />
             ) : (
               <div className="row">
@@ -575,6 +625,11 @@ export const LancamentoPorPeriodo = ({
             solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
             onClickInfoBasicas={onClickInfoBasicas}
             setFinalizandoMedicao={setFinalizandoMedicao}
+            opcaoSelecionada={opcaoSelecionada}
+            setOpcaoSelecionada={setOpcaoSelecionada}
+            arquivo={arquivo}
+            setArquivo={setArquivo}
+            handleFinalizarMedicao={handleFinalizarMedicao}
           />
           <ModalSolicitacaoDownload
             show={exibirModalCentralDownloads}
@@ -604,6 +659,7 @@ export const LancamentoPorPeriodo = ({
           />
           <ModalSemOcorrenciasIMR
             show={showModalSemOcorrenciasIMR}
+            handleFinalizarMedicao={handleFinalizarMedicao}
             handleClose={() => setShowModalSemOcorrenciasIMR(false)}
             mes={mes}
             ano={ano}

@@ -12,12 +12,13 @@ type ModalSalvarRascunhoType = {
   handleClose: () => void;
   mes: string;
   ano: string;
+  handleFinalizarMedicao: () => void;
 };
 
 export const ModalSemOcorrenciasIMR = ({
   ...props
 }: ModalSalvarRascunhoType) => {
-  const { show, handleClose, mes, ano } = props;
+  const { show, handleClose, mes, ano, handleFinalizarMedicao } = props;
 
   return (
     <Modal
@@ -53,6 +54,7 @@ export const ModalSemOcorrenciasIMR = ({
           type={BUTTON_TYPE.BUTTON}
           onClick={async () => {
             handleClose();
+            handleFinalizarMedicao();
           }}
           style={BUTTON_STYLE.GREEN}
           className="ms-3"
