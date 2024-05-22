@@ -1,39 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router";
-import HTTP_STATUS from "http-status-codes";
-import { addMonths, getYear, format, getMonth } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Select, Skeleton, Spin } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
+import { Select, Skeleton, Spin } from "antd";
+import { addMonths, format, getMonth, getYear } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import HTTP_STATUS from "http-status-codes";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { FluxoDeStatusMedicaoInicial } from "./components/FluxoDeStatusMedicaoInicial";
 import InformacoesEscola from "./components/InformacoesEscola";
 import InformacoesMedicaoInicial from "./components/InformacoesMedicaoInicial";
-import { LancamentoPorPeriodo } from "./components/LancamentoPorPeriodo";
-import Ocorrencias from "./components/Ocorrencias";
-import { FluxoDeStatusMedicaoInicial } from "./components/FluxoDeStatusMedicaoInicial";
 import { InformacoesMedicaoInicialCEI } from "./components/InformacoesMedicaoInicialCEI";
+import { LancamentoPorPeriodo } from "./components/LancamentoPorPeriodo";
 import { LancamentoPorPeriodoCEI } from "./components/LancamentoPorPeriodoCEI";
-import { toastError } from "../../../Shareable/Toast/dialogs";
+import Ocorrencias from "./components/Ocorrencias";
 
 import {
   DETALHAMENTO_DO_LANCAMENTO,
   LANCAMENTO_MEDICAO_INICIAL,
 } from "configs/constants";
-import * as perfilService from "services/perfil.service";
-import { getEscolaSimples } from "services/escola.service";
+import { ehEscolaTipoCEI, ehEscolaTipoCEMEI } from "helpers/utilities";
+import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getPanoramaEscola } from "services/dietaEspecial.service";
+import { getEscolaSimples } from "services/escola.service";
+import { getDiasCalendario } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { getPeriodosPermissoesLancamentosEspeciaisMesAno } from "services/medicaoInicial/permissaoLancamentosEspeciais.service";
 import {
   getPeriodosEscolaCemeiComAlunosEmei,
   getSolicitacaoMedicaoInicial,
   getSolicitacoesLancadas,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { getDiasCalendario } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
-import { getPeriodosPermissoesLancamentosEspeciaisMesAno } from "services/medicaoInicial/permissaoLancamentosEspeciais.service";
-import {
-  ehEscolaTipoCEI,
-  ehEscolaTipoCEMEI,
-} from "../../../../helpers/utilities";
+import * as perfilService from "services/perfil.service";
 import "./styles.scss";
 
 export default () => {

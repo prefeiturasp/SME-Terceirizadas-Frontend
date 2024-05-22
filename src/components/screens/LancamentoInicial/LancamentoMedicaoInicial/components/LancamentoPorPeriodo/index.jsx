@@ -33,6 +33,7 @@ import {
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import { BlocoOcorrencias } from "../BlocoOcorrencias";
 import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
+import { ModalSemOcorrenciasIMR } from "../ModalSemOcorrenciasIMR";
 import { CardLancamento } from "./CardLancamento";
 import {
   CORES,
@@ -60,6 +61,9 @@ export const LancamentoPorPeriodo = ({
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
     useState(false);
   const [showModalEnviarCorrecao, setShowModalEnviarCorrecao] = useState(false);
+  const [showModalSemOcorrenciasIMR, setShowModalSemOcorrenciasIMR] =
+    useState(false);
+
   const [desabilitaSim, setDesabilitaSim] = useState(false);
   const [periodosInclusaoContinua, setPeriodosInclusaoContinua] =
     useState(undefined);
@@ -361,6 +365,25 @@ export const LancamentoPorPeriodo = ({
     return removeObjetosDuplicados(tiposAlimentacao, "nome");
   };
 
+  const handleFinalizarMedicao = () => {
+    if (!ehIMR) {
+      setShowModalFinalizarMedicao(true);
+      return;
+    }
+    if (!comOcorrencias) {
+      if (errosAoSalvar && errosAoSalvar.length === 0) {
+        const errosAoSalvar_ = deepCopy(errosAoSalvar);
+        errosAoSalvar_.push({
+          erro: "Faça avaliação do serviço prestado pela empresa.",
+          periodo_escolar: "OCORRENCIAS",
+        });
+        setErrosAoSalvar(errosAoSalvar_);
+      }
+    } else {
+      setShowModalSemOcorrenciasIMR(true);
+    }
+  };
+
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
@@ -372,6 +395,8 @@ export const LancamentoPorPeriodo = ({
               setComOcorrencias={setComOcorrencias}
               errosAoSalvar={errosAoSalvar}
               setErrosAoSalvar={setErrosAoSalvar}
+              mes={mes}
+              ano={ano}
             />
           )}
           <div className="pb-2">
@@ -503,20 +528,7 @@ export const LancamentoPorPeriodo = ({
                 disabled={
                   !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
                 }
-                onClick={() => {
-                  if (ehIMR) {
-                    if (!comOcorrencias && errosAoSalvar.length === 0) {
-                      const errosAoSalvar_ = deepCopy(errosAoSalvar);
-                      errosAoSalvar_.push({
-                        erro: "Faça avaliação do serviço prestado pela empresa.",
-                        periodo_escolar: "OCORRENCIAS",
-                      });
-                      setErrosAoSalvar(errosAoSalvar_);
-                    }
-                  } else {
-                    setShowModalFinalizarMedicao(true);
-                  }
-                }}
+                onClick={() => handleFinalizarMedicao()}
               />
             ) : (
               <div className="row">
@@ -589,6 +601,12 @@ export const LancamentoPorPeriodo = ({
             }
             funcaoSim={escolaEnviaCorrecaoDreCodae}
             desabilitaSim={desabilitaSim}
+          />
+          <ModalSemOcorrenciasIMR
+            show={showModalSemOcorrenciasIMR}
+            handleClose={() => setShowModalSemOcorrenciasIMR(false)}
+            mes={mes}
+            ano={ano}
           />
         </>
       )}
