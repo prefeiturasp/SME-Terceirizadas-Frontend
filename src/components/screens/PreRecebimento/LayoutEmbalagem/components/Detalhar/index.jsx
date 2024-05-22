@@ -131,6 +131,27 @@ export default () => {
     setModais(newModais);
   };
 
+  const renderizarTipoEmbalagem = (idx, titulo, arquivos, values) =>
+    objeto.tipos_de_embalagens[idx] && (
+      <>
+        <hr />
+
+        <div
+          className={`${
+            objeto.tipos_de_embalagens[idx].status === "REPROVADO"
+              ? "subtitulo-laranja"
+              : "subtitulo"
+          }  mb-3`}
+        >
+          {titulo}
+        </div>
+        <div className="row d-flex align-items-center">
+          <div className="col-5">{botoesArquivosAnexos(arquivos)}</div>
+          {visaoCODAE && textoAprovacao(idx, values)}
+        </div>
+      </>
+    );
+
   const textoAprovacao = (index, values) => {
     if (!aprovacoes) return;
 
@@ -329,9 +350,7 @@ export default () => {
             </>
           )}
 
-          <hr />
-
-          {Object.keys(objeto).length !== 0 && (
+          {!carregando && (
             <Form
               onSubmit={onSubmit}
               initialValues={initialValues}
@@ -348,64 +367,25 @@ export default () => {
                     enviar={() => enviarAnalise(values)}
                   />
 
-                  <div
-                    className={`${
-                      objeto.tipos_de_embalagens[0].status === "REPROVADO"
-                        ? "subtitulo-laranja"
-                        : "subtitulo"
-                    }  mb-3`}
-                  >
-                    Embalagem Primária
-                  </div>
-                  <div className="row d-flex align-items-center">
-                    <div className="col-5">
-                      {botoesArquivosAnexos(embalagemPrimaria)}
-                    </div>
-                    {visaoCODAE && textoAprovacao(0, values)}
-                  </div>
+                  {renderizarTipoEmbalagem(
+                    0,
+                    "Embalagem Primária",
+                    embalagemPrimaria,
+                    values
+                  )}
 
-                  <hr />
+                  {renderizarTipoEmbalagem(
+                    1,
+                    "Embalagem Secundária",
+                    embalagemSecundaria,
+                    values
+                  )}
 
-                  <div
-                    className={`${
-                      objeto.tipos_de_embalagens[1].status === "REPROVADO"
-                        ? "subtitulo-laranja"
-                        : "subtitulo"
-                    }  mb-3`}
-                  >
-                    Embalagem Secundária
-                  </div>
-                  <div className="row d-flex align-items-center">
-                    <div className="col-5">
-                      {botoesArquivosAnexos(embalagemSecundaria)}
-                    </div>
-                    {visaoCODAE && textoAprovacao(1, values)}
-                  </div>
-
-                  {objeto.tipos_de_embalagens[2] && (
-                    <>
-                      <hr />
-
-                      <div
-                        className={`${
-                          objeto.tipos_de_embalagens[2].status === "REPROVADO"
-                            ? "subtitulo-laranja"
-                            : "subtitulo"
-                        }  mb-3`}
-                      >
-                        Embalagem Terciária
-                      </div>
-                      <div className="row d-flex align-items-center">
-                        <div className="col-5">
-                          {embalagemTerciaria.map((e) => (
-                            <div className="w-75" key={e.arquivo}>
-                              <BotaoAnexo urlAnexo={e.arquivo} />
-                            </div>
-                          ))}
-                        </div>
-                        {visaoCODAE && textoAprovacao(2, values)}
-                      </div>
-                    </>
+                  {renderizarTipoEmbalagem(
+                    2,
+                    "Embalagem Secundária",
+                    embalagemSecundaria,
+                    values
                   )}
 
                   {!visaoCODAE && objeto.observacoes && (
