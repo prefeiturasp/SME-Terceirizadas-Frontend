@@ -8,6 +8,8 @@ import {
   CORRIGIR_DOCUMENTOS_RECEBIMENTO,
 } from "../../../../../../configs/constants";
 import { downloadArquivoLaudoAssinado } from "services/documentosRecebimento.service";
+import { Tooltip } from "antd";
+import { truncarString } from "../../../../../../helpers/utilities";
 
 interface Props {
   objetos: Array<DocumentosRecebimento>;
@@ -98,7 +100,20 @@ const Listagem: React.FC<Props> = ({ objetos, setCarregando }) => {
                 <div>{objeto.numero_cronograma}</div>
                 <div>{objeto.numero_laudo}</div>
                 <div>{objeto.pregao_chamada_publica}</div>
-                <div>{objeto.nome_produto}</div>
+                <div>
+                  <Tooltip
+                    color="#42474a"
+                    overlayStyle={{
+                      maxWidth: "320px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                    }}
+                    title={objeto.nome_produto}
+                  >
+                    {truncarString(objeto.nome_produto, 30)}
+                  </Tooltip>
+                </div>
+
                 <div>{objeto.criado_em}</div>
                 <div>{renderizarStatus(objeto.status)}</div>
                 <div className="actions">{renderizarAcoes(objeto)}</div>
