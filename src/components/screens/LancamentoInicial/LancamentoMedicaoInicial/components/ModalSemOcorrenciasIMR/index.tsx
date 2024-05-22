@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
-import Botao from "components/Shareable/Botao";
+import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -34,8 +34,8 @@ export const ModalSemOcorrenciasIMR = ({
           mês de {formataMesNome(mes)}/{ano}?
         </b>
         <p>
-          Após a finalização da medição os dados serão enviados para analise de
-          DRE e CODAE
+          Após a finalização da medição os dados serão enviados para análise de
+          DRE e CODAE.
         </p>
       </Modal.Body>
       <Modal.Footer>
