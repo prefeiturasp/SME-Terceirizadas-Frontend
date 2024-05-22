@@ -362,39 +362,41 @@ export default () => {
         (f) => f.numero === numeroFicha
       )?.uuid;
 
-      setCarregando(true);
+      if (uuidFicha) {
+        setCarregando(true);
 
-      const response = await getDadosCronogramaFichaTecnica(uuidFicha);
-      const fichaTecnica = response.data;
+        const response = await getDadosCronogramaFichaTecnica(uuidFicha);
+        const fichaTecnica = response.data;
 
-      form.change("marca", fichaTecnica.marca?.nome);
-      form.change(
-        "peso_liquido_embalagem_primaria",
-        numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_primaria)
-      );
-      form.change(
-        "unidade_medida_primaria",
-        fichaTecnica.unidade_medida_primaria?.uuid
-      );
-      form.change(
-        "peso_liquido_embalagem_secundaria",
-        numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_secundaria)
-      );
-      form.change(
-        "unidade_medida_secundaria",
-        fichaTecnica.unidade_medida_secundaria?.uuid
-      );
-      form.change(
-        "volume_embalagem_primaria",
-        numberToStringDecimal(fichaTecnica.volume_embalagem_primaria)
-      );
-      form.change(
-        "unidade_medida_volume_primaria",
-        fichaTecnica.unidade_medida_volume_primaria?.uuid
-      );
+        form.change("marca", fichaTecnica.marca?.nome);
+        form.change(
+          "peso_liquido_embalagem_primaria",
+          numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_primaria)
+        );
+        form.change(
+          "unidade_medida_primaria",
+          fichaTecnica.unidade_medida_primaria?.uuid
+        );
+        form.change(
+          "peso_liquido_embalagem_secundaria",
+          numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_secundaria)
+        );
+        form.change(
+          "unidade_medida_secundaria",
+          fichaTecnica.unidade_medida_secundaria?.uuid
+        );
+        form.change(
+          "volume_embalagem_primaria",
+          numberToStringDecimal(fichaTecnica.volume_embalagem_primaria)
+        );
+        form.change(
+          "unidade_medida_volume_primaria",
+          fichaTecnica.unidade_medida_volume_primaria?.uuid
+        );
 
-      setFichaTecnicaSelecionada(fichaTecnica);
-      setCarregando(false);
+        setFichaTecnicaSelecionada(fichaTecnica);
+        setCarregando(false);
+      }
     }
   };
 
