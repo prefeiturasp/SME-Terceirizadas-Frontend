@@ -106,10 +106,12 @@ export default () => {
       setAprovacoes(aprovacoesAtualizadas);
       return aprovacoesAtualizadas;
     }
+
+    return [];
   };
 
   const definirInitialValues = (objeto, aprovacoes) => {
-    return aprovacoes?.length > 0
+    return aprovacoes.length > 0
       ? {
           justificativa_0: objeto.tipos_de_embalagens[0]?.complemento_do_status,
           justificativa_1: objeto.tipos_de_embalagens[1]?.complemento_do_status,
