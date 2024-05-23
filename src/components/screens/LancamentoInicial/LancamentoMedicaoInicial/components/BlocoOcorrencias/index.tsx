@@ -4,6 +4,12 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import {
+  LANCAMENTO_INICIAL,
+  LANCAMENTO_MEDICAO_INICIAL,
+  REGISTRAR_OCORRENCIAS,
+} from "configs/constants";
 
 type BlocoOcorrenciasType = {
   comOcorrencias: string;
@@ -17,6 +23,8 @@ type BlocoOcorrenciasType = {
 export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
   const { comOcorrencias, setComOcorrencias, errosAoSalvar, setErrosAoSalvar } =
     props;
+
+  const navigate: NavigateFunction = useNavigate();
 
   return (
     <div className="bloco-ocorrencias mb-3">
@@ -88,6 +96,11 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
             <div className="col-8 text-end">
               <Botao
                 texto="Registrar Ocorrências"
+                onClick={() =>
+                  navigate(
+                    `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}`
+                  )
+                }
                 disabled={comOcorrencias !== "true"}
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.RED_OUTLINE}

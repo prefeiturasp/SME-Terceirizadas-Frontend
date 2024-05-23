@@ -204,6 +204,8 @@ export const TERCEIRIZADAS = "terceirizadas";
 export const RELATORIO_FISCALIZACAO_TERCEIRIZADAS =
   "relatorio-fiscalizacao-terceirizadas";
 export const NOVO_RELATORIO_VISITAS = "novo-relatorio-visitas";
+export const REGISTRAR_OCORRENCIAS = "registrar-ocorrencias";
+export const REGISTRAR_NOVA_OCORRENCIA = "registrar-nova-ocorrencia";
 
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 export const PERIODO_LANCAMENTO = "periodo-lancamento";

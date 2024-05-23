@@ -45,6 +45,8 @@ import { CadastroDeClausulasPage } from "pages/LancamentoMedicaoInicial/Cadastro
 import { RelatorioAdesaoPage } from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesaoPage";
 import { EditarClausulaPage } from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
 import { ControleDeFrequenciaPage } from "pages/LancamentoMedicaoInicial/ControleDeFrequenciaPage";
+import { ListaOcorrenciasPage } from "pages/IMR/ListaOcorrenciasPage";
+import { REGISTRAR_OCORRENCIAS } from "../../constants";
 
 export const medicaoInicial = [
   {
@@ -60,6 +62,11 @@ export const medicaoInicial = [
   {
     path: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO_CEI}`,
     component: PeriodoLancamentoMedicaoInicialCEIPage,
+    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
+  },
+  {
+    path: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}`,
+    component: ListaOcorrenciasPage,
     tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
