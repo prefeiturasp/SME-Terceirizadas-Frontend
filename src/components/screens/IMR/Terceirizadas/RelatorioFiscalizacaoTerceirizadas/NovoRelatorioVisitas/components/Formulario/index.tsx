@@ -44,12 +44,28 @@ export const Formulario = ({ ...props }: FormularioType) => {
                   {(index === 0 ||
                     tipoOcorrencia.categoria.nome !==
                       tiposOcorrencia[index - 1].categoria.nome) && (
-                    <tr className="categoria">
-                      <th className="pb-3" colSpan={3}>
-                        {tipoOcorrencia.categoria.nome}
-                      </th>
-                    </tr>
+                    <>
+                      <tr className="categoria">
+                        <th className="pb-3" colSpan={3}>
+                          {tipoOcorrencia.categoria.nome}
+                        </th>
+                      </tr>
+                      {tipoOcorrencia.categoria.gera_notificacao && (
+                        <tr className="frequencia">
+                          <th className="pb-3" colSpan={3}>
+                            Maior Frequência Registrada:
+                            {values.maior_frequencia_no_periodo && (
+                              <span className="highlight">
+                                {" "}
+                                {values.maior_frequencia_no_periodo} alunos
+                              </span>
+                            )}
+                          </th>
+                        </tr>
+                      )}
+                    </>
                   )}
+
                   <tr className="tipo-ocorrencia">
                     <td
                       rowSpan={
