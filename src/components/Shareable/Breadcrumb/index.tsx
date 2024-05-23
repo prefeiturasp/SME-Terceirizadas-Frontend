@@ -1,12 +1,12 @@
 import { TemaContext } from "context/TemaContext";
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import "./style.scss";
 
 type BreadcrumbProps = {
   home: string;
   anteriores?: {
-    href: string;
+    href?: string;
     titulo: string;
   }[];
   atual: {
@@ -22,6 +22,8 @@ export default function Breadcrumb({
 }: BreadcrumbProps) {
   const temaContext = useContext(TemaContext);
 
+  const navigate: NavigateFunction = useNavigate();
+
   return (
     <div className="breadcrumb-row row">
       <div className="col-10">
@@ -36,7 +38,12 @@ export default function Breadcrumb({
             anteriores.length > 0 &&
             anteriores.map((anterior, key) => {
               return (
-                <li key={key}>
+                <li
+                  key={key}
+                  onClick={() => {
+                    if (!anterior.href) navigate(-1);
+                  }}
+                >
                   <Link to={anterior.href}>{anterior.titulo}</Link>
                 </li>
               );

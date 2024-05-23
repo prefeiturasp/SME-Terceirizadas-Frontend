@@ -20,7 +20,6 @@ const anteriores = [
     titulo: "Medição Inicial",
   },
   {
-    href: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/`,
     titulo: "Lançamento Medição Inicial",
   },
 ];
