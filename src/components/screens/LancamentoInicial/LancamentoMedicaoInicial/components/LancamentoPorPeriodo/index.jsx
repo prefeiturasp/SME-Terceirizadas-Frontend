@@ -29,7 +29,6 @@ import {
   getCEUGESTAOFrequenciasDietas,
   getQuantidadeAlimentacoesLancadasPeriodoGrupo,
   getSolicitacaoMedicaoInicial,
-  updateSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import { BlocoOcorrencias } from "../BlocoOcorrencias";
@@ -58,6 +57,15 @@ export const LancamentoPorPeriodo = ({
   naoPodeFinalizar,
   setFinalizandoMedicao,
   ehIMR,
+  errosAoSalvar,
+  setErrosAoSalvar,
+  handleFinalizarMedicao,
+  opcaoSelecionada,
+  setOpcaoSelecionada,
+  arquivo,
+  setArquivo,
+  comOcorrencias,
+  setComOcorrencias,
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
     useState(false);
@@ -95,11 +103,6 @@ export const LancamentoPorPeriodo = ({
     useState(false);
 
   const [periodosEspecificos, setPeriodosEspecificos] = useState([]);
-  const [comOcorrencias, setComOcorrencias] = useState("");
-  const [errosAoSalvar, setErrosAoSalvar] = useState([]);
-
-  const [opcaoSelecionada, setOpcaoSelecionada] = useState(null);
-  const [arquivo, setArquivo] = useState([]);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
     const response = await getPeriodosInclusaoContinua({
@@ -384,54 +387,12 @@ export const LancamentoPorPeriodo = ({
         setErrosAoSalvar(errosAoSalvar_);
       }
     } else {
-      setShowModalSemOcorrenciasIMR(true);
+      if (comOcorrencias === "false") {
+        setShowModalSemOcorrenciasIMR(true);
+      } else {
+        handleFinalizarMedicao();
+      }
     }
-  };
-
-  const handleFinalizarMedicao = async () => {
-    setFinalizandoMedicao(true);
-
-    let data = new FormData();
-    data.append("escola", String(escolaInstituicao.uuid));
-
-    if (solicitacaoMedicaoInicial.tipo_contagem_alimentacoes) {
-      data.append(
-        "tipo_contagem_alimentacoes",
-        String(solicitacaoMedicaoInicial.tipo_contagem_alimentacoes?.uuid)
-      );
-    }
-    data.append(
-      "responsaveis",
-      JSON.stringify(solicitacaoMedicaoInicial.responsaveis)
-    );
-    data.append("com_ocorrencias", String(!opcaoSelecionada));
-
-    if (!opcaoSelecionada) {
-      let payloadAnexos = [];
-      arquivo.forEach((element) => {
-        payloadAnexos.push({
-          nome: String(element.nome),
-          base64: String(element.base64),
-        });
-      });
-      data.append("anexos", JSON.stringify(payloadAnexos));
-    }
-    data.append("finaliza_medicao", true);
-    const response = await updateSolicitacaoMedicaoInicial(
-      solicitacaoMedicaoInicial.uuid,
-      data
-    );
-    if (response.status === HTTP_STATUS.OK) {
-      toastSuccess("Medição Inicial finalizada com sucesso!");
-      setObjSolicitacaoMIFinalizada(response.data);
-      setFinalizandoMedicao(false);
-      setErrosAoSalvar([]);
-    } else {
-      setErrosAoSalvar(response.data);
-      setFinalizandoMedicao(false);
-      toastError("Não foi possível finalizar as alterações!");
-    }
-    onClickInfoBasicas();
   };
 
   return (

@@ -36,7 +36,7 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
           <input
             name="com_ocorrencias"
             onClick={() => {
-              setComOcorrencias("nao");
+              setComOcorrencias("false");
               setErrosAoSalvar(
                 errosAoSalvar.filter(
                   (obj) => obj.periodo_escolar !== "OCORRENCIAS"
@@ -44,18 +44,18 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
               );
             }}
             type="radio"
-            value="nao"
-            id="nao"
+            value="false"
+            id="false"
             required
           />
-          <label className="ms-1" htmlFor="nao">
+          <label className="ms-1" htmlFor="false">
             Serviço prestado sem ocorrências
           </label>
           <input
             name="com_ocorrencias"
             className="ms-3"
             onClick={() => {
-              setComOcorrencias("sim");
+              setComOcorrencias("true");
               setErrosAoSalvar(
                 errosAoSalvar.filter(
                   (obj) => obj.periodo_escolar !== "OCORRENCIAS"
@@ -63,11 +63,11 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
               );
             }}
             type="radio"
-            value="sim"
-            id="sim"
+            value="true"
+            id="true"
             required
           />
-          <label className="ms-1" htmlFor="sim">
+          <label className="ms-1" htmlFor="true">
             Com ocorrências
           </label>
         </div>
@@ -88,7 +88,7 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
             <div className="col-8 text-end">
               <Botao
                 texto="Registrar Ocorrências"
-                disabled={comOcorrencias !== "sim"}
+                disabled={comOcorrencias !== "true"}
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.RED_OUTLINE}
               />

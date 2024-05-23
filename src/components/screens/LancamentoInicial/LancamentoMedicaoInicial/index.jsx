@@ -6,7 +6,7 @@ import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 
-import { toastError } from "components/Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { FluxoDeStatusMedicaoInicial } from "./components/FluxoDeStatusMedicaoInicial";
 import InformacoesEscola from "./components/InformacoesEscola";
 import InformacoesMedicaoInicial from "./components/InformacoesMedicaoInicial";
@@ -29,6 +29,7 @@ import {
   getPeriodosEscolaCemeiComAlunosEmei,
   getSolicitacaoMedicaoInicial,
   getSolicitacoesLancadas,
+  updateSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import * as perfilService from "services/perfil.service";
 import "./styles.scss";
@@ -64,6 +65,11 @@ export default () => {
   const [open, setOpen] = useState(false);
   const [naoPodeFinalizar, setNaoPodeFinalizar] = useState(true);
   const [finalizandoMedicao, setFinalizandoMedicao] = useState(false);
+
+  const [errosAoSalvar, setErrosAoSalvar] = useState([]);
+  const [comOcorrencias, setComOcorrencias] = useState("");
+  const [opcaoSelecionada, setOpcaoSelecionada] = useState(null);
+  const [arquivo, setArquivo] = useState([]);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -341,6 +347,55 @@ export default () => {
     setSolicitacaoMedicaoInicial(solicitacao.data[0]);
   };
 
+  const handleFinalizarMedicao = async () => {
+    setFinalizandoMedicao(true);
+
+    let data = new FormData();
+    data.append("escola", String(escolaInstituicao.uuid));
+
+    if (solicitacaoMedicaoInicial.tipo_contagem_alimentacoes) {
+      data.append(
+        "tipo_contagem_alimentacoes",
+        String(solicitacaoMedicaoInicial.tipo_contagem_alimentacoes?.uuid)
+      );
+    }
+    data.append(
+      "responsaveis",
+      JSON.stringify(solicitacaoMedicaoInicial.responsaveis)
+    );
+    data.append(
+      "com_ocorrencias",
+      ehIMR ? String(comOcorrencias) : String(!opcaoSelecionada)
+    );
+
+    if (!opcaoSelecionada) {
+      let payloadAnexos = [];
+      arquivo.forEach((element) => {
+        payloadAnexos.push({
+          nome: String(element.nome),
+          base64: String(element.base64),
+        });
+      });
+      data.append("anexos", JSON.stringify(payloadAnexos));
+    }
+    data.append("finaliza_medicao", true);
+    const response = await updateSolicitacaoMedicaoInicial(
+      solicitacaoMedicaoInicial.uuid,
+      data
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Medição Inicial finalizada com sucesso!");
+      setObjSolicitacaoMIFinalizada(response.data);
+      setFinalizandoMedicao(false);
+      setErrosAoSalvar([]);
+    } else {
+      setErrosAoSalvar(response.data);
+      setFinalizandoMedicao(false);
+      toastError("Não foi possível finalizar as alterações!");
+    }
+    onClickInfoBasicas();
+  };
+
   return (
     <div className="card mt-3">
       <div className="card-body">
@@ -435,6 +490,7 @@ export default () => {
                 panoramaGeral={panoramaGeral}
                 mes={mes}
                 ano={ano}
+                ehIMR={ehIMR}
                 periodoSelecionado={periodoSelecionado}
                 escolaInstituicao={escolaInstituicao}
                 periodosEscolaSimples={periodosEscolaSimples}
@@ -456,6 +512,15 @@ export default () => {
                 periodosPermissoesLancamentosEspeciais={
                   periodosPermissoesLancamentosEspeciais
                 }
+                errosAoSalvar={errosAoSalvar}
+                setErrosAoSalvar={setErrosAoSalvar}
+                handleFinalizarMedicao={handleFinalizarMedicao}
+                opcaoSelecionada={opcaoSelecionada}
+                setOpcaoSelecionada={setOpcaoSelecionada}
+                arquivo={arquivo}
+                setArquivo={setArquivo}
+                comOcorrencias={comOcorrencias}
+                setComOcorrencias={setComOcorrencias}
               />
             ) : (
               <LancamentoPorPeriodo
@@ -481,6 +546,15 @@ export default () => {
                 setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
                 naoPodeFinalizar={naoPodeFinalizar}
                 setFinalizandoMedicao={setFinalizandoMedicao}
+                errosAoSalvar={errosAoSalvar}
+                setErrosAoSalvar={setErrosAoSalvar}
+                handleFinalizarMedicao={handleFinalizarMedicao}
+                opcaoSelecionada={opcaoSelecionada}
+                setOpcaoSelecionada={setOpcaoSelecionada}
+                arquivo={arquivo}
+                setArquivo={setArquivo}
+                comOcorrencias={comOcorrencias}
+                setComOcorrencias={setComOcorrencias}
               />
             ))}
         </Spin>
