@@ -11,7 +11,7 @@ import FiltrosEmails from "./FiltrosEmails";
 import ListagemEmails from "./ListagemSolicitacoes";
 import {
   getEmailsTerceirizadasPorModulo,
-  getTerceirizada_razoes,
+  listaSimplesTerceirizadas,
 } from "services/terceirizada.service";
 import "./style.scss";
 import { Paginacao } from "components/Shareable/Paginacao";
@@ -31,7 +31,7 @@ export default () => {
   }, []);
 
   const getTerceirizadas = async () => {
-    const responseEmpresa = await getTerceirizada_razoes();
+    const responseEmpresa = await listaSimplesTerceirizadas();
     if (responseEmpresa.data) {
       setEmpresas(
         normalizaLabelValueEmpresaSocial(responseEmpresa.data.results)
