@@ -4,8 +4,8 @@ import "./style.scss";
 
 import Botao from "components/Shareable/Botao";
 import {
-  BUTTON_TYPE,
   BUTTON_STYLE,
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 
 import ModalJustificativa from "components/Shareable/ModalJustificativa";
@@ -19,13 +19,13 @@ import { CODAEPedeAnaliseSensorialProdutoReclamacao } from "../../../../../../se
 import { RECLAMACAO_PRODUTO_STATUS } from "constants/shared";
 import {
   CODAEAceitaReclamacao,
-  CODAERecusaReclamacao,
+  CODAEQuestionaNutrisupervisor,
   CODAEQuestionaTerceirizada,
   CODAEQuestionaUE,
-  CODAEQuestionaNutrisupervisor,
+  CODAERecusaReclamacao,
 } from "services/reclamacaoProduto.service";
 import { ordenaPorCriadoEm } from "./helpers";
-import { corrigeLinkAnexo } from "../../../../../../helpers/utilities";
+import { corrigeLinkAnexo } from "helpers/utilities";
 
 const {
   AGUARDANDO_AVALIACAO,
