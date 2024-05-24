@@ -11,6 +11,8 @@ interface Props {
   objetos: FichaDeRecebimentoItemListagem[];
 }
 
+const TAMANHO_MAXIMO = 30;
+
 const Listagem: React.FC<Props> = ({ objetos }) => {
   return (
     <div className="listagem-fichas-recebimento">
@@ -32,12 +34,12 @@ const Listagem: React.FC<Props> = ({ objetos }) => {
                 <div>{objeto.numero_cronograma}</div>
                 <div>
                   <Tooltip title={objeto.nome_produto}>
-                    {truncarString(objeto.nome_produto, 32)}
+                    {truncarString(objeto.nome_produto, TAMANHO_MAXIMO)}
                   </Tooltip>
                 </div>
                 <div>
                   <Tooltip title={objeto.fornecedor}>
-                    {truncarString(objeto.fornecedor, 32)}
+                    {truncarString(objeto.fornecedor, TAMANHO_MAXIMO)}
                   </Tooltip>
                 </div>
                 <div>{objeto.pregao_chamada_publica}</div>
