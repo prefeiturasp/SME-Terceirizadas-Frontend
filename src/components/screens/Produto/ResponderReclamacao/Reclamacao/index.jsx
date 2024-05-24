@@ -9,6 +9,7 @@ import {
 import ModalResponderReclamacao from "../ModalResponderReclamacao";
 import { RECLAMACAO_PRODUTO_STATUS_EXPLICACAO } from "constants/shared";
 import { getReclamacoesTerceirizadaPorFiltro } from "services/produto.service";
+import { corrigeLinkAnexo } from "helpers/utilities";
 
 const obterTituloLog = (status_evento) => {
   switch (status_evento) {
@@ -48,6 +49,29 @@ const LogReclamacao = ({ log }) => {
           className="value-item value-uppercase"
           dangerouslySetInnerHTML={{ __html: log.justificativa }}
         />
+        {log.anexos && log.anexos.length > 0 && (
+          <div className="mb-3">
+            <div key={1}>
+              <p className="botao-reclamacao-title">Anexos da resposta</p>
+            </div>
+            <div key={2}>
+              {log.anexos.map((anexo, key) => {
+                return (
+                  <div key={key}>
+                    <a
+                      href={corrigeLinkAnexo(anexo.arquivo)}
+                      className="value-important link"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {`Anexo ${key + 1}`}
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
