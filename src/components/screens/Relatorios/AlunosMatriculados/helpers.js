@@ -1,3 +1,5 @@
+import { TIPOS_TURMAS } from "../constants";
+
 export const formataOpcoes = (lista) => {
   return lista.map((opcao) => ({
     label: opcao.nome || opcao.iniciais,
@@ -15,7 +17,7 @@ export const formataNome = (nome) => {
 
 export const formataLista = (lista) => {
   return lista.map((opcao) => ({
-    label: opcao,
+    label: TIPOS_TURMAS[opcao],
     value: opcao,
   }));
 };
