@@ -18,11 +18,19 @@ type BlocoOcorrenciasType = {
   setErrosAoSalvar: (
     _errosAoSalvar: Array<{ erro: string; periodo_escolar: string }>
   ) => void;
+  ano: string;
+  mes: string;
 };
 
 export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
-  const { comOcorrencias, setComOcorrencias, errosAoSalvar, setErrosAoSalvar } =
-    props;
+  const {
+    comOcorrencias,
+    setComOcorrencias,
+    errosAoSalvar,
+    setErrosAoSalvar,
+    ano,
+    mes,
+  } = props;
 
   const navigate: NavigateFunction = useNavigate();
 
@@ -98,7 +106,10 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
                 texto="Registrar Ocorrências"
                 onClick={() =>
                   navigate(
-                    `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}`
+                    `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}`,
+                    {
+                      state: { ano, mes },
+                    }
                   )
                 }
                 disabled={comOcorrencias !== "true"}
