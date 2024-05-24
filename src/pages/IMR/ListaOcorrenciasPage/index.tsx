@@ -1,13 +1,13 @@
-import React from "react";
-import { HOME } from "constants/config";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
+import { ListaOcorrencias } from "components/screens/IMR/ListaOcorrencias";
 import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
   REGISTRAR_OCORRENCIAS,
 } from "configs/constants";
-import { ListaOcorrencias } from "components/screens/IMR/ListaOcorrencias";
+import { HOME } from "constants/config";
+import React from "react";
 
 const atual = {
   href: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}`,
@@ -20,6 +20,7 @@ const anteriores = [
     titulo: "Medição Inicial",
   },
   {
+    navigate_to: -1,
     titulo: "Lançamento Medição Inicial",
   },
 ];

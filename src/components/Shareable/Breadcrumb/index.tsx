@@ -7,6 +7,7 @@ type BreadcrumbProps = {
   home: string;
   anteriores?: {
     href?: string;
+    navigate_to?: number;
     titulo: string;
   }[];
   atual: {
@@ -41,7 +42,7 @@ export default function Breadcrumb({
                 <li
                   key={key}
                   onClick={() => {
-                    if (!anterior.href) navigate(-1);
+                    if (anterior.navigate_to) navigate(anterior.navigate_to);
                   }}
                 >
                   <Link to={anterior.href}>{anterior.titulo}</Link>

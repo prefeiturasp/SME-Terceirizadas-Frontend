@@ -7,11 +7,23 @@ import { Select } from "components/Shareable/Select";
 import { formataMesNome } from "helpers/utilities";
 import React from "react";
 import { Field, Form } from "react-final-form";
-import { Location, useLocation } from "react-router-dom";
+import {
+  LANCAMENTO_INICIAL,
+  LANCAMENTO_MEDICAO_INICIAL,
+  REGISTRAR_NOVA_OCORRENCIA,
+  REGISTRAR_OCORRENCIAS,
+} from "configs/constants";
+import {
+  Location,
+  NavigateFunction,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import "./style.scss";
 
 export const ListaOcorrencias = () => {
   const location: Location<any> = useLocation();
+  const navigate: NavigateFunction = useNavigate();
 
   const onSubmit = () => {};
 
@@ -43,6 +55,11 @@ export const ListaOcorrencias = () => {
                     texto="Registrar Nova Ocorrência"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={() =>
+                      navigate(
+                        `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}/${REGISTRAR_NOVA_OCORRENCIA}`
+                      )
+                    }
                   />
                 </div>
               </div>
