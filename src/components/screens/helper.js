@@ -211,12 +211,34 @@ export const ajustarFormatoLog = (logs, card) => {
         ? "pendentes-aut"
         : card;
 
+    const getTextCard = () => {
+      let text = "";
+      if (
+        usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhEscolaTerceirizada()
+      ) {
+        text =
+          truncarString(descricao, tamanhoString) +
+          (log.serie ? " - " + log.serie : "");
+      } else if (
+        ["pendentes-aut", "pendente"].includes(card) &&
+        usuarioEhCoordenadorNutriCODAE()
+      ) {
+        text =
+          log.dre_iniciais +
+          " - " +
+          truncarString(descricao, tamanhoString) +
+          " / " +
+          log.escola_nome;
+      } else {
+        text =
+          truncarString(descricao, tamanhoString) + " / " + log.escola_nome;
+      }
+      return text;
+    };
+
     return {
-      text:
-        usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada()
-          ? truncarString(descricao, tamanhoString) +
-            (log.serie ? " - " + log.serie : "")
-          : truncarString(descricao, tamanhoString) + " / " + log.escola_nome,
+      text: getTextCard(),
       conferido: log.conferido || log.terceirizada_conferiu_gestao,
       lote_uuid: log.lote_uuid,
       date: getDate(),
