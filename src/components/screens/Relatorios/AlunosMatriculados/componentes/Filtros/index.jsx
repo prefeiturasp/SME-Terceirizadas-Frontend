@@ -168,7 +168,7 @@ export const Filtros = ({ ...props }) => {
             ) : (
               <>
                 <div className="row">
-                  <div className="col-8">
+                  <div className="col-4">
                     <label>DRE</label>
                     <Field
                       component={StatefulMultiSelect}
@@ -188,7 +188,7 @@ export const Filtros = ({ ...props }) => {
                       }}
                     />
                   </div>
-                  <div className="col-2">
+                  <div className="col-4">
                     <label>Lote</label>
                     <Field
                       component={StatefulMultiSelect}
@@ -218,7 +218,7 @@ export const Filtros = ({ ...props }) => {
                       }}
                     />
                   </div>
-                  <div className="col-2">
+                  <div className="col-4">
                     <label>Tipo de Unidade</label>
                     <Field
                       component={StatefulMultiSelect}
