@@ -13,16 +13,16 @@ import { ModalCancelaPreenchimento } from "./components/ModalCancelaPreenchiment
 import { ModalSalvarRascunho } from "./components/ModalSalvarRascunho";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
-  EscolaLabelInterface,
-  NovoRelatorioVisitasFormInterface,
-} from "./interfaces";
-import {
   createFormularioSupervisao,
   getTiposOcorrenciaPorEdital,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { Formulario } from "./components/Formulario";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
-import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
+import {
+  TipoOcorrenciaInterface,
+  EscolaLabelInterface,
+  NovoRelatorioVisitasFormInterface,
+} from "interfaces/imr.interface";
 import { Spin } from "antd";
 import { formataPayload } from "./helpers";
 
