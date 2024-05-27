@@ -1,4 +1,9 @@
 import { TipoAlimentacaoInterface } from "interfaces/cardapio.interface";
+import {
+  PeriodoEscolarRascunhosInterface,
+  TipoGestaoRascunhosInterface,
+  TipoUnidadeRascunhosInterface,
+} from "./rascunhos.interface";
 import { TerceirizadaInterface } from "./terceirizada.interface";
 
 export interface DiretoriaRegionalInterface {
@@ -66,10 +71,7 @@ export interface EnderecoInterface {
 }
 
 export interface LoteComContratosInterface {
-  contratos_do_lote: Array<{
-    edital: string;
-    encerrado: boolean;
-  }>;
+  contratos_do_lote: Array<ContratoDoLoteInterface>;
   nome: string;
   uuid: string;
 }
@@ -83,5 +85,37 @@ export interface EscolaSimplissimaInterface {
   quantidade_alunos: number;
   terceirizada: string;
   tipo_unidade: string;
+  uuid: string;
+}
+
+export interface ContratoDoLoteInterface {
+  edital: string;
+  edital_numero: string;
+  eh_imr: boolean;
+  encerrado: boolean;
+  uuid: string;
+}
+
+export interface LoteDaEscolaSimplesInterface {
+  contratos_do_lote: Array<ContratoDoLoteInterface>;
+  diretoria_regional: DiretoriaRegionalInterface;
+  nome: string;
+  terceirizada: TerceirizadaInterface;
+  tipo_gestao: string;
+  uuid: string;
+}
+
+export interface EscolaSimplesInterface {
+  codigo_eol: number;
+  diretoria_regional: DiretoriaRegionalInterface;
+  lote: LoteDaEscolaSimplesInterface;
+  nome: string;
+  periodos_escolares: Array<PeriodoEscolarRascunhosInterface>;
+  quantidade_alunos: number;
+  quantidade_alunos_cei_da_cemei: number | null;
+  quantidade_alunos_emei_da_cemei: number | null;
+  tipo_gestao: TipoGestaoRascunhosInterface;
+  tipo_unidade: TipoUnidadeRascunhosInterface;
+  tipos_contagem: Array<any>;
   uuid: string;
 }
