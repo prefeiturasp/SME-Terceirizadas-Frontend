@@ -6,6 +6,8 @@ import authService from "./auth";
 import axios from "./_base";
 import { ENDPOINT_RELATORIO_QUANTITATIVO } from "constants/shared";
 import { ErrorHandlerFunction } from "./service-helpers";
+import { getMensagemDeErro } from "helpers/statusErrors";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -34,23 +36,12 @@ export const getTerceirizada = (filtros = null) => {
     });
 };
 
-export const getTerceirizada_razoes = () => {
-  const url = `${API_URL}/terceirizadas/lista-razoes/`;
-  let status = 0;
-  return fetch(url, {
-    headers: authToken,
-    method: "GET",
-  })
-    .then((response) => {
-      status = response.status;
-      return response.json();
-    })
-    .then((data) => {
-      return { data: data, status: status };
-    })
-    .catch((error) => {
-      return error.json();
-    });
+export const listaSimplesTerceirizadas = async () => {
+  try {
+    return await axios.get("/terceirizadas/lista-simples/");
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
 };
 
 export const getTerceirizadaUUID = async (uuid) =>

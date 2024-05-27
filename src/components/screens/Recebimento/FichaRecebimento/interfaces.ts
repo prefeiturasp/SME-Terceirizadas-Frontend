@@ -1,4 +1,8 @@
 import { Arquivo } from "interfaces/pre_recebimento.interface";
+import {
+  ListagemPaginada,
+  ResponseInterface,
+} from "interfaces/responses.interface";
 
 export interface FichaRecebimentoPayload {
   etapa: string;
@@ -75,4 +79,25 @@ export interface CronogramaFicha {
   qtd_total_programada: string;
   uuid: string;
   sistema_vedacao_embalagem_secundaria: string;
+}
+
+export interface FiltrosFichaRecebimento {
+  numero_cronograma?: string;
+  nome_produto?: string;
+  nome_empresa?: string;
+  data_inicial?: string;
+  data_final?: string;
+}
+
+export interface FichaDeRecebimentoItemListagem {
+  uuid?: string;
+  numero_cronograma?: string;
+  nome_produto?: string;
+  fornecedor?: string;
+  pregao_chamada_publica?: string;
+  data_recebimento?: string;
+}
+
+export interface ResponseFichasDeRecebimento extends ResponseInterface {
+  data: ListagemPaginada<FichaDeRecebimentoItemListagem>;
 }

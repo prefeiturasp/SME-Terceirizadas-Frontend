@@ -34,6 +34,9 @@ import {
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesKitLanchesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { BlocoOcorrencias } from "../BlocoOcorrencias";
+import { deepCopy } from "../../../../../../helpers/utilities";
+import { ModalSemOcorrenciasIMR } from "../ModalSemOcorrenciasIMR";
 
 export const LancamentoPorPeriodoCEI = ({
   mes,
@@ -49,11 +52,23 @@ export const LancamentoPorPeriodoCEI = ({
   setFinalizandoMedicao,
   naoPodeFinalizar,
   periodosPermissoesLancamentosEspeciais,
+  ehIMR,
+  errosAoSalvar,
+  setErrosAoSalvar,
+  handleFinalizarMedicao,
+  opcaoSelecionada,
+  setOpcaoSelecionada,
+  arquivo,
+  setArquivo,
+  comOcorrencias,
+  setComOcorrencias,
 }) => {
   const [periodosComAlunos, setPeriodosComAlunos] = useState([]);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
+    useState(false);
+  const [showModalSemOcorrenciasIMR, setShowModalSemOcorrenciasIMR] =
     useState(false);
   const [quantidadeAlimentacoesLancadas, setQuantidadeAlimentacoesLancadas] =
     useState(undefined);
@@ -69,8 +84,8 @@ export const LancamentoPorPeriodoCEI = ({
     solicitacoesAlteracaoLancheEmergencialAutorizadas,
     setSolicitacoesAlteracaoLancheEmergencialAutorizadas,
   ] = useState(undefined);
+
   const [erroAPI, setErroAPI] = useState("");
-  const [errosAoSalvar, setErrosAoSalvar] = useState([]);
 
   const gerarPDFMedicaoInicial = async () => {
     const response = await relatorioMedicaoInicialPDF(
@@ -282,6 +297,29 @@ export const LancamentoPorPeriodoCEI = ({
     );
   };
 
+  const onClickFinalizarMedicao = () => {
+    if (!ehIMR) {
+      setShowModalFinalizarMedicao(true);
+      return;
+    }
+    if (!comOcorrencias) {
+      if (errosAoSalvar && errosAoSalvar.length === 0) {
+        const errosAoSalvar_ = deepCopy(errosAoSalvar);
+        errosAoSalvar_.push({
+          erro: "Faça avaliação do serviço prestado pela empresa.",
+          periodo_escolar: "OCORRENCIAS",
+        });
+        setErrosAoSalvar(errosAoSalvar_);
+      }
+    } else {
+      if (comOcorrencias === "false") {
+        setShowModalSemOcorrenciasIMR(true);
+      } else {
+        handleFinalizarMedicao();
+      }
+    }
+  };
+
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
@@ -289,6 +327,16 @@ export const LancamentoPorPeriodoCEI = ({
         !erroAPI &&
         quantidadeAlimentacoesLancadas && (
           <>
+            {ehIMR && (
+              <BlocoOcorrencias
+                comOcorrencias={comOcorrencias}
+                setComOcorrencias={setComOcorrencias}
+                errosAoSalvar={errosAoSalvar}
+                setErrosAoSalvar={setErrosAoSalvar}
+                mes={mes}
+                ano={ano}
+              />
+            )}
             <div className="row pb-2">
               <div className="col">
                 <b className="section-title">Períodos</b>
@@ -373,7 +421,7 @@ export const LancamentoPorPeriodoCEI = ({
                   disabled={
                     !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
                   }
-                  onClick={() => setShowModalFinalizarMedicao(true)}
+                  onClick={() => onClickFinalizarMedicao()}
                 />
               ) : (
                 <div className="row">
@@ -409,6 +457,11 @@ export const LancamentoPorPeriodoCEI = ({
               solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
               onClickInfoBasicas={onClickInfoBasicas}
               setFinalizandoMedicao={setFinalizandoMedicao}
+              opcaoSelecionada={opcaoSelecionada}
+              setOpcaoSelecionada={setOpcaoSelecionada}
+              arquivo={arquivo}
+              setArquivo={setArquivo}
+              handleFinalizarMedicao={handleFinalizarMedicao}
             />
             <ModalSolicitacaoDownload
               show={exibirModalCentralDownloads}
@@ -435,6 +488,13 @@ export const LancamentoPorPeriodoCEI = ({
               }
               funcaoSim={escolaEnviaCorrecaoDreCodae}
               desabilitaSim={desabilitaSim}
+            />
+            <ModalSemOcorrenciasIMR
+              show={showModalSemOcorrenciasIMR}
+              handleFinalizarMedicao={handleFinalizarMedicao}
+              handleClose={() => setShowModalSemOcorrenciasIMR(false)}
+              mes={mes}
+              ano={ano}
             />
           </>
         )}

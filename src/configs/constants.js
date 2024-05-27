@@ -223,6 +223,7 @@ export const EDITAR_PARAMETRIZACAO_FINANCEIRA =
 export const CADASTRO_DE_CLAUSULA = "cadastro-de-clausula";
 export const EDITAR_CLAUSULA = "editar-clausula";
 export const CONTROLE_DE_FREQUENCIA = "controle-de-frequencia";
+export const RELATORIO_FINANCEIRO = "relatorio-financeiro";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";

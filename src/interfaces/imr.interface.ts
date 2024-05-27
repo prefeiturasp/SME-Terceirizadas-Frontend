@@ -31,6 +31,7 @@ export interface PeriodoDeVisitaInterface {
 export interface CategoriaTipoOcorrenciaInterface {
   nome: string;
   posicao: number;
+  gera_notificacao: boolean;
   uuid: string;
 }
 

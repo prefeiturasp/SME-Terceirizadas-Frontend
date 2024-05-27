@@ -210,7 +210,11 @@ export const getEscolaSimples = async (uuidEscola) => {
   const url = uuidEscola
     ? `/escolas-simples/${uuidEscola}/`
     : "/escolas-simples/";
-  return axios.get(url);
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const updateEscolaSimples = async (uuidEscola, valores) =>

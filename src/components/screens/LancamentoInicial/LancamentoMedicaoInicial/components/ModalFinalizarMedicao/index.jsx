@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import HTTP_STATUS from "http-status-codes";
 import { Radio } from "antd";
 import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
@@ -10,26 +9,22 @@ import {
 import InputFile from "components/Shareable/Input/InputFile";
 import { Field, Form } from "react-final-form";
 import { OPCOES_AVALIACAO_A_CONTENTO } from "../LancamentoPorPeriodo/helpers";
-import { updateSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 export const ModalFinalizarMedicao = ({ ...props }) => {
   const {
     showModal,
     closeModal,
-    escolaInstituicao,
-    solicitacaoMedicaoInicial,
-    setObjSolicitacaoMIFinalizada,
-    onClickInfoBasicas,
-    setErrosAoSalvar,
-    setFinalizandoMedicao,
+    opcaoSelecionada,
+    setOpcaoSelecionada,
+    handleFinalizarMedicao,
+    arquivo,
+    setArquivo,
   } = props;
 
-  const [opcaoSelecionada, setOpcaoSelecionada] = useState(null);
   const [disableFinalizarMedicao, setDisableFinalizarMedicao] = useState(true);
   const [showButtonAnexarPlanilha, setShowButtonAnexarPlanilha] =
     useState(false);
-  const [arquivo, setArquivo] = useState([]);
   const [validationFile, setValidationFile] = useState({ touched: false });
   const [desativarAnexar, setDesativarAnexar] = useState(false);
 
@@ -118,53 +113,6 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     setArquivo(arquivos);
   };
 
-  const handleFinalizarMedicao = async () => {
-    setFinalizandoMedicao(true);
-
-    let data = new FormData();
-    data.append("escola", String(escolaInstituicao.uuid));
-
-    if (solicitacaoMedicaoInicial.tipo_contagem_alimentacoes) {
-      data.append(
-        "tipo_contagem_alimentacoes",
-        String(solicitacaoMedicaoInicial.tipo_contagem_alimentacoes?.uuid)
-      );
-    }
-    data.append(
-      "responsaveis",
-      JSON.stringify(solicitacaoMedicaoInicial.responsaveis)
-    );
-    data.append("com_ocorrencias", String(!opcaoSelecionada));
-
-    if (!opcaoSelecionada) {
-      let payloadAnexos = [];
-      arquivo.forEach((element) => {
-        payloadAnexos.push({
-          nome: String(element.nome),
-          base64: String(element.base64),
-        });
-      });
-      data.append("anexos", JSON.stringify(payloadAnexos));
-    }
-    data.append("finaliza_medicao", true);
-    handleHideModal();
-    const response = await updateSolicitacaoMedicaoInicial(
-      solicitacaoMedicaoInicial.uuid,
-      data
-    );
-    if (response.status === HTTP_STATUS.OK) {
-      toastSuccess("Medição Inicial finalizada com sucesso!");
-      setObjSolicitacaoMIFinalizada(response.data);
-      setFinalizandoMedicao(false);
-      setErrosAoSalvar([]);
-    } else {
-      setErrosAoSalvar(response.data);
-      setFinalizandoMedicao(false);
-      toastError("Não foi possível finalizar as alterações!");
-    }
-    onClickInfoBasicas();
-  };
-
   return (
     <Modal
       dialogClassName="modal-50w"
@@ -245,7 +193,10 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
             <Botao
               texto="Finalizar Medição"
               type={BUTTON_TYPE.BUTTON}
-              onClick={() => handleFinalizarMedicao()}
+              onClick={() => {
+                handleFinalizarMedicao();
+                handleHideModal();
+              }}
               style={BUTTON_STYLE.GREEN}
               className="ms-3"
               disabled={disableFinalizarMedicao}

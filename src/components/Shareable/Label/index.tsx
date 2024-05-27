@@ -7,11 +7,12 @@ interface LabelProps {
   required?: boolean;
   htmlFor?: string;
   disabled?: boolean;
+  className?: string;
 }
 
-export default ({ content, required, htmlFor }: LabelProps) => {
+export default ({ content, required, htmlFor, className }: LabelProps) => {
   return (
-    <span className="custom-label">
+    <span className={`custom-label ${className}`}>
       {required && <span className="required-asterisk">*</span>}
       <label htmlFor={htmlFor} className="col-form-label">
         {content}
