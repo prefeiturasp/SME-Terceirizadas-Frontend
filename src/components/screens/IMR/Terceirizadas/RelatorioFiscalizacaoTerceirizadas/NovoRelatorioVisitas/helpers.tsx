@@ -1,4 +1,5 @@
 import {
+  ArquivoInterface,
   EscolaLabelInterface,
   NovoRelatorioVisitasFormInterface,
 } from "./interfaces";
@@ -6,7 +7,8 @@ import { deepCopy } from "helpers/utilities";
 
 export const formataPayload = (
   values: NovoRelatorioVisitasFormInterface,
-  escolaSelecionada: EscolaLabelInterface
+  escolaSelecionada: EscolaLabelInterface,
+  anexos: Array<ArquivoInterface>
 ) => {
   let values_ = deepCopy(values);
   values_.escola = escolaSelecionada.uuid;
@@ -23,5 +25,5 @@ export const formataPayload = (
       });
     }
   });
-  return { ...values_, ocorrencias_nao_se_aplica };
+  return { ...values_, ocorrencias_nao_se_aplica, anexos };
 };
