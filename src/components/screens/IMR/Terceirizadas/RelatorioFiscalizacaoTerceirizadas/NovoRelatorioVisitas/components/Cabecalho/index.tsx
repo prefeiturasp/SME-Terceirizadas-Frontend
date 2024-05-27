@@ -17,7 +17,6 @@ import {
   DiretoriaRegionalInterface,
   EscolaSimplissimaInterface,
 } from "interfaces/escola.interface";
-import { PeriodoDeVisitaInterface } from "interfaces/imr.interface";
 import {
   ResponseDiretoriasRegionaisSimplissimaInterface,
   ResponseGetEscolasTercTotalInterface,
@@ -34,9 +33,10 @@ import {
 } from "services/escola.service";
 import { getPeriodosVisita } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import {
+  PeriodoDeVisitaInterface,
   EscolaLabelInterface,
   NovoRelatorioVisitasFormInterface,
-} from "../../interfaces";
+} from "interfaces/imr.interface";
 
 type CabecahoType = {
   form: FormApi<any, Partial<any>>;

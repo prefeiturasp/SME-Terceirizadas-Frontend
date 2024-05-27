@@ -8,7 +8,7 @@ import {
 import {
   EscolaLabelInterface,
   NovoRelatorioVisitasFormInterface,
-} from "../../interfaces";
+} from "interfaces/imr.interface";
 
 type ModalSalvarRascunhoType = {
   show: boolean;
