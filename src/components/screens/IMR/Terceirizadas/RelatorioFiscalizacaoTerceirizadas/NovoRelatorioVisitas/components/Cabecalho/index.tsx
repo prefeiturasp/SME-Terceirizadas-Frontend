@@ -32,10 +32,10 @@ import {
   EscolaSimplissimaInterface,
 } from "interfaces/escola.interface";
 import {
+  PeriodoDeVisitaInterface,
   EscolaLabelInterface,
   NovoRelatorioVisitasFormInterface,
-} from "../../interfaces";
-import { PeriodoDeVisitaInterface } from "interfaces/imr.interface";
+} from "interfaces/imr.interface";
 import { FormApi } from "final-form";
 
 type CabecahoType = {
