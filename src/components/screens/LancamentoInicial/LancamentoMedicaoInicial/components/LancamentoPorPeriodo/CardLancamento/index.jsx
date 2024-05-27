@@ -1,6 +1,3 @@
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Form } from "react-final-form";
 import { Botao } from "components/Shareable/Botao";
 import { PERIODO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import {
@@ -8,7 +5,10 @@ import {
   LANCAMENTO_MEDICAO_INICIAL,
   PERIODO_LANCAMENTO,
 } from "configs/constants";
-import "./styles.scss";
+import { deepCopy } from "helpers/utilities";
+import React from "react";
+import { Form } from "react-final-form";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   desabilitarBotaoEditar,
   justificativaPeriodo,
@@ -17,7 +17,7 @@ import {
   styleBotaoCardLancamento,
   textoBotaoCardLancamento,
 } from "../helpers";
-import { deepCopy } from "helpers/utilities";
+import "./styles.scss";
 
 export const CardLancamento = ({
   textoCabecalho = null,

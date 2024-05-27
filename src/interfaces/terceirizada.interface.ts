@@ -59,4 +59,5 @@ export interface TerceirizadaComEnderecoInterface
 export interface TerceirizadaSimplesInterface {
   uuid: string;
   razao_social: string;
+  nome_fantasia: string;
 }

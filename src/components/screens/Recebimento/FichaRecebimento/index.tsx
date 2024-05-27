@@ -1,25 +1,88 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Spin } from "antd";
+
+import { gerarParametrosConsulta } from "helpers/utilities";
+import { listarFichasRecebimentos } from "services/fichaRecebimento.service";
+import { Paginacao } from "components/Shareable/Paginacao";
+
+import Filtros from "./components/Filtros";
 import {
-  BUTTON_TYPE,
-  BUTTON_STYLE,
-} from "components/Shareable/Botao/constants";
-import Botao from "components/Shareable/Botao";
-import { NavLink } from "react-router-dom";
-import { RECEBIMENTO, CADASTRO_FICHA_RECEBIMENTO } from "configs/constants";
+  FichaDeRecebimentoItemListagem,
+  FiltrosFichaRecebimento,
+} from "./interfaces";
+import Listagem from "./components/Listagem";
 
 export default () => {
+  const [carregando, setCarregando] = useState(false);
+  const [filtros, setFiltros] = useState<FiltrosFichaRecebimento>({});
+  const [page, setPage] = useState<number>(1);
+  const [totalResultados, setTotalResultados] = useState(0);
+  const [consultaRealizada, setConsultaRealizada] = useState(false);
+  const [fichasRecebimento, setFichasRecebimento] = useState<
+    FichaDeRecebimentoItemListagem[]
+  >([]);
+
+  const buscarResultados = async (pageNumber: number) => {
+    setCarregando(true);
+
+    try {
+      const params: URLSearchParams = gerarParametrosConsulta({
+        page: pageNumber,
+        ...filtros,
+      });
+      const response = await listarFichasRecebimentos(params);
+
+      if (response?.status === 200) {
+        setFichasRecebimento(response.data.results);
+        setTotalResultados(response.data.count);
+        setConsultaRealizada(true);
+      }
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const proximaPagina = (page: number) => {
+    buscarResultados(page);
+    setPage(page);
+  };
+
+  useEffect(() => {
+    buscarResultados(1);
+    setPage(1);
+  }, [filtros]);
+
   return (
-    <div className="card mt-3 card-ficha-recebimento">
-      <div className="card-body ficha-recebimento">
-        <NavLink to={`/${RECEBIMENTO}/${CADASTRO_FICHA_RECEBIMENTO}`}>
-          <Botao
-            texto="Cadastrar Recebimento"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            onClick={() => {}}
+    <Spin tip="Carregando..." spinning={carregando}>
+      <div className="card mt-3 card-documentos-recebimento">
+        <div className="card-body documentos-recebimento">
+          <Filtros
+            setFiltros={setFiltros}
+            setFichasRecebimento={setFichasRecebimento}
+            setConsultaRealizada={setConsultaRealizada}
           />
-        </NavLink>
+          {consultaRealizada &&
+            (fichasRecebimento.length === 0 ? (
+              <div className="text-center mt-4 mb-4">
+                Nenhum resultado encontrado
+              </div>
+            ) : (
+              <>
+                <Listagem objetos={fichasRecebimento} />
+
+                <div className="row">
+                  <div className="col">
+                    <Paginacao
+                      current={page}
+                      total={totalResultados}
+                      onChange={proximaPagina}
+                    />
+                  </div>
+                </div>
+              </>
+            ))}
+        </div>
       </div>
-    </div>
+    </Spin>
   );
 };
