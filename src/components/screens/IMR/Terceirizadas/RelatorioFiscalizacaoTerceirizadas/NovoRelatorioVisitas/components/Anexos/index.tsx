@@ -1,6 +1,9 @@
 import React from "react";
 import InputFileField from "components/Shareable/InputFileField";
-import { ArquivoInterface, ArquivoFormInterface } from "../../interfaces";
+import {
+  ArquivoInterface,
+  ArquivoFormInterface,
+} from "interfaces/imr.interface";
 
 const FORMATOS_ARQUIVOS = "PDF, XLS, XLSX, XLSXM, PNG, JPG ou JPEG";
 

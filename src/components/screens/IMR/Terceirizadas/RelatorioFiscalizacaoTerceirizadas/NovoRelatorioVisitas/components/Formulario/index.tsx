@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
 import { Field } from "react-final-form";
 import { required } from "helpers/fieldValidators";
-import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
+import {
+  TipoOcorrenciaInterface,
+  NovoRelatorioVisitasFormInterface,
+} from "interfaces/imr.interface";
 import { FormApi } from "final-form";
-import { NovoRelatorioVisitasFormInterface } from "../../interfaces";
 import { OcorrenciaNaoSeAplica } from "./components/OcorrenciaNaoSeAplica";
+import { Ocorrencia } from "./components/Ocorrencia";
 
 type FormularioType = {
   tiposOcorrencia: Array<TipoOcorrenciaInterface>;
@@ -70,7 +73,8 @@ export const Formulario = ({ ...props }: FormularioType) => {
                     <td
                       rowSpan={
                         values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
-                        "nao_se_aplica"
+                          "nao_se_aplica" ||
+                        values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao"
                           ? 2
                           : 1
                       }
@@ -92,7 +96,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                       </div>
                     </td>
                     <td>
-                      <div className="ms-3">
+                      <div className="ms-3 my-3">
                         <Field
                           name={`ocorrencia_${tipoOcorrencia.uuid}`}
                           component="input"
@@ -108,6 +112,23 @@ export const Formulario = ({ ...props }: FormularioType) => {
                         >
                           Sim
                         </label>
+                        <div className="mt-2">
+                          <Field
+                            name={`ocorrencia_${tipoOcorrencia.uuid}`}
+                            component="input"
+                            type="radio"
+                            value="nao"
+                            id={`nao_${tipoOcorrencia.uuid}`}
+                            required
+                            validate={required}
+                          />
+                          <label
+                            className="ms-2"
+                            htmlFor={`nao_${tipoOcorrencia.uuid}`}
+                          >
+                            Não
+                          </label>
+                        </div>
                         <div className="mt-2">
                           <Field
                             name={`ocorrencia_${tipoOcorrencia.uuid}`}
@@ -131,6 +152,10 @@ export const Formulario = ({ ...props }: FormularioType) => {
                   {values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
                     "nao_se_aplica" && (
                     <OcorrenciaNaoSeAplica tipoOcorrencia={tipoOcorrencia} />
+                  )}
+
+                  {values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" && (
+                    <Ocorrencia tipoOcorrencia={tipoOcorrencia} form={form} />
                   )}
                 </>
               );

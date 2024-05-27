@@ -85,6 +85,29 @@ div.novo-relatorio-visitas {
             }
           }
         }
+
+        &.tipo-ocorrencia-parametrizacao {
+          .parametrizacao-tipo-radio {
+            label {
+              color: #42474a;
+              margin-left: 0.5em;
+            }
+          }
+        }
+
+        &.tipo-ocorrencia-nao-ha-parametrizacao {
+          div {
+            min-height: 200px;
+            p {
+              color: $grayParagraph;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+      .required-asterisk {
+        color: #a50e05;
+        padding-right: 5px;
       }
     }
   }

@@ -19,6 +19,7 @@ import {
   PERIODO_LANCAMENTO_CEI,
   RELATORIO_ADESAO,
   RELATORIOS,
+  RELATORIO_FINANCEIRO,
 } from "configs/constants";
 import {
   usuarioEhCODAEGabinete,
@@ -45,6 +46,7 @@ import { CadastroDeClausulasPage } from "pages/LancamentoMedicaoInicial/Cadastro
 import { RelatorioAdesaoPage } from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesaoPage";
 import { EditarClausulaPage } from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
 import { ControleDeFrequenciaPage } from "pages/LancamentoMedicaoInicial/ControleDeFrequenciaPage";
+import { RelatorioFinanceiroPage } from "pages/LancamentoMedicaoInicial/RelatorioFinanceiro/RelatorioFinanceiroPage";
 
 export const medicaoInicial = [
   {
@@ -146,5 +148,10 @@ export const medicaoInicial = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhDRE() ||
       usuarioEhEscolaTerceirizadaQualquerPerfil(),
+  },
+  {
+    path: `/${MEDICAO_INICIAL}/${RELATORIO_FINANCEIRO}`,
+    component: RelatorioFinanceiroPage,
+    tipoUsuario: usuarioEhMedicao(),
   },
 ];
