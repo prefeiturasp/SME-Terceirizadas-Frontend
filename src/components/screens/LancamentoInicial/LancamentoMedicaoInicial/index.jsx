@@ -3,7 +3,7 @@ import { Select, Skeleton, Spin } from "antd";
 import { addMonths, format, getMonth, getYear } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import HTTP_STATUS from "http-status-codes";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -33,6 +33,7 @@ import {
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import * as perfilService from "services/perfil.service";
 import "./styles.scss";
+import { EscolaSimplesContext } from "context/EscolaSimplesContext";
 
 export default () => {
   const [ano, setAno] = useState(null);
@@ -73,6 +74,7 @@ export default () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const { escolaSimples, setEscolaSimples } = useContext(EscolaSimplesContext);
 
   const proximosDozeMeses = 12;
   let periodos = [];
@@ -121,6 +123,8 @@ export default () => {
         meusDados.vinculo_atual && meusDados.vinculo_atual.instituicao;
       const respostaPanorama = await getPanoramaEscola({ escola: escola.uuid });
       const respostaEscolaSimples = await getEscolaSimples(escola.uuid);
+      setEscolaSimples(respostaEscolaSimples.data);
+
       setNomeTerceirizada(
         respostaEscolaSimples.data.lote.terceirizada.nome_fantasia
       );
@@ -555,6 +559,7 @@ export default () => {
                 setArquivo={setArquivo}
                 comOcorrencias={comOcorrencias}
                 setComOcorrencias={setComOcorrencias}
+                escolaSimples={escolaSimples}
               />
             ))}
         </Spin>

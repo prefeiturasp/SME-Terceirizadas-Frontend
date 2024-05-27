@@ -10,6 +10,7 @@ import {
   LANCAMENTO_MEDICAO_INICIAL,
   REGISTRAR_OCORRENCIAS,
 } from "configs/constants";
+import { EscolaSimplesInterface } from "interfaces/escola.interface";
 
 type BlocoOcorrenciasType = {
   comOcorrencias: string;
@@ -20,6 +21,7 @@ type BlocoOcorrenciasType = {
   ) => void;
   ano: string;
   mes: string;
+  escolaSimples: EscolaSimplesInterface;
 };
 
 export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
@@ -30,6 +32,7 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
     setErrosAoSalvar,
     ano,
     mes,
+    escolaSimples,
   } = props;
 
   const navigate: NavigateFunction = useNavigate();
@@ -108,7 +111,7 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
                   navigate(
                     `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}`,
                     {
-                      state: { ano, mes },
+                      state: { ano, mes, escolaSimples },
                     }
                   )
                 }

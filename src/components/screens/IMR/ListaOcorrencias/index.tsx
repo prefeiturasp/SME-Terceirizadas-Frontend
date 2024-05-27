@@ -23,6 +23,8 @@ import "./style.scss";
 
 export const ListaOcorrencias = () => {
   const location: Location<any> = useLocation();
+  const { mes, ano, escolaSimples } = location.state;
+
   const navigate: NavigateFunction = useNavigate();
 
   const onSubmit = () => {};
@@ -41,9 +43,7 @@ export const ListaOcorrencias = () => {
                     label="Período de Lançamento da Medição"
                     options={[
                       {
-                        nome: `${formataMesNome(location.state?.mes)} / ${
-                          location.state?.ano
-                        }`,
+                        nome: `${formataMesNome(mes)} / ${ano}`,
                         uuid: "",
                       },
                     ]}
@@ -57,7 +57,12 @@ export const ListaOcorrencias = () => {
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     onClick={() =>
                       navigate(
-                        `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}/${REGISTRAR_NOVA_OCORRENCIA}`
+                        `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}/${REGISTRAR_NOVA_OCORRENCIA}`,
+                        {
+                          state: {
+                            escolaSimples,
+                          },
+                        }
                       )
                     }
                   />

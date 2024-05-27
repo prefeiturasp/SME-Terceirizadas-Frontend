@@ -1,9 +1,11 @@
 import { Spin } from "antd";
 import HTTP_STATUS from "http-status-codes";
+import { ContratoDoLoteInterface } from "interfaces/escola.interface";
 import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
 import React, { useEffect, useState } from "react";
 import { Form } from "react-final-form";
+import { Location, useLocation } from "react-router-dom";
 import { getTiposOcorrenciaPorEdital } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 
 export const RegistrarNovaOcorrencia = () => {
@@ -12,11 +14,16 @@ export const RegistrarNovaOcorrencia = () => {
   const [loadingTiposOcorrencia, setLoadingTiposOcorrencia] = useState(false);
   const [erroAPI, setErroAPI] = useState<string>("");
 
+  const location: Location<any> = useLocation();
+  const { escolaSimples } = location.state;
+
   const getTiposOcorrenciaPorEditalAsync = async (): Promise<void> => {
     setLoadingTiposOcorrencia(true);
     const response: ResponseFormularioSupervisaoTiposOcorrenciasInterface =
       await getTiposOcorrenciaPorEdital({
-        edital_uuid: "",
+        edital_uuid: escolaSimples.lote.contratos_do_lote.find(
+          (contrato: ContratoDoLoteInterface) => !contrato.encerrado
+        ).edital,
       });
     if (response.status === HTTP_STATUS.OK) {
       setTiposOcorrencia(response.data);

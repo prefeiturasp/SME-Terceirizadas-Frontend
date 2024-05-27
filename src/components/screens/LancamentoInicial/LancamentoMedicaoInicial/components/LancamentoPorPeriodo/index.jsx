@@ -66,6 +66,7 @@ export const LancamentoPorPeriodo = ({
   setArquivo,
   comOcorrencias,
   setComOcorrencias,
+  escolaSimples,
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
     useState(false);
@@ -408,6 +409,7 @@ export const LancamentoPorPeriodo = ({
               setErrosAoSalvar={setErrosAoSalvar}
               mes={mes}
               ano={ano}
+              escolaSimples={escolaSimples}
             />
           )}
           <div className="pb-2">
