@@ -25,7 +25,7 @@ import {
   NovoRelatorioVisitasFormInterface,
 } from "interfaces/imr.interface";
 import { Spin } from "antd";
-import { formataPayload } from "./helpers";
+import { formataPayload, validarFormulariosTiposOcorrencia } from "./helpers";
 import { Anexos } from "./components/Anexos";
 
 export const NovoRelatorioVisitas = () => {
@@ -126,7 +126,13 @@ export const NovoRelatorioVisitas = () => {
                   )}
                 </Spin>
               )}
-              <Anexos setAnexos={setAnexos} anexos={anexos} />
+              {tiposOcorrencia &&
+                validarFormulariosTiposOcorrencia(
+                  form.getState().values,
+                  tiposOcorrencia
+                ).length !== 0 && (
+                  <Anexos setAnexos={setAnexos} anexos={anexos} />
+                )}
               <div className="row float-end mt-4">
                 <div className="col-12">
                   <Botao
