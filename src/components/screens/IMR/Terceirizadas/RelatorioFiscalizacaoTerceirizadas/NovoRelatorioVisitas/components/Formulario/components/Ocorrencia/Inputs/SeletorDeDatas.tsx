@@ -35,7 +35,7 @@ export const SeletorDeDatas = ({ ...props }: SeletorDeDatasType) => {
     <>
       {[...Array(dateInputs).keys()].map((_dateinput, _dateinputIndex) => {
         return (
-          <div className="col-10 col-md-4" key={_dateinputIndex}>
+          <div className="col-3" key={_dateinputIndex}>
             <Field
               component={InputComData}
               label={titulo}
@@ -53,7 +53,7 @@ export const SeletorDeDatas = ({ ...props }: SeletorDeDatasType) => {
           </div>
         );
       })}
-      <div className="col-2">
+      <div className="col-2 my-auto">
         <Botao
           className="pr-3 mt-3"
           icon={BUTTON_ICON.PLUS}

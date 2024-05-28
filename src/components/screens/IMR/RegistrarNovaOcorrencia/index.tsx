@@ -7,8 +7,10 @@ import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interface
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
 import { Location, useLocation } from "react-router-dom";
-import { getTiposOcorrenciaPorEdital } from "services/imr/relatorioFiscalizacaoTerceirizadas";
+import { getTiposOcorrenciaPorEditalDiretor } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import "./style.scss";
+import { SeletorDeDatas } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/Inputs/SeletorDeDatas";
+import RenderComponentByParametrizacao from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/RenderComponentByParametrizacao";
 
 export const RegistrarNovaOcorrencia = () => {
   const [tiposOcorrencia, setTiposOcorrencia] =
@@ -25,45 +27,44 @@ export const RegistrarNovaOcorrencia = () => {
 
   const location: Location<any> = useLocation();
 
-  const getTiposOcorrenciaPorEditalAsync = async (): Promise<void> => {
-    setLoadingTiposOcorrencia(true);
-    const response: ResponseFormularioSupervisaoTiposOcorrenciasInterface =
-      await getTiposOcorrenciaPorEdital({
-        edital_uuid: location.state?.editalUuid,
-      });
-    if (response.status === HTTP_STATUS.OK) {
-      setTiposOcorrencia(response.data);
-      setCategorias(
-        response.data
-          .map((tipoOcorrencia) => {
-            return {
-              nome: tipoOcorrencia.categoria.nome,
-              uuid: tipoOcorrencia.categoria.uuid,
-            };
-          })
-          .filter(
-            (value, index, self) =>
-              index ===
-              self.findIndex(
-                (t) => t.nome === value.nome && t.uuid === value.uuid
-              )
-          )
-      );
-    } else {
-      setErroAPI(
-        "Erro ao carregar tipos de ocorrência do edital da unidade educacional. Tente novamente mais tarde."
-      );
-    }
-    setLoadingTiposOcorrencia(false);
-  };
+  const getTiposOcorrenciaPorEditalNutrisupervisaoAsync =
+    async (): Promise<void> => {
+      setLoadingTiposOcorrencia(true);
+      const response: ResponseFormularioSupervisaoTiposOcorrenciasInterface =
+        await getTiposOcorrenciaPorEditalDiretor({
+          edital_uuid: location.state?.editalUuid,
+        });
+      if (response.status === HTTP_STATUS.OK) {
+        setTiposOcorrencia(response.data);
+        setCategorias(
+          response.data
+            .map((tipoOcorrencia) => {
+              return {
+                nome: tipoOcorrencia.categoria.nome,
+                uuid: tipoOcorrencia.categoria.uuid,
+              };
+            })
+            .filter(
+              (value, index, self) =>
+                index ===
+                self.findIndex(
+                  (t) => t.nome === value.nome && t.uuid === value.uuid
+                )
+            )
+        );
+      } else {
+        setErroAPI(
+          "Erro ao carregar tipos de ocorrência do edital da unidade educacional. Tente novamente mais tarde."
+        );
+      }
+      setLoadingTiposOcorrencia(false);
+    };
 
   useEffect(() => {
-    getTiposOcorrenciaPorEditalAsync();
+    getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
   }, []);
 
   const onSubmit = () => {};
-
-  console.log(tipoOcorrencia);
 
   return (
     <div className="card registrar-nova-ocorrencia mt-3">
@@ -72,7 +73,7 @@ export const RegistrarNovaOcorrencia = () => {
           <Spin spinning={loadingTiposOcorrencia}>
             {tiposOcorrencia && (
               <Form onSubmit={onSubmit}>
-                {({ handleSubmit, values }) => (
+                {({ handleSubmit, form, values }) => (
                   <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-6">
@@ -157,8 +158,38 @@ export const RegistrarNovaOcorrencia = () => {
                                 </b>
                               </div>
                             </div>
+                            <h2 className="mt-3 mb-3">
+                              Detalhe a ocorrência nos itens abaixo:
+                            </h2>
                           </div>
                         </div>
+                        <div className="row">
+                          <SeletorDeDatas
+                            titulo="Data da Ocorrência"
+                            name="datas"
+                            form={form}
+                          />
+                        </div>
+                        {tipoOcorrencia.parametrizacoes.length ? (
+                          tipoOcorrencia.parametrizacoes.map(
+                            (parametrizacao, index) => {
+                              return (
+                                <div key={index} className="row">
+                                  <div className="col-12">
+                                    <RenderComponentByParametrizacao
+                                      index={index}
+                                      parametrizacao={parametrizacao}
+                                      tipoOcorrencia={tipoOcorrencia}
+                                      form={form}
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            }
+                          )
+                        ) : (
+                          <div>Não há parametrização para esse item.</div>
+                        )}
                       </section>
                     )}
                   </form>
