@@ -1,7 +1,7 @@
 import axios from "../../_base";
 import { API_URL } from "constants/config";
 import { ErrorHandlerFunction } from "../../service-helpers";
-import { NovoRelatorioVisitasFormInterface } from "components/screens/IMR/Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/interfaces";
+import { NovoRelatorioVisitasFormInterface } from "interfaces/imr.interface";
 import {
   ResponseFormularioSupervisaoTiposOcorrenciasInterface,
   ResponsePeriodosDeVisitaInterface,

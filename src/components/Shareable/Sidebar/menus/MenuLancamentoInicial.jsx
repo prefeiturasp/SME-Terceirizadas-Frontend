@@ -11,6 +11,7 @@ import {
   MEDICAO_INICIAL,
   RELATORIOS,
   RELATORIO_ADESAO,
+  RELATORIO_FINANCEIRO,
 } from "configs/constants";
 import {
   exibirModuloMedicaoInicial,
@@ -54,6 +55,11 @@ const MenuLancamentoInicial = ({ activeSubmenu, onSubmenuLancamentoClick }) => {
           usuarioEhCODAEGabinete) && (
           <LeafItem to={`/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`}>
             Acompanhamento de Lançamentos
+          </LeafItem>
+        )}
+        {usuarioEhMedicao() && (
+          <LeafItem to={`/${MEDICAO_INICIAL}/${RELATORIO_FINANCEIRO}`}>
+            Relatório Financeiro
           </LeafItem>
         )}
         {(escolaEhCEMEI() || escolaEhCei()) && (
