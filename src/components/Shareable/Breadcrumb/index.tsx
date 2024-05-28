@@ -1,6 +1,11 @@
 import { TemaContext } from "context/TemaContext";
 import React, { useContext } from "react";
-import { Link, NavigateFunction, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Location,
+  NavigateFunction,
+  useNavigate,
+} from "react-router-dom";
 import "./style.scss";
 
 type BreadcrumbProps = {
@@ -8,6 +13,7 @@ type BreadcrumbProps = {
   anteriores?: {
     href?: string;
     navigate_to?: number;
+    location?: Location;
     titulo: string;
   }[];
   atual: {

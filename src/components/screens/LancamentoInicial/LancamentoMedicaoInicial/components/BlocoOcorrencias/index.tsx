@@ -1,10 +1,15 @@
-import React from "react";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import React from "react";
+import {
+  NavigateFunction,
+  createSearchParams,
+  useNavigate,
+} from "react-router-dom";
+
 import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
@@ -108,12 +113,16 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
               <Botao
                 texto="Registrar Ocorrências"
                 onClick={() =>
-                  navigate(
-                    `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}`,
-                    {
-                      state: { ano, mes, escolaSimples },
-                    }
-                  )
+                  navigate({
+                    pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}`,
+                    search: createSearchParams({
+                      ano,
+                      mes,
+                      editalUuid: escolaSimples.lote.contratos_do_lote.find(
+                        (contrato) => !contrato.encerrado
+                      ).edital,
+                    }).toString(),
+                  })
                 }
                 disabled={comOcorrencias !== "true"}
                 type={BUTTON_TYPE.BUTTON}

@@ -14,17 +14,14 @@ import {
   REGISTRAR_OCORRENCIAS,
 } from "configs/constants";
 import {
-  Location,
   NavigateFunction,
-  useLocation,
   useNavigate,
+  useSearchParams,
 } from "react-router-dom";
 import "./style.scss";
 
 export const ListaOcorrencias = () => {
-  const location: Location<any> = useLocation();
-  const { mes, ano, escolaSimples } = location.state;
-
+  const [searchParams] = useSearchParams();
   const navigate: NavigateFunction = useNavigate();
 
   const onSubmit = () => {};
@@ -43,7 +40,9 @@ export const ListaOcorrencias = () => {
                     label="Período de Lançamento da Medição"
                     options={[
                       {
-                        nome: `${formataMesNome(mes)} / ${ano}`,
+                        nome: `${formataMesNome(
+                          searchParams.get("mes")
+                        )} / ${searchParams.get("ano")}`,
                         uuid: "",
                       },
                     ]}
@@ -60,7 +59,7 @@ export const ListaOcorrencias = () => {
                         `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}/${REGISTRAR_NOVA_OCORRENCIA}`,
                         {
                           state: {
-                            escolaSimples,
+                            editalUuid: searchParams.get("editalUuid"),
                           },
                         }
                       )
