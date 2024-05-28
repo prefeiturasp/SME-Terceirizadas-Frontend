@@ -1,5 +1,6 @@
 import { Spin } from "antd";
 import { Select } from "components/Shareable/Select";
+import { required } from "helpers/fieldValidators";
 import HTTP_STATUS from "http-status-codes";
 import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
@@ -7,7 +8,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
 import { Location, useLocation } from "react-router-dom";
 import { getTiposOcorrenciaPorEdital } from "services/imr/relatorioFiscalizacaoTerceirizadas";
-import { required } from "helpers/fieldValidators";
+import "./style.scss";
 
 export const RegistrarNovaOcorrencia = () => {
   const [tiposOcorrencia, setTiposOcorrencia] =
@@ -19,6 +20,8 @@ export const RegistrarNovaOcorrencia = () => {
   const [tiposOcorrenciaDaCategoria, setTiposOcorrenciaDaCategoria] = useState<
     Array<TipoOcorrenciaInterface>
   >([]);
+  const [tipoOcorrencia, setTipoOcorrencia] =
+    useState<TipoOcorrenciaInterface>();
 
   const location: Location<any> = useLocation();
 
@@ -60,8 +63,10 @@ export const RegistrarNovaOcorrencia = () => {
 
   const onSubmit = () => {};
 
+  console.log(tipoOcorrencia);
+
   return (
-    <div className="card mt-3">
+    <div className="card registrar-nova-ocorrencia mt-3">
       <div className="card-body">
         {!erroAPI && (
           <Spin spinning={loadingTiposOcorrencia}>
@@ -117,9 +122,45 @@ export const RegistrarNovaOcorrencia = () => {
                           validate={required}
                           disabled={!values.categoria}
                           naoDesabilitarPrimeiraOpcao
+                          onChangeEffect={(
+                            e: ChangeEvent<HTMLInputElement>
+                          ) => {
+                            const value = e.target.value;
+                            setTipoOcorrencia(
+                              tiposOcorrencia.find(
+                                (tipoOcorrencia) =>
+                                  tipoOcorrencia.uuid === value
+                              )
+                            );
+                          }}
                         />
                       </div>
                     </div>
+                    {tipoOcorrencia && (
+                      <section className="tipo-ocorrencia">
+                        <div className="row">
+                          <div className="col-12">
+                            <div className="title-label mt-3 mb-1">
+                              Descrição do Tipo de Ocorrência e Penalidades:
+                            </div>
+                            <div className="box-descricao">
+                              <div>
+                                <b>{tipoOcorrencia.titulo}:</b>{" "}
+                                {tipoOcorrencia.descricao}
+                              </div>
+                              <div>
+                                <b>
+                                  Penalidade:{" "}
+                                  {tipoOcorrencia.penalidade.numero_clausula}{" "}
+                                  Obrigação:{" "}
+                                  {tipoOcorrencia.penalidade.obrigacoes.toString()}
+                                </b>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    )}
                   </form>
                 )}
               </Form>

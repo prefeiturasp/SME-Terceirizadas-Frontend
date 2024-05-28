@@ -1,0 +1,20 @@
+@import "styles/variables.scss";
+
+div.registrar-nova-ocorrencia {
+  min-height: 73vh;
+
+  section.tipo-ocorrencia {
+    font-size: 14px;
+
+    div.title-label {
+      color: $gray;
+    }
+
+    div.box-descricao {
+      background-color: $grayBackgroundTr;
+      border: 1px solid $grayBorderIMR;
+      border-radius: 0.5em;
+      padding: 1em;
+    }
+  }
+}
