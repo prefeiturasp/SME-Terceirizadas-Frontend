@@ -166,7 +166,7 @@ const Relatorio = ({ visao }) => {
       setShowModalAviso(true);
     } else {
       setCarregando(true);
-      await getProtocoloDietaEspecial(uuid);
+      await getProtocoloDietaEspecial(uuid, dietaEspecial);
       setCarregando(false);
     }
   };
