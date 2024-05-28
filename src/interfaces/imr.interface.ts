@@ -1,3 +1,14 @@
+export interface ArquivoInterface {
+  nome: string;
+  arquivo: string;
+}
+
+export interface ArquivoFormInterface {
+  nome: string;
+  arquivo?: string;
+  base64: string;
+}
+
 export interface NovoRelatorioVisitasFormInterface {
   uuid?: number;
   diretoria_regional: string;
@@ -10,6 +21,7 @@ export interface NovoRelatorioVisitasFormInterface {
   nome_nutricionista_empresa?: string;
   total_matriculados_por_data: number;
   maior_frequencia_no_periodo: number;
+  anexos: Array<ArquivoInterface>;
 }
 
 export interface EscolaLabelInterface {

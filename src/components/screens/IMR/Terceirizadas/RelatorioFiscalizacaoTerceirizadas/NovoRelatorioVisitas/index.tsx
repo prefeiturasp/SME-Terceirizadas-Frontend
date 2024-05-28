@@ -19,12 +19,14 @@ import {
 import { Formulario } from "./components/Formulario";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
 import {
+  ArquivoInterface,
   TipoOcorrenciaInterface,
   EscolaLabelInterface,
   NovoRelatorioVisitasFormInterface,
 } from "interfaces/imr.interface";
 import { Spin } from "antd";
-import { formataPayload } from "./helpers";
+import { formataPayload, validarFormulariosTiposOcorrencia } from "./helpers";
+import { Anexos } from "./components/Anexos";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
@@ -37,6 +39,7 @@ export const NovoRelatorioVisitas = () => {
     useState<Array<TipoOcorrenciaInterface>>();
   const [loadingTiposOcorrencia, setLoadingTiposOcorrencia] = useState(false);
   const [erroAPI, setErroAPI] = useState<string>("");
+  const [anexos, setAnexos] = useState<ArquivoInterface[]>([]);
 
   const navigate: NavigateFunction = useNavigate();
 
@@ -55,7 +58,7 @@ export const NovoRelatorioVisitas = () => {
     }
 
     const response = await createFormularioSupervisao(
-      formataPayload(values, escolaSelecionada)
+      formataPayload(values, escolaSelecionada, anexos)
     );
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Rascunho do Relatório de Fiscalização salvo com sucesso!");
@@ -123,6 +126,13 @@ export const NovoRelatorioVisitas = () => {
                   )}
                 </Spin>
               )}
+              {tiposOcorrencia &&
+                validarFormulariosTiposOcorrencia(
+                  form.getState().values,
+                  tiposOcorrencia
+                ).length !== 0 && (
+                  <Anexos setAnexos={setAnexos} anexos={anexos} />
+                )}
               <div className="row float-end mt-4">
                 <div className="col-12">
                   <Botao
