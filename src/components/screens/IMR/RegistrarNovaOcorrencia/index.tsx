@@ -1,22 +1,38 @@
 import { Spin } from "antd";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "components/Shareable/Botao/constants";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import HTTP_STATUS from "http-status-codes";
 import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
 import React, { useEffect, useState } from "react";
 import { Form } from "react-final-form";
-import { Location, useLocation } from "react-router-dom";
-import { getTiposOcorrenciaPorEditalDiretor } from "services/imr/relatorioFiscalizacaoTerceirizadas";
-import "./style.scss";
+import {
+  Location,
+  NavigateFunction,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import {
+  createFormularioDiretor,
+  getTiposOcorrenciaPorEditalDiretor,
+} from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { SeletorDeDatas } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/Inputs/SeletorDeDatas";
 import RenderComponentByParametrizacao from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/RenderComponentByParametrizacao";
+import { ModalCancelaPreenchimento } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/ModalCancelaPreenchimento";
+import { ModalSalvar } from "./components/ModalSalvar";
 import { SeletorCategoria } from "./components/SeletorCategoria";
-import { SeletorTipoOcorrencia } from "./components/SeletorTIpoOcorrencia";
+import { SeletorTipoOcorrencia } from "./components/SeletorTipoOcorrencia";
+import { formataPayload } from "./helpers";
+import "./style.scss";
 
 export const RegistrarNovaOcorrencia = () => {
   const [tiposOcorrencia, setTiposOcorrencia] =
     useState<Array<TipoOcorrenciaInterface>>();
   const [loadingTiposOcorrencia, setLoadingTiposOcorrencia] = useState(false);
-  const [erroAPI, setErroAPI] = useState<string>("");
   const [categorias, setCategorias] =
     useState<Array<{ nome: string; uuid: string }>>();
   const [tiposOcorrenciaDaCategoria, setTiposOcorrenciaDaCategoria] = useState<
@@ -25,7 +41,13 @@ export const RegistrarNovaOcorrencia = () => {
   const [tipoOcorrencia, setTipoOcorrencia] =
     useState<TipoOcorrenciaInterface>();
 
+  const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
+    useState(false);
+  const [showModalSalvar, setShowModalSalvar] = useState(false);
+  const [erroAPI, setErroAPI] = useState<string>("");
+
   const location: Location<any> = useLocation();
+  const navigate: NavigateFunction = useNavigate();
 
   const getTiposOcorrenciaPorEditalNutrisupervisaoAsync =
     async (): Promise<void> => {
@@ -64,7 +86,28 @@ export const RegistrarNovaOcorrencia = () => {
     getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
   }, []);
 
-  const onSubmit = () => {};
+  const salvar = async (values: any): Promise<void> => {
+    if (!showModalSalvar) {
+      setShowModalSalvar(true);
+      return;
+    }
+
+    const response = await createFormularioDiretor(
+      formataPayload(values, location.state?.solicitacaoMedicaoInicialUuid)
+    );
+    if (response.status === HTTP_STATUS.CREATED) {
+      toastSuccess("Rascunho do Relatório de Fiscalização salvo com sucesso!");
+      navigate(-1);
+    } else {
+      toastError(
+        "Erro ao criar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const onSubmit = (values) => {
+    values;
+  };
 
   return (
     <div className="card registrar-nova-ocorrencia mt-3">
@@ -73,7 +116,7 @@ export const RegistrarNovaOcorrencia = () => {
           <Spin spinning={loadingTiposOcorrencia}>
             {tiposOcorrencia && (
               <Form onSubmit={onSubmit}>
-                {({ handleSubmit, form }) => (
+                {({ handleSubmit, form, values, submitting }) => (
                   <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-6">
@@ -154,6 +197,41 @@ export const RegistrarNovaOcorrencia = () => {
                             </div>
                           </div>
                         )}
+                        <div className="row float-end mt-4">
+                          <div className="col-12">
+                            <Botao
+                              texto="Cancelar"
+                              onClick={() => {
+                                setShowModalCancelaPreenchimento(true);
+                              }}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                            <Botao
+                              texto={values.uuid ? "Atualizar" : "Salvar"}
+                              className="ms-3"
+                              disabled={submitting}
+                              onClick={() => {
+                                setShowModalSalvar(true);
+                              }}
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                            />
+                          </div>
+                        </div>
+                        <ModalCancelaPreenchimento
+                          show={showModalCancelaPreenchimento}
+                          handleClose={() =>
+                            setShowModalCancelaPreenchimento(false)
+                          }
+                          form={form}
+                          navigate={navigate}
+                        />
+                        <ModalSalvar
+                          show={showModalSalvar}
+                          handleClose={() => setShowModalSalvar(false)}
+                          values={form.getState().values}
+                          salvar={salvar}
+                        />
                       </section>
                     )}
                   </form>

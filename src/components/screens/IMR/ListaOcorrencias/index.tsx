@@ -60,6 +60,9 @@ export const ListaOcorrencias = () => {
                         {
                           state: {
                             editalUuid: searchParams.get("editalUuid"),
+                            solicitacaoMedicaoInicialUuid: searchParams.get(
+                              "solicitacaoMedicaoInicialUuid"
+                            ),
                           },
                         }
                       )

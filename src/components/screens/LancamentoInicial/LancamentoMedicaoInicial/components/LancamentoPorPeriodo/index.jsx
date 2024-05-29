@@ -410,6 +410,7 @@ export const LancamentoPorPeriodo = ({
               mes={mes}
               ano={ano}
               escolaSimples={escolaSimples}
+              solicitacaoMedicaoInicialUuid={solicitacaoMedicaoInicial.uuid}
             />
           )}
           <div className="pb-2">

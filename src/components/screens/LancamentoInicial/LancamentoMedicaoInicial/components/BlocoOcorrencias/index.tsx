@@ -27,6 +27,7 @@ type BlocoOcorrenciasType = {
   ano: string;
   mes: string;
   escolaSimples: EscolaSimplesInterface;
+  solicitacaoMedicaoInicialUuid: string;
 };
 
 export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
@@ -38,6 +39,7 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
     ano,
     mes,
     escolaSimples,
+    solicitacaoMedicaoInicialUuid,
   } = props;
 
   const navigate: NavigateFunction = useNavigate();
@@ -121,6 +123,7 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
                       editalUuid: escolaSimples.lote.contratos_do_lote.find(
                         (contrato) => !contrato.encerrado
                       ).edital,
+                      solicitacaoMedicaoInicialUuid,
                     }).toString(),
                   })
                 }
