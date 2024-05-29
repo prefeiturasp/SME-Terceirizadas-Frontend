@@ -549,6 +549,7 @@ export const usuarioComAcessoAoPainelAprovacoes = () => {
 export const usuarioComAcessoAoPainelEmbalagens = () => {
   return [
     PERFIL.DILOG_QUALIDADE,
+    PERFIL.ADMINISTRADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
@@ -573,6 +574,7 @@ export const usuarioComAcessoAoPainelDocumentos = () => {
 
 export const usuarioComAcessoAoPainelFichasTecnicas = () => {
   return [
+    PERFIL.ADMINISTRADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
