@@ -188,6 +188,7 @@ export const SidebarContent = () => {
     usuarioEhPreRecebimento() ||
     usuarioEhEmpresaFornecedor() ||
     usuarioEhCoordenadorGpCODAE() ||
+    usuarioEhAdministradorGpCODAE() ||
     usuarioEhCODAEGabinete() ||
     usuarioEhGticCODAE();
 
