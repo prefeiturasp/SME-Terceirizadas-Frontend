@@ -92,6 +92,10 @@ div.novo-relatorio-visitas {
               color: #42474a;
               margin-left: 0.5em;
             }
+
+            input[type="radio"] {
+              accent-color: $green !important;
+            }
           }
         }
 

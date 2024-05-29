@@ -137,16 +137,13 @@ export const RegistrarNovaOcorrencia = () => {
                           tipoOcorrencia.parametrizacoes.map(
                             (parametrizacao, index) => {
                               return (
-                                <div key={index} className="row">
-                                  <div className="col-12">
-                                    <RenderComponentByParametrizacao
-                                      index={index}
-                                      parametrizacao={parametrizacao}
-                                      tipoOcorrencia={tipoOcorrencia}
-                                      form={form}
-                                    />
-                                  </div>
-                                </div>
+                                <RenderComponentByParametrizacao
+                                  index={index}
+                                  parametrizacao={parametrizacao}
+                                  tipoOcorrencia={tipoOcorrencia}
+                                  form={form}
+                                  key={index}
+                                />
                               );
                             }
                           )

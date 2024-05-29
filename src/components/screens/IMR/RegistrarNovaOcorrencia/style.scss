@@ -6,6 +6,10 @@ div.registrar-nova-ocorrencia {
   section.tipo-ocorrencia {
     font-size: 14px;
 
+    .required-asterisk {
+      color: $red;
+    }
+
     div.title-label {
       color: $gray;
     }
@@ -21,6 +25,17 @@ div.registrar-nova-ocorrencia {
       color: $green;
       font-size: 14px;
       font-weight: bold;
+    }
+
+    .parametrizacao-tipo-radio {
+      label {
+        color: #42474a;
+        margin-left: 0.5em;
+      }
+
+      input[type="radio"] {
+        accent-color: $green !important;
+      }
     }
   }
 }
