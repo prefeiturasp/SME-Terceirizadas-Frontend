@@ -169,7 +169,7 @@ export default ({
 
           <div className="row mb-4">
             <div className="col-4">
-              <p>Peso da Embalagem Primária:</p>
+              <p>Embalagem Primária:</p>
               <p>
                 <b>
                   {cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria}{" "}
@@ -181,7 +181,7 @@ export default ({
               </p>
             </div>
             <div className="col-4">
-              <p>Peso da Embalagem Secundária:</p>
+              <p>Embalagem Secundária:</p>
               <p>
                 <b>
                   {cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria}{" "}
@@ -222,23 +222,27 @@ export default ({
                     return etapas.map((etapa, key) => {
                       return (
                         <tr key={key}>
-                          <td className="borda-crono">
+                          <td className="borda-crono text-center">
                             {etapa.numero_empenho}
                           </td>
-                          <td className="borda-crono">
+                          <td className="borda-crono text-center">
                             {formataMilharDecimal(etapa.qtd_total_empenho)}{" "}
                             {cronograma.unidade_medida?.abreviacao}
                           </td>
-                          <td className="borda-crono">{etapa.etapa}</td>
-                          <td className="borda-crono">{etapa.parte}</td>
-                          <td className="borda-crono">
+                          <td className="borda-crono text-center">
+                            {etapa.etapa}
+                          </td>
+                          <td className="borda-crono text-center">
+                            {etapa.parte}
+                          </td>
+                          <td className="borda-crono text-center">
                             {etapa.data_programada}
                           </td>
-                          <td className="borda-crono">
+                          <td className="borda-crono text-center">
                             {formataMilharDecimal(etapa.quantidade)}{" "}
                             {cronograma.unidade_medida?.abreviacao}
                           </td>
-                          <td className="borda-crono">
+                          <td className="borda-crono text-center">
                             {formataMilharDecimal(etapa.total_embalagens)}{" "}
                             {cronograma.tipo_embalagem_secundaria?.abreviacao}
                           </td>

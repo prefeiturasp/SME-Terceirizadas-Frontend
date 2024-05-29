@@ -573,14 +573,14 @@ export default () => {
                                 <div className="row">
                                   <div className="col-6">
                                     <Label
-                                      content="Peso da Embalagem Primária"
+                                      content="Embalagem Primária"
                                       required
                                     />
                                   </div>
 
                                   <div className="col-6">
                                     <Label
-                                      content="Peso da Embalagem Secundária"
+                                      content="Embalagem Secundária"
                                       required
                                     />
                                   </div>
