@@ -54,12 +54,13 @@ export const getRelatorioDietaEspecial = async (uuid) => {
   saveAs(data, "relatorio_dieta_especial.pdf");
 };
 
-export const getProtocoloDietaEspecial = async (uuid) => {
+export const getProtocoloDietaEspecial = async (uuid, dietaEspecial) => {
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/protocolo/`;
   const { data } = await axios.get(url, {
     responseType: "blob",
   });
-  saveAs(data, "protocolo_dieta_especial.pdf");
+  const nomePdf = "Protocolo " + dietaEspecial?.aluno?.nome;
+  saveAs(data, `${nomePdf}.pdf`);
 };
 
 export const getRelatorioInclusaoAlimentacao = async (

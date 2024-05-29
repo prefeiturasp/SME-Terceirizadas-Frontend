@@ -111,6 +111,19 @@ div.novo-relatorio-visitas {
       }
     }
   }
+
+  div.anexos {
+    span.titulo-anexo {
+      font-size: 14px;
+      font-weight: bold;
+      background-color: $grayBackgroundTr;
+      border: 1px solid $grayIcon;
+      width: 100%;
+      text-align: left;
+      display: block;
+      padding: 1em;
+    }
+  }
 }
 
 @media only screen and (min-width: 1024px) and (max-width: 1643px) {
