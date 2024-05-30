@@ -1,15 +1,19 @@
 import React from "react";
-import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
+import {
+  EscolaLabelInterface,
+  TipoOcorrenciaInterface,
+} from "interfaces/imr.interface";
 import RenderComponentByParametrizacao from "./RenderComponentByParametrizacao";
 import { FormApi } from "final-form";
 
 type OcorrenciaType = {
   tipoOcorrencia: TipoOcorrenciaInterface;
   form: FormApi<any, Partial<any>>;
+  escolaSelecionada: EscolaLabelInterface;
 };
 
 export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
-  const { tipoOcorrencia, form } = props;
+  const { tipoOcorrencia, form, escolaSelecionada } = props;
 
   return tipoOcorrencia.parametrizacoes.length ? (
     <tr className="tipo-ocorrencia-parametrizacao">
@@ -25,6 +29,7 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
                 parametrizacao={parametrizacao}
                 tipoOcorrencia={tipoOcorrencia}
                 form={form}
+                escolaSelecionada={escolaSelecionada}
               />
             </div>
           );

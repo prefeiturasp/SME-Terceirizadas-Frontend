@@ -122,6 +122,7 @@ export const NovoRelatorioVisitas = () => {
                       form={form}
                       tiposOcorrencia={tiposOcorrencia}
                       values={form.getState().values}
+                      escolaSelecionada={escolaSelecionada}
                     />
                   )}
                 </Spin>

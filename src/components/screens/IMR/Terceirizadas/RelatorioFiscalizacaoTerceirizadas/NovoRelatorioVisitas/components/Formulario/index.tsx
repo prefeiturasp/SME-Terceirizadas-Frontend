@@ -4,6 +4,7 @@ import { required } from "helpers/fieldValidators";
 import {
   TipoOcorrenciaInterface,
   NovoRelatorioVisitasFormInterface,
+  EscolaLabelInterface,
 } from "interfaces/imr.interface";
 import { FormApi } from "final-form";
 import { OcorrenciaNaoSeAplica } from "./components/OcorrenciaNaoSeAplica";
@@ -13,10 +14,11 @@ type FormularioType = {
   tiposOcorrencia: Array<TipoOcorrenciaInterface>;
   form: FormApi<any, Partial<any>>;
   values: NovoRelatorioVisitasFormInterface;
+  escolaSelecionada: EscolaLabelInterface;
 };
 
 export const Formulario = ({ ...props }: FormularioType) => {
-  const { tiposOcorrencia, form, values } = props;
+  const { tiposOcorrencia, form, values, escolaSelecionada } = props;
 
   useEffect(() => {
     tiposOcorrencia.forEach((tipoOcorrencia) => {
@@ -155,7 +157,11 @@ export const Formulario = ({ ...props }: FormularioType) => {
                   )}
 
                   {values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" && (
-                    <Ocorrencia tipoOcorrencia={tipoOcorrencia} form={form} />
+                    <Ocorrencia
+                      tipoOcorrencia={tipoOcorrencia}
+                      form={form}
+                      escolaSelecionada={escolaSelecionada}
+                    />
                   )}
                 </>
               );
