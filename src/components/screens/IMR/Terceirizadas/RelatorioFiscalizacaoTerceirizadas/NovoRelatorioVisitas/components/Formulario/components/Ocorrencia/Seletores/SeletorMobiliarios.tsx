@@ -3,33 +3,27 @@ import { Field } from "react-final-form";
 import Select from "components/Shareable/Select";
 import HTTP_STATUS from "http-status-codes";
 import { required } from "helpers/fieldValidators";
-import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import { getMobiliarios } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { SelectOption } from "interfaces/option.interface";
-import { EscolaLabelInterface } from "interfaces/imr.interface";
 
-type SeletorTipoAlimentacaoType = {
+type SeletorMobiliariosType = {
   titulo: string;
   name: string;
-  escolaSelecionada: EscolaLabelInterface;
 };
 
-export const SeletorTipoAlimentacao = ({
-  ...props
-}: SeletorTipoAlimentacaoType) => {
-  const { titulo, name, escolaSelecionada } = props;
+export const SeletorMobiliarios = ({ ...props }: SeletorMobiliariosType) => {
+  const { titulo, name } = props;
   const [options, setOptions] = useState<Array<SelectOption>>([]);
 
-  const getOptionsAsync = async (escola_uuid) => {
-    const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
+  const getOptionsAsync = async () => {
+    const response = await getMobiliarios();
     if (response.status === HTTP_STATUS.OK) {
       const itemsMap: Map<string, SelectOption> = new Map();
 
       response.data.results.forEach((item) => {
-        item.tipos_alimentacao.forEach((tipo: SelectOption) => {
-          itemsMap.set(tipo.nome, {
-            nome: tipo.nome,
-            uuid: tipo.uuid,
-          });
+        itemsMap.set(item.nome, {
+          nome: item.nome,
+          uuid: item.uuid,
         });
       });
 
@@ -38,17 +32,14 @@ export const SeletorTipoAlimentacao = ({
   };
 
   useEffect(() => {
-    getOptionsAsync(escolaSelecionada.uuid);
-  }, [escolaSelecionada]);
+    getOptionsAsync();
+  }, []);
 
   return (
     <Field
       component={Select}
       naoDesabilitarPrimeiraOpcao
-      options={[
-        { nome: "Selecione um Tipo de Alimentação", uuid: "" },
-        ...options,
-      ]}
+      options={[{ nome: "Selecione um Mobiliário", uuid: "" }, ...options]}
       label={titulo}
       name={name}
       className="seletor-imr"
