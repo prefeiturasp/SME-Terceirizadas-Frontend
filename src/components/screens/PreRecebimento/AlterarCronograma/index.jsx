@@ -148,7 +148,9 @@ export default ({ analiseSolicitacao }) => {
       values[`parte_${index}`] = etapa.parte;
       values[`data_programada_${index}`] = etapa.data_programada;
       values[`quantidade_${index}`] = formataMilhar(etapa.quantidade);
-      values[`total_embalagens_${index}`] = etapa.total_embalagens;
+      values[`total_embalagens_${index}`] = numberToStringDecimal(
+        etapa.total_embalagens
+      );
       values[`qtd_total_empenho_${index}`] = numberToStringDecimal(
         etapa.qtd_total_empenho
       );

@@ -51,7 +51,7 @@ export const formataPayload = (
   payload.cadastro_finalizado = !rascunho;
   payload.contrato = values.contrato;
   payload.empresa = empresaSelecionada.uuid;
-  payload.ficha_tecnica = fichaTecnicaSelecionada.uuid;
+  payload.ficha_tecnica = fichaTecnicaSelecionada?.uuid;
   payload.armazem = values.armazem;
   payload.qtd_total_programada = values.quantidade_total
     ?.replaceAll(".", "")
