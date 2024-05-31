@@ -1,10 +1,10 @@
-import React from "react";
-import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
-  BUTTON_TYPE,
   BUTTON_STYLE,
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
+import React from "react";
+import { Modal } from "react-bootstrap";
 import { RegistrarNovaOcorrenciaFormInterface } from "../../interfaces";
 
 type ModalSalvarType = {

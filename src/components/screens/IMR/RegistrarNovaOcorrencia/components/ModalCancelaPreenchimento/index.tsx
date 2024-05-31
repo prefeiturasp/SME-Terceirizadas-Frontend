@@ -1,11 +1,11 @@
-import React from "react";
-import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
-  BUTTON_TYPE,
   BUTTON_STYLE,
+  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { FormApi } from "final-form";
+import React from "react";
+import { Modal } from "react-bootstrap";
 import { NavigateFunction } from "react-router-dom";
 
 type ModalCancelaPreenchimentoType = {

@@ -1,8 +1,8 @@
-import React, { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { Select } from "components/Shareable/Select";
-import { Field } from "react-final-form";
-import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
 import { required } from "helpers/fieldValidators";
+import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
+import React, { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { Field } from "react-final-form";
 import { RegistrarNovaOcorrenciaFormInterface } from "../../interfaces";
 
 type SeletorTipoOcorrenciaType = {
