@@ -20,6 +20,7 @@ import {
   RELATORIO_ADESAO,
   RELATORIOS,
   RELATORIO_FINANCEIRO,
+  RELATORIO_CONSOLIDADO,
 } from "configs/constants";
 import {
   usuarioEhCODAEGabinete,
@@ -47,6 +48,7 @@ import { RelatorioAdesaoPage } from "pages/LancamentoMedicaoInicial/Relatorios/R
 import { EditarClausulaPage } from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
 import { ControleDeFrequenciaPage } from "pages/LancamentoMedicaoInicial/ControleDeFrequenciaPage";
 import { RelatorioFinanceiroPage } from "pages/LancamentoMedicaoInicial/RelatorioFinanceiro/RelatorioFinanceiroPage";
+import { RelatorioConsolidadoPage } from "pages/LancamentoMedicaoInicial/RelatorioConsolidado/RelatorioConsolidadoPage";
 
 export const medicaoInicial = [
   {
@@ -152,6 +154,11 @@ export const medicaoInicial = [
   {
     path: `/${MEDICAO_INICIAL}/${RELATORIO_FINANCEIRO}`,
     component: RelatorioFinanceiroPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${MEDICAO_INICIAL}/${RELATORIO_FINANCEIRO}/${RELATORIO_CONSOLIDADO}`,
+    component: RelatorioConsolidadoPage,
     tipoUsuario: usuarioEhMedicao(),
   },
 ];
