@@ -70,7 +70,9 @@ export const RegistrarNovaOcorrencia = () => {
               (value, index, self) =>
                 index ===
                 self.findIndex(
-                  (t) => t.nome === value.nome && t.uuid === value.uuid
+                  (tipoOcorrencia) =>
+                    tipoOcorrencia.nome === value.nome &&
+                    tipoOcorrencia.uuid === value.uuid
                 )
             )
         );
@@ -86,7 +88,7 @@ export const RegistrarNovaOcorrencia = () => {
     getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
   }, []);
 
-  const salvar = async (values: any): Promise<void> => {
+  const onSubmit = async (values) => {
     if (!showModalSalvar) {
       setShowModalSalvar(true);
       return;
@@ -105,18 +107,14 @@ export const RegistrarNovaOcorrencia = () => {
     }
   };
 
-  const onSubmit = (values) => {
-    values;
-  };
-
   return (
     <div className="card registrar-nova-ocorrencia mt-3">
       <div className="card-body">
         {!erroAPI && (
           <Spin spinning={loadingTiposOcorrencia}>
             {tiposOcorrencia && (
-              <Form onSubmit={onSubmit}>
-                {({ handleSubmit, form, values, submitting }) => (
+              <Form destroyOnUnregister onSubmit={onSubmit}>
+                {({ handleSubmit, form, submitting }) => (
                   <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-6">
@@ -180,13 +178,15 @@ export const RegistrarNovaOcorrencia = () => {
                           tipoOcorrencia.parametrizacoes.map(
                             (parametrizacao, index) => {
                               return (
-                                <RenderComponentByParametrizacao
-                                  index={index}
-                                  parametrizacao={parametrizacao}
-                                  tipoOcorrencia={tipoOcorrencia}
-                                  form={form}
-                                  key={index}
-                                />
+                                <div key={index} className="row">
+                                  <RenderComponentByParametrizacao
+                                    index={index}
+                                    parametrizacao={parametrizacao}
+                                    tipoOcorrencia={tipoOcorrencia}
+                                    form={form}
+                                    key={index}
+                                  />
+                                </div>
                               );
                             }
                           )
@@ -207,13 +207,10 @@ export const RegistrarNovaOcorrencia = () => {
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                             />
                             <Botao
-                              texto={values.uuid ? "Atualizar" : "Salvar"}
+                              texto="Salvar"
                               className="ms-3"
                               disabled={submitting}
-                              onClick={() => {
-                                setShowModalSalvar(true);
-                              }}
-                              type={BUTTON_TYPE.BUTTON}
+                              type={BUTTON_TYPE.SUBMIT}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                             />
                           </div>
@@ -230,7 +227,7 @@ export const RegistrarNovaOcorrencia = () => {
                           show={showModalSalvar}
                           handleClose={() => setShowModalSalvar(false)}
                           values={form.getState().values}
-                          salvar={salvar}
+                          salvar={onSubmit}
                         />
                       </section>
                     )}
