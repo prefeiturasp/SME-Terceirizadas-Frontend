@@ -89,6 +89,8 @@ export const NovoRelatorioVisitas = () => {
   useEffect(() => {
     if (escolaSelecionada) {
       getTiposOcorrenciaPorEditalAsync();
+    } else {
+      setTiposOcorrencia(undefined);
     }
   }, [escolaSelecionada]);
 
