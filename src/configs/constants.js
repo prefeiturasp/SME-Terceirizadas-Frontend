@@ -225,6 +225,7 @@ export const CADASTRO_DE_CLAUSULA = "cadastro-de-clausula";
 export const EDITAR_CLAUSULA = "editar-clausula";
 export const CONTROLE_DE_FREQUENCIA = "controle-de-frequencia";
 export const RELATORIO_FINANCEIRO = "relatorio-financeiro";
+export const RELATORIO_CONSOLIDADO = "relatorio-consolidado";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";

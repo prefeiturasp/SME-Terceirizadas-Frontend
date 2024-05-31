@@ -21,6 +21,28 @@ export interface RelatorioFinanceiroResponse {
   results: RelatorioFinanceiroInterface[];
 }
 
+export interface RelatorioFinanceiroConsolidado {
+  uuid: string;
+  edital: Edital;
+  dre: string;
+  lote: string;
+  tipos_unidades: TipoUnidade[];
+  legenda: string;
+  tabelas: Tabela[];
+  grupo_unidade_escolar: string;
+  mes_ano: string;
+}
+
+type Tabela = {
+  nome: string;
+  valores: [];
+};
+
+type Edital = {
+  uuid: string;
+  numero: string;
+};
+
 type Lote = {
   uuid: string;
   nome: string;
