@@ -47,7 +47,7 @@ export const SeletorReparosEAdaptacoes = ({
       ]}
       label={titulo}
       name={name}
-      className="seletor-tipo-alimentacao"
+      className="seletor-imr"
       required
       validate={required}
     />

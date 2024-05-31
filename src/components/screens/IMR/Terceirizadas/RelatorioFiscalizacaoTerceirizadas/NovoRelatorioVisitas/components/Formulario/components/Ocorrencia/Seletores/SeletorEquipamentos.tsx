@@ -42,7 +42,7 @@ export const SeletorEquipamentos = ({ ...props }: SeletorEquipamentosType) => {
       options={[{ nome: "Selecione um Equipamento", uuid: "" }, ...options]}
       label={titulo}
       name={name}
-      className="seletor-tipo-alimentacao"
+      className="seletor-imr"
       required
       validate={required}
     />

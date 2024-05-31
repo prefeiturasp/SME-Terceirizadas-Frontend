@@ -47,7 +47,7 @@ export const SeletorUtensiliosMesa = ({
       ]}
       label={titulo}
       name={name}
-      className="seletor-tipo-alimentacao"
+      className="seletor-imr"
       required
       validate={required}
     />
