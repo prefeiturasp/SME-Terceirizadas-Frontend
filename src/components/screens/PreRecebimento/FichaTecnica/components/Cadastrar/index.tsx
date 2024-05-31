@@ -31,8 +31,6 @@ import Select from "components/Shareable/Select";
 import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 
-import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
-
 import {
   ArquivoForm,
   FichaTecnicaDetalhada,
@@ -79,7 +77,7 @@ const ITENS_STEPS = [
 ];
 
 export default () => {
-  const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
+  const { meusDados } = useContext(MeusDadosContext);
   const [carregando, setCarregando] = useState<boolean>(true);
   const [produtosOptions, setProdutosOptions] = useState<OptionsGenerico[]>([]);
   const [marcasOptions, setMarcasOptions] = useState<OptionsGenerico[]>([]);

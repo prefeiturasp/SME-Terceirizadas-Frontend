@@ -1,7 +1,6 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 
 import MeusDadosContext from "context/MeusDadosContext";
-import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
 
 import {
   formatarOpcoesLote,
@@ -25,7 +24,7 @@ import { MESES } from "constants/shared";
 import { Args, SelectOption, MultiSelectOption, Option } from "./types";
 
 export default ({ form, onChange }: Args) => {
-  const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
+  const { meusDados } = useContext(MeusDadosContext);
   const [mesesAnosOpcoes, setMesesAnosOpcoes] = useState<Array<SelectOption>>(
     []
   );

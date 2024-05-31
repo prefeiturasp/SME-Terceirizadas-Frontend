@@ -53,7 +53,6 @@ export const RegistrarNovaOcorrencia = () => {
   const [showModalSalvar, setShowModalSalvar] = useState(false);
   const [erroAPI, setErroAPI] = useState<string>("");
 
-  // @ts-ignore
   const { meusDados } = useContext(MeusDadosContext);
   const location: Location<any> = useLocation();
   const navigate: NavigateFunction = useNavigate();

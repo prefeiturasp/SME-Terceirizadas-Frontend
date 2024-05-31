@@ -37,10 +37,9 @@ import {
 } from "interfaces/responses.interface";
 import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
 import MeusDadosContext from "context/MeusDadosContext";
-import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
 
 export const Container = () => {
-  const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
+  const { meusDados } = useContext(MeusDadosContext);
 
   const [motivosSimples, setMotivosSimples] =
     useState<Array<MotivoSimplesInterface>>(undefined);

@@ -32,14 +32,13 @@ import {
   atualizarPermissaoLancamentoEspecial,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import MeusDadosContext from "context/MeusDadosContext";
-import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
 import { PermissaoLancamentosEspeciaisInterface } from "interfaces/medicao_inicial.interface";
 
 import "./style.scss";
 import { NovaPermissaoInterface } from "./interfaces";
 
 export const NovaPermissaoLancamentoEspecial: React.FC = () => {
-  const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
+  const { meusDados } = useContext(MeusDadosContext);
   const navigate = useNavigate();
   const location = useLocation();
 
