@@ -21,8 +21,7 @@ type SeletorDeDatasType = {
 export const SeletorDeDatas = ({ ...props }: SeletorDeDatasType) => {
   const { titulo, name, form } = props;
 
-  const [dateInputs, setDateInput] = useState(1);
-  const [dates, setDates] = useState<string[]>([]);
+  const [dates, setDates] = useState<string[]>([""]);
 
   const handleDateChange = (index: number, value: string) => {
     const newDates = [...dates];
@@ -31,35 +30,62 @@ export const SeletorDeDatas = ({ ...props }: SeletorDeDatasType) => {
     form.change(name, newDates);
   };
 
+  const onClickTrash = (index: number, form: FormApi<any, Partial<any>>) => {
+    let newDates = [...dates];
+    newDates.splice(index, 1);
+    setDates(newDates);
+    for (let i = index; i < dates.length - 1; i += 1) {
+      form.change(
+        `${index}_${titulo}`,
+        form.getState().values[`${index + 1}_${titulo}`]
+      );
+    }
+    form.change(`${dates.length - 1}_${titulo}`, undefined);
+    form.change(name, newDates);
+  };
+
+  const adicionarData = () => {
+    const newDates = [...dates];
+    newDates.push("");
+    setDates(newDates);
+    form.change(name, newDates);
+  };
+
   return (
     <>
-      {[...Array(dateInputs).keys()].map((_dateinput, _dateinputIndex) => {
-        return (
-          <div className="col-10 col-md-4" key={_dateinputIndex}>
-            <Field
-              component={InputComData}
-              label={titulo}
-              name={`${_dateinputIndex}_${titulo}`}
-              showMonthDropdown
-              showYearDropdown
-              tabindex="-1"
-              minDate={null}
-              required
-              validate={required}
-              inputOnChange={(value: any) => {
-                handleDateChange(_dateinputIndex, value);
-              }}
-            />
-          </div>
-        );
-      })}
-      <div className="col-2">
+      {Array.from({ length: dates.length }, (_, index) => index).map(
+        (_dateinput, _dateinputIndex) => {
+          return (
+            <div className="col-3" key={_dateinputIndex}>
+              <Field
+                component={InputComData}
+                label={titulo}
+                name={`${_dateinputIndex}_${titulo}`}
+                showMonthDropdown
+                showYearDropdown
+                tabindex="-1"
+                minDate={null}
+                required
+                validate={required}
+                onClickTrash={onClickTrash}
+                indexTrash={_dateinputIndex}
+                form={form}
+                labelClassName={!_dateinputIndex ? "pb-3" : ""}
+                inputOnChange={(value: any) => {
+                  handleDateChange(_dateinputIndex, value);
+                }}
+              />
+            </div>
+          );
+        }
+      )}
+      <div className="col-2 my-auto">
         <Botao
-          className="pr-3 mt-3"
+          className="mt-4"
           icon={BUTTON_ICON.PLUS}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           type={BUTTON_TYPE.BUTTON}
-          onClick={() => setDateInput((prev) => prev + 1)}
+          onClick={() => adicionarData()}
         />
       </div>
       <Field className="d-none" component={InputText} name={name} />

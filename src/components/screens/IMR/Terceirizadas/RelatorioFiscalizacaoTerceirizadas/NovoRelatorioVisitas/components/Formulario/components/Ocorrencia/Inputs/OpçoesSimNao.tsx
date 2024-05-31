@@ -13,8 +13,8 @@ export const OpçoesSimNao = ({ ...props }: OpçoesSimNaoType) => {
   return (
     <div className="col-12">
       <div>
-        <span className="required-asterisk">*</span>
-        <label className="col-form-label ">{titulo}</label>
+        <span className="required-asterisk me-1">*</span>
+        <label className="col-form-label">{titulo}</label>
       </div>
 
       <div className="row parametrizacao-tipo-radio">

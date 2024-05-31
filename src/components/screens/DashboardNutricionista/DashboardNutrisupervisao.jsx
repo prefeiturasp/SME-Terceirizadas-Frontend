@@ -1,4 +1,4 @@
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import React, { useContext, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import {

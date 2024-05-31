@@ -3,7 +3,7 @@ import HTTP_STATUS from "http-status-codes";
 import DashboardTerceirizada from "./DashboardTerceirizada";
 import { TIPOS_SOLICITACAO_LISTA } from "constants/shared";
 import { formatarLotesParaVisao } from "helpers/utilities";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import { Spin } from "antd";
 import { getMeusLotes } from "services/lote.service";
 

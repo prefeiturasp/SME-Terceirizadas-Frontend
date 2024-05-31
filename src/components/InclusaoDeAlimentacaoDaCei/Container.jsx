@@ -7,7 +7,7 @@ import { getMotivosInclusaoNormal } from "services/inclusaoDeAlimentacao";
 import { getDiasUteis } from "services/diasUteis.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 
 export const Container = () => {
   const { meusDados } = useContext(MeusDadosContext);

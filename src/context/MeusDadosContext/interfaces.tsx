@@ -52,7 +52,3 @@ export interface MeusDadosInterface {
   uuid: string;
   vinculo_atual: VinculoAtualInterface;
 }
-
-export interface MeusDadosInterfaceOuter {
-  meusDados: MeusDadosInterface;
-}
