@@ -5,12 +5,13 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
+import { RegistrarNovaOcorrenciaFormInterface } from "../../interfaces";
 
 type ModalSalvarType = {
   show: boolean;
   handleClose: () => void;
-  salvar: (_values: any) => Promise<void>;
-  values: any;
+  salvar: (_values: RegistrarNovaOcorrenciaFormInterface) => Promise<void>;
+  values: RegistrarNovaOcorrenciaFormInterface;
 };
 
 export const ModalSalvar = ({ ...props }: ModalSalvarType) => {

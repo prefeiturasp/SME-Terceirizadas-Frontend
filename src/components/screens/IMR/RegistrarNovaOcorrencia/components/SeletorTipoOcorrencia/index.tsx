@@ -3,12 +3,13 @@ import { Select } from "components/Shareable/Select";
 import { Field } from "react-final-form";
 import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
 import { required } from "helpers/fieldValidators";
+import { RegistrarNovaOcorrenciaFormInterface } from "../../interfaces";
 
 type SeletorTipoOcorrenciaType = {
   setTipoOcorrencia: Dispatch<SetStateAction<TipoOcorrenciaInterface>>;
   tiposOcorrencia: Array<TipoOcorrenciaInterface>;
   tiposOcorrenciaDaCategoria: Array<TipoOcorrenciaInterface>;
-  values: any;
+  values: RegistrarNovaOcorrenciaFormInterface;
 };
 
 export const SeletorTipoOcorrencia = ({

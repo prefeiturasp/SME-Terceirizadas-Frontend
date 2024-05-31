@@ -27,6 +27,7 @@ import { ModalSalvar } from "./components/ModalSalvar";
 import { SeletorCategoria } from "./components/SeletorCategoria";
 import { SeletorTipoOcorrencia } from "./components/SeletorTipoOcorrencia";
 import { formataPayload } from "./helpers";
+import { RegistrarNovaOcorrenciaFormInterface } from "./interfaces";
 import "./style.scss";
 
 export const RegistrarNovaOcorrencia = () => {
@@ -88,7 +89,9 @@ export const RegistrarNovaOcorrencia = () => {
     getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
   }, []);
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (
+    values: RegistrarNovaOcorrenciaFormInterface
+  ): Promise<void> => {
     if (!showModalSalvar) {
       setShowModalSalvar(true);
       return;

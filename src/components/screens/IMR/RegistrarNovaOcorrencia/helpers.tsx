@@ -1,7 +1,11 @@
 import { deepCopy } from "helpers/utilities";
+import {
+  OcorrenciaFormInterface,
+  RegistrarNovaOcorrenciaFormInterface,
+} from "./interfaces";
 
-const formatOcorrencias = (values_) => {
-  let respostas = [];
+const formatOcorrencias = (values_: RegistrarNovaOcorrenciaFormInterface) => {
+  let respostas: Array<OcorrenciaFormInterface> = [];
 
   Object.keys(values_).forEach((key) => {
     if (key.includes(`resposta_`)) {
@@ -19,7 +23,7 @@ const formatOcorrencias = (values_) => {
 };
 
 export const formataPayload = (
-  values,
+  values: RegistrarNovaOcorrenciaFormInterface,
   solicitacaoMedicaoInicialUuid: string
 ) => {
   const values_ = deepCopy(values);
