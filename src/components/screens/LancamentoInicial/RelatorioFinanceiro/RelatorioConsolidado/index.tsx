@@ -4,8 +4,10 @@ import { Form } from "react-final-form";
 import { Spin } from "antd";
 import { FormFields } from "../components/FormFields";
 
-import useView from "../view";
 import { TabelaAlimentacaoCEI } from "../components/TabelaAlimentacaoCEI";
+import { TabelaDietasCEI } from "../components/TabelaDietasCEI";
+
+import useView from "../view";
 import "./styles.scss";
 
 export function RelatorioConsolidado() {
@@ -33,11 +35,21 @@ export function RelatorioConsolidado() {
             </Form>
 
             {!view.carregando && view.relatorioConsolidado ? (
-              <div className="tabelas-relatorio-consolidado mt-4 mb-4">
+              <div className="tabelas-relatorio-consolidado mt-5 mb-4">
                 {exibeTabelasCEI ? (
-                  <TabelaAlimentacaoCEI
-                    tabelas={view.relatorioConsolidado.tabelas}
-                  />
+                  <>
+                    <TabelaAlimentacaoCEI
+                      tabelas={view.relatorioConsolidado.tabelas}
+                    />
+                    <TabelaDietasCEI
+                      tabelas={view.relatorioConsolidado.tabelas}
+                      tipoDieta="Dietas Tipo A e Tipo A Enteral"
+                    />
+                    <TabelaDietasCEI
+                      tabelas={view.relatorioConsolidado.tabelas}
+                      tipoDieta="Dietas Tipo B"
+                    />
+                  </>
                 ) : null}
               </div>
             ) : null}
