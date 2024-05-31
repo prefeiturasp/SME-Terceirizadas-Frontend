@@ -176,6 +176,7 @@ import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/Relatori
 import RelatorioQuantitativoClassificacaoDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoClassificacaoDietaEspPage";
 import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
 import RelatorioDietasAutorizadas from "pages/DietaEspecial/RelatorioDietasAutorizadas";
+import RelatorioDietasCanceladas from "pages/DietaEspecial/RelatorioDietasCanceladas";
 import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
 import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
 import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
@@ -1379,6 +1380,24 @@ let routesConfig = [
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETAS_AUTORIZADAS}`,
     component: RelatorioDietasAutorizadas,
+    tipoUsuario:
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhAdministradorNutriCODAE() ||
+      usuarioEhCoordenadorNutriSupervisao() ||
+      usuarioEhAdministradorNutriCODAE() ||
+      usuarioEhCoordenadorNutriCODAE() ||
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGabinete() ||
+      usuarioEhEmpresaTerceirizada() ||
+      ehUsuarioRelatorios() ||
+      usuarioEhGticCODAE(),
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETAS_CANCELADAS}`,
+    component: RelatorioDietasCanceladas,
     tipoUsuario:
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||

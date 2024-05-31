@@ -5,10 +5,14 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import MeusDadosContext from "context/MeusDadosContext";
 import HTTP_STATUS from "http-status-codes";
-import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
+import {
+  EscolaLabelInterface,
+  TipoOcorrenciaInterface,
+} from "interfaces/imr.interface";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Form } from "react-final-form";
 import {
   Location,
@@ -20,8 +24,8 @@ import {
   createFormularioDiretor,
   getTiposOcorrenciaPorEditalDiretor,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
-import { SeletorDeDatas } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/Inputs/SeletorDeDatas";
 import RenderComponentByParametrizacao from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/RenderComponentByParametrizacao";
+import { SeletorDeDatas } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/Seletores/SeletorDeDatas";
 import { ModalCancelaPreenchimento } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/ModalCancelaPreenchimento";
 import { ModalSalvar } from "./components/ModalSalvar";
 import { SeletorCategoria } from "./components/SeletorCategoria";
@@ -41,12 +45,16 @@ export const RegistrarNovaOcorrencia = () => {
   >([]);
   const [tipoOcorrencia, setTipoOcorrencia] =
     useState<TipoOcorrenciaInterface>();
+  const [escolaSelecionada, setEscolaSelecionada] =
+    useState<EscolaLabelInterface>();
 
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
     useState(false);
   const [showModalSalvar, setShowModalSalvar] = useState(false);
   const [erroAPI, setErroAPI] = useState<string>("");
 
+  // @ts-ignore
+  const { meusDados } = useContext(MeusDadosContext);
   const location: Location<any> = useLocation();
   const navigate: NavigateFunction = useNavigate();
 
@@ -87,6 +95,14 @@ export const RegistrarNovaOcorrencia = () => {
 
   useEffect(() => {
     getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
+    setEscolaSelecionada({
+      label: "",
+      value: "",
+      lote_nome: "",
+      terceirizada: "",
+      edital: location.state?.editalUuid,
+      uuid: meusDados.vinculo_atual.instituicao.uuid,
+    });
   }, []);
 
   const onSubmit = async (
@@ -188,6 +204,7 @@ export const RegistrarNovaOcorrencia = () => {
                                     tipoOcorrencia={tipoOcorrencia}
                                     form={form}
                                     key={index}
+                                    escolaSelecionada={escolaSelecionada}
                                   />
                                 </div>
                               );

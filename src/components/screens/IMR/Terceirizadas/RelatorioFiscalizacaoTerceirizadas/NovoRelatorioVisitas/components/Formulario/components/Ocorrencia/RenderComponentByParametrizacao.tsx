@@ -4,10 +4,12 @@ import { CampoTextoLongo } from "./Inputs/CampoTextoLongo";
 import { CampodeTextoSimples } from "./Inputs/CampodeTextoSimples";
 import { CampoNumerico } from "./Inputs/CampoNumerico";
 import { OpçoesSimNao } from "./Inputs/OpçoesSimNao";
-import { SeletorDeDatas } from "./Inputs/SeletorDeDatas";
+import { SeletorDeDatas } from "./Seletores/SeletorDeDatas";
+import { SeletorTipoAlimentacao } from "./Seletores/SeletorTipoAlimentacao";
 import {
   TipoOcorrenciaInterface,
   ParametrizacoesInterface,
+  EscolaLabelInterface,
 } from "interfaces/imr.interface";
 
 const componentMap = {
@@ -16,6 +18,7 @@ const componentMap = {
   "Campo Numérico": CampoNumerico,
   "Opções Sim/Não": OpçoesSimNao,
   "Seletor de Datas": SeletorDeDatas,
+  "Seletor de Tipo de Alimentação": SeletorTipoAlimentacao,
 };
 
 type RenderComponentByParametrizacaoType = {
@@ -23,12 +26,14 @@ type RenderComponentByParametrizacaoType = {
   tipoOcorrencia: TipoOcorrenciaInterface;
   parametrizacao: ParametrizacoesInterface;
   index: number;
+  escolaSelecionada: EscolaLabelInterface;
 };
 
 const RenderComponentByParametrizacao = ({
   ...props
 }: RenderComponentByParametrizacaoType) => {
-  const { form, tipoOcorrencia, parametrizacao, index } = props;
+  const { form, tipoOcorrencia, parametrizacao, index, escolaSelecionada } =
+    props;
   const ComponentToRender = componentMap[parametrizacao.tipo_pergunta.nome];
 
   if (!ComponentToRender) {
@@ -40,6 +45,7 @@ const RenderComponentByParametrizacao = ({
       titulo={parametrizacao.titulo}
       name={`${index}_resposta_${tipoOcorrencia.uuid}_parametrizacao_${parametrizacao.uuid}`}
       form={form}
+      escolaSelecionada={escolaSelecionada}
     />
   );
 };

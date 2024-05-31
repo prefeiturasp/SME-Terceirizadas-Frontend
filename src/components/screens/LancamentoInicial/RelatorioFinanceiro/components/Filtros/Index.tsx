@@ -1,9 +1,7 @@
 import React from "react";
-import { Field } from "react-final-form";
 
 import CollapseFiltros from "components/Shareable/CollapseFiltros";
-import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
-import { Select } from "components/Shareable/Select";
+import { FormFields } from "../FormFields";
 
 type FiltrosProps = {
   onSubmit: (_values: any) => void;
@@ -37,39 +35,11 @@ export function Filtros({
         titulo="Filtrar Resultados"
       >
         {() => (
-          <div className="row">
-            <div className="col-8">
-              <Field
-                component={MultiSelect}
-                name="lote"
-                label="Lote e DRE"
-                placeholder="Selecione um lote e uma DRE"
-                nomeDoItemNoPlural="lotes"
-                naoDesabilitarPrimeiraOpcao
-                options={lotes}
-              />
-            </div>
-
-            <div className="col-4">
-              <Field
-                component={Select}
-                name="grupo_unidade_escolar"
-                label="Tipo de UE"
-                naoDesabilitarPrimeiraOpcao
-                options={gruposUnidadeEscolar}
-              />
-            </div>
-
-            <div className="col-4">
-              <Field
-                component={Select}
-                name="mes_ano"
-                label="Mês de Referência"
-                naoDesabilitarPrimeiraOpcao
-                options={mesesAnos}
-              />
-            </div>
-          </div>
+          <FormFields
+            lotes={lotes}
+            gruposUnidadeEscolar={gruposUnidadeEscolar}
+            mesesAnos={mesesAnos}
+          />
         )}
       </CollapseFiltros>
     </div>

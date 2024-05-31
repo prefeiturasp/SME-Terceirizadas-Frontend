@@ -21,6 +21,7 @@ import {
   REGISTRAR_OCORRENCIAS,
   RELATORIOS,
   RELATORIO_ADESAO,
+  RELATORIO_CONSOLIDADO,
   RELATORIO_FINANCEIRO,
 } from "configs/constants";
 import {
@@ -49,6 +50,7 @@ import { EditarParametrizacaoFinanceiraPage } from "pages/LancamentoMedicaoInici
 import { ParametrizacaoFinanceiraPage } from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/ParametrizacaoFinanceiraPage";
 import { PeriodoLancamentoMedicaoInicialCEIPage } from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialCEIPage";
 import { PeriodoLancamentoMedicaoInicialPage } from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialPage";
+import { RelatorioConsolidadoPage } from "pages/LancamentoMedicaoInicial/RelatorioConsolidado/RelatorioConsolidadoPage";
 import { RelatorioFinanceiroPage } from "pages/LancamentoMedicaoInicial/RelatorioFinanceiro/RelatorioFinanceiroPage";
 import { RelatorioAdesaoPage } from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesaoPage";
 
@@ -166,6 +168,11 @@ export const medicaoInicial = [
   {
     path: `/${MEDICAO_INICIAL}/${RELATORIO_FINANCEIRO}`,
     component: RelatorioFinanceiroPage,
+    tipoUsuario: usuarioEhMedicao(),
+  },
+  {
+    path: `/${MEDICAO_INICIAL}/${RELATORIO_FINANCEIRO}/${RELATORIO_CONSOLIDADO}`,
+    component: RelatorioConsolidadoPage,
     tipoUsuario: usuarioEhMedicao(),
   },
 ];
