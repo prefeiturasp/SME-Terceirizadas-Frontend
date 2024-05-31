@@ -17,30 +17,28 @@ export const SeletorTipoAlimentacao = ({
   ...props
 }: SeletorTipoAlimentacaoType) => {
   const { titulo, name, escolaSelecionada } = props;
-  const [tiposAlimentacaoOption, setTiposAlimentacaoOption] = useState<
-    Array<SelectOption>
-  >([]);
+  const [options, setOptions] = useState<Array<SelectOption>>([]);
 
-  const getTipoAlimentacaoOptionAsync = async (escola_uuid) => {
+  const getOptionsAsync = async (escola_uuid) => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
-      const tiposAlimentacaoMap: Map<string, SelectOption> = new Map();
+      const itemsMap: Map<string, SelectOption> = new Map();
 
       response.data.results.forEach((item) => {
         item.tipos_alimentacao.forEach((tipo: SelectOption) => {
-          tiposAlimentacaoMap.set(tipo.nome, {
+          itemsMap.set(tipo.nome, {
             nome: tipo.nome,
             uuid: tipo.uuid,
           });
         });
       });
 
-      setTiposAlimentacaoOption(Array.from(tiposAlimentacaoMap.values()));
+      setOptions(Array.from(itemsMap.values()));
     }
   };
 
   useEffect(() => {
-    getTipoAlimentacaoOptionAsync(escolaSelecionada.uuid);
+    getOptionsAsync(escolaSelecionada.uuid);
   }, [escolaSelecionada]);
 
   return (
@@ -49,11 +47,11 @@ export const SeletorTipoAlimentacao = ({
       naoDesabilitarPrimeiraOpcao
       options={[
         { nome: "Selecione um Tipo de Alimentação", uuid: "" },
-        ...tiposAlimentacaoOption,
+        ...options,
       ]}
       label={titulo}
       name={name}
-      className="seletor-tipo-alimentacao"
+      className="seletor-imr"
       required
       validate={required}
     />
