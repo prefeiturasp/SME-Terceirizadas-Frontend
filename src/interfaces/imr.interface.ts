@@ -74,3 +74,33 @@ export interface TipoOcorrenciaInterface {
   titulo: string;
   uuid: string;
 }
+
+export interface UtensilioCozinhaInterface {
+  nome: string;
+  uuid: string;
+}
+
+export interface UtensilioMesaInterface {
+  nome: string;
+  uuid: string;
+}
+
+export interface EquipamentoInterface {
+  nome: string;
+  uuid: string;
+}
+
+export interface MobiliarioInterface {
+  nome: string;
+  uuid: string;
+}
+
+export interface ReparoEAdaptacaoInterface {
+  nome: string;
+  uuid: string;
+}
+
+export interface InsumoInterface {
+  nome: string;
+  uuid: string;
+}
