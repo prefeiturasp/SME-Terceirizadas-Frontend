@@ -26,7 +26,7 @@ import {
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import RenderComponentByParametrizacao from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/RenderComponentByParametrizacao";
 import { SeletorDeDatas } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/Seletores/SeletorDeDatas";
-import { ModalCancelaPreenchimento } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/ModalCancelaPreenchimento";
+import { ModalCancelaPreenchimento } from "./components/ModalCancelaPreenchimento";
 import { ModalSalvar } from "./components/ModalSalvar";
 import { SeletorCategoria } from "./components/SeletorCategoria";
 import { SeletorTipoOcorrencia } from "./components/SeletorTipoOcorrencia";
