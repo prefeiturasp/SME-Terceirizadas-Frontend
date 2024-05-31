@@ -21,7 +21,7 @@ type ContextProviderType = {
   children?: ReactNode;
 };
 
-const MeusDadosContextProvider = ({ children }: ContextProviderType) => {
+export const MeusDadosContextProvider = ({ children }: ContextProviderType) => {
   const [meusDados, setMeusDados] = useState<MeusDadosInterface>();
   return (
     <MeusDadosContext.Provider value={{ meusDados, setMeusDados }}>
@@ -29,6 +29,3 @@ const MeusDadosContextProvider = ({ children }: ContextProviderType) => {
     </MeusDadosContext.Provider>
   );
 };
-
-export { MeusDadosContextProvider };
-export default MeusDadosContext;

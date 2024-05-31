@@ -15,7 +15,7 @@ import InputText from "components/Shareable/Input/InputText";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 
 import Collapse, { CollapseControl } from "components/Shareable/Collapse";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,

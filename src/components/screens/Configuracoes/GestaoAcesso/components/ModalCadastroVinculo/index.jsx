@@ -30,7 +30,7 @@ import {
   getSubdivisoesCodae,
   getVinculoEmpresa,
 } from "services/vinculos.service";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import ModalExclusaoVinculo from "../ModalExclusaoVinculo";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { cnpjMask, cpfMask } from "constants/shared";

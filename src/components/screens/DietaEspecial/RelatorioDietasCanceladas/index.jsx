@@ -10,7 +10,7 @@ import {
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import {
   gerarExcelRelatorioDietaEspecial,
   getFiltrosRelatorioDietasEspeciais,

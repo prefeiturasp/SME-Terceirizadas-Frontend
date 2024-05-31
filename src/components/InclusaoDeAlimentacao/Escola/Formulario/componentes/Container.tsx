@@ -36,7 +36,7 @@ import {
   ResponseVinculosTipoAlimentacaoPorEscolaInterface,
 } from "interfaces/responses.interface";
 import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 
 export const Container = () => {
   const { meusDados } = useContext(MeusDadosContext);

@@ -12,7 +12,7 @@ import {
 } from "helpers/utilities";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import ModalVoltar from "./ModalVoltar";
 import ModalCestasBasicas from "../ModalCestasBasicas";
 import ModalTermosDeUso from "../ModalTermosDeUso";

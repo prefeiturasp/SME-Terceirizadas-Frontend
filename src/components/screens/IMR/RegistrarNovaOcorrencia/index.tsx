@@ -5,7 +5,7 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import HTTP_STATUS from "http-status-codes";
 import {
   EscolaLabelInterface,
@@ -116,11 +116,11 @@ export const RegistrarNovaOcorrencia = () => {
       formataPayload(values, location.state?.solicitacaoMedicaoInicialUuid)
     );
     if (response.status === HTTP_STATUS.CREATED) {
-      toastSuccess("Rascunho do Relatório de Fiscalização salvo com sucesso!");
+      toastSuccess("Registro de Ocorrência realizado com sucesso!");
       navigate(-1);
     } else {
       toastError(
-        "Erro ao criar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
+        "Erro ao criar Registro de Ocorrência. Tente novamente mais tarde."
       );
     }
   };

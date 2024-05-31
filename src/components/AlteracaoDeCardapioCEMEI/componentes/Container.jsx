@@ -7,7 +7,7 @@ import { getQuantidadeAlunosCEMEIporCEIEMEI } from "services/aluno.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getMotivosAlteracaoCardapio } from "services/alteracaoDeCardapio";
 import { getDiasUteis, getFeriadosAno } from "services/diasUteis.service";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
 
 export const Container = () => {

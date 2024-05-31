@@ -10,7 +10,7 @@ import CardLegendas from "components/Shareable/CardLegendas";
 import { formatarLotesParaVisao } from "helpers/utilities";
 import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import { PAGINACAO_DEFAULT } from "constants/shared";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 
 const atual = {
   href: `/${TERCEIRIZADA}/${SOLICITACOES_CANCELADAS}`,

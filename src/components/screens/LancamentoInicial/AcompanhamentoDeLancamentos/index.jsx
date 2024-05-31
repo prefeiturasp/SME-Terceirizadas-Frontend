@@ -26,7 +26,7 @@ import { Field, Form } from "react-final-form";
 import Select from "components/Shareable/Select";
 import { MESES, TIPO_PERFIL } from "constants/shared";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import { getLotesSimples } from "services/lote.service";
 import { getEscolasTercTotal } from "services/escola.service";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
