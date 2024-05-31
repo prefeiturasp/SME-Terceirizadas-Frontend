@@ -5,6 +5,7 @@ import {
   CANCELAMENTO,
   CONSULTA_PROTOCOLO_PADRAO_DIETA,
   RELATORIO_DIETAS_AUTORIZADAS,
+  RELATORIO_DIETAS_CANCELADAS,
   RELATORIO_GERENCIAL_DIETAS,
 } from "configs/constants";
 import {
@@ -122,6 +123,9 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
         >
           <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_DIETAS_AUTORIZADAS}`}>
             Relatório de Dietas Autorizadas
+          </LeafItem>
+          <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_DIETAS_CANCELADAS}`}>
+            Relatório de Dietas Canceladas
           </LeafItem>
           {(usuarioEhAdministradorNutriCODAE() ||
             usuarioEhCoordenadorNutriCODAE() ||
