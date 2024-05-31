@@ -11,6 +11,12 @@ import {
   ParametrizacoesInterface,
   EscolaLabelInterface,
 } from "interfaces/imr.interface";
+import { SeletorUtensiliosCozinha } from "./Seletores/SeletorUtensiliosCozinha";
+import { SeletorUtensiliosMesa } from "./Seletores/SeletorUtensiliosMesa";
+import { SeletorEquipamentos } from "./Seletores/SeletorEquipamentos";
+import { SeletorMobiliarios } from "./Seletores/SeletorMobiliarios";
+import { SeletorReparosEAdaptacoes } from "./Seletores/SeletorReparosEAdaptacoes";
+import { SeletorInsumos } from "./Seletores/SeletorInsumos";
 
 const componentMap = {
   "Campo de Texto Longo": CampoTextoLongo,
@@ -19,6 +25,12 @@ const componentMap = {
   "Opções Sim/Não": OpçoesSimNao,
   "Seletor de Datas": SeletorDeDatas,
   "Seletor de Tipo de Alimentação": SeletorTipoAlimentacao,
+  "Seletor de Utensílios de Cozinha": SeletorUtensiliosCozinha,
+  "Seletor de Utensílios de Mesa": SeletorUtensiliosMesa,
+  "Seletor de Equipamentos": SeletorEquipamentos,
+  "Seletor de Mobiliários": SeletorMobiliarios,
+  "Seletor de Reparos e Adaptações": SeletorReparosEAdaptacoes,
+  "Seletor de Insumos": SeletorInsumos,
 };
 
 type RenderComponentByParametrizacaoType = {

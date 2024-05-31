@@ -90,6 +90,8 @@ export const NovoRelatorioVisitas = () => {
   useEffect(() => {
     if (escolaSelecionada) {
       getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
+    } else {
+      setTiposOcorrencia(undefined);
     }
   }, [escolaSelecionada]);
 
