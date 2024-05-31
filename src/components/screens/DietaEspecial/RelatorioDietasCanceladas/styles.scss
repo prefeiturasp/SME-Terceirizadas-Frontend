@@ -1,0 +1,21 @@
+.sub-titulo {
+  font-weight: bold;
+  color: #353535;
+}
+
+.card.relatorio-dietas-especiais {
+  padding-bottom: 16px;
+  min-height: 52vh;
+}
+
+.total-dietas {
+  color: #353535;
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+
+  .numero-total-dietas {
+    font-weight: bold;
+    margin-left: 5px;
+  }
+}
