@@ -1,9 +1,21 @@
-import React from "react";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
+import React from "react";
+import {
+  NavigateFunction,
+  createSearchParams,
+  useNavigate,
+} from "react-router-dom";
+
+import {
+  LANCAMENTO_INICIAL,
+  LANCAMENTO_MEDICAO_INICIAL,
+  REGISTRAR_OCORRENCIAS,
+} from "configs/constants";
+import { EscolaSimplesInterface } from "interfaces/escola.interface";
 
 type BlocoOcorrenciasType = {
   comOcorrencias: string;
@@ -12,11 +24,25 @@ type BlocoOcorrenciasType = {
   setErrosAoSalvar: (
     _errosAoSalvar: Array<{ erro: string; periodo_escolar: string }>
   ) => void;
+  ano: string;
+  mes: string;
+  escolaSimples: EscolaSimplesInterface;
+  solicitacaoMedicaoInicialUuid: string;
 };
 
 export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
-  const { comOcorrencias, setComOcorrencias, errosAoSalvar, setErrosAoSalvar } =
-    props;
+  const {
+    comOcorrencias,
+    setComOcorrencias,
+    errosAoSalvar,
+    setErrosAoSalvar,
+    ano,
+    mes,
+    escolaSimples,
+    solicitacaoMedicaoInicialUuid,
+  } = props;
+
+  const navigate: NavigateFunction = useNavigate();
 
   return (
     <div className="bloco-ocorrencias mb-3">
@@ -88,6 +114,19 @@ export const BlocoOcorrencias = ({ ...props }: BlocoOcorrenciasType) => {
             <div className="col-8 text-end">
               <Botao
                 texto="Registrar Ocorrências"
+                onClick={() =>
+                  navigate({
+                    pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}`,
+                    search: createSearchParams({
+                      ano,
+                      mes,
+                      editalUuid: escolaSimples.lote.contratos_do_lote.find(
+                        (contrato) => !contrato.encerrado
+                      ).edital,
+                      solicitacaoMedicaoInicialUuid,
+                    }).toString(),
+                  })
+                }
                 disabled={comOcorrencias !== "true"}
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.RED_OUTLINE}

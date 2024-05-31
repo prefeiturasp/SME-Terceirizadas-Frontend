@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from "react";
-import HTTP_STATUS from "http-status-codes";
-import { Form } from "react-final-form";
-import { Cabecalho } from "./components/Cabecalho";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import "./styles.scss";
-import { ModalCancelaPreenchimento } from "./components/ModalCancelaPreenchimento";
-import { ModalSalvarRascunho } from "./components/ModalSalvarRascunho";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import {
-  createFormularioSupervisao,
-  getTiposOcorrenciaPorEdital,
-} from "services/imr/relatorioFiscalizacaoTerceirizadas";
-import { Formulario } from "./components/Formulario";
-import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
+import HTTP_STATUS from "http-status-codes";
 import {
   ArquivoInterface,
-  TipoOcorrenciaInterface,
   EscolaLabelInterface,
   NovoRelatorioVisitasFormInterface,
+  TipoOcorrenciaInterface,
 } from "interfaces/imr.interface";
-import { Spin } from "antd";
-import { formataPayload, validarFormulariosTiposOcorrencia } from "./helpers";
+import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
+import React, { useEffect, useState } from "react";
+import { Form } from "react-final-form";
+import { NavigateFunction, useNavigate } from "react-router-dom";
+import {
+  createFormularioSupervisao,
+  getTiposOcorrenciaPorEditalNutrisupervisao,
+} from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { Anexos } from "./components/Anexos";
+import { Cabecalho } from "./components/Cabecalho";
+import { Formulario } from "./components/Formulario";
+import { ModalCancelaPreenchimento } from "./components/ModalCancelaPreenchimento";
+import { ModalSalvarRascunho } from "./components/ModalSalvarRascunho";
+import { formataPayload, validarFormulariosTiposOcorrencia } from "./helpers";
+import "./styles.scss";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
@@ -70,25 +70,26 @@ export const NovoRelatorioVisitas = () => {
     }
   };
 
-  const getTiposOcorrenciaPorEditalAsync = async (): Promise<void> => {
-    setLoadingTiposOcorrencia(true);
-    const response: ResponseFormularioSupervisaoTiposOcorrenciasInterface =
-      await getTiposOcorrenciaPorEdital({
-        edital_uuid: escolaSelecionada.edital,
-      });
-    if (response.status === HTTP_STATUS.OK) {
-      setTiposOcorrencia(response.data);
-    } else {
-      setErroAPI(
-        "Erro ao carregar tipos de ocorrência do edital da unidade educacional. Tente novamente mais tarde."
-      );
-    }
-    setLoadingTiposOcorrencia(false);
-  };
+  const getTiposOcorrenciaPorEditalNutrisupervisaoAsync =
+    async (): Promise<void> => {
+      setLoadingTiposOcorrencia(true);
+      const response: ResponseFormularioSupervisaoTiposOcorrenciasInterface =
+        await getTiposOcorrenciaPorEditalNutrisupervisao({
+          edital_uuid: escolaSelecionada.edital,
+        });
+      if (response.status === HTTP_STATUS.OK) {
+        setTiposOcorrencia(response.data);
+      } else {
+        setErroAPI(
+          "Erro ao carregar tipos de ocorrência do edital da unidade educacional. Tente novamente mais tarde."
+        );
+      }
+      setLoadingTiposOcorrencia(false);
+    };
 
   useEffect(() => {
     if (escolaSelecionada) {
-      getTiposOcorrenciaPorEditalAsync();
+      getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
     } else {
       setTiposOcorrencia(undefined);
     }

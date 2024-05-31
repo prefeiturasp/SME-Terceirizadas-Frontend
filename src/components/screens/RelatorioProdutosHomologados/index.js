@@ -25,7 +25,7 @@ import {
 import "./style.scss";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import { formataParams } from "./helper";
 
 const RelatorioProdutosHomologados = () => {

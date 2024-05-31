@@ -9,7 +9,7 @@ import { HOME } from "../constants";
 import { ICON_CARD_TYPE_ENUM } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getSolicitacoesAutorizadasTerceirizada } from "services/painelTerceirizada.service";
 import { CARD_TYPE_ENUM } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import CardLegendas from "components/Shareable/CardLegendas";
 import { formatarLotesParaVisao } from "helpers/utilities";

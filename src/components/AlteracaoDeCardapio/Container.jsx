@@ -4,7 +4,7 @@ import AlteracaoDeCardapio from ".";
 import { agregarDefault, dataParaUTC } from "helpers/utilities";
 import { getMotivosAlteracaoCardapio } from "services/alteracaoDeCardapio";
 import { getDiasUteis, getFeriadosAno } from "services/diasUteis.service";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 
 export const Container = () => {
   const { meusDados } = useContext(MeusDadosContext);

@@ -15,7 +15,7 @@ import InputText from "components/Shareable/Input/InputText";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 
 import Collapse, { CollapseControl } from "components/Shareable/Collapse";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -30,8 +30,6 @@ import TabelaNutricional from "components/Shareable/TabelaNutricional";
 import Select from "components/Shareable/Select";
 import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
-
-import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
 
 import {
   ArquivoForm,
@@ -79,7 +77,7 @@ const ITENS_STEPS = [
 ];
 
 export default () => {
-  const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
+  const { meusDados } = useContext(MeusDadosContext);
   const [carregando, setCarregando] = useState<boolean>(true);
   const [produtosOptions, setProdutosOptions] = useState<OptionsGenerico[]>([]);
   const [marcasOptions, setMarcasOptions] = useState<OptionsGenerico[]>([]);

@@ -17,10 +17,12 @@ import {
   PARAMETRIZACAO_FINANCEIRA,
   PERIODO_LANCAMENTO,
   PERIODO_LANCAMENTO_CEI,
-  RELATORIO_ADESAO,
+  REGISTRAR_NOVA_OCORRENCIA,
+  REGISTRAR_OCORRENCIAS,
   RELATORIOS,
-  RELATORIO_FINANCEIRO,
+  RELATORIO_ADESAO,
   RELATORIO_CONSOLIDADO,
+  RELATORIO_FINANCEIRO,
 } from "configs/constants";
 import {
   usuarioEhCODAEGabinete,
@@ -30,25 +32,27 @@ import {
   usuarioEhEscolaTerceirizadaQualquerPerfil,
   usuarioEhMedicao,
 } from "helpers/utilities";
+import { ListaOcorrenciasPage } from "pages/IMR/ListaOcorrenciasPage";
+import { RegistrarNovaOcorrenciaPage } from "pages/IMR/RegistrarNovaOcorrenciaPage";
 import { AcompanhamentoDeLancamentosPage } from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
+import { CadastroDeClausulasPage } from "pages/LancamentoMedicaoInicial/CadastroDeClausulasPage";
 import { CadastroDeEmpenhoPage } from "pages/LancamentoMedicaoInicial/CadastroDeEmpenhoPage";
 import { ClausulasParaDescontosPage } from "pages/LancamentoMedicaoInicial/ClausulasParaDescontosPage";
 import { ConferenciaDosLancamentosPage } from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
+import { ControleDeFrequenciaPage } from "pages/LancamentoMedicaoInicial/ControleDeFrequenciaPage";
 import { DetalhamentoDoLancamentoPage } from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
+import { EditarClausulaPage } from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
 import { EditarEmpenhoPage } from "pages/LancamentoMedicaoInicial/EditarEmpenhoPage";
 import { EmpenhosPage } from "pages/LancamentoMedicaoInicial/EmpenhosPage";
 import { LancamentoMedicaoInicialPage } from "pages/LancamentoMedicaoInicial/LancamentoMedicaoInicialPage";
-import { PeriodoLancamentoMedicaoInicialCEIPage } from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialCEIPage";
-import { PeriodoLancamentoMedicaoInicialPage } from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialPage";
-import { ParametrizacaoFinanceiraPage } from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/ParametrizacaoFinanceiraPage";
 import { AdicionarParametrizacaoFinanceiraPage } from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/AdicionarParametrizacaoFinanceiraPage";
 import { EditarParametrizacaoFinanceiraPage } from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/EditarParametrizacaoFinanceiraPage";
-import { CadastroDeClausulasPage } from "pages/LancamentoMedicaoInicial/CadastroDeClausulasPage";
-import { RelatorioAdesaoPage } from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesaoPage";
-import { EditarClausulaPage } from "pages/LancamentoMedicaoInicial/EditarClausulaPage";
-import { ControleDeFrequenciaPage } from "pages/LancamentoMedicaoInicial/ControleDeFrequenciaPage";
-import { RelatorioFinanceiroPage } from "pages/LancamentoMedicaoInicial/RelatorioFinanceiro/RelatorioFinanceiroPage";
+import { ParametrizacaoFinanceiraPage } from "pages/LancamentoMedicaoInicial/ParametrizacaoFinanceira/ParametrizacaoFinanceiraPage";
+import { PeriodoLancamentoMedicaoInicialCEIPage } from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialCEIPage";
+import { PeriodoLancamentoMedicaoInicialPage } from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialPage";
 import { RelatorioConsolidadoPage } from "pages/LancamentoMedicaoInicial/RelatorioConsolidado/RelatorioConsolidadoPage";
+import { RelatorioFinanceiroPage } from "pages/LancamentoMedicaoInicial/RelatorioFinanceiro/RelatorioFinanceiroPage";
+import { RelatorioAdesaoPage } from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesaoPage";
 
 export const medicaoInicial = [
   {
@@ -64,6 +68,16 @@ export const medicaoInicial = [
   {
     path: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO_CEI}`,
     component: PeriodoLancamentoMedicaoInicialCEIPage,
+    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
+  },
+  {
+    path: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}`,
+    component: ListaOcorrenciasPage,
+    tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
+  },
+  {
+    path: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}/${REGISTRAR_NOVA_OCORRENCIA}`,
+    component: RegistrarNovaOcorrenciaPage,
     tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {

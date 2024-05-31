@@ -4,7 +4,7 @@ import "./styles.scss";
 import { NavLink } from "react-router-dom";
 import * as constants from "configs/constants";
 import { deParaStatusAltCronograma } from "components/screens/helper";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 
 const ListagemAlteracoesCronogramas = ({
   alteracoesCronogramas,

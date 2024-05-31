@@ -6,7 +6,7 @@ import { SolicitacaoKitLancheCEMEI } from "..";
 import { getKitsLanche } from "services/kitLanche";
 import { getDietasAtivasInativasPorAluno } from "services/dietaEspecial.service";
 import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 
 export const Container = () => {
   const { meusDados } = useContext(MeusDadosContext);
