@@ -27,8 +27,14 @@ import { TerceirizadaInterface } from "./terceirizada.interface";
 import { EditalContratoInterface } from "components/screens/Cadastros/EditaisContratosRefatorado/interfaces";
 import { FichaRecebimento } from "./recebimento.interface";
 import {
+  EquipamentoInterface,
+  InsumoInterface,
+  MobiliarioInterface,
   PeriodoDeVisitaInterface,
+  ReparoEAdaptacaoInterface,
   TipoOcorrenciaInterface,
+  UtensilioCozinhaInterface,
+  UtensilioMesaInterface,
 } from "./imr.interface";
 
 export interface ResponseInterface {
@@ -233,4 +239,28 @@ export interface ResponseFormularioSupervisaoTiposOcorrenciasInterface
 export interface ResponseGetQuantidadeAlunosMatriculadosPorDataInterface
   extends ResponseInterface {
   data: number;
+}
+
+export interface ResponseUtensilioCozinhaInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<UtensilioCozinhaInterface>;
+}
+
+export interface ResponseUtensilioMesaInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<UtensilioMesaInterface>;
+}
+
+export interface ResponseEquipamentoInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<EquipamentoInterface>;
+}
+
+export interface ResponseMobiliarioInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<MobiliarioInterface>;
+}
+
+export interface ResponseReparoEAdaptacaoInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<ReparoEAdaptacaoInterface>;
+}
+
+export interface ResponseInsumoInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<InsumoInterface>;
 }
