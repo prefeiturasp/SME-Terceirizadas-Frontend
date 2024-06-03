@@ -14,7 +14,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { MultiSelect } from "../../../MultiSelect";
 import { getError } from "helpers/utilities";
 import { requiredMultiselect } from "helpers/fieldValidators";
-import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
+import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "helpers/utilities";
 import "./style.scss";
 
 export const ModalCadastrarNoCalendario = ({ ...props }) => {
