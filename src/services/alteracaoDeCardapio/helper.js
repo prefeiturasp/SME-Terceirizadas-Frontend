@@ -22,3 +22,19 @@ export const getPath = (tipoSolicitacao) => {
       return "tipo----solicitacao----invalido";
   }
 };
+
+export const getAlteracaoNome = (tipoSolicitacao, escola) => {
+  const escolaLowerCase = escola.toLowerCase().replace(/\s/g, "_");
+  switch (tipoSolicitacao) {
+    case TIPO_SOLICITACAO.SOLICITACAO_NORMAL:
+      return "alteracao_" + escolaLowerCase;
+    case TIPO_SOLICITACAO.SOLICITACAO_CONTINUA:
+      return "alteracao_continua_" + escolaLowerCase;
+    case TIPO_SOLICITACAO.SOLICITACAO_CEI:
+      return "alteracao_cei_" + escolaLowerCase;
+    case TIPO_SOLICITACAO.SOLICITACAO_CEMEI:
+      return "alteracao_cemei_" + escolaLowerCase;
+    default:
+      return "alteracao_do_tipo_de_alimentacao";
+  }
+};

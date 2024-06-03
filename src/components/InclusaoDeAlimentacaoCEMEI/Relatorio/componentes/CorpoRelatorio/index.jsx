@@ -55,7 +55,8 @@ export const CorpoRelatorio = ({
     try {
       await getRelatorioInclusaoAlimentacaoCEMEI(
         solicitacao.uuid,
-        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
+        solicitacao?.escola?.nome
       );
     } catch (e) {
       toastError("Houve um erro ao imprimir o relatório");

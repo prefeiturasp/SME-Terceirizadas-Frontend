@@ -23,3 +23,19 @@ export const getPath = (tipoSolicitacao) => {
       return "tipo----solicitacao----invalido";
   }
 };
+
+export const getInclusaoNome = (tipoSolicitacao, escola) => {
+  const escolaLowerCase = escola.toLowerCase().replace(/\s/g, "_");
+  switch (tipoSolicitacao) {
+    case TIPO_SOLICITACAO.SOLICITACAO_NORMAL:
+      return "inclusao_" + escolaLowerCase;
+    case TIPO_SOLICITACAO.SOLICITACAO_CONTINUA:
+      return "inclusao_continua_" + escolaLowerCase;
+    case TIPO_SOLICITACAO.SOLICITACAO_CEI:
+      return "inclusao_cei_" + escolaLowerCase;
+    case TIPO_SOLICITACAO.SOLICITACAO_CEMEI:
+      return "inclusao_cemei_" + escolaLowerCase;
+    default:
+      return "inclusao_alimentacao";
+  }
+};

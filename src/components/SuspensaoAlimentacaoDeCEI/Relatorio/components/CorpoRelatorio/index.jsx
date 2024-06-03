@@ -44,6 +44,7 @@ export default ({ solicitacaoSuspensao }) => {
             onClick={() =>
               imprimeRelatorioSuspensaoAlimentacao(
                 solicitacaoSuspensao.uuid,
+                solicitacaoSuspensao?.escola?.nome,
                 true
               )
             }
