@@ -18,6 +18,8 @@ import StatusSolicitacoesCanceladasCODAEPage from "pages/CODAE/Solicitacoes/Stat
 import StatusSolicitacoesComQuestionamentosCODAEPage from "pages/CODAE/Solicitacoes/StatusSolicitacoesComQuestionamentosCODAEPage";
 import StatusSolicitacoesPendentesCODAEPage from "pages/CODAE/Solicitacoes/StatusSolicitacoesPendentesCODAEPage";
 import StatusSolicitacoesRecusadasCODAEPage from "pages/CODAE/Solicitacoes/StatusSolicitacoesRecusadasCODAEPage";
+import CadastroKitLanchePage from "pages/Cadastros/CadastroKitLanchePage";
+import ConsultaKitLanchePage from "pages/Cadastros/ConsultaKitLanchePage";
 import PainelPedidosAlteracaoDeCardapioDREPage from "pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
@@ -237,6 +239,21 @@ export const rotasGestaoDeAlimentacao: Array<RotaInterface> = [
   {
     path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
     component: PainelPedidosSolicitacaoUnificadaCODAEPage,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
+  },
+  {
+    path: `/${constants.CODAE}/${constants.CADASTROS}/${constants.CONSULTA_KITS}`,
+    component: ConsultaKitLanchePage,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
+  },
+  {
+    path: `/${constants.CODAE}/${constants.CADASTROS}/${constants.KITS}`,
+    component: CadastroKitLanchePage,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
+  },
+  {
+    path: `/${constants.CODAE}/${constants.CADASTROS}/${constants.KITS}/:uuid/${constants.EDITAR}`,
+    component: CadastroKitLanchePage,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
   },
   {

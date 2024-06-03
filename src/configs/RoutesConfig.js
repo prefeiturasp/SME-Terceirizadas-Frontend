@@ -1,21 +1,8 @@
 import CriarCopiaProtocoloPadraoDieta from "pages/DietaEspecial/CriarCopiaProtocoloPadraoDieta";
 import EditaProtocoloPadraoDieta from "pages/DietaEspecial/EditaProtocoloPadraoDieta";
 import { Login } from "../components/Login";
-import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
-import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHorarioComboAlimentacaoPage";
-import CadastroKitLanchePage from "../pages/Cadastros/CadastroKitLanchePage";
-import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
-import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
-import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
-import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
-import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
-import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
-import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
-import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
-import NovaPermissaoLancamentoEspecialPage from "../pages/Cadastros/NovaPermissaoLancamentoEspecialPage";
-import PermissaoLancamentosEspeciaisPage from "../pages/Cadastros/PermissaoLancamentosEspeciaisPage";
 import VincularProdutosEditaisPage from "../pages/Cadastros/VincularProdutosEditaisPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import GerenciamentoEmailsPage from "../pages/Configuracoes/GerenciamentoEmailsPage";
@@ -24,6 +11,7 @@ import ConsultaProtocoloPadraoDietaEspecial from "../pages/DietaEspecial/Consult
 import ProtocoloPadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPadraoDietaEspecialPage.jsx";
 import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
 
+import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
 import RelatorioReclamacaoProduto from "pages/Produto/RelatorioReclamacaoProduto";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
 import FaqPage from "../pages/Faq/FaqPage";
@@ -32,23 +20,7 @@ import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerP
 import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "../pages/Terceirizada/AlteracaoDeCardapio/PainelPedidosPage";
 
 import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
-import CadastroFabricantePage from "pages/Cadastros/CadastroFabricantePage";
-import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
-import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
-import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
-import CadastroProdutosLogisticaPage from "pages/Cadastros/CadastroProdutosLogisticaPage";
-import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
-import CadastroTipoEmbalagemPage from "pages/Cadastros/CadastroTipoEmbalagemPage";
-import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
-import DetalharCadastroLaboratorioPage from "pages/Cadastros/DetalharCadastroLaboratorioPage";
-import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
-import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
-import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogisticaPage";
-import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
-import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
-import ProdutosLogisticaPage from "pages/Cadastros/ProdutosLogisticaPage";
-import TiposEmbalagensCadastradosPage from "pages/Cadastros/TiposEmbalagensCadastradosPage";
-import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
+
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
 import AtualizacaoEmailEOLPage from "pages/Configuracoes/AtualizacaoEmailEOLPage";
 import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
@@ -144,7 +116,6 @@ import {
   usuarioEhDilogDiretoria,
   usuarioEhDilogJuridico,
   usuarioEhDilogQualidade,
-  usuarioEhDilogQualidadeOuCronograma,
   usuarioEhDinutreDiretoria,
   usuarioEhDiretorUE,
   usuarioEhEmpresaDistribuidora,
@@ -166,9 +137,6 @@ import {
   usuarioEscolaEhGestaoParceira,
   validaPerfilEscolaMistaParceira,
 } from "../helpers/utilities";
-import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroSuspensaoAtividades";
-import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
-import EditarCadastroTipoEmbalagemPage from "../pages/Cadastros/EditarCadastroTipoEmbalagemPage";
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
 import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
 import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
@@ -250,6 +218,7 @@ import {
   relatoriosSolicitacaoKitLancheCEMEI,
   relatoriosSolicitacaoUnificada,
 } from "./helper";
+import { rotasCadastros } from "./rotas/cadastros";
 import { rotasDietaEspecial } from "./rotas/dietaEspecial";
 import { rotasGestaoDeAlimentacao } from "./rotas/gestaoDeAlimentacao";
 import { rotasMedicaoInicial } from "./rotas/medicaoInicial";
@@ -273,195 +242,6 @@ let routesConfig = [
     path: "/perfil",
     component: PerfilPage,
     tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/configuracoes/cadastros/${constants.SOBREMESA_DOCE}`,
-    component: CadastroSobremesaDocePage,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao(),
-  },
-  {
-    path: `/configuracoes/cadastros/${constants.SUSPENSAO_ATIVIDADES}`,
-    component: CadastroSuspensaoDeAtividadesPage,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao(),
-  },
-  {
-    path: `/configuracoes/cadastros/lotes-cadastrados`,
-    component: LotesCadastradosPage,
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/configuracoes/cadastros/editais-cadastrados`,
-    component: EditaisCadastradosPage,
-    tipoUsuario: usuarioEhQualquerCODAE(),
-  },
-  {
-    path: `/configuracoes/cadastros/lote`,
-    component: CadastroLotePage,
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/configuracoes/cadastros/tipos-alimentacao`,
-    component: CadastroTipoAlimentacaoPage,
-    tipoUsuario: usuarioEhQualquerCODAE(),
-  },
-  {
-    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais`,
-    component: PermissaoLancamentosEspeciaisPage,
-    tipoUsuario: usuarioEhQualquerCODAE(),
-  },
-  {
-    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais/nova-permissao-lancamento-especial`,
-    component: NovaPermissaoLancamentoEspecialPage,
-    tipoUsuario: usuarioEhQualquerCODAE(),
-  },
-  {
-    path: `/configuracoes/cadastros/tipos-alimentacao/permissao-lancamentos-especiais/editar-permissao-lancamento-especial`,
-    component: NovaPermissaoLancamentoEspecialPage,
-    tipoUsuario: usuarioEhQualquerCODAE(),
-  },
-  {
-    path: `/configuracoes/cadastros/horario-combos-alimentacao`,
-    component: CadastroHorarioComboAlimentacaoPage,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
-  },
-  {
-    path: `/configuracoes/cadastros/empresas-cadastradas`,
-    component: EmpresasCadastradas,
-    tipoUsuario:
-      usuarioEhQualquerCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhCronograma(),
-  },
-  {
-    path: `/configuracoes/cadastros/empresa`,
-    component: CadastroEmpresaPage,
-    tipoUsuario:
-      usuarioEhQualquerCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhCronograma(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.EDITAR_EMPRESA}`,
-    component: EditarEmpresaPage,
-    tipoUsuario:
-      usuarioEhQualquerCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhCronograma(),
-  },
-  {
-    path: `/configuracoes/cadastros/editais-contratos`,
-    component: EditaisContratosPage,
-    tipoUsuario: usuarioEhQualquerCODAE(),
-  },
-  {
-    path: `/configuracoes/cadastros/editais-contratos/editar`,
-    component: EditaisContratosEditarPage,
-    tipoUsuario: usuarioEhQualquerCODAE(),
-  },
-  {
-    path: `/configuracoes/cadastros/faixas-etarias`,
-    component: FaixasEtariasPage,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
-  },
-  {
-    path: `/${constants.CODAE}/${constants.CADASTROS}/${constants.CONSULTA_KITS}`,
-    component: ConsultaKitLanchePage,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
-  },
-  {
-    path: `/${constants.CODAE}/${constants.CADASTROS}/${constants.KITS}`,
-    component: CadastroKitLanchePage,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
-  },
-  {
-    path: `/${constants.CODAE}/${constants.CADASTROS}/${constants.KITS}/:uuid/${constants.EDITAR}`,
-    component: CadastroKitLanchePage,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.LABORATORIOS_CADASTRADOS}`,
-    component: LaboratoriosCadastradosPage,
-    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.CADASTRO_LABORATORIO}`,
-    component: CadastroLaboratorioPage,
-    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.CADASTRO_LABORATORIO}/${constants.DETALHAR}`,
-    component: DetalharCadastroLaboratorioPage,
-    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.CADASTRO_LABORATORIO}/${constants.EDITAR}`,
-    component: EditarCadastroLaboratorioPage,
-    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.TIPOS_EMBALAGENS}`,
-    component: TiposEmbalagensCadastradosPage,
-    tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.CADASTRO_TIPO_EMBALAGEM}`,
-    component: CadastroTipoEmbalagemPage,
-    tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.CADASTRO_TIPO_EMBALAGEM}/${constants.EDITAR}`,
-    component: EditarCadastroTipoEmbalagemPage,
-    tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.PRODUTOS}`,
-    component: ProdutosLogisticaPage,
-    tipoUsuario:
-      usuarioEhCronograma() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhEmpresaFornecedor(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.CADASTRO_PRODUTOS}`,
-    component: CadastroProdutosLogisticaPage,
-    tipoUsuario:
-      usuarioEhCronograma() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhEmpresaFornecedor(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.EDICAO_PRODUTOS}`,
-    component: EditarProdutosLogisticaPage,
-    tipoUsuario:
-      usuarioEhCronograma() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhEmpresaFornecedor(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.UNIDADES_MEDIDA}`,
-    component: UnidadesMedidaPage,
-    tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.CADASTRO_UNIDADE_MEDIDA}`,
-    component: CadastroUnidadeMedidaPage,
-    tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.EDICAO_UNIDADE_MEDIDA}`,
-    component: EditarUnidadesMedidaPage,
-    tipoUsuario: usuarioEhDilogQualidadeOuCronograma(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.MARCAS}`,
-    component: CadastroMarcaPage,
-    tipoUsuario: usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.FABRICANTES}`,
-    component: CadastroFabricantePage,
-    tipoUsuario: usuarioEhEmpresaFornecedor() || usuarioEhCodaeDilog(),
   },
   {
     path: `/configuracoes/cadastros`,
@@ -1646,5 +1426,6 @@ routesConfig = routesConfig.concat(rotasDietaEspecial);
 routesConfig = routesConfig.concat(rotasMedicaoInicial);
 routesConfig = routesConfig.concat(rotasSupervisao);
 routesConfig = routesConfig.concat(rotasRelatorios);
+routesConfig = routesConfig.concat(rotasCadastros);
 
 export default routesConfig;
