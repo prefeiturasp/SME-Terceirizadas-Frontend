@@ -1,26 +1,17 @@
-import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
-import InclusaoDeAlimentacaoCEIPage from "../pages/Escola/InclusaoDeAlimentacaoCEIPage";
-import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
-import AlteracaoDeCardapioCEIPage from "../pages/Escola/AlteracaoDeCardapioCEIPage";
-import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
-import SuspensaoDeAlimentacaoDeCEI from "../pages/Escola/SuspensaoDeAlimentacaoDeCEIPage";
-import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
-import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
-import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
 import * as RelatoriosInclusaoDeAlimentacaoCEMEI from "pages/InclusaoDeAlimentacaoCEMEIRelatorios";
+import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
 import * as RelatoriosAlteracaoDeCardapioCEMEI from "../pages/AlteracaoDeCardapioCEMEIRelatorios";
+import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DashboardDietaEspecialPage";
+import * as RelatoriosDietaEspecial from "../pages/DietaEspecial/RelatorioPage";
+import * as StatusSolicitacoesDietaEspecialPage from "../pages/DietaEspecial/StatusSolicitacoesPage";
+import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
+import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 import * as RelatorioSolicitacaoKitLancheCEMEI from "../pages/SolicitacaoDeKitLancheCEMEI/RelatorioPage";
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
-import * as RelatoriosDietaEspecial from "../pages/DietaEspecial/RelatorioPage";
-import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DashboardDietaEspecialPage";
-import * as StatusSolicitacoesDietaEspecialPage from "../pages/DietaEspecial/StatusSolicitacoesPage";
 
 import { TIPO_PERFIL } from "../constants/shared";
 import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
-import { escolaEhCei, escolaEhCEMEI } from "helpers/utilities";
-import InclusaoDeAlimentacaoCEMEIPage from "pages/Escola/InclusaoDeAlimentacaoCEMEIPage";
-import AlteracaoDeCardapioCEMEIPage from "pages/Escola/AlteracaoDeCardapioCEMEIPage";
 
 export const dashBoardDietaEspecial = () => {
   switch (localStorage.getItem("tipo_perfil")) {
@@ -179,28 +170,6 @@ export const StatusSolicitacoesDietaEspecial = () => {
 
 export const painelInicial = () => {
   return PainelInicialPage;
-};
-
-export const inclusaoAlimentacao = () => {
-  return escolaEhCei()
-    ? InclusaoDeAlimentacaoCEIPage
-    : escolaEhCEMEI()
-    ? InclusaoDeAlimentacaoCEMEIPage
-    : InclusaoDeAlimentacaoPage;
-};
-
-export const alteracaoCardapio = () => {
-  return escolaEhCei()
-    ? AlteracaoDeCardapioCEIPage
-    : escolaEhCEMEI()
-    ? AlteracaoDeCardapioCEMEIPage
-    : AlteracaoDeCardapioPage;
-};
-
-export const suspensaoAlimentacao = () => {
-  return escolaEhCei()
-    ? SuspensaoDeAlimentacaoDeCEI
-    : SuspensaoDeAlimentacaoPage;
 };
 
 export const getDDMMYYYfromDate = (date) => {

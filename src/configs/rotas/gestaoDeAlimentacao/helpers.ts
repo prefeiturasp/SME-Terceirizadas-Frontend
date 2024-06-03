@@ -1,10 +1,19 @@
 import { TIPO_PERFIL } from "constants/shared";
-import DashboardDREPage from "pages/DRE/DashboardDREPage";
-import DashboardEscolaPage from "pages/Escola/DashboardEscolaPage";
+import { escolaEhCei, escolaEhCEMEI } from "helpers/utilities";
 import DashboardCODAEPage from "pages/CODAE/DashboardCODAEPage";
-import DashboardTerceirizadaPage from "pages/Terceirizada/DashboardTerceirizadaPage";
+import DashboardDREPage from "pages/DRE/DashboardDREPage";
+import AlteracaoDeCardapioCEIPage from "pages/Escola/AlteracaoDeCardapioCEIPage";
+import AlteracaoDeCardapioCEMEIPage from "pages/Escola/AlteracaoDeCardapioCEMEIPage";
+import AlteracaoDeCardapioPage from "pages/Escola/AlteracaoDeCardapioPage";
+import DashboardEscolaPage from "pages/Escola/DashboardEscolaPage";
+import InclusaoDeAlimentacaoCEIPage from "pages/Escola/InclusaoDeAlimentacaoCEIPage";
+import InclusaoDeAlimentacaoCEMEIPage from "pages/Escola/InclusaoDeAlimentacaoCEMEIPage";
+import InclusaoDeAlimentacaoPage from "pages/Escola/InclusaoDeAlimentacaoPage";
+import SuspensaoDeAlimentacaoDeCEI from "pages/Escola/SuspensaoDeAlimentacaoDeCEIPage";
+import SuspensaoDeAlimentacaoPage from "pages/Escola/SuspensaoDeAlimentacaoPage";
 import DashboardNutricionistaGAPage from "pages/Nutricionista/DashboardNutricionistaGAPage";
 import DashboardNutriManifestacaoPage from "pages/Nutricionista/DashboardNutriManifestacaoPage";
+import DashboardTerceirizadaPage from "pages/Terceirizada/DashboardTerceirizadaPage";
 
 export const painelGestaoAlimentacao = () => {
   switch (localStorage.getItem("tipo_perfil")) {
@@ -23,4 +32,26 @@ export const painelGestaoAlimentacao = () => {
     default:
       return DashboardEscolaPage;
   }
+};
+
+export const inclusaoAlimentacao = () => {
+  return escolaEhCei()
+    ? InclusaoDeAlimentacaoCEIPage
+    : escolaEhCEMEI()
+    ? InclusaoDeAlimentacaoCEMEIPage
+    : InclusaoDeAlimentacaoPage;
+};
+
+export const alteracaoCardapio = () => {
+  return escolaEhCei()
+    ? AlteracaoDeCardapioCEIPage
+    : escolaEhCEMEI()
+    ? AlteracaoDeCardapioCEMEIPage
+    : AlteracaoDeCardapioPage;
+};
+
+export const suspensaoAlimentacao = () => {
+  return escolaEhCei()
+    ? SuspensaoDeAlimentacaoDeCEI
+    : SuspensaoDeAlimentacaoPage;
 };
