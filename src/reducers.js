@@ -6,7 +6,6 @@ import inversaoDeDiaDeCardapioReducer from "./reducers/inversaoDeDiaDeCardapio.r
 import alteracaoCardapioReducer from "./reducers/alteracaoCardapioReducer";
 import loteReducer from "./reducers/lote.reducer";
 import loadUnifiedReducer from "./reducers/unifiedSolicitation.reducer";
-import editalReducer from "./reducers/edital.reducer";
 import loadTipoAlimentacao from "./reducers/tipoAlimentacaoReducer";
 import loadEmpresa from "./reducers/empresa.reducer";
 import loadFiltroBusca from "./reducers/loadFiltroBusca";
@@ -34,7 +33,6 @@ const rootReducer = combineReducers({
   foodInclusion: foodInclusionReducer,
   loteForm: loteReducer,
   suspensaoDeAlimentacao: suspensaoDeAlimentacaoReducer,
-  cadastroEditaisForm: editalReducer,
   TipoDeAlimentacaoForm: loadTipoAlimentacao,
   cadastroEmpresaForm: loadEmpresa,
   FiltrosDeBuscaForm: loadFiltroBusca,
