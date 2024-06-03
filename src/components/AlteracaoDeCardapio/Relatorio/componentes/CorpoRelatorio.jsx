@@ -58,7 +58,8 @@ export const CorpoRelatorio = (props) => {
               setBaixandoPDF(true);
               await getRelatorioAlteracaoCardapio(
                 alteracaoDeCardapio.uuid,
-                tipoSolicitacao
+                tipoSolicitacao,
+                alteracaoDeCardapio?.escola?.nome
               );
               setBaixandoPDF(false);
             }}

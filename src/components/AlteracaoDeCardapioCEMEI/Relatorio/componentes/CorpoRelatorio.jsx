@@ -34,7 +34,8 @@ export const CorpoRelatorio = ({ ...props }) => {
     try {
       await getRelatorioAlteracaoTipoAlimentacao(
         solicitacao.uuid,
-        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
+        solicitacao?.escola?.nome
       );
     } catch (e) {
       toastError("Houve um erro ao imprimir o relatório");

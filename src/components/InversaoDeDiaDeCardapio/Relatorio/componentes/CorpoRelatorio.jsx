@@ -27,7 +27,10 @@ export const CorpoRelatorio = (props) => {
 
   const btnImprimirRelatorio = async () => {
     setimprimindo(true);
-    await getDetalheInversaoCardapio(inversaoDiaCardapio.uuid);
+    await getDetalheInversaoCardapio(
+      inversaoDiaCardapio.uuid,
+      inversaoDiaCardapio?.escola?.nome
+    );
     setimprimindo(false);
   };
 
