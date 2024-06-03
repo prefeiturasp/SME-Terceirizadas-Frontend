@@ -1,27 +1,8 @@
-import CriarCopiaProtocoloPadraoDieta from "pages/DietaEspecial/CriarCopiaProtocoloPadraoDieta";
-import EditaProtocoloPadraoDieta from "pages/DietaEspecial/EditaProtocoloPadraoDieta";
 import { Login } from "../components/Login";
-import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
-import VincularProdutosEditaisPage from "../pages/Cadastros/VincularProdutosEditaisPage";
-
-import ConsultaProtocoloPadraoDietaEspecial from "../pages/DietaEspecial/ConsultaProtocoloPadraoDietaEspecial.jsx";
-import ProtocoloPadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPadraoDietaEspecialPage.jsx";
-
-import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
-import RelatorioReclamacaoProduto from "pages/Produto/RelatorioReclamacaoProduto";
-import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
 import FaqPage from "../pages/Faq/FaqPage";
 import PerfilPage from "../pages/Perfil/PerfilPage";
 
-import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
-
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
-import RelatorioDietasAutorizadas from "pages/DietaEspecial/RelatorioDietasAutorizadas";
-import RelatorioDietasCanceladas from "pages/DietaEspecial/RelatorioDietasCanceladas";
-import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
-import RelatorioQuantitativoClassificacaoDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoClassificacaoDietaEspPage";
-import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
-import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoSolicDietaEspPage";
 import StatusCronogramasAguardandoDilog from "pages/Dinutre/Cronogramas/StatusCronogramasAguardandoDilog";
 import StatusCronogramasAssinadoCODAE from "pages/Dinutre/Cronogramas/StatusCronogramasAssinadoCODAE";
 import StatusCronogramasPendentesDinutre from "pages/Dinutre/Cronogramas/StatusCronogramasPendentesDinutre";
@@ -67,12 +48,8 @@ import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
 import SolicitacaoAlteracaoCronogramaFornecedorPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaFornecedorPage";
 import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
-import AcompanharSolicitacaoCadastroProdutoPage from "pages/Produto/AcompanharSolicitacaoCadastroProdutoPage";
-import AvaliarSolicitacaoCadastroProdutoPage from "pages/Produto/AvaliarSolicitacaoCadastroProdutoPage";
-import RelatorioAlunosMatriculadosPage from "pages/Relatorios/RelatorioAlunosMatriculadosPage";
-import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSolicitacoesAlimentacaoPage";
+
 import {
-  ehUsuarioRelatorios,
   usuarioComAcessoAoCalendarioCronograma,
   usuarioComAcessoAoPainelAprovacoes,
   usuarioComAcessoAoPainelDocumentos,
@@ -81,16 +58,8 @@ import {
   usuarioComAcessoAoRelatorioCronogramas,
   usuarioComAcessoTelaDetalharNotificacaoOcorrencia,
   usuarioComAcessoTelaEntregasDilog,
-  usuarioEhAdministradorNutriCODAE,
-  usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGabinete,
-  usuarioEhCODAEGestaoAlimentacao,
-  usuarioEhCODAEGestaoProduto,
-  usuarioEhCODAENutriManifestacao,
   usuarioEhCodaeDilog,
-  usuarioEhCogestorDRE,
-  usuarioEhCoordenadorNutriCODAE,
-  usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCronograma,
   usuarioEhDRE,
   usuarioEhDilog,
@@ -100,24 +69,13 @@ import {
   usuarioEhDinutreDiretoria,
   usuarioEhEmpresaDistribuidora,
   usuarioEhEmpresaFornecedor,
-  usuarioEhEmpresaTerceirizada,
   usuarioEhEscolaAbastecimento,
   usuarioEhEscolaAbastecimentoDiretor,
-  usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhGticCODAE,
   usuarioEhLogistica,
-  usuarioEhMedicao,
-  usuarioEhNutricionistaSupervisao,
-  usuarioEhOrgaoFiscalizador,
   usuarioEhPreRecebimento,
-  usuarioEhQualquerCODAE,
   usuarioEhRecebimento,
-  usuarioEscolaEhGestaoDireta,
-  validaPerfilEscolaMistaParceira,
 } from "../helpers/utilities";
-import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
-import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
+
 import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
 import StatusCronogramasPendentesDilog from "../pages/Dinutre/Cronogramas/StatusCronogramasPendentesDilog";
 import StatusSolicitacoesAlteracoesCodae from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCodae";
@@ -155,27 +113,7 @@ import PainelDocumentosRecebimentoPage from "../pages/PreRecebimento/PainelDocum
 import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
 import PainelLayoutEmbalagemPage from "../pages/PreRecebimento/PainelLayoutEmbalagemPage";
 import RelatorioCronogramaPage from "../pages/PreRecebimento/Relatorios/RelatorioCronogramaPage";
-import {
-  AtivacaoDeProdutoPage,
-  ConsultaAtivacaoDeProdutoPage,
-  ConsultaResponderReclamacaoPage,
-  ReclamacaoDeProdutoPage,
-  RelatorioQuantitativoPorTerceirizadaPage,
-  ResponderQuestionamentoNutrisupervisorPage,
-  ResponderQuestionamentoUEPage,
-  ResponderReclamacaoPage,
-} from "../pages/Produto";
-import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
-import AvaliarReclamacaoProdutoPage from "../pages/Produto/AvaliarReclamacaoProdutoPage";
-import BuscaAvancadaProdutoAnaliseSensorial from "../pages/Produto/BuscaAvancadaProdutoAnaliseSensorial";
-import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
-import BuscaProdutoAnaliseSensorial from "../pages/Produto/BuscaProdutoAnaliseSensorial";
-import BuscaProdutosSuspensos from "../pages/Produto/BuscaProdutosSuspensos";
-import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
-import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
-import RelatorioAnaliseSensorial from "../pages/Produto/RelatorioAnaliseSensorial";
-import RelatorioProduto from "../pages/Produto/RelatorioProduto";
-import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
+
 import CadastroFichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/CadastroFichaRecebimentoPage";
 import FichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/FichaRecebimentoPage";
 import AtribuirQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/AtribuirQuestoesPage";
@@ -184,9 +122,12 @@ import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProdut
 import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
 import * as constants from "./constants";
 import { painelInicial } from "./helper";
+
 import { rotasCadastros } from "./rotas/cadastros";
+import { rotasConfiguracoes } from "./rotas/configuracoes";
 import { rotasDietaEspecial } from "./rotas/dietaEspecial";
 import { rotasGestaoDeAlimentacao } from "./rotas/gestaoDeAlimentacao";
+import { rotasGestaoDeProdutos } from "./rotas/gestaoDeProdutos";
 import { rotasMedicaoInicial } from "./rotas/medicaoInicial";
 import { rotasRelatorios } from "./rotas/relatorios";
 import { rotasSupervisao } from "./rotas/supervisao";
@@ -213,440 +154,6 @@ let routesConfig = [
     path: `/ajuda`,
     component: FaqPage,
     tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.PRODUTO}`,
-    component: CadastroProdutoPage,
-    tipoUsuario: usuarioEhEmpresaTerceirizada(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.EDITAR}`,
-    component: AtualizacaoProdutoFormPage,
-    tipoUsuario: usuarioEhEmpresaTerceirizada(),
-  },
-  {
-    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
-    component: BuscaAvancadaProdutoPage,
-    tipoUsuario:
-      validaPerfilEscolaMistaParceira() && !usuarioEscolaEhGestaoDireta(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.AVALIAR_RECLAMACAO_PRODUTO}`,
-    component: AvaliarReclamacaoProdutoPage,
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO_ANALISE_SENSORIAL}`,
-    component: BuscaProdutoAnaliseSensorial,
-    tipoUsuario: usuarioEhEmpresaTerceirizada(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.RELATORIO_ANALISE_SENSORIAL}`,
-    component: BuscaAvancadaProdutoAnaliseSensorial,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto(),
-  },
-  {
-    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.RELATORIO_ANALISE_SENSORIAL}`,
-    component: RelatorioAnaliseSensorial,
-    tipoUsuario: usuarioEhEmpresaTerceirizada(),
-  },
-  {
-    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.RELATORIO_PRODUTO}`,
-    component: RelatorioProduto,
-    tipoUsuario: validaPerfilEscolaMistaParceira(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.RELATORIO_RECLAMACAO_PRODUTO}`,
-    component: RelatorioReclamacaoProduto,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhDRE() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
-    component: ResponderQuestionamentoUEPage,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-nutrisupervisor`,
-    component: ResponderQuestionamentoNutrisupervisorPage,
-    tipoUsuario: usuarioEhNutricionistaSupervisao(),
-  },
-  {
-    path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.HOMOLOGACAO_PRODUTO}`,
-    component: HomologacaoProdutoPage,
-    tipoUsuario: usuarioEhCODAEGestaoProduto(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.RELATORIO}`,
-    component: HomologacaoProdutoPage,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhDRE() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RECLAMACAO_DE_PRODUTO}`,
-    component: StatusSolicitacoesGestaoProduto.ReclamacaoDeProduto,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.PRODUTOS_SUSPENSOS}`,
-    component: StatusSolicitacoesGestaoProduto.ProdutosSuspensos,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhDRE() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.CORRECAO_DE_PRODUTO}`,
-    component: StatusSolicitacoesGestaoProduto.CorrecaoDeProduto,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.AGUARDANDO_ANALISE_RECLAMACAO}`,
-    component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseReclamacao,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhCODAEGestaoProduto() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCogestorDRE() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.RESPONDER_QUESTIONAMENTOS_DA_CODAE}`,
-    component: StatusSolicitacoesGestaoProduto.ResponderQuestionamentoDaCodae,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCogestorDRE() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.AGUARDANDO_ANALISE_SENSORIAL}`,
-    component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseSensorial,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_PENDENTE_HOMOLOGACAO}`,
-    component: StatusSolicitacoesGestaoProduto.PendenteHomologacao,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_HOMOLOGADAS}`,
-    component: StatusSolicitacoesGestaoProduto.Homologados,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhDRE() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO.SOLICITACOES_NAO_HOMOLOGADAS}`,
-    component: StatusSolicitacoesGestaoProduto.NaoHomologados,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhDRE() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: "/painel-gestao-produto",
-    component: DashboardGestaoProdutoPage,
-    tipoUsuario:
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhDRE() ||
-      usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
-    component: ReclamacaoDeProdutoPage,
-    tipoUsuario:
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.SUSPENSAO_DE_PRODUTO}`,
-    component: BuscaProdutosSuspensos,
-    tipoUsuario:
-      usuarioEhCODAEGestaoProduto() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhDRE() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete() ||
-      ehUsuarioRelatorios() ||
-      usuarioEhGticCODAE(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ATIVACAO_DE_PRODUTO}/consulta`,
-    component: ConsultaAtivacaoDeProdutoPage,
-    tipoUsuario: usuarioEhCODAEGestaoProduto,
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ATIVACAO_DE_PRODUTO}/detalhe`,
-    component: AtivacaoDeProdutoPage,
-    tipoUsuario: usuarioEhCODAEGestaoProduto,
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/relatorios/produtos-homologados`,
-    component: RelatorioProdutosHomologadosPage,
-    tipoUsuario:
-      usuarioEhQualquerCODAE() ||
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhDRE() ||
-      usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete() ||
-      ehUsuarioRelatorios() ||
-      usuarioEhGticCODAE(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
-    component: ConsultaResponderReclamacaoPage,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhCogestorDRE() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhOrgaoFiscalizador() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
-    component: ResponderReclamacaoPage,
-    tipoUsuario: usuarioEhEmpresaTerceirizada(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/cadastro-geral`,
-    component: CadastroGeralPage,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/vincular-produto-edital`,
-    component: VincularProdutosEditaisPage,
-    tipoUsuario: usuarioEhCODAEGestaoProduto(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/cadastro-produtos-provinientes-edital`,
-    component: CadastroProdutosEdital,
-    tipoUsuario: usuarioEhCODAEGestaoProduto(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/relatorios/quantitativo-por-terceirizada`,
-    component: RelatorioQuantitativoPorTerceirizadaPage,
-    tipoUsuario: usuarioEhCODAEGestaoProduto(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.AVALIAR_SOLICITACAO_CADASTRO_PRODUTO}`,
-    component: AvaliarSolicitacaoCadastroProdutoPage,
-    tipoUsuario: usuarioEhEmpresaTerceirizada(),
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${constants.ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO}`,
-    component: AcompanharSolicitacaoCadastroProdutoPage,
-    tipoUsuario: usuarioEhCODAEDietaEspecial(),
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP}`,
-    component: RelatorioQuantitativoSolicDietaEspPage,
-    tipoUsuario: podeAcessarRelatorioQuantSolicDietaEsp,
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP}`,
-    component: RelatorioQuantitativoClassificacaoDietaEspPage,
-    tipoUsuario: podeAcessarRelatorioQuantSolicDietaEsp,
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP}`,
-    component: RelatorioQuantitativoDiagDietaEspPage,
-    tipoUsuario: podeAcessarRelatorioQuantSolicDietaEsp,
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETAS_AUTORIZADAS}`,
-    component: RelatorioDietasAutorizadas,
-    tipoUsuario:
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhDRE() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhAdministradorNutriCODAE() ||
-      usuarioEhCoordenadorNutriSupervisao() ||
-      usuarioEhAdministradorNutriCODAE() ||
-      usuarioEhCoordenadorNutriCODAE() ||
-      usuarioEhMedicao() ||
-      usuarioEhCODAEGabinete() ||
-      usuarioEhEmpresaTerceirizada() ||
-      ehUsuarioRelatorios() ||
-      usuarioEhGticCODAE(),
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETAS_CANCELADAS}`,
-    component: RelatorioDietasCanceladas,
-    tipoUsuario:
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhDRE() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhAdministradorNutriCODAE() ||
-      usuarioEhCoordenadorNutriSupervisao() ||
-      usuarioEhAdministradorNutriCODAE() ||
-      usuarioEhCoordenadorNutriCODAE() ||
-      usuarioEhMedicao() ||
-      usuarioEhCODAEGabinete() ||
-      usuarioEhEmpresaTerceirizada() ||
-      ehUsuarioRelatorios() ||
-      usuarioEhGticCODAE(),
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GERENCIAL_DIETAS}`,
-    component: RelatorioGerencialDietas,
-    tipoUsuario:
-      usuarioEhAdministradorNutriCODAE() ||
-      usuarioEhCoordenadorNutriCODAE() ||
-      ehUsuarioRelatorios() ||
-      usuarioEhGticCODAE(),
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_GESTAO_DIETA_ESPECIAL}`,
-    component: RelatorioGestaoDietaEspecial,
-    tipoUsuario:
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhDRE() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      ehUsuarioRelatorios() ||
-      usuarioEhGticCODAE(),
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
-    component: ProtocoloPadraoDietaEspecialPage,
-    tipoUsuario: usuarioEhCODAEDietaEspecial(),
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.CONSULTA_PROTOCOLO_PADRAO_DIETA}`,
-    component: ConsultaProtocoloPadraoDietaEspecial,
-    tipoUsuario: usuarioEhCODAEDietaEspecial(),
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/protocolo-padrao/:uuid/editar`,
-    component: EditaProtocoloPadraoDieta,
-    tipoUsuario: usuarioEhCODAEDietaEspecial(),
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/protocolo-padrao/:uuid/criar-copia`,
-    component: CriarCopiaProtocoloPadraoDieta,
-    tipoUsuario: usuarioEhCODAEDietaEspecial(),
-  },
-  {
-    path: `/${constants.RELATORIO_SOLICITACOES_ALIMENTACAO}`,
-    component: RelatorioSolicitacoesAlimentacaoPage,
-    tipoUsuario:
-      usuarioEhDRE() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhMedicao() ||
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCODAEGabinete() ||
-      ehUsuarioRelatorios() ||
-      usuarioEhGticCODAE(),
-  },
-  {
-    path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
-    component: RelatorioAlunosMatriculadosPage,
-    tipoUsuario:
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhDRE() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhMedicao() ||
-      usuarioEhCODAEGabinete() ||
-      ehUsuarioRelatorios() ||
-      usuarioEhGticCODAE(),
   },
   {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,
@@ -1166,9 +673,11 @@ let routesConfig = [
 
 routesConfig = routesConfig.concat(rotasGestaoDeAlimentacao);
 routesConfig = routesConfig.concat(rotasDietaEspecial);
+routesConfig = routesConfig.concat(rotasGestaoDeProdutos);
 routesConfig = routesConfig.concat(rotasMedicaoInicial);
 routesConfig = routesConfig.concat(rotasSupervisao);
 routesConfig = routesConfig.concat(rotasRelatorios);
 routesConfig = routesConfig.concat(rotasCadastros);
+routesConfig = routesConfig.concat(rotasConfiguracoes);
 
 export default routesConfig;

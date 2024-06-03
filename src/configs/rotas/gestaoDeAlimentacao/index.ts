@@ -1,4 +1,5 @@
 import {
+  ehUsuarioRelatorios,
   usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
@@ -6,6 +7,7 @@ import {
   usuarioEhEmpresaTerceirizada,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhGticCODAE,
   usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
 } from "helpers/utilities";
@@ -43,6 +45,8 @@ import StatusSolicitacoesComQuestionamentosNutrisupervisaoPage from "pages/Nutri
 import StatusSolicitacoesPendentesNutrisupervisaoPage from "pages/Nutricionista/Solicitacoes/StatusSolicitacoesPendentesNutrisupervisaoPage";
 import StatusSolicitacoesRecusadasNutriManifestacaoPage from "pages/Nutricionista/Solicitacoes/StatusSolicitacoesRecusadasNutriManifestacaoPage";
 import StatusSolicitacoesRecusadasNutrisupervisaoPage from "pages/Nutricionista/Solicitacoes/StatusSolicitacoesRecusadasNutrisupervisaoPage";
+import RelatorioAlunosMatriculadosPage from "pages/Relatorios/RelatorioAlunosMatriculadosPage";
+import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSolicitacoesAlimentacaoPage";
 import * as PainelPageKitLanche from "pages/SolicitacaoDeKitLanche/ContainerPage";
 import PainelPedidosSuspensaoAlimentacaoCEIRelatorio from "pages/SuspensaoAlimentacaoCEI/RelatorioPage";
 import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "pages/Terceirizada/AlteracaoDeCardapio/PainelPedidosPage";
@@ -415,5 +419,34 @@ export const rotasGestaoDeAlimentacao: Array<RotaInterface> = [
     path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: PainelPedidosSuspensaoAlimentacao,
     tipoUsuario: usuarioEhEmpresaTerceirizada(),
+  },
+  {
+    path: `/${constants.RELATORIO_SOLICITACOES_ALIMENTACAO}`,
+    component: RelatorioSolicitacoesAlimentacaoPage,
+    tipoUsuario:
+      usuarioEhDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhMedicao() ||
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios() ||
+      usuarioEhGticCODAE(),
+  },
+  {
+    path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
+    component: RelatorioAlunosMatriculadosPage,
+    tipoUsuario:
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhMedicao() ||
+      usuarioEhCODAEGabinete() ||
+      ehUsuarioRelatorios() ||
+      usuarioEhGticCODAE(),
   },
 ];
