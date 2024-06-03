@@ -3,7 +3,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { getDDMMYYYfromDate } from "configs/helper";
+import { getDDMMYYYfromDate } from "helpers/utilities";
 import React from "react";
 import { Modal } from "react-bootstrap";
 import { Form } from "react-final-form";

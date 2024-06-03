@@ -1,42 +1,34 @@
 import { combineReducers } from "redux";
 import { reducer as formReducer } from "redux-form";
-import foodInclusionReducer from "./reducers/foodInclusionReducer";
-import suspensaoDeAlimentacaoReducer from "./reducers/suspensaoDeAlimentacaoReducer";
-import inversaoDeDiaDeCardapioReducer from "./reducers/inversaoDeDiaDeCardapio.reducer";
 import alteracaoCardapioReducer from "./reducers/alteracaoCardapioReducer";
-import loteReducer from "./reducers/lote.reducer";
-import loadUnifiedReducer from "./reducers/unifiedSolicitation.reducer";
-import editalReducer from "./reducers/edital.reducer";
-import loadTipoAlimentacao from "./reducers/tipoAlimentacaoReducer";
-import loadEmpresa from "./reducers/empresa.reducer";
-import loadFiltroBusca from "./reducers/loadFiltroBusca";
-import loadProduto from "./reducers/produto.reducer";
-import kitLancheReducer from "./reducers/kitLanche.reducer";
-import { produtoReducer } from "./reducers/produtoReducer";
-import finalFormReducer from "./reducers/finalForm";
 import avaliarReclamacaoProdutoReducer from "./reducers/avaliarReclamacaoProduto";
-import reclamacaoProdutoReducer from "./reducers/reclamacaoProduto";
-import responderAnaliseSensorialReducer from "./reducers/responderAnaliseSensorial";
 import buscaAvancadaProdutoReducer from "./reducers/buscaAvancadaProduto";
-import responderReclamacaoProdutoReducer from "./reducers/responderReclamacaoProduto";
-import incluirDietaEspecialReducer from "./reducers/incluirDietaEspecialReducer";
 import dietasAtivasInativasPorAlunoReducer from "./reducers/dietasAtivasInativasPorAlunoReducer";
+import { filtersAlimentacaoReducer } from "./reducers/filtersAlimentacaoReducer";
 import { filtersDietaReducer } from "./reducers/filtersDietaReducer";
 import { filtersProdutoReducer } from "./reducers/filtersProdutoReducer";
-import { filtersAlimentacaoReducer } from "./reducers/filtersAlimentacaoReducer";
+import finalFormReducer from "./reducers/finalForm";
+import incluirDietaEspecialReducer from "./reducers/incluirDietaEspecialReducer";
+import inversaoDeDiaDeCardapioReducer from "./reducers/inversaoDeDiaDeCardapio.reducer";
+import kitLancheReducer from "./reducers/kitLanche.reducer";
+import loadFiltroBusca from "./reducers/loadFiltroBusca";
+import loteReducer from "./reducers/lote.reducer";
+import loadProduto from "./reducers/produto.reducer";
+import { produtoReducer } from "./reducers/produtoReducer";
+import reclamacaoProdutoReducer from "./reducers/reclamacaoProduto";
+import responderAnaliseSensorialReducer from "./reducers/responderAnaliseSensorial";
+import responderReclamacaoProdutoReducer from "./reducers/responderReclamacaoProduto";
+import suspensaoDeAlimentacaoReducer from "./reducers/suspensaoDeAlimentacaoReducer";
+import loadTipoAlimentacao from "./reducers/tipoAlimentacaoReducer";
 
 // Junta todos os reducers do sistema! Vai pra store
 const rootReducer = combineReducers({
   form: formReducer,
   inversaoDeDiaDeCardapioForm: inversaoDeDiaDeCardapioReducer,
   alteracaoCardapio: alteracaoCardapioReducer,
-  unifiedSolicitation: loadUnifiedReducer,
-  foodInclusion: foodInclusionReducer,
   loteForm: loteReducer,
   suspensaoDeAlimentacao: suspensaoDeAlimentacaoReducer,
-  cadastroEditaisForm: editalReducer,
   TipoDeAlimentacaoForm: loadTipoAlimentacao,
-  cadastroEmpresaForm: loadEmpresa,
   FiltrosDeBuscaForm: loadFiltroBusca,
   kitLanche: kitLancheReducer,
   cadastroProduto: loadProduto,
