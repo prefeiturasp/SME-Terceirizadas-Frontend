@@ -9,6 +9,7 @@ import {
   usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
 } from "helpers/utilities";
+
 import PainelPedidosAlteracaoDeCardapioCODAEPage from "pages/CODAE/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
@@ -44,6 +45,7 @@ import StatusSolicitacoesRecusadasNutriManifestacaoPage from "pages/Nutricionist
 import StatusSolicitacoesRecusadasNutrisupervisaoPage from "pages/Nutricionista/Solicitacoes/StatusSolicitacoesRecusadasNutrisupervisaoPage";
 import * as PainelPageKitLanche from "pages/SolicitacaoDeKitLanche/ContainerPage";
 import PainelPedidosSuspensaoAlimentacaoCEIRelatorio from "pages/SuspensaoAlimentacaoCEI/RelatorioPage";
+import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "pages/Terceirizada/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
 import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
@@ -54,6 +56,7 @@ import { StatusSolicitacoesNegadasTerceirizadaPage } from "pages/Terceirizada/St
 import StatusSolicitacoesPendentesTerceirizadaPage from "pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesPendentes";
 import PainelPedidosSuspensaoAlimentacao from "pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
+
 import * as constants from "../../constants";
 import { RotaInterface } from "../interfaces";
 
@@ -61,6 +64,14 @@ import {
   alteracaoCardapio,
   inclusaoAlimentacao,
   painelGestaoAlimentacao,
+  relatoriosAlteracaoDeCardapio,
+  relatoriosAlteracaoDeCardapioCEMEI,
+  relatoriosInclusaoDeAlimentacao,
+  relatoriosInclusaoDeAlimentacaoCEMEI,
+  relatoriosInversaoDiaCardapio,
+  relatoriosSolicitacaoKitLanche,
+  relatoriosSolicitacaoKitLancheCEMEI,
+  relatoriosSolicitacaoUnificada,
   suspensaoAlimentacao,
 } from "./helpers";
 
@@ -86,10 +97,30 @@ export const rotasGestaoDeAlimentacao: Array<RotaInterface> = [
       usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
   },
   {
+    path: `/${constants.INCLUSAO_ALIMENTACAO}/${constants.RELATORIO}`,
+    component: relatoriosInclusaoDeAlimentacao(),
+    tipoUsuario: constants.QUALQUER_USUARIO,
+  },
+  {
+    path: `/${constants.INCLUSAO_ALIMENTACAO_CEMEI}/${constants.RELATORIO}`,
+    component: relatoriosInclusaoDeAlimentacaoCEMEI(),
+    tipoUsuario: constants.QUALQUER_USUARIO,
+  },
+  {
     path: `/${constants.ESCOLA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: alteracaoCardapio(),
     tipoUsuario:
       usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
+  },
+  {
+    path: `/${constants.ALTERACAO_TIPO_ALIMENTACAO}/${constants.RELATORIO}`,
+    component: relatoriosAlteracaoDeCardapio(),
+    tipoUsuario: constants.QUALQUER_USUARIO,
+  },
+  {
+    path: `/${constants.ALTERACAO_TIPO_ALIMENTACAO_CEMEI}/${constants.RELATORIO}`,
+    component: relatoriosAlteracaoDeCardapioCEMEI(),
+    tipoUsuario: constants.QUALQUER_USUARIO,
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
@@ -98,16 +129,46 @@ export const rotasGestaoDeAlimentacao: Array<RotaInterface> = [
       usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
   },
   {
+    path: `/${constants.SOLICITACAO_KIT_LANCHE}/${constants.RELATORIO}`,
+    component: relatoriosSolicitacaoKitLanche(),
+    tipoUsuario: constants.QUALQUER_USUARIO,
+  },
+  {
+    path: `/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${constants.RELATORIO}`,
+    component: relatoriosSolicitacaoUnificada(),
+    tipoUsuario: constants.QUALQUER_USUARIO,
+  },
+  {
+    path: `/${constants.SOLICITACAO_KIT_LANCHE_CEMEI}/${constants.RELATORIO}`,
+    component: relatoriosSolicitacaoKitLancheCEMEI(),
+    tipoUsuario: constants.QUALQUER_USUARIO,
+  },
+  {
     path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
     component: RelatorioPageInversaoDiaCardapio.InversaoDeDiaDeCardapioPage,
     tipoUsuario:
       usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
   },
   {
+    path: `/${constants.INVERSAO_CARDAPIO}/${constants.RELATORIO}`,
+    component: relatoriosInversaoDiaCardapio(),
+    tipoUsuario: constants.QUALQUER_USUARIO,
+  },
+  {
     path: `/${constants.ESCOLA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: suspensaoAlimentacao(),
     tipoUsuario:
       usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
+  },
+  {
+    path: `/${constants.SUSPENSAO_ALIMENTACAO}/${constants.RELATORIO}`,
+    component: PainelPedidosSuspensaoAlimentacaoRelatorio,
+    tipoUsuario: constants.QUALQUER_USUARIO,
+  },
+  {
+    path: `/${constants.SUSPENSAO_ALIMENTACAO_CEI}/${constants.RELATORIO}`,
+    component: PainelPedidosSuspensaoAlimentacaoCEIRelatorio,
+    tipoUsuario: constants.QUALQUER_USUARIO,
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,
@@ -132,16 +193,6 @@ export const rotasGestaoDeAlimentacao: Array<RotaInterface> = [
     component: StatusSolicitacoesRecusadasEscolaPage,
     tipoUsuario:
       usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
-  },
-  {
-    path: `/${constants.SUSPENSAO_ALIMENTACAO}/${constants.RELATORIO}`,
-    component: PainelPedidosSuspensaoAlimentacaoRelatorio,
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.SUSPENSAO_ALIMENTACAO_CEI}/${constants.RELATORIO}`,
-    component: PainelPedidosSuspensaoAlimentacaoCEIRelatorio,
-    tipoUsuario: constants.QUALQUER_USUARIO,
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,
@@ -232,6 +283,11 @@ export const rotasGestaoDeAlimentacao: Array<RotaInterface> = [
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
   },
   {
+    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}`,
+    component: PainelPageKitLanche.PainelPedidosCODAE,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
+  },
+  {
     path: `/${constants.CODAE}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioCODAEPage,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
@@ -304,6 +360,11 @@ export const rotasGestaoDeAlimentacao: Array<RotaInterface> = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhMedicao() ||
       usuarioEhCODAEGabinete(),
+  },
+  {
+    path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
+    component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
+    tipoUsuario: usuarioEhEmpresaTerceirizada(),
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}`,

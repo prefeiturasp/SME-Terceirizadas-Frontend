@@ -2,35 +2,20 @@ import CriarCopiaProtocoloPadraoDieta from "pages/DietaEspecial/CriarCopiaProtoc
 import EditaProtocoloPadraoDieta from "pages/DietaEspecial/EditaProtocoloPadraoDieta";
 import { Login } from "../components/Login";
 import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
-import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import VincularProdutosEditaisPage from "../pages/Cadastros/VincularProdutosEditaisPage";
-import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
-import GerenciamentoEmailsPage from "../pages/Configuracoes/GerenciamentoEmailsPage";
-import MensagemPage from "../pages/Configuracoes/MensagemPage";
+
 import ConsultaProtocoloPadraoDietaEspecial from "../pages/DietaEspecial/ConsultaProtocoloPadraoDietaEspecial.jsx";
 import ProtocoloPadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPadraoDietaEspecialPage.jsx";
-import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
 
 import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
 import RelatorioReclamacaoProduto from "pages/Produto/RelatorioReclamacaoProduto";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
 import FaqPage from "../pages/Faq/FaqPage";
 import PerfilPage from "../pages/Perfil/PerfilPage";
-import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
-import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "../pages/Terceirizada/AlteracaoDeCardapio/PainelPedidosPage";
 
 import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
 
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
-import AtualizacaoEmailEOLPage from "pages/Configuracoes/AtualizacaoEmailEOLPage";
-import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
-import CargasUsuariosServidoresPage from "pages/Configuracoes/CargasUsuariosServidoresPage";
-import GestaoAcessoCodaeDilogPage from "pages/Configuracoes/GestaoAcessoCodaeDilogPage";
-import GestaoAcessoCogestorPage from "pages/Configuracoes/GestaoAcessoCogestorPage";
-import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiretorEscolaPage";
-import GestaoAcessoEmpresaPage from "pages/Configuracoes/GestaoAcessoEmpresaPage";
-import GestaoAcessoGeralPage from "pages/Configuracoes/GestaoAcessoGeralPage";
-import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
 import RelatorioDietasAutorizadas from "pages/DietaEspecial/RelatorioDietasAutorizadas";
 import RelatorioDietasCanceladas from "pages/DietaEspecial/RelatorioDietasCanceladas";
 import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
@@ -96,9 +81,7 @@ import {
   usuarioComAcessoAoRelatorioCronogramas,
   usuarioComAcessoTelaDetalharNotificacaoOcorrencia,
   usuarioComAcessoTelaEntregasDilog,
-  usuarioEhAdmQualquerEmpresa,
   usuarioEhAdministradorNutriCODAE,
-  usuarioEhAdministradorRepresentanteCodae,
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoAlimentacao,
@@ -106,8 +89,6 @@ import {
   usuarioEhCODAENutriManifestacao,
   usuarioEhCodaeDilog,
   usuarioEhCogestorDRE,
-  usuarioEhCoordenadorCODAE,
-  usuarioEhCoordenadorGpCODAE,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCronograma,
@@ -117,7 +98,6 @@ import {
   usuarioEhDilogJuridico,
   usuarioEhDilogQualidade,
   usuarioEhDinutreDiretoria,
-  usuarioEhDiretorUE,
   usuarioEhEmpresaDistribuidora,
   usuarioEhEmpresaFornecedor,
   usuarioEhEmpresaTerceirizada,
@@ -134,7 +114,6 @@ import {
   usuarioEhQualquerCODAE,
   usuarioEhRecebimento,
   usuarioEscolaEhGestaoDireta,
-  usuarioEscolaEhGestaoParceira,
   validaPerfilEscolaMistaParceira,
 } from "../helpers/utilities";
 import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
@@ -204,20 +183,7 @@ import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProdut
 import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/EditarAtribuicaoQuestoesPage";
 import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
 import * as constants from "./constants";
-import {
-  StatusSolicitacoesDietaEspecial,
-  dashBoardDietaEspecial,
-  painelInicial,
-  relatoriosAlteracaoDeCardapio,
-  relatoriosAlteracaoDeCardapioCEMEI,
-  relatoriosDietaEspecial,
-  relatoriosInclusaoDeAlimentacao,
-  relatoriosInclusaoDeAlimentacaoCEMEI,
-  relatoriosInversaoDiaCardapio,
-  relatoriosSolicitacaoKitLanche,
-  relatoriosSolicitacaoKitLancheCEMEI,
-  relatoriosSolicitacaoUnificada,
-} from "./helper";
+import { painelInicial } from "./helper";
 import { rotasCadastros } from "./rotas/cadastros";
 import { rotasDietaEspecial } from "./rotas/dietaEspecial";
 import { rotasGestaoDeAlimentacao } from "./rotas/gestaoDeAlimentacao";
@@ -241,229 +207,6 @@ let routesConfig = [
   {
     path: "/perfil",
     component: PerfilPage,
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/configuracoes/cadastros`,
-    component: CadastrosPage,
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/configuracoes/gerenciamento-emails`,
-    component: GerenciamentoEmailsPage,
-    tipoUsuario: usuarioEhQualquerCODAE(),
-  },
-  {
-    path: `/configuracoes/mensagem`,
-    component: MensagemPage,
-    tipoUsuario: usuarioEhQualquerCODAE(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_CODAE_DILOG}`,
-    component: GestaoAcessoCodaeDilogPage,
-    tipoUsuario: usuarioEhAdministradorRepresentanteCodae(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_MASTER}`,
-    component: GestaoAcessoMasterPage,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhCODAEGabinete() ||
-      usuarioEhDilogDiretoria() ||
-      usuarioEhGticCODAE(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_DIRETOR_ESCOLA}`,
-    component: GestaoAcessoDiretorEscolaPage,
-    tipoUsuario: usuarioEhDiretorUE(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_EMPRESA}`,
-    component: GestaoAcessoEmpresaPage,
-    tipoUsuario: usuarioEhAdmQualquerEmpresa(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_COGESTOR}`,
-    component: GestaoAcessoCogestorPage,
-    tipoUsuario: usuarioEhCogestorDRE(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_GERAL}`,
-    component: GestaoAcessoGeralPage,
-    tipoUsuario:
-      usuarioEhCoordenadorNutriSupervisao() ||
-      usuarioEhCoordenadorNutriCODAE() ||
-      usuarioEhCoordenadorGpCODAE(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
-    component: CargasUsuariosPage,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhGticCODAE(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
-    component: CargasUsuariosServidoresPage,
-    tipoUsuario: usuarioEhAdministradorRepresentanteCodae(),
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.ATUALIZACAO_EMAIL_EOL}`,
-    component: AtualizacaoEmailEOLPage,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhGticCODAE(),
-  },
-  {
-    path: `/configuracoes`,
-    component: ConfigEmailPage,
-    tipoUsuario: usuarioEhQualquerCODAE(),
-  },
-  {
-    path: `/${constants.ALTERACAO_TIPO_ALIMENTACAO}/${constants.RELATORIO}`,
-    component: relatoriosAlteracaoDeCardapio(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.ALTERACAO_TIPO_ALIMENTACAO_CEMEI}/${constants.RELATORIO}`,
-    component: relatoriosAlteracaoDeCardapioCEMEI(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.INCLUSAO_ALIMENTACAO}/${constants.RELATORIO}`,
-    component: relatoriosInclusaoDeAlimentacao(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.INCLUSAO_ALIMENTACAO_CEMEI}/${constants.RELATORIO}`,
-    component: relatoriosInclusaoDeAlimentacaoCEMEI(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO}`,
-    component: relatoriosDietaEspecial(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/ativas-inativas`,
-    component: RelatorioAlunosDietasAtivasInativasPage,
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.INVERSAO_CARDAPIO}/${constants.RELATORIO}`,
-    component: relatoriosInversaoDiaCardapio(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.SOLICITACAO_KIT_LANCHE}/${constants.RELATORIO}`,
-    component: relatoriosSolicitacaoKitLanche(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.SOLICITACAO_KIT_LANCHE_UNIFICADA}/${constants.RELATORIO}`,
-    component: relatoriosSolicitacaoUnificada(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.SOLICITACAO_KIT_LANCHE_CEMEI}/${constants.RELATORIO}`,
-    component: relatoriosSolicitacaoKitLancheCEMEI(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}`,
-    component: PainelPageKitLanche.PainelPedidosCODAE,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
-  },
-  {
-    path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
-    component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
-    tipoUsuario: usuarioEhEmpresaTerceirizada(),
-  },
-  {
-    path: `/painel-dieta-especial`,
-    component: dashBoardDietaEspecial(),
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhDRE() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhMedicao() ||
-      usuarioEscolaEhGestaoDireta() ||
-      usuarioEscolaEhGestaoParceira() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_PENDENTES}`,
-    component: StatusSolicitacoesDietaEspecial(),
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhDRE() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_NEGADAS}`,
-    component: StatusSolicitacoesDietaEspecial(),
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhDRE() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_AUTORIZADAS}`,
-    component: StatusSolicitacoesDietaEspecial(),
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhDRE() ||
-      usuarioEhCODAEDietaEspecial() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhCODAEGabinete(),
-  },
-  {
-    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_CANCELADAS}`,
-    component: StatusSolicitacoesDietaEspecial(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE}`,
-    component: StatusSolicitacoesDietaEspecial(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA}`,
-    component: StatusSolicitacoesDietaEspecial(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_INATIVAS}`,
-    component: StatusSolicitacoesDietaEspecial(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${constants.SOLICITACOES_INATIVAS_TEMPORARIAMENTE}`,
-    component: StatusSolicitacoesDietaEspecial(),
     tipoUsuario: constants.QUALQUER_USUARIO,
   },
   {

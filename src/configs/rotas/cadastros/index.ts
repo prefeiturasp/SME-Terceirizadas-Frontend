@@ -25,26 +25,32 @@ import CadastroSuspensaoDeAtividadesPage from "pages/Cadastros/CadastroSuspensao
 import CadastroTipoAlimentacaoPage from "pages/Cadastros/CadastroTipoAlimentacaoPage";
 import CadastroTipoEmbalagemPage from "pages/Cadastros/CadastroTipoEmbalagemPage";
 import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
+import CadastrosPage from "pages/Cadastros/CadastrosPage";
 import DetalharCadastroLaboratorioPage from "pages/Cadastros/DetalharCadastroLaboratorioPage";
 import EditaisCadastradosPage from "pages/Cadastros/EditaisCadastradosPage";
 import EditaisContratosEditarPage from "pages/Cadastros/EditaisContratosEditarPage.jsx";
 import EditaisContratosPage from "pages/Cadastros/EditaisContratosPage";
 import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
+import EditarCadastroTipoEmbalagemPage from "pages/Cadastros/EditarCadastroTipoEmbalagemPage";
 import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
+import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogisticaPage";
+import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import EmpresasCadastradas from "pages/Cadastros/EmpresasCadastradasPage";
 import FaixasEtariasPage from "pages/Cadastros/FaixasEtariasPage";
+import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 import LotesCadastradosPage from "pages/Cadastros/LotesCadastradosPage";
 import NovaPermissaoLancamentoEspecialPage from "pages/Cadastros/NovaPermissaoLancamentoEspecialPage";
 import PermissaoLancamentosEspeciaisPage from "pages/Cadastros/PermissaoLancamentosEspeciaisPage";
-import EditarCadastroTipoEmbalagemPage from "pages/Cadastros/EditarCadastroTipoEmbalagemPage";
-import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogisticaPage";
-import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
-import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 import ProdutosLogisticaPage from "pages/Cadastros/ProdutosLogisticaPage";
 import TiposEmbalagensCadastradosPage from "pages/Cadastros/TiposEmbalagensCadastradosPage";
 import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
 
 export const rotasCadastros: Array<RotaInterface> = [
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}`,
+    component: CadastrosPage,
+    tipoUsuario: constants.QUALQUER_USUARIO,
+  },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.SOBREMESA_DOCE}`,
     component: CadastroSobremesaDocePage,
