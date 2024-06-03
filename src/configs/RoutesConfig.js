@@ -21,7 +21,6 @@ import {
   usuarioEhCronograma,
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
-  usuarioEhRecebimento,
 } from "../helpers/utilities";
 
 import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
@@ -29,12 +28,6 @@ import StatusCronogramasPendentesDilog from "../pages/Dinutre/Cronogramas/Status
 import StatusSolicitacoesAlteracoesCodae from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCodae";
 import StatusSolicitacoesAlteracoesCronograma from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCronograma";
 
-import CadastroFichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/CadastroFichaRecebimentoPage";
-import FichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/FichaRecebimentoPage";
-import AtribuirQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/AtribuirQuestoesPage";
-import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/CopiarAtribuicaoQuestoesPage";
-import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/EditarAtribuicaoQuestoesPage";
-import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
 import * as constants from "./constants";
 import { painelInicial } from "./helper";
 
@@ -46,6 +39,7 @@ import { rotasRelatorios } from "./rotas/relatorios";
 import { rotasSupervisao } from "./rotas/supervisao";
 import { rotasLogistica } from "./rotas/logistica";
 import { rotasPreRecebimento } from "./rotas/preRecebimento";
+import { rotasRecebimento } from "./rotas/recebimento";
 import { rotasCadastros } from "./rotas/cadastros";
 import { rotasConfiguracoes } from "./rotas/configuracoes";
 
@@ -171,36 +165,6 @@ let routesConfig = [
       usuarioEhDinutreDiretoria() ||
       usuarioEhCODAEGabinete(),
   },
-  {
-    path: `/${constants.RECEBIMENTO}/${constants.QUESTOES_POR_PRODUTO}`,
-    component: QuestoesPorProdutoPage,
-    tipoUsuario: usuarioEhRecebimento(),
-  },
-  {
-    path: `/${constants.RECEBIMENTO}/${constants.ATRIBUIR_QUESTOES_CONFERENCIA}`,
-    component: AtribuirQuestoesPage,
-    tipoUsuario: usuarioEhRecebimento(),
-  },
-  {
-    path: `/${constants.RECEBIMENTO}/${constants.EDITAR_ATRIBUICAO_QUESTOES_CONFERENCIA}`,
-    component: EditarAtribuicaoQuestoesPage,
-    tipoUsuario: usuarioEhRecebimento(),
-  },
-  {
-    path: `/${constants.RECEBIMENTO}/${constants.COPIAR_ATRIBUICAO_QUESTOES_CONFERENCIA}`,
-    component: CopiarAtribuicaoQuestoesPage,
-    tipoUsuario: usuarioEhRecebimento(),
-  },
-  {
-    path: `/${constants.RECEBIMENTO}/${constants.FICHA_RECEBIMENTO}`,
-    component: FichaRecebimentoPage,
-    tipoUsuario: usuarioEhRecebimento(),
-  },
-  {
-    path: `/${constants.RECEBIMENTO}/${constants.CADASTRO_FICHA_RECEBIMENTO}`,
-    component: CadastroFichaRecebimentoPage,
-    tipoUsuario: usuarioEhRecebimento(),
-  },
 ];
 
 routesConfig = routesConfig.concat(rotasGestaoDeAlimentacao);
@@ -211,6 +175,7 @@ routesConfig = routesConfig.concat(rotasSupervisao);
 routesConfig = routesConfig.concat(rotasRelatorios);
 routesConfig = routesConfig.concat(rotasLogistica);
 routesConfig = routesConfig.concat(rotasPreRecebimento);
+routesConfig = routesConfig.concat(rotasRecebimento);
 routesConfig = routesConfig.concat(rotasCadastros);
 routesConfig = routesConfig.concat(rotasConfiguracoes);
 
