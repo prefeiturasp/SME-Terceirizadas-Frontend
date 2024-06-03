@@ -1,8 +1,8 @@
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import Page from "components/Shareable/Page/Page";
+import DietaEspecialEscola from "components/screens/DietaEspecial/Escola";
+import { DIETA_ESPECIAL, ESCOLA } from "configs/constants";
 import React from "react";
-import DietaEspecialEscola from "../../../components/screens/DietaEspecial/Escola";
-import Breadcrumb from "../../../components/Shareable/Breadcrumb";
-import Page from "../../../components/Shareable/Page/Page";
-import { DIETA_ESPECIAL, ESCOLA } from "../../../configs/constants";
 import { HOME } from "../constants";
 
 const atual = {
@@ -10,7 +10,7 @@ const atual = {
   titulo: "Solicitação de dieta especial",
 };
 
-export default () => (
+export const DietaEspecialEscolaPage = () => (
   <Page titulo={atual.titulo} botaoVoltar>
     <Breadcrumb home={HOME} atual={atual} />
     <DietaEspecialEscola />

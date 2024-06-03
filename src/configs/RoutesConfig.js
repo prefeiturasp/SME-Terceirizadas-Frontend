@@ -1,46 +1,34 @@
+import CriarCopiaProtocoloPadraoDieta from "pages/DietaEspecial/CriarCopiaProtocoloPadraoDieta";
+import EditaProtocoloPadraoDieta from "pages/DietaEspecial/EditaProtocoloPadraoDieta";
 import { Login } from "../components/Login";
-import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
-import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHorarioComboAlimentacaoPage";
-import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
-import CadastrosPage from "../pages/Cadastros/CadastrosPage";
-import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
-import VincularProdutosEditaisPage from "../pages/Cadastros/VincularProdutosEditaisPage";
-import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
-import PermissaoLancamentosEspeciaisPage from "../pages/Cadastros/PermissaoLancamentosEspeciaisPage";
-import NovaPermissaoLancamentoEspecialPage from "../pages/Cadastros/NovaPermissaoLancamentoEspecialPage";
-import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
-import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
-import CadastroKitLanchePage from "../pages/Cadastros/CadastroKitLanchePage";
-import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
-import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
-import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
-import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 import PainelPedidosAlteracaoDeCardapioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
 import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
 import StatusSolicitacoesAutorizadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesAutorizadasCODAEPage";
 import StatusSolicitacoesCanceladasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesCanceladasCODAEPage";
+import StatusSolicitacoesComQuestionamentosCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesComQuestionamentosCODAEPage";
 import StatusSolicitacoesPendentesCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesPendentesCODAEPage";
 import StatusSolicitacoesRecusadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesRecusadasCODAEPage";
-import StatusSolicitacoesComQuestionamentosCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesComQuestionamentosCODAEPage";
-import StatusSolicitacoesAutorizadasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesAutorizadasNutrisupervisaoPage";
-import StatusSolicitacoesAutorizadasNutriManifestacaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesAutorizadasNutriManifestacaoPage";
-import StatusSolicitacoesCanceladasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesCanceladasNutrisupervisaoPage";
-import StatusSolicitacoesCanceladasNutriManifestacaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesCanceladasNutriManifestacaoPage";
-import StatusSolicitacoesPendentesNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesPendentesNutrisupervisaoPage";
-import StatusSolicitacoesRecusadasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesRecusadasNutrisupervisaoPage";
-import StatusSolicitacoesRecusadasNutriManifestacaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesRecusadasNutriManifestacaoPage";
-import StatusSolicitacoesComQuestionamentosNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesComQuestionamentosNutrisupervisaoPage";
+import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
+import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
+import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHorarioComboAlimentacaoPage";
+import CadastroKitLanchePage from "../pages/Cadastros/CadastroKitLanchePage";
+import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
+import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
+import CadastrosPage from "../pages/Cadastros/CadastrosPage";
+import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
+import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
+import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
+import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
+import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
+import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
+import NovaPermissaoLancamentoEspecialPage from "../pages/Cadastros/NovaPermissaoLancamentoEspecialPage";
+import PermissaoLancamentosEspeciaisPage from "../pages/Cadastros/PermissaoLancamentosEspeciaisPage";
+import VincularProdutosEditaisPage from "../pages/Cadastros/VincularProdutosEditaisPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
-import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import GerenciamentoEmailsPage from "../pages/Configuracoes/GerenciamentoEmailsPage";
-import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecialPage";
-import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
-import ProtocoloPadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPadraoDietaEspecialPage.jsx";
-import EditaProtocoloPadraoDieta from "pages/DietaEspecial/EditaProtocoloPadraoDieta";
-import CriarCopiaProtocoloPadraoDieta from "pages/DietaEspecial/CriarCopiaProtocoloPadraoDieta";
-import ConsultaProtocoloPadraoDietaEspecial from "../pages/DietaEspecial/ConsultaProtocoloPadraoDietaEspecial.jsx";
+import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
@@ -49,286 +37,274 @@ import StatusSolicitacoesAutorizadasDREPage from "../pages/DRE/Solicitacoes/Stat
 import StatusSolicitacoesCanceladasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesCanceladasDREPage";
 import StatusSolicitacoesPendentesDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesPendentesDREPage";
 import StatusSolicitacoesRecusadasDREPage from "../pages/DRE/Solicitacoes/StatusSolicitacoesRecusadasDREPage";
-import DietaEspecialEscolaPage from "../pages/Escola/DietaEspecial/DietaEspecialEscolaPage";
-import DietaEspecialAlteracaoUEPage from "../pages/Escola/DietaEspecial/AlteracaoUEPage";
-import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesAutorizadasEscolaPage";
-import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
-import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
-import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
+import ConsultaProtocoloPadraoDietaEspecial from "../pages/DietaEspecial/ConsultaProtocoloPadraoDietaEspecial.jsx";
+import ProtocoloPadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPadraoDietaEspecialPage.jsx";
+import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
 
+import StatusSolicitacoesAutorizadasNutriManifestacaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesAutorizadasNutriManifestacaoPage";
+import StatusSolicitacoesAutorizadasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesAutorizadasNutrisupervisaoPage";
+import StatusSolicitacoesCanceladasNutriManifestacaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesCanceladasNutriManifestacaoPage";
+import StatusSolicitacoesCanceladasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesCanceladasNutrisupervisaoPage";
+import StatusSolicitacoesComQuestionamentosNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesComQuestionamentosNutrisupervisaoPage";
+import StatusSolicitacoesPendentesNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesPendentesNutrisupervisaoPage";
+import StatusSolicitacoesRecusadasNutriManifestacaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesRecusadasNutriManifestacaoPage";
+import StatusSolicitacoesRecusadasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesRecusadasNutrisupervisaoPage";
+
+import RelatorioReclamacaoProduto from "pages/Produto/RelatorioReclamacaoProduto";
+import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
+import FaqPage from "../pages/Faq/FaqPage";
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import PerfilPage from "../pages/Perfil/PerfilPage";
 import * as PainelPageKitLanche from "../pages/SolicitacaoDeKitLanche/ContainerPage";
+import PainelPedidosSuspensaoAlimentacaoCEIRelatorio from "../pages/SuspensaoAlimentacaoCEI/RelatorioPage";
 import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "../pages/Terceirizada/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
 import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
-import { StatusSolicitacoesAutorizadasTerceirizadaPage } from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesAutorizadas";
 import { StatusQuestionamentosCodae } from "../pages/Terceirizada/StatusSolicitacoes/StatusQuestionamentosCodae";
+import { StatusSolicitacoesAutorizadasTerceirizadaPage } from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesAutorizadas";
 import { StatusSolicitacoesCanceladasTerceirizadaPage } from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesCanceladasTerceirizada";
 import { StatusSolicitacoesNegadasTerceirizadaPage } from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesNegadasTerceirizada";
 import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesPendentes";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
-import PainelPedidosSuspensaoAlimentacaoCEIRelatorio from "../pages/SuspensaoAlimentacaoCEI/RelatorioPage";
-import FaqPage from "../pages/Faq/FaqPage";
-import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
-import RelatorioReclamacaoProduto from "pages/Produto/RelatorioReclamacaoProduto";
 
+import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
+import CadastroFabricantePage from "pages/Cadastros/CadastroFabricantePage";
+import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
+import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
+import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
+import CadastroProdutosLogisticaPage from "pages/Cadastros/CadastroProdutosLogisticaPage";
+import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
+import CadastroTipoEmbalagemPage from "pages/Cadastros/CadastroTipoEmbalagemPage";
+import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
+import DetalharCadastroLaboratorioPage from "pages/Cadastros/DetalharCadastroLaboratorioPage";
+import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
+import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
+import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogisticaPage";
+import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
+import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
+import ProdutosLogisticaPage from "pages/Cadastros/ProdutosLogisticaPage";
+import TiposEmbalagensCadastradosPage from "pages/Cadastros/TiposEmbalagensCadastradosPage";
+import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
+import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
+import AtualizacaoEmailEOLPage from "pages/Configuracoes/AtualizacaoEmailEOLPage";
+import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
+import CargasUsuariosServidoresPage from "pages/Configuracoes/CargasUsuariosServidoresPage";
+import GestaoAcessoCodaeDilogPage from "pages/Configuracoes/GestaoAcessoCodaeDilogPage";
+import GestaoAcessoCogestorPage from "pages/Configuracoes/GestaoAcessoCogestorPage";
+import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiretorEscolaPage";
+import GestaoAcessoEmpresaPage from "pages/Configuracoes/GestaoAcessoEmpresaPage";
+import GestaoAcessoGeralPage from "pages/Configuracoes/GestaoAcessoGeralPage";
+import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
+import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
+import RelatorioDietasAutorizadas from "pages/DietaEspecial/RelatorioDietasAutorizadas";
+import RelatorioDietasCanceladas from "pages/DietaEspecial/RelatorioDietasCanceladas";
+import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
+import RelatorioQuantitativoClassificacaoDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoClassificacaoDietaEspPage";
+import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
+import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoSolicDietaEspPage";
+import StatusCronogramasAguardandoDilog from "pages/Dinutre/Cronogramas/StatusCronogramasAguardandoDilog";
+import StatusCronogramasAssinadoCODAE from "pages/Dinutre/Cronogramas/StatusCronogramasAssinadoCODAE";
+import StatusCronogramasPendentesDinutre from "pages/Dinutre/Cronogramas/StatusCronogramasPendentesDinutre";
+import StatusSolicitacoesAlteracoesAprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDilog";
+import StatusSolicitacoesAlteracoesAprovadasDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDinutre";
+import StatusSolicitacoesAlteracoesDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDilog";
+import StatusSolicitacoesAlteracoesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDinutre";
+import StatusSolicitacoesAlteracoesReprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDilog";
+import StatusSolicitacoesAlteracoesReprovadasDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDinutre";
+import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
+import CadastroNotificacaoPage from "pages/Logistica/CadastroNotificacao.page";
+import ConferenciaDeGuiaComOcorrenciaPage from "pages/Logistica/ConferenciaDeGuiaComOcorrenciaPage";
+import ConferenciaDeGuiaPage from "pages/Logistica/ConferenciaDeGuiaPage";
+import ConferenciaDeGuiaResumoFinalPage from "pages/Logistica/ConferenciaDeGuiaResumoFinalPage";
+import ConferenciaInconsistenciasPage from "pages/Logistica/ConferenciaInconsistenciasPage";
+import ConferirEntregaPage from "pages/Logistica/ConferirEntregaPage";
+import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEntregaDilog";
+import ConsultaSolicitacaoAlteracaoPage from "pages/Logistica/ConsultaSolicitacaoAlteracaoPage";
+import DetalhamentoGuiaPage from "pages/Logistica/DetalhamentoGuiaPage";
+import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
+import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
+import EditarNotificacaoPage from "pages/Logistica/EditarNotificacaoPage";
+import EntregasDilogPage from "pages/Logistica/EntregasDilogPage";
+import EntregasDistribuidorPage from "pages/Logistica/EntregasDistribuidorPage";
+import EntregasDrePage from "pages/Logistica/EntregasDrePage";
+import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
+import GestaoRequisicaoEntregaPage from "pages/Logistica/GestaoRequisicaoEntregaPage";
+import GestaoSolicitacaoAlteracaoPage from "pages/Logistica/GestaoSolicitacaoAlteracaoPage";
+import GuiasNotificacoesFiscalPage from "pages/Logistica/GuiasNotificacoesFiscalPage";
+import GuiasNotificacoesPage from "pages/Logistica/GuiasNotificacoesPage";
+import InsucessoEntregaPage from "pages/Logistica/InsucessoEntregaPage";
+import NotificarEmpresaPage from "pages/Logistica/NotificarEmpresaPage";
+import RegistrarInsucessoEntregaPage from "pages/Logistica/RegistrarInsucessoEntregaPage";
+import ReposicaoDeGuiaPage from "pages/Logistica/ReposicaoDeGuiaPage";
+import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
+import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
+import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
+import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
+import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
+import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
+import AnaliseDilogCronogramaPage from "pages/PreRecebimento/DetalharSolicitacaoCronograma";
+import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
+import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
+import SolicitacaoAlteracaoCronogramaFornecedorPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaFornecedorPage";
+import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
+import AcompanharSolicitacaoCadastroProdutoPage from "pages/Produto/AcompanharSolicitacaoCadastroProdutoPage";
+import AvaliarSolicitacaoCadastroProdutoPage from "pages/Produto/AvaliarSolicitacaoCadastroProdutoPage";
+import RelatorioAlunosMatriculadosPage from "pages/Relatorios/RelatorioAlunosMatriculadosPage";
+import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSolicitacoesAlimentacaoPage";
+import {
+  ehUsuarioRelatorios,
+  usuarioComAcessoAoCalendarioCronograma,
+  usuarioComAcessoAoPainelAprovacoes,
+  usuarioComAcessoAoPainelDocumentos,
+  usuarioComAcessoAoPainelEmbalagens,
+  usuarioComAcessoAoPainelFichasTecnicas,
+  usuarioComAcessoAoRelatorioCronogramas,
+  usuarioComAcessoTelaDetalharNotificacaoOcorrencia,
+  usuarioComAcessoTelaEntregasDilog,
+  usuarioEhAdmQualquerEmpresa,
+  usuarioEhAdministradorNutriCODAE,
+  usuarioEhAdministradorRepresentanteCodae,
+  usuarioEhCODAEDietaEspecial,
+  usuarioEhCODAEGabinete,
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAEGestaoProduto,
+  usuarioEhCODAENutriManifestacao,
+  usuarioEhCodaeDilog,
+  usuarioEhCogestorDRE,
+  usuarioEhCoordenadorCODAE,
+  usuarioEhCoordenadorGpCODAE,
+  usuarioEhCoordenadorNutriCODAE,
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEhCronograma,
+  usuarioEhDRE,
+  usuarioEhDilog,
+  usuarioEhDilogDiretoria,
+  usuarioEhDilogJuridico,
+  usuarioEhDilogQualidade,
+  usuarioEhDilogQualidadeOuCronograma,
+  usuarioEhDinutreDiretoria,
+  usuarioEhDiretorUE,
+  usuarioEhEmpresaDistribuidora,
+  usuarioEhEmpresaFornecedor,
+  usuarioEhEmpresaTerceirizada,
+  usuarioEhEscolaAbastecimento,
+  usuarioEhEscolaAbastecimentoDiretor,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhGticCODAE,
+  usuarioEhLogistica,
+  usuarioEhMedicao,
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhOrgaoFiscalizador,
+  usuarioEhPreRecebimento,
+  usuarioEhQualquerCODAE,
+  usuarioEhRecebimento,
+  usuarioEscolaEhGestaoDireta,
+  usuarioEscolaEhGestaoParceira,
+  validaPerfilEscolaMistaParceira,
+} from "../helpers/utilities";
+import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroSuspensaoAtividades";
+import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
+import EditarCadastroTipoEmbalagemPage from "../pages/Cadastros/EditarCadastroTipoEmbalagemPage";
+import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
+import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
+import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
+import StatusCronogramasPendentesDilog from "../pages/Dinutre/Cronogramas/StatusCronogramasPendentesDilog";
+import StatusSolicitacoesAlteracoesCodae from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCodae";
+import StatusSolicitacoesAlteracoesCronograma from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCronograma";
+import AnalisarDocumentosRecebimentoPage from "../pages/PreRecebimento/AnalisarDocumentosRecebimentoPage";
+import AnalisarLayoutEmbalagemPage from "../pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
+import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayoutEmbalagemPage";
+import CadastroDocumentosRecebimentoPage from "../pages/PreRecebimento/CadastroDocumentosRecebimentoPage";
+import CadastroLayoutEmbalagemPage from "../pages/PreRecebimento/CadastroLayoutEmbalagemPage";
+import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
+import StatusDocumentoAprovados from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoAprovados";
+import StatusDocumentoEnviadosParaCorrecao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoEnviadosParaCorrecao";
+import StatusDocumentoPendenteAprovacao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoPendenteAprovacao";
+import StatusFichasTecnicasAprovadas from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasAprovadas";
+import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
+import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
+import StatusLayoutAprovados from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutAprovados";
+import StatusLayoutEnviadosParaCorrecao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutEnviadosParaCorrecao";
+import StatusLayoutPendenteAprovacao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutPendenteAprovacao";
+import CorrigirDocumentosRecebimentoPage from "../pages/PreRecebimento/CorrigirDocumentosRecebimentoPage";
+import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutEmbalagemPage";
+import DetalharCodaeDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharCodaeDocumentosRecebimentoPage";
+import DetalharFornecedorDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharFornecedorDocumentosRecebimentoPage";
+import DetalharLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharLayoutEmbalagemPage";
+import DetalharSolicitacaoAlteracaoLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharSolicitacaoAlteracaoLayoutEmbalagemPage";
+import DocumentosRecebimentoPage from "../pages/PreRecebimento/DocumentosRecebimentoPage";
+import AlterarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AlterarFichaTecnicaPage";
+import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
+import AtualizarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AtualizarFichaTecnicaPage";
+import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/CadastroFichaTecnicaPage";
+import DetalharFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/DetalharFichaTecnicaPage";
+import FichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/FichaTecnicaPage";
+import LayoutEmbalagemPage from "../pages/PreRecebimento/LayoutEmbalagemPage";
+import PainelDocumentosRecebimentoPage from "../pages/PreRecebimento/PainelDocumentosRecebimentoPage";
+import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
+import PainelLayoutEmbalagemPage from "../pages/PreRecebimento/PainelLayoutEmbalagemPage";
+import RelatorioCronogramaPage from "../pages/PreRecebimento/Relatorios/RelatorioCronogramaPage";
+import {
+  AtivacaoDeProdutoPage,
+  ConsultaAtivacaoDeProdutoPage,
+  ConsultaResponderReclamacaoPage,
+  ReclamacaoDeProdutoPage,
+  RelatorioQuantitativoPorTerceirizadaPage,
+  ResponderQuestionamentoNutrisupervisorPage,
+  ResponderQuestionamentoUEPage,
+  ResponderReclamacaoPage,
+} from "../pages/Produto";
+import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
+import AvaliarReclamacaoProdutoPage from "../pages/Produto/AvaliarReclamacaoProdutoPage";
+import BuscaAvancadaProdutoAnaliseSensorial from "../pages/Produto/BuscaAvancadaProdutoAnaliseSensorial";
+import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
+import BuscaProdutoAnaliseSensorial from "../pages/Produto/BuscaProdutoAnaliseSensorial";
+import BuscaProdutosSuspensos from "../pages/Produto/BuscaProdutosSuspensos";
+import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
+import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
+import RelatorioAnaliseSensorial from "../pages/Produto/RelatorioAnaliseSensorial";
+import RelatorioProduto from "../pages/Produto/RelatorioProduto";
+import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
+import CadastroFichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/CadastroFichaRecebimentoPage";
+import FichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/FichaRecebimentoPage";
+import AtribuirQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/AtribuirQuestoesPage";
+import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/CopiarAtribuicaoQuestoesPage";
+import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/EditarAtribuicaoQuestoesPage";
+import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
 import * as constants from "./constants";
 import {
+  StatusSolicitacoesDietaEspecial,
   alteracaoCardapio,
-  suspensaoAlimentacao,
   dashBoardDietaEspecial,
-  painelGestaoAlimentacao,
+  inclusaoAlimentacao,
   painelInicial,
-  relatorios,
   relatoriosAlteracaoDeCardapio,
   relatoriosAlteracaoDeCardapioCEMEI,
   relatoriosDietaEspecial,
   relatoriosInclusaoDeAlimentacao,
+  relatoriosInclusaoDeAlimentacaoCEMEI,
   relatoriosInversaoDiaCardapio,
   relatoriosSolicitacaoKitLanche,
   relatoriosSolicitacaoKitLancheCEMEI,
   relatoriosSolicitacaoUnificada,
-  StatusSolicitacoesDietaEspecial,
-  inclusaoAlimentacao,
-  relatoriosInclusaoDeAlimentacaoCEMEI,
+  suspensaoAlimentacao,
 } from "./helper";
-import {
-  usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaAbastecimento,
-  usuarioEhDRE,
-  usuarioEhCODAEGestaoAlimentacao,
-  usuarioEhCODAENutriManifestacao,
-  usuarioEhEmpresaTerceirizada,
-  usuarioEhCODAEDietaEspecial,
-  usuarioEhCODAEGestaoProduto,
-  usuarioEhQualquerCODAE,
-  usuarioEhMedicao,
-  usuarioEhNutricionistaSupervisao,
-  usuarioEhLogistica,
-  usuarioEhEmpresaDistribuidora,
-  usuarioEhPreRecebimento,
-  usuarioEhCronograma,
-  usuarioComAcessoTelaEntregasDilog,
-  usuarioEscolaEhGestaoDireta,
-  usuarioEscolaEhGestaoParceira,
-  validaPerfilEscolaMistaParceira,
-  usuarioEhCoordenadorCODAE,
-  usuarioEhDilogQualidade,
-  usuarioEhDilogQualidadeOuCronograma,
-  usuarioEhCodaeDilog,
-  usuarioEhEmpresaFornecedor,
-  usuarioEhAdministradorRepresentanteCodae,
-  usuarioEhEscolaAbastecimentoDiretor,
-  usuarioEhAdmQualquerEmpresa,
-  usuarioEhCoordenadorNutriCODAE,
-  usuarioEhCoordenadorGpCODAE,
-  usuarioEhDinutreDiretoria,
-  usuarioEhDilogDiretoria,
-  usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhCogestorDRE,
-  usuarioEhDiretorUE,
-  usuarioEhAdministradorNutriCODAE,
-  usuarioEhDilogJuridico,
-  usuarioEhDilog,
-  usuarioComAcessoTelaDetalharNotificacaoOcorrencia,
-  usuarioComAcessoAoPainelAprovacoes,
-  usuarioComAcessoAoPainelEmbalagens,
-  usuarioEhOrgaoFiscalizador,
-  usuarioComAcessoAoPainelDocumentos,
-  usuarioComAcessoAoPainelFichasTecnicas,
-  usuarioEhCODAEGabinete,
-  ehUsuarioRelatorios,
-  usuarioComAcessoAoCalendarioCronograma,
-  usuarioEhRecebimento,
-  usuarioComAcessoAoRelatorioCronogramas,
-  usuarioEhGticCODAE,
-} from "../helpers/utilities";
-import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
-import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
-import HomologacaoProdutoPage from "../pages/Produto/HomologacaoProdutoPage";
-import BuscaAvancadaProdutoPage from "../pages/Produto/BuscaAvancadaProdutoPage";
-import BuscaProdutoAnaliseSensorial from "../pages/Produto/BuscaProdutoAnaliseSensorial";
-import RelatorioAnaliseSensorial from "../pages/Produto/RelatorioAnaliseSensorial";
-import AvaliarReclamacaoProdutoPage from "../pages/Produto/AvaliarReclamacaoProdutoPage";
-import RelatorioProduto from "../pages/Produto/RelatorioProduto";
-import * as StatusSolicitacoesGestaoProduto from "../pages/Produto/StatusSolicitacoesGestaoProduto";
-import DashboardGestaoProdutoPage from "../pages/DashboardGestaoProduto/DashboardGestaoProdutoPage";
-import BuscaProdutosSuspensos from "../pages/Produto/BuscaProdutosSuspensos";
-import BuscaAvancadaProdutoAnaliseSensorial from "../pages/Produto/BuscaAvancadaProdutoAnaliseSensorial";
-import {
-  ReclamacaoDeProdutoPage,
-  ConsultaAtivacaoDeProdutoPage,
-  AtivacaoDeProdutoPage,
-  ConsultaResponderReclamacaoPage,
-  ResponderReclamacaoPage,
-  RelatorioQuantitativoPorTerceirizadaPage,
-  ResponderQuestionamentoUEPage,
-  ResponderQuestionamentoNutrisupervisorPage,
-} from "../pages/Produto";
-import AvaliarSolicitacaoCadastroProdutoPage from "pages/Produto/AvaliarSolicitacaoCadastroProdutoPage";
-import AcompanharSolicitacaoCadastroProdutoPage from "pages/Produto/AcompanharSolicitacaoCadastroProdutoPage";
-import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
-import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoSolicDietaEspPage";
-import RelatorioQuantitativoClassificacaoDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoClassificacaoDietaEspPage";
-import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
-import RelatorioDietasAutorizadas from "pages/DietaEspecial/RelatorioDietasAutorizadas";
-import RelatorioDietasCanceladas from "pages/DietaEspecial/RelatorioDietasCanceladas";
-import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
-import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
-import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
-import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
-import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEntregaDilog";
-import GestaoRequisicaoEntregaPage from "pages/Logistica/GestaoRequisicaoEntregaPage";
-import GestaoSolicitacaoAlteracaoPage from "pages/Logistica/GestaoSolicitacaoAlteracaoPage";
-import ConsultaSolicitacaoAlteracaoPage from "pages/Logistica/ConsultaSolicitacaoAlteracaoPage";
-import InsucessoEntregaPage from "pages/Logistica/InsucessoEntregaPage";
-import ConferenciaInconsistenciasPage from "pages/Logistica/ConferenciaInconsistenciasPage";
-import ConferirEntregaPage from "pages/Logistica/ConferirEntregaPage";
-import ConferenciaDeGuiaPage from "pages/Logistica/ConferenciaDeGuiaPage";
-import DetalhamentoGuiaPage from "pages/Logistica/DetalhamentoGuiaPage";
-import ReposicaoDeGuiaPage from "pages/Logistica/ReposicaoDeGuiaPage";
-import RegistrarInsucessoEntregaPage from "pages/Logistica/RegistrarInsucessoEntregaPage";
-import ConferenciaDeGuiaComOcorrenciaPage from "pages/Logistica/ConferenciaDeGuiaComOcorrenciaPage";
-import ConferenciaDeGuiaResumoFinalPage from "pages/Logistica/ConferenciaDeGuiaResumoFinalPage";
-import EntregasDilogPage from "pages/Logistica/EntregasDilogPage";
-import EntregasDistribuidorPage from "pages/Logistica/EntregasDistribuidorPage";
-import EntregasDrePage from "pages/Logistica/EntregasDrePage";
-import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
-import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
-import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
-import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
-import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
-import GestaoAcessoCodaeDilogPage from "pages/Configuracoes/GestaoAcessoCodaeDilogPage";
-import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiretorEscolaPage";
-import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
-import CargasUsuariosServidoresPage from "pages/Configuracoes/CargasUsuariosServidoresPage";
-import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
-import StatusCronogramasPendentesDinutre from "pages/Dinutre/Cronogramas/StatusCronogramasPendentesDinutre";
-import StatusCronogramasAguardandoDilog from "pages/Dinutre/Cronogramas/StatusCronogramasAguardandoDilog";
-import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
-import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
-import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
-import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSolicitacoesAlimentacaoPage";
-import RelatorioAlunosMatriculadosPage from "pages/Relatorios/RelatorioAlunosMatriculadosPage";
-import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
-import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
-import DetalharCadastroLaboratorioPage from "pages/Cadastros/DetalharCadastroLaboratorioPage";
-import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
-import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
-import CadastroTipoEmbalagemPage from "pages/Cadastros/CadastroTipoEmbalagemPage";
-import TiposEmbalagensCadastradosPage from "pages/Cadastros/TiposEmbalagensCadastradosPage";
-import GestaoAcessoEmpresaPage from "pages/Configuracoes/GestaoAcessoEmpresaPage";
-import EditarCadastroTipoEmbalagemPage from "../pages/Cadastros/EditarCadastroTipoEmbalagemPage";
-import ProdutosLogisticaPage from "pages/Cadastros/ProdutosLogisticaPage";
-import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
-import GestaoAcessoGeralPage from "pages/Configuracoes/GestaoAcessoGeralPage";
-import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
-import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
-import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
-import StatusCronogramasAssinadoCODAE from "pages/Dinutre/Cronogramas/StatusCronogramasAssinadoCODAE";
-import StatusSolicitacoesAlteracoesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDinutre";
-import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
-import GestaoAcessoCogestorPage from "pages/Configuracoes/GestaoAcessoCogestorPage";
-import AnaliseDilogCronogramaPage from "pages/PreRecebimento/DetalharSolicitacaoCronograma";
-import SolicitacaoAlteracaoCronogramaFornecedorPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaFornecedorPage";
-import StatusSolicitacoesAlteracoesAprovadasDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDinutre";
-import StatusSolicitacoesAlteracoesReprovadasDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDinutre";
-import StatusSolicitacoesAlteracoesDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDilog";
-import StatusSolicitacoesAlteracoesAprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDilog";
-import StatusSolicitacoesAlteracoesReprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDilog";
-import AtualizacaoEmailEOLPage from "pages/Configuracoes/AtualizacaoEmailEOLPage";
-import GuiasNotificacoesPage from "pages/Logistica/GuiasNotificacoesPage";
-import GuiasNotificacoesFiscalPage from "pages/Logistica/GuiasNotificacoesFiscalPage";
-import CadastroNotificacaoPage from "pages/Logistica/CadastroNotificacao.page";
-import NotificarEmpresaPage from "pages/Logistica/NotificarEmpresaPage";
-import EditarNotificacaoPage from "pages/Logistica/EditarNotificacaoPage";
-import CadastroProdutosLogisticaPage from "pages/Cadastros/CadastroProdutosLogisticaPage";
-import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogisticaPage";
-import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
-import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
-import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
-import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
-import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
-import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
-import CadastroFabricantePage from "pages/Cadastros/CadastroFabricantePage";
-import StatusCronogramasPendentesDilog from "../pages/Dinutre/Cronogramas/StatusCronogramasPendentesDilog";
-import StatusAguardandoAssinaturasCronograma from "../pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
-import StatusSolicitacoesAlteracoesCronograma from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCronograma";
-import CadastroSuspensaoDeAtividadesPage from "../pages/Cadastros/CadastroSuspensaoAtividades";
-import LayoutEmbalagemPage from "../pages/PreRecebimento/LayoutEmbalagemPage";
-import CadastroLayoutEmbalagemPage from "../pages/PreRecebimento/CadastroLayoutEmbalagemPage";
-import DetalharLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharLayoutEmbalagemPage";
-import DetalharSolicitacaoAlteracaoLayoutEmbalagemPage from "../pages/PreRecebimento/DetalharSolicitacaoAlteracaoLayoutEmbalagemPage";
-import StatusSolicitacoesAlteracoesCodae from "../pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCodae";
-import PainelLayoutEmbalagemPage from "../pages/PreRecebimento/PainelLayoutEmbalagemPage";
-import StatusLayoutPendenteAprovacao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutPendenteAprovacao";
-import StatusLayoutAprovados from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutAprovados";
-import StatusLayoutEnviadosParaCorrecao from "../pages/PreRecebimento/CardsLayoutEmbalagem/StatusLayoutEnviadosParaCorrecao";
-import AnalisarLayoutEmbalagemPage from "../pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
-import CorrigirLayoutEmbalagemPage from "../pages/PreRecebimento/CorrigirLayoutEmbalagemPage";
-import AtualizarLayoutEmbalagemPage from "../pages/PreRecebimento/AtualizarLayoutEmbalagemPage";
-import DocumentosRecebimentoPage from "../pages/PreRecebimento/DocumentosRecebimentoPage";
-import CadastroDocumentosRecebimentoPage from "../pages/PreRecebimento/CadastroDocumentosRecebimentoPage";
-import DetalharFornecedorDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharFornecedorDocumentosRecebimentoPage";
-import DetalharCodaeDocumentosRecebimentoPage from "../pages/PreRecebimento/DetalharCodaeDocumentosRecebimentoPage";
-import PainelDocumentosRecebimentoPage from "../pages/PreRecebimento/PainelDocumentosRecebimentoPage";
-import StatusDocumentoPendenteAprovacao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoPendenteAprovacao";
-import StatusDocumentoAprovados from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoAprovados";
-import StatusDocumentoEnviadosParaCorrecao from "../pages/PreRecebimento/CardsDocumentosRecebimento/StatusDocumentoEnviadosParaCorrecao";
-import AnalisarDocumentosRecebimentoPage from "../pages/PreRecebimento/AnalisarDocumentosRecebimentoPage";
-import CorrigirDocumentosRecebimentoPage from "../pages/PreRecebimento/CorrigirDocumentosRecebimentoPage";
-import FichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/FichaTecnicaPage";
-import CadastroFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/CadastroFichaTecnicaPage";
-import PainelFichasTecnicasPage from "../pages/PreRecebimento/PainelFichasTecnicasPage";
-import AnalisarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AnalisarFichaTecnicaPage";
-import DetalharFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/DetalharFichaTecnicaPage";
-import AlterarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AlterarFichaTecnicaPage";
-import AtualizarFichaTecnicaPage from "../pages/PreRecebimento/FichaTecnica/AtualizarFichaTecnicaPage";
-import CalendarioCronogramaPage from "../pages/PreRecebimento/CalendarioCronogramaPage";
-import StatusFichasTecnicasPendenteAprovacao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasPendenteAprovacao";
-import StatusFichasTecnicasEnviadosParaCorrecao from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasEnviadosParaCorrecao";
-import StatusFichasTecnicasAprovadas from "../pages/PreRecebimento/CardsFichasTecnicas/StatusFichasTecnicasAprovadas";
-import RelatorioGerencialDietas from "../pages/DietaEspecial/RelatorioGerencialDietas.jsx";
-import EditaisContratosEditarPage from "../pages/Cadastros/EditaisContratosEditarPage.jsx";
-import QuestoesPorProdutoPage from "../pages/Recebimento/QuestoesPorProduto/QuestoesPorProdutoPage";
-import AtribuirQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/AtribuirQuestoesPage";
-import EditarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/EditarAtribuicaoQuestoesPage";
-import CopiarAtribuicaoQuestoesPage from "../pages/Recebimento/QuestoesPorProduto/CopiarAtribuicaoQuestoesPage";
-import FichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/FichaRecebimentoPage";
-import CadastroFichaRecebimentoPage from "../pages/Recebimento/FichaRecebimento/CadastroFichaRecebimentoPage";
-import { supervisao } from "./rotas/supervisao/index.js";
-import RelatorioCronogramaPage from "../pages/PreRecebimento/Relatorios/RelatorioCronogramaPage";
-import { medicaoInicial } from "./rotas/medicaoInicial/index.js";
+import { rotasDietaEspecial } from "./rotas/dietaEspecial";
+import { rotasGestaoDeAlimentacao } from "./rotas/gestaoDeAlimentacao";
+import { rotasMedicaoInicial } from "./rotas/medicaoInicial";
+import { rotasRelatorios } from "./rotas/relatorios";
+import { rotasSupervisao } from "./rotas/supervisao";
 
 let routesConfig = [
-  {
-    path: `/${constants.ALUNO}/${constants.DIETA_ESPECIAL}`,
-    component: DietaEspecialAluno,
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
   {
     path: "/",
     component: painelInicial(),
     tipoUsuario: constants.QUALQUER_USUARIO,
   },
-  {
-    path: "/painel-gestao-alimentacao",
-    component: painelGestaoAlimentacao(),
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhDRE() ||
-      usuarioEhCODAEGestaoAlimentacao() ||
-      usuarioEhCODAENutriManifestacao() ||
-      usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEmpresaTerceirizada() ||
-      usuarioEhMedicao() ||
-      usuarioEhCODAEGabinete(),
-  },
+
   {
     path: "/login",
     component: Login,
@@ -339,62 +315,6 @@ let routesConfig = [
     path: "/perfil",
     component: PerfilPage,
     tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: "/relatorios",
-    component: relatorios(),
-    tipoUsuario: constants.QUALQUER_USUARIO,
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}`,
-    component: DietaEspecialEscolaPage,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEscolaEhGestaoDireta() ||
-      usuarioEscolaEhGestaoParceira(),
-  },
-  {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.CANCELAMENTO}`,
-    component: CancelamentoDietaPage,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEscolaEhGestaoDireta() ||
-      usuarioEscolaEhGestaoParceira(),
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL_ALTERACAO_UE}`,
-    component: DietaEspecialAlteracaoUEPage,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEscolaEhGestaoDireta() ||
-      usuarioEscolaEhGestaoParceira(),
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,
-    component: StatusSolicitacoesAutorizadasEscolaPage,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_PENDENTES}`,
-    component: StatusSolicitacoesPendentesEscolaPage,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_CANCELADAS}`,
-    component: StatusSolicitacoesCanceladasEscolaPage,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
-  },
-  {
-    path: `/${constants.ESCOLA}/${constants.SOLICITACOES_NEGADAS}`,
-    component: StatusSolicitacoesRecusadasEscolaPage,
-    tipoUsuario:
-      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor(),
   },
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
@@ -2000,7 +1920,10 @@ let routesConfig = [
   },
 ];
 
-routesConfig = routesConfig.concat(medicaoInicial);
-routesConfig = routesConfig.concat(supervisao);
+routesConfig = routesConfig.concat(rotasGestaoDeAlimentacao);
+routesConfig = routesConfig.concat(rotasDietaEspecial);
+routesConfig = routesConfig.concat(rotasMedicaoInicial);
+routesConfig = routesConfig.concat(rotasSupervisao);
+routesConfig = routesConfig.concat(rotasRelatorios);
 
 export default routesConfig;

@@ -1,16 +1,9 @@
-import DashboardDREPage from "../pages/DRE/DashboardDREPage";
-import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
-import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
-import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
-import DashboardNutricionistaGAPage from "../pages/Nutricionista/DashboardNutricionistaGAPage";
-import DashboardNutriManifestacaoPage from "../pages/Nutricionista/DashboardNutriManifestacaoPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 import InclusaoDeAlimentacaoCEIPage from "../pages/Escola/InclusaoDeAlimentacaoCEIPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import AlteracaoDeCardapioCEIPage from "../pages/Escola/AlteracaoDeCardapioCEIPage";
 import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
 import SuspensaoDeAlimentacaoDeCEI from "../pages/Escola/SuspensaoDeAlimentacaoDeCEIPage";
-import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
 import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
 import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
@@ -28,38 +21,6 @@ import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
 import { escolaEhCei, escolaEhCEMEI } from "helpers/utilities";
 import InclusaoDeAlimentacaoCEMEIPage from "pages/Escola/InclusaoDeAlimentacaoCEMEIPage";
 import AlteracaoDeCardapioCEMEIPage from "pages/Escola/AlteracaoDeCardapioCEMEIPage";
-
-export const painelGestaoAlimentacao = () => {
-  switch (localStorage.getItem("tipo_perfil")) {
-    case TIPO_PERFIL.DIRETORIA_REGIONAL:
-      return DashboardDREPage;
-    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
-      return DashboardCODAEPage;
-    case TIPO_PERFIL.TERCEIRIZADA:
-      return DashboardTerceirizadaPage;
-    case TIPO_PERFIL.SUPERVISAO_NUTRICAO:
-      return DashboardNutricionistaGAPage;
-    case TIPO_PERFIL.NUTRICAO_MANIFESTACAO:
-    case TIPO_PERFIL.MEDICAO:
-    case TIPO_PERFIL.CODAE_GABINETE:
-      return DashboardNutriManifestacaoPage;
-    default:
-      return DashboardEscolaPage;
-  }
-};
-
-export const relatorios = () => {
-  switch (localStorage.getItem("tipo_perfil")) {
-    case TIPO_PERFIL.DIRETORIA_REGIONAL:
-      return RelatoriosPage.RelatoriosDRE;
-    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
-      return RelatoriosPage.RelatoriosCODAE;
-    case TIPO_PERFIL.TERCEIRIZADA:
-      return RelatoriosPage.RelatoriosEscola;
-    default:
-      return RelatoriosPage.RelatoriosEscola;
-  }
-};
 
 export const dashBoardDietaEspecial = () => {
   switch (localStorage.getItem("tipo_perfil")) {

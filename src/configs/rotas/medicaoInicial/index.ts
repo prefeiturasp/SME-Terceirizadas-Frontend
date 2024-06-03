@@ -1,30 +1,4 @@
 import {
-  ACOMPANHAMENTO_DE_LANCAMENTOS,
-  ADICIONAR_PARAMETRIZACAO_FINANCEIRA,
-  CADASTRO_DE_CLAUSULA,
-  CADASTRO_DE_EMPENHO,
-  CLAUSULAS_PARA_DESCONTOS,
-  CONFERENCIA_DOS_LANCAMENTOS,
-  CONTROLE_DE_FREQUENCIA,
-  DETALHAMENTO_DO_LANCAMENTO,
-  EDITAR_CLAUSULA,
-  EDITAR_EMPENHO,
-  EDITAR_PARAMETRIZACAO_FINANCEIRA,
-  EMPENHOS,
-  LANCAMENTO_INICIAL,
-  LANCAMENTO_MEDICAO_INICIAL,
-  MEDICAO_INICIAL,
-  PARAMETRIZACAO_FINANCEIRA,
-  PERIODO_LANCAMENTO,
-  PERIODO_LANCAMENTO_CEI,
-  REGISTRAR_NOVA_OCORRENCIA,
-  REGISTRAR_OCORRENCIAS,
-  RELATORIOS,
-  RELATORIO_ADESAO,
-  RELATORIO_CONSOLIDADO,
-  RELATORIO_FINANCEIRO,
-} from "configs/constants";
-import {
   usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
@@ -53,35 +27,37 @@ import { PeriodoLancamentoMedicaoInicialPage } from "pages/LancamentoMedicaoInic
 import { RelatorioConsolidadoPage } from "pages/LancamentoMedicaoInicial/RelatorioConsolidado/RelatorioConsolidadoPage";
 import { RelatorioFinanceiroPage } from "pages/LancamentoMedicaoInicial/RelatorioFinanceiro/RelatorioFinanceiroPage";
 import { RelatorioAdesaoPage } from "pages/LancamentoMedicaoInicial/Relatorios/RelatorioAdesaoPage";
+import * as constants from "../../constants";
+import { RotaInterface } from "../interfaces";
 
-export const medicaoInicial = [
+export const rotasMedicaoInicial: Array<RotaInterface> = [
   {
-    path: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`,
+    path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}`,
     component: LancamentoMedicaoInicialPage,
     tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
-    path: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`,
+    path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}/${constants.PERIODO_LANCAMENTO}`,
     component: PeriodoLancamentoMedicaoInicialPage,
     tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
-    path: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO_CEI}`,
+    path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}/${constants.PERIODO_LANCAMENTO_CEI}`,
     component: PeriodoLancamentoMedicaoInicialCEIPage,
     tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
-    path: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}`,
+    path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}/${constants.REGISTRAR_OCORRENCIAS}`,
     component: ListaOcorrenciasPage,
     tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
-    path: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${REGISTRAR_OCORRENCIAS}/${REGISTRAR_NOVA_OCORRENCIA}`,
+    path: `/${constants.LANCAMENTO_INICIAL}/${constants.LANCAMENTO_MEDICAO_INICIAL}/${constants.REGISTRAR_OCORRENCIAS}/${constants.REGISTRAR_NOVA_OCORRENCIA}`,
     component: RegistrarNovaOcorrenciaPage,
     tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.ACOMPANHAMENTO_DE_LANCAMENTOS}`,
     component: AcompanhamentoDeLancamentosPage,
     tipoUsuario:
       usuarioEhDRE() ||
@@ -92,7 +68,7 @@ export const medicaoInicial = [
       usuarioEhCODAEGabinete(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CONFERENCIA_DOS_LANCAMENTOS}`,
     component: ConferenciaDosLancamentosPage,
     tipoUsuario:
       usuarioEhDRE() ||
@@ -102,62 +78,62 @@ export const medicaoInicial = [
       usuarioEhCODAEGabinete(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${DETALHAMENTO_DO_LANCAMENTO}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.DETALHAMENTO_DO_LANCAMENTO}`,
     component: DetalhamentoDoLancamentoPage,
     tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${EMPENHOS}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}`,
     component: EmpenhosPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${EMPENHOS}/${CADASTRO_DE_EMPENHO}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}/${constants.CADASTRO_DE_EMPENHO}`,
     component: CadastroDeEmpenhoPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${EMPENHOS}/${EDITAR_EMPENHO}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.EMPENHOS}/${constants.EDITAR_EMPENHO}`,
     component: EditarEmpenhoPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${CLAUSULAS_PARA_DESCONTOS}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}`,
     component: ClausulasParaDescontosPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${PARAMETRIZACAO_FINANCEIRA}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.PARAMETRIZACAO_FINANCEIRA}`,
     component: ParametrizacaoFinanceiraPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${PARAMETRIZACAO_FINANCEIRA}/${ADICIONAR_PARAMETRIZACAO_FINANCEIRA}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.PARAMETRIZACAO_FINANCEIRA}/${constants.ADICIONAR_PARAMETRIZACAO_FINANCEIRA}`,
     component: AdicionarParametrizacaoFinanceiraPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${PARAMETRIZACAO_FINANCEIRA}/${EDITAR_PARAMETRIZACAO_FINANCEIRA}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.PARAMETRIZACAO_FINANCEIRA}/${constants.EDITAR_PARAMETRIZACAO_FINANCEIRA}`,
     component: EditarParametrizacaoFinanceiraPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${CLAUSULAS_PARA_DESCONTOS}/${CADASTRO_DE_CLAUSULA}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}/${constants.CADASTRO_DE_CLAUSULA}`,
     component: CadastroDeClausulasPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${CLAUSULAS_PARA_DESCONTOS}/${EDITAR_CLAUSULA}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CLAUSULAS_PARA_DESCONTOS}/${constants.EDITAR_CLAUSULA}`,
     component: EditarClausulaPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${CONTROLE_DE_FREQUENCIA}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.CONTROLE_DE_FREQUENCIA}`,
     component: ControleDeFrequenciaPage,
     tipoUsuario: usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${RELATORIOS}/${RELATORIO_ADESAO}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.RELATORIOS}/${constants.RELATORIO_ADESAO}`,
     component: RelatorioAdesaoPage,
     tipoUsuario:
       usuarioEhMedicao() ||
@@ -166,12 +142,12 @@ export const medicaoInicial = [
       usuarioEhEscolaTerceirizadaQualquerPerfil(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${RELATORIO_FINANCEIRO}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.RELATORIO_FINANCEIRO}`,
     component: RelatorioFinanceiroPage,
     tipoUsuario: usuarioEhMedicao(),
   },
   {
-    path: `/${MEDICAO_INICIAL}/${RELATORIO_FINANCEIRO}/${RELATORIO_CONSOLIDADO}`,
+    path: `/${constants.MEDICAO_INICIAL}/${constants.RELATORIO_FINANCEIRO}/${constants.RELATORIO_CONSOLIDADO}`,
     component: RelatorioConsolidadoPage,
     tipoUsuario: usuarioEhMedicao(),
   },

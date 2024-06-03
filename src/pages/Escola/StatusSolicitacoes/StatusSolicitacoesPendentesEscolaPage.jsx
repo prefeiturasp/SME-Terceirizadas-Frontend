@@ -1,9 +1,9 @@
-import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import CardLegendas from "components/Shareable/CardLegendas";
 import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import { PAGINACAO_DEFAULT } from "constants/shared";
 import React from "react";
 import { getSolicitacoesPendentesEscola } from "services/painelEscola.service";
@@ -17,7 +17,7 @@ const atual = {
   titulo: "Solicitações Pendentes",
 };
 
-export default () => (
+export const StatusSolicitacoesPendentesEscolaPage = () => (
   <Page titulo={atual.titulo} botaoVoltar>
     <Breadcrumb home={HOME} atual={atual} />
     <SolicitacoesPorStatusGenerico
