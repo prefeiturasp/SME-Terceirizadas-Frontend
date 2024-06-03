@@ -4,7 +4,6 @@ import suspensaoDeAlimentacaoReducer from "./reducers/suspensaoDeAlimentacaoRedu
 import inversaoDeDiaDeCardapioReducer from "./reducers/inversaoDeDiaDeCardapio.reducer";
 import alteracaoCardapioReducer from "./reducers/alteracaoCardapioReducer";
 import loteReducer from "./reducers/lote.reducer";
-import loadUnifiedReducer from "./reducers/unifiedSolicitation.reducer";
 import loadTipoAlimentacao from "./reducers/tipoAlimentacaoReducer";
 import loadEmpresa from "./reducers/empresa.reducer";
 import loadFiltroBusca from "./reducers/loadFiltroBusca";
@@ -28,7 +27,6 @@ const rootReducer = combineReducers({
   form: formReducer,
   inversaoDeDiaDeCardapioForm: inversaoDeDiaDeCardapioReducer,
   alteracaoCardapio: alteracaoCardapioReducer,
-  unifiedSolicitation: loadUnifiedReducer,
   loteForm: loteReducer,
   suspensaoDeAlimentacao: suspensaoDeAlimentacaoReducer,
   TipoDeAlimentacaoForm: loadTipoAlimentacao,
