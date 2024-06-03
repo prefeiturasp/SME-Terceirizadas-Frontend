@@ -10,14 +10,12 @@ import {
   usuarioEhMedicao,
   usuarioEhQualquerCODAE,
 } from "helpers/utilities";
-import CadastroEmpresaPage from "pages/Cadastros/CadastroEmpresaPage";
-import CadastroHorarioComboAlimentacaoPage from "pages/Cadastros/CadastroHorarioComboAlimentacaoPage";
-import CadastroLotePage from "pages/Cadastros/CadastroLotePage";
-import * as constants from "../../constants";
-import { RotaInterface } from "../interfaces";
 
+import CadastroEmpresaPage from "pages/Cadastros/CadastroEmpresaPage";
 import CadastroFabricantePage from "pages/Cadastros/CadastroFabricantePage";
+import CadastroHorarioComboAlimentacaoPage from "pages/Cadastros/CadastroHorarioComboAlimentacaoPage";
 import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
+import CadastroLotePage from "pages/Cadastros/CadastroLotePage";
 import CadastroMarcaPage from "pages/Cadastros/CadastroMarcaPage";
 import CadastroProdutosLogisticaPage from "pages/Cadastros/CadastroProdutosLogisticaPage";
 import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
@@ -44,6 +42,9 @@ import PermissaoLancamentosEspeciaisPage from "pages/Cadastros/PermissaoLancamen
 import ProdutosLogisticaPage from "pages/Cadastros/ProdutosLogisticaPage";
 import TiposEmbalagensCadastradosPage from "pages/Cadastros/TiposEmbalagensCadastradosPage";
 import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
+
+import * as constants from "../../constants";
+import { RotaInterface } from "../interfaces";
 
 export const rotasCadastros: Array<RotaInterface> = [
   {

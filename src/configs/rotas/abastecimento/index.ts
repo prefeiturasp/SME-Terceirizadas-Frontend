@@ -44,7 +44,7 @@ import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
 import * as constants from "../../constants";
 import { RotaInterface } from "../interfaces";
 
-export const rotasLogistica: Array<RotaInterface> = [
+export const rotasAbastecimento: Array<RotaInterface> = [
   {
     path: `/${constants.LOGISTICA}/${constants.DISPONIBILIZACAO_DE_SOLICITACOES}`,
     component: DisponibilizacaoDeSolicitacoesPage,

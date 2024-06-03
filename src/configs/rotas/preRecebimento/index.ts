@@ -15,6 +15,19 @@ import {
   usuarioEhPreRecebimento,
 } from "helpers/utilities";
 
+import StatusAguardandoAssinaturasCronograma from "pages/Dinutre/Cronogramas/StatusAguardandoAssinaturasCronograma";
+import StatusCronogramasAguardandoDilog from "pages/Dinutre/Cronogramas/StatusCronogramasAguardandoDilog";
+import StatusCronogramasAssinadoCODAE from "pages/Dinutre/Cronogramas/StatusCronogramasAssinadoCODAE";
+import StatusCronogramasPendentesDilog from "pages/Dinutre/Cronogramas/StatusCronogramasPendentesDilog";
+import StatusCronogramasPendentesDinutre from "pages/Dinutre/Cronogramas/StatusCronogramasPendentesDinutre";
+import StatusSolicitacoesAlteracoesAprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDilog";
+import StatusSolicitacoesAlteracoesAprovadasDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDinutre";
+import StatusSolicitacoesAlteracoesCodae from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCodae";
+import StatusSolicitacoesAlteracoesCronograma from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesCronograma";
+import StatusSolicitacoesAlteracoesDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDilog";
+import StatusSolicitacoesAlteracoesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDinutre";
+import StatusSolicitacoesAlteracoesReprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDilog";
+import StatusSolicitacoesAlteracoesReprovadasDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDinutre";
 import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
 import AnalisarDocumentosRecebimentoPage from "pages/PreRecebimento/AnalisarDocumentosRecebimentoPage";
 import AnalisarLayoutEmbalagemPage from "pages/PreRecebimento/AnalisarLayoutEmbalagemPage";
@@ -299,5 +312,94 @@ export const rotasPreRecebimento: Array<RotaInterface> = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.RELATORIO_CRONOGRAMA}`,
     component: RelatorioCronogramaPage,
     tipoUsuario: usuarioComAcessoAoRelatorioCronogramas(),
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.SOLICITACOES_PENDENTES}`,
+    component: StatusCronogramasPendentesDinutre,
+    tipoUsuario: usuarioEhDinutreDiretoria(),
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.AGUARDANDO_DILOG}`,
+    component: StatusCronogramasAguardandoDilog,
+    tipoUsuario: usuarioEhDinutreDiretoria(),
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.SOLICITACOES_ALTERACOES}`,
+    component: StatusSolicitacoesAlteracoesDinutre,
+    tipoUsuario: usuarioEhDinutreDiretoria(),
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.ALTERACOES_APROVADAS}`,
+    component: StatusSolicitacoesAlteracoesAprovadasDinutre,
+    tipoUsuario: usuarioEhDinutreDiretoria(),
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.ALTERACOES_REPROVADAS}`,
+    component: StatusSolicitacoesAlteracoesReprovadasDinutre,
+    tipoUsuario: usuarioEhDinutreDiretoria(),
+  },
+  {
+    path: `/${constants.DILOG}/${constants.SOLICITACOES_PENDENTES}`,
+    component: StatusCronogramasPendentesDilog,
+    tipoUsuario: usuarioEhDilogDiretoria(),
+  },
+  {
+    path: `/${constants.DILOG}/${constants.SOLICITACOES_ALTERACOES}`,
+    component: StatusSolicitacoesAlteracoesDilog,
+    tipoUsuario: usuarioEhDilogDiretoria(),
+  },
+  {
+    path: `/${constants.DILOG}/${constants.ALTERACOES_APROVADAS}`,
+    component: StatusSolicitacoesAlteracoesAprovadasDilog,
+    tipoUsuario:
+      usuarioEhDilogDiretoria() ||
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
+  },
+  {
+    path: `/${constants.DILOG}/${constants.ALTERACOES_REPROVADAS}`,
+    component: StatusSolicitacoesAlteracoesReprovadasDilog,
+    tipoUsuario:
+      usuarioEhDilogDiretoria() ||
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
+  },
+  {
+    path: `/${constants.CRONOGRAMA}/${constants.AGUARDANDO_ASSINATURAS}`,
+    component: StatusAguardandoAssinaturasCronograma,
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
+  },
+  {
+    path: `/${constants.ASSINADO_CODAE}`,
+    component: StatusCronogramasAssinadoCODAE,
+    tipoUsuario:
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhDilogDiretoria() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCronograma() ||
+      usuarioEhCODAEGabinete(),
+  },
+  {
+    path: `/${constants.CRONOGRAMA}/${constants.SOLICITACOES_ALTERACOES}`,
+    component: StatusSolicitacoesAlteracoesCronograma,
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhCODAEGabinete(),
+  },
+  {
+    path: `/${constants.CRONOGRAMA}/${constants.ALTERACOES_CODAE}`,
+    component: StatusSolicitacoesAlteracoesCodae,
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhDilogDiretoria() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhCODAEGabinete(),
   },
 ];
