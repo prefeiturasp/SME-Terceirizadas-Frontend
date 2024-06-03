@@ -13,7 +13,7 @@ const atual = {
   titulo: "Cancelamento de Dieta Especial",
 };
 
-export default () => (
+export const CancelamentoDietaPage = () => (
   <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} />
     <CancelamentoDieta />

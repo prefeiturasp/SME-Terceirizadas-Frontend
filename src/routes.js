@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
-import RoutesConfig from "./configs/RoutesConfig";
+import { rotas } from "./configs/rotas";
 import ConfirmarEmailPage from "./pages/ConfirmarEmailPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import RecuperarSenhaPage from "./pages/RecuperarSenhaPage";
@@ -24,7 +24,7 @@ const AppRoutes = () => (
   <BrowserRouter>
     <Routes>
       <Route path="/login" element={<Login />} />
-      {RoutesConfig.map((value, key) => {
+      {rotas.map((value, key) => {
         return (
           <Route
             key={key}
