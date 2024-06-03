@@ -64,7 +64,8 @@ export const CorpoRelatorio = (props) => {
             onClick={() => {
               getDetalheKitLancheAvulso(
                 solicitacaoKitLanche.uuid,
-                tipoSolicitacao
+                tipoSolicitacao,
+                solicitacaoKitLanche?.escola?.nome
               );
             }}
           />
