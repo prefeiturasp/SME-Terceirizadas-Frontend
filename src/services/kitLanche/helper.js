@@ -26,11 +26,9 @@ export const getKitLancheNome = (tipoSolicitacao, escola) => {
   const escolaLowerCase = escola.toLowerCase().replace(/\s/g, "_");
   switch (tipoSolicitacao) {
     case TIPO_SOLICITACAO.SOLICITACAO_NORMAL:
-      return "kit_lanche_" + escolaLowerCase;
     case TIPO_SOLICITACAO.SOLICITACAO_CEI:
-      return "kit_lanche_cei_" + escolaLowerCase;
     case TIPO_SOLICITACAO.SOLICITACAO_CEMEI:
-      return "kit_lanche_cemei_" + escolaLowerCase;
+      return "kit_lanche_" + escolaLowerCase;
     default:
       return "solicitacao_kit_lanche";
   }
