@@ -170,7 +170,7 @@ export const imprimeRelatorioSuspensaoAlimentacao = async (
     responseType: "blob",
   });
   const escolaLowerCase = escola.toLowerCase().replace(/\s/g, "_");
-  const nomePdf = "inversao_" + escolaLowerCase;
+  const nomePdf = "suspensao_" + escolaLowerCase;
   saveAs(data, `${nomePdf}.pdf`);
 };
 
