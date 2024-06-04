@@ -738,13 +738,13 @@ const routesConfig = [
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao(),
   },
   {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.TIPOS_RECIPIENTE}`,
+    path: `/${constants.DESPERDICIO}/${constants.CADASTROS}/${constants.TIPOS_RECIPIENTE}`,
     component: TiposRecipientePage,
     exact: true,
     tipoUsuario: usuarioEhCoordenadorNutriSupervisao(),
   },
   {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${constants.TIPOS_ALIMENTO}`,
+    path: `/${constants.DESPERDICIO}/${constants.CADASTROS}/${constants.TIPOS_ALIMENTO}`,
     component: TiposAlimentoPage,
     exact: true,
     tipoUsuario: usuarioEhCoordenadorNutriSupervisao(),

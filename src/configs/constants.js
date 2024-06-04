@@ -139,6 +139,7 @@ export const RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP =
   "relatorio-quantitativo-diag-dieta-esp";
 export const RELATORIO_SOLICITACOES_ALIMENTACAO = `${RELATORIO}/solicitacoes-alimentacao`;
 export const RELATORIO_ALUNOS_MATRICULADOS = `${RELATORIO}/alunos-matriculados`;
+export const DESPERDICIO = "desperdicio";
 export const CONTROLE_SOBRAS = "controle-sobras";
 export const RELATORIO_CONTROLE_SOBRAS = "relatorio-controle-sobras";
 export const CONTROLE_RESTOS = "controle-restos";

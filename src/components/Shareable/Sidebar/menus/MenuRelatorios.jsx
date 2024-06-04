@@ -12,8 +12,6 @@ import {
   usuarioEhEscolaTerceirizada,
   usuarioEhDRE,
   usuarioEhOrgaoFiscalizador,
-  usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhAdmQualquerEmpresa,
   ehUsuarioRelatorios,
 } from "helpers/utilities";
 import * as constants from "configs/constants";
@@ -70,10 +68,6 @@ const MenuRelatorios = () => {
     usuarioEhDRE() ||
     usuarioEhEscolaTerceirizada() ||
     usuarioEhEscolaTerceirizadaDiretor();
-
-  const exibirRelatorioControleRestos = usuarioEhCoordenadorNutriSupervisao();
-
-  const exibirRelatorioControleSobras = usuarioEhAdmQualquerEmpresa();
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
@@ -143,21 +137,7 @@ const MenuRelatorios = () => {
         >
           Relatório de gestão de dieta esp.
         </LeafItem>
-      )}
-      {exibirRelatorioControleRestos && (
-        <LeafItem
-          to={`/${constants.CONTROLE_RESTOS}/${constants.RELATORIO_CONTROLE_RESTOS}`}
-        >
-          Relatório de Restos
-        </LeafItem>
-      )}
-      {exibirRelatorioControleSobras && (
-        <LeafItem
-          to={`/${constants.CONTROLE_SOBRAS}/${constants.RELATORIO_CONTROLE_SOBRAS}`}
-        >
-          Relatório de Sobras
-        </LeafItem>
-      )}
+      )}      
     </Menu>
   );
 };

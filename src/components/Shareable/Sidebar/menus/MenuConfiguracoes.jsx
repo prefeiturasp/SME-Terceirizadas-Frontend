@@ -13,9 +13,6 @@ import {
   GESTAO_ACESSO_MASTER,
   CARGAS_USUARIOS_SERVIDORES,
   ATUALIZACAO_EMAIL_EOL,
-  CADASTROS,
-  TIPOS_RECIPIENTE,
-  TIPOS_ALIMENTO,
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -167,22 +164,6 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
         >
           <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_MASTER}/`}>
             Gestão de Acesso
-          </LeafItem>
-        </SubMenu>
-      )}
-
-      {usuarioEhCoordenadorNutriSupervisao() && (
-        <SubMenu
-          icon="fa-chevron-down"
-          onClick={onSubmenuClick}
-          title="Cadastros"
-          activeMenu={activeMenu}
-        >
-          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${TIPOS_RECIPIENTE}`}>
-            Tipos de Recipiente
-          </LeafItem>
-          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${TIPOS_ALIMENTO}`}>
-            Tipos de Alimento
           </LeafItem>
         </SubMenu>
       )}
