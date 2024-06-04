@@ -37,6 +37,7 @@ import {
   usuarioEhDilogDiretoria,
   usuarioEhRecebimento,
   ehUsuarioRelatorios,
+  usuarioEhAdmQualquerEmpresa,
 } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
 
@@ -52,6 +53,7 @@ import {
   MenuLogistica,
   MenuPreRecebimento,
   MenuRecebimento,
+  MenuDesperdicio,
 } from "./menus";
 
 export const SidebarContent = () => {
@@ -110,6 +112,9 @@ export const SidebarContent = () => {
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAEGabinete() ||
       ehUsuarioRelatorios());
+  const exibirMenuDesperdicio = 
+    usuarioEhAdmQualquerEmpresa() || 
+    usuarioEhNutricionistaSupervisao();
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -204,8 +209,9 @@ export const SidebarContent = () => {
       </ListItem>
     ),
     exibirGestaoAlimentacao && <MenuGestaoDeAlimentacao key={1} {..._props} />,
-    exibirDietaEspecial && <MenuDietaEspecial key={2} {..._props} />,
-    exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
+    exibirMenuDesperdicio && <MenuDesperdicio key={2} {..._props} />,
+    exibirDietaEspecial && <MenuDietaEspecial key={3} {..._props} />,
+    exibirGestaoProduto && <MenuGestaoDeProduto key={4} {..._props} />,
     exibirCadastros && <MenuCadastros key={5} />,
     exibirModuloMedicaoInicial() && (
       <MenuLancamentoInicial key={6} {..._props} />

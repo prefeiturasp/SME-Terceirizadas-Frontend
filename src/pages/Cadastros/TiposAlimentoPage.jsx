@@ -3,13 +3,13 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import {
   CADASTROS,
-  CONFIGURACOES,
+  DESPERDICIO,
   TIPOS_ALIMENTO,
 } from "../../configs/constants";
 import TiposAlimento from "components/screens/Cadastros/TiposAlimento";
 
 const atual = {
-  href: `/${CONFIGURACOES}/${CADASTROS}/${TIPOS_ALIMENTO}`,
+  href: `/${DESPERDICIO}/${CADASTROS}/${TIPOS_ALIMENTO}`,
   titulo: "Cadastro de Tipos de Alimento",
 };
 
