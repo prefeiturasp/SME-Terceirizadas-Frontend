@@ -162,12 +162,10 @@ const ModalCadastrarControleSobras = ({
   }
 
   const onSubmit = async (formValues) => {
-    const data_hora_medicao = moment(
-      formValues.data_medicao + formValues.hora_medicao,
-      "DD/MM/YYYYHH:mm:ss"
-    );
+    const data_hora_medicao = formValues.data_medicao + " " + formValues.hora_medicao; 
+    moment(data_hora_medicao, "DD/MM/YYYY HH:mm:ss");
 
-    if (data_hora_medicao.isAfter(moment())) {
+    if (moment(data_hora_medicao, "DD/MM/YYYY HH:mm:ss").isAfter(moment())) {
       return toastError(
         "Data/Hora da Medição não podem ser posteriores à data e hora atual"
       );
@@ -190,7 +188,7 @@ const ModalCadastrarControleSobras = ({
       peso_alimento: parseDecimal(formValues.peso_alimento),
       peso_recipiente: parseDecimal(formValues.peso_recipiente),
       peso_sobra: parseDecimal(formValues.peso_sobra),
-      data_hora_medicao: data_hora_medicao.toDate(),
+      data_hora_medicao: data_hora_medicao,
     };
 
     await cadastrarControleSobras(payload)
