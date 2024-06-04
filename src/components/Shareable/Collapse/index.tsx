@@ -1,4 +1,9 @@
-import React, { Dispatch, ReactElement, SetStateAction } from "react";
+import React, {
+  Dispatch,
+  ReactElement,
+  SetStateAction,
+  useEffect,
+} from "react";
 import "./styles.scss";
 import { CollapseConfig } from "./interfaces";
 import { StateConferidosAnalise } from "components/screens/PreRecebimento/FichaTecnica/interfaces";
@@ -39,6 +44,13 @@ const Collapse: React.FC<Props> = ({
 
   const configs =
     collapseConfigs?.length > 0 ? collapseConfigs : gerarConfigsPadrao();
+
+  useEffect(() => {
+    const elements = document.querySelectorAll(`.accordionComponent .collapse`);
+    elements.forEach((element, index) => {
+      if (collapse[index]) element.classList.add("show");
+    });
+  }, []);
 
   return (
     collapse && (
@@ -111,7 +123,7 @@ const Collapse: React.FC<Props> = ({
 
               <div
                 id={`collapse_${index}`}
-                className="collapse"
+                className={`collapse`}
                 aria-labelledby="headingOne"
                 data-bs-parent={`#${id}`}
               >

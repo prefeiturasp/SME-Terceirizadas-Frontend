@@ -1,5 +1,6 @@
 import {
   DiretoriaRegionalInterface,
+  EscolaSimplissimaInterface,
   QuantidadeAlunosEscolaInterface,
   VinculoTipoAlimentacaoPorEscolaInterface,
 } from "interfaces/escola.interface";
@@ -24,6 +25,17 @@ import { InformacaoNutricional } from "./produto.interface";
 import { LoteRascunhosInterface } from "./rascunhos.interface";
 import { TerceirizadaInterface } from "./terceirizada.interface";
 import { EditalContratoInterface } from "components/screens/Cadastros/EditaisContratosRefatorado/interfaces";
+import { FichaRecebimento } from "./recebimento.interface";
+import {
+  EquipamentoInterface,
+  InsumoInterface,
+  MobiliarioInterface,
+  PeriodoDeVisitaInterface,
+  ReparoEAdaptacaoInterface,
+  TipoOcorrenciaInterface,
+  UtensilioCozinhaInterface,
+  UtensilioMesaInterface,
+} from "./imr.interface";
 
 export interface ResponseInterface {
   data: Object;
@@ -183,12 +195,7 @@ export interface ResponseLotesSimplesInterface extends ResponseInterface {
 
 export interface ResponseDiretoriasRegionaisSimplissimaInterface
   extends ResponseInterface {
-  data: {
-    count: number;
-    next: string | null;
-    previous: string | null;
-    results: Array<DiretoriaRegionalInterface>;
-  };
+  data: ListagemPaginada<DiretoriaRegionalInterface>;
 }
 
 export interface ResponseTerceirizadaListaNomesInterface
@@ -209,4 +216,51 @@ export interface ResponseEditalCotratoInterface extends ResponseInterface {
 
 export interface ResponseGetEditalCotratoInterface extends ResponseInterface {
   data: EditalContratoInterface;
+}
+
+export interface ResponseFichaRecebimento extends ResponseInterface {
+  data: FichaRecebimento;
+}
+
+export interface ResponseGetEscolasTercTotalInterface
+  extends ResponseInterface {
+  data: Array<EscolaSimplissimaInterface>;
+}
+
+export interface ResponsePeriodosDeVisitaInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<PeriodoDeVisitaInterface>;
+}
+
+export interface ResponseFormularioSupervisaoTiposOcorrenciasInterface
+  extends ResponseInterface {
+  data: Array<TipoOcorrenciaInterface>;
+}
+
+export interface ResponseGetQuantidadeAlunosMatriculadosPorDataInterface
+  extends ResponseInterface {
+  data: number;
+}
+
+export interface ResponseUtensilioCozinhaInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<UtensilioCozinhaInterface>;
+}
+
+export interface ResponseUtensilioMesaInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<UtensilioMesaInterface>;
+}
+
+export interface ResponseEquipamentoInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<EquipamentoInterface>;
+}
+
+export interface ResponseMobiliarioInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<MobiliarioInterface>;
+}
+
+export interface ResponseReparoEAdaptacaoInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<ReparoEAdaptacaoInterface>;
+}
+
+export interface ResponseInsumoInterface extends ResponseInterface {
+  data: ListagemNaoPaginada<InsumoInterface>;
 }

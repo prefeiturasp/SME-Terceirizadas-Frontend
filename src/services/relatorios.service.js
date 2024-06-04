@@ -395,12 +395,10 @@ export const getSolicitacoesDetalhadas = async (params) => {
   }
 };
 
-export const getTotalizadoresRelatorioSolicitacoesAlimentacao = async (
-  payload
-) => {
+export const getTotalizadoresRelatorioSolicitacoes = async (payload) => {
   const response = await axios
     .post(
-      `${API_URL}/solicitacoes-genericas/filtrar-solicitacoes-ga-cards-totalizadores/`,
+      `${API_URL}/solicitacoes-genericas/filtrar-solicitacoes-cards-totalizadores/`,
       payload
     )
     .catch(ErrorHandlerFunction);
@@ -410,12 +408,10 @@ export const getTotalizadoresRelatorioSolicitacoesAlimentacao = async (
   }
 };
 
-export const getDatasetsGraficosRelatorioSolicitacoesAlimentacao = async (
-  payload
-) => {
+export const getDatasetsGraficos = async (payload) => {
   const response = await axios
     .post(
-      `${API_URL}/solicitacoes-genericas/filtrar-solicitacoes-ga-graficos/`,
+      `${API_URL}/solicitacoes-genericas/filtrar-solicitacoes-graficos/`,
       payload
     )
     .catch(ErrorHandlerFunction);

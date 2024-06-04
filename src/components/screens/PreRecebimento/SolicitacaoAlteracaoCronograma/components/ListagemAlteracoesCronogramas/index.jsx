@@ -4,7 +4,7 @@ import "./styles.scss";
 import { NavLink } from "react-router-dom";
 import * as constants from "configs/constants";
 import { deParaStatusAltCronograma } from "components/screens/helper";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 
 const ListagemAlteracoesCronogramas = ({
   alteracoesCronogramas,
@@ -15,6 +15,7 @@ const ListagemAlteracoesCronogramas = ({
   const STATUS_PRIORITARIO = {
     ADMINISTRADOR_EMPRESA: ["Alteração Enviada ao Fornecedor"],
     USUARIO_EMPRESA: ["Alteração Enviada ao Fornecedor"],
+    COORDENADOR_CODAE_DILOG_LOGISTICA: ["Em análise"],
     DILOG_CRONOGRAMA: ["Em análise"],
     DILOG_DIRETORIA: ["Aprovado DINUTRE", "Reprovado DINUTRE"],
     DINUTRE_DIRETORIA: ["Cronograma ciente"],

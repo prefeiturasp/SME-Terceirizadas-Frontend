@@ -26,7 +26,7 @@ import { Field, Form } from "react-final-form";
 import Select from "components/Shareable/Select";
 import { MESES, TIPO_PERFIL } from "constants/shared";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import { getLotesSimples } from "services/lote.service";
 import { getEscolasTercTotal } from "services/escola.service";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
@@ -54,11 +54,12 @@ import { required } from "helpers/fieldValidators";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import {
   relatorioMedicaoInicialPDF,
+  relatorioConsolidadoMedicaoInicialXLSX,
   relatorioUnificadoMedicaoInicialPDF,
 } from "services/relatorios";
 import { MEDICAO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import { updateSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import ModalRelatorioUnificado from "./components/ModalRelatorioUnificado";
+import ModalRelatorio from "./components/ModalRelatorio";
 
 export const AcompanhamentoDeLancamentos = () => {
   const navigate = useNavigate();
@@ -92,6 +93,8 @@ export const AcompanhamentoDeLancamentos = () => {
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
   const [exibirModalRelatorioUnificado, setExibirModalRelatorioUnificado] =
+    useState(false);
+  const [exibirModalRelatorioConsolidado, setExibirModalRelatorioConsolidado] =
     useState(false);
 
   const [initialValues, setInitialValues] = useState({
@@ -398,13 +401,17 @@ export const AcompanhamentoDeLancamentos = () => {
     }
   };
 
-  const handleSubmitRelatorioUnificado = async (form, grupoSelecionado) => {
+  const handleSubmitRelatorio = async (
+    values,
+    grupoSelecionado,
+    nomeRelatorio
+  ) => {
     const dre = usuarioEhDRE()
       ? meusDados && meusDados.vinculo_atual.instituicao.uuid
       : diretoriaRegional;
-    const [mes, ano] = form
-      .getFieldState("mes_ano" || undefined)
-      .value.split("_");
+    const [mes, ano] = values.mes_ano ? values.mes_ano.split("_") : "";
+
+    const lotes = values.lotes_selecionados;
 
     const payload = {
       dre,
@@ -412,15 +419,19 @@ export const AcompanhamentoDeLancamentos = () => {
       grupo_escolar: grupoSelecionado,
       mes,
       ano,
+      lotes,
     };
 
-    const response = await relatorioUnificadoMedicaoInicialPDF(payload);
-    if (response.status === HTTP_STATUS.OK) {
+    const funcExportarRelatorio = {
+      "Relatório Unificado": relatorioUnificadoMedicaoInicialPDF,
+      "Relatório Consolidado": relatorioConsolidadoMedicaoInicialXLSX,
+    };
+
+    try {
+      await funcExportarRelatorio[nomeRelatorio](payload);
       setExibirModalCentralDownloads(true);
-    } else {
-      toastError(
-        "Erro ao gerar relatório unificado. Tente novamente mais tarde."
-      );
+    } catch ({ response }) {
+      toastError(getError(response.data));
     }
   };
 
@@ -851,7 +862,7 @@ export const AcompanhamentoDeLancamentos = () => {
                               {statusSelecionado ===
                                 "MEDICAO_APROVADA_PELA_CODAE" &&
                               (usuarioEhDRE() || usuarioEhMedicao()) ? (
-                                <div className="col-12 mt-4 text-end">
+                                <div className="col-12 mt-4 botoes-relatorios">
                                   <Botao
                                     type={BUTTON_TYPE.BUTTON}
                                     style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -861,6 +872,16 @@ export const AcompanhamentoDeLancamentos = () => {
                                       setExibirModalRelatorioUnificado(true)
                                     }
                                   />
+
+                                  <Botao
+                                    type={BUTTON_TYPE.BUTTON}
+                                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                                    icon={BUTTON_ICON.FILE_EXCEL}
+                                    texto="Relatório Consolidado"
+                                    onClick={() =>
+                                      setExibirModalRelatorioConsolidado(true)
+                                    }
+                                  />
                                 </div>
                               ) : null}
                               <ModalSolicitacaoDownload
@@ -868,17 +889,34 @@ export const AcompanhamentoDeLancamentos = () => {
                                 setShow={setExibirModalCentralDownloads}
                               />
 
-                              <ModalRelatorioUnificado
+                              <ModalRelatorio
                                 show={exibirModalRelatorioUnificado}
                                 onClose={() =>
                                   setExibirModalRelatorioUnificado(false)
                                 }
                                 onSubmit={({ grupoSelecionado }) =>
-                                  handleSubmitRelatorioUnificado(
-                                    form,
-                                    grupoSelecionado
+                                  handleSubmitRelatorio(
+                                    values,
+                                    grupoSelecionado,
+                                    "Relatório Unificado"
                                   )
                                 }
+                                nomeRelatorio="Relatório Unificado"
+                              />
+
+                              <ModalRelatorio
+                                show={exibirModalRelatorioConsolidado}
+                                onClose={() =>
+                                  setExibirModalRelatorioConsolidado(false)
+                                }
+                                onSubmit={({ grupoSelecionado }) =>
+                                  handleSubmitRelatorio(
+                                    values,
+                                    grupoSelecionado,
+                                    "Relatório Consolidado"
+                                  )
+                                }
+                                nomeRelatorio="Relatório Consolidado"
                               />
                             </>
                           )}

@@ -9,6 +9,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { Field, Form, FormSpy } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { getNomesDistribuidores } from "services/logistica.service";
 import Select from "components/Shareable/Select";
@@ -43,7 +44,7 @@ import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 import FormRecebimento from "components/PreRecebimento/FormRecebimento";
 import {
-  getListaFichasTecnicasSimplesSemCronograma,
+  getListaFichasTecnicasSimples,
   getDadosCronogramaFichaTecnica,
 } from "services/fichaTecnica.service";
 import {
@@ -58,7 +59,6 @@ import {
   getOpcoesContrato,
   validaRascunho,
 } from "./helpers";
-import { formatarNumeroEProdutoFichaTecnica } from "helpers/preRecebimento";
 import { getListaTiposEmbalagens } from "../../../../services/qualidade.service";
 
 export default () => {
@@ -73,9 +73,6 @@ export default () => {
   const [contratoSelecionado, setContratoSelecionado] = useState(undefined);
   const [unidadeSelecionada, setUnidadeSelecionada] = useState({});
   const [fichaTecnicaSelecionada, setFichaTecnicaSelecionada] = useState();
-
-  const [fichaTecnicaAtualCronograma, setFichaTecnicaAtualCronograma] =
-    useState();
 
   const [etapas, setEtapas] = useState([{}]);
   const [recebimentos, setRecebimentos] = useState([{}]);
@@ -103,6 +100,7 @@ export default () => {
       values,
       rascunho,
       empresaSelecionada,
+      fichaTecnicaSelecionada,
       etapas,
       recebimentos
     );
@@ -132,7 +130,7 @@ export default () => {
         toastError("Ocorreu um erro ao salvar o Cronograma");
       }
     } catch (error) {
-      if (error.response.status === 401) {
+      if (error.response?.status === 401) {
         toastError(MSG_SENHA_INVALIDA);
       } else {
         exibeError(error, "Ocorreu um erro ao salvar o Cronograma");
@@ -168,7 +166,6 @@ export default () => {
       if (uuid) {
         const responseCronograma = await getCronograma(uuid);
         setInitialValues(geraInitialValues(responseCronograma.data));
-        setFichaTecnicaAtualCronograma(responseCronograma.data.ficha_tecnica);
       }
     } catch (error) {
       exibeError(error, "Ocorreu um erro ao carregar o Cronograma");
@@ -199,7 +196,7 @@ export default () => {
   };
 
   const buscaFichasTecnicas = async () => {
-    const response = await getListaFichasTecnicasSimplesSemCronograma();
+    const response = await getListaFichasTecnicasSimples();
     setFichasTecnicas(response.data.results);
   };
 
@@ -247,19 +244,21 @@ export default () => {
     cronogramaValues["unidade_medida"] = cronograma.unidade_medida?.uuid;
     cronogramaValues["produto"] = cronograma.produto?.uuid;
     cronogramaValues["armazem"] = cronograma.armazem?.uuid;
-    cronogramaValues["ficha_tecnica"] = cronograma.ficha_tecnica?.uuid;
+    cronogramaValues[
+      "ficha_tecnica"
+    ] = `${cronograma.ficha_tecnica?.numero} - ${cronograma.ficha_tecnica?.produto.nome}`;
     cronogramaValues["marca"] = cronograma.ficha_tecnica?.marca.nome;
     cronogramaValues["peso_liquido_embalagem_primaria"] = numberToStringDecimal(
       cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria
     );
     cronogramaValues["unidade_medida_primaria"] =
-      cronograma.ficha_tecnica?.unidade_medida_primaria.uuid;
+      cronograma.ficha_tecnica?.unidade_medida_primaria?.uuid;
     cronogramaValues["peso_liquido_embalagem_secundaria"] =
       numberToStringDecimal(
         cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria
       );
     cronogramaValues["unidade_medida_secundaria"] =
-      cronograma.ficha_tecnica?.unidade_medida_secundaria.uuid;
+      cronograma.ficha_tecnica?.unidade_medida_secundaria?.uuid;
     cronogramaValues["volume_embalagem_primaria"] = numberToStringDecimal(
       cronograma.ficha_tecnica?.volume_embalagem_primaria
     );
@@ -272,13 +271,14 @@ export default () => {
     );
     cronogramaValues["numero"] = cronograma.numero;
     cronogramaValues["uuid"] = cronograma.uuid;
+    cronogramaValues["observacoes"] = cronograma.observacoes;
 
     const etapaValues = {};
     cronograma.etapas.forEach((etapa, i) => {
       etapaValues[`empenho_${i}`] = stringNaoVaziaOuUndefined(
         etapa.numero_empenho
       );
-      etapaValues[`qtd_total_empenho_${i}`] = numberToStringDecimal(
+      etapaValues[`qtd_total_empenho_${i}`] = formataMilharDecimal(
         etapa.qtd_total_empenho
       );
       etapaValues[`etapa_${i}`] = stringNaoVaziaOuUndefined(etapa.etapa);
@@ -322,9 +322,9 @@ export default () => {
     onChangeEtapas(changes, etapas, setRestante, setDuplicados);
   };
 
-  const selecionaEmpresa = (uuidEmpresa) => {
-    if (!empresaSelecionada || empresaSelecionada.uuid !== uuidEmpresa) {
-      let fornecedor = fornecedores.find((f) => f.value === uuidEmpresa);
+  const selecionaEmpresa = (nomeEmpresa) => {
+    if (!empresaSelecionada || empresaSelecionada.uuid !== nomeEmpresa) {
+      let fornecedor = fornecedores.find((f) => f.value === nomeEmpresa);
       setEmpresaSelecionada(fornecedor);
     }
   };
@@ -353,70 +353,51 @@ export default () => {
   };
 
   const selecionaFichaTecnica = async (values, form) => {
-    const uuidFicha = values.ficha_tecnica;
+    const numeroFicha = values.ficha_tecnica?.split("-")[0].trim();
     if (
       !fichaTecnicaSelecionada ||
-      fichaTecnicaSelecionada.uuid !== uuidFicha
+      fichaTecnicaSelecionada.uuid !== numeroFicha
     ) {
-      setCarregando(true);
+      let uuidFicha = fichasTecnicas.find(
+        (f) => f.numero === numeroFicha
+      )?.uuid;
 
-      const response = await getDadosCronogramaFichaTecnica(uuidFicha);
-      const fichaTecnica = response.data;
+      if (uuidFicha) {
+        setCarregando(true);
 
-      form.change("marca", fichaTecnica.marca.nome);
-      form.change(
-        "peso_liquido_embalagem_primaria",
-        numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_primaria)
-      );
-      form.change(
-        "unidade_medida_primaria",
-        fichaTecnica.unidade_medida_primaria.uuid
-      );
-      form.change(
-        "peso_liquido_embalagem_secundaria",
-        numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_secundaria)
-      );
-      form.change(
-        "unidade_medida_secundaria",
-        fichaTecnica.unidade_medida_secundaria.uuid
-      );
-      form.change(
-        "volume_embalagem_primaria",
-        numberToStringDecimal(fichaTecnica.volume_embalagem_primaria)
-      );
-      form.change(
-        "unidade_medida_volume_primaria",
-        fichaTecnica.unidade_medida_volume_primaria?.uuid
-      );
+        const response = await getDadosCronogramaFichaTecnica(uuidFicha);
+        const fichaTecnica = response.data;
 
-      setFichaTecnicaSelecionada(fichaTecnica);
-      setCarregando(false);
+        form.change("marca", fichaTecnica.marca?.nome);
+        form.change(
+          "peso_liquido_embalagem_primaria",
+          numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_primaria)
+        );
+        form.change(
+          "unidade_medida_primaria",
+          fichaTecnica.unidade_medida_primaria?.uuid
+        );
+        form.change(
+          "peso_liquido_embalagem_secundaria",
+          numberToStringDecimal(fichaTecnica.peso_liquido_embalagem_secundaria)
+        );
+        form.change(
+          "unidade_medida_secundaria",
+          fichaTecnica.unidade_medida_secundaria?.uuid
+        );
+        form.change(
+          "volume_embalagem_primaria",
+          numberToStringDecimal(fichaTecnica.volume_embalagem_primaria)
+        );
+        form.change(
+          "unidade_medida_volume_primaria",
+          fichaTecnica.unidade_medida_volume_primaria?.uuid
+        );
+
+        setFichaTecnicaSelecionada(fichaTecnica);
+        setCarregando(false);
+      }
     }
-  };
-
-  const optionsFichaTecnica = () => {
-    const options = [
-      {
-        nome: "Selecione uma Ficha Técnica de Produto",
-        uuid: "",
-      },
-    ];
-
-    fichaTecnicaAtualCronograma &&
-      options.push({
-        nome: formatarNumeroEProdutoFichaTecnica(fichaTecnicaAtualCronograma),
-        uuid: fichaTecnicaAtualCronograma?.uuid,
-      });
-
-    options.push(
-      ...geraOptionsFichasTecnicas(
-        fichasTecnicas,
-        empresaSelecionada,
-        fichaTecnicaSelecionada
-      )
-    );
-
-    return options;
   };
 
   return (
@@ -462,7 +443,6 @@ export default () => {
                         required
                         validate={required}
                         placeholder={"Selecione uma Empresa Cadastrada"}
-                        esconderIcone
                       />
                     </div>
                     <div className="col-4">
@@ -561,11 +541,21 @@ export default () => {
                               <div className="col-6">
                                 <Field
                                   className="input-cronograma"
-                                  component={Select}
-                                  options={optionsFichaTecnica()}
+                                  component={AutoCompleteField}
+                                  options={getEmpresaFiltrado(
+                                    geraOptionsFichasTecnicas(
+                                      fichasTecnicas,
+                                      empresaSelecionada
+                                    ),
+                                    values.ficha_tecnica
+                                  )}
+                                  placeholder={
+                                    "Selecione uma Ficha Técnica de Produto"
+                                  }
                                   label="Ficha Técnica e Produto"
                                   name="ficha_tecnica"
                                   required
+                                  validate={required}
                                 />
                               </div>
                               <div className="col-6">
@@ -583,14 +573,14 @@ export default () => {
                                 <div className="row">
                                   <div className="col-6">
                                     <Label
-                                      content="Peso da Embalagem Primária"
+                                      content="Embalagem Primária"
                                       required
                                     />
                                   </div>
 
                                   <div className="col-6">
                                     <Label
-                                      content="Peso da Embalagem Secundária"
+                                      content="Embalagem Secundária"
                                       required
                                     />
                                   </div>
@@ -785,6 +775,16 @@ export default () => {
                       />
                     </div>
                   )}
+
+                  <div className="row mt-2">
+                    <div className="col-12">
+                      <Field
+                        component={TextArea}
+                        label="Observações"
+                        name="observacoes"
+                      />
+                    </div>
+                  </div>
 
                   <hr />
 

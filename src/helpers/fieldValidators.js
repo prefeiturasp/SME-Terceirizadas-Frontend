@@ -187,6 +187,12 @@ export const maxValueFrequenciaAlimentacao = (max, inputName) => (value) => {
     : undefined;
 };
 
+export const maxValueMaiorFrequenciaNoPeriodoIMR = (max) => (value) => {
+  return value && value > max
+    ? "Não pode ser maior que o Nº de matriculados"
+    : undefined;
+};
+
 export const maxValueLancheRefeicaoSobremesa1Oferta =
   (max, inputName, solicitacoesAutorizadas, mesAnoConsiderado, dia) =>
   (value) => {

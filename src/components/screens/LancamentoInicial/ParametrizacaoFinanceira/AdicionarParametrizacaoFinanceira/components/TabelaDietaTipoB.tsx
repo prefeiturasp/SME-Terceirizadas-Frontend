@@ -18,19 +18,44 @@ const ALIMENTACOES = ["Lanche", "Lanche 4h"];
 type Props = {
   form: FormApi<any, any>;
   tiposAlimentacao: Array<any>;
+  grupoSelecionado?: string;
+  tipoTurma?: string;
 };
 
-export default ({ form, tiposAlimentacao }: Props) => {
+export default ({
+  form,
+  tiposAlimentacao,
+  grupoSelecionado,
+  tipoTurma = "",
+}: Props) => {
   const alimentacoes = tiposAlimentacao.filter((t) =>
     ALIMENTACOES.includes(t.nome)
   );
 
+  const nomeTabela = tipoTurma
+    ? `Dietas Tipo B - ${tipoTurma}`
+    : "Dietas Tipo B";
+
   return (
     <div className="row mt-5">
       <div className="col">
-        <h2 className="text-start texto-simples-verde fw-bold">
-          Preço das Dietas Tipo B
-        </h2>
+        {["grupo_2", "grupo_4"].includes(grupoSelecionado) ? (
+          <h2 className="text-start texto-simples-verde fw-bold mb-3">
+            Preço das Dietas Tipo B -{" "}
+            <span
+              className={`titulo-tag turma-${tipoTurma
+                .replace(/\s/g, "-")
+                .toLocaleLowerCase()}`}
+            >
+              {tipoTurma}
+            </span>
+          </h2>
+        ) : (
+          <h2 className="text-start texto-simples-verde fw-bold">
+            Preço das Dietas Tipo B
+          </h2>
+        )}
+
         <Table pagination={false} bordered dataSource={alimentacoes}>
           <Column
             title="Tipo de Alimentação"
@@ -44,13 +69,13 @@ export default ({ form, tiposAlimentacao }: Props) => {
                   </p>
                   <Field
                     component="input"
-                    name={`tabelas["Dietas Tipo B"].${value}.tipo_alimentacao`}
+                    name={`tabelas[${nomeTabela}].${value}_${record.grupo}.tipo_alimentacao`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
                   <Field
                     component="input"
-                    name={`tabelas["Dietas Tipo B"].${value}.grupo`}
+                    name={`tabelas[${nomeTabela}].${value}_${record.grupo}.grupo`}
                     type="hidden"
                     defaultValue={record.grupo}
                   />
@@ -65,7 +90,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Dietas Tipo B"].${record.nome}.valor_unitario`}
+                name={`tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -73,19 +98,20 @@ export default ({ form, tiposAlimentacao }: Props) => {
                 defaultValue={null}
                 onChange={(value: number) => {
                   const percentualAcrescimo =
-                    form.getState().values.tabelas["Dietas Tipo B"][record.nome]
-                      .percentual_acrescimo || 0;
+                    form.getState().values.tabelas[nomeTabela]?.[
+                      `${record.nome}_${record.grupo}`
+                    ]?.percentual_acrescimo || 0;
                   const valorUnitarioTotal =
                     value * (1 + percentualAcrescimo / 100);
 
                   form.change(
-                    `tabelas["Dietas Tipo B"].${record.nome}.valor_unitario_total`,
+                    `tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas["Dietas Tipo B"].${record.nome}.valor_unitario`,
+                    `tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario`,
                     value
                   );
                 }}
@@ -99,7 +125,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Dietas Tipo B"].${record.nome}.percentual_acrescimo`}
+                name={`tabelas[${nomeTabela}].${record.nome}_${record.grupo}.percentual_acrescimo`}
                 placeholder="%"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -107,18 +133,19 @@ export default ({ form, tiposAlimentacao }: Props) => {
                 defaultValue={null}
                 onChange={(value: number) => {
                   const valorUnitario =
-                    form.getState().values.tabelas["Dietas Tipo B"][record.nome]
-                      .valor_unitario || 0;
+                    form.getState().values.tabelas[nomeTabela]?.[
+                      `${record.nome}_${record.grupo}`
+                    ]?.valor_unitario || 0;
                   const valorUnitarioTotal = valorUnitario * (1 + value / 100);
 
                   form.change(
-                    `tabelas["Dietas Tipo B"].${record.nome}.valor_unitario_total`,
+                    `tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario_total`,
                     valorUnitarioTotal
                       ? Number(valorUnitarioTotal.toFixed(2))
                       : undefined
                   );
                   form.change(
-                    `tabelas["Dietas Tipo B"].${record.nome}.percentual_acrescimo`,
+                    `tabelas[${nomeTabela}].${record.nome}_${record.grupo}.percentual_acrescimo`,
                     value
                   );
                 }}
@@ -132,7 +159,7 @@ export default ({ form, tiposAlimentacao }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Dietas Tipo B"].${record.nome}.valor_unitario_total`}
+                name={`tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario_total`}
                 placeholder="0,00"
                 disabled
               />

@@ -24,7 +24,7 @@ const anteriores = [
   },
 ];
 
-export default () => (
+export const DetalhamentoDoLancamentoPage = () => (
   <Page botaoVoltar titulo={"Detalhamento do Lançamento da Medição Inicial"}>
     <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
     <LancamentoMedicaoInicial />

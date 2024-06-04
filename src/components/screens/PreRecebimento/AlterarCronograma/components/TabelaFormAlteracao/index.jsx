@@ -3,7 +3,8 @@ import { required } from "helpers/fieldValidators";
 import React from "react";
 import { Field } from "react-final-form";
 import "./styles.scss";
-import { formataMilhar } from "../../../../../../helpers/utilities";
+import { numberToStringDecimal } from "helpers/parsers";
+import { formataMilharDecimal } from "../../../../../../helpers/utilities";
 
 export default ({ solicitacao, somenteLeitura }) => {
   const pintaTabela = (campo, index) => {
@@ -22,6 +23,7 @@ export default ({ solicitacao, somenteLeitura }) => {
       <table className="table tabela-form-alteracao mt-2 mb-4">
         <thead className="head-crono">
           <th className="borda-crono">Confirmar N° do Empenho</th>
+          <th className="borda-crono">Qtde Total do Empenho</th>
           <th className="borda-crono">Etapa</th>
           <th className="borda-crono">Parte</th>
           <th className="borda-crono">Data Programada</th>
@@ -52,6 +54,27 @@ export default ({ solicitacao, somenteLeitura }) => {
                       />
                     </td>
                   )}
+                  {somenteLeitura ? (
+                    <td
+                      className={`borda-crono ${pintaTabela(
+                        "qtd_total_empenho",
+                        index
+                      )}`}
+                    >
+                      {etapa.qtd_total_empenho
+                        ? numberToStringDecimal(etapa.qtd_total_empenho)
+                        : "----"}
+                    </td>
+                  ) : (
+                    <td className="borda-crono">
+                      <Field
+                        component={InputText}
+                        name={`qtd_total_empenho_${index}`}
+                        validate={required}
+                        agrupadorMilharComDecimal
+                      />
+                    </td>
+                  )}
                   <td className={`borda-crono ${pintaTabela("etapa", index)}`}>
                     {etapa.etapa}
                   </td>
@@ -72,7 +95,7 @@ export default ({ solicitacao, somenteLeitura }) => {
                       index
                     )}`}
                   >
-                    {formataMilhar(etapa.quantidade)}
+                    {formataMilharDecimal(etapa.quantidade)}
                   </td>
                   <td
                     className={`borda-crono ${pintaTabela(
@@ -80,7 +103,7 @@ export default ({ solicitacao, somenteLeitura }) => {
                       index
                     )}`}
                   >
-                    {formataMilhar(etapa.total_embalagens)}
+                    {formataMilharDecimal(etapa.total_embalagens)}
                   </td>
                 </tr>
               );

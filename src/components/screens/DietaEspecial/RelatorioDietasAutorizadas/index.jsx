@@ -7,16 +7,19 @@ import { ListagemDietas } from "./components/ListagemDietas";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
+  BUTTON_TYPE,
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import {
   gerarExcelRelatorioDietaEspecial,
   getFiltrosRelatorioDietasEspeciais,
   gerarPdfRelatorioDietaEspecial,
 } from "services/dietaEspecial.service";
 import "./styles.scss";
+import { Graficos } from "./components/Graficos";
+import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 
 export const RelatorioDietasAutorizadas = () => {
   const { meusDados } = useContext(MeusDadosContext);
@@ -32,6 +35,9 @@ export const RelatorioDietasAutorizadas = () => {
   const [imprimindoExcel, setImprimindoExcel] = useState(false);
   const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
     useState(false);
+  const [totalizadores, setTotalizadores] = useState(undefined);
+  const [renderGraficosOuTabela, setRenderGraficosOuTabela] =
+    useState("Gráficos");
 
   const ajustaParams = (params) => {
     if (
@@ -119,25 +125,78 @@ export const RelatorioDietasAutorizadas = () => {
                 unidadesEducacionais={unidadesEducacionais}
                 onClear={() => {
                   setDietasEspeciais(null);
+                  setTotalizadores(null);
+                  setUnidadesEducacionais([]);
                   getFiltrosRelatorioDietasEspeciaisAsync({
                     status_selecionado: "AUTORIZADAS",
                   });
                 }}
                 setLoadingDietas={setLoadingDietas}
-                ajustaParams={ajustaParams}
                 setValuesForm={setValuesForm}
                 getFiltrosRelatorioDietasEspeciaisAsync={
                   getFiltrosRelatorioDietasEspeciaisAsync
                 }
+                setTotalizadores={setTotalizadores}
+                setRenderGraficosOuTabela={setRenderGraficosOuTabela}
               />
-              {dietasEspeciais && (
+              {totalizadores && (
+                <>
+                  <div className="row mt-3">
+                    <div className="col-8 quantitativo-dietas-autorizadas">
+                      <p>
+                        TOTAL DE DIETAS AUTORIZADAS - DIA{" "}
+                        {new Date().toLocaleDateString("pt-BR")}
+                      </p>
+                    </div>
+                    {!usuarioEhEmpresaTerceirizada() && (
+                      <div className="col-4 text-end">
+                        <Botao
+                          texto={renderGraficosOuTabela}
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          icon={
+                            renderGraficosOuTabela === "Gráficos"
+                              ? BUTTON_ICON.CHART_BAR
+                              : BUTTON_ICON.TABLE
+                          }
+                          onClick={() =>
+                            setRenderGraficosOuTabela(
+                              renderGraficosOuTabela === "Tabela"
+                                ? "Gráficos"
+                                : "Tabela"
+                            )
+                          }
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className="row">
+                    {totalizadores.map((totalizador, key) => {
+                      return (
+                        <div key={key} className="col-4 mt-3">
+                          <div className="totalizador-dietas-autorizadas ps-3 pe-3">
+                            <div className="d-flex justify-content-between">
+                              <div className="titulo">
+                                {Object.keys(totalizador)[0]}
+                              </div>
+                              <div className="valor">
+                                {Object.values(totalizador)[0]}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+              {dietasEspeciais && renderGraficosOuTabela === "Gráficos" && (
                 <>
                   <div className="row">
-                    <div className="total-dietas col-12 text-end">
-                      Total de dietas:
-                      <div className="numero-total-dietas">
-                        {dietasEspeciais.count}
-                      </div>
+                    <div className="mt-4 pl-0">
+                      <p className="mb-2">
+                        <b>Resultado Detalhado</b>
+                      </p>
                     </div>
                   </div>
 
@@ -195,6 +254,9 @@ export const RelatorioDietasAutorizadas = () => {
                     </div>
                   </div>
                 </>
+              )}
+              {dietasEspeciais && renderGraficosOuTabela === "Tabela" && (
+                <Graficos valuesForm={valuesForm} values={filtros} />
               )}
             </Spin>
           </>

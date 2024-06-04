@@ -24,7 +24,7 @@ import {
 } from "services/painelEscola.service";
 import { Spin } from "antd";
 import { ajustarFormatoLog } from "../helper";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 
 export const DashboardEscola = () => {
   const [aguardandoAutorizacao, setAguardandoAutorizacao] = useState(null);

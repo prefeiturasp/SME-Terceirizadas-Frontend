@@ -1,4 +1,4 @@
-import { Spin } from "antd";
+import { Spin, Switch } from "antd";
 import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -57,6 +57,7 @@ export const EditaisContratosRefatorado = () => {
   const [erro, setErro] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [switchAtivoImr, setSwitchAtivoImrl] = useState<boolean>(false);
 
   const location = useLocation();
   const navigate: NavigateFunction = useNavigate();
@@ -66,7 +67,11 @@ export const EditaisContratosRefatorado = () => {
       uuid
     );
     if (response.status === HTTP_STATUS.OK) {
-      setObjEditalContrato(formataEditalContratoParaForm(response.data));
+      const editalFormatadoParaForm = formataEditalContratoParaForm(
+        response.data,
+        setSwitchAtivoImrl
+      );
+      setObjEditalContrato(editalFormatadoParaForm);
     } else {
       setErro("Erro ao carregar edital ");
     }
@@ -127,8 +132,9 @@ export const EditaisContratosRefatorado = () => {
       setShowModal(true);
       return;
     }
+    const values_ = { ...values, eh_imr: switchAtivoImr };
     if (!values.uuid) {
-      const response = await criarEditalEContrato(values);
+      const response = await criarEditalEContrato(values_);
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Edital salvo com sucesso");
         navigate("/configuracoes/cadastros/editais-cadastrados");
@@ -136,7 +142,7 @@ export const EditaisContratosRefatorado = () => {
         toastError("Houve um erro ao salvar o edital");
       }
     } else {
-      const response = await updateEditalContrato(values, values.uuid);
+      const response = await updateEditalContrato(values_, values_.uuid);
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Edição salva com sucesso!");
         navigate("/configuracoes/cadastros/editais-cadastrados");
@@ -173,6 +179,10 @@ export const EditaisContratosRefatorado = () => {
         data_final: undefined,
       },
     ],
+  };
+
+  const onChangeSwitchImr = (checked: boolean) => {
+    setSwitchAtivoImrl(checked);
   };
 
   return (
@@ -227,7 +237,7 @@ export const EditaisContratosRefatorado = () => {
                   }) => (
                     <form onSubmit={handleSubmit}>
                       <div className="row">
-                        <div className="col-4">
+                        <div className="col-3">
                           <Field
                             component={InputText}
                             label="Tipo de contratação"
@@ -238,7 +248,7 @@ export const EditaisContratosRefatorado = () => {
                             max={50}
                           />
                         </div>
-                        <div className="col-4">
+                        <div className="col-3">
                           <Field
                             component={InputText}
                             className="form-control"
@@ -249,6 +259,35 @@ export const EditaisContratosRefatorado = () => {
                             validate={required}
                             max={50}
                           />
+                        </div>
+                        <div className="col-2 switch-imr">
+                          <label className="col-form-label">
+                            Edital com IMR?
+                          </label>
+                          <br />
+                          <div>
+                            <label
+                              className={`col-form-label ${
+                                !switchAtivoImr && "green"
+                              }`}
+                            >
+                              Não
+                            </label>
+                            <br />
+                            <Switch
+                              size="small"
+                              onChange={onChangeSwitchImr}
+                              checked={switchAtivoImr}
+                            />
+                            <label
+                              className={`col-form-label ${
+                                switchAtivoImr && "green"
+                              }`}
+                            >
+                              Sim
+                            </label>
+                            <br />
+                          </div>
                         </div>
                         <div className="col-4">
                           <Field

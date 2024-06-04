@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 .sub-titulo {
   font-weight: bold;
   color: #353535;
@@ -8,14 +10,24 @@
   min-height: 52vh;
 }
 
-.total-dietas {
-  color: #353535;
-  margin-top: 30px;
-  display: flex;
-  justify-content: flex-end;
+.quantitativo-dietas-autorizadas {
+  padding-left: 0 !important;
+  p {
+    color: $green;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
 
-  .numero-total-dietas {
-    font-weight: bold;
-    margin-left: 5px;
+.totalizador-dietas-autorizadas {
+  padding: 0.5em;
+  color: $green;
+  font-weight: 500;
+  border: 1px solid $green;
+  border-left: 5px solid $green;
+  border-radius: 4px;
+
+  .valor {
+    font-weight: bolder;
   }
 }

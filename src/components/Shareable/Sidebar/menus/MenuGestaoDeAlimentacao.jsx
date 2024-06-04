@@ -30,6 +30,7 @@ import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
   usuarioEscolaEhGestaoDireta,
+  usuarioEhGticCODAE,
   usuarioEhNutricionistaSupervisao,
   usuarioEhMedicao,
   usuarioEhEscolaTerceirizadaQualquerPerfil,
@@ -43,7 +44,9 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhDRE();
   const exibeMenuConsultaDeSolicitacoes =
-    !usuarioEscolaEhGestaoDireta() && !ehUsuarioRelatorios();
+    !usuarioEscolaEhGestaoDireta() &&
+    !ehUsuarioRelatorios() &&
+    !usuarioEhGticCODAE();
   const PERFIL =
     usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
       ? ESCOLA
@@ -67,7 +70,7 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       icon="fa-utensils"
       title={"Gestão de Alimentação"}
     >
-      {!ehUsuarioRelatorios() && (
+      {!ehUsuarioRelatorios() && !usuarioEhGticCODAE() && (
         <LeafItem to="/painel-gestao-alimentacao">
           Painel de Solicitações
         </LeafItem>

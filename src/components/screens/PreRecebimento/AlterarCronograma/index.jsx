@@ -30,11 +30,11 @@ import {
 } from "configs/constants";
 import { useNavigate } from "react-router-dom";
 import {
-  usuarioEhCronograma,
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
   usuarioEhEmpresaFornecedor,
-} from "helpers/utilities";
+  usuarioEhCronogramaOuCodae,
+} from "../../../../helpers/utilities";
 import { Radio, Spin } from "antd";
 import { FluxoDeStatusPreRecebimento } from "components/Shareable/FluxoDeStatusPreRecebimento";
 import FormEtapa from "../../../PreRecebimento/FormEtapa";
@@ -75,6 +75,7 @@ export default ({ analiseSolicitacao }) => {
 
   const exibirJustificativaDinutre = () =>
     aprovacaoDinutre === false ||
+    usuarioEhCronogramaOuCodae() ||
     ((usuarioEhDilogDiretoria() || usuarioEhDinutreDiretoria()) &&
       ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
         solicitacaoAlteracaoCronograma.status
@@ -124,6 +125,10 @@ export default ({ analiseSolicitacao }) => {
         solicitacao.logs,
         "dinutre"
       ),
+      justificativa_dilog: buscaLogJustificativaCronograma(
+        solicitacao.logs,
+        "dilog"
+      ),
     };
     solicitacao.etapas_novas.forEach((etapa, index) => {
       values[`total_embalagens_${index}`] = etapa.total_embalagens;
@@ -143,7 +148,9 @@ export default ({ analiseSolicitacao }) => {
       values[`parte_${index}`] = etapa.parte;
       values[`data_programada_${index}`] = etapa.data_programada;
       values[`quantidade_${index}`] = formataMilhar(etapa.quantidade);
-      values[`total_embalagens_${index}`] = etapa.total_embalagens;
+      values[`total_embalagens_${index}`] = numberToStringDecimal(
+        etapa.total_embalagens
+      );
       values[`qtd_total_empenho_${index}`] = numberToStringDecimal(
         etapa.qtd_total_empenho
       );
@@ -156,15 +163,28 @@ export default ({ analiseSolicitacao }) => {
   };
 
   const analisadoPelaDinutre = () => {
-    return ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
-      solicitacaoAlteracaoCronograma.status
+    return solicitacaoAlteracaoCronograma?.logs.some((l) =>
+      ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
+        l.status_evento_explicacao
+      )
+    );
+  };
+
+  const reprovadoPelaDinutre = () => {
+    return solicitacaoAlteracaoCronograma?.logs.some(
+      (l) => l.status_evento_explicacao === "Reprovado DINUTRE"
+    );
+  };
+
+  const analisadoPelaDilog = () => {
+    return solicitacaoAlteracaoCronograma?.logs.some((l) =>
+      ["Aprovado DILOG", "Reprovado DILOG"].includes(l.status_evento_explicacao)
     );
   };
 
   const analiseCronograma = () =>
     solicitacaoAlteracaoCronograma.status === "Em análise" &&
-    usuarioEhCronograma();
-
+    usuarioEhCronogramaOuCodae();
   const cadastraAlteracao = async (values) => {
     const payload = prepararPayloadCronograma(
       cronograma,
@@ -287,6 +307,7 @@ export default ({ analiseSolicitacao }) => {
     const dict_logs = {
       cronograma: ["Cronograma Ciente"],
       dinutre: ["Aprovado DINUTRE", "Reprovado DINUTRE"],
+      dilog: ["Aprovado DILOG", "Reprovado DILOG"],
     };
     let log_correto = logs.find((log) => {
       return dict_logs[autorJustificativa].includes(
@@ -391,7 +412,7 @@ export default ({ analiseSolicitacao }) => {
                         <div className="head-green">
                           Informe as Alterações Necessárias
                         </div>
-                        {usuarioEhCronograma() && (
+                        {usuarioEhCronogramaOuCodae() && (
                           <div className="row">
                             <div className="col-4">
                               <Field
@@ -400,7 +421,7 @@ export default ({ analiseSolicitacao }) => {
                                 name="quantidade_total"
                                 className="input-busca-produto"
                                 disabled={false}
-                                agrupadorMilhar
+                                agrupadorMilharComDecimal
                                 required
                                 validate={required}
                                 placeholder="Informe a Quantidade Total"
@@ -429,7 +450,7 @@ export default ({ analiseSolicitacao }) => {
                         component={TextArea}
                         name="justificativa"
                         placeholder={
-                          usuarioEhCronograma()
+                          usuarioEhCronogramaOuCodae()
                             ? "Escreva o motivo da alteração"
                             : "Escreva o motivo da solicitação de alteração"
                         }
@@ -438,9 +459,12 @@ export default ({ analiseSolicitacao }) => {
                         validate={textAreaRequired}
                       />
                     </div>
-                    {((usuarioEhDinutreDiretoria() &&
-                      solicitacaoAlteracaoCronograma.status !== "Em análise" &&
-                      values.justificativa_cronograma) ||
+                    {((usuarioEhCronogramaOuCodae() &&
+                      solicitacaoAlteracaoCronograma) ||
+                      (usuarioEhDinutreDiretoria() &&
+                        solicitacaoAlteracaoCronograma.status !==
+                          "Em análise" &&
+                        values.justificativa_cronograma) ||
                       (usuarioEhDilogDiretoria() &&
                         analisadoPelaDinutre())) && (
                       <>
@@ -484,11 +508,14 @@ export default ({ analiseSolicitacao }) => {
                         {exibirJustificativaDinutre() && (
                           <div className="mt-4">
                             {analisadoPelaDinutre() && (
-                              <p>{solicitacaoAlteracaoCronograma.status}</p>
+                              <p className="head-green">
+                                {reprovadoPelaDinutre()
+                                  ? "Reprovado DINUTRE"
+                                  : "Aprovado DINUTRE"}
+                              </p>
                             )}
                             {(aprovacaoDinutre === false ||
-                              solicitacaoAlteracaoCronograma.status ===
-                                "Reprovado DINUTRE") && (
+                              reprovadoPelaDinutre()) && (
                               <>
                                 <label className="label fw-normal">
                                   <span>* </span>Justificativa
@@ -506,7 +533,7 @@ export default ({ analiseSolicitacao }) => {
                         )}
                       </>
                     )}
-                    {((!analiseSolicitacao && usuarioEhCronograma()) ||
+                    {((!analiseSolicitacao && usuarioEhCronogramaOuCodae()) ||
                       (analiseSolicitacao && analiseCronograma())) && (
                       <div className="accordion mt-1" id="accordionCronograma">
                         <FormRecebimento
@@ -522,8 +549,11 @@ export default ({ analiseSolicitacao }) => {
                         />
                       </div>
                     )}
-                    {usuarioEhDilogDiretoria() && analisadoPelaDinutre() && (
+                    {((usuarioEhDilogDiretoria() && analisadoPelaDinutre()) ||
+                      (usuarioEhCronogramaOuCodae() &&
+                        analisadoPelaDilog())) && (
                       <AnaliseDilogDiretoria
+                        solicitacao={solicitacaoAlteracaoCronograma}
                         aprovacaoDilog={aprovacaoDilog}
                         setAprovacaoDilog={setAprovacaoDilog}
                       />

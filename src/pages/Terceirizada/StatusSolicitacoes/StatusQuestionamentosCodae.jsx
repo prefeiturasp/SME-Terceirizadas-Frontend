@@ -12,7 +12,7 @@ import { CARD_TYPE_ENUM } from "components/Shareable/CardStatusDeSolicitacao/Car
 import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import CardLegendas from "components/Shareable/CardLegendas";
 import { PAGINACAO_DEFAULT } from "constants/shared";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import { formatarLotesParaVisao } from "helpers/utilities";
 
 const atual = {

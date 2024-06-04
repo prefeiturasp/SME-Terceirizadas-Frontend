@@ -399,7 +399,7 @@ export default () => {
           periodos_escolares.find(
             (periodo) =>
               periodo.periodo_escolar.nome ===
-              (location.state ? location.state.periodo : "MANHA")
+              (location.state?.periodo || "INTEGRAL")
           ) || periodos_escolares[0];
       }
 
@@ -459,7 +459,6 @@ export default () => {
           uuid: null,
         });
       }
-
       const tiposAlimentacaoProgramasProjetosOuCEUGESTAO = deepCopy(
         tiposAlimentacaoFormatadas
       );
@@ -1212,7 +1211,7 @@ export default () => {
                     `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
                   ] = `${log.quantidade}`);
                 categoria.nome.includes("TIPO B") &&
-                  log.classificacao.toUpperCase().includes("TIPO B") &&
+                  log.classificacao.toUpperCase() === "TIPO B - LANCHE" &&
                   (dadosValoresDietasAutorizadas[
                     `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
                   ] = `${log.quantidade}`);
@@ -1248,7 +1247,7 @@ export default () => {
                   `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
                 ] = `${log.quantidade}`);
               categoria.nome.includes("TIPO B") &&
-                log.classificacao.toUpperCase().includes("TIPO B") &&
+                log.classificacao.toUpperCase() === "TIPO B - LANCHE" &&
                 (dadosValoresDietasAutorizadas[
                   `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
                 ] = `${log.quantidade}`);
@@ -1590,7 +1589,7 @@ export default () => {
     disableBotaoSalvarLancamentos,
   ]);
 
-  const onSubmitObservacao = async (values, dia, categoria, errors) => {
+  const onSubmitObservacao = async (values, dia, categoria, form, errors) => {
     let valoresMedicao = [];
     const valuesMesmoDiaDaObservacao = Object.fromEntries(
       Object.entries(values).filter(([key]) =>
@@ -1615,7 +1614,10 @@ export default () => {
         key.includes(`__dia_${dia}__categoria_${categoria}`)
       ).length
     ) {
-      toastError(`Existe(m) erro(s) na coluna do dia ${dia}.`);
+      toastError(
+        `Não foi possível salvar seu comentário, pois existe(m) erro(s) na coluna do dia ${dia}.`
+      );
+      form.change(`observacoes__dia_${dia}__categoria_${categoria}`, "");
       return;
     }
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
@@ -3170,6 +3172,7 @@ export default () => {
                           formValuesAtualizados,
                           showDiaObservacaoDiaria,
                           showCategoriaObservacaoDiaria,
+                          form,
                           errors
                         )
                       }

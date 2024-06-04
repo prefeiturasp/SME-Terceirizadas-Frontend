@@ -1,11 +1,8 @@
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import Page from "components/Shareable/Page/Page";
+import DietaEspecialAlteracaoUE from "components/screens/DietaEspecial/AlteracaoUE";
+import { DIETA_ESPECIAL_ALTERACAO_UE, ESCOLA } from "configs/constants";
 import React from "react";
-import DietaEspecialAlteracaoUE from "../../../components/screens/DietaEspecial/AlteracaoUE";
-import Breadcrumb from "../../../components/Shareable/Breadcrumb";
-import Page from "../../../components/Shareable/Page/Page";
-import {
-  DIETA_ESPECIAL_ALTERACAO_UE,
-  ESCOLA,
-} from "../../../configs/constants";
 import { HOME } from "../constants";
 
 const atual = {
@@ -13,7 +10,7 @@ const atual = {
   titulo: "Solicitação de alteração de U.E da dieta especial",
 };
 
-export default () => (
+export const AlteracaoUEPage = () => (
   <Page titulo={atual.titulo} botaoVoltar>
     <Breadcrumb home={HOME} atual={atual} />
     <DietaEspecialAlteracaoUE />

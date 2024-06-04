@@ -5,7 +5,7 @@ import { getKitLanches } from "services/kitLanche";
 import { getEscolasTercTotal } from "services/escola.service";
 import { dataParaUTC } from "helpers/utilities";
 import SolicitacaoUnificada from ".";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import { SigpaeLogoLoader } from "components/Shareable/SigpaeLogoLoader";
 
 export const Container = () => {

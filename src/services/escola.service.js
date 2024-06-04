@@ -210,7 +210,11 @@ export const getEscolaSimples = async (uuidEscola) => {
   const url = uuidEscola
     ? `/escolas-simples/${uuidEscola}/`
     : "/escolas-simples/";
-  return axios.get(url);
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const updateEscolaSimples = async (uuidEscola, valores) =>
@@ -228,6 +232,15 @@ export const getQuantidadeAlunosEscola = async (uuidEscola) => {
 export const getGrupoUnidadeEscolar = async () => {
   const url = `${API_URL}/grupos-unidade-escolar/`;
   const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getQuantidadeAlunosMatriculadosPorData = async (params) => {
+  const url = `${API_URL}/matriculados-no-mes/quantidade-por-data/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;

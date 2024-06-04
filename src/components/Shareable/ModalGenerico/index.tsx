@@ -12,14 +12,18 @@ export interface ModalGenericoProps {
   titulo: ReactNode;
   texto: ReactNode;
   loading?: boolean;
+  textoBotaoClose?: string;
   handleClose: () => void;
+  textoBotaoSim?: string;
   handleSim: () => void;
 }
 
 const ModalGenerico: React.FC<ModalGenericoProps> = ({
   show,
+  textoBotaoClose = "Não",
   handleClose,
   loading = false,
+  textoBotaoSim = "Sim",
   handleSim,
   titulo,
   texto,
@@ -38,14 +42,14 @@ const ModalGenerico: React.FC<ModalGenericoProps> = ({
         </Modal.Body>
         <Modal.Footer>
           <Botao
-            texto="Não"
+            texto={textoBotaoClose}
             type={BUTTON_TYPE.BUTTON}
             onClick={() => handleClose()}
             style={BUTTON_STYLE.GREEN_OUTLINE}
             className="ms-3"
           />
           <Botao
-            texto="Sim"
+            texto={textoBotaoSim}
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
             className="ms-3"

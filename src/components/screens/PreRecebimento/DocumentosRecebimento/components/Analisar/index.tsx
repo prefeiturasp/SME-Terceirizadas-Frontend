@@ -471,13 +471,14 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputComData}
-                      label="Data Final do Laudo"
+                      label="Data de Conclusão do Laudo"
                       name={`data_final_lote`}
                       placeholder="Selecione uma Data"
                       className="input-analise"
                       required
                       validate={required}
-                      minDate={new Date()}
+                      minDate={null}
+                      maxDate={null}
                     />
                   </div>
                   <div className="col-8">

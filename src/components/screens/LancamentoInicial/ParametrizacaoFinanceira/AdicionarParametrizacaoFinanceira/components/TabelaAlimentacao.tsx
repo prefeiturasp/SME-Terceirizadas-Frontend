@@ -15,9 +15,10 @@ import {
 type Props = {
   tiposAlimentacao: Array<any>;
   grupoSelecionado: string;
+  tipoTurma?: string;
 };
 
-export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
+export default ({ tiposAlimentacao, grupoSelecionado, tipoTurma }: Props) => {
   const alimentacoes = tiposAlimentacao.map((t) => ({ ...t }));
 
   if (grupoSelecionado === "grupo_3") {
@@ -25,7 +26,7 @@ export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
     if (refeicaoIndex !== -1) {
       alimentacoes[refeicaoIndex] = {
         ...alimentacoes[refeicaoIndex],
-        grupo: "EMEF / CEUEMEF / EMEFM / EMEBS",
+        grupo: "EMEF / CEUEMEF / EMEFM",
       };
 
       alimentacoes.splice(refeicaoIndex + 1, 0, {
@@ -35,12 +36,34 @@ export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
     }
   }
 
+  const nomeTabela = tipoTurma
+    ? `Preço das Alimentações - ${tipoTurma}`
+    : "Preço das Alimentações";
+
   return (
     <div className="row mt-5">
-      <div className="col-4">
-        <h2 className="text-start texto-simples-verde fw-bold">
-          Preço das Alimentações Convencionais
-        </h2>
+      <div
+        className={`col${
+          !["grupo_2", "grupo_4"].includes(grupoSelecionado) ? "-4" : ""
+        }`}
+      >
+        {["grupo_2", "grupo_4"].includes(grupoSelecionado) ? (
+          <h2 className="text-start texto-simples-verde fw-bold mb-3">
+            Preço das Alimentações -{" "}
+            <span
+              className={`titulo-tag turma-${tipoTurma
+                .replace(/\s/g, "-")
+                .toLocaleLowerCase()}`}
+            >
+              {tipoTurma}
+            </span>
+          </h2>
+        ) : (
+          <h2 className="text-start texto-simples-verde fw-bold">
+            Preço das Alimentações
+          </h2>
+        )}
+
         <Table pagination={false} bordered dataSource={alimentacoes}>
           <Column
             title="Tipo de Alimentação"
@@ -54,13 +77,13 @@ export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
                   </p>
                   <Field
                     component="input"
-                    name={`tabelas["Alimentações Convencionais"].${value}_${record.grupo}.tipo_alimentacao`}
+                    name={`tabelas[${nomeTabela}].${value}_${record.grupo}.tipo_alimentacao`}
                     type="hidden"
                     defaultValue={record.uuid}
                   />
                   <Field
                     component="input"
-                    name={`tabelas["Alimentações Convencionais"].${value}_${record.grupo}.grupo`}
+                    name={`tabelas[${nomeTabela}].${value}_${record.grupo}.grupo`}
                     type="hidden"
                     defaultValue={record.grupo}
                   />
@@ -75,7 +98,7 @@ export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Alimentações Convencionais"].${record.nome}_${record.grupo}.valor_unitario`}
+                name={`tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}
@@ -91,7 +114,7 @@ export default ({ tiposAlimentacao, grupoSelecionado }: Props) => {
             render={(_, record: any) => (
               <Field
                 component={AInputNumber}
-                name={`tabelas["Alimentações Convencionais"].${record.nome}_${record.grupo}.valor_unitario_reajuste`}
+                name={`tabelas[${nomeTabela}].${record.nome}_${record.grupo}.valor_unitario_reajuste`}
                 placeholder="0,00"
                 min={0}
                 formatter={(value: string) => formataValorDecimal(value)}

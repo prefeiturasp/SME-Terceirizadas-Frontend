@@ -30,7 +30,7 @@
       color: #42474a;
       font-weight: bold;
       div {
-        display: grid;
+        display: flex;
         align-items: center;
         text-align: left;
         height: 100%;
@@ -71,7 +71,7 @@
       }
 
       div {
-        display: grid;
+        display: flex;
         align-items: center;
         text-align: left;
         height: 100%;

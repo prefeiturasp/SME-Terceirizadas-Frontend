@@ -46,7 +46,7 @@ import {
   validarCamposComInclusoesDeAlimentacaoSemObservacao,
   exibirTooltipAlimentacoesAutorizadasDiaNaoLetivoCEI,
   exibirTooltipSuspensoesAutorizadasCEI,
-  frequenciaComSuspensaoAutorizadaPreenchida,
+  frequenciaComSuspensaoAutorizadaPreenchidaESemObservacao,
   campoComInclusaoAutorizadaValorZeroESemObservacao,
   exibirTooltipErroQtdMaiorQueAutorizado,
   exibirTooltipDietasInclusaoDiaNaoLetivoCEI,
@@ -640,7 +640,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         logQtdDietasAutorizadasCEI &&
           logQtdDietasAutorizadasCEI.forEach((log) => {
             categoria.nome.includes("TIPO B") &&
-              log.classificacao.toUpperCase().includes("TIPO B") &&
+              log.classificacao.toUpperCase() === "TIPO B - LANCHE" &&
               (dadosValoresDietasAutorizadas[
                 `dietas_autorizadas__faixa_${log.faixa_etaria.uuid}__dia_${log.dia}__categoria_${categoria.id}`
               ] = `${log.quantidade}`);
@@ -682,7 +682,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                 `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
               ] = `${log.quantidade}`);
             categoria.nome.includes("TIPO B") &&
-              log.classificacao.toUpperCase().includes("TIPO B") &&
+              log.classificacao.toUpperCase() === "TIPO B - LANCHE" &&
               (dadosValoresDietasAutorizadasEmeiDaCemei[
                 `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
               ] = `${log.quantidade}`);
@@ -888,7 +888,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         dadosValoresMatriculadosFaixaEtariaDia[
           `matriculados__faixa_${objMatriculado.faixa_etaria.uuid}__dia_${objMatriculado.dia}__categoria_${idCategoriaAlimentacao}`
         ] = objMatriculado.quantidade
-          ? `${objMatriculado.quantidade - somaDietasMesmoDia}`
+          ? `${Math.max(objMatriculado.quantidade - somaDietasMesmoDia, 0)}`
           : null;
       });
 
@@ -1050,7 +1050,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     disableBotaoSalvarLancamentos,
   ]);
 
-  const onSubmitObservacao = async (values, dia, categoria, errors) => {
+  const onSubmitObservacao = async (values, dia, categoria, form, errors) => {
     let valoresMedicao = [];
     if (exibirTooltipAoSalvar) {
       validarCamposComInclusoesDeAlimentacaoSemObservacao(
@@ -1080,7 +1080,10 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
         key.includes(`__dia_${dia}__categoria_${categoria}`)
       ).length
     ) {
-      toastError(`Existe(m) erro(s) na coluna do dia ${dia}.`);
+      toastError(
+        `Não foi possível salvar seu comentário, pois existe(m) erro(s) na coluna do dia ${dia}.`
+      );
+      form.change(`observacoes__dia_${dia}__categoria_${categoria}`, "");
       return;
     }
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
@@ -1487,7 +1490,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
     if (
       ((categoria.nome.includes("ALIMENTAÇÃO") &&
         ((!ehEmeiDaCemeiLocation &&
-          frequenciaComSuspensaoAutorizadaPreenchida(
+          frequenciaComSuspensaoAutorizadaPreenchidaESemObservacao(
             formValuesAtualizados,
             column,
             categoria,
@@ -2067,7 +2070,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                                                         alteracoesAlimentacaoAutorizadas
                                                       ) ||
                                                       (!ehEmeiDaCemeiLocation &&
-                                                        frequenciaComSuspensaoAutorizadaPreenchida(
+                                                        frequenciaComSuspensaoAutorizadaPreenchidaESemObservacao(
                                                           formValuesAtualizados,
                                                           column,
                                                           categoria,
@@ -2546,6 +2549,7 @@ export const PeriodoLancamentoMedicaoInicialCEI = () => {
                           formValuesAtualizados,
                           showDiaObservacaoDiaria,
                           showCategoriaObservacaoDiaria,
+                          form,
                           errors
                         )
                       }

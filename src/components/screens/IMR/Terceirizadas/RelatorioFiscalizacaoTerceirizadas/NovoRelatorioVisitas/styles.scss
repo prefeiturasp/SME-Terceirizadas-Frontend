@@ -1,0 +1,160 @@
+@import "styles/variables.scss";
+
+div.novo-relatorio-visitas {
+  h2 {
+    color: $green;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  input[type="radio"] {
+    accent-color: $green;
+  }
+
+  div.cabecalho {
+    .ant-select-selection-placeholder {
+      font-weight: normal !important;
+    }
+
+    section.nutri-acompanhou-visita {
+      font-size: 14px;
+      color: $gray;
+
+      label {
+        color: $blackInput;
+        margin-left: 0.5em;
+      }
+    }
+  }
+
+  div.formulario {
+    div.subtitle {
+      color: $grayHeader;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    table {
+      font-size: 14px;
+      width: 100%;
+
+      tr {
+        border: 1px solid $grayIcon;
+
+        &:not(:last-child) {
+          border-bottom: none;
+        }
+
+        &.categoria {
+          background-color: $grayBackgroundTr;
+
+          th {
+            padding: 1em;
+            text-align: center;
+          }
+        }
+
+        &.frequencia {
+          background-color: $grayBackground;
+
+          th {
+            padding: 1em;
+            text-align: center;
+          }
+
+          th .highlight {
+            color: $green;
+          }
+        }
+
+        &.tipo-ocorrencia {
+          td:not(:last-child) {
+            border-right: 1px solid $grayIcon;
+          }
+
+          td {
+            &:first-child {
+              width: 5%;
+            }
+
+            &:nth-child(2) {
+              width: 85%;
+            }
+            &:last-child {
+              width: 10%;
+            }
+          }
+        }
+
+        &.tipo-ocorrencia-parametrizacao {
+          .parametrizacao-tipo-radio {
+            label {
+              color: #42474a;
+              margin-left: 0.5em;
+            }
+
+            input[type="radio"] {
+              accent-color: $green !important;
+            }
+          }
+        }
+
+        &.tipo-ocorrencia-nao-ha-parametrizacao {
+          div {
+            min-height: 200px;
+            p {
+              color: $grayParagraph;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+      .required-asterisk {
+        color: #a50e05;
+        padding-right: 5px;
+      }
+    }
+  }
+
+  div.anexos {
+    span.titulo-anexo {
+      font-size: 14px;
+      font-weight: bold;
+      background-color: $grayBackgroundTr;
+      border: 1px solid $grayIcon;
+      width: 100%;
+      text-align: left;
+      display: block;
+      padding: 1em;
+    }
+  }
+
+  .seletor-imr {
+    height: 35px;
+  }
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1643px) {
+  div.novo-relatorio-visitas {
+    div.formulario {
+      table {
+        tr {
+          &.tipo-ocorrencia {
+            td {
+              &:first-child {
+                width: 10%;
+              }
+
+              &:nth-child(2) {
+                width: 70%;
+              }
+              &:last-child {
+                width: 20%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

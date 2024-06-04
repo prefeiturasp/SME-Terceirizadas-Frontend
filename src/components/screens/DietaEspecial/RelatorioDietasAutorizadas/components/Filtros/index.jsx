@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Field } from "react-final-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Spin } from "antd";
@@ -11,6 +11,7 @@ import {
   getUnidadesEducacionaisComCodEol,
   getSolicitacoesRelatorioDietasEspeciais,
 } from "services/dietaEspecial.service";
+import { getTotalizadoresRelatorioSolicitacoes } from "services/relatorios.service";
 import "./styles.scss";
 
 export const Filtros = ({ ...props }) => {
@@ -19,13 +20,15 @@ export const Filtros = ({ ...props }) => {
     filtros,
     meusDados,
     setDietasEspeciais,
+    setErroAPI,
     setUnidadesEducacionais,
     unidadesEducacionais,
     onClear,
     setLoadingDietas,
-    ajustaParams,
     setValuesForm,
     getFiltrosRelatorioDietasEspeciaisAsync,
+    setTotalizadores,
+    setRenderGraficosOuTabela,
   } = props;
 
   const getUnidadesEducacionaisAsync = async (values) => {
@@ -36,7 +39,7 @@ export const Filtros = ({ ...props }) => {
       setUnidadesEducacionais(
         response.data.map((unidade) => ({
           label: unidade.codigo_eol_escola,
-          value: unidade.codigo_eol,
+          value: unidade.uuid,
         }))
       );
     } else {
@@ -49,7 +52,23 @@ export const Filtros = ({ ...props }) => {
   const PAGE_SIZE = 10;
   const PARAMS = { limit: PAGE_SIZE, offset: 0 };
 
+  useEffect(() => {
+    if (filtros?.lotes.length === 1) {
+      getUnidadesEducacionaisAsync({ lote: filtros.lotes[0].uuid });
+    }
+  }, [filtros]);
+
+  const getTotalizadoresAsync = async (values) => {
+    const response = await getTotalizadoresRelatorioSolicitacoes(values);
+    if (response.status === HTTP_STATUS.OK) {
+      setTotalizadores(response.data.results);
+    } else {
+      setErroAPI("Erro ao carregar totalizadores. Tente novamente mais tarde.");
+    }
+  };
+
   const onSubmit = async (values) => {
+    setRenderGraficosOuTabela("Gráficos");
     const filtrosValues = {
       ...values,
       status_selecionado: "AUTORIZADAS",
@@ -63,9 +82,9 @@ export const Filtros = ({ ...props }) => {
       ...PARAMS,
       ...filtrosValues,
     };
-    const response = await getSolicitacoesRelatorioDietasEspeciais(
-      ajustaParams(params)
-    );
+    const response = await getSolicitacoesRelatorioDietasEspeciais(params);
+    params["relatorio_dietas_autorizadas"] = true;
+    await getTotalizadoresAsync(params);
     if (response.status === HTTP_STATUS.OK) {
       setDietasEspeciais(response.data);
     } else {
@@ -212,7 +231,7 @@ export const Filtros = ({ ...props }) => {
                           "Todos as unidades estão selecionadas",
                         selectAll: "Todas",
                       }}
-                      disabled={!values.lote}
+                      disabled={filtros.lotes.length > 1 && !values.lote}
                     />
                   </Spin>
                 </div>
@@ -235,7 +254,7 @@ export const Filtros = ({ ...props }) => {
                     }
                     overrideStrings={{
                       search: "Busca",
-                      selectSomeItems: "Selecione classificações de dieta",
+                      selectSomeItems: "Selecione as classificações de dietas",
                       allItemsAreSelected:
                         "Todos as classificações estão selecionadas",
                       selectAll: "Todas",

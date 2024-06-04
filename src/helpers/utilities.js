@@ -513,6 +513,18 @@ export const usuarioComAcessoTelaDetalharNotificacaoOcorrencia = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioComAcessoAoRelatorioCronogramas = () => {
+  return [
+    PERFIL.DILOG_DIRETORIA,
+    PERFIL.DINUTRE_DIRETORIA,
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.USUARIO_RELATORIOS,
+    PERFIL.USUARIO_GTIC_CODAE,
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioComAcessoAoCalendarioCronograma = () => {
   return [
     PERFIL.DILOG_CRONOGRAMA,
@@ -537,6 +549,7 @@ export const usuarioComAcessoAoPainelAprovacoes = () => {
 export const usuarioComAcessoAoPainelEmbalagens = () => {
   return [
     PERFIL.DILOG_QUALIDADE,
+    PERFIL.ADMINISTRADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
@@ -561,6 +574,7 @@ export const usuarioComAcessoAoPainelDocumentos = () => {
 
 export const usuarioComAcessoAoPainelFichasTecnicas = () => {
   return [
+    PERFIL.ADMINISTRADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_GESTAO_PRODUTO,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
@@ -581,6 +595,13 @@ export const usuarioEhDilogQualidade = () =>
 export const usuarioEhDilogQualidadeOuCronograma = () => {
   return [
     PERFIL.DILOG_QUALIDADE,
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhCronogramaOuCodae = () => {
+  return [
     PERFIL.DILOG_CRONOGRAMA,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
   ].includes(localStorage.getItem("perfil"));
@@ -740,6 +761,10 @@ export const usuarioEhOrgaoFiscalizador = () => {
 
 export const usuarioEhCODAEGabinete = () => {
   return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_CODAE_GABINETE;
+};
+
+export const usuarioEhGticCODAE = () => {
+  return localStorage.getItem("perfil") === PERFIL.USUARIO_GTIC_CODAE;
 };
 
 export const acessoModuloMedicaoInicialEscola = () => {
@@ -1215,4 +1240,16 @@ export const ordenarPorLogMaisRecente = (itemA, itemB) => {
   let dataB = parseDataHoraBrToMoment(itemB.log_mais_recente);
 
   return comparaObjetosMoment(dataB, dataA);
+};
+
+export const getDDMMYYYfromDate = (date) => {
+  return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}/${date.getFullYear()}`;
+};
+
+export const getYYYYMMDDfromDate = (date) => {
+  return `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
 };

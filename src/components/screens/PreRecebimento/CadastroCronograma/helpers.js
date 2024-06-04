@@ -19,7 +19,7 @@ export const geraOptionsFichasTecnicas = (
     .filter((ficha) => ficha.uuid_empresa === empresaSelecionada?.uuid)
     .map((ficha) => {
       return {
-        nome: formatarNumeroEProdutoFichaTecnica(ficha),
+        value: formatarNumeroEProdutoFichaTecnica(ficha),
         uuid: ficha.uuid,
       };
     });
@@ -43,6 +43,7 @@ export const formataPayload = (
   values,
   rascunho,
   empresaSelecionada,
+  fichaTecnicaSelecionada,
   etapas,
   recebimentos
 ) => {
@@ -50,7 +51,7 @@ export const formataPayload = (
   payload.cadastro_finalizado = !rascunho;
   payload.contrato = values.contrato;
   payload.empresa = empresaSelecionada.uuid;
-  payload.ficha_tecnica = values.ficha_tecnica;
+  payload.ficha_tecnica = fichaTecnicaSelecionada?.uuid;
   payload.armazem = values.armazem;
   payload.qtd_total_programada = values.quantidade_total
     ?.replaceAll(".", "")
@@ -83,6 +84,8 @@ export const formataPayload = (
     data_programada: values[`data_recebimento_${index}`],
     tipo_carga: values[`tipo_recebimento_${index}`],
   }));
+
+  payload.observacoes = values.observacoes;
 
   return payload;
 };

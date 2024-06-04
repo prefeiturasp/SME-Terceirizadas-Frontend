@@ -3,7 +3,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { getDDMMYYYfromDate } from "configs/helper";
+import { getDDMMYYYfromDate } from "helpers/utilities";
 import React from "react";
 import { Modal } from "react-bootstrap";
 import "./style.scss";
@@ -30,7 +30,8 @@ export const ModalEditar = ({ ...props }) => {
       <Modal.Body>
         <p>
           <strong>{nomeObjetoNoCalendario}</strong> para a unidade{" "}
-          <strong>{event.title}</strong> cadastrada para o dia{" "}
+          <strong>{event.title}</strong> dos editais{" "}
+          <strong>{event.editais_numeros_virgula}</strong> cadastrada para o dia{" "}
           <strong>{getDDMMYYYfromDate(event.start)}</strong>, por{" "}
           {event.criado_por.nome} em {event.criado_em}.
         </p>

@@ -9,13 +9,13 @@ import {
   composeValidators,
   inteiroOuDecimalComVirgula,
 } from "helpers/fieldValidators";
-import { Spin, Steps } from "antd";
+import { Spin, Tooltip } from "antd";
 import { CATEGORIA_OPTIONS } from "../../constants";
 import InputText from "components/Shareable/Input/InputText";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 
 import Collapse, { CollapseControl } from "components/Shareable/Collapse";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -30,8 +30,6 @@ import TabelaNutricional from "components/Shareable/TabelaNutricional";
 import Select from "components/Shareable/Select";
 import ModalCadastrarItemIndividual from "components/Shareable/ModalCadastrarItemIndividual";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
-
-import { MeusDadosInterfaceOuter } from "context/MeusDadosContext/interfaces";
 
 import {
   ArquivoForm,
@@ -64,6 +62,7 @@ import {
 
 import "./styles.scss";
 import FormProponente from "./components/FormProponente";
+import StepsSigpae from "components/Shareable/StepsSigpae";
 
 const ITENS_STEPS = [
   {
@@ -78,7 +77,7 @@ const ITENS_STEPS = [
 ];
 
 export default () => {
-  const { meusDados } = useContext<MeusDadosInterfaceOuter>(MeusDadosContext);
+  const { meusDados } = useContext(MeusDadosContext);
   const [carregando, setCarregando] = useState<boolean>(true);
   const [produtosOptions, setProdutosOptions] = useState<OptionsGenerico[]>([]);
   const [marcasOptions, setMarcasOptions] = useState<OptionsGenerico[]>([]);
@@ -151,9 +150,7 @@ export default () => {
             decorators={[cepCalculator(setDesabilitaEndereco)]}
             render={({ form, handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
-                <div className="steps">
-                  <Steps size="small" current={stepAtual} items={ITENS_STEPS} />
-                </div>
+                <StepsSigpae current={stepAtual} items={ITENS_STEPS} />
 
                 <hr />
 
@@ -513,6 +510,11 @@ export default () => {
                       </div>
                     </div>
 
+                    <div className="aviso-tabela mt-4">
+                      <span className="red">IMPORTANTE:</span>{" "}
+                      {`Os campos abaixo são de preenchimento obrigatório, caso não haja valores nutricionais informar o valor "0" nos campos.`}
+                    </div>
+
                     <TabelaNutricional
                       values={values}
                       listaCompletaInformacoesNutricionais={
@@ -549,35 +551,68 @@ export default () => {
 
                 {stepAtual === ITENS_STEPS.length - 1 && (
                   <div className="mt-4 mb-4">
-                    <Botao
-                      texto="Assinar e Enviar"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-end ms-3"
-                      onClick={() => setShowModalAssinatura(true)}
-                      disabled={validaAssinarEnviar(
-                        values as FichaTecnicaPayload,
-                        errors,
-                        arquivo
-                      )}
-                    />
+                    <Tooltip
+                      className="float-end"
+                      title={
+                        validaAssinarEnviar(
+                          values as FichaTecnicaPayload,
+                          errors,
+                          arquivo
+                        )
+                          ? "Há campos de preenchimento obrigatório sem informação."
+                          : undefined
+                      }
+                    >
+                      <div>
+                        <Botao
+                          texto="Assinar e Enviar"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          className="float-end ms-3"
+                          onClick={() => setShowModalAssinatura(true)}
+                          disabled={validaAssinarEnviar(
+                            values as FichaTecnicaPayload,
+                            errors,
+                            arquivo
+                          )}
+                        />
+                      </div>
+                    </Tooltip>
                   </div>
                 )}
 
                 {stepAtual < ITENS_STEPS.length - 1 && (
                   <div className="mt-4 mb-4">
-                    <Botao
-                      texto="Próximo"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-end ms-3"
-                      onClick={() => setStepAtual((stepAtual) => stepAtual + 1)}
-                      disabled={validaProximo(
-                        values as FichaTecnicaPayload,
-                        errors,
-                        stepAtual
-                      )}
-                    />
+                    <Tooltip
+                      className="float-end"
+                      title={
+                        validaProximo(
+                          values as FichaTecnicaPayload,
+                          errors,
+                          stepAtual
+                        )
+                          ? "Há campos de preenchimento obrigatório sem informação."
+                          : undefined
+                      }
+                    >
+                      <div>
+                        <Botao
+                          texto="Próximo"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          className="float-end ms-3"
+                          onClick={() => {
+                            setStepAtual((stepAtual) => stepAtual + 1);
+                            setCollapse({ 0: true });
+                          }}
+                          disabled={validaProximo(
+                            values as FichaTecnicaPayload,
+                            errors,
+                            stepAtual
+                          )}
+                        />
+                      </div>
+                    </Tooltip>
                   </div>
                 )}
 
@@ -609,7 +644,10 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="float-end ms-3"
-                      onClick={() => setStepAtual((stepAtual) => stepAtual - 1)}
+                      onClick={() => {
+                        setStepAtual((stepAtual) => stepAtual - 1);
+                        setCollapse({});
+                      }}
                     />
                   </div>
                 )}

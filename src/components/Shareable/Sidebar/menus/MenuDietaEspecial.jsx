@@ -5,6 +5,7 @@ import {
   CANCELAMENTO,
   CONSULTA_PROTOCOLO_PADRAO_DIETA,
   RELATORIO_DIETAS_AUTORIZADAS,
+  RELATORIO_DIETAS_CANCELADAS,
   RELATORIO_GERENCIAL_DIETAS,
 } from "configs/constants";
 import {
@@ -20,6 +21,7 @@ import {
   usuarioEhAdministradorNutriCODAE,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCoordenadorNutriCODAE,
+  usuarioEhGticCODAE,
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoParceira,
   usuarioEhCODAEGabinete,
@@ -73,7 +75,8 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCoordenadorNutriCODAE() ||
     usuarioEhMedicao() ||
     usuarioEhCODAEGabinete() ||
-    ehUsuarioRelatorios();
+    ehUsuarioRelatorios() ||
+    usuarioEhGticCODAE();
 
   return (
     <Menu id="DietaEspecial" icon="fa-apple-alt" title={"Dieta Especial"}>
@@ -121,9 +124,13 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
           <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_DIETAS_AUTORIZADAS}`}>
             Relatório de Dietas Autorizadas
           </LeafItem>
+          <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_DIETAS_CANCELADAS}`}>
+            Relatório de Dietas Canceladas
+          </LeafItem>
           {(usuarioEhAdministradorNutriCODAE() ||
             usuarioEhCoordenadorNutriCODAE() ||
-            ehUsuarioRelatorios()) && (
+            ehUsuarioRelatorios() ||
+            usuarioEhGticCODAE()) && (
             <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_GERENCIAL_DIETAS}`}>
               Relatório Gerencial de Dietas
             </LeafItem>
