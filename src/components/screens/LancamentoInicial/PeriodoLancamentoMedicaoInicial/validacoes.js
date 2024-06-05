@@ -587,7 +587,7 @@ export const validacoesTabelaAlimentacao = (
     ) &&
     !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0)
   ) {
-    if (!value || (value && Number(value) !== 0 && validacaoDiaLetivo(dia))) {
+    if (validacaoDiaLetivo(dia) && (!value || (value && Number(value) !== 0))) {
       return `Foi autorizada inclusão de alimentação ${
         location.state && location.state.grupo ? "contínua" : ""
       } nesta data. Informe a frequência de alunos.`;
@@ -806,8 +806,8 @@ export const validacoesTabelasDietas = (
   ) {
     if (
       !EH_INCLUSAO_SOMENTE_SOBREMESA &&
-      ((maxDietasAutorizadas !== 0 && !value) ||
-        (value && Number(value) !== 0 && validacaoDiaLetivo(dia)))
+      validacaoDiaLetivo(dia) &&
+      ((maxDietasAutorizadas !== 0 && !value) || (value && Number(value) !== 0))
     ) {
       return `Foi autorizada inclusão de alimentação ${
         location.state && location.state.grupo ? "contínua" : ""
