@@ -6,7 +6,7 @@ import { formatarOpcoesLote, formatarOpcoesDRE } from "helpers/utilities";
 import DashboardCODAE from ".";
 import { getLotesSimples } from "services/lote.service";
 import { Spin } from "antd";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 
 export const Container = () => {
   const [visaoPor] = useState([

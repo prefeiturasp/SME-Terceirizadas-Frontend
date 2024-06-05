@@ -1,23 +1,23 @@
-import React from "react";
-import { ESCOLA, SOLICITACOES_AUTORIZADAS } from "configs/constants";
 import Breadcrumb from "components/Shareable/Breadcrumb";
-import Page from "components/Shareable/Page/Page";
-import { HOME } from "../constants";
-import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
+import CardLegendas from "components/Shareable/CardLegendas";
 import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM,
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import CardLegendas from "components/Shareable/CardLegendas";
-import { getSolicitacoesAutorizadasEscola } from "services/painelEscola.service";
+import Page from "components/Shareable/Page/Page";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
+import { ESCOLA, SOLICITACOES_AUTORIZADAS } from "configs/constants";
 import { PAGINACAO_DEFAULT } from "constants/shared";
+import React from "react";
+import { getSolicitacoesAutorizadasEscola } from "services/painelEscola.service";
+import { HOME } from "../constants";
 
 const atual = {
   href: `/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`,
   titulo: "Solicitações Autorizadas",
 };
 
-export default () => (
+export const StatusSolicitacoesAutorizadasEscolaPage = () => (
   <Page titulo={atual.titulo} botaoVoltar>
     <Breadcrumb home={HOME} atual={atual} />
     <SolicitacoesPorStatusGenerico

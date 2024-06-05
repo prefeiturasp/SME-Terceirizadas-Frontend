@@ -22,7 +22,6 @@ import {
 import { required } from "helpers/fieldValidators";
 
 import "./styles.scss";
-import { calculaTotalEmbalagens } from "./helper";
 import { usuarioEhEmpresaFornecedor } from "../../../helpers/utilities";
 import { usuarioEhCodaeDilog } from "../../../helpers/utilities";
 
@@ -312,23 +311,6 @@ export default ({
                   apenasNumeros
                   agrupadorMilharComDecimal
                   disabled={desabilitar[index]}
-                  inputOnChange={(e) => {
-                    const value = e.target.value;
-                    const totalEmbalagens = calculaTotalEmbalagens(
-                      Number(value.replaceAll(".", "").replace(",", ".")),
-                      Number(
-                        values.peso_liquido_embalagem_secundaria?.replace(
-                          ",",
-                          "."
-                        )
-                      )
-                    );
-
-                    form.change(
-                      `total_embalagens_${index}`,
-                      formataMilharDecimal(totalEmbalagens)
-                    );
-                  }}
                 />
               </div>
               <div className="col-4">
@@ -337,8 +319,9 @@ export default ({
                   label="Total de Embalagens"
                   name={`total_embalagens_${index}`}
                   required
-                  disabled
                   valorInicial={""}
+                  validate={required}
+                  agrupadorMilharComDecimal
                 />
               </div>
             </div>

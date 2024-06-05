@@ -9,6 +9,12 @@ import "./style.scss";
 import { HelpText } from "../HelpText";
 import TooltipIcone from "../TooltipIcone";
 import InputErroMensagem from "../Input/InputErroMensagem";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "components/Shareable/Botao/constants";
 
 export class InputComData extends Component {
   // Thanks community :D
@@ -121,6 +127,9 @@ export class InputComData extends Component {
       usarDirty,
       excludeDates,
       filterDate,
+      onClickTrash,
+      indexTrash,
+      form,
     } = this.props;
 
     return (
@@ -139,6 +148,15 @@ export class InputComData extends Component {
             {label}
           </label>,
         ]}
+        {onClickTrash && form && indexTrash > 0 && (
+          <Botao
+            onClick={() => onClickTrash(indexTrash, form)}
+            className="no-border"
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+            icon={BUTTON_ICON.TRASH}
+          />
+        )}
         {tooltipText && <TooltipIcone tooltipText={tooltipText} />}
         <div
           className={

@@ -10,7 +10,7 @@ import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service
 import { ModalCadastrarNoCalendario } from "components/Shareable/Calendario/componentes/ModalCadastrarNoCalendario";
 import { ModalEditar } from "components/Shareable/Calendario/componentes/ModalEditar";
 import { ModalConfirmarExclusao } from "components/Shareable/Calendario/componentes//ModalConfirmarExclusao";
-import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
+import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "helpers/utilities";
 import { toastSuccess } from "components/Shareable/Toast/dialogs";
 import "components/Shareable/Calendario/style.scss";
 import { getNumerosEditais } from "services/edital.service";

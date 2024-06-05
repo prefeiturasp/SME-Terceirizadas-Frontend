@@ -5,8 +5,14 @@ import { saveAs } from "file-saver";
 import { converterDDMMYYYYparaYYYYMMDD } from "../helpers/utilities";
 import authService from "./auth";
 import { getPath as getInclusaoPath } from "services/inclusaoDeAlimentacao/helper";
+import { getInclusaoNome } from "services/inclusaoDeAlimentacao/helper";
 import { getPath as getAlteracaoPath } from "services/alteracaoDeCardapio/helper";
+import { getAlteracaoNome } from "services/alteracaoDeCardapio/helper";
 import { getPath as getKitLanchePath } from "services/kitLanche/helper";
+import {
+  getKitLancheNome,
+  getKitLancheUnificadoNome,
+} from "services/kitLanche/helper";
 import {
   RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP,
   RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
@@ -32,18 +38,24 @@ export const getRelatorioKitLancheUnificado = (uuid) => {
     .then((data) => {
       let a = document.createElement("a");
       const fileURL = URL.createObjectURL(data);
+      const nomePdf = getKitLancheUnificadoNome();
       a.href = fileURL;
-      a.download = `solicitacao_unificada.pdf`;
+      a.download = `${nomePdf}.pdf`;
       a.click();
     });
 };
 
-export const getRelatorioAlteracaoCardapio = async (uuid, tipoSolicitacao) => {
+export const getRelatorioAlteracaoCardapio = async (
+  uuid,
+  tipoSolicitacao,
+  escola
+) => {
   let url = `${getAlteracaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
     responseType: "blob",
   });
-  saveAs(data, "alteracao_do_tipo_de_alimentacao.pdf");
+  const nomePdf = getAlteracaoNome(tipoSolicitacao, escola);
+  saveAs(data, `${nomePdf}.pdf`);
 };
 
 export const getRelatorioDietaEspecial = async (uuid) => {
@@ -54,48 +66,55 @@ export const getRelatorioDietaEspecial = async (uuid) => {
   saveAs(data, "relatorio_dieta_especial.pdf");
 };
 
-export const getProtocoloDietaEspecial = async (uuid) => {
+export const getProtocoloDietaEspecial = async (uuid, dietaEspecial) => {
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/protocolo/`;
   const { data } = await axios.get(url, {
     responseType: "blob",
   });
-  saveAs(data, "protocolo_dieta_especial.pdf");
+  const nomePdf = "Protocolo " + dietaEspecial?.aluno?.nome;
+  saveAs(data, `${nomePdf}.pdf`);
 };
 
 export const getRelatorioInclusaoAlimentacao = async (
   uuid,
-  tipoSolicitacao
+  tipoSolicitacao,
+  escola
 ) => {
   let url = `${getInclusaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
     responseType: "blob",
   });
-  saveAs(data, "inclusao_alimentacao.pdf");
+  const nomePdf = getInclusaoNome(tipoSolicitacao, escola);
+  saveAs(data, `${nomePdf}.pdf`);
 };
 
 export const getRelatorioInclusaoAlimentacaoCEMEI = async (
   uuid,
-  tipoSolicitacao
+  tipoSolicitacao,
+  escola
 ) => {
   const url = `${getInclusaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
     responseType: "blob",
   });
-  saveAs(data, "inclusao_alimentacao_cemei.pdf");
+  const nomePdf = getInclusaoNome(tipoSolicitacao, escola);
+  saveAs(data, `${nomePdf}.pdf`);
 };
 
 export const getRelatorioAlteracaoTipoAlimentacao = async (
   uuid,
-  tipoSolicitacao
+  tipoSolicitacao,
+  escola
 ) => {
   const url = `${getAlteracaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
     responseType: "blob",
   });
-  saveAs(data, "alteracao_tipo_alimentacao_cemei.pdf");
+  const nomePdf = getAlteracaoNome(tipoSolicitacao, escola);
+  saveAs(data, `${nomePdf}.pdf`);
 };
 
-export const getDetalheKitLancheAvulso = (uuid, tipoSolicitacao) => {
+export const getDetalheKitLancheAvulso = (uuid, tipoSolicitacao, escola) => {
   const url = `${getKitLanchePath(tipoSolicitacao)}/${uuid}/relatorio/`;
   fetch(url, {
     method: "GET",
@@ -106,8 +125,9 @@ export const getDetalheKitLancheAvulso = (uuid, tipoSolicitacao) => {
     .then((data) => {
       let a = document.createElement("a");
       const fileURL = URL.createObjectURL(data);
+      const nomePdf = getKitLancheNome(tipoSolicitacao, escola);
       a.href = fileURL;
-      a.download = `solicitacao_kit_lanche.pdf`;
+      a.download = `${nomePdf}.pdf`;
       a.click();
     });
 };
@@ -129,16 +149,19 @@ export const getRelatorioProduto = ({ uuid, id_externo }) => {
     });
 };
 
-export const getDetalheInversaoCardapio = async (uuid) => {
+export const getDetalheInversaoCardapio = async (uuid, escola) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
     responseType: "blob",
   });
-  saveAs(data, "relatorio_inversao_dia_cardapio.pdf");
+  const escolaLowerCase = escola.toLowerCase().replace(/\s/g, "_");
+  const nomePdf = "inversao_" + escolaLowerCase;
+  saveAs(data, `${nomePdf}.pdf`);
 };
 
 export const imprimeRelatorioSuspensaoAlimentacao = async (
   uuid,
+  escola,
   ehCei = false
 ) => {
   let url = `/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
@@ -146,7 +169,9 @@ export const imprimeRelatorioSuspensaoAlimentacao = async (
   const { data } = await axios.get(url, {
     responseType: "blob",
   });
-  saveAs(data, "relatorio_suspensao_alimentacao.pdf");
+  const escolaLowerCase = escola.toLowerCase().replace(/\s/g, "_");
+  const nomePdf = "suspensao_" + escolaLowerCase;
+  saveAs(data, `${nomePdf}.pdf`);
 };
 
 export const getRelatorioFiltroPorPeriodo = (filtro, visao) => {
@@ -340,12 +365,17 @@ export const getMotivosDREnaoValida = async () => {
   }
 };
 
-export const getRelatorioKitLancheCEMEI = async (uuid) => {
+export const getRelatorioKitLancheCEMEI = async (
+  tipoSolicitacao,
+  uuid,
+  escola
+) => {
   const url = `/solicitacao-kit-lanche-cemei/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
     responseType: "blob",
   });
-  saveAs(data, "relatorio_kit_lanche_cemei.pdf");
+  const nomePdf = getKitLancheNome(tipoSolicitacao, escola);
+  saveAs(data, `${nomePdf}.pdf`);
 };
 
 export const medicaoInicialExportarOcorrenciasPDF = async (url) => {

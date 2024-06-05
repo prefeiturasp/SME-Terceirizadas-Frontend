@@ -208,3 +208,11 @@ export const getPerfisSubordinados = async (params) => {
     toastError(getMensagemDeErro(error.response.status));
   }
 };
+
+export const aceitarTermos = async (uuid) => {
+  try {
+    return await axios.patch(`/usuarios/${uuid}/aceitar-termos/`);
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response?.status));
+  }
+};

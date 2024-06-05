@@ -169,7 +169,7 @@ export default ({
 
           <div className="row mb-4">
             <div className="col-4">
-              <p>Peso da Embalagem Primária:</p>
+              <p>Embalagem Primária:</p>
               <p>
                 <b>
                   {cronograma.ficha_tecnica?.peso_liquido_embalagem_primaria}{" "}
@@ -181,7 +181,7 @@ export default ({
               </p>
             </div>
             <div className="col-4">
-              <p>Peso da Embalagem Secundária:</p>
+              <p>Embalagem Secundária:</p>
               <p>
                 <b>
                   {cronograma.ficha_tecnica?.peso_liquido_embalagem_secundaria}{" "}
@@ -206,13 +206,17 @@ export default ({
             <div className="col">
               <table className="table tabela-dados-cronograma">
                 <thead className="head-crono">
-                  <th className="borda-crono">N° do Empenho</th>
-                  <th className="borda-crono">Qtde. Total do Empenho</th>
-                  <th className="borda-crono">Etapa</th>
-                  <th className="borda-crono">Parte</th>
-                  <th className="borda-crono">Data Programada</th>
-                  <th className="borda-crono">Quantidade</th>
-                  <th className="borda-crono">Total de Embalagens</th>
+                  <th className="borda-crono text-center">N° do Empenho</th>
+                  <th className="borda-crono text-center">
+                    Qtde. Total do Empenho
+                  </th>
+                  <th className="borda-crono text-center">Etapa</th>
+                  <th className="borda-crono text-center">Parte</th>
+                  <th className="borda-crono text-center">Data Programada</th>
+                  <th className="borda-crono text-center">Quantidade</th>
+                  <th className="borda-crono text-center">
+                    Total de Embalagens
+                  </th>
                 </thead>
                 <tbody>
                   {(() => {
@@ -222,23 +226,27 @@ export default ({
                     return etapas.map((etapa, key) => {
                       return (
                         <tr key={key}>
-                          <td className="borda-crono">
+                          <td className="borda-crono text-center">
                             {etapa.numero_empenho}
                           </td>
-                          <td className="borda-crono">
+                          <td className="borda-crono text-center">
                             {formataMilharDecimal(etapa.qtd_total_empenho)}{" "}
                             {cronograma.unidade_medida?.abreviacao}
                           </td>
-                          <td className="borda-crono">{etapa.etapa}</td>
-                          <td className="borda-crono">{etapa.parte}</td>
-                          <td className="borda-crono">
+                          <td className="borda-crono text-center">
+                            {etapa.etapa}
+                          </td>
+                          <td className="borda-crono text-center">
+                            {etapa.parte}
+                          </td>
+                          <td className="borda-crono text-center">
                             {etapa.data_programada}
                           </td>
-                          <td className="borda-crono">
+                          <td className="borda-crono text-center">
                             {formataMilharDecimal(etapa.quantidade)}{" "}
                             {cronograma.unidade_medida?.abreviacao}
                           </td>
-                          <td className="borda-crono">
+                          <td className="borda-crono text-center">
                             {formataMilharDecimal(etapa.total_embalagens)}{" "}
                             {cronograma.tipo_embalagem_secundaria?.abreviacao}
                           </td>
@@ -271,36 +279,40 @@ export default ({
           </p>
           <table className="table mt-4 mb-3">
             <thead className="head-crono">
-              <th className="borda-crono">Fornecedor</th>
-              <th className="borda-crono">Produto</th>
-              <th className="borda-crono">Data</th>
-              <th className="borda-crono">Etapa</th>
-              <th className="borda-crono">Parte</th>
-              <th className="borda-crono">Quantidade</th>
-              <th className="borda-crono">Armazém</th>
-              <th className="borda-crono">Status</th>
+              <th className="borda-crono text-center">Fornecedor</th>
+              <th className="borda-crono text-center">Produto</th>
+              <th className="borda-crono text-center">Data</th>
+              <th className="borda-crono text-center">Etapa</th>
+              <th className="borda-crono text-center">Parte</th>
+              <th className="borda-crono text-center">Quantidade</th>
+              <th className="borda-crono text-center">Armazém</th>
+              <th className="borda-crono text-center">Status</th>
             </thead>
             <tbody>
               {cronograma.etapas.length > 0 &&
                 cronograma.etapas.map((etapa, key) => {
                   return (
                     <tr key={key}>
-                      <td className="borda-crono">
+                      <td className="borda-crono text-center">
                         {cronograma.empresa && cronograma.empresa.nome_fantasia}
                       </td>
-                      <td className="borda-crono">
+                      <td className="borda-crono text-center">
                         {cronograma.ficha_tecnica?.produto?.nome}
                       </td>
-                      <td className="borda-crono">{etapa.data_programada}</td>
-                      <td className="borda-crono">{etapa.etapa}</td>
-                      <td className="borda-crono">{etapa.parte}</td>
-                      <td className="borda-crono">
+                      <td className="borda-crono text-center">
+                        {etapa.data_programada}
+                      </td>
+                      <td className="borda-crono text-center">{etapa.etapa}</td>
+                      <td className="borda-crono text-center">{etapa.parte}</td>
+                      <td className="borda-crono text-center">
                         {formataMilharDecimal(etapa.quantidade)}
                       </td>
-                      <td className="borda-crono">
+                      <td className="borda-crono text-center">
                         {cronograma.armazem && cronograma.armazem.nome_fantasia}
                       </td>
-                      <td className="borda-crono">{cronograma.status}</td>
+                      <td className="borda-crono text-center">
+                        {cronograma.status}
+                      </td>
                     </tr>
                   );
                 })}

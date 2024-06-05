@@ -54,6 +54,19 @@ div.novo-relatorio-visitas {
           }
         }
 
+        &.frequencia {
+          background-color: $grayBackground;
+
+          th {
+            padding: 1em;
+            text-align: center;
+          }
+
+          th .highlight {
+            color: $green;
+          }
+        }
+
         &.tipo-ocorrencia {
           td:not(:last-child) {
             border-right: 1px solid $grayIcon;
@@ -72,8 +85,52 @@ div.novo-relatorio-visitas {
             }
           }
         }
+
+        &.tipo-ocorrencia-parametrizacao {
+          .parametrizacao-tipo-radio {
+            label {
+              color: #42474a;
+              margin-left: 0.5em;
+            }
+
+            input[type="radio"] {
+              accent-color: $green !important;
+            }
+          }
+        }
+
+        &.tipo-ocorrencia-nao-ha-parametrizacao {
+          div {
+            min-height: 200px;
+            p {
+              color: $grayParagraph;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+      .required-asterisk {
+        color: #a50e05;
+        padding-right: 5px;
       }
     }
+  }
+
+  div.anexos {
+    span.titulo-anexo {
+      font-size: 14px;
+      font-weight: bold;
+      background-color: $grayBackgroundTr;
+      border: 1px solid $grayIcon;
+      width: 100%;
+      text-align: left;
+      display: block;
+      padding: 1em;
+    }
+  }
+
+  .seletor-imr {
+    height: 35px;
   }
 }
 

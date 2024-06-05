@@ -12,7 +12,7 @@ import {
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import { Field, Form } from "react-final-form";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import moment from "moment";
 import { textAreaRequired } from "helpers/fieldValidators";
 import ModalCancelarCorrecao from "./components/ModalCancelarCorrecao";

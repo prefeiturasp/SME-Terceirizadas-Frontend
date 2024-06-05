@@ -1,4 +1,4 @@
-import { TIPO_PERFIL } from "constants/shared";
+import { TIPO_PERFIL, PERFIL } from "constants/shared";
 import { getRelatorioQuantitativo } from "services/terceirizada.service";
 
 // Por algum motivo não consegui usar as constantes de status como chave do objeto
@@ -16,6 +16,7 @@ const MAPEAMENTO_STATUS_LABEL = {
 };
 
 const tipoPerfil = localStorage.getItem("tipo_perfil");
+const perfil = localStorage.getItem("perfil");
 
 export const obterRelatorioQuantitativo = async (params) => {
   const dadosRelatorio = await getRelatorioQuantitativo(params);
@@ -51,12 +52,21 @@ export const obterRelatorioQuantitativo = async (params) => {
 };
 
 export const conferidaClass = (solicitation, cardTitle) => {
-  let conferida = "";
-  if (
+  const condicaoNutriCODAE =
+    perfil === PERFIL.COORDENADOR_DIETA_ESPECIAL &&
+    cardTitle.includes("Recebidas");
+
+  const condicaoTerceirizada =
     tipoPerfil === TIPO_PERFIL.TERCEIRIZADA &&
-    ["Autorizadas", "Canceladas", "Negadas"].includes(cardTitle)
-  ) {
-    conferida = solicitation.conferido ? "conferida" : "";
+    ["Autorizadas", "Canceladas", "Negadas"].includes(cardTitle);
+
+  const ehConferida = condicaoTerceirizada
+    ? solicitation.conferido
+    : solicitation.tipo_solicitacao_dieta === "CANCELAMENTO_DIETA";
+
+  let conferida = "";
+  if (condicaoTerceirizada || condicaoNutriCODAE) {
+    conferida = ehConferida ? "conferida" : "";
   }
 
   return conferida;

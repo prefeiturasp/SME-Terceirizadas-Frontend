@@ -47,7 +47,9 @@ export const prepararPayloadEtapas = (values, etapas) => {
         )
       : undefined,
     quantidade: values[`quantidade_${index}`].replaceAll(".", ""),
-    total_embalagens: values[`total_embalagens_${index}`],
+    total_embalagens: stringDecimalToNumber(
+      values[`total_embalagens_${index}`]
+    ),
     qtd_total_empenho: stringDecimalToNumber(
       values[`qtd_total_empenho_${index}`]
     ),

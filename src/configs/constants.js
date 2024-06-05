@@ -132,6 +132,7 @@ export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
 export const RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP =
   "relatorio-quantitativo-classificacao-dieta-esp";
 export const RELATORIO_DIETAS_AUTORIZADAS = "relatorio-dietas-autorizadas";
+export const RELATORIO_DIETAS_CANCELADAS = "relatorio-dietas-canceladas";
 export const RELATORIO_GERENCIAL_DIETAS = "relatorio-gerencial-dietas";
 export const RELATORIO_GESTAO_DIETA_ESPECIAL =
   "relatorio-gestao-dieta-especial";
@@ -204,6 +205,8 @@ export const TERCEIRIZADAS = "terceirizadas";
 export const RELATORIO_FISCALIZACAO_TERCEIRIZADAS =
   "relatorio-fiscalizacao-terceirizadas";
 export const NOVO_RELATORIO_VISITAS = "novo-relatorio-visitas";
+export const REGISTRAR_OCORRENCIAS = "registrar-ocorrencias";
+export const REGISTRAR_NOVA_OCORRENCIA = "registrar-nova-ocorrencia";
 
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 export const PERIODO_LANCAMENTO = "periodo-lancamento";
@@ -223,6 +226,8 @@ export const EDITAR_PARAMETRIZACAO_FINANCEIRA =
 export const CADASTRO_DE_CLAUSULA = "cadastro-de-clausula";
 export const EDITAR_CLAUSULA = "editar-clausula";
 export const CONTROLE_DE_FREQUENCIA = "controle-de-frequencia";
+export const RELATORIO_FINANCEIRO = "relatorio-financeiro";
+export const RELATORIO_CONSOLIDADO = "relatorio-consolidado";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";

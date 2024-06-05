@@ -176,7 +176,11 @@ export const CorpoRelatorio = ({ ...props }) => {
             icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
             onClick={async () => {
               setImprimindo(true);
-              await getRelatorioKitLancheCEMEI(solicitacaoKitLancheCEMEI.uuid);
+              await getRelatorioKitLancheCEMEI(
+                tipoSolicitacao,
+                solicitacaoKitLancheCEMEI.uuid,
+                solicitacaoKitLancheCEMEI?.escola?.nome
+              );
               setImprimindo(false);
             }}
             className="float-end"

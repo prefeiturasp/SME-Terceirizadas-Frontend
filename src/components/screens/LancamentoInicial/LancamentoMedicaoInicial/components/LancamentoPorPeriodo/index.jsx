@@ -1,24 +1,28 @@
-import React, { useEffect, useState } from "react";
-import HTTP_STATUS from "http-status-codes";
-import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
-import { CardLancamento } from "./CardLancamento";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
+  deepCopy,
+  ehEscolaTipoCEUGESTAO,
+  getError,
+  tiposAlimentacaoETEC,
+  usuarioEhEscolaTerceirizadaDiretor,
+} from "helpers/utilities";
+import HTTP_STATUS from "http-status-codes";
+import React, { useEffect, useState } from "react";
+import {
+  getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola,
   getPeriodosInclusaoContinua,
-  getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesInclusoesEtecAutorizadasEscola,
   getSolicitacoesInclusoesEventoEspecificoAutorizadasEscola,
-  getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola,
+  getSolicitacoesKitLanchesAutorizadasEscola,
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import {
   escolaEnviaCorrecaoMedicaoInicialCODAE,
   escolaEnviaCorrecaoMedicaoInicialDRE,
@@ -26,18 +30,17 @@ import {
   getQuantidadeAlimentacoesLancadasPeriodoGrupo,
   getSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { relatorioMedicaoInicialPDF } from "services/relatorios";
+import { BlocoOcorrencias } from "../BlocoOcorrencias";
+import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
+import { ModalSemOcorrenciasIMR } from "../ModalSemOcorrenciasIMR";
+import { CardLancamento } from "./CardLancamento";
 import {
   CORES,
   removeObjetosDuplicados,
   renderBotaoEnviarCorrecao,
   verificaSeEnviarCorrecaoDisabled,
 } from "./helpers";
-import {
-  ehEscolaTipoCEUGESTAO,
-  getError,
-  usuarioEhEscolaTerceirizadaDiretor,
-} from "helpers/utilities";
-import { tiposAlimentacaoETEC } from "helpers/utilities";
 
 export const LancamentoPorPeriodo = ({
   escolaInstituicao,
@@ -53,10 +56,24 @@ export const LancamentoPorPeriodo = ({
   setSolicitacaoMedicaoInicial,
   naoPodeFinalizar,
   setFinalizandoMedicao,
+  ehIMR,
+  errosAoSalvar,
+  setErrosAoSalvar,
+  handleFinalizarMedicao,
+  opcaoSelecionada,
+  setOpcaoSelecionada,
+  arquivo,
+  setArquivo,
+  comOcorrencias,
+  setComOcorrencias,
+  escolaSimples,
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] =
     useState(false);
   const [showModalEnviarCorrecao, setShowModalEnviarCorrecao] = useState(false);
+  const [showModalSemOcorrenciasIMR, setShowModalSemOcorrenciasIMR] =
+    useState(false);
+
   const [desabilitaSim, setDesabilitaSim] = useState(false);
   const [periodosInclusaoContinua, setPeriodosInclusaoContinua] =
     useState(undefined);
@@ -87,7 +104,6 @@ export const LancamentoPorPeriodo = ({
     useState(false);
 
   const [periodosEspecificos, setPeriodosEspecificos] = useState([]);
-  const [errosAoSalvar, setErrosAoSalvar] = useState([]);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
     const response = await getPeriodosInclusaoContinua({
@@ -357,11 +373,46 @@ export const LancamentoPorPeriodo = ({
     return removeObjetosDuplicados(tiposAlimentacao, "nome");
   };
 
+  const onClickFinalizarMedicao = () => {
+    if (!ehIMR) {
+      setShowModalFinalizarMedicao(true);
+      return;
+    }
+    if (!comOcorrencias) {
+      if (errosAoSalvar && errosAoSalvar.length === 0) {
+        const errosAoSalvar_ = deepCopy(errosAoSalvar);
+        errosAoSalvar_.push({
+          erro: "Faça avaliação do serviço prestado pela empresa.",
+          periodo_escolar: "OCORRENCIAS",
+        });
+        setErrosAoSalvar(errosAoSalvar_);
+      }
+    } else {
+      if (comOcorrencias === "false") {
+        setShowModalSemOcorrenciasIMR(true);
+      } else {
+        handleFinalizarMedicao();
+      }
+    }
+  };
+
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
       {!erroAPI && quantidadeAlimentacoesLancadas && (
         <>
+          {ehIMR && (
+            <BlocoOcorrencias
+              comOcorrencias={comOcorrencias}
+              setComOcorrencias={setComOcorrencias}
+              errosAoSalvar={errosAoSalvar}
+              setErrosAoSalvar={setErrosAoSalvar}
+              mes={mes}
+              ano={ano}
+              escolaSimples={escolaSimples}
+              solicitacaoMedicaoInicialUuid={solicitacaoMedicaoInicial.uuid}
+            />
+          )}
           <div className="pb-2">
             <b className="section-title">Períodos</b>
           </div>
@@ -491,7 +542,7 @@ export const LancamentoPorPeriodo = ({
                 disabled={
                   !usuarioEhEscolaTerceirizadaDiretor() || naoPodeFinalizar
                 }
-                onClick={() => setShowModalFinalizarMedicao(true)}
+                onClick={() => onClickFinalizarMedicao()}
               />
             ) : (
               <div className="row">
@@ -538,6 +589,11 @@ export const LancamentoPorPeriodo = ({
             solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
             onClickInfoBasicas={onClickInfoBasicas}
             setFinalizandoMedicao={setFinalizandoMedicao}
+            opcaoSelecionada={opcaoSelecionada}
+            setOpcaoSelecionada={setOpcaoSelecionada}
+            arquivo={arquivo}
+            setArquivo={setArquivo}
+            handleFinalizarMedicao={handleFinalizarMedicao}
           />
           <ModalSolicitacaoDownload
             show={exibirModalCentralDownloads}
@@ -564,6 +620,13 @@ export const LancamentoPorPeriodo = ({
             }
             funcaoSim={escolaEnviaCorrecaoDreCodae}
             desabilitaSim={desabilitaSim}
+          />
+          <ModalSemOcorrenciasIMR
+            show={showModalSemOcorrenciasIMR}
+            handleFinalizarMedicao={handleFinalizarMedicao}
+            handleClose={() => setShowModalSemOcorrenciasIMR(false)}
+            mes={mes}
+            ano={ano}
           />
         </>
       )}
