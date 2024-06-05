@@ -62,6 +62,7 @@ const RenderComponentByParametrizacao = ({
   return (
     <ComponentToRender
       titulo={parametrizacao.titulo}
+      name_grupos={name_grupos}
       name={`${name_grupos}.${index}_resposta_${tipoOcorrencia.uuid}_parametrizacao_${parametrizacao.uuid}`}
       form={form}
       escolaSelecionada={escolaSelecionada}

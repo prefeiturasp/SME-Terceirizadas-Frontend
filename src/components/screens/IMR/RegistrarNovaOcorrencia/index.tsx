@@ -6,6 +6,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { MeusDadosContext } from "context/MeusDadosContext";
+import arrayMutators from "final-form-arrays";
 import HTTP_STATUS from "http-status-codes";
 import {
   EscolaLabelInterface,
@@ -14,6 +15,7 @@ import {
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
 import React, { useContext, useEffect, useState } from "react";
 import { Form } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
 import {
   Location,
   NavigateFunction,
@@ -33,7 +35,6 @@ import { SeletorTipoOcorrencia } from "./components/SeletorTipoOcorrencia";
 import { formataPayload } from "./helpers";
 import { RegistrarNovaOcorrenciaFormInterface } from "./interfaces";
 import "./style.scss";
-import { FieldArray } from "react-final-form-arrays";
 
 export const RegistrarNovaOcorrencia = () => {
   const [tiposOcorrencia, setTiposOcorrencia] =
@@ -94,16 +95,18 @@ export const RegistrarNovaOcorrencia = () => {
     };
 
   useEffect(() => {
-    getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
-    setEscolaSelecionada({
-      label: "",
-      value: "",
-      lote_nome: "",
-      terceirizada: "",
-      edital: location.state?.editalUuid,
-      uuid: meusDados.vinculo_atual.instituicao.uuid,
-    });
-  }, []);
+    if (meusDados) {
+      getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
+      setEscolaSelecionada({
+        label: "",
+        value: "",
+        lote_nome: "",
+        terceirizada: "",
+        edital: location.state?.editalUuid,
+        uuid: meusDados.vinculo_atual.instituicao.uuid,
+      });
+    }
+  }, [meusDados]);
 
   const onSubmit = async (
     values: RegistrarNovaOcorrenciaFormInterface
@@ -132,7 +135,14 @@ export const RegistrarNovaOcorrencia = () => {
         {!erroAPI && (
           <Spin spinning={loadingTiposOcorrencia}>
             {tiposOcorrencia && (
-              <Form destroyOnUnregister onSubmit={onSubmit}>
+              <Form
+                destroyOnUnregister
+                keepDirtyOnReinitialize
+                mutators={{
+                  ...arrayMutators,
+                }}
+                onSubmit={onSubmit}
+              >
                 {({ handleSubmit, form, submitting }) => (
                   <form onSubmit={handleSubmit}>
                     <div className="row">
@@ -189,7 +199,9 @@ export const RegistrarNovaOcorrencia = () => {
                             <SeletorDeDatas
                               titulo="Data da Ocorrência"
                               name="datas"
+                              name_grupos="datas_ocorrencias[0]"
                               form={form}
+                              ehDataOcorrencia
                             />
                           </div>
                         )}
