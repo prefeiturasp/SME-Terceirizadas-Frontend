@@ -121,3 +121,22 @@
   border-radius: 5px;
   border: solid 1px #a4a4a4;
 }
+
+div.bloco-ocorrencias {
+  font-size: 14px;
+
+  div.box {
+    padding: 1em !important;
+    border: 1px solid $grayDisabled;
+    border-radius: 5px;
+
+    input[type="radio"] {
+      accent-color: $green;
+    }
+
+    .mensagem-erro {
+      font-size: 11px;
+      color: $red;
+    }
+  }
+}

@@ -1,40 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router";
-import HTTP_STATUS from "http-status-codes";
-import { addMonths, getYear, format, getMonth } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Select, Skeleton, Spin } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
+import { Select, Skeleton, Spin } from "antd";
+import { addMonths, format, getMonth, getYear } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import HTTP_STATUS from "http-status-codes";
+import React, { useContext, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { FluxoDeStatusMedicaoInicial } from "./components/FluxoDeStatusMedicaoInicial";
 import InformacoesEscola from "./components/InformacoesEscola";
 import InformacoesMedicaoInicial from "./components/InformacoesMedicaoInicial";
-import { LancamentoPorPeriodo } from "./components/LancamentoPorPeriodo";
-import Ocorrencias from "./components/Ocorrencias";
-import { FluxoDeStatusMedicaoInicial } from "./components/FluxoDeStatusMedicaoInicial";
 import { InformacoesMedicaoInicialCEI } from "./components/InformacoesMedicaoInicialCEI";
+import { LancamentoPorPeriodo } from "./components/LancamentoPorPeriodo";
 import { LancamentoPorPeriodoCEI } from "./components/LancamentoPorPeriodoCEI";
-import { toastError } from "../../../Shareable/Toast/dialogs";
+import Ocorrencias from "./components/Ocorrencias";
 
 import {
   DETALHAMENTO_DO_LANCAMENTO,
   LANCAMENTO_MEDICAO_INICIAL,
 } from "configs/constants";
-import * as perfilService from "services/perfil.service";
-import { getEscolaSimples } from "services/escola.service";
+import { ehEscolaTipoCEI, ehEscolaTipoCEMEI } from "helpers/utilities";
+import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getPanoramaEscola } from "services/dietaEspecial.service";
+import { getEscolaSimples } from "services/escola.service";
+import { getDiasCalendario } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { getPeriodosPermissoesLancamentosEspeciaisMesAno } from "services/medicaoInicial/permissaoLancamentosEspeciais.service";
 import {
   getPeriodosEscolaCemeiComAlunosEmei,
   getSolicitacaoMedicaoInicial,
   getSolicitacoesLancadas,
+  updateSolicitacaoMedicaoInicial,
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { getDiasCalendario } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
-import { getPeriodosPermissoesLancamentosEspeciaisMesAno } from "services/medicaoInicial/permissaoLancamentosEspeciais.service";
-import {
-  ehEscolaTipoCEI,
-  ehEscolaTipoCEMEI,
-} from "../../../../helpers/utilities";
+import * as perfilService from "services/perfil.service";
 import "./styles.scss";
+import { EscolaSimplesContext } from "context/EscolaSimplesContext";
 
 export default () => {
   const [ano, setAno] = useState(null);
@@ -44,6 +43,7 @@ export default () => {
   const [objectoPeriodos, setObjectoPeriodos] = useState([]);
   const [periodoSelecionado, setPeriodoSelecionado] = useState(null);
   const [escolaInstituicao, setEscolaInstituicao] = useState(null);
+  const [ehIMR, setEhIMR] = useState(false);
   const [loteEscolaSimples, setLoteEscolaSimples] = useState(null);
   const [periodosEscolaSimples, setPeriodosEscolaSimples] = useState(null);
   const [
@@ -67,8 +67,14 @@ export default () => {
   const [naoPodeFinalizar, setNaoPodeFinalizar] = useState(true);
   const [finalizandoMedicao, setFinalizandoMedicao] = useState(false);
 
+  const [errosAoSalvar, setErrosAoSalvar] = useState([]);
+  const [comOcorrencias, setComOcorrencias] = useState("");
+  const [opcaoSelecionada, setOpcaoSelecionada] = useState(null);
+  const [arquivo, setArquivo] = useState([]);
+
   const navigate = useNavigate();
   const location = useLocation();
+  const { escolaSimples, setEscolaSimples } = useContext(EscolaSimplesContext);
 
   const proximosDozeMeses = 12;
   let periodos = [];
@@ -117,6 +123,8 @@ export default () => {
         meusDados.vinculo_atual && meusDados.vinculo_atual.instituicao;
       const respostaPanorama = await getPanoramaEscola({ escola: escola.uuid });
       const respostaEscolaSimples = await getEscolaSimples(escola.uuid);
+      setEscolaSimples(respostaEscolaSimples.data);
+
       setNomeTerceirizada(
         respostaEscolaSimples.data.lote.terceirizada.nome_fantasia
       );
@@ -124,6 +132,11 @@ export default () => {
       setPanoramaGeral(respostaPanorama.data);
       setEscolaInstituicao(escola);
       setLoteEscolaSimples(respostaEscolaSimples.data.lote.nome);
+      setEhIMR(
+        !!respostaEscolaSimples.data.lote.contratos_do_lote.find(
+          (contrato) => !contrato.encerrado && contrato.eh_imr
+        )
+      );
 
       let solicitacoesLancadas = [];
 
@@ -247,8 +260,8 @@ export default () => {
     };
 
     const solicitacao = await getSolicitacaoMedicaoInicial(payload);
-    getDiasCalendarioAsync(payload);
-    setSolicitacaoMedicaoInicial(solicitacao.data[0]);
+    await getDiasCalendarioAsync(payload);
+    await setSolicitacaoMedicaoInicial(solicitacao.data[0]);
   };
 
   const { Option } = Select;
@@ -278,6 +291,8 @@ export default () => {
         } else {
           setNaoPodeFinalizar(true);
         }
+      } else {
+        setNaoPodeFinalizar(false);
       }
     } else {
       toastError(
@@ -334,6 +349,55 @@ export default () => {
 
     const solicitacao = await getSolicitacaoMedicaoInicial(payload);
     setSolicitacaoMedicaoInicial(solicitacao.data[0]);
+  };
+
+  const handleFinalizarMedicao = async () => {
+    setFinalizandoMedicao(true);
+
+    let data = new FormData();
+    data.append("escola", String(escolaInstituicao.uuid));
+
+    if (solicitacaoMedicaoInicial.tipo_contagem_alimentacoes) {
+      data.append(
+        "tipo_contagem_alimentacoes",
+        String(solicitacaoMedicaoInicial.tipo_contagem_alimentacoes?.uuid)
+      );
+    }
+    data.append(
+      "responsaveis",
+      JSON.stringify(solicitacaoMedicaoInicial.responsaveis)
+    );
+    data.append(
+      "com_ocorrencias",
+      ehIMR ? String(comOcorrencias) : String(!opcaoSelecionada)
+    );
+
+    if (!opcaoSelecionada) {
+      let payloadAnexos = [];
+      arquivo.forEach((element) => {
+        payloadAnexos.push({
+          nome: String(element.nome),
+          base64: String(element.base64),
+        });
+      });
+      data.append("anexos", JSON.stringify(payloadAnexos));
+    }
+    data.append("finaliza_medicao", true);
+    const response = await updateSolicitacaoMedicaoInicial(
+      solicitacaoMedicaoInicial.uuid,
+      data
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Medição Inicial finalizada com sucesso!");
+      setObjSolicitacaoMIFinalizada(response.data);
+      setFinalizandoMedicao(false);
+      setErrosAoSalvar([]);
+    } else {
+      setErrosAoSalvar(response.data);
+      setFinalizandoMedicao(false);
+      toastError("Não foi possível finalizar as alterações!");
+    }
+    onClickInfoBasicas();
   };
 
   return (
@@ -430,6 +494,7 @@ export default () => {
                 panoramaGeral={panoramaGeral}
                 mes={mes}
                 ano={ano}
+                ehIMR={ehIMR}
                 periodoSelecionado={periodoSelecionado}
                 escolaInstituicao={escolaInstituicao}
                 periodosEscolaSimples={periodosEscolaSimples}
@@ -451,12 +516,22 @@ export default () => {
                 periodosPermissoesLancamentosEspeciais={
                   periodosPermissoesLancamentosEspeciais
                 }
+                errosAoSalvar={errosAoSalvar}
+                setErrosAoSalvar={setErrosAoSalvar}
+                handleFinalizarMedicao={handleFinalizarMedicao}
+                opcaoSelecionada={opcaoSelecionada}
+                setOpcaoSelecionada={setOpcaoSelecionada}
+                arquivo={arquivo}
+                setArquivo={setArquivo}
+                comOcorrencias={comOcorrencias}
+                setComOcorrencias={setComOcorrencias}
               />
             ) : (
               <LancamentoPorPeriodo
                 panoramaGeral={panoramaGeral}
                 mes={mes}
                 ano={ano}
+                ehIMR={ehIMR}
                 periodoSelecionado={periodoSelecionado}
                 escolaInstituicao={escolaInstituicao}
                 periodosEscolaSimples={periodosEscolaSimples}
@@ -475,6 +550,16 @@ export default () => {
                 setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
                 naoPodeFinalizar={naoPodeFinalizar}
                 setFinalizandoMedicao={setFinalizandoMedicao}
+                errosAoSalvar={errosAoSalvar}
+                setErrosAoSalvar={setErrosAoSalvar}
+                handleFinalizarMedicao={handleFinalizarMedicao}
+                opcaoSelecionada={opcaoSelecionada}
+                setOpcaoSelecionada={setOpcaoSelecionada}
+                arquivo={arquivo}
+                setArquivo={setArquivo}
+                comOcorrencias={comOcorrencias}
+                setComOcorrencias={setComOcorrencias}
+                escolaSimples={escolaSimples}
               />
             ))}
         </Spin>

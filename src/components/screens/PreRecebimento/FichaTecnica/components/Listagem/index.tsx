@@ -12,6 +12,8 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 
 import "./styles.scss";
 import { imprimirFichaTecnica } from "services/fichaTecnica.service";
+import { Tooltip } from "antd";
+import { truncarString } from "../../../../../../helpers/utilities";
 
 interface Props {
   objetos: Array<FichaTecnica>;
@@ -97,7 +99,19 @@ const Listagem: React.FC<Props> = ({ objetos, setCarregando }) => {
 
   return (
     <div className="listagem-fichas-tecnicas">
-      <div className="titulo-verde mt-4 mb-3">Fichas Técnicas Cadastradas</div>
+      <header>
+        <div className="row mt-3">
+          <div className="col-5 px-0">
+            <div className="titulo-verde">Fichas Técnicas Cadastradas</div>
+          </div>
+          <div className="col-7 px-0 text-end">
+            <p className="mb-0">
+              <i className="fa fa-info-circle me-2" />
+              Veja a descrição do produto passando o mouse sobre o nome.
+            </p>
+          </div>
+        </div>
+      </header>
 
       <article>
         <div className="grid-table header-table">
@@ -114,7 +128,19 @@ const Listagem: React.FC<Props> = ({ objetos, setCarregando }) => {
             <>
               <div key={objeto.uuid} className="grid-table body-table">
                 <div>{objeto.numero}</div>
-                <div>{objeto.nome_produto}</div>
+                <div>
+                  <Tooltip
+                    color="#42474a"
+                    overlayStyle={{
+                      maxWidth: "320px",
+                      fontSize: "12px",
+                      fontWeight: "700",
+                    }}
+                    title={objeto.nome_produto}
+                  >
+                    {truncarString(objeto.nome_produto, 30)}
+                  </Tooltip>
+                </div>
                 <div>{objeto.pregao_chamada_publica}</div>
                 <div>{objeto.criado_em}</div>
                 <div>{renderizarStatus(objeto.status)}</div>

@@ -16,3 +16,7 @@ export const FUNDAMENTAL_EMEBS = {
   key: ALUNOS_EMEBS["FUNDAMENTAL"].key,
   label: "Alunos do Fundamental (acima de 6 anos)",
 };
+
+export const STATUS_RELATORIO_FINANCEIRO = {
+  EM_ANALISE: "Em Análise",
+};

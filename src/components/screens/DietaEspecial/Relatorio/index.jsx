@@ -42,8 +42,9 @@ import "./style.scss";
 import ModalAvisoDietaImportada from "./componentes/ModalAvisoDietaImportada";
 import { Websocket } from "services/websocket";
 import {
-  usuarioEhEmpresaTerceirizada,
   usuarioEhCoordenadorNutriCODAE,
+  usuarioEhEmpresaTerceirizada,
+  usuarioEhEscola,
 } from "helpers/utilities";
 
 const Relatorio = ({ visao }) => {
@@ -165,7 +166,7 @@ const Relatorio = ({ visao }) => {
       setShowModalAviso(true);
     } else {
       setCarregando(true);
-      await getProtocoloDietaEspecial(uuid);
+      await getProtocoloDietaEspecial(uuid, dietaEspecial);
       setCarregando(false);
     }
   };
@@ -295,6 +296,23 @@ const Relatorio = ({ visao }) => {
     );
   };
 
+  const exibeBotaoImprimir = () => {
+    let exibir = true;
+    if (dietaEspecial && !editar) {
+      if (usuarioEhEmpresaTerceirizada()) {
+        exibir = false;
+      }
+      if (
+        usuarioEhEscola() &&
+        dietaEspecial.ativo &&
+        dietaEspecial.status_solicitacao === "CODAE_AUTORIZADO"
+      ) {
+        exibir = false;
+      }
+    }
+    return exibir;
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       {dietaEspecial && status && (
@@ -331,7 +349,7 @@ const Relatorio = ({ visao }) => {
                 exibirUsuariosSimultaneos() ? "col-3" : "col-12"
               } col-3 mb-3`}
             >
-              {dietaEspecial && !editar && !usuarioEhEmpresaTerceirizada() && (
+              {dietaEspecial && exibeBotaoImprimir() && (
                 <BotaoImprimir uuid={dietaEspecial.uuid} />
               )}
               {dietaEspecial && !editar && historico && (

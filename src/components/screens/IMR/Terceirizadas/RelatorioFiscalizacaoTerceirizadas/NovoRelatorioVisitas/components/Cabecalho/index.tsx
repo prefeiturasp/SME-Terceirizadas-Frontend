@@ -1,42 +1,42 @@
-import Select from "components/Shareable/Select";
-import moment from "moment";
 import { Spin } from "antd";
+import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import { InputComData } from "components/Shareable/DatePicker";
+import { InputText } from "components/Shareable/Input/InputText";
+import Select from "components/Shareable/Select";
+import { FormApi } from "final-form";
 import {
-  required,
   maxValueMaiorFrequenciaNoPeriodoIMR,
+  required,
 } from "helpers/fieldValidators";
 import {
-  converterDDMMYYYYparaYYYYMMDD,
   composeValidators,
+  converterDDMMYYYYparaYYYYMMDD,
 } from "helpers/utilities";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { Field } from "react-final-form";
 import HTTP_STATUS from "http-status-codes";
-import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
-import {
-  getEscolasTercTotal,
-  getQuantidadeAlunosMatriculadosPorData,
-} from "services/escola.service";
-import AutoCompleteField from "components/Shareable/AutoCompleteField";
-import { InputText } from "components/Shareable/Input/InputText";
-import { getPeriodosVisita } from "services/imr/relatorioFiscalizacaoTerceirizadas";
-import { InputComData } from "components/Shareable/DatePicker";
-import {
-  ResponseDiretoriasRegionaisSimplissimaInterface,
-  ResponseGetEscolasTercTotalInterface,
-  ResponsePeriodosDeVisitaInterface,
-  ResponseGetQuantidadeAlunosMatriculadosPorDataInterface,
-} from "interfaces/responses.interface";
 import {
   DiretoriaRegionalInterface,
   EscolaSimplissimaInterface,
 } from "interfaces/escola.interface";
 import {
+  ResponseDiretoriasRegionaisSimplissimaInterface,
+  ResponseGetEscolasTercTotalInterface,
+  ResponseGetQuantidadeAlunosMatriculadosPorDataInterface,
+  ResponsePeriodosDeVisitaInterface,
+} from "interfaces/responses.interface";
+import moment from "moment";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { Field } from "react-final-form";
+import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
+import {
+  getEscolasTercTotal,
+  getQuantidadeAlunosMatriculadosPorData,
+} from "services/escola.service";
+import { getPeriodosVisita } from "services/imr/relatorioFiscalizacaoTerceirizadas";
+import {
+  PeriodoDeVisitaInterface,
   EscolaLabelInterface,
   NovoRelatorioVisitasFormInterface,
-} from "../../interfaces";
-import { PeriodoDeVisitaInterface } from "interfaces/imr.interface";
-import { FormApi } from "final-form";
+} from "interfaces/imr.interface";
 
 type CabecahoType = {
   form: FormApi<any, Partial<any>>;

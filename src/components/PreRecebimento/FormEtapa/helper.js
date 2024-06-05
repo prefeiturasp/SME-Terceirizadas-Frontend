@@ -52,8 +52,3 @@ export const onChangeEtapas = (changes, etapas, setRestante, setDuplicados) => {
 
   setDuplicados(duplicados);
 };
-
-export const calculaTotalEmbalagens = (quantidade, pesoEmbalagemSecundaria) =>
-  quantidade && pesoEmbalagemSecundaria
-    ? (quantidade / pesoEmbalagemSecundaria).toFixed(2)
-    : undefined;

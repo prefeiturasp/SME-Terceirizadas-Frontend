@@ -4,7 +4,7 @@ import {
   getFiltros,
   filtrarAlunosMatriculados,
 } from "services/alunosMatriculados.service";
-import { formataOpcoes } from "./helpers";
+import { formataOpcoes, formataLista } from "./helpers";
 import { Filtros } from "./componentes/Filtros";
 import { TabelaResultado } from "./componentes/TabelaResultado";
 import { Spin } from "antd";
@@ -34,6 +34,7 @@ export const AlunosMatriculados = () => {
   const [lotes, setLotes] = useState([]);
   const [tiposUnidades, setTiposUnidades] = useState([]);
   const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
+  const [tiposTurmas, setTiposTurmas] = useState([]);
   const [total, setTotal] = useState(undefined);
   const [page, setPage] = useState(10);
   const [resultado, setResultado] = useState(undefined);
@@ -51,6 +52,7 @@ export const AlunosMatriculados = () => {
       setDres(formataOpcoes(response.data.diretorias_regionais));
       setTiposUnidades(formataOpcoes(response.data.tipos_unidade_escolar));
       setUnidadesEducacionais(formataOpcoes(response.data.escolas));
+      setTiposTurmas(formataLista(response.data.tipos_turmas));
     } else {
       toastError("Erro ao carregar filtros.");
     }
@@ -121,6 +123,7 @@ export const AlunosMatriculados = () => {
             lotes={lotes}
             tiposUnidades={tiposUnidades}
             unidadesEducacionais={unidadesEducacionais}
+            tiposTurmas={tiposTurmas}
             listaOpcoes={listaOpcoes}
             setFiltrando={(value) => setFiltrando(value)}
             setPage={(value) => setPage(value)}

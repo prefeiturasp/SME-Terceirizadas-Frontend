@@ -6,7 +6,7 @@ import {
   getPeriodosComMatriculadosPorUE,
 } from "services/alteracaoDeCardapio";
 import { getDiasUteis, getFeriadosAno } from "services/diasUteis.service";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 import { useEffect } from "react";
 import { AlteracaoDoTipoDeAlimentacaoCEI } from ".";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";

@@ -27,3 +27,5 @@ launch.json
 
 .env*
 .vscode
+
+prettierrc

@@ -1,16 +1,16 @@
-import React from "react";
 import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
-import { useNavigate } from "react-router-dom";
 import {
   NOVO_RELATORIO_VISITAS,
+  RELATORIO_FISCALIZACAO_TERCEIRIZADAS,
   SUPERVISAO,
   TERCEIRIZADAS,
-  RELATORIO_FISCALIZACAO_TERCEIRIZADAS,
 } from "configs/constants";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export const ListaRelatorios = () => {
   const navigate = useNavigate();

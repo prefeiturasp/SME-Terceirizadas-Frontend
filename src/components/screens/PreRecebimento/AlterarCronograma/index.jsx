@@ -148,7 +148,9 @@ export default ({ analiseSolicitacao }) => {
       values[`parte_${index}`] = etapa.parte;
       values[`data_programada_${index}`] = etapa.data_programada;
       values[`quantidade_${index}`] = formataMilhar(etapa.quantidade);
-      values[`total_embalagens_${index}`] = etapa.total_embalagens;
+      values[`total_embalagens_${index}`] = numberToStringDecimal(
+        etapa.total_embalagens
+      );
       values[`qtd_total_empenho_${index}`] = numberToStringDecimal(
         etapa.qtd_total_empenho
       );
@@ -161,7 +163,7 @@ export default ({ analiseSolicitacao }) => {
   };
 
   const analisadoPelaDinutre = () => {
-    return solicitacaoAlteracaoCronograma.logs.some((l) =>
+    return solicitacaoAlteracaoCronograma?.logs.some((l) =>
       ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
         l.status_evento_explicacao
       )
@@ -169,13 +171,13 @@ export default ({ analiseSolicitacao }) => {
   };
 
   const reprovadoPelaDinutre = () => {
-    return solicitacaoAlteracaoCronograma.logs.some(
+    return solicitacaoAlteracaoCronograma?.logs.some(
       (l) => l.status_evento_explicacao === "Reprovado DINUTRE"
     );
   };
 
   const analisadoPelaDilog = () => {
-    return solicitacaoAlteracaoCronograma.logs.some((l) =>
+    return solicitacaoAlteracaoCronograma?.logs.some((l) =>
       ["Aprovado DILOG", "Reprovado DILOG"].includes(l.status_evento_explicacao)
     );
   };
@@ -457,7 +459,8 @@ export default ({ analiseSolicitacao }) => {
                         validate={textAreaRequired}
                       />
                     </div>
-                    {(usuarioEhCronogramaOuCodae() ||
+                    {((usuarioEhCronogramaOuCodae() &&
+                      solicitacaoAlteracaoCronograma) ||
                       (usuarioEhDinutreDiretoria() &&
                         solicitacaoAlteracaoCronograma.status !==
                           "Em análise" &&

@@ -1,3 +1,38 @@
+export interface ArquivoInterface {
+  nome: string;
+  arquivo: string;
+}
+
+export interface ArquivoFormInterface {
+  nome: string;
+  arquivo?: string;
+  base64: string;
+}
+
+export interface NovoRelatorioVisitasFormInterface {
+  uuid?: number;
+  diretoria_regional: string;
+  escola: string;
+  data: string;
+  lote: string;
+  terceirizada: string;
+  periodo_visita?: string;
+  acompanhou_visita?: string;
+  nome_nutricionista_empresa?: string;
+  total_matriculados_por_data: number;
+  maior_frequencia_no_periodo: number;
+  anexos: Array<ArquivoInterface>;
+}
+
+export interface EscolaLabelInterface {
+  label: string;
+  value: string;
+  lote_nome: string;
+  terceirizada: string;
+  edital: string;
+  uuid: string;
+}
+
 export interface PeriodoDeVisitaInterface {
   alterado_em: string;
   criado_em: string;
@@ -8,6 +43,7 @@ export interface PeriodoDeVisitaInterface {
 export interface CategoriaTipoOcorrenciaInterface {
   nome: string;
   posicao: number;
+  gera_notificacao: boolean;
   uuid: string;
 }
 
@@ -36,5 +72,35 @@ export interface TipoOcorrenciaInterface {
   penalidade: PenalidadeInterface;
   posicao: number;
   titulo: string;
+  uuid: string;
+}
+
+export interface UtensilioCozinhaInterface {
+  nome: string;
+  uuid: string;
+}
+
+export interface UtensilioMesaInterface {
+  nome: string;
+  uuid: string;
+}
+
+export interface EquipamentoInterface {
+  nome: string;
+  uuid: string;
+}
+
+export interface MobiliarioInterface {
+  nome: string;
+  uuid: string;
+}
+
+export interface ReparoEAdaptacaoInterface {
+  nome: string;
+  uuid: string;
+}
+
+export interface InsumoInterface {
+  nome: string;
   uuid: string;
 }

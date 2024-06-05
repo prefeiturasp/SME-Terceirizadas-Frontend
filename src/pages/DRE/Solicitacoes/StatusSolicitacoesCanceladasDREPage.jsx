@@ -12,7 +12,7 @@ import { getSolicitacoesCanceladasDRE } from "services/painelDRE.service";
 import CardLegendas from "components/Shareable/CardLegendas";
 import { PAGINACAO_DEFAULT } from "constants/shared";
 import { formatarLotesParaVisao } from "helpers/utilities";
-import MeusDadosContext from "context/MeusDadosContext";
+import { MeusDadosContext } from "context/MeusDadosContext";
 
 const atual = {
   href: `/${DRE}/${SOLICITACOES_CANCELADAS}`,

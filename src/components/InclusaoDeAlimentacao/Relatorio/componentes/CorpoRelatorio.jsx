@@ -227,7 +227,8 @@ export const CorpoRelatorio = ({ ...props }) => {
               setBaixandoPDF(true);
               await getRelatorioInclusaoAlimentacao(
                 inclusaoDeAlimentacao.uuid,
-                tipoSolicitacao
+                tipoSolicitacao,
+                inclusaoDeAlimentacao?.escola?.nome
               );
               setBaixandoPDF(false);
             }}
