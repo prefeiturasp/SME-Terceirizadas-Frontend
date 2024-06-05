@@ -79,7 +79,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                       rowSpan={
                         values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" &&
                         tipoOcorrencia.categoria.gera_notificacao
-                          ? 3
+                          ? 2 + values[`grupos_${tipoOcorrencia.uuid}`].length
                           : values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
                               "nao_se_aplica" ||
                             values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
