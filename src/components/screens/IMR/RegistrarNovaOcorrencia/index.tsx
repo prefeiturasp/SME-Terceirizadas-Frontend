@@ -33,6 +33,7 @@ import { SeletorTipoOcorrencia } from "./components/SeletorTipoOcorrencia";
 import { formataPayload } from "./helpers";
 import { RegistrarNovaOcorrenciaFormInterface } from "./interfaces";
 import "./style.scss";
+import { FieldArray } from "react-final-form-arrays";
 
 export const RegistrarNovaOcorrencia = () => {
   const [tiposOcorrencia, setTiposOcorrencia] =
@@ -197,14 +198,21 @@ export const RegistrarNovaOcorrencia = () => {
                             (parametrizacao, index) => {
                               return (
                                 <div key={index} className="row">
-                                  <RenderComponentByParametrizacao
-                                    index={index}
-                                    parametrizacao={parametrizacao}
-                                    tipoOcorrencia={tipoOcorrencia}
-                                    form={form}
-                                    key={index}
-                                    escolaSelecionada={escolaSelecionada}
-                                  />
+                                  <FieldArray name="grupos">
+                                    {({ fields }) =>
+                                      fields.map((name, index) => (
+                                        <RenderComponentByParametrizacao
+                                          index={index}
+                                          parametrizacao={parametrizacao}
+                                          name_grupos={name}
+                                          tipoOcorrencia={tipoOcorrencia}
+                                          form={form}
+                                          key={index}
+                                          escolaSelecionada={escolaSelecionada}
+                                        />
+                                      ))
+                                    }
+                                  </FieldArray>
                                 </div>
                               );
                             }

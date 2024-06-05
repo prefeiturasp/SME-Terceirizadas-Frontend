@@ -10,10 +10,11 @@ type OcorrenciaType = {
   tipoOcorrencia: TipoOcorrenciaInterface;
   form: FormApi<any, Partial<any>>;
   escolaSelecionada: EscolaLabelInterface;
+  name_grupos: string;
 };
 
 export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
-  const { tipoOcorrencia, form, escolaSelecionada } = props;
+  const { tipoOcorrencia, form, escolaSelecionada, name_grupos } = props;
 
   return tipoOcorrencia.parametrizacoes.length ? (
     <tr className="tipo-ocorrencia-parametrizacao">
@@ -28,6 +29,7 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
                 index={index}
                 parametrizacao={parametrizacao}
                 tipoOcorrencia={tipoOcorrencia}
+                name_grupos={name_grupos}
                 form={form}
                 escolaSelecionada={escolaSelecionada}
               />

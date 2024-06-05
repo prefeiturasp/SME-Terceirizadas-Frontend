@@ -9,16 +9,19 @@ import {
 import { FormApi } from "final-form";
 import { OcorrenciaNaoSeAplica } from "./components/OcorrenciaNaoSeAplica";
 import { Ocorrencia } from "./components/Ocorrencia";
+import { FieldArray } from "react-final-form-arrays";
+import { AdicionarResposta } from "./components/BotaoAdicionar";
 
 type FormularioType = {
   tiposOcorrencia: Array<TipoOcorrenciaInterface>;
   form: FormApi<any, Partial<any>>;
   values: NovoRelatorioVisitasFormInterface;
   escolaSelecionada: EscolaLabelInterface;
+  push: (_string) => {};
 };
 
 export const Formulario = ({ ...props }: FormularioType) => {
-  const { tiposOcorrencia, form, values, escolaSelecionada } = props;
+  const { tiposOcorrencia, form, values, escolaSelecionada, push } = props;
 
   useEffect(() => {
     tiposOcorrencia.forEach((tipoOcorrencia) => {
@@ -74,9 +77,13 @@ export const Formulario = ({ ...props }: FormularioType) => {
                   <tr className="tipo-ocorrencia">
                     <td
                       rowSpan={
-                        values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
-                          "nao_se_aplica" ||
-                        values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao"
+                        values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" &&
+                        tipoOcorrencia.categoria.gera_notificacao
+                          ? 3
+                          : values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
+                              "nao_se_aplica" ||
+                            values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
+                              "nao"
                           ? 2
                           : 1
                       }
@@ -157,11 +164,31 @@ export const Formulario = ({ ...props }: FormularioType) => {
                   )}
 
                   {values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" && (
-                    <Ocorrencia
-                      tipoOcorrencia={tipoOcorrencia}
-                      form={form}
-                      escolaSelecionada={escolaSelecionada}
-                    />
+                    <>
+                      <FieldArray name={`grupos_${tipoOcorrencia.uuid}`}>
+                        {({ fields }) =>
+                          fields.map((name, indexFieldArray) => (
+                            <>
+                              <Ocorrencia
+                                key={indexFieldArray}
+                                name_grupos={name}
+                                tipoOcorrencia={tipoOcorrencia}
+                                form={form}
+                                escolaSelecionada={escolaSelecionada}
+                              />
+                            </>
+                          ))
+                        }
+                      </FieldArray>
+                      <tr className="adicionar text-center">
+                        <td colSpan={2} className="py-3">
+                          <AdicionarResposta
+                            push={push}
+                            nameFieldArray={`grupos_${tipoOcorrencia.uuid}`}
+                          />
+                        </td>
+                      </tr>
+                    </>
                   )}
                 </>
               );
