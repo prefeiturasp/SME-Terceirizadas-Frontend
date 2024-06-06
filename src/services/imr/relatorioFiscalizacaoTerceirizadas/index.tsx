@@ -24,10 +24,10 @@ export const getPeriodosVisita = async () => {
   }
 };
 
-export const createFormularioSupervisao = async (
+export const createRascunhoFormularioSupervisao = async (
   params: NovoRelatorioVisitasFormInterface
 ) => {
-  const url = `${API_URL}/imr/formulario-supervisao/`;
+  const url = `${API_URL}/imr/rascunho-formulario-supervisao/`;
   const response = await axios.post(url, params).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };

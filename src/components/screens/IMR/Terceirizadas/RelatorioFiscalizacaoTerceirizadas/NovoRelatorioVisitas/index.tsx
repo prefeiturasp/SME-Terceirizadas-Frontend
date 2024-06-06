@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 import { Form } from "react-final-form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import {
-  createFormularioSupervisao,
+  createRascunhoFormularioSupervisao,
   getTiposOcorrenciaPorEditalNutrisupervisao,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { Anexos } from "./components/Anexos";
@@ -59,7 +59,7 @@ export const NovoRelatorioVisitas = () => {
       return;
     }
 
-    const response = await createFormularioSupervisao(
+    const response = await createRascunhoFormularioSupervisao(
       formataPayload(values, escolaSelecionada, anexos)
     );
     if (response.status === HTTP_STATUS.CREATED) {
