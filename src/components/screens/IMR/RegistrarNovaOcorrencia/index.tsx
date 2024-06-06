@@ -35,6 +35,7 @@ import { SeletorTipoOcorrencia } from "./components/SeletorTipoOcorrencia";
 import { formataPayload } from "./helpers";
 import { RegistrarNovaOcorrenciaFormInterface } from "./interfaces";
 import "./style.scss";
+import { AdicionarResposta } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/BotaoAdicionar";
 
 export const RegistrarNovaOcorrencia = () => {
   const [tiposOcorrencia, setTiposOcorrencia] =
@@ -107,7 +108,6 @@ export const RegistrarNovaOcorrencia = () => {
       });
     }
   }, [meusDados]);
-
   const onSubmit = async (
     values: RegistrarNovaOcorrenciaFormInterface
   ): Promise<void> => {
@@ -129,6 +129,13 @@ export const RegistrarNovaOcorrencia = () => {
     }
   };
 
+  const exibeBotaoAdicionar = (tipoOcorrencia: TipoOcorrenciaInterface) => {
+    return (
+      tipoOcorrencia.categoria.gera_notificacao &&
+      tipoOcorrencia.parametrizacoes.length > 0
+    );
+  };
+
   return (
     <div className="card registrar-nova-ocorrencia mt-3">
       <div className="card-body">
@@ -138,12 +145,20 @@ export const RegistrarNovaOcorrencia = () => {
               <Form
                 destroyOnUnregister
                 keepDirtyOnReinitialize
+                initialValues={{ grupos: [{}] }}
                 mutators={{
                   ...arrayMutators,
                 }}
                 onSubmit={onSubmit}
               >
-                {({ handleSubmit, form, submitting }) => (
+                {({
+                  handleSubmit,
+                  form,
+                  form: {
+                    mutators: { push },
+                  },
+                  submitting,
+                }) => (
                   <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-6">
@@ -163,6 +178,7 @@ export const RegistrarNovaOcorrencia = () => {
                           }
                           tiposOcorrencia={tiposOcorrencia}
                           values={form.getState().values}
+                          form={form}
                         />
                       </div>
                     </div>
@@ -205,14 +221,14 @@ export const RegistrarNovaOcorrencia = () => {
                             />
                           </div>
                         )}
-                        {tipoOcorrencia.parametrizacoes.length ? (
-                          tipoOcorrencia.parametrizacoes.map(
-                            (parametrizacao, index) => {
-                              return (
-                                <div key={index} className="row">
-                                  <FieldArray name="grupos">
-                                    {({ fields }) =>
-                                      fields.map((name, index) => (
+                        <FieldArray name="grupos">
+                          {({ fields }) =>
+                            fields.map((name, index) =>
+                              tipoOcorrencia.parametrizacoes.length ? (
+                                tipoOcorrencia.parametrizacoes.map(
+                                  (parametrizacao, index) => {
+                                    return (
+                                      <div key={index} className="row">
                                         <RenderComponentByParametrizacao
                                           index={index}
                                           parametrizacao={parametrizacao}
@@ -222,18 +238,27 @@ export const RegistrarNovaOcorrencia = () => {
                                           key={index}
                                           escolaSelecionada={escolaSelecionada}
                                         />
-                                      ))
-                                    }
-                                  </FieldArray>
+                                      </div>
+                                    );
+                                  }
+                                )
+                              ) : (
+                                <div key={index} className="row mt-3">
+                                  <div className="col-12">
+                                    Não há parametrização para esse item.
+                                  </div>
                                 </div>
-                              );
-                            }
-                          )
-                        ) : (
-                          <div className="row mt-3">
-                            <div className="col-12">
-                              Não há parametrização para esse item.
-                            </div>
+                              )
+                            )
+                          }
+                        </FieldArray>
+
+                        {exibeBotaoAdicionar(tipoOcorrencia) && (
+                          <div className="text-center mt-3">
+                            <AdicionarResposta
+                              push={push}
+                              nameFieldArray="grupos"
+                            />
                           </div>
                         )}
                         <div className="row float-end mt-4">
