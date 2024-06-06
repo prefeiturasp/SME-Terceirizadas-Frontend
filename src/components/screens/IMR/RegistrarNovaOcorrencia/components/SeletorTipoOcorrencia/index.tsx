@@ -4,12 +4,14 @@ import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
 import React, { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { Field } from "react-final-form";
 import { RegistrarNovaOcorrenciaFormInterface } from "../../interfaces";
+import { FormApi } from "final-form";
 
 type SeletorTipoOcorrenciaType = {
   setTipoOcorrencia: Dispatch<SetStateAction<TipoOcorrenciaInterface>>;
   tiposOcorrencia: Array<TipoOcorrenciaInterface>;
   tiposOcorrenciaDaCategoria: Array<TipoOcorrenciaInterface>;
   values: RegistrarNovaOcorrenciaFormInterface;
+  form: FormApi;
 };
 
 export const SeletorTipoOcorrencia = ({
@@ -20,6 +22,7 @@ export const SeletorTipoOcorrencia = ({
     tiposOcorrenciaDaCategoria,
     tiposOcorrencia,
     values,
+    form,
   } = props;
 
   return (
@@ -38,13 +41,14 @@ export const SeletorTipoOcorrencia = ({
       validate={required}
       disabled={!values.categoria}
       naoDesabilitarPrimeiraOpcao
-      onChangeEffect={(e: ChangeEvent<HTMLInputElement>) => {
+      onChangeEffect={async (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        setTipoOcorrencia(
+        await setTipoOcorrencia(
           tiposOcorrencia.find(
             (tipoOcorrencia) => tipoOcorrencia.uuid === value
           )
         );
+        await form.change("grupos", [{}]);
       }}
     />
   );

@@ -24,6 +24,9 @@ export interface NovoRelatorioVisitasFormInterface {
   anexos: Array<ArquivoInterface>;
 }
 
+export interface InitialValuesInterface {
+  [key: string]: Object[];
+}
 export interface EscolaLabelInterface {
   label: string;
   value: string;

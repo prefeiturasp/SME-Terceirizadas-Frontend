@@ -1,23 +1,52 @@
-import React from "react";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "components/Shareable/Botao/constants";
+import { FormApi } from "final-form";
 import {
   EscolaLabelInterface,
   TipoOcorrenciaInterface,
 } from "interfaces/imr.interface";
+import React from "react";
 import RenderComponentByParametrizacao from "./RenderComponentByParametrizacao";
-import { FormApi } from "final-form";
 
 type OcorrenciaType = {
   tipoOcorrencia: TipoOcorrenciaInterface;
   form: FormApi<any, Partial<any>>;
   escolaSelecionada: EscolaLabelInterface;
+  name_grupos: string;
+  indexFieldArray: number;
 };
 
 export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
-  const { tipoOcorrencia, form, escolaSelecionada } = props;
+  const {
+    tipoOcorrencia,
+    form,
+    escolaSelecionada,
+    name_grupos,
+    indexFieldArray,
+  } = props;
+
+  const excluiGrupoDeResposta = (): void => {
+    const grupos = [...form.getState().values[`grupos_${tipoOcorrencia.uuid}`]];
+    grupos.splice(indexFieldArray, 1);
+    form.change(`grupos_${tipoOcorrencia.uuid}`, grupos);
+  };
 
   return tipoOcorrencia.parametrizacoes.length ? (
     <tr className="tipo-ocorrencia-parametrizacao">
       <td colSpan={2} className="py-3">
+        {indexFieldArray > 0 && (
+          <Botao
+            className="no-border float-end"
+            onClick={() => excluiGrupoDeResposta()}
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+            icon={BUTTON_ICON.TRASH}
+          />
+        )}
         {tipoOcorrencia.parametrizacoes.map((parametrizacao, index) => {
           return (
             <div
@@ -28,6 +57,7 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
                 index={index}
                 parametrizacao={parametrizacao}
                 tipoOcorrencia={tipoOcorrencia}
+                name_grupos={name_grupos}
                 form={form}
                 escolaSelecionada={escolaSelecionada}
               />

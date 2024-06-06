@@ -39,13 +39,20 @@ type RenderComponentByParametrizacaoType = {
   parametrizacao: ParametrizacoesInterface;
   index: number;
   escolaSelecionada: EscolaLabelInterface;
+  name_grupos: string;
 };
 
 const RenderComponentByParametrizacao = ({
   ...props
 }: RenderComponentByParametrizacaoType) => {
-  const { form, tipoOcorrencia, parametrizacao, index, escolaSelecionada } =
-    props;
+  const {
+    form,
+    tipoOcorrencia,
+    parametrizacao,
+    index,
+    escolaSelecionada,
+    name_grupos,
+  } = props;
   const ComponentToRender = componentMap[parametrizacao.tipo_pergunta.nome];
 
   if (!ComponentToRender) {
@@ -55,7 +62,8 @@ const RenderComponentByParametrizacao = ({
   return (
     <ComponentToRender
       titulo={parametrizacao.titulo}
-      name={`${index}_resposta_${tipoOcorrencia.uuid}_parametrizacao_${parametrizacao.uuid}`}
+      name_grupos={name_grupos}
+      name={`${name_grupos}.${index}_resposta_${tipoOcorrencia.uuid}_parametrizacao_${parametrizacao.uuid}`}
       form={form}
       escolaSelecionada={escolaSelecionada}
     />

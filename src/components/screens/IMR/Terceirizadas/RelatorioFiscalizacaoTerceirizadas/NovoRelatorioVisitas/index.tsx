@@ -5,6 +5,7 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import arrayMutators from "final-form-arrays";
 import HTTP_STATUS from "http-status-codes";
 import {
   ArquivoInterface,
@@ -27,6 +28,7 @@ import { ModalCancelaPreenchimento } from "./components/ModalCancelaPreenchiment
 import { ModalSalvarRascunho } from "./components/ModalSalvarRascunho";
 import { formataPayload, validarFormulariosTiposOcorrencia } from "./helpers";
 import "./styles.scss";
+import { FormApi } from "final-form";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
@@ -70,27 +72,30 @@ export const NovoRelatorioVisitas = () => {
     }
   };
 
-  const getTiposOcorrenciaPorEditalNutrisupervisaoAsync =
-    async (): Promise<void> => {
-      setLoadingTiposOcorrencia(true);
-      const response: ResponseFormularioSupervisaoTiposOcorrenciasInterface =
-        await getTiposOcorrenciaPorEditalNutrisupervisao({
-          edital_uuid: escolaSelecionada.edital,
-        });
-      if (response.status === HTTP_STATUS.OK) {
-        setTiposOcorrencia(response.data);
-      } else {
-        setErroAPI(
-          "Erro ao carregar tipos de ocorrência do edital da unidade educacional. Tente novamente mais tarde."
-        );
-      }
-      setLoadingTiposOcorrencia(false);
-    };
+  const getTiposOcorrenciaPorEditalNutrisupervisaoAsync = async (
+    form: FormApi<any, Partial<any>>,
+    _escola: EscolaLabelInterface
+  ): Promise<void> => {
+    setLoadingTiposOcorrencia(true);
+    const response: ResponseFormularioSupervisaoTiposOcorrenciasInterface =
+      await getTiposOcorrenciaPorEditalNutrisupervisao({
+        edital_uuid: _escola.edital,
+      });
+    if (response.status === HTTP_STATUS.OK) {
+      setTiposOcorrencia(response.data);
+      response.data.forEach((tipoOcorrencia) => {
+        form.change(`grupos_${tipoOcorrencia.uuid}`, [{}]);
+      });
+    } else {
+      setErroAPI(
+        "Erro ao carregar tipos de ocorrência do edital da unidade educacional. Tente novamente mais tarde."
+      );
+    }
+    setLoadingTiposOcorrencia(false);
+  };
 
   useEffect(() => {
-    if (escolaSelecionada) {
-      getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
-    } else {
+    if (!escolaSelecionada) {
       setTiposOcorrencia(undefined);
     }
   }, [escolaSelecionada]);
@@ -104,14 +109,31 @@ export const NovoRelatorioVisitas = () => {
   return (
     <div className="card novo-relatorio-visitas mt-3">
       <div className="card-body">
-        <Form onSubmit={onSubmit}>
-          {({ handleSubmit, values, form, submitting }) => (
+        <Form
+          keepDirtyOnReinitialize
+          mutators={{
+            ...arrayMutators,
+          }}
+          onSubmit={onSubmit}
+        >
+          {({
+            handleSubmit,
+            values,
+            form,
+            form: {
+              mutators: { push },
+            },
+            submitting,
+          }) => (
             <form onSubmit={handleSubmit}>
               <Cabecalho
                 values={form.getState().values}
                 form={form}
                 setEscolaSelecionada={setEscolaSelecionada}
                 escolaSelecionada={escolaSelecionada}
+                getTiposOcorrenciaPorEditalNutrisupervisaoAsync={
+                  getTiposOcorrenciaPorEditalNutrisupervisaoAsync
+                }
               />
               <div className="row">
                 <div className="col-12">
@@ -126,6 +148,7 @@ export const NovoRelatorioVisitas = () => {
                       tiposOcorrencia={tiposOcorrencia}
                       values={form.getState().values}
                       escolaSelecionada={escolaSelecionada}
+                      push={push}
                     />
                   )}
                 </Spin>
