@@ -132,7 +132,7 @@ export const RegistrarNovaOcorrencia = () => {
 
   const exibeBotaoAdicionar = (tipoOcorrencia: TipoOcorrenciaInterface) => {
     return (
-      tipoOcorrencia.categoria.gera_notificacao &&
+      tipoOcorrencia.aceita_multiplas_respostas &&
       tipoOcorrencia.parametrizacoes.length > 0
     );
   };
