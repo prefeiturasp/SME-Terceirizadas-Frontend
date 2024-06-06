@@ -23,6 +23,13 @@ type FormularioType = {
 export const Formulario = ({ ...props }: FormularioType) => {
   const { tiposOcorrencia, form, values, escolaSelecionada, push } = props;
 
+  const exibeBotaoAdicionar = (tipoOcorrencia: TipoOcorrenciaInterface) => {
+    return (
+      tipoOcorrencia.categoria.gera_notificacao &&
+      tipoOcorrencia.parametrizacoes.length > 0
+    );
+  };
+
   useEffect(() => {
     tiposOcorrencia.forEach((tipoOcorrencia) => {
       form.change(`ocorrencia_${tipoOcorrencia.uuid}`, "sim");
@@ -78,7 +85,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                     <td
                       rowSpan={
                         values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" &&
-                        tipoOcorrencia.categoria.gera_notificacao
+                        exibeBotaoAdicionar(tipoOcorrencia)
                           ? 2 + values[`grupos_${tipoOcorrencia.uuid}`].length
                           : values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
                               "nao_se_aplica" ||
@@ -180,14 +187,16 @@ export const Formulario = ({ ...props }: FormularioType) => {
                           ))
                         }
                       </FieldArray>
-                      <tr className="adicionar text-center">
-                        <td colSpan={2} className="py-3">
-                          <AdicionarResposta
-                            push={push}
-                            nameFieldArray={`grupos_${tipoOcorrencia.uuid}`}
-                          />
-                        </td>
-                      </tr>
+                      {exibeBotaoAdicionar(tipoOcorrencia) && (
+                        <tr className="adicionar text-center">
+                          <td colSpan={2} className="py-3">
+                            <AdicionarResposta
+                              push={push}
+                              nameFieldArray={`grupos_${tipoOcorrencia.uuid}`}
+                            />
+                          </td>
+                        </tr>
+                      )}
                     </>
                   )}
                 </>

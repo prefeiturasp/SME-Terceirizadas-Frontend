@@ -43,14 +43,35 @@ const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
       const tipoOcorrenciaUUID = key.split("_")[1];
       ocorrenciasNao.push(tipoOcorrenciaUUID);
       Object.keys(values_).forEach((_key) => {
-        if (_key.includes(`resposta_${tipoOcorrenciaUUID}`)) {
-          const parametrizacaoUUID = _key.split("_")[4];
-          const resposta = values_[_key];
-          respostas.push({
-            tipoOcorrencia: tipoOcorrenciaUUID,
-            parametrizacao: parametrizacaoUUID,
-            resposta: resposta,
-          });
+        if (_key.includes(`grupos_${tipoOcorrenciaUUID}`)) {
+          const gruposDeRespostas = values_[_key];
+          if (gruposDeRespostas) {
+            gruposDeRespostas.forEach((grupo, indexGrupo) => {
+              if (grupo) {
+                Object.keys(grupo).forEach((keyGrupo) => {
+                  const parametrizacaoUUID = keyGrupo.split("_")[4];
+                  const resposta = grupo[keyGrupo];
+                  const respostaDuplicada = respostas.find(
+                    (resposta) =>
+                      resposta.parametrizacao === parametrizacaoUUID &&
+                      resposta.grupo === indexGrupo + 1
+                  );
+                  if (respostaDuplicada) {
+                    if (typeof respostaDuplicada.resposta === "string") {
+                      respostaDuplicada.resposta = resposta;
+                    }
+                  } else {
+                    respostas.push({
+                      tipoOcorrencia: tipoOcorrenciaUUID,
+                      parametrizacao: parametrizacaoUUID,
+                      resposta: resposta,
+                      grupo: indexGrupo + 1,
+                    });
+                  }
+                });
+              }
+            });
+          }
         }
       });
     }
