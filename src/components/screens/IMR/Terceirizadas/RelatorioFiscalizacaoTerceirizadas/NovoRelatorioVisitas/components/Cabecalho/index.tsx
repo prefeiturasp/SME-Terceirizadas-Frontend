@@ -212,12 +212,10 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       required
                       disabled={!values.diretoria_regional || loadingEscolas}
                       inputOnChange={async (value: string) => {
-                        console.log(value);
                         if (value) {
                           const _escola = escolas.find(
                             (e: EscolaLabelInterface) => e.value === value
                           );
-                          console.log(_escola);
 
                           form.change("total_matriculados_por_data", undefined);
                           form.change("maior_frequencia_no_periodo", undefined);
