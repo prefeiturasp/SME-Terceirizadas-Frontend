@@ -1,6 +1,7 @@
 import { Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
+  BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
@@ -26,6 +27,7 @@ import {
   createFormularioDiretor,
   getTiposOcorrenciaPorEditalDiretor,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
+import { AdicionarResposta } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/BotaoAdicionar";
 import RenderComponentByParametrizacao from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/RenderComponentByParametrizacao";
 import { SeletorDeDatas } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/Seletores/SeletorDeDatas";
 import { ModalCancelaPreenchimento } from "./components/ModalCancelaPreenchimento";
@@ -35,7 +37,6 @@ import { SeletorTipoOcorrencia } from "./components/SeletorTipoOcorrencia";
 import { formataPayload } from "./helpers";
 import { RegistrarNovaOcorrenciaFormInterface } from "./interfaces";
 import "./style.scss";
-import { AdicionarResposta } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/BotaoAdicionar";
 
 export const RegistrarNovaOcorrencia = () => {
   const [tiposOcorrencia, setTiposOcorrencia] =
@@ -136,6 +137,12 @@ export const RegistrarNovaOcorrencia = () => {
     );
   };
 
+  const excluiGrupoDeResposta = (form, indexFieldArray): void => {
+    const grupos = [...form.getState().values["grupos"]];
+    grupos.splice(indexFieldArray, 1);
+    form.change("grupos", grupos);
+  };
+
   return (
     <div className="card registrar-nova-ocorrencia mt-3">
       <div className="card-body">
@@ -223,33 +230,63 @@ export const RegistrarNovaOcorrencia = () => {
                         )}
                         <FieldArray name="grupos">
                           {({ fields }) =>
-                            fields.map((name, index) =>
-                              tipoOcorrencia.parametrizacoes.length ? (
-                                tipoOcorrencia.parametrizacoes.map(
-                                  (parametrizacao, index) => {
-                                    return (
-                                      <div key={index} className="row">
-                                        <RenderComponentByParametrizacao
-                                          index={index}
-                                          parametrizacao={parametrizacao}
-                                          name_grupos={name}
-                                          tipoOcorrencia={tipoOcorrencia}
-                                          form={form}
-                                          key={index}
-                                          escolaSelecionada={escolaSelecionada}
-                                        />
-                                      </div>
-                                    );
-                                  }
-                                )
-                              ) : (
-                                <div key={index} className="row mt-3">
-                                  <div className="col-12">
-                                    Não há parametrização para esse item.
+                            fields.map((name, indexFieldArray) => (
+                              <>
+                                {indexFieldArray > 0 && (
+                                  <div className="row">
+                                    <div className="col-11">
+                                      <hr />
+                                    </div>
+                                    <div className="col-1 text-end">
+                                      <Botao
+                                        className="no-border"
+                                        onClick={() =>
+                                          excluiGrupoDeResposta(
+                                            form,
+                                            indexFieldArray
+                                          )
+                                        }
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                                        icon={BUTTON_ICON.TRASH}
+                                      />
+                                    </div>
                                   </div>
-                                </div>
-                              )
-                            )
+                                )}
+                                {tipoOcorrencia.parametrizacoes.length ? (
+                                  tipoOcorrencia.parametrizacoes.map(
+                                    (parametrizacao, index) => {
+                                      return (
+                                        <div
+                                          key={indexFieldArray}
+                                          className="row"
+                                        >
+                                          <RenderComponentByParametrizacao
+                                            index={index}
+                                            parametrizacao={parametrizacao}
+                                            name_grupos={name}
+                                            tipoOcorrencia={tipoOcorrencia}
+                                            form={form}
+                                            escolaSelecionada={
+                                              escolaSelecionada
+                                            }
+                                          />
+                                        </div>
+                                      );
+                                    }
+                                  )
+                                ) : (
+                                  <div
+                                    key={indexFieldArray}
+                                    className="row mt-3"
+                                  >
+                                    <div className="col-12">
+                                      Não há parametrização para esse item.
+                                    </div>
+                                  </div>
+                                )}
+                              </>
+                            ))
                           }
                         </FieldArray>
 
