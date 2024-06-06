@@ -7,13 +7,13 @@ import {
 const formatOcorrencias = (values_: RegistrarNovaOcorrenciaFormInterface) => {
   let respostas: Array<OcorrenciaFormInterface> = [];
 
-  values_["grupos"].forEach((grupo, indexGrupo) => {
+  values_["grupos"].forEach((grupo: string, indexGrupo: number) => {
     Object.keys(grupo).forEach((key) => {
       const tipoOcorrenciaUUID = key.split("_")[2];
       const parametrizacaoUUID = key.split("_")[4];
       const resposta = grupo[key];
       const respostaDuplicada = respostas.find(
-        (resposta) =>
+        (resposta: OcorrenciaFormInterface) =>
           resposta.parametrizacao === parametrizacaoUUID &&
           resposta.grupo === indexGrupo + 1
       );

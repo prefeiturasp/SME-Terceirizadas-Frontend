@@ -38,7 +38,7 @@ const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
   let respostas = [];
   let ocorrenciasNao = [];
 
-  Object.keys(values_).forEach((key) => {
+  Object.keys(values_).forEach((key: string) => {
     if (key.includes("ocorrencia_") && values_[key] === "nao") {
       const tipoOcorrenciaUUID = key.split("_")[1];
       ocorrenciasNao.push(tipoOcorrenciaUUID);
@@ -46,9 +46,9 @@ const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
         if (_key.includes(`grupos_${tipoOcorrenciaUUID}`)) {
           const gruposDeRespostas = values_[_key];
           if (gruposDeRespostas) {
-            gruposDeRespostas.forEach((grupo, indexGrupo) => {
+            gruposDeRespostas.forEach((grupo: string, indexGrupo: number) => {
               if (grupo) {
-                Object.keys(grupo).forEach((keyGrupo) => {
+                Object.keys(grupo).forEach((keyGrupo: string) => {
                   const parametrizacaoUUID = keyGrupo.split("_")[4];
                   const resposta = grupo[keyGrupo];
                   const respostaDuplicada = respostas.find(
