@@ -43,6 +43,10 @@ type CabecahoType = {
   values: NovoRelatorioVisitasFormInterface;
   setEscolaSelecionada: (_escola: EscolaLabelInterface) => void;
   escolaSelecionada: EscolaLabelInterface;
+  getTiposOcorrenciaPorEditalNutrisupervisaoAsync: (
+    _form: FormApi<any, Partial<any>>,
+    _escola: EscolaLabelInterface
+  ) => Promise<void>;
 };
 
 export const Cabecalho = ({ ...props }: CabecahoType) => {
@@ -58,7 +62,12 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
 
   const [erroAPI, setErroAPI] = useState<string>("");
 
-  const { form, values, setEscolaSelecionada } = props;
+  const {
+    form,
+    values,
+    setEscolaSelecionada,
+    getTiposOcorrenciaPorEditalNutrisupervisaoAsync,
+  } = props;
 
   const getDiretoriasRegionaisAsync = async (): Promise<void> => {
     const response: ResponseDiretoriasRegionaisSimplissimaInterface =
@@ -202,24 +211,31 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       placeholder={"Selecione uma Unidade"}
                       required
                       disabled={!values.diretoria_regional || loadingEscolas}
-                      inputOnChange={(value: string) => {
-                        const _escola = escolas.find(
-                          (e: EscolaLabelInterface) => e.value === value
-                        );
-
-                        form.change("total_matriculados_por_data", undefined);
-                        form.change("maior_frequencia_no_periodo", undefined);
-
-                        form.change("lote", _escola?.lote_nome);
-                        form.change("terceirizada", _escola?.terceirizada);
-
-                        setEscolaSelecionada(_escola);
-
-                        if (values.data && _escola) {
-                          getTotalAlunosMatriculadosPorData(
-                            values.data,
-                            _escola.uuid
+                      inputOnChange={async (value: string) => {
+                        if (value) {
+                          const _escola = escolas.find(
+                            (e: EscolaLabelInterface) => e.value === value
                           );
+
+                          form.change("total_matriculados_por_data", undefined);
+                          form.change("maior_frequencia_no_periodo", undefined);
+
+                          form.change("lote", _escola?.lote_nome);
+                          form.change("terceirizada", _escola?.terceirizada);
+
+                          await setEscolaSelecionada(_escola);
+                          await getTiposOcorrenciaPorEditalNutrisupervisaoAsync(
+                            form,
+                            _escola
+                          );
+                          if (values.data && _escola) {
+                            await getTotalAlunosMatriculadosPorData(
+                              values.data,
+                              _escola.uuid
+                            );
+                          }
+                        } else {
+                          setEscolaSelecionada(undefined);
                         }
                       }}
                     />

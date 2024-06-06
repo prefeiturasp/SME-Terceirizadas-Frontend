@@ -1,24 +1,34 @@
-import React, { useEffect } from "react";
-import { Field } from "react-final-form";
+import { FormApi } from "final-form";
 import { required } from "helpers/fieldValidators";
 import {
-  TipoOcorrenciaInterface,
-  NovoRelatorioVisitasFormInterface,
   EscolaLabelInterface,
+  NovoRelatorioVisitasFormInterface,
+  TipoOcorrenciaInterface,
 } from "interfaces/imr.interface";
-import { FormApi } from "final-form";
-import { OcorrenciaNaoSeAplica } from "./components/OcorrenciaNaoSeAplica";
+import React, { useEffect } from "react";
+import { Field } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
+import { AdicionarResposta } from "./components/BotaoAdicionar";
 import { Ocorrencia } from "./components/Ocorrencia";
+import { OcorrenciaNaoSeAplica } from "./components/OcorrenciaNaoSeAplica";
 
 type FormularioType = {
   tiposOcorrencia: Array<TipoOcorrenciaInterface>;
   form: FormApi<any, Partial<any>>;
   values: NovoRelatorioVisitasFormInterface;
   escolaSelecionada: EscolaLabelInterface;
+  push: (_string) => {};
 };
 
 export const Formulario = ({ ...props }: FormularioType) => {
-  const { tiposOcorrencia, form, values, escolaSelecionada } = props;
+  const { tiposOcorrencia, form, values, escolaSelecionada, push } = props;
+
+  const exibeBotaoAdicionar = (tipoOcorrencia: TipoOcorrenciaInterface) => {
+    return (
+      tipoOcorrencia.categoria.gera_notificacao &&
+      tipoOcorrencia.parametrizacoes.length > 0
+    );
+  };
 
   useEffect(() => {
     tiposOcorrencia.forEach((tipoOcorrencia) => {
@@ -74,9 +84,13 @@ export const Formulario = ({ ...props }: FormularioType) => {
                   <tr className="tipo-ocorrencia">
                     <td
                       rowSpan={
-                        values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
-                          "nao_se_aplica" ||
-                        values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao"
+                        values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" &&
+                        exibeBotaoAdicionar(tipoOcorrencia)
+                          ? 2 + values[`grupos_${tipoOcorrencia.uuid}`].length
+                          : values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
+                              "nao_se_aplica" ||
+                            values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
+                              "nao"
                           ? 2
                           : 1
                       }
@@ -157,11 +171,34 @@ export const Formulario = ({ ...props }: FormularioType) => {
                   )}
 
                   {values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" && (
-                    <Ocorrencia
-                      tipoOcorrencia={tipoOcorrencia}
-                      form={form}
-                      escolaSelecionada={escolaSelecionada}
-                    />
+                    <>
+                      <FieldArray name={`grupos_${tipoOcorrencia.uuid}`}>
+                        {({ fields }) =>
+                          fields.map((name, indexFieldArray) => (
+                            <>
+                              <Ocorrencia
+                                key={indexFieldArray}
+                                name_grupos={name}
+                                tipoOcorrencia={tipoOcorrencia}
+                                form={form}
+                                escolaSelecionada={escolaSelecionada}
+                                indexFieldArray={indexFieldArray}
+                              />
+                            </>
+                          ))
+                        }
+                      </FieldArray>
+                      {exibeBotaoAdicionar(tipoOcorrencia) && (
+                        <tr className="adicionar text-center">
+                          <td colSpan={2} className="py-3">
+                            <AdicionarResposta
+                              push={push}
+                              nameFieldArray={`grupos_${tipoOcorrencia.uuid}`}
+                            />
+                          </td>
+                        </tr>
+                      )}
+                    </>
                   )}
                 </>
               );

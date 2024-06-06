@@ -2,6 +2,7 @@ export interface OcorrenciaFormInterface {
   tipoOcorrencia: string;
   parametrizacao: string;
   resposta: string | number | boolean;
+  grupo: number;
 }
 
 export interface RegistrarNovaOcorrenciaFormInterface {
