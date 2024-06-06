@@ -1,16 +1,16 @@
-import React, { useEffect } from "react";
-import { Field } from "react-final-form";
+import { FormApi } from "final-form";
 import { required } from "helpers/fieldValidators";
 import {
-  TipoOcorrenciaInterface,
-  NovoRelatorioVisitasFormInterface,
   EscolaLabelInterface,
+  NovoRelatorioVisitasFormInterface,
+  TipoOcorrenciaInterface,
 } from "interfaces/imr.interface";
-import { FormApi } from "final-form";
-import { OcorrenciaNaoSeAplica } from "./components/OcorrenciaNaoSeAplica";
-import { Ocorrencia } from "./components/Ocorrencia";
+import React, { useEffect } from "react";
+import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { AdicionarResposta } from "./components/BotaoAdicionar";
+import { Ocorrencia } from "./components/Ocorrencia";
+import { OcorrenciaNaoSeAplica } from "./components/OcorrenciaNaoSeAplica";
 
 type FormularioType = {
   tiposOcorrencia: Array<TipoOcorrenciaInterface>;
@@ -182,6 +182,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                                 tipoOcorrencia={tipoOcorrencia}
                                 form={form}
                                 escolaSelecionada={escolaSelecionada}
+                                indexFieldArray={indexFieldArray}
                               />
                             </>
                           ))
