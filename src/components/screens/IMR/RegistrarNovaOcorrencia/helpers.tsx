@@ -7,17 +7,29 @@ import {
 const formatOcorrencias = (values_: RegistrarNovaOcorrenciaFormInterface) => {
   let respostas: Array<OcorrenciaFormInterface> = [];
 
-  Object.keys(values_).forEach((key) => {
-    if (key.includes(`resposta_`)) {
+  values_["grupos"].forEach((grupo, indexGrupo) => {
+    Object.keys(grupo).forEach((key) => {
       const tipoOcorrenciaUUID = key.split("_")[2];
       const parametrizacaoUUID = key.split("_")[4];
-      const resposta = values_[key];
-      respostas.push({
-        tipoOcorrencia: tipoOcorrenciaUUID,
-        parametrizacao: parametrizacaoUUID,
-        resposta: resposta,
-      });
-    }
+      const resposta = grupo[key];
+      const respostaDuplicada = respostas.find(
+        (resposta) =>
+          resposta.parametrizacao === parametrizacaoUUID &&
+          resposta.grupo === indexGrupo + 1
+      );
+      if (respostaDuplicada) {
+        if (typeof respostaDuplicada.resposta === "string") {
+          respostaDuplicada.resposta = resposta;
+        }
+      } else {
+        respostas.push({
+          tipoOcorrencia: tipoOcorrenciaUUID,
+          parametrizacao: parametrizacaoUUID,
+          resposta: resposta,
+          grupo: indexGrupo + 1,
+        });
+      }
+    });
   });
   return respostas;
 };
