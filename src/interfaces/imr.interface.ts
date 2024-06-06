@@ -69,6 +69,7 @@ export interface PenalidadeInterface {
 }
 
 export interface TipoOcorrenciaInterface {
+  aceita_multiplas_respostas: boolean;
   categoria: CategoriaTipoOcorrenciaInterface;
   descricao: string;
   parametrizacoes: Array<ParametrizacoesInterface>;
