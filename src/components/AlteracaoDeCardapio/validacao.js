@@ -45,6 +45,38 @@ export const validateSubmit = (values, meusDados) => {
     });
   }
 
+  if (
+    values.substituicoes_VESPERTINO &&
+    values.substituicoes_VESPERTINO.check
+  ) {
+    totalAlunos += parseInt(values.substituicoes_VESPERTINO.numero_de_alunos);
+    values["substituicoes"].push({
+      periodo_escolar: values.substituicoes_VESPERTINO.periodo,
+      tipos_alimentacao_de:
+        values.substituicoes_VESPERTINO.tipos_alimentacao_de,
+      tipos_alimentacao_para:
+        values.substituicoes_VESPERTINO.tipos_alimentacao_para,
+      qtd_alunos: values.substituicoes_VESPERTINO.numero_de_alunos,
+    });
+  }
+
+  if (
+    values.substituicoes_INTERMEDIARIO &&
+    values.substituicoes_INTERMEDIARIO.check
+  ) {
+    totalAlunos += parseInt(
+      values.substituicoes_INTERMEDIARIO.numero_de_alunos
+    );
+    values["substituicoes"].push({
+      periodo_escolar: values.substituicoes_INTERMEDIARIO.periodo,
+      tipos_alimentacao_de:
+        values.substituicoes_INTERMEDIARIO.tipos_alimentacao_de,
+      tipos_alimentacao_para:
+        values.substituicoes_INTERMEDIARIO.tipos_alimentacao_para,
+      qtd_alunos: values.substituicoes_INTERMEDIARIO.numero_de_alunos,
+    });
+  }
+
   if (temPeriodosEscolares(values)) return "Obrigatório ao menos um período";
 
   if (
@@ -58,6 +90,8 @@ export const validateSubmit = (values, meusDados) => {
     delete values["substituicoes_TARDE"];
     delete values["substituicoes_NOITE"];
     delete values["substituicoes_INTEGRAL"];
+    delete values["substituicoes_VESPERTINO"];
+    delete values["substituicoes_INTERMEDIARIO"];
   }
 
   if (values["alterar_dia"]) {
