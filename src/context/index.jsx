@@ -1,20 +1,20 @@
 import React from "react";
+import { BuildProviderTree } from "./helpers";
+
 import { CentralDeDownloadContextProvider } from "./CentralDeDownloads";
-import { TemaContextProvider } from "./TemaContext";
+import { EscolaSimplesContextProvider } from "./EscolaSimplesContext";
 import { MeusDadosContextProvider } from "./MeusDadosContext";
 import { SolicitacaoAlimentacaoContextProvider } from "./SolicitacaoAlimentacao";
-import { EscolaSimplesContextProvider } from "./EscolaSimplesContext";
+import { TemaContextProvider } from "./TemaContext";
+
+const Providers = BuildProviderTree([
+  CentralDeDownloadContextProvider,
+  TemaContextProvider,
+  MeusDadosContextProvider,
+  SolicitacaoAlimentacaoContextProvider,
+  EscolaSimplesContextProvider,
+]);
 
 export const GlobalContext = ({ children }) => {
-  return (
-    <TemaContextProvider>
-      <CentralDeDownloadContextProvider>
-        <SolicitacaoAlimentacaoContextProvider>
-          <EscolaSimplesContextProvider>
-            <MeusDadosContextProvider>{children}</MeusDadosContextProvider>
-          </EscolaSimplesContextProvider>
-        </SolicitacaoAlimentacaoContextProvider>
-      </CentralDeDownloadContextProvider>
-    </TemaContextProvider>
-  );
+  return <Providers>{children}</Providers>;
 };
