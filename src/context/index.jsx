@@ -4,17 +4,16 @@ import { TemaContextProvider } from "./TemaContext";
 import { MeusDadosContextProvider } from "./MeusDadosContext";
 import { SolicitacaoAlimentacaoContextProvider } from "./SolicitacaoAlimentacao";
 import { EscolaSimplesContextProvider } from "./EscolaSimplesContext";
+import { BuildProviderTree } from "./helpers";
+
+const Providers = BuildProviderTree([
+  CentralDeDownloadContextProvider,
+  TemaContextProvider,
+  MeusDadosContextProvider,
+  SolicitacaoAlimentacaoContextProvider,
+  EscolaSimplesContextProvider,
+]);
 
 export const GlobalContext = ({ children }) => {
-  return (
-    <TemaContextProvider>
-      <CentralDeDownloadContextProvider>
-        <SolicitacaoAlimentacaoContextProvider>
-          <EscolaSimplesContextProvider>
-            <MeusDadosContextProvider>{children}</MeusDadosContextProvider>
-          </EscolaSimplesContextProvider>
-        </SolicitacaoAlimentacaoContextProvider>
-      </CentralDeDownloadContextProvider>
-    </TemaContextProvider>
-  );
+  return <Providers>{children}</Providers>;
 };
