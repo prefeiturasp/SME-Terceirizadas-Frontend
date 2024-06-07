@@ -240,6 +240,7 @@ export const RegistrarNovaOcorrencia = () => {
                                     <div className="col-1 text-end">
                                       <Botao
                                         className="no-border"
+                                        titulo="Excluir"
                                         onClick={() =>
                                           excluiGrupoDeResposta(
                                             form,
