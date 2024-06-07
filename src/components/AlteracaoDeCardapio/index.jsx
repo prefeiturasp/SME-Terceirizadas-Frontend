@@ -374,6 +374,14 @@ class AlteracaoCardapio extends Component {
         param.substituicoes_INTEGRAL !== undefined
           ? param.substituicoes_INTEGRAL.tipos_alimentacao_de
           : [],
+      VESPERTINO:
+        param.substituicoes_VESPERTINO !== undefined
+          ? param.substituicoes_VESPERTINO.tipos_alimentacao_de
+          : [],
+      INTERMEDIARIO:
+        param.substituicoes_INTERMEDIARIO !== undefined
+          ? param.substituicoes_INTERMEDIARIO.tipos_alimentacao_de
+          : [],
     };
 
     this.setState({
@@ -431,6 +439,8 @@ class AlteracaoCardapio extends Component {
         TARDE: [],
         NOITE: [],
         INTEGRAL: [],
+        VESPERTINO: [],
+        INTERMEDIARIO: [],
       },
     });
     this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
@@ -1291,6 +1301,8 @@ const mapStateToProps = (state) => {
     substituicoes_TARDE: selector(state, "substituicoes_TARDE"),
     substituicoes_NOITE: selector(state, "substituicoes_NOITE"),
     substituicoes_INTEGRAL: selector(state, "substituicoes_INTEGRAL"),
+    substituicoes_VESPERTINO: selector(state, "substituicoes_VESPERTINO"),
+    substituicoes_INTERMEDIARIO: selector(state, "substituicoes_INTERMEDIARIO"),
   };
 };
 
