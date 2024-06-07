@@ -40,6 +40,7 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
       <td colSpan={2} className="py-3">
         {indexFieldArray > 0 && (
           <Botao
+            titulo="Excluir"
             className="no-border float-end"
             onClick={() => excluiGrupoDeResposta()}
             type={BUTTON_TYPE.BUTTON}
