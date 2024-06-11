@@ -1,4 +1,5 @@
 import {
+  PAINEL_RELATORIOS_VISITAS,
   RELATORIO_FISCALIZACAO_TERCEIRIZADAS,
   SUPERVISAO,
   TERCEIRIZADAS,
@@ -17,6 +18,11 @@ export const MenuSupervisao = ({ ...props }) => {
         title="Terceirizadas"
         activeMenu={activeMenu}
       >
+        <LeafItem
+          to={`/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`}
+        >
+          Painel de Acompanhamento
+        </LeafItem>
         <LeafItem
           to={`/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}`}
         >
