@@ -36,6 +36,12 @@ export interface EscolaLabelInterface {
   uuid: string;
 }
 
+export interface EscolaOptionsInterface {
+  uuid: string;
+  nome: string;
+  codigo_eol: string;
+}
+
 export interface PeriodoDeVisitaInterface {
   alterado_em: string;
   criado_em: string;
@@ -107,4 +113,18 @@ export interface ReparoEAdaptacaoInterface {
 export interface InsumoInterface {
   nome: string;
   uuid: string;
+}
+
+export interface FiltrosRelatoriosVisitasInterface {
+  unidade_educacional?: string;
+  data_inicial?: string;
+  data_final?: string;
+}
+
+export interface RelatorioVisitaItemListagem {
+  uuid?: string;
+  unidade_educacional?: string;
+  diretoria_regional?: string;
+  data?: string;
+  status?: string;
 }
