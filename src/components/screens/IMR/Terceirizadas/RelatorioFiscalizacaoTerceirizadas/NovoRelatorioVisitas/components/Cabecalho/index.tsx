@@ -321,7 +321,6 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       label="Nº de Matriculados da Unidade"
                       name="total_matriculados_por_data"
                       required
-                      validate={required}
                       disabled
                     />
                   </Spin>
@@ -340,9 +339,11 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                         values.total_matriculados_por_data
                       )
                     )}
+                    min={0}
                     placeholder="Informe a quantidade"
                     disabled={
-                      !values.total_matriculados_por_data ||
+                      values.total_matriculados_por_data === null ||
+                      values.total_matriculados_por_data === undefined ||
                       loadingTotalMatriculadosPorData
                     }
                   />
