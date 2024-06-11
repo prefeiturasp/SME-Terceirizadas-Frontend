@@ -131,10 +131,20 @@ export const NovoRelatorioVisitas = () => {
   };
 
   const formularioValido = (form: FormApi<any, Partial<any>>) => {
+    const _validarFormulariosTiposOcorrencia =
+      validarFormulariosTiposOcorrencia(
+        form.getState().values,
+        tiposOcorrencia
+      );
+
     return (
       !form.getState().hasValidationErrors &&
-      validarFormulariosTiposOcorrencia(form.getState().values, tiposOcorrencia)
-        .formulariosValidos
+      _validarFormulariosTiposOcorrencia.formulariosValidos &&
+      ((_validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
+        .length > 0 &&
+        anexos.length > 0) ||
+        _validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
+          .length === 0)
     );
   };
 
