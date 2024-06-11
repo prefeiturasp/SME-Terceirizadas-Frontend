@@ -88,7 +88,7 @@ export const validarFormulariosTiposOcorrencia = (
   const { respostas, ocorrenciasNao, grupos } = formatOcorrencias(values);
 
   // valida todos os tipos de ocorrência assinalados como "não"
-  const resultadoValidacaoPorTipoOcorrencia = ocorrenciasNao.map(
+  const listaValidacaoPorTipoOcorrencia = ocorrenciasNao.map(
     (_ocorrenciaUUID) => {
       const _tipoOcorrencia = tiposOcorrencia.find(
         (_tipo_ocorrencia) => _tipo_ocorrencia.uuid === _ocorrenciaUUID
@@ -125,6 +125,8 @@ export const validarFormulariosTiposOcorrencia = (
       return { tipo_ocorrencia: _ocorrenciaUUID, valid: isValid };
     }
   );
-
-  return resultadoValidacaoPorTipoOcorrencia;
+  const formulariosValidos = listaValidacaoPorTipoOcorrencia.every(
+    (resultado) => resultado.valid
+  );
+  return { listaValidacaoPorTipoOcorrencia, formulariosValidos };
 };

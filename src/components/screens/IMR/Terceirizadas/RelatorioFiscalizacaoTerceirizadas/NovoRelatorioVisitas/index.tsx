@@ -30,11 +30,13 @@ import { ModalSalvarRascunho } from "./components/ModalSalvarRascunho";
 import { formataPayload, validarFormulariosTiposOcorrencia } from "./helpers";
 import "./styles.scss";
 import { FormApi } from "final-form";
+import { ModalSalvar } from "./components/ModalSalvar";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
     useState(false);
   const [showModalSalvarRascunho, setShowModalSalvarRascunho] = useState(false);
+  const [showModalSalvar, setShowModalSalvar] = useState(false);
 
   const [escolaSelecionada, setEscolaSelecionada] =
     useState<EscolaLabelInterface>();
@@ -76,14 +78,8 @@ export const NovoRelatorioVisitas = () => {
   const salvar = async (
     values: NovoRelatorioVisitasFormInterface
   ): Promise<void> => {
-    if (!values.escola || !values.data) {
-      toastError(
-        "Os campos unidade educacional e data da visita são obrigatórios para salvar."
-      );
-      return;
-    }
-    if (!showModalSalvarRascunho) {
-      setShowModalSalvarRascunho(true);
+    if (!showModalSalvar) {
+      setShowModalSalvar(true);
       return;
     }
 
@@ -91,11 +87,11 @@ export const NovoRelatorioVisitas = () => {
       formataPayload(values, escolaSelecionada, anexos)
     );
     if (response.status === HTTP_STATUS.CREATED) {
-      toastSuccess(" Relatório de Fiscalização salvo com sucesso!");
+      toastSuccess("Relatório de Fiscalização enviado com sucesso!");
       navigate(-1);
     } else {
       toastError(
-        "Erro ao criar Relatório de Fiscalização. Tente novamente mais tarde."
+        "Erro ao enviar Relatório de Fiscalização. Tente novamente mais tarde."
       );
     }
   };
@@ -132,6 +128,14 @@ export const NovoRelatorioVisitas = () => {
     values: NovoRelatorioVisitasFormInterface
   ): Promise<void> => {
     values;
+  };
+
+  const formularioValido = (form: FormApi<any, Partial<any>>) => {
+    return (
+      !form.getState().hasValidationErrors &&
+      validarFormulariosTiposOcorrencia(form.getState().values, tiposOcorrencia)
+        .formulariosValidos
+    );
   };
 
   return (
@@ -185,7 +189,7 @@ export const NovoRelatorioVisitas = () => {
                 validarFormulariosTiposOcorrencia(
                   form.getState().values,
                   tiposOcorrencia
-                ).length !== 0 && (
+                ).listaValidacaoPorTipoOcorrencia.length !== 0 && (
                   <Anexos setAnexos={setAnexos} anexos={anexos} />
                 )}
               <div className="row float-end mt-4">
@@ -210,7 +214,7 @@ export const NovoRelatorioVisitas = () => {
                   <Botao
                     texto="Enviar Formulário"
                     className="ms-3"
-                    disabled={submitting}
+                    disabled={submitting || !formularioValido(form)}
                     onClick={() => salvar(values)}
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN}
@@ -228,6 +232,13 @@ export const NovoRelatorioVisitas = () => {
                 handleClose={() => setShowModalSalvarRascunho(false)}
                 values={form.getState().values}
                 salvarRascunho={salvarRascunho}
+                escolaSelecionada={escolaSelecionada}
+              />
+              <ModalSalvar
+                show={showModalSalvar}
+                handleClose={() => setShowModalSalvar(false)}
+                values={form.getState().values}
+                salvar={salvar}
                 escolaSelecionada={escolaSelecionada}
               />
             </form>
