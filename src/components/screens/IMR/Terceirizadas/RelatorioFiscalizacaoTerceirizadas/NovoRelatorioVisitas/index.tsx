@@ -110,6 +110,7 @@ export const NovoRelatorioVisitas = () => {
       response.data.forEach((tipoOcorrencia) => {
         form.change(`grupos_${tipoOcorrencia.uuid}`, [{}]);
       });
+      setErroAPI("");
     } else {
       setErroAPI(
         "Erro ao carregar tipos de ocorrência do edital da unidade educacional. Tente novamente mais tarde."
