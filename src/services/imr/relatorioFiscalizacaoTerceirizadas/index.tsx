@@ -48,6 +48,17 @@ export const createRascunhoFormularioSupervisao = async (
   }
 };
 
+export const createFormularioSupervisao = async (
+  params: NovoRelatorioVisitasFormInterface
+) => {
+  const url = `${API_URL}/imr/formulario-supervisao/`;
+  const response = await axios.post(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const createFormularioDiretor = async (
   params: NovoRelatorioVisitasFormInterface
 ) => {
@@ -83,10 +94,10 @@ export const getTiposOcorrenciaPorEditalDiretor = async (params: {
   }
 };
 
-export const getUtensiliosCozinha = async () => {
+export const getUtensiliosCozinha = async (params: { edital_uuid: string }) => {
   const url = `${API_URL}/imr/utensilios-cozinha/`;
   const response: ResponseUtensilioCozinhaInterface = await axios
-    .get(url)
+    .get(url, { params })
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -94,10 +105,10 @@ export const getUtensiliosCozinha = async () => {
   }
 };
 
-export const getUtensiliosMesa = async () => {
+export const getUtensiliosMesa = async (params: { edital_uuid: string }) => {
   const url = `${API_URL}/imr/utensilios-mesa/`;
   const response: ResponseUtensilioMesaInterface = await axios
-    .get(url)
+    .get(url, { params })
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -105,10 +116,10 @@ export const getUtensiliosMesa = async () => {
   }
 };
 
-export const getEquipamentos = async () => {
+export const getEquipamentos = async (params: { edital_uuid: string }) => {
   const url = `${API_URL}/imr/equipamentos/`;
   const response: ResponseEquipamentoInterface = await axios
-    .get(url)
+    .get(url, { params })
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -116,10 +127,10 @@ export const getEquipamentos = async () => {
   }
 };
 
-export const getMobiliarios = async () => {
+export const getMobiliarios = async (params: { edital_uuid: string }) => {
   const url = `${API_URL}/imr/mobiliarios/`;
   const response: ResponseMobiliarioInterface = await axios
-    .get(url)
+    .get(url, { params })
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -127,10 +138,12 @@ export const getMobiliarios = async () => {
   }
 };
 
-export const getReparosEAdaptacoes = async () => {
+export const getReparosEAdaptacoes = async (params: {
+  edital_uuid: string;
+}) => {
   const url = `${API_URL}/imr/reparos-e-adaptacoes/`;
   const response: ResponseReparoEAdaptacaoInterface = await axios
-    .get(url)
+    .get(url, { params })
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -138,10 +151,10 @@ export const getReparosEAdaptacoes = async () => {
   }
 };
 
-export const getInsumos = async () => {
+export const getInsumos = async (params: { edital_uuid: string }) => {
   const url = `${API_URL}/imr/insumos/`;
   const response: ResponseInsumoInterface = await axios
-    .get(url)
+    .get(url, { params })
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };

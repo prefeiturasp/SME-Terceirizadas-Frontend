@@ -19,6 +19,7 @@ import { Form } from "react-final-form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import {
   createRascunhoFormularioSupervisao,
+  createFormularioSupervisao,
   getTiposOcorrenciaPorEditalNutrisupervisao,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { Anexos } from "./components/Anexos";
@@ -29,11 +30,13 @@ import { ModalSalvarRascunho } from "./components/ModalSalvarRascunho";
 import { formataPayload, validarFormulariosTiposOcorrencia } from "./helpers";
 import "./styles.scss";
 import { FormApi } from "final-form";
+import { ModalSalvar } from "./components/ModalSalvar";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
     useState(false);
   const [showModalSalvarRascunho, setShowModalSalvarRascunho] = useState(false);
+  const [showModalSalvar, setShowModalSalvar] = useState(false);
 
   const [escolaSelecionada, setEscolaSelecionada] =
     useState<EscolaLabelInterface>();
@@ -72,6 +75,27 @@ export const NovoRelatorioVisitas = () => {
     }
   };
 
+  const salvar = async (
+    values: NovoRelatorioVisitasFormInterface
+  ): Promise<void> => {
+    if (!showModalSalvar) {
+      setShowModalSalvar(true);
+      return;
+    }
+
+    const response = await createFormularioSupervisao(
+      formataPayload(values, escolaSelecionada, anexos)
+    );
+    if (response.status === HTTP_STATUS.CREATED) {
+      toastSuccess("Relatório de Fiscalização enviado com sucesso!");
+      navigate(-1);
+    } else {
+      toastError(
+        "Erro ao enviar Relatório de Fiscalização. Tente novamente mais tarde."
+      );
+    }
+  };
+
   const getTiposOcorrenciaPorEditalNutrisupervisaoAsync = async (
     form: FormApi<any, Partial<any>>,
     _escola: EscolaLabelInterface
@@ -86,6 +110,7 @@ export const NovoRelatorioVisitas = () => {
       response.data.forEach((tipoOcorrencia) => {
         form.change(`grupos_${tipoOcorrencia.uuid}`, [{}]);
       });
+      setErroAPI("");
     } else {
       setErroAPI(
         "Erro ao carregar tipos de ocorrência do edital da unidade educacional. Tente novamente mais tarde."
@@ -104,6 +129,24 @@ export const NovoRelatorioVisitas = () => {
     values: NovoRelatorioVisitasFormInterface
   ): Promise<void> => {
     values;
+  };
+
+  const formularioValido = (form: FormApi<any, Partial<any>>) => {
+    const _validarFormulariosTiposOcorrencia =
+      validarFormulariosTiposOcorrencia(
+        form.getState().values,
+        tiposOcorrencia
+      );
+
+    return (
+      !form.getState().hasValidationErrors &&
+      _validarFormulariosTiposOcorrencia.formulariosValidos &&
+      ((_validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
+        .length > 0 &&
+        anexos.length > 0) ||
+        _validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
+          .length === 0)
+    );
   };
 
   return (
@@ -157,7 +200,7 @@ export const NovoRelatorioVisitas = () => {
                 validarFormulariosTiposOcorrencia(
                   form.getState().values,
                   tiposOcorrencia
-                ).length !== 0 && (
+                ).listaValidacaoPorTipoOcorrencia.length !== 0 && (
                   <Anexos setAnexos={setAnexos} anexos={anexos} />
                 )}
               <div className="row float-end mt-4">
@@ -179,6 +222,14 @@ export const NovoRelatorioVisitas = () => {
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                   />
+                  <Botao
+                    texto="Enviar Formulário"
+                    className="ms-3"
+                    disabled={submitting || !formularioValido(form)}
+                    onClick={() => salvar(values)}
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN}
+                  />
                 </div>
               </div>
               <ModalCancelaPreenchimento
@@ -192,6 +243,13 @@ export const NovoRelatorioVisitas = () => {
                 handleClose={() => setShowModalSalvarRascunho(false)}
                 values={form.getState().values}
                 salvarRascunho={salvarRascunho}
+                escolaSelecionada={escolaSelecionada}
+              />
+              <ModalSalvar
+                show={showModalSalvar}
+                handleClose={() => setShowModalSalvar(false)}
+                values={form.getState().values}
+                salvar={salvar}
                 escolaSelecionada={escolaSelecionada}
               />
             </form>

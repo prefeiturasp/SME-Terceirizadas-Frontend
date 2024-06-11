@@ -55,7 +55,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
           <table>
             {tiposOcorrencia.map((tipoOcorrencia, index) => {
               return (
-                <>
+                <React.Fragment key={index}>
                   {(index === 0 ||
                     tipoOcorrencia.categoria.nome !==
                       tiposOcorrencia[index - 1].categoria.nome) && (
@@ -175,7 +175,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                       <FieldArray name={`grupos_${tipoOcorrencia.uuid}`}>
                         {({ fields }) =>
                           fields.map((name, indexFieldArray) => (
-                            <>
+                            <React.Fragment key={indexFieldArray}>
                               <Ocorrencia
                                 key={indexFieldArray}
                                 name_grupos={name}
@@ -184,7 +184,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                                 escolaSelecionada={escolaSelecionada}
                                 indexFieldArray={indexFieldArray}
                               />
-                            </>
+                            </React.Fragment>
                           ))
                         }
                       </FieldArray>
@@ -200,7 +200,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                       )}
                     </>
                   )}
-                </>
+                </React.Fragment>
               );
             })}
           </table>
