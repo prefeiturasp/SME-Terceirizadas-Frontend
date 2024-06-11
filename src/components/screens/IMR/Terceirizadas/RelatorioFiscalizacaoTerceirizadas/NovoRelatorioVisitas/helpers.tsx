@@ -37,7 +37,7 @@ const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
   let values_ = deepCopy(values);
   let respostas = [];
   let ocorrenciasNao = [];
-
+  let grupos = {};
   Object.keys(values_).forEach((key: string) => {
     if (key.includes("ocorrencia_") && values_[key] === "nao") {
       const tipoOcorrenciaUUID = key.split("_")[1];
@@ -45,6 +45,7 @@ const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
       Object.keys(values_).forEach((_key) => {
         if (_key.includes(`grupos_${tipoOcorrenciaUUID}`)) {
           const gruposDeRespostas = values_[_key];
+          grupos[tipoOcorrenciaUUID] = gruposDeRespostas;
           if (gruposDeRespostas) {
             gruposDeRespostas.forEach((grupo: string, indexGrupo: number) => {
               if (grupo) {
@@ -77,14 +78,14 @@ const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
     }
   });
 
-  return { ocorrenciasNao, respostas };
+  return { ocorrenciasNao, respostas, grupos };
 };
 
 export const validarFormulariosTiposOcorrencia = (
   values: NovoRelatorioVisitasFormInterface,
   tiposOcorrencia: Array<TipoOcorrenciaInterface>
 ) => {
-  const { respostas, ocorrenciasNao } = formatOcorrencias(values);
+  const { respostas, ocorrenciasNao, grupos } = formatOcorrencias(values);
 
   // valida todos os tipos de ocorrência assinalados como "não"
   const resultadoValidacaoPorTipoOcorrencia = ocorrenciasNao.map(
@@ -96,18 +97,30 @@ export const validarFormulariosTiposOcorrencia = (
       if (!_tipoOcorrencia) {
         return { tipo_ocorrencia: _ocorrenciaUUID, valid: false };
       }
-
-      // valida a existência de resposta de cada parametrização da ocorrência
-      const resultadoValidacaoParametrizacoes =
-        _tipoOcorrencia.parametrizacoes.map((_parametrizacao) => {
-          const _resposta = respostas.find(
-            (_resp) => _resp.parametrizacao === _parametrizacao.uuid
-          );
-          return _resposta && _resposta.resposta;
-        });
-
+      let _validacaoTodosOsGrupos = [];
+      // pega os grupos de resposta por tipo de ocorrência
+      const gruposPorTipoOcorrencia = grupos[_tipoOcorrencia.uuid];
+      if (gruposPorTipoOcorrencia) {
+        _validacaoTodosOsGrupos = gruposPorTipoOcorrencia.map(
+          (_respostas, indexGrupo) => {
+            const _validacaoPorGrupo = _tipoOcorrencia.parametrizacoes.map(
+              (_parametrizacao) => {
+                // valida a existência de resposta de cada parametrização da ocorrência
+                const _resposta = respostas.find(
+                  (_resp) =>
+                    _resp.grupo === indexGrupo + 1 &&
+                    _resp.parametrizacao === _parametrizacao.uuid
+                );
+                return (_resposta && _resposta.resposta) || false;
+              }
+            );
+            const grupoIsValid = _validacaoPorGrupo.every(Boolean);
+            return grupoIsValid;
+          }
+        );
+      }
       // checa o resultado da validação de todas as parametrizações do tipo de ocorrência
-      const isValid = resultadoValidacaoParametrizacoes.every(Boolean);
+      const isValid = _validacaoTodosOsGrupos.every(Boolean);
 
       return { tipo_ocorrencia: _ocorrenciaUUID, valid: isValid };
     }
