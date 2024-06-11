@@ -2,6 +2,8 @@ import axios from "../../_base";
 import { API_URL } from "constants/config";
 import { ErrorHandlerFunction } from "../../service-helpers";
 import { NovoRelatorioVisitasFormInterface } from "interfaces/imr.interface";
+import { getMensagemDeErro } from "helpers/statusErrors";
+import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   ResponseEquipamentoInterface,
   ResponseFormularioSupervisaoTiposOcorrenciasInterface,
@@ -11,7 +13,18 @@ import {
   ResponseReparoEAdaptacaoInterface,
   ResponseUtensilioCozinhaInterface,
   ResponseUtensilioMesaInterface,
+  ResponseRelatoriosVisitas,
 } from "interfaces/responses.interface";
+
+export const listRelatoriosVisitaSupervisao = async (
+  params: URLSearchParams
+): Promise<ResponseRelatoriosVisitas> => {
+  try {
+    return await axios.get("/imr/formulario-supervisao/", { params });
+  } catch (error) {
+    toastError(getMensagemDeErro(error.response.status));
+  }
+};
 
 export const getPeriodosVisita = async () => {
   const url = `${API_URL}/imr/periodos-de-visita/`;
