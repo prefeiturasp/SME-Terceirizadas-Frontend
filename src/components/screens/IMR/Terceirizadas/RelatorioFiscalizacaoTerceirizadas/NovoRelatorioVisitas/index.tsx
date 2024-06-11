@@ -19,6 +19,7 @@ import { Form } from "react-final-form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import {
   createRascunhoFormularioSupervisao,
+  createFormularioSupervisao,
   getTiposOcorrenciaPorEditalNutrisupervisao,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { Anexos } from "./components/Anexos";
@@ -68,6 +69,33 @@ export const NovoRelatorioVisitas = () => {
     } else {
       toastError(
         "Erro ao criar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const salvar = async (
+    values: NovoRelatorioVisitasFormInterface
+  ): Promise<void> => {
+    if (!values.escola || !values.data) {
+      toastError(
+        "Os campos unidade educacional e data da visita são obrigatórios para salvar."
+      );
+      return;
+    }
+    if (!showModalSalvarRascunho) {
+      setShowModalSalvarRascunho(true);
+      return;
+    }
+
+    const response = await createFormularioSupervisao(
+      formataPayload(values, escolaSelecionada, anexos)
+    );
+    if (response.status === HTTP_STATUS.CREATED) {
+      toastSuccess(" Relatório de Fiscalização salvo com sucesso!");
+      navigate(-1);
+    } else {
+      toastError(
+        "Erro ao criar Relatório de Fiscalização. Tente novamente mais tarde."
       );
     }
   };
@@ -178,6 +206,14 @@ export const NovoRelatorioVisitas = () => {
                     onClick={() => salvarRascunho(values)}
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
+                  />
+                  <Botao
+                    texto="Enviar Formulário"
+                    className="ms-3"
+                    disabled={submitting}
+                    onClick={() => salvar(values)}
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN}
                   />
                 </div>
               </div>
