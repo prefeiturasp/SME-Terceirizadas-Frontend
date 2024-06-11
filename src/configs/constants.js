@@ -204,6 +204,7 @@ export const SUPERVISAO = "supervisao";
 export const TERCEIRIZADAS = "terceirizadas";
 export const RELATORIO_FISCALIZACAO_TERCEIRIZADAS =
   "relatorio-fiscalizacao-terceirizadas";
+export const PAINEL_RELATORIOS_VISITAS = "painel-relatorio-visitas";
 export const NOVO_RELATORIO_VISITAS = "novo-relatorio-visitas";
 export const REGISTRAR_OCORRENCIAS = "registrar-ocorrencias";
 export const REGISTRAR_NOVA_OCORRENCIA = "registrar-nova-ocorrencia";
