@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
-import { Collapse, Checkbox, Modal } from "antd";
+import { Collapse, Checkbox, Modal, Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
@@ -67,6 +67,8 @@ export const InformacoesMedicaoInicialCEI = ({
   const [tipoDeContagemSelecionada, setTipoDeContagemSelecionada] = useState(
     []
   );
+  const [alunosParcialAlterado, setAlunosParcialAlterado] = useState(false);
+  const [loadingInfoBasicas, setLoadingInfoBasicas] = useState(false);
 
   const { Panel } = Collapse;
 
@@ -170,6 +172,7 @@ export const InformacoesMedicaoInicialCEI = ({
       toastError("O campo de RF deve conter 7 números");
       return;
     }
+    setLoadingInfoBasicas(true);
     if (solicitacaoMedicaoInicial) {
       let data = new FormData();
       data.append("escola", String(escolaInstituicao.uuid));
@@ -185,8 +188,15 @@ export const InformacoesMedicaoInicialCEI = ({
         );
       }
       if (Array.isArray(alunosAdicionados) && alunosAdicionados.length > 0) {
-        const uuidsDosAlunos = alunosAdicionados.map((aluno) => aluno.uuid);
-        data.append("alunos_periodo_parcial", JSON.stringify(uuidsDosAlunos));
+        let alunos = [];
+        alunosAdicionados.forEach((alunoAdicionado) => {
+          alunos.push({
+            aluno: alunoAdicionado.uuid,
+            data: alunoAdicionado.data,
+          });
+        });
+        data.append("alunos_periodo_parcial", JSON.stringify(alunos));
+        data.append("alunos_parcial_alterado", alunosParcialAlterado);
       }
       const response = await updateSolicitacaoMedicaoInicial(
         solicitacaoMedicaoInicial.uuid,
@@ -234,10 +244,14 @@ export const InformacoesMedicaoInicialCEI = ({
         ano: getYear(new Date(periodoSelecionado)).toString(),
       };
       if (alunosAdicionados && alunosAdicionados.length > 0) {
-        const uuidsDosAlunos = alunosAdicionados.map((aluno) => ({
-          aluno: aluno.uuid,
-        }));
-        payload.alunos_periodo_parcial = uuidsDosAlunos;
+        let alunos = [];
+        alunosAdicionados.forEach((alunoAdicionado) => {
+          alunos.push({
+            aluno: alunoAdicionado.uuid,
+            data: alunoAdicionado.data,
+          });
+        });
+        payload.alunos_periodo_parcial = alunos;
       }
       const response = await setSolicitacaoMedicaoInicial(payload);
       if (response.status === HTTP_STATUS.CREATED) {
@@ -248,7 +262,8 @@ export const InformacoesMedicaoInicialCEI = ({
       }
     }
     setEmEdicao(false);
-    onClickInfoBasicas();
+    await onClickInfoBasicas();
+    setLoadingInfoBasicas(false);
   };
 
   const options = [
@@ -354,108 +369,114 @@ export const InformacoesMedicaoInicialCEI = ({
             onChange={() => setIsOpen(!isOpen)}
           >
             <Panel header="Informações Básicas da Medição Inicial" key="1">
-              <div className="row">
-                {ehEscolaTipoCEMEI(escolaInstituicao) && (
-                  <div className="col-5 info-label select-medicao-inicial">
-                    <b className="mb-2">
-                      Método de Contagem das Alimentações Servidas
-                    </b>
-                    {opcoesContagem.length > 0 && (
-                      <StatefulMultiSelect
-                        name="contagem_refeicoes"
-                        selected={tipoDeContagemSelecionada}
-                        options={opcoesContagem || []}
-                        onSelectedChanged={(values) =>
-                          handleChangeTipoContagem(values)
-                        }
-                        hasSelectAll={false}
-                        overrideStrings={{
-                          selectSomeItems: "Selecione os métodos de contagem",
-                          allItemsAreSelected: "Todos os métodos selecionados",
-                        }}
-                        disabled={!emEdicao}
-                      />
-                    )}
-                  </div>
-                )}
-
-                <div className="col-7 info-label">
-                  <label className="mt-2 mb-2">
-                    Nome da Empresa Responsável pelo Atendimento
-                  </label>
-                  <p className="value-label">{nomeTerceirizada}</p>
-                </div>
-              </div>
-
-              <div className="row">
-                <div className="col-7 info-label">
-                  <label className="asterisk-label">*</label>
-                  <label className="value-label mt-2 mb-2 me-3">
-                    A UE possui alunos no período parcial?
-                  </label>
-                  {options.map((option) => (
-                    <Checkbox
-                      key={option.value}
-                      value={option.value}
-                      checked={uePossuiAlunosPeriodoParcial === option.value}
-                      onChange={onChange}
-                      disabled={!emEdicao}
-                    >
-                      {option.label}
-                    </Checkbox>
-                  ))}
-                </div>
-              </div>
-              {showPesquisaAluno && (
-                <TabelaAlunosParciais
-                  setIsModalDuplicata={setIsModalDuplicata}
-                  alunos={alunos}
-                  loading={loading}
-                  alunosAdicionados={alunosAdicionados}
-                  setAlunosAdicionados={setAlunosAdicionados}
-                  emEdicao={emEdicao}
-                />
-              )}
-
-              <div className="row mt-4 me-0">
-                <div className="col-8">
-                  <label>
-                    Responsáveis por acompanhar a prestação de serviços
-                  </label>
-                  <label className="asterisk-label">*</label>
-                </div>
-                <div className="col-4 ps-0">
-                  <label>RF</label>
-                  <label className="asterisk-label">*</label>
-                </div>
-                <ResponsaveisInputs
-                  responsaveis={responsaveis}
-                  setaResponsavel={setaResponsavel}
-                  verificarInput={verificarInput}
-                  emEdicao={emEdicao}
-                />
-                {(!location.state ||
-                  location.state.status !== "Aprovado pela DRE") &&
-                  !location.pathname.includes(DETALHAMENTO_DO_LANCAMENTO) && (
-                    <div className="mt-3 pe-2">
-                      <Botao
-                        texto="Salvar"
-                        style={BUTTON_STYLE.GREEN}
-                        className="float-end ms-3"
-                        onClick={() => handleClickSalvar()}
-                        disabled={!emEdicao}
-                      />
-                      <Botao
-                        texto="Editar"
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                        icon={BUTTON_ICON.PEN}
-                        className="float-end ms-3"
-                        onClick={() => handleClickEditar()}
-                        disabled={emEdicao}
-                      />
+              <Spin tip="Carregando..." spinning={loadingInfoBasicas}>
+                <div className="row">
+                  {ehEscolaTipoCEMEI(escolaInstituicao) && (
+                    <div className="col-5 info-label select-medicao-inicial">
+                      <b className="mb-2">
+                        Método de Contagem das Alimentações Servidas
+                      </b>
+                      {opcoesContagem.length > 0 && (
+                        <StatefulMultiSelect
+                          name="contagem_refeicoes"
+                          selected={tipoDeContagemSelecionada}
+                          options={opcoesContagem || []}
+                          onSelectedChanged={(values) =>
+                            handleChangeTipoContagem(values)
+                          }
+                          hasSelectAll={false}
+                          overrideStrings={{
+                            selectSomeItems: "Selecione os métodos de contagem",
+                            allItemsAreSelected:
+                              "Todos os métodos selecionados",
+                          }}
+                          disabled={!emEdicao}
+                        />
+                      )}
                     </div>
                   )}
-              </div>
+
+                  <div className="col-7 info-label">
+                    <label className="mt-2 mb-2">
+                      Nome da Empresa Responsável pelo Atendimento
+                    </label>
+                    <p className="value-label">{nomeTerceirizada}</p>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-7 info-label">
+                    <label className="asterisk-label">*</label>
+                    <label className="value-label mt-2 mb-2 me-3">
+                      A UE possui alunos no período parcial?
+                    </label>
+                    {options.map((option) => (
+                      <Checkbox
+                        key={option.value}
+                        value={option.value}
+                        checked={uePossuiAlunosPeriodoParcial === option.value}
+                        onChange={onChange}
+                        disabled={!emEdicao}
+                      >
+                        {option.label}
+                      </Checkbox>
+                    ))}
+                  </div>
+                </div>
+                {showPesquisaAluno && (
+                  <TabelaAlunosParciais
+                    setIsModalDuplicata={setIsModalDuplicata}
+                    alunos={alunos}
+                    loading={loading}
+                    alunosAdicionados={alunosAdicionados}
+                    setAlunosAdicionados={setAlunosAdicionados}
+                    emEdicao={emEdicao}
+                    mes={searchParams.get("mes")}
+                    ano={searchParams.get("ano")}
+                    setAlunosParcialAlterado={setAlunosParcialAlterado}
+                  />
+                )}
+
+                <div className="row mt-4 me-0">
+                  <div className="col-8">
+                    <label>
+                      Responsáveis por acompanhar a prestação de serviços
+                    </label>
+                    <label className="asterisk-label">*</label>
+                  </div>
+                  <div className="col-4 ps-0">
+                    <label>RF</label>
+                    <label className="asterisk-label">*</label>
+                  </div>
+                  <ResponsaveisInputs
+                    responsaveis={responsaveis}
+                    setaResponsavel={setaResponsavel}
+                    verificarInput={verificarInput}
+                    emEdicao={emEdicao}
+                  />
+                  {(!location.state ||
+                    location.state.status !== "Aprovado pela DRE") &&
+                    !location.pathname.includes(DETALHAMENTO_DO_LANCAMENTO) && (
+                      <div className="mt-3 pe-2">
+                        <Botao
+                          texto="Salvar"
+                          style={BUTTON_STYLE.GREEN}
+                          className="float-end ms-3"
+                          onClick={() => handleClickSalvar()}
+                          disabled={!emEdicao}
+                        />
+                        <Botao
+                          texto="Editar"
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          icon={BUTTON_ICON.PEN}
+                          className="float-end ms-3"
+                          onClick={() => handleClickEditar()}
+                          disabled={emEdicao}
+                        />
+                      </div>
+                    )}
+                </div>
+              </Spin>
             </Panel>
           </Collapse>
         </div>
