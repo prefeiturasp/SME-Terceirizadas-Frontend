@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
 
 import { gerarParametrosConsulta } from "helpers/utilities";
@@ -11,6 +12,8 @@ import {
   RelatorioVisitaItemListagem,
 } from "interfaces/imr.interface";
 import { Listagem } from "./components/Listagem";
+import { getDashboardPainelGerencialSupervisao } from "services/imr/painelGerencial";
+import { CardPorStatus } from "./components/CardPorStatus";
 
 export const PainelRelatorios = () => {
   const [carregando, setCarregando] = useState(false);
@@ -21,6 +24,8 @@ export const PainelRelatorios = () => {
   const [relatoriosVisita, setRelatoriosVisita] = useState<
     RelatorioVisitaItemListagem[]
   >([]);
+  const [dashboard, setDashboard] =
+    useState<Array<{ status: string; label: string; total: number }>>();
 
   const buscarResultados = async (pageNumber: number) => {
     setCarregando(true);
@@ -32,13 +37,20 @@ export const PainelRelatorios = () => {
       });
       const response = await listRelatoriosVisitaSupervisao(params);
 
-      if (response?.status === 200) {
+      if (response.status === HTTP_STATUS.OK) {
         setRelatoriosVisita(response.data.results);
         setTotalResultados(response.data.count);
         setConsultaRealizada(true);
       }
     } finally {
       setCarregando(false);
+    }
+  };
+
+  const getDashboardPainelGerencialSupervisaoAsync = async () => {
+    const response = await getDashboardPainelGerencialSupervisao(filtros);
+    if (response.status === HTTP_STATUS.OK) {
+      setDashboard(response.data.results);
     }
   };
 
@@ -50,12 +62,19 @@ export const PainelRelatorios = () => {
   useEffect(() => {
     buscarResultados(1);
     setPage(1);
+    getDashboardPainelGerencialSupervisaoAsync();
   }, [filtros]);
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-documentos-recebimento">
         <div className="card-body documentos-recebimento">
+          <div className="d-flex row row-cols-1">
+            {dashboard &&
+              dashboard.map((cardStatus, index) => {
+                return <CardPorStatus cardStatus={cardStatus} key={index} />;
+              })}
+          </div>
           <Filtros
             setFiltros={setFiltros}
             setRelatoriosVisita={setRelatoriosVisita}
