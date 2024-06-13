@@ -43,7 +43,7 @@ export const CardPorStatus = ({ ...props }: CardPorStatusType) => {
     setStatusSelecionado(cardStatus.status);
     setFiltros({
       status:
-        cardStatus.status !== "TODOS_OS_FORMULARIOS" ? cardStatus.status : "",
+        cardStatus.status !== "TODOS_OS_RELATORIOS" ? cardStatus.status : "",
     });
   };
 
