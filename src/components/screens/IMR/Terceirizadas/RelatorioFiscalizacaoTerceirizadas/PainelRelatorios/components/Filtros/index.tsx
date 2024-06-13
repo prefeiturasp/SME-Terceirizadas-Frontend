@@ -30,15 +30,19 @@ import "./styles.scss";
 import { Spin } from "antd";
 
 interface Props {
+  filtros: FiltrosRelatoriosVisitasInterface;
   setFiltros: Dispatch<SetStateAction<FiltrosRelatoriosVisitasInterface>>;
   setRelatoriosVisita: Dispatch<SetStateAction<RelatorioVisitaItemListagem[]>>;
   setConsultaRealizada: Dispatch<SetStateAction<boolean>>;
+  buscarResultados: (_page: number) => void;
 }
 
 export const Filtros: React.FC<Props> = ({
+  filtros,
   setFiltros,
   setRelatoriosVisita,
   setConsultaRealizada,
+  buscarResultados,
 }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] = useState<
     { nome: string; uuid: string }[]
@@ -84,15 +88,15 @@ export const Filtros: React.FC<Props> = ({
       true
     );
 
-  const onSubmit = (values: FiltrosRelatoriosVisitasInterface) => {
-    const filtros = {
+  const onSubmit = async (values: FiltrosRelatoriosVisitasInterface) => {
+    const filtros_ = {
       unidade_educacional:
         escolas.find(buscarEscolaPeloNome(values))?.uuid ?? "",
       data_inicial: values.data_inicial ?? "",
       data_final: values.data_final ?? "",
     };
-
-    setFiltros(filtros);
+    await setFiltros({ ...filtros_, status: filtros.status });
+    await buscarResultados(1);
   };
 
   const buscarEscolaPeloNome =

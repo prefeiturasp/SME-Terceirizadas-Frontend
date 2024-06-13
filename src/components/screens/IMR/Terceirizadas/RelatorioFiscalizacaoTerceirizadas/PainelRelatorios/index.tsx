@@ -14,9 +14,10 @@ import {
 import { Listagem } from "./components/Listagem";
 import { getDashboardPainelGerencialSupervisao } from "services/imr/painelGerencial";
 import { CardPorStatus } from "./components/CardPorStatus";
+import "./style.scss";
+import { DashboardSupervisaoInterface } from "./interfaces";
 
 export const PainelRelatorios = () => {
-  const [carregando, setCarregando] = useState(false);
   const [filtros, setFiltros] = useState<FiltrosRelatoriosVisitasInterface>({});
   const [page, setPage] = useState<number>(1);
   const [totalResultados, setTotalResultados] = useState(0);
@@ -25,10 +26,13 @@ export const PainelRelatorios = () => {
     RelatorioVisitaItemListagem[]
   >([]);
   const [dashboard, setDashboard] =
-    useState<Array<{ status: string; label: string; total: number }>>();
+    useState<Array<DashboardSupervisaoInterface>>();
+  const [statusSelecionado, setStatusSelecionado] = useState<string>("");
+
+  const [carregandoTabela, setCarregandoTabela] = useState(false);
 
   const buscarResultados = async (pageNumber: number) => {
-    setCarregando(true);
+    setCarregandoTabela(true);
 
     try {
       const params: URLSearchParams = gerarParametrosConsulta({
@@ -43,7 +47,7 @@ export const PainelRelatorios = () => {
         setConsultaRealizada(true);
       }
     } finally {
-      setCarregando(false);
+      setCarregandoTabela(false);
     }
   };
 
@@ -60,45 +64,61 @@ export const PainelRelatorios = () => {
   };
 
   useEffect(() => {
-    buscarResultados(1);
-    setPage(1);
     getDashboardPainelGerencialSupervisaoAsync();
-  }, [filtros]);
+  }, []);
 
   return (
-    <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-documentos-recebimento">
-        <div className="card-body documentos-recebimento">
-          <div className="d-flex row row-cols-1">
-            {dashboard &&
-              dashboard.map((cardStatus, index) => {
-                return <CardPorStatus cardStatus={cardStatus} key={index} />;
-              })}
-          </div>
-          <Filtros
-            setFiltros={setFiltros}
-            setRelatoriosVisita={setRelatoriosVisita}
-            setConsultaRealizada={setConsultaRealizada}
-          />
-          {consultaRealizada &&
-            (relatoriosVisita.length === 0 ? (
-              <div className="text-center mt-4 mb-4">
-                Nenhum resultado encontrado
-              </div>
-            ) : (
-              <>
-                <Listagem objetos={relatoriosVisita} />
-                <div className="row">
-                  <div className="col">
-                    <Paginacao
-                      current={page}
-                      total={totalResultados}
-                      onChange={proximaPagina}
+    <Spin tip="Carregando..." spinning={!dashboard}>
+      <div className="card painel-acompanhamento-supervisao mt-3">
+        <div className="card-body">
+          {dashboard && (
+            <>
+              <div className="d-flex row row-cols-1">
+                {dashboard.map((cardStatus, index) => {
+                  return (
+                    <CardPorStatus
+                      cardStatus={cardStatus}
+                      filtros={filtros}
+                      key={index}
+                      setFiltros={setFiltros}
+                      setStatusSelecionado={setStatusSelecionado}
+                      statusSelecionado={statusSelecionado}
                     />
-                  </div>
-                </div>
-              </>
-            ))}
+                  );
+                })}
+              </div>
+              {statusSelecionado && (
+                <Filtros
+                  filtros={filtros}
+                  setFiltros={setFiltros}
+                  setRelatoriosVisita={setRelatoriosVisita}
+                  setConsultaRealizada={setConsultaRealizada}
+                  buscarResultados={buscarResultados}
+                />
+              )}
+              <Spin tip="Carregando..." spinning={carregandoTabela}>
+                {consultaRealizada &&
+                  (relatoriosVisita.length === 0 ? (
+                    <div className="text-center mt-4 mb-4">
+                      Nenhum resultado encontrado
+                    </div>
+                  ) : (
+                    <>
+                      <Listagem objetos={relatoriosVisita} />
+                      <div className="row">
+                        <div className="col">
+                          <Paginacao
+                            current={page}
+                            total={totalResultados}
+                            onChange={proximaPagina}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  ))}
+              </Spin>
+            </>
+          )}
         </div>
       </div>
     </Spin>

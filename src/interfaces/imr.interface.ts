@@ -119,6 +119,7 @@ export interface FiltrosRelatoriosVisitasInterface {
   unidade_educacional?: string;
   data_inicial?: string;
   data_final?: string;
+  status?: string;
 }
 
 export interface RelatorioVisitaItemListagem {
