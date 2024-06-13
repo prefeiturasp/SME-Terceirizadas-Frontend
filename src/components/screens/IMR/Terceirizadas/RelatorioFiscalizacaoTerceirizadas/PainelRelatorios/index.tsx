@@ -83,7 +83,10 @@ export const PainelRelatorios = () => {
                       cardStatus={cardStatus}
                       filtros={filtros}
                       key={index}
+                      setConsultaRealizada={setConsultaRealizada}
                       setFiltros={setFiltros}
+                      setPage={setPage}
+                      setRelatoriosVisita={setRelatoriosVisita}
                       setStatusSelecionado={setStatusSelecionado}
                       statusSelecionado={statusSelecionado}
                     />

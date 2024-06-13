@@ -111,7 +111,7 @@ export const Filtros: React.FC<Props> = ({
 
   const onClear = () => {
     setRelatoriosVisita([]);
-    setFiltros({} as FiltrosRelatoriosVisitasInterface);
+    setFiltros({ status: filtros.status } as FiltrosRelatoriosVisitasInterface);
     setConsultaRealizada(false);
   };
 
@@ -127,6 +127,7 @@ export const Filtros: React.FC<Props> = ({
           onSubmit={onSubmit}
           onClear={onClear}
           titulo="Filtrar Resultados"
+          desabilitarBotoes={loadingEscolas}
         >
           {(values) => (
             <>
