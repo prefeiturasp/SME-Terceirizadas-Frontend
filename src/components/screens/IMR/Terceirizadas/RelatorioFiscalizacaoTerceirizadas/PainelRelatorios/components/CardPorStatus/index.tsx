@@ -25,7 +25,11 @@ export const CardPorStatus = ({ ...props }: CardPorStatusType) => {
   const onClickCard = () => {
     if (!cardStatus.total) return;
     setStatusSelecionado(cardStatus.status);
-    setFiltros({ ...filtros, status: cardStatus.status });
+    setFiltros({
+      ...filtros,
+      status:
+        cardStatus.status !== "TODOS_OS_FORMULARIOS" ? cardStatus.status : "",
+    });
   };
 
   const getClassNameCorCard = () => {

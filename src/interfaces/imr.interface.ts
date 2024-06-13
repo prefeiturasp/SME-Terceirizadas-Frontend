@@ -116,6 +116,7 @@ export interface InsumoInterface {
 }
 
 export interface FiltrosRelatoriosVisitasInterface {
+  diretoria_regional?: string;
   unidade_educacional?: string;
   data_inicial?: string;
   data_final?: string;

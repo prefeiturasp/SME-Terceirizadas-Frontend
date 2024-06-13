@@ -31,13 +31,16 @@ export const PainelRelatorios = () => {
 
   const [carregandoTabela, setCarregandoTabela] = useState(false);
 
-  const buscarResultados = async (pageNumber: number) => {
+  const buscarResultados = async (
+    filtros_: FiltrosRelatoriosVisitasInterface,
+    pageNumber: number
+  ) => {
     setCarregandoTabela(true);
 
     try {
       const params: URLSearchParams = gerarParametrosConsulta({
         page: pageNumber,
-        ...filtros,
+        ...filtros_,
       });
       const response = await listRelatoriosVisitaSupervisao(params);
 
@@ -59,7 +62,7 @@ export const PainelRelatorios = () => {
   };
 
   const proximaPagina = (page: number) => {
-    buscarResultados(page);
+    buscarResultados(filtros, page);
     setPage(page);
   };
 
