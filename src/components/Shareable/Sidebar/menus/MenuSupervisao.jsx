@@ -1,4 +1,5 @@
 import {
+  NOVO_RELATORIO_VISITAS,
   PAINEL_RELATORIOS_VISITAS,
   RELATORIO_FISCALIZACAO_TERCEIRIZADAS,
   SUPERVISAO,
@@ -24,9 +25,9 @@ export const MenuSupervisao = ({ ...props }) => {
           Painel de Acompanhamento
         </LeafItem>
         <LeafItem
-          to={`/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}`}
+          to={`/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${NOVO_RELATORIO_VISITAS}`}
         >
-          Relatório de Fiscalização
+          Novo Relatório de Visita
         </LeafItem>
       </SubMenu>
     </Menu>

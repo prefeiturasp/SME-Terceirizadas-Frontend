@@ -20,6 +20,7 @@ import { dateDelta } from "helpers/utilities.js";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getEscolasTercTotal } from "services/escola.service";
 
+import { FormApi } from "final-form";
 import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
 import {
   EscolaOptionsInterface,
@@ -28,7 +29,6 @@ import {
 } from "interfaces/imr.interface";
 import { ResponseDiretoriasRegionaisSimplissimaInterface } from "interfaces/responses.interface";
 import "./styles.scss";
-import { FormApi } from "final-form";
 
 interface Props {
   filtros: FiltrosRelatoriosVisitasInterface;
