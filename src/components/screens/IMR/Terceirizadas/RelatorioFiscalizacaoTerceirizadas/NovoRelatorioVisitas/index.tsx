@@ -182,6 +182,7 @@ export const NovoRelatorioVisitas = () => {
                 getTiposOcorrenciaPorEditalNutrisupervisaoAsync={
                   getTiposOcorrenciaPorEditalNutrisupervisaoAsync
                 }
+                setTiposOcorrencia={setTiposOcorrencia}
               />
               <div className="row">
                 <div className="col-12">

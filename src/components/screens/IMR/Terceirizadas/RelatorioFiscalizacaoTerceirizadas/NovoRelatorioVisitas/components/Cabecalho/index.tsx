@@ -18,6 +18,12 @@ import {
   EscolaSimplissimaInterface,
 } from "interfaces/escola.interface";
 import {
+  EscolaLabelInterface,
+  NovoRelatorioVisitasFormInterface,
+  PeriodoDeVisitaInterface,
+  TipoOcorrenciaInterface,
+} from "interfaces/imr.interface";
+import {
   ResponseDiretoriasRegionaisSimplissimaInterface,
   ResponseGetEscolasTercTotalInterface,
   ResponseGetQuantidadeAlunosMatriculadosPorDataInterface,
@@ -32,11 +38,6 @@ import {
   getQuantidadeAlunosMatriculadosPorData,
 } from "services/escola.service";
 import { getPeriodosVisita } from "services/imr/relatorioFiscalizacaoTerceirizadas";
-import {
-  PeriodoDeVisitaInterface,
-  EscolaLabelInterface,
-  NovoRelatorioVisitasFormInterface,
-} from "interfaces/imr.interface";
 
 type CabecahoType = {
   form: FormApi<any, Partial<any>>;
@@ -47,6 +48,9 @@ type CabecahoType = {
     _form: FormApi<any, Partial<any>>,
     _escola: EscolaLabelInterface
   ) => Promise<void>;
+  setTiposOcorrencia: (
+    _tiposOcorrencia: Array<TipoOcorrenciaInterface>
+  ) => void;
 };
 
 export const Cabecalho = ({ ...props }: CabecahoType) => {
@@ -67,6 +71,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
     values,
     setEscolaSelecionada,
     getTiposOcorrenciaPorEditalNutrisupervisaoAsync,
+    setTiposOcorrencia,
   } = props;
 
   const getDiretoriasRegionaisAsync = async (): Promise<void> => {
@@ -184,6 +189,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                     required
                     onChangeEffect={(e: ChangeEvent<HTMLInputElement>) => {
                       const value = e.target.value;
+                      setTiposOcorrencia(undefined);
                       form.change("escola", undefined);
                       form.change("lote", undefined);
                       form.change("terceirizada", undefined);
@@ -212,6 +218,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       required
                       disabled={!values.diretoria_regional || loadingEscolas}
                       inputOnChange={async (value: string) => {
+                        setTiposOcorrencia(undefined);
                         const _escola = escolas.find(
                           (e: EscolaLabelInterface) => e.value === value
                         );
