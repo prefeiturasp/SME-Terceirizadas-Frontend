@@ -28,6 +28,7 @@ import {
 } from "interfaces/imr.interface";
 import { ResponseDiretoriasRegionaisSimplissimaInterface } from "interfaces/responses.interface";
 import "./styles.scss";
+import { FormApi } from "final-form";
 
 interface Props {
   filtros: FiltrosRelatoriosVisitasInterface;
@@ -38,6 +39,8 @@ interface Props {
     _filtros: FiltrosRelatoriosVisitasInterface,
     _page: number
   ) => void;
+  form_: FormApi;
+  setForm: (_form: FormApi) => void;
 }
 
 export const Filtros: React.FC<Props> = ({
@@ -46,6 +49,8 @@ export const Filtros: React.FC<Props> = ({
   setRelatoriosVisita,
   setConsultaRealizada,
   buscarResultados,
+  form_,
+  setForm,
 }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] = useState<
     { nome: string; uuid: string }[]
@@ -129,8 +134,9 @@ export const Filtros: React.FC<Props> = ({
           titulo="Filtrar Resultados"
           desabilitarBotoes={loadingEscolas}
         >
-          {(values) => (
+          {(values, form) => (
             <>
+              {!form_ && setForm(form)}
               <div className="row">
                 <div className="col-6">
                   <Field

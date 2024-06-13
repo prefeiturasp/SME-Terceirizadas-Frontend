@@ -7,12 +7,13 @@ import {
 } from "interfaces/imr.interface";
 import { DashboardSupervisaoInterface } from "../../interfaces";
 import { CLASSE_COR_CARD } from "./constants";
+import { FormApi } from "final-form";
 
 type CardPorStatusType = {
   cardStatus: DashboardSupervisaoInterface;
+  form: FormApi;
   statusSelecionado: string;
   setStatusSelecionado: (_statusSelecionado: string) => void;
-  filtros: FiltrosRelatoriosVisitasInterface;
   setFiltros: (_filtros: FiltrosRelatoriosVisitasInterface) => void;
   setPage: (_page: number) => void;
   setRelatoriosVisita: (
@@ -24,7 +25,7 @@ type CardPorStatusType = {
 export const CardPorStatus = ({ ...props }: CardPorStatusType) => {
   const {
     cardStatus,
-    filtros,
+    form,
     setFiltros,
     statusSelecionado,
     setStatusSelecionado,
@@ -35,12 +36,12 @@ export const CardPorStatus = ({ ...props }: CardPorStatusType) => {
 
   const onClickCard = () => {
     if (!cardStatus.total) return;
+    form?.reset();
     setPage(1);
     setRelatoriosVisita([]);
     setConsultaRealizada(false);
     setStatusSelecionado(cardStatus.status);
     setFiltros({
-      ...filtros,
       status:
         cardStatus.status !== "TODOS_OS_FORMULARIOS" ? cardStatus.status : "",
     });

@@ -16,6 +16,7 @@ import { getDashboardPainelGerencialSupervisao } from "services/imr/painelGerenc
 import { CardPorStatus } from "./components/CardPorStatus";
 import "./style.scss";
 import { DashboardSupervisaoInterface } from "./interfaces";
+import { FormApi } from "final-form";
 
 export const PainelRelatorios = () => {
   const [filtros, setFiltros] = useState<FiltrosRelatoriosVisitasInterface>({});
@@ -30,6 +31,7 @@ export const PainelRelatorios = () => {
   const [statusSelecionado, setStatusSelecionado] = useState<string>("");
 
   const [carregandoTabela, setCarregandoTabela] = useState(false);
+  const [form, setForm] = useState<FormApi>();
 
   const buscarResultados = async (
     filtros_: FiltrosRelatoriosVisitasInterface,
@@ -81,7 +83,7 @@ export const PainelRelatorios = () => {
                   return (
                     <CardPorStatus
                       cardStatus={cardStatus}
-                      filtros={filtros}
+                      form={form}
                       key={index}
                       setConsultaRealizada={setConsultaRealizada}
                       setFiltros={setFiltros}
@@ -100,6 +102,8 @@ export const PainelRelatorios = () => {
                   setRelatoriosVisita={setRelatoriosVisita}
                   setConsultaRealizada={setConsultaRealizada}
                   buscarResultados={buscarResultados}
+                  form_={form}
+                  setForm={setForm}
                 />
               )}
               <Spin tip="Carregando..." spinning={carregandoTabela}>
