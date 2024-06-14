@@ -19,6 +19,7 @@ type Props = {
   onSubmit: (_values: Record<string, any>) => void;
   onClear: () => void;
   manterFiltros?: Array<string>;
+  desabilitarBotoes?: boolean;
 };
 
 const CollapseFiltros: React.FC<Props> = ({
@@ -26,6 +27,7 @@ const CollapseFiltros: React.FC<Props> = ({
   children,
   onSubmit,
   onClear,
+  desabilitarBotoes,
   manterFiltros,
 }) => {
   const id = "collapseFiltros";
@@ -108,6 +110,7 @@ const CollapseFiltros: React.FC<Props> = ({
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                       className="float-end ms-3"
+                      disabled={desabilitarBotoes}
                     />
 
                     <Botao
@@ -116,6 +119,7 @@ const CollapseFiltros: React.FC<Props> = ({
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="float-end ms-3"
                       onClick={() => limparFiltros(form, values)}
+                      disabled={desabilitarBotoes}
                     />
                   </div>
                 </form>

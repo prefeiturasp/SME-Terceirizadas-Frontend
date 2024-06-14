@@ -34,7 +34,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
     tiposOcorrencia.forEach((tipoOcorrencia) => {
       form.change(`ocorrencia_${tipoOcorrencia.uuid}`, "sim");
     });
-  }, []);
+  }, [escolaSelecionada]);
 
   let currentIndex = 0;
   let prevPosition;

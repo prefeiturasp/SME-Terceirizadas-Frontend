@@ -1,3 +1,6 @@
+import { Spin } from "antd";
+import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
 import React, {
   ChangeEvent,
   Dispatch,
@@ -6,39 +9,48 @@ import React, {
   useState,
 } from "react";
 import { Field } from "react-final-form";
-import moment from "moment";
-import HTTP_STATUS from "http-status-codes";
-import Select from "components/Shareable/Select";
+
 import AutoCompleteSelectField from "components/Shareable/AutoCompleteSelectField";
-import { InputComData } from "components/Shareable/DatePicker";
 import CollapseFiltros from "components/Shareable/CollapseFiltros";
+import { InputComData } from "components/Shareable/DatePicker";
 import Label from "components/Shareable/Label";
-import { getEscolasTercTotal } from "services/escola.service";
-import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
+import Select from "components/Shareable/Select";
 import { getListaFiltradaAutoCompleteSelect } from "helpers/autoCompleteSelect";
 import { dateDelta } from "helpers/utilities.js";
+import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
+import { getEscolasTercTotal } from "services/escola.service";
 
+import { FormApi } from "final-form";
+import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
 import {
   EscolaOptionsInterface,
   FiltrosRelatoriosVisitasInterface,
   RelatorioVisitaItemListagem,
 } from "interfaces/imr.interface";
 import { ResponseDiretoriasRegionaisSimplissimaInterface } from "interfaces/responses.interface";
-import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
-
 import "./styles.scss";
-import { Spin } from "antd";
 
 interface Props {
+  filtros: FiltrosRelatoriosVisitasInterface;
   setFiltros: Dispatch<SetStateAction<FiltrosRelatoriosVisitasInterface>>;
   setRelatoriosVisita: Dispatch<SetStateAction<RelatorioVisitaItemListagem[]>>;
   setConsultaRealizada: Dispatch<SetStateAction<boolean>>;
+  buscarResultados: (
+    _filtros: FiltrosRelatoriosVisitasInterface,
+    _page: number
+  ) => void;
+  form_: FormApi;
+  setForm: (_form: FormApi) => void;
 }
 
 export const Filtros: React.FC<Props> = ({
+  filtros,
   setFiltros,
   setRelatoriosVisita,
   setConsultaRealizada,
+  buscarResultados,
+  form_,
+  setForm,
 }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] = useState<
     { nome: string; uuid: string }[]
@@ -84,15 +96,17 @@ export const Filtros: React.FC<Props> = ({
       true
     );
 
-  const onSubmit = (values: FiltrosRelatoriosVisitasInterface) => {
-    const filtros = {
+  const onSubmit = async (values: FiltrosRelatoriosVisitasInterface) => {
+    let filtros_ = {
+      diretoria_regional: values.diretoria_regional ?? "",
       unidade_educacional:
         escolas.find(buscarEscolaPeloNome(values))?.uuid ?? "",
       data_inicial: values.data_inicial ?? "",
       data_final: values.data_final ?? "",
     };
-
-    setFiltros(filtros);
+    if (filtros.status) filtros_["status"] = filtros.status;
+    await setFiltros({ ...filtros_ });
+    await buscarResultados(filtros_, 1);
   };
 
   const buscarEscolaPeloNome =
@@ -102,7 +116,7 @@ export const Filtros: React.FC<Props> = ({
 
   const onClear = () => {
     setRelatoriosVisita([]);
-    setFiltros({} as FiltrosRelatoriosVisitasInterface);
+    setFiltros({ status: filtros.status } as FiltrosRelatoriosVisitasInterface);
     setConsultaRealizada(false);
   };
 
@@ -118,9 +132,11 @@ export const Filtros: React.FC<Props> = ({
           onSubmit={onSubmit}
           onClear={onClear}
           titulo="Filtrar Resultados"
+          desabilitarBotoes={loadingEscolas}
         >
-          {(values) => (
+          {(values, form) => (
             <>
+              {!form_ && setForm(form)}
               <div className="row">
                 <div className="col-6">
                   <Field
@@ -129,11 +145,17 @@ export const Filtros: React.FC<Props> = ({
                       { nome: "Selecione uma DRE", uuid: "" },
                       ...diretoriasRegionais,
                     ]}
+                    disabled={loadingEscolas}
+                    naoDesabilitarPrimeiraOpcao
                     name="diretoria_regional"
                     label="Diretoria Regional de Educação"
                     onChangeEffect={(e: ChangeEvent<HTMLInputElement>) => {
                       const value = e.target.value;
-                      buscarListaEscolas(value);
+                      if (value) {
+                        buscarListaEscolas(value);
+                      } else {
+                        setEscolas([]);
+                      }
                     }}
                   />
                 </div>
