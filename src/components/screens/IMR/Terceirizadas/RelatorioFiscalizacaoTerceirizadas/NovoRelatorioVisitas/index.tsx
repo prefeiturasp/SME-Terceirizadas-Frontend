@@ -5,6 +5,12 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import {
+  PAINEL_RELATORIOS_VISITAS,
+  SUPERVISAO,
+  TERCEIRIZADAS,
+} from "configs/constants";
+import { FormApi } from "final-form";
 import arrayMutators from "final-form-arrays";
 import HTTP_STATUS from "http-status-codes";
 import {
@@ -18,19 +24,18 @@ import React, { useEffect, useState } from "react";
 import { Form } from "react-final-form";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import {
-  createRascunhoFormularioSupervisao,
   createFormularioSupervisao,
+  createRascunhoFormularioSupervisao,
   getTiposOcorrenciaPorEditalNutrisupervisao,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { Anexos } from "./components/Anexos";
 import { Cabecalho } from "./components/Cabecalho";
 import { Formulario } from "./components/Formulario";
 import { ModalCancelaPreenchimento } from "./components/ModalCancelaPreenchimento";
+import { ModalSalvar } from "./components/ModalSalvar";
 import { ModalSalvarRascunho } from "./components/ModalSalvarRascunho";
 import { formataPayload, validarFormulariosTiposOcorrencia } from "./helpers";
 import "./styles.scss";
-import { FormApi } from "final-form";
-import { ModalSalvar } from "./components/ModalSalvar";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
@@ -67,7 +72,7 @@ export const NovoRelatorioVisitas = () => {
     );
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Rascunho do Relatório de Fiscalização salvo com sucesso!");
-      navigate(-1);
+      navigate(`/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`);
     } else {
       toastError(
         "Erro ao criar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
@@ -88,7 +93,7 @@ export const NovoRelatorioVisitas = () => {
     );
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Relatório de Fiscalização enviado com sucesso!");
-      navigate(-1);
+      navigate(`/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`);
     } else {
       toastError(
         "Erro ao enviar Relatório de Fiscalização. Tente novamente mais tarde."
@@ -177,6 +182,7 @@ export const NovoRelatorioVisitas = () => {
                 getTiposOcorrenciaPorEditalNutrisupervisaoAsync={
                   getTiposOcorrenciaPorEditalNutrisupervisaoAsync
                 }
+                setTiposOcorrencia={setTiposOcorrencia}
               />
               <div className="row">
                 <div className="col-12">

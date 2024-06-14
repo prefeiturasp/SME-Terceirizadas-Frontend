@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
 
 import { gerarParametrosConsulta } from "helpers/utilities";
@@ -11,9 +12,13 @@ import {
   RelatorioVisitaItemListagem,
 } from "interfaces/imr.interface";
 import { Listagem } from "./components/Listagem";
+import { getDashboardPainelGerencialSupervisao } from "services/imr/painelGerencial";
+import { CardPorStatus } from "./components/CardPorStatus";
+import "./style.scss";
+import { DashboardSupervisaoInterface } from "./interfaces";
+import { FormApi } from "final-form";
 
 export const PainelRelatorios = () => {
-  const [carregando, setCarregando] = useState(false);
   const [filtros, setFiltros] = useState<FiltrosRelatoriosVisitasInterface>({});
   const [page, setPage] = useState<number>(1);
   const [totalResultados, setTotalResultados] = useState(0);
@@ -21,65 +26,109 @@ export const PainelRelatorios = () => {
   const [relatoriosVisita, setRelatoriosVisita] = useState<
     RelatorioVisitaItemListagem[]
   >([]);
+  const [dashboard, setDashboard] =
+    useState<Array<DashboardSupervisaoInterface>>();
+  const [statusSelecionado, setStatusSelecionado] = useState<string>("");
 
-  const buscarResultados = async (pageNumber: number) => {
-    setCarregando(true);
+  const [carregandoTabela, setCarregandoTabela] = useState(false);
+  const [form, setForm] = useState<FormApi>();
+
+  const buscarResultados = async (
+    filtros_: FiltrosRelatoriosVisitasInterface,
+    pageNumber: number
+  ) => {
+    setCarregandoTabela(true);
 
     try {
       const params: URLSearchParams = gerarParametrosConsulta({
         page: pageNumber,
-        ...filtros,
+        ...filtros_,
       });
       const response = await listRelatoriosVisitaSupervisao(params);
 
-      if (response?.status === 200) {
+      if (response.status === HTTP_STATUS.OK) {
         setRelatoriosVisita(response.data.results);
         setTotalResultados(response.data.count);
         setConsultaRealizada(true);
       }
     } finally {
-      setCarregando(false);
+      setCarregandoTabela(false);
+    }
+  };
+
+  const getDashboardPainelGerencialSupervisaoAsync = async () => {
+    const response = await getDashboardPainelGerencialSupervisao(filtros);
+    if (response.status === HTTP_STATUS.OK) {
+      setDashboard(response.data.results);
     }
   };
 
   const proximaPagina = (page: number) => {
-    buscarResultados(page);
+    buscarResultados(filtros, page);
     setPage(page);
   };
 
   useEffect(() => {
-    buscarResultados(1);
-    setPage(1);
-  }, [filtros]);
+    getDashboardPainelGerencialSupervisaoAsync();
+  }, []);
 
   return (
-    <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-documentos-recebimento">
-        <div className="card-body documentos-recebimento">
-          <Filtros
-            setFiltros={setFiltros}
-            setRelatoriosVisita={setRelatoriosVisita}
-            setConsultaRealizada={setConsultaRealizada}
-          />
-          {consultaRealizada &&
-            (relatoriosVisita.length === 0 ? (
-              <div className="text-center mt-4 mb-4">
-                Nenhum resultado encontrado
-              </div>
-            ) : (
-              <>
-                <Listagem objetos={relatoriosVisita} />
-                <div className="row">
-                  <div className="col">
-                    <Paginacao
-                      current={page}
-                      total={totalResultados}
-                      onChange={proximaPagina}
+    <Spin tip="Carregando..." spinning={!dashboard}>
+      <div className="card painel-acompanhamento-supervisao mt-3">
+        <div className="card-body">
+          {dashboard && (
+            <>
+              <div className="d-flex row row-cols-1">
+                {dashboard.map((cardStatus, index) => {
+                  return (
+                    <CardPorStatus
+                      cardStatus={cardStatus}
+                      form={form}
+                      key={index}
+                      setConsultaRealizada={setConsultaRealizada}
+                      setFiltros={setFiltros}
+                      setPage={setPage}
+                      setRelatoriosVisita={setRelatoriosVisita}
+                      setStatusSelecionado={setStatusSelecionado}
+                      statusSelecionado={statusSelecionado}
                     />
-                  </div>
-                </div>
-              </>
-            ))}
+                  );
+                })}
+              </div>
+              {statusSelecionado && (
+                <Filtros
+                  filtros={filtros}
+                  setFiltros={setFiltros}
+                  setRelatoriosVisita={setRelatoriosVisita}
+                  setConsultaRealizada={setConsultaRealizada}
+                  buscarResultados={buscarResultados}
+                  form_={form}
+                  setForm={setForm}
+                />
+              )}
+              <Spin tip="Carregando..." spinning={carregandoTabela}>
+                {consultaRealizada &&
+                  (relatoriosVisita.length === 0 ? (
+                    <div className="text-center mt-4 mb-4">
+                      Nenhum resultado encontrado
+                    </div>
+                  ) : (
+                    <>
+                      <Listagem objetos={relatoriosVisita} />
+                      <div className="row">
+                        <div className="col">
+                          <Paginacao
+                            current={page}
+                            total={totalResultados}
+                            onChange={proximaPagina}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  ))}
+              </Spin>
+            </>
+          )}
         </div>
       </div>
     </Spin>

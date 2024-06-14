@@ -24,10 +24,6 @@ const anteriores = [
     href: `/`,
     titulo: "Terceirizadas",
   },
-  {
-    href: `/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}`,
-    titulo: "Relatório de Fiscalização Terceirizadas",
-  },
 ];
 
 export const NovoRelatorioVisitasPage = () => (

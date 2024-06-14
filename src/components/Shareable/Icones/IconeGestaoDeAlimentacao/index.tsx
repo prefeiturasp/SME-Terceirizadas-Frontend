@@ -47,5 +47,3 @@ export const IconeGestaoDeAlimentacao = () => {
     </svg>
   );
 };
-
-export default IconeGestaoDeAlimentacao;

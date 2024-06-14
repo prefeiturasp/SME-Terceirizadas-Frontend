@@ -6,14 +6,12 @@ export const CardLogo = (props) => {
   return (
     <div
       onClick={onClick}
-      className={disabled ? "card card-logo disabled" : "card card-logo"}
+      className={`card card-logo${disabled ? "disabled" : ""}`}
     >
-      <div className="card-body">
+      <div className="card-body mt-4">
         <div className="icon-component">{props.children}</div>
         <div className="card-title">{titulo}</div>
       </div>
     </div>
   );
 };
-
-export default CardLogo;
