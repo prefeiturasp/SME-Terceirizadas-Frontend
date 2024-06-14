@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import CardLogo from "../../Shareable/CardLogo/CardLogo";
+import { CardLogo } from "../../Shareable/CardLogo/CardLogo";
 import IconeLote from "../../Shareable/Icones/Cadastros/IconeLote";
 import IconeEmpresa from "../../Shareable/Icones/Cadastros/IconeEmpresa";
 import IconeEdital from "../../Shareable/Icones/Cadastros/IconeCadastroEdital";

@@ -1,34 +1,42 @@
+import { Col, Row } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col } from "antd";
-import CardLogo from "components/Shareable/CardLogo/CardLogo";
-import IconeGestaoDeAlimentacao from "components/Shareable/Icones/IconeGestaoDeAlimentacao";
-import IconeGestaoDeProduto from "components/Shareable/Icones/IconeGestaoDeProduto";
-import IconeDietaEspecial from "components/Shareable/Icones/IconeDietaEspecial";
-import IconeAbastecimento from "components/Shareable/Icones/IconeAbastecimento";
-import IconeMedicaoInicial from "components/Shareable/Icones/IconeMedicaoInicial";
+
+import { CardLogo } from "components/Shareable/CardLogo/CardLogo";
+import { IconeDietaEspecial } from "components/Shareable/Icones/IconeDietaEspecial";
+import { IconeGestaoDeAlimentacao } from "components/Shareable/Icones/IconeGestaoDeAlimentacao";
+import { IconeGestaoDeProduto } from "components/Shareable/Icones/IconeGestaoDeProduto";
+import { IconeMedicaoInicial } from "components/Shareable/Icones/IconeMedicaoInicial";
+import { IconeAbastecimento } from "./components/IconeAbastecimento";
+import { IconeSupervisaoTerceirizadas } from "./components/IconeSupervisaoTerceirizadas";
+
 import {
-  usuarioEhEmpresaTerceirizada,
-  usuarioEhQualquerCODAE,
+  ACOMPANHAMENTO_DE_LANCAMENTOS,
+  PAINEL_RELATORIOS_VISITAS,
+  SUPERVISAO,
+  TERCEIRIZADAS,
+} from "configs/constants";
+import { ENVIRONMENT } from "constants/config";
+import {
+  exibirGA,
+  exibirModuloMedicaoInicial,
+  usuarioEhCODAEDietaEspecial,
+  usuarioEhCODAEGabinete,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
-  usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
+  usuarioEhEmpresaTerceirizada,
+  usuarioEhEscolaAbastecimento,
+  usuarioEhEscolaAbastecimentoDiretor,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
-  usuarioEhEscolaAbastecimento,
-  exibirGA,
-  usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaAbastecimentoDiretor,
-  exibirModuloMedicaoInicial,
   usuarioEhOrgaoFiscalizador,
+  usuarioEhQualquerCODAE,
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoParceira,
-  usuarioEhCODAEGabinete,
 } from "helpers/utilities";
-import { ACOMPANHAMENTO_DE_LANCAMENTOS } from "configs/constants";
-import { ENVIRONMENT } from "constants/config";
 
 const PainelInicial = () => {
   const navigate = useNavigate();
@@ -136,6 +144,20 @@ const PainelInicial = () => {
             onClick={() => navigate("/logistica/conferir-entrega")}
           >
             <IconeAbastecimento />
+          </CardLogo>
+        </Col>
+      )}
+      {usuarioEhNutricionistaSupervisao() && (
+        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+          <CardLogo
+            titulo={"Supervisão Terceirizadas"}
+            onClick={() =>
+              navigate(
+                `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`
+              )
+            }
+          >
+            <IconeSupervisaoTerceirizadas />
           </CardLogo>
         </Col>
       )}
