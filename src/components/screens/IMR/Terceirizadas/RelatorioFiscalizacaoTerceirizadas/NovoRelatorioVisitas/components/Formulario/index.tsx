@@ -40,7 +40,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
   let prevPosition;
   let prevCategoria;
 
-  const checaPosicao = (tipoOcorrencia) => {
+  const checaPosicao = (tipoOcorrencia: TipoOcorrenciaInterface) => {
     if (
       tipoOcorrencia.categoria.nome !== prevCategoria ||
       tipoOcorrencia.posicao !== prevPosition
@@ -52,6 +52,64 @@ export const Formulario = ({ ...props }: FormularioType) => {
     prevPosition = tipoOcorrencia.posicao;
 
     return currentIndex;
+  };
+
+  const getRowSpanTiposOcorrenciaMesmaPosicao = (
+    tipoOcorrencia: TipoOcorrenciaInterface
+  ) => {
+    const tiposOcorrenciaMesmaPosicao = tiposOcorrencia.filter(
+      (tipoOcorrencia_) =>
+        tipoOcorrencia_.categoria.uuid === tipoOcorrencia.categoria.uuid &&
+        tipoOcorrencia_.posicao === tipoOcorrencia.posicao
+    );
+    let rowSpan = tiposOcorrenciaMesmaPosicao.length;
+
+    tiposOcorrenciaMesmaPosicao.forEach((tipoOcorrencia_) => {
+      if (
+        values[`ocorrencia_${tipoOcorrencia_.uuid}`] === "nao" ||
+        values[`ocorrencia_${tipoOcorrencia_.uuid}`] === "nao_se_aplica"
+      ) {
+        rowSpan += 1;
+        if (exibeBotaoAdicionar(tipoOcorrencia_))
+          rowSpan += values[`grupos_${tipoOcorrencia_.uuid}`].length;
+      }
+    });
+
+    return rowSpan;
+  };
+
+  const getRowSpan = (tipoOcorrencia: TipoOcorrenciaInterface) => {
+    if (
+      tiposOcorrencia.filter(
+        (tipoOcorrencia_) =>
+          tipoOcorrencia_.categoria.uuid === tipoOcorrencia.categoria.uuid &&
+          tipoOcorrencia_.posicao === tipoOcorrencia.posicao
+      ).length > 1
+    ) {
+      return getRowSpanTiposOcorrenciaMesmaPosicao(tipoOcorrencia);
+    }
+    let rowSpan = 1;
+    if (
+      values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" ||
+      values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao_se_aplica"
+    ) {
+      rowSpan = 2;
+      if (exibeBotaoAdicionar(tipoOcorrencia))
+        rowSpan += values[`grupos_${tipoOcorrencia.uuid}`].length;
+    }
+    return rowSpan;
+  };
+
+  const exibeColunaIndice = (
+    tipoOcorrencia: TipoOcorrenciaInterface,
+    index: number
+  ) => {
+    return (
+      index === 0 ||
+      tipoOcorrencia.categoria.uuid !==
+        tiposOcorrencia[index - 1].categoria.uuid ||
+      tipoOcorrencia.posicao !== tiposOcorrencia[index - 1].posicao
+    );
   };
 
   return (
@@ -72,16 +130,6 @@ export const Formulario = ({ ...props }: FormularioType) => {
         <div className="col-12">
           <table>
             {tiposOcorrencia.map((tipoOcorrencia, index) => {
-              const shouldIncreaseIndex =
-                values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" &&
-                exibeBotaoAdicionar(tipoOcorrencia)
-                  ? 2 + values[`grupos_${tipoOcorrencia.uuid}`].length
-                  : values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
-                      "nao_se_aplica" ||
-                    values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao"
-                  ? 2
-                  : 1;
-
               return (
                 <React.Fragment key={index}>
                   {(index === 0 ||
@@ -110,12 +158,14 @@ export const Formulario = ({ ...props }: FormularioType) => {
                   )}
 
                   <tr className="tipo-ocorrencia">
-                    <td
-                      rowSpan={shouldIncreaseIndex}
-                      className="fw-bold text-center"
-                    >
-                      {checaPosicao(tipoOcorrencia)}
-                    </td>
+                    {exibeColunaIndice(tipoOcorrencia, index) && (
+                      <td
+                        rowSpan={getRowSpan(tipoOcorrencia)}
+                        className="fw-bold text-center"
+                      >
+                        {checaPosicao(tipoOcorrencia)}
+                      </td>
+                    )}
                     <td className="p-3">
                       <div>
                         <b>{tipoOcorrencia.titulo}:</b>{" "}
