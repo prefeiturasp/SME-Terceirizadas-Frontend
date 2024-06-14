@@ -36,6 +36,24 @@ export const Formulario = ({ ...props }: FormularioType) => {
     });
   }, []);
 
+  let currentIndex = 0;
+  let prevPosition;
+  let prevCategoria;
+
+  const checaPosicao = (tipoOcorrencia) => {
+    if (
+      tipoOcorrencia.categoria.nome !== prevCategoria ||
+      tipoOcorrencia.posicao !== prevPosition
+    ) {
+      currentIndex++;
+    }
+
+    prevCategoria = tipoOcorrencia.categoria.nome;
+    prevPosition = tipoOcorrencia.posicao;
+
+    return currentIndex;
+  };
+
   return (
     <div className="formulario">
       <div className="row mt-3 mb-3">
@@ -54,6 +72,16 @@ export const Formulario = ({ ...props }: FormularioType) => {
         <div className="col-12">
           <table>
             {tiposOcorrencia.map((tipoOcorrencia, index) => {
+              const shouldIncreaseIndex =
+                values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" &&
+                exibeBotaoAdicionar(tipoOcorrencia)
+                  ? 2 + values[`grupos_${tipoOcorrencia.uuid}`].length
+                  : values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
+                      "nao_se_aplica" ||
+                    values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao"
+                  ? 2
+                  : 1;
+
               return (
                 <React.Fragment key={index}>
                   {(index === 0 ||
@@ -83,20 +111,10 @@ export const Formulario = ({ ...props }: FormularioType) => {
 
                   <tr className="tipo-ocorrencia">
                     <td
-                      rowSpan={
-                        values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" &&
-                        exibeBotaoAdicionar(tipoOcorrencia)
-                          ? 2 + values[`grupos_${tipoOcorrencia.uuid}`].length
-                          : values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
-                              "nao_se_aplica" ||
-                            values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
-                              "nao"
-                          ? 2
-                          : 1
-                      }
+                      rowSpan={shouldIncreaseIndex}
                       className="fw-bold text-center"
                     >
-                      {index + 1}
+                      {checaPosicao(tipoOcorrencia)}
                     </td>
                     <td className="p-3">
                       <div>
