@@ -40,15 +40,15 @@ export const Formulario = ({ ...props }: FormularioType) => {
   let prevPosition;
   let prevCategoria;
 
-  const checaPosicao = (tipoOcorrencia: TipoOcorrenciaInterface) => {
+  const getIndicePosicao = (tipoOcorrencia: TipoOcorrenciaInterface) => {
     if (
-      tipoOcorrencia.categoria.nome !== prevCategoria ||
+      tipoOcorrencia.categoria.uuid !== prevCategoria ||
       tipoOcorrencia.posicao !== prevPosition
     ) {
       currentIndex++;
     }
 
-    prevCategoria = tipoOcorrencia.categoria.nome;
+    prevCategoria = tipoOcorrencia.categoria.uuid;
     prevPosition = tipoOcorrencia.posicao;
 
     return currentIndex;
@@ -163,7 +163,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                         rowSpan={getRowSpan(tipoOcorrencia)}
                         className="fw-bold text-center"
                       >
-                        {checaPosicao(tipoOcorrencia)}
+                        {getIndicePosicao(tipoOcorrencia)}
                       </td>
                     )}
                     <td className="p-3">
