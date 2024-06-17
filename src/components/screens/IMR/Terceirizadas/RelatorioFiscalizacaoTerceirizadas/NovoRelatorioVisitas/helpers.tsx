@@ -9,28 +9,45 @@ import { deepCopy } from "helpers/utilities";
 export const formataPayload = (
   values: NovoRelatorioVisitasFormInterface,
   escolaSelecionada: EscolaLabelInterface,
-  anexos: Array<ArquivoInterface>
+  anexos: Array<ArquivoInterface>,
+  respostasOcorrenciaNaoSeAplica?: Array<any>
 ) => {
   let values_ = deepCopy(values);
   values_.escola = escolaSelecionada.uuid;
   values_.acompanhou_visita = values.acompanhou_visita === "sim";
 
+  const { respostas: ocorrencias_nao_se_aplica } = formatOcorrenciasNaoSeAplica(
+    values,
+    respostasOcorrenciaNaoSeAplica
+  );
+  const { respostas: ocorrencias } = formatOcorrencias(values);
+
+  return { ...values_, ocorrencias_nao_se_aplica, ocorrencias, anexos };
+};
+
+const formatOcorrenciasNaoSeAplica = (
+  values: NovoRelatorioVisitasFormInterface,
+  respostasOcorrenciaNaoSeAplica?: Array<any>
+) => {
   const ocorrencias_nao_se_aplica = [];
 
-  Object.keys(values_).forEach((key) => {
-    if (key.includes("ocorrencia_") && values_[key] === "nao_se_aplica") {
+  Object.keys(values).forEach((key) => {
+    if (key.includes("ocorrencia_") && values[key] === "nao_se_aplica") {
       const tipoOcorrenciaUUID = key.split("_")[1];
-      const descricao = values_[`descricao_${tipoOcorrenciaUUID}`];
+      const descricao = values[`descricao_${tipoOcorrenciaUUID}`];
+      const _resposta = respostasOcorrenciaNaoSeAplica.find(
+        (_resposta) => _resposta.tipo_ocorrencia === tipoOcorrenciaUUID
+      );
+      const uuidResposta = _resposta ? _resposta.uuid : null;
       ocorrencias_nao_se_aplica.push({
         tipo_ocorrencia: tipoOcorrenciaUUID,
         descricao,
+        uuid: uuidResposta,
       });
     }
   });
 
-  const { respostas: ocorrencias } = formatOcorrencias(values);
-
-  return { ...values_, ocorrencias_nao_se_aplica, ocorrencias, anexos };
+  return { respostas: ocorrencias_nao_se_aplica };
 };
 
 const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
@@ -50,8 +67,9 @@ const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
             gruposDeRespostas.forEach((grupo: string, indexGrupo: number) => {
               if (grupo) {
                 Object.keys(grupo).forEach((keyGrupo: string) => {
-                  const parametrizacaoUUID = keyGrupo.split("_")[4];
+                  const parametrizacaoUUID = keyGrupo.split("_")[3];
                   const resposta = grupo[keyGrupo];
+                  const respostaUUID = keyGrupo.split("_")[5];
                   const respostaDuplicada = respostas.find(
                     (resposta) =>
                       resposta.parametrizacao === parametrizacaoUUID &&
@@ -63,6 +81,7 @@ const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
                     }
                   } else {
                     respostas.push({
+                      uuid: respostaUUID,
                       tipoOcorrencia: tipoOcorrenciaUUID,
                       parametrizacao: parametrizacaoUUID,
                       resposta: resposta,
@@ -86,7 +105,6 @@ export const validarFormulariosTiposOcorrencia = (
   tiposOcorrencia: Array<TipoOcorrenciaInterface>
 ) => {
   const { respostas, ocorrenciasNao, grupos } = formatOcorrencias(values);
-
   // valida todos os tipos de ocorrência assinalados como "não"
   const listaValidacaoPorTipoOcorrencia = ocorrenciasNao.map(
     (_ocorrenciaUUID) => {
