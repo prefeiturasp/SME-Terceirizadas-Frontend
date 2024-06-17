@@ -65,7 +65,7 @@ export default ({ resultado, tipo, fetchData }) => {
                     <Fragment key={idx}>
                       <tr className="table-body-items">
                         <td>{item.descricao}</td>
-                        <td>{item.valor}</td>
+                        <td>{(item.valor ?? '').toString().replaceAll(".", ",")}</td>
                         <td className="acoes">
                           <button
                             className="botaoEditar me-2"
