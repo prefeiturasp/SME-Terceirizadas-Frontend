@@ -21,4 +21,9 @@ export const rotasSupervisao: Array<RotaInterface> = [
     component: NovoRelatorioVisitasPage,
     tipoUsuario: usuarioEhNutricionistaSupervisao(),
   },
+  {
+    path: `/${constants.SUPERVISAO}/${constants.TERCEIRIZADAS}/${constants.RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${constants.NOVO_RELATORIO_VISITAS}/:uuid/${constants.EDITAR}`,
+    component: NovoRelatorioVisitasPage,
+    tipoUsuario: usuarioEhNutricionistaSupervisao(),
+  },
 ];
