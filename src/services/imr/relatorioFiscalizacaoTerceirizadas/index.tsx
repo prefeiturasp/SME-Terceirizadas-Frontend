@@ -48,11 +48,51 @@ export const createRascunhoFormularioSupervisao = async (
   }
 };
 
+export const updateRascunhoFormularioSupervisao = async (
+  params: NovoRelatorioVisitasFormInterface
+) => {
+  const url = `${API_URL}/imr/rascunho-formulario-supervisao/${params.uuid}/`;
+  const response = await axios.put(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const createFormularioSupervisao = async (
   params: NovoRelatorioVisitasFormInterface
 ) => {
   const url = `${API_URL}/imr/formulario-supervisao/`;
   const response = await axios.post(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getFormularioSupervisao = async (uuid: string) => {
+  const url = `${API_URL}/imr/formulario-supervisao/${uuid}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getRespostasFormularioSupervisao = async (uuid: string) => {
+  const url = `${API_URL}/imr/formulario-supervisao/${uuid}/respostas/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getRespostasNaoSeAplicaFormularioSupervisao = async (
+  uuid: string
+) => {
+  const url = `${API_URL}/imr/formulario-supervisao/${uuid}/respostas_nao_se_aplica/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;

@@ -20,13 +20,17 @@ import {
   TipoOcorrenciaInterface,
 } from "interfaces/imr.interface";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Form } from "react-final-form";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
 import {
   createFormularioSupervisao,
   createRascunhoFormularioSupervisao,
+  updateRascunhoFormularioSupervisao,
   getTiposOcorrenciaPorEditalNutrisupervisao,
+  getFormularioSupervisao,
+  getRespostasFormularioSupervisao,
+  getRespostasNaoSeAplicaFormularioSupervisao,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { Anexos } from "./components/Anexos";
 import { Cabecalho } from "./components/Cabecalho";
@@ -50,8 +54,47 @@ export const NovoRelatorioVisitas = () => {
   const [loadingTiposOcorrencia, setLoadingTiposOcorrencia] = useState(false);
   const [erroAPI, setErroAPI] = useState<string>("");
   const [anexos, setAnexos] = useState<ArquivoInterface[]>([]);
+  const [initialValues, setInitialValues] = useState();
+  const [respostasOcorrencias, setRespostasOcorrencias] = useState([]);
+  const [respostasOcorrenciaNaoSeAplica, setRespostasOcorrenciaNaoSeAplica] =
+    useState([]);
 
   const navigate: NavigateFunction = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (isEditing) getDadosFormularioSupervisao();
+  }, []);
+
+  const isEditing = useMemo(() => {
+    const uuid = location.pathname.split("/")[5];
+    return uuid ? true : false;
+  }, [location]);
+
+  const getDadosFormularioSupervisao = async () => {
+    const uuid = location.pathname.split("/")[5];
+    if (uuid) {
+      try {
+        const formularioResponse = await getFormularioSupervisao(uuid);
+        setInitialValues({
+          ...formularioResponse.data,
+          acompanhou_visita: formularioResponse.data.acompanhou_visita
+            ? "sim"
+            : "nao",
+        });
+
+        const [respostasResponse, respostasNaoSeAplica] = await Promise.all([
+          getRespostasFormularioSupervisao(uuid),
+          getRespostasNaoSeAplicaFormularioSupervisao(uuid),
+        ]);
+
+        setRespostasOcorrencias(respostasResponse.data);
+        setRespostasOcorrenciaNaoSeAplica(respostasNaoSeAplica.data);
+      } catch (error) {
+        // Handle errors
+      }
+    }
+  };
 
   const salvarRascunho = async (
     values: NovoRelatorioVisitasFormInterface
@@ -66,17 +109,43 @@ export const NovoRelatorioVisitas = () => {
       setShowModalSalvarRascunho(true);
       return;
     }
-
-    const response = await createRascunhoFormularioSupervisao(
-      formataPayload(values, escolaSelecionada, anexos)
-    );
-    if (response.status === HTTP_STATUS.CREATED) {
-      toastSuccess("Rascunho do Relatório de Fiscalização salvo com sucesso!");
-      navigate(`/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`);
-    } else {
-      toastError(
-        "Erro ao criar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
+    if (values.uuid) {
+      const response = await updateRascunhoFormularioSupervisao(
+        formataPayload(
+          values,
+          escolaSelecionada,
+          anexos,
+          respostasOcorrenciaNaoSeAplica
+        )
       );
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess(
+          "Rascunho do Relatório de Fiscalização salvo com sucesso!"
+        );
+        navigate(
+          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`
+        );
+      } else {
+        toastError(
+          "Erro ao atualizar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
+        );
+      }
+    } else {
+      const response = await createRascunhoFormularioSupervisao(
+        formataPayload(values, escolaSelecionada, anexos)
+      );
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess(
+          "Rascunho do Relatório de Fiscalização salvo com sucesso!"
+        );
+        navigate(
+          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`
+        );
+      } else {
+        toastError(
+          "Erro ao criar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
+        );
+      }
     }
   };
 
@@ -158,6 +227,7 @@ export const NovoRelatorioVisitas = () => {
     <div className="card novo-relatorio-visitas mt-3">
       <div className="card-body">
         <Form
+          initialValues={initialValues}
           keepDirtyOnReinitialize
           mutators={{
             ...arrayMutators,
@@ -193,6 +263,10 @@ export const NovoRelatorioVisitas = () => {
                 <Spin spinning={loadingTiposOcorrencia}>
                   {tiposOcorrencia && (
                     <Formulario
+                      respostasOcorrencias={respostasOcorrencias}
+                      respostasOcorrenciaNaoSeAplica={
+                        respostasOcorrenciaNaoSeAplica
+                      }
                       form={form}
                       tiposOcorrencia={tiposOcorrencia}
                       values={form.getState().values}
@@ -219,9 +293,7 @@ export const NovoRelatorioVisitas = () => {
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                   />
                   <Botao
-                    texto={
-                      values.uuid ? "Atualizar rascunho" : "Salvar rascunho"
-                    }
+                    texto="Salvar rascunho"
                     className="ms-3"
                     disabled={submitting}
                     onClick={() => salvarRascunho(values)}
