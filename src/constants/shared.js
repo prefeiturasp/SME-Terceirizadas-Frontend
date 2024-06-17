@@ -282,6 +282,7 @@ const ENDPOINT = {
   TIPOS_ALIMENTO: "tipos-alimento",
   CONTROLE_SOBRAS: "controle-sobras",
   CONTROLE_RESTOS: "controle-restos",
+  PARAMETROS_CLASSIFICACAO: "parametros-classificacao",
   INCLUSOES_ALIMENTACAO_DA_CEI: "inclusoes-alimentacao-da-cei",
   SUSPENSAO_ALIMENTACAO_DA_CEI: "suspensao-alimentacao-de-cei",
   INICIO_PEDIDO: "inicio-pedido",

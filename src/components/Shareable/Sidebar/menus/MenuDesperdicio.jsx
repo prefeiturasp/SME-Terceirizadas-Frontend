@@ -6,7 +6,9 @@ import {
   CONTROLE_RESTOS,
   CADASTROS,
   TIPOS_RECIPIENTE,
-  TIPOS_ALIMENTO
+  TIPOS_ALIMENTO,
+  PARAMETROS_CLASSIFICACAO,
+  RELATORIOS,
 } from "configs/constants";
 import {
   usuarioEhNutricionistaSupervisao,
@@ -30,10 +32,10 @@ const MenuDesperdicio = ({ activeMenu, onSubmenuClick }) => {
       title={"Desperdicio"}
     >
       {usuarioEhAdmQualquerEmpresa() && (
-        <LeafItem to={`/${CONTROLE_SOBRAS}`}>Controle de Sobras</LeafItem>
+        <LeafItem to={`/${DESPERDICIO}/${CONTROLE_SOBRAS}`}>Controle de Sobras</LeafItem>
       )}
       {usuarioEhNutricionistaSupervisao() && (
-        <LeafItem to={`/${CONTROLE_RESTOS}`}>Controle de Restos</LeafItem>
+        <LeafItem to={`/${DESPERDICIO}/${CONTROLE_RESTOS}`}>Controle de Restos</LeafItem>
       )}
 
       {exibirRelatorios && (
@@ -46,14 +48,14 @@ const MenuDesperdicio = ({ activeMenu, onSubmenuClick }) => {
         >
           {usuarioEhCoordenadorNutriSupervisao() && (
             <LeafItem
-              to={`/${constants.CONTROLE_RESTOS}/${constants.RELATORIO_CONTROLE_RESTOS}`}
+              to={`/${constants.DESPERDICIO}/${RELATORIOS}/${constants.RELATORIO_CONTROLE_RESTOS}`}
             >
               Relatório de Restos
             </LeafItem>
           )}
           {usuarioEhAdmQualquerEmpresa() && (
             <LeafItem
-              to={`/${constants.CONTROLE_SOBRAS}/${constants.RELATORIO_CONTROLE_SOBRAS}`}
+              to={`/${constants.DESPERDICIO}/${RELATORIOS}/${constants.RELATORIO_CONTROLE_SOBRAS}`}
             >
               Relatório de Sobras
             </LeafItem>
@@ -73,6 +75,9 @@ const MenuDesperdicio = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
           <LeafItem to={`/${DESPERDICIO}/${CADASTROS}/${TIPOS_ALIMENTO}`}>
             Tipos de Alimento
+          </LeafItem>
+          <LeafItem to={`/${DESPERDICIO}/${CADASTROS}/${PARAMETROS_CLASSIFICACAO}`}>
+            Parâmetros de Classificação
           </LeafItem>
         </SubMenu>
       )}
