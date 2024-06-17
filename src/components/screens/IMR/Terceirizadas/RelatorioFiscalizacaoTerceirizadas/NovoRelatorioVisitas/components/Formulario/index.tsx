@@ -18,10 +18,20 @@ type FormularioType = {
   values: NovoRelatorioVisitasFormInterface;
   escolaSelecionada: EscolaLabelInterface;
   push: (_string) => {};
+  respostasOcorrencias: Array<any>;
+  respostasOcorrenciaNaoSeAplica: Array<any>;
 };
 
 export const Formulario = ({ ...props }: FormularioType) => {
-  const { tiposOcorrencia, form, values, escolaSelecionada, push } = props;
+  const {
+    tiposOcorrencia,
+    form,
+    values,
+    escolaSelecionada,
+    respostasOcorrencias,
+    respostasOcorrenciaNaoSeAplica,
+    push,
+  } = props;
 
   const exibeBotaoAdicionar = (tipoOcorrencia: TipoOcorrenciaInterface) => {
     return (
@@ -30,11 +40,52 @@ export const Formulario = ({ ...props }: FormularioType) => {
     );
   };
 
-  useEffect(() => {
-    tiposOcorrencia.forEach((tipoOcorrencia) => {
-      form.change(`ocorrencia_${tipoOcorrencia.uuid}`, "sim");
+  const setRespostas = (respostas: any) => {
+    respostas.forEach((_resposta) => {
+      form.change(
+        `grupos_${_resposta.parametrizacao.tipo_ocorrencia}[${
+          _resposta.grupo - 1
+        }].tipoocorrencia_${
+          _resposta.parametrizacao.tipo_ocorrencia
+        }_parametrizacao_${_resposta.parametrizacao.uuid}_uuid_${
+          _resposta.uuid
+        }`,
+        _resposta.resposta
+      );
     });
-  }, [escolaSelecionada]);
+  };
+
+  useEffect(() => {
+    if (respostasOcorrencias.length || respostasOcorrenciaNaoSeAplica.length) {
+      tiposOcorrencia.forEach((tipoOcorrencia) => {
+        const _respostas = respostasOcorrencias.filter(
+          (_ocorr) =>
+            _ocorr.parametrizacao.tipo_ocorrencia === tipoOcorrencia.uuid
+        );
+
+        const _respostaNaoSeAplica = respostasOcorrenciaNaoSeAplica.find(
+          (_ocorr) => _ocorr.tipo_ocorrencia === tipoOcorrencia.uuid
+        );
+
+        if (_respostas.length > 0) {
+          form.change(`ocorrencia_${tipoOcorrencia.uuid}`, "nao");
+          setRespostas(_respostas);
+        } else if (_respostaNaoSeAplica) {
+          form.change(`ocorrencia_${tipoOcorrencia.uuid}`, "nao_se_aplica");
+          form.change(
+            `descricao_${tipoOcorrencia.uuid}`,
+            _respostaNaoSeAplica.descricao
+          );
+        } else {
+          form.change(`ocorrencia_${tipoOcorrencia.uuid}`, "sim");
+        }
+      });
+    } else {
+      tiposOcorrencia.forEach((tipoOcorrencia) => {
+        form.change(`ocorrencia_${tipoOcorrencia.uuid}`, "sim");
+      });
+    }
+  }, [escolaSelecionada, respostasOcorrencias, respostasOcorrenciaNaoSeAplica]);
 
   return (
     <div className="formulario">
@@ -183,6 +234,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                                 form={form}
                                 escolaSelecionada={escolaSelecionada}
                                 indexFieldArray={indexFieldArray}
+                                respostasOcorrencias={respostasOcorrencias}
                               />
                             </React.Fragment>
                           ))
