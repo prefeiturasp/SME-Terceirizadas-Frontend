@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
-import { deletarTipoAlimento } from "services/tipoAlimento.service";
+import { deletarParametrosClassificacao } from "services/parametrosClassificacao.service";
 import { Form } from "react-final-form";
 import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -10,27 +10,27 @@ import {
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 
-export default ({ closeModal, showModal, item, changePage }) => {
+export default ({ closeModal, showModal, item, fetchData }) => {
   const [carregando, setCarregando] = useState(false);
 
   const onSubmit = async () => {
     setCarregando(true);
-    await deletarTipoAlimento(item.uuid)
+    await deletarParametrosClassificacao(item.uuid)
       .then(() => {
-        toastSuccess("Tipo de alimento excluído com sucesso");
+        toastSuccess("Parâmetro de Classificação excluído com sucesso");
       })
       .catch((error) => {
         toastError(error.response.data.detail);
       });
     setCarregando(false);
     closeModal();
-    changePage();
+    fetchData();
   };
 
   return (
     <Modal dialogClassName="modal-50w" show={showModal} onHide={closeModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Excluir Tipo de Alimento</Modal.Title>
+        <Modal.Title>Excluir Parâmetro de Classificação</Modal.Title>
       </Modal.Header>
       <Spin tip="Carregando..." spinning={carregando}>
         <Form
