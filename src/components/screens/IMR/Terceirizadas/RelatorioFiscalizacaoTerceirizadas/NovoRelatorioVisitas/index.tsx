@@ -58,6 +58,7 @@ export const NovoRelatorioVisitas = () => {
   const [loadingTiposOcorrencia, setLoadingTiposOcorrencia] = useState(false);
   const [erroAPI, setErroAPI] = useState<string>("");
   const [anexos, setAnexos] = useState<ArquivoInterface[]>([]);
+  const [anexosIniciais, setAnexosIniciais] = useState<any[]>([]);
   const [initialValues, setInitialValues] = useState();
   const [respostasOcorrencias, setRespostasOcorrencias] = useState([]);
   const [respostasOcorrenciaNaoSeAplica, setRespostasOcorrenciaNaoSeAplica] =
@@ -80,11 +81,13 @@ export const NovoRelatorioVisitas = () => {
     if (uuid) {
       try {
         const formularioResponse = await getFormularioSupervisao(uuid);
+        setAnexosIniciais(formularioResponse.data.anexos);
         setInitialValues({
           ...formularioResponse.data,
           acompanhou_visita: formularioResponse.data.acompanhou_visita
             ? "sim"
             : "nao",
+          anexos: null,
         });
 
         const [respostasResponse, respostasNaoSeAplica] = await Promise.all([
@@ -287,7 +290,11 @@ export const NovoRelatorioVisitas = () => {
                   form.getState().values,
                   tiposOcorrencia
                 ).listaValidacaoPorTipoOcorrencia.length !== 0 && (
-                  <Anexos setAnexos={setAnexos} anexos={anexos} />
+                  <Anexos
+                    setAnexos={setAnexos}
+                    anexos={anexos}
+                    anexosIniciais={anexosIniciais}
+                  />
                 )}
               <div className="row float-end mt-4">
                 <div className="col-12">
