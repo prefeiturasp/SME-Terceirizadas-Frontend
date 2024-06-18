@@ -32,6 +32,13 @@
   .ant-table {
     border: 1px solid #ccc;
   }
+
+  .botao-excluir-tabela-parcial {
+    &:hover:not(:disabled) {
+      border-color: $red !important;
+      background-color: $red !important;
+    }
+  }
 }
 .table-disabled {
   pointer-events: none;

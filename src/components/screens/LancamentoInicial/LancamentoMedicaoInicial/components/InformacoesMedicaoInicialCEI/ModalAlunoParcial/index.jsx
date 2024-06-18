@@ -11,7 +11,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { required } from "helpers/fieldValidators";
 
-export const ModalAdicionarAlunoParcial = ({ ...props }) => {
+export const ModalAlunoParcial = ({ ...props }) => {
   const {
     closeModal,
     showModal,
@@ -19,14 +19,20 @@ export const ModalAdicionarAlunoParcial = ({ ...props }) => {
     mes,
     ano,
     setAlunosParcialAlterado,
+    adicionarOuExcluir,
+    dataAdicionado,
   } = props;
   const [dataAlunoParcial, setDataAlunoParcial] = useState(null);
 
   const onClickSim = async () => {
     if (dataAlunoParcial) {
       await onSubmit(dataAlunoParcial);
+      toastSuccess(
+        `Aluno ${
+          adicionarOuExcluir === "Adicionar" ? "adicionado" : "removido"
+        } com Sucesso!`
+      );
       closeModal();
-      toastSuccess("Aluno adicionado com Sucesso!");
       setAlunosParcialAlterado(true);
     }
     setDataAlunoParcial(null);
@@ -42,12 +48,17 @@ export const ModalAdicionarAlunoParcial = ({ ...props }) => {
       }}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Adicionar Aluno no Período Parcial</Modal.Title>
+        <Modal.Title>
+          {adicionarOuExcluir === "Adicionar"
+            ? "Adicionar Aluno no Período Parcial"
+            : "Excluir Aluno"}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <p className="col-12 my-3 p-0">
-          A partir de qual data o aluno adicionado deve constar em período
-          parcial?
+          {adicionarOuExcluir === "Adicionar"
+            ? "A partir de qual data o aluno adicionado deve constar em período parcial?"
+            : "A partir de qual data o aluno não deve mais constar no período parcial?"}
         </p>
         <Form
           onSubmit={() => {}}
@@ -61,7 +72,15 @@ export const ModalAdicionarAlunoParcial = ({ ...props }) => {
                 required
                 validate={required}
                 usarDirty={true}
-                minDate={new Date(ano, mes - 1, 1)}
+                minDate={
+                  adicionarOuExcluir === "Adicionar"
+                    ? new Date(ano, mes - 1, 1)
+                    : new Date(
+                        ano,
+                        mes - 1,
+                        Number(dataAdicionado.substring(0, 2))
+                      )
+                }
                 maxDate={
                   new Date(
                     ano,
@@ -76,8 +95,9 @@ export const ModalAdicionarAlunoParcial = ({ ...props }) => {
         <div className="msg-rodape">
           <span className="required-asterisk">*</span>
           <label>
-            Ao adicionar alunos os lançamentos já realizados nos períodos
-            INTEGRAL e PARCIAL serão perdidos.
+            {`Ao ${
+              adicionarOuExcluir === "Adicionar" ? "adicionar" : "excluir"
+            } alunos os lançamentos já realizados nos períodos INTEGRAL e PARCIAL serão perdidos.`}
           </label>
         </div>
       </Modal.Body>
@@ -85,7 +105,7 @@ export const ModalAdicionarAlunoParcial = ({ ...props }) => {
         <div className="col-12">
           <Botao
             className="float-end"
-            texto="Salvar"
+            texto={"Salvar"}
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
             onClick={() => onClickSim()}

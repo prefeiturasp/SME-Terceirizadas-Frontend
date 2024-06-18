@@ -193,6 +193,7 @@ export const InformacoesMedicaoInicialCEI = ({
           alunos.push({
             aluno: alunoAdicionado.uuid,
             data: alunoAdicionado.data,
+            data_removido: alunoAdicionado.data_removido,
           });
         });
         data.append("alunos_periodo_parcial", JSON.stringify(alunos));
