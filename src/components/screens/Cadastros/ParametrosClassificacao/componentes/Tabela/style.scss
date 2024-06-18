@@ -17,28 +17,16 @@
     background: #e5e5e5;
     color: #42474a;
 
-    .criado_em {
-      min-width: 140px;
+    .nome {
+      min-width: 400px;
     }
 
-    .periodo {
-      min-width: 80px;
-    }
-
-    .responsavel {
-      min-width: 200px;
-    }
-
-    .tipo_alimentacao {
+    .valor {
       min-width: 150px;
     }
 
-    .escola {
-      min-width: 200px;
-    }
-
-    .acoes-visualizar-apenas {
-      width: 140px;
+    .acoes {
+      width: 185px;
     }
   }
 
@@ -46,23 +34,33 @@
     font-size: 13px;
     color: #42474a;
 
-    .acoes-visualizar-apenas {
+    .acoes {
       font-family: Font Awesome 5 Free;
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
       line-height: 16px;
 
-      .botaoVisualizar {
+      .botaoEditar {
         background-color: #ffffff;
         border: none;
         outline: none;
-        display: flex;
-        align-items: center;
         color: #266397;
       }
 
-      .botaoVisualizar:disabled {
+      .botaoEditar:disabled {
+        color: #42474a;
+        opacity: 0.6;
+      }
+
+      .botaoExcluir {
+        background-color: #ffffff;
+        border: none;
+        outline: none;
+        color: #a61e0f;
+      }
+
+      .botaoExcluir:disabled {
         color: #42474a;
         opacity: 0.6;
       }

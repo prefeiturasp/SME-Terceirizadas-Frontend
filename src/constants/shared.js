@@ -282,6 +282,7 @@ const ENDPOINT = {
   TIPOS_ALIMENTO: "tipos-alimento",
   CONTROLE_SOBRAS: "controle-sobras",
   CONTROLE_RESTOS: "controle-restos",
+  PARAMETROS_CLASSIFICACAO: "parametros-classificacao",
   INCLUSOES_ALIMENTACAO_DA_CEI: "inclusoes-alimentacao-da-cei",
   SUSPENSAO_ALIMENTACAO_DA_CEI: "suspensao-alimentacao-de-cei",
   INICIO_PEDIDO: "inicio-pedido",
@@ -593,6 +594,22 @@ export const PERIODOS_OPTIONS = [
   { nome: "Últimos 12 meses", uuid: "365" },
   { nome: "Todos", uuid: "" },
 ];
+
+export const PERIODO_SOBRAS = [
+  {
+    uuid: "M",
+    nome: "Manhã",
+  },
+  {
+    uuid: "T",
+    nome: "Tarde",
+  },
+  {
+    uuid: "I",
+    nome: "Integral",
+  },
+];
+
 
 export const numeroChamadaPublicamMask = [
   /\d/,

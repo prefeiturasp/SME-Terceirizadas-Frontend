@@ -144,7 +144,7 @@ export const DESPERDICIO = "desperdicio";
 export const CONTROLE_SOBRAS = "controle-sobras";
 export const RELATORIO_CONTROLE_SOBRAS = "relatorio-controle-sobras";
 export const CONTROLE_RESTOS = "controle-restos";
-export const RELATORIO_CONTROLE_RESTOS = "relatorio-controle-sobras";
+export const RELATORIO_CONTROLE_RESTOS = "relatorio-controle-restos";
 export const PANORAMA_ESCOLA = "panorama-escola";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
@@ -175,6 +175,7 @@ export const EDITAR_PERMISSAO_LANCAMENTO_ESPECIAL =
   "editar-permissao-lancamento-especial";
 export const TIPOS_RECIPIENTE = "tipos-recipiente";
 export const TIPOS_ALIMENTO = "tipos-alimento";
+export const PARAMETROS_CLASSIFICACAO = "parametros-classificacao";
 export const DISPONIBILIZACAO_DE_SOLICITACOES =
   "disponibilizacao-de-solicitacoes";
 export const ENVIO_REQUISICOES_ENTREGA = "envio-requisicoes-entrega";

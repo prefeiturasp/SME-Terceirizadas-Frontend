@@ -32,8 +32,8 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import "./styles.scss";
 import { InputComData } from "../DatePicker";
-import { InputHorario } from "../Input/InputHorario";
 import moment from "moment";
+import { PERIODO_SOBRAS } from "../../../constants/shared";
 
 const ModalCadastrarControleSobras = ({
   closeModal,
@@ -53,8 +53,6 @@ const ModalCadastrarControleSobras = ({
   const [escolaSelected, setEscolaSelected] = useState();
   const [tiposAlimentacao, setTiposAlimentacao] = useState([]);
   const [initialValues, setInitialValues] = useState(undefined);
-  const [HoraMedicao, setHoraMedicao] = useState("00:00");
-  const [HoraMedicaoAlterada, setHoraMedicaoAlterada] = useState(false);
 
   const [registroEdicao, setRegistroEdicao] = useState(selecionado);
 
@@ -72,8 +70,8 @@ const ModalCadastrarControleSobras = ({
     if (selecionado) {
       setRegistroEdicao(selecionado);
 
-      const data_hora_medicao = selecionado.data_hora_medicao
-        ? moment(selecionado.data_hora_medicao, "DD/MM/YYYY HH:mm")
+      const data_medicao = selecionado.data_medicao
+        ? moment(selecionado.data_medicao, "DD/MM/YYYY")
         : null;
 
       const _initValues = {
@@ -86,16 +84,13 @@ const ModalCadastrarControleSobras = ({
         peso_alimento: formatDecimal(selecionado.peso_alimento),
         peso_recipiente: formatDecimal(selecionado.peso_recipiente),
         peso_sobra: formatDecimal(selecionado.peso_sobra),
-        data_medicao: data_hora_medicao
-          ? data_hora_medicao.format("DD/MM/YYYY")
+        data_medicao: data_medicao
+          ? data_medicao.format("DD/MM/YYYY")
           : null,
-        hora_medicao: data_hora_medicao
-          ? data_hora_medicao.format("HH:mm")
-          : "00:00",
+        periodo: PERIODO_SOBRAS.find(p => p.uuid === selecionado.periodo).nome,
       };
 
       setInitialValues(_initValues);
-      setHoraMedicao(_initValues.hora_medicao);
       onBlurEscola(undefined, {
         escola:
           selecionado?.escola.codigo_eol + " - " + selecionado.escola?.nome,
@@ -103,10 +98,7 @@ const ModalCadastrarControleSobras = ({
     } else {
       setRegistroEdicao(undefined);
       setNomeEscolas(escolas.map(ue => `${ue.codigo_eol} - ${ue.label}`));
-      setHoraMedicao("00:00");
-      setInitialValues({
-        hora_medicao: "00:00",
-      });
+      setInitialValues({});
     }
   };
 
@@ -162,12 +154,9 @@ const ModalCadastrarControleSobras = ({
   }
 
   const onSubmit = async (formValues) => {
-    const data_hora_medicao = formValues.data_medicao + " " + formValues.hora_medicao; 
-    moment(data_hora_medicao, "DD/MM/YYYY HH:mm:ss");
-
-    if (moment(data_hora_medicao, "DD/MM/YYYY HH:mm:ss").isAfter(moment())) {
+    if (moment(formValues.data_medicao, "DD/MM/YYYY").isAfter(moment())) {
       return toastError(
-        "Data/Hora da Medição não podem ser posteriores à data e hora atual"
+        "Data da Medição não podem ser posteriores à data."
       );
     }
 
@@ -188,7 +177,8 @@ const ModalCadastrarControleSobras = ({
       peso_alimento: parseDecimal(formValues.peso_alimento),
       peso_recipiente: parseDecimal(formValues.peso_recipiente),
       peso_sobra: parseDecimal(formValues.peso_sobra),
-      data_hora_medicao: data_hora_medicao,
+      data_medicao: formValues.data_medicao,
+      periodo: PERIODO_SOBRAS.find(p => p.nome === formValues.periodo).uuid,
     };
 
     await cadastrarControleSobras(payload)
@@ -240,26 +230,6 @@ const ModalCadastrarControleSobras = ({
   const parseDecimal = (value) => {
     if (!value) return value;
     return parseFloat(value.replace(/\./g, "").replace(",", "."));
-  };
-
-  const escolherHora = (hora, form) => {
-    setTimeout(() => {
-      if (hora) {
-        const horario = moment(hora.toDate()).format("HH:mm:ss");
-        setHoraMedicao(horario);
-        setHoraMedicaoAlterada(true);
-        form.change("hora_medicao", horario);
-      } else {
-        setHoraMedicao("00:00:00");
-        setHoraMedicaoAlterada(false);
-        form.change("hora_medicao", "00:00:00");
-      }
-    }, 250);
-  };
-
-  const validaHora = (value) => {
-    value = HoraMedicaoAlterada ? HoraMedicao : undefined;
-    return value !== undefined ? "" : "Campo obrigatório";
   };
 
   return (
@@ -354,22 +324,22 @@ const ModalCadastrarControleSobras = ({
                     </div>
                     <div className="col-3">
                       <Field
-                        component={InputHorario}
-                        label="Hora da Medição"
-                        name="hora_medicao"
-                        placeholder="Selecione a Hora"
-                        horaAtual={HoraMedicao}
-                        onOk={(hora) => escolherHora(hora, form)}
-                        onChangeFunction={(hora) => escolherHora(hora, form)}
-                        writable={false}
+                        dataSource={PERIODO_SOBRAS.map((tipo) => tipo.nome)}
+                        name="periodo"
+                        label="Período"
+                        component={AutoCompleteField}
+                        placeholder={"Digite o Período"}
                         className={
-                          "input-data-hora" +
-                          (registroEdicao ? " input-controle-restos" : "")
+                          registroEdicao
+                            ? "input-controle-sobras"
+                            : "input-busca-nome-item"
                         }
-                        validate={validaHora}
                         disabled={!!registroEdicao}
+                        validate={composeValidators(
+                          required,
+                          requiredOptionSearchSelect(PERIODO_SOBRAS, "nome")
+                        )}
                         required
-                        functionComponent
                       />
                     </div>
                     <div className="col-6">
