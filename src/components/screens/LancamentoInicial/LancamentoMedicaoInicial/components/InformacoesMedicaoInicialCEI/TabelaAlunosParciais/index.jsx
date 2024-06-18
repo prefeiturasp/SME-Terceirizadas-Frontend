@@ -1,14 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { Input, Skeleton, AutoComplete, Table, Modal, Tooltip } from "antd";
+import { Input, Skeleton, AutoComplete, Table, Tooltip } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
-import { ModalAdicionarAlunoParcial } from "../ModalAdicionarAlunoParcial";
+import { ModalAlunoParcial } from "../ModalAlunoParcial";
 
 export default ({
   setIsModalDuplicata,
@@ -22,11 +21,11 @@ export default ({
   setAlunosParcialAlterado,
 }) => {
   const [valorSelecionado, setValorSelecionado] = useState(null);
-  const [isModalExcluir, setIsModalExcluir] = useState(false);
   const [registroCodigoEol, setRegistroCodigoEol] = useState(false);
   const [erro, setErro] = useState(null);
-  const [showModalAdicionarAlunoParcial, setShowModalAdicionarAlunoParcial] =
-    useState(false);
+  const [showModalAlunoParcial, setShowModalAlunoParcial] = useState(false);
+  const [dataAdicionado, setDataAdicionado] = useState("");
+  const [adicionarOuExcluir, setAdicionarOuExcluir] = useState("");
 
   const alunosOptions = useMemo(
     () =>
@@ -54,13 +53,9 @@ export default ({
     setValorSelecionado("");
   };
 
-  const excluirAluno = (codigo_eol) => {
-    setAlunosAdicionados((prev) =>
-      prev.filter(
-        (alunoAdicionado) => alunoAdicionado.codigo_eol !== codigo_eol
-      )
-    );
-    setIsModalExcluir(false);
+  const excluirAluno = (aluno, dataAlunoParcial) => {
+    aluno["data_removido"] = dataAlunoParcial;
+    setAlunosAdicionados(alunosAdicionados);
   };
 
   const TabelaAlunos = ({ alunos }) => {
@@ -78,24 +73,35 @@ export default ({
         align: "center",
       },
       {
+        title: "Removido em:",
+        dataIndex: "data_removido",
+        key: "data_removido",
+        width: 150,
+        align: "center",
+      },
+      {
         title: "Excluir",
         key: "acoes",
         width: 100,
         align: "center",
-        render: (texto, registro) => (
-          <Tooltip title="Excluir aluno">
-            <>
-              <Botao
-                onClick={() => {
-                  setIsModalExcluir(true);
-                  setRegistroCodigoEol(registro.key);
-                }}
-                icon={BUTTON_ICON.TRASH}
-                disabled={!emEdicao}
-              />
-            </>
-          </Tooltip>
-        ),
+        render: (texto, registro) =>
+          !registro.data_removido && (
+            <Tooltip title="Excluir aluno">
+              <>
+                <Botao
+                  onClick={() => {
+                    setShowModalAlunoParcial(true);
+                    setAdicionarOuExcluir("Excluir");
+                    setRegistroCodigoEol(registro.key);
+                    setDataAdicionado(registro.data_adicao);
+                  }}
+                  className="botao-excluir-tabela-parcial"
+                  icon={BUTTON_ICON.TRASH}
+                  disabled={!emEdicao}
+                />
+              </>
+            </Tooltip>
+          ),
       },
     ];
 
@@ -103,6 +109,8 @@ export default ({
       key: alunoAdicionado.codigo_eol,
       nome: `${alunoAdicionado.codigo_eol} - ${alunoAdicionado.nome}`,
       data_adicao: `${alunoAdicionado.data}`,
+      data_removido:
+        alunoAdicionado.data_removido && `${alunoAdicionado.data_removido}`,
     }));
 
     const contador = `Total: ${dataSource.length.toString().padStart(2, "0")}`;
@@ -124,19 +132,31 @@ export default ({
     );
   };
 
-  const handleModalExcluirClose = () => {
-    setIsModalExcluir(false);
-  };
-
   const onClickAdicionarAlunoParcial = () => {
     const alunoSelecionado = alunos.find(
       (aluno) => `${aluno.codigo_eol} - ${aluno.nome}` === valorSelecionado
     );
     if (alunoSelecionado) {
       setErro(null);
-      setShowModalAdicionarAlunoParcial(true);
+      setShowModalAlunoParcial(true);
+      setAdicionarOuExcluir("Adicionar");
     } else {
       setErro("Selecione uma opção válida");
+    }
+  };
+
+  const onSubmitModalAlunoParcial = (dataAlunoParcial) => {
+    if (adicionarOuExcluir === "Adicionar") {
+      const alunoSelecionado = alunos.find(
+        (aluno) => `${aluno.codigo_eol} - ${aluno.nome}` === valorSelecionado
+      );
+      alunoSelecionado && adicionarAluno(alunoSelecionado, dataAlunoParcial);
+    } else {
+      const alunoAddSelecionado = alunosAdicionados.find(
+        (alunoAdicionado) => alunoAdicionado.codigo_eol === registroCodigoEol
+      );
+      alunoAddSelecionado &&
+        excluirAluno(alunoAddSelecionado, dataAlunoParcial);
     }
   };
 
@@ -144,33 +164,6 @@ export default ({
     <Skeleton paragraph={false} active />
   ) : (
     <div className="row">
-      <Modal
-        title="Excluir aluno"
-        open={isModalExcluir}
-        onCancel={handleModalExcluirClose}
-        footer={[
-          <>
-            <Botao
-              key="sim"
-              texto="SIM"
-              type={BUTTON_TYPE.BUTTON}
-              onClick={() => excluirAluno(registroCodigoEol)}
-              className="ms-3"
-            />
-            <Botao
-              key="nao"
-              texto="NÃO"
-              type={BUTTON_TYPE.BUTTON}
-              onClick={handleModalExcluirClose}
-              className="ms-3"
-            />
-          </>,
-        ]}
-      >
-        <p>
-          Deseja realmente excluir esse aluno do lançamento do período parcial?
-        </p>
-      </Modal>
       <div className="msg-alunos-parciais">
         <div className="icon-exclamation-alunos-parciais">
           <div className="fas fa-exclamation" />
@@ -230,20 +223,17 @@ export default ({
         {erro && <span style={{ color: "red" }}>{erro}</span>}
       </div>
       <TabelaAlunos alunos={alunosAdicionados} />
-      <ModalAdicionarAlunoParcial
-        closeModal={() => setShowModalAdicionarAlunoParcial(false)}
-        showModal={showModalAdicionarAlunoParcial}
-        onSubmit={(dataAlunoParcial) => {
-          const alunoSelecionado = alunos.find(
-            (aluno) =>
-              `${aluno.codigo_eol} - ${aluno.nome}` === valorSelecionado
-          );
-          alunoSelecionado &&
-            adicionarAluno(alunoSelecionado, dataAlunoParcial);
-        }}
+      <ModalAlunoParcial
+        closeModal={() => setShowModalAlunoParcial(false)}
+        showModal={showModalAlunoParcial}
+        onSubmit={(dataAlunoParcial) =>
+          onSubmitModalAlunoParcial(dataAlunoParcial)
+        }
         mes={mes}
         ano={ano}
         setAlunosParcialAlterado={setAlunosParcialAlterado}
+        adicionarOuExcluir={adicionarOuExcluir}
+        dataAdicionado={dataAdicionado}
       />
     </div>
   );
