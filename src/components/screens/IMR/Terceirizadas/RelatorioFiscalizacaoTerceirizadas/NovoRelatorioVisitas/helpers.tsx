@@ -6,7 +6,7 @@ import {
 } from "interfaces/imr.interface";
 import { deepCopy } from "helpers/utilities";
 
-export const formataPayload = (
+export const formataPayloadUpdate = (
   values: NovoRelatorioVisitasFormInterface,
   escolaSelecionada: EscolaLabelInterface,
   anexos: Array<ArquivoInterface>,
@@ -19,6 +19,32 @@ export const formataPayload = (
   const { respostas: ocorrencias_nao_se_aplica } = formatOcorrenciasNaoSeAplica(
     values,
     respostasOcorrenciaNaoSeAplica
+  );
+
+  const { respostas: ocorrencias, respostas_delete: ocorrencias_to_delete } =
+    formatOcorrencias(values);
+
+  return {
+    ...values_,
+    ocorrencias_nao_se_aplica,
+    ocorrencias,
+    ocorrencias_to_delete,
+    anexos,
+  };
+};
+
+export const formataPayload = (
+  values: NovoRelatorioVisitasFormInterface,
+  escolaSelecionada: EscolaLabelInterface,
+  anexos: Array<ArquivoInterface>
+) => {
+  let values_ = deepCopy(values);
+  values_.escola = escolaSelecionada.uuid;
+  values_.acompanhou_visita = values.acompanhou_visita === "sim";
+
+  const { respostas: ocorrencias_nao_se_aplica } = formatOcorrenciasNaoSeAplica(
+    values,
+    []
   );
   const { respostas: ocorrencias } = formatOcorrencias(values);
 
@@ -55,49 +81,74 @@ const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
   let respostas = [];
   let ocorrenciasNao = [];
   let grupos = {};
+
+  const getGrupoRespostas = (tipoOcorrenciaUUID: string) => {
+    return Object.keys(values_).reduce((acc, _key) => {
+      if (_key.includes(`grupos_${tipoOcorrenciaUUID}`)) {
+        acc[_key] = values_[_key];
+      }
+      return acc;
+    }, {});
+  };
+
+  const processRespostas = (
+    grupo: any,
+    tipoOcorrenciaUUID: string,
+    indexGrupo: number
+  ) => {
+    Object.keys(grupo).forEach((keyGrupo: string) => {
+      const itemsKey = keyGrupo.split("_");
+      const parametrizacaoUUID = itemsKey[3];
+      const resposta = grupo[keyGrupo];
+      const respostaUUID = itemsKey[5];
+      const deleteExistingGrupo = itemsKey.includes("deleted");
+      const respostaObj = respostaUUID
+        ? {
+            uuid: respostaUUID,
+            tipoOcorrencia: tipoOcorrenciaUUID,
+            parametrizacao: parametrizacaoUUID,
+            resposta: resposta,
+            delete: deleteExistingGrupo,
+          }
+        : {
+            tipoOcorrencia: tipoOcorrenciaUUID,
+            parametrizacao: parametrizacaoUUID,
+            resposta: resposta,
+            grupo: indexGrupo + 1,
+          };
+      // condição específica para remover keys usadas apenas para auxiliar o componente de datas
+      if (itemsKey.length === 6 || itemsKey.length === 5) {
+        respostas.push(respostaObj);
+      }
+    });
+  };
+
   Object.keys(values_).forEach((key: string) => {
-    if (key.includes("ocorrencia_") && values_[key] === "nao") {
+    if (key.startsWith("ocorrencia_") && values_[key] === "nao") {
       const tipoOcorrenciaUUID = key.split("_")[1];
       ocorrenciasNao.push(tipoOcorrenciaUUID);
-      Object.keys(values_).forEach((_key) => {
-        if (_key.includes(`grupos_${tipoOcorrenciaUUID}`)) {
-          const gruposDeRespostas = values_[_key];
-          grupos[tipoOcorrenciaUUID] = gruposDeRespostas;
-          if (gruposDeRespostas) {
-            gruposDeRespostas.forEach((grupo: string, indexGrupo: number) => {
-              if (grupo) {
-                Object.keys(grupo).forEach((keyGrupo: string) => {
-                  const parametrizacaoUUID = keyGrupo.split("_")[3];
-                  const resposta = grupo[keyGrupo];
-                  const respostaUUID = keyGrupo.split("_")[5];
-                  const respostaDuplicada = respostas.find(
-                    (resposta) =>
-                      resposta.parametrizacao === parametrizacaoUUID &&
-                      resposta.grupo === indexGrupo + 1
-                  );
-                  if (respostaDuplicada) {
-                    if (typeof respostaDuplicada.resposta === "string") {
-                      respostaDuplicada.resposta = resposta;
-                    }
-                  } else {
-                    respostas.push({
-                      uuid: respostaUUID,
-                      tipoOcorrencia: tipoOcorrenciaUUID,
-                      parametrizacao: parametrizacaoUUID,
-                      resposta: resposta,
-                      grupo: indexGrupo + 1,
-                    });
-                  }
-                });
-              }
-            });
-          }
+      const grupoRespostas = getGrupoRespostas(tipoOcorrenciaUUID);
+
+      Object.keys(grupoRespostas).forEach((_key) => {
+        const gruposDeRespostas = grupoRespostas[_key];
+        grupos[tipoOcorrenciaUUID] = gruposDeRespostas;
+        if (gruposDeRespostas) {
+          gruposDeRespostas.forEach((grupo: any, indexGrupo: number) => {
+            if (grupo) {
+              processRespostas(grupo, tipoOcorrenciaUUID, indexGrupo);
+            }
+          });
         }
       });
     }
   });
 
-  return { ocorrenciasNao, respostas, grupos };
+  return {
+    ocorrenciasNao,
+    respostas: respostas.filter((resposta) => !resposta.delete),
+    respostas_delete: respostas.filter((resposta) => resposta.delete === true),
+    grupos,
+  };
 };
 
 export const validarFormulariosTiposOcorrencia = (
