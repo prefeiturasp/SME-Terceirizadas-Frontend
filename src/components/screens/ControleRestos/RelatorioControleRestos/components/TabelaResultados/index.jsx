@@ -53,6 +53,7 @@ const TabelaControleRestos = ({ list, getFiltros }) => {
                   <th className="num_refeicoes">Nº Refeições</th>
                   <th className="resto_per_capita">Resto per Capita</th>
                   <th className="percent_resto">% Resto</th>
+                  <th className="classificacao">Classificação</th>
                 </tr>
               </thead>
               <tbody>
@@ -71,6 +72,7 @@ const TabelaControleRestos = ({ list, getFiltros }) => {
                         <td>{item.num_refeicoes}</td>
                         <td>{item.resto_per_capita}</td>
                         <td>{item.percent_resto}</td>
+                        <td>{item.classificacao}</td>
                       </tr>
                     </Fragment>
                   );

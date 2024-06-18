@@ -595,6 +595,22 @@ export const PERIODOS_OPTIONS = [
   { nome: "Todos", uuid: "" },
 ];
 
+export const PERIODO_SOBRAS = [
+  {
+    uuid: "M",
+    nome: "Manhã",
+  },
+  {
+    uuid: "T",
+    nome: "Tarde",
+  },
+  {
+    uuid: "I",
+    nome: "Integral",
+  },
+];
+
+
 export const numeroChamadaPublicamMask = [
   /\d/,
   /\d/,

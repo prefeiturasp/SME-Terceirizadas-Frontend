@@ -48,6 +48,7 @@ const TabelaControleSobras = ({ list, getFiltros }) => {
                   <th className="tipo_alimentacao">Tipo de Alimentação</th>
                   <th className="tipo_alimento">Tipo de Alimento</th>
                   <th className="data_medicao">Data da Medição</th>
+                  <th className="periodo">Período</th>
                   <th className="peso_refeicao_distribuida">
                     Peso da Refeição Distribuída (Kg)
                   </th>
@@ -62,6 +63,7 @@ const TabelaControleSobras = ({ list, getFiltros }) => {
                   <th className="percentual_sobra">% Sobra</th>
                   <th className="media_aluno">Média por Aluno</th>
                   <th className="media_refeicao">Média por Refeição</th>
+                  <th className="classificacao">Classificação</th>
                 </tr>
               </thead>
               <tbody>
@@ -77,6 +79,7 @@ const TabelaControleSobras = ({ list, getFiltros }) => {
                         <td>{item.tipo_alimentacao_nome}</td>
                         <td>{item.tipo_alimento_nome}</td>
                         <td>{item.data_medicao}</td>
+                        <td>{item.periodo}</td>
                         <td>{item.quantidade_distribuida}</td>
                         <td>{item.peso_sobra}</td>
                         <td>{item.frequencia}</td>
@@ -85,6 +88,7 @@ const TabelaControleSobras = ({ list, getFiltros }) => {
                         <td>{item.percentual_sobra}</td>
                         <td>{item.media_por_aluno}</td>
                         <td>{item.media_por_refeicao}</td>
+                        <td>{item.classificacao}</td>
                       </tr>
                     </Fragment>
                   );
