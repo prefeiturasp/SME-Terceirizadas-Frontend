@@ -12,6 +12,13 @@ import { DEZ_MB, VINTE_CINCO_MB } from "../../../../constants/shared";
 
 const InputFile = (props) => {
   const [files, setFiles] = useState(props.arquivosPreCarregados || []);
+
+  useEffect(() => {
+    if (props.arquivosPreCarregados && props.arquivosPreCarregados.length > 0) {
+      setFiles(props.arquivosPreCarregados);
+    }
+  }, [props.arquivosPreCarregados]);
+
   const inputRef = useRef(null);
 
   const openFile = (file) => {

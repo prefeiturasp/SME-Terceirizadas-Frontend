@@ -7,6 +7,7 @@ import {
 import { FormApi } from "final-form";
 import {
   EscolaLabelInterface,
+  RespostaOcorrenciaInterface,
   TipoOcorrenciaInterface,
 } from "interfaces/imr.interface";
 import React from "react";
@@ -18,6 +19,7 @@ type OcorrenciaType = {
   escolaSelecionada: EscolaLabelInterface;
   name_grupos: string;
   indexFieldArray: number;
+  respostasOcorrencias?: Array<RespostaOcorrenciaInterface>;
 };
 
 export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
@@ -27,12 +29,32 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
     escolaSelecionada,
     name_grupos,
     indexFieldArray,
+    respostasOcorrencias,
   } = props;
 
   const excluiGrupoDeResposta = (): void => {
     const grupos = [...form.getState().values[`grupos_${tipoOcorrencia.uuid}`]];
-    grupos.splice(indexFieldArray, 1);
+    const currentDeletedGrupos =
+      form.getState().values[`grupos_${tipoOcorrencia.uuid}_deleted`];
+
+    const deletedGrupo = grupos.splice(indexFieldArray, 1);
+    form.change(`grupos_${tipoOcorrencia.uuid}_deleted`, [
+      ...(currentDeletedGrupos ? currentDeletedGrupos : []),
+      ...deletedGrupo,
+    ]);
     form.change(`grupos_${tipoOcorrencia.uuid}`, grupos);
+  };
+
+  const getUUIDRespostaParametrizacao = (parametrizacao) => {
+    let UUIDResposta = "";
+    const _resposta = respostasOcorrencias.find(
+      (_resposta) =>
+        _resposta.parametrizacao.uuid === parametrizacao.uuid &&
+        _resposta.grupo === indexFieldArray + 1
+    );
+    UUIDResposta = _resposta && _resposta.uuid ? _resposta.uuid : "";
+
+    return UUIDResposta;
   };
 
   return tipoOcorrencia.parametrizacoes.length ? (
@@ -49,18 +71,23 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
           />
         )}
         {tipoOcorrencia.parametrizacoes.map((parametrizacao, index) => {
+          let UUID = "";
+          if (respostasOcorrencias.length > 0) {
+            UUID = getUUIDRespostaParametrizacao(parametrizacao);
+          }
+
           return (
             <div
               key={index}
               className="row d-flex align-items-center py-1 px-3"
             >
               <RenderComponentByParametrizacao
-                index={index}
                 parametrizacao={parametrizacao}
                 tipoOcorrencia={tipoOcorrencia}
                 name_grupos={name_grupos}
                 form={form}
                 escolaSelecionada={escolaSelecionada}
+                UUIDResposta={UUID}
               />
             </div>
           );

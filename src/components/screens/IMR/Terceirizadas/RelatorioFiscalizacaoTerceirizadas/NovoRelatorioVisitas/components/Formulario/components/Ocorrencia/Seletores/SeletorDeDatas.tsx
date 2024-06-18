@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Field } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
 import { InputText } from "components/Shareable/Input/InputText";
@@ -24,6 +24,19 @@ export const SeletorDeDatas = ({ ...props }: SeletorDeDatasType) => {
   const { titulo, name, name_grupos, form, ehDataOcorrencia } = props;
 
   const [dates, setDates] = useState<string[]>([""]);
+
+  const setInitialDates = () => {
+    const fieldState = form.getFieldState(name);
+    if (fieldState && fieldState.value && fieldState.value.length) {
+      setDates(fieldState.value);
+      fieldState.value.forEach((_value, _dateinputIndex) => {
+        form.change(`${name}_${_dateinputIndex}_${titulo}`, _value);
+      });
+    }
+  };
+  useEffect(() => {
+    setInitialDates();
+  }, [form]);
 
   const handleDateChange = (index: number, value: string) => {
     const newDates = [...dates];

@@ -30,7 +30,7 @@ export const ModalCancelaPreenchimento = ({
         <Modal.Title>Cancelar Preenchimento</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Deseja cancelar o preenchimento do Relatório de Visitas? <br />
+        Deseja cancelar o preenchimento do Relatório de Fiscalização? <br />
         As informações preenchidas serão perdidas e o formulário não será salvo!
       </Modal.Body>
       <Modal.Footer>

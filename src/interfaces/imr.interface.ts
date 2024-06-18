@@ -130,3 +130,32 @@ export interface RelatorioVisitaItemListagem {
   data?: string;
   status?: string;
 }
+
+export interface RespostaOcorrenciaInterface {
+  criado_em: string;
+  alterado_em: string;
+  uuid: string;
+  grupo: number;
+  resposta: any;
+  formulario_base: number;
+  parametrizacao: {
+    uuid: string;
+    posicao: number;
+    titulo: string;
+    tipo_pergunta: {
+      uuid: string;
+      nome: string;
+    };
+    tipo_ocorrencia: string;
+  };
+}
+
+export interface RespostaOcorrenciaNaoSeAplicaInterface {
+  criado_em: string;
+  alterado_em: string;
+  uuid: string;
+  grupo: number;
+  descricao: string;
+  formulario_base: number;
+  tipo_ocorrencia: string;
+}

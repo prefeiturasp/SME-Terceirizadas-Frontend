@@ -3,12 +3,18 @@ import React from "react";
 import { RelatorioVisitaItemListagem } from "interfaces/imr.interface";
 
 import "./styles.scss";
-
+import Botao from "../../../../../../../Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+} from "../../../../../../../Shareable/Botao/constants";
 interface Props {
   objetos: RelatorioVisitaItemListagem[];
+  handleEditAction?: (_uuid: any) => void;
 }
 
-export const Listagem: React.FC<Props> = ({ objetos }) => {
+export const Listagem: React.FC<Props> = ({ objetos, handleEditAction }) => {
   return (
     <div className="listagem-relatorios-visita">
       <div className="titulo-verde mt-5 mb-3">
@@ -32,7 +38,15 @@ export const Listagem: React.FC<Props> = ({ objetos }) => {
                 <div>{objeto.unidade_educacional}</div>
                 <div>{objeto.data}</div>
                 <div>{objeto.status}</div>
-                <div></div>
+                <div>
+                  <Botao
+                    type={BUTTON_TYPE.BUTTON}
+                    style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
+                    icon={BUTTON_ICON.EDIT}
+                    onClick={() => handleEditAction(objeto.uuid)}
+                    tooltipExterno="Editar relatório"
+                  />
+                </div>
               </div>
             </>
           );

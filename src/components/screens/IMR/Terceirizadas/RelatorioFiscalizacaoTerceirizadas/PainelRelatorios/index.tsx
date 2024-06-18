@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
-
+import { useNavigate } from "react-router-dom";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { listRelatoriosVisitaSupervisao } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { Paginacao } from "components/Shareable/Paginacao";
-
+import {
+  RELATORIO_FISCALIZACAO,
+  RELATORIO_FISCALIZACAO_TERCEIRIZADAS,
+  SUPERVISAO,
+  TERCEIRIZADAS,
+  EDITAR,
+} from "configs/constants";
 import { Filtros } from "./components/Filtros";
 import {
   FiltrosRelatoriosVisitasInterface,
@@ -19,6 +25,7 @@ import { DashboardSupervisaoInterface } from "./interfaces";
 import { FormApi } from "final-form";
 
 export const PainelRelatorios = () => {
+  const navigate = useNavigate();
   const [filtros, setFiltros] = useState<FiltrosRelatoriosVisitasInterface>({});
   const [page, setPage] = useState<number>(1);
   const [totalResultados, setTotalResultados] = useState(0);
@@ -72,6 +79,13 @@ export const PainelRelatorios = () => {
     getDashboardPainelGerencialSupervisaoAsync();
   }, []);
 
+  const goToFormularioSupervisao = (uuid) => {
+    navigate(
+      `/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO}/${uuid}/${EDITAR}`,
+      { state: { uuid: uuid } }
+    );
+  };
+
   return (
     <Spin tip="Carregando..." spinning={!dashboard}>
       <div className="card painel-acompanhamento-supervisao mt-3">
@@ -118,7 +132,10 @@ export const PainelRelatorios = () => {
                     </div>
                   ) : (
                     <>
-                      <Listagem objetos={relatoriosVisita} />
+                      <Listagem
+                        objetos={relatoriosVisita}
+                        handleEditAction={goToFormularioSupervisao}
+                      />
                       <div className="row">
                         <div className="col">
                           <Paginacao
