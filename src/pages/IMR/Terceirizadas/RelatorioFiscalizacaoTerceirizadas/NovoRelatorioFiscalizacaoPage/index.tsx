@@ -5,14 +5,14 @@ import Page from "components/Shareable/Page/Page";
 import {
   SUPERVISAO,
   TERCEIRIZADAS,
-  NOVO_RELATORIO_VISITAS,
+  RELATORIO_FISCALIZACAO,
   RELATORIO_FISCALIZACAO_TERCEIRIZADAS,
 } from "configs/constants";
 import { NovoRelatorioVisitas } from "components/screens/IMR/Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas";
 
 const atual = {
-  href: `/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${NOVO_RELATORIO_VISITAS}`,
-  titulo: "Novo Relatório de Visitas",
+  href: `/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO}`,
+  titulo: "Novo Relatório de Fiscalização",
 };
 
 const anteriores = [
@@ -26,7 +26,7 @@ const anteriores = [
   },
 ];
 
-export const NovoRelatorioVisitasPage = () => (
+export const NovoRelatorioFiscalizacaoPage = () => (
   <Page botaoVoltar titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
     <NovoRelatorioVisitas />

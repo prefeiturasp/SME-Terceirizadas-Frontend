@@ -256,14 +256,13 @@ export const RegistrarNovaOcorrencia = () => {
                                 )}
                                 {tipoOcorrencia.parametrizacoes.length ? (
                                   tipoOcorrencia.parametrizacoes.map(
-                                    (parametrizacao, index) => {
+                                    (parametrizacao) => {
                                       return (
                                         <div
                                           key={indexFieldArray}
                                           className="row"
                                         >
                                           <RenderComponentByParametrizacao
-                                            index={index}
                                             parametrizacao={parametrizacao}
                                             name_grupos={name}
                                             tipoOcorrencia={tipoOcorrencia}

@@ -74,6 +74,8 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
     setTiposOcorrencia,
   } = props;
 
+  const initialValues = form.getState().initialValues;
+
   const getDiretoriasRegionaisAsync = async (): Promise<void> => {
     const response: ResponseDiretoriasRegionaisSimplissimaInterface =
       await getDiretoriaregionalSimplissima();
@@ -118,6 +120,19 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
     setLoadingEscolas(false);
   };
 
+  const setEscolaInitialValues = async (uuid: string) => {
+    const _escola = escolas.find((e: EscolaLabelInterface) => e.uuid === uuid);
+    if (_escola) {
+      form.change("escola", _escola.value);
+      form.change("lote", _escola?.lote_nome);
+      form.change("terceirizada", _escola?.terceirizada);
+
+      setEscolaSelecionada(_escola);
+      await getTiposOcorrenciaPorEditalNutrisupervisaoAsync(form, _escola);
+      await getTotalAlunosMatriculadosPorData(values.data, _escola.uuid);
+    }
+  };
+
   const getTotalAlunosMatriculadosPorData = async (
     data: string,
     escolaUUID: string
@@ -160,6 +175,18 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
   useEffect(() => {
     requisicoesPreRender();
   }, []);
+
+  useEffect(() => {
+    if (initialValues && initialValues.diretoria_regional) {
+      getEscolasTercTotalAsync(initialValues.diretoria_regional);
+    }
+  }, [initialValues]);
+
+  useEffect(() => {
+    if (escolas.length && initialValues && initialValues.escola) {
+      setEscolaInitialValues(initialValues.escola);
+    }
+  }, [initialValues, escolas]);
 
   const LOADING = !diretoriasRegionais || !periodosVisita;
 

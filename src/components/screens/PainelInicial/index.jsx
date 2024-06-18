@@ -12,7 +12,7 @@ import { IconeSupervisaoTerceirizadas } from "./components/IconeSupervisaoTercei
 
 import {
   ACOMPANHAMENTO_DE_LANCAMENTOS,
-  PAINEL_RELATORIOS_VISITAS,
+  PAINEL_RELATORIOS_FISCALIZACAO,
   SUPERVISAO,
   TERCEIRIZADAS,
 } from "configs/constants";
@@ -153,7 +153,7 @@ const PainelInicial = () => {
             titulo={"Supervisão Terceirizadas"}
             onClick={() =>
               navigate(
-                `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`
+                `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
               )
             }
           >

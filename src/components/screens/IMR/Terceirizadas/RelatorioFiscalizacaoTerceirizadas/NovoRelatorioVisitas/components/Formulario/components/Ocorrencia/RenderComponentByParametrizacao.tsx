@@ -37,9 +37,9 @@ type RenderComponentByParametrizacaoType = {
   form: FormApi<any, Partial<any>>;
   tipoOcorrencia: TipoOcorrenciaInterface;
   parametrizacao: ParametrizacoesInterface;
-  index: number;
   escolaSelecionada: EscolaLabelInterface;
   name_grupos: string;
+  UUIDResposta?: string;
 };
 
 const RenderComponentByParametrizacao = ({
@@ -49,9 +49,9 @@ const RenderComponentByParametrizacao = ({
     form,
     tipoOcorrencia,
     parametrizacao,
-    index,
     escolaSelecionada,
     name_grupos,
+    UUIDResposta,
   } = props;
   const ComponentToRender = componentMap[parametrizacao.tipo_pergunta.nome];
 
@@ -63,7 +63,7 @@ const RenderComponentByParametrizacao = ({
     <ComponentToRender
       titulo={parametrizacao.titulo}
       name_grupos={name_grupos}
-      name={`${name_grupos}.${index}_resposta_${tipoOcorrencia.uuid}_parametrizacao_${parametrizacao.uuid}`}
+      name={`${name_grupos}.tipoocorrencia_${tipoOcorrencia.uuid}_parametrizacao_${parametrizacao.uuid}_uuid_${UUIDResposta}`}
       form={form}
       escolaSelecionada={escolaSelecionada}
     />
