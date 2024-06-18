@@ -38,7 +38,11 @@ import { Formulario } from "./components/Formulario";
 import { ModalCancelaPreenchimento } from "./components/ModalCancelaPreenchimento";
 import { ModalSalvar } from "./components/ModalSalvar";
 import { ModalSalvarRascunho } from "./components/ModalSalvarRascunho";
-import { formataPayload, validarFormulariosTiposOcorrencia } from "./helpers";
+import {
+  formataPayload,
+  formataPayloadUpdate,
+  validarFormulariosTiposOcorrencia,
+} from "./helpers";
 import "./styles.scss";
 
 export const NovoRelatorioVisitas = () => {
@@ -111,7 +115,7 @@ export const NovoRelatorioVisitas = () => {
     }
     if (values.uuid) {
       const response = await updateRascunhoFormularioSupervisao(
-        formataPayload(
+        formataPayloadUpdate(
           values,
           escolaSelecionada,
           anexos,
@@ -300,14 +304,16 @@ export const NovoRelatorioVisitas = () => {
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                   />
-                  <Botao
-                    texto="Enviar Formulário"
-                    className="ms-3"
-                    disabled={submitting || !formularioValido(form)}
-                    onClick={() => salvar(values)}
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN}
-                  />
+                  {tiposOcorrencia && (
+                    <Botao
+                      texto="Enviar Formulário"
+                      className="ms-3"
+                      disabled={submitting || !formularioValido(form)}
+                      onClick={() => salvar(values)}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN}
+                    />
+                  )}
                 </div>
               </div>
               <ModalCancelaPreenchimento

@@ -3,6 +3,8 @@ import { required } from "helpers/fieldValidators";
 import {
   EscolaLabelInterface,
   NovoRelatorioVisitasFormInterface,
+  RespostaOcorrenciaInterface,
+  RespostaOcorrenciaNaoSeAplicaInterface,
   TipoOcorrenciaInterface,
 } from "interfaces/imr.interface";
 import React, { useEffect } from "react";
@@ -17,9 +19,9 @@ type FormularioType = {
   form: FormApi<any, Partial<any>>;
   values: NovoRelatorioVisitasFormInterface;
   escolaSelecionada: EscolaLabelInterface;
+  respostasOcorrencias: Array<RespostaOcorrenciaInterface>;
+  respostasOcorrenciaNaoSeAplica: Array<RespostaOcorrenciaNaoSeAplicaInterface>;
   push: (_string) => {};
-  respostasOcorrencias: Array<any>;
-  respostasOcorrenciaNaoSeAplica: Array<any>;
 };
 
 export const Formulario = ({ ...props }: FormularioType) => {

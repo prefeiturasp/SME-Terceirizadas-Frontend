@@ -7,6 +7,7 @@ import {
 import { FormApi } from "final-form";
 import {
   EscolaLabelInterface,
+  RespostaOcorrenciaInterface,
   TipoOcorrenciaInterface,
 } from "interfaces/imr.interface";
 import React from "react";
@@ -18,7 +19,7 @@ type OcorrenciaType = {
   escolaSelecionada: EscolaLabelInterface;
   name_grupos: string;
   indexFieldArray: number;
-  respostasOcorrencias?: Array<any>;
+  respostasOcorrencias?: Array<RespostaOcorrenciaInterface>;
 };
 
 export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
@@ -33,7 +34,14 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
 
   const excluiGrupoDeResposta = (): void => {
     const grupos = [...form.getState().values[`grupos_${tipoOcorrencia.uuid}`]];
-    grupos.splice(indexFieldArray, 1);
+    const currentDeletedGrupos =
+      form.getState().values[`grupos_${tipoOcorrencia.uuid}_deleted`];
+
+    const deletedGrupo = grupos.splice(indexFieldArray, 1);
+    form.change(`grupos_${tipoOcorrencia.uuid}_deleted`, [
+      ...(currentDeletedGrupos ? currentDeletedGrupos : []),
+      ...deletedGrupo,
+    ]);
     form.change(`grupos_${tipoOcorrencia.uuid}`, grupos);
   };
 
@@ -64,7 +72,7 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
         )}
         {tipoOcorrencia.parametrizacoes.map((parametrizacao, index) => {
           let UUID = "";
-          if (respostasOcorrencias.length) {
+          if (respostasOcorrencias.length > 0) {
             UUID = getUUIDRespostaParametrizacao(parametrizacao);
           }
 
