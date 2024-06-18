@@ -72,6 +72,7 @@ export const createFormularioDiretor = async (
 
 export const getTiposOcorrenciaPorEditalNutrisupervisao = async (params: {
   edital_uuid: string;
+  escola_uuid: string;
 }) => {
   const url = `${API_URL}/imr/formulario-supervisao/tipos-ocorrencias/`;
   const response: ResponseFormularioSupervisaoTiposOcorrenciasInterface =

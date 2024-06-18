@@ -109,6 +109,7 @@ export const NovoRelatorioVisitas = () => {
     const response: ResponseFormularioSupervisaoTiposOcorrenciasInterface =
       await getTiposOcorrenciaPorEditalNutrisupervisao({
         edital_uuid: _escola.edital,
+        escola_uuid: _escola.uuid,
       });
     if (response.status === HTTP_STATUS.OK) {
       setTiposOcorrencia(response.data);
