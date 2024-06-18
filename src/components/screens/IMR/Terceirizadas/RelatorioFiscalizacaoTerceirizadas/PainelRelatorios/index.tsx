@@ -5,7 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { listRelatoriosVisitaSupervisao } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { Paginacao } from "components/Shareable/Paginacao";
-
+import {
+  RELATORIO_FISCALIZACAO,
+  RELATORIO_FISCALIZACAO_TERCEIRIZADAS,
+  SUPERVISAO,
+  TERCEIRIZADAS,
+  EDITAR,
+} from "configs/constants";
 import { Filtros } from "./components/Filtros";
 import {
   FiltrosRelatoriosVisitasInterface,
@@ -75,7 +81,7 @@ export const PainelRelatorios = () => {
 
   const goToFormularioSupervisao = (uuid) => {
     navigate(
-      `/supervisao/terceirizadas/relatorio-fiscalizacao-terceirizadas/novo-relatorio-visitas/${uuid}/editar`,
+      `/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO}/${uuid}/${EDITAR}`,
       { state: { uuid: uuid } }
     );
   };

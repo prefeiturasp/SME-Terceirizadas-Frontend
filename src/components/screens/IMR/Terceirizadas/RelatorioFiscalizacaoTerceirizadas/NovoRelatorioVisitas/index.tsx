@@ -6,7 +6,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
-  PAINEL_RELATORIOS_VISITAS,
+  PAINEL_RELATORIOS_FISCALIZACAO,
   SUPERVISAO,
   TERCEIRIZADAS,
 } from "configs/constants";
@@ -127,7 +127,7 @@ export const NovoRelatorioVisitas = () => {
           "Rascunho do Relatório de Fiscalização salvo com sucesso!"
         );
         navigate(
-          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`
+          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
         );
       } else {
         toastError(
@@ -143,7 +143,7 @@ export const NovoRelatorioVisitas = () => {
           "Rascunho do Relatório de Fiscalização salvo com sucesso!"
         );
         navigate(
-          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`
+          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
         );
       } else {
         toastError(
@@ -166,7 +166,9 @@ export const NovoRelatorioVisitas = () => {
     );
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Relatório de Fiscalização enviado com sucesso!");
-      navigate(`/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`);
+      navigate(
+        `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
+      );
     } else {
       toastError(
         "Erro ao enviar Relatório de Fiscalização. Tente novamente mais tarde."

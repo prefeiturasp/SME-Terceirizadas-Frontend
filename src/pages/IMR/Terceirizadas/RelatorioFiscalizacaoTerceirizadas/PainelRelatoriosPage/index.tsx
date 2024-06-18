@@ -5,12 +5,12 @@ import Page from "components/Shareable/Page/Page";
 import {
   SUPERVISAO,
   TERCEIRIZADAS,
-  PAINEL_RELATORIOS_VISITAS,
+  PAINEL_RELATORIOS_FISCALIZACAO,
 } from "configs/constants";
 import { PainelRelatorios } from "components/screens/IMR/Terceirizadas/RelatorioFiscalizacaoTerceirizadas/PainelRelatorios";
 
 const atual = {
-  href: `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_VISITAS}`,
+  href: `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`,
   titulo: "Painel de Acompanhamento dos Relatórios",
 };
 
