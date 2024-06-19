@@ -595,7 +595,7 @@ export const PERIODOS_OPTIONS = [
   { nome: "Todos", uuid: "" },
 ];
 
-export const PERIODO_SOBRAS = [
+export const PERIODO_DESPERDICIO = [
   {
     uuid: "M",
     nome: "Manhã",

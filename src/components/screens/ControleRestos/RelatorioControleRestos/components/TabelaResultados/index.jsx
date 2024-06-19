@@ -46,6 +46,7 @@ const TabelaControleRestos = ({ list, getFiltros }) => {
                 <tr className="table-head-items">
                   <th className="escola">Escola</th>
                   <th className="data_medicao">Data da Medição</th>
+                  <th className="periodo">Período</th>
                   <th className="quantidade_distribuida">
                     Quantidade Distribuída
                   </th>
@@ -67,6 +68,7 @@ const TabelaControleRestos = ({ list, getFiltros }) => {
                           <small>{item.dre_nome}</small>
                         </td>
                         <td>{item.data_medicao}</td>
+                        <td>{item.periodo}</td>
                         <td>{item.quantidade_distribuida_soma}</td>
                         <td>{item.peso_resto_soma}</td>
                         <td>{item.num_refeicoes}</td>

@@ -3,7 +3,7 @@ import { EyeOutlined } from "@ant-design/icons";
 
 import "./styles.scss";
 import ModalCadastrarControleSobras from "components/Shareable/ModalCadastrarControleSobras";
-import { PERIODO_SOBRAS } from "../../../../../../constants/shared";
+import { PERIODO_DESPERDICIO } from "../../../../../../constants/shared";
 
 const TabelaControleSobras = ({ list, nextPage }) => {
   const [showModal, setShowModal] = useState(false);
@@ -51,7 +51,12 @@ const TabelaControleSobras = ({ list, nextPage }) => {
                     <Fragment key={idx}>
                       <tr className="table-body-items">
                         <td>{item.data_medicao}</td>
-                        <td>{PERIODO_SOBRAS.find((p) => p.uuid === item.periodo).nome}</td>
+                        <td>
+                          {item.periodo &&
+                            PERIODO_DESPERDICIO.find(
+                              (p) => p.uuid === item.periodo
+                            ).nome}
+                        </td>
                         <td>{item.usuario?.nome}</td>
                         <td>{item.tipo_alimentacao_nome}</td>
                         <td>{item.escola?.nome}</td>
