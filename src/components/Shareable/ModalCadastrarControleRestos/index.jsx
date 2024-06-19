@@ -30,7 +30,7 @@ import "./styles.scss";
 import ManagedInputFileField from "../Input/InputFile/ManagedField";
 import { InputComData } from "../DatePicker";
 import moment from "moment";
-import { InputHorario } from "../Input/InputHorario";
+import { PERIODO_DESPERDICIO } from "../../../constants/shared";
 
 const ModalCadastrarControleRestos = ({
   closeModal,
@@ -45,8 +45,6 @@ const ModalCadastrarControleRestos = ({
   const [escolaSelected, setEscolaSelected] = useState();
   const [tiposAlimentacao, setTiposAlimentacao] = useState([]);
   const [initialValues, setInitialValues] = useState(undefined);
-  const [HoraMedicao, setHoraMedicao] = useState("00:00");
-  const [HoraMedicaoAlterada, setHoraMedicaoAlterada] = useState(false);
 
   const [registroEdicao, setRegistroEdicao] = useState(selecionado);
 
@@ -54,8 +52,8 @@ const ModalCadastrarControleRestos = ({
     if (selecionado) {
       setRegistroEdicao(selecionado);
 
-      const data_hora_medicao = selecionado.data_hora_medicao
-        ? moment(selecionado.data_hora_medicao, "DD/MM/YYYY HH:mm")
+      const data_medicao = selecionado.data_medicao
+        ? moment(selecionado.data_medicao, "DD/MM/YYYY")
         : null;
 
       const _initValues = {
@@ -69,16 +67,13 @@ const ModalCadastrarControleRestos = ({
         ),
         cardapio: selecionado.cardapio,
         resto_predominante: selecionado.resto_predominante,
-        data_medicao: data_hora_medicao
-          ? data_hora_medicao.format("DD/MM/YYYY")
-          : null,
-        hora_medicao: data_hora_medicao
-          ? data_hora_medicao.format("HH:mm")
-          : "00:00",
+        data_medicao: data_medicao ? data_medicao.format("DD/MM/YYYY") : null,
+        periodo:
+          selecionado.periodo &&
+          PERIODO_DESPERDICIO.find((p) => p.uuid === selecionado.periodo).nome,
       };
 
       setInitialValues(_initValues);
-      setHoraMedicao(_initValues.hora_medicao);
       onBlurEscola(undefined, {
         escola:
           selecionado?.escola.codigo_eol + " - " + selecionado.escola?.nome,
@@ -86,10 +81,7 @@ const ModalCadastrarControleRestos = ({
     } else {
       setRegistroEdicao(undefined);
       setNomeEscolas(escolas.map(ue => `${ue.codigo_eol} - ${ue.label}`));
-      setHoraMedicao("00:00");
-      setInitialValues({
-        hora_medicao: "00:00",
-      });
+      setInitialValues({});
     }
   };
 
@@ -135,12 +127,9 @@ const ModalCadastrarControleRestos = ({
   };
 
   const onSubmit = async (formValues) => {
-    const data_hora_medicao = formValues.data_medicao + " " + formValues.hora_medicao; 
-    moment(data_hora_medicao, "DD/MM/YYYY HH:mm:ss");
-
-    if (moment(data_hora_medicao, "DD/MM/YYYY HH:mm:ss").isAfter(moment())) {
+    if (moment(formValues.data_medicao, "DD/MM/YYYY").isAfter(moment())) {
       return toastError(
-        "Data/Hora da Medição não podem ser posteriores à data e hora atual"
+        "Data da Medição não podem ser posteriores à data."
       );
     }
 
@@ -160,7 +149,8 @@ const ModalCadastrarControleRestos = ({
         nome: a.nome,
         arquivo: a.base64,
       })),
-      data_hora_medicao: data_hora_medicao,
+      data_medicao: formValues.data_medicao,
+      periodo: PERIODO_DESPERDICIO.find(p => p.nome === formValues.periodo).uuid,
     };
 
     await cadastrarControleRestos(payload)
@@ -203,10 +193,7 @@ const ModalCadastrarControleRestos = ({
 
   const formatDecimal = (value) => {
     if (!value) return value;
-    return value.toLocaleString("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+    return value.replaceAll('.', ',');
   };
 
   const parseDecimal = (value) => {
@@ -228,26 +215,6 @@ const ModalCadastrarControleRestos = ({
         "<iframe width='100%' height='100%' src='" + file.base64 + "'></iframe>"
       );
     }
-  };
-
-  const escolherHora = (hora, form) => {
-    setTimeout(() => {
-      if (hora) {
-        const horario = moment(hora.toDate()).format("HH:mm:ss");
-        setHoraMedicao(horario);
-        setHoraMedicaoAlterada(true);
-        form.change("hora_medicao", horario);
-      } else {
-        setHoraMedicao("00:00:00");
-        setHoraMedicaoAlterada(false);
-        form.change("hora_medicao", "00:00:00");
-      }
-    }, 250);
-  };
-
-  const validaHora = (value) => {
-    value = HoraMedicaoAlterada ? HoraMedicao : undefined;
-    return value !== undefined ? "" : "Campo obrigatório";
   };
 
   return (
@@ -342,22 +309,22 @@ const ModalCadastrarControleRestos = ({
                     </div>
                     <div className="col-3">
                       <Field
-                        component={InputHorario}
-                        label="Hora da Medição"
-                        name="hora_medicao"
-                        placeholder="Selecione a Hora"
-                        horaAtual={HoraMedicao}
-                        onOk={(hora) => escolherHora(hora, form)}
-                        onChangeFunction={(hora) => escolherHora(hora, form)}
-                        writable={false}
+                        dataSource={PERIODO_DESPERDICIO.map((tipo) => tipo.nome)}
+                        name="periodo"
+                        label="Período"
+                        component={AutoCompleteField}
+                        placeholder={"Digite o Período"}
                         className={
-                          "input-data-hora" +
-                          (registroEdicao ? " input-controle-restos" : "")
+                          registroEdicao
+                            ? "input-controle-sobras"
+                            : "input-busca-nome-item"
                         }
                         disabled={!!registroEdicao}
-                        validate={validaHora}
+                        validate={composeValidators(
+                          required,
+                          requiredOptionSearchSelect(PERIODO_DESPERDICIO, "nome")
+                        )}
                         required
-                        functionComponent
                       />
                     </div>
                     <div className="col-6">

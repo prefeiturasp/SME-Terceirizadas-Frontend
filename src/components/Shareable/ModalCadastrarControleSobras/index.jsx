@@ -33,7 +33,7 @@ import { bindActionCreators } from "redux";
 import "./styles.scss";
 import { InputComData } from "../DatePicker";
 import moment from "moment";
-import { PERIODO_SOBRAS } from "../../../constants/shared";
+import { PERIODO_DESPERDICIO } from "../../../constants/shared";
 
 const ModalCadastrarControleSobras = ({
   closeModal,
@@ -87,7 +87,9 @@ const ModalCadastrarControleSobras = ({
         data_medicao: data_medicao
           ? data_medicao.format("DD/MM/YYYY")
           : null,
-        periodo: PERIODO_SOBRAS.find(p => p.uuid === selecionado.periodo).nome,
+        periodo:
+          selecionado.periodo &&
+          PERIODO_DESPERDICIO.find((p) => p.uuid === selecionado.periodo).nome,
       };
 
       setInitialValues(_initValues);
@@ -178,7 +180,7 @@ const ModalCadastrarControleSobras = ({
       peso_recipiente: parseDecimal(formValues.peso_recipiente),
       peso_sobra: parseDecimal(formValues.peso_sobra),
       data_medicao: formValues.data_medicao,
-      periodo: PERIODO_SOBRAS.find(p => p.nome === formValues.periodo).uuid,
+      periodo: PERIODO_DESPERDICIO.find(p => p.nome === formValues.periodo).uuid,
     };
 
     await cadastrarControleSobras(payload)
@@ -221,10 +223,7 @@ const ModalCadastrarControleSobras = ({
 
   const formatDecimal = (value) => {
     if (!value) return value;
-    return value.toLocaleString("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+    return value.replaceAll('.', ',');
   };
 
   const parseDecimal = (value) => {
@@ -324,7 +323,7 @@ const ModalCadastrarControleSobras = ({
                     </div>
                     <div className="col-3">
                       <Field
-                        dataSource={PERIODO_SOBRAS.map((tipo) => tipo.nome)}
+                        dataSource={PERIODO_DESPERDICIO.map((tipo) => tipo.nome)}
                         name="periodo"
                         label="Período"
                         component={AutoCompleteField}
@@ -337,7 +336,7 @@ const ModalCadastrarControleSobras = ({
                         disabled={!!registroEdicao}
                         validate={composeValidators(
                           required,
-                          requiredOptionSearchSelect(PERIODO_SOBRAS, "nome")
+                          requiredOptionSearchSelect(PERIODO_DESPERDICIO, "nome")
                         )}
                         required
                       />
