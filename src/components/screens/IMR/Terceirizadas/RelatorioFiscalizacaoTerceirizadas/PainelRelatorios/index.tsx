@@ -12,6 +12,7 @@ import {
   TERCEIRIZADAS,
   EDITAR,
 } from "configs/constants";
+import { STATUS_IMR_FORMULARIO_SUPERVISAO } from "constants/shared";
 import { Filtros } from "./components/Filtros";
 import {
   FiltrosRelatoriosVisitasInterface,
@@ -134,7 +135,12 @@ export const PainelRelatorios = () => {
                     <>
                       <Listagem
                         objetos={relatoriosVisita}
-                        handleEditAction={goToFormularioSupervisao}
+                        handleEditAction={
+                          statusSelecionado ===
+                          STATUS_IMR_FORMULARIO_SUPERVISAO.EM_PREENCHIMENTO
+                            ? goToFormularioSupervisao
+                            : null
+                        }
                       />
                       <div className="row">
                         <div className="col">

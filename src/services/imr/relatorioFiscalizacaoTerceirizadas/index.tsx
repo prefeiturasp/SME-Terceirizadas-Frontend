@@ -70,6 +70,17 @@ export const createFormularioSupervisao = async (
   }
 };
 
+export const updateFormularioSupervisao = async (
+  params: NovoRelatorioVisitasFormInterface
+) => {
+  const url = `${API_URL}/imr/formulario-supervisao/${params.uuid}/`;
+  const response = await axios.put(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const getFormularioSupervisao = async (uuid: string) => {
   const url = `${API_URL}/imr/formulario-supervisao/${uuid}/`;
   const response = await axios.get(url).catch(ErrorHandlerFunction);

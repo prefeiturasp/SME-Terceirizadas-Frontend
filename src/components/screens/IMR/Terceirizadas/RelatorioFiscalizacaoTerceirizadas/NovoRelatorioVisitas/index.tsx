@@ -27,6 +27,7 @@ import {
   createFormularioSupervisao,
   createRascunhoFormularioSupervisao,
   updateRascunhoFormularioSupervisao,
+  updateFormularioSupervisao,
   getTiposOcorrenciaPorEditalNutrisupervisao,
   getFormularioSupervisao,
   getRespostasFormularioSupervisao,
@@ -164,18 +165,39 @@ export const NovoRelatorioVisitas = () => {
       return;
     }
 
-    const response = await createFormularioSupervisao(
-      formataPayload(values, escolaSelecionada, anexos)
-    );
-    if (response.status === HTTP_STATUS.CREATED) {
-      toastSuccess("Relatório de Fiscalização enviado com sucesso!");
-      navigate(
-        `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
+    if (values.uuid) {
+      const response = await updateFormularioSupervisao(
+        formataPayloadUpdate(
+          values,
+          escolaSelecionada,
+          anexos,
+          respostasOcorrenciaNaoSeAplica
+        )
       );
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Relatório de Fiscalização enviado com sucesso!");
+        navigate(
+          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
+        );
+      } else {
+        toastError(
+          "Erro ao enviar Relatório de Fiscalização. Tente novamente mais tarde."
+        );
+      }
     } else {
-      toastError(
-        "Erro ao enviar Relatório de Fiscalização. Tente novamente mais tarde."
+      const response = await createFormularioSupervisao(
+        formataPayload(values, escolaSelecionada, anexos)
       );
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess("Relatório de Fiscalização enviado com sucesso!");
+        navigate(
+          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
+        );
+      } else {
+        toastError(
+          "Erro ao enviar Relatório de Fiscalização. Tente novamente mais tarde."
+        );
+      }
     }
   };
 
@@ -221,7 +243,6 @@ export const NovoRelatorioVisitas = () => {
         form.getState().values,
         tiposOcorrencia
       );
-
     return (
       !form.getState().hasValidationErrors &&
       _validarFormulariosTiposOcorrencia.formulariosValidos &&
@@ -271,7 +292,7 @@ export const NovoRelatorioVisitas = () => {
               </div>
               {!erroAPI && (
                 <Spin spinning={loadingTiposOcorrencia}>
-                  {tiposOcorrencia && (
+                  {tiposOcorrencia && escolaSelecionada && (
                     <Formulario
                       respostasOcorrencias={respostasOcorrencias}
                       respostasOcorrenciaNaoSeAplica={

@@ -34,6 +34,7 @@ export const Anexos = ({ ...props }: AnexosType) => {
       })
     );
     setArquivosIniciais(anexosIniciaisFormatados);
+    setFiles(anexosIniciaisFormatados);
   };
 
   const setFiles = (files: Array<ArquivoFormInterface>): void => {

@@ -4,7 +4,10 @@ import strip_tags from "locutus/php/strings/strip_tags";
 import { ALT_CARDAPIO } from "components/screens/helper";
 import { TIPO_PERFIL } from "constants/shared";
 
-export const required = (value) => (!value ? "Campo obrigatório" : undefined);
+export const required = (value) =>
+  value === null || value === undefined || value === ""
+    ? "Campo obrigatório"
+    : undefined;
 
 export const ehDiaUtil = (values, motivos, feriadosAno) => (value) => {
   const ehLPRouRPL = () => {

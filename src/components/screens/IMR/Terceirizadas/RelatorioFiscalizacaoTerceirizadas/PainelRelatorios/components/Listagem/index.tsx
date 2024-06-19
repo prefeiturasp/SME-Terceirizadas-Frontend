@@ -39,13 +39,15 @@ export const Listagem: React.FC<Props> = ({ objetos, handleEditAction }) => {
                 <div>{objeto.data}</div>
                 <div>{objeto.status}</div>
                 <div>
-                  <Botao
-                    type={BUTTON_TYPE.BUTTON}
-                    style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
-                    icon={BUTTON_ICON.EDIT}
-                    onClick={() => handleEditAction(objeto.uuid)}
-                    tooltipExterno="Editar relatório"
-                  />
+                  {handleEditAction ? (
+                    <Botao
+                      type={BUTTON_TYPE.BUTTON}
+                      style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
+                      icon={BUTTON_ICON.EDIT}
+                      onClick={() => handleEditAction(objeto.uuid)}
+                      tooltipExterno="Editar relatório"
+                    />
+                  ) : null}
                 </div>
               </div>
             </>
