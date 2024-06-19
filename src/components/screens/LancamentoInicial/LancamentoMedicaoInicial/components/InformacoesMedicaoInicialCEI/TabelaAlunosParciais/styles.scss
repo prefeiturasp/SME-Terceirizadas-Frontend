@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 .tabela-alunos-parciais {
   padding: 12px;
 
@@ -30,6 +32,13 @@
   .ant-table {
     border: 1px solid #ccc;
   }
+
+  .botao-excluir-tabela-parcial {
+    &:hover:not(:disabled) {
+      border-color: $red !important;
+      background-color: $red !important;
+    }
+  }
 }
 .table-disabled {
   pointer-events: none;
@@ -37,4 +46,28 @@
 }
 .input-error .ant-input {
   border-color: red !important;
+}
+.msg-alunos-parciais {
+  display: flex;
+  color: $green;
+  font-weight: 700;
+
+  .icon-exclamation-alunos-parciais {
+    text-align: center;
+    background-color: $green;
+    color: $white;
+    width: 25px !important;
+    height: 25px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+}
+.msg-rodape {
+  .required-asterisk {
+    color: $red;
+    margin-right: 6px;
+  }
+  label {
+    font-size: 12px !important;
+  }
 }

@@ -17,5 +17,3 @@ export const IconeAbastecimento = () => {
     </svg>
   );
 };
-
-export default IconeAbastecimento;

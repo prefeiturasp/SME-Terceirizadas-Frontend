@@ -18,6 +18,12 @@ import {
   EscolaSimplissimaInterface,
 } from "interfaces/escola.interface";
 import {
+  EscolaLabelInterface,
+  NovoRelatorioVisitasFormInterface,
+  PeriodoDeVisitaInterface,
+  TipoOcorrenciaInterface,
+} from "interfaces/imr.interface";
+import {
   ResponseDiretoriasRegionaisSimplissimaInterface,
   ResponseGetEscolasTercTotalInterface,
   ResponseGetQuantidadeAlunosMatriculadosPorDataInterface,
@@ -32,17 +38,19 @@ import {
   getQuantidadeAlunosMatriculadosPorData,
 } from "services/escola.service";
 import { getPeriodosVisita } from "services/imr/relatorioFiscalizacaoTerceirizadas";
-import {
-  PeriodoDeVisitaInterface,
-  EscolaLabelInterface,
-  NovoRelatorioVisitasFormInterface,
-} from "interfaces/imr.interface";
 
 type CabecahoType = {
   form: FormApi<any, Partial<any>>;
   values: NovoRelatorioVisitasFormInterface;
   setEscolaSelecionada: (_escola: EscolaLabelInterface) => void;
   escolaSelecionada: EscolaLabelInterface;
+  getTiposOcorrenciaPorEditalNutrisupervisaoAsync: (
+    _form: FormApi<any, Partial<any>>,
+    _escola: EscolaLabelInterface
+  ) => Promise<void>;
+  setTiposOcorrencia: (
+    _tiposOcorrencia: Array<TipoOcorrenciaInterface>
+  ) => void;
 };
 
 export const Cabecalho = ({ ...props }: CabecahoType) => {
@@ -58,7 +66,15 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
 
   const [erroAPI, setErroAPI] = useState<string>("");
 
-  const { form, values, setEscolaSelecionada } = props;
+  const {
+    form,
+    values,
+    setEscolaSelecionada,
+    getTiposOcorrenciaPorEditalNutrisupervisaoAsync,
+    setTiposOcorrencia,
+  } = props;
+
+  const initialValues = form.getState().initialValues;
 
   const getDiretoriasRegionaisAsync = async (): Promise<void> => {
     const response: ResponseDiretoriasRegionaisSimplissimaInterface =
@@ -104,6 +120,19 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
     setLoadingEscolas(false);
   };
 
+  const setEscolaInitialValues = async (uuid: string) => {
+    const _escola = escolas.find((e: EscolaLabelInterface) => e.uuid === uuid);
+    if (_escola) {
+      form.change("escola", _escola.value);
+      form.change("lote", _escola?.lote_nome);
+      form.change("terceirizada", _escola?.terceirizada);
+
+      setEscolaSelecionada(_escola);
+      await getTiposOcorrenciaPorEditalNutrisupervisaoAsync(form, _escola);
+      await getTotalAlunosMatriculadosPorData(values.data, _escola.uuid);
+    }
+  };
+
   const getTotalAlunosMatriculadosPorData = async (
     data: string,
     escolaUUID: string
@@ -147,6 +176,18 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
     requisicoesPreRender();
   }, []);
 
+  useEffect(() => {
+    if (initialValues && initialValues.diretoria_regional) {
+      getEscolasTercTotalAsync(initialValues.diretoria_regional);
+    }
+  }, [initialValues]);
+
+  useEffect(() => {
+    if (escolas.length && initialValues && initialValues.escola) {
+      setEscolaInitialValues(initialValues.escola);
+    }
+  }, [initialValues, escolas]);
+
   const LOADING = !diretoriasRegionais || !periodosVisita;
 
   return (
@@ -175,6 +216,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                     required
                     onChangeEffect={(e: ChangeEvent<HTMLInputElement>) => {
                       const value = e.target.value;
+                      setTiposOcorrencia(undefined);
                       form.change("escola", undefined);
                       form.change("lote", undefined);
                       form.change("terceirizada", undefined);
@@ -202,24 +244,31 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       placeholder={"Selecione uma Unidade"}
                       required
                       disabled={!values.diretoria_regional || loadingEscolas}
-                      inputOnChange={(value: string) => {
+                      inputOnChange={async (value: string) => {
+                        setTiposOcorrencia(undefined);
                         const _escola = escolas.find(
                           (e: EscolaLabelInterface) => e.value === value
                         );
+                        if (_escola) {
+                          form.change("total_matriculados_por_data", undefined);
+                          form.change("maior_frequencia_no_periodo", undefined);
 
-                        form.change("total_matriculados_por_data", undefined);
-                        form.change("maior_frequencia_no_periodo", undefined);
+                          form.change("lote", _escola?.lote_nome);
+                          form.change("terceirizada", _escola?.terceirizada);
 
-                        form.change("lote", _escola?.lote_nome);
-                        form.change("terceirizada", _escola?.terceirizada);
-
-                        setEscolaSelecionada(_escola);
-
-                        if (values.data && _escola) {
-                          getTotalAlunosMatriculadosPorData(
-                            values.data,
-                            _escola.uuid
+                          await setEscolaSelecionada(_escola);
+                          await getTiposOcorrenciaPorEditalNutrisupervisaoAsync(
+                            form,
+                            _escola
                           );
+                          if (values.data && _escola) {
+                            await getTotalAlunosMatriculadosPorData(
+                              values.data,
+                              _escola.uuid
+                            );
+                          }
+                        } else {
+                          setEscolaSelecionada(undefined);
                         }
                       }}
                     />
@@ -306,7 +355,6 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       label="Nº de Matriculados da Unidade"
                       name="total_matriculados_por_data"
                       required
-                      validate={required}
                       disabled
                     />
                   </Spin>
@@ -325,9 +373,11 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                         values.total_matriculados_por_data
                       )
                     )}
+                    min={0}
                     placeholder="Informe a quantidade"
                     disabled={
-                      !values.total_matriculados_por_data ||
+                      values.total_matriculados_por_data === null ||
+                      values.total_matriculados_por_data === undefined ||
                       loadingTotalMatriculadosPorData
                     }
                   />
