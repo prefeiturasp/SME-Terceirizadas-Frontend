@@ -34,14 +34,7 @@ export const Ocorrencia = ({ ...props }: OcorrenciaType) => {
 
   const excluiGrupoDeResposta = (): void => {
     const grupos = [...form.getState().values[`grupos_${tipoOcorrencia.uuid}`]];
-    const currentDeletedGrupos =
-      form.getState().values[`grupos_${tipoOcorrencia.uuid}_deleted`];
-
-    const deletedGrupo = grupos.splice(indexFieldArray, 1);
-    form.change(`grupos_${tipoOcorrencia.uuid}_deleted`, [
-      ...(currentDeletedGrupos ? currentDeletedGrupos : []),
-      ...deletedGrupo,
-    ]);
+    grupos.splice(indexFieldArray, 1);
     form.change(`grupos_${tipoOcorrencia.uuid}`, grupos);
   };
 

@@ -21,14 +21,15 @@ export const formataPayloadUpdate = (
     respostasOcorrenciaNaoSeAplica
   );
 
-  const { respostas: ocorrencias, respostas_delete: ocorrencias_to_delete } =
-    formatOcorrencias(values);
+  const { respostas: ocorrencias } = formatOcorrencias(values);
+
+  const ocorrencias_sim = formatOcorrenciasSim(values);
 
   return {
     ...values_,
     ocorrencias_nao_se_aplica,
     ocorrencias,
-    ocorrencias_to_delete,
+    ocorrencias_sim,
     anexos,
   };
 };
@@ -49,6 +50,19 @@ export const formataPayload = (
   const { respostas: ocorrencias } = formatOcorrencias(values);
 
   return { ...values_, ocorrencias_nao_se_aplica, ocorrencias, anexos };
+};
+
+const formatOcorrenciasSim = (values: NovoRelatorioVisitasFormInterface) => {
+  const ocorrencias_sim = [];
+
+  Object.keys(values).forEach((key) => {
+    if (key.includes("ocorrencia_") && values[key] === "sim") {
+      const tipoOcorrenciaUUID = key.split("_")[1];
+      ocorrencias_sim.push(tipoOcorrenciaUUID);
+    }
+  });
+
+  return ocorrencias_sim;
 };
 
 const formatOcorrenciasNaoSeAplica = (
@@ -101,14 +115,13 @@ const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
       const parametrizacaoUUID = itemsKey[3];
       const resposta = grupo[keyGrupo];
       const respostaUUID = itemsKey[5];
-      const deleteExistingGrupo = itemsKey.includes("deleted");
       const respostaObj = respostaUUID
         ? {
             uuid: respostaUUID,
             tipoOcorrencia: tipoOcorrenciaUUID,
             parametrizacao: parametrizacaoUUID,
             resposta: resposta,
-            delete: deleteExistingGrupo,
+            grupo: indexGrupo + 1,
           }
         : {
             tipoOcorrencia: tipoOcorrenciaUUID,
@@ -143,12 +156,7 @@ const formatOcorrencias = (values: NovoRelatorioVisitasFormInterface) => {
     }
   });
 
-  return {
-    ocorrenciasNao,
-    respostas: respostas.filter((resposta) => !resposta.delete),
-    respostas_delete: respostas.filter((resposta) => resposta.delete === true),
-    grupos,
-  };
+  return { ocorrenciasNao, respostas, grupos };
 };
 
 export const validarFormulariosTiposOcorrencia = (
@@ -156,6 +164,7 @@ export const validarFormulariosTiposOcorrencia = (
   tiposOcorrencia: Array<TipoOcorrenciaInterface>
 ) => {
   const { respostas, ocorrenciasNao, grupos } = formatOcorrencias(values);
+
   // valida todos os tipos de ocorrência assinalados como "não"
   const listaValidacaoPorTipoOcorrencia = ocorrenciasNao.map(
     (_ocorrenciaUUID) => {
