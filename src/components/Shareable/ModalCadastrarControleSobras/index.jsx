@@ -155,7 +155,7 @@ const ModalCadastrarControleSobras = ({
     form?.change("tipo_alimentacao", undefined);
   }
 
-  const onSubmit = async (formValues) => {
+  const onSubmit = async (formValues, form) => {
     if (moment(formValues.data_medicao, "DD/MM/YYYY").isAfter(moment())) {
       return toastError(
         "Data da Medição não podem ser posteriores à data."
@@ -187,6 +187,7 @@ const ModalCadastrarControleSobras = ({
       .then(() => {
         toastSuccess("Cadastro de Sobras efetuado com sucesso.");
         cleanForm(formValues);
+        form.restart();
       })
       .catch((error) => {
         toastError(error.response.data[0]);
@@ -245,7 +246,7 @@ const ModalCadastrarControleSobras = ({
             initialValues={initialValues}
             validate={() => {}}
             render={({ handleSubmit, submitting, form, values }) => (
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={values => handleSubmit(values, form)}>
                 <Modal.Body>
                   <div className="row">
                     <div className="col-6">
@@ -411,6 +412,8 @@ const ModalCadastrarControleSobras = ({
                         name="peso_recipiente"
                         component={InputText}
                         placeholder={"Digite o Peso do Recipiente"}
+                        agrupadorMilharComDecimal
+                        maxlength="6"
                         required
                         proibeLetras
                         className={registroEdicao ? "input-controle-sobras" : "input-busca-nome-item"}
@@ -427,6 +430,8 @@ const ModalCadastrarControleSobras = ({
                         name="peso_alimento"
                         component={InputText}
                         placeholder={"Digite o Peso do Alimento Pronto"}
+                        agrupadorMilharComDecimal
+                        maxlength="6"
                         className={registroEdicao ? "input-controle-sobras" : ""}
                         required
                         proibeLetras
@@ -443,6 +448,8 @@ const ModalCadastrarControleSobras = ({
                         name="peso_sobra"
                         component={InputText}
                         placeholder={"Digite o Peso da Sobra"}
+                        agrupadorMilharComDecimal
+                        maxlength="6"
                         required
                         proibeLetras
                         className={registroEdicao ? "input-controle-sobras" : ""}
