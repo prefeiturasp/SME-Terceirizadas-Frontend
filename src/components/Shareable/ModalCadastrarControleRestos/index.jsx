@@ -9,7 +9,6 @@ import {
   requiredSearchSelectUnidEducDietas,
   noSpaceStartOrEnd,
   requiredOptionSearchSelect,
-  inteiroOuDecimalComVirgula,
   peloMenosUmCaractere
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
@@ -126,7 +125,7 @@ const ModalCadastrarControleRestos = ({
     form?.change("tipo_alimentacao", undefined);
   };
 
-  const onSubmit = async (formValues) => {
+  const onSubmit = async (formValues, form) => {
     if (moment(formValues.data_medicao, "DD/MM/YYYY").isAfter(moment())) {
       return toastError(
         "Data da Medição não podem ser posteriores à data."
@@ -157,6 +156,7 @@ const ModalCadastrarControleRestos = ({
       .then(() => {
         toastSuccess("Cadastro de Resto efetuado com sucesso.");
         cleanForm(formValues);
+        form.restart();
       })
       .catch((error) => {
         toastError(error.response.data[0]);
@@ -231,7 +231,7 @@ const ModalCadastrarControleRestos = ({
             initialValues={initialValues}
             validate={() => {}}
             render={({ handleSubmit, submitting, form, values }) => (
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={values => handleSubmit(values, form)}>
                 <Modal.Body>
                   <div className="row">
                     <div className="col-6">
@@ -388,13 +388,12 @@ const ModalCadastrarControleRestos = ({
                         name="peso_resto"
                         component={InputText}
                         placeholder={"Digite o Peso do Resto"}
+                        agrupadorMilharComDecimal
+                        maxlength="6"
                         className={registroEdicao ? "input-controle-restos" : ""}
                         required
                         proibeLetras
-                        validate={composeValidators(
-                          required,
-                          inteiroOuDecimalComVirgula,
-                        )}
+                        validate={composeValidators(required)}
                         disabled={!!registroEdicao}
                       />
                     </div>
@@ -404,13 +403,12 @@ const ModalCadastrarControleRestos = ({
                         name="quantidade_distribuida"
                         component={InputText}
                         placeholder={"Digite o Peso da Quantidade Distribuída"}
+                        agrupadorMilharComDecimal
+                        maxlength="6"
                         className={registroEdicao ? "input-controle-restos" : ""}
                         required
                         proibeLetras
-                        validate={composeValidators(
-                          required,
-                          inteiroOuDecimalComVirgula,
-                        )}
+                        validate={composeValidators(required)}
                         disabled={!!registroEdicao}
                       />
                     </div>
