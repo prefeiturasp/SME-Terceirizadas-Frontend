@@ -147,7 +147,7 @@ const PainelInicial = () => {
           </CardLogo>
         </Col>
       )}
-      {usuarioEhNutricionistaSupervisao() && (
+      {usuarioEhNutricionistaSupervisao() && ENVIRONMENT !== "production" && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Supervisão Terceirizadas"}

@@ -194,7 +194,8 @@ export const SidebarContent = () => {
 
   const exibirMenuRecebimento = usuarioEhRecebimento();
 
-  const exibirMenuSupervisao = usuarioEhNutricionistaSupervisao();
+  const exibirMenuSupervisao =
+    usuarioEhNutricionistaSupervisao() && ENVIRONMENT !== "production";
 
   const _props = {
     activeMenu,
