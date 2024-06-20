@@ -8,7 +8,6 @@ import {
   required,
   requiredSearchSelectUnidEducDietas,
   requiredOptionSearchSelect,
-  inteiroOuDecimalComVirgula
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
@@ -417,10 +416,7 @@ const ModalCadastrarControleSobras = ({
                         required
                         proibeLetras
                         className={registroEdicao ? "input-controle-sobras" : "input-busca-nome-item"}
-                        validate={composeValidators(
-                          required,
-                          inteiroOuDecimalComVirgula,
-                        )}
+                        validate={composeValidators(required)}
                         disabled={!!registroEdicao}
                       />
                     </div>
@@ -435,10 +431,7 @@ const ModalCadastrarControleSobras = ({
                         className={registroEdicao ? "input-controle-sobras" : ""}
                         required
                         proibeLetras
-                        validate={composeValidators(
-                          required,
-                          inteiroOuDecimalComVirgula,
-                        )}
+                        validate={composeValidators(required)}
                         disabled={!!registroEdicao}
                       />
                     </div>
@@ -453,10 +446,7 @@ const ModalCadastrarControleSobras = ({
                         required
                         proibeLetras
                         className={registroEdicao ? "input-controle-sobras" : ""}
-                        validate={composeValidators(
-                          required,
-                          inteiroOuDecimalComVirgula,
-                        )}
+                        validate={composeValidators(required)}
                         disabled={!!registroEdicao}
                       />
                     </div>
