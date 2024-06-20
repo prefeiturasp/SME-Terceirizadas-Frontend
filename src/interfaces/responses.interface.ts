@@ -31,6 +31,7 @@ import {
   InsumoInterface,
   MobiliarioInterface,
   PeriodoDeVisitaInterface,
+  RelatorioVisitaItemListagem,
   ReparoEAdaptacaoInterface,
   TipoOcorrenciaInterface,
   UtensilioCozinhaInterface,
@@ -263,4 +264,8 @@ export interface ResponseReparoEAdaptacaoInterface extends ResponseInterface {
 
 export interface ResponseInsumoInterface extends ResponseInterface {
   data: ListagemNaoPaginada<InsumoInterface>;
+}
+
+export interface ResponseRelatoriosVisitas extends ResponseInterface {
+  data: ListagemPaginada<RelatorioVisitaItemListagem>;
 }

@@ -1,11 +1,13 @@
 import { Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
+  BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { MeusDadosContext } from "context/MeusDadosContext";
+import arrayMutators from "final-form-arrays";
 import HTTP_STATUS from "http-status-codes";
 import {
   EscolaLabelInterface,
@@ -14,6 +16,7 @@ import {
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
 import React, { useContext, useEffect, useState } from "react";
 import { Form } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
 import {
   Location,
   NavigateFunction,
@@ -24,6 +27,7 @@ import {
   createFormularioDiretor,
   getTiposOcorrenciaPorEditalDiretor,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
+import { AdicionarResposta } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/BotaoAdicionar";
 import RenderComponentByParametrizacao from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/RenderComponentByParametrizacao";
 import { SeletorDeDatas } from "../Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas/components/Formulario/components/Ocorrencia/Seletores/SeletorDeDatas";
 import { ModalCancelaPreenchimento } from "./components/ModalCancelaPreenchimento";
@@ -93,17 +97,18 @@ export const RegistrarNovaOcorrencia = () => {
     };
 
   useEffect(() => {
-    getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
-    setEscolaSelecionada({
-      label: "",
-      value: "",
-      lote_nome: "",
-      terceirizada: "",
-      edital: location.state?.editalUuid,
-      uuid: meusDados.vinculo_atual.instituicao.uuid,
-    });
-  }, []);
-
+    if (meusDados) {
+      getTiposOcorrenciaPorEditalNutrisupervisaoAsync();
+      setEscolaSelecionada({
+        label: "",
+        value: "",
+        lote_nome: "",
+        terceirizada: "",
+        edital: location.state?.editalUuid,
+        uuid: meusDados.vinculo_atual.instituicao.uuid,
+      });
+    }
+  }, [meusDados]);
   const onSubmit = async (
     values: RegistrarNovaOcorrenciaFormInterface
   ): Promise<void> => {
@@ -125,14 +130,42 @@ export const RegistrarNovaOcorrencia = () => {
     }
   };
 
+  const exibeBotaoAdicionar = (tipoOcorrencia: TipoOcorrenciaInterface) => {
+    return (
+      tipoOcorrencia.aceita_multiplas_respostas &&
+      tipoOcorrencia.parametrizacoes.length > 0
+    );
+  };
+
+  const excluiGrupoDeResposta = (form, indexFieldArray): void => {
+    const grupos = [...form.getState().values["grupos"]];
+    grupos.splice(indexFieldArray, 1);
+    form.change("grupos", grupos);
+  };
+
   return (
     <div className="card registrar-nova-ocorrencia mt-3">
       <div className="card-body">
         {!erroAPI && (
           <Spin spinning={loadingTiposOcorrencia}>
             {tiposOcorrencia && (
-              <Form destroyOnUnregister onSubmit={onSubmit}>
-                {({ handleSubmit, form, submitting }) => (
+              <Form
+                destroyOnUnregister
+                keepDirtyOnReinitialize
+                initialValues={{ grupos: [{}] }}
+                mutators={{
+                  ...arrayMutators,
+                }}
+                onSubmit={onSubmit}
+              >
+                {({
+                  handleSubmit,
+                  form,
+                  form: {
+                    mutators: { push },
+                  },
+                  submitting,
+                }) => (
                   <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-6">
@@ -152,6 +185,7 @@ export const RegistrarNovaOcorrencia = () => {
                           }
                           tiposOcorrencia={tiposOcorrencia}
                           values={form.getState().values}
+                          form={form}
                         />
                       </div>
                     </div>
@@ -188,32 +222,80 @@ export const RegistrarNovaOcorrencia = () => {
                             <SeletorDeDatas
                               titulo="Data da Ocorrência"
                               name="datas"
+                              name_grupos="datas_ocorrencias[0]"
                               form={form}
+                              ehDataOcorrencia
                             />
                           </div>
                         )}
-                        {tipoOcorrencia.parametrizacoes.length ? (
-                          tipoOcorrencia.parametrizacoes.map(
-                            (parametrizacao, index) => {
-                              return (
-                                <div key={index} className="row">
-                                  <RenderComponentByParametrizacao
-                                    index={index}
-                                    parametrizacao={parametrizacao}
-                                    tipoOcorrencia={tipoOcorrencia}
-                                    form={form}
-                                    key={index}
-                                    escolaSelecionada={escolaSelecionada}
-                                  />
-                                </div>
-                              );
-                            }
-                          )
-                        ) : (
-                          <div className="row mt-3">
-                            <div className="col-12">
-                              Não há parametrização para esse item.
-                            </div>
+                        <FieldArray name="grupos">
+                          {({ fields }) =>
+                            fields.map((name, indexFieldArray) => (
+                              <>
+                                {indexFieldArray > 0 && (
+                                  <div className="row">
+                                    <div className="col-11">
+                                      <hr />
+                                    </div>
+                                    <div className="col-1 text-end">
+                                      <Botao
+                                        className="no-border"
+                                        titulo="Excluir"
+                                        onClick={() =>
+                                          excluiGrupoDeResposta(
+                                            form,
+                                            indexFieldArray
+                                          )
+                                        }
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                                        icon={BUTTON_ICON.TRASH}
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                                {tipoOcorrencia.parametrizacoes.length ? (
+                                  tipoOcorrencia.parametrizacoes.map(
+                                    (parametrizacao) => {
+                                      return (
+                                        <div
+                                          key={indexFieldArray}
+                                          className="row"
+                                        >
+                                          <RenderComponentByParametrizacao
+                                            parametrizacao={parametrizacao}
+                                            name_grupos={name}
+                                            tipoOcorrencia={tipoOcorrencia}
+                                            form={form}
+                                            escolaSelecionada={
+                                              escolaSelecionada
+                                            }
+                                          />
+                                        </div>
+                                      );
+                                    }
+                                  )
+                                ) : (
+                                  <div
+                                    key={indexFieldArray}
+                                    className="row mt-3"
+                                  >
+                                    <div className="col-12">
+                                      Não há parametrização para esse item.
+                                    </div>
+                                  </div>
+                                )}
+                              </>
+                            ))
+                          }
+                        </FieldArray>
+
+                        {exibeBotaoAdicionar(tipoOcorrencia) && (
+                          <div className="text-center mt-3">
+                            <AdicionarResposta
+                              push={push}
+                              nameFieldArray="grupos"
+                            />
                           </div>
                         )}
                         <div className="row float-end mt-4">

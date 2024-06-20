@@ -5,20 +5,22 @@ import HTTP_STATUS from "http-status-codes";
 import { required } from "helpers/fieldValidators";
 import { getReparosEAdaptacoes } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { SelectOption } from "interfaces/option.interface";
+import { EscolaLabelInterface } from "interfaces/imr.interface";
 
 type SeletorReparosEAdaptacoesType = {
   titulo: string;
   name: string;
+  escolaSelecionada: EscolaLabelInterface;
 };
 
 export const SeletorReparosEAdaptacoes = ({
   ...props
 }: SeletorReparosEAdaptacoesType) => {
-  const { titulo, name } = props;
+  const { titulo, name, escolaSelecionada } = props;
   const [options, setOptions] = useState<Array<SelectOption>>([]);
 
-  const getOptionsAsync = async () => {
-    const response = await getReparosEAdaptacoes();
+  const getOptionsAsync = async (edital_uuid) => {
+    const response = await getReparosEAdaptacoes({ edital_uuid: edital_uuid });
     if (response.status === HTTP_STATUS.OK) {
       const itemsMap: Map<string, SelectOption> = new Map();
 
@@ -34,8 +36,10 @@ export const SeletorReparosEAdaptacoes = ({
   };
 
   useEffect(() => {
-    getOptionsAsync();
-  }, []);
+    if (escolaSelecionada) {
+      getOptionsAsync(escolaSelecionada.edital);
+    }
+  }, [escolaSelecionada]);
 
   return (
     <Field

@@ -17,6 +17,7 @@ export const CampoNumerico = ({ ...props }: CampoNumericoType) => {
       label={titulo}
       name={name}
       type="number"
+      min={0}
       required
       validate={required}
     />

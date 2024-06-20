@@ -86,6 +86,10 @@ div.novo-relatorio-visitas {
           }
         }
 
+        &.adicionar {
+          border-top: none;
+        }
+
         &.tipo-ocorrencia-parametrizacao {
           .parametrizacao-tipo-radio {
             label {

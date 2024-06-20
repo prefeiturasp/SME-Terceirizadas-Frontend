@@ -24,6 +24,9 @@ export interface NovoRelatorioVisitasFormInterface {
   anexos: Array<ArquivoInterface>;
 }
 
+export interface InitialValuesInterface {
+  [key: string]: Object[];
+}
 export interface EscolaLabelInterface {
   label: string;
   value: string;
@@ -31,6 +34,12 @@ export interface EscolaLabelInterface {
   terceirizada: string;
   edital: string;
   uuid: string;
+}
+
+export interface EscolaOptionsInterface {
+  uuid: string;
+  nome: string;
+  codigo_eol: string;
 }
 
 export interface PeriodoDeVisitaInterface {
@@ -66,6 +75,7 @@ export interface PenalidadeInterface {
 }
 
 export interface TipoOcorrenciaInterface {
+  aceita_multiplas_respostas: boolean;
   categoria: CategoriaTipoOcorrenciaInterface;
   descricao: string;
   parametrizacoes: Array<ParametrizacoesInterface>;
@@ -103,4 +113,49 @@ export interface ReparoEAdaptacaoInterface {
 export interface InsumoInterface {
   nome: string;
   uuid: string;
+}
+
+export interface FiltrosRelatoriosVisitasInterface {
+  diretoria_regional?: string;
+  unidade_educacional?: string;
+  data_inicial?: string;
+  data_final?: string;
+  status?: string;
+}
+
+export interface RelatorioVisitaItemListagem {
+  uuid?: string;
+  unidade_educacional?: string;
+  diretoria_regional?: string;
+  data?: string;
+  status?: string;
+}
+
+export interface RespostaOcorrenciaInterface {
+  criado_em: string;
+  alterado_em: string;
+  uuid: string;
+  grupo: number;
+  resposta: any;
+  formulario_base: number;
+  parametrizacao: {
+    uuid: string;
+    posicao: number;
+    titulo: string;
+    tipo_pergunta: {
+      uuid: string;
+      nome: string;
+    };
+    tipo_ocorrencia: string;
+  };
+}
+
+export interface RespostaOcorrenciaNaoSeAplicaInterface {
+  criado_em: string;
+  alterado_em: string;
+  uuid: string;
+  grupo: number;
+  descricao: string;
+  formulario_base: number;
+  tipo_ocorrencia: string;
 }
