@@ -1,17 +1,18 @@
+import React from "react";
+import { Field } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import {
   alunosEMEIporPeriodo,
+  arrTiposAlimentacaoPorPeriodoETipoUnidade,
   possuiAlunosCEIporPeriodo,
   tiposAlimentacaoPorPeriodoETipoUnidade,
-  tiposAlimentacaoMotivoEspecifico,
   totalAlunosInputPorPeriodoCEI,
   totalAlunosPorPeriodoCEI,
 } from "components/InclusaoDeAlimentacaoCEMEI/helpers";
 import InputText from "components/Shareable/Input/InputText";
 import { maxValue, naoPodeSerZero } from "helpers/fieldValidators";
-import { composeValidators } from "helpers/utilities";
-import React from "react";
-import { Field } from "react-final-form";
-import { FieldArray } from "react-final-form-arrays";
+import { composeValidators, formatarParaMultiselect } from "helpers/utilities";
 import "./style.scss";
 
 export const PeriodosCEIeouEMEI = ({
@@ -23,6 +24,14 @@ export const PeriodosCEIeouEMEI = ({
 }) => {
   const getPeriodo = (indice) => {
     return values.quantidades_periodo[indice];
+  };
+
+  const onTiposAlimentacaoChanged = (values_, indice) => {
+    form.change(
+      `quantidades_periodo[
+          ${indice}].tipos_alimentacao_selecionados`,
+      values_
+    );
   };
 
   return (
@@ -56,11 +65,31 @@ export const PeriodosCEIeouEMEI = ({
               {values.quantidades_periodo[indice][`checked`] && (
                 <div className="ms-5 me-5">
                   <div className="alunos-label mt-3">Alunos EMEI</div>
-                  <div className="tipos-alimentacao mt-3 mb-3">
+                  <div className="tipos-alimentacao mt-3 mb-3 row">
                     Tipos de alimentação do período {getPeriodo(indice).nome}:{" "}
-                    <span>
-                      {tiposAlimentacaoMotivoEspecifico(getPeriodo(indice))}
-                    </span>
+                    <div className="col-4">
+                      <Field
+                        component={StatefulMultiSelect}
+                        name="tipos_alimentacao"
+                        selected={
+                          getPeriodo(indice).tipos_alimentacao_selecionados ||
+                          []
+                        }
+                        options={formatarParaMultiselect(
+                          getPeriodo(indice).tipos_alimentacao
+                        )}
+                        onSelectedChanged={(values_) =>
+                          onTiposAlimentacaoChanged(values_, indice)
+                        }
+                        disableSearch={true}
+                        overrideStrings={{
+                          selectSomeItems: "Selecione",
+                          allItemsAreSelected:
+                            "Todos os itens estão selecionados",
+                          selectAll: "Todos",
+                        }}
+                      />
+                    </div>
                   </div>
                   <table className="faixas-etarias-cei w-50">
                     <thead>
@@ -193,16 +222,36 @@ export const PeriodosCEIeouEMEI = ({
                     <>
                       <div className="ms-5 me-5">
                         <div className="alunos-label mt-3">Alunos EMEI</div>
-                        <div className="tipos-alimentacao mt-3 mb-3">
+                        <div className="tipos-alimentacao mt-3 mb-3 row">
                           Tipos de alimentação do período{" "}
                           {getPeriodo(indice).nome}:{" "}
-                          <span>
-                            {tiposAlimentacaoPorPeriodoETipoUnidade(
-                              vinculos,
-                              getPeriodo(indice).nome,
-                              "EMEI"
-                            )}
-                          </span>
+                          <div className="col-4">
+                            <Field
+                              component={StatefulMultiSelect}
+                              name="tipos_alimentacao"
+                              selected={
+                                getPeriodo(indice)
+                                  .tipos_alimentacao_selecionados || []
+                              }
+                              options={formatarParaMultiselect(
+                                arrTiposAlimentacaoPorPeriodoETipoUnidade(
+                                  vinculos,
+                                  getPeriodo(indice).nome,
+                                  "EMEI"
+                                )
+                              )}
+                              onSelectedChanged={(values_) =>
+                                onTiposAlimentacaoChanged(values_, indice)
+                              }
+                              disableSearch={true}
+                              overrideStrings={{
+                                selectSomeItems: "Selecione",
+                                allItemsAreSelected:
+                                  "Todos os itens estão selecionados",
+                                selectAll: "Todos",
+                              }}
+                            />
+                          </div>
                         </div>
                         <table
                           className={`faixas-etarias-cei ${
