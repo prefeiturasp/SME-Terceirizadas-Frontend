@@ -222,12 +222,16 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     });
   };
 
-  const buildAlunosEMEI = (values, inclusao) => {
+  const buildAlunosEMEI = async (values, inclusao, form) => {
     inclusao.quantidade_alunos_emei_da_inclusao_cemei.forEach((qtd_alunos) => {
       const periodo_nome = qtd_alunos.periodo_escolar.nome;
       const index = values.findIndex((qp) => qp.nome === periodo_nome);
       values[index].checked = true;
       values[index].alunos_emei = qtd_alunos.quantidade_alunos;
+      form.change(
+        `quantidades_periodo[${index}].tipos_alimentacao_selecionados`,
+        qtd_alunos.tipos_alimentacao.map((t) => t.uuid)
+      );
     });
   };
 
@@ -244,8 +248,8 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     });
     await form.change("inclusoes", inclusao_.dias_motivos_da_inclusao_cemei);
     buildFaixas(periodos_, inclusao_);
-    buildAlunosEMEI(periodos_, inclusao_);
     await form.change(`quantidades_periodo`, periodos_);
+    await buildAlunosEMEI(periodos_, inclusao_, form);
   };
 
   const refresh = (form) => {
