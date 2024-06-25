@@ -362,7 +362,16 @@ export const CorpoRelatorio = ({
                   <div className="tipos-alimentacao mt-3 mb-3">
                     Tipos de inclusão de alimentação:{" "}
                     <span>
-                      {!ehMotivoEspecifico
+                      {solicitacao.quantidade_alunos_emei_da_inclusao_cemei.find(
+                        (q) => q.periodo_escolar.nome === periodo
+                      ).tipos_alimentacao?.length
+                        ? solicitacao.quantidade_alunos_emei_da_inclusao_cemei
+                            .find((q) => q.periodo_escolar.nome === periodo)
+                            .tipos_alimentacao.map(
+                              (alimentacao) => alimentacao.nome
+                            )
+                            .join(", ")
+                        : !ehMotivoEspecifico
                         ? tiposAlimentacaoPorPeriodoETipoUnidade(
                             vinculos,
                             periodo,
