@@ -10,7 +10,7 @@ export interface ArquivoFormInterface {
 }
 
 export interface NovoRelatorioVisitasFormInterface {
-  uuid?: number;
+  uuid?: string;
   diretoria_regional: string;
   escola: string;
   data: string;

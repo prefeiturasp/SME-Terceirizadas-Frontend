@@ -1,8 +1,15 @@
 import { Spin } from "antd";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import { Botao } from "components/Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+} from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import { InputText } from "components/Shareable/Input/InputText";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import Select from "components/Shareable/Select";
+import { toastError } from "components/Shareable/Toast/dialogs";
 import { FormApi } from "final-form";
 import {
   maxValueMaiorFrequenciaNoPeriodoIMR,
@@ -37,7 +44,10 @@ import {
   getEscolasTercTotal,
   getQuantidadeAlunosMatriculadosPorData,
 } from "services/escola.service";
-import { getPeriodosVisita } from "services/imr/relatorioFiscalizacaoTerceirizadas";
+import {
+  exportarPDFRelatorioFiscalizacao,
+  getPeriodosVisita,
+} from "services/imr/relatorioFiscalizacaoTerceirizadas";
 
 type CabecahoType = {
   form: FormApi<any, Partial<any>>;
@@ -63,6 +73,9 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
   const [loadingEscolas, setLoadingEscolas] = useState(false);
   const [loadingTotalMatriculadosPorData, setLoadingTotalMatriculadosPorData] =
     useState(false);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
+  const [imprimindoPDF, setImprimindoPDF] = useState(false);
 
   const [erroAPI, setErroAPI] = useState<string>("");
 
@@ -153,6 +166,19 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
     setLoadingTotalMatriculadosPorData(false);
   };
 
+  const exportarPDF = async () => {
+    setImprimindoPDF(true);
+    const response = await exportarPDFRelatorioFiscalizacao({
+      uuid: values.uuid,
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao baixar PDF. Tente novamente mais tarde");
+    }
+    setImprimindoPDF(false);
+  };
+
   const getPeriodosVisitaAsync = async (): Promise<void> => {
     const response: ResponsePeriodosDeVisitaInterface =
       await getPeriodosVisita();
@@ -198,8 +224,22 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
           {!LOADING && (
             <div className="cabecalho">
               <div className="row">
-                <div className="col-12">
+                <div className="col-11">
                   <h2 className="mt-2 mb-4">Dados da Unidade Educacional</h2>
+                </div>
+                <div className="col-1 text-end">
+                  <Botao
+                    style={
+                      imprimindoPDF
+                        ? BUTTON_STYLE.GREEN_OUTLINE
+                        : BUTTON_STYLE.GREEN
+                    }
+                    icon={
+                      imprimindoPDF ? BUTTON_ICON.LOADING : BUTTON_ICON.FILE_PDF
+                    }
+                    disabled={imprimindoPDF}
+                    onClick={() => exportarPDF()}
+                  />
                 </div>
               </div>
               <div className="row">
@@ -432,6 +472,10 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
               )}
             </div>
           )}
+          <ModalSolicitacaoDownload
+            show={exibirModalCentralDownloads}
+            setShow={setExibirModalCentralDownloads}
+          />
         </Spin>
       )}
     </>
