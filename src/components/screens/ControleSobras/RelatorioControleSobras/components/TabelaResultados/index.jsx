@@ -49,10 +49,13 @@ const TabelaControleSobras = ({ list, getFiltros }) => {
                   <th className="tipo_alimento">Tipo de Alimento</th>
                   <th className="data_medicao">Data da Medição</th>
                   <th className="periodo">Período</th>
+                  <th className="pelo_alimento">
+                    Peso do Alimento Pronto (Kg)
+                  </th>
+                  <th className="peso_sobra">Peso da Sobra (Kg)</th>
                   <th className="peso_refeicao_distribuida">
                     Peso da Refeição Distribuída (Kg)
                   </th>
-                  <th className="peso_sobra">Peso da Sobra (Kg)</th>
                   <th className="total_alunos">Total de Alunos (frequência)</th>
                   <th className="total_primeira_oferta">
                     Total Primeira Oferta
@@ -80,8 +83,9 @@ const TabelaControleSobras = ({ list, getFiltros }) => {
                         <td>{item.tipo_alimento_nome}</td>
                         <td>{item.data_medicao}</td>
                         <td>{item.periodo}</td>
-                        <td>{item.quantidade_distribuida}</td>
+                        <td>{item.peso_alimento}</td>
                         <td>{item.peso_sobra}</td>
+                        <td>{item.quantidade_distribuida}</td>
                         <td>{item.frequencia}</td>
                         <td>{item.total_primeira_oferta}</td>
                         <td>{item.total_repeticao}</td>
