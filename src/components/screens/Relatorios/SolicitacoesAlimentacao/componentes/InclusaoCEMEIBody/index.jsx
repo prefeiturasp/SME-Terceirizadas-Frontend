@@ -187,9 +187,19 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                     vinc.periodo_escolar.nome === periodo &&
                     vinc.tipo_unidade_escolar.iniciais === "EMEI"
                 );
-                const tiposAlimentacaoEMEI = vinculosEMEI.tipos_alimentacao
-                  .map((ta) => ta.nome)
-                  .join(", ");
+                const tiposAlimentacaoEMEI =
+                  solicitacao.quantidade_alunos_emei_da_inclusao_cemei.find(
+                    (q) => q.periodo_escolar.nome === periodo
+                  )?.tipos_alimentacao?.length
+                    ? solicitacao.quantidade_alunos_emei_da_inclusao_cemei
+                        .find((q) => q.periodo_escolar.nome === periodo)
+                        .tipos_alimentacao.map(
+                          (alimentacao) => alimentacao.nome
+                        )
+                        .join(", ")
+                    : vinculosEMEI.tipos_alimentacao
+                        .map((ta) => ta.nome)
+                        .join(", ");
                 const faixasCEI =
                   solicitacao.quantidade_alunos_cei_da_inclusao_cemei.filter(
                     (qa) => qa.periodo_escolar.nome === periodo
@@ -333,9 +343,19 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                     vinc.periodo_escolar.nome === periodo &&
                     vinc.tipo_unidade_escolar.iniciais === "EMEI"
                 );
-                const tiposAlimentacaoEMEI = vinculosEMEI.tipos_alimentacao
-                  .map((ta) => ta.nome)
-                  .join(", ");
+                const tiposAlimentacaoEMEI =
+                  solicitacao.quantidade_alunos_emei_da_inclusao_cemei.find(
+                    (q) => q.periodo_escolar.nome === periodo
+                  )?.tipos_alimentacao?.length
+                    ? solicitacao.quantidade_alunos_emei_da_inclusao_cemei
+                        .find((q) => q.periodo_escolar.nome === periodo)
+                        .tipos_alimentacao.map(
+                          (alimentacao) => alimentacao.nome
+                        )
+                        .join(", ")
+                    : vinculosEMEI.tipos_alimentacao
+                        .map((ta) => ta.nome)
+                        .join(", ");
 
                 const faixasEMEI =
                   solicitacao.quantidade_alunos_emei_da_inclusao_cemei.filter(
@@ -343,6 +363,13 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                   );
                 return (
                   <Fragment key={idx}>
+                    <div className="row">
+                      <div className="col-12">
+                        <label className="label-periodo-cei-cemei">
+                          {periodo}
+                        </label>
+                      </div>
+                    </div>
                     {faixasEMEI.length ? (
                       <div className="row">
                         <div className="col-12">
