@@ -10,7 +10,7 @@ export interface ArquivoFormInterface {
 }
 
 export interface NovoRelatorioVisitasFormInterface {
-  uuid?: number;
+  uuid?: string;
   diretoria_regional: string;
   escola: string;
   data: string;
@@ -22,6 +22,7 @@ export interface NovoRelatorioVisitasFormInterface {
   total_matriculados_por_data: number;
   maior_frequencia_no_periodo: number;
   anexos: Array<ArquivoInterface>;
+  status?: string;
 }
 
 export interface InitialValuesInterface {

@@ -273,3 +273,10 @@ export interface ResponseRelatoriosVisitas extends ResponseInterface {
 export interface ResponseNomesNutricionistas extends ResponseInterface {
   data: ListagemNaoPaginada<string>;
 }
+
+export interface ResponseExportarPDFAssincronoInterface
+  extends ResponseInterface {
+  data: {
+    detail: string;
+  };
+}
