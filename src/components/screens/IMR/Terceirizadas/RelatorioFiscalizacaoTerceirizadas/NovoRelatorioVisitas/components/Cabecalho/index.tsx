@@ -227,20 +227,24 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                 <div className="col-11">
                   <h2 className="mt-2 mb-4">Dados da Unidade Educacional</h2>
                 </div>
-                <div className="col-1 text-end">
-                  <Botao
-                    style={
-                      imprimindoPDF
-                        ? BUTTON_STYLE.GREEN_OUTLINE
-                        : BUTTON_STYLE.GREEN
-                    }
-                    icon={
-                      imprimindoPDF ? BUTTON_ICON.LOADING : BUTTON_ICON.FILE_PDF
-                    }
-                    disabled={imprimindoPDF}
-                    onClick={() => exportarPDF()}
-                  />
-                </div>
+                {values.status && values.status !== "EM_PREENCHIMENTO" && (
+                  <div className="col-1 text-end">
+                    <Botao
+                      style={
+                        imprimindoPDF
+                          ? BUTTON_STYLE.GREEN_OUTLINE
+                          : BUTTON_STYLE.GREEN
+                      }
+                      icon={
+                        imprimindoPDF
+                          ? BUTTON_ICON.LOADING
+                          : BUTTON_ICON.FILE_PDF
+                      }
+                      disabled={imprimindoPDF}
+                      onClick={() => exportarPDF()}
+                    />
+                  </div>
+                )}
               </div>
               <div className="row">
                 <div className="col-5">
