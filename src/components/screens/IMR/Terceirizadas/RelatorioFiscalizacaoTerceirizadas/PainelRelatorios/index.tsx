@@ -1,18 +1,9 @@
 import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
-import { useNavigate } from "react-router-dom";
 import { gerarParametrosConsulta } from "helpers/utilities";
-import { listRelatoriosVisitaSupervisao } from "services/imr/relatorioFiscalizacaoTerceirizadas";
+import { getListRelatoriosVisitaSupervisao } from "services/imr/painelGerencial";
 import { Paginacao } from "components/Shareable/Paginacao";
-import {
-  RELATORIO_FISCALIZACAO,
-  RELATORIO_FISCALIZACAO_TERCEIRIZADAS,
-  SUPERVISAO,
-  TERCEIRIZADAS,
-  EDITAR,
-} from "configs/constants";
-import { STATUS_IMR_FORMULARIO_SUPERVISAO } from "constants/shared";
 import { Filtros } from "./components/Filtros";
 import {
   FiltrosRelatoriosVisitasInterface,
@@ -26,7 +17,6 @@ import { DashboardSupervisaoInterface } from "./interfaces";
 import { FormApi } from "final-form";
 
 export const PainelRelatorios = () => {
-  const navigate = useNavigate();
   const [filtros, setFiltros] = useState<FiltrosRelatoriosVisitasInterface>({});
   const [page, setPage] = useState<number>(1);
   const [totalResultados, setTotalResultados] = useState(0);
@@ -40,6 +30,9 @@ export const PainelRelatorios = () => {
 
   const [carregandoTabela, setCarregandoTabela] = useState(false);
   const [form, setForm] = useState<FormApi>();
+  const perfilNutriSupervisao =
+    JSON.parse(localStorage.getItem("perfil")) ===
+    "COORDENADOR_SUPERVISAO_NUTRICAO";
 
   const buscarResultados = async (
     filtros_: FiltrosRelatoriosVisitasInterface,
@@ -52,7 +45,7 @@ export const PainelRelatorios = () => {
         page: pageNumber,
         ...filtros_,
       });
-      const response = await listRelatoriosVisitaSupervisao(params);
+      const response = await getListRelatoriosVisitaSupervisao(params);
 
       if (response.status === HTTP_STATUS.OK) {
         setRelatoriosVisita(response.data.results);
@@ -67,7 +60,17 @@ export const PainelRelatorios = () => {
   const getDashboardPainelGerencialSupervisaoAsync = async () => {
     const response = await getDashboardPainelGerencialSupervisao(filtros);
     if (response.status === HTTP_STATUS.OK) {
-      setDashboard(response.data.results);
+      setDashboard(
+        response.data.results.map((item) => {
+          if (
+            item.status === "NUTRIMANIFESTACAO_A_VALIDAR" &&
+            !perfilNutriSupervisao
+          ) {
+            return { ...item, label: "Enviados pela Supervisão" };
+          }
+          return item;
+        })
+      );
     }
   };
 
@@ -79,13 +82,6 @@ export const PainelRelatorios = () => {
   useEffect(() => {
     getDashboardPainelGerencialSupervisaoAsync();
   }, []);
-
-  const goToFormularioSupervisao = (uuid) => {
-    navigate(
-      `/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO}/${uuid}/${EDITAR}`,
-      { state: { uuid: uuid } }
-    );
-  };
 
   return (
     <Spin tip="Carregando..." spinning={!dashboard}>
@@ -120,6 +116,7 @@ export const PainelRelatorios = () => {
                   setFiltros={setFiltros}
                   setRelatoriosVisita={setRelatoriosVisita}
                   setConsultaRealizada={setConsultaRealizada}
+                  perfilNutriSupervisao={perfilNutriSupervisao}
                   buscarResultados={buscarResultados}
                   form_={form}
                   setForm={setForm}
@@ -135,12 +132,7 @@ export const PainelRelatorios = () => {
                     <>
                       <Listagem
                         objetos={relatoriosVisita}
-                        handleEditAction={
-                          statusSelecionado ===
-                          STATUS_IMR_FORMULARIO_SUPERVISAO.EM_PREENCHIMENTO
-                            ? goToFormularioSupervisao
-                            : null
-                        }
+                        perfilNutriSupervisao={perfilNutriSupervisao}
                       />
                       <div className="row">
                         <div className="col">
