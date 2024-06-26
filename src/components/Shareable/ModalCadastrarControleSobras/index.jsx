@@ -231,6 +231,22 @@ const ModalCadastrarControleSobras = ({
     return parseFloat(value.replace(/\./g, "").replace(",", "."));
   };
 
+  const getPesoAlimentoPronto = (values) => {
+    if (!values?.peso_alimento || !values?.peso_recipiente) {
+      return "-";
+    }
+    const value = parseDecimal(values.peso_alimento) - parseDecimal(values.peso_recipiente);
+    return value <= 0 ? 0 : formatDecimal(value.toFixed(2).toString());
+  }
+
+  const getPesoSobra = (values) => {
+    if (!values?.peso_sobra || !values?.peso_recipiente) {
+      return "-";
+    }
+    const value = parseDecimal(values.peso_sobra) - parseDecimal(values.peso_recipiente);
+    return value <= 0 ? 0 : formatDecimal(value.toFixed(2).toString());
+  }
+
   return (
     <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal} backdrop="static">
       <Modal.Header closeButton>
@@ -420,12 +436,13 @@ const ModalCadastrarControleSobras = ({
                         disabled={!!registroEdicao}
                       />
                     </div>
-                    <div className="col-4">
+                    <div className="col-4 col-input-controle-sobras-addon">
                       <Field
-                        label="Peso do Alimento Pronto (Kg)"
+                        label="Peso do alimento pronto com recipiente"
                         name="peso_alimento"
                         component={InputText}
-                        placeholder={"Digite o Peso do Alimento Pronto"}
+                        placeholder={"Digite o peso do alimento pronto com recipiente"}
+                        acrescentarAppend={"Peso do alimento pronto: " + getPesoAlimentoPronto(values)}
                         agrupadorMilharComDecimal
                         maxlength="6"
                         className={registroEdicao ? "input-controle-sobras" : ""}
@@ -435,12 +452,13 @@ const ModalCadastrarControleSobras = ({
                         disabled={!!registroEdicao}
                       />
                     </div>
-                    <div className="col-4">
+                    <div className="col-4 col-input-controle-sobras-addon">
                       <Field
-                        label="Peso da Sobra (Kg)"
+                        label="Peso da sobra com recipiente"
                         name="peso_sobra"
                         component={InputText}
-                        placeholder={"Digite o Peso da Sobra"}
+                        placeholder={"Digite o peso da sobra com recipiente"}
+                        acrescentarAppend={"Peso da sobra: " + getPesoSobra(values)}
                         agrupadorMilharComDecimal
                         maxlength="6"
                         required
