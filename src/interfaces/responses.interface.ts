@@ -269,3 +269,7 @@ export interface ResponseInsumoInterface extends ResponseInterface {
 export interface ResponseRelatoriosVisitas extends ResponseInterface {
   data: ListagemPaginada<RelatorioVisitaItemListagem>;
 }
+
+export interface ResponseNomesNutricionistas extends ResponseInterface {
+  data: ListagemNaoPaginada<string>;
+}

@@ -118,6 +118,7 @@ export interface InsumoInterface {
 export interface FiltrosRelatoriosVisitasInterface {
   diretoria_regional?: string;
   unidade_educacional?: string;
+  nome_nutricionista?: string;
   data_inicial?: string;
   data_final?: string;
   status?: string;
@@ -158,4 +159,9 @@ export interface RespostaOcorrenciaNaoSeAplicaInterface {
   descricao: string;
   formulario_base: number;
   tipo_ocorrencia: string;
+}
+
+export interface NutricionistaOptionInterface {
+  value: string;
+  label: string;
 }
