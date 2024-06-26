@@ -4,6 +4,7 @@ import { ErrorHandlerFunction } from "../../service-helpers";
 import { NovoRelatorioVisitasFormInterface } from "interfaces/imr.interface";
 import {
   ResponseEquipamentoInterface,
+  ResponseExportarPDFAssincronoInterface,
   ResponseFormularioSupervisaoTiposOcorrenciasInterface,
   ResponseInsumoInterface,
   ResponseMobiliarioInterface,
@@ -194,6 +195,19 @@ export const getInsumos = async (params: { edital_uuid: string }) => {
   const url = `${API_URL}/imr/insumos/`;
   const response: ResponseInsumoInterface = await axios
     .get(url, { params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const exportarPDFRelatorioFiscalizacao = async (params: {
+  uuid: string;
+}) => {
+  const url = `${API_URL}/imr/formulario-supervisao/${params.uuid}/relatorio-pdf/`;
+  const response: ResponseExportarPDFAssincronoInterface = await axios
+    .get(url)
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
