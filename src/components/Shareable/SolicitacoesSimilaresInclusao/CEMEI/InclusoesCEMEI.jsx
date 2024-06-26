@@ -91,9 +91,15 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
               vinc.periodo_escolar.nome === periodo &&
               vinc.tipo_unidade_escolar.iniciais === "EMEI"
           );
-          const tiposAlimentacaoEMEI = vinculosEMEI.tipos_alimentacao
-            .map((ta) => ta.nome)
-            .join(", ");
+          const tiposAlimentacaoEMEI =
+            inclusaoDeAlimentacao.quantidade_alunos_emei_da_inclusao_cemei.find(
+              (q) => q.periodo_escolar.nome === periodo
+            )?.tipos_alimentacao?.length
+              ? inclusaoDeAlimentacao.quantidade_alunos_emei_da_inclusao_cemei
+                  .find((q) => q.periodo_escolar.nome === periodo)
+                  .tipos_alimentacao.map((alimentacao) => alimentacao.nome)
+                  .join(", ")
+              : vinculosEMEI.tipos_alimentacao.map((ta) => ta.nome).join(", ");
           const faixasCEI =
             inclusaoDeAlimentacao.quantidade_alunos_cei_da_inclusao_cemei.filter(
               (qa) => qa.periodo_escolar.nome === periodo
@@ -279,9 +285,15 @@ export const InclusoesCEMEI = ({ inclusaoDeAlimentacao }) => {
               vinc.periodo_escolar.nome === periodo &&
               vinc.tipo_unidade_escolar.iniciais === "EMEI"
           );
-          const tiposAlimentacaoEMEI = vinculosEMEI.tipos_alimentacao
-            .map((ta) => ta.nome)
-            .join(", ");
+          const tiposAlimentacaoEMEI =
+            inclusaoDeAlimentacao.quantidade_alunos_emei_da_inclusao_cemei.find(
+              (q) => q.periodo_escolar.nome === periodo
+            )?.tipos_alimentacao?.length
+              ? inclusaoDeAlimentacao.quantidade_alunos_emei_da_inclusao_cemei
+                  .find((q) => q.periodo_escolar.nome === periodo)
+                  .tipos_alimentacao.map((alimentacao) => alimentacao.nome)
+                  .join(", ")
+              : vinculosEMEI.tipos_alimentacao.map((ta) => ta.nome).join(", ");
 
           const faixasEMEI =
             inclusaoDeAlimentacao.quantidade_alunos_emei_da_inclusao_cemei.filter(
