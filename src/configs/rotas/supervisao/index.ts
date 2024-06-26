@@ -1,4 +1,8 @@
-import { usuarioEhNutricionistaSupervisao } from "helpers/utilities";
+import {
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao,
+} from "helpers/utilities";
 import { ListaRelatoriosFiscalizacaoTerceirizadasPage } from "pages/IMR/Terceirizadas/RelatorioFiscalizacaoTerceirizadas/ListaRelatoriosPage";
 import { NovoRelatorioFiscalizacaoPage } from "pages/IMR/Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioFiscalizacaoPage";
 import { RelatorioFiscalizacaoPage } from "pages/IMR/Terceirizadas/RelatorioFiscalizacaoTerceirizadas/RelatorioFiscalizacaoPage";
@@ -10,7 +14,10 @@ export const rotasSupervisao: Array<RotaInterface> = [
   {
     path: `/${constants.SUPERVISAO}/${constants.TERCEIRIZADAS}/${constants.PAINEL_RELATORIOS_FISCALIZACAO}`,
     component: PainelRelatoriosPage,
-    tipoUsuario: usuarioEhNutricionistaSupervisao(),
+    tipoUsuario:
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao(),
   },
   {
     path: `/${constants.SUPERVISAO}/${constants.TERCEIRIZADAS}/${constants.RELATORIO_FISCALIZACAO_TERCEIRIZADAS}`,
