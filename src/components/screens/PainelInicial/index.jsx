@@ -147,20 +147,24 @@ const PainelInicial = () => {
           </CardLogo>
         </Col>
       )}
-      {usuarioEhNutricionistaSupervisao() && ENVIRONMENT !== "production" && (
-        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
-          <CardLogo
-            titulo={"Supervisão Terceirizadas"}
-            onClick={() =>
-              navigate(
-                `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
-              )
-            }
-          >
-            <IconeSupervisaoTerceirizadas />
-          </CardLogo>
-        </Col>
-      )}
+      {(usuarioEhNutricionistaSupervisao() ||
+        usuarioEhCODAEGestaoAlimentacao() ||
+        usuarioEhMedicao() ||
+        usuarioEhCODAENutriManifestacao()) &&
+        ENVIRONMENT !== "production" && (
+          <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+            <CardLogo
+              titulo={"Supervisão Terceirizadas"}
+              onClick={() =>
+                navigate(
+                  `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
+                )
+              }
+            >
+              <IconeSupervisaoTerceirizadas />
+            </CardLogo>
+          </Col>
+        )}
     </Row>
   );
 };
