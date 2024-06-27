@@ -1,29 +1,23 @@
+import React, { ReactElement, useState } from "react";
 import { Tooltip } from "antd";
-import Botao from "components/Shareable/Botao";
-import {
-  BUTTON_ICON,
-  BUTTON_STYLE,
-  BUTTON_TYPE,
-} from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { RelatorioVisitaItemListagem } from "interfaces/imr.interface";
 import {
-  EDITAR,
-  RELATORIO_FISCALIZACAO,
+  DETALHAR_RELATORIO_FISCALIZACAO,
+  EDITAR_RELATORIO_FISCALIZACAO,
   RELATORIO_FISCALIZACAO_TERCEIRIZADAS,
   SUPERVISAO,
   TERCEIRIZADAS,
 } from "configs/constants";
 import { truncarString } from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
-import { RelatorioVisitaItemListagem } from "interfaces/imr.interface";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { exportarPDFRelatorioFiscalizacao } from "services/imr/relatorioFiscalizacaoTerceirizadas";
+import { NavLink } from "react-router-dom";
 import "./styles.scss";
+
 interface Props {
   objetos: RelatorioVisitaItemListagem[];
-  handleEditAction?: (_uuid: any) => void;
   perfilNutriSupervisao: boolean;
 }
 
@@ -37,18 +31,10 @@ export const Listagem: React.FC<Props> = ({
     useState(false);
   const [imprimindoPDF, setImprimindoPDF] = useState<string>("");
 
-  const navigate = useNavigate();
   const deParaStatus = (status: string) =>
     ["Enviado para CODAE"].includes(status) && !perfilNutriSupervisao
       ? "Enviado pela Supervisão"
       : status;
-
-  const goToFormularioSupervisao = (uuid: string) => {
-    navigate(
-      `/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO}/${uuid}/${EDITAR}`,
-      { state: { uuid: uuid } }
-    );
-  };
 
   const exportarPDF = async (uuid: string) => {
     setImprimindoPDF(uuid);
@@ -61,6 +47,62 @@ export const Listagem: React.FC<Props> = ({
       toastError("Erro ao baixar PDF. Tente novamente mais tarde");
     }
     setImprimindoPDF("");
+  };
+
+  const renderizarAcoes = (
+    objeto: RelatorioVisitaItemListagem
+  ): ReactElement => {
+    const botaoContinuarCadastro = (
+      <Tooltip title="Editar relatório">
+        <NavLink
+          className="float-start"
+          to={`/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${EDITAR_RELATORIO_FISCALIZACAO}?uuid=${objeto.uuid}`}
+        >
+          <button className="verde">
+            <i className="fas fa-edit" />
+          </button>
+        </NavLink>
+      </Tooltip>
+    );
+
+    const botaoDetalhar = (
+      <Tooltip title="Detalhar">
+        <NavLink
+          className="float-start"
+          to={`/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${DETALHAR_RELATORIO_FISCALIZACAO}?uuid=${objeto.uuid}`}
+        >
+          <button className="verde">
+            <i className="fas fa-eye" />
+          </button>
+        </NavLink>
+      </Tooltip>
+    );
+
+    const botaoImprimir = (
+      <Tooltip title="Relatório em PDF">
+        <button
+          onClick={() => exportarPDF(objeto.uuid)}
+          className="verde"
+          disabled={imprimindoPDF === objeto.uuid}
+        >
+          <i className="fas fa-download" />
+        </button>
+      </Tooltip>
+    );
+
+    return (
+      <div>
+        {objeto.status === "Em Preenchimento" &&
+          perfilNutriSupervisao &&
+          botaoContinuarCadastro}
+        {objeto.status === "Enviado para CODAE" &&
+          perfilNutriSupervisao &&
+          botaoDetalhar}
+        {objeto.status !== "Em Preenchimento" &&
+          perfilNutriSupervisao &&
+          botaoImprimir}
+      </div>
+    );
   };
 
   return (
@@ -90,30 +132,7 @@ export const Listagem: React.FC<Props> = ({
                 </div>
                 <div>{objeto.data}</div>
                 <div>{deParaStatus(objeto.status)}</div>
-                <div>
-                  {objeto.status === "Em Preenchimento" &&
-                    perfilNutriSupervisao && (
-                      <Botao
-                        type={BUTTON_TYPE.BUTTON}
-                        style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
-                        icon={BUTTON_ICON.EDIT}
-                        onClick={() => goToFormularioSupervisao(objeto.uuid)}
-                        tooltipExterno="Editar relatório"
-                      />
-                    )}
-                  {objeto.status && objeto.status !== "Em Preenchimento" && (
-                    <Botao
-                      style={`${BUTTON_STYLE.GREEN_OUTLINE} no-border`}
-                      icon={
-                        imprimindoPDF === objeto.uuid
-                          ? BUTTON_ICON.LOADING
-                          : BUTTON_ICON.FILE_PDF
-                      }
-                      disabled={imprimindoPDF === objeto.uuid}
-                      onClick={() => exportarPDF(objeto.uuid)}
-                    />
-                  )}
-                </div>
+                <div className="p-0">{renderizarAcoes(objeto)}</div>
               </div>
             </>
           );
