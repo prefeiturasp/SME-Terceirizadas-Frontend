@@ -20,9 +20,9 @@ import {
   TipoOcorrenciaInterface,
 } from "interfaces/imr.interface";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form } from "react-final-form";
-import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import {
   createFormularioSupervisao,
   createRascunhoFormularioSupervisao,
@@ -46,7 +46,15 @@ import {
 } from "./helpers";
 import "./styles.scss";
 
-export const NovoRelatorioVisitas = () => {
+interface NovoRelatorioVisitasProps {
+  somenteLeitura?: boolean;
+  isEditing?: boolean;
+}
+
+export const NovoRelatorioVisitas = ({
+  somenteLeitura = false,
+  isEditing = false,
+}: NovoRelatorioVisitasProps) => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
     useState(false);
   const [showModalSalvarRascunho, setShowModalSalvarRascunho] = useState(false);
@@ -66,19 +74,14 @@ export const NovoRelatorioVisitas = () => {
     useState([]);
 
   const navigate: NavigateFunction = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
-    if (isEditing) getDadosFormularioSupervisao();
+    if (isEditing || somenteLeitura) getDadosFormularioSupervisao();
   }, []);
 
-  const isEditing = useMemo(() => {
-    const uuid = location.pathname.split("/")[5];
-    return uuid ? true : false;
-  }, [location]);
-
   const getDadosFormularioSupervisao = async () => {
-    const uuid = location.pathname.split("/")[5];
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
     if (uuid) {
       try {
         const formularioResponse = await getFormularioSupervisao(uuid);
@@ -284,6 +287,7 @@ export const NovoRelatorioVisitas = () => {
                   getTiposOcorrenciaPorEditalNutrisupervisaoAsync
                 }
                 setTiposOcorrencia={setTiposOcorrencia}
+                somenteLeitura={somenteLeitura}
               />
               <div className="row">
                 <div className="col-12">
