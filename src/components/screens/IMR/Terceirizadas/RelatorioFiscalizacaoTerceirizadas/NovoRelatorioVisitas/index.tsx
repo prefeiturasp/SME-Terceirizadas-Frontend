@@ -45,12 +45,16 @@ import {
   validarFormulariosTiposOcorrencia,
 } from "./helpers";
 import "./styles.scss";
+import { Notificacoes } from "./components/Notificacoes";
+import { ModalBaixarNotificaoces } from "./components/ModalBaixarNotificacoes";
 
 export const NovoRelatorioVisitas = () => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
     useState(false);
   const [showModalSalvarRascunho, setShowModalSalvarRascunho] = useState(false);
   const [showModalSalvar, setShowModalSalvar] = useState(false);
+  const [showModalBaixarNotificacoes, setShowModalBaixarNotificacoes] =
+    useState(false);
 
   const [escolaSelecionada, setEscolaSelecionada] =
     useState<EscolaLabelInterface>();
@@ -155,6 +159,14 @@ export const NovoRelatorioVisitas = () => {
         );
       }
     }
+  };
+
+  const salvarRascunhoEBaixarNotificacoes = async (
+    values: NovoRelatorioVisitasFormInterface
+  ): Promise<void> => {
+    // eslint-disable-next-line no-console
+    console.log(values);
+    setShowModalBaixarNotificacoes(true);
   };
 
   const salvar = async (
@@ -312,6 +324,15 @@ export const NovoRelatorioVisitas = () => {
                   form.getState().values,
                   tiposOcorrencia
                 ).listaValidacaoPorTipoOcorrencia.length !== 0 && (
+                  <Notificacoes
+                    onClickBaixarNotificacoes={setShowModalBaixarNotificacoes}
+                  />
+                )}
+              {tiposOcorrencia &&
+                validarFormulariosTiposOcorrencia(
+                  form.getState().values,
+                  tiposOcorrencia
+                ).listaValidacaoPorTipoOcorrencia.length !== 0 && (
                   <Anexos
                     setAnexos={setAnexos}
                     anexos={anexos}
@@ -366,6 +387,13 @@ export const NovoRelatorioVisitas = () => {
                 values={form.getState().values}
                 salvar={salvar}
                 escolaSelecionada={escolaSelecionada}
+              />
+              <ModalBaixarNotificaoces
+                show={showModalBaixarNotificacoes}
+                handleClose={() => setShowModalBaixarNotificacoes(false)}
+                salvarRascunhoEBaixarNotificacoes={() =>
+                  salvarRascunhoEBaixarNotificacoes(form.getState().values)
+                }
               />
             </form>
           )}
