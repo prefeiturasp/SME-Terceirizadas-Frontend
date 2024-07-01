@@ -225,6 +225,7 @@ export const RegistrarNovaOcorrencia = () => {
                               name_grupos="datas_ocorrencias[0]"
                               form={form}
                               ehDataOcorrencia
+                              somenteLeitura={false}
                             />
                           </div>
                         )}
@@ -270,6 +271,7 @@ export const RegistrarNovaOcorrencia = () => {
                                             escolaSelecionada={
                                               escolaSelecionada
                                             }
+                                            somenteLeitura={false}
                                           />
                                         </div>
                                       );
