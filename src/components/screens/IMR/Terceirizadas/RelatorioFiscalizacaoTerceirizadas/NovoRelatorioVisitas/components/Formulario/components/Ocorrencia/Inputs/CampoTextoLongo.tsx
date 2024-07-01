@@ -6,10 +6,11 @@ import { required } from "helpers/fieldValidators";
 type CampoTextoLongoType = {
   titulo: string;
   name: string;
+  somenteLeitura: boolean;
 };
 
 export const CampoTextoLongo = ({ ...props }: CampoTextoLongoType) => {
-  const { titulo, name } = props;
+  const { titulo, name, somenteLeitura } = props;
 
   return (
     <Field
@@ -19,6 +20,7 @@ export const CampoTextoLongo = ({ ...props }: CampoTextoLongoType) => {
       height="100"
       required
       validate={required}
+      disabled={somenteLeitura}
     />
   );
 };
