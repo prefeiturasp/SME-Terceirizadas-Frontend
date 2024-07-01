@@ -8,17 +8,12 @@ import {
   RELATORIO_FISCALIZACAO,
   RELATORIO_FISCALIZACAO_TERCEIRIZADAS,
   PAINEL_RELATORIOS_FISCALIZACAO,
-  EDITAR,
 } from "configs/constants";
 import { NovoRelatorioVisitas } from "components/screens/IMR/Terceirizadas/RelatorioFiscalizacaoTerceirizadas/NovoRelatorioVisitas";
-import { useLocation } from "react-router-dom";
 
-export const RelatorioFiscalizacaoPage = () => {
-  const location = useLocation();
-  const uuid = location.pathname.split("/")[5];
-
+export const EditarRelatorioFiscalizacaoPage = () => {
   const atual = {
-    href: `/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO}/${uuid}/${EDITAR}`,
+    href: `/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO}`,
     titulo: "Relatório de Fiscalização",
   };
 
@@ -39,7 +34,7 @@ export const RelatorioFiscalizacaoPage = () => {
   return (
     <Page botaoVoltar titulo={atual.titulo}>
       <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-      <NovoRelatorioVisitas />
+      <NovoRelatorioVisitas isEditing />
     </Page>
   );
 };

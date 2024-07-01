@@ -20,9 +20,9 @@ import {
   TipoOcorrenciaInterface,
 } from "interfaces/imr.interface";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form } from "react-final-form";
-import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import {
   createFormularioSupervisao,
   createRascunhoFormularioSupervisao,
@@ -46,7 +46,15 @@ import {
 } from "./helpers";
 import "./styles.scss";
 
-export const NovoRelatorioVisitas = () => {
+interface NovoRelatorioVisitasProps {
+  somenteLeitura?: boolean;
+  isEditing?: boolean;
+}
+
+export const NovoRelatorioVisitas = ({
+  somenteLeitura = false,
+  isEditing = false,
+}: NovoRelatorioVisitasProps) => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
     useState(false);
   const [showModalSalvarRascunho, setShowModalSalvarRascunho] = useState(false);
@@ -66,19 +74,14 @@ export const NovoRelatorioVisitas = () => {
     useState([]);
 
   const navigate: NavigateFunction = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
-    if (isEditing) getDadosFormularioSupervisao();
+    if (isEditing || somenteLeitura) getDadosFormularioSupervisao();
   }, []);
 
-  const isEditing = useMemo(() => {
-    const uuid = location.pathname.split("/")[5];
-    return uuid ? true : false;
-  }, [location]);
-
   const getDadosFormularioSupervisao = async () => {
-    const uuid = location.pathname.split("/")[5];
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
     if (uuid) {
       try {
         const formularioResponse = await getFormularioSupervisao(uuid);
@@ -254,6 +257,12 @@ export const NovoRelatorioVisitas = () => {
     );
   };
 
+  const handleClickVoltar = () => {
+    navigate(
+      `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
+    );
+  };
+
   return (
     <div className="card novo-relatorio-visitas mt-3">
       <div className="card-body">
@@ -284,6 +293,8 @@ export const NovoRelatorioVisitas = () => {
                   getTiposOcorrenciaPorEditalNutrisupervisaoAsync
                 }
                 setTiposOcorrencia={setTiposOcorrencia}
+                somenteLeitura={somenteLeitura}
+                isEditing={isEditing}
               />
               <div className="row">
                 <div className="col-12">
@@ -291,7 +302,10 @@ export const NovoRelatorioVisitas = () => {
                 </div>
               </div>
               {!erroAPI && (
-                <Spin spinning={loadingTiposOcorrencia}>
+                <Spin
+                  spinning={loadingTiposOcorrencia}
+                  style={{ display: "block", margin: "auto", width: "100%" }}
+                >
                   {tiposOcorrencia && escolaSelecionada && (
                     <Formulario
                       respostasOcorrencias={respostasOcorrencias}
@@ -303,6 +317,7 @@ export const NovoRelatorioVisitas = () => {
                       values={form.getState().values}
                       escolaSelecionada={escolaSelecionada}
                       push={push}
+                      somenteLeitura={somenteLeitura}
                     />
                   )}
                 </Spin>
@@ -316,37 +331,53 @@ export const NovoRelatorioVisitas = () => {
                     setAnexos={setAnexos}
                     anexos={anexos}
                     anexosIniciais={anexosIniciais}
+                    somenteLeitura={somenteLeitura}
                   />
                 )}
-              <div className="row float-end mt-4">
-                <div className="col-12">
-                  <Botao
-                    texto="Cancelar"
-                    onClick={() => {
-                      setShowModalCancelaPreenchimento(true);
-                    }}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                  />
-                  <Botao
-                    texto="Salvar rascunho"
-                    className="ms-3"
-                    disabled={submitting}
-                    onClick={() => salvarRascunho(values)}
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                  />
-                  {tiposOcorrencia && (
+              {!somenteLeitura && (
+                <div className="row float-end mt-4">
+                  <div className="col-12">
                     <Botao
-                      texto="Enviar Formulário"
-                      className="ms-3"
-                      disabled={submitting || !formularioValido(form)}
-                      onClick={() => salvar(values)}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN}
+                      texto="Cancelar"
+                      onClick={() => {
+                        setShowModalCancelaPreenchimento(true);
+                      }}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
-                  )}
+                    <Botao
+                      texto="Salvar rascunho"
+                      className="ms-3"
+                      disabled={submitting}
+                      onClick={() => salvarRascunho(values)}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    {tiposOcorrencia && (
+                      <Botao
+                        texto="Enviar Formulário"
+                        className="ms-3"
+                        disabled={submitting || !formularioValido(form)}
+                        onClick={() => salvar(values)}
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
+              {somenteLeitura && (
+                <div className="row float-end mt-4">
+                  <div className="col-12">
+                    <Botao
+                      texto="Voltar"
+                      onClick={() => {
+                        handleClickVoltar();
+                      }}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                  </div>
+                </div>
+              )}
               <ModalCancelaPreenchimento
                 show={showModalCancelaPreenchimento}
                 handleClose={() => setShowModalCancelaPreenchimento(false)}

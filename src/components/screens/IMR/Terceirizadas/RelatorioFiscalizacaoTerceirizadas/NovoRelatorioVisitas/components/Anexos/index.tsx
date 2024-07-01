@@ -5,6 +5,7 @@ import {
   ArquivoInterface,
   ArquivoFormInterface,
 } from "interfaces/imr.interface";
+import BotaoAnexo from "components/PreRecebimento/BotaoAnexo";
 
 const FORMATOS_ARQUIVOS = "PDF, XLS, XLSX, XLSXM, PNG, JPG ou JPEG";
 
@@ -12,10 +13,11 @@ type AnexosType = {
   setAnexos: React.Dispatch<React.SetStateAction<ArquivoInterface[]>>;
   anexos: Array<ArquivoInterface>;
   anexosIniciais: Array<any>;
+  somenteLeitura: Boolean;
 };
 
 export const Anexos = ({ ...props }: AnexosType) => {
-  const { setAnexos, anexos, anexosIniciais } = props;
+  const { setAnexos, anexos, anexosIniciais, somenteLeitura } = props;
   const [arquivosIniciais, setArquivosIniciais] = useState<any>();
 
   useEffect(() => {
@@ -63,18 +65,33 @@ export const Anexos = ({ ...props }: AnexosType) => {
           </div>
         </div>
 
-        <div className="row">
-          <InputFileField
-            name="anexos"
-            arquivosIniciais={arquivosIniciais}
-            setFiles={setFiles}
-            removeFile={removeFiles}
-            formatosAceitos={FORMATOS_ARQUIVOS}
-            toastSuccess="Anexo incluído com sucesso!"
-            textoBotao="Anexar Arquivos"
-            helpText="Envie o(s) arquivo(s) no formato PDF, PNG, JPG, JPEG e Excel (Todos os formatos), com até 10MB."
-          />
-        </div>
+        {!somenteLeitura && (
+          <div className="row">
+            <InputFileField
+              name="anexos"
+              arquivosIniciais={arquivosIniciais}
+              setFiles={setFiles}
+              removeFile={removeFiles}
+              formatosAceitos={FORMATOS_ARQUIVOS}
+              toastSuccess="Anexo incluído com sucesso!"
+              textoBotao="Anexar Arquivos"
+              helpText="Envie o(s) arquivo(s) no formato PDF, PNG, JPG, JPEG e Excel (Todos os formatos), com até 10MB."
+            />
+          </div>
+        )}
+        {somenteLeitura && (
+          <>
+            {anexosIniciais?.map((arquivo, index) => {
+              return (
+                <div className="row mt-2" key={index}>
+                  <div className="col-2">
+                    <BotaoAnexo urlAnexo={arquivo.anexo_url} />
+                  </div>
+                </div>
+              );
+            })}
+          </>
+        )}
       </div>
     </>
   );
