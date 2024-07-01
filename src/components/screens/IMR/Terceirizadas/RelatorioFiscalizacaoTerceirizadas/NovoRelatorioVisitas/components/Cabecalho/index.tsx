@@ -62,6 +62,7 @@ type CabecahoType = {
     _tiposOcorrencia: Array<TipoOcorrenciaInterface>
   ) => void;
   somenteLeitura?: boolean;
+  isEditing?: boolean;
 };
 
 export const Cabecalho = ({ ...props }: CabecahoType) => {
@@ -87,6 +88,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
     getTiposOcorrenciaPorEditalNutrisupervisaoAsync,
     setTiposOcorrencia,
     somenteLeitura,
+    isEditing,
   } = props;
 
   const initialValues = form.getState().initialValues;
@@ -135,11 +137,11 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
     setLoadingEscolas(false);
   };
 
-  const setEscolaInitialValues = async (uuid: string) => {
-    const _escola = escolas.find((e: EscolaLabelInterface) => e.uuid === uuid);
+  const setEscolaInitialValues = async (initialValues) => {
+    const _escola = initialValues.escola;
     if (_escola) {
-      form.change("escola", _escola.value);
-      form.change("lote", _escola?.lote_nome);
+      form.change("escola", `${_escola.codigo_eol} - ${_escola.nome}`);
+      form.change("lote", _escola?.lote);
       form.change("terceirizada", _escola?.terceirizada);
 
       setEscolaSelecionada(_escola);
@@ -205,16 +207,10 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
   }, []);
 
   useEffect(() => {
-    if (initialValues && initialValues.diretoria_regional) {
-      getEscolasTercTotalAsync(initialValues.diretoria_regional);
+    if (initialValues && initialValues.escola) {
+      setEscolaInitialValues(initialValues);
     }
   }, [initialValues]);
-
-  useEffect(() => {
-    if (escolas.length && initialValues && initialValues.escola) {
-      setEscolaInitialValues(initialValues.escola);
-    }
-  }, [initialValues, escolas]);
 
   const LOADING = !diretoriasRegionais || !periodosVisita;
 
@@ -260,7 +256,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                     label="Diretoria Regional de Educação"
                     validate={required}
                     required
-                    disabled={somenteLeitura}
+                    disabled={isEditing || somenteLeitura}
                     onChangeEffect={(e: ChangeEvent<HTMLInputElement>) => {
                       const value = e.target.value;
                       setTiposOcorrencia(undefined);
@@ -293,6 +289,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       disabled={
                         !values.diretoria_regional ||
                         loadingEscolas ||
+                        isEditing ||
                         somenteLeitura
                       }
                       inputOnChange={async (value: string) => {
