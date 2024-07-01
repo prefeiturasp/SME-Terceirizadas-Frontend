@@ -6,10 +6,11 @@ import { required } from "helpers/fieldValidators";
 type CampodeTextoSimplesType = {
   titulo: string;
   name: string;
+  somenteLeitura: boolean;
 };
 
 export const CampodeTextoSimples = ({ ...props }: CampodeTextoSimplesType) => {
-  const { titulo, name } = props;
+  const { titulo, name, somenteLeitura } = props;
 
   return (
     <Field
@@ -18,6 +19,7 @@ export const CampodeTextoSimples = ({ ...props }: CampodeTextoSimplesType) => {
       name={name}
       required
       validate={required}
+      disabled={somenteLeitura}
     />
   );
 };

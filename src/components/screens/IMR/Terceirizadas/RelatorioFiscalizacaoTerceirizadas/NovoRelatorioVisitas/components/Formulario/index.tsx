@@ -22,6 +22,7 @@ type FormularioType = {
   respostasOcorrencias: Array<RespostaOcorrenciaInterface>;
   respostasOcorrenciaNaoSeAplica: Array<RespostaOcorrenciaNaoSeAplicaInterface>;
   push: (_string) => {};
+  somenteLeitura?: boolean;
 };
 
 export const Formulario = ({ ...props }: FormularioType) => {
@@ -33,10 +34,12 @@ export const Formulario = ({ ...props }: FormularioType) => {
     respostasOcorrencias,
     respostasOcorrenciaNaoSeAplica,
     push,
+    somenteLeitura,
   } = props;
 
   const exibeBotaoAdicionar = (tipoOcorrencia: TipoOcorrenciaInterface) => {
     return (
+      !somenteLeitura &&
       tipoOcorrencia.aceita_multiplas_respostas &&
       tipoOcorrencia.parametrizacoes.length > 0
     );
@@ -242,6 +245,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                           id={`sim_${tipoOcorrencia.uuid}`}
                           required
                           validate={required}
+                          disabled={somenteLeitura}
                         />
                         <label
                           className="ms-2"
@@ -258,6 +262,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                             id={`nao_${tipoOcorrencia.uuid}`}
                             required
                             validate={required}
+                            disabled={somenteLeitura}
                           />
                           <label
                             className="ms-2"
@@ -275,6 +280,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                             id={`nao_se_aplica_${tipoOcorrencia.uuid}`}
                             required
                             validate={required}
+                            disabled={somenteLeitura}
                           />
                           <label
                             className="ms-2"
@@ -288,7 +294,10 @@ export const Formulario = ({ ...props }: FormularioType) => {
                   </tr>
                   {values[`ocorrencia_${tipoOcorrencia.uuid}`] ===
                     "nao_se_aplica" && (
-                    <OcorrenciaNaoSeAplica tipoOcorrencia={tipoOcorrencia} />
+                    <OcorrenciaNaoSeAplica
+                      tipoOcorrencia={tipoOcorrencia}
+                      somenteLeitura={somenteLeitura}
+                    />
                   )}
 
                   {values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao" && (
@@ -305,6 +314,7 @@ export const Formulario = ({ ...props }: FormularioType) => {
                                 escolaSelecionada={escolaSelecionada}
                                 indexFieldArray={indexFieldArray}
                                 respostasOcorrencias={respostasOcorrencias}
+                                somenteLeitura={somenteLeitura}
                               />
                             </React.Fragment>
                           ))

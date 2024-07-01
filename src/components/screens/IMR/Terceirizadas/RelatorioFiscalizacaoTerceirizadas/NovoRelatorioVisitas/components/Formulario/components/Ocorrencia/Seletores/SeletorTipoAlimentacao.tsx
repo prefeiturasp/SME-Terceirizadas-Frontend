@@ -11,12 +11,13 @@ type SeletorTipoAlimentacaoType = {
   titulo: string;
   name: string;
   escolaSelecionada: EscolaLabelInterface;
+  somenteLeitura: boolean;
 };
 
 export const SeletorTipoAlimentacao = ({
   ...props
 }: SeletorTipoAlimentacaoType) => {
-  const { titulo, name, escolaSelecionada } = props;
+  const { titulo, name, escolaSelecionada, somenteLeitura } = props;
   const [options, setOptions] = useState<Array<SelectOption>>([]);
 
   const getOptionsAsync = async (escola_uuid) => {
@@ -54,6 +55,7 @@ export const SeletorTipoAlimentacao = ({
       className="seletor-imr"
       required
       validate={required}
+      disabled={somenteLeitura}
     />
   );
 };

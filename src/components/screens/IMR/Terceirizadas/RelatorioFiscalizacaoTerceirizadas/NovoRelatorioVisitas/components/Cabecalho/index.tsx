@@ -61,6 +61,8 @@ type CabecahoType = {
   setTiposOcorrencia: (
     _tiposOcorrencia: Array<TipoOcorrenciaInterface>
   ) => void;
+  somenteLeitura?: boolean;
+  isEditing?: boolean;
 };
 
 export const Cabecalho = ({ ...props }: CabecahoType) => {
@@ -85,6 +87,8 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
     setEscolaSelecionada,
     getTiposOcorrenciaPorEditalNutrisupervisaoAsync,
     setTiposOcorrencia,
+    somenteLeitura,
+    isEditing,
   } = props;
 
   const initialValues = form.getState().initialValues;
@@ -133,11 +137,11 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
     setLoadingEscolas(false);
   };
 
-  const setEscolaInitialValues = async (uuid: string) => {
-    const _escola = escolas.find((e: EscolaLabelInterface) => e.uuid === uuid);
+  const setEscolaInitialValues = async (initialValues) => {
+    const _escola = initialValues.escola;
     if (_escola) {
-      form.change("escola", _escola.value);
-      form.change("lote", _escola?.lote_nome);
+      form.change("escola", `${_escola.codigo_eol} - ${_escola.nome}`);
+      form.change("lote", _escola?.lote);
       form.change("terceirizada", _escola?.terceirizada);
 
       setEscolaSelecionada(_escola);
@@ -203,16 +207,10 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
   }, []);
 
   useEffect(() => {
-    if (initialValues && initialValues.diretoria_regional) {
-      getEscolasTercTotalAsync(initialValues.diretoria_regional);
+    if (initialValues && initialValues.escola) {
+      setEscolaInitialValues(initialValues);
     }
   }, [initialValues]);
-
-  useEffect(() => {
-    if (escolas.length && initialValues && initialValues.escola) {
-      setEscolaInitialValues(initialValues.escola);
-    }
-  }, [initialValues, escolas]);
 
   const LOADING = !diretoriasRegionais || !periodosVisita;
 
@@ -258,6 +256,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                     label="Diretoria Regional de Educação"
                     validate={required}
                     required
+                    disabled={isEditing || somenteLeitura}
                     onChangeEffect={(e: ChangeEvent<HTMLInputElement>) => {
                       const value = e.target.value;
                       setTiposOcorrencia(undefined);
@@ -287,7 +286,12 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       label="Unidade Educacional"
                       placeholder={"Selecione uma Unidade"}
                       required
-                      disabled={!values.diretoria_regional || loadingEscolas}
+                      disabled={
+                        !values.diretoria_regional ||
+                        loadingEscolas ||
+                        isEditing ||
+                        somenteLeitura
+                      }
                       inputOnChange={async (value: string) => {
                         setTiposOcorrencia(undefined);
                         const _escola = escolas.find(
@@ -360,6 +364,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                     maxDate={moment().toDate()}
                     required
                     validate={required}
+                    disabled={somenteLeitura}
                     inputOnChange={(value) => {
                       form.change("total_matriculados_por_data", undefined);
                       form.change("maior_frequencia_no_periodo", undefined);
@@ -384,6 +389,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                     label="Período de Visita"
                     validate={required}
                     required
+                    disabled={somenteLeitura}
                   />
                 </div>
               </div>
@@ -422,7 +428,8 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                     disabled={
                       values.total_matriculados_por_data === null ||
                       values.total_matriculados_por_data === undefined ||
-                      loadingTotalMatriculadosPorData
+                      loadingTotalMatriculadosPorData ||
+                      somenteLeitura
                     }
                   />
                 </div>
@@ -443,6 +450,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       id="sim"
                       required
                       validate={required}
+                      disabled={somenteLeitura}
                     />
                     <label htmlFor="sim">Sim</label>
                   </div>
@@ -455,6 +463,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       id="nao"
                       required
                       validate={required}
+                      disabled={somenteLeitura}
                     />
                     <label htmlFor="nao">Não estava presente</label>
                   </div>
@@ -470,6 +479,7 @@ export const Cabecalho = ({ ...props }: CabecahoType) => {
                       placeholder="Digite o Nome da Nutricionista da Empresa"
                       required
                       validate={required}
+                      disabled={somenteLeitura}
                     />
                   </div>
                 </div>
