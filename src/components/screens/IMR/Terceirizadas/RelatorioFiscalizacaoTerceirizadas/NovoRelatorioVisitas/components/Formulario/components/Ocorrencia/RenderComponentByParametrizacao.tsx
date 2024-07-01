@@ -40,6 +40,7 @@ type RenderComponentByParametrizacaoType = {
   escolaSelecionada: EscolaLabelInterface;
   name_grupos: string;
   UUIDResposta?: string;
+  somenteLeitura: boolean;
 };
 
 const RenderComponentByParametrizacao = ({
@@ -52,6 +53,7 @@ const RenderComponentByParametrizacao = ({
     escolaSelecionada,
     name_grupos,
     UUIDResposta,
+    somenteLeitura,
   } = props;
   const ComponentToRender = componentMap[parametrizacao.tipo_pergunta.nome];
 
@@ -66,6 +68,7 @@ const RenderComponentByParametrizacao = ({
       name={`${name_grupos}.tipoocorrencia_${tipoOcorrencia.uuid}_parametrizacao_${parametrizacao.uuid}_uuid_${UUIDResposta}`}
       form={form}
       escolaSelecionada={escolaSelecionada}
+      somenteLeitura={somenteLeitura}
     />
   );
 };
