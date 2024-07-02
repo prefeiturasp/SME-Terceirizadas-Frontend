@@ -115,6 +115,12 @@ export const NovoRelatorioVisitas = ({
     }
   };
 
+  function navigateToPainelRelatorios() {
+    navigate(
+      `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
+    );
+  }
+
   const salvarRascunho = async (
     values: NovoRelatorioVisitasFormInterface,
     gerarRelatorioNotificacoes = false
@@ -145,9 +151,7 @@ export const NovoRelatorioVisitas = ({
         if (gerarRelatorioNotificacoes) {
           solicitarGeracaoRelatorioNotificacoes(values.uuid);
         } else {
-          navigate(
-            `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
-          );
+          navigateToPainelRelatorios();
         }
       } else {
         toastError(
@@ -165,9 +169,7 @@ export const NovoRelatorioVisitas = ({
         if (gerarRelatorioNotificacoes) {
           solicitarGeracaoRelatorioNotificacoes(response.data.uuid);
         } else {
-          navigate(
-            `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
-          );
+          navigateToPainelRelatorios();
         }
       } else {
         toastError(
@@ -448,6 +450,7 @@ export const NovoRelatorioVisitas = ({
                 <ModalSolicitacaoDownload
                   show={exibirModalCentralDownloads}
                   setShow={setExibirModalCentralDownloads}
+                  callbackClose={navigateToPainelRelatorios}
                 />
               )}
             </form>
