@@ -5,6 +5,7 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import {
   PAINEL_RELATORIOS_FISCALIZACAO,
   SUPERVISAO,
@@ -32,6 +33,7 @@ import {
   getFormularioSupervisao,
   getRespostasFormularioSupervisao,
   getRespostasNaoSeAplicaFormularioSupervisao,
+  exportarPDFRelatorioNotificacao,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { Anexos } from "./components/Anexos";
 import { Cabecalho } from "./components/Cabecalho";
@@ -45,6 +47,8 @@ import {
   validarFormulariosTiposOcorrencia,
 } from "./helpers";
 import "./styles.scss";
+import { Notificacoes } from "./components/Notificacoes";
+import { ModalBaixarNotificaoces } from "./components/ModalBaixarNotificacoes";
 
 interface NovoRelatorioVisitasProps {
   somenteLeitura?: boolean;
@@ -59,6 +63,8 @@ export const NovoRelatorioVisitas = ({
     useState(false);
   const [showModalSalvarRascunho, setShowModalSalvarRascunho] = useState(false);
   const [showModalSalvar, setShowModalSalvar] = useState(false);
+  const [showModalBaixarNotificacoes, setShowModalBaixarNotificacoes] =
+    useState(false);
 
   const [escolaSelecionada, setEscolaSelecionada] =
     useState<EscolaLabelInterface>();
@@ -72,6 +78,8 @@ export const NovoRelatorioVisitas = ({
   const [respostasOcorrencias, setRespostasOcorrencias] = useState([]);
   const [respostasOcorrenciaNaoSeAplica, setRespostasOcorrenciaNaoSeAplica] =
     useState([]);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
 
   const navigate: NavigateFunction = useNavigate();
 
@@ -108,7 +116,8 @@ export const NovoRelatorioVisitas = ({
   };
 
   const salvarRascunho = async (
-    values: NovoRelatorioVisitasFormInterface
+    values: NovoRelatorioVisitasFormInterface,
+    gerarRelatorioNotificacoes = false
   ): Promise<void> => {
     if (!values.escola || !values.data) {
       toastError(
@@ -116,7 +125,7 @@ export const NovoRelatorioVisitas = ({
       );
       return;
     }
-    if (!showModalSalvarRascunho) {
+    if (!showModalSalvarRascunho && !gerarRelatorioNotificacoes) {
       setShowModalSalvarRascunho(true);
       return;
     }
@@ -133,9 +142,13 @@ export const NovoRelatorioVisitas = ({
         toastSuccess(
           "Rascunho do Relatório de Fiscalização salvo com sucesso!"
         );
-        navigate(
-          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
-        );
+        if (gerarRelatorioNotificacoes) {
+          solicitarGeracaoRelatorioNotificacoes(values.uuid);
+        } else {
+          navigate(
+            `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
+          );
+        }
       } else {
         toastError(
           "Erro ao atualizar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
@@ -149,14 +162,31 @@ export const NovoRelatorioVisitas = ({
         toastSuccess(
           "Rascunho do Relatório de Fiscalização salvo com sucesso!"
         );
-        navigate(
-          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
-        );
+        if (gerarRelatorioNotificacoes) {
+          solicitarGeracaoRelatorioNotificacoes(response.data.uuid);
+        } else {
+          navigate(
+            `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
+          );
+        }
       } else {
         toastError(
           "Erro ao criar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
         );
       }
+    }
+  };
+
+  const solicitarGeracaoRelatorioNotificacoes = async (
+    formulario_uuid: string
+  ): Promise<void> => {
+    const response = await exportarPDFRelatorioNotificacao(formulario_uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      setShowModalBaixarNotificacoes(false);
+      setExibirModalCentralDownloads(true);
+    } else {
+      setShowModalBaixarNotificacoes(false);
+      toastError("Erro ao solicitar geração de relatório de notificações.");
     }
   };
 
@@ -327,6 +357,15 @@ export const NovoRelatorioVisitas = ({
                   form.getState().values,
                   tiposOcorrencia
                 ).listaValidacaoPorTipoOcorrencia.length !== 0 && (
+                  <Notificacoes
+                    onClickBaixarNotificacoes={setShowModalBaixarNotificacoes}
+                  />
+                )}
+              {tiposOcorrencia &&
+                validarFormulariosTiposOcorrencia(
+                  form.getState().values,
+                  tiposOcorrencia
+                ).listaValidacaoPorTipoOcorrencia.length !== 0 && (
                   <Anexos
                     setAnexos={setAnexos}
                     anexos={anexos}
@@ -398,6 +437,19 @@ export const NovoRelatorioVisitas = ({
                 salvar={salvar}
                 escolaSelecionada={escolaSelecionada}
               />
+              <ModalBaixarNotificaoces
+                show={showModalBaixarNotificacoes}
+                handleClose={() => setShowModalBaixarNotificacoes(false)}
+                salvarRascunhoEBaixarNotificacoes={() =>
+                  salvarRascunho(form.getState().values, true)
+                }
+              />
+              {exibirModalCentralDownloads && (
+                <ModalSolicitacaoDownload
+                  show={exibirModalCentralDownloads}
+                  setShow={setExibirModalCentralDownloads}
+                />
+              )}
             </form>
           )}
         </Form>
