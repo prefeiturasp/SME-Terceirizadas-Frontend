@@ -133,6 +133,12 @@ export const PainelRelatorios = () => {
                       <Listagem
                         objetos={relatoriosVisita}
                         perfilNutriSupervisao={perfilNutriSupervisao}
+                        getDashboardPainelGerencialSupervisaoAsync={
+                          getDashboardPainelGerencialSupervisaoAsync
+                        }
+                        buscarResultados={buscarResultados}
+                        filtros={filtros}
+                        pagina={page}
                       />
                       <div className="row">
                         <div className="col">
