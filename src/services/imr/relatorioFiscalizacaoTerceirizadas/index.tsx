@@ -70,7 +70,7 @@ export const updateFormularioSupervisao = async (
 };
 
 export const deleteFormularioSupervisao = async (params: { uuid: string }) => {
-  const url = `${API_URL}/imr/formulario-supervisao/${params.uuid}/`;
+  const url = `${API_URL}/imr/rascunho-formulario-supervisao/${params.uuid}/`;
   const response = await axios.delete(url).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
