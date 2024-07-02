@@ -214,3 +214,14 @@ export const exportarPDFRelatorioFiscalizacao = async (params: {
     return data;
   }
 };
+
+export const exportarPDFRelatorioNotificacao = async (uuid: string) => {
+  const url = `${API_URL}/imr/formulario-supervisao/${uuid}/gerar-relatorio-notificacoes/`;
+  const response: ResponseExportarPDFAssincronoInterface = await axios
+    .get(url)
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
