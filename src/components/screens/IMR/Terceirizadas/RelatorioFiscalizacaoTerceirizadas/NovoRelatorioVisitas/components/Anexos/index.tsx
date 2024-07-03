@@ -66,7 +66,7 @@ export const Anexos = ({ ...props }: AnexosType) => {
         </div>
 
         {!somenteLeitura && (
-          <div className="row">
+          <div className="row mt-3">
             <InputFileField
               name="anexos"
               arquivosIniciais={arquivosIniciais}
