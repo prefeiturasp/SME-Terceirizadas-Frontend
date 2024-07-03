@@ -66,7 +66,7 @@ export const Listagem: React.FC<Props> = ({
     );
 
     const botaoDetalhar = (
-      <Tooltip title="Detalhar">
+      <Tooltip title="Visualizar Relatório">
         <NavLink
           className="float-start"
           to={`/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${DETALHAR_RELATORIO_FISCALIZACAO}?uuid=${objeto.uuid}`}
