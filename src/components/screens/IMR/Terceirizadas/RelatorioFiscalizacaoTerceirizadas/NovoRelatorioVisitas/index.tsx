@@ -290,12 +290,7 @@ export const NovoRelatorioVisitas = ({
     return (
       !form.getState().hasValidationErrors &&
       _validarFormulariosTiposOcorrencia.formulariosValidos &&
-      ((_validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
-        .length > 0 &&
-        anexos.length > 0 &&
-        notificacoesAssinadas.length > 0) ||
-        _validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
-          .length === 0)
+      notificacoesAssinadas.length > 0
     );
   };
 
