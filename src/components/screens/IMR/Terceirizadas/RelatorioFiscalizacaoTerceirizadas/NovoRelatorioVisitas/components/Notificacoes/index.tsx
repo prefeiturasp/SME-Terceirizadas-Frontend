@@ -8,6 +8,7 @@ import {
 
 type NotificacoesType = {
   onClickBaixarNotificacoes: React.Dispatch<React.SetStateAction<boolean>>;
+  disabledBaixarNotificacoes: boolean;
 };
 
 export const Notificacoes = ({ ...props }: NotificacoesType) => {
@@ -29,6 +30,7 @@ export const Notificacoes = ({ ...props }: NotificacoesType) => {
               icon={BUTTON_ICON.DOWNLOAD}
               iconPosition="right"
               onClick={props.onClickBaixarNotificacoes}
+              disabled={props.disabledBaixarNotificacoes}
             />
             <Botao
               texto="Anexar Notificações Assinadas"

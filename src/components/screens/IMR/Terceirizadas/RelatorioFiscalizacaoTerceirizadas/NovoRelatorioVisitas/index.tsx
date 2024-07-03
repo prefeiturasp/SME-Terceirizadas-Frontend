@@ -45,6 +45,7 @@ import {
   formataPayload,
   formataPayloadUpdate,
   validarFormulariosTiposOcorrencia,
+  validarFormulariosParaCategoriasDeNotificacao,
 } from "./helpers";
 import "./styles.scss";
 import { Notificacoes } from "./components/Notificacoes";
@@ -289,6 +290,36 @@ export const NovoRelatorioVisitas = ({
     );
   };
 
+  const showNotificacoesComponent = (
+    form: FormApi<any, Partial<any>>,
+    tiposOcorrencia
+  ) => {
+    const _validarFormulariosTiposOcorrencia =
+      validarFormulariosParaCategoriasDeNotificacao(
+        form.getState().values,
+        tiposOcorrencia
+      );
+    return (
+      _validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
+        .length !== 0
+    );
+  };
+
+  const habilitarBotaoBaixarNotificacao = (
+    form: FormApi<any, Partial<any>>,
+    tiposOcorrencia
+  ) => {
+    const _validarFormulariosTiposOcorrencia =
+      validarFormulariosParaCategoriasDeNotificacao(
+        form.getState().values,
+        tiposOcorrencia
+      );
+    return (
+      !form.getState().hasValidationErrors &&
+      _validarFormulariosTiposOcorrencia.formulariosValidos
+    );
+  };
+
   const handleClickVoltar = () => {
     navigate(
       `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
@@ -355,12 +386,12 @@ export const NovoRelatorioVisitas = ({
                 </Spin>
               )}
               {tiposOcorrencia &&
-                validarFormulariosTiposOcorrencia(
-                  form.getState().values,
-                  tiposOcorrencia
-                ).listaValidacaoPorTipoOcorrencia.length !== 0 && (
+                showNotificacoesComponent(form, tiposOcorrencia) && (
                   <Notificacoes
                     onClickBaixarNotificacoes={setShowModalBaixarNotificacoes}
+                    disabledBaixarNotificacoes={
+                      !habilitarBotaoBaixarNotificacao(form, tiposOcorrencia)
+                    }
                   />
                 )}
               {tiposOcorrencia &&
