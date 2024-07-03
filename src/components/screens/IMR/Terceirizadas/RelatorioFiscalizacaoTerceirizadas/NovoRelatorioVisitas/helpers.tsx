@@ -10,6 +10,7 @@ export const formataPayloadUpdate = (
   values: NovoRelatorioVisitasFormInterface,
   escolaSelecionada: EscolaLabelInterface,
   anexos: Array<ArquivoInterface>,
+  notificacoes_assinadas: Array<ArquivoInterface>,
   respostasOcorrenciaNaoSeAplica?: Array<any>
 ) => {
   let values_ = deepCopy(values);
@@ -31,13 +32,15 @@ export const formataPayloadUpdate = (
     ocorrencias,
     ocorrencias_sim,
     anexos,
+    notificacoes_assinadas,
   };
 };
 
 export const formataPayload = (
   values: NovoRelatorioVisitasFormInterface,
   escolaSelecionada: EscolaLabelInterface,
-  anexos: Array<ArquivoInterface>
+  anexos: Array<ArquivoInterface>,
+  notificacoes_assinadas: Array<ArquivoInterface>
 ) => {
   let values_ = deepCopy(values);
   values_.escola = escolaSelecionada.uuid;
@@ -49,7 +52,13 @@ export const formataPayload = (
   );
   const { respostas: ocorrencias } = formatOcorrencias(values);
 
-  return { ...values_, ocorrencias_nao_se_aplica, ocorrencias, anexos };
+  return {
+    ...values_,
+    ocorrencias_nao_se_aplica,
+    ocorrencias,
+    anexos,
+    notificacoes_assinadas,
+  };
 };
 
 const formatOcorrenciasSim = (values: NovoRelatorioVisitasFormInterface) => {
