@@ -126,7 +126,10 @@ export const Formulario = ({ ...props }: FormularioType) => {
         values[`ocorrencia_${tipoOcorrencia_.uuid}`] === "nao_se_aplica"
       ) {
         rowSpan += 1;
-        if (exibeBotaoAdicionar(tipoOcorrencia_))
+        if (
+          exibeBotaoAdicionar(tipoOcorrencia_) &&
+          values[`ocorrencia_${tipoOcorrencia_.uuid}`] === "nao"
+        )
           rowSpan += values[`grupos_${tipoOcorrencia_.uuid}`].length;
       }
     });
@@ -150,7 +153,10 @@ export const Formulario = ({ ...props }: FormularioType) => {
       values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao_se_aplica"
     ) {
       rowSpan = 2;
-      if (exibeBotaoAdicionar(tipoOcorrencia))
+      if (
+        exibeBotaoAdicionar(tipoOcorrencia) &&
+        values[`ocorrencia_${tipoOcorrencia.uuid}`] === "nao"
+      )
         rowSpan += values[`grupos_${tipoOcorrencia.uuid}`].length;
     }
     return rowSpan;
