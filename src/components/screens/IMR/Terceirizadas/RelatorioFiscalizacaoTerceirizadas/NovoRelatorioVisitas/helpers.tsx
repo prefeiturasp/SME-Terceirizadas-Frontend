@@ -175,14 +175,14 @@ export const validarFormulariosTiposOcorrencia = (
   const { respostas, ocorrenciasNao, grupos } = formatOcorrencias(values);
 
   // valida todos os tipos de ocorrência assinalados como "não"
-  const listaValidacaoPorTipoOcorrencia = ocorrenciasNao.map(
-    (_ocorrenciaUUID) => {
+  const listaValidacaoPorTipoOcorrencia = ocorrenciasNao
+    .map((_ocorrenciaUUID) => {
       const _tipoOcorrencia = tiposOcorrencia.find(
         (_tipo_ocorrencia) => _tipo_ocorrencia.uuid === _ocorrenciaUUID
       );
 
       if (!_tipoOcorrencia) {
-        return { tipo_ocorrencia: _ocorrenciaUUID, valid: false };
+        return null;
       }
       let _validacaoTodosOsGrupos = [];
       // pega os grupos de resposta por tipo de ocorrência
@@ -210,10 +210,29 @@ export const validarFormulariosTiposOcorrencia = (
       const isValid = _validacaoTodosOsGrupos.every(Boolean);
 
       return { tipo_ocorrencia: _ocorrenciaUUID, valid: isValid };
-    }
-  );
+    })
+    .filter((resultado) => resultado !== null);
+
   const formulariosValidos = listaValidacaoPorTipoOcorrencia.every(
     (resultado) => resultado.valid
   );
   return { listaValidacaoPorTipoOcorrencia, formulariosValidos };
+};
+
+export const validarFormulariosParaCategoriasDeNotificacao = (
+  values: NovoRelatorioVisitasFormInterface,
+  tiposOcorrencia: Array<TipoOcorrenciaInterface>
+) => {
+  const tiposOcorrenciaFiltradosPorCategoria = tiposOcorrencia.filter(
+    (tipo) =>
+      tipo.categoria.nome ===
+        "QUANTIDADE/QUALIDADE DE UTENSÍLIOS/MOBILIÁRIOS/EQUIPAMENTOS" ||
+      tipo.categoria.nome === "MANUTENÇÃO DE EQUIPAMENTOS/REPARO E ADAPTAÇÃO"
+  );
+  const _validarFormulariosTiposOcorrencia = validarFormulariosTiposOcorrencia(
+    values,
+    tiposOcorrenciaFiltradosPorCategoria
+  );
+
+  return _validarFormulariosTiposOcorrencia;
 };

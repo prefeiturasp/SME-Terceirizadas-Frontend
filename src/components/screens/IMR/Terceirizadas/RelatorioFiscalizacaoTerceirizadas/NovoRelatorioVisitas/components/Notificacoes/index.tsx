@@ -20,6 +20,7 @@ type NotificacoesType = {
   notificacoesAssinadas: Array<ArquivoInterface>;
   notificacoesIniciais: Array<any>;
   somenteLeitura?: boolean;
+  disabledBaixarNotificacoes: boolean;
 };
 
 export const Notificacoes = ({ ...props }: NotificacoesType) => {
@@ -29,6 +30,7 @@ export const Notificacoes = ({ ...props }: NotificacoesType) => {
     notificacoesAssinadas,
     notificacoesIniciais,
     somenteLeitura,
+    disabledBaixarNotificacoes,
   } = props;
   const [arquivosIniciais, setArquivosIniciais] = useState<any>();
 
@@ -89,6 +91,7 @@ export const Notificacoes = ({ ...props }: NotificacoesType) => {
                 icon={BUTTON_ICON.DOWNLOAD}
                 iconPosition="left"
                 onClick={onClickBaixarNotificacoes}
+                disabled={disabledBaixarNotificacoes}
               />
             </div>
             <div className="col-10">
