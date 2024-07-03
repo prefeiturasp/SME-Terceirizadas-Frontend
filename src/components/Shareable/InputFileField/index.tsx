@@ -57,7 +57,7 @@ const InputFileField: React.FC<Props> = ({
       />
 
       {(required || helpText) && (
-        <label className={`input-file-field-label ${labelClassName}`}>
+        <label className={`col-12 input-file-field-label ${labelClassName}`}>
           {required && <span className="red">* Campo Obrigatório</span>}
           {required && helpText && ": "}
           {helpText}

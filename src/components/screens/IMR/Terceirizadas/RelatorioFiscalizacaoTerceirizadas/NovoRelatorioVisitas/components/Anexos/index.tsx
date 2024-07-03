@@ -13,7 +13,7 @@ type AnexosType = {
   setAnexos: React.Dispatch<React.SetStateAction<ArquivoInterface[]>>;
   anexos: Array<ArquivoInterface>;
   anexosIniciais: Array<any>;
-  somenteLeitura: Boolean;
+  somenteLeitura?: Boolean;
 };
 
 export const Anexos = ({ ...props }: AnexosType) => {
