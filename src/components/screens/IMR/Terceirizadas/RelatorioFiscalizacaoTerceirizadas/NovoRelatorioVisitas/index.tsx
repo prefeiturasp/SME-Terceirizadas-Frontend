@@ -74,7 +74,11 @@ export const NovoRelatorioVisitas = ({
   const [loadingTiposOcorrencia, setLoadingTiposOcorrencia] = useState(false);
   const [erroAPI, setErroAPI] = useState<string>("");
   const [anexos, setAnexos] = useState<ArquivoInterface[]>([]);
+  const [notificacoesAssinadas, setNotificacoesAssinadas] = useState<
+    ArquivoInterface[]
+  >([]);
   const [anexosIniciais, setAnexosIniciais] = useState<any[]>([]);
+  const [notificacoesIniciais, setNotificacoesIniciais] = useState<any[]>([]);
   const [initialValues, setInitialValues] = useState();
   const [respostasOcorrencias, setRespostasOcorrencias] = useState([]);
   const [respostasOcorrenciaNaoSeAplica, setRespostasOcorrenciaNaoSeAplica] =
@@ -95,12 +99,14 @@ export const NovoRelatorioVisitas = ({
       try {
         const formularioResponse = await getFormularioSupervisao(uuid);
         setAnexosIniciais(formularioResponse.data.anexos);
+        setNotificacoesIniciais(formularioResponse.data.notificacoes_assinadas);
         setInitialValues({
           ...formularioResponse.data,
           acompanhou_visita: formularioResponse.data.acompanhou_visita
             ? "sim"
             : "nao",
           anexos: null,
+          notificacoes_assinadas: null,
         });
 
         const [respostasResponse, respostasNaoSeAplica] = await Promise.all([
@@ -142,6 +148,7 @@ export const NovoRelatorioVisitas = ({
           values,
           escolaSelecionada,
           anexos,
+          notificacoesAssinadas,
           respostasOcorrenciaNaoSeAplica
         )
       );
@@ -161,7 +168,7 @@ export const NovoRelatorioVisitas = ({
       }
     } else {
       const response = await createRascunhoFormularioSupervisao(
-        formataPayload(values, escolaSelecionada, anexos)
+        formataPayload(values, escolaSelecionada, anexos, notificacoesAssinadas)
       );
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess(
@@ -207,6 +214,7 @@ export const NovoRelatorioVisitas = ({
           values,
           escolaSelecionada,
           anexos,
+          notificacoesAssinadas,
           respostasOcorrenciaNaoSeAplica
         )
       );
@@ -222,7 +230,7 @@ export const NovoRelatorioVisitas = ({
       }
     } else {
       const response = await createFormularioSupervisao(
-        formataPayload(values, escolaSelecionada, anexos)
+        formataPayload(values, escolaSelecionada, anexos, notificacoesAssinadas)
       );
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Relatório de Fiscalização enviado com sucesso!");
@@ -284,7 +292,8 @@ export const NovoRelatorioVisitas = ({
       _validarFormulariosTiposOcorrencia.formulariosValidos &&
       ((_validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
         .length > 0 &&
-        anexos.length > 0) ||
+        anexos.length > 0 &&
+        notificacoesAssinadas.length > 0) ||
         _validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
           .length === 0)
     );
@@ -389,6 +398,10 @@ export const NovoRelatorioVisitas = ({
                 showNotificacoesComponent(form, tiposOcorrencia) && (
                   <Notificacoes
                     onClickBaixarNotificacoes={setShowModalBaixarNotificacoes}
+                    somenteLeitura={somenteLeitura}
+                    setNotificacoesAssinadas={setNotificacoesAssinadas}
+                    notificacoesAssinadas={notificacoesAssinadas}
+                    notificacoesIniciais={notificacoesIniciais}
                     disabledBaixarNotificacoes={
                       !habilitarBotaoBaixarNotificacao(form, tiposOcorrencia)
                     }
