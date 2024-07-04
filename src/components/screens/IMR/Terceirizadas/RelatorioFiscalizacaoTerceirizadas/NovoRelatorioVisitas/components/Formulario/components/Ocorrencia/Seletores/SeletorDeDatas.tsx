@@ -18,10 +18,12 @@ type SeletorDeDatasType = {
   name_grupos: string;
   form: FormApi<any, Partial<any>>;
   ehDataOcorrencia?: boolean;
+  somenteLeitura?: boolean;
 };
 
 export const SeletorDeDatas = ({ ...props }: SeletorDeDatasType) => {
-  const { titulo, name, name_grupos, form, ehDataOcorrencia } = props;
+  const { titulo, name, name_grupos, form, ehDataOcorrencia, somenteLeitura } =
+    props;
 
   const [dates, setDates] = useState<string[]>([""]);
 
@@ -103,6 +105,7 @@ export const SeletorDeDatas = ({ ...props }: SeletorDeDatasType) => {
                 tabindex="-1"
                 minDate={null}
                 required
+                disabled={somenteLeitura}
                 validate={required}
                 onClickTrash={onClickTrash}
                 indexTrash={_dateinputIndex}
@@ -116,15 +119,17 @@ export const SeletorDeDatas = ({ ...props }: SeletorDeDatasType) => {
           );
         }
       )}
-      <div className="col-2 my-auto">
-        <Botao
-          className="mt-4"
-          icon={BUTTON_ICON.PLUS}
-          style={BUTTON_STYLE.GREEN_OUTLINE}
-          type={BUTTON_TYPE.BUTTON}
-          onClick={() => adicionarData()}
-        />
-      </div>
+      {!somenteLeitura && (
+        <div className="col-2 my-auto">
+          <Botao
+            className="mt-4"
+            icon={BUTTON_ICON.PLUS}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+            type={BUTTON_TYPE.BUTTON}
+            onClick={() => adicionarData()}
+          />
+        </div>
+      )}
       <Field className="d-none" component={InputText} name={name} />
     </>
   );

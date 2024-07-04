@@ -11,12 +11,13 @@ type SeletorReparosEAdaptacoesType = {
   titulo: string;
   name: string;
   escolaSelecionada: EscolaLabelInterface;
+  somenteLeitura: boolean;
 };
 
 export const SeletorReparosEAdaptacoes = ({
   ...props
 }: SeletorReparosEAdaptacoesType) => {
-  const { titulo, name, escolaSelecionada } = props;
+  const { titulo, name, escolaSelecionada, somenteLeitura } = props;
   const [options, setOptions] = useState<Array<SelectOption>>([]);
 
   const getOptionsAsync = async (edital_uuid) => {
@@ -54,6 +55,7 @@ export const SeletorReparosEAdaptacoes = ({
       className="seletor-imr"
       required
       validate={required}
+      disabled={somenteLeitura}
     />
   );
 };

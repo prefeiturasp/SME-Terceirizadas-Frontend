@@ -5,12 +5,13 @@ import { TipoOcorrenciaInterface } from "interfaces/imr.interface";
 
 type OcorrenciaNaoSeAplicaType = {
   tipoOcorrencia: TipoOcorrenciaInterface;
+  somenteLeitura: boolean;
 };
 
 export const OcorrenciaNaoSeAplica = ({
   ...props
 }: OcorrenciaNaoSeAplicaType) => {
-  const { tipoOcorrencia } = props;
+  const { tipoOcorrencia, somenteLeitura } = props;
   return (
     <tr>
       <td className="p-3" colSpan={2}>
@@ -20,6 +21,7 @@ export const OcorrenciaNaoSeAplica = ({
           name={`descricao_${tipoOcorrencia.uuid}`}
           placeholder="Descreva as observações"
           height="100"
+          disabled={somenteLeitura}
         />
       </td>
     </tr>

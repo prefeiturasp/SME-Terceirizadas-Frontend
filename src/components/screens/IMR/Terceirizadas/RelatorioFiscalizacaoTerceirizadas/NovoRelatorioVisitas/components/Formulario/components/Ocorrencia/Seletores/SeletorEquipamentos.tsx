@@ -11,10 +11,11 @@ type SeletorEquipamentosType = {
   titulo: string;
   name: string;
   escolaSelecionada: EscolaLabelInterface;
+  somenteLeitura: boolean;
 };
 
 export const SeletorEquipamentos = ({ ...props }: SeletorEquipamentosType) => {
-  const { titulo, name, escolaSelecionada } = props;
+  const { titulo, name, escolaSelecionada, somenteLeitura } = props;
   const [options, setOptions] = useState<Array<SelectOption>>([]);
 
   const getOptionsAsync = async (edital_uuid) => {
@@ -49,6 +50,7 @@ export const SeletorEquipamentos = ({ ...props }: SeletorEquipamentosType) => {
       className="seletor-imr"
       required
       validate={required}
+      disabled={somenteLeitura}
     />
   );
 };

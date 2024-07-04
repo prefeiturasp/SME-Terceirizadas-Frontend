@@ -6,10 +6,11 @@ import { required } from "helpers/fieldValidators";
 type CampoNumericoType = {
   titulo: string;
   name: string;
+  somenteLeitura: boolean;
 };
 
 export const CampoNumerico = ({ ...props }: CampoNumericoType) => {
-  const { titulo, name } = props;
+  const { titulo, name, somenteLeitura } = props;
 
   return (
     <Field
@@ -20,6 +21,7 @@ export const CampoNumerico = ({ ...props }: CampoNumericoType) => {
       min={0}
       required
       validate={required}
+      disabled={somenteLeitura}
     />
   );
 };

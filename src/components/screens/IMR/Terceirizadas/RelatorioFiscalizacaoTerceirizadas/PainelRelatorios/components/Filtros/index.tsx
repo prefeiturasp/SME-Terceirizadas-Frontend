@@ -25,16 +25,19 @@ import { DiretoriaRegionalInterface } from "interfaces/escola.interface";
 import {
   EscolaOptionsInterface,
   FiltrosRelatoriosVisitasInterface,
+  NutricionistaOptionInterface,
   RelatorioVisitaItemListagem,
 } from "interfaces/imr.interface";
 import { ResponseDiretoriasRegionaisSimplissimaInterface } from "interfaces/responses.interface";
 import "./styles.scss";
+import { getListNomesNutricionistas } from "services/imr/painelGerencial";
 
 interface Props {
   filtros: FiltrosRelatoriosVisitasInterface;
   setFiltros: Dispatch<SetStateAction<FiltrosRelatoriosVisitasInterface>>;
   setRelatoriosVisita: Dispatch<SetStateAction<RelatorioVisitaItemListagem[]>>;
   setConsultaRealizada: Dispatch<SetStateAction<boolean>>;
+  perfilNutriSupervisao: boolean;
   buscarResultados: (
     _filtros: FiltrosRelatoriosVisitasInterface,
     _page: number
@@ -51,12 +54,16 @@ export const Filtros: React.FC<Props> = ({
   buscarResultados,
   form_,
   setForm,
+  perfilNutriSupervisao,
 }) => {
   const [diretoriasRegionais, setDiretoriasRegionais] = useState<
     { nome: string; uuid: string }[]
   >([]);
   const [escolas, setEscolas] = useState<EscolaOptionsInterface[]>([]);
   const [loadingEscolas, setLoadingEscolas] = useState(false);
+  const [nutricionistas, setNutricionistas] = useState<
+    NutricionistaOptionInterface[]
+  >([]);
 
   const buscarListaDREsAsync = async (): Promise<void> => {
     const response: ResponseDiretoriasRegionaisSimplissimaInterface =
@@ -89,10 +96,31 @@ export const Filtros: React.FC<Props> = ({
     setLoadingEscolas(false);
   };
 
+  const buscarListaNutricionistas = async (): Promise<void> => {
+    const response = await getListNomesNutricionistas();
+    if (response.status === HTTP_STATUS.OK) {
+      setNutricionistas(
+        response.data.results.map((nutri: string) => {
+          return {
+            value: nutri,
+            label: nutri.toUpperCase(),
+          };
+        })
+      );
+    }
+  };
+
   const optionsCampoUnidade = (values: Record<string, any>) =>
     getListaFiltradaAutoCompleteSelect(
       escolas.map((e) => e.nome),
       values.unidade_educacional,
+      true
+    );
+
+  const optionsCampoNutricionista = (values: Record<string, any>) =>
+    getListaFiltradaAutoCompleteSelect(
+      nutricionistas.map((e) => e.label),
+      values.nome_nutricionista,
       true
     );
 
@@ -101,6 +129,8 @@ export const Filtros: React.FC<Props> = ({
       diretoria_regional: values.diretoria_regional ?? "",
       unidade_educacional:
         escolas.find(buscarEscolaPeloNome(values))?.uuid ?? "",
+      nome_nutricionista:
+        nutricionistas.find(buscarNutriPeloNome(values))?.value ?? "",
       data_inicial: values.data_inicial ?? "",
       data_final: values.data_final ?? "",
     };
@@ -114,14 +144,23 @@ export const Filtros: React.FC<Props> = ({
     ({ nome }) =>
       nome === values.unidade_educacional;
 
+  const buscarNutriPeloNome =
+    (values: Record<string, any>) =>
+    ({ label }) =>
+      label === values.nome_nutricionista;
+
   const onClear = () => {
     setRelatoriosVisita([]);
     setFiltros({ status: filtros.status } as FiltrosRelatoriosVisitasInterface);
     setConsultaRealizada(false);
   };
 
+  const requisicoesPreRender = async (): Promise<void> => {
+    await Promise.all([buscarListaDREsAsync(), buscarListaNutricionistas()]);
+  };
+
   useEffect(() => {
-    buscarListaDREsAsync();
+    requisicoesPreRender();
   }, []);
 
   const LOADING = !diretoriasRegionais;
@@ -173,6 +212,17 @@ export const Filtros: React.FC<Props> = ({
                 </div>
               </div>
               <div className="row">
+                {!perfilNutriSupervisao && (
+                  <div className="col-6">
+                    <Field
+                      component={AutoCompleteSelectField}
+                      options={optionsCampoNutricionista(values)}
+                      label="Filtrar por Nutricionista"
+                      name="nome_nutricionista"
+                      placeholder="Digite o nome da supervisão"
+                    />
+                  </div>
+                )}
                 <div className="col-6">
                   <div className="row">
                     <Label

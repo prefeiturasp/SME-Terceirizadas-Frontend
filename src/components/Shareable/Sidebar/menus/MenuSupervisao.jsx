@@ -7,9 +7,23 @@ import {
 } from "configs/constants";
 import React from "react";
 import { LeafItem, Menu, SubMenu } from "./shared";
+import {
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao,
+  usuarioEhMedicao,
+  usuarioEhNutricionistaSupervisao,
+} from "../../../../helpers/utilities";
 
 export const MenuSupervisao = ({ ...props }) => {
   const { activeMenu, onSubmenuClick } = props;
+  const exibirPainelAcompanhamento =
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhMedicao() ||
+    usuarioEhCODAENutriManifestacao();
+
+  const exibirCadastroNovoRelatorio = usuarioEhNutricionistaSupervisao();
+
   return (
     <Menu id="Supervisao" icon="fa-clipboard-list" title={"Supervisão"}>
       <SubMenu
@@ -19,16 +33,20 @@ export const MenuSupervisao = ({ ...props }) => {
         title="Terceirizadas"
         activeMenu={activeMenu}
       >
-        <LeafItem
-          to={`/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`}
-        >
-          Painel de Acompanhamento
-        </LeafItem>
-        <LeafItem
-          to={`/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO}`}
-        >
-          Novo Relatório de Fiscalização
-        </LeafItem>
+        {exibirPainelAcompanhamento && (
+          <LeafItem
+            to={`/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`}
+          >
+            Painel de Acompanhamento
+          </LeafItem>
+        )}
+        {exibirCadastroNovoRelatorio && (
+          <LeafItem
+            to={`/${SUPERVISAO}/${TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO_TERCEIRIZADAS}/${RELATORIO_FISCALIZACAO}`}
+          >
+            Novo Relatório de Fiscalização
+          </LeafItem>
+        )}
       </SubMenu>
     </Menu>
   );

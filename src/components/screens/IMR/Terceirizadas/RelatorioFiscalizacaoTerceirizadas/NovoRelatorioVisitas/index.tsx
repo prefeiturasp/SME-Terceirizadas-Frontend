@@ -5,6 +5,7 @@ import {
   BUTTON_TYPE,
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import {
   PAINEL_RELATORIOS_FISCALIZACAO,
   SUPERVISAO,
@@ -20,9 +21,9 @@ import {
   TipoOcorrenciaInterface,
 } from "interfaces/imr.interface";
 import { ResponseFormularioSupervisaoTiposOcorrenciasInterface } from "interfaces/responses.interface";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form } from "react-final-form";
-import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import {
   createFormularioSupervisao,
   createRascunhoFormularioSupervisao,
@@ -32,6 +33,7 @@ import {
   getFormularioSupervisao,
   getRespostasFormularioSupervisao,
   getRespostasNaoSeAplicaFormularioSupervisao,
+  exportarPDFRelatorioNotificacao,
 } from "services/imr/relatorioFiscalizacaoTerceirizadas";
 import { Anexos } from "./components/Anexos";
 import { Cabecalho } from "./components/Cabecalho";
@@ -43,14 +45,27 @@ import {
   formataPayload,
   formataPayloadUpdate,
   validarFormulariosTiposOcorrencia,
+  validarFormulariosParaCategoriasDeNotificacao,
 } from "./helpers";
 import "./styles.scss";
+import { Notificacoes } from "./components/Notificacoes";
+import { ModalBaixarNotificaoces } from "./components/ModalBaixarNotificacoes";
 
-export const NovoRelatorioVisitas = () => {
+interface NovoRelatorioVisitasProps {
+  somenteLeitura?: boolean;
+  isEditing?: boolean;
+}
+
+export const NovoRelatorioVisitas = ({
+  somenteLeitura = false,
+  isEditing = false,
+}: NovoRelatorioVisitasProps) => {
   const [showModalCancelaPreenchimento, setShowModalCancelaPreenchimento] =
     useState(false);
   const [showModalSalvarRascunho, setShowModalSalvarRascunho] = useState(false);
   const [showModalSalvar, setShowModalSalvar] = useState(false);
+  const [showModalBaixarNotificacoes, setShowModalBaixarNotificacoes] =
+    useState(false);
 
   const [escolaSelecionada, setEscolaSelecionada] =
     useState<EscolaLabelInterface>();
@@ -59,36 +74,39 @@ export const NovoRelatorioVisitas = () => {
   const [loadingTiposOcorrencia, setLoadingTiposOcorrencia] = useState(false);
   const [erroAPI, setErroAPI] = useState<string>("");
   const [anexos, setAnexos] = useState<ArquivoInterface[]>([]);
+  const [notificacoesAssinadas, setNotificacoesAssinadas] = useState<
+    ArquivoInterface[]
+  >([]);
   const [anexosIniciais, setAnexosIniciais] = useState<any[]>([]);
+  const [notificacoesIniciais, setNotificacoesIniciais] = useState<any[]>([]);
   const [initialValues, setInitialValues] = useState();
   const [respostasOcorrencias, setRespostasOcorrencias] = useState([]);
   const [respostasOcorrenciaNaoSeAplica, setRespostasOcorrenciaNaoSeAplica] =
     useState([]);
+  const [exibirModalCentralDownloads, setExibirModalCentralDownloads] =
+    useState(false);
 
   const navigate: NavigateFunction = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
-    if (isEditing) getDadosFormularioSupervisao();
+    if (isEditing || somenteLeitura) getDadosFormularioSupervisao();
   }, []);
 
-  const isEditing = useMemo(() => {
-    const uuid = location.pathname.split("/")[5];
-    return uuid ? true : false;
-  }, [location]);
-
   const getDadosFormularioSupervisao = async () => {
-    const uuid = location.pathname.split("/")[5];
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
     if (uuid) {
       try {
         const formularioResponse = await getFormularioSupervisao(uuid);
         setAnexosIniciais(formularioResponse.data.anexos);
+        setNotificacoesIniciais(formularioResponse.data.notificacoes_assinadas);
         setInitialValues({
           ...formularioResponse.data,
           acompanhou_visita: formularioResponse.data.acompanhou_visita
             ? "sim"
             : "nao",
           anexos: null,
+          notificacoes_assinadas: null,
         });
 
         const [respostasResponse, respostasNaoSeAplica] = await Promise.all([
@@ -104,8 +122,15 @@ export const NovoRelatorioVisitas = () => {
     }
   };
 
+  function navigateToPainelRelatorios() {
+    navigate(
+      `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
+    );
+  }
+
   const salvarRascunho = async (
-    values: NovoRelatorioVisitasFormInterface
+    values: NovoRelatorioVisitasFormInterface,
+    gerarRelatorioNotificacoes = false
   ): Promise<void> => {
     if (!values.escola || !values.data) {
       toastError(
@@ -113,7 +138,7 @@ export const NovoRelatorioVisitas = () => {
       );
       return;
     }
-    if (!showModalSalvarRascunho) {
+    if (!showModalSalvarRascunho && !gerarRelatorioNotificacoes) {
       setShowModalSalvarRascunho(true);
       return;
     }
@@ -123,6 +148,7 @@ export const NovoRelatorioVisitas = () => {
           values,
           escolaSelecionada,
           anexos,
+          notificacoesAssinadas,
           respostasOcorrenciaNaoSeAplica
         )
       );
@@ -130,9 +156,11 @@ export const NovoRelatorioVisitas = () => {
         toastSuccess(
           "Rascunho do Relatório de Fiscalização salvo com sucesso!"
         );
-        navigate(
-          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
-        );
+        if (gerarRelatorioNotificacoes) {
+          solicitarGeracaoRelatorioNotificacoes(values.uuid);
+        } else {
+          navigateToPainelRelatorios();
+        }
       } else {
         toastError(
           "Erro ao atualizar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
@@ -140,20 +168,35 @@ export const NovoRelatorioVisitas = () => {
       }
     } else {
       const response = await createRascunhoFormularioSupervisao(
-        formataPayload(values, escolaSelecionada, anexos)
+        formataPayload(values, escolaSelecionada, anexos, notificacoesAssinadas)
       );
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess(
           "Rascunho do Relatório de Fiscalização salvo com sucesso!"
         );
-        navigate(
-          `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
-        );
+        if (gerarRelatorioNotificacoes) {
+          solicitarGeracaoRelatorioNotificacoes(response.data.uuid);
+        } else {
+          navigateToPainelRelatorios();
+        }
       } else {
         toastError(
           "Erro ao criar rascunho do Relatório de Fiscalização. Tente novamente mais tarde."
         );
       }
+    }
+  };
+
+  const solicitarGeracaoRelatorioNotificacoes = async (
+    formulario_uuid: string
+  ): Promise<void> => {
+    const response = await exportarPDFRelatorioNotificacao(formulario_uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      setShowModalBaixarNotificacoes(false);
+      setExibirModalCentralDownloads(true);
+    } else {
+      setShowModalBaixarNotificacoes(false);
+      toastError("Erro ao solicitar geração de relatório de notificações.");
     }
   };
 
@@ -171,6 +214,7 @@ export const NovoRelatorioVisitas = () => {
           values,
           escolaSelecionada,
           anexos,
+          notificacoesAssinadas,
           respostasOcorrenciaNaoSeAplica
         )
       );
@@ -186,7 +230,7 @@ export const NovoRelatorioVisitas = () => {
       }
     } else {
       const response = await createFormularioSupervisao(
-        formataPayload(values, escolaSelecionada, anexos)
+        formataPayload(values, escolaSelecionada, anexos, notificacoesAssinadas)
       );
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Relatório de Fiscalização enviado com sucesso!");
@@ -246,11 +290,43 @@ export const NovoRelatorioVisitas = () => {
     return (
       !form.getState().hasValidationErrors &&
       _validarFormulariosTiposOcorrencia.formulariosValidos &&
-      ((_validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
-        .length > 0 &&
-        anexos.length > 0) ||
-        _validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
-          .length === 0)
+      notificacoesAssinadas.length > 0
+    );
+  };
+
+  const showNotificacoesComponent = (
+    form: FormApi<any, Partial<any>>,
+    tiposOcorrencia
+  ) => {
+    const _validarFormulariosTiposOcorrencia =
+      validarFormulariosParaCategoriasDeNotificacao(
+        form.getState().values,
+        tiposOcorrencia
+      );
+    return (
+      _validarFormulariosTiposOcorrencia.listaValidacaoPorTipoOcorrencia
+        .length !== 0
+    );
+  };
+
+  const habilitarBotaoBaixarNotificacao = (
+    form: FormApi<any, Partial<any>>,
+    tiposOcorrencia
+  ) => {
+    const _validarFormulariosTiposOcorrencia =
+      validarFormulariosParaCategoriasDeNotificacao(
+        form.getState().values,
+        tiposOcorrencia
+      );
+    return (
+      !form.getState().hasValidationErrors &&
+      _validarFormulariosTiposOcorrencia.formulariosValidos
+    );
+  };
+
+  const handleClickVoltar = () => {
+    navigate(
+      `/${SUPERVISAO}/${TERCEIRIZADAS}/${PAINEL_RELATORIOS_FISCALIZACAO}`
     );
   };
 
@@ -284,6 +360,8 @@ export const NovoRelatorioVisitas = () => {
                   getTiposOcorrenciaPorEditalNutrisupervisaoAsync
                 }
                 setTiposOcorrencia={setTiposOcorrencia}
+                somenteLeitura={somenteLeitura}
+                isEditing={isEditing}
               />
               <div className="row">
                 <div className="col-12">
@@ -291,7 +369,10 @@ export const NovoRelatorioVisitas = () => {
                 </div>
               </div>
               {!erroAPI && (
-                <Spin spinning={loadingTiposOcorrencia}>
+                <Spin
+                  spinning={loadingTiposOcorrencia}
+                  style={{ display: "block", margin: "auto", width: "100%" }}
+                >
                   {tiposOcorrencia && escolaSelecionada && (
                     <Formulario
                       respostasOcorrencias={respostasOcorrencias}
@@ -303,10 +384,24 @@ export const NovoRelatorioVisitas = () => {
                       values={form.getState().values}
                       escolaSelecionada={escolaSelecionada}
                       push={push}
+                      somenteLeitura={somenteLeitura}
                     />
                   )}
                 </Spin>
               )}
+              {tiposOcorrencia &&
+                showNotificacoesComponent(form, tiposOcorrencia) && (
+                  <Notificacoes
+                    onClickBaixarNotificacoes={setShowModalBaixarNotificacoes}
+                    somenteLeitura={somenteLeitura}
+                    setNotificacoesAssinadas={setNotificacoesAssinadas}
+                    notificacoesAssinadas={notificacoesAssinadas}
+                    notificacoesIniciais={notificacoesIniciais}
+                    disabledBaixarNotificacoes={
+                      !habilitarBotaoBaixarNotificacao(form, tiposOcorrencia)
+                    }
+                  />
+                )}
               {tiposOcorrencia &&
                 validarFormulariosTiposOcorrencia(
                   form.getState().values,
@@ -316,37 +411,53 @@ export const NovoRelatorioVisitas = () => {
                     setAnexos={setAnexos}
                     anexos={anexos}
                     anexosIniciais={anexosIniciais}
+                    somenteLeitura={somenteLeitura}
                   />
                 )}
-              <div className="row float-end mt-4">
-                <div className="col-12">
-                  <Botao
-                    texto="Cancelar"
-                    onClick={() => {
-                      setShowModalCancelaPreenchimento(true);
-                    }}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                  />
-                  <Botao
-                    texto="Salvar rascunho"
-                    className="ms-3"
-                    disabled={submitting}
-                    onClick={() => salvarRascunho(values)}
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                  />
-                  {tiposOcorrencia && (
+              {!somenteLeitura && (
+                <div className="row float-end mt-4">
+                  <div className="col-12">
                     <Botao
-                      texto="Enviar Formulário"
-                      className="ms-3"
-                      disabled={submitting || !formularioValido(form)}
-                      onClick={() => salvar(values)}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN}
+                      texto="Cancelar"
+                      onClick={() => {
+                        setShowModalCancelaPreenchimento(true);
+                      }}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
-                  )}
+                    <Botao
+                      texto="Salvar rascunho"
+                      className="ms-3"
+                      disabled={submitting}
+                      onClick={() => salvarRascunho(values)}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    {tiposOcorrencia && (
+                      <Botao
+                        texto="Enviar Formulário"
+                        className="ms-3"
+                        disabled={submitting || !formularioValido(form)}
+                        onClick={() => salvar(values)}
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
+              {somenteLeitura && (
+                <div className="row float-end mt-4">
+                  <div className="col-12">
+                    <Botao
+                      texto="Voltar"
+                      onClick={() => {
+                        handleClickVoltar();
+                      }}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                  </div>
+                </div>
+              )}
               <ModalCancelaPreenchimento
                 show={showModalCancelaPreenchimento}
                 handleClose={() => setShowModalCancelaPreenchimento(false)}
@@ -367,6 +478,20 @@ export const NovoRelatorioVisitas = () => {
                 salvar={salvar}
                 escolaSelecionada={escolaSelecionada}
               />
+              <ModalBaixarNotificaoces
+                show={showModalBaixarNotificacoes}
+                handleClose={() => setShowModalBaixarNotificacoes(false)}
+                salvarRascunhoEBaixarNotificacoes={() =>
+                  salvarRascunho(form.getState().values, true)
+                }
+              />
+              {exibirModalCentralDownloads && (
+                <ModalSolicitacaoDownload
+                  show={exibirModalCentralDownloads}
+                  setShow={setExibirModalCentralDownloads}
+                  callbackClose={navigateToPainelRelatorios}
+                />
+              )}
             </form>
           )}
         </Form>

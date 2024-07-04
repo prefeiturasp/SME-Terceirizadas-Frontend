@@ -6,9 +6,10 @@ import Botao from "../Botao";
 import { CENTRAL_DOWNLOADS } from "configs/constants";
 import "./styles.scss";
 
-const ModalSolicitacaoDownload = ({ show, setShow }) => {
+const ModalSolicitacaoDownload = ({ show, setShow, callbackClose }) => {
   const handleClose = () => {
     setShow(false);
+    callbackClose && callbackClose();
   };
 
   return (
