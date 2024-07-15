@@ -1,13 +1,15 @@
 import React, { Fragment, useState } from "react";
-import { EyeOutlined } from "@ant-design/icons";
+import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 
 import "./styles.scss";
 import ModalCadastrarControleSobras from "components/Shareable/ModalCadastrarControleSobras";
 import { PERIODO_DESPERDICIO } from "../../../../../../constants/shared";
+import ModalExcluirItem from "../ModalExcluirItem";
 
 const TabelaControleSobras = ({ list, nextPage }) => {
   const [showModal, setShowModal] = useState(false);
   const [selecionado, setSelecionado] = useState(undefined);
+  const [showModalExcluir, setShowModalExcluir] = useState(false);
 
   if (list === undefined || list.length === 0) {
     return <div>Carregando...</div>;
@@ -16,6 +18,11 @@ const TabelaControleSobras = ({ list, nextPage }) => {
   const openModal = (item) => {
     setSelecionado(item);
     setShowModal(true);
+  };
+
+  const openModalExcluir = (item) => {
+    setSelecionado(item);
+    setShowModalExcluir(true);
   };
 
   const tipoUsuario = localStorage.getItem("tipo_perfil");
@@ -42,7 +49,7 @@ const TabelaControleSobras = ({ list, nextPage }) => {
                   <th className="responsavel">Responsável pela Medição</th>
                   <th className="tipo_alimentacao">Tipo de Refeição</th>
                   <th className="escola">Unidade Educacional</th>
-                  <th className="acoes-visualizar-apenas">Ações</th>
+                  <th className="acoes">Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -60,13 +67,21 @@ const TabelaControleSobras = ({ list, nextPage }) => {
                         <td>{item.usuario?.nome}</td>
                         <td>{item.tipo_alimentacao_nome}</td>
                         <td>{item.escola?.nome}</td>
-                        <td className="acoes-visualizar-apenas">
+                        <td className="acoes">
                           <button
-                            className="botaoVisualizar"
+                            className="botaoEditar me-2"
                             onClick={() => openModal(item)}
                           >
-                            <EyeOutlined className="me-1" />
-                            <span>Visualizar</span>
+                            <FormOutlined className="me-1" />
+                            Editar
+                          </button>
+                          |
+                          <button
+                            className="botaoExcluir ms-2"
+                            onClick={() => openModalExcluir(item)}
+                          >
+                            <DeleteOutlined className="me-1" />
+                            Excluir
                           </button>
                         </td>
                       </tr>
@@ -85,10 +100,16 @@ const TabelaControleSobras = ({ list, nextPage }) => {
         changePage={nextPage}
         selecionado={selecionado}
       />
+      <ModalExcluirItem
+        closeModal={() => setShowModalExcluir(false)}
+        showModal={showModalExcluir}
+        item={selecionado}
+        changePage={nextPage}
+      />
     </>
   );
 };
 
-export default ({ list }) => {
-  return <TabelaControleSobras list={list} />;
+export default ({ list, nextPage }) => {
+  return <TabelaControleSobras list={list} nextPage={nextPage} />;
 };

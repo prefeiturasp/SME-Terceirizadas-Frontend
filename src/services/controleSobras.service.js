@@ -7,6 +7,12 @@ export const consultaControleSobras = async (params) =>
 export const cadastrarControleSobras = async (payload) =>
   await axios.post(`/${ENDPOINT.CONTROLE_SOBRAS}/`, payload);
 
+export const atualizarControleSobras = async (payload, uuid) =>
+  axios.patch(`/${ENDPOINT.CONTROLE_SOBRAS}/${uuid}/`, payload);
+
+export const deletarControleSobras = async (uuid) =>
+  axios.delete(`/${ENDPOINT.CONTROLE_SOBRAS}/${uuid}/`);
+
 export const consultaRelatorioControleSobras = async (params) =>
   await axios.get(`/${ENDPOINT.CONTROLE_SOBRAS}/relatorio/`, { params });
 

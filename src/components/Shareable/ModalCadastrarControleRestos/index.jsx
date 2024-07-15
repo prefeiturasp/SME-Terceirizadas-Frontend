@@ -9,7 +9,7 @@ import {
   requiredSearchSelectUnidEducDietas,
   noSpaceStartOrEnd,
   requiredOptionSearchSelect,
-  peloMenosUmCaractere
+  peloMenosUmCaractere,
 } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
@@ -22,7 +22,10 @@ import AutoCompleteField from "../AutoCompleteField";
 import InputText from "../Input/InputText";
 import { composeValidators } from "helpers/utilities";
 import { formatarVinculosParaTiposAlimentacao } from "helpers/controleRestos";
-import { cadastrarControleRestos } from "services/controleRestos.service";
+import {
+  cadastrarControleRestos,
+  atualizarControleRestos,
+} from "services/controleRestos.service";
 import { toastError, toastSuccess } from "../Toast/dialogs";
 import { connect } from "react-redux";
 import "./styles.scss";
@@ -30,6 +33,7 @@ import ManagedInputFileField from "../Input/InputFile/ManagedField";
 import { InputComData } from "../DatePicker";
 import moment from "moment";
 import { PERIODO_DESPERDICIO } from "../../../constants/shared";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 
 const ModalCadastrarControleRestos = ({
   closeModal,
@@ -70,16 +74,17 @@ const ModalCadastrarControleRestos = ({
         periodo:
           selecionado.periodo &&
           PERIODO_DESPERDICIO.find((p) => p.uuid === selecionado.periodo).nome,
+        observacoes: selecionado.observacoes,
       };
-
       setInitialValues(_initValues);
+      onChangeDre();
       onBlurEscola(undefined, {
         escola:
           selecionado?.escola.codigo_eol + " - " + selecionado.escola?.nome,
       });
     } else {
       setRegistroEdicao(undefined);
-      setNomeEscolas(escolas.map(ue => `${ue.codigo_eol} - ${ue.label}`));
+      setNomeEscolas(escolas.map((ue) => `${ue.codigo_eol} - ${ue.label}`));
       setInitialValues({});
     }
   };
@@ -94,6 +99,20 @@ const ModalCadastrarControleRestos = ({
     }
   }, [showModal]);
 
+  const onChangeDre = (e, form) => {
+    const value = e
+      ? e.target.value
+      : selecionado.escola.diretoria_regional.uuid;
+    const ueFiltro =
+      value === "all"
+        ? escolas
+        : escolas.filter((ue) => value.includes(ue.dre.uuid));
+    setNomeEscolas(ueFiltro.map((ue) => `${ue.codigo_eol} - ${ue.label}`));
+    if (form) {
+      tipoUsuario !== TIPO_PERFIL.ESCOLA && form.change("escola", undefined);
+    }
+  };
+
   const onBlurEscola = async (form, value) => {
     if (!value) {
       if (tiposAlimentacao) {
@@ -104,8 +123,9 @@ const ModalCadastrarControleRestos = ({
     }
 
     const escola = escolas.filter(
-      (e) => e?.codigo_eol === (typeof value === "string" ? value : value.escola)
-        .split(" - ")[0]
+      (e) =>
+        e?.codigo_eol ===
+        (typeof value === "string" ? value : value.escola).split(" - ")[0]
     )[0];
     if (escola) {
       if (escola?.codigo_eol !== escolaSelected?.codigo_eol) {
@@ -127,9 +147,7 @@ const ModalCadastrarControleRestos = ({
 
   const onSubmit = async (formValues, form) => {
     if (moment(formValues.data_medicao, "DD/MM/YYYY").isAfter(moment())) {
-      return toastError(
-        "Data da Medição não podem ser posteriores à data."
-      );
+      return toastError("Data da Medição não podem ser posteriores à data.");
     }
 
     setCarregando(true);
@@ -149,35 +167,48 @@ const ModalCadastrarControleRestos = ({
         arquivo: a.base64,
       })),
       data_medicao: formValues.data_medicao,
-      periodo: PERIODO_DESPERDICIO.find(p => p.nome === formValues.periodo).uuid,
+      periodo: PERIODO_DESPERDICIO.find((p) => p.nome === formValues.periodo)
+        .uuid,
+      observacoes: formValues.observacoes,
     };
 
-    await cadastrarControleRestos(payload)
-      .then(() => {
-        toastSuccess("Cadastro de Resto efetuado com sucesso.");
-        cleanForm(formValues);
-        form.restart();
-      })
-      .catch((error) => {
-        toastError(error.response.data[0]);
-      });
+    if (selecionado) {
+      await atualizarControleRestos(payload, selecionado.uuid)
+        .then(() => {
+          toastSuccess("Cadastro atualizado com sucesso.");
+          cleanForm(formValues);
+          form.restart();
+        })
+        .catch((error) => {
+          toastError(error.response.data[0]);
+        });
+    } else {
+      await cadastrarControleRestos(payload)
+        .then(() => {
+          toastSuccess("Cadastro de Resto efetuado com sucesso.");
+          cleanForm(formValues);
+          form.restart();
+        })
+        .catch((error) => {
+          toastError(error.response.data[0]);
+        });
+    }
 
     setCarregando(false);
   };
 
   const cleanForm = (formValues) => {
-
     const _initValues = {
       ...formValues,
       peso_resto: null,
       quantidade_distribuida: null,
       cardapio: null,
       resto_predominante: null,
-      imagens: []
+      observacoes: null,
+      imagens: [],
     };
 
     setInitialValues(_initValues);
-
   };
 
   const getNomesItemsFiltrado = (value) => {
@@ -193,7 +224,7 @@ const ModalCadastrarControleRestos = ({
 
   const formatDecimal = (value) => {
     if (!value) return value;
-    return value.replaceAll('.', ',');
+    return value.replaceAll(".", ",");
   };
 
   const parseDecimal = (value) => {
@@ -218,7 +249,12 @@ const ModalCadastrarControleRestos = ({
   };
 
   return (
-    <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal} backdrop="static">
+    <Modal
+      dialogClassName="modal-90w"
+      show={showModal}
+      onHide={closeModal}
+      backdrop="static"
+    >
       <Modal.Header closeButton>
         <Modal.Title>
           {registroEdicao ? "Visualizar" : "Cadastrar"} Resto
@@ -231,7 +267,7 @@ const ModalCadastrarControleRestos = ({
             initialValues={initialValues}
             validate={() => {}}
             render={({ handleSubmit, submitting, form, values }) => (
-              <form onSubmit={values => handleSubmit(values, form)}>
+              <form onSubmit={(values) => handleSubmit(values, form)}>
                 <Modal.Body>
                   <div className="row">
                     <div className="col-6">
@@ -250,17 +286,11 @@ const ModalCadastrarControleRestos = ({
                           })
                         )}
                         disabled={
-                          registroEdicao ||
                           tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
                           tipoUsuario === TIPO_PERFIL.ESCOLA
                         }
                         naoDesabilitarPrimeiraOpcao
-                        onChangeEffect={(e) => {
-                          const value = e.target.value;
-                          const ueFiltro = value === "all" ? escolas : escolas.filter(ue => value.includes(ue.dre.uuid));
-                          setNomeEscolas(ueFiltro.map(ue => `${ue.codigo_eol} - ${ue.label}`));
-                          tipoUsuario !== TIPO_PERFIL.ESCOLA && form.change("escola", undefined);
-                        }}
+                        onChangeEffect={(e) => onChangeDre(e, form)}
                       />
                     </div>
                     <div className="col-6">
@@ -275,10 +305,7 @@ const ModalCadastrarControleRestos = ({
                             ? "input-controle-restos"
                             : "input-busca-nome-item"
                         }
-                        disabled={
-                          registroEdicao ||
-                          tipoUsuario === TIPO_PERFIL.ESCOLA
-                        }
+                        disabled={tipoUsuario === TIPO_PERFIL.ESCOLA}
                         required
                         validate={composeValidators(
                           required,
@@ -301,7 +328,6 @@ const ModalCadastrarControleRestos = ({
                           "input-data-hora" +
                           (registroEdicao ? " input-controle-restos" : "")
                         }
-                        disabled={!!registroEdicao}
                         writable={false}
                         validate={required}
                         required
@@ -309,7 +335,9 @@ const ModalCadastrarControleRestos = ({
                     </div>
                     <div className="col-3">
                       <Field
-                        dataSource={PERIODO_DESPERDICIO.map((tipo) => tipo.nome)}
+                        dataSource={PERIODO_DESPERDICIO.map(
+                          (tipo) => tipo.nome
+                        )}
                         name="periodo"
                         label="Período"
                         component={AutoCompleteField}
@@ -319,10 +347,12 @@ const ModalCadastrarControleRestos = ({
                             ? "input-controle-sobras"
                             : "input-busca-nome-item"
                         }
-                        disabled={!!registroEdicao}
                         validate={composeValidators(
                           required,
-                          requiredOptionSearchSelect(PERIODO_DESPERDICIO, "nome")
+                          requiredOptionSearchSelect(
+                            PERIODO_DESPERDICIO,
+                            "nome"
+                          )
                         )}
                         required
                       />
@@ -344,7 +374,6 @@ const ModalCadastrarControleRestos = ({
                           required,
                           requiredOptionSearchSelect(tiposAlimentacao, "nome")
                         )}
-                        disabled={!!registroEdicao}
                       />
                     </div>
                   </div>
@@ -355,14 +384,15 @@ const ModalCadastrarControleRestos = ({
                         name="cardapio"
                         component={InputText}
                         placeholder={"Digite o Cardápio"}
-                        className={registroEdicao ? "input-controle-restos" : ""}
+                        className={
+                          registroEdicao ? "input-controle-restos" : ""
+                        }
                         required
                         validate={composeValidators(
                           required,
                           noSpaceStartOrEnd,
                           peloMenosUmCaractere
                         )}
-                        disabled={!!registroEdicao}
                       />
                     </div>
                     <div className="col-6">
@@ -371,13 +401,14 @@ const ModalCadastrarControleRestos = ({
                         name="resto_predominante"
                         component={InputText}
                         placeholder={"Digite o Resto Predominante"}
-                        className={registroEdicao ? "input-controle-restos" : ""}
+                        className={
+                          registroEdicao ? "input-controle-restos" : ""
+                        }
                         required
                         validate={composeValidators(
                           required,
                           noSpaceStartOrEnd
                         )}
-                        disabled={!!registroEdicao}
                       />
                     </div>
                   </div>
@@ -390,11 +421,12 @@ const ModalCadastrarControleRestos = ({
                         placeholder={"Digite o Peso do Resto"}
                         agrupadorMilharComDecimal
                         maxlength="6"
-                        className={registroEdicao ? "input-controle-restos" : ""}
+                        className={
+                          registroEdicao ? "input-controle-restos" : ""
+                        }
                         required
                         proibeLetras
                         validate={composeValidators(required)}
-                        disabled={!!registroEdicao}
                       />
                     </div>
                     <div className="col-3">
@@ -405,11 +437,21 @@ const ModalCadastrarControleRestos = ({
                         placeholder={"Digite o Peso da Quantidade Distribuída"}
                         agrupadorMilharComDecimal
                         maxlength="6"
-                        className={registroEdicao ? "input-controle-restos" : ""}
+                        className={
+                          registroEdicao ? "input-controle-restos" : ""
+                        }
                         required
                         proibeLetras
                         validate={composeValidators(required)}
-                        disabled={!!registroEdicao}
+                      />
+                    </div>
+                    <div className="col-6">
+                      <Field
+                        component={TextArea}
+                        placeholder="Digite as Observações"
+                        label="Observações"
+                        name="observacoes"
+                        maxLength={1500}
                       />
                     </div>
                   </div>
@@ -440,7 +482,9 @@ const ModalCadastrarControleRestos = ({
                         {(registroEdicao.imagens?.length ?? []) > 0 && (
                           <>
                             {registroEdicao.imagens
-                              .filter((anexo) => anexo.arquivo.includes("media"))
+                              .filter((anexo) =>
+                                anexo.arquivo.includes("media")
+                              )
                               .map((anexo, key) => {
                                 return (
                                   <div
@@ -469,7 +513,7 @@ const ModalCadastrarControleRestos = ({
                     </div>
                   )}
                 </Modal.Body>
-                {!registroEdicao && (<Modal.Footer>
+                <Modal.Footer>
                   <div className="row mt-4">
                     <div className="col-12">
                       <Botao
@@ -489,7 +533,6 @@ const ModalCadastrarControleRestos = ({
                     </div>
                   </div>
                 </Modal.Footer>
-              )}
               </form>
             )}
           />
