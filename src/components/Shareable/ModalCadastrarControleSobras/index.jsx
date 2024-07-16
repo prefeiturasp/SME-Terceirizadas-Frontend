@@ -19,7 +19,10 @@ import AutoCompleteField from "../AutoCompleteField";
 import InputText from "../Input/InputText";
 import { composeValidators } from "helpers/utilities";
 import { formatarVinculosParaTiposAlimentacao } from "helpers/controleSobras";
-import { cadastrarControleSobras } from "services/controleSobras.service";
+import {
+  cadastrarControleSobras,
+  atualizarControleSobras,
+} from "services/controleSobras.service";
 import { toastError, toastSuccess } from "../Toast/dialogs";
 import {
   setTiposAlimento,
@@ -83,22 +86,22 @@ const ModalCadastrarControleSobras = ({
         peso_alimento: formatDecimal(selecionado.peso_alimento),
         peso_recipiente: formatDecimal(selecionado.peso_recipiente),
         peso_sobra: formatDecimal(selecionado.peso_sobra),
-        data_medicao: data_medicao
-          ? data_medicao.format("DD/MM/YYYY")
-          : null,
+        data_medicao: data_medicao ? data_medicao.format("DD/MM/YYYY") : null,
         periodo:
           selecionado.periodo &&
           PERIODO_DESPERDICIO.find((p) => p.uuid === selecionado.periodo).nome,
+        especificar: selecionado.especificar,
       };
 
       setInitialValues(_initValues);
+      onChangeDre();
       onBlurEscola(undefined, {
         escola:
           selecionado?.escola.codigo_eol + " - " + selecionado.escola?.nome,
       });
     } else {
       setRegistroEdicao(undefined);
-      setNomeEscolas(escolas.map(ue => `${ue.codigo_eol} - ${ue.label}`));
+      setNomeEscolas(escolas.map((ue) => `${ue.codigo_eol} - ${ue.label}`));
       setInitialValues({});
     }
   };
@@ -116,7 +119,21 @@ const ModalCadastrarControleSobras = ({
     }
   }, [showModal]);
 
-  async function onBlurEscola(form, value) {
+  const onChangeDre = (e, form) => {
+    const value = e
+      ? e.target.value
+      : selecionado.escola.diretoria_regional.uuid;
+    const ueFiltro =
+      value === "all"
+        ? escolas
+        : escolas.filter((ue) => value.includes(ue.dre.uuid));
+    setNomeEscolas(ueFiltro.map((ue) => `${ue.codigo_eol} - ${ue.label}`));
+    if (form) {
+      tipoUsuario !== TIPO_PERFIL.ESCOLA && form.change("escola", undefined);
+    }
+  };
+
+  const onBlurEscola = async (form, value) => {
     if (!value) {
       if (tiposAlimentacao) {
         setTiposAlimentacao([]);
@@ -133,8 +150,9 @@ const ModalCadastrarControleSobras = ({
     }
 
     const escola = escolas.filter(
-      (e) => e?.codigo_eol === (typeof value === "string" ? value : value.escola)
-        .split(" - ")[0]
+      (e) =>
+        e?.codigo_eol ===
+        (typeof value === "string" ? value : value.escola).split(" - ")[0]
     )[0];
     if (escola) {
       if (escola?.codigo_eol !== escolaSelected?.codigo_eol) {
@@ -152,13 +170,11 @@ const ModalCadastrarControleSobras = ({
       setTiposAlimentacao([]);
     }
     form?.change("tipo_alimentacao", undefined);
-  }
+  };
 
   const onSubmit = async (formValues, form) => {
     if (moment(formValues.data_medicao, "DD/MM/YYYY").isAfter(moment())) {
-      return toastError(
-        "Data da Medição não podem ser posteriores à data."
-      );
+      return toastError("Data da Medição não podem ser posteriores à data.");
     }
 
     setCarregando(true);
@@ -179,24 +195,37 @@ const ModalCadastrarControleSobras = ({
       peso_recipiente: parseDecimal(formValues.peso_recipiente),
       peso_sobra: parseDecimal(formValues.peso_sobra),
       data_medicao: formValues.data_medicao,
-      periodo: PERIODO_DESPERDICIO.find(p => p.nome === formValues.periodo).uuid,
+      periodo: PERIODO_DESPERDICIO.find((p) => p.nome === formValues.periodo)
+        .uuid,
+      especificar: formValues.especificar,
     };
 
-    await cadastrarControleSobras(payload)
-      .then(() => {
-        toastSuccess("Cadastro de Sobras efetuado com sucesso.");
-        cleanForm(formValues);
-        form.restart();
-      })
-      .catch((error) => {
-        toastError(error.response.data[0]);
-      });
+    if (selecionado) {
+      await atualizarControleSobras(payload, selecionado.uuid)
+        .then(() => {
+          toastSuccess("Cadastro atualizado com sucesso.");
+          cleanForm(formValues);
+          form.restart();
+        })
+        .catch((error) => {
+          toastError(error.response.data[0]);
+        });
+    } else {
+      await cadastrarControleSobras(payload)
+        .then(() => {
+          toastSuccess("Cadastro de Sobras efetuado com sucesso.");
+          cleanForm(formValues);
+          form.restart();
+        })
+        .catch((error) => {
+          toastError(error.response.data[0]);
+        });
+    }
 
     setCarregando(false);
   };
 
   const cleanForm = (formValues) => {
-
     const _initValues = {
       ...formValues,
       tipo_alimento: null,
@@ -204,10 +233,10 @@ const ModalCadastrarControleSobras = ({
       peso_alimento: null,
       peso_recipiente: null,
       peso_sobra: null,
+      especificar: null,
     };
 
     setInitialValues(_initValues);
-
   };
 
   const getNomesItemsFiltrado = (value) => {
@@ -223,7 +252,7 @@ const ModalCadastrarControleSobras = ({
 
   const formatDecimal = (value) => {
     if (!value) return value;
-    return value.replaceAll('.', ',');
+    return value.replaceAll(".", ",");
   };
 
   const parseDecimal = (value) => {
@@ -235,20 +264,27 @@ const ModalCadastrarControleSobras = ({
     if (!values?.peso_alimento || !values?.peso_recipiente) {
       return "-";
     }
-    const value = parseDecimal(values.peso_alimento) - parseDecimal(values.peso_recipiente);
+    const value =
+      parseDecimal(values.peso_alimento) - parseDecimal(values.peso_recipiente);
     return value <= 0 ? 0 : formatDecimal(value.toFixed(2).toString());
-  }
+  };
 
   const getPesoSobra = (values) => {
     if (!values?.peso_sobra || !values?.peso_recipiente) {
       return "-";
     }
-    const value = parseDecimal(values.peso_sobra) - parseDecimal(values.peso_recipiente);
+    const value =
+      parseDecimal(values.peso_sobra) - parseDecimal(values.peso_recipiente);
     return value <= 0 ? 0 : formatDecimal(value.toFixed(2).toString());
-  }
+  };
 
   return (
-    <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal} backdrop="static">
+    <Modal
+      dialogClassName="modal-90w"
+      show={showModal}
+      onHide={closeModal}
+      backdrop="static"
+    >
       <Modal.Header closeButton>
         <Modal.Title>
           {registroEdicao ? "Visualizar" : "Cadastrar"} Sobra
@@ -261,7 +297,7 @@ const ModalCadastrarControleSobras = ({
             initialValues={initialValues}
             validate={() => {}}
             render={({ handleSubmit, submitting, form, values }) => (
-              <form onSubmit={values => handleSubmit(values, form)}>
+              <form onSubmit={(values) => handleSubmit(values, form)}>
                 <Modal.Body>
                   <div className="row">
                     <div className="col-6">
@@ -280,17 +316,11 @@ const ModalCadastrarControleSobras = ({
                           })
                         )}
                         disabled={
-                          registroEdicao ||
                           tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
                           tipoUsuario === TIPO_PERFIL.ESCOLA
                         }
                         naoDesabilitarPrimeiraOpcao
-                        onChangeEffect={(e) => {
-                          const value = e.target.value;
-                          const ueFiltro = value === "all" ? escolas : escolas.filter(ue => value.includes(ue.dre.uuid));
-                          setNomeEscolas(ueFiltro.map(ue => `${ue.codigo_eol} - ${ue.label}`));
-                          tipoUsuario !== TIPO_PERFIL.ESCOLA && form.change("escola", undefined);
-                        }}
+                        onChangeEffect={(e) => onChangeDre(e, form)}
                       />
                     </div>
                     <div className="col-6">
@@ -305,10 +335,7 @@ const ModalCadastrarControleSobras = ({
                             ? "input-controle-sobras"
                             : "input-busca-nome-item"
                         }
-                        disabled={
-                          registroEdicao ||
-                          tipoUsuario === TIPO_PERFIL.ESCOLA
-                        }
+                        disabled={tipoUsuario === TIPO_PERFIL.ESCOLA}
                         required
                         validate={composeValidators(
                           required,
@@ -331,7 +358,6 @@ const ModalCadastrarControleSobras = ({
                           "input-data-hora" +
                           (registroEdicao ? " input-controle-restos" : "")
                         }
-                        disabled={!!registroEdicao}
                         writable={false}
                         validate={required}
                         required
@@ -339,7 +365,9 @@ const ModalCadastrarControleSobras = ({
                     </div>
                     <div className="col-3">
                       <Field
-                        dataSource={PERIODO_DESPERDICIO.map((tipo) => tipo.nome)}
+                        dataSource={PERIODO_DESPERDICIO.map(
+                          (tipo) => tipo.nome
+                        )}
                         name="periodo"
                         label="Período"
                         component={AutoCompleteField}
@@ -349,15 +377,33 @@ const ModalCadastrarControleSobras = ({
                             ? "input-controle-sobras"
                             : "input-busca-nome-item"
                         }
-                        disabled={!!registroEdicao}
                         validate={composeValidators(
                           required,
-                          requiredOptionSearchSelect(PERIODO_DESPERDICIO, "nome")
+                          requiredOptionSearchSelect(
+                            PERIODO_DESPERDICIO,
+                            "nome"
+                          )
                         )}
                         required
                       />
                     </div>
                     <div className="col-6">
+                      <Field
+                        label="Especificar"
+                        name="especificar"
+                        component={InputText}
+                        placeholder={""}
+                        maxlength="250"
+                        className={
+                          registroEdicao
+                            ? "input-controle-sobras"
+                            : "input-busca-nome-item"
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4">
                       <Field
                         dataSource={tiposAlimentacao.map((tipo) => tipo.nome)}
                         component={AutoCompleteField}
@@ -374,12 +420,9 @@ const ModalCadastrarControleSobras = ({
                           required,
                           requiredOptionSearchSelect(tiposAlimentacao, "nome")
                         )}
-                        disabled={!!registroEdicao}
                       />
                     </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-6">
+                    <div className="col-4">
                       <Field
                         dataSource={tiposAlimento.map((tipo) => tipo.nome)}
                         component={AutoCompleteField}
@@ -396,10 +439,9 @@ const ModalCadastrarControleSobras = ({
                           required,
                           requiredOptionSearchSelect(tiposAlimento, "nome")
                         )}
-                        disabled={!!registroEdicao}
                       />
                     </div>
-                    <div className="col-6">
+                    <div className="col-4">
                       <Field
                         dataSource={tiposRecipiente.map((tipo) => tipo.nome)}
                         component={AutoCompleteField}
@@ -416,7 +458,6 @@ const ModalCadastrarControleSobras = ({
                           required,
                           requiredOptionSearchSelect(tiposRecipiente, "nome")
                         )}
-                        disabled={!!registroEdicao}
                       />
                     </div>
                   </div>
@@ -431,9 +472,12 @@ const ModalCadastrarControleSobras = ({
                         maxlength="6"
                         required
                         proibeLetras
-                        className={registroEdicao ? "input-controle-sobras" : "input-busca-nome-item"}
+                        className={
+                          registroEdicao
+                            ? "input-controle-sobras"
+                            : "input-busca-nome-item"
+                        }
                         validate={composeValidators(required)}
-                        disabled={!!registroEdicao}
                       />
                     </div>
                     <div className="col-4 col-input-controle-sobras-addon">
@@ -441,15 +485,21 @@ const ModalCadastrarControleSobras = ({
                         label="Peso do alimento pronto com recipiente"
                         name="peso_alimento"
                         component={InputText}
-                        placeholder={"Digite o peso do alimento pronto com recipiente"}
-                        acrescentarAppend={"Peso do alimento pronto: " + getPesoAlimentoPronto(values)}
+                        placeholder={
+                          "Digite o peso do alimento pronto com recipiente"
+                        }
+                        acrescentarAppend={
+                          "Peso do alimento pronto: " +
+                          getPesoAlimentoPronto(values)
+                        }
                         agrupadorMilharComDecimal
                         maxlength="6"
-                        className={registroEdicao ? "input-controle-sobras" : ""}
+                        className={
+                          registroEdicao ? "input-controle-sobras" : ""
+                        }
                         required
                         proibeLetras
                         validate={composeValidators(required)}
-                        disabled={!!registroEdicao}
                       />
                     </div>
                     <div className="col-4 col-input-controle-sobras-addon">
@@ -458,19 +508,22 @@ const ModalCadastrarControleSobras = ({
                         name="peso_sobra"
                         component={InputText}
                         placeholder={"Digite o peso da sobra com recipiente"}
-                        acrescentarAppend={"Peso da sobra: " + getPesoSobra(values)}
+                        acrescentarAppend={
+                          "Peso da sobra: " + getPesoSobra(values)
+                        }
                         agrupadorMilharComDecimal
                         maxlength="6"
                         required
                         proibeLetras
-                        className={registroEdicao ? "input-controle-sobras" : ""}
+                        className={
+                          registroEdicao ? "input-controle-sobras" : ""
+                        }
                         validate={composeValidators(required)}
-                        disabled={!!registroEdicao}
                       />
                     </div>
                   </div>
                 </Modal.Body>
-                {!registroEdicao && (<Modal.Footer>
+                <Modal.Footer>
                   <div className="row mt-4">
                     <div className="col-12">
                       <Botao
@@ -490,7 +543,6 @@ const ModalCadastrarControleSobras = ({
                     </div>
                   </div>
                 </Modal.Footer>
-                )}
               </form>
             )}
           />
