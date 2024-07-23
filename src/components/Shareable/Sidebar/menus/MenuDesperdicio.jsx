@@ -11,6 +11,7 @@ import {
   RELATORIOS,
   RELATORIO_CONTROLE_RESTOS,
   RELATORIO_CONTROLE_SOBRAS,
+  RELATORIO_CONTROLE_SOBRAS_BRUTO,
 } from "configs/constants";
 import {
   usuarioEhNutricionistaSupervisao,
@@ -19,24 +20,22 @@ import {
 } from "helpers/utilities";
 
 const MenuDesperdicio = ({ activeMenu, onSubmenuClick }) => {
-
   const exibirCadastros = usuarioEhCoordenadorNutriSupervisao();
 
-  const exibirRelatorios = 
-    usuarioEhCoordenadorNutriSupervisao() || 
-    usuarioEhAdmQualquerEmpresa();
+  const exibirRelatorios =
+    usuarioEhCoordenadorNutriSupervisao() || usuarioEhAdmQualquerEmpresa();
 
   return (
-    <Menu
-      id="desperdicio"
-      icon="fas fa-recycle"
-      title={"Desperdicio"}
-    >
+    <Menu id="desperdicio" icon="fas fa-recycle" title={"Desperdicio"}>
       {usuarioEhAdmQualquerEmpresa() && (
-        <LeafItem to={`/${DESPERDICIO}/${CONTROLE_SOBRAS}`}>Controle de Sobras</LeafItem>
+        <LeafItem to={`/${DESPERDICIO}/${CONTROLE_SOBRAS}`}>
+          Controle de Sobras
+        </LeafItem>
       )}
       {usuarioEhNutricionistaSupervisao() && (
-        <LeafItem to={`/${DESPERDICIO}/${CONTROLE_RESTOS}`}>Controle de Restos</LeafItem>
+        <LeafItem to={`/${DESPERDICIO}/${CONTROLE_RESTOS}`}>
+          Controle de Restos
+        </LeafItem>
       )}
 
       {exibirRelatorios && (
@@ -55,11 +54,18 @@ const MenuDesperdicio = ({ activeMenu, onSubmenuClick }) => {
             </LeafItem>
           )}
           {usuarioEhAdmQualquerEmpresa() && (
-            <LeafItem
-              to={`/${DESPERDICIO}/${RELATORIOS}/${RELATORIO_CONTROLE_SOBRAS}`}
-            >
-              Relatório de Sobras
-            </LeafItem>
+            <>
+              <LeafItem
+                to={`/${DESPERDICIO}/${RELATORIOS}/${RELATORIO_CONTROLE_SOBRAS}`}
+              >
+                Relatório de Sobras
+              </LeafItem>
+              <LeafItem
+                to={`/${DESPERDICIO}/${RELATORIOS}/${RELATORIO_CONTROLE_SOBRAS_BRUTO}`}
+              >
+                Relatório de Sobras - Bruto
+              </LeafItem>
+            </>
           )}
         </SubMenu>
       )}
@@ -77,13 +83,13 @@ const MenuDesperdicio = ({ activeMenu, onSubmenuClick }) => {
           <LeafItem to={`/${DESPERDICIO}/${CADASTROS}/${TIPOS_ALIMENTO}`}>
             Tipos de Alimento
           </LeafItem>
-          <LeafItem to={`/${DESPERDICIO}/${CADASTROS}/${PARAMETROS_CLASSIFICACAO}`}>
+          <LeafItem
+            to={`/${DESPERDICIO}/${CADASTROS}/${PARAMETROS_CLASSIFICACAO}`}
+          >
             Parâmetros de Classificação
           </LeafItem>
         </SubMenu>
       )}
-
-
     </Menu>
   );
 };
