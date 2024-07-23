@@ -65,9 +65,6 @@ const ModalCadastrarControleRestos = ({
           selecionado?.escola.codigo_eol + " - " + selecionado.escola?.nome,
         tipo_alimentacao: selecionado.tipo_alimentacao_nome,
         peso_resto: formatDecimal(selecionado.peso_resto),
-        quantidade_distribuida: formatDecimal(
-          selecionado.quantidade_distribuida
-        ),
         cardapio: selecionado.cardapio,
         resto_predominante: selecionado.resto_predominante,
         data_medicao: data_medicao ? data_medicao.format("DD/MM/YYYY") : null,
@@ -159,7 +156,6 @@ const ModalCadastrarControleRestos = ({
         (tipo) => tipo.nome === formValues.tipo_alimentacao
       ).uuid,
       peso_resto: parseDecimal(formValues.peso_resto),
-      quantidade_distribuida: parseDecimal(formValues.quantidade_distribuida),
       cardapio: formValues.cardapio,
       resto_predominante: formValues.resto_predominante,
       imagens: formValues.imagens?.map((a) => ({
@@ -201,7 +197,6 @@ const ModalCadastrarControleRestos = ({
     const _initValues = {
       ...formValues,
       peso_resto: null,
-      quantidade_distribuida: null,
       cardapio: null,
       resto_predominante: null,
       observacoes: null,
@@ -429,23 +424,7 @@ const ModalCadastrarControleRestos = ({
                         validate={composeValidators(required)}
                       />
                     </div>
-                    <div className="col-3">
-                      <Field
-                        label="Quantidade Distribuída (Kg)"
-                        name="quantidade_distribuida"
-                        component={InputText}
-                        placeholder={"Digite o Peso da Quantidade Distribuída"}
-                        agrupadorMilharComDecimal
-                        maxlength="6"
-                        className={
-                          registroEdicao ? "input-controle-restos" : ""
-                        }
-                        required
-                        proibeLetras
-                        validate={composeValidators(required)}
-                      />
-                    </div>
-                    <div className="col-6">
+                    <div className="col-9">
                       <Field
                         component={TextArea}
                         placeholder="Digite as Observações"

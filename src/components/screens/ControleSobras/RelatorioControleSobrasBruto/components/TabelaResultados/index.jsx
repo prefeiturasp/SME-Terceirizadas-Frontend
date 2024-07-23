@@ -7,7 +7,7 @@ import {
   BUTTON_STYLE,
 } from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
-import { gerarExcelRelatorioControleSobras } from "services/controleSobras.service";
+import { gerarExcelRelatorioControleSobrasBruto } from "services/controleSobras.service";
 import { toastError } from "components/Shareable/Toast/dialogs";
 
 const TabelaControleSobras = ({ list, getFiltros }) => {
@@ -21,7 +21,7 @@ const TabelaControleSobras = ({ list, getFiltros }) => {
 
   const exportarXLSX = async () => {
     setImprimindoExcel(true);
-    const response = await gerarExcelRelatorioControleSobras({
+    const response = await gerarExcelRelatorioControleSobrasBruto({
       ...getFiltros(),
     });
     if (response.status === HTTP_STATUS.OK) {
@@ -45,12 +45,15 @@ const TabelaControleSobras = ({ list, getFiltros }) => {
               <thead>
                 <tr className="table-head-items">
                   <th className="unidade_dre">Unidade Educacional e DRE</th>
-                  <th>Tipo de Alimentação</th>
-                  <th>Tipo de Alimento</th>
                   <th>Data da Medição</th>
                   <th>Período</th>
+                  <th>Tipo de Alimentação</th>
+                  <th>Tipo de Alimento</th>
+                  <th>Especificar</th>
                   <th>Tipo de Recipiente</th>
                   <th>Peso do Recipiente (Kg)</th>
+                  <th>Peso do Alimento Pronto com Recipiente</th>
+                  <th>Peso da Sobra com Recipiente</th>
                   <th>Peso do Alimento Pronto (Kg)</th>
                   <th>Peso da Sobra (Kg)</th>
                   <th>Peso da Refeição Distribuída (Kg)</th>
@@ -73,15 +76,18 @@ const TabelaControleSobras = ({ list, getFiltros }) => {
                           <br></br>
                           <small>{item.dre_nome}</small>
                         </td>
-                        <td>{item.tipo_alimentacao_nome}</td>
-                        <td>{item.tipo_alimento_nome}</td>
                         <td>{item.data_medicao}</td>
                         <td>{item.periodo}</td>
+                        <td>{item.tipo_alimentacao_nome}</td>
+                        <td>{item.tipo_alimento_nome}</td>
+                        <td>{item.especificar}</td>
                         <td>{item.tipo_recipiente_nome}</td>
                         <td>{item.peso_recipiente}</td>
+                        <td>{item.peso_alimento_pronto_com_recipiente}</td>
+                        <td>{item.peso_sobra_com_recipiente}</td>
                         <td>{item.peso_alimento}</td>
                         <td>{item.peso_sobra}</td>
-                        <td>{item.quantidade_distribuida}</td>
+                        <td>{item.peso_distribuida}</td>
                         <td>{item.frequencia}</td>
                         <td>{item.total_primeira_oferta}</td>
                         <td>{item.total_repeticao}</td>

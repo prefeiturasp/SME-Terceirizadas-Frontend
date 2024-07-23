@@ -41,20 +41,24 @@ const TabelaControleRestos = ({ list, getFiltros }) => {
       ) : (
         <div className="row">
           <div className="col-12">
-            <table className="table table-bordered table-items">
+            <table className="table table-bordered table-items table-responsive">
               <thead>
                 <tr className="table-head-items">
                   <th className="escola">Escola</th>
-                  <th className="data_medicao">Data da Medição</th>
-                  <th className="periodo">Período</th>
-                  <th className="quantidade_distribuida">
-                    Quantidade Distribuída
-                  </th>
-                  <th className="peso_resto">Peso do Resto (Kg)</th>
-                  <th className="num_refeicoes">Nº Refeições</th>
-                  <th className="resto_per_capita">Resto per Capita</th>
-                  <th className="percent_resto">% Resto</th>
-                  <th className="classificacao">Classificação</th>
+                  <th>Data da Medição</th>
+                  <th>Período</th>
+                  <th>Cardápio</th>
+                  <th>Tipo de Alimentação</th>
+                  <th>Resto Predomínante</th>
+                  <th>Quantidade Distribuída</th>
+                  <th>Tipo de Alimento</th>
+                  <th>Peso do Resto (Kg)</th>
+                  <th>Nº Refeições</th>
+                  <th>Resto per Capita</th>
+                  <th>% Resto</th>
+                  <th>Classificação</th>
+                  <th>Aceitabilidade</th>
+                  <th>Observações</th>
                 </tr>
               </thead>
               <tbody>
@@ -69,12 +73,18 @@ const TabelaControleRestos = ({ list, getFiltros }) => {
                         </td>
                         <td>{item.data_medicao}</td>
                         <td>{item.periodo}</td>
-                        <td>{item.quantidade_distribuida_soma}</td>
-                        <td>{item.peso_resto_soma}</td>
+                        <td>{item.cardapio}</td>
+                        <td>{item.tipo_alimentacao_nome}</td>
+                        <td>{item.resto_predominante}</td>
+                        <td>{item.quantidade_distribuida}</td>
+                        <td>{item.tipo_alimento_nome}</td>
+                        <td>{item.peso_resto}</td>
                         <td>{item.num_refeicoes}</td>
                         <td>{item.resto_per_capita}</td>
                         <td>{item.percent_resto}</td>
                         <td>{item.classificacao}</td>
+                        <td>{item.aceitabilidade}</td>
+                        <td>{item.observacoes}</td>
                       </tr>
                     </Fragment>
                   );

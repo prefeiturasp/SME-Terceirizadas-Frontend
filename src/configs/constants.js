@@ -143,6 +143,8 @@ export const RELATORIO_ALUNOS_MATRICULADOS = `${RELATORIO}/alunos-matriculados`;
 export const DESPERDICIO = "desperdicio";
 export const CONTROLE_SOBRAS = "controle-sobras";
 export const RELATORIO_CONTROLE_SOBRAS = "relatorio-controle-sobras";
+export const RELATORIO_CONTROLE_SOBRAS_BRUTO =
+  "relatorio-controle-sobras-bruto";
 export const CONTROLE_RESTOS = "controle-restos";
 export const RELATORIO_CONTROLE_RESTOS = "relatorio-controle-restos";
 export const PANORAMA_ESCOLA = "panorama-escola";

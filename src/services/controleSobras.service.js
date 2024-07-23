@@ -20,3 +20,14 @@ export const gerarExcelRelatorioControleSobras = async (params) =>
   await axios.get(`/${ENDPOINT.CONTROLE_SOBRAS}/relatorio/exportar-xlsx/`, {
     params,
   });
+
+export const consultaRelatorioControleSobrasBruto = async (params) =>
+  await axios.get(`/${ENDPOINT.CONTROLE_SOBRAS}/relatorio-bruto/`, { params });
+
+export const gerarExcelRelatorioControleSobrasBruto = async (params) =>
+  await axios.get(
+    `/${ENDPOINT.CONTROLE_SOBRAS}/relatorio-bruto/exportar-xlsx/`,
+    {
+      params,
+    }
+  );

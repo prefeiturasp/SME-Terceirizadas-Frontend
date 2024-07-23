@@ -1,6 +1,6 @@
-import { 
-  usuarioEhCoordenadorNutriSupervisao, 
-  usuarioEhAdmQualquerEmpresa 
+import {
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEhAdmQualquerEmpresa,
 } from "helpers/utilities";
 
 import ControleRestosPage from "pages/Cadastros/ControleRestosPage";
@@ -10,6 +10,7 @@ import TiposRecipientePage from "pages/Cadastros/TiposRecipientePage";
 import ParametrosClassificacaoPage from "pages/Cadastros/ParametrosClassificacaoPage";
 import RelatorioControleRestosPage from "pages/Relatorios/RelatorioControleRestosPage";
 import RelatorioControleSobrasPage from "pages/Relatorios/RelatorioControleSobrasPage";
+import RelatorioControleSobrasBrutoPage from "pages/Relatorios/RelatorioControleSobrasBrutoPage";
 
 import * as constants from "../../constants";
 import { RotaInterface } from "../interfaces";
@@ -36,6 +37,12 @@ export const rotasDesperdicio: Array<RotaInterface> = [
   {
     path: `/${constants.DESPERDICIO}/${constants.RELATORIOS}/${constants.RELATORIO_CONTROLE_SOBRAS}`,
     component: RelatorioControleSobrasPage,
+    exact: true,
+    tipoUsuario: usuarioEhAdmQualquerEmpresa(),
+  },
+  {
+    path: `/${constants.DESPERDICIO}/${constants.RELATORIOS}/${constants.RELATORIO_CONTROLE_SOBRAS_BRUTO}`,
+    component: RelatorioControleSobrasBrutoPage,
     exact: true,
     tipoUsuario: usuarioEhAdmQualquerEmpresa(),
   },
