@@ -10,7 +10,7 @@ import ParametrosClassificacao from "components/screens/Cadastros/ParametrosClas
 
 const atual = {
   href: `/${DESPERDICIO}/${CADASTROS}/${PARAMETROS_CLASSIFICACAO}`,
-  titulo: "Parametros de Classificação",
+  titulo: "Parâmetros de Classificação",
 };
 
 export default () => (
