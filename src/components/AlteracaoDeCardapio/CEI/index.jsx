@@ -16,6 +16,7 @@ import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import arrayMutators from "final-form-arrays";
 import {
+  // eslint-disable-next-line no-unused-vars
   ehDiaUtil,
   maxValue,
   naoPodeSerZero,
@@ -62,6 +63,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     proximosCincoDiasUteis,
     proximosDoisDiasUteis,
     vinculos,
+    // eslint-disable-next-line no-unused-vars
     feriadosAno,
   } = props;
 
@@ -437,8 +439,8 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                           label="Alterar dia"
                           required
                           validate={composeValidators(
-                            required,
-                            ehDiaUtil(values, motivos, feriadosAno)
+                            required
+                            // ehDiaUtil(values, motivos, feriadosAno)
                           )}
                           usarDirty={true}
                           inputOnChange={(value) => {
